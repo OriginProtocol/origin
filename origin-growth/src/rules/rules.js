@@ -9,10 +9,8 @@ const {
 } = require('../enums')
 const logger = require('../logger')
 
-
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
-
 
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
@@ -91,7 +89,9 @@ class CampaignRules {
       ethAddress: ethAddress.toLowerCase()
     }
 
-    const endDate = opts.beforeCampaign ? this.campaign.startDate : (this.campaign.capReachedDate || this.campaign.endDate)
+    const endDate = opts.beforeCampaign
+      ? this.campaign.startDate
+      : this.campaign.capReachedDate || this.campaign.endDate
     if (opts.duringCampaign) {
       whereClause.createdAt = {
         [Sequelize.Op.gte]: this.campaign.startDate,
@@ -131,7 +131,10 @@ class CampaignRules {
   async _calculateLevel(ethAddress, events) {
     let level
     for (level = 0; level < this.config.numLevels - 1; level++) {
-      const qualify = await this.levels[level].qualifyForNextLevel(ethAddress, events)
+      const qualify = await this.levels[level].qualifyForNextLevel(
+        ethAddress,
+        events
+      )
       if (!qualify) {
         break
       }
@@ -171,15 +174,15 @@ class CampaignRules {
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
-   *   for the calculation. Otherwise uses events with status Verified or Logged.
+   *   for the calculation. By default uses events with status Verified or Logged.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
-  async getRewards(ethAddress, onlyVerifiedEvents) {
+  async getRewards(ethAddress, onlyVerifiedEvents = false) {
     const rewards = []
-    const events = await this.getEvents(
-      ethAddress,
-      { duringCampaign: true, onlyVerifiedEvents }
-    )
+    const events = await this.getEvents(ethAddress, {
+      duringCampaign: true,
+      onlyVerifiedEvents
+    })
     const currentLevel = await this.getCurrentLevel(
       ethAddress,
       onlyVerifiedEvents
@@ -200,10 +203,7 @@ class CampaignRules {
     const now = new Date()
     if (this.campaign.startDate > now) {
       return GrowthCampaignStatuses.Pending
-    } else if (
-      this.campaign.startDate < now &&
-      this.campaign.endDate > now
-    ) {
+    } else if (this.campaign.startDate < now && this.campaign.endDate > now) {
       //TODO: check if cap reached
       return GrowthCampaignStatuses.Active
     } else if (this.campaign.endDate < now) {
@@ -237,7 +237,7 @@ class Level {
 
   async getRewards(ethAddress, events) {
     const rewards = []
-    this.rules.forEach(async rule =>  {
+    this.rules.forEach(async rule => {
       const ruleReward = await rule.getRewards(ethAddress, events)
       rewards.push(...ruleReward)
     })
@@ -508,7 +508,6 @@ class MultiEventsRule extends BaseRule {
   }
 }
 
-
 /**
  * A rule for rewarding a referrer when their referees reaches a certain level.
  *
@@ -535,7 +534,7 @@ class ReferralRule extends BaseRule {
    * @returns {boolean}
    */
   async evaluate(ethAddress) {
-    return await this.getRewards(ethAddress).length > 0
+    return (await this.getRewards(ethAddress).length) > 0
   }
 
   /**
@@ -569,7 +568,10 @@ class ReferralRule extends BaseRule {
     }
 
     const rewards = []
-    const crules = new CampaignRules(this.campaign, JSON.parse(this.campaign.rules))
+    const crules = new CampaignRules(
+      this.campaign,
+      JSON.parse(this.campaign.rules)
+    )
 
     // Go thru each referee and check if they meet the referral reward conditions.
     const referees = await this._getReferees(ethAddress)
@@ -577,7 +579,9 @@ class ReferralRule extends BaseRule {
       // Check the referee is at or above required level.
       const refereeLevel = crules.getCurrentLevel(referee)
       if (refereeLevel < this.requiredLevel) {
-        logger.debug(`Referee ${referee} does not meet level requirement. skipping.`)
+        logger.debug(
+          `Referee ${referee} does not meet level requirement. skipping.`
+        )
         continue
       }
 
@@ -585,12 +589,16 @@ class ReferralRule extends BaseRule {
       // to prior to the campaign.
       const refereePriorLevel = crules.getPriorLevel(referee)
       if (refereePriorLevel >= this.requiredLevel) {
-        logger.debug(`Referee ${referee} reached level prior to campaign start. skipping`)
+        logger.debug(
+          `Referee ${referee} reached level prior to campaign start. skipping`
+        )
         continue
       }
 
       // Referral is valid. Referrer should get a reward for it.
-      logger.debug(`Referrer ${ethAddress} gets credit for referring ${referee}`)
+      logger.debug(
+        `Referrer ${ethAddress} gets credit for referring ${referee}`
+      )
       const reward = new ReferralReward(
         this.campaignId,
         this.levelId,
@@ -605,17 +613,19 @@ class ReferralRule extends BaseRule {
   }
 }
 
-const Fetcher = {
-  getAllCampaigns: async () => {
-    const campaigns = await db.GrowthCampaign.findAll({})
+/**
+ * Helper function that returns all campaign rules.
+ * @returns {Array<CampaignRules>}
+ */
+async function getAllCampaigns() {
+  const campaigns = await db.GrowthCampaign.findAll({})
 
-    return campaigns.map(
-      campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
-    )
-  }
+  return campaigns.map(
+    campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
+  )
 }
 
 module.exports = {
   CampaignRules,
-  Fetcher
+  getAllCampaigns
 }

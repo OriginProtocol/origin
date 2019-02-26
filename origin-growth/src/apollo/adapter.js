@@ -41,6 +41,17 @@ const eventTypeToActionType = eventType => {
 }
 
 /**
+ * Returns rewards earned from a specific rule
+ * @param {BaseRule} rule
+ * @param {Array<Reward>} rewards
+ * @returns {Array<reward>}
+ * @private
+ */
+const _rewardsForRule = (rule, rewards) => {
+  return rewards.filter(r => r.ruleId === rule.id)
+}
+
+/**
  * Formats the campaign object according to the Growth schema
  *
  * @returns {Object} - formatted object
@@ -48,16 +59,16 @@ const eventTypeToActionType = eventType => {
 const multiEventRuleApolloObject = async (
   rule,
   ethAddress,
+  rewards,
   events,
   currentUserLevel
 ) => {
-  const rewards = rule.getRewards(ethAddress, events)
-
+  const ruleRewards = _rewardsForRule(rule, rewards)
   return {
     // TODO: we need event types for MultiEventsRule
     type: eventTypeToActionType(rule.config.eventTypes[0]),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(rewards),
+    rewardEarned: sumUpRewards(ruleRewards),
     reward: rule.config.reward
   }
 }
@@ -70,49 +81,47 @@ const multiEventRuleApolloObject = async (
 const singleEventRuleApolloObject = async (
   rule,
   ethAddress,
+  rewards,
   events,
   currentUserLevel
 ) => {
-  const rewards = await rule.getRewards(ethAddress, events)
-  const objectToReturn = {
+  const ruleRewards = _rewardsForRule(rule, rewards)
+  return {
     type: eventTypeToActionType(rule.config.eventType),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(rewards),
+    rewardEarned: sumUpRewards(ruleRewards),
     reward: rule.config.reward
   }
-
-  if (objectToReturn.type === 'Referral') {
-    // TODO implement this
-    objectToReturn.rewardPending = rule.config.reward
-  }
-
-  return objectToReturn
 }
 
-const referralRuleApolloObject = async (ethAddress, events, currentUserLevel) => {
-
-  const rewards = await this.getRewards(ethAddress)
-
+const referralRuleApolloObject = async (
+  rule,
+  ethAddress,
+  rewards,
+  events,
+  currentUserLevel
+) => {
+  const ruleRewards = _rewardsForRule(rule, rewards)
   return {
     type: 'Referral',
     status: await this.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(rewards),
-    reward: this.config.reward
+    rewardEarned: sumUpRewards(ruleRewards),
+    reward: rule.config.reward
   }
 }
 
 /**
- * Formats the campaign object according to the Growth schema
- *
- * @returns {Object} - formatted object
+ * Formats the campaign object according to the Growth GraphQL schema.
+ * @param {CampaignRules} campaign
+ * @param {string} ethAddress - User's Eth address.
+ * @returns {Promise<{id: *, name: string, startDate: *, endDate: *, distributionDate: (where.distributionDate|{}), status: (Enum<GrowthCampaignStatuses>|Enum<GrowthActionStatus>), actions: any[], rewardEarned: {amount, currency}}>}
  */
 const campaignToApolloObject = async (campaign, ethAddress) => {
-  //TODO: change to true, true
-  //const events = this.getEvents(ethAddress, true, true)
-  const events = await campaign.getEvents(ethAddress, false, false)
+  const events = await campaign.getEvents(ethAddress)
   const levels = Object.values(campaign.levels)
   const rules = levels.flatMap(level => level.rules)
   const currentLevel = await campaign.getCurrentLevel(ethAddress, false)
+  const rewards = await campaign.getRewards(ethAddress)
 
   return {
     id: campaign.campaign.id,
@@ -128,6 +137,7 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
           return singleEventRuleApolloObject(
             rule,
             ethAddress,
+            rewards,
             events,
             currentLevel
           )
@@ -135,6 +145,7 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
           return multiEventRuleApolloObject(
             rule,
             ethAddress,
+            rewards,
             events,
             currentLevel
           )
@@ -142,6 +153,8 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
           return referralRuleApolloObject(
             rule,
             ethAddress,
+            rewards,
+            events,
             currentLevel
           )
       }),

@@ -5,7 +5,6 @@ const logger = require('../logger')
 const { GrowthCampaign } = require('./campaign')
 const { CampaignRules } = require('../rules/rules')
 
-
 class GrowthInvite {
   /**
    * Returns a list of pending rewards:
@@ -94,12 +93,12 @@ class GrowthInvite {
     }
 
     // Get list of referrals completed during the campaign by evaluating its rules.
-    const campaignRule = new Rule(campaign, JSON.parse(campaign.rules))
-    const rewardValue = campaignRule.getReferralRewardValue()
-    const rewards = await campaignRule.getRewards(ethAddress, false)
+    const crules = new CampaignRules(campaign, JSON.parse(campaign.rules))
+    const rewardValue = crules.getReferralRewardValue()
+    const rewards = await crules.getRewards(ethAddress, false)
     const completedInvites = rewards
       .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
-      .map(r => Invite._decorate(r, 'Completed')) // Decorate with extra info.
+      .map(r => GrowthInvite._decorate(r, 'Completed')) // Decorate with extra info.
 
     // We need to compute pending invites only if the campaign is active.
     let pendingInvites = []
@@ -107,12 +106,14 @@ class GrowthInvite {
     const isActive = campaign.startDate >= now && campaign.endDate <= now
     if (isActive) {
       const ignore = completedInvites.map(i => i.walletAddress)
-      const pendingRewards = await Invite._getPendingRewards(
+      const pendingRewards = await GrowthInvite._getPendingRewards(
         ethAddress,
         ignore,
         rewardValue
       )
-      pendingInvites = pendingRewards.map(r => Invite._decorate(r, 'Pending'))
+      pendingInvites = pendingRewards.map(r =>
+        GrowthInvite._decorate(r, 'Pending')
+      )
     }
 
     const allInvites = completedInvites.concat(pendingInvites)
@@ -178,6 +179,5 @@ class GrowthInvite {
     }
   }
 }
-
 
 module.exports = { GrowthInvite }

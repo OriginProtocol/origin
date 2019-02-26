@@ -2,7 +2,7 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 //const db = require('./db')
-const { Fetcher } = require('../rules/rules')
+const { getAllCampaigns } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
@@ -26,7 +26,7 @@ const resolvers = {
   },
   Query: {
     async campaigns(_, args) {
-      const campaigns = await Fetcher.getAllCampaigns()
+      const campaigns = await getAllCampaigns()
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
@@ -45,10 +45,10 @@ const resolvers = {
       return null
     },
     async invites(root, args) {
-      return Invite.getInvitesStatus(args.walletAddress, args.campaignId)
+      return GrowthInvite.getInvitesStatus(args.walletAddress, args.campaignId)
     },
     async inviteInfo(root, args) {
-      return await Invite.getReferrerInfo(args.code)
+      return await GrowthInvite.getReferrerInfo(args.code)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
