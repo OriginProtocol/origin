@@ -5,6 +5,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+
+const gitRevisionPlugin = new GitRevisionPlugin()
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -106,7 +109,10 @@ const config = {
       LINKER_HOST: 'localhost',
       DOCKER: false,
       ENABLE_GROWTH: false,
-      IPFS_SWARM: ''
+      IPFS_SWARM: '',
+      GIT_COMMIT_HASH: gitRevisionPlugin.commithash(),
+      GIT_BRANCH: gitRevisionPlugin.branch(),
+      BUILD_TIMESTAMP: +new Date()
     })
   ],
 
