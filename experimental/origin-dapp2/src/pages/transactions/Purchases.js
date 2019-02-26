@@ -181,6 +181,8 @@ require('react-styl')(`
         height: 260px
       .details
         flex: 1
+        display: flex
+        flex-direction: column
       .top
         display: flex
         align-items: flex-start
@@ -205,4 +207,10 @@ require('react-styl')(`
       .price
         font-weight: normal
         margin-top: 0.5rem
+        flex: 1
+      .actions
+        font-size: 12px
+        font-weight: normal
+        > a
+          margin-right: 1rem
 `)
