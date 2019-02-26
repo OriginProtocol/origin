@@ -104,8 +104,7 @@ class PhoneAttestation extends Component {
         <div className="instructions">Enter the code we sent you below</div>
         <div className="my-3 verification-code">
           <input
-            type="number"
-            pattern="\d*"
+            type="tel"
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
             placeholder="Verification code"

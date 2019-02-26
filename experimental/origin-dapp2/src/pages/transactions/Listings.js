@@ -13,6 +13,8 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import PageTitle from 'components/PageTitle'
 
+import WithdrawListing from './mutations/WithdrawListing'
+
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/UserListings'
 
@@ -35,7 +37,7 @@ class Listings extends Component {
           notifyOnNetworkStatusChange={true}
           skip={!this.props.wallet}
         >
-          {({ error, data, fetchMore, networkStatus }) => {
+          {({ error, data, fetchMore, networkStatus, refetch }) => {
             if (networkStatus === 1 || !this.props.wallet) {
               return <LoadingSpinner />
             } else if (error) {
@@ -118,6 +120,18 @@ class Listings extends Component {
                               <div className="price">
                                 <TokenPrice {...listing.price} />
                               </div>
+                              {listing.status !== 'active' ? null : (
+                                <div className="actions">
+                                  <Link
+                                    to={`/listings/${listing.id}/edit`}
+                                    children="Edit Listing"
+                                  />
+                                  <WithdrawListing
+                                    listing={listing}
+                                    refetch={refetch}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         ))}

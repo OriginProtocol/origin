@@ -5,18 +5,13 @@ import camelToDash from 'utils/camelToDash'
  * hostname with a list of non-whitelabel hostnames.
  */
 function isWhiteLabelHostname() {
+  const { hostname } = window.location
   const exceptionNeedles = [
-    'dapp.originprotocol.com',
-    'dapp.dev.originprotocol.com',
-    'dapp.staging.originprotocol.com',
-    'localhost',
-    '127.0.0.1'
+    /dapp2?\.((staging|dev)\.)?originprotocol\.com/,
+    /localhost/,
+    /127.0.0.1/
   ]
-  return (
-    exceptionNeedles.find(needle => {
-      return window.location.hostname.includes(needle)
-    }) === undefined
-  )
+  return !exceptionNeedles.some(needle => hostname.match(needle))
 }
 
 function applyConfiguration(config) {
