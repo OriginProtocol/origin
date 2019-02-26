@@ -88,7 +88,16 @@
   "3i2AJC": "목록 추가",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
-  "Kuqpt": "{shortNameDefault}",
+  "4FLcHL": {
+    "growth.jan2019.name": "January 2019 Campaign",
+    "growth.jan2019.short_name": "Jan 2019",
+    "growth.feb2019.name": "February 2019 Campaign",
+    "growth.feb2019.short_name": "Feb 2019",
+    "growth.mar2019.name": "March 2019 Campaign",
+    "growth.mar2019.short_name": "Mar 2019",
+    "growth.apr2019.name": "April 2019 Campaign",
+    "growth.apr2019.short_name": "Apr 2019"
+  },
   "1r15SU": "Airbnb 계정을 확인합니다",
   "4iptAy": "아래에 Airbnb 프로필 Url을 입력하세요.",
   "1jSLWC": "다른 사용자가 당신이 확인된 Airbnb 프로필을 가지고 있음을 알 수 있습니다.",
@@ -119,13 +128,5 @@
   "JDc0Z": "트위터",
   "3blg9A": "지금 게시",
   "edtCZ": "프로필을 확인하면 다른 사용자가 귀하가 진짜 사람이라는 것을 알게되고 Origin에서 성공적인 거래 기회가 증가합니다.",
-  "3xBWtA": "Verifying your profile",
-  "4xu11A": "Jan 2019",
-  "uXwd4": "January 2019 campaign",
-  "4Blta1": "Feb 2019",
-  "3uYByg": "February 2019 campaign",
-  "1xRHAa": "Mar 2019",
-  "4ua3Is": "March 2019 campaign",
-  "RBskH": "Apr 2019",
-  "4qPCOm": "April 2019 campaign"
+  "3xBWtA": "Verifying your profile"
 }

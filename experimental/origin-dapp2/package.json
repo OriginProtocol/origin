@@ -23,10 +23,9 @@
     "geth": "geth --nodiscover --datadir ./data/geth --maxpeers 0 --dev --rpc --ws --wsorigins=* --rpccorsdomain=* --rpcaddr=0.0.0.0 --wsaddr=0.0.0.0 --rpcvhosts=*",
     "fbt:manifest": "node -r @babel/register ../../node_modules/babel-plugin-fbt/bin/manifest --src src",
     "fbt:collect": "node -r @babel/register ../../node_modules/babel-plugin-fbt/bin/collectFBT --json-input --pretty < .src_manifest.json > .source_strings.json",
-    "fbt:add-external": "node -r @babel/register src/utils/addExternalTranslations --collect-file .source_strings.json --external-rules ./translations/.external_translations.json --output .source_strings.json",
     "fbt:translate": "node  -r @babel/register ../../node_modules/babel-plugin-fbt/bin/translate.js --translations translations/*.json --jenkins --pretty > .translated_fbts.json",
     "fbt:clean": "rm .enum_manifest.json .src_manifest.json source_strings.json src/translatedFbts.json 2&> /dev/null || exit 0",
-    "translate": "npm run fbt:manifest && npm run fbt:collect && npm run fbt:add-external && node scripts/convertTranslations && npm run fbt:translate && node scripts/splitTranslations"
+    "translate": "npm run fbt:manifest && npm run fbt:collect && node scripts/convertTranslations && npm run fbt:translate && node scripts/splitTranslations"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -54,8 +53,8 @@
     "origin-graphql": "^0.1.0",
     "origin-services": "^0.1.0",
     "prettier": "^1.16.3",
-    "query-string": "^6.2.0",
     "qrcode.react": "^0.8.0",
+    "query-string": "^6.2.0",
     "react": "^16.8.1",
     "react-apollo": "^2.4.1",
     "react-dom": "^16.8.1",
@@ -125,6 +124,7 @@
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-react": "^7.12.4",
     "file-loader": "^3.0.1",
+    "git-revision-webpack-plugin": "^3.0.3",
     "hdkey": "^1.1.1",
     "html-webpack-plugin": "^3.2.0",
     "ignore-loader": "^0.1.2",

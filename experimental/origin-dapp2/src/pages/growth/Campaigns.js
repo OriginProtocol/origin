@@ -11,6 +11,17 @@ import profileQuery from 'queries/Profile'
 import { Link } from 'react-router-dom'
 import AccountTokenBalance from 'queries/TokenBalance'
 
+const GrowthEnum = require('Growth$FbtEnum')
+
+const GrowthTranslation = ({ growth }) => {
+  console.log("DEBUG,", stringKey, GrowthEnum)
+  
+  return (
+    <fbt desc="growth">
+      <fbt:enum enum-range={GrowthEnum} value={growth} />
+    </fbt>
+  )}
+
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
   const completedIndicator =
@@ -22,7 +33,6 @@ function CampaignNavItem(props) {
   } else if (campaign.status === 'Pending') {
     statusClass = 'inactive'
   }
-  console.log(fbt("campaign.shortName.default", campaign.shortName.key))
 
   return (
     <a
@@ -38,9 +48,12 @@ function CampaignNavItem(props) {
           {completedIndicator && <img src="images/circular-check-button.svg" />}
         </div>
         <div className={`name ${selected ? 'active' : ''}`}>
-        {fbt(
-          fbt.param('shortNameDefault', campaign.shortName.default),
-          fbt.param('shortNameKey', campaign.shortName.key))
+        {GrowthEnum[campaign.shortNameKey] ? (
+          <GrowthTranslation stringKey={campaign.shortNameKey} />
+        ) : (
+          'Campaign'
+        )}
+
         }
         </div>
         {selected && <div className="select-bar" />}
@@ -257,7 +270,7 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const { startDate, endDate, status, rewardEarned, actions, name } = campaign
+  const { startDate, endDate, status, rewardEarned, actions, nameKey } = campaign
 
   let timeLabel = ''
   let subTitleText = ''
@@ -310,7 +323,7 @@ function Campaign(props) {
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">{name.default}</h1>
+              <h1 className="mb-2 pt-3">{nameKey}</h1>
               <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
               </a>

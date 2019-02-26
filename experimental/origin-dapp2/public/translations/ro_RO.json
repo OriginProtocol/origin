@@ -88,7 +88,16 @@
   "3i2AJC": "Adaugă un anunț",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
-  "Kuqpt": "{shortNameDefault}",
+  "4FLcHL": {
+    "growth.jan2019.name": "January 2019 Campaign",
+    "growth.jan2019.short_name": "Jan 2019",
+    "growth.feb2019.name": "February 2019 Campaign",
+    "growth.feb2019.short_name": "Feb 2019",
+    "growth.mar2019.name": "March 2019 Campaign",
+    "growth.mar2019.short_name": "Mar 2019",
+    "growth.apr2019.name": "April 2019 Campaign",
+    "growth.apr2019.short_name": "Apr 2019"
+  },
   "1r15SU": "Verificați-vă contul de Airbnb",
   "4iptAy": "Introduceţi Url-ul profilului Airbnb mai jos",
   "1jSLWC": "Ceilalți utilizatori vor ști că aveți un profil de Airbnb verificat.",
@@ -119,13 +128,5 @@
   "JDc0Z": "Twitter",
   "3blg9A": "Publică acum",
   "edtCZ": "Verificarea profilului permite altor utilizatori să știe că sunteți o persoană reală și crește șansele de tranzacții de succes pe Origine.",
-  "3xBWtA": "Verifying your profile",
-  "4xu11A": "Jan 2019",
-  "uXwd4": "January 2019 campaign",
-  "4Blta1": "Feb 2019",
-  "3uYByg": "February 2019 campaign",
-  "1xRHAa": "Mar 2019",
-  "4ua3Is": "March 2019 campaign",
-  "RBskH": "Apr 2019",
-  "4qPCOm": "April 2019 campaign"
+  "3xBWtA": "Verifying your profile"
 }
