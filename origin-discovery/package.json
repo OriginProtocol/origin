@@ -48,7 +48,9 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.js' 'devops/**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "npm run start:discovery",
     "start:listener": "per-env",
@@ -58,5 +60,9 @@
     "start:discovery:development": "nodemon src/apollo/app.js",
     "start:discovery:production": "node src/apollo/app.js",
     "test": "mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

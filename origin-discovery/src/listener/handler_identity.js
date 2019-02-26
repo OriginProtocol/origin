@@ -4,8 +4,10 @@ const logger = require('./logger')
 const db = require('../models')
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
-const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
-
+const {
+  AttestationServiceToEventType,
+  GrowthEvent
+} = require('origin-growth/src/resources/event')
 
 class IdentityEventHandler {
   constructor(config, origin) {
@@ -28,13 +30,13 @@ class IdentityEventHandler {
       'SELECT * FROM attestation WHERE eth_address=(:ethAddress) AND method=(:method) ORDER BY ID DESC LIMIT 1',
       {
         replacements: {
-            ethAddress: Web3.utils.toChecksumAddress(ethAddress),
-            method
+          ethAddress: Web3.utils.toChecksumAddress(ethAddress),
+          method
         },
         type: db.sequelize.QueryTypes.SELECT
       }
     )
-    return (attestations.length === 1) ? attestations[0].value : null
+    return attestations.length === 1 ? attestations[0].value : null
   }
 
   /**
@@ -44,27 +46,41 @@ class IdentityEventHandler {
    * @private
    */
   async _decorateUser(user) {
-    await Promise.all(user.attestations.map(async attestation => {
-      switch (attestation.service) {
-        case 'email':
-          user.email = await this._loadValueFromAttestation(user.address, 'EMAIL')
-          break
-        case 'phone':
-          user.phone = await this._loadValueFromAttestation(user.address, 'PHONE')
-          break
-        case 'twitter':
-          user.twitter = await this._loadValueFromAttestation(user.address, 'TWITTER')
-          break
-        case 'airbnb':
-          user.airbnb = await this._loadValueFromAttestation(user.address, 'AIRBNB')
-          break
-        case 'facebook':
-          // Note: we don't have access to the user's fbook id,
-          // only whether the account was verified or not.
-          user.facebookVerified = true
-          break
-      }
-    }))
+    await Promise.all(
+      user.attestations.map(async attestation => {
+        switch (attestation.service) {
+          case 'email':
+            user.email = await this._loadValueFromAttestation(
+              user.address,
+              'EMAIL'
+            )
+            break
+          case 'phone':
+            user.phone = await this._loadValueFromAttestation(
+              user.address,
+              'PHONE'
+            )
+            break
+          case 'twitter':
+            user.twitter = await this._loadValueFromAttestation(
+              user.address,
+              'TWITTER'
+            )
+            break
+          case 'airbnb':
+            user.airbnb = await this._loadValueFromAttestation(
+              user.address,
+              'AIRBNB'
+            )
+            break
+          case 'facebook':
+            // Note: we don't have access to the user's fbook id,
+            // only whether the account was verified or not.
+            user.facebookVerified = true
+            break
+        }
+      })
+    )
   }
 
   /**
@@ -111,8 +127,9 @@ class IdentityEventHandler {
   async _recordGrowthProfileEvent(user, blockInfo) {
     // Check profile is populated.
     const profile = user.profile
-    const validProfile = (profile.firstName.length > 0 || profile.lastName.length > 0) &&
-      (profile.avatar.length > 0)
+    const validProfile =
+      (profile.firstName.length > 0 || profile.lastName.length > 0) &&
+      profile.avatar.length > 0
     if (!validProfile) {
       return
     }
@@ -135,21 +152,23 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthAttestationEvents(user, blockInfo) {
-    await Promise.all(user.attestations.map(attestation => {
-      const eventType = AttestationServiceToEventType[attestation.service]
-      if (!eventType) {
-        logger.error(`Unrecognized attestation service received: ${attestation.service}. Skipping.`)
-        return
-      }
+    await Promise.all(
+      user.attestations.map(attestation => {
+        const eventType = AttestationServiceToEventType[attestation.service]
+        if (!eventType) {
+          logger.error(
+            `Unrecognized attestation service received: ${
+              attestation.service
+            }. Skipping.`
+          )
+          return
+        }
 
-      return GrowthEvent.insert(
-        logger,
-        user.address,
-        eventType,
-        null,
-        { blockInfo }
-      )
-    }))
+        return GrowthEvent.insert(logger, user.address, eventType, null, {
+          blockInfo
+        })
+      })
+    )
   }
 
   /**
@@ -195,7 +214,9 @@ class IdentityEventHandler {
         //    browser and clicks on an invite link from a different referrer.
         //  - referrer updates their profile which now contains
         //    different invite code from another referrer.
-        logger.error(`Referee ${referee} already referred by ${row.referrerEthAddress}`)
+        logger.error(
+          `Referee ${referee} already referred by ${row.referrerEthAddress}`
+        )
       }
       // Referral was already recorded. It could be an identity update,
       // or it's possible the listener is reprocessing data.
@@ -225,7 +246,9 @@ class IdentityEventHandler {
 
     const user = await this.origin.users.get(account)
     if (!user) {
-      logger.error(`Failed loading identity data for account ${account} - skipping indexing`)
+      logger.error(
+        `Failed loading identity data for account ${account} - skipping indexing`
+      )
       return
     }
     // Avatar can be large binary data. Clip it for logging purposes.
