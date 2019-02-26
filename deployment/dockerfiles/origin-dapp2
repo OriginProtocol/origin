@@ -1,15 +1,12 @@
+ARG GIT_COMMIT_HASH=dev
+ARG GIT_BRANCH=dev
+ARG NAMESPACE=dev
+
 FROM node:10 as build
 
 WORKDIR /app
 
-ARG DEPLOY_TAG
-ARG ENVKEY
-
-# Set environment variables. NODE_ENV is set to production to avoid installing
-# any dependencies that aren't necessary for the build. The DEPLOY_TAG is to
-# make the commit hash of the currently built version available in the DApp
-# info screen.
-ENV NODE_ENV=production DEPLOY_TAG=$DEPLOY_TAG
+ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH GIT_BRANCH=$GIT_BRANCH
 
 # Copy the necessary files for building origin-dapp
 COPY package*.json ./
@@ -32,11 +29,24 @@ COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
 
 RUN npm run build --prefix experimental/origin-dapp2
 
+# Conditional copy of config depending on NAMESPACE build arg using multi stage
+# builds
+FROM build as build-dev
 RUN mv /app/experimental/origin-dapp2/public/kovan.html \
 	/app/experimental/origin-dapp2/public/index.html
 
+FROM build as build-staging
+RUN mv /app/experimental/origin-dapp2/public/rinkeby.html \
+	/app/experimental/origin-dapp2/public/index.html
+
+FROM build as build-prod
+RUN mv /app/experimental/origin-dapp2/public/mainnet.html \
+	/app/experimental/origin-dapp2/public/index.html
+
+FROM build-${NAMESPACE} AS build-complete
+
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build /app/experimental/origin-dapp2/public /usr/share/nginx/html
+COPY --from=build-complete /app/experimental/origin-dapp2/public /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

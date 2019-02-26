@@ -36,7 +36,6 @@ const Configs = {
     providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmbNYwVLSLmaKmuA1R2v7VU9w1z3jxJVbTJNtstRU4TzPr',
     discovery: 'https://discovery.originprotocol.com',
     growth: 'http://growth.originprotocol.com',
     bridge: 'https://bridge.originprotocol.com',
@@ -47,6 +46,7 @@ const Configs = {
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
+    ipfsEventCache: 'QmSjXV4HRo39USnpzbE9cK5Qs989fAEsnv165bZxoJDWPg',
     tokens: [
       {
         id: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
@@ -71,14 +71,15 @@ const Configs = {
       }
     ],
     affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
-    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a',
+    linker: `https://linking.originprotocol.com`,
+    linkerWS: `wss://linking.originprotocol.com`
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
     providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    ipfsEventCache: 'QmdMTYdXtKHzhTHDuUmx4eGG372pwbK4sQptPtoS6q3LsK',
     discovery: 'https://discovery.staging.originprotocol.com',
     growth: 'http://growth.staging.originprotocol.com',
     bridge: 'https://bridge.staging.originprotocol.com',
@@ -87,6 +88,7 @@ const Configs = {
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
     V00_Marketplace_Epoch: '3086315',
+    ipfsEventCache: 'QmbmjqFhoQyBq27u9F969L15QivjZF9xo4P8DiV8xqgqTf',
     affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
     arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
     messaging: {
@@ -94,7 +96,9 @@ const Configs = {
         '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
       messagingNamespace: 'origin:staging',
       globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
-    }
+    },
+    linker: `https://linking.staging.originprotocol.com`,
+    linkerWS: `wss://linking.staging.originprotocol.com`
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -112,9 +116,11 @@ const Configs = {
     bridge: 'https://bridge.staging.originprotocol.com',
     OriginToken: '0xb0efa5A1f199B7562Dd4f34758497594797C05E9',
     V00_Marketplace: '0xaE145bE14b9369fE5DF917B58daDe2589ddB48C9',
+    ipfsEventCache: 'QmaXMXUws4mq6MQ114Pjqv25hhpYdS6P6cD1z4x5R2ZAja',
     V00_Marketplace_Epoch: '10329348',
     IdentityEvents: '0x967DB2Ed91000efA8d5Ce860d5A8B34a6BCfb6E2',
     IdentityEvents_Epoch: '10339753',
+    IdentityEvents_EventCache: 'QmQ5vJa5oFy9rj3E9aEtVb637G3xiJLnHFyAuwvwfj6XTN',
     affiliate: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C',
     arbitrator: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C'
   },

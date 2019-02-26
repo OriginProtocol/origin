@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 const db = require('../models')
 
-class Campaign {
+class GrowthCampaign {
   // Return all the past campaigns a user participated to.
   static async getPast() {
     const now = new Date()
@@ -14,4 +14,4 @@ class Campaign {
   }
 }
 
-module.exports = { Campaign }
+module.exports = { GrowthCampaign }

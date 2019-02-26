@@ -30,13 +30,17 @@ spec:
         image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.eventlistenerImage }}:{{ .Values.eventlistenerImageTag }}"
         imagePullPolicy: Always
         env:
-        - name: ENVKEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "eventlistener.fullname" . }}
-              key: ENVKEY
-        - name: NAMESPACE
-          value: {{ .Release.Namespace | quote }}
+          - name: ENVKEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "eventlistener.fullname" . }}
+                key: ENVKEY
+          - name: NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+        volumeMounts:
+          - name: gcloud-event-listener-sa-credentials
+            mountPath: /secrets/gcloud
+            readOnly: true
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",
@@ -53,3 +57,6 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
+        - name: gcloud-event-listener-sa-credentials
+          secret:
+            secretName: gcloud-event-listener-sa-credentials

@@ -1,11 +1,11 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
 
-const db = require('./db')
-const { Invite } = require('../resources/invite')
+//const db = require('./db')
 const { Fetcher } = require('../rules/rules')
 const { getLocationInfo } = require('../util/locationInfo')
-
+const { campaignToApolloObject } = require('./adapter')
+const { GrowthInvite } = require('../resources/invite')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -30,7 +30,8 @@ const resolvers = {
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
-          async campaign => await campaign.toApolloObject(args.walletAddress)
+          async campaign =>
+            await campaignToApolloObject(campaign, args.walletAddress)
         ),
         pageInfo: {
           endCursor: 'TODO implement',
@@ -45,6 +46,9 @@ const resolvers = {
     },
     async invites(root, args) {
       return Invite.getInvitesStatus(args.walletAddress, args.campaignId)
+    },
+    async inviteInfo(root, args) {
+      return await Invite.getReferrerInfo(args.code)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
@@ -72,9 +76,6 @@ const resolvers = {
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
       }
-    },
-    async inviteInfo(root, args) {
-      return await Invite.getReferrerInfo(args.code)
     }
   },
   Mutation: {

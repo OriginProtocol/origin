@@ -6,7 +6,7 @@ const { GrowthCampaign } = require('./campaign')
 const { CampaignRules } = require('../rules/rules')
 
 
-class Invite {
+class GrowthInvite {
   /**
    * Returns a list of pending rewards:
    *  - get list of referees from growth_referral. Note: for now we only care
@@ -180,4 +180,4 @@ class Invite {
 }
 
 
-module.exports = { Invite }
+module.exports = { GrowthInvite }

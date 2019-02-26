@@ -349,6 +349,10 @@ class MarketplaceEventHandler {
   emailWebhookEnabled() {
     return false
   }
+
+  gcloudPubsubEnabled() {
+    return this.config.marketplace
+  }
 }
 
 class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
@@ -379,7 +383,7 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
       throw new Error(`ListingIpfs and Id mismatch: ${listingId} !== ${listing.creator.listing.createDate}`)
     }
 
-    if(listing.creator != offer.buyer) 
+    if(listing.creator != offer.buyer)
     {
       if(listing.creator != offer.seller)
       {
@@ -391,7 +395,7 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
         throw new Error(`listing signature does not match seller ${listing.seller}.`)
       }
     }
-    
+
     let seller
     let buyer
     if (web3.utils.toBN(offer.seller) != 0)
