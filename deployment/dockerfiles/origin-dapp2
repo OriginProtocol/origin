@@ -1,12 +1,20 @@
-ARG GIT_COMMIT_HASH=dev
-ARG GIT_BRANCH=dev
 ARG NAMESPACE=dev
 
 FROM node:10 as build
 
+ARG GIT_COMMIT_HASH=dev
+ARG GIT_BRANCH=dev
+ARG ENVKEY
+
 WORKDIR /app
 
 ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH GIT_BRANCH=$GIT_BRANCH
+
+# Install envkey-source
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
 
 # Copy the necessary files for building origin-dapp
 COPY package*.json ./
@@ -27,7 +35,7 @@ RUN npm install --unsafe-perm
 
 COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
 
-RUN npm run build --prefix experimental/origin-dapp2
+RUN eval $(envkey-source) && npm run build --prefix experimental/origin-dapp2
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds
