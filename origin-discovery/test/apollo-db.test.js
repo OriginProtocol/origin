@@ -1,7 +1,11 @@
 const chai = require('chai')
 
 const db = require('../src/models')
-const { getListing, getListingsById, getListingsBySeller } = require('../src/apollo/db')
+const {
+  getListing,
+  getListingsById,
+  getListingsBySeller
+} = require('../src/apollo/db')
 
 const expect = chai.expect
 

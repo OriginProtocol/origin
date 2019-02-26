@@ -16,15 +16,18 @@ try {
 const http = require('http')
 const https = require('https')
 const readline = require('readline')
-const { groupBy, mapValues } = require('./../../origin-js/src/utils/arrayFunctions.js')
+const {
+  groupBy,
+  mapValues
+} = require('./../../origin-js/src/utils/arrayFunctions.js')
 
 // Configuration
 let host = 'localhost'
 let port = '9200'
 if (process.env.ELASTICSEARCH_HOST) {
   const splits = process.env.ELASTICSEARCH_HOST.split(':')
-  host=splits[0]
-  port=splits[1]
+  host = splits[0]
+  port = splits[1]
 }
 const isHttps = false
 
@@ -133,8 +136,7 @@ function printInteractiveUsage() {
 4 delete alias
 5 delete index
 6 reindex
-9 show usage`
-  )
+9 show usage`)
 }
 
 async function showIndexInfo() {
@@ -143,7 +145,7 @@ async function showIndexInfo() {
 
   /* Gives alias output where each index has a list of its aliases. Example:
    * { listingsIndex: [ 'listings', 'listingsNew' ] }
-   * where listings & listingsNew are aliases. 
+   * where listings & listingsNew are aliases.
    */
   const aliases = mapValues(
     groupBy(
@@ -171,16 +173,16 @@ async function showIndexInfo() {
   console.log(
     '\x1b[45m%s\x1b[0m',
     'Index name'.padEnd(paddingSize) +
-    'Document Count'.padEnd(paddingSize) +
-    'Aliases'.padEnd(paddingSize)
+      'Document Count'.padEnd(paddingSize) +
+      'Aliases'.padEnd(paddingSize)
   )
   indexes.forEach((indexName, position) => {
     const alias =
       aliases[indexName] === undefined ? '' : aliases[indexName].join(',')
     console.log(
       indexName.padEnd(paddingSize) +
-      docCounts[position].toString().padEnd(paddingSize) +
-      alias
+        docCounts[position].toString().padEnd(paddingSize) +
+        alias
     )
   })
 }
@@ -195,16 +197,12 @@ async function createIndex() {
 }
 
 async function createIndexWithName(indexName) {
-  return await executePayloadRequest(
-    indexName,
-    JSON.stringify(index),
-    'PUT'
-  )
+  return await executePayloadRequest(indexName, JSON.stringify(index), 'PUT')
 }
 
-async function validateCliResponse(callback, args, validationPredicate){
+async function validateCliResponse(callback, args, validationPredicate) {
   const response = await callback(...args)
-  if (validationPredicate(response)){
+  if (validationPredicate(response)) {
     return
   }
   console.error('Unexpected repsonse: ', response)
@@ -271,33 +269,24 @@ async function deleteAlias() {
 
 let inputResolveCallback = null
 async function waitForInput() {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     inputResolveCallback = resolve
   })
 }
 
-(async () => {
+;(async () => {
   if (process.argv[2] === 'createIndex' && process.argv.length === 4) {
     const indexName = process.argv[3]
-    await validateCliResponse(
-      createIndexWithName,
-      [indexName],
-      (response) => {
-        return JSON.parse(response).acknowledged === true
-      }
-    )
+    await validateCliResponse(createIndexWithName, [indexName], response => {
+      return JSON.parse(response).acknowledged === true
+    })
     console.log(`Index ${indexName} created!`)
     process.exit(1)
-  }
-  else if (process.argv[2] === 'deleteIndex' && process.argv.length === 4) {
+  } else if (process.argv[2] === 'deleteIndex' && process.argv.length === 4) {
     const indexName = process.argv[3]
-    await validateCliResponse(
-      deleteIndexWithName,
-      [indexName],
-      (response) => {
-        return JSON.parse(response).acknowledged === true
-      }
-    )
+    await validateCliResponse(deleteIndexWithName, [indexName], response => {
+      return JSON.parse(response).acknowledged === true
+    })
     console.log(`Index ${indexName} deleted!`)
     process.exit(1)
   }
