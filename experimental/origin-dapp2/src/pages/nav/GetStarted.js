@@ -8,7 +8,11 @@ class GetStarted extends Component {
     return (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
-          <a className="nav-link" href="#" onClick={() => this.setState({ open: true })}>
+          <a
+            className="nav-link"
+            href="#"
+            onClick={() => this.setState({ open: true })}
+          >
             Get Started
           </a>
           {!this.state.open ? null : <MobileLinkerCode />}
