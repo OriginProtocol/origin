@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "L'app decentralizzata di Origin consente agli acquirenti e ai venditori di effettuare transazioni senza intermediari utilizzando la blockchain di Ethereum e IPFS.",
-  "3dlcbL": "Visita il nostro sito web",
-  "421TH8": "Visita il nostro Github",
+  "45kim7": "Visita il nostro sito web",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "Acquisto",
   "3i2AJC": "Aggiungi un annuncio",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "Verifica il tuo Account Airbnb",
   "4iptAy": "Inserisci Url del profilo di Airbnb qui sotto",
   "1jSLWC": "Altri utenti sapranno che hai un profilo di Airbnb verificato.",
@@ -95,6 +96,11 @@
   "47VMoo": "Vai al sito Web di Airbnb, modifica il tuo profilo e incolla il seguente testo nella descrizione del profilo.",
   "4ppTCb": "Continua dopo che il codice di conferma è inserito nel tuo profilo di Airbnb.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "Twitter",
   "3blg9A": "Pubblica Ora",
   "edtCZ": "La verifica del tuo profilo consente ad altri utenti di sapere che sei una persona reale e aumenta le possibilità di transazioni di successo su Origin.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
+import { fbt } from 'fbt-runtime'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
@@ -21,6 +22,7 @@ function CampaignNavItem(props) {
   } else if (campaign.status === 'Pending') {
     statusClass = 'inactive'
   }
+  console.log(fbt("campaign.shortName.default", campaign.shortName.key))
 
   return (
     <a
@@ -36,7 +38,10 @@ function CampaignNavItem(props) {
           {completedIndicator && <img src="images/circular-check-button.svg" />}
         </div>
         <div className={`name ${selected ? 'active' : ''}`}>
-          {campaign.name}
+        {fbt(
+          fbt.param('shortNameDefault', campaign.shortName.default),
+          fbt.param('shortNameKey', campaign.shortName.key))
+        }
         </div>
         {selected && <div className="select-bar" />}
       </div>
@@ -305,7 +310,7 @@ function Campaign(props) {
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">{name}</h1>
+              <h1 className="mb-2 pt-3">{name.default}</h1>
               <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
               </a>

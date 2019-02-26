@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "แอ็พพลิเคชันการกระจายข้อมูล Origin ช่วยให้ผู้ซื้อและผู้ขายสามารถทำธุรกรรมได้โดยไม่ต้องหาพ่อค้าคนกลางเช่าโดยใช้ Ethereum blockchain และ IPFS",
-  "3dlcbL": "เยี่ยมชมเว็บไซต์ของเรา",
-  "421TH8": "เยี่ยมชม Github ของเรา",
+  "45kim7": "เยี่ยมชมเว็บไซต์ของเรา",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "การซื้อ",
   "3i2AJC": "เพิ่มรายการ",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "ยืนยันบัญชี Airbnb ของคุณ",
   "4iptAy": "ป้อน Url โปรไฟล์ Airbnb ด้านล่าง",
   "1jSLWC": "ผู้ใช้รายอื่นจะทราบว่าคุณมีโปรไฟล์ Airbnb ที่ได้รับการยืนยันแล้ว",
@@ -95,6 +96,11 @@
   "47VMoo": "ไปที่เว็บไซต์ Airbnb แก้ไขโปรไฟล์ของคุณและวางข้อความต่อไปนี้ลงในรายละเอียดโปรไฟล์",
   "4ppTCb": "ดำเนินการต่อเมื่อป้อนรหัสยืนยันในโปรไฟล์ Airbnb ของคุณแล้ว",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "พูดเบาและรวดเร็ว",
   "3blg9A": "เผยแพร่เลย",
   "edtCZ": "การยืนยันโปรไฟล์ช่วยให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

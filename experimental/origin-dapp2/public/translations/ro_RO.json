@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Aplicația de origine descentralizată permite cumpărătorilor și vânzătorilor să efectueze tranzacții fără intermediari care caută chirie utilizând blocul Ethereum și IPFS.",
-  "3dlcbL": "Vizitați site-ul nostru",
-  "421TH8": "Vizitați Github",
+  "45kim7": "Vizitați site-ul nostru",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "Cumparare",
   "3i2AJC": "Adaugă un anunț",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "Verificați-vă contul de Airbnb",
   "4iptAy": "Introduceţi Url-ul profilului Airbnb mai jos",
   "1jSLWC": "Ceilalți utilizatori vor ști că aveți un profil de Airbnb verificat.",
@@ -95,6 +96,11 @@
   "47VMoo": "Navigați către site-ul Airbnb, editați-vă profilul si copiați următorul text in descrierea profilului dumneavoastră.",
   "4ppTCb": "Continua după ce codul de confirmare este introdus în profilul Airbnb.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "Twitter",
   "3blg9A": "Publică acum",
   "edtCZ": "Verificarea profilului permite altor utilizatori să știe că sunteți o persoană reală și crește șansele de tranzacții de succes pe Origine.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

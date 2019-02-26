@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Ứng dụng phi tập trung nguồn gốc cho phép người mua và người bán giao dịch mà không cần thuê trung gian sử dụng blockchain Ethereum và IPFS.",
-  "3dlcbL": "Truy cập trang web của chúng tôi",
-  "421TH8": "Ghé thăm Github của chúng tôi",
+  "45kim7": "Truy cập trang web của chúng tôi",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "Đang mua",
   "3i2AJC": "Thêm danh sách",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "Xác minh tài khoản Airbnb của bạn",
   "4iptAy": "Nhập Url hồ sơ Airbnb bên dưới",
   "1jSLWC": "Những người dùng khác sẽ biết rằng bạn có một hồ sơ Airbnb đã được xác minh.",
@@ -95,6 +96,11 @@
   "47VMoo": "Truy cập trang web Airbnb, chỉnh sửa tiểu sử của bạn và dán văn bản sau vào mô tả hồ sơ của mình.",
   "4ppTCb": "Tiếp tục một khi mã xác nhận được đưa vào hồ sơ Airbnb của bạn.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "Twitter",
   "3blg9A": "Xuất bản ngay",
   "edtCZ": "Việc xác minh tiểu sử của bạn cho phép người dùng khác biết rằng bạn là người thực và làm tăng cơ hội giao dịch thành công trên Nguồn gốc.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

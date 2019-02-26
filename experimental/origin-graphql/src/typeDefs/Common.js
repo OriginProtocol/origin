@@ -4,6 +4,14 @@ const Price = `
     amount: String
   }
 `
+
+const TranslatedString = `
+  type TranslatedString {
+    key: String!
+    default: String!
+  }
+`
+
 const PageInfo = `
   type PageInfo {
     endCursor: String
@@ -13,4 +21,4 @@ const PageInfo = `
   }
 `
 
-module.exports = { PageInfo, Price }
+module.exports = { PageInfo, Price, TranslatedString }

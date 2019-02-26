@@ -45,6 +45,7 @@
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
+    "fixtures": "node src/util/fixtures.js",
     "start": "npm run start:growth",
     "start:growth": "per-env",
     "start:growth:development": "nodemon src/apollo/app.js",

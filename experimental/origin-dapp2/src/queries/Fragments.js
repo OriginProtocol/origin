@@ -149,7 +149,14 @@ export default {
     basic: gql`
       fragment basicCampaignFields on GrowthCampaign {
         id
-        name
+        name {
+          key
+          default
+        }
+        shortName {
+          key
+          default
+        }
         startDate
         endDate
         distributionDate

@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS.",
-  "3dlcbL": "Visit our Website",
-  "421TH8": "Visit our GitHub",
+  "45kim7": "Learn More About Origin",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "Buy",
   "3i2AJC": "Add Listing",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "Verify your Airbnb account",
   "4iptAy": "Enter Airbnb profile URL below",
   "1jSLWC": "Other users will know that you have a verified Airbnb profile and your user id will be published on the blockchain.",
@@ -95,6 +96,11 @@
   "47VMoo": "Go to the Airbnb website, edit your profile and paste the following text into profile description:",
   "4ppTCb": "Continue once the confirmation code is entered in your Airbnb profile.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} LISTINGS",
     "_1": "1 LISTING"
@@ -113,5 +119,13 @@
   "JDc0Z": "Twitter",
   "3blg9A": "Publish Now",
   "edtCZ": "{=Verifying your profile} allows other users to know that you are a real person and increases the chances of successful transactions on Origin.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

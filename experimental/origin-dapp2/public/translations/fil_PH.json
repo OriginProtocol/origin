@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Ang Pinagmulan ng desentralisadong app ay nagbibigay-daan sa mga mamimili at nagbebenta na mag-transact nang walang renta-naghahanap ng mga middleman gamit ang Ethereum blockchain at IPFS.",
-  "3dlcbL": "Bisitahin ang aming Website",
-  "421TH8": "Bisitahin ang aming Github",
+  "45kim7": "Bisitahin ang aming Website",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "Bumibili",
   "3i2AJC": "Magdagdag ng listahan",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "I-verify ang iyong Airbnb account",
   "4iptAy": "Ilagay ang Airbnb profile Url sa ibaba",
   "1jSLWC": "Malalaman ng iba pang mga user na mayroon kang isang na-verify na profile ng Airbnb.",
@@ -95,6 +96,11 @@
   "47VMoo": "Magpunta sa website ng Airbnb, i-edit ang iyong profile at ilagay ang sumusunod na teksto sa profile description.",
   "4ppTCb": "Magpatuloy kapag nailagay na ang confirmation code sa iyong profile ng Airbnb.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "Twitter",
   "3blg9A": "I-publish na ngayon",
   "edtCZ": "Ang pag-verify ng iyong profile ay nagbibigay-daan sa ibang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

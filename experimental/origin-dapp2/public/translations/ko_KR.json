@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Origin 분산 앱을 사용하면 구매자와 판매자가 Ethereum 블록 체인과 IPFS를 사용하여 임대료를 찾는 중개인없이 거래 할 수 있습니다.",
-  "3dlcbL": "우리 홈페이지에 방문해주세요",
-  "421TH8": "우리 Github 방문",
+  "45kim7": "우리 홈페이지에 방문해주세요",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "구매",
   "3i2AJC": "목록 추가",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "Airbnb 계정을 확인합니다",
   "4iptAy": "아래에 Airbnb 프로필 Url을 입력하세요.",
   "1jSLWC": "다른 사용자가 당신이 확인된 Airbnb 프로필을 가지고 있음을 알 수 있습니다.",
@@ -95,6 +96,11 @@
   "47VMoo": "Airbnb 웹사이트로 이동하여 프로필 수정하기에서 다음의 문구를 프로필 설명란에 붙여넣기 하십시오.",
   "4ppTCb": "당신의 Airbnb 프로필에 확인 코드를 입력한 후 계속합니다.",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "트위터",
   "3blg9A": "지금 게시",
   "edtCZ": "프로필을 확인하면 다른 사용자가 귀하가 진짜 사람이라는 것을 알게되고 Origin에서 성공적인 거래 기회가 증가합니다.",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

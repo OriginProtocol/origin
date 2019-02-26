@@ -48,13 +48,15 @@ services:
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
-      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./experimental/origin-validator:/app/experimental/origin-validator/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/
       - ./origin-notifications/:/app/origin-notifications/
       - ./origin-growth/:/app/origin-growth/
       - ./origin-token/:/app/origin-token/
+    # Required by the dapp2 translation plugin
+      - ./origin-dapp/translations:/app/origin-dapp/translations
     # Exclude all node_modules
       - /app/experimental/origin-dapp2/node_modules/
       - /app/experimental/origin-services/node_modules/

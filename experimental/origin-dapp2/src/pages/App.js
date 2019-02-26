@@ -66,7 +66,8 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
     const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
-    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
+    //const enableGrowth = process.env.ENABLE_GROWTH === 'true'
+    const enableGrowth = true
     return (
       <>
         <BetaBanner />

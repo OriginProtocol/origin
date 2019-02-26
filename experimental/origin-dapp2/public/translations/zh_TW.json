@@ -82,12 +82,13 @@
   "3tmHza": "Unnamed User",
   "48NbPX": "Read More",
   "1VUOGf": "Origin分散式應用程序允許買家和賣家使用以太坊區塊鍊和IPFS進行交易而無需尋租中間商。",
-  "3dlcbL": "訪問我們的網站",
-  "421TH8": "訪問我們的Github",
+  "45kim7": "訪問我們的網站",
+  "2CIGBu": "Create Your Own Marketplace",
   "1xF0Sp": "購買",
   "3i2AJC": "新增刊登",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
+  "Kuqpt": "{shortNameDefault}",
   "1r15SU": "驗証你的Airbnb帳號",
   "4iptAy": "在下面輸入 Airbnb 檔案 Url",
   "1jSLWC": "其他使用者將知道您有一個經過驗證的 Airbnb 設定檔。",
@@ -95,6 +96,11 @@
   "47VMoo": "前往 Airbnb 網站, 編輯您的個人資料, 並將以下文本粘貼到設定檔描述中。",
   "4ppTCb": "在 Airbnb 設定檔中輸入確認代碼後繼續。",
   "4mIku4": "All",
+  "62EcI": "No search results found",
+  "49IFWc": "Your marketplace doesn't have any listings yet",
+  "2Vj5Zk": "You can create listings yourself or invite sellers to join your platform!",
+  "2Qfyq": "Create a Listing",
+  "4u7nzi": "No listings found",
   "1tebgy": {
     "*": "{number} Listings",
     "_1": "1 Listing"
@@ -113,5 +119,13 @@
   "JDc0Z": "推特",
   "3blg9A": "立即發佈",
   "edtCZ": "驗證您的個人資料允許其他用戶知道您是真人並且增加了在Origin上成功交易的機會。",
-  "3xBWtA": "Verifying your profile"
+  "3xBWtA": "Verifying your profile",
+  "4xu11A": "Jan 2019",
+  "uXwd4": "January 2019 campaign",
+  "4Blta1": "Feb 2019",
+  "3uYByg": "February 2019 campaign",
+  "1xRHAa": "Mar 2019",
+  "4ua3Is": "March 2019 campaign",
+  "RBskH": "Apr 2019",
+  "4qPCOm": "April 2019 campaign"
 }

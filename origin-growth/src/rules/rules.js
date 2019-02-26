@@ -207,7 +207,14 @@ class Campaign {
 
     return {
       id: this.campaign.id,
-      name: this.campaign.name,
+      name: {
+        key: this.campaign.nameKey,
+        default: this.campaign.nameDefaultText
+      },
+      shortName: {
+        key: this.campaign.shortNameKey,
+        default: this.campaign.shortNameDefaultText
+      },
       startDate: this.campaign.startDate,
       endDate: this.campaign.endDate,
       distributionDate: this.campaign.distributionDate,
