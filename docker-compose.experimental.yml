@@ -48,7 +48,7 @@ services:
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
-      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./experimental/origin-validator:/app/experimental/origin-validator/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/

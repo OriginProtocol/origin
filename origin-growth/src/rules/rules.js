@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize')
-const BigNumber = require('bignumber.js')
 
 const db = require('../models')
 const {
@@ -11,46 +10,6 @@ const {
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
-
-const sumUpRewards = rewards => {
-  if (rewards === null || rewards.length === 0) {
-    return null
-  }
-
-  const totalReward = rewards.reduce((first, second) => {
-    if (first.currency !== second.currency)
-      throw new Error(
-        `At least two rewards have different currencies. ${first.currency} ${
-          second.currency
-        }`
-      )
-    return {
-      amount: BigNumber(first.amount).plus(BigNumber(second.amount)),
-      currency: first.currency
-    }
-  })
-
-  return {
-    amount: totalReward.amount.toString(),
-    currency: totalReward.currency
-  }
-}
-
-const eventTypeToActionType = eventType => {
-  const eventToActionType = {
-    ProfilePublished: 'Profile',
-    EmailAttestationPublished: 'Email',
-    FacebookAttestationPublished: 'Facebook',
-    AirbnbAttestationPublished: 'Airbnb',
-    TwitterAttestationPublished: 'Twitter',
-    PhoneAttestationPublished: 'Phone',
-    RefereeSignedUp: 'Referral',
-    ListingCreated: 'ListingCreated',
-    ListingPurchased: 'ListingPurchased'
-  }
-
-  return eventToActionType[eventType]
-}
 
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
@@ -189,35 +148,6 @@ class Campaign {
       return GrowthCampaignStatuses.Completed
     } else {
       throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
-    }
-  }
-
-  /**
-   * Formats the campaign object according to the Growth schema
-   *
-   * @returns {Object} - formatted object
-   */
-  async toApolloObject(ethAddress) {
-    //TODO: change to true, true
-    //const events = this.getEvents(ethAddress, true, true)
-    const events = await this.getEvents(ethAddress, false, false)
-    const levels = Object.values(this.levels)
-    const rules = levels.flatMap(level => level.rules)
-    const currentLevel = await this.getCurrentLevel(ethAddress, false)
-
-    return {
-      id: this.campaign.id,
-      name: this.campaign.name,
-      startDate: this.campaign.startDate,
-      endDate: this.campaign.endDate,
-      distributionDate: this.campaign.distributionDate,
-      status: this.getStatus(),
-      actions: rules
-        .filter(rule => rule.isVisible())
-        .map(rule => rule.toApolloObject(ethAddress, events, currentLevel)),
-      rewardEarned: sumUpRewards(
-        levels.flatMap(level => level.getRewards(ethAddress, events))
-      )
     }
   }
 }
@@ -380,13 +310,6 @@ class BaseRule {
       return GrowthActionStatus.Active
     }
   }
-
-  /**
-   * classes extending this one should implement this method
-   */
-  toApolloObject() {
-    throw new Error('Not implemented')
-  }
 }
 
 /**
@@ -430,28 +353,6 @@ class SingleEventRule extends BaseRule {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
-  }
-
-  /**
-   * Formats the campaign object according to the Growth schema
-   *
-   * @returns {Object} - formatted object
-   */
-  toApolloObject(ethAddress, events, currentUserLevel) {
-    const rewards = this.getRewards(ethAddress, events)
-    const objectToReturn = {
-      type: eventTypeToActionType(this.config.eventType),
-      status: this.getStatus(ethAddress, events, currentUserLevel),
-      rewardEarned: sumUpRewards(rewards),
-      reward: this.config.reward
-    }
-
-    if (objectToReturn.type === 'Referral') {
-      // TODO implement this
-      objectToReturn.rewardPending = this.config.reward
-    }
-
-    return objectToReturn
   }
 }
 
@@ -531,23 +432,6 @@ class MultiEventsRule extends BaseRule {
   evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
-  }
-
-  /**
-   * Formats the campaign object according to the Growth schema
-   *
-   * @returns {Object} - formatted object
-   */
-  toApolloObject(ethAddress, events, currentUserLevel) {
-    const rewards = this.getRewards(ethAddress, events)
-
-    return {
-      // TODO: we need event types for MultiEventsRule
-      type: eventTypeToActionType(this.config.eventTypes[0]),
-      status: this.getStatus(ethAddress, events, currentUserLevel),
-      rewardEarned: sumUpRewards(rewards),
-      reward: this.config.reward
-    }
   }
 }
 
