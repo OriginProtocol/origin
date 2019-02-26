@@ -42,7 +42,10 @@ class Step1 extends Component {
         <div
           key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-          onClick={() => this.setState({ category: id, subCategory: '' })}
+          onClick={e => {
+            if (e.target.tagName == 'SELECT') return
+            this.setState({ category: id, subCategory: '' })
+          }}
         >
           <div className="title">{title}</div>
           {!active ? null : (
