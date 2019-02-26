@@ -1,8 +1,9 @@
 const BigNumber = require('bignumber.js')
+const { GrowthInvite } = require('../resources/invite')
 
-const sumUpRewards = rewards => {
+const sumUpRewards = (rewards, currency) => {
   if (rewards === null || rewards.length === 0) {
-    return null
+    return { amount: '0', currency }
   }
 
   const totalReward = rewards.reduce((first, second) => {
@@ -68,7 +69,7 @@ const multiEventRuleApolloObject = async (
     // TODO: we need event types for MultiEventsRule
     type: eventTypeToActionType(rule.config.eventTypes[0]),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(ruleRewards),
+    rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward
   }
 }
@@ -89,7 +90,7 @@ const singleEventRuleApolloObject = async (
   return {
     type: eventTypeToActionType(rule.config.eventType),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(ruleRewards),
+    rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward
   }
 }
@@ -101,13 +102,12 @@ const referralRuleApolloObject = async (
   events,
   currentUserLevel
 ) => {
-  const ruleRewards = _rewardsForRule(rule, rewards)
-  return {
-    type: 'Referral',
-    status: await this.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(ruleRewards),
-    reward: rule.config.reward
-  }
+  const status = await rule.getStatus(ethAddress, events, currentUserLevel)
+  const referralsInfo = await GrowthInvite.getReferralsInfo(
+    ethAddress,
+    rule.campaignId
+  )
+  return Object.assign({ type: 'Referral', status }, referralsInfo)
 }
 
 /**
@@ -158,9 +158,7 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
             currentLevel
           )
       }),
-    rewardEarned: sumUpRewards(
-      levels.flatMap(level => level.getRewards(ethAddress, events))
-    )
+    rewardEarned: sumUpRewards(rewards, campaign.campaign.currency)
   }
 }
 

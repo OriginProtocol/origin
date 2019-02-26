@@ -145,9 +145,8 @@ module.exports =
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
-    campaigns(first: Int, after: String): GrowthCampaignConnection
-    campaign(id: String): GrowthCampaign
-    invites(walletAddress: ID!, campaignId: Int!): ReferralAction
+    campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
+    campaign(id: String, walletAddress: ID!): GrowthCampaign
     inviteInfo(code: String): InviteInfo
     isEligible: EligibilityInfo
   }

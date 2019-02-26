@@ -1,3 +1,5 @@
+const BigNumber = require('bignumber.js')
+
 const db = require('../models')
 const db2 = require('origin-discovery/src/models')
 const logger = require('../logger')
@@ -37,8 +39,7 @@ class GrowthInvite {
       // TODO(franck): for a campaign for which rewards have already been
       // distributed, it could be faster to load the data from the
       // growth_reward table as opposed to recalculating the rules.
-      const rules = new CampaignRules(campaign, JSON.parse(campaign.rules))
-      const rewards = await rules.getRewards(referrer, false)
+      const rewards = await campaign.getRewards(referrer, false)
       // Get list of addresses for referees for which referral was completed
       // during that campaign.
       const referees = rewards
@@ -83,18 +84,18 @@ class GrowthInvite {
     }
   }
 
-  // Returns pending and completed invites for a campaign.
-  //
-  static async getInvitesStatus(ethAddress, campaignId) {
+  // Returns information about pending and completed referrals for a campaign
+  static async getReferralsInfo(ethAddress, campaignId) {
     // Load the campaign.
-    const campaign = db.GrowthCampaign.findOne({ where: { id: campaignId } })
+    const campaign = await db.GrowthCampaign.findOne({
+      where: { id: campaignId }
+    })
     if (!campaign) {
       throw new Error('Failed loading campaign with id ${campaignId}')
     }
 
     // Get list of referrals completed during the campaign by evaluating its rules.
     const crules = new CampaignRules(campaign, JSON.parse(campaign.rules))
-    const rewardValue = crules.getReferralRewardValue()
     const rewards = await crules.getRewards(ethAddress, false)
     const completedInvites = rewards
       .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
@@ -119,12 +120,14 @@ class GrowthInvite {
     const allInvites = completedInvites.concat(pendingInvites)
 
     // Calculate total rewards earned and pending.
-    const earnedAmount = rewardValue.amount.times(completedInvites.length)
-    const pendingAmount = rewardValue.amount.times(pendingInvites.length)
+    const rewardValue = crules.getReferralRewardValue()
+    const rewardAmount = rewardValue
+      ? BigNumber(rewardValue.amount)
+      : BigNumber(0)
+    const earnedAmount = rewardAmount.times(completedInvites.length)
+    const pendingAmount = rewardAmount.times(pendingInvites.length)
 
     return {
-      type: 'referral',
-      status: isActive ? 'active' : 'completed', // FIXME: use Domen's campaign status method
       rewardEarned: {
         amount: earnedAmount.toFixed(),
         currency: campaign.currency
@@ -144,7 +147,7 @@ class GrowthInvite {
           hasPreviousPage: false,
           startCursor: null
         },
-        totalCount: allInvites.length()
+        totalCount: allInvites.length
       }
     }
   }
@@ -152,7 +155,7 @@ class GrowthInvite {
   // Returns referrer's information based on an invite code.
   static async getReferrerInfo(code) {
     // Lookup the code.
-    const inviteCode = await db.InviteCode.findOne({ where: { code } })
+    const inviteCode = await db.GrowthInviteCode.findOne({ where: { code } })
     if (!inviteCode) {
       throw new Error('Invalid invite code')
     }

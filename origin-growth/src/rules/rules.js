@@ -59,8 +59,8 @@ class CampaignRules {
    */
   getReferralRewardValue() {
     // Go thru each rule and check if it is of type Referral.
-    for (const level of this.levels) {
-      for (const rule of level.rules) {
+    for (let i = 0; i < this.config.numLevels; i++) {
+      for (const rule of this.levels[i].rules) {
         if (rule.constructor.name === 'ReferralRule') {
           return rule.rewardValue
         }
@@ -613,19 +613,4 @@ class ReferralRule extends BaseRule {
   }
 }
 
-/**
- * Helper function that returns all campaign rules.
- * @returns {Array<CampaignRules>}
- */
-async function getAllCampaigns() {
-  const campaigns = await db.GrowthCampaign.findAll({})
-
-  return campaigns.map(
-    campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
-  )
-}
-
-module.exports = {
-  CampaignRules,
-  getAllCampaigns
-}
+module.exports = { CampaignRules }
