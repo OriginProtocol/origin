@@ -8,6 +8,8 @@ const {
   GrowthCampaignStatuses,
   GrowthActionStatus
 } = require('../enums')
+const logger = require('../logger')
+
 
 // System cap for number of rewards per rule.
 const MAX_NUM_REWARDS_PER_RULE = 1000
@@ -44,7 +46,6 @@ const eventTypeToActionType = eventType => {
     AirbnbAttestationPublished: 'Airbnb',
     TwitterAttestationPublished: 'Twitter',
     PhoneAttestationPublished: 'Phone',
-    RefereeSignedUp: 'Referral',
     ListingCreated: 'ListingCreated',
     ListingPurchased: 'ListingPurchased'
   }
@@ -68,7 +69,7 @@ class ReferralReward extends Reward {
   }
 }
 
-class Campaign {
+class CampaignRules {
   constructor(campaign, config) {
     this.campaign = campaign
     this.config = config
@@ -112,28 +113,36 @@ class Campaign {
   /**
    * Reads events related to a user from the DB.
    * @param {string} ethAddress - User's account.
-   * @param {boolean} duringCampaign - Restricts query to events that occurred
+   * @param {Object} Options:
+   *   - duringCampaign - Restricts query to events that occurred
    *  during the campaign vs since user signed up.
-   * @param {boolean} onlyVerified - Only returns events with status
+   *   - beforeCampaign - Restricts query to events that occurred
+   *   prior to the campaign start vs since user signed up.
+   *   - onlyVerified - Only returns events with status
    *   Verified. Otherwise returns events with status Verified or Logged.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
-  async getEvents(ethAddress, duringCampaign, onlyVerified) {
+  async getEvents(ethAddress, opts) {
+    if (opts.beforeCampaign && opts.duringCampaign) {
+      throw new Error('beforeCampaign and duringCampaign args are incompatible')
+    }
     const whereClause = {
       ethAddress: ethAddress.toLowerCase()
     }
 
-    if (duringCampaign) {
-      // Note: restrict the query by using the capReachedDate (that's the case where the
-      // campaign was exhausted before its end date) or the campaign end date.
-      const endDate = this.campaign.capReachedDate || this.campaign.endDate
+    const endDate = opts.beforeCampaign ? this.campaign.startDate : (this.campaign.capReachedDate || this.campaign.endDate)
+    if (opts.duringCampaign) {
       whereClause.createdAt = {
         [Sequelize.Op.gte]: this.campaign.startDate,
         [Sequelize.Op.lt]: endDate
       }
+    } else {
+      whereClause.createdAt = {
+        [Sequelize.Op.lt]: endDate
+      }
     }
 
-    if (onlyVerified) {
+    if (opts.onlyVerified) {
       whereClause.status = GrowthEventStatuses.Verified
     } else {
       whereClause.status = {
@@ -152,23 +161,47 @@ class Campaign {
   }
 
   /**
-   * Calculates the current campaign level the user is at.
-   * Considers events that occurred since user joined the platform.
-   *
-   * @param {string} ethAddress - User's account.
-   * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
-   *   for the calculation. Otherwise uses events with status Verified or Logged.
-   * @returns {Promise<number>}
+   * Helper method to calculate level based on a set of events.
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
    */
-  async getCurrentLevel(ethAddress, onlyVerifiedEvents) {
-    const events = await this.getEvents(ethAddress, false, onlyVerifiedEvents)
+  async _calculateLevel(ethAddress, events) {
     let level
     for (level = 0; level < this.config.numLevels - 1; level++) {
-      if (!this.levels[level].qualifyForNextLevel(ethAddress, events)) {
+      const qualify = await this.levels[level].qualifyForNextLevel(ethAddress, events)
+      if (!qualify) {
         break
       }
     }
     return level
+  }
+
+  /**
+   * Returns the user level.
+   * Considers events that occurred until the campaign ended.
+   *
+   * @param {string} ethAddress - User's account.
+   * @param {boolean} onlyVerifiedEvents - If true, only uses events with
+   *  status Verified for the calculation. By default uses events with
+   *  status Verified or Logged.
+   * @returns {Promise<number>}
+   */
+  async getCurrentLevel(ethAddress, onlyVerifiedEvents = false) {
+    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
+    return await this._calculateLevel(ethAddress, events)
+  }
+
+  /**
+   * Returns the user level prior to the campaign starting.
+   *
+   * @param ethAddress
+   * @returns {Promise<number>}
+   */
+  async getPriorLevel(ethAddress) {
+    const events = await this.getEvents(ethAddress, { beforeCampaign: true })
+    return await this._calculateLevel(ethAddress, events)
   }
 
   /**
@@ -182,13 +215,17 @@ class Campaign {
    */
   async getRewards(ethAddress, onlyVerifiedEvents) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, true, onlyVerifiedEvents)
+    const events = await this.getEvents(
+      ethAddress,
+      { duringCampaign: true, onlyVerifiedEvents }
+    )
     const currentLevel = await this.getCurrentLevel(
       ethAddress,
       onlyVerifiedEvents
     )
     for (let i = 0; i <= currentLevel; i++) {
-      rewards.push(...this.levels[i].getRewards(ethAddress, events))
+      const levelRewards = await this.levels[i].getRewards(ethAddress, events)
+      rewards.push(...levelRewards)
     }
     return rewards
   }
@@ -198,21 +235,20 @@ class Campaign {
    *
    * @returns {Enum<GrowthCampaignStatuses>} - campaign status
    */
-
   getStatus() {
-    if (this.campaign.startDate > Date.now()) {
+    const now = new Date()
+    if (this.campaign.startDate > now) {
       return GrowthCampaignStatuses.Pending
     } else if (
-      this.campaign.startDate < Date.now() &&
-      this.campaign.endDate > Date.now()
+      this.campaign.startDate < now &&
+      this.campaign.endDate > now
     ) {
       //TODO: check if cap reached
       return GrowthCampaignStatuses.Active
-    } else if (this.campaign.endDate < Date.now()) {
+    } else if (this.campaign.endDate < now) {
       return GrowthCampaignStatuses.Completed
-    } else {
-      throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
     }
+    throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
   }
 
   /**
@@ -221,9 +257,8 @@ class Campaign {
    * @returns {Object} - formatted object
    */
   async toApolloObject(ethAddress) {
-    //TODO: change to true, true
-    //const events = this.getEvents(ethAddress, true, true)
-    const events = await this.getEvents(ethAddress, false, false)
+    // TODO: filter events not related to the rules.
+    const events = await this.getEvents(ethAddress, { duringCampaign: true })
     const levels = Object.values(this.levels)
     const rules = levels.flatMap(level => level.rules)
     const currentLevel = await this.getCurrentLevel(ethAddress, false)
@@ -234,12 +269,12 @@ class Campaign {
       startDate: this.campaign.startDate,
       endDate: this.campaign.endDate,
       distributionDate: this.campaign.distributionDate,
-      status: this.getStatus(),
+      status: await this.getStatus(),
       actions: rules
         .filter(rule => rule.isVisible())
-        .map(rule => rule.toApolloObject(ethAddress, events, currentLevel)),
+        .map(async rule => await rule.toApolloObject(ethAddress, events, currentLevel)),
       rewardEarned: sumUpRewards(
-        levels.flatMap(level => level.getRewards(ethAddress, events))
+        levels.flatMap(async level => await level.getRewards(ethAddress, events))
       )
     }
   }
@@ -257,9 +292,9 @@ class Level {
     )
   }
 
-  qualifyForNextLevel(ethAddress, events) {
-    for (let i = 0; i < this.rules.length; i++) {
-      const result = this.rules[i].qualifyForNextLevel(ethAddress, events)
+  async qualifyForNextLevel(ethAddress, events) {
+    for (const rule of this.rules) {
+      const result = await rule.qualifyForNextLevel(ethAddress, events)
       if (result !== null && result === false) {
         return false
       }
@@ -267,10 +302,11 @@ class Level {
     return true
   }
 
-  getRewards(ethAddress, events) {
+  async getRewards(ethAddress, events) {
     const rewards = []
-    this.rules.forEach(rule => {
-      rewards.push(...rule.getRewards(ethAddress, events))
+    this.rules.forEach(async rule =>  {
+      const ruleReward = await rule.getRewards(ethAddress, events)
+      rewards.push(...ruleReward)
     })
 
     return rewards
@@ -341,14 +377,14 @@ class BaseRule {
    * @returns {boolean|null} - Null indicates the rule does not participate in
    *   the condition to qualify for next level.
    */
-  qualifyForNextLevel(ethAddress, events) {
+  async qualifyForNextLevel(ethAddress, events) {
     // If the rule is not part of the next level condition, return right away.
     if (!this.config.nextLevelCondition) {
       return null
     }
 
     // Evaluate the rule based on events.
-    return this.evaluate(ethAddress, events)
+    return await this.evaluate(ethAddress, events)
   }
 
   /**
@@ -377,14 +413,14 @@ class BaseRule {
     return tally
   }
 
-  getRewards(ethAddress, events) {
+  async getRewards(ethAddress, events) {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
     }
 
     const numRewards = this._numRewards(ethAddress, events)
-    const rewards = Array(numRewards).fill(this.reward.value)
+    const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
   }
@@ -404,11 +440,11 @@ class BaseRule {
    *
    * @returns {Enum<GrowthActionStatus>}
    */
-  getStatus(ethAddress, events, currentUserLevel) {
+  async getStatus(ethAddress, events, currentUserLevel) {
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
     } else {
-      if (this.evaluate(ethAddress, events)) {
+      if (await this.evaluate(ethAddress, events)) {
         return GrowthActionStatus.Completed
       }
       return GrowthActionStatus.Active
@@ -455,12 +491,12 @@ class SingleEventRule extends BaseRule {
   }
 
   /**
-   * Calculates if the rule passes.
+   * Returns true if the rule passes, false otherwise.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  evaluate(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
@@ -471,11 +507,11 @@ class SingleEventRule extends BaseRule {
    *
    * @returns {Object} - formatted object
    */
-  toApolloObject(ethAddress, events, currentUserLevel) {
-    const rewards = this.getRewards(ethAddress, events)
+  async toApolloObject(ethAddress, events, currentUserLevel) {
+    const rewards = await this.getRewards(ethAddress, events)
     const objectToReturn = {
       type: eventTypeToActionType(this.config.eventType),
-      status: this.getStatus(ethAddress, events, currentUserLevel),
+      status: await this.getStatus(ethAddress, events, currentUserLevel),
       rewardEarned: sumUpRewards(rewards),
       reward: this.config.reward
     }
@@ -562,7 +598,7 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  evaluate(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
@@ -572,139 +608,102 @@ class MultiEventsRule extends BaseRule {
    *
    * @returns {Object} - formatted object
    */
-  toApolloObject(ethAddress, events, currentUserLevel) {
-    const rewards = this.getRewards(ethAddress, events)
+  async toApolloObject(ethAddress, events, currentUserLevel) {
+    const rewards = await this.getRewards(ethAddress, events)
 
     return {
       // TODO: we need event types for MultiEventsRule
       type: eventTypeToActionType(this.config.eventTypes[0]),
-      status: this.getStatus(ethAddress, events, currentUserLevel),
+      status: await this.getStatus(ethAddress, events, currentUserLevel),
       rewardEarned: sumUpRewards(rewards),
       reward: this.config.reward
     }
   }
 }
 
-const Fetcher = {
-  getAllCampaigns: async () => {
-    const campaigns = await db.GrowthCampaign.findAll({})
-
-    return campaigns.map(
-      campaign => new Campaign(campaign, JSON.parse(campaign.rules))
-    )
-  }
-}
 
 /**
- * A rule for rewarding a referrer when their referees meet certain conditions.
+ * A rule for rewarding a referrer when their referees reaches a certain level.
  *
- * The referrer receives the referral reward during the campaign window when
- * referee completes the referral conditions.
- * For example, assume referrer Bob sends invite to referee Alice.
- *  - Alice signs up and meets all referral conditions except one during campaign window 1.
- *  - Alice completes final action and now meets all conditions.
- *  => Bob gets credited for the referral of Alice during campaign 2.
+ * Note: For the referrer to obtain the reward during a given campaign,
+ * the referee must reached the required level during that campaign's window.
  */
 class ReferralRule extends BaseRule {
   constructor(campaign, levelId, config) {
     super(campaign, levelId, config)
 
-    // List of required event types that must be present on the referee's side
-    // for the referrer to ge rewarded.
-    if (!this.config.eventTypes) {
-      throw new Error(`${this.str()}: missing eventTypes field`)
+    // Level the referee is required to reach for the referrer to get the reward.
+    if (!this.config.requiredLevel) {
+      throw new Error(`${this.str()}: missing requiredLevel field`)
     }
-    this.config.eventTypes.forEach(eventType => {
-      if (!GrowthEventTypes.includes(eventType)) {
-        throw new Error(`${this.str()}: unknown eventType ${eventType}`)
-      }
-    })
-    this.eventTypes = this.config.eventTypes
-  }
-
-  async _getRefereeEvents(refereeEthAddress) {
-    return await db.GrowthEvent.findAll({
-      where: {
-        ethAddress: refereeEthAddress.toLowerCase(),
-        createdAt: { [Sequelize.Op.lt]: this.campaign.endDate },
-        status: {
-          [Sequelize.Op.in]: [
-            GrowthEventStatuses.Logged,
-            GrowthEventStatuses.Verified
-          ]
-        }
-      },
-      order: [['id', 'ASC']]
-    })
+    this.requiredLevel = this.config.requiredLevel
   }
 
   /**
    * Return true if the referrer qualifies for at least one referral reward
-   * in the campaign.
+   * as part of the campaign.
    * Note: this could become configurable if needed in the future. For example
    * to require N rewards.
    * @param {string} ethAddress - Referrer's account.
    * @returns {boolean}
    */
-  evaluate(ethAddress) {
-    return this.getRewards(ethAddress).length > 0
+  async evaluate(ethAddress) {
+    return await this.getRewards(ethAddress).length > 0
+  }
+
+  /**
+   * Returns list of address of referees for a referrer.
+   * @param {string} referrer - Referrer's eth address.
+   * @returns {Promise<Array<string>>}
+   * @private
+   */
+  async _getReferees(referrer) {
+    const invites = await db.GrowthInvite.findAll({
+      where: {
+        referrerEthAddress: referrer,
+        createdAt: { [Sequelize.Op.lte]: this.campaign.endDate }
+      }
+    })
+    return invites.map(i => i.refereeEthAddress)
   }
 
   /**
    * Calculates referral rewards:
    *  - load list of referee's of the referrer
-   *  - for each referee, load list of all events up to the end of this campaign.
-   *  - check if referee's events list includes all required events and that at least one
-   *  of the event occurred during the campaign window.
+   *  - for each referee, check they are at required level and that level
+   *  was reaching during this campaign.
    * @param {string} ethAddress - Referrer's account.
    * @returns {Array<ReferralReward>}
    */
-  getRewards(ethAddress) {
+  async getRewards(ethAddress) {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
     }
 
     const rewards = []
+    const crules = new CampaignRules(this.campaign, JSON.parse(this.campaign.rules))
 
-    // Load all invites the referrer sent before the campaign ended.
-    const invites = db.GrowthInvite.findAll({
-      where: {
-        referrerEthAddress: ethAddress,
-        createdAt: { [Sequelize.Op.lte]: this.campaign.endDate }
-      }
-    })
-
-    // For each referee, determine if they meet all the referral conditions.
-    for (const invite of invites) {
-      const referee = invite.refereeEthAddress
-      const events = this._getRefereeEvents(referee)
-
-      // Check if the referee has all the required events.
-      if (!this.eventTypes.every(t => events.map(e => e.type).includes(t))) {
-        logger.debug(
-          `Referee ${referee} misses some referral events. skipping.`
-        )
+    // Go thru each referee and check if they meet the referral reward conditions.
+    const referees = await this._getReferees(ethAddress)
+    for (const referee of referees) {
+      // Check the referee is at or above required level.
+      const refereeLevel = crules.getCurrentLevel(referee)
+      if (refereeLevel < this.requiredLevel) {
+        logger.debug(`Referee ${referee} does not meet level requirement. skipping.`)
         continue
       }
 
-      // Check that at least one event was emitted during the campaign.
-      if (
-        !events.some(e => {
-          return (
-            e.createdAt >= this.campaign.startDate &&
-            e.createdAt <= this.campaign.endDate
-          )
-        })
-      ) {
-        logger.debug(
-          `Referee ${referee} has not referral event in campaign. skipping.`
-        )
+      // Check the referee reached the level during this campaign as opposed
+      // to prior to the campaign.
+      const refereePriorLevel = crules.getPriorLevel(referee)
+      if (refereePriorLevel >= this.requiredLevel) {
+        logger.debug(`Referee ${referee} reached level prior to campaign start. skipping`)
         continue
       }
 
-      // We found a referee that qualifies the referrer for a reward.
-      logger.debug(`Referrer ${ethAddress} gets referral for ${referee}`)
+      // Referral is valid. Referrer should get a reward for it.
+      logger.debug(`Referrer ${ethAddress} gets credit for referring ${referee}`)
       const reward = new ReferralReward(
         this.campaignId,
         this.levelId,
@@ -717,8 +716,35 @@ class ReferralRule extends BaseRule {
 
     return rewards
   }
+
+  /**
+   * Formats the campaign object according to the Growth GraphQL schema
+   *
+   * @returns {Object} - formatted object
+   */
+  async toApolloObject(ethAddress, events, currentUserLevel) {
+    const rewards = await this.getRewards(ethAddress)
+
+    return {
+      type: 'Referral',
+      status: await this.getStatus(ethAddress, events, currentUserLevel),
+      rewardEarned: sumUpRewards(rewards),
+      reward: this.config.reward
+    }
+  }
 }
+
+const Fetcher = {
+  getAllCampaigns: async () => {
+    const campaigns = await db.GrowthCampaign.findAll({})
+
+    return campaigns.map(
+      campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
+    )
+  }
+}
+
 module.exports = {
-  Campaign,
+  CampaignRules,
   Fetcher
 }

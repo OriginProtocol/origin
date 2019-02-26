@@ -3,63 +3,83 @@ const db2 = require('origin-discovery/src/models')
 const logger = require('../logger')
 
 const { GrowthCampaign } = require('./campaign')
-const { Rule } = require('../rules/rules')
+const { CampaignRules } = require('../rules/rules')
 
 
 class Invite {
-  // Returns a list of pending rewards:
-  //  - get all invites
-  //  - filter out invites completed during the current campaign
-  //  - filter out invites completed during prior campaign
-  static async _getPendingRewards(ethAddress, completedInvites, rewardValue) {
+  /**
+   * Returns a list of pending rewards:
+   *  - get list of referees from growth_referral. Note: for now we only care
+   *    about referees that published their profiles. We ignore others
+   *    that haven't made it that far.
+   *  - filter out invites completed during the current campaign.
+   *  - filter out invites completed during prior campaigns.
+   * @param {string} referrer: ethAddress of the referrer.
+   * @param {Array<string>} ignore: list of accounts to ignore
+   * @param rewardValue
+   * @returns {Promise<*>}
+   * @private
+   */
+  //
+  //
+  static async _getPendingRewards(referrer, ignore, rewardValue) {
     // Load all invites.
-    const invites = db.Invite.findAll({
-      where: { referrerEthAddress: ethAddress }
+    const referrals = db.GrowthReferall.findAll({
+      where: { referrerEthAddress: referrer }
     })
-    const allReferees = invites.map(invite => invite.referrerEthAddress)
+    const allReferees = referrals.map(r => r.refereeEthAddress)
 
-    // Filter out referrals completed during the current campaign.
-    let pendingReferees = allReferees.filter(referee => {
-      return !completedInvites.map(i => i.walletAddress).includes(referee)
-    })
+    // Filter out referrals we are supposed to ignore.
+    const pendingReferees = allReferees.filter(r => !ignore.includes(r))
 
-    // Load prior campaigns and filter out referrals completed back then.
-    const pastCampaigns = GrowthCampaign.getPast(ethAddress)
+    // Load prior campaigns and filter out referrals completed during those.
+    const pastCampaigns = GrowthCampaign.getPast(referrer)
     for (const campaign of pastCampaigns) {
-      // TODO(franck): for a campaign for which rewards have been distributed,
-      // it could be faster to load the data from the growth_reward table
-      // as opposed to recalculating the rules.
-      const campaignRule = new Rule(campaign, JSON.parse(campaign.rules))
-      const rewards = await campaignRule.getRewards(ethAddress, false)
-
-      pendingReferees = pendingReferees.filter(referee => {
-        return !rewards.map(r => r.refereeEthAddress).includes(referee)
-      })
+      // TODO(franck): for a campaign for which rewards have already been
+      // distributed, it could be faster to load the data from the
+      // growth_reward table as opposed to recalculating the rules.
+      const rules = new CampaignRules(campaign, JSON.parse(campaign.rules))
+      const rewards = await rules.getRewards(referrer, false)
+      // Get list of addresses for referees for which referral was completed
+      // during that campaign.
+      const referees = rewards
+        .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
+        .map(r => r.refereeEthAddress)
+      // Filter out those completed referrals from our pendingReferees list.
+      pendingReferees.filter(r => !referees.includes(r))
     }
 
-    return pendingReferees.map(referee => {
+    return pendingReferees.map(r => {
       return {
-        refereeEthAddress: referee,
+        refereeEthAddress: r,
         value: rewardValue
       }
     })
   }
 
+  /**
+   *
+   * @param {ReferralReward} reward of type referral.
+   * @param {string} status to set
+   * @returns {Promise<{status:string, walletAddress:string, contactName:string, reward:{amount:string, currency:string}}>}
+   * @private
+   */
   static async _decorate(reward, status) {
     const referee = reward.refereeEthAddress
 
-    const identity = await db2.Identity.findOne({
+    let identity = await db2.Identity.findOne({
       where: { ethAddress: referee }
     })
     if (!identity) {
-
-      return { firstName: '', lastName: '' }
+      // Defensive coding. This should theoretically not happen.
+      logger.error(`Failed loading identity for referee ${referee}`)
+      identity = { firstName: '', lastName: '' }
     }
 
     return {
       status,
       walletAddress: referee,
-      contactName: null, // TODO: load from identity
+      contactName: (identity.firstName || '') + ' ' + (identity.lastName || ''),
       reward: reward.value
     }
   }
@@ -73,20 +93,23 @@ class Invite {
       throw new Error('Failed loading campaign with id ${campaignId}')
     }
 
-    // Get list of completed referrals during the campaign by evaluating the rules.
+    // Get list of referrals completed during the campaign by evaluating its rules.
     const campaignRule = new Rule(campaign, JSON.parse(campaign.rules))
-    const rewards = await campaignRule.getRewards(ethAddress, false)
     const rewardValue = campaignRule.getReferralRewardValue()
-    const completedInvites = rewards.map(r => Invite._decorate(r, 'Completed'))
+    const rewards = await campaignRule.getRewards(ethAddress, false)
+    const completedInvites = rewards
+      .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
+      .map(r => Invite._decorate(r, 'Completed')) // Decorate with extra info.
 
     // We need to compute pending invites only if the campaign is active.
     let pendingInvites = []
     const now = new Date()
     const isActive = campaign.startDate >= now && campaign.endDate <= now
     if (isActive) {
+      const ignore = completedInvites.map(i => i.walletAddress)
       const pendingRewards = await Invite._getPendingRewards(
         ethAddress,
-        completedInvites,
+        ignore,
         rewardValue
       )
       pendingInvites = pendingRewards.map(r => Invite._decorate(r, 'Pending'))
