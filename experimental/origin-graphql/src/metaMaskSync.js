@@ -23,6 +23,14 @@ const GetMetaMaskStateQuery = gql`
           eth
         }
       }
+      primaryAccount {
+        id
+        checksumAddress
+        balance {
+          eth
+        }
+      }
+      walletType
     }
   }
 `
