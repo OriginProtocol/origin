@@ -193,9 +193,9 @@ async function createTestData() {
     truncate: true
   })
 
-/* IMPORTANT when adding new translatable fields update the enums document: 
- * /Users/domen-privat/projects/OriginProtocol/origin/experimental/origin-dapp2/src/constants/Growth$FbtEnum.js
- */
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * experimental/origin-dapp2/src/constants/Growth$FbtEnum.js
+   */
 
   await db.GrowthCampaign.upsert({
     id: 1,

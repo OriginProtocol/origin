@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const tableName = 'growth_campaign'
 const { GrowthCampaignRewardStatuses } = require('../src/enums')
@@ -107,4 +107,4 @@ module.exports = {
       }
     })
   }
-};
+}

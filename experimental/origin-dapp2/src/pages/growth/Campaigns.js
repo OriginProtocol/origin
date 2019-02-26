@@ -18,7 +18,8 @@ const GrowthTranslation = ({ stringKey }) => {
     <fbt desc="growth">
       <fbt:enum enum-range={GrowthEnum} value={stringKey} />
     </fbt>
-  )}
+  )
+}
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -46,11 +47,11 @@ function CampaignNavItem(props) {
           {completedIndicator && <img src="images/circular-check-button.svg" />}
         </div>
         <div className={`name ${selected ? 'active' : ''}`}>
-        {GrowthEnum[campaign.shortNameKey] ? (
-          <GrowthTranslation stringKey={campaign.shortNameKey} />
-        ) : (
-          'Campaign'
-        )}
+          {GrowthEnum[campaign.shortNameKey] ? (
+            <GrowthTranslation stringKey={campaign.shortNameKey} />
+          ) : (
+            'Campaign'
+          )}
         </div>
         {selected && <div className="select-bar" />}
       </div>
@@ -266,7 +267,14 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const { startDate, endDate, status, rewardEarned, actions, nameKey } = campaign
+  const {
+    startDate,
+    endDate,
+    status,
+    rewardEarned,
+    actions,
+    nameKey
+  } = campaign
 
   let timeLabel = ''
   let subTitleText = ''
@@ -320,11 +328,11 @@ function Campaign(props) {
           <Fragment>
             <div className="d-flex justify-content-between">
               <h1 className="mb-2 pt-3">
-              {GrowthEnum[nameKey] ? (
-                <GrowthTranslation stringKey={nameKey} />
-              ) : (
-                'Campaign'
-              )}
+                {GrowthEnum[nameKey] ? (
+                  <GrowthTranslation stringKey={nameKey} />
+                ) : (
+                  'Campaign'
+                )}
               </h1>
               <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
