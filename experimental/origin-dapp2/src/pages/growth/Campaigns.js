@@ -213,7 +213,9 @@ function Action(props) {
           )}
         </div>
       </div>
-      <div className={`d-flex flex-column ${actionLocked ? 'col-10' : 'col-8'}`}>
+      <div
+        className={`d-flex flex-column ${actionLocked ? 'col-10' : 'col-8'}`}
+      >
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
         <div className="d-flex">
@@ -235,28 +237,36 @@ function Action(props) {
           )}
           {!actionCompleted &&
             reward !== null &&
-            renderReward(reward.amount, true)
-          }
-          {actionLocked && unlockConditions.length > 0 &&
+            renderReward(reward.amount, true)}
+          {actionLocked && unlockConditions.length > 0 && (
             <Fragment>
-              <div className="emphasis pr-2 pt-1 d-flex align-items-center ">Requires</div>
+              <div className="emphasis pr-2 pt-1 d-flex align-items-center ">
+                Requires
+              </div>
               {unlockConditions.map(unlockCondition => {
-                return (<div className="requirement d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2">
-                  <img src={unlockCondition.iconSource} />
-                  <div className="value">
-                    {GrowthEnum[unlockCondition.messageKey] ?
-                      <fbt desc="growth">
-                        <fbt:enum enum-range={GrowthEnum} value={unlockCondition.messageKey} />
-                      </fbt>
-                      :
-                      "Missing translation"
-                    }
-                    
+                return (
+                  <div
+                    className="requirement d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2"
+                    key={unlockCondition.messageKey}
+                  >
+                    <img src={unlockCondition.iconSource} />
+                    <div className="value">
+                      {GrowthEnum[unlockCondition.messageKey] ? (
+                        <fbt desc="growth">
+                          <fbt:enum
+                            enum-range={GrowthEnum}
+                            value={unlockCondition.messageKey}
+                          />
+                        </fbt>
+                      ) : (
+                        'Missing translation'
+                      )}
+                    </div>
                   </div>
-                </div>)
+                )
               })}
             </Fragment>
-          }
+          )}
         </div>
       </div>
       <div className={`d-flex ${actionLocked ? '' : 'col-2'}`}>
