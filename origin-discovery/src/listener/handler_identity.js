@@ -2,6 +2,7 @@ const Web3 = require('web3')
 const logger = require('./logger')
 
 const db = require('../models')
+const db2 = require('origin-identity/src/models')
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { AttestationServiceToEventType, GrowthEvent } = require('origin-growth/src/resources/event')
@@ -98,7 +99,7 @@ class IdentityEventHandler {
     }
 
     logger.debug('Identity=', identity)
-    await db.Identity.upsert(identity)
+    await db2.Identity.upsert(identity)
   }
 
   /**

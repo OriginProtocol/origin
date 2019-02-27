@@ -1,9 +1,7 @@
 const BigNumber = require('bignumber.js')
 
 const db = require('../models')
-// FIXME(franck): create origin-identity package
-//const db2 = require('origin-identity/src/models')
-const db2 = {}
+const db2 = require('origin-identity/src/models')
 const logger = require('../logger')
 
 const { GrowthCampaign } = require('./campaign')
