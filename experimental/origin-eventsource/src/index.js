@@ -107,7 +107,7 @@ class OriginEventSource {
       }
 
       // TODO: Dapp1 fractional compat
-      if (rawData.availability) {
+      if (rawData.availability && !rawData.weekendPrice) {
         try {
           const isWeekly = _get(rawData, 'availability.2.6.0') === 'x-price'
           const weekdayPrice = _get(rawData, 'availability.2.6.3')
