@@ -156,8 +156,8 @@ class OnboardMetaMask extends Component {
                   return <p className="p-3">No Web3</p>
                 }
 
-                const backLink = `/listings/${listing.id}/onboard`
-                const nextLink = `/listings/${listing.id}/onboard/messaging`
+                const backLink = `/listing/${listing.id}/onboard`
+                const nextLink = `/listing/${listing.id}/onboard/messaging`
                 let nextEnabled = false
                 const { web3 } = data
 

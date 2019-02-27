@@ -16,7 +16,7 @@ class Review extends Component {
   state = {}
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
 
     const { listing, tokenBalance } = this.props
     if (!listing.subCategory) {
