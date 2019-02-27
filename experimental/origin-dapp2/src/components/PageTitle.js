@@ -5,7 +5,7 @@ import withCreatorConfig from 'hoc/withCreatorConfig'
 
 class PageTitle extends Component {
   componentDidMount() {
-    const siteTitle = get(this.props, 'creatorConfig.title', 'Origin')
+    const siteTitle = get(this.props, 'creatorConfig.title') || 'Origin'
     if (!this.props.children) return siteTitle
     const pageTitle = this._cleanPageTitle(this.props.children)
     document.title = `${pageTitle} - ${siteTitle}`
