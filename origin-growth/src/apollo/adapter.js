@@ -125,6 +125,8 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
 
   return {
     id: campaign.campaign.id,
+    nameKey: campaign.campaign.nameKey,
+    shortNameKey: campaign.campaign.shortNameKey,
     name: campaign.campaign.name,
     startDate: campaign.campaign.startDate,
     endDate: campaign.campaign.endDate,

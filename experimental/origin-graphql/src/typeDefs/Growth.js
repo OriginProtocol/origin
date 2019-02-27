@@ -95,7 +95,8 @@ module.exports =
 
   type GrowthCampaign {
     id: Int!
-    name: String!
+    nameKey: String!
+    shortNameKey: String!
     startDate: DateTime
     endDate: DateTime
     distributionDate: DateTime
