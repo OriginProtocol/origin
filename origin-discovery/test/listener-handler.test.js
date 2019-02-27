@@ -6,8 +6,9 @@ const expect = chai.expect
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 
-const db = require('../src/models')
-const db2 = require('origin-identity/src/models')
+const _discoveryModels = require('../src/models')
+const _identityModels = require('origin-identity/src/models')
+const db = { ..._discoveryModels, ..._identityModels }
 
 const { handleLog } = require('../src/listener/handler')
 const  { MarketplaceEventHandler } = require('../src/listener/handler_marketplace')
@@ -188,7 +189,7 @@ describe('Listener Handlers', () => {
     expect(result.user.address).to.equal(this.seller)
 
     // Check expected entry was added into user DB table.
-    const user = await db2.Identity.findAll({
+    const user = await db.Identity.findAll({
       where: {
         ethAddress: this.seller, firstName: 'foo', lastName: 'bar', email: 'toto@spirou.com', phone: '+33 0555875838' } })
     expect(user.length).to.equal(1)
