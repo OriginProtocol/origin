@@ -29,6 +29,15 @@ module.exports = `
     configObj: Config
   }
 
+  input ConfigInput {
+    discovery: String
+    bridge: String
+    ipfsRPC: String
+    ipfsGateway: String
+    provider: String
+    providerWS: String
+  }
+
   type Config {
     affiliate: String
     arbitrator: String
@@ -45,7 +54,7 @@ module.exports = `
 
   type Mutation {
     refetch: Boolean
-    setNetwork(network: String): Boolean
+    setNetwork(network: String, customConfig: ConfigInput): Boolean
     toggleMetaMask(enabled: Boolean): Boolean
     deployToken(name: String!, symbol: String!, decimals: String!, supply: String!, type: String, from: String): Transaction
     transferToken(token: String!, from: String!, to: String!, value: String!): Transaction
@@ -59,6 +68,7 @@ module.exports = `
     importWallet(role: String, name: String, privateKey: String!): Account
     importWallets(accounts: [WalletInput]): Boolean
     removeWallet(address: String!): String
+    signMessage(address: ID!, message: String!): String
   }
 
   type Web3 {

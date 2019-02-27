@@ -22,6 +22,8 @@ export default {
     basic: gql`
       fragment basicListingFields on Listing {
         id
+        valid
+        validationError
         status
         totalEvents
         seller {
@@ -53,8 +55,9 @@ export default {
           urlExpanded
           contentType
         }
+        commission
+        commissionPerUnit
         ... on UnitListing {
-          multiUnit
           unitsTotal
           unitsAvailable
           unitsSold
@@ -138,6 +141,45 @@ export default {
               party
             }
           }
+        }
+      }
+    `
+  },
+  GrowthCampaign: {
+    basic: gql`
+      fragment basicCampaignFields on GrowthCampaign {
+        id
+        nameKey
+        shortNameKey
+        startDate
+        endDate
+        distributionDate
+        status
+        actions {
+          type
+          status
+          rewardEarned {
+            amount
+            currency
+          }
+          reward {
+            amount
+            currency
+          }
+          unlockConditions {
+            messageKey
+            iconSource
+          }
+          ... on ReferralAction {
+            rewardPending {
+              amount
+              currency
+            }
+          }
+        }
+        rewardEarned {
+          amount
+          currency
         }
       }
     `

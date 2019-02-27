@@ -68,7 +68,7 @@ export default class MobileLinkerCode extends Component {
                   <button
                     className="btn btn-primary"
                     style={{ width: 'auto' }}
-                    onClick={() => this.openLinkerApp(role)}
+                    onClick={() => this.openLinkerApp(role, linkCode)}
                   >
                     Copy &amp; Open App
                   </button>

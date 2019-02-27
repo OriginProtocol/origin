@@ -4,6 +4,10 @@ databaseInstance: origin-214503:us-west1:staging
 bridgeImage: origin-bridge
 bridgeImageTag: '0a36fe4'
 
+# origin-dapp2
+dapp2Image: origin-dapp2
+dapp2ImageTag: 'latest'
+
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: '0a36fe4'
@@ -31,6 +35,10 @@ eventlistenerImageTag: '7dfaa5d'
 # origin-discovery
 discoveryImage: origin-discovery
 discoveryImageTag: '4aa5387'
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
 
 # origin-messaging
 messagingImage: origin-messaging

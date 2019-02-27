@@ -40,7 +40,7 @@ const Step1 = ({ listing }) => (
             </div>
             <div className="note">Available for Google Chrome</div>
             <Link
-              to={`/listings/${listing.id}/onboard/metamask`}
+              to={`/listing/${listing.id}/onboard/metamask`}
               className="btn btn-outline-primary"
             >
               Connect MetaMask

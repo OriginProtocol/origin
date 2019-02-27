@@ -1,3 +1,18 @@
+- Enable notifications after create listing
+- Enable messaging before create listing
+- Ready to release funds warning modal on finalize offer
+- 'Sale reviewed' step
+  Next Step: Leave a review of the buyer
+  Leaving a review lets other sellers know about your experience with this buyer.
+
+- Check fractional listing
+- Check identity + attestations
+- Check messaging
+
+- Hide sold listings
+- Styling for listing error / unavailable
+- Scroll when lots of pics? http://localhost:3000/#/listings/1-000-85
+
 # Messaging
 
 - Dropdown

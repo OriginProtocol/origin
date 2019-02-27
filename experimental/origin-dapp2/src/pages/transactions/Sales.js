@@ -29,57 +29,58 @@ class Sales extends Component {
     return (
       <div className="container purchases">
         <PageTitle>My Sales</PageTitle>
-        <Query
-          query={query}
-          variables={vars}
-          notifyOnNetworkStatusChange={true}
-          skip={!this.props.wallet}
-        >
-          {({ error, data, fetchMore, networkStatus }) => {
-            if (networkStatus === 1 || !this.props.wallet) {
-              return <LoadingSpinner />
-            } else if (error) {
-              return <QueryError error={error} query={query} vars={vars} />
-            } else if (!data || !data.marketplace) {
-              return <p className="p-3">No marketplace contract?</p>
-            }
+        <h1>My Sales</h1>
+        <div className="row">
+          <div className="col-md-3">
+            <ul className="nav nav-pills flex-column">
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/my-sales" exact>
+                  Pending
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/my-sales/complete">
+                  Complete
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/my-sales/all">
+                  All
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+          <div className="col-md-9">
+            <Query
+              query={query}
+              variables={vars}
+              notifyOnNetworkStatusChange={true}
+              skip={!this.props.wallet}
+            >
+              {({ error, data, fetchMore, networkStatus }) => {
+                if (networkStatus <= 2 || !this.props.wallet) {
+                  return <LoadingSpinner />
+                } else if (error) {
+                  return <QueryError error={error} query={query} vars={vars} />
+                } else if (!data || !data.marketplace) {
+                  return <p className="p-3">No marketplace contract?</p>
+                }
 
-            const { nodes, pageInfo, totalCount } = data.marketplace.user.sales
-            const { hasNextPage, endCursor: after } = pageInfo
+                const {
+                  nodes,
+                  pageInfo,
+                  totalCount
+                } = data.marketplace.user.sales
+                const { hasNextPage, endCursor: after } = pageInfo
 
-            if (!totalCount) {
-              return <NoSales />
-            }
-
-            return (
-              <BottomScrollListener
-                ready={networkStatus === 7}
-                hasMore={hasNextPage}
-                onBottom={() => nextPage(fetchMore, { ...vars, after })}
-              >
-                <>
-                  <h1>My Sales</h1>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <ul className="nav nav-pills flex-column">
-                        <li className="nav-item">
-                          <NavLink className="nav-link" to="/my-sales" exact>
-                            Pending
-                          </NavLink>
-                        </li>
-                        <li className="nav-item">
-                          <NavLink className="nav-link" to="/my-sales/complete">
-                            Complete
-                          </NavLink>
-                        </li>
-                        <li className="nav-item">
-                          <NavLink className="nav-link" to="/my-sales/all">
-                            All
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="col-md-9">
+                return (
+                  <BottomScrollListener
+                    ready={networkStatus === 7}
+                    hasMore={hasNextPage}
+                    onBottom={() => nextPage(fetchMore, { ...vars, after })}
+                  >
+                    <>
+                      {totalCount > 0 ? null : <NoSales />}
                       {nodes.map(({ listing, ...offer }) => (
                         <div
                           className="purchase"
@@ -127,13 +128,13 @@ class Sales extends Component {
                           }
                         />
                       )}
-                    </div>
-                  </div>
-                </>
-              </BottomScrollListener>
-            )
-          }}
-        </Query>
+                    </>
+                  </BottomScrollListener>
+                )
+              }}
+            </Query>
+          </div>
+        </div>
       </div>
     )
   }

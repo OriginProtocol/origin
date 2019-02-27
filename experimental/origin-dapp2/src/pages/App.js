@@ -5,7 +5,6 @@ import get from 'lodash/get'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import BetaBanner from './_BetaBanner'
-import BetaModal from './_BetaModal'
 import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
@@ -21,7 +20,10 @@ import Profile from './user/Profile'
 import CreateListing from './create-listing/CreateListing'
 import Messages from './messaging/Messages'
 import Notifications from './notifications/Notifications'
+import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
+import GrowthCampaigns from './growth/Campaigns'
+import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -63,15 +65,15 @@ class App extends Component {
 
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
-
+    const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <>
         <BetaBanner />
-        <BetaModal />
-        <Nav />
+        {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
-            <Route path="/listings/:listingID" component={Listing} />
+            <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
             <Route path="/my-sales/:filter?" component={MySales} />
@@ -81,8 +83,24 @@ class App extends Component {
             <Route path="/profile" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
+            <Route
+              path="/settings"
+              render={props => (
+                <Settings
+                  {...props}
+                  locale={this.props.locale}
+                  onLocale={this.props.onLocale}
+                />
+              )}
+            />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
+            {enableGrowth && (
+              <Route path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route path="/welcome" component={GrowthWelcome} />
+            )}
             <Route component={Listings} />
           </Switch>
         </main>

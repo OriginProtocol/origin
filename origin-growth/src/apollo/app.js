@@ -37,7 +37,21 @@ const server = new ApolloServer({
   typeDefs,
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
-  playground: true
+  playground: true,
+  context: context => {
+    let countryCode = null
+    const headers = context.req.headers
+    /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
+     */
+    if (headers) {
+      countryCode = headers['X-AppEngine-Country'] || null
+    }
+
+    return {
+      ...context,
+      countryCode
+    }
+  }
 })
 
 server.applyMiddleware({ app })

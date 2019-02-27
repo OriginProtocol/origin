@@ -96,7 +96,7 @@ async function toIpfsData(data) {
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId,
+    listingId: data.listingID,
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
@@ -104,8 +104,7 @@ async function toIpfsData(data) {
       currency: 'ETH'
     },
     commission,
-    finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365,
+    finalizes: data.finalizes || 60 * 60 * 24 * 365,
     ...(data.fractionalData || {})
   }
 

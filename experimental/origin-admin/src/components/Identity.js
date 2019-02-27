@@ -4,7 +4,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const IdentityQuery = gql`
-  query IdentityQuery($account: String!) {
+  query IdentityQuery($account: ID!) {
     web3 {
       account(id: $account) {
         id

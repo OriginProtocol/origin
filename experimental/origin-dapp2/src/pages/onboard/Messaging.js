@@ -177,7 +177,7 @@ const Messaging = ({ listing }) => (
       <div className="col-md-8">
         <Steps steps={4} step={2} />
         <OnboardMessaging
-          nextLink={`/listings/${listing.id}/onboard/notifications`}
+          nextLink={`/listing/${listing.id}/onboard/notifications`}
         />
       </div>
       <div className="col-md-4">
