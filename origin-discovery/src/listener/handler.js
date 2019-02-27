@@ -1,7 +1,10 @@
 const logger = require('./logger')
 const db = require('../models')
 const { withRetrys } = require('./utils')
-const { MarketplaceEventHandler, NoGasMarketplaceEventHandler } = require('./handler_marketplace')
+const {
+  MarketplaceEventHandler,
+  NoGasMarketplaceEventHandler
+} = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
 const {
@@ -43,11 +46,10 @@ const EVENT_TO_HANDLER_MAP = {
     OfferData: NoGasMarketplaceEventHandler
   },
   IdentityEvents: {
-    IdentityUpdated: IdentityEventHandler,
+    IdentityUpdated: IdentityEventHandler
     // TODO(franck): handle IdentityDeleted
   }
 }
-
 
 /**
  *  Main entry point for processing events.
@@ -55,7 +57,7 @@ const EVENT_TO_HANDLER_MAP = {
  *   - Calls the event's handler.
  *   - Optionally calls webhooks.
  */
-async function handleLog (log, rule, contractVersion, context) {
+async function handleLog(log, rule, contractVersion, context) {
   log.decoded = context.web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,
@@ -107,7 +109,7 @@ async function handleLog (log, rule, contractVersion, context) {
     await withRetrys(async () => {
       result = await rule.handler.process(log, context)
     }, false)
-  } catch(e) {
+  } catch (e) {
     logger.error(`Handler failed. Skipping log.`)
     context.errorCounter.inc()
     return
@@ -157,7 +159,9 @@ async function handleLog (log, rule, contractVersion, context) {
   }
 
   if (rule.handler.gcloudPubsubEnabled() && context.config.gcloudPubsubTopic) {
-    logger.info(`Google Cloud Pub/Sub publish to ${context.config.gcloudPubsubTopic}`)
+    logger.info(
+      `Google Cloud Pub/Sub publish to ${context.config.gcloudPubsubTopic}`
+    )
     try {
       await withRetrys(async () => {
         return publishToGcloudPubsub(

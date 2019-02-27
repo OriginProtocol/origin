@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 module.exports = {
-  'development': {
+  development: {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
@@ -14,7 +14,7 @@ module.exports = {
     // Disable logging of SQL statements.
     logging: false
   },
-  'test': {
+  test: {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
@@ -27,7 +27,7 @@ module.exports = {
     // Disable logging of SQL statements.
     logging: false
   },
-  'production': {
+  production: {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
