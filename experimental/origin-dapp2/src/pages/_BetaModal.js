@@ -1,88 +1,65 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
-import get from 'lodash/get'
 
-import Store from 'utils/store'
-import NetworkQuery from 'queries/Network'
 import Modal from 'components/Modal'
+import Link from 'components/Link'
 
-const store = Store('sessionStorage')
-
-class BetaBanner extends Component {
-  state = {
-    hideModal: store.get('hide-beta-modal', false)
-  }
+class BetaModal extends Component {
+  state = {}
   render() {
-    if (this.state.hideModal) {
-      return null
-    }
     return (
-      <Query query={NetworkQuery}>
-        {({ data }) => {
-          const networkId = get(data, 'web3.networkId')
-          if (networkId !== 1) {
-            return null
-          }
-          return (
-            <Modal
-              onClose={() => this.setState({ hideModal: true })}
-              shouldClose={this.state.shouldClose}
-            >
-              <div className="beta-modal">
-                <h5>
-                  Welcome to Origin&apos;s decentralized app! Please use at your
-                  own risk while we fix bugs and get our contracts audited.
-                </h5>
-                <ul className="list-unstyled">
-                  <li>
-                    Transactions use real ETH. Take offers to buy/sell
-                    seriously.
-                  </li>
-                  <li>
-                    Use caution with counterparties you don&apos;t know. Please
-                    verify your own identity.
-                  </li>
-                  <li>
-                    Check back often for status updates. There are currently no
-                    push/email notifications.
-                  </li>
-                  <li>
-                    Disputes for escrowed funds are resolved by Origin&apos;s
-                    arbitration team.
-                  </li>
-                  <li>No insurance is currently offered on any listings.</li>
-                </ul>
-                <div className="actions">
-                  <button
-                    className="btn btn-outline-light"
-                    onClick={() => {
-                      if (this.state.doNotShow) {
-                        store.set('hide-beta-modal', true)
-                      }
-                      this.setState({ shouldClose: true })
-                    }}
-                  >
-                    Proceed
-                  </button>
-                  <label>
-                    <input
-                      type="checkbox"
-                      value={this.state.doNotShow}
-                      onChange={() => this.setState({ doNotShow: true })}
-                    />
-                    Do not show again
-                  </label>
-                </div>
-              </div>
-            </Modal>
-          )
-        }}
-      </Query>
+      <Modal
+        onClose={() => this.props.onClose()}
+        shouldClose={this.state.shouldClose}
+      >
+        <div className="beta-modal">
+          <h5>
+            Welcome to Origin Beta! Origin is a decentralized marketplace that
+            works a little differently than most apps.
+          </h5>
+          <ul className="list-unstyled">
+            <li>
+              We&apos;re in Beta mode, but all transactions are real and use
+              ETH.
+            </li>
+            <li>
+              Please verify your{' '}
+              <Link
+                to="/profile"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="identity"
+              />
+              {' so other buyers and sellers know who you are.'}
+            </li>
+            <li>
+              Don&apos;t forget to enable{' '}
+              <Link
+                to="/messages"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="Origin Messaging"
+              />{' '}
+              so you can communicate with other users. It&apos;s free.
+            </li>
+            <li>
+              {'If you have any questions or need to dispute a transaction, '}
+              <a href="mailto:support@originprotocol.com">let us know</a>.
+            </li>
+          </ul>
+          <div className="actions">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => {
+                this.setState({ shouldClose: true })
+              }}
+              children="I got it."
+            />
+          </div>
+        </div>
+      </Modal>
     )
   }
 }
 
-export default BetaBanner
+export default BetaModal
 
 require('react-styl')(`
   .beta-modal
@@ -90,6 +67,9 @@ require('react-styl')(`
     background-size: 11rem
     padding-top: 10rem
     font-size: 16px
+    a
+      color: var(--white)
+      text-decoration: underline
     h5
       font-size: 18px
     ul

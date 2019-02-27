@@ -93,7 +93,7 @@ class OnboardNotifications extends Component {
   state = { permission: Notification.permission }
   render() {
     const { listing } = this.props
-    const nextLink = `/listings/${listing.id}/onboard/profile`
+    const nextLink = `/listing/${listing.id}/onboard/profile`
     return (
       <>
         {this.state.redirect && <Redirect to={nextLink} />}
