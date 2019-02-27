@@ -6,7 +6,10 @@ const expect = chai.expect
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 
-const db = require('../src/models')
+const _discoveryModels = require('../src/models')
+const _identityModels = require('origin-identity/src/models')
+const db = { ..._discoveryModels, ..._identityModels }
+
 const { handleLog } = require('../src/listener/handler')
 const  { MarketplaceEventHandler } = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')

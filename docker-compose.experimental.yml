@@ -54,6 +54,7 @@ services:
       - ./origin-messaging/:/app/origin-messaging/
       - ./origin-notifications/:/app/origin-notifications/
       - ./origin-growth/:/app/origin-growth/
+      - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
     # Exclude all node_modules
       - /app/experimental/origin-dapp2/node_modules/
@@ -70,7 +71,8 @@ services:
       - /app/origin-notifications/node_modules/
       - /app/origin-growth/node_modules/
       - /app/origin-token/node_modules/
-      # IPFS data
+      - /app/origin-identity/node_modules/
+    # IPFS data
       - ipfs:/app/ipfs
     ports:
       - "3000:3000"
@@ -142,6 +144,7 @@ services:
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
+      npm run migrate --prefix origin-identity &&
       npm run start:listener --prefix origin-discovery"
 
   origin-discovery:
