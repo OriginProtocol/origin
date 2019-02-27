@@ -85,6 +85,7 @@ class Buy extends Component {
         hash={this.state.waitFor}
         event="OfferCreated"
         walletType={walletType}
+        onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
           <div className="make-offer-modal success">

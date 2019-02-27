@@ -65,7 +65,11 @@ class AddData extends Component {
     if (!this.state.waitFor) return null
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="OfferData">
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="OfferData"
+        onClose={() => this.setState({ waitFor: null })}
+      >
         {({ client }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />

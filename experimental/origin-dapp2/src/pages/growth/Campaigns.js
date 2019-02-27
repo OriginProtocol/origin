@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
+import { fbt } from 'fbt-runtime'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
@@ -9,6 +10,16 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import { Link } from 'react-router-dom'
 import AccountTokenBalance from 'queries/TokenBalance'
+
+const GrowthEnum = require('Growth$FbtEnum')
+
+const GrowthTranslation = ({ stringKey }) => {
+  return (
+    <fbt desc="growth">
+      <fbt:enum enum-range={GrowthEnum} value={stringKey} />
+    </fbt>
+  )
+}
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -36,7 +47,11 @@ function CampaignNavItem(props) {
           {completedIndicator && <img src="images/circular-check-button.svg" />}
         </div>
         <div className={`name ${selected ? 'active' : ''}`}>
-          {campaign.name}
+          {GrowthEnum[campaign.shortNameKey] ? (
+            <GrowthTranslation stringKey={campaign.shortNameKey} />
+          ) : (
+            'Campaign'
+          )}
         </div>
         {selected && <div className="select-bar" />}
       </div>
@@ -257,7 +272,14 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const { startDate, endDate, status, rewardEarned, actions, name } = campaign
+  const {
+    startDate,
+    endDate,
+    status,
+    rewardEarned,
+    actions,
+    nameKey
+  } = campaign
 
   let timeLabel = ''
   let subTitleText = ''
@@ -310,7 +332,13 @@ function Campaign(props) {
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">{name}</h1>
+              <h1 className="mb-2 pt-3">
+                {GrowthEnum[nameKey] ? (
+                  <GrowthTranslation stringKey={nameKey} />
+                ) : (
+                  'Campaign'
+                )}
+              </h1>
               <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
               </a>

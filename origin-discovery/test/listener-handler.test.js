@@ -6,19 +6,26 @@ const expect = chai.expect
 const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 
-const db = require('../src/models')
+const _discoveryModels = require('../src/models')
+const _identityModels = require('origin-identity/src/models')
+const db = { ..._discoveryModels, ..._identityModels }
+
 const { handleLog } = require('../src/listener/handler')
-const  { MarketplaceEventHandler } = require('../src/listener/handler_marketplace')
+const {
+  MarketplaceEventHandler
+} = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')
 
-
 describe('Listener Handlers', () => {
-
   class MockWeb3Eth {
     constructor(decoded) {
-      this.getBlock = () => { return { timestamp: 1 } }
+      this.getBlock = () => {
+        return { timestamp: 1 }
+      }
       this.abi = {}
-      this.abi.decodeLog = () => { return decoded }
+      this.abi.decodeLog = () => {
+        return decoded
+      }
     }
   }
 
@@ -29,7 +36,7 @@ describe('Listener Handlers', () => {
         id: listingId,
         status: 'active',
         seller: seller,
-        events: [ { blockNumber: 1, logIndex: 1 } ]
+        events: [{ blockNumber: 1, logIndex: 1 }]
       })
       this.marketplace.getOffer = sinon.fake.returns({
         id: offerId,
@@ -40,7 +47,7 @@ describe('Listener Handlers', () => {
       const fakeUser = {
         address: seller,
         profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-        attestations: [ { service: 'email' }, { service: 'phone' } ]
+        attestations: [{ service: 'email' }, { service: 'phone' }]
       }
       this.users = {}
       this.users.get = sinon.fake.returns(fakeUser)
@@ -73,9 +80,16 @@ describe('Listener Handlers', () => {
       web3: {},
       networkId: 999,
       config: this.config,
-      origin: new MockOrigin(this.seller, this.buyer, this.listingId, this.offerId),
+      origin: new MockOrigin(
+        this.seller,
+        this.buyer,
+        this.listingId,
+        this.offerId
+      )
     }
-    this.context.web3.eth = new MockWeb3Eth( { listingID: this.listingId.split('-')[2] })
+    this.context.web3.eth = new MockWeb3Eth({
+      listingID: this.listingId.split('-')[2]
+    })
 
     // Marketplace test fixtures.
     this.marketplaceRule = {
@@ -100,7 +114,7 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      topics: ['topic0', 'topic1', 'topic2', 'topic3']
     }
 
     // Identity test fixtures.
@@ -127,7 +141,7 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      topics: ['topic0', 'topic1', 'topic2', 'topic3']
     }
   })
 
@@ -139,13 +153,22 @@ describe('Listener Handlers', () => {
       this.context
     )
     expect(this.marketplaceRule.handler.process.calledOnce).to.equal(true)
-    expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(true)
-    expect(this.marketplaceRule.handler.discordWebhookEnabled.calledOnce).to.equal(true)
-    expect(this.marketplaceRule.handler.emailWebhookEnabled.calledOnce).to.equal(true)
+    expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(
+      true
+    )
+    expect(
+      this.marketplaceRule.handler.discordWebhookEnabled.calledOnce
+    ).to.equal(true)
+    expect(
+      this.marketplaceRule.handler.emailWebhookEnabled.calledOnce
+    ).to.equal(true)
   })
 
   it(`Marketplace`, async () => {
-    const handler = new MarketplaceEventHandler(this.config, this.context.origin)
+    const handler = new MarketplaceEventHandler(
+      this.config,
+      this.context.origin
+    )
     const result = await handler.process(this.marketplaceLog)
 
     // Check output.
@@ -156,14 +179,30 @@ describe('Listener Handlers', () => {
 
     // Check expected rows were inserted in the DB.
     const listing = await db.Listing.findAll({
-      where: { id: this.listingId, blockNumber: 1, logIndex: 1, sellerAddress: this.seller } })
+      where: {
+        id: this.listingId,
+        blockNumber: 1,
+        logIndex: 1,
+        sellerAddress: this.seller
+      }
+    })
     expect(listing.length).to.equal(1)
     const offer = await db.Offer.findAll({
       where: {
-        id: this.offerId, listingId: this.listingId, status: 'finalized',
-        sellerAddress: this.seller, buyerAddress: this.buyer } })
+        id: this.offerId,
+        listingId: this.listingId,
+        status: 'finalized',
+        sellerAddress: this.seller,
+        buyerAddress: this.buyer
+      }
+    })
     expect(offer.length).to.equal(1)
-    const listingEvent = await GrowthEvent.findAll(null, this.buyer, GrowthEventTypes.ListingPurchased, this.offerId)
+    const listingEvent = await GrowthEvent.findAll(
+      null,
+      this.buyer,
+      GrowthEventTypes.ListingPurchased,
+      this.offerId
+    )
     expect(listingEvent.length).to.equal(1)
   })
 
@@ -188,15 +227,36 @@ describe('Listener Handlers', () => {
     // Check expected entry was added into user DB table.
     const user = await db.Identity.findAll({
       where: {
-        ethAddress: this.seller, firstName: 'foo', lastName: 'bar', email: 'toto@spirou.com', phone: '+33 0555875838' } })
+        ethAddress: this.seller,
+        firstName: 'foo',
+        lastName: 'bar',
+        email: 'toto@spirou.com',
+        phone: '+33 0555875838'
+      }
+    })
     expect(user.length).to.equal(1)
 
     // Check expected growth rows were inserted in the DB.
-    const profileEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.ProfilePublished, null)
+    const profileEvents = await GrowthEvent.findAll(
+      null,
+      this.seller,
+      GrowthEventTypes.ProfilePublished,
+      null
+    )
     expect(profileEvents.length).to.equal(1)
-    const emailEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.EmailAttestationPublished, null)
+    const emailEvents = await GrowthEvent.findAll(
+      null,
+      this.seller,
+      GrowthEventTypes.EmailAttestationPublished,
+      null
+    )
     expect(emailEvents.length).to.equal(1)
-    const phoneEvents = await GrowthEvent.findAll(null, this.seller, GrowthEventTypes.PhoneAttestationPublished, null)
+    const phoneEvents = await GrowthEvent.findAll(
+      null,
+      this.seller,
+      GrowthEventTypes.PhoneAttestationPublished,
+      null
+    )
     expect(phoneEvents.length).to.equal(1)
   })
 })

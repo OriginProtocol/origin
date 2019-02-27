@@ -29,7 +29,7 @@ class Availability extends Component {
 
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
 
     if (this.state.valid) {
       return <Redirect to={`${prefix}/boost`} push />
