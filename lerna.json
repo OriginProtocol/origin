@@ -16,7 +16,8 @@
     "origin-notifications",
     "origin-tests",
     "origin-token",
-    "origin-token-transfer/*"
+    "origin-token-transfer-client",
+    "origin-token-transfer-server"
   ],
   "command": {
     "bootstrap": {
