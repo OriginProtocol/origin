@@ -224,6 +224,7 @@ class OriginEventSource {
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
+    let pendingUnits = 0
     const booked = []
 
     if (listing.listingType === 'fractional') {
@@ -245,6 +246,9 @@ class OriginEventSource {
         } else {
           try {
             unitsAvailable -= offer.quantity
+            if (offer.status === '1' || offer.status === '2') {
+              pendingUnits += offer.quantity
+            }
 
             // Validate offer commission.
             const normalCommission = commissionPerUnit.mul(
@@ -274,9 +278,15 @@ class OriginEventSource {
     commissionAvailable = !commissionAvailable.isNeg()
       ? commissionAvailable.toString()
       : '0'
+
     if (listing.status === 'active' && unitsAvailable <= 0) {
-      listing.status = 'sold'
+      if (listing.unitsTotal === 1 && pendingUnits > 0) {
+        listing.status = 'pending'
+      } else {
+        listing.status = 'sold'
+      }
     }
+
     return Object.assign({}, listing, {
       allOffers,
       booked,

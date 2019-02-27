@@ -5,7 +5,6 @@ import get from 'lodash/get'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import BetaBanner from './_BetaBanner'
-import BetaModal from './_BetaModal'
 import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
@@ -70,7 +69,6 @@ class App extends Component {
     return (
       <>
         <BetaBanner />
-        <BetaModal />
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>

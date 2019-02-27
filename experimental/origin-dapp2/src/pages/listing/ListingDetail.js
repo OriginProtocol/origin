@@ -201,8 +201,8 @@ class ListingDetail extends Component {
     const { listing } = this.props
 
     const isFractional = listing.__typename === 'FractionalListing'
-    const sold = listing.unitsSold >= listing.unitsTotal
-    const pending = listing.unitsAvailable <= 0
+    const sold = listing.status === 'sold'
+    const pending = listing.status === 'pending'
     const isAnnouncement = get(listing, 'category', '').match(/announcement/i)
 
     return (
@@ -229,6 +229,8 @@ class ListingDetail extends Component {
                 />
               </>
             )}
+            <hr />
+            <Reviews id={listing.seller.id} />
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
@@ -253,8 +255,6 @@ class ListingDetail extends Component {
             <AboutParty id={listing.seller.id} />
           </div>
         </div>
-        <hr />
-        <Reviews id={listing.seller.id} />
       </div>
     )
   }
