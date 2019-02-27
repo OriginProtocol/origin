@@ -117,14 +117,11 @@ const referralRuleApolloObject = async (
     type: 'Referral',
     unlockConditions: conditionToUnlockRule(rule, allRules),
     ...referralsInfo,
-    status,
+    status
   }
 }
 
-const conditionToUnlockRule = (
-  rule,
-  allRules
-) => {
+const conditionToUnlockRule = (rule, allRules) => {
   return allRules
     .filter(allRule => allRule.levelId === rule.levelId - 1)
     .filter(allRule => allRule.config.nextLevelCondition === true)

@@ -278,9 +278,10 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
-    if (this.config.nextLevelCondition === true &&
-        (!this.config.conditionTranslateKey || !this.config.conditionIcon)
-      ) {
+    if (
+      this.config.nextLevelCondition === true &&
+      (!this.config.conditionTranslateKey || !this.config.conditionIcon)
+    ) {
       throw new Error('Missing translation key and icon.')
     }
     this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
