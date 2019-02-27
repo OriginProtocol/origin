@@ -151,7 +151,7 @@ module.exports =
   }
 
   type Mutation {
-    invite(emails: [String!]!): InviteResponse
+    invite(walletAddress: ID!, emails: [String!]!): InviteResponse
     enroll(campaignId: Int!, notResidentCertification: Boolean): EnrollResponse
     gasForIdentity(walletAddress: ID!): SimpleResponse
     invited(walletAddress: ID!, inviteCode: String!): SimpleResponse

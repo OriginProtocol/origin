@@ -78,9 +78,8 @@ const resolvers = {
   },
   Mutation: {
     async invite(root, args) {
-      // FIXME: get referrer's eth address from Auth token.
-      const referrer = 'FakeAddress'
-      await sendInviteEmails(referrer, args.emails)
+      // FIXME: Check the referrer against Auth token.
+      await sendInviteEmails(args.walletAddress, args.emails)
       return {
         code: '200',
         success: true,
