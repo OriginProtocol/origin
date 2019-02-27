@@ -43,7 +43,7 @@ const server = new ApolloServer({
   },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
-  playground: true,
+  playground: true
 })
 
 server.applyMiddleware({ app })
@@ -54,5 +54,7 @@ listingMetadata.updateHiddenFeaturedListings()
 const port = process.env.PORT || 4000
 
 app.listen({ port: port }, () =>
-  console.log(`Apollo server ready at http://localhost:${port}${server.graphqlPath}`)
+  console.log(
+    `Apollo server ready at http://localhost:${port}${server.graphqlPath}`
+  )
 )
