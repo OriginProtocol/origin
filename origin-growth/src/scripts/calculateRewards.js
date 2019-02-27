@@ -12,7 +12,7 @@ const Token = require('origin-token/src/token')
 
 const enums = require('../enums')
 const db = require('../models')
-const { Campaign } = require('../rules/rules')
+const { CampaignRules } = require('../rules/rules')
 const parseArgv = require('../util/args')
 
 // We allow a campaign to go a bit over budget since the capUsed field
@@ -112,7 +112,7 @@ class CalculateRewards {
       logger.info(
         `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
       )
-      const campaignRule = new Campaign(campaign, JSON.parse(campaign.rules))
+      const rules = new CampaignRules(campaign, JSON.parse(campaign.rules))
 
       // Consistency checks.
       if (campaign.currency !== 'OGN') {
@@ -159,7 +159,7 @@ class CalculateRewards {
 
         // Calculate rewards for this user.
         // Note that we set the onlyVerifiedEvents param of getRewards to true.
-        const rewards = await campaignRule.getRewards(ethAddress, true)
+        const rewards = await rules.getRewards(ethAddress, true)
         if (!rewards.length) {
           continue
         }

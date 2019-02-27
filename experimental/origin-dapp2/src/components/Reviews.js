@@ -7,7 +7,9 @@ import distanceToNow from 'utils/distanceToNow'
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
 import Link from 'components/Link'
-import ReviewsQuery from 'queries/Reviews'
+import QueryError from 'components/QueryError'
+
+import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
 export default class Reviews extends Component {
@@ -20,9 +22,12 @@ export default class Reviews extends Component {
   render() {
     const id = this.props.id
     return (
-      <Query query={ReviewsQuery} variables={{ id }}>
+      <Query query={query} variables={{ id }}>
         {({ data, loading, error }) => {
-          if (loading || error) return null
+          if (error) {
+            return <QueryError error={error} query={query} vars={{ id }} />
+          }
+          if (loading) return null
 
           const reviews = get(data, 'marketplace.user.reviews.nodes', [])
           const count = get(data, 'marketplace.user.reviews.totalCount', 0)
@@ -64,7 +69,7 @@ export default class Reviews extends Component {
                         <div className="info">
                           <div className="purchase">
                             {`Purchased `}
-                            <Link to={`/listings/${review.listing.id}`}>
+                            <Link to={`/listing/${review.listing.id}`}>
                               {review.listing.title}
                             </Link>
                           </div>

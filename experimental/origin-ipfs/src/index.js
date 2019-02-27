@@ -100,11 +100,11 @@ async function getText(gateway, hashAsBytes) {
     hashAsBytes.indexOf('0x') === 0
       ? getIpfsHashFromBytes32(hashAsBytes)
       : hashAsBytes
-  const response = await new Promise(resolve => {
+  const response = await new Promise((resolve, reject) => {
     let didTimeOut = false
     const timeout = setTimeout(() => {
       didTimeOut = true
-      resolve()
+      reject()
     }, 10000)
     fetch(`${gateway}/ipfs/${hash}`)
       .then(response => {
@@ -116,7 +116,7 @@ async function getText(gateway, hashAsBytes) {
       .catch(() => {
         clearTimeout(timeout)
         if (!didTimeOut) {
-          resolve(null)
+          reject()
         }
       })
   })

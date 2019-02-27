@@ -28,7 +28,13 @@ class WaitForTransaction extends Component {
       return (
         <>
           <MobileLinkerCode role={role} />
-          <Modal>
+          <Modal
+            onClose={() => {
+              if (this.props.onClose) {
+                this.props.onClose()
+              }
+            }}
+          >
             <div className="make-offer-modal">
               <div className="spinner light" />
               <div>
@@ -43,7 +49,7 @@ class WaitForTransaction extends Component {
 
     return (
       <Query query={query} variables={{ id }} pollInterval={3000}>
-        {({ data, client }) => {
+        {({ data, client, error }) => {
           const events = get(data, 'web3.transactionReceipt.events', [])
           const currentBlock = get(data, 'web3.blockNumber')
           const confirmedBlock = get(
@@ -54,7 +60,17 @@ class WaitForTransaction extends Component {
             events.find(e => e.event === this.props.event) || events[0]
 
           let content
-          if (!event) {
+          if (error) {
+            console.log(error)
+            content = (
+              <div className="make-offer-modal">
+                <div className="spinner light" />
+                <div>
+                  <b>Error - see console</b>
+                </div>
+              </div>
+            )
+          } else if (!event) {
             content = (
               <div className="make-offer-modal">
                 <div className="spinner light" />

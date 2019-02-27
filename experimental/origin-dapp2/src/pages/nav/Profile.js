@@ -17,9 +17,11 @@ class ProfileNav extends Component {
     super()
     this.state = {}
   }
+
   render() {
+    // TODO: Bring back pollInterval={1000} for wallet linking?
     return (
-      <Query query={ProfileQuery} pollInterval={1000}>
+      <Query query={ProfileQuery}>
         {({ data, loading, error }) => {
           if (error) console.error(error)
           if (loading || error) return null

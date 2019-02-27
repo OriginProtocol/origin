@@ -193,7 +193,7 @@ class Messaging {
   preGenKeys(web3Account) {
     const sig_phrase = PROMPT_MESSAGE
     const signature = web3Account.sign(sig_phrase).signature
-    console.log('We got a signature of: ', signature)
+    debug('We got a signature of: ', signature)
 
     const sig_key = signature.substring(0, 66)
     const msg_account = this.web3.eth.accounts.privateKeyToAccount(sig_key)
@@ -328,7 +328,7 @@ class Messaging {
         (peer_ids && peer_ids.sort().join() !== this.last_peers.sort().join())
       ) {
         this.last_peers = peer_ids
-        console.log('New peers:', this.last_peers)
+        debug('New peers:', this.last_peers)
       }
       //let's do a 15 second reconnect policy
       if (
@@ -341,7 +341,7 @@ class Messaging {
         for (const peer of Object.keys(this.ipfs.__reconnect_peers)) {
           if (!this.last_peers.includes(peer)) {
             const peer_address = this.ipfs.__reconnect_peers[peer]
-            console.log('Reconnecting:', peer_address)
+            debug('Reconnecting:', peer_address)
             this.ipfs.swarm.connect(peer_address)
           }
         }
@@ -384,52 +384,51 @@ class Messaging {
     debug('initRemote')
     this.ipfs = this.ipfsCreator(this.account_key)
 
-    return new Promise((resolve, reject) => {
-      this.ipfs
-        .on('ready', async () => {
-          debug('ipfsReady')
-          if (this.refreshIntervalId) {
-            clearInterval(this.refreshIntervalId)
-          }
+    return new Promise(resolve => {
+      this.ipfs.on('ready', async () => {
+        debug('ipfsReady')
+        if (this.refreshIntervalId) {
+          clearInterval(this.refreshIntervalId)
+        }
 
-          this.last_connect_time = Date.now()
-          this.refreshIntervalId = setInterval(
-            this.refreshPeerList.bind(this),
-            5000
-          )
+        this.last_connect_time = Date.now()
+        this.refreshIntervalId = setInterval(
+          this.refreshPeerList.bind(this),
+          5000
+        )
 
-          const main_keystore = new InsertOnlyKeystore(this.account_key, '-')
-          this.main_orbit = new this.OrbitDB(
-            this.ipfs,
-            'main_orbit' + this.account_key,
-            { keystore: main_keystore }
-          )
+        const main_keystore = new InsertOnlyKeystore(this.account_key, '-')
+        this.main_orbit = new this.OrbitDB(
+          this.ipfs,
+          'main_orbit' + this.account_key,
+          { keystore: main_keystore }
+        )
 
-          main_keystore.registerSignVerify(
-            this.GLOBAL_KEYS,
-            this.signRegistry.bind(this),
-            this.verifyRegistrySignature.bind(this),
-            this.postVerifyRegistry.bind(this)
-          )
+        main_keystore.registerSignVerify(
+          this.GLOBAL_KEYS,
+          this.signRegistry.bind(this),
+          this.verifyRegistrySignature.bind(this),
+          this.postVerifyRegistry.bind(this)
+        )
 
-          // took a hint from peerpad
-          this.global_keys = await this.main_orbit.kvstore(
-            this.GLOBAL_KEYS,
-            this.orbitStoreOptions({ write: ['*'] })
-          )
+        // took a hint from peerpad
+        this.global_keys = await this.main_orbit.kvstore(
+          this.GLOBAL_KEYS,
+          this.orbitStoreOptions({ write: ['*'] })
+        )
 
-          this.events.emit('initRemote')
+        this.events.emit('initRemote')
 
-          try {
-            // await this.global_keys.load()
-            this.global_keys.load()
-          } catch (error) {
-            console.error(error)
-          }
+        try {
+          // await this.global_keys.load()
+          this.global_keys.load()
+        } catch (error) {
+          console.error(error)
+        }
 
-          this.ipfs_bound_account = this.account_key
-          resolve(this.global_keys)
-        })
+        this.ipfs_bound_account = this.account_key
+        resolve(this.global_keys)
+      })
     })
   }
 
@@ -624,7 +623,7 @@ class Messaging {
       if (this.sharedRooms[key] == 'wait') {
         return new Promise(resolve => {
           this.events.on('SharedRoom.' + key, room => {
-            console.log('Returning shared room:', key)
+            debug('Returning shared room:', key)
             resolve(room)
           })
         })

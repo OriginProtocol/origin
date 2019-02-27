@@ -24,13 +24,38 @@ const rule = {
     0: {
       rules: [
         {
-          id: 'PreRequisite',
+          id: 'ProfilePublished',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'ProfilePublished',
+            reward: null,
+            nextLevelCondition: false,
+            visible: true
+          }
+        },
+        {
+          id: 'EmailAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'EmailAttestationPublished',
+            reward: null,
+            visible: true,
+            limit: 1,
+            nextLevelCondition: false
+          }
+        },
+        {
+          id: 'BothRules',
           class: 'MultiEvents',
           config: {
             eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
+            visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.profile.and.email.requirement',
+            //TODO: update image once it is created
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]
@@ -46,6 +71,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -59,6 +85,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -72,6 +99,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -85,6 +113,7 @@ const rule = {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
+            visible: true,
             limit: 1,
             nextLevelCondition: false
           }
@@ -99,9 +128,13 @@ const rule = {
               'AirbnbAttestationPublished',
               'TwitterAttestationPublished'
             ],
+            visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.two.attestations.requirement',
+            //TODO: update image once it is created
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]
@@ -110,14 +143,15 @@ const rule = {
       rules: [
         {
           id: 'Referral',
-          class: 'SingleEvent',
+          class: 'Referral',
           config: {
-            eventType: 'RefereeSignedUp',
+            requiredLevel: 2,
             reward: {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 100,
+            visible: true,
             nextLevelCondition: false
           }
         },
@@ -130,6 +164,7 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
           }
@@ -143,6 +178,7 @@ const rule = {
               amount: tokenNaturalUnits(5),
               currency: 'OGN'
             },
+            visible: true,
             limit: 10,
             nextLevelCondition: false
           }
@@ -163,9 +199,14 @@ async function createTestData() {
     truncate: true
   })
 
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * experimental/origin-dapp2/src/constants/Growth$FbtEnum.js
+   */
+
   await db.GrowthCampaign.upsert({
     id: 1,
-    name: 'JAN 2019',
+    nameKey: 'growth.jan2019.name',
+    shortNameKey: 'growth.jan2019.short_name',
     rules: JSON.stringify(rule),
     startDate: Date.parse('January 1, 2019'),
     endDate: Date.parse('January 28, 2019'),
@@ -178,7 +219,8 @@ async function createTestData() {
 
   await db.GrowthCampaign.upsert({
     id: 2,
-    name: 'FEB 2019',
+    nameKey: 'growth.feb2019.name',
+    shortNameKey: 'growth.feb2019.short_name',
     rules: JSON.stringify(rule),
     startDate: Date.parse('February 1, 2019'),
     endDate: Date.parse('February 28, 2019'),
@@ -191,7 +233,8 @@ async function createTestData() {
 
   await db.GrowthCampaign.upsert({
     id: 3,
-    name: 'MAR 2019',
+    nameKey: 'growth.mar2019.name',
+    shortNameKey: 'growth.mar2019.short_name',
     rules: JSON.stringify(rule),
     startDate: Date.parse('March 1, 2019'),
     endDate: Date.parse('March 31, 2019'),
@@ -204,7 +247,8 @@ async function createTestData() {
 
   await db.GrowthCampaign.upsert({
     id: 4,
-    name: 'APR 2019',
+    nameKey: 'growth.apr2019.name',
+    shortNameKey: 'growth.apr2019.short_name',
     rules: JSON.stringify(rule),
     startDate: Date.parse('April 1, 2019'),
     endDate: Date.parse('April 30, 2019'),

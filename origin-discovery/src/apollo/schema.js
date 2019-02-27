@@ -27,13 +27,13 @@ const typeDefs = gql`
   # USER
   #
   type User {
-    walletAddress: ID!   # Ethereum wallet address
-    identityAddress: ID  # ERC 725 identity address.
+    walletAddress: ID! # Ethereum wallet address
+    identityAddress: ID # ERC 725 identity address.
     firstName: String
     lastName: String
     description: String
     listings: ListingConnection # Listings created by the user.
-    offers: OfferConnection     # Offers made by the user.
+    offers: OfferConnection # Offers made by the user.
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -48,8 +48,8 @@ const typeDefs = gql`
     buyer: User!
     seller: User!
     status: String!
-    affiliate: ID,
-    unitsPurchased: Int,
+    affiliate: ID
+    unitsPurchased: Int
     totalPrice: Price!
     commission: Price!
     listing: Listing!
@@ -103,7 +103,7 @@ const typeDefs = gql`
 
   #
   # This should come from origin-js/models/listing
-  # It's all the chainlisting inputs 
+  # It's all the chainlisting inputs
   #
   input ListingInput {
     ipfsHash: ID!
@@ -137,7 +137,7 @@ const typeDefs = gql`
   #
   ######################
   enum OrderDirection {
-    ASC   # Default if no direction specified.
+    ASC # Default if no direction specified.
     DESC
   }
   input Page {
@@ -165,7 +165,7 @@ const typeDefs = gql`
     RATING
   }
   enum ListingOrderField {
-    RELEVANCE  # Default if no order field specified in the query.
+    RELEVANCE # Default if no order field specified in the query.
     PRICE
     CREATION_DATE
     SELLER_RATING
@@ -189,7 +189,7 @@ const typeDefs = gql`
   input OfferFilter {
     status: String
   }
-   input ReviewFilter {
+  input ReviewFilter {
     rating: Int
   }
   enum ValueType {
@@ -218,13 +218,17 @@ const typeDefs = gql`
   # The "Query" type is the root of all GraphQL queries.
   #
   type Query {
-    listings(searchQuery: String, filters: [ListingFilter!], page: Page!): ListingPage,
-    listing(id: ID!, blockInfo: inBlockInfo): Listing,
+    listings(
+      searchQuery: String
+      filters: [ListingFilter!]
+      page: Page!
+    ): ListingPage
+    listing(id: ID!, blockInfo: inBlockInfo): Listing
 
-    offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection,
-    offer(id: ID!): Offer,
+    offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection
+    offer(id: ID!): Offer
 
-    user(walletAddress: ID!): User,
+    user(walletAddress: ID!): User
 
     info: JSON!
   }
@@ -234,7 +238,11 @@ const typeDefs = gql`
   #
   type Mutation {
     injectListing(listingInput: ListingInput, signature: String!): Listing
-    updateListing(id: ID!, listingInput: ListingInput, signature: String!): Listing
+    updateListing(
+      id: ID!
+      listingInput: ListingInput
+      signature: String!
+    ): Listing
   }
 `
 

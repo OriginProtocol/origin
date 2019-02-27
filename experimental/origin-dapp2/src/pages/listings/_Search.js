@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
-import queryString from 'query-string'
+import omit from 'lodash/omit'
 import { fbt } from 'fbt-runtime'
 import Categories from 'origin-graphql/src/constants/Categories'
+
+// import PriceFilter from './filters/Price'
 
 const CategoriesEnum = require('Categories$FbtEnum')
 
@@ -16,25 +18,10 @@ const categories = Categories.root.map(c => ({
 }))
 categories.unshift({ id: '', type: '' })
 
-function getStateFromQuery(props) {
-  const getParams = queryString.parse(props.location.search)
-  return {
-    category: categories.find(c => c.type === getParams.type) || {},
-    searchInput: getParams.q || '',
-    open: false
-  }
-}
-
 class Search extends Component {
   constructor(props) {
     super(props)
-    this.state = getStateFromQuery(props)
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.location.search !== this.props.location.search) {
-      this.setState(getStateFromQuery(this.props))
-    }
+    this.state = props.value || {}
   }
 
   render() {
@@ -42,14 +29,17 @@ class Search extends Component {
     const category = this.state.category || {}
     return (
       <div className="search-bar">
-        <div className="container">
-          <div className="input-group">
+        <div className="container d-flex align-items-center">
+          <div className="input-group search-query">
             <Dropdown
               className="input-group-prepend"
               content={
                 <SearchDropdown
+                  active={category}
                   onChange={category =>
-                    this.setState({ category, open: false })
+                    this.setState({ category, open: false }, () => {
+                      this.doSearch()
+                    })
                   }
                 />
               }
@@ -74,7 +64,7 @@ class Search extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder={enabled ? null : 'Note: Search unavailable'}
+              placeholder={enabled ? 'Search' : 'Note: Search unavailable'}
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
               onKeyUp={e => {
@@ -88,32 +78,36 @@ class Search extends Component {
               />
             </div>
           </div>
+          {/* <PriceFilter
+            low={this.state.priceLow}
+            high={this.state.priceHigh}
+            onChange={({ low, high }) => {
+              this.setState(
+                { priceMin: low / 1000, priceMax: high / 1000 },
+                () => this.doSearch()
+              )
+            }}
+          /> */}
         </div>
       </div>
     )
   }
 
   doSearch() {
-    this.props.history.replace({
-      to: '/search',
-      search: queryString.stringify({
-        q: this.state.searchInput || undefined,
-        type: this.state.category.type || undefined
-      })
-    })
-
     if (this.props.onSearch) {
-      this.props.onSearch(this.state.searchInput)
+      this.props.onSearch(omit(this.state, 'open'))
     }
   }
 }
 
-const SearchDropdown = ({ onChange }) => (
+const SearchDropdown = ({ onChange, active }) => (
   <div className="dropdown-menu show">
     {categories.map((category, idx) => (
       <a
         key={idx}
-        className="dropdown-item"
+        className={`dropdown-item${
+          active && active.id === category.id ? ' active' : ''
+        }`}
         href="#"
         onClick={e => {
           e.preventDefault()
@@ -139,22 +133,22 @@ require('react-styl')(`
     padding: 0.7rem 0
     box-shadow: 0 1px 0 0 var(--light)
     background-color: var(--pale-grey)
-    .input-group
+    .input-group.search-query
       max-width: 520px
-    .btn-outline-secondary
-      border: 1px solid var(--light)
-      font-size: 14px
-      font-weight: normal
-      color: var(--dusk)
-    .dropdown-toggle::after
-      margin-left: 0.5rem
-    .form-control
-      border-color: var(--light)
-      &::placeholder
-        opacity: 0.5
-    .btn-primary
-      background: var(--dusk) url(images/magnifying-glass.svg) no-repeat center
-      border-color: var(--dusk)
-      padding-left: 1.25rem
-      padding-right: 1.25rem
+      .btn-outline-secondary
+        border: 1px solid var(--light)
+        font-size: 14px
+        font-weight: normal
+        color: var(--dusk)
+      .dropdown-toggle::after
+        margin-left: 0.5rem
+      .form-control
+        border-color: var(--light)
+        &::placeholder
+          opacity: 0.5
+      .btn-primary
+        background: var(--dusk) url(images/magnifying-glass.svg) no-repeat center
+        border-color: var(--dusk)
+        padding-left: 1.25rem
+        padding-right: 1.25rem
 `)

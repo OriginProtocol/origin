@@ -21,6 +21,8 @@ const ListingInterface = `
   featured: Boolean
   depositAvailable: String
   type: String
+  valid: Boolean
+  validationError: String
 
   # IPFS
   title: String
@@ -91,7 +93,17 @@ module.exports = `
 
     executeRuling(
       offerID: ID!
+      offerID: ID!
+      # ruling may be one of:
+      #
+      # - refund-buyer: Buyer gets all value in the offer
+      # - pay-seller: Seller gets all value in the offer
+      # - partial-refund: Buyer the refund value, Seller gets all remaining value
       ruling: String!
+      # commission may be one of:
+      #
+      # - pay: Affiliate receives commission tokens, if any
+      # - refund: Seller refunded commission tokens, if any
       commission: String!
       message: String
       refund: String
@@ -125,6 +137,7 @@ module.exports = `
       before: String
       after: String
       search: String
+      filters: [ListingFilterInput!]
       sort: String
       hidden: Boolean
     ): ListingConnection!
@@ -302,6 +315,29 @@ module.exports = `
     ipfsUrl: String
   }
 
+  enum ValueType {
+    STRING
+    FLOAT
+    DATE
+    ARRAY_STRING
+  }
+
+  enum FilterOperator {
+    EQUALS
+    CONTAINS
+    GREATER
+    GREATER_OR_EQUAL
+    LESSER
+    LESSER_OR_EQUAL
+  }
+
+  input ListingFilterInput {
+    name: String!
+    value: String!
+    valueType: ValueType!
+    operator: FilterOperator!
+  }
+
   input ListingInput {
     title: String!
     description: String
@@ -315,6 +351,8 @@ module.exports = `
     commission: String
     "commission, in natural units, to be paid for each unit sold"
     commissionPerUnit: String
+
+    marketplacePublisher: String
   }
 
   input UnitListingInput {
@@ -346,5 +384,4 @@ module.exports = `
     amount: String
     currency: String
   }
-
 `

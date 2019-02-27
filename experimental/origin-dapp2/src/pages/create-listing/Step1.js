@@ -25,7 +25,7 @@ class Step1 extends Component {
     if (this.state.valid) {
       if (isEdit) {
         return (
-          <Redirect to={`/listings/${this.props.listingId}/edit/step-2`} push />
+          <Redirect to={`/listing/${this.props.listingId}/edit/step-2`} push />
         )
       } else {
         return <Redirect to="/create/step-2" push />
@@ -42,7 +42,10 @@ class Step1 extends Component {
         <div
           key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-          onClick={() => this.setState({ category: id, subCategory: '' })}
+          onClick={e => {
+            if (e.target.tagName == 'SELECT') return
+            this.setState({ category: id, subCategory: '' })
+          }}
         >
           <div className="title">{title}</div>
           {!active ? null : (

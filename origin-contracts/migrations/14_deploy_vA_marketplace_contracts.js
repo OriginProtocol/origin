@@ -13,6 +13,8 @@ async function deployContracts(deployer, network) {
 
   await deployer.deploy(VA_Marketplace, token.address, netId)
   const contractOwner = await token.owner()
-  await token.addCallSpenderWhitelist(VA_Marketplace.address, {from:contractOwner})
+  if (!(network === 'mainnet' || process.env['SIMULATE_MAINNET'])) {
+    await token.addCallSpenderWhitelist(VA_Marketplace.address, {from:contractOwner})
+  }
 }
 
