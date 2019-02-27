@@ -13,11 +13,13 @@ COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./origin-growth ./origin-growth
+COPY ./origin-identity ./origin-identity
 COPY ./origin-token ./origin-token
 COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
 COPY ./experimental/origin-graphql ./experimental/origin-graphql
 COPY ./experimental/origin-ipfs ./experimental/origin-ipfs
 COPY ./experimental/origin-messaging-client ./experimental/origin-messaging-client
+COPY ./experimental/origin-linker-client ./experimental/origin-linker-client
 COPY ./experimental/origin-services ./experimental/origin-services
 COPY ./experimental/origin-validator ./experimental/origin-validator
 COPY ./scripts ./scripts

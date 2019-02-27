@@ -4,7 +4,7 @@ import get from 'lodash/get'
 class Gallery extends Component {
   state = { active: 0 }
   render() {
-    const pics = get(this.props, 'pics', [])
+    const pics = get(this.props, 'pics') || []
     const active = pics[this.state.active]
     if (!active) return null
 
@@ -65,8 +65,7 @@ require('react-styl')(`
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5)
             opacity: 1
 
-
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .gallery
       flex-direction: column
       .thumbnails
@@ -76,6 +75,7 @@ require('react-styl')(`
         margin-left: 0
         .inner
           flex-direction: row
+          justify-content: center
           > div
             width: 75px
             height: 50px

@@ -5,9 +5,11 @@ import get from 'lodash/get'
 import Store from 'utils/store'
 import NetworkQuery from 'queries/Network'
 import Tooltip from 'components/Tooltip'
+import BetaModal from './_BetaModal'
 
 const store = Store('sessionStorage')
 const GitHubLink = 'https://github.com/OriginProtocol/origin-dapp/issues/new'
+const SupportEmail = 'support@originprotocol.com'
 
 class BetaBanner extends Component {
   state = {
@@ -40,12 +42,27 @@ class BetaBanner extends Component {
                   <div className="badge badge-primary">Beta</div>
                   <div>
                     <div>
-                      You&apos;re currently using the Origin {networkName} Beta.
+                      {`You're currently using the Origin Beta on ${networkName}. `}
+                      <a
+                        href="#"
+                        onClick={e => {
+                          e.preventDefault()
+                          this.setState({ reminders: true })
+                        }}
+                        children="Important Reminders"
+                      />
+                      {!this.state.reminders ? null : (
+                        <BetaModal
+                          onClose={() => this.setState({ reminders: false })}
+                        />
+                      )}
                     </div>
                     <div>
-                      {'Found a bug? Open an issue on '}
+                      {'Found a bug or have feedback? Send an email to '}
+                      <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
+                      {', open an issue on '}
                       <a href={GitHubLink}>GitHub</a>
-                      {' or report it in our #bug-reports channel on '}
+                      {' or post in our #bug-reports channel on '}
                       <a href="https://discord.gg/jyxpUSe">Discord</a>.
                     </div>
                   </div>
@@ -87,6 +104,7 @@ require('react-styl')(`
       padding: 0.375rem 0.5rem
       font-size: 14px
       font-weight: bold
+      line-height: 1
       .container
         padding-right: 0
       .badge

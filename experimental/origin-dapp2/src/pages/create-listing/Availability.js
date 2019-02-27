@@ -29,7 +29,7 @@ class Availability extends Component {
 
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
 
     if (this.state.valid) {
       return <Redirect to={`${prefix}/boost`} push />
@@ -236,7 +236,7 @@ require('react-styl')(`
     .availability-editor
       margin-top: 10.5rem
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem
       font-size: 18px
       font-weight: normal

@@ -12,6 +12,25 @@ import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
 import RoomStatus from 'pages/messaging/RoomStatus'
 
+const MessagingDisabled = ({ onClose }) => (
+  <div className="dropdown-menu dropdown-menu-right show">
+    <div className="count">
+      <div className="total">1</div>
+      <div className="title">Unread Message</div>
+      <Link
+        to="/messages"
+        onClick={() => onClose()}
+        className="btn btn-primary btn-rounded btn-sm"
+      >
+        Enable Messaging
+      </Link>
+    </div>
+    <Link to="/messages" onClick={() => onClose()}>
+      View Messages
+    </Link>
+  </div>
+)
+
 class MessagesNav extends Component {
   constructor() {
     super()
@@ -22,26 +41,30 @@ class MessagesNav extends Component {
       <Query query={MessagingQuery} pollInterval={2000}>
         {({ data, loading, error }) => {
           if (loading || error) return null
-          if (!get(data, 'web3.metaMaskAccount.id')) {
-            return null
+          const messagingEnabled = get(data, 'messaging.enabled', false)
+          const totalUnread = get(data, 'messaging.totalUnread', 0)
+          const hasUnread = totalUnread > 0 ? ' active' : ''
+
+          let content = (
+            <MessagingDisabled onClose={() => this.props.onClose()} />
+          )
+          if (this.props.open && messagingEnabled) {
+            content = (
+              <MessagesDropdownWithRouter
+                onClick={() => this.props.onClose()}
+                totalUnread={totalUnread}
+                wallet={this.props.wallet}
+              />
+            )
           }
 
-          const totalUnread = get(data, 'messaging.totalUnread', 0)
-
-          const hasUnread = totalUnread > 0 ? ' active' : ''
           return (
             <Dropdown
               el="li"
               className="nav-item messages d-none d-md-flex"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={
-                <MessagesDropdownWithRouter
-                  onClick={() => this.props.onClose()}
-                  totalUnread={totalUnread}
-                  wallet={this.props.wallet}
-                />
-              }
+              content={content}
             >
               <a
                 className="nav-link"
@@ -138,4 +161,6 @@ require('react-styl')(`
           right: -3px
     &.show .messages-icon
       background-image: url(images/messages-icon-selected.svg)
+    .count .btn
+      margin-left: 1.5rem
 `)

@@ -59,6 +59,7 @@ module.exports = `
     importWallet(role: String, name: String, privateKey: String!): Account
     importWallets(accounts: [WalletInput]): Boolean
     removeWallet(address: String!): String
+    signMessage(address: ID!, message: String!): String
   }
 
   type Web3 {
@@ -80,6 +81,9 @@ module.exports = `
     metaMaskAccount: Account
     metaMaskNetworkId: Int
     metaMaskNetworkName: String
+    walletType: String
+    mobileWalletAccount: Account
+    primaryAccount: Account
   }
 
   type Account {

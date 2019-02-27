@@ -25,7 +25,7 @@ class Step1 extends Component {
     if (this.state.valid) {
       if (isEdit) {
         return (
-          <Redirect to={`/listings/${this.props.listingId}/edit/step-2`} push />
+          <Redirect to={`/listing/${this.props.listingId}/edit/step-2`} push />
         )
       } else {
         return <Redirect to="/create/step-2" push />
@@ -42,7 +42,10 @@ class Step1 extends Component {
         <div
           key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-          onClick={() => this.setState({ category: id, subCategory: '' })}
+          onClick={e => {
+            if (e.target.tagName == 'SELECT') return
+            this.setState({ category: id, subCategory: '' })
+          }}
         >
           <div className="title">{title}</div>
           {!active ? null : (
@@ -135,7 +138,7 @@ require('react-styl')(`
     > .wrap
       max-width: 460px
     h2
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 40px
       font-weight: 200
       line-height: 1.25
@@ -145,7 +148,7 @@ require('react-styl')(`
       font-weight: normal
       color: var(--dark)
       margin-bottom: 0.75rem
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       &.inactive
         cursor: pointer
       &.inactive:hover
@@ -187,7 +190,7 @@ require('react-styl')(`
 
 
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .create-listing .create-listing-step-1
       h2
         font-size: 32px

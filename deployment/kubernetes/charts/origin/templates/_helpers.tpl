@@ -58,7 +58,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{- define "faucet.host" -}}
-{{- if eq .Release.Namespace "staging" -}}
+{{- if eq .Release.Namespace "prod" -}}
 {{- printf "faucet.originprotocol.com" }}
 {{- else -}}
 {{- printf "faucet.%s.originprotocol.com" .Release.Namespace -}}
@@ -122,6 +122,18 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
 {{- else -}}
 {{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "growth.fullname" -}}
+{{- printf "%s-%s" .Release.Name "growth" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "growth.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "growth.originprotocol.com" }}
+{{- else -}}
+{{- printf "growth.%s.originprotocol.com" .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
 

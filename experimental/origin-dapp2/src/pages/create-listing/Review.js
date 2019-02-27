@@ -16,7 +16,7 @@ class Review extends Component {
   state = {}
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
 
     const { listing, tokenBalance } = this.props
     if (!listing.subCategory) {
@@ -174,7 +174,7 @@ require('react-styl')(`
       font-size: 28px
     .detail
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 1rem 2rem
       font-size: 18px
       font-weight: normal
@@ -199,7 +199,7 @@ require('react-styl')(`
         background-size: contain
         background-repeat: no-repeat
 
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .create-listing .create-listing-review
       .detail
         padding: 1rem

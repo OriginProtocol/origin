@@ -2,7 +2,6 @@
 @import '~react-image-crop/dist/ReactCrop.css';
 @import '~typeface-lato';
 @import '~typeface-poppins';
-@import 'variables.css';
 @import 'bootstrap.css';
 @import 'buttons.css';
 
@@ -23,7 +22,7 @@ body {
 }
 
 .loading-screen {
-  background: url(images/spinner-animation-dark.svg) no-repeat center;
+  background: url('images/spinner-animation-dark.svg') no-repeat center;
   background-size: cover;
   position: fixed;
   top: calc(50% - 1.5rem);

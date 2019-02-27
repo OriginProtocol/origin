@@ -2,7 +2,7 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { Campaign } = require('../src/rules/rules')
+const { CampaignRules } = require('../src/rules/rules')
 
 
 describe('Growth Engine rules', () => {
@@ -25,7 +25,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 2,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               }
             ],
@@ -33,11 +34,11 @@ describe('Growth Engine rules', () => {
         }
       }
       const row = { id: 1 }
-      this.campaign = new Campaign(row, config)
-      expect(this.campaign).to.be.an('object')
-      expect(this.campaign.numLevels).to.equal(1)
-      expect(this.campaign.levels[0]).to.be.an('object')
-      expect(this.campaign.levels[0].rules.length).to.equal(1)
+      this.crules = new CampaignRules(row, config)
+      expect(this.crules).to.be.an('object')
+      expect(this.crules.numLevels).to.equal(1)
+      expect(this.crules.levels[0]).to.be.an('object')
+      expect(this.crules.levels[0].rules.length).to.equal(1)
 
       this.ethAddress = '0x123'
     })
@@ -51,10 +52,10 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.campaign.getEvents = () => {
+      this.crules.getEvents = () => {
         return events
       }
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
@@ -67,11 +68,11 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.campaign.getEvents = () => { return events }
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      this.crules.getEvents = () => { return events }
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
           campaignId: 1,
           levelId: 0,
@@ -105,9 +106,9 @@ describe('Growth Engine rules', () => {
           ethAddress: '0xbad'
         }
       ]
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -120,9 +121,9 @@ describe('Growth Engine rules', () => {
         status: GrowthEventStatuses.Verified,
         ethAddress: this.ethAddress
       })
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [
         {
           campaignId: 1,
@@ -172,7 +173,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: true
+                  nextLevelCondition: true,
+                  visible: true
                 }
               }
             ],
@@ -180,21 +182,21 @@ describe('Growth Engine rules', () => {
         }
       }
       const row = { id: 1 }
-      this.campaign = new Campaign(row, config)
-      expect(this.campaign).to.be.an('object')
-      expect(this.campaign.numLevels).to.equal(1)
-      expect(this.campaign.levels[0]).to.be.an('object')
-      expect(this.campaign.levels[0].rules.length).to.equal(1)
+      this.crules = new CampaignRules(row, config)
+      expect(this.crules).to.be.an('object')
+      expect(this.crules.numLevels).to.equal(1)
+      expect(this.crules.levels[0]).to.be.an('object')
+      expect(this.crules.levels[0].rules.length).to.equal(1)
 
       this.ethAddress = '0x123'
     })
 
     it(`Should return level`, async () => {
       const events = []
-      this.campaign.getEvents = () => {
+      this.crules.getEvents = () => {
         return events
       }
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
@@ -219,9 +221,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -243,9 +245,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -271,9 +273,9 @@ describe('Growth Engine rules', () => {
           ethAddress: '0xbad'
         }
       ]
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -306,9 +308,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         },
       ]
-      this.campaign.getEvents = () => { return events }
+      this.crules.getEvents = () => { return events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -322,7 +324,7 @@ describe('Growth Engine rules', () => {
     })
   })
 
-  describe('Multi Levels campaign', () => {
+  describe('March campaign rules', () => {
 
     before(() => {
       const config = {
@@ -340,7 +342,8 @@ describe('Growth Engine rules', () => {
                   ],
                   numEventsRequired: 2,
                   reward: null,
-                  nextLevelCondition: true
+                  nextLevelCondition: true,
+                  visible: true
                 }
               }
             ],
@@ -357,7 +360,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -370,7 +374,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -383,7 +388,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -396,7 +402,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -411,7 +418,8 @@ describe('Growth Engine rules', () => {
                   ],
                   numEventsRequired: 2,
                   reward: null,
-                  nextLevelCondition: true
+                  nextLevelCondition: true,
+                  visible: true
                 }
               }
             ],
@@ -420,15 +428,16 @@ describe('Growth Engine rules', () => {
             rules: [
               {
                 id: 'Referral',
-                class: 'SingleEvent',
+                class: 'Referral',
                 config: {
-                  eventType: 'RefereeSignedUp',
+                  requiredLevel: 1,
                   reward: {
                     amount: 10,
                     currency: 'OGN'
                   },
                   limit: 100,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -441,7 +450,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 10,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               },
               {
@@ -454,34 +464,50 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 10,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
+                }
+              },
+              {
+                id: 'ListingSold',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'ListingSold',
+                  reward: {
+                    amount: 5,
+                    currency: 'OGN'
+                  },
+                  limit: 10,
+                  nextLevelCondition: false,
+                  visible: true
                 }
               }
             ],
           }
         }
       }
-      const row = { id: 1 }
-      this.campaign = new Campaign(row, config)
-      expect(this.campaign).to.be.an('object')
-      expect(this.campaign.numLevels).to.equal(3)
-      expect(this.campaign.levels[0]).to.be.an('object')
-      expect(this.campaign.levels[0].rules.length).to.equal(1)
-      expect(this.campaign.levels[1]).to.be.an('object')
-      expect(this.campaign.levels[1].rules.length).to.equal(5)
-      expect(this.campaign.levels[2]).to.be.an('object')
-      expect(this.campaign.levels[2].rules.length).to.equal(3)
+      const row = { id: 1, rules: JSON.stringify(config) }
+      this.crules = new CampaignRules(row, config)
+      expect(this.crules).to.be.an('object')
+      expect(this.crules.numLevels).to.equal(3)
+      expect(this.crules.levels[0]).to.be.an('object')
+      expect(this.crules.levels[0].rules.length).to.equal(1)
+      expect(this.crules.levels[1]).to.be.an('object')
+      expect(this.crules.levels[1].rules.length).to.equal(5)
+      expect(this.crules.levels[2]).to.be.an('object')
+      expect(this.crules.levels[2].rules.length).to.equal(4)
 
       this.ethAddress = '0x123'
+      this.referee = '0x456'
       this.expectedRewards = []
     })
 
     it(`Should start at level 0`, async () => {
       const events = []
-      this.campaign.getEvents = () => {
+      this.crules.getEvents = () => {
         return events
       }
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
@@ -500,14 +526,14 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.campaign.getEvents = () => {
+      this.crules.getEvents = () => {
         return this.events
       }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       expect(rewards).to.deep.equal([])
 
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(1)
     })
 
@@ -526,9 +552,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       )
-      this.campaign.getEvents = () => { return this.events }
+      this.crules.getEvents = () => { return this.events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       this.expectedRewards.push(
         {
           campaignId: 1,
@@ -551,22 +577,41 @@ describe('Growth Engine rules', () => {
       )
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
     it(`Should remain on level 2 when referees sign up`, async () => {
+      this.crules.levels[2].rules[0]._getReferees = () => { return [this.referee] }
       this.events.push(
         {
+          id: 7,
+          type: GrowthEventTypes.ProfilePublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.referee
+        },
+        {
+          id: 8,
+          type: GrowthEventTypes.EmailAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.referee
+        },
+        {
           id: 9,
-          type: GrowthEventTypes.RefereeSignedUp,
-          status: GrowthEventStatuses.Verified,
-          ethAddress: this.ethAddress
+          type: GrowthEventTypes.TwitterAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.referee
+        },
+        {
+          id: 10,
+          type: GrowthEventTypes.PhoneAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.referee
         }
       )
-      this.campaign.getEvents = () => { return this.events }
+      this.crules.getEvents = () => { return this.events }
 
-      const rewards = await  this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
@@ -574,11 +619,12 @@ describe('Growth Engine rules', () => {
         value: {
           currency: 'OGN',
           amount: 10
-        }
+        },
+        refereeEthAddress: this.referee
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = await  this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
@@ -591,9 +637,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       )
-      this.campaign.getEvents = () => { return this.events }
+      this.crules.getEvents = () => { return this.events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
@@ -605,7 +651,7 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
@@ -618,9 +664,9 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       )
-      this.campaign.getEvents = () => { return this.events }
+      this.crules.getEvents = () => { return this.events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       this.expectedRewards.push({
         campaignId: 1,
         levelId: 2,
@@ -632,18 +678,39 @@ describe('Growth Engine rules', () => {
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
+      expect(level).to.equal(2)
+    })
+
+    it(`Should remain on level 2 when a listing is sold`, async () => {
+      this.events.push(
+        {
+          id: 6,
+          type: GrowthEventTypes.ListingSold,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
+        }
+      )
+      this.crules.getEvents = () => { return this.events }
+
+      const rewards = await this.crules.getRewards(this.ethAddress)
+      this.expectedRewards.push({
+        campaignId: 1,
+        levelId: 2,
+        ruleId: 'ListingSold',
+        value: {
+          currency: 'OGN',
+          amount: 5
+        }
+      })
+      expect(rewards).to.deep.equal(this.expectedRewards)
+
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
 
     it(`Should honor limits`, async () => {
       this.events.push(
-        ...Array(200).fill({
-          id: 10,
-          type: GrowthEventTypes.RefereeSignedUp,
-          status: GrowthEventStatuses.Verified,
-          ethAddress: this.ethAddress
-        }),
         ...Array(200).fill({
           id: 12,
             type: GrowthEventTypes.ListingCreated,
@@ -655,11 +722,17 @@ describe('Growth Engine rules', () => {
             type: GrowthEventTypes.ListingPurchased,
           status: GrowthEventStatuses.Logged,
           ethAddress: this.ethAddress
+        }),
+        ...Array(200).fill({
+          id: 16,
+          type: GrowthEventTypes.ListingSold,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.ethAddress
         })
       )
-      this.campaign.getEvents = () => { return this.events }
+      this.crules.getEvents = () => { return this.events }
 
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       this.expectedRewards = [
         {
           campaignId: 1,
@@ -673,15 +746,13 @@ describe('Growth Engine rules', () => {
           ruleId: 'TwitterAttestation',
           value: { amount: 10, currency: 'OGN' }
         },
-        ...Array(100).fill({
+        {
           campaignId: 1,
           levelId: 2,
           ruleId: 'Referral',
-          value: {
-            currency: 'OGN',
-            amount: 10
-          }
-        }),
+          value: { amount: 10, currency: 'OGN' },
+          refereeEthAddress: this.referee
+        },
         ...Array(10).fill({
           campaignId: 1,
           levelId: 2,
@@ -699,11 +770,20 @@ describe('Growth Engine rules', () => {
             currency: 'OGN',
             amount: 5
           }
+        }),
+        ...Array(10).fill({
+          campaignId: 1,
+          levelId: 2,
+          ruleId: 'ListingSold',
+          value: {
+            currency: 'OGN',
+            amount: 5
+          }
         })
       ]
       expect(rewards).to.deep.equal(this.expectedRewards)
 
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(2)
     })
   })
@@ -720,9 +800,10 @@ describe('Growth Engine rules', () => {
                 id: 'PreRequisite',
                 class: 'SingleEvent',
                 config: {
-                  eventType: GrowthEventTypes.RefereeSignedUp,
+                  eventType: GrowthEventTypes.ListingSold,
                   reward: null,
-                  nextLevelCondition: true
+                  nextLevelCondition: true,
+                  visible: true
                 }
               }
             ],
@@ -730,16 +811,17 @@ describe('Growth Engine rules', () => {
           1: {
             rules: [
               {
-                id: 'Referral',
+                id: 'ListingSold',
                 class: 'SingleEvent',
                 config: {
-                  eventType: GrowthEventTypes.RefereeSignedUp,
+                  eventType: GrowthEventTypes.ListingSold,
                   reward: {
                     amount: 1,
                     currency: 'OGN'
                   },
                   limit: 10,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  visible: true
                 }
               }
             ],
@@ -747,57 +829,57 @@ describe('Growth Engine rules', () => {
         }
       }
       const row = { id: 1, startDate: 10, endDate: 100 }
-      this.campaign = new Campaign(row, config)
-      expect(this.campaign).to.be.an('object')
-      expect(this.campaign.numLevels).to.equal(2)
+      this.crules = new CampaignRules(row, config)
+      expect(this.crules).to.be.an('object')
+      expect(this.crules.numLevels).to.equal(2)
 
       this.ethAddress = '0x123'
 
       const events = [
         {
           id: 1,
-          type: GrowthEventTypes.RefereeSignedUp,
+          type: GrowthEventTypes.ListingSold,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress,
           createdAt: 1 // Occurred prior to campaign start.
         },
         {
           id: 2,
-          type: GrowthEventTypes.RefereeSignedUp,
+          type: GrowthEventTypes.ListingSold,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress,
           createdAt: 50 // Occurred after campaign start.
         },
         {
           id: 3,
-          type: GrowthEventTypes.RefereeSignedUp,
+          type: GrowthEventTypes.ListingSold,
           status: GrowthEventStatuses.Verified,
           ethAddress: this.ethAddress,
           createdAt: 150 // Occurred after campaign end.
         }
       ]
-      this.campaign.getEvents = (ethAddress, duringCampaign) => {
+      this.crules.getEvents = (ethAddress, duringCampaignRules) => {
         return events
           .filter(event => {
-            return duringCampaign
-              ? event.createdAt >= this.campaign.campaign.startDate &&
-              event.createdAt < this.campaign.campaign.endDate
+            return duringCampaignRules
+              ? event.createdAt >= this.crules.campaign.startDate &&
+              event.createdAt < this.crules.campaign.endDate
               : true
           })
       }
     })
 
     it(`Should use events from inception for level calculation`, async () => {
-      const level = await this.campaign.getCurrentLevel(this.ethAddress)
+      const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(1)
     })
 
     it(`Should use events from campaign period for reward calculation`, async () => {
-      const rewards = await this.campaign.getRewards(this.ethAddress)
+      const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 1,
-        ruleId: 'Referral',
+        ruleId: 'ListingSold',
         value: {
           currency: 'OGN',
           amount: 1

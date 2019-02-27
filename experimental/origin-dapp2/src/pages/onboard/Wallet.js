@@ -40,7 +40,7 @@ const Step1 = ({ listing }) => (
             </div>
             <div className="note">Available for Google Chrome</div>
             <Link
-              to={`/listings/${listing.id}/onboard/metamask`}
+              to={`/listing/${listing.id}/onboard/metamask`}
               className="btn btn-outline-primary"
             >
               Connect MetaMask
@@ -62,7 +62,7 @@ require('react-styl')(`
   .onboard
     .connect
       border: 1px solid var(--light)
-      border-radius: 5px
+      border-radius: var(--default-radius)
       padding: 2rem
       margin-bottom: 1.5rem
       display: flex
@@ -80,7 +80,7 @@ require('react-styl')(`
         background: url(images/metamask.svg) no-repeat center
         background-size: 6rem
       h4
-        font-family: Poppins
+        font-family: var(--heading-font)
         font-size: 24px
         font-weight: 300
       .note

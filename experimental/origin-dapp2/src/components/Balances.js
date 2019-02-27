@@ -21,11 +21,10 @@ const Balances = ({ balance, account }) => (
     <div className="account ogn">
       <div className="icon" />
       <div className="balance">
-        <div className="coin">
+        <div className="coin ogn">
           <TokenBalance account={account} token="OGN" />
           <span>OGN</span>
         </div>
-        <div className="usd">0.00 USD</div>
       </div>
     </div>
   </div>
@@ -58,6 +57,8 @@ require('react-styl')(`
             color: var(--dark-purple)
             font-size: 10px
             margin-left: 0.25rem
+          &.ogn > span
+            color: #007bff
         .usd
           font-size: 10px
           line-height: 10px

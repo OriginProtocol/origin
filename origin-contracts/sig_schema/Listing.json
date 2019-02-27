@@ -5,7 +5,7 @@
   { "name" : "commision", "type" : "Money" },
   { "name" : "category", "type" : "string" },
   { "name" : "type", "type" : "string" },
-  { "name" : "unitsTotal", "type" : "uint256" },
+  { "name" : "unitsTotal", "type" : "int256" },
   { "name" : "createDate", "type" : "string" },
   { "name" : "deposit", "type": "string" },
   { "name" : "depositManager", "type": "address" },

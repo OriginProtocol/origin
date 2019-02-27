@@ -13,28 +13,41 @@ module.exports =
   ###############################################
 
   enum GrowthCampaignStatus {
-    pending                   #not yet started
-    active
-    capReached
-    completed
+    Pending                   #not yet started
+    Active
+    CapReached
+    Completed
   }
 
   enum GrowthActionStatus {
-    inactive
-    active
-    exhausted
-    completed
+    Inactive
+    Active
+    Exhausted
+    Completed
   }
 
   enum GrowthActionType {
-    basicProfile
-    attestations
-    referral
+    Email
+    Phone
+    Twitter
+    Airbnb
+    Facebook
+    Referral
+    Profile
+    ListingCreated
+    ListingPurchased
   }
 
   enum GrowthInviteStatus {
-    pending
-    successful
+    Pending
+    Successful
+  }
+
+  enum Eligibility {
+    Unknown
+    Eligible
+    Restricted
+    Forbidden
   }
 
   type Invite {
@@ -44,18 +57,30 @@ module.exports =
     reward: Price
   }
 
+  type InviteInfo {
+    firstName: String
+    lastName: String
+  }
+
+  type UnlockCondition {
+    messageKey: String!
+    iconSource: String!
+  }
+
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthAction implements GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthInviteConnection {
@@ -69,21 +94,23 @@ module.exports =
     status: GrowthActionStatus!
     rewardEarned: Price
     rewardPending: Price
-    reward: Price!            # information about reward
+    reward: Price            # information about reward
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): [GrowthInviteConnection]
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthCampaign {
     id: Int!
-    name: String!
+    nameKey: String!
+    shortNameKey: String!
     startDate: DateTime
     endDate: DateTime
     distributionDate: DateTime
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
-    rewardEarned: Price!      # amount earned all actions combined
+    rewardEarned: Price      # amount earned all actions combined
   }
 
   type GrowthCampaignConnection {
@@ -118,16 +145,24 @@ module.exports =
     message: String!
   }
 
+  type EligibilityInfo {
+    eligibility: Eligibility
+    countryName: String
+    countryCode: String
+  }
+
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
-    campaigns(first: Int, after: String): GrowthCampaignConnection
-    campaign(id: String): GrowthCampaign
+    campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
+    campaign(id: String, walletAddress: ID!): GrowthCampaign
+    inviteInfo(code: String): InviteInfo
+    isEligible: EligibilityInfo
   }
 
   type Mutation {
     invite(emails: [String!]!): InviteResponse
-    enroll(campaignId: Int!): EnrollResponse
+    enroll(campaignId: Int!, notResidentCertification: Boolean): EnrollResponse
     gasForIdentity(walletAddress: ID!): SimpleResponse
     invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
     log(event: JSON!): SimpleResponse

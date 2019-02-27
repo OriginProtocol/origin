@@ -301,7 +301,7 @@ require('react-styl')(`
     .month-chooser
       display: flex
       justify-content: space-between;
-      font-family: Poppins
+      font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       .btn

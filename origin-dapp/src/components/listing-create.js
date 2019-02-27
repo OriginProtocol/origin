@@ -224,10 +224,12 @@ class ListingCreate extends Component {
       }
     } else if (
       web3.currentProvider.isOrigin ||
-      (this.props.messagingRequired && !this.props.messagingEnabled)
+      (this.props.messagingRequired && !this.props.messagingEnabled && !(origin.contractService.walletLinker && origin.contractService.walletLinker.linked))
     ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
+      } else {
+        origin.contractService.showLinkPopUp()
       }
       this.props.storeWeb3Intent('create a listing')
     }

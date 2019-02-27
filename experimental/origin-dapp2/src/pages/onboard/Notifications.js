@@ -93,7 +93,7 @@ class OnboardNotifications extends Component {
   state = { permission: Notification.permission }
   render() {
     const { listing } = this.props
-    const nextLink = `/listings/${listing.id}/onboard/profile`
+    const nextLink = `/listing/${listing.id}/onboard/profile`
     return (
       <>
         {this.state.redirect && <Redirect to={nextLink} />}
@@ -242,7 +242,7 @@ require('react-styl')(`
       justify-content: center;
       font-weight: 800;
       font-size: 4rem;
-      font-family: poppins;
+      font-family: var(--heading-font);
     .btn-success
       margin-top: 2rem
     .btn-link

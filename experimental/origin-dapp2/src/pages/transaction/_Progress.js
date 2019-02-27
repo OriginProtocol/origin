@@ -11,46 +11,48 @@ import EventTick from './_EventTick'
 import StarRating from 'components/StarRating'
 import SendMessage from 'components/SendMessage'
 
-const TransactionProgress = ({ offer, wallet, refetch }) => {
-  if (offer.status === 4) {
-    return <Finalized offer={offer} />
-  }
+const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
+  const props = { offer, loading }
   if (offer.status === 3) {
-    return <Disputed offer={offer} />
+    return <Disputed {...props} />
   }
   if (offer.status === 5) {
-    return <DisputeResolved offer={offer} />
+    return <DisputeResolved {...props} />
   }
   if (offer.listing.seller.id === wallet) {
-    if (offer.status === 2) {
-      return <WaitForFinalize offer={offer} />
+    if (offer.status === 4) {
+      return <Finalized party="seller" {...props} />
+    } else if (offer.status === 2) {
+      return <WaitForFinalize {...props} />
     } else if (offer.status === 0) {
       if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
-        return <OfferRejected party="seller" offer={offer} />
+        return <OfferRejected party="seller" {...props} />
       } else {
-        return <OfferWithdrawn party="seller" offer={offer} />
+        return <OfferWithdrawn party="seller" {...props} />
       }
     } else {
-      return <AcceptOrReject offer={offer} refetch={refetch} />
+      return <AcceptOrReject {...props} refetch={refetch} />
     }
+  } else if (offer.status === 4) {
+    return <Finalized party="buyer" {...props} />
   }
   if (offer.status === 2) {
-    return <ReviewAndFinalize offer={offer} refetch={refetch} />
+    return <ReviewAndFinalize {...props} refetch={refetch} />
   } else if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
-      return <OfferRejected party="buyer" offer={offer} />
+      return <OfferRejected party="buyer" {...props} />
     } else {
-      return <OfferWithdrawn party="buyer" offer={offer} />
+      return <OfferWithdrawn party="buyer" {...props} />
     }
   } else if (offer.listing.__typename === 'FractionalListing') {
-    return <WaitForSeller offer={offer} refetch={refetch} />
+    return <WaitForSeller {...props} refetch={refetch} />
   } else {
-    return <MessageSeller offer={offer} refetch={refetch} />
+    return <MessageSeller {...props} refetch={refetch} />
   }
 }
 
-const AcceptOrReject = ({ offer, refetch }) => (
-  <div className="transaction-progress">
+const AcceptOrReject = ({ offer, refetch, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Next Step:</h4>
       <div className="next-step">Accept or Reject Offer</div>
@@ -77,7 +79,7 @@ const AcceptOrReject = ({ offer, refetch }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
       <EventTick>Funds withdrawn</EventTick>
     </div>
   </div>
@@ -86,9 +88,9 @@ const AcceptOrReject = ({ offer, refetch }) => (
 class ReviewAndFinalize extends Component {
   state = { rating: 0, review: '' }
   render() {
-    const offer = this.props.offer
+    const { offer, loading } = this.props
     return (
-      <div className="transaction-progress">
+      <div className={`transaction-progress${loading ? ' loading' : ''}`}>
         <div className="top">
           <h4>Next Step:</h4>
           <div className="next-step">
@@ -133,15 +135,15 @@ class ReviewAndFinalize extends Component {
           <EventTick className="active bgl" event={offer.acceptedEvent}>
             Offer Accepted
           </EventTick>
-          <EventTick>Received by buyer</EventTick>
+          <EventTick>Sale Completed</EventTick>
         </div>
       </div>
     )
   }
 }
 
-const MessageSeller = ({ offer, refetch }) => (
-  <div className="transaction-progress">
+const MessageSeller = ({ offer, refetch, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Next Step</h4>
       <div className="next-step">Give your shipping address to seller</div>
@@ -156,13 +158,13 @@ const MessageSeller = ({ offer, refetch }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
     </div>
   </div>
 )
 
-const WaitForSeller = ({ offer, refetch }) => (
-  <div className="transaction-progress">
+const WaitForSeller = ({ offer, refetch, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Next Step</h4>
       <div className="next-step">Wait for seller</div>
@@ -174,13 +176,13 @@ const WaitForSeller = ({ offer, refetch }) => (
         Offer Placed
       </EventTick>
       <EventTick>Offer Accepted</EventTick>
-      <EventTick>Received by buyer</EventTick>
+      <EventTick>Sale Completed</EventTick>
     </div>
   </div>
 )
 
-const OfferWithdrawn = ({ offer, party }) => (
-  <div className="transaction-progress">
+const OfferWithdrawn = ({ offer, party, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Offer Withdrawn</h4>
       <div className="help mb-0">
@@ -200,8 +202,8 @@ const OfferWithdrawn = ({ offer, party }) => (
   </div>
 )
 
-const OfferRejected = ({ offer, party }) => (
-  <div className="transaction-progress">
+const OfferRejected = ({ offer, party, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Offer Rejected</h4>
       <div className="help mb-0">
@@ -221,8 +223,8 @@ const OfferRejected = ({ offer, party }) => (
   </div>
 )
 
-const Disputed = ({ offer }) => (
-  <div className="transaction-progress">
+const Disputed = ({ offer, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Offer Disputed</h4>
       <div className="help mb-0">
@@ -244,8 +246,8 @@ const Disputed = ({ offer }) => (
   </div>
 )
 
-const DisputeResolved = ({ offer }) => (
-  <div className="transaction-progress">
+const DisputeResolved = ({ offer, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Dispute Resolved</h4>
       <div className="help mb-0">Origin have resolved this dispute</div>
@@ -267,8 +269,8 @@ const DisputeResolved = ({ offer }) => (
   </div>
 )
 
-const Finalized = ({ offer }) => (
-  <div className="transaction-progress">
+const Finalized = ({ offer, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>Transaction Finalized</h4>
       <div className="help mb-0">
@@ -284,7 +286,7 @@ const Finalized = ({ offer }) => (
         Offer Accepted
       </EventTick>
       <EventTick className="active bg" event={offer.finalizedEvent}>
-        Received by buyer
+        Sale Completed
       </EventTick>
     </div>
   </div>
@@ -295,12 +297,34 @@ export default TransactionProgress
 require('react-styl')(`
   .transaction-progress
     border: 2px solid black
-    border-radius: 5px
+    border-radius: var(--default-radius)
     padding-top: 1.5rem
     display: flex
     flex-direction: column
     align-items: center
     margin-bottom: 2.5rem
+    position: relative
+    &.loading
+      &::before
+        content: ""
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+        background: rgba(255, 255, 255, 0.75)
+        z-index: 10
+      &::after
+        content: ""
+        background: url(images/spinner-animation-dark.svg) no-repeat center
+        background-size: cover
+        position: absolute
+        top: calc(50% - 1.5rem)
+        left: calc(50% - 1.5rem)
+        width: 3rem
+        height: 3rem
+        z-index: 11
+
     .top
       padding: 0 1rem
       display: flex
@@ -310,7 +334,7 @@ require('react-styl')(`
       font-weight: bold
       font-size: 24px
       margin-bottom: 0
-      font-family: Lato
+      font-family: var(--default-font)
     .next-step
       font-size: 24px
       font-weight: normal
@@ -401,7 +425,7 @@ require('react-styl')(`
           background: var(--greenblue)
         &.bgl::after
           background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) 50%, var(--pale-grey-two) 50%, var(--pale-grey-two))
-  @media (max-width: 575.98px)
+  @media (max-width: 767.98px)
     .transaction-progress
       .actions
         flex-direction: column-reverse

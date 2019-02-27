@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import fragments from './Fragments'
 
 const UserOffersQuery = gql`
   query UserOffers($id: ID!, $first: Int, $after: String) {
@@ -26,7 +25,6 @@ const UserOffersQuery = gql`
       }
     }
   }
-  ${fragments.Listing.basic}
 `
 
 export default UserOffersQuery

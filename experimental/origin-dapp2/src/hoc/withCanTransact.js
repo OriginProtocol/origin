@@ -15,7 +15,19 @@ function withCanTransact(WrappedComponent) {
           if (loading) {
             return <WrappedComponent {...props} cannotTransact="loading" />
           }
-          if (!get(data, 'web3.metaMaskAccount.id')) {
+
+          const walletType = get(data, 'web3.walletType')
+          const metaMaskId = get(data, 'web3.metaMaskAccount.id')
+          if (!walletType) {
+            return <WrappedComponent {...props} cannotTransact="no-wallet" />
+          }
+          // Use mobile wallet if it's available and MetaMask isn't enabled.
+          if (walletType.startsWith('mobile-') && !metaMaskId) {
+            // TODO: handle no-balance case
+            return <WrappedComponent {...props} />
+          }
+
+          if (!metaMaskId) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
           if (get(data, 'web3.metaMaskAccount.balance.eth') === '0') {

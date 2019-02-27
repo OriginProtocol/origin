@@ -7,11 +7,11 @@ export default {
   acceptOffer: 48099,
   finalizeOffer: 128219,
   withdrawOffer: 41321,
-  withdrawListing: 29367,
+  withdrawListing: 60000,
   addFunds: 200000, // Needs real value. Needs GraphQL tests.
   updateRefund: 200000, // Needs real value. Needs GraphQL tests.
-  disputeOffer: 60000, // Contract test at 32164. Needs GraphQL tests.
-  executeRuling: 200000, // Needs real value. Needs GraphQL tests.
+  disputeOffer: 60000, // Contract test at 32164.
+  executeRuling: 200000, // If ERC20 token used, actual cost will vary
   addData: 28690, // Contract test. Uses offer addData, since amount is larger.
 
   // Identity

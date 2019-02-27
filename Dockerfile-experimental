@@ -18,12 +18,14 @@ COPY ./origin-messaging/package*.json ./origin-messaging/
 COPY ./origin-notifications/package*.json ./origin-notifications/
 COPY ./origin-tests/package*.json ./origin-tests/
 COPY ./origin-growth/package*.json ./origin-growth/
+COPY ./origin-identity/package*.json ./origin-identity/
 COPY ./origin-token/package*.json ./origin-token/
 COPY ./experimental/origin-dapp2/package*.json ./experimental/origin-dapp2/
 COPY ./experimental/origin-graphql/package*.json ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/package*.json ./experimental/origin-ipfs/
 COPY ./experimental/origin-validator/package*.json ./experimental/origin-validator/
 COPY ./experimental/origin-messaging-client/package*.json ./experimental/origin-messaging-client/
+COPY ./experimental/origin-linker-client/package*.json ./experimental/origin-linker-client/
 COPY ./experimental/origin-eventsource/package*.json ./experimental/origin-eventsource/
 COPY ./experimental/origin-services/package*.json ./experimental/origin-services/
 

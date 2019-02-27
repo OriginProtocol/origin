@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { ActivityIndicator, Alert, Dimensions, Image, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Image, Platform, PushNotificationIOS, StyleSheet, View, YellowBox } from 'react-native'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { connect, Provider } from 'react-redux'
 
@@ -7,7 +7,7 @@ import NavigationService from './NavigationService'
 import originWallet, { Events } from './OriginWallet'
 import Store from './Store'
 
-import { storeNotificationsPermissions, updateCarouselStatus } from 'actions/Activation'
+import { storeNotificationsPermissions, updateBackupWarningStatus, updateCarouselStatus } from 'actions/Activation'
 import { setDevices } from 'actions/Devices'
 import { add as addNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
@@ -128,9 +128,11 @@ const OriginNavigator = createBottomTabNavigator({
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
   componentDidMount() {
-    PushNotificationIOS.checkPermissions(permissions => {
-      this.props.storeNotificationsPermissions(permissions)
-    })
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.checkPermissions(permissions => {
+        this.props.storeNotificationsPermissions(permissions)
+      })
+    }
 
     originWallet.initNotifications()
     // skip the prompt
@@ -208,6 +210,18 @@ class OriginNavWrapper extends Component {
     setInterval(() => this.props.getBalance(), 5000)
   }
 
+  componentDidUpdate() {
+    const { activation, wallet } = this.props
+
+    // prompt with private key backup warning if funds are detected
+    if (!activation.backupWarningDismissed && Number(wallet.balances.eth) > 0) {
+      NavigationService.navigate('Home', {
+        backupWarning: true,
+        walletExpanded: true,
+      })
+    }
+  }
+
   componentWillUnmount() {
     originWallet.closeWallet()
   }
@@ -229,7 +243,9 @@ class OriginWrapper extends Component {
 
   async componentDidMount() {
     const completed = await loadData('carouselCompleted')
+    const dismissed = await loadData('backupWarningDismissed')
 
+    this.props.updateBackupWarningStatus(!!dismissed)
     this.props.updateCarouselStatus(!!completed)
 
     this.setState({ loading: false })
@@ -311,9 +327,10 @@ class OriginWrapper extends Component {
   }
 }
 
-const mapStateToProps = ({ activation }) => {
+const mapStateToProps = ({ activation, wallet }) => {
   return {
     activation,
+    wallet,
   }
 }
 
@@ -327,6 +344,7 @@ const mapDispatchToProps = dispatch => ({
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
   storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  updateBackupWarningStatus: bool => dispatch(updateBackupWarningStatus(bool)),
   updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
 })

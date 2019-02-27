@@ -5,9 +5,7 @@ const elasticsearch = require('elasticsearch')
  */
 
 const client = new elasticsearch.Client({
-  hosts: [
-    process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200'
-  ]
+  hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200']
 })
 
 // Elasticsearch index and type names for our data
@@ -16,12 +14,11 @@ const client = new elasticsearch.Client({
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 
-
 class Cluster {
   /**
    * Gets cluster health and prints it.
    */
-  static async health () {
+  static async health() {
     const resp = await client.cluster.health({})
     console.log('-- Search cluster health --\n', resp)
   }
@@ -32,8 +29,11 @@ class Listing {
    * Counts number of listings indexed.
    * @returns The number of listings indexed.
    */
-  static async count () {
-    const resp = await client.count({ index: LISTINGS_INDEX, type: LISTINGS_TYPE })
+  static async count() {
+    const resp = await client.count({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE
+    })
     console.log(`Counted ${resp.count} listings in the search index.`)
     return resp.count
   }
@@ -47,18 +47,26 @@ class Listing {
    * @throws Throws an error if indexing operation failed.
    * @returns The listingId indexed.
    */
-  static async index (listingId, buyerAddress, ipfsHash, listing) {
+  static async index(listingId, buyerAddress, ipfsHash, listing) {
     /* When serialising to JSON, getters of an object do not get serialized and indexed. For that reason
      * we call all the getters and store them before indexing.
      */
     const listingToIndex = JSON.parse(JSON.stringify(listing))
-    const gettersToIndex = ['unitsPending', 'unitsSold', 'unitsRemaining', 'commissionRemaining', 'boostCommission']
-    gettersToIndex.forEach(getter => listingToIndex[getter] = listing[getter])
+    const gettersToIndex = [
+      'unitsPending',
+      'unitsSold',
+      'unitsRemaining',
+      'commissionRemaining',
+      'boostCommission'
+    ]
+    gettersToIndex.forEach(getter => (listingToIndex[getter] = listing[getter]))
 
     // boostCommission is critical for calculating scoring.
     // Log a warning if that field is not populated - it is likely a bug.
     if (!listingToIndex.boostCommission) {
-      console.log(`WARNING: missing field boostCommission on listing ${listingId}`)
+      console.log(
+        `WARNING: missing field boostCommission on listing ${listingId}`
+      )
     }
 
     // jCal fields are very dynamic and cause issues with ElasticSearch dynamic mappings.
@@ -93,14 +101,24 @@ class Listing {
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search (query, filters, numberOfItems, offset, idsOnly, hiddenIds = [], featuredIds = []) {
+  static async search(
+    query,
+    filters,
+    numberOfItems,
+    offset,
+    idsOnly,
+    hiddenIds = [],
+    featuredIds = []
+  ) {
     const esQuery = {
       bool: {
-        must: [{
-          match: {
-            status: 'active'
+        must: [
+          {
+            match: {
+              status: 'active'
+            }
           }
-        }],
+        ],
         should: [],
         filter: [],
         must_not: []
@@ -160,43 +178,42 @@ class Listing {
       })
     }
 
-    filters
-      .forEach(filter => {
-        let innerFilter = {}
+    filters.forEach(filter => {
+      let innerFilter = {}
 
-        if (filter.operator === 'GREATER_OR_EQUAL') {
-          innerFilter = {
-            range: {
-              [filter.name]: {
-                gte: filter.value
-              }
+      if (filter.operator === 'GREATER_OR_EQUAL') {
+        innerFilter = {
+          range: {
+            [filter.name]: {
+              gte: filter.value
             }
           }
-        } else if (filter.operator === 'LESSER_OR_EQUAL') {
-          innerFilter = {
-            range: {
-              [filter.name]: {
-                lte: filter.value
-              }
-            }
-          }
-        } else if (filter.operator === 'CONTAINS' && filter.valueType === 'ARRAY_STRING') {
-          innerFilter = {
-            bool: {
-              should: filter
-                .value
-                .split(',')
-                .map(singleValue => {
-                  return { term: { [filter.name]: singleValue } }
-                })
-            }
-          }
-        } else if (filter.operator === 'EQUALS') {
-          innerFilter = { term: { [filter.name]: filter.value } }
         }
+      } else if (filter.operator === 'LESSER_OR_EQUAL') {
+        innerFilter = {
+          range: {
+            [filter.name]: {
+              lte: filter.value
+            }
+          }
+        }
+      } else if (
+        filter.operator === 'CONTAINS' &&
+        filter.valueType === 'ARRAY_STRING'
+      ) {
+        innerFilter = {
+          bool: {
+            should: filter.value.split(',').map(singleValue => {
+              return { term: { [filter.name]: singleValue } }
+            })
+          }
+        }
+      } else if (filter.operator === 'EQUALS') {
+        innerFilter = { term: { [filter.name]: filter.value } }
+      }
 
-        esQuery.bool.filter.push(innerFilter)
-      })
+      esQuery.bool.filter.push(innerFilter)
+    })
 
     /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
      * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
@@ -239,15 +256,18 @@ class Listing {
         query: esAggregationQuery,
         _source: ['_id'],
         aggs: {
-          'max_price': { 'max': { 'field': 'price.amount' } },
-          'min_price': { 'min': { 'field': 'price.amount' } }
+          max_price: { max: { field: 'price.amount' } },
+          min_price: { min: { field: 'price.amount' } }
         }
       }
     })
 
-    const [searchResponse, aggregationResponse] = await Promise.all([searchRequest, aggregationRequest])
+    const [searchResponse, aggregationResponse] = await Promise.all([
+      searchRequest,
+      aggregationRequest
+    ])
     const listings = []
-    searchResponse.hits.hits.forEach((hit) => {
+    searchResponse.hits.hits.forEach(hit => {
       listings.push({
         id: hit._id,
         title: hit._source.title,
@@ -276,8 +296,7 @@ class Listing {
   }
 }
 
-
 module.exports = {
   Cluster,
-  Listing,
+  Listing
 }

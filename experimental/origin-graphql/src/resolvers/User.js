@@ -100,12 +100,13 @@ async function reviews(user) {
         event.returnValues.listingID,
         event.returnValues.offerID,
         event.returnValues.party,
-        event.returnValues.ipfsHash
+        event.returnValues.ipfsHash,
+        event
       )
     )
   )
 
-  nodes = nodes.filter(n => n.rating)
+  nodes = sortBy(nodes.filter(n => n.rating), n => -n.event.blockNumber)
 
   return {
     totalCount: nodes.length,
@@ -120,7 +121,7 @@ async function reviews(user) {
 }
 
 // Sourced from offer events where user is alternate party
-async function notifications(user, { first = 10, after }, _, info) {
+async function notifications(user, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
   const sellerListings = await ec().allEvents('ListingCreated', user.id)
@@ -156,10 +157,35 @@ async function notifications(user, { first = 10, after }, _, info) {
     user.id
   )
 
-  const allEvents = sortBy(
-    [...sellerEvents, ...buyerEvents],
-    e => -e.blockNumber
-  )
+  let allEvents = sortBy([...sellerEvents, ...buyerEvents], e => -e.blockNumber)
+
+  if (filter === 'pending') {
+    const allListingIds = allEvents.map(e => Number(e.returnValues.listingID))
+    const allListings = await Promise.all(
+      allListingIds.map(id => ec().offers(id))
+    )
+
+    allEvents = allEvents.filter(e => {
+      const idx = allListingIds.indexOf(Number(e.returnValues.listingID))
+      const events = allListings[idx]
+      if (e.event === 'OfferFinalized') {
+        return false
+      } else if (
+        e.event === 'OfferCreated' &&
+        events.some(t => t.event.match(/Offer(Withdrawn|Finalized)/))
+      ) {
+        console.log(events)
+        return false
+      } else if (
+        e.event === 'OfferAccepted' &&
+        events.some(t => t.event === 'OfferFinalized')
+      ) {
+        return false
+      } else {
+        return true
+      }
+    })
+  }
 
   const totalCount = allEvents.length,
     allIds = allEvents.map(e => e.id)

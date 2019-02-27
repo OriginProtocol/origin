@@ -25,7 +25,7 @@ const NavPills = () => (
         className="nav-link"
         to="/notifications"
         exact
-        children="Unread"
+        children="Pending"
       />
     </li>
     <li className="nav-item">
@@ -140,5 +140,5 @@ export default withWallet(Notifications)
 require('react-styl')(`
   .notifications-list
     border: 1px solid var(--light)
-    border-radius: 5px
+    border-radius: var(--default-radius)
 `)

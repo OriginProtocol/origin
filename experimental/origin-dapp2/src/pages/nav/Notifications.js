@@ -13,14 +13,17 @@ import NotificationRow from 'pages/notifications/NotificationRow'
 class NotificationsNav extends Component {
   render() {
     const vars = { first: 5, id: this.props.wallet }
+    const skip = !this.props.wallet || !this.props.open
     return (
-      <Query query={query} variables={vars} skip={!this.props.wallet}>
-        {({ loading, error, data }) => {
-          if (loading || error) {
-            return null
-          }
-          return <NotificationsDropdown {...this.props} data={data} />
-        }}
+      <Query query={query} variables={vars} skip={skip}>
+        {({ data, loading, error }) => (
+          <NotificationsDropdown
+            {...this.props}
+            data={data}
+            error={error}
+            loading={loading}
+          />
+        )}
       </Query>
     )
   }
@@ -45,7 +48,7 @@ class NotificationsDropdown extends Component {
       return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
     }
 
-    const { data, open, onOpen, onClose } = this.props
+    const { data, open, onOpen, onClose, loading, error } = this.props
 
     const { nodes, totalCount } = get(
       data,
@@ -55,23 +58,40 @@ class NotificationsDropdown extends Component {
 
     const hasUnread = '' //get(data, .notifications.totalUnread > 0 ? ' active' : ''
 
+    let content
+    if (error) {
+      content = (
+        <div className="dropdown-menu dropdown-menu-right show p-3">
+          Error loading notifications
+        </div>
+      )
+    } else if (loading) {
+      content = (
+        <div className="dropdown-menu dropdown-menu-right show p-3">
+          Loading...
+        </div>
+      )
+    } else if (open) {
+      content = (
+        <NotificationsContent
+          totalCount={totalCount}
+          nodes={nodes}
+          onClose={() => onClose()}
+          onClick={node => {
+            this.setState({ redirect: node })
+            onClose()
+          }}
+        />
+      )
+    }
+
     return (
       <Dropdown
         el="li"
         className="nav-item notifications d-none d-md-flex"
         open={open}
         onClose={() => onClose()}
-        content={
-          <NotificationsContent
-            totalCount={totalCount}
-            nodes={nodes}
-            onClose={() => onClose()}
-            onClick={node => {
-              this.setState({ redirect: node })
-              onClose()
-            }}
-          />
-        }
+        content={content}
       >
         <a
           className="nav-link"
@@ -122,7 +142,7 @@ require('react-styl')(`
       display: flex
       white-space: nowrap
       align-items: center
-      padding: 0.85rem 1.25rem
+      padding: 0.625rem 1.25rem
       font-size: 18px
       font-weight: bold
       border-bottom: 1px solid var(--light)

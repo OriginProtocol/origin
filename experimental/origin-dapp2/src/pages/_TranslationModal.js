@@ -55,7 +55,7 @@ require('react-styl')(`
     max-width: 18rem
   .translation-article
     padding: 1.5rem
-    border-radius: 5px
+    border-radius: var(--default-radius)
     font-size: 18px
     line-height: normal
     font-weight: normal
