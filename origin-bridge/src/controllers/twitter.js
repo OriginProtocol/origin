@@ -17,7 +17,10 @@ const AttestationTypes = Attestation.AttestationTypes
 router.get(
   '/auth-url',
   asyncMiddleware(async (req, res) => {
-    const { oAuthToken, oAuthTokenSecret } = await getTwitterOAuthRequestToken()
+    const dappRedirectUrl = req.query.dappRedirectUrl || null
+    const { oAuthToken, oAuthTokenSecret } = await getTwitterOAuthRequestToken(
+      dappRedirectUrl
+    )
     req.session.oAuthToken = oAuthToken
     req.session.oAuthTokenSecret = oAuthTokenSecret
     const url =

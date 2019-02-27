@@ -14,9 +14,10 @@ const {
 const constants = require('../constants')
 
 router.get('/auth-url', (req, res) => {
+  const dappRedirectUrl = req.query.dappRedirectUrl || null
   params = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
-    redirect_uri: getAbsoluteUrl('/redirects/facebook/')
+    redirect_uri: getAbsoluteUrl('/redirects/facebook/', dappRedirectUrl)
   }
   url = constants.FACEBOOK_BASE_AUTH_URL + mapObjectToQueryParams(params)
   res.send({ url: url })
