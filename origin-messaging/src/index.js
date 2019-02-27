@@ -6,10 +6,12 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
 import Web3 from 'web3'
-import { setKeySignature,
+import {
+  setKeySignature,
   getSignedKey,
   keyFromData,
-  injectLogAppend } from './inject-log-append'
+  injectLogAppend
+} from './inject-log-append'
 
 const Log = require('ipfs-log')
 const IPFSApi = require('ipfs-api')
@@ -289,8 +291,11 @@ const initRESTApp = db => {
 
     const { signature, data } = req.body
 
-    if (verifyRegistrySignature(signature, '', { payload: { value: data, key: address } }))
-    {
+    if (
+      verifyRegistrySignature(signature, '', {
+        payload: { value: data, key: address }
+      })
+    ) {
       const entry = db.get(address)
       console.log('setting registry existing entry:', entry)
       if (!entry || entry.sig != signature) {
@@ -302,7 +307,6 @@ const initRESTApp = db => {
     res.statusMessage = 'Cannot verify signature of registery'
     return res.status(400).end()
   })
-
 
   app.listen(port, () => {
     logger.debug(`REST endpoint listening on port ${port}`)

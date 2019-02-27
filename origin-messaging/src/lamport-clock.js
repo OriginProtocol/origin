@@ -1,25 +1,25 @@
 'use strict'
 
 class LamportClock {
-  constructor (id, time) {
+  constructor(id, time) {
     this.id = id
     this.time = time || 0
   }
 
-  tick () {
+  tick() {
     return new LamportClock(this.id, ++this.time)
   }
 
-  merge (clock) {
+  merge(clock) {
     this.time = Math.max(this.time, clock.time)
     return new LamportClock(this.id, this.time)
   }
 
-  clone () {
+  clone() {
     return new LamportClock(this.id, this.time)
   }
 
-  static compare (a, b) {
+  static compare(a, b) {
     // Calculate the "distance" based on the clock, ie. lower or greater
     const dist = a.time - b.time
 

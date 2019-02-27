@@ -17,21 +17,30 @@ class Entry {
    * // { hash: "Qm...Foo", payload: "hello", next: [] }
    * @returns {Promise<Entry>}
    */
-  static async create (ipfs, keystore, id, data, next = [], clock, pubkey, signFunc) {
+  static async create(
+    ipfs,
+    keystore,
+    id,
+    data,
+    next = [],
+    clock,
+    pubkey,
+    signFunc
+  ) {
     if (!isDefined(ipfs)) throw IpfsNotDefinedError()
     if (!isDefined(id)) throw new Error('Entry requires an id')
     if (!isDefined(data)) throw new Error('Entry requires data')
-    if (!isDefined(next) || !Array.isArray(next)) throw new Error("'next' argument is not an array")
+    if (!isDefined(next) || !Array.isArray(next))
+      throw new Error("'next' argument is not an array")
 
     // Clean the next objects and convert to hashes
-    const toEntry = (e) => e.hash ? e.hash : e
-    const nexts = next.filter(isDefined)
-      .map(toEntry)
+    const toEntry = e => (e.hash ? e.hash : e)
+    const nexts = next.filter(isDefined).map(toEntry)
 
     // Take the id of the given clock by default,
     // if clock not given, take the signing key if it's a Key instance,
     // or if none given, take the id as the clock id
-    const clockId = clock ? clock.id : (pubkey || id)
+    const clockId = clock ? clock.id : pubkey || id
     const clockTime = clock ? clock.time : null
 
     const entry = {
@@ -40,7 +49,7 @@ class Entry {
       payload: data, // Can be any JSON.stringifyable data
       next: nexts, // Array of Multihashes
       v: 0, // For future data structure updates, should currently always be 0
-      clock: new Clock(clockId, clockTime),
+      clock: new Clock(clockId, clockTime)
     }
 
     // If signing key was passedd, sign the enrty
@@ -54,21 +63,28 @@ class Entry {
     return entry
   }
 
-  static async verifyEntry (entry, keystore) {
-    const e = Object.assign({}, {
-      hash: null,
-      id: entry.id,
-      payload: entry.payload,
-      next: entry.next,
-      v: entry.v,
-      clock: entry.clock,
-    })
+  static async verifyEntry(entry, keystore) {
+    const e = Object.assign(
+      {},
+      {
+        hash: null,
+        id: entry.id,
+        payload: entry.payload,
+        next: entry.next,
+        v: entry.v,
+        clock: entry.clock
+      }
+    )
 
     const pubKey = await keystore.importPublicKey(entry.key)
-    return await keystore.verify(entry.sig, pubKey, Buffer.from(JSON.stringify(e)))
+    return await keystore.verify(
+      entry.sig,
+      pubKey,
+      Buffer.from(JSON.stringify(e))
+    )
   }
 
-  static toBuffer (entry) {
+  static toBuffer(entry) {
     return Buffer.from(JSON.stringify(entry))
   }
 
@@ -82,9 +98,10 @@ class Entry {
    * // "Qm...Foo"
    * @returns {Promise<string>}
    */
-  static async toMultihash (ipfs, entry) {
+  static async toMultihash(ipfs, entry) {
     if (!ipfs) throw IpfsNotDefinedError()
-    const isValidEntryObject = entry => entry.id && entry.clock && entry.next && entry.payload && entry.v >= 0
+    const isValidEntryObject = entry =>
+      entry.id && entry.clock && entry.next && entry.payload && entry.v >= 0
     if (!isValidEntryObject(entry)) {
       throw new Error('Invalid object format, cannot generate entry multihash')
     }
@@ -96,7 +113,7 @@ class Entry {
       payload: entry.payload,
       next: entry.next,
       v: entry.v,
-      clock: entry.clock,
+      clock: entry.clock
     }
 
     if (entry.sig) Object.assign(e, { sig: entry.sig })
@@ -117,19 +134,20 @@ class Entry {
    * // { hash: "Qm...Foo", payload: "hello", next: [] }
    * @returns {Promise<Entry>}
    */
-  static fromMultihash (ipfs, hash) {
+  static fromMultihash(ipfs, hash) {
     if (!ipfs) throw IpfsNotDefinedError()
     if (!hash) throw new Error(`Invalid hash: ${hash}`)
-    return ipfs.object.get(hash, { enc: 'base58' })
-      .then((obj) => JSON.parse(obj.toJSON().data))
-      .then((data) => {
+    return ipfs.object
+      .get(hash, { enc: 'base58' })
+      .then(obj => JSON.parse(obj.toJSON().data))
+      .then(data => {
         const entry = {
           hash: hash,
           id: data.id,
           payload: data.payload,
           next: data.next,
           v: data.v,
-          clock: data.clock,
+          clock: data.clock
         }
         if (data.sig) Object.assign(entry, { sig: data.sig })
         if (data.key) Object.assign(entry, { key: data.key })
@@ -142,16 +160,18 @@ class Entry {
    * @param {Entry} obj
    * @returns {boolean}
    */
-  static isEntry (obj) {
-    return obj.id !== undefined
-      && obj.next !== undefined
-      && obj.hash !== undefined
-      && obj.payload !== undefined
-      && obj.v !== undefined
-      && obj.clock !== undefined
+  static isEntry(obj) {
+    return (
+      obj.id !== undefined &&
+      obj.next !== undefined &&
+      obj.hash !== undefined &&
+      obj.payload !== undefined &&
+      obj.v !== undefined &&
+      obj.clock !== undefined
+    )
   }
 
-  static compare (a, b) {
+  static compare(a, b) {
     const distance = Clock.compare(a.clock, b.clock)
     if (distance === 0) return a.clock.id < b.clock.id ? -1 : 1
     return distance
@@ -163,7 +183,7 @@ class Entry {
    * @param {Entry} b
    * @returns {boolean}
    */
-  static isEqual (a, b) {
+  static isEqual(a, b) {
     return a.hash === b.hash
   }
 
@@ -173,7 +193,7 @@ class Entry {
    * @param {Entry} [entry2] Parent
    * @returns {boolean}
    */
-  static isParent (entry1, entry2) {
+  static isParent(entry1, entry2) {
     return entry2.next.indexOf(entry1.hash) > -1
   }
 
@@ -187,16 +207,16 @@ class Entry {
    * @param {Array<Entry>} [vaules] Entries to search parents from
    * @returns {Array<Entry>}
    */
-  static findChildren (entry, values) {
+  static findChildren(entry, values) {
     let stack = []
-    let parent = values.find((e) => Entry.isParent(entry, e))
+    let parent = values.find(e => Entry.isParent(entry, e))
     let prev = entry
     while (parent) {
       stack.push(parent)
       prev = parent
-      parent = values.find((e) => Entry.isParent(prev, e))
+      parent = values.find(e => Entry.isParent(prev, e))
     }
-    stack = stack.sort((a) => a.clock.time > a.clock.time)
+    stack = stack.sort(a => a.clock.time > a.clock.time)
     return stack
   }
 }

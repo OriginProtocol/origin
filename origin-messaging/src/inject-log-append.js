@@ -12,7 +12,7 @@ function setKeySignature(key, signature) {
 async function getSignedKey(entry) {
   const key = entry.payload.key
   const signature = KEY_SIGNATURES[key]
-  if(signature) {
+  if (signature) {
     delete KEY_SIGNATURES[key]
     return { signature, key }
   } else {
@@ -25,20 +25,30 @@ function keyFromData(data) {
 }
 
 function injectLogAppend(log, keyFunc, signFunc) {
-  log.append = async function(data, pointerCount =1) {
+  log.append = async function(data, pointerCount = 1) {
     // Update the clock (find the latest clock)
-    const newTime = Math.max(this.clock.time, this.heads.reduce(maxClockTimeReducer, 0)) + 1
+    const newTime =
+      Math.max(this.clock.time, this.heads.reduce(maxClockTimeReducer, 0)) + 1
     this._clock = new Clock(this.clock.id, newTime)
     // Get the required amount of hashes to next entries (as per current state of the log)
     const nexts = Object.keys(this.traverse(this.heads, pointerCount))
     // Create the entry and add it to the internal cache
-    const entry = await Entry.create(this._storage, this._keystore, this.id, data, nexts, this.clock, keyFunc(data), signFunc)
+    const entry = await Entry.create(
+      this._storage,
+      this._keystore,
+      this.id,
+      data,
+      nexts,
+      this.clock,
+      keyFunc(data),
+      signFunc
+    )
     this._entryIndex[entry.hash] = entry
-    nexts.forEach(e => this._nextsIndex[e] = entry.hash)
+    nexts.forEach(e => (this._nextsIndex[e] = entry.hash))
     this._headsIndex = {}
     this._headsIndex[entry.hash] = entry
     // Update the length
-    this._length ++
+    this._length++
     return entry
   }
 }
@@ -47,5 +57,5 @@ module.exports = {
   setKeySignature,
   getSignedKey,
   keyFromData,
-  injectLogAppend  
+  injectLogAppend
 }
