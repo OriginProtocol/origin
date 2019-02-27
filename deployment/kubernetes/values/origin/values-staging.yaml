@@ -36,6 +36,10 @@ eventlistenerImageTag: '7dfaa5d'
 discoveryImage: origin-discovery
 discoveryImageTag: '4aa5387'
 
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
+
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '4aa5387'
