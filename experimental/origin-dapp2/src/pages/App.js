@@ -83,10 +83,15 @@ class App extends Component {
             <Route path="/profile" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
-            <Route path="/settings"
-              component={Settings}
-              locale={this.props.locale}
-              onLocale={this.props.onLocale}
+            <Route
+              path="/settings"
+              render={props => (
+                <Settings
+                  {...props}
+                  locale={this.props.locale}
+                  onLocale={this.props.onLocale}
+                />
+              )}
             />
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />

@@ -11,7 +11,6 @@ import ProfileQuery from 'queries/Profile'
 import MobileLinkToggle from 'components/MobileLinkToggle'
 import LocaleDropdown from 'components/LocaleDropdown'
 
-
 const configurableFields = [
   'bridge',
   'discovery',
@@ -26,16 +25,14 @@ class Settings extends Component {
     super(props)
 
     this.state = {
-      ...Object.assign(
-        ...configurableFields.map(key => ({ [key]: '' }))
-      ),
+      ...Object.assign(...configurableFields.map(key => ({ [key]: '' }))),
       ...pick(this.props.config, configurableFields)
     }
 
     this.saveConfig = this.saveConfig.bind(this)
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (prevProps.config !== this.props.config) {
       this.setState({
         ...pick(this.props.config, configurableFields)
@@ -60,26 +57,35 @@ class Settings extends Component {
       <Mutation
         mutation={SetNetwork}
         refetchQueries={() => {
-          return [{
-            query: ConfigQuery
-          }]
+          return [
+            {
+              query: ConfigQuery
+            }
+          ]
         }}
       >
-       {setNetwork => (
-         <div className="container settings">
-          <h1>Settings</h1>
-          <div className="row">
-            <div className="col-lg-6 col-md-12">
-              <div className="settings-box">
-                <div className="form-group">
-                  <label htmlFor="language">Language</label>
-                  <div className="form-text form-text-muted">
-                    <small>Please make a selection from the list below.</small>
+        {setNetwork => (
+          <div className="container settings">
+            <h1>Settings</h1>
+            <div className="row">
+              <div className="col-lg-6 col-md-12">
+                <div className="settings-box">
+                  <div className="form-group">
+                    <label htmlFor="language">Language</label>
+                    <div className="form-text form-text-muted">
+                      <small>
+                        Please make a selection from the list below.
+                      </small>
+                    </div>
+                    <LocaleDropdown
+                      locale={locale}
+                      onLocale={onLocale}
+                      className="btn btn-secondary"
+                      dropdown={true}
+                    />
                   </div>
-                  <LocaleDropdown locale={locale} onLocale={onLocale} />
-                </div>
 
-                {/*
+                  {/*
                 <div className="form-group">
                   <label htmlFor="notifications">Notifications</label>
                   <div className="form-text form-text-muted">
@@ -119,80 +125,94 @@ class Settings extends Component {
                 </div>
                 */}
 
-                <Query query={ProfileQuery}>
-                  {({ data }) => {
-                    const walletType = get(data.web3, 'walletType')
-                    const mobileWalletConnected = walletType && walletType.startsWith('mobile-')
-                    return (
-                      <div className="form-group">
-                        <label htmlFor="language">Mobile Wallet</label>
-                        <div className="form-text form-text-muted">
-                          {mobileWalletConnected && (
-                            <small>Disconnect from your mobile wallet by clicking the button below.</small>
-                          )}
+                  <Query query={ProfileQuery}>
+                    {({ data }) => {
+                      const walletType = get(data.web3, 'walletType')
+                      const mobileWalletConnected =
+                        walletType && walletType.startsWith('mobile-')
+                      return (
+                        <div className="form-group">
+                          <label htmlFor="language">Mobile Wallet</label>
+                          <div className="form-text form-text-muted">
+                            {mobileWalletConnected && (
+                              <small>
+                                Disconnect from your mobile wallet by clicking
+                                the button below.
+                              </small>
+                            )}
+                          </div>
+                          <MobileLinkToggle
+                            isConnected={mobileWalletConnected}
+                          />
                         </div>
-                        <MobileLinkToggle isConnected={mobileWalletConnected} />
-                      </div>
-                    )
-                  }}
-                </Query>
+                      )
+                    }}
+                  </Query>
+                </div>
               </div>
-            </div>
 
-            <div className="col-lg-6 col-md-12">
-              <div className="settings-box">
-                <div className="form-group">
-                  <label htmlFor="indexing">Discovery Server</label>
-                  <div className="form-text form-text-muted">
-                    <small>Please enter the URL below. Leave blank to directly query the blockchain. Search functionality will disabled if no discovery server is used.</small>
-                  </div>
-                  <input className="form-control form-control-lg"
-                    type="text"
-                    name="discovery"
-                    {...input('discovery')}
-                    onBlur={() => this.saveConfig(setNetwork)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="indexing">IPFS Gateway</label>
-                  <div className="form-text form-text-muted">
-                    <small>Please enter the URL below.</small>
-                  </div>
-                  <input className="form-control form-control-lg"
-                    type="text"
-                    name="ipfsGateway"
-                    {...input('ipfsGateway')}
-                    onBlur={() => this.saveConfig(setNetwork)}
+              <div className="col-lg-6 col-md-12">
+                <div className="settings-box">
+                  <div className="form-group">
+                    <label htmlFor="indexing">Discovery Server</label>
+                    <div className="form-text form-text-muted">
+                      <small>
+                        Please enter the URL below. Leave blank to directly
+                        query the blockchain. Search functionality will disabled
+                        if no discovery server is used.
+                      </small>
+                    </div>
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="discovery"
+                      {...input('discovery')}
+                      onBlur={() => this.saveConfig(setNetwork)}
                     />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="indexing">Web3 Provider</label>
-                  <div className="form-text form-text-muted">
-                    <small>Please enter the URL below.</small>
                   </div>
-                  <input className="form-control form-control-lg"
-                    type="text"
-                    name="web3Provider"
-                    {...input('provider')}
-                    onBlur={() => this.saveConfig(setNetwork)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="indexing">Bridge Server</label>
-                  <div className="form-text form-text-muted">
-                    <small>Please enter the URL below.</small>
+                  <div className="form-group">
+                    <label htmlFor="indexing">IPFS Gateway</label>
+                    <div className="form-text form-text-muted">
+                      <small>Please enter the URL below.</small>
+                    </div>
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="ipfsGateway"
+                      {...input('ipfsGateway')}
+                      onBlur={() => this.saveConfig(setNetwork)}
+                    />
                   </div>
-                  <input className="form-control form-control-lg"
-                    type="text"
-                    name="bridgeServer"
-                    {...input('bridge')}
-                    onBlur={() => this.saveConfig(setNetwork)}
-                  />
+                  <div className="form-group">
+                    <label htmlFor="indexing">Web3 Provider</label>
+                    <div className="form-text form-text-muted">
+                      <small>Please enter the URL below.</small>
+                    </div>
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="web3Provider"
+                      {...input('provider')}
+                      onBlur={() => this.saveConfig(setNetwork)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="indexing">Bridge Server</label>
+                    <div className="form-text form-text-muted">
+                      <small>Please enter the URL below.</small>
+                    </div>
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="bridgeServer"
+                      {...input('bridge')}
+                      onBlur={() => this.saveConfig(setNetwork)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         )}
       </Mutation>
     )

@@ -8,13 +8,11 @@ class MobileLinkToggle extends Component {
     super(props)
   }
 
-  render () {
+  render() {
     if (this.props.isConnected) {
       return (
         <Mutation mutation={UnlinkMobileWallet}>
-          <button className="btn btn-outline-danger">
-            Disconnect
-          </button>
+          <button className="btn btn-outline-danger">Disconnect</button>
         </Mutation>
       )
     } else {
