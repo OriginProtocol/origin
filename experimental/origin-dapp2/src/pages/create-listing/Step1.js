@@ -25,7 +25,7 @@ class Step1 extends Component {
     if (this.state.valid) {
       if (isEdit) {
         return (
-          <Redirect to={`/listings/${this.props.listingId}/edit/step-2`} push />
+          <Redirect to={`/listing/${this.props.listingId}/edit/step-2`} push />
         )
       } else {
         return <Redirect to="/create/step-2" push />
