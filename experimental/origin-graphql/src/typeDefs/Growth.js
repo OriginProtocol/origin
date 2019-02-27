@@ -120,7 +120,6 @@ module.exports =
     code: String!
     success: Boolean!
     message: String!
-    invites: [Invite]
   }
 
   type EnrollResponse implements MutationResponse {
