@@ -139,7 +139,6 @@ module.exports =
     invite(walletAddress: ID!, emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
     enroll(campaignId: Int!, notResidentCertification: Boolean): Boolean
-    invited(walletAddress: ID!, inviteCode: String!): Boolean
     # Records a growth engine event.
     log(event: JSON!): Boolean
   }
