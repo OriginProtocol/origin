@@ -287,12 +287,12 @@ const initRESTApp = db => {
 
     address = Web3.utils.toChecksumAddress(address)
 
-    const {signature, data} = req.body
+    const { signature, data } = req.body
 
-    if (verifyRegistrySignature(signature, "", {payload:{value:data, key:address}}))
+    if (verifyRegistrySignature(signature, '', { payload: { value: data, key: address } }))
     {
       const entry = db.get(address)
-      console.log("setting registry existing entry:", entry)
+      console.log('setting registry existing entry:', entry)
       if (!entry || entry.sig != signature) {
         setKeySignature(address, signature)
         db.set(address, data)

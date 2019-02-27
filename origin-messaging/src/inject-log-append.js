@@ -14,9 +14,9 @@ async function getSignedKey(entry) {
   const signature = KEY_SIGNATURES[key]
   if(signature) {
     delete KEY_SIGNATURES[key]
-    return {signature, key}
+    return { signature, key }
   } else {
-    throw new Error("no signature for:", key)
+    throw new Error('no signature for:', key)
   }
 }
 

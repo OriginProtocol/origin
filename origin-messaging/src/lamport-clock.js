@@ -21,7 +21,7 @@ class LamportClock {
 
   static compare (a, b) {
     // Calculate the "distance" based on the clock, ie. lower or greater
-    var dist = a.time - b.time
+    const dist = a.time - b.time
 
     // If the sequence number is the same (concurrent events),
     // and the IDs are different, take the one with a "lower" id

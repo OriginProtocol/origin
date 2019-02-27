@@ -25,7 +25,7 @@ class Entry {
 
     // Clean the next objects and convert to hashes
     const toEntry = (e) => e.hash ? e.hash : e
-    let nexts = next.filter(isDefined)
+    const nexts = next.filter(isDefined)
       .map(toEntry)
 
     // Take the id of the given clock by default,
@@ -34,7 +34,7 @@ class Entry {
     const clockId = clock ? clock.id : (pubkey || id)
     const clockTime = clock ? clock.time : null
 
-    let entry = {
+    const entry = {
       hash: null, // "Qm...Foo", we'll set the hash after persisting the entry
       id: id, // For determining a unique chain
       payload: data, // Can be any JSON.stringifyable data
@@ -45,7 +45,7 @@ class Entry {
 
     // If signing key was passedd, sign the enrty
     if (signFunc) {
-      const {signature, key} = await signFunc(entry)
+      const { signature, key } = await signFunc(entry)
       entry.sig = signature
       entry.key = key
     }
@@ -123,7 +123,7 @@ class Entry {
     return ipfs.object.get(hash, { enc: 'base58' })
       .then((obj) => JSON.parse(obj.toJSON().data))
       .then((data) => {
-        let entry = {
+        const entry = {
           hash: hash,
           id: data.id,
           payload: data.payload,
@@ -152,7 +152,7 @@ class Entry {
   }
 
   static compare (a, b) {
-    var distance = Clock.compare(a.clock, b.clock)
+    const distance = Clock.compare(a.clock, b.clock)
     if (distance === 0) return a.clock.id < b.clock.id ? -1 : 1
     return distance
   }
@@ -188,15 +188,15 @@ class Entry {
    * @returns {Array<Entry>}
    */
   static findChildren (entry, values) {
-    var stack = []
-    var parent = values.find((e) => Entry.isParent(entry, e))
-    var prev = entry
+    let stack = []
+    let parent = values.find((e) => Entry.isParent(entry, e))
+    let prev = entry
     while (parent) {
       stack.push(parent)
       prev = parent
       parent = values.find((e) => Entry.isParent(prev, e))
     }
-    stack = stack.sort((a, b) => a.clock.time > a.clock.time)
+    stack = stack.sort((a) => a.clock.time > a.clock.time)
     return stack
   }
 }
