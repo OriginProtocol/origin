@@ -5,6 +5,7 @@ const { GrowthCampaign } = require('../resources/campaign')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
+const { sendInviteEmails } = require('../resources/email')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -76,11 +77,14 @@ const resolvers = {
     }
   },
   Mutation: {
-    async invite() {
+    async invite(root, args) {
+      // FIXME: get referrer's eth address from Auth token.
+      const referrer = 'FakeAddress'
+      await sendInviteEmails(referrer, args.emails)
       return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
+        code: '200',
+        success: true,
+        message: 'Invite successfully sent'
       }
     },
     async enroll() {
