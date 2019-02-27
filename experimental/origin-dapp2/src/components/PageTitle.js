@@ -1,13 +1,17 @@
 import { Component } from 'react'
+import get from 'lodash/get'
 
-export default class PageTitle extends Component {
+import withCreatorConfig from 'hoc/withCreatorConfig'
+
+class PageTitle extends Component {
   componentDidMount() {
-    if (!this.props.children) return 'Origin'
-    const title = this._cleanTitle(this.props.children)
-    document.title = title + ' - Origin'
+    const siteTitle = get(this.props, 'creatorConfig.title') || 'Origin'
+    if (!this.props.children) return siteTitle
+    const pageTitle = this._cleanPageTitle(this.props.children)
+    document.title = `${pageTitle} - ${siteTitle}`
   }
 
-  _cleanTitle(raw) {
+  _cleanPageTitle(raw) {
     // Since we are using react children for the title,
     // we get in multiple text elements if variables are used.
     // If so, join and clean up whitespace.
@@ -18,3 +22,5 @@ export default class PageTitle extends Component {
     return null
   }
 }
+
+export default withCreatorConfig(PageTitle)

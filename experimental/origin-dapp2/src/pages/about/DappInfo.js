@@ -218,6 +218,38 @@ const DappInfo = () => {
                     ))}
                   </tbody>
                 </table>
+
+                <table className="config-table">
+                  <thead>
+                    <tr>
+                      <th>
+                        <h3>Environment Variables</h3>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>DOCKER</th>
+                      <td>{process.env.DOCKER}</td>
+                    </tr>
+                    <tr>
+                      <th>ENABLE_GROWTH</th>
+                      <td>{process.env.ENABLE_GROWTH}</td>
+                    </tr>
+                    <tr>
+                      <th>HOST</th>
+                      <td>{process.env.HOST}</td>
+                    </tr>
+                    <tr>
+                      <th>IPFS_SWARM</th>
+                      <td>{process.env.IPFS_SWARM}</td>
+                    </tr>
+                    <tr>
+                      <th>ORIGIN_LINKING</th>
+                      <td>{process.env.ORIGIN_LINKING}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </section>
             )
           }}

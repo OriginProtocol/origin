@@ -55,19 +55,19 @@ class EditListing extends Component {
         <PageTitle>Edit Listing</PageTitle>
         <Switch>
           <Route
-            path="/listings/:listingID/edit/step-2"
+            path="/listing/:listingID/edit/step-2"
             render={() => <Step2 {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/boost"
+            path="/listing/:listingID/edit/boost"
             render={() => <Boost {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/availability"
+            path="/listing/:listingID/edit/availability"
             render={() => <Availability {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/review"
+            path="/listing/:listingID/edit/review"
             render={() => (
               <Review {...stepProps} refetch={this.props.refetch} />
             )}
