@@ -1,8 +1,9 @@
 const BigNumber = require('bignumber.js')
+const { GrowthInvite } = require('../resources/invite')
 
-const sumUpRewards = rewards => {
+const sumUpRewards = (rewards, currency) => {
   if (rewards === null || rewards.length === 0) {
-    return null
+    return { amount: '0', currency }
   }
 
   const totalReward = rewards.reduce((first, second) => {
@@ -41,23 +42,34 @@ const eventTypeToActionType = eventType => {
 }
 
 /**
+ * Returns rewards earned from a specific rule
+ * @param {BaseRule} rule
+ * @param {Array<Reward>} rewards
+ * @returns {Array<reward>}
+ * @private
+ */
+const _rewardsForRule = (rule, rewards) => {
+  return rewards.filter(r => r.ruleId === rule.id)
+}
+
+/**
  * Formats the campaign object according to the Growth schema
  *
  * @returns {Object} - formatted object
  */
-const multiEventRuleApolloObject = (
+const multiEventRuleApolloObject = async (
   rule,
   ethAddress,
+  rewards,
   events,
   currentUserLevel
 ) => {
-  const rewards = rule.getRewards(ethAddress, events)
-
+  const ruleRewards = _rewardsForRule(rule, rewards)
   return {
     // TODO: we need event types for MultiEventsRule
     type: eventTypeToActionType(rule.config.eventTypes[0]),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(rewards),
+    rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward
   }
 }
@@ -67,40 +79,49 @@ const multiEventRuleApolloObject = (
  *
  * @returns {Object} - formatted object
  */
-const singleEventRuleApolloObject = (
+const singleEventRuleApolloObject = async (
   rule,
   ethAddress,
+  rewards,
   events,
   currentUserLevel
 ) => {
-  const rewards = rule.getRewards(ethAddress, events)
-  const objectToReturn = {
+  const ruleRewards = _rewardsForRule(rule, rewards)
+  return {
     type: eventTypeToActionType(rule.config.eventType),
     status: rule.getStatus(ethAddress, events, currentUserLevel),
-    rewardEarned: sumUpRewards(rewards),
+    rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward
   }
+}
 
-  if (objectToReturn.type === 'Referral') {
-    // TODO implement this
-    objectToReturn.rewardPending = rule.config.reward
-  }
-
-  return objectToReturn
+const referralRuleApolloObject = async (
+  rule,
+  ethAddress,
+  rewards,
+  events,
+  currentUserLevel
+) => {
+  const status = await rule.getStatus(ethAddress, events, currentUserLevel)
+  const referralsInfo = await GrowthInvite.getReferralsInfo(
+    ethAddress,
+    rule.campaignId
+  )
+  return Object.assign({ type: 'Referral', status }, referralsInfo)
 }
 
 /**
- * Formats the campaign object according to the Growth schema
- *
- * @returns {Object} - formatted object
+ * Formats the campaign object according to the Growth GraphQL schema.
+ * @param {CampaignRules} campaign
+ * @param {string} ethAddress - User's Eth address.
+ * @returns {Promise<{id: *, name: string, startDate: *, endDate: *, distributionDate: (where.distributionDate|{}), status: (Enum<GrowthCampaignStatuses>|Enum<GrowthActionStatus>), actions: any[], rewardEarned: {amount, currency}}>}
  */
 const campaignToApolloObject = async (campaign, ethAddress) => {
-  //TODO: change to true, true
-  //const events = this.getEvents(ethAddress, true, true)
-  const events = await campaign.getEvents(ethAddress, false, false)
+  const events = await campaign.getEvents(ethAddress)
   const levels = Object.values(campaign.levels)
   const rules = levels.flatMap(level => level.rules)
   const currentLevel = await campaign.getCurrentLevel(ethAddress, false)
+  const rewards = await campaign.getRewards(ethAddress)
 
   return {
     id: campaign.campaign.id,
@@ -118,6 +139,7 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
           return singleEventRuleApolloObject(
             rule,
             ethAddress,
+            rewards,
             events,
             currentLevel
           )
@@ -125,13 +147,20 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
           return multiEventRuleApolloObject(
             rule,
             ethAddress,
+            rewards,
+            events,
+            currentLevel
+          )
+        else if (rule.constructor.name == 'ReferralRule')
+          return referralRuleApolloObject(
+            rule,
+            ethAddress,
+            rewards,
             events,
             currentLevel
           )
       }),
-    rewardEarned: sumUpRewards(
-      levels.flatMap(level => level.getRewards(ethAddress, events))
-    )
+    rewardEarned: sumUpRewards(rewards, campaign.campaign.currency)
   }
 }
 

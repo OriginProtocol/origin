@@ -137,9 +137,9 @@ const rule = {
       rules: [
         {
           id: 'Referral',
-          class: 'SingleEvent',
+          class: 'Referral',
           config: {
-            eventType: 'RefereeSignedUp',
+            requiredLevel: 2,
             reward: {
               amount: tokenNaturalUnits(10),
               currency: 'OGN'

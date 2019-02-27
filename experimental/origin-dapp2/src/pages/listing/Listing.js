@@ -44,13 +44,13 @@ class Listing extends Component {
             return (
               <Switch>
                 <Route
-                  path="/listings/:listingID/onboard"
+                  path="/listing/:listingID/onboard"
                   render={() => (
                     <Onboard listing={listing} quantity={this.state.quantity} />
                   )}
                 />
                 <Route
-                  path="/listings/:listingID/edit"
+                  path="/listing/:listingID/edit"
                   render={() => (
                     <EditListing listing={listing} refetch={refetch} />
                   )}

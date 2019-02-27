@@ -22,9 +22,9 @@ class Listings extends Component {
             key={a.id}
             onClick={e => {
               if (altClick(e)) {
-                this.setState({ redirect: `/listings/${a.id}` })
+                this.setState({ redirect: `/listing/${a.id}` })
               } else if (e.target.tagName !== 'A') {
-                window.open(`#/listings/${a.id}`, '_blank')
+                window.open(`#/listing/${a.id}`, '_blank')
               }
             }}
             className="col-md-4 listing-card"
@@ -46,7 +46,7 @@ class Listings extends Component {
               <ListingBadge status={a.status} featured={a.featured} />
             </div>
             <h5>
-              <a href={`#/listings/${a.id}`}>{a.title}</a>
+              <a href={`#/listing/${a.id}`}>{a.title}</a>
             </h5>
             <div className="price">
               <div className="eth">

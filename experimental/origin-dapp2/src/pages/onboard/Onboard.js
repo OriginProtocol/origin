@@ -22,19 +22,19 @@ class Onboard extends Component {
 
         <Switch>
           <Route
-            path="/listings/:listingID/onboard/metamask"
+            path="/listing/:listingID/onboard/metamask"
             render={() => <MetaMask listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/messaging"
+            path="/listing/:listingID/onboard/messaging"
             render={() => <Messaging listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/notifications"
+            path="/listing/:listingID/onboard/notifications"
             render={() => <Notifications listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/profile"
+            path="/listing/:listingID/onboard/profile"
             render={() => <Profile listing={listing} />}
           />
           <Route render={() => <Wallet listing={listing} />} />

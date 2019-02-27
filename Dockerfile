@@ -13,13 +13,14 @@ COPY ./lerna.json ./
 COPY ./package.json ./
 COPY ./origin-dapp/package.json ./origin-dapp/
 COPY ./origin-discovery/package.json ./origin-discovery/
+COPY ./origin-growth/package.json ./origin-growth/
+COPY ./origin-identity/package.json ./origin-identity/
 COPY ./origin-ipfs-proxy/package.json ./origin-ipfs-proxy/
 COPY ./origin-js/package.json ./origin-js/
 COPY ./origin-messaging/package.json ./origin-messaging/
 COPY ./origin-notifications/package.json ./origin-notifications/
 COPY ./origin-tests/package.json ./origin-tests/
 COPY ./origin-token/package.json ./origin-token/
-COPY ./origin-growth/package.json ./origin-growth/
 COPY ./experimental/origin-graphql/package.json ./experimental/origin-graphql/
 COPY ./experimental/origin-ipfs/package.json ./experimental/origin-ipfs/
 COPY ./experimental/origin-validator/package.json ./experimental/origin-validator/
@@ -46,6 +47,7 @@ COPY ./experimental/origin-messaging-client ./experimental/origin-messaging-clie
 COPY ./experimental/origin-linker-client ./experimental/origin-linker-client
 COPY ./experimental/origin-services ./experimental/origin-services
 COPY ./origin-growth ./origin-growth
+COPY ./origin-identity ./origin-identity
 COPY ./origin-ipfs-proxy ./origin-ipfs-proxy
 COPY ./origin-js ./origin-js
 COPY ./origin-messaging ./origin-messaging
