@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 
 import contracts from '../contracts'
+import creatorConfig from '../constants/CreatorConfig'
 
 let ethPrice, activeMessaging
 const marketplaceExists = {}
@@ -10,6 +11,25 @@ import { identity } from './IdentityEvents'
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
+  creatorConfig: async (_, args) => {
+    let configUrl = args.creatorConfigUrl
+    if (configUrl) {
+      try {
+        if (!configUrl.match(/^http/)) {
+          configUrl = `${contracts.config.ipfsGateway}/ipns/${configUrl}`
+        }
+        const response = await fetch(configUrl)
+        const json = await response.json()
+        return Object.assign(creatorConfig, {
+          ...json.config,
+          isCreatedMarketplace: true
+        })
+      } catch (e) {
+        console.log('Could not fetch marketplace config')
+      }
+    }
+    return creatorConfig
+  },
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address
@@ -22,8 +42,9 @@ export default {
         marketplaceExists[address] = true
         return contracts.marketplace
       }
+      console.log(`Could not find marketplace at ${address}`)
     } catch (e) {
-      /* Ignore */
+      console.log(`Error finding marketplace`, e)
     }
   },
   contracts: () => {

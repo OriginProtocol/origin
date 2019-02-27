@@ -7,7 +7,6 @@ const { GrowthEvent } = require('origin-growth/src/resources/event')
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
 
-
 const LISTING_EVENTS = [
   'ListingCreated',
   'ListingUpdated',
@@ -35,11 +34,9 @@ function isOfferEvent(eventName) {
 }
 
 function generateListingId(log) {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    log.decoded.listingID
-  ].join('-')
+  return [log.networkId, log.contractVersionKey, log.decoded.listingID].join(
+    '-'
+  )
 }
 
 function generateOfferId(log) {
@@ -52,19 +49,19 @@ function generateOfferId(log) {
 }
 
 const generateListingIdFromUnique = ({ network, version, uniqueId }) => {
-  return [network, version, uniqueId].join(
-    '-'
-  )
+  return [network, version, uniqueId].join('-')
 }
 
-const toNoGasListingID = (listingID) => {
+const toNoGasListingID = listingID => {
   return base58.encode(web3.utils.toBN(listingID).toBuffer())
 }
 
 const generateNoGasListingId = log => {
-  return [log.networkId, log.contractVersionKey, toNoGasListingID(log.decoded.listingID)].join(
-    '-'
-  )
+  return [
+    log.networkId,
+    log.contractVersionKey,
+    toNoGasListingID(log.decoded.listingID)
+  ].join('-')
 }
 
 function generateNoGasOfferId(log) {
@@ -75,7 +72,6 @@ function generateNoGasOfferId(log) {
     log.decoded.offerID
   ].join('-')
 }
-
 
 class MarketplaceEventHandler {
   constructor(config, origin) {
@@ -97,10 +93,10 @@ class MarketplaceEventHandler {
     // Note: Passing blockInfo as an arg to the getListing call ensures that we preserve
     // listings version history if the listener is re-indexing data.
     // Otherwise all the listing version rows in the DB would end up with the same data.
-    const listing = await origin.marketplace.getListing(
-      listingId,
-      { blockInfo: blockInfo, loadOffers: true }
-    )
+    const listing = await origin.marketplace.getListing(listingId, {
+      blockInfo: blockInfo,
+      loadOffers: true
+    })
     checkEventsFreshness(listing.events, blockInfo)
 
     let seller
@@ -134,10 +130,10 @@ class MarketplaceEventHandler {
     // Otherwise all the listing versions in the DB would end up with the same data.
     //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
     // is not versioned.
-    const listing = await origin.marketplace.getListing(
-      listingId,
-      { blockInfo: blockInfo, loadOffers: true }
-    )
+    const listing = await origin.marketplace.getListing(listingId, {
+      blockInfo: blockInfo,
+      loadOffers: true
+    })
     checkEventsFreshness(listing.events, blockInfo)
 
     const offer = await origin.marketplace.getOffer(offerId)
@@ -205,8 +201,13 @@ class MarketplaceEventHandler {
     // DVF: this should really be handled in origin js - origin.js should throw
     // an error if this happens.
     const contractListingId = listingId.split('-')[2]
-    if (contractListingId !== log.decoded.listingID && contractListingId != toNoGasListingID(log.decoded.listingID)) {
-      throw new Error(`ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`)
+    if (
+      contractListingId !== log.decoded.listingID &&
+      contractListingId != toNoGasListingID(log.decoded.listingID)
+    ) {
+      throw new Error(
+        `ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`
+      )
     }
 
     logger.info(`Indexing listing in DB: \
@@ -260,7 +261,8 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Records ListingCreated and ListingPurchase events in the growth DB.
+   * Records ListingCreated, ListingPurchased and ListingSold events
+   * in the growth DB.
    * @param log
    * @param details
    * @param blockInfo
@@ -268,24 +270,35 @@ class MarketplaceEventHandler {
    * @private
    */
   async _recordGrowthEvent(log, details, blockInfo) {
-    let address, eventType, customId
     switch (log.eventName) {
       case 'ListingCreated':
-        address = details.listing.seller
-        eventType = GrowthEventTypes.ListingCreated
-        customId = details.listing.id
+        await GrowthEvent.insert(
+          logger,
+          details.listing.seller.toLowerCase(),
+          GrowthEventTypes.ListingCreated,
+          details.listing.id,
+          { blockInfo }
+        )
         break
       case 'OfferFinalized':
-        address = details.offer.buyer
-        eventType = GrowthEventTypes.ListingPurchased
-        customId = details.offer.id
+        // Insert a ListingPurchased event on the buyer side and
+        // a ListingSold event on the seller side.
+        await GrowthEvent.insert(
+          logger,
+          details.offer.buyer.toLowerCase(),
+          GrowthEventTypes.ListingPurchased,
+          details.offer.id,
+          { blockInfo }
+        )
+        await GrowthEvent.insert(
+          logger,
+          details.listing.seller.toLowerCase(),
+          GrowthEventTypes.ListingSold,
+          details.offer.id,
+          { blockInfo }
+        )
         break
-      default:
-        return
     }
-
-    // Record the event.
-    await GrowthEvent.insert(logger, address, eventType, customId, { blockInfo })
   }
 
   /**
@@ -337,6 +350,10 @@ class MarketplaceEventHandler {
   emailWebhookEnabled() {
     return false
   }
+
+  gcloudPubsubEnabled() {
+    return this.config.marketplace
+  }
 }
 
 class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
@@ -360,30 +377,50 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
     //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
     const network = await origin.contractService.web3.eth.net.getId()
 
-    const listing = await origin.marketplace._listingFromData(listingId, { status: 'active', seller: offer.seller, ipfsHash: offer.listingIpfsHash })
+    const listing = await origin.marketplace._listingFromData(listingId, {
+      status: 'active',
+      seller: offer.seller,
+      ipfsHash: offer.listingIpfsHash
+    })
 
-    if (generateListingIdFromUnique({ version: 'A', network, uniqueId: listing.uniqueId }) != listingId)
-    {
-      throw new Error(`ListingIpfs and Id mismatch: ${listingId} !== ${listing.creator.listing.createDate}`)
+    if (
+      generateListingIdFromUnique({
+        version: 'A',
+        network,
+        uniqueId: listing.uniqueId
+      }) != listingId
+    ) {
+      throw new Error(
+        `ListingIpfs and Id mismatch: ${listingId} !== ${
+          listing.creator.listing.createDate
+        }`
+      )
     }
 
-    if(listing.creator != offer.buyer) 
-    {
-      if(listing.creator != offer.seller)
-      {
-        throw new Error(`listing creator ${listing.creator} does not match buyer(${offer.buyer}) or seller(${offer.seller})`)
+    if (listing.creator != offer.buyer) {
+      if (listing.creator != offer.seller) {
+        throw new Error(
+          `listing creator ${listing.creator} does not match buyer(${
+            offer.buyer
+          }) or seller(${offer.seller})`
+        )
       }
 
-      if (!(await origin.marketplace.verifyListingSignature(listing, listing.seller)))
-      {
-        throw new Error(`listing signature does not match seller ${listing.seller}.`)
+      if (
+        !(await origin.marketplace.verifyListingSignature(
+          listing,
+          listing.seller
+        ))
+      ) {
+        throw new Error(
+          `listing signature does not match seller ${listing.seller}.`
+        )
       }
     }
-    
+
     let seller
     let buyer
-    if (web3.utils.toBN(offer.seller) != 0)
-    {
+    if (web3.utils.toBN(offer.seller) != 0) {
       try {
         seller = await origin.users.get(offer.seller)
       } catch (e) {
@@ -403,7 +440,6 @@ class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
       seller: seller,
       buyer: buyer
     }
-
   }
 }
 

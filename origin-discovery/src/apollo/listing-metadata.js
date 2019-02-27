@@ -6,7 +6,7 @@ const fetch = require('node-fetch')
 const METADATA_STALE_TIME = 60 * 1000 // 60 seconds
 
 class ListingMetadata {
-  constructor () {
+  constructor() {
     const networkId = process.env.NETWORK_ID
     this.featuredListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/featurelist_${networkId}.txt`
     this.hiddenListingsUrl = `https://raw.githubusercontent.com/OriginProtocol/origin/hidefeature_list/hidelist_${networkId}.txt`
@@ -15,7 +15,7 @@ class ListingMetadata {
     this.listingsUpdateTime = undefined
   }
 
-  async readListingsFromUrl (githubUrl) {
+  async readListingsFromUrl(githubUrl) {
     const response = await fetch(githubUrl)
     return (await response.text())
       .split(',')
@@ -23,20 +23,29 @@ class ListingMetadata {
       .filter(listingId => listingId.match(/\d*-\d*-\d*/) !== null)
   }
 
-  async updateHiddenFeaturedListings () {
-    if (!this.listingsUpdateTime || new Date() - this.listingsUpdateTime > METADATA_STALE_TIME) {
+  async updateHiddenFeaturedListings() {
+    if (
+      !this.listingsUpdateTime ||
+      new Date() - this.listingsUpdateTime > METADATA_STALE_TIME
+    ) {
       try {
         this.listingsUpdateTime = new Date()
         this.hiddenIds = await this.readListingsFromUrl(this.hiddenListingsUrl)
-        this.featuredIds = await this.readListingsFromUrl(this.featuredListingsUrl)
-        console.log(`Hidden/Featured lists updated with number of items hidden:${this.hiddenIds.length} featured:${this.featuredIds.length}`)
+        this.featuredIds = await this.readListingsFromUrl(
+          this.featuredListingsUrl
+        )
+        console.log(
+          `Hidden/Featured lists updated with number of items hidden:${
+            this.hiddenIds.length
+          } featured:${this.featuredIds.length}`
+        )
       } catch (e) {
         console.error('Could not update hidden/featured listings ', e)
       }
     }
   }
 
-  getDisplay (listingId) {
+  getDisplay(listingId) {
     let display = 'normal'
     if (this.hiddenIds.includes(listingId)) {
       display = 'hidden'

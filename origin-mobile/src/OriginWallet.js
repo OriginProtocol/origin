@@ -1,4 +1,4 @@
-import {AppState, PushNotificationIOS,Linking, Clipboard} from 'react-native'
+import {Alert, AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
@@ -13,6 +13,10 @@ import { randomBytes } from 'react-native-randombytes'
 import { TypedDataUtils, concatSig } from 'eth-sig-util'
 import ethUtil from 'ethereumjs-util'
 
+
+import {
+  GCM_SENDER_ID,
+} from 'react-native-dotenv'
 
 import {setRemoteLocal, localfy, storeData, loadData} from './tools'
 
@@ -30,6 +34,11 @@ const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
 const WALLET_LINK = "WALLET_LINK"
 const REMOTE_LOCALHOST_STORE = "REMOTE_LOCAL_STORE"
+const DEFAULT_NOTIFICATION_PERMISSIONS = {
+  alert: true,
+  badge: true,
+  sound: true
+}
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -115,10 +124,15 @@ class OriginWallet {
   }
 
   getNotifyType() {
-    return EthNotificationTypes.APN
+    if (Platform.OS === 'ios') {
+      return EthNotificationTypes.APN
+    } else if (Platform.OS === 'android') {
+      return EthNotificationTypes.FCM
+    }
   }
 
   initNotifications() {
+    console.log('GCM_SENDER_ID: ', GCM_SENDER_ID)
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function(device_token) {
@@ -130,18 +144,16 @@ class OriginWallet {
         this.onNotification(notification)
 
         // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
-        notification.finish(PushNotificationIOS.FetchResult.NoData)
+        if (Platform.OS === 'ios') {
+          notification.finish(PushNotificationIOS.FetchResult.NoData)
+        }
       }.bind(this),
 
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-      senderID: "YOUR GCM SENDER ID",
+      senderID: GCM_SENDER_ID,
 
       // IOS ONLY (optional): default: all - Permissions to register.
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true
-      },
+      permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
 
       // Should the initial notification be popped automatically
       // default: true
@@ -152,12 +164,19 @@ class OriginWallet {
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
-      requestPermissions: false,
+      requestPermissions: Platform.OS !== 'ios',
     })
   }
 
   requestNotifications() {
-    return PushNotificationIOS.requestPermissions()
+    if (Platform.OS === 'ios') {
+      return PushNotificationIOS.requestPermissions()
+    } else {
+      // Function callers expect a Promise
+      return new Promise((resolve, reject) => {
+        resolve(DEFAULT_NOTIFICATION_PERMISSIONS)
+      })
+    }
   }
 
   initUrls() {
@@ -826,8 +845,9 @@ class OriginWallet {
   }
 
   async getPrivateLink() {
-    // TODO: someone fix this
-    await PushNotificationIOS.requestPermissions()
+    if (Platform.OS === 'ios') {
+      await PushNotificationIOS.requestPermissions()
+    }
     const stored_link_id = await loadData(WALLET_LINK)
 
     if (stored_link_id) 
@@ -911,7 +931,10 @@ class OriginWallet {
       await timeout(1000)
     }
     console.log("notification.message:", notification.message)
-    if (notification.data.newMessage)
+    if (!notification.data) {
+      console.log("notification has no data", notification)
+    }
+    if (notification.data && notification.data.newMessage)
     {
       if (notification.foreground)
       {
@@ -923,7 +946,7 @@ class OriginWallet {
         this.fireEvent(Events.SHOW_MESSAGES)
       }
     }
-    else if (notification.data.to_dapp && notification.data.url)
+    else if (notification.data && notification.data.to_dapp && notification.data.url)
     {
       if (notification.foreground)
       {
@@ -1220,6 +1243,10 @@ class OriginWallet {
       await this.updateLinks()
       return true
     }
+  }
+
+  showPrivateKey() {
+    Alert.alert('Private Key', this.getCurrentWeb3Account().privateKey)
   }
 
   setWeb3Address() {

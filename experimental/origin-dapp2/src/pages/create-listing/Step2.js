@@ -30,7 +30,7 @@ class Step2 extends Component {
   render() {
     const prefix =
       this.props.mode === 'edit'
-        ? `/listings/${this.props.listingId}/edit`
+        ? `/listing/${this.props.listingId}/edit`
         : '/create'
 
     let ListingType = UnitListing,

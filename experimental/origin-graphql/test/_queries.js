@@ -11,7 +11,7 @@ const GetNodeAccounts = gql`
 `
 
 const GetReceipt = gql`
-  query TransactionReceipt($id: String!) {
+  query TransactionReceipt($id: ID!) {
     web3 {
       transactionReceipt(id: $id) {
         id
@@ -36,18 +36,20 @@ const GetReceipt = gql`
 `
 
 const GetAllOffers = gql`
-  query GetAllOffers($id: String!) {
+  query GetAllOffers($id: ID!) {
     marketplace {
       listing(id: $id) {
-        id
-        title
-        allOffers {
+        ... on Listing {
           id
-          status
-          statusStr
-          valid
-          validationError
-          commission
+          title
+          allOffers {
+            id
+            status
+            statusStr
+            valid
+            validationError
+            commission
+          }
         }
       }
     }
@@ -55,50 +57,62 @@ const GetAllOffers = gql`
 `
 
 const GetListing = gql`
-query GetListing($id: String!) {
-  marketplace {
-    listing(id: $id) {
-      id
-      status
-      totalEvents
-      seller {
-        id
-      }
-      arbitrator {
-        id
-      }
-      deposit
-      depositAvailable
-      createdEvent {
-        timestamp
-      }
+  query GetListing($id: ID!) {
+    marketplace {
+      listing(id: $id) {
+        ... on Listing {
+          id
+          status
+          totalEvents
+          seller {
+            id
+          }
+          arbitrator {
+            id
+          }
+          deposit
+          depositAvailable
+          createdEvent {
+            timestamp
+          }
 
-      category
-      categoryStr
-      subCategory
-      title
-      description
-      currencyId
-      featured
-      hidden
-      price {
-        amount
-        currency
-      }
-      media {
-        url
-        contentType
-      }
-      commission
-      commissionPerUnit
-      ... on UnitListing {
-        unitsTotal
-        unitsAvailable
-        unitsSold
+          category
+          categoryStr
+          subCategory
+          title
+          description
+          currencyId
+          featured
+          hidden
+          price {
+            amount
+            currency
+          }
+          media {
+            url
+            urlExpanded
+            contentType
+          }
+          commission
+          commissionPerUnit
+        }
+        ... on UnitListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
+        }
       }
     }
   }
-}
 `
 
 export default {

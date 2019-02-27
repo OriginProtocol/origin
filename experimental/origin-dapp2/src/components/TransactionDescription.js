@@ -27,6 +27,10 @@ class TransactionDescription extends Component {
       receipt.events.find(e => Events.indexOf(e.event) >= 0) ||
       receipt.events[0]
 
+    if (!event) {
+      return null
+    }
+
     let description = 'Transaction: ' + event.id
 
     const name = event.event

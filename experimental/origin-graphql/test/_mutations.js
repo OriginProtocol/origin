@@ -169,26 +169,25 @@ const DisputeOffer = gql`
 
 const ExecuteRuling = gql`
   mutation ExecuteRuling(
-    $offerID: ID!,
-    $ruling: String!,
-    $commission: String!,
-    $message: String,
-    $refund: String,
+    $offerID: ID!
+    $ruling: String!
+    $commission: String!
+    $message: String
+    $refund: String
     $from: String
   ) {
     executeRuling(
-      offerID: $offerID,
-      ruling: $ruling,
-      commission: $commission,
-      message: $message,
-      refund: $refund,
+      offerID: $offerID
+      ruling: $ruling
+      commission: $commission
+      message: $message
+      refund: $refund
       from: $from
     ) {
       id
     }
   }
 `
-
 
 const UpdateTokenAllowance = gql`
   mutation UpdateTokenAllowance(

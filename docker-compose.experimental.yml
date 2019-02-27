@@ -48,13 +48,16 @@ services:
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
-      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./experimental/origin-validator:/app/experimental/origin-validator/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/
       - ./origin-notifications/:/app/origin-notifications/
       - ./origin-growth/:/app/origin-growth/
+      - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
+    # Required by the dapp2 translation plugin
+      - ./origin-dapp/translations:/app/origin-dapp/translations
     # Exclude all node_modules
       - /app/experimental/origin-dapp2/node_modules/
       - /app/experimental/origin-services/node_modules/
@@ -70,7 +73,8 @@ services:
       - /app/origin-notifications/node_modules/
       - /app/origin-growth/node_modules/
       - /app/origin-token/node_modules/
-      # IPFS data
+      - /app/origin-identity/node_modules/
+    # IPFS data
       - ipfs:/app/ipfs
     ports:
       - "3000:3000"
@@ -80,6 +84,7 @@ services:
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
+      - ENABLE_GROWTH=false
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and export the IPFS_SWARM variable
@@ -141,6 +146,7 @@ services:
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
+      npm run migrate --prefix origin-identity &&
       npm run start:listener --prefix origin-discovery"
 
   origin-discovery:
@@ -180,6 +186,19 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix origin-notifications &&
       npm run start --prefix origin-notifications"
+
+  origin-growth:
+    container_name: origin-growth
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    ports:
+      - "4001:4001"
+    #command: sleep infinity
+    command: npm run start --prefix origin-growth
 
   origin-bridge:
     container_name: origin-bridge

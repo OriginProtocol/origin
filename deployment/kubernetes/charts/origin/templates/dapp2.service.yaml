@@ -1,4 +1,4 @@
-{{- if eq .Release.Namespace "dev" -}}
+{{- if ne .Release.Namespace "prod" -}}
 apiVersion: v1
 kind: Service
 metadata:
