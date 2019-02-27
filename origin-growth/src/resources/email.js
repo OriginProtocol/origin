@@ -7,12 +7,19 @@ const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
 
+// Do not allow referrer to blast invites to more than maxNumInvites recipients.
+const maxNumInvites = 50
+
 /**
  * Send invite codes by email.
  * @param {string} referrer - Eth address of the referrer.
  * @param {Array<string>>} recipients - List of email addresses.
  */
 async function sendInvites(referrer, recipients) {
+  if (recipients.length > maxNumInvites) {
+    throw new Error(`Exceded number of invites limit.`)
+  }
+
   // Load the invite code for the referrer.
   const code = db.GrowthInviteCode.findOne({
     where: { ethAddress: referrer.toLowerCase() }
@@ -44,7 +51,8 @@ async function sendInvites(referrer, recipients) {
       to: recipient,
       from: process.env.INVITE_FROM_EMAIL,
       subject: `${contactName} invited you to join Origin`,
-      text: `Check it out at https://dapp.originprotocol.com/invite/${code}.`
+      text: `Check out the Origin DApp at https://dapp.originprotocol.com/invite/${code}`,
+      html: `Check out the <a href="https://dapp.originprotocol.com/invite/${code}">Origin Protocol DApp</a>`
     }
     try {
       await sendgridMail.send(email)

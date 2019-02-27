@@ -78,24 +78,23 @@ const resolvers = {
   },
   Mutation: {
     async invite(root, args) {
-      // FIXME: Check the referrer against Auth token.
+      // FIXME:
+      //  a. Check the referrer against Auth token.
+      //  b. Implement rate limiting to avoid spam attack.
       await sendInviteEmails(args.walletAddress, args.emails)
       return {
-        code: '200',
         success: true,
         message: 'Invite successfully sent'
       }
     },
     async enroll() {
       return {
-        code: '418',
         success: false,
         message: 'I am a teapot'
       }
     },
     async log() {
       return {
-        code: '418',
         success: false,
         message: 'I am a teapot'
       }

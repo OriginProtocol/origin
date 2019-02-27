@@ -111,26 +111,22 @@ module.exports =
   }
 
   interface MutationResponse {
-    code: String!
     success: Boolean!
     message: String!
   }
 
   type InviteResponse implements MutationResponse {
-    code: String!
     success: Boolean!
     message: String!
   }
 
   type EnrollResponse implements MutationResponse {
-    code: String!
     success: Boolean!
     message: String!
     campaign: GrowthCampaign
   }
 
   type SimpleResponse implements MutationResponse {
-    code: String!
     success: Boolean!
     message: String!
   }
