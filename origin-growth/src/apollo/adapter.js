@@ -5,7 +5,8 @@ const sumUpRewards = (rewards, currency) => {
   if (rewards === null || rewards.length === 0) {
     return { amount: '0', currency }
   }
-
+  rewards = rewards.map(reward => reward.value)
+  
   const totalReward = rewards.reduce((first, second) => {
     if (first.currency !== second.currency)
       throw new Error(
