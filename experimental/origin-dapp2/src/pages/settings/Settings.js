@@ -49,7 +49,7 @@ class Settings extends Component {
     })
   }
 
-  requestNotificationPermission () {
+  requestNotificationPermission() {
     Notification.requestPermission().then(permission => {
       this.setState({ permission: permission })
       if (permission === 'granted') {
@@ -107,7 +107,10 @@ class Settings extends Component {
                         <div className="form-text form-text-muted">
                           <small>Enable browser notifications below.</small>
                         </div>
-                        <button className="btn btn-success" onClick={() => this.requestNotificationPermission()}>
+                        <button
+                          className="btn btn-success"
+                          onClick={() => this.requestNotificationPermission()}
+                        >
                           Enable
                         </button>
                       </>
@@ -145,12 +148,17 @@ class Settings extends Component {
                                 </small>
                               </div>
                               <Mutation mutation={UnlinkMobileWallet}>
-                                <button className="btn btn-outline-danger">Disconnect</button>
+                                <button className="btn btn-outline-danger">
+                                  Disconnect
+                                </button>
                               </Mutation>
                             </>
                           ) : (
                             <div>
-                              <button className="btn btn-outline-secondary" disabled>
+                              <button
+                                className="btn btn-outline-secondary"
+                                disabled
+                              >
                                 <span>Not connected</span>
                               </button>
                             </div>
