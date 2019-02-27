@@ -40,6 +40,8 @@ services:
       # and the contract address here, and other services will then parse these
       # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
+      # if new origin module is added the whole container does not need to be rebuilt
+      - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
       - ./experimental/origin-dapp2/:/app/experimental/origin-dapp2/
       - ./experimental/origin-services/:/app/experimental/origin-services/
