@@ -11,6 +11,12 @@ const pinService = async event => {
     ? JSON.parse(Buffer.from(pubsubMessage, 'base64').toString())
     : null
 
+  const eventName = data.log.eventName
+  if (!['ListingCreated', 'ListingUpdated'].includes(eventName)) {
+    // Not an event we are interested in pinning anything for
+    return
+  }
+
   let pinnedHashes = []
   let unPinnedHashes = []
 
@@ -70,8 +76,8 @@ const parseIncomingData = data => {
   let hashesToPin = []
   const eventName = data.log.eventName
 
-  // Parse a listing
   if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
+    console.log(`Processing event ${eventName}`)
     const ipfsData = data.related.listing.ipfs
     hashesToPin.push(ipfsData.hash)
     if ('media' in ipfsData.data && ipfsData.data.media.length > 0) {
@@ -82,9 +88,8 @@ const parseIncomingData = data => {
     } else {
       console.log('No IPFS media hashes found in listing data')
     }
-  } else if (data.type === 'identity') {
-    hashesToPin.push(data.ipfsHash)
   }
+
   return hashesToPin
 }
 
