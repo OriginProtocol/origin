@@ -29,9 +29,11 @@
     "origin-token": "^0.1.0",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
+    "@sendgrid/mail": "^6.3.1",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
     "url": "^0.11.0",
+    "validator": "^10.11.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

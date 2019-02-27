@@ -33,4 +33,4 @@ spec:
         - path: /
           backend:
             serviceName: {{ template "growth.fullname" . }}
-            servicePort: 5000
+            servicePort: 4001
