@@ -15,7 +15,7 @@ const logger = require('../logger')
 async function sendInvites(referrer, recipients) {
   // Load the invite code for the referrer.
   const code = db.GrowthInviteCode.findOne({
-    where: { ethAddress: referrer.lowerCase() }
+    where: { ethAddress: referrer.toLowerCase() }
   })
   if (!code) {
     throw new Error(`No invite code for ${referrer}`)
@@ -23,7 +23,7 @@ async function sendInvites(referrer, recipients) {
 
   // Load the referrer's identity to get their name.
   const identity = await db.Identity.findOne({
-    where: { ethAddress: referrer }
+    where: { ethAddress: referrer.toLowerCase() }
   })
   if (!identity) {
     throw new Error(`Failed loading identity for ${referrer}`)
