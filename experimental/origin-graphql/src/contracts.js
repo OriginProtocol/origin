@@ -204,6 +204,7 @@ export function setNetwork(net, customConfig) {
   }
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
+    typeof window !== undefined &&
     window.localStorage.customConfig &&
     window.localStorage.customConfig !== 'undefined'
   ) {
