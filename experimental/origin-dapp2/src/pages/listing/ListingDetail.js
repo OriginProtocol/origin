@@ -80,8 +80,13 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
   return (
     <div className="listing-buy multi">
       <div className="price">
-        {`${listing.price.amount} ETH`}
-        {listing.multiUnit ? <span>{` / each`}</span> : null}
+        <div className="eth">
+          {`${listing.price.amount} ETH`}
+          {listing.multiUnit ? <span>{` / each`}</span> : null}
+        </div>
+        <div className="usd">
+          <Price amount={listing.price.amount} />
+        </div>
       </div>
       <SelectQuantity
         quantity={quantity}
@@ -127,7 +132,12 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
 
   return (
     <div className="listing-buy fractional">
-      <div className="price">{`${listing.price.amount} ETH / night`}</div>
+      <div className="price">
+        <div className="eth">{`${listing.price.amount} ETH / night`}</div>
+        <div className="usd">
+          <Price amount={listing.price.amount} />
+        </div>
+      </div>
       <div className="choose-dates form-control">
         <div>{checkIn}</div>
         <div className="arr" />
@@ -158,10 +168,15 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
 
 const ForSeller = ({ listing }) => (
   <div className="listing-buy">
-    <div className="price">{`${listing.price.amount} ETH`}</div>
+    <div className="price">
+      <div className="eth">{`${listing.price.amount} ETH`}</div>
+      <div className="usd">
+        <Price amount={listing.price.amount} />
+      </div>
+    </div>
     <Link
       className="btn btn-primary mt-2"
-      to={`/listings/${listing.id}/edit`}
+      to={`/listing/${listing.id}/edit`}
       children={'Edit Listing'}
     />
   </div>
@@ -186,8 +201,8 @@ class ListingDetail extends Component {
     const { listing } = this.props
 
     const isFractional = listing.__typename === 'FractionalListing'
-    const sold = listing.unitsSold >= listing.unitsTotal
-    const pending = listing.unitsAvailable <= 0
+    const sold = listing.status === 'sold'
+    const pending = listing.status === 'pending'
     const isAnnouncement = get(listing, 'category', '').match(/announcement/i)
 
     return (
@@ -214,6 +229,8 @@ class ListingDetail extends Component {
                 />
               </>
             )}
+            <hr />
+            <Reviews id={listing.seller.id} />
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
@@ -238,8 +255,6 @@ class ListingDetail extends Component {
             <AboutParty id={listing.seller.id} />
           </div>
         </div>
-        <hr />
-        <Reviews id={listing.seller.id} />
       </div>
     )
   }
@@ -309,6 +324,8 @@ require('react-styl')(`
         display: flex
         align-items: baseline
         margin-bottom: 1.5rem
+        white-space: nowrap
+        flex-wrap: wrap
         .eth
           background: url(images/eth-icon.svg) no-repeat
           background-size: 1.5rem

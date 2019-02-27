@@ -110,7 +110,7 @@ class Listings extends Component {
                                 <div className="status">{listing.status}</div>
                               </div>
                               <div className="title">
-                                <Link to={`/listings/${listing.id}`}>
+                                <Link to={`/listing/${listing.id}`}>
                                   {listing.title}
                                 </Link>
                               </div>
@@ -123,7 +123,7 @@ class Listings extends Component {
                               {listing.status !== 'active' ? null : (
                                 <div className="actions">
                                   <Link
-                                    to={`/listings/${listing.id}/edit`}
+                                    to={`/listing/${listing.id}/edit`}
                                     children="Edit Listing"
                                   />
                                   <WithdrawListing

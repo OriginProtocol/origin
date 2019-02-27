@@ -28,7 +28,13 @@ class WaitForTransaction extends Component {
       return (
         <>
           <MobileLinkerCode role={role} />
-          <Modal>
+          <Modal
+            onClose={() => {
+              if (this.props.onClose) {
+                this.props.onClose()
+              }
+            }}
+          >
             <div className="make-offer-modal">
               <div className="spinner light" />
               <div>

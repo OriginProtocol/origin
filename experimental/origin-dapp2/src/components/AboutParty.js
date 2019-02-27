@@ -8,8 +8,10 @@ import Avatar from 'components/Avatar'
 import SendMessage from 'components/SendMessage'
 import Tooltip from 'components/Tooltip'
 import EthAddress from 'components/EthAddress'
+import QueryError from 'components/QueryError'
+import Link from 'components/Link'
 
-import IdentityQuery from 'queries/Identity'
+import query from 'queries/Identity'
 
 class AboutParty extends Component {
   state = {}
@@ -22,9 +24,13 @@ class AboutParty extends Component {
 
     return (
       <div className="about-party">
-        <Query query={IdentityQuery} variables={{ id }}>
+        <Query query={query} variables={{ id }}>
           {({ data, loading, error }) => {
-            if (loading || error) return null
+            if (error) {
+              return <QueryError error={error} query={query} vars={{ id }} />
+            }
+            if (loading) return null
+
             const profile = get(data, 'web3.account.identity')
             if (!profile) {
               return null
@@ -93,12 +99,15 @@ class AboutParty extends Component {
             </div>
           </div>
         </div>
-        <div className="mt-3 text-center">
+        <div className="actions">
           <SendMessage
             to={id}
             className="btn btn-primary btn-rounded"
             children="Send Message"
           />
+          <Link to={`/user/${id}`} className="btn btn-primary btn-rounded">
+            View Profile
+          </Link>
         </div>
       </div>
     )
@@ -111,13 +120,13 @@ require('react-styl')(`
   .about-party
     background: var(--pale-grey-eight)
     border-radius: var(--default-radius)
-    padding: 1rem
+    padding: 1rem 1rem 0.5rem 1rem
     font-size: 14px
     font-weight: normal
-    cursor: pointer
     .profile
       display: flex
       margin-bottom: 1rem
+      cursor: pointer
       .avatar
         margin-right: 1rem
       .name
@@ -131,4 +140,15 @@ require('react-styl')(`
         margin: 0 5px
       > div
         margin-left: 1rem
+    .actions
+      margin: 1rem -0.25rem 0 -0.25rem
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+    .btn-rounded
+      flex: 1
+      padding-left: 1rem
+      padding-right: 1rem
+      white-space: nowrap
+      margin: 0 0.25rem 0.5rem 0.25rem
 `)
