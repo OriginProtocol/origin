@@ -119,27 +119,6 @@ module.exports =
     totalCount: Int!
   }
 
-  interface MutationResponse {
-    success: Boolean!
-    message: String!
-  }
-
-  type InviteResponse implements MutationResponse {
-    success: Boolean!
-    message: String!
-  }
-
-  type EnrollResponse implements MutationResponse {
-    success: Boolean!
-    message: String!
-    campaign: GrowthCampaign
-  }
-
-  type SimpleResponse implements MutationResponse {
-    success: Boolean!
-    message: String!
-  }
-
   type EligibilityInfo {
     eligibility: Eligibility
     countryName: String
@@ -156,10 +135,12 @@ module.exports =
   }
 
   type Mutation {
-    invite(walletAddress: ID!, emails: [String!]!): InviteResponse
-    enroll(campaignId: Int!, notResidentCertification: Boolean): EnrollResponse
-    gasForIdentity(walletAddress: ID!): SimpleResponse
-    invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
-    log(event: JSON!): SimpleResponse
+    # Sends email invites with referral code on behalf of the referrer.
+    invite(walletAddress: ID!, emails: [String!]!): Boolean
+    # Enrolls user into the growth engine program.
+    enroll(campaignId: Int!, notResidentCertification: Boolean): Boolean
+    invited(walletAddress: ID!, inviteCode: String!): Boolean
+    # Records a growth engine event.
+    log(event: JSON!): Boolean
   }
 `
