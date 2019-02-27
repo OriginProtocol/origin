@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     'GrowthCampaign',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true },
-      name: DataTypes.STRING,
+      nameKey: DataTypes.STRING,
+      shortNameKey: DataTypes.STRING,
       rules: DataTypes.JSONB,
       startDate: DataTypes.DATE,
       endDate: DataTypes.DATE,

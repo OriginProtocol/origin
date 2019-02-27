@@ -6,8 +6,9 @@
     "origin-dapp-creator-client",
     "origin-dapp-creator-server",
     "origin-discovery",
-    "origin-growth",
     "origin-faucet",
+    "origin-growth",
+    "origin-identity",
     "origin-ipfs-proxy",
     "origin-js",
     "origin-linking",
@@ -16,7 +17,8 @@
     "origin-notifications",
     "origin-tests",
     "origin-token",
-    "origin-token-transfer/*"
+    "origin-token-transfer-client",
+    "origin-token-transfer-server"
   ],
   "command": {
     "bootstrap": {

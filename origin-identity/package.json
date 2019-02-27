@@ -1,0 +1,33 @@
+{
+  "name": "origin-identity",
+  "description": "Origin identity",
+  "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
+    "pg": "^7.7.1",
+    "sequelize": "^5.0.0-beta.14",
+    "sequelize-cli": "^5.4.0"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "migrate": "sequelize db:migrate",
+    "test": "mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

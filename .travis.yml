@@ -70,6 +70,7 @@ matrix:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope origin-discovery
         - lerna run migrate --scope origin-growth
+        - lerna run migrate --scope origin-identity
       install:
         - npm install
         - lerna run build --scope origin
@@ -101,5 +102,5 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin-token --scope origin-token-transfer-client --scope origin-token-transfer-server
       script:
-        - npm run test --prefix origin-token-transfer/server
-        - npm run test --prefix origin-token-transfer/client
+        - npm run test --prefix origin-token-transfer-server
+        - npm run test --prefix origin-token-transfer-client

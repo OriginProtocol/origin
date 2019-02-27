@@ -1,11 +1,9 @@
 const BigNumber = require('bignumber.js')
 
-const db = require('../models')
-// FIXME(franck): create origin-identity package
-//const db2 = require('origin-identity/src/models')
-const db2 = {}
+const _growthModels = require('../models')
+const _identityModels = require('origin-identity/src/models')
+const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-
 const { GrowthCampaign } = require('./campaign')
 const { CampaignRules } = require('../rules/rules')
 
@@ -69,7 +67,7 @@ class GrowthInvite {
   static async _decorate(reward, status) {
     const referee = reward.refereeEthAddress
 
-    let identity = await db2.Identity.findOne({
+    let identity = await db.Identity.findOne({
       where: { ethAddress: referee }
     })
     if (!identity) {
@@ -168,7 +166,7 @@ class GrowthInvite {
     // stable, we should consider:
     //  a. fetching identity by making a call to the identity graphql endpoint.
     //  b. putting all the identity code in a separate origin-identity package.
-    const identity = await db2.Identity.findOne({
+    const identity = await db.Identity.findOne({
       where: { ethAddress: referrer }
     })
     if (!identity) {

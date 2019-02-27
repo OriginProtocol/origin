@@ -4,6 +4,7 @@ const Price = `
     amount: String
   }
 `
+
 const PageInfo = `
   type PageInfo {
     endCursor: String

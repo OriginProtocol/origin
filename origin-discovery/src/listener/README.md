@@ -23,6 +23,7 @@ You can either start the listener via docker compose or via lerna.
 ```
 lerna run migrate --scope origin-discovery
 lerna run migrate --scope origin-growth
+lerna run migrate --scope origin-identity
 ```
 
 ### Start the listener
