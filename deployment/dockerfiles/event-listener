@@ -18,6 +18,7 @@ COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./origin-growth ./origin-growth
+COPY ./origin-identity ./origin-identity
 COPY ./origin-token ./origin-token
 COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
 COPY ./experimental/origin-graphql ./experimental/origin-graphql
@@ -37,4 +38,5 @@ RUN npm run build --prefix origin-js
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix origin-discovery && \
+	npm run migrate --prefix origin-identity && \
 	npm run start:listener --prefix origin-discovery

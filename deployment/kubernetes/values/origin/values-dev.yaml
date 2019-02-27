@@ -10,7 +10,7 @@ dappImageTag: 'fe9d43b'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
-dapp2ImageTag: '45ec308'
+dapp2ImageTag: '903e9c9'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -26,11 +26,15 @@ faucetImageTag: '02fe2e6'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'ab5e68a'
+eventlistenerImageTag: '3e74bbf'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '5b3b803'
+discoveryImageTag: '3e74bbf'
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
 
 # origin-messaging
 messagingImage: origin-messaging

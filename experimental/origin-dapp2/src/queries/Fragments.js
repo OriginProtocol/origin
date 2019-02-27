@@ -149,7 +149,8 @@ export default {
     basic: gql`
       fragment basicCampaignFields on GrowthCampaign {
         id
-        name
+        nameKey
+        shortNameKey
         startDate
         endDate
         distributionDate
@@ -164,6 +165,10 @@ export default {
           reward {
             amount
             currency
+          }
+          unlockConditions {
+            messageKey
+            iconSource
           }
           ... on ReferralAction {
             rewardPending {
