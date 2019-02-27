@@ -121,7 +121,15 @@ class ProgressBar extends Component {
 }
 
 function Action(props) {
-  const { type, status, reward, rewardEarned, rewardPending } = props.action
+  const {
+    type,
+    status,
+    reward,
+    rewardEarned,
+    rewardPending,
+    unlockConditions
+  } = props.action
+
   const actionLocked = status === 'Inactive'
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
@@ -205,7 +213,7 @@ function Action(props) {
           )}
         </div>
       </div>
-      <div className="col-8 d-flex flex-column">
+      <div className={`d-flex flex-column ${actionLocked ? 'col-10' : 'col-8'}`}>
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
         <div className="d-flex">
@@ -227,10 +235,31 @@ function Action(props) {
           )}
           {!actionCompleted &&
             reward !== null &&
-            renderReward(reward.amount, true)}
+            renderReward(reward.amount, true)
+          }
+          {actionLocked && unlockConditions.length > 0 &&
+            <Fragment>
+              <div className="emphasis pr-2 pt-1 d-flex align-items-center ">Requires</div>
+              {unlockConditions.map(unlockCondition => {
+                return (<div className="requirement d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2">
+                  <img src={unlockCondition.iconSource} />
+                  <div className="value">
+                    {GrowthEnum[unlockCondition.messageKey] ?
+                      <fbt desc="growth">
+                        <fbt:enum enum-range={GrowthEnum} value={unlockCondition.messageKey} />
+                      </fbt>
+                      :
+                      "Missing translation"
+                    }
+                    
+                  </div>
+                </div>)
+              })}
+            </Fragment>
+          }
         </div>
       </div>
-      <div className="col-2 d-flex">
+      <div className={`d-flex ${actionLocked ? '' : 'col-2'}`}>
         {!actionCompleted && !actionLocked && (
           <Link to="/profile" className="mt-auto mb-auto">
             <button
@@ -615,6 +644,23 @@ require('react-styl')(`
         margin-right: 6px;
       .reward img
         margin-right: 6px;
+      .requirement
+        padding-right: 10px;
+        height: 28px;
+        background-color: var(--pale-grey);
+        border-radius: 52px;
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--clear-blue);
+      .requirement .value
+        padding-bottom: 1px;
+        font-size: 14px;
+        font-weight: bold;
+      .requirement img
+        margin-right: 6px;
+      .emphasis
+        font-size: 14px;
+        font-weight: bold;
       img
         width: 19px;
       .astronaut
