@@ -51,7 +51,7 @@
     "fixtures": "node src/util/fixtures.js",
     "start": "per-env",
     "start:development": "nodemon src/apollo/app.js",
-    "start:gproduction": "node src/apollo/app.js",
+    "start:production": "node src/apollo/app.js",
     "test": "mocha --timeout 10000 --exit"
   },
   "prettier": {
