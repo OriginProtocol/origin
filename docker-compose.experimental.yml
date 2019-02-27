@@ -56,6 +56,8 @@ services:
       - ./origin-growth/:/app/origin-growth/
       - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
+    # Required by the dapp2 translation plugin
+      - ./origin-dapp/translations:/app/origin-dapp/translations
     # Exclude all node_modules
       - /app/experimental/origin-dapp2/node_modules/
       - /app/experimental/origin-services/node_modules/
@@ -196,7 +198,7 @@ services:
     ports:
       - "4001:4001"
     #command: sleep infinity
-    command: npm run start:growth --prefix origin-growth
+    command: npm run start --prefix origin-growth
 
   origin-bridge:
     container_name: origin-bridge

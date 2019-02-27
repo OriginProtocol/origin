@@ -125,6 +125,18 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "growth.fullname" -}}
+{{- printf "%s-%s" .Release.Name "growth" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "growth.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "growth.originprotocol.com" }}
+{{- else -}}
+{{- printf "growth.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "notifications.fullname" -}}
 {{- printf "%s-%s" .Release.Name "notifications" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

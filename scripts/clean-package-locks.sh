@@ -23,6 +23,6 @@ rm ./origin-messaging/package-lock.json
 rm ./origin-mobile/package-lock.json
 rm ./origin-notifications/package-lock.json
 rm ./origin-token/package-lock.json
-rm ./origin-token-transfer/client/package-lock.json
-rm ./origin-token-transfer/server/package-lock.json
+rm ./origin-token-transfer-client/package-lock.json
+rm ./origin-token-transfer-server/package-lock.json
 rm ./package-lock.json

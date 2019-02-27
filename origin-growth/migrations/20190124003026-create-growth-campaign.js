@@ -13,7 +13,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      name_key: {
+        type: Sequelize.STRING
+      },
+      short_name_key: {
         type: Sequelize.STRING
       },
       rules: {
