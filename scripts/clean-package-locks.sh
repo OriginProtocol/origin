@@ -15,6 +15,7 @@ rm ./origin-dapp/package-lock.json
 rm ./origin-discovery/package-lock.json
 rm ./origin-faucet/package-lock.json
 rm ./origin-growth/package-lock.json
+rm ./origin-identity/package-lock.json
 rm ./origin-ipfs-proxy/package-lock.json
 rm ./origin-js/package-lock.json
 rm ./origin-linking/package-lock.json
