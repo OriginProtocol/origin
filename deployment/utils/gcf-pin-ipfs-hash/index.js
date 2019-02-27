@@ -1,4 +1,4 @@
-const IpfsClusterAPI = require('./ipfs-cluster-api-service.js');
+const IpfsClusterAPI = require("./ipfs-cluster-api-service.js");
 const ipfsClusterApiService = new IpfsClusterAPI(
   process.env.IPFS_CLUSTER_URL,
   process.env.IPFS_CLUSTER_USERNAME,
@@ -17,10 +17,10 @@ Example of incoming data:
 }
 */
 
-exports.pinService = async (event) => {
+exports.pinService = async event => {
   const pubsubMessage = event.data;
   const data = pubsubMessage
-    ? JSON.parse(Buffer.from(pubsubMessage, 'base64').toString())
+    ? JSON.parse(Buffer.from(pubsubMessage, "base64").toString())
     : null;
 
   let pinnedHashes = [];
@@ -28,7 +28,7 @@ exports.pinService = async (event) => {
 
   if (!Object.is(data, null)) {
     const hashesToPin = parseIncomingData(data);
-    for(let i = 0; i < hashesToPin.length; i++){
+    for (let i = 0; i < hashesToPin.length; i++) {
       hashToPin = hashesToPin[i];
 
       pinned = await ipfsClusterApiService.pin(hashToPin);
@@ -40,46 +40,58 @@ exports.pinService = async (event) => {
         let numberOfRetries = 4;
         let initialRetryInterval = 500;
         let retryIntervalGrowthRate = 2;
-        let retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval);
+        let retryPinned = await promiseSetTimeout(
+          hashToPin,
+          initialRetryInterval
+        );
         while (!retryPinned && numberOfRetries > 0) {
-          console.log("Retrying Pinning:\n")
-          console.log("Retry Interval : "+initialRetryInterval+"ms \n")
-          console.log("Number of Retry : "+(5-numberOfRetries)+"\n")
+          console.log("Retrying Pinning:\n");
+          console.log("Retry Interval : " + initialRetryInterval + "ms \n");
+          console.log("Number of Retry : " + (5 - numberOfRetries) + "\n");
           numberOfRetries--;
           initialRetryInterval *= retryIntervalGrowthRate;
-          retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval);
+          retryPinned = await promiseSetTimeout(
+            hashToPin,
+            initialRetryInterval
+          );
         }
-        retryPinned ? pinnedHashes.push(hashToPin) : unPinnedHashes.push(hashToPin);
+        retryPinned
+          ? pinnedHashes.push(hashToPin)
+          : unPinnedHashes.push(hashToPin);
       }
     }
   } else {
     console.log("Error retreiving listing data");
   }
   console.log("Pinned following hashes: ", pinnedHashes.join(", "), "\n");
-  console.log("Could not pin following hashes: ", unPinnedHashes.join(", "), "\n");
+  console.log(
+    "Could not pin following hashes: ",
+    unPinnedHashes.join(", "),
+    "\n"
+  );
 };
 
 const promiseSetTimeout = async (hashToPin, interval) => {
   return new Promise(resolve => {
-    setTimeout( async () => {
+    setTimeout(async () => {
       const retryPinned = await ipfsClusterApiService.pin(hashToPin);
       resolve(retryPinned);
     }, interval);
-  })
-}
+  });
+};
 
 const parseIncomingData = data => {
   let hashesToPin = [];
-  if(data.type === "listing"){
+  if (data.type === "listing") {
     hashesToPin.push(data.ipfsHash);
-    if("media" in data.rawData && data.rawData["media"].length > 0) {
+    if ("media" in data.rawData && data.rawData["media"].length > 0) {
       const mediaData = data.rawData["media"];
-      for(let i = 0; i < mediaData.length; i++){
-        hashesToPin.push(mediaData[i]["url"].replace('ipfs://',''));
+      for (let i = 0; i < mediaData.length; i++) {
+        hashesToPin.push(mediaData[i]["url"].replace("ipfs://", ""));
       }
     } else {
       console.log("No media ipfs hashes found in listing data");
     }
   }
   return hashesToPin;
-}
+};
