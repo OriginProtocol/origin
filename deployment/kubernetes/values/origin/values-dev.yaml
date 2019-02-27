@@ -10,7 +10,7 @@ dappImageTag: 'fe9d43b'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
-dapp2ImageTag: '903e9c9'
+dapp2ImageTag: 'b916323'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -34,7 +34,7 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'e379ac1'
+growthImageTag: '3b8f7bf'
 
 # origin-messaging
 messagingImage: origin-messaging
