@@ -81,7 +81,11 @@ class CreateListing extends Component {
     const netId = get(this.props, 'web3.networkId')
 
     return (
-      <WaitForTransaction hash={this.state.waitFor} event="ListingCreated">
+      <WaitForTransaction
+        hash={this.state.waitFor}
+        event="ListingCreated"
+        onClose={() => this.setState({ waitFor: null })}
+      >
         {({ event }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
@@ -93,7 +97,7 @@ class CreateListing extends Component {
                 store.set('create-listing', undefined)
                 const { listingID } = event.returnValues
                 this.setState({
-                  redirect: `/listings/${netId}-000-${listingID}`
+                  redirect: `/listing/${netId}-000-${listingID}`
                 })
               }}
               children="View Listing"

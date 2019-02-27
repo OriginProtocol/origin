@@ -42,7 +42,7 @@ class Boost extends Component {
 
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
     const isFractional = this.props.listingType === 'fractional'
     const step = isFractional ? 4 : 3
 
