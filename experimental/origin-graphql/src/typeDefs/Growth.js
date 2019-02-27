@@ -62,11 +62,17 @@ module.exports =
     lastName: String
   }
 
+  type UnlockCondition {
+    messageKey: String!
+    iconSource: String!
+  }
+
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
     reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthAction implements GrowthBaseAction {
@@ -74,6 +80,7 @@ module.exports =
     status: GrowthActionStatus!
     rewardEarned: Price
     reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthInviteConnection {
@@ -91,11 +98,13 @@ module.exports =
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): [GrowthInviteConnection]
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthCampaign {
     id: Int!
-    name: String!
+    nameKey: String!
+    shortNameKey: String!
     startDate: DateTime
     endDate: DateTime
     distributionDate: DateTime
