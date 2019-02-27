@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
+import ProfileQuery from 'queries/Profile'
 import MobileLinkToggle from 'components/MobileLinkToggle'
+import LocaleDropdown from 'components/LocaleDropdown'
+
 
 const configurableFields = [
   'bridge',
@@ -50,6 +54,7 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
+    const { locale, onLocale } = this.props
 
     return (
       <Mutation
@@ -71,10 +76,10 @@ class Settings extends Component {
                   <div className="form-text form-text-muted">
                     <small>Please make a selection from the list below.</small>
                   </div>
-                  <select className="form-control form-control-lg">
-                    English
-                  </select>
+                  <LocaleDropdown locale={locale} onLocale={onLocale} />
                 </div>
+
+                {/*
                 <div className="form-group">
                   <label htmlFor="notifications">Notifications</label>
                   <div className="form-text form-text-muted">
@@ -102,6 +107,7 @@ class Settings extends Component {
                     </label>
                   </div>
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="Messaging">Messaging</label>
                   <div className="form-text form-text-muted">
@@ -111,15 +117,28 @@ class Settings extends Component {
                     Disable
                   </button>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="language">Mobile Wallet</label>
-                  <div className="form-text form-text-muted">
-                    <small>Disconnect from your mobile wallet by clicking the button below.</small>
-                  </div>
-                  <MobileLinkToggle />
-                </div>
+                */}
+
+                <Query query={ProfileQuery}>
+                  {({ data }) => {
+                    const walletType = get(data.web3, 'walletType')
+                    const mobileWalletConnected = walletType && walletType.startsWith('mobile-')
+                    return (
+                      <div className="form-group">
+                        <label htmlFor="language">Mobile Wallet</label>
+                        <div className="form-text form-text-muted">
+                          {mobileWalletConnected && (
+                            <small>Disconnect from your mobile wallet by clicking the button below.</small>
+                          )}
+                        </div>
+                        <MobileLinkToggle isConnected={mobileWalletConnected} />
+                      </div>
+                    )
+                  }}
+                </Query>
               </div>
             </div>
+
             <div className="col-lg-6 col-md-12">
               <div className="settings-box">
                 <div className="form-group">
