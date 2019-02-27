@@ -96,7 +96,7 @@ services:
       - postgres
     ports:
       - "4001:4001"
-    command: npm run start:growth --prefix origin-growth
+    command: npm run start --prefix origin-growth
 
   event-listener:
     container_name: event-listener
