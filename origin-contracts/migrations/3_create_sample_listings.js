@@ -73,7 +73,7 @@ async function deployContracts(deployer) {
   // origin-spaceman
   await createListing(
     marketplace00,
-    getBytes32FromIpfsHash('Qmau28UCMaPpdqidSnBPy1oehkEVpQfmqAsbXB2bJQHbyU'),
+    getBytes32FromIpfsHash('QmfQKXAvEEkHKTcg5km5YqqT53ZDBcpPsNuJhvhD2DoHJE'),
     Seller
   )
 }
