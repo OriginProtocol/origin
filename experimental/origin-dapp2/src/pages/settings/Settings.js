@@ -8,7 +8,6 @@ import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import ProfileQuery from 'queries/Profile'
-import MobileLinkToggle from 'components/MobileLinkToggle'
 import LocaleDropdown from 'components/LocaleDropdown'
 
 const configurableFields = [
@@ -49,6 +48,21 @@ class Settings extends Component {
     })
   }
 
+  requestNotificationPermission () {
+    Notification.requestPermission().then(permission => {
+      this.setState({ permission: permission })
+      if (permission === 'granted') {
+        this.showNotification()
+      }
+    })
+  }
+
+  showNotification() {
+    new Notification('Sweet! Desktop notifications are on :)', {
+      icon: 'images/app-icon.png'
+    })
+  }
+
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const { locale, onLocale } = this.props
@@ -85,45 +99,33 @@ class Settings extends Component {
                     />
                   </div>
 
-                  {/*
-                <div className="form-group">
-                  <label htmlFor="notifications">Notifications</label>
-                  <div className="form-text form-text-muted">
-                    <small>Set your notifications settings below.</small>
+                  <div className="form-group">
+                    <label htmlFor="notifications">Notifications</label>
+                    {Notification.permission !== 'granted' ? (
+                      <>
+                        <div className="form-text form-text-muted">
+                          <small>Enable browser notifications below.</small>
+                        </div>
+                        <button className="btn btn-success" onClick={() => this.requestNotificationPermission()}>
+                          Enable
+                        </button>
+                      </>
+                    ) : (
+                      <div>Browser notifications are enabled.</div>
+                    )}
                   </div>
-                  <div className="form-check">
-                    <input className="form-check-input"
-                        type="radio"
-                        name="notifications"
-                        id="notificationsOffRadio"
-                        value="true"
-                        checked />
-                    <label className="form-check-label" htmlFor="notifiationsOffRadio">
-                      Off
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input className="form-check-input"
-                        type="radio"
-                        name="notifications"
-                        id="notificationsOnRadio"
-                        value="true" />
-                    <label className="form-check-label" htmlFor="notificationsOnRadio">
-                      All messages
-                    </label>
-                  </div>
-                </div>
 
-                <div className="form-group">
-                  <label htmlFor="Messaging">Messaging</label>
-                  <div className="form-text form-text-muted">
-                    <small>Enable/disable messaging by clicking the button below.</small>
+                  {/*
+                  <div className="form-group">
+                    <label htmlFor="Messaging">Messaging</label>
+                    <div className="form-text form-text-muted">
+                      <small>Enable/disable messaging by clicking the button below.</small>
+                    </div>
+                    <button className="btn btn-outline-danger">
+                      Disable
+                    </button>
                   </div>
-                  <button className="btn btn-outline-danger">
-                    Disable
-                  </button>
-                </div>
-                */}
+                  */}
 
                   <Query query={ProfileQuery}>
                     {({ data }) => {
@@ -133,17 +135,25 @@ class Settings extends Component {
                       return (
                         <div className="form-group">
                           <label htmlFor="language">Mobile Wallet</label>
-                          <div className="form-text form-text-muted">
-                            {mobileWalletConnected && (
-                              <small>
-                                Disconnect from your mobile wallet by clicking
-                                the button below.
-                              </small>
-                            )}
-                          </div>
-                          <MobileLinkToggle
-                            isConnected={mobileWalletConnected}
-                          />
+                          {mobileWalletConnected ? (
+                            <>
+                              <div className="form-text form-text-muted">
+                                <small>
+                                  Disconnect from your mobile wallet by clicking
+                                  the button below.
+                                </small>
+                              </div>
+                              <Mutation mutation={UnlinkMobileWallet}>
+                                <button className="btn btn-outline-danger">Disconnect</button>
+                              </Mutation>
+                            </>
+                          ) : (
+                            <div>
+                              <button className="btn btn-outline-secondary" disabled>
+                                <span>Not connected</span>
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )
                     }}
