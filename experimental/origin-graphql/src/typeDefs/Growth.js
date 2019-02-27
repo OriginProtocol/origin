@@ -147,8 +147,8 @@ module.exports =
     # after is the cursor
     campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
     campaign(id: String, walletAddress: ID!): GrowthCampaign
-    isEligible: EligibilityInfo
     inviteInfo(code: String): InviteInfo
+    isEligible: EligibilityInfo
   }
 
   type Mutation {
