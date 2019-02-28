@@ -99,7 +99,7 @@ class TxnManager {
   /**
    * Calculates gas price to use for sending transactions. We use a slightly
    * higher gas price in order for transactions to get mined faster.
-   * @returns {Promise<{string}>}
+   * @returns {Promise<{BigNumber}>}
    */
   async calcGasPrice() {
     // Get default gas price from web3 which is determined by the
@@ -107,9 +107,7 @@ class TxnManager {
     const medianGasPrice = await this.web3.eth.getGasPrice()
 
     // Apply our ratio.
-    return BigNumber(medianGasPrice)
-      .times(gasPriceMultiplier)
-      .toFixed()
+    return BigNumber(medianGasPrice).times(gasPriceMultiplier)
   }
 
   // Submits a transaction and returns a promise that resolves
@@ -125,7 +123,7 @@ class TxnManager {
     logger.info(
       `sendTransaction value:${value.toFixed()} from:${from} to:${to} nonce:${
         this.nonce
-      }, gasPrice:${gasPrice}`
+      }, gasPrice:${gasPrice.toFixed()}`
     )
     return new Promise((resolve, reject) => {
       try {
