@@ -200,7 +200,7 @@ services:
     ports:
       - "4001:4001"
     #command: sleep infinity
-    command: npm run start:growth --prefix origin-growth
+    command: npm run start --prefix origin-growth
 
   origin-bridge:
     container_name: origin-bridge

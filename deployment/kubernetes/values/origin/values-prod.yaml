@@ -28,6 +28,10 @@ eventlistenerImageTag: '9509a68'
 discoveryImage: origin-discovery
 discoveryImageTag: '6e22b35'
 
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
+
 # OrbitDB
 messagingImage: origin-messaging
 messagingImageTag: '3104d23'

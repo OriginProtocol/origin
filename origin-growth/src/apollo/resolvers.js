@@ -5,6 +5,8 @@ const { GrowthCampaign } = require('../resources/campaign')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
+const { sendInviteEmails } = require('../resources/email')
+const logger = require('../logger')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -76,26 +78,24 @@ const resolvers = {
     }
   },
   Mutation: {
-    async invite() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    // Sends email invites with referral code on behalf of the referrer.
+    async invite(root, args) {
+      logger.info('invite mutation called.')
+      // FIXME:
+      //  a. Check the referrer against Auth token.
+      //  b. Implement rate limiting to avoid spam attack.
+      await sendInviteEmails(args.walletAddress, args.emails)
+      return true
     },
-    async enroll() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    enroll() {
+      // TODO: implement
+      logger.info('enroll mutation called.')
+      return true
     },
-    async log() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    log() {
+      // TODO: implement
+      logger.info('log mutation called.')
+      return true
     }
   }
 }
