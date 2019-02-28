@@ -525,10 +525,10 @@ class ReferralRule extends BaseRule {
     super(campaign, levelId, config)
 
     // Level the referee is required to reach for the referrer to get the reward.
-    if (!this.config.requiredLevel) {
-      throw new Error(`${this.str()}: missing requiredLevel field`)
+    if (!this.config.levelRequired) {
+      throw new Error(`${this.str()}: missing levelRequired field`)
     }
-    this.requiredLevel = this.config.requiredLevel
+    this.levelRequired = this.config.levelRequired
   }
 
   /**
@@ -584,7 +584,7 @@ class ReferralRule extends BaseRule {
     for (const referee of referees) {
       // Check the referee is at or above required level.
       const refereeLevel = crules.getCurrentLevel(referee)
-      if (refereeLevel < this.requiredLevel) {
+      if (refereeLevel < this.levelRequired) {
         logger.debug(
           `Referee ${referee} does not meet level requirement. skipping.`
         )
@@ -594,7 +594,7 @@ class ReferralRule extends BaseRule {
       // Check the referee reached the level during this campaign as opposed
       // to prior to the campaign.
       const refereePriorLevel = crules.getPriorLevel(referee)
-      if (refereePriorLevel >= this.requiredLevel) {
+      if (refereePriorLevel >= this.levelRequired) {
         logger.debug(
           `Referee ${referee} reached level prior to campaign start. skipping`
         )
