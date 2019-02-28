@@ -34,7 +34,9 @@ router.post('/verify', airbnbVerifyCode, async (req, res) => {
   } catch (error) {
     const statusCode = get(error, 'response.status')
     if (statusCode === 404) {
-      logger.warn(`Attestation attempt for invalid Airbnb user: ${req.body.airbnbUserId}`)
+      logger.warn(
+        `Attestation attempt for invalid Airbnb user: ${req.body.airbnbUserId}`
+      )
       return res.status(400).send({
         errors: {
           airbnbUserId: 'Airbnb user not found.'

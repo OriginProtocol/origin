@@ -9,7 +9,6 @@ const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
-
 describe('airbnb attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -41,7 +40,10 @@ describe('airbnb attestations', () => {
     nock('https://www.airbnb.com')
       .get('/users/show/123456')
       .once()
-      .reply(200, '<html>topple wedding catalog topple catalog above february</html>')
+      .reply(
+        200,
+        '<html>topple wedding catalog topple catalog above february</html>'
+      )
 
     const response = await request(app)
       .post('/airbnb/verify')
@@ -57,9 +59,9 @@ describe('airbnb attestations', () => {
     expect(response.body.data.issuer.url).to.equal(
       'https://www.originprotocol.com'
     )
-    expect(response.body.data.attestation.verificationMethod.pubAuditableUrl).to.deep.equal(
-      {}
-    )
+    expect(
+      response.body.data.attestation.verificationMethod.pubAuditableUrl
+    ).to.deep.equal({})
     expect(response.body.data.attestation.site.siteName).to.equal('airbnb.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal(123456)
 
@@ -69,7 +71,6 @@ describe('airbnb attestations', () => {
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.AIRBNB)
     expect(results[0].value).to.equal('123456')
-
   })
 
   it('should error on invalid airbnb user id format', async () => {

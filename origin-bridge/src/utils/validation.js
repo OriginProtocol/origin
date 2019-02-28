@@ -1,3 +1,5 @@
+'use strict'
+
 const { check, validationResult } = require('express-validator/check')
 
 const handleValidationError = (req, res, next) => {
@@ -57,6 +59,19 @@ const emailVerifyCode = [
   handleValidationError
 ]
 
+const facebookVerify = [
+  check('identity')
+    .not()
+    .isEmpty()
+    .withMessage('Must not be empty'),
+  check('code')
+    .not()
+    .isEmpty()
+    .withMessage('Must not be empty')
+    .trim(),
+  handleValidationError
+]
+
 const phoneGenerateCode = [
   check('country_calling_code')
     .not()
@@ -101,6 +116,7 @@ module.exports = {
   airbnbVerifyCode,
   emailGenerateCode,
   emailVerifyCode,
+  facebookVerify,
   phoneGenerateCode,
   phoneVerifyCode
 }
