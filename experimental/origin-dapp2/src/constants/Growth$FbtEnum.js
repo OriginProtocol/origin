@@ -6,7 +6,9 @@ const Growth$FbtEnum = {
   'growth.mar2019.name': 'March 2019 Campaign',
   'growth.mar2019.short_name': 'Mar 2019',
   'growth.apr2019.name': 'April 2019 Campaign',
-  'growth.apr2019.short_name': 'Apr 2019'
+  'growth.apr2019.short_name': 'Apr 2019',
+  'growth.profile.and.email.requirement': 'Verified email and Origin profile',
+  'growth.two.attestations.requirement': 'Two attestations'
 }
 
 module.exports = Growth$FbtEnum

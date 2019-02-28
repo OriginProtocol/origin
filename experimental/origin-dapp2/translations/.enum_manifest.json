@@ -83,6 +83,8 @@
         "growth.jan2019.name": "January 2019 Campaign",
         "growth.jan2019.short_name": "Jan 2019",
         "growth.mar2019.name": "March 2019 Campaign",
-        "growth.mar2019.short_name": "Mar 2019"
+        "growth.mar2019.short_name": "Mar 2019",
+        "growth.profile.and.email.requirement": "Verified email and Origin profile",
+        "growth.two.attestations.requirement": "Two attestations"
     }
 }
