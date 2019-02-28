@@ -22,6 +22,7 @@ class CreateListing extends Component {
     super(props)
     this.state = {
       listing: {
+        __typename: 'UnitListing',
         title: '',
         description: '',
         category: '',
@@ -55,11 +56,6 @@ class CreateListing extends Component {
   }
 
   render() {
-    const { category, subCategory } = this.state.listing
-    let listingType = 'unit'
-    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
-      listingType = 'fractional'
-    }
     return (
       <div className="container create-listing">
         <PageTitle>Add a Listing</PageTitle>
@@ -69,7 +65,6 @@ class CreateListing extends Component {
             render={() => (
               <Step2
                 listing={this.state.listing}
-                listingType={listingType}
                 onChange={listing => this.setListing(listing)}
               />
             )}
@@ -79,7 +74,6 @@ class CreateListing extends Component {
             render={() => (
               <Boost
                 listing={this.state.listing}
-                listingType={listingType}
                 tokenBalance={this.props.tokenBalance}
                 onChange={listing => this.setListing(listing)}
               />
@@ -90,7 +84,6 @@ class CreateListing extends Component {
             render={() => (
               <Review
                 tokenBalance={this.props.tokenBalance}
-                listingType={listingType}
                 listing={this.state.listing}
               />
             )}
