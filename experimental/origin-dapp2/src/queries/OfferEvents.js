@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query OfferEvents($offerId: String!) {
+  query OfferEvents($offerId: ID!) {
     marketplace {
       offer(id: $offerId) {
         id

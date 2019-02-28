@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Redirect from 'components/Redirect'
@@ -27,8 +27,15 @@ class Review extends Component {
 
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
-    const isFractional = this.props.listingType === 'fractional'
+    const isFractional = this.props.__typename === 'FractionalListing'
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
+
+    const description = listing.description.split('\n').map((d, idx) => (
+      <Fragment key={idx}>
+        {d}
+        <br />
+      </Fragment>
+    ))
 
     return (
       <div className="row create-listing-review">
@@ -48,40 +55,44 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-sm-4 col-lg-3 label">Description</div>
-              <div className="col-sm-8 col-lg-9">{listing.description}</div>
+              <div className="col-sm-8 col-lg-9">{description}</div>
             </div>
-            {isFractional ? null : (
-              <div className="row">
-                <div className="col-sm-4 col-lg-3 label">Listing Price</div>
-                <div className="col-sm-8 col-lg-9">
-                  <CoinPrice price={listing.price} coin="eth" />
-                  <div className="fiat">
-                    ~ <Price amount={listing.price} />
+            {listing.__typename === 'AnnouncementListing' ? null : (
+              <>
+                {isFractional ? null : (
+                  <div className="row">
+                    <div className="col-sm-4 col-lg-3 label">Listing Price</div>
+                    <div className="col-sm-8 col-lg-9">
+                      <CoinPrice price={listing.price} coin="eth" />
+                      <div className="fiat">
+                        ~ <Price amount={listing.price} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {isFractional || quantity <= 1 ? null : (
+                  <div className="row">
+                    <div className="col-sm-4 col-lg-3 label">Quantity</div>
+                    <div className="col-sm-8 col-lg-9">{listing.quantity}</div>
+                  </div>
+                )}
+                <div className="row">
+                  <div className="col-sm-4 col-lg-3 label">Boost Level</div>
+                  <div className="col-sm-8 col-lg-9">
+                    <CoinPrice price={boost} coin="ogn" />
+                    {isMulti ? ' / unit' : ''}
+                    {isFractional ? ' / night' : ''}
                   </div>
                 </div>
-              </div>
-            )}
-            {quantity <= 1 ? null : (
-              <div className="row">
-                <div className="col-sm-4 col-lg-3 label">Quantity</div>
-                <div className="col-sm-8 col-lg-9">{listing.quantity}</div>
-              </div>
-            )}
-            <div className="row">
-              <div className="col-sm-4 col-lg-3 label">Boost Level</div>
-              <div className="col-sm-8 col-lg-9">
-                <CoinPrice price={boost} coin="ogn" />
-                {isMulti ? ' / unit' : ''}
-                {isFractional ? ' / night' : ''}
-              </div>
-            </div>
-            {!isMulti && !isFractional ? null : (
-              <div className="row">
-                <div className="col-sm-4 col-lg-3 label">Boost Cap</div>
-                <div className="col-sm-8 col-lg-9">
-                  <CoinPrice price={listing.boostLimit} coin="ogn" />
-                </div>
-              </div>
+                {!isMulti && !isFractional ? null : (
+                  <div className="row">
+                    <div className="col-sm-4 col-lg-3 label">Boost Cap</div>
+                    <div className="col-sm-8 col-lg-9">
+                      <CoinPrice price={listing.boostLimit} coin="ogn" />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
             <div className="row">
               <div className="col-sm-4 col-lg-3 label">Photos</div>
@@ -129,9 +140,8 @@ class Review extends Component {
             </Link>
             {isEdit ? (
               <UpdateListing
-                listing={this.props.listing}
+                listing={listing}
                 listingId={this.props.listingId}
-                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
@@ -139,8 +149,7 @@ class Review extends Component {
               />
             ) : (
               <CreateListing
-                listing={this.props.listing}
-                listingType={this.props.listingType}
+                listing={listing}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
@@ -148,7 +157,7 @@ class Review extends Component {
             )}
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <Wallet />
           <div className="gray-box">
             <h5>What happens next?</h5>
