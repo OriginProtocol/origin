@@ -202,20 +202,16 @@ services:
 
   origin-bridge:
     container_name: origin-bridge
-    image: origin-bridge
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-bridge
-    volumes:
-      - ./origin-bridge:/app
-      # Set the envfile from the local envfile
-      - ./development/envfiles/origin-bridge.env:/app/.env
+    image: origin-experimental
+    volumes: *volumes
     depends_on:
       - postgres
     environment:
-      - FLASK_APP=/app/main.py
-      - FLASK_DEBUG=True
-      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
-      - "5000:5000"
-    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
+      - "3456:3456"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-bridge &&
+      npm run start --prefix origin-bridge"
