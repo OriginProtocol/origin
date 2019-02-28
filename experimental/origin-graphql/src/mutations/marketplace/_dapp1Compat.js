@@ -9,7 +9,7 @@ export default function dapp1FractionalCompat(ipfsData) {
     '_1.0.0.json'
   ].join('')
 
-  if (ipfsData.listingType === 'fractional') {
+  if (ipfsData.__typename === 'FractionalListing') {
     ipfsData.unitsTotal = 1
     ipfsData.slotLength = 1
     ipfsData.slotLengthUnit = 'schema.days'

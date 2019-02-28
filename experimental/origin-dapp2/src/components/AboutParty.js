@@ -102,10 +102,13 @@ class AboutParty extends Component {
         <div className="actions">
           <SendMessage
             to={id}
-            className="btn btn-primary btn-rounded"
+            className="btn btn-outline-primary btn-rounded"
             children="Send Message"
           />
-          <Link to={`/user/${id}`} className="btn btn-primary btn-rounded">
+          <Link
+            to={`/user/${id}`}
+            className="btn btn-outline-primary btn-rounded"
+          >
             View Profile
           </Link>
         </div>
