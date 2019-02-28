@@ -52,7 +52,10 @@ const rule = {
             visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.profile.and.email.requirement',
+            //TODO: update image once it is created
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]
@@ -128,7 +131,10 @@ const rule = {
             visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.two.attestations.requirement',
+            //TODO: update image once it is created
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]

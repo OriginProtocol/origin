@@ -21,8 +21,6 @@ class GrowthInvite {
    * @returns {Promise<*>}
    * @private
    */
-  //
-  //
   static async _getPendingRewards(referrer, ignore, rewardValue) {
     // Load all invites.
     const referrals = db.GrowthReferall.findAll({

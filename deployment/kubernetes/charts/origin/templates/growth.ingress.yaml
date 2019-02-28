@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "growth.fullname" . }}
+  labels:
+    app: {{ template "growth.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origin-growth
+  annotations:
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}-ingress
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/rewrite-target: /graphql
+    nginx.ingress.kubernetes.io/limit-rps: "50"
+spec:
+  tls:
+    - secretName: {{ template "growth.host" . }}
+      hosts:
+        - {{ template "growth.host" . }}
+  rules:
+  - host: {{ template "growth.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "growth.fullname" . }}
+            servicePort: 4001

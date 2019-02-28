@@ -38,4 +38,5 @@ RUN npm run build --prefix origin-js
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix origin-discovery && \
+	npm run migrate --prefix origin-identity && \
 	npm run start:listener --prefix origin-discovery
