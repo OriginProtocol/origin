@@ -81,8 +81,8 @@ class OriginEventSource {
       const rawData = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         rawData,
+        '__typename',
         'valid',
-        'listingType',
         'title',
         'description',
         'currencyId',
@@ -167,10 +167,23 @@ class OriginEventSource {
       }))
     }
 
-    const type = 'unit'
+    let __typename = data.__typename
+    if (!__typename) {
+      if (
+        data.category === 'schema.forRent' &&
+        data.subCategory === 'schema.housing'
+      ) {
+        __typename = 'FractionalListing'
+      } else if (data.category === 'schema.announcements') {
+        __typename = 'AnnouncementListing'
+      } else {
+        __typename = 'UnitListing'
+      }
+    }
+
     let commissionPerUnit = '0',
       commission = '0'
-    if (type === 'unit') {
+    if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
         data.unitsTotal === 1
           ? (data.commission && data.commission.amount) || '0'
@@ -183,8 +196,7 @@ class OriginEventSource {
 
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
-      __typename:
-        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
+      __typename,
       id: `${networkId}-000-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
@@ -197,8 +209,7 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      type,
-      multiUnit: type === 'unit' && data.unitsTotal > 1,
+      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
@@ -227,7 +238,7 @@ class OriginEventSource {
     let pendingUnits = 0
     const booked = []
 
-    if (listing.listingType === 'fractional') {
+    if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -235,7 +246,7 @@ class OriginEventSource {
           booked.push(`${offer.startDate}-${offer.endDate}`)
         }
       })
-    } else if (listing.type === 'unit') {
+    } else if (listing.__typename !== 'AnnouncementListing') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -421,7 +432,7 @@ class OriginEventSource {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
-    if (listing.type !== 'unit') {
+    if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
       return
     }
