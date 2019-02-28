@@ -2,6 +2,13 @@ import React from 'react'
 import TokenPrice from 'components/TokenPrice'
 import dayjs from 'dayjs'
 
+function paymentStatus(status) {
+  if (status === 'Pending') {
+    return 'In Escrow'
+  }
+  return status
+}
+
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
     {offer.listing.__typename === 'FractionalListing' ||
@@ -39,7 +46,7 @@ const OfferDetails = ({ offer }) => (
     </li>
     <li className="payment-status">
       <span>Payment Status</span>
-      <span>{offer.statusStr}</span>
+      <span>{paymentStatus(offer.statusStr)}</span>
     </li>
     <li className="offer-date">
       <span>Offer Date</span>

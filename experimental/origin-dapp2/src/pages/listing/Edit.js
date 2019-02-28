@@ -23,6 +23,7 @@ class EditListing extends Component {
         unavailable: get(props, 'listing.unavailable', []),
 
         ...pick(props.listing, [
+          '__typename',
           'title',
           'description',
           'category',
@@ -38,15 +39,9 @@ class EditListing extends Component {
   }
 
   render() {
-    const { category, subCategory } = this.state.listing
-    let listingType = 'unit'
-    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
-      listingType = 'fractional'
-    }
     const stepProps = {
       listing: this.state.listing,
       listingId: this.props.listing.id,
-      listingType,
       mode: 'edit',
       onChange: listing => this.setState({ listing })
     }
