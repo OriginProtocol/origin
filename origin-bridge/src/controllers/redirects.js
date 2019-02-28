@@ -1,7 +1,7 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
-
-const Attestation = require('../models/attestation')
 
 router.get('/facebook', (req, res) => {
   if (req.query.dappRedirectUrl) {

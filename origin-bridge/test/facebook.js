@@ -33,7 +33,7 @@ describe('facebook attestations', () => {
       .get('/facebook/auth-url')
       .expect(200)
 
-    expect(response.body.url).equal(
+    expect(response.body.url).to.equal(
       `https://www.facebook.com/v3.2/dialog/oauth?client_id=${
         process.env.FACEBOOK_CLIENT_ID
       }&redirect_uri=${redirectUrl}`

@@ -1,91 +1,111 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
 
 const {
-  asyncMiddleware,
-  mapObjectToQueryParams,
-  generateAttestationSignature,
   getTwitterOAuthRequestToken,
   getTwitterOAuthAccessToken,
   verifyTwitterCredentials
-} = require('../utils')
-
+} = require('../utils/twitter')
+const { generateAttestation } = require('../utils/attestation')
+const { mapObjectToQueryParams } = require('../utils')
+const { twitterVerifyCode } = require('../utils/validation')
 const constants = require('../constants')
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
+const logger = require('../logger')
 
-router.get(
-  '/auth-url',
-  asyncMiddleware(async (req, res) => {
-    const dappRedirectUrl = req.query.dappRedirectUrl || null
-    const { oAuthToken, oAuthTokenSecret } = await getTwitterOAuthRequestToken(
+/* Get an oAuth request token from Twitter.
+ *
+ */
+router.get('/auth-url', async (req, res) => {
+  const dappRedirectUrl = req.query.dappRedirectUrl || null
+
+  let oAuthToken, oAuthTokenSecret
+  try {
+    // eslint-disable-next-line no-extra-semi
+    ;({ oAuthToken, oAuthTokenSecret } = await getTwitterOAuthRequestToken(
       dappRedirectUrl
-    )
-    req.session.oAuthToken = oAuthToken
-    req.session.oAuthTokenSecret = oAuthTokenSecret
-    const url =
-      constants.TWITTER_BASE_AUTH_URL +
-      mapObjectToQueryParams({ oauth_token: oAuthToken })
-    res.send({ url })
-  })
-)
+    ))
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Failed to get Twitter OAuth request token.']
+    })
+  }
 
-router.post(
-  '/verify',
-  asyncMiddleware(async (req, res) => {
-    const {
+  req.session.oAuthToken = oAuthToken
+  req.session.oAuthTokenSecret = oAuthTokenSecret
+
+  const url =
+    constants.TWITTER_BASE_AUTH_URL +
+    mapObjectToQueryParams({ oauth_token: oAuthToken })
+
+  res.send({ url })
+})
+
+/* Get an oAuth access token from Twitter using the `oauth-verifier` parameter
+ * obtained from the login flow.
+ */
+router.post('/verify', twitterVerifyCode, async (req, res) => {
+  let oAuthAccessToken, oAuthAccessTokenSecret
+  try {
+    // eslint-disable-next-line no-extra-semi
+    ;({
       oAuthAccessToken,
       oAuthAccessTokenSecret
     } = await getTwitterOAuthAccessToken(
       req.session.oAuthToken,
       req.session.oAuthTokenSecret,
       req.body['oauth-verifier']
-    )
-    const screenName = await verifyTwitterCredentials(
+    ))
+  } catch (error) {
+    if (error.statusCode == 401) {
+      return res.status(401).send({
+        errors: ['The verifier you have provided is invalid.']
+      })
+    }
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not get a Twitter access token.']
+    })
+  }
+
+  let screenName
+  try {
+    screenName = await verifyTwitterCredentials(
       oAuthAccessToken,
       oAuthAccessTokenSecret
     )
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not verify Twitter credentials.']
+    })
+  }
 
-    data = {
-      issuer: constants.ISSUER,
-      issueDate: new Date(),
-      attestation: {
-        verificationMethod: {
-          oAuth: true
-        },
-        site: {
-          siteName: 'twitter.com',
-          userId: {
-            raw: screenName
-          }
-        }
+  const attestationBody = {
+    verificationMethod: {
+      oAuth: true
+    },
+    site: {
+      siteName: 'twitter.com',
+      userId: {
+        raw: screenName
       }
     }
-    const ethAddress = req.body.identity
+  }
 
-    const signature = {
-      bytes: generateAttestationSignature(
-        process.env.ATTESTATION_SIGNING_KEY,
-        ethAddress,
-        JSON.stringify(data)
-      ),
-      version: '1.0.0'
-    }
+  const attestation = await generateAttestation(
+    AttestationTypes.TWITTER,
+    attestationBody,
+    screenName,
+    req.body.identity,
+    req.ip
+  )
 
-    await Attestation.create({
-      method: AttestationTypes.TWITTER,
-      eth_address: ethAddress,
-      value: screenName,
-      signature: signature['bytes'],
-      remote_ip_address: req.ip
-    })
-
-    res.send({
-      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
-      data: data,
-      signature: signature
-    })
-  })
-)
+  return res.send(attestation)
+})
 
 module.exports = router

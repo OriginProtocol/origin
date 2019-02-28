@@ -111,6 +111,18 @@ const phoneVerifyCode = [
   handleValidationError
 ]
 
+const twitterVerifyCode = [
+  check('identity')
+    .not()
+    .isEmpty()
+    .withMessage('Must not be empty'),
+  check('oauth-verifier')
+    .not()
+    .isEmpty()
+    .withMessage('Must not be empty'),
+  handleValidationError
+]
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -118,5 +130,6 @@ module.exports = {
   emailVerifyCode,
   facebookVerify,
   phoneGenerateCode,
-  phoneVerifyCode
+  phoneVerifyCode,
+  twitterVerifyCode
 }

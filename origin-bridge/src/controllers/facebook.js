@@ -60,7 +60,7 @@ router.post('/verify', facebookVerify, async (req, res) => {
 
   // Verify the token and determine the user account that it was generated for,
   // use that data to generate the attetation
-  let useDataResponse
+  let userDataResponse
   try {
     userDataResponse = await request
       .get(constants.FACEBOOK_BASE_GRAPH_URL + '/me')
