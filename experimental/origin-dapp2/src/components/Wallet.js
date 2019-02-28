@@ -45,7 +45,7 @@ require('react-styl')(`
     word-break: break-all;
     font-size: 14px;
     .wallet-info
-      padding: 0.75rem 1.5rem
+      padding: 1rem 1.5rem
       display: flex
       flex-direction: row
       font-size: 14px
@@ -61,6 +61,6 @@ require('react-styl')(`
       font-size: 14px
       color: var(--light)
     .balances
-      padding: 0.75rem 1.5rem
+      padding: 1rem 1.5rem
 
 `)

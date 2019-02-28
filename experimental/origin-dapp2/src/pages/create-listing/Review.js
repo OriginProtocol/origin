@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Redirect from 'components/Redirect'
@@ -30,11 +30,11 @@ class Review extends Component {
     const isFractional = this.props.__typename === 'FractionalListing'
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
-    const description = listing.description.split('\n').map(d => (
-      <>
+    const description = listing.description.split('\n').map((d, idx) => (
+      <Fragment key={idx}>
         {d}
         <br />
-      </>
+      </Fragment>
     ))
 
     return (

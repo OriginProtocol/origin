@@ -11,6 +11,7 @@ import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
 import Category from 'components/Category'
 import Price from 'components/Price'
+import Tooltip from 'components/Tooltip'
 
 import Buy from './mutations/Buy'
 
@@ -139,9 +140,19 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         </div>
       </div>
       <div className="choose-dates form-control">
-        <div>{checkIn}</div>
+        <Tooltip
+          tooltip="Scroll down for availability calendar"
+          placement="top"
+        >
+          <div>{checkIn}</div>
+        </Tooltip>
         <div className="arr" />
-        <div>{checkOut}</div>
+        <Tooltip
+          tooltip="Scroll down for availability calendar"
+          placement="top"
+        >
+          <div>{checkOut}</div>
+        </Tooltip>
       </div>
       {!showUnavailable ? null : <div className="total">Unavailable</div>}
       {!totalPrice ? null : (
@@ -229,6 +240,9 @@ class ListingDetail extends Component {
                   onChange={state => this.setState(state)}
                   availability={this.state.availability}
                 />
+                <div className="availability-help">
+                  * Click and drag to select a date range
+                </div>
               </>
             )}
             <hr />
@@ -301,8 +315,9 @@ require('react-styl')(`
     .description
       white-space: pre-wrap
 
-    .gallery
-      margin-bottom: 2rem
+    .availability-help
+      font-size: 14px
+      margin-bottom: 1rem
 
     .listing-buy
       padding: 1.5rem

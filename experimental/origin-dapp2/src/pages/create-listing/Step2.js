@@ -172,7 +172,13 @@ class Step2 extends Component {
         newState.quantityError = 'Quantity must be greater than zero'
       }
     } else if (this.state.__typename === 'FractionalListing') {
-      // HomeShare validation
+      if (!this.state.weekendPrice) {
+        newState.weekendPriceError = 'Price is required'
+      } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
+        newState.weekendPriceError = 'Price must be a number'
+      } else if (Number(this.state.weekendPrice) <= 0) {
+        newState.weekendPriceError = 'Price must be greater than zero'
+      }
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
