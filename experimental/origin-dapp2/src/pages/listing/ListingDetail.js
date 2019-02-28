@@ -166,14 +166,16 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   )
 }
 
-const ForSeller = ({ listing }) => (
+const ForSeller = ({ listing, isAnnouncement }) => (
   <div className="listing-buy">
-    <div className="price">
-      <div className="eth">{`${listing.price.amount} ETH`}</div>
-      <div className="usd">
-        <Price amount={listing.price.amount} />
+    {isAnnouncement ? null : (
+      <div className="price">
+        <div className="eth">{`${listing.price.amount} ETH`}</div>
+        <div className="usd">
+          <Price amount={listing.price.amount} />
+        </div>
       </div>
-    </div>
+    )}
     <Link
       className="btn btn-primary mt-2"
       to={`/listing/${listing.id}/edit`}
@@ -203,7 +205,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const sold = listing.status === 'sold'
     const pending = listing.status === 'pending'
-    const isAnnouncement = get(listing, 'category', '').match(/announcement/i)
+    const isAnnouncement = listing.__typename === 'AnnouncementListing'
 
     return (
       <div className="listing-detail">
@@ -234,8 +236,8 @@ class ListingDetail extends Component {
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
-              <ForSeller {...this.props} />
-            ) : sold ? (
+              <ForSeller {...this.props} isAnnouncement={isAnnouncement} />
+            ) : isAnnouncement ? null : sold ? (
               <Sold />
             ) : pending ? (
               <Pending />

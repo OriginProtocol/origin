@@ -28,6 +28,7 @@ export default {
   Listing,
   UnitListing: Listing,
   FractionalListing: Listing,
+  AnnouncementListing: Listing,
   ListingResult: {
     __resolveType(obj) {
       return obj.__typename

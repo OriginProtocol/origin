@@ -8,8 +8,8 @@ import dapp1Compatibility from './_dapp1Compat'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
-
   const ipfsData = {
+    __typename: data.typename || 'UnitListing',
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
     listingType,
     category: data.category || '',
@@ -32,14 +32,16 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
   if (data.marketplacePublisher) {
     ipfsData.marketplacePublisher = data.marketplacePublisher
   }
-  if (listingType === 'unit') {
-    ipfsData.unitsTotal = unitData.unitsTotal
-  } else if (listingType === 'fractional') {
+  if (fractionalData) {
     ipfsData.weekendPrice =
       fractionalData.weekendPrice || fractionalData.price || '0'
     ipfsData.unavailable = fractionalData.unavailable || []
     ipfsData.customPricing = fractionalData.customPricing || []
     ipfsData.booked = fractionalData.booked || []
+  } else if (unitData) {
+    ipfsData.unitsTotal = unitData.unitsTotal
+  } else {
+    ipfsData.unitsTotal = 1
   }
 
   // Dapp1 compatibility:

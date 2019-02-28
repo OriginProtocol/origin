@@ -56,3 +56,7 @@
 .form-control.dark::-webkit-input-placeholder {
   color: var(--dusk);
 }
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: var(--dusk)
+}
