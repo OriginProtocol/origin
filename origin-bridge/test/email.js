@@ -75,7 +75,7 @@ describe('email attestations', () => {
       .send({
         email: 'origin@protocol.foo',
         code: '123456',
-        eth_address: ethAddress
+        identity: ethAddress
       })
       .expect(200)
 
@@ -120,7 +120,11 @@ describe('email attestations', () => {
 
     const response = await request(parentApp)
       .post('/email/verify')
-      .send({ email: 'origin@protocol.foo', code: '123456' })
+      .send({
+        email: 'origin@protocol.foo',
+        code: '123456',
+        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+      })
       .expect(400)
 
     expect(response.body.errors.code).to.equal('Verification code has expired.')
@@ -148,7 +152,11 @@ describe('email attestations', () => {
 
     const response = await request(parentApp)
       .post('/email/verify')
-      .send({ email: 'origin@protocol.foo', code: '123456' })
+      .send({
+        email: 'origin@protocol.foo',
+        code: '123456',
+        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+      })
       .expect(400)
 
     expect(response.body.errors.code).to.equal(
@@ -159,7 +167,10 @@ describe('email attestations', () => {
   it('should error on missing verification code', async () => {
     const response = await request(app)
       .post('/email/verify')
-      .send({ email: 'origin@protocol.foo' })
+      .send({
+        email: 'origin@protocol.foo',
+        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+      })
       .expect(400)
 
     expect(response.body.errors.code).to.equal('Invalid value')
@@ -168,7 +179,11 @@ describe('email attestations', () => {
   it('should error on incorrect email format', async () => {
     const response = await request(app)
       .post('/email/verify')
-      .send({ email: 'originprotocol.foo', code: '123456' })
+      .send({
+        email: 'originprotocol.foo',
+        code: '123456',
+        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+      })
       .expect(400)
 
     expect(response.body.errors.email).to.equal('Invalid value')
