@@ -11,7 +11,10 @@ const enums = require('./enums')
 const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
 
 // Max number of transactions that can be waiting to be mined.
-const MaxNumberPendingTxnCount = 30
+const MaxNumberPendingTxnCount = 50
+
+// Gas price multiplier to apply to default gas price when sending transactions.
+const gasPriceMultiplier = 1.3 // 30% over default gas price.
 
 /**
  * Singleton class for managing a monotonically increasing nonce
@@ -93,9 +96,28 @@ class TxnManager {
     this.txnHash = null
   }
 
+  /**
+   * Calculates gas price to use for sending transactions. We use a slightly
+   * higher gas price in order for transactions to get mined faster.
+   * @returns {Promise<{string}>}
+   */
+  async calcGasPrice() {
+    // Get default gas price from web3 which is determined by the
+    // last few blocks median gas price.
+    const medianGasPrice = await this.web3.eth.getGasPrice()
+
+    // Apply our ratio.
+    return BigNumber(medianGasPrice)
+      .times(gasPriceMultiplier)
+      .toFixed()
+  }
+
   // Submits a transaction and returns a promise that resolves
   // with the transaction hash.
   async send(from, to, value) {
+    // Calculate the gas price.
+    const gasPrice = await this.calcGasPrice()
+
     // Get a nonce.
     this.nonce = await this.nonceMgr.next()
 
@@ -103,13 +125,19 @@ class TxnManager {
     logger.info(
       `sendTransaction value:${value.toFixed()} from:${from} to:${to} nonce:${
         this.nonce
-      }`
+      }, gasPrice:${gasPrice}`
     )
-
     return new Promise((resolve, reject) => {
       try {
         this.web3.eth
-          .sendTransaction({ from, to, value, gas: 21000, nonce: this.nonce })
+          .sendTransaction({
+            from,
+            to,
+            value,
+            gas: 21000,
+            gasPrice,
+            nonce: this.nonce
+          })
           .on('transactionHash', hash => {
             logger.info('Transaction hash: ', hash)
             this.txnHash = hash
