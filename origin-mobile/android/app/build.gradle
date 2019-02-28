@@ -77,7 +77,6 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -157,7 +156,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-sentry')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-webview')
