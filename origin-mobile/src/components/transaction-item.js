@@ -137,9 +137,7 @@ class TransactionItem extends Component {
             }
             <View style={styles.main}>
               <View style={styles.detailsContainer}>
-                <Text numberOfLines={1} style={styles.subject}>
-                  {listing.title || fullName}
-                </Text>
+                <Text numberOfLines={1} style={styles.subject}>{listing.title || fullName}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
