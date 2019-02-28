@@ -83,18 +83,18 @@ matrix:
       addons:
           postgresql: 9.6
       services:
-      - postgresql
+        - postgresql
       env:
-      - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
-      - psql -c 'create database travis_ci_test;' -U postgres
-      - lerna run migrate --scope origin-growth
-      - lerna run migrate --scope origin-identity
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-growth
+        - lerna run migrate --scope origin-identity
       install:
-      - npm install --ignore-scripts
-      - npm run bootstrap -- --scope origin-growth
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-linker-client --scope origin-graphql --scope origin-identity --scope origin-token --scope origin-growth
       script:
-      - npm run test --prefix origin-growth
+        - npm run test --prefix origin-growth
 
     - name: "origin-js unit tests"
       language: node_js
