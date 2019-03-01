@@ -97,8 +97,6 @@ describe('facebook attestations', () => {
     expect(results[0].value).to.equal('Origin Protocol')
   })
 
-  it('should error on incorrect verification code', () => {})
-
   it('should error on missing verification code', async () => {
     const response = await request(app)
       .post('/api/attestations/facebook/verify')

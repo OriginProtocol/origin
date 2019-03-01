@@ -49,6 +49,14 @@ router.get('/auth-url', async (req, res) => {
  * obtained from the login flow.
  */
 router.post('/verify', twitterVerifyCode, async (req, res) => {
+  if (!req.session.oAuthToken || !req.session.oAuthTokenSecret) {
+    console.log(req.session.oAuthToken)
+    console.log(req.session.oAuthTokenSecret)
+    return res.status(400).send({
+      errors: ['Invalid Twitter oAuth session.']
+    })
+  }
+
   let oAuthAccessToken, oAuthAccessTokenSecret
   try {
     // eslint-disable-next-line no-extra-semi

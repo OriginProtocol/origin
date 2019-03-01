@@ -2,6 +2,7 @@
 
 const chai = require('chai')
 const expect = chai.expect
+const express = require('express')
 const nock = require('nock')
 const request = require('supertest')
 
@@ -48,7 +49,20 @@ describe('twitter attestations', async () => {
       .get('/1.1/account/verify_credentials.json')
       .reply(200, { screen_name: 'Origin Protocol' })
 
-    const response = await request(app)
+    // Fake a session
+    const parentApp = express()
+    parentApp.use((req, res, next) => {
+      req.session = {}
+      next()
+    })
+    parentApp.post('/api/attestations/twitter/verify', (req, res, next) => {
+      req.session.oAuthToken = 'fake-oauth-token'
+      req.session.oAuthTokenSecret = 'fake-oauth-token-secret'
+      next()
+    })
+    parentApp.use(app)
+
+    const response = await request(parentApp)
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
@@ -84,7 +98,20 @@ describe('twitter attestations', async () => {
       .post('/oauth/access_token')
       .reply(401)
 
-    const response = await request(app)
+    // Fake a session
+    const parentApp = express()
+    parentApp.use((req, res, next) => {
+      req.session = {}
+      next()
+    })
+    parentApp.post('/api/attestations/twitter/verify', (req, res, next) => {
+      req.session.oAuthToken = 'fake-oauth-token'
+      req.session.oAuthTokenSecret = 'fake-oauth-token-secret'
+      next()
+    })
+    parentApp.use(app)
+
+    const response = await request(parentApp)
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
@@ -110,5 +137,15 @@ describe('twitter attestations', async () => {
     )
   })
 
-  it('should error on invalid session', async () => {})
+  it('should error on invalid session', async () => {
+    const response = await request(app)
+      .post('/api/attestations/twitter/verify')
+      .send({
+        identity: ethAddress,
+        'oauth-verifier': 'verifier'
+      })
+      .expect(400)
+
+    expect(response.body.errors[0]).to.equal('Invalid Twitter oAuth session.')
+  })
 })
