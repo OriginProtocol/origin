@@ -210,6 +210,7 @@ class Messaging {
   }
 
   async onPreGenKeys(data) {
+    debug('onPreGenKeys')
     const account_id = data.account
     const sig_key = data.sig_key
     const sig_phrase = data.sig_phrase

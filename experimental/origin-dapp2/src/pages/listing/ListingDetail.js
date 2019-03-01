@@ -71,7 +71,7 @@ const SingleUnit = ({ listing, from, refetch }) => (
       value={listing.price.amount}
       quantity={1}
       className="btn btn-primary"
-      children="Buy Now"
+      children="Purchase"
     />
   </div>
 )
