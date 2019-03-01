@@ -55,9 +55,7 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
     !req.session.emailAttestation.emailHash
   ) {
     return res.status(400).send({
-      errors: [
-        'No verification code was found for that email.'
-      ]
+      errors: ['No verification code was found for that email.']
     })
   }
 
@@ -68,25 +66,19 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
 
   if (!validHash) {
     return res.status(400).send({
-      errors: [
-        'No verification code was not found that email.'
-      ]
+      errors: ['No verification code was not found that email.']
     })
   }
 
   if (req.session.emailAttestation.expiry < new Date()) {
     return res.status(400).send({
-      errors: [
-        'Verification code has expired.'
-      ]
+      errors: ['Verification code has expired.']
     })
   }
 
   if (req.session.emailAttestation.code !== req.body.code) {
     return res.status(400).send({
-      errors: [
-        'Verification code is incorrect.'
-      ]
+      errors: ['Verification code is incorrect.']
     })
   }
 

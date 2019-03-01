@@ -38,9 +38,7 @@ router.post('/verify', airbnbVerifyCode, async (req, res) => {
         `Attestation attempt for invalid Airbnb user: ${req.body.airbnbUserId}`
       )
       return res.status(400).send({
-        errors: [
-          'Airbnb user not found.'
-        ]
+        errors: ['Airbnb user not found.']
       })
     } else {
       return res.status(500).send({

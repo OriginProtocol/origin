@@ -6,9 +6,7 @@ const handleValidationError = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
-      errors: [
-        errors.array()[0].msg
-      ]
+      errors: [errors.array()[0].msg]
     })
   } else {
     next()
@@ -16,14 +14,14 @@ const handleValidationError = (req, res, next) => {
 }
 
 const identityValidation = check('identity')
-    .not()
-    .isEmpty()
-    .withMessage('Field identity must not be empty.')
-    .trim()
+  .not()
+  .isEmpty()
+  .withMessage('Field identity must not be empty.')
+  .trim()
 
 const airbnbGenerateCode = [
   identityValidation,
- check('airbnbUserId')
+  check('airbnbUserId')
     .isInt()
     .withMessage('Field airbnbUserId must be an integer.')
     .isLength({ min: 2 })
@@ -50,11 +48,13 @@ const emailVerifyCode = [
     .not()
     .isEmpty()
     .withMessage('Field email must not be empty.')
-    .isEmail().withMessage('Email is not a valid email address.')
+    .isEmail()
+    .withMessage('Email is not a valid email address.')
     .trim(),
   check('code')
     .not()
-    .isEmpty().withMessage('Field code must not be empty.')
+    .isEmpty()
+    .withMessage('Field code must not be empty.')
     .trim()
     .toInt(),
   handleValidationError
