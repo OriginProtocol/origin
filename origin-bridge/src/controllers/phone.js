@@ -104,7 +104,9 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
       })
     } else {
       if (twilioErrorCode) {
-        logger.error(`Could not verify phone verification code: ${error.response.text}`)
+        logger.error(
+          `Could not verify phone verification code: ${error.response.text}`
+        )
       } else {
         logger.error(`Could not verify phone verification code: ${error}`)
       }
@@ -136,9 +138,7 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
       verified: true
     }
   }
-  const attestationValue = `${req.body.country_calling_code} ${
-    req.body.phone
-  }`
+  const attestationValue = `${req.body.country_calling_code} ${req.body.phone}`
 
   const attestation = await generateAttestation(
     AttestationTypes.PHONE,
