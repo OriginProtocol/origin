@@ -2,8 +2,6 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-Just getting started with Origin? We recommend using [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box) for development and testing on your local machine.
-
 # Origin Bridge Server
 
 The Origin Bridge Server connects the old world to the new.
@@ -12,7 +10,7 @@ Most traditional web APIs, such as those from Facebook and Twitter, can only int
 
 Origin hosts a Bridge Server, but in the true spirit of decentralization, anyone is free to clone our open source code and host their own.
 
-You can connect to and use our hosted Bridge Server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `develop` branch of this repo is available at [dev.bridge.originprotocol.com](https://dev.bridge.originprotocol.com).
+You can connect to and use our hosted Bridge Server at [bridge.originprotocol.com](https://bridge.originprotocol.com). The `master` branch of this repo is available at [bridge.dev.originprotocol.com](https://bridge.dev.originprotocol.com).
 
 DApps can connect to the Bridge Server of their choosing in order to enable the following functionality which is either impossible or impractical to do directly onchain, including:
 
@@ -20,10 +18,6 @@ DApps can connect to the Bridge Server of their choosing in order to enable the 
 ### Identity
 
 We need a centralized server that can handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.
-
-## API documentation
-
-See the [README for the API](api)
 
 ## One-time Setup
 
