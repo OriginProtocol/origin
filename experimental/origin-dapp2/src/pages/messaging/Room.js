@@ -8,6 +8,7 @@ import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
+import EnableMessaging from 'components/EnableMessaging'
 
 class AllMessages extends Component {
   componentDidMount() {
@@ -51,7 +52,7 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, markRead } = this.props
+    const { id, wallet, markRead, enabled } = this.props
     return (
       <div className="container">
         <Query
@@ -79,7 +80,13 @@ class Room extends Component {
                   convId={id}
                   markRead={() => markRead({ variables: { id } })}
                 />
-                <SendMessage to={this.props.id} />
+                {enabled ? (
+                  <SendMessage to={this.props.id} />
+                ) : (
+                  <div className="col-12">
+                    <EnableMessaging />
+                  </div>
+                )}
               </>
             )
           }}

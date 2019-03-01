@@ -2,33 +2,46 @@ import contracts from '../../contracts'
 
 import { totalUnread } from './Conversation'
 
+function isEnabled() {
+  return contracts.messaging.pub_sig &&
+    contracts.messaging.account &&
+    contracts.messaging.account.publicKey
+    ? true
+    : false
+}
+
+async function getMyConvs() {
+  const rawConvos = isEnabled() ? await contracts.messaging.getMyConvs() : {}
+  if (contracts.config.messagingAccount) {
+    rawConvos[contracts.config.messagingAccount] = +new Date()
+  }
+  return rawConvos
+}
+
+async function convosWithSupport() {
+  const rawConvos = await getMyConvs()
+  return Object.keys(rawConvos).map(id => ({
+    id,
+    timestamp: Math.round(rawConvos[id] / 1000)
+  }))
+}
+
 export default {
-  conversations: () =>
-    new Promise(async resolve => {
-      const convos = await contracts.messaging.getMyConvs()
-      resolve(
-        Object.keys(convos).map(id => ({
-          id,
-          timestamp: Math.round(convos[id] / 1000)
-        }))
-      )
-    }),
+  enabled: () => isEnabled(),
+  conversations: () => convosWithSupport(),
   conversation: (_, args) =>
     new Promise(async resolve => {
-      const convos = await contracts.messaging.getMyConvs()
+      const convos = await getMyConvs()
       if (!convos[args.id]) {
         resolve(null)
       }
       resolve({ id: args.id, timestamp: Math.round(convos[args.id] / 1000) })
     }),
-  enabled: () => {
-    return contracts.messaging.pub_sig &&
-      contracts.messaging.account &&
-      contracts.messaging.account.publicKey
-      ? true
-      : false
-  },
   totalUnread: async () => {
+    // Show 1 unread when messaging disabled. Intro message from Origin Support
+    if (!isEnabled()) {
+      return 1
+    }
     const convos = await contracts.messaging.getMyConvs()
     const ids = Object.keys(convos)
     const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
@@ -41,5 +54,9 @@ export default {
   syncProgress: () => contracts.messaging.syncProgress,
   pubKey: () =>
     contracts.messaging.account ? contracts.messaging.account.publicKey : null,
-  pubSig: () => contracts.messaging.pub_sig
+  pubSig: () => contracts.messaging.pub_sig,
+  canConverseWith: async (_, args) => {
+    const recipient = await contracts.messaging.canReceiveMessages(args.id)
+    return recipient ? true : false
+  }
 }
