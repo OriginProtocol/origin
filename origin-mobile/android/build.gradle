@@ -32,14 +32,9 @@ buildscript {
     ext {
         //buildToolsVersion = "26.1.1"
         minSdkVersion = 21
-        compileSdkVersion = 26
+        compileSdkVersion = 27
         targetSdkVersion = 27
-        supportLibVersion = "27.1.1"
-
-        // Necessary for notifications to play nicely
-        // Ref: https://github.com/zo0r/react-native-push-notification#android-manual-installation
-        googlePlayServicesVersion = "11.8.0"
-        firebaseVersion = "11.8.0"
+        supportLibVersion = "27.1.0"
     }
     repositories {
         google()
@@ -47,7 +42,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.1'
-        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'com.google.gms:google-services:4.0.2'
+        classpath 'com.google.android.gms:strict-version-matcher-plugin:1.0.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -56,13 +52,35 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        mavenLocal()
-        jcenter()
+        configurations.all {
+            resolutionStrategy {
+                // This is all apparently required for react-native-camera to build... no clue why
+                // I suppose this has the potential to break things, so keep an eye out
+                force 'com.google.android.gms:play-services-base:15.0.1'
+                force 'com.google.android.gms:play-services-basement:15.0.1'
+                force 'com.google.android.gms:play-services-tasks:15.0.1'
+                force 'com.android.support:support-core-utils:27.1.0'
+                force 'com.android.support:support-core-ui:27.1.0'
+                force 'com.android.support:support-core-ui:27.1.0'
+                force 'com.android.support:support-fragment:27.1.0'
+                force 'com.android.support:support-compat:27.1.0'
+                force 'com.android.support:support-annotations:27.1.0'
+                force 'android.arch.lifecycle:common:1.1.0'
+                force 'android.arch.core:common:1.1.0'
+                // Not sure what needs this
+                force "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+            }
+        }
+
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+        google()
+        mavenLocal()
+        jcenter()
     }
 }
 
