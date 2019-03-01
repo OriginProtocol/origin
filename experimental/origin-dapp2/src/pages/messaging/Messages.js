@@ -9,8 +9,6 @@ import withIdentity from 'hoc/withIdentity'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
 
-import { OnboardMessaging } from 'pages/onboard/Messaging'
-
 import RoomStatus from './RoomStatus'
 import Room from './Room'
 import QueryError from 'components/QueryError'
@@ -94,10 +92,6 @@ class Messages extends Component {
                   return <p className="p-3">Cannot query messages</p>
                 }
 
-                if (!data.messaging.enabled) {
-                  return <OnboardMessaging />
-                }
-
                 const conversations = get(data, 'messaging.conversations', [])
                 const room = get(this.props, 'match.params.room')
                 const defaultRoom = this.state.smallScreen
@@ -135,7 +129,11 @@ class Messages extends Component {
                     </div>
                     <div className="col-md-9">
                       {active ? (
-                        <Room id={active} markRead={markConversationRead} />
+                        <Room
+                          id={active}
+                          markRead={markConversationRead}
+                          enabled={data.messaging.enabled}
+                        />
                       ) : null}
                     </div>
                   </div>
