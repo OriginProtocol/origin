@@ -8,7 +8,9 @@ import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import PageTitle from 'components/PageTitle'
 
-import Step1 from './Step1'
+import UnitListing from './listing-types/UnitListing/UnitListing'
+
+import ChooseListingType from './ChooseListingType'
 import Step2 from './Step2'
 import Boost from './Boost'
 import Availability from './Availability'
@@ -61,6 +63,25 @@ class CreateListing extends Component {
         <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
+            path="/create/details"
+            render={({match}) => (
+              <UnitListing
+                listing={this.state.listing}
+                onChange={listing => this.setListing(listing)}
+              />
+            )}
+          />
+          <Route
+            path="/create"
+            render={() => (
+              <ChooseListingType
+                listing={this.state.listing}
+                onChange={listing => this.setListing(listing)}
+              />
+            )}
+          />
+{/*}
+          <Route
             path="/create/step-2"
             render={() => (
               <Step2
@@ -100,12 +121,13 @@ class CreateListing extends Component {
           />
           <Route
             render={() => (
-              <Step1
+              <ChooseListingType
                 listing={this.state.listing}
                 onChange={listing => this.setListing(listing)}
               />
             )}
           />
+*/}
         </Switch>
       </div>
     )

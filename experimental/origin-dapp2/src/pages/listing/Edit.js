@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import PageTitle from 'components/PageTitle'
 
-import Step1 from '../create-listing/Step1'
+import ChooseListingType from '../create-listing/ChooseListingType'
 import Step2 from '../create-listing/Step2'
 import Boost from '../create-listing/Boost'
 import Availability from '../create-listing/Availability'
@@ -67,7 +67,7 @@ class EditListing extends Component {
               <Review {...stepProps} refetch={this.props.refetch} />
             )}
           />
-          <Route render={() => <Step1 {...stepProps} />} />
+          <Route render={() => <ChooseListingType {...stepProps} />} />
         </Switch>
       </div>
     )
