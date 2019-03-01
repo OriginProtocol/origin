@@ -2,39 +2,48 @@ import React, { Component } from 'react'
 import Modal from 'components/Modal'
 
 import DisputeOffer from './mutations/DisputeOffer'
+import EventTick from './_EventTick'
 
 class WaitForFinalize extends Component {
   state = {}
 
   render() {
+    const { offer } = this.props
     return (
       <div className="transaction-progress">
-        <h4>Next Step:</h4>
-        <div className="next-step">Wait for buyer to confirm receipt</div>
-        <div className="help">
-          Make sure you fulfill the order and wait for the buyer’s confirmation
-        </div>
-        <button
-          className="btn btn-link"
-          onClick={() => this.setState({ open: true })}
-          children=""
-        >
-          View Fulfillment Checklist &rsaquo;
-        </button>
+        <div className="top">
+          <h4>Next Step:</h4>
+          <div className="next-step">Wait for buyer to confirm receipt</div>
+          <div className="help">
+            Make sure you fulfill the order and wait for the buyer’s
+            confirmation
+          </div>
+          <button
+            className="btn btn-link"
+            onClick={() => this.setState({ open: true })}
+            children=""
+          >
+            View Fulfillment Checklist &rsaquo;
+          </button>
 
-        <DisputeOffer
-          offer={this.props.offer}
-          party="seller"
-          className="btn btn-link withdraw mt-3"
-        >
-          Report a Problem
-        </DisputeOffer>
+          <DisputeOffer
+            offer={this.props.offer}
+            party="seller"
+            className="btn btn-link withdraw mt-3"
+          >
+            Report a Problem
+          </DisputeOffer>
+        </div>
 
         <div className="stages">
-          <div className="active bg">Offer Placed</div>
-          <div className="active bgl">Offer Accepted</div>
-          <div>Received by buyer</div>
-          <div>Funds withdrawn</div>
+          <EventTick className="active bg" event={offer.createdEvent}>
+            Offer Placed
+          </EventTick>
+          <EventTick className="active bgl" event={offer.acceptedEvent}>
+            Offer Accepted
+          </EventTick>
+          <EventTick>Sale Completed</EventTick>
+          <EventTick>Funds withdrawn</EventTick>
         </div>
         {!this.state.open ? null : (
           <Modal

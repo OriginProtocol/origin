@@ -9,9 +9,9 @@ import Offer from './Offer'
 import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
-import Identity from './Identity'
+import IdentityEvents from './IdentityEvents'
 import Conversation from './messaging/Conversation'
-import UserRegistry from './UserRegistry'
+import WalletLinker from './linker/WalletLinker'
 import Mutation from '../mutations/index'
 
 export default {
@@ -27,7 +27,7 @@ export default {
   Offer,
   Token,
   TokenHolder,
-  Identity,
+  IdentityEvents,
   Conversation,
-  UserRegistry
+  WalletLinker
 }

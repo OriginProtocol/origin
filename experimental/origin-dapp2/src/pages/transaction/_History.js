@@ -3,10 +3,13 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import dayjs from 'dayjs'
 
-import OfferEventsQuery from 'queries/OfferEvents'
+import query from 'queries/OfferEvents'
+import QueryError from 'components/QueryError'
+import TxHash from './_TxHash'
 
 const date = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY h:mmA')
 const eventName = name => {
+  if (name === 'OfferCreated') return 'Offer Made'
   const [, , target] = name.split(/(Offer|Listing)/)
   return target
 }
@@ -25,6 +28,7 @@ class TxHistory extends Component {
           [`row${idx}`]: this.state[`row${idx}`] ? false : true
         })
     })
+    const vars = { offerId }
 
     return (
       <table className="tx-history table table-sm">
@@ -35,10 +39,12 @@ class TxHistory extends Component {
             <th className="expand" />
           </tr>
         </thead>
-        <Query query={OfferEventsQuery} variables={{ offerId }}>
+        <Query query={query} variables={vars}>
           {({ loading, error, data }) => {
             const history = get(data, 'marketplace.offer.history', [])
-            if (loading || error || !history.length) {
+            if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
+            } else if (loading || !history.length) {
               return null
             }
 
@@ -72,8 +78,7 @@ class TxHistory extends Component {
                             />
                           </div>
                           <div>
-                            Tx Hash:
-                            <a href="#">{item.id}</a>
+                            Tx Hash: <TxHash hash={item.id} />
                           </div>
                         </td>
                       </tr>

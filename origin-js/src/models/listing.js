@@ -1,3 +1,6 @@
+const base58 = require('bs58')
+const web3 = require('web3')
+
 //
 // Listing is the main object exposed by Origin Protocol to access listing data.
 //
@@ -28,7 +31,7 @@ class Listing {
    *  - {string} display - 'normal', 'featured', 'hidden'
    *  - {Array<Object>} media
    *  - {Object} commission - Total commission of a listing. Consists of 'amount' and 'currency' properties
-   *  - {Array} slots - to be implemented
+   *  - {Array} availability - to be implemented
    *  - {Integer} slotLength - defines the length of a time slot in a fractional listing
    *  - {String} slotLengthUnit - defines the unit of measurement for a fractional usage time slot
    *  - {string} schemaId
@@ -39,9 +42,9 @@ class Listing {
    *  - {Object} commissionPerUnit - Commission per unit in multi unit listings. Consists of 'amount' and 'currency' properties
    */
   constructor({ id, title, display, description, category, subCategory, status, type, media,
-    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, slots,
-    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager,
-    commissionPerUnit, marketplacePublisher }) {
+    unitsTotal, offers, events, ipfs, ipfsHash, language, price, seller, commission, availability,
+    slotLength, slotLengthUnit, schemaId, dappSchemaId, deposit, depositManager, commissionPerUnit,
+    marketplacePublisher, createDate, updateVersion, creator }) {
 
     this.id = id
     this.title = title
@@ -61,7 +64,7 @@ class Listing {
     this.display = display
     this.media = media
     this.commission = commission
-    this.slots = slots
+    this.availability = availability
     this.slotLength = slotLength
     this.slotLengthUnit = slotLengthUnit
     this.schemaId = schemaId
@@ -70,6 +73,9 @@ class Listing {
     this.depositManager = depositManager
     this.commissionPerUnit = commissionPerUnit
     this.marketplacePublisher = marketplacePublisher
+    this.createDate = createDate
+    this.updateVersion = updateVersion
+    this.creator = creator
   }
 
   // creates a Listing using on-chain and off-chain data
@@ -94,7 +100,7 @@ class Listing {
       display: 'normal',
       media: ipfsListing.media,
       commission: ipfsListing.commission,
-      slots: ipfsListing.slots,
+      availability: ipfsListing.availability,
       slotLength: ipfsListing.slotLength,
       slotLengthUnit: ipfsListing.slotLengthUnit,
       schemaId: ipfsListing.schemaId,
@@ -102,7 +108,10 @@ class Listing {
       deposit: chainListing.deposit,
       depositManager: chainListing.depositManager,
       commissionPerUnit: ipfsListing.commissionPerUnit,
-      marketplacePublisher: ipfsListing.marketplacePublisher
+      createDate: ipfsListing.createDate,
+      marketplacePublisher: ipfsListing.marketplacePublisher,
+      updateVersion: ipfsListing.updateVersion,
+      creator: ipfsListing.creator
     })
   }
 
@@ -127,7 +136,7 @@ class Listing {
       display: discoveryNodeData.display,
       media: discoveryNodeData.media,
       commission: discoveryNodeData.commission,
-      slots: discoveryNodeData.slots,
+      availability: discoveryNodeData.availability,
       slotLength: discoveryNodeData.slotLength,
       slotLengthUnit: discoveryNodeData.slotLengthUnit,
       schemaId: discoveryNodeData.schemaId,
@@ -135,7 +144,10 @@ class Listing {
       deposit: discoveryNodeData.deposit,
       depositManager: discoveryNodeData.depositManager,
       commissionPerUnit: discoveryNodeData.commissionPerUnit,
-      marketplacePublisher: discoveryNodeData.marketplacePublisher
+      marketplacePublisher: discoveryNodeData.marketplacePublisher,
+      creator: discoveryNodeData.creator,
+      updateVersion: discoveryNodeData.updateVersion,
+      createDate: discoveryNodeData.createDate
     })
   }
 
@@ -198,6 +210,16 @@ class Listing {
     } else {
       return this.commission
     }
+  }
+
+  get uniqueId() {
+    const hash = web3.utils.soliditySha3({ t: 'address', v: this.creator },
+      { t: 'bytes32', v: web3.utils.fromAscii(this.createDate) })
+    return base58.encode(Buffer.from(hash.slice(2), 'hex'))
+  }
+
+  get isEmptySeller() {
+    return this.seller == '0x0000000000000000000000000000000000000000'
   }
 }
 

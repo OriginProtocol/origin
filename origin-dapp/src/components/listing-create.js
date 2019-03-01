@@ -5,7 +5,10 @@ import { Link, Prompt } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
+import queryString from 'query-string'
 
+
+import { originToDAppListing } from 'utils/listing'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
 import { storeWeb3Intent } from 'actions/App'
@@ -25,7 +28,7 @@ import Modal from 'components/modal'
 import Calendar from './calendar'
 
 import { getListing } from 'utils/listing'
-import { prepareSlotsToSave, generateDefaultPricing } from 'utils/calendarHelpers'
+import { generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
@@ -44,7 +47,6 @@ import {
 import origin from '../services/origin'
 
 const { web3 } = origin.contractService
-const enableFractional = process.env.ENABLE_FRACTIONAL === 'true'
 
 class ListingCreate extends Component {
   constructor(props) {
@@ -91,7 +93,11 @@ class ListingCreate extends Component {
       },
       showDetailsFormErrorMsg: false,
       showBoostFormErrorMsg: false,
-      showBoostTutorial: false
+      showBoostTutorial: false,
+      verifyObj: JSON.stringify({ verifyURL: 'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
+        checkArg: 'state',
+        matchValue: 'closed',
+        verifyFee: '100' })
     }
 
     this.state = { ...this.defaultState }
@@ -164,6 +170,16 @@ class ListingCreate extends Component {
   }
 
   async componentDidMount() {
+
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    const showRequestListing = query['showRequestListing']
+
+    if (showRequestListing)
+    {
+      sessionStorage.setItem('showRequestListing', showRequestListing)
+    }
+
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
     if (this.props.listingId) {
       this.props.storeWeb3Intent('edit a listing')
@@ -206,9 +222,14 @@ class ListingCreate extends Component {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
       }
-    } else if (web3.currentProvider.isOrigin || !this.props.messagingEnabled) {
+    } else if (
+      web3.currentProvider.isOrigin ||
+      (this.props.messagingRequired && !this.props.messagingEnabled && !(origin.contractService.walletLinker && origin.contractService.walletLinker.linked))
+    ) {
       if (!origin.contractService.walletLinker) {
         this.props.history.push('/')
+      } else {
+        origin.contractService.showLinkPopUp()
       }
       this.props.storeWeb3Intent('create a listing')
     }
@@ -308,12 +329,12 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(selectedSchemaId) {
+  handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (event.target.value) {
-      schemaFileName = event.target.value
+    if (!selectedSchemaId) {
+      schemaFileName = e.target.value
     }
 
     return fetch(`schemas/${schemaFileName}`)
@@ -372,23 +393,15 @@ class ListingCreate extends Component {
 
     const { properties } = schemaJson
 
-    // TODO(John) - remove enableFractional conditional once fractional usage is enabled by default
-    const isFractionalListing = enableFractional &&
-      properties &&
+    const isFractionalListing = properties &&
       properties.listingType &&
       properties.listingType.const === 'fractional'
 
-    const slotLength = enableFractional &&
-      this.state.formListing.formData.slotLength ?
-      this.state.formListing.formData.slotLength :
-        properties &&
+    const slotLength = properties &&
         properties.slotLength &&
         properties.slotLength.default
 
-    const slotLengthUnit = enableFractional &&
-      this.state.formListing.formData.slotLengthUnit ?
-      this.state.formListing.formData.slotLengthUnit :
-        properties &&
+    const slotLengthUnit = properties &&
         properties.slotLengthUnit &&
         properties.slotLengthUnit.default
 
@@ -411,9 +424,23 @@ class ListingCreate extends Component {
       }
     }
 
+    if (this.state.isEditMode && isFractionalListing) {
+      this.uiSchema = {
+        ...this.uiSchema,
+        ...{
+          weekdayPricing: {
+            'ui:widget': 'hidden'
+          },
+          weekendPricing: {
+            'ui:widget': 'hidden'
+          }
+        }
+      }
+    }
+
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState({
+    this.setState(prevState => ({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -421,16 +448,16 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
+          ...prevState.formListing.formData,
           ...schemaSetValues,
-          ...this.state.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
           slotLength,
-          slotLengthUnit
+          slotLengthUnit,
         }
       }
-    })
+    }))
   }
 
   goToDetailsStep() {
@@ -460,14 +487,12 @@ class ListingCreate extends Component {
         break
     }
 
-    slots = (slots && slots.length && prepareSlotsToSave(slots)) || []
-
     this.setState({
       formListing: {
         ...this.state.formListing,
         formData: {
           ...this.state.formListing.formData,
-          slots
+          availability: slots
         }
       },
       step: this.STEP[nextStep]
@@ -504,7 +529,7 @@ class ListingCreate extends Component {
         [this.STEP.BOOST, 'unit']
 
     if (formListing.formData.weekdayPricing || formListing.formData.weekendPricing) {
-      formListing.formData.slots = generateDefaultPricing(formListing.formData)
+      formListing.formData.availability = generateDefaultPricing(formListing.formData)
     }
 
     formListing.formData.listingType = listingType
@@ -626,6 +651,66 @@ class ListingCreate extends Component {
     window.scrollTo(0, 0)
   }
 
+  async onOfferListing(formListing, verifyData) {
+    const { isEditMode } = this.state
+    this.setState({ step: this.STEP.METAMASK })
+    const listing = dappFormDataToOriginListing(formListing.formData)
+    if (this.props.marketplacePublisher) {
+      listing['marketplacePublisher'] = this.props.marketplacePublisher
+    }
+    if (!isEditMode) {
+      console.log('creating offer listing:', listing, ' verifyData: ', verifyData)
+
+      await origin.marketplace.offerListing(listing, 
+        async (createdListing) => {
+          const {
+            boostValue,
+            isMultiUnit,
+            isFractional,
+            listingType,
+            price,
+            boostRemaining
+          } = await originToDAppListing(createdListing)
+
+          const listingPrice = price
+          const quantity = 1
+          const offerData = {
+            listingId: createdListing.id,
+            listingType: listingType,
+            totalPrice: {
+              amount: listingPrice,
+              currency: 'ETH'
+            },
+            commission: {
+              amount: boostValue.toString(),
+              currency: 'OGN'
+            },
+            // Set the finalization time to ~1 year after the offer is accepted.
+            // This is the window during which the buyer may file a dispute.
+            finalizes: 365 * 24 * 60 * 60
+          }
+
+          if (isFractional) {
+            //TODO: does commission change according to amount of slots bought?
+            //TODO: actually support fractional offering
+          } else if (isMultiUnit) {
+            offerData.unitsPurchased = quantity
+            /* If listing has enough boost remaining, take commission for each unit purchased.
+             * In the case listing has ran out of boost, take up the remaining boost.
+             */
+            offerData.commission.amount = Math.min(boostValue * quantity, boostRemaining).toString()
+          } else {
+            offerData.unitsPurchased = 1
+          }
+          offerData.verifyTerms = verifyData
+          return offerData
+        }
+      )
+      this.setState({ step: this.STEP.SUCCESS })
+      this.props.handleNotificationsSubscription('seller', this.props)
+    }
+  }
+
   async onSubmitListing(formListing) {
     const { isEditMode } = this.state
 
@@ -646,12 +731,25 @@ class ListingCreate extends Component {
           }
         )
       } else {
-        transactionReceipt = await origin.marketplace.createListing(
-          listing,
-          (confirmationCount, transactionReceipt) => {
-            this.props.updateTransaction(confirmationCount, transactionReceipt)
-          }
-        )
+        const account = await origin.contractService.currentAccount()
+        const balance = await web3.eth.getBalance(account)
+        console.log('creating balance:', balance, ' listing: ', listing)
+        if (origin.marketplace.injectPossible && web3.utils.toBN(balance).lte(web3.utils.toBN(0)))
+        {
+          await origin.marketplace.injectListing(listing)
+          this.setState({ step: this.STEP.SUCCESS })
+          this.props.handleNotificationsSubscription('seller', this.props)
+          return
+        }
+        else
+        {
+          transactionReceipt = await origin.marketplace.createListing(
+            listing,
+            (confirmationCount, transactionReceipt) => {
+              this.props.updateTransaction(confirmationCount, transactionReceipt)
+            }
+          )
+        }
       }
 
       const transactionTypeKey = isEditMode ? 'updateListing' : 'createListing'
@@ -978,7 +1076,7 @@ class ListingCreate extends Component {
                         selectedSchemaId === schemaObj.schema ? ' selected' : ''
                       }`}
                       key={schemaObj.schema}
-                      onClick={() => this.handleSchemaSelection(schemaObj.schema)}
+                      onClick={e => this.handleSchemaSelection(e, schemaObj.schema)}
                       ga-category="create_listing"
                       ga-label={ `select_schema_${schemaObj.schema}`}
                     >
@@ -1103,12 +1201,12 @@ class ListingCreate extends Component {
                 </div>
                 <div className="col-md-12 listing-availability">
                   <Calendar
-                    slots={ formData && formData.slots }
+                    slots={formData && formData.availability}
                     userType="seller"
-                    viewType={ fractionalTimeIncrement }
-                    step={ 60 }
-                    onComplete={ (slots) => this.onAvailabilityEntered(slots, 'forward') }
-                    onGoBack={ (slots) => this.onAvailabilityEntered(slots, 'back') }
+                    viewType={fractionalTimeIncrement}
+                    step={60}
+                    onComplete={(slots) => this.onAvailabilityEntered(slots, 'forward')}
+                    onGoBack={(slots) => this.onAvailabilityEntered(slots, 'back')}
                   />
                 </div>
               </Fragment>
@@ -1534,7 +1632,22 @@ class ListingCreate extends Component {
                       defaultMessage={'Done'}
                     />
                   </button>
+
                 </div>
+              {sessionStorage.getItem('showRequestListing') && <div className="d-block">
+                <textarea style={{ width: '100%' }} value={this.state.verifyObj} onChange={ (e) => {this.setState({ verifyObj: e.target.value })}  }/>
+                  <button
+                    className="btn btn-primary float-right btn-listing-create"
+                    onClick={() => this.onOfferListing(formListing, JSON.parse(this.state.verifyObj))}
+                    ga-category="create_listing"
+                    ga-label="review_step_done"
+                  >
+                    <FormattedMessage
+                      id={'listing-create.offerButtonLabel'}
+                      defaultMessage={'I want this'}
+                    />
+                  </button>
+                </div>}
               </div>
             )}
             {step !== this.STEP.AVAILABILITY &&
@@ -1801,6 +1914,7 @@ const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => 
     exchangeRates,
     marketplacePublisher: config.marketplacePublisher,
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     pushNotificationsSupported: activation.notifications.pushEnabled,

@@ -38,12 +38,10 @@ export default {
 
         category
         categoryStr
+        subCategory
         title
         description
         currencyId
-        unitsTotal
-        unitsAvailable
-        unitsSold
         featured
         hidden
         price {
@@ -52,10 +50,25 @@ export default {
         }
         media {
           url
+          urlExpanded
           contentType
         }
         commission
         commissionPerUnit
+        ... on UnitListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
+        }
+        ... on FractionalListing {
+          weekendPrice {
+            amount
+            currency
+          }
+          booked
+          customPricing
+          unavailable
+        }
       }
     `
   },

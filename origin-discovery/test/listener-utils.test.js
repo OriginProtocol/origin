@@ -2,15 +2,22 @@ const chai = require('chai')
 
 const fs = require('fs')
 const db = require('../src/models')
-const { getLastBlock, setLastBlock } = require('../src/listener/utils')
+const {
+  getLastBlock,
+  setLastBlock,
+  checkEventsFreshness
+} = require('../src/listener/utils')
 
 const expect = chai.expect
 
 const continueFile = 'continueTest'
 describe('get/setLastBlock with continue file', () => {
-  afterEach(function () {
+  afterEach(function() {
     if (fs.existsSync(continueFile)) {
-      fs.unlink(continueFile, error => { if (error) console.error(`Error occurred deleting continue file: ${error}`) })
+      fs.unlink(continueFile, error => {
+        if (error)
+          console.error(`Error occurred deleting continue file: ${error}`)
+      })
     }
   })
 
@@ -54,5 +61,29 @@ describe('get/setLastBlock with DB', () => {
     }
     const block = await getLastBlock(config)
     expect(block).to.equal(987)
+  })
+})
+
+describe('checkEventsFreshness', () => {
+  it(`Should not throw`, () => {
+    const blockInfo = {
+      blockNumber: 1,
+      logIndex: 1
+    }
+
+    let events = [{ blockNumber: 2, logIndex: 1 }]
+    expect(() => checkEventsFreshness(events, blockInfo)).to.not.throw()
+
+    events = [{ blockNumber: 1, logIndex: 1 }]
+    expect(() => checkEventsFreshness(events, blockInfo)).to.not.throw()
+  })
+
+  it(`Should throw`, () => {
+    const events = []
+    const blockInfo = {
+      blockNumber: 1,
+      logIndex: 1
+    }
+    expect(() => checkEventsFreshness(events, blockInfo)).to.throw()
   })
 })

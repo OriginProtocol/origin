@@ -1,4 +1,4 @@
-Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.originprotocol.com](https://faucet.originprotocol.com)
+Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is deployed at [faucet.staging.originprotocol.com](https://faucet.staging.originprotocol.com)
 
 ## Code structure
 
@@ -8,16 +8,38 @@ Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is
 
 ## Using the faucet in local environment
 
-### Prerequisite
+You can start the faucet using either docker or lerna.
 
-  Use origin-box to start an origin-js container.
+### Docker
+
+ Use origin-box to start an origin-js container.
 
       docker-compose up origin-js
 
-### Starting the server
-
  Start the server in the origin-js container
 
-     docker exec -w /app/token origin-js node faucet/app.js --network_ids=999
+     docker exec -w /app/token origin-js node src/app.js --network_ids=999
 
-  The server should start and you can point your browser to http://localhost:5000 to access the faucet web UI.
+### Lerna
+
+  Make sure to have Postgres installed and running locally.
+  
+  Run migration files to create the DB tables.
+  
+        export DATABASE_URL=postgres://origin:origin@localhost/origin
+        lerna run migrate --scope origin-faucet 
+
+  Bootstrap lerna
+  
+        lerna bootstrap
+        
+  Start a local blockchain
+  
+        lerna run start --scope origin --stream
+        
+  Start the faucet server
+  
+        lerna run start --scope origin-faucet --stream
+        
+ ### Access the faucet
+   The server should start and you can point your browser to http://localhost:5000 to access the faucet web UI.

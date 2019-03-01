@@ -1,4 +1,5 @@
 import { Route, Switch } from 'react-router-dom'
+import { Web3Provider } from 'react-web3'
 import { baseConfig } from 'origin-dapp/src/config'
 import React from 'react'
 import superagent from 'superagent'
@@ -6,15 +7,17 @@ import superagent from 'superagent'
 import Create from 'pages/Create'
 import Customize from 'pages/Customize'
 import Configure from 'pages/Configure'
+import MetaMaskRequirement from 'pages/MetaMaskRequirement'
 import MetaMaskPrompt from 'pages/MetaMaskPrompt'
 import Resolver from 'pages/Resolver'
-import Steps from 'components/Steps'
+import StepsContainer from 'components/StepsContainer'
 import Success from 'pages/Success'
+import CustomDomainInstructions from 'pages/CustomDomainInstructions'
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class App extends React.Component {
-  constructor (props, context) {
+  constructor(props, context) {
     super(props)
 
     this.web3Context = context.web3
@@ -22,11 +25,13 @@ class App extends React.Component {
     this.state = {
       config: store.get('creator-config', {
         ...baseConfig,
-        marketplacePublisher: web3.eth.accounts[0]
-      })
+        marketplacePublisher: ''
+      }),
+      publishedIpfsHash: null
     }
 
     this.handlePublish = this.handlePublish.bind(this)
+    this.onWeb3AccountChange = this.onWeb3AccountChange.bind(this)
     this.setConfig = this.setConfig.bind(this)
     this.signConfig = this.signConfig.bind(this)
   }
@@ -36,20 +41,55 @@ class App extends React.Component {
     this.setState({ config })
   }
 
-  signConfig () {
+  signConfig() {
     if (this.state.config.subdomain) {
       // Generate a valid signature if a subdomain is in use
-      const dataToSign = JSON.stringify(this.state.config)
-      return this.web3Sign(dataToSign, web3.eth.accounts[0])
+      return this.web3Sign(
+        'I would like to publish an Origin marketplace.',
+        web3.eth.accounts[0]
+      )
     }
   }
 
-  async handlePublish (signature) {
-    return superagent.post(`${process.env.DAPP_CREATOR_API_URL}/config`)
+  onWeb3AccountChange(nextAddress) {
+    // Update listings filters if exists
+    if (
+      this.state.config.filters.listings &&
+      this.state.config.filters.listings.marketplacePublisher
+    ) {
+      this.setState({
+        config: {
+          ...this.state.config,
+          filters: {
+            ...this.state.config.filters,
+            listings: {
+              ...this.state.config.filters.listings,
+              marketplacePublisher: nextAddress
+            }
+          }
+        }
+      })
+    }
+  }
+
+  async handlePublish(signature) {
+    // Set the marketplacePublisher field to the current account
+    this.setState({
+      config: {
+        ...this.state.config,
+        marketplacePublisher: web3.eth.accounts[0]
+      }
+    })
+    // Post to API
+    return superagent
+      .post(`${process.env.DAPP_CREATOR_API_URL}/config`)
       .send({
         config: this.state.config,
         signature: signature,
         address: web3.eth.accounts[0]
+      })
+      .then(response => {
+        this.setState({ publishedIpfsHash: response.text })
       })
   }
 
@@ -67,13 +107,17 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
+      <Web3Provider
+        onChangeAccount={this.onWeb3AccountChange}
+        accountUnavailableScreen={MetaMaskRequirement}
+        web3UnavailableScreen={MetaMaskRequirement}
+      >
         <div className="logo">
           <img src="images/origin-logo.svg" className="logo" />
         </div>
 
         <div className="main">
-          <Steps  />
+          <StepsContainer />
 
           <div className="form">
             <Switch>
@@ -116,16 +160,18 @@ class App extends React.Component {
               />
               <Route
                 path="/resolver"
-                render={() => (
-                  <Resolver
-                    config={this.state.config}
-                  />
-                )}
+                render={() => <Resolver config={this.state.config} />}
               />
               <Route
                 path="/success"
+                render={() => <Success config={this.state.config} />}
+              />
+              <Route
+                path="/customdomain"
                 render={() => (
-                  <Success config={this.state.config} />
+                  <CustomDomainInstructions
+                    publishedIpfsHash={this.state.publishedIpfsHash}
+                  />
                 )}
               />
             </Switch>
@@ -133,9 +179,9 @@ class App extends React.Component {
         </div>
 
         <div className="copyright">
-          &copy;2017 Origin Protocol LLC
+          &copy;{new Date().getFullYear()} Origin Protocol Inc.
         </div>
-      </>
+      </Web3Provider>
     )
   }
 }

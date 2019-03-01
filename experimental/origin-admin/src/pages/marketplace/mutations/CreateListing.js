@@ -13,7 +13,8 @@ import {
   HTMLSelect,
   Slider,
   Checkbox,
-  TextArea
+  TextArea,
+  Tag
 } from '@blueprintjs/core'
 
 import rnd from 'utils/rnd'
@@ -50,6 +51,9 @@ class CreateListing extends Component {
       const media = props.listing.media || []
       const category = props.listing.category || 'schema.forSale'
       const subCategory = get(Categories[category], `0.0`, '')
+      const commissionPerUnit = props.listing.commissionPerUnit
+        ? web3.utils.fromWei(props.listing.commissionPerUnit, 'ether')
+        : '0'
 
       this.state = {
         title: props.listing.title || '',
@@ -63,12 +67,13 @@ class CreateListing extends Component {
         autoApprove: true,
         media,
         initialMedia: media,
-        unitsTotal: props.listing.unitsTotal
+        unitsTotal: props.listing.unitsTotal,
+        commissionPerUnit
       }
     } else {
       this.state = {
         title: '',
-        currency: '0x0000000000000000000000000000000000000000',
+        currency: 'ETH',
         price: '0.1',
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
@@ -79,7 +84,8 @@ class CreateListing extends Component {
         autoApprove: true,
         media: [],
         initialMedia: [],
-        unitsTotal: 1
+        unitsTotal: 1,
+        commissionPerUnit: 5
       }
     }
   }
@@ -93,11 +99,11 @@ class CreateListing extends Component {
     const currencyOpts = [
       {
         label: 'ETH',
-        value: '0x0000000000000000000000000000000000000000'
+        value: 'ETH'
       },
       ...this.props.tokens.map(token => ({
         label: token.symbol,
-        value: token.id
+        value: token.symbol
       }))
     ]
 
@@ -167,7 +173,7 @@ class CreateListing extends Component {
                     />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 2, marginRight: 20 }}>
+                <div style={{ flex: 2 }}>
                   <FormGroup label="Sub-Category">
                     <HTMLSelect
                       fill={true}
@@ -179,11 +185,6 @@ class CreateListing extends Component {
                         })
                       )}
                     />
-                  </FormGroup>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Units">
-                    <InputGroup {...input('unitsTotal')} />
                   </FormGroup>
                 </div>
               </div>
@@ -204,7 +205,7 @@ class CreateListing extends Component {
                 />
               </FormGroup>
               <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1.5, marginRight: 20 }}>
+                <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Price">
                     <ControlGroup fill={true}>
                       <InputGroup {...input('price')} />
@@ -216,7 +217,14 @@ class CreateListing extends Component {
                     </ControlGroup>
                   </FormGroup>
                 </div>
-
+                <div style={{ flex: 1 }}>
+                  <FormGroup label="Units">
+                    <InputGroup {...input('unitsTotal')} />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1 }} />
+              </div>
+              <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1, marginRight: 30, padding: '0 5px' }}>
                   <FormGroup label="Deposit" labelInfo="(OGN)">
                     <Slider
@@ -227,6 +235,14 @@ class CreateListing extends Component {
                       labelStepSize={25}
                       onChange={deposit => this.setState({ deposit })}
                       value={this.state.deposit}
+                    />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Com/Unit">
+                    <InputGroup
+                      {...input('commissionPerUnit')}
+                      rightElement={<Tag minimal={true}>OGN</Tag>}
                     />
                   </FormGroup>
                 </div>
@@ -307,7 +323,9 @@ class CreateListing extends Component {
       description: egListing.description,
       media: egListing.media,
       initialMedia: egListing.media,
-      unitsTotal: egListing.unitsTotal
+      unitsTotal: egListing.unitsTotal,
+      commission: egListing.commission || '2',
+      commissionPerUnit: egListing.commissionPerUnit || '2'
     })
   }
 
@@ -324,7 +342,9 @@ class CreateListing extends Component {
           price: { currency: this.state.currency, amount: this.state.price },
           category: this.state.category,
           subCategory: this.state.subCategory,
-          media: this.state.media,
+          media: this.state.media
+        },
+        unitData: {
           unitsTotal: Number(this.state.unitsTotal)
         }
       }
@@ -345,7 +365,9 @@ class CreateListing extends Component {
           category: this.state.category,
           subCategory: this.state.subCategory,
           media: this.state.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(this.state.unitsTotal)
+          unitsTotal: Number(this.state.unitsTotal),
+          commission: String(this.state.deposit) || '0',
+          commissionPerUnit: String(this.state.commissionPerUnit) || '0'
         }
       }
     }

@@ -1,5 +1,8 @@
+import contracts from '../../contracts'
+
 export default async (_, args) => {
   return new Promise(resolve => {
+    const web3 = contracts.web3
     const wallet = web3.eth.accounts.wallet[args.address]
     let privateKeys = []
     try {

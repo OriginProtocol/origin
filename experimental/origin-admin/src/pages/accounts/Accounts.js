@@ -7,6 +7,7 @@ import { Button } from '@blueprintjs/core'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import NodeAccounts from './_NodeAccounts'
+import Toaster from '../Toaster'
 import CreateWallet from './mutations/CreateWallet'
 
 import Contracts from '../contracts/Contracts'
@@ -21,6 +22,24 @@ const SetNetworkMutation = gql`
     setNetwork(network: $network)
   }
 `
+
+function updateTruffle() {
+  fetch('/update-truffle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      marketplace: localStorage.marketplaceContract,
+      token: localStorage.OGNContract
+    })
+  }).then(() => {
+    Toaster.show({
+      icon: 'tick',
+      intent: 'success',
+      message: 'Truffle contracts updated',
+      timeout: 2000
+    })
+  })
+}
 
 const Accounts = props => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
@@ -75,23 +94,41 @@ const Accounts = props => (
           />
           <Button
             style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
+            onClick={() => updateTruffle()}
+            text="Update Truffle"
+          />
+          <Button
+            style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
             icon="refresh"
             onClick={() => refetch()}
           />
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
           <Contracts />
           <hr style={{ marginTop: '1.5rem', marginBottom: '1rem' }} />
-          Paste into dapp console:
-          <pre>
-          {`localStorage.clear()\n`}
-          {`sessionStorage.clear()\n`}
-          {`localStorage.OGNContract = "${localStorage.OGNContract}"\n`}
-          {`localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n`}
-          {`localStorage.userRegistryContract = "${localStorage.userRegistryContract}"\n`}
-          {`localStorage.KeyHolderLibrary = "${localStorage.KeyHolderLibrary}"\n`}
-          {`localStorage.ClaimHolderLibrary = "${localStorage.ClaimHolderLibrary}"\n`}
-          {`location.reload()\n`}
-          </pre>
+          <div>Paste into dapp console:</div>
+          <textarea
+            readOnly
+            style={{
+              height: '100px',
+              width: '100%',
+              fontFamily: 'Roboto, monospace',
+              display: 'table-caption',
+              overflowY: 'scroll'
+            }}
+            onClick={e => e.target.select()}
+            value={
+              `localStorage.clear()\n` +
+              `sessionStorage.clear()\n` +
+              `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
+              `localStorage.marketplaceContract = "${
+                localStorage.marketplaceContract
+              }"\n` +
+              `localStorage.identityEventsContract = "${
+                localStorage.identityEventsContract
+              }"\n` +
+              `location.reload()\n`
+            }
+          />
         </div>
       )
     }}

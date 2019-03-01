@@ -4,9 +4,12 @@ import pick from 'lodash/pick'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
-import Price from 'components/Price'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
+
+import UnitListing from './listing-types/Unit'
+import HomeShareListing from './listing-types/HomeShare'
+import AnnouncementListing from './listing-types/Announcement'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -28,11 +31,23 @@ class Step2 extends Component {
   render() {
     const prefix =
       this.props.mode === 'edit'
-        ? `/listings/${this.props.listingId}/edit`
+        ? `/listing/${this.props.listingId}/edit`
         : '/create'
 
+    let ListingType = UnitListing
+    if (this.state.__typename === 'FractionalListing') {
+      ListingType = HomeShareListing
+    } else if (this.state.__typename === 'AnnouncementListing') {
+      ListingType = AnnouncementListing
+    }
+    const isFractional = this.state.__typename === 'FractionalListing'
+
     if (this.state.valid) {
-      return <Redirect to={`${prefix}/step-3`} push />
+      if (isFractional) {
+        return <Redirect to={`${prefix}/availability`} push />
+      } else {
+        return <Redirect to={`${prefix}/boost`} push />
+      }
     } else if (!this.state.subCategory) {
       return <Redirect to={`${prefix}/step-1`} />
     }
@@ -47,7 +62,7 @@ class Step2 extends Component {
             <div className="wrap">
               <div className="step">Step 2</div>
               <div className="step-description">Provide listing details</div>
-              <Steps steps={3} step={2} />
+              <Steps steps={isFractional ? 4 : 3} step={2} />
 
               <form
                 onSubmit={e => {
@@ -62,67 +77,40 @@ class Step2 extends Component {
                 )}
                 <div className="form-group">
                   <label>Title</label>
-                  <input
-                    {...input('title')}
-                    placeholder="This is the title of your listing"
-                    ref={r => (this.titleInput = r)}
-                  />
+                  <input {...input('title')} ref={r => (this.titleInput = r)} />
                   {Feedback('title')}
                 </div>
                 <div className="form-group">
                   <label className="mb-0">Description</label>
-                  <div className="help-text">
-                    Make sure to include any product variant details here. Learn
-                    more
-                  </div>
-                  <textarea
-                    {...input('description')}
-                    placeholder="Tell us a bit about this listing"
-                  />
+                  <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
+
+                <ListingType
+                  listing={this.state}
+                  onChange={state => this.setState(state)}
+                />
+
                 <div className="form-group">
-                  <label>Quantity</label>
-                  <input
-                    {...input('quantity')}
-                    placeholder="How many are you selling?"
-                  />
-                  {Feedback('quantity')}
-                </div>
-                <div className="form-group">
-                  <label>Price</label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
-                    </div>
-                  </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    The cost to buy this listing. Price is always in ETH, USD is
-                    an estimate.
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Add Photos</label>
+                  <label>Select photos</label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
                   >
-                    <div className="add-photos">Add photo</div>
+                    <div className="add-photos">Select photos</div>
                   </ImagePicker>
+                  <ul className="help-text photo-help list-unstyled">
+                    <li>
+                      Hold down &apos;command&apos; (⌘) to select multiple
+                      images.
+                    </li>
+                    <li>Maximum 10 images per listing.</li>
+                    <li>
+                      First image will be featured - drag and drop images to
+                      reorder.
+                    </li>
+                    <li>Recommended aspect ratio is 4:3</li>
+                  </ul>
                 </div>
 
                 <div className="actions">
@@ -137,7 +125,7 @@ class Step2 extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <Wallet />
           <div className="gray-box">
             <h5>Add Listing Details</h5>
@@ -165,20 +153,32 @@ class Step2 extends Component {
       newState.descriptionError = 'Description is too short'
     }
 
-    if (!this.state.quantity) {
-      newState.quantityError = 'Quantity is required'
-    } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
-      newState.quantityError = 'Quantity must be a number'
-    } else if (Number(this.state.quantity) <= 0) {
-      newState.quantityError = 'Quantity must be greater than zero'
+    if (this.state.__typename !== 'AnnouncementListing') {
+      if (!this.state.price) {
+        newState.priceError = 'Price is required'
+      } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
+        newState.priceError = 'Price must be a number'
+      } else if (Number(this.state.price) <= 0) {
+        newState.priceError = 'Price must be greater than zero'
+      }
     }
 
-    if (!this.state.price) {
-      newState.priceError = 'Price is required'
-    } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
-      newState.priceError = 'Price must be a number'
-    } else if (Number(this.state.price) <= 0) {
-      newState.priceError = 'Price must be greater than zero'
+    if (this.state.__typename === 'UnitListing') {
+      if (!this.state.quantity) {
+        newState.quantityError = 'Quantity is required'
+      } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
+        newState.quantityError = 'Quantity must be a number'
+      } else if (Number(this.state.quantity) <= 0) {
+        newState.quantityError = 'Quantity must be greater than zero'
+      }
+    } else if (this.state.__typename === 'FractionalListing') {
+      if (!this.state.weekendPrice) {
+        newState.weekendPriceError = 'Price is required'
+      } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
+        newState.weekendPriceError = 'Price must be a number'
+      } else if (Number(this.state.weekendPrice) <= 0) {
+        newState.weekendPriceError = 'Price must be greater than zero'
+      }
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -210,6 +210,7 @@ require('react-styl')(`
       font-size: 18px;
       &.is-invalid
         border-color: #dc3545
+        background-image: none
       &::-webkit-input-placeholder
         color: var(--bluey-grey)
         font-size: 18px;
@@ -249,15 +250,9 @@ require('react-styl')(`
       &.price
         color: var(--bluey-grey)
         margin-top: 0.5rem
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+      &.photo-help
+        font-weight: 300
+
   .with-symbol
     position: relative
     &.corner::before
@@ -298,7 +293,11 @@ require('react-styl')(`
       &.eth
         padding-left: 1.75rem
         color: var(--bluish-purple)
-        background-image: url(/images/eth-icon.svg)
+        background-image: url(images/eth-icon.svg)
+      &.ogn
+        padding-left: 1.75rem
+        color: var(--clear-blue)
+        background-image: url(images/ogn-icon.svg)
       &.usd
         &::before
           content: "$"

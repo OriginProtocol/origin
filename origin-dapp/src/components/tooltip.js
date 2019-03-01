@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import TooltipBS from 'react-bootstrap/lib/Tooltip'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import TooltipBS from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 let counter = 0
 

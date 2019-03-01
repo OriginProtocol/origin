@@ -23,7 +23,6 @@ const env = {
   CONTRACT_ADDRESSES: '{}',
   DEPLOY_TAG: false,
   DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
-  ENABLE_FRACTIONAL: false,
   ENABLE_PERFORMANCE_MODE: false,
   ETH_NETWORK_ID: null,
   FORCE_HTTPS: false,

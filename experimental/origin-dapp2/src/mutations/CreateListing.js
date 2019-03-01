@@ -2,18 +2,22 @@ import gql from 'graphql-tag'
 
 export default gql`
   mutation CreateListing(
+    $from: String!
     $deposit: String
     $depositManager: String
-    $from: String
-    $data: NewListingInput
     $autoApprove: Boolean
+    $data: ListingInput!
+    $unitData: UnitListingInput
+    $fractionalData: FractionalListingInput
   ) {
     createListing(
+      from: $from
       deposit: $deposit
       depositManager: $depositManager
-      from: $from
-      data: $data
       autoApprove: $autoApprove
+      data: $data
+      unitData: $unitData
+      fractionalData: $fractionalData
     ) {
       id
     }

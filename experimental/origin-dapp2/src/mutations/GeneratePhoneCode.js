@@ -6,11 +6,7 @@ export default gql`
     $method: String
     $phone: String!
   ) {
-    generatePhoneCode(
-      prefix: $prefix
-      method: $method
-      phone: $phone
-    ) {
+    generatePhoneCode(prefix: $prefix, method: $method, phone: $phone) {
       success
       reason
     }

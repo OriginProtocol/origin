@@ -1,7 +1,7 @@
 import React from 'react'
 
 class Help extends React.Component {
-  render () {
+  render() {
     return (
       <>
         {/*
@@ -14,10 +14,17 @@ class Help extends React.Component {
         <p>You should have received an IPFS hash for your configuration during creation process.</p>
         */}
         <h2>Troubleshooting</h2>
-        <h3>My subdomain is not working</h3>
-        <p>Subdomains rely on DNS, and changes to DNS can take some time to propagate.</p>
-        <h3>I am having another problem</h3>
-        <p>Our #engineering channel on our <a href="https://discord.gg/jyxpUSe">Discord server</a> is full of helpful engineers.</p>
+        <h3>My subdomain is not working.</h3>
+        <p>
+          Subdomains rely on DNS, and changes to DNS can take some time to
+          propagate.
+        </p>
+        <h3>I am having another problem.</h3>
+        <p>
+          Our #engineering channel on our{' '}
+          <a href="https://discord.gg/jyxpUSe">Discord server</a> is full of
+          helpful engineers.
+        </p>
       </>
     )
   }

@@ -131,20 +131,32 @@ export const DeployIdentityContractMutation = gql`
   }
 `
 
+export const DeployIdentityEventsContractMutation = gql`
+  mutation DeployIdentityEventsContract($from: String!) {
+    deployIdentityEvents(from: $from) {
+      id
+    }
+  }
+`
+
 export const CreateListingMutation = gql`
   mutation CreateListing(
+    $from: String!
     $deposit: String
     $depositManager: String
-    $from: String
-    $data: NewListingInput
     $autoApprove: Boolean
+    $data: ListingInput!
+    $unitData: UnitListingInput
+    $fractionalData: FractionalListingInput
   ) {
     createListing(
+      from: $from
       deposit: $deposit
       depositManager: $depositManager
-      from: $from
-      data: $data
       autoApprove: $autoApprove
+      data: $data
+      unitData: $unitData
+      fractionalData: $fractionalData
     ) {
       id
     }
@@ -153,18 +165,22 @@ export const CreateListingMutation = gql`
 
 export const UpdateListingMutation = gql`
   mutation UpdateListing(
-    $listingID: String!
+    $listingID: ID!
+    $from: String!
     $additionalDeposit: String
-    $from: String
-    $data: NewListingInput
     $autoApprove: Boolean
+    $data: ListingInput!
+    $unitData: UnitListingInput
+    $fractionalData: FractionalListingInput
   ) {
     updateListing(
       listingID: $listingID
-      additionalDeposit: $additionalDeposit
       from: $from
-      data: $data
+      additionalDeposit: $additionalDeposit
       autoApprove: $autoApprove
+      data: $data
+      unitData: $unitData
+      fractionalData: $fractionalData
     ) {
       id
     }
@@ -316,7 +332,7 @@ export const DeployIdentityMutation = gql`
   mutation DeployIdentity(
     $from: String!
     $profile: ProfileInput
-    $attestations: [AttestationInput]
+    $attestations: [String]
   ) {
     deployIdentity(
       from: $from

@@ -20,6 +20,7 @@ import {
 
 import { PendingBadge, SoldBadge, FeaturedBadge } from 'components/badges'
 import Calendar from 'components/calendar'
+import { getTotalPriceFromJCal } from 'utils/calendarHelpers'
 import Modal from 'components/modal'
 import { ProcessingModal, ProviderModal } from 'components/modals/wait-modals'
 import SelectNumberField from 'components/form-widgets/select-number-field'
@@ -27,7 +28,6 @@ import Reviews from 'components/reviews'
 import UserCard from 'components/user-card'
 import PicturesThumbPreview from 'components/pictures-thumb-preview'
 
-import { prepareSlotsToSave } from 'utils/calendarHelpers'
 import getCurrentProvider from 'utils/getCurrentProvider'
 import { getListing, transformPurchasesOrSales, getDerivedListingData } from 'utils/listing'
 import { offerStatusToListingAvailability } from 'utils/offer'
@@ -140,9 +140,9 @@ class ListingsDetail extends Component {
     if (
       !web3.currentProvider.isOrigin &&
       !origin.contractService.walletLinker &&
-      !this.props.messagingEnabled
+      (this.props.messagingRequired && !this.props.messagingEnabled)
     ) {
-       return
+      return
     }
 
     if ((!web3.currentProvider.isOrigin && this.props.wallet.address) || origin.contractService.walletLinker) {
@@ -157,10 +157,10 @@ class ListingsDetail extends Component {
 
     this.setState({ step: this.STEP.METAMASK })
 
-    const slots = slotsToReserve || this.state.slotsToReserve
+    const jCal = slotsToReserve || this.state.slotsToReserve
     let listingPrice = price
     if (isFractional) {
-      const rawPrice = slots.reduce((totalPrice, nextPrice) => totalPrice + nextPrice.price, 0).toString()
+      const rawPrice = getTotalPriceFromJCal(jCal)
       listingPrice = `${Number(rawPrice).toLocaleString(undefined, {
           minimumFractionDigits: 5,
           maximumFractionDigits: 5
@@ -188,7 +188,7 @@ class ListingsDetail extends Component {
 
       if (isFractional) {
         //TODO: does commission change according to amount of slots bought?
-        offerData.slots = prepareSlotsToSave(slots)
+        offerData.timeSlots = jCal
       } else if (isMultiUnit) {
         offerData.unitsPurchased = quantity
         /* If listing has enough boost remaining, take commission for each unit purchased.
@@ -370,7 +370,7 @@ class ListingsDetail extends Component {
       pictures,
       price,
       seller,
-      slots,
+      availability,
       unitsRemaining,
       unitsSold,
       unitsPending,
@@ -392,6 +392,7 @@ class ListingsDetail extends Component {
       userIsSeller,
       showRemainingBoost
     } = getDerivedListingData(listing, wallet.address)
+    const isOfferListing = !isSold && (listing.seller && web3.utils.toBN(listing.seller) == 0)
 
     // only expose where user is a buyer or a seller
     let offerToExpose = undefined
@@ -858,7 +859,20 @@ class ListingsDetail extends Component {
                           />
                         )}
                       </div>
-                      <Link
+                      {isOfferListing && <button
+                        onClick={async ()=> { 
+                          const offer = listing.offers[0]
+
+                          const acceptance = await origin.marketplace.signAcceptOffer(offer.id)
+                          const buyer = web3.utils.toChecksumAddress(offer.buyer)
+                          console.log('sending message to:', buyer)
+                          await origin.messaging.sendConvMessage(buyer, { content: 'Hey I want to do this!', acceptance,
+                            listingId: offer.listingId })}
+                      }
+                      >
+                        Send Signed Offer
+                      </button> }
+                      {!isOfferListing && <Link
                         to="/"
                         ga-category="listing"
                         ga-label="view_listings"
@@ -867,7 +881,7 @@ class ListingsDetail extends Component {
                           id={'listing-detail.viewListings'}
                           defaultMessage={'View Listings'}
                         />
-                      </Link>
+                      </Link> }
                     </Fragment>
                   )}
                   {userIsBuyerOffer !== undefined && (
@@ -980,7 +994,7 @@ class ListingsDetail extends Component {
             {!loading && isFractional &&
               <div className="col-12">
                 <Calendar
-                  slots={slots}
+                  slots={availability}
                   offers={offers}
                   userType="buyer"
                   userIsSeller={userIsSeller}
@@ -1010,6 +1024,7 @@ class ListingsDetail extends Component {
 const mapStateToProps = ({ activation, app, profile, wallet }) => {
   return {
     messagingEnabled: activation.messaging.enabled,
+    messagingRequired: app.messagingRequired,
     notificationsHardPermission: activation.notifications.permissions.hard,
     notificationsSoftPermission: activation.notifications.permissions.soft,
     profile,

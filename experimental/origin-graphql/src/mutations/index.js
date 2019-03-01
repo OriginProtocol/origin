@@ -6,6 +6,7 @@ import sendFromWallet from './web3/sendFromWallet'
 import sendFromNode from './web3/sendFromNode'
 import setActiveWallet from './web3/setActiveWallet'
 import setNetwork from './web3/setNetwork'
+import signMessage from './web3/signMessage'
 import toggleMetaMask from './web3/toggleMetaMask'
 
 import acceptOffer from './marketplace/acceptOffer'
@@ -25,15 +26,15 @@ import withdrawOffer from './marketplace/withdrawOffer'
 
 import enableMessaging from './messaging/enableMessaging'
 import sendMessage from './messaging/sendMessage'
+import markConversationRead from './messaging/markConversationRead'
 
 import deployToken from './token/deployToken'
 import transferToken from './token/transferToken'
 import updateTokenAllowance from './token/updateTokenAllowance'
+import useFaucet from './token/useFaucet'
 
-import deployUserRegistry from './identity/deployUserRegistry'
-import deployIdentityContract from './identity/deployIdentityContract'
 import deployIdentity from './identity/deployIdentity'
-import updateIdentity from './identity/updateIdentity'
+import deployIdentityEvents from './identity/deployIdentityEvents'
 
 import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
@@ -44,46 +45,50 @@ import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
+import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
+
 export default {
-  addAffiliate,
   acceptOffer,
+  addAffiliate,
+  addData,
   addFunds,
-  updateRefund,
   createListing,
   createWallet,
-  importWallet,
-  importWallets,
+  deployIdentity,
+  deployIdentityEvents,
   deployMarketplace,
   deployToken,
+  disputeOffer,
+  enableMessaging,
   executeRuling,
   finalizeOffer,
-  disputeOffer,
+  generateAirbnbCode,
+  generateEmailCode,
+  generatePhoneCode,
+  importWallet,
+  importWallets,
   makeOffer,
+  markConversationRead,
   removeWallet,
   sendFromNode,
   sendFromWallet,
-  setActiveWallet,
-  transferToken,
-  updateTokenAllowance,
-  withdrawOffer,
-  withdrawListing,
-  addData,
-  updateListing,
-  setNetwork,
-  toggleMetaMask,
-  enableMessaging,
   sendMessage,
-  deployUserRegistry,
-  deployIdentityContract,
-  deployIdentity,
-  updateIdentity,
-  generatePhoneCode,
-  verifyPhoneCode,
-  generateEmailCode,
+  setActiveWallet,
+  setNetwork,
+  signMessage,
+  toggleMetaMask,
+  transferToken,
+  unlinkMobileWallet,
+  updateListing,
+  updateRefund,
+  updateTokenAllowance,
+  useFaucet,
+  verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyPhoneCode,
   verifyTwitter,
-  generateAirbnbCode,
-  verifyAirbnbCode,
+  withdrawListing,
+  withdrawOffer,
   refetch: () => true
 }

@@ -4,6 +4,7 @@
 
 import gql from 'graphql-tag'
 import config from './contracts'
+import get from 'lodash/get'
 
 const GetMetaMaskStateQuery = gql`
   query GetMetaMaskState {
@@ -22,20 +23,29 @@ const GetMetaMaskStateQuery = gql`
           eth
         }
       }
+      primaryAccount {
+        id
+        checksumAddress
+        balance {
+          eth
+        }
+      }
+      walletType
     }
   }
 `
 
 export default function(client) {
-  if (config.metaMask && config.metaMask.currentProvider) {
-    // config.metaMask.currentProvider.publicConfigStore.on('controllerConnectionChanged', () => {
+  const configStore = get(config, 'metaMask.currentProvider.publicConfigStore')
+  if (configStore) {
+    // configStore.on('controllerConnectionChanged', () => {
     //   console.log("MM End")
     // })
-    // config.metaMask.currentProvider.publicConfigStore.on('notification', () => {
+    // configStore.on('notification', () => {
     //   console.log("MM Notification")
     // })
     let currentState
-    config.metaMask.currentProvider.publicConfigStore.on('update', state => {
+    configStore.on('update', state => {
       // console.log("MM Update", ok)
       if (currentState === JSON.stringify(state)) {
         return

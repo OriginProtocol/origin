@@ -84,11 +84,13 @@ steps:
         docker build \
           -f deployment/dockerfiles/${_CONTAINER} \
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
-          --build-arg DEPLOY_TAG=${SHORT_SHA} \
+          --build-arg GIT_COMMIT_HASH=${SHORT_SHA} \
+          --build-arg GIT_BRANCH=${BRANCH_NAME} \
           --build-arg ENVKEY=$${_ENVKEY} \
+          --build-arg NAMESPACE=$(cat .namespace) \
           .
 
-  # Push the origin-dapp container image
+  # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:

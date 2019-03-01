@@ -4,7 +4,7 @@ export default gql`
   query Config {
     config
     configObj {
-      affilliate
+      affiliate
       arbitrator
       discovery
       bridge

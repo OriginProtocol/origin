@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 import { Route, HashRouter } from 'react-router-dom'
-import { Web3Provider } from 'react-web3'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Styl from 'react-styl'
@@ -17,13 +16,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 class AppWrapper extends React.Component {
-  render () {
+  render() {
     return (
-      <Web3Provider>
-        <HashRouter>
-          <Route component={App} />
-        </HashRouter>
-      </Web3Provider>
+      <HashRouter>
+        <Route component={App} />
+      </HashRouter>
     )
   }
 }

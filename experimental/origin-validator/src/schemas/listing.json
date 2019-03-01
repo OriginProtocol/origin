@@ -14,10 +14,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "currency",
-        "amount"
-      ]
+      "required": ["currency", "amount"]
     },
     "media": {
       "type": "object",
@@ -42,23 +39,14 @@
               "type": "integer"
             }
           },
-          "required": [
-            "height",
-            "width"
-          ]
+          "required": ["height", "width"]
         }
       },
-      "required": [
-        "url"
-      ]
+      "required": ["url"]
     },
     "timeSlot": {
       "type": "object",
-      "required": [
-        "startDate",
-        "endDate",
-        "isAvailable"
-      ],
+      "required": ["startDate", "endDate", "isAvailable"],
       "properties": {
         "startDate": {
           "type": "string",
@@ -75,51 +63,44 @@
           "$ref": "#/definitions/money"
         }
       },
-      "required": [
-        "startDate",
-        "endDate",
-        "isAvailable",
-        "price"
-      ]
+      "required": ["startDate", "endDate", "isAvailable", "price"]
     },
     "unitListing": {
       "type": "object",
       "properties": {
+        "listingType": { "enum": ["unit"] },
         "unitsTotal": {
           "type": "integer"
-        },
-        "price": {
-          "$ref": "#/definitions/money"
-        },
-        "commissionPerUnit": {
-          "$ref": "#/definitions/money"
         }
       },
-      "required": [
-        "unitsTotal",
-        "price"
-      ]
+      "required": ["unitsTotal"]
     },
     "fractionalListing": {
       "type": "object",
       "properties": {
-        "timeIncrement": {
-          "type": "string"
+        "listingType": { "enum": ["fractional"] },
+        "weekendPrice": {
+          "$ref": "#/definitions/money"
         },
-        "calendarStep": {
-          "type": "string"
-        },
-        "slots": {
+        "unavailable": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/timeSlot"
+            "type": "string"
+          }
+        },
+        "customPricing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "booked": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
-      },
-      "required": [
-        "calendarStep",
-        "slots"
-      ]
+      }
     }
   },
   "type": "object",
@@ -146,23 +127,29 @@
       "minLength": 10,
       "maxLength": 1024
     },
+    "marketplacePublisher": {
+      "type": "string"
+    },
     "media": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/media"
       }
     },
+    "price": {
+      "$ref": "#/definitions/money"
+    },
     "commission": {
+      "$ref": "#/definitions/money"
+    },
+    "commissionPerUnit": {
       "$ref": "#/definitions/money"
     }
   },
   "listingType": {
-    "enum": [
-      "unit",
-      "fractional"
-    ]
+    "enum": ["unit", "fractional"]
   },
-  "oneOf": [
+  "anyOf": [
     {
       "$ref": "#/definitions/unitListing"
     },
@@ -177,6 +164,7 @@
     "subCategory",
     "language",
     "title",
-    "description"
+    "description",
+    "price"
   ]
 }

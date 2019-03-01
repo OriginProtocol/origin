@@ -47,134 +47,134 @@ const listingSchemaMetadata = {
         translationName: {
           id: 'schema.activities',
           defaultMessage: 'Activities'
-        },
+        }
       },
       {
         schema: 'announcements-artists_1.0.0.json',
         translationName: {
           id: 'schema.artists',
           defaultMessage: 'Artists'
-        },
+        }
       },
       {
         schema: 'announcements-barter_1.0.0.json',
         translationName: {
           id: 'schema.barter',
           defaultMessage: 'Barter'
-        },
+        }
       },
       {
         schema: 'announcements-childcare_1.0.0.json',
         translationName: {
           id: 'schema.childcare',
           defaultMessage: 'Childcare'
-        },
+        }
       },
       {
         schema: 'announcements-classes_1.0.0.json',
         translationName: {
           id: 'schema.classes',
           defaultMessage: 'Classes'
-        },
+        }
       },
       {
         schema: 'announcements-freeStuff_1.0.0.json',
         translationName: {
           id: 'schema.freeStuff',
           defaultMessage: 'Free Stuff'
-        },
+        }
       },
       {
         schema: 'announcements-garageMovingSales_1.0.0.json',
         translationName: {
           id: 'schema.garageMovingSales',
           defaultMessage: 'Garage and Moving Sales'
-        },
+        }
       },
       {
         schema: 'announcements-general_1.0.0.json',
         translationName: {
           id: 'schema.general',
           defaultMessage: 'General'
-        },
+        }
       },
       {
         schema: 'announcements-groups_1.0.0.json',
         translationName: {
           id: 'schema.groups',
           defaultMessage: 'Groups'
-        },
+        }
       },
       {
         schema: 'announcements-localNews_1.0.0.json',
         translationName: {
           id: 'schema.localNews',
           defaultMessage: 'Local News'
-        },
+        }
       },
       {
         schema: 'announcements-lostFound_1.0.0.json',
         translationName: {
           id: 'schema.lostFound',
           defaultMessage: 'Lost and Found'
-        },
+        }
       },
       {
         schema: 'announcements-marketing_1.0.0.json',
         translationName: {
           id: 'schema.marketing',
           defaultMessage: 'Marketing'
-        },
+        }
       },
       {
         schema: 'announcements-musicians_1.0.0.json',
         translationName: {
           id: 'schema.musicians',
           defaultMessage: 'Musicians'
-        },
+        }
       },
       {
         schema: 'announcements-other_1.0.0.json',
         translationName: {
           id: 'schema.other',
           defaultMessage: 'Other'
-        },
+        }
       },
       {
         schema: 'announcements-personals_1.0.0.json',
         translationName: {
           id: 'schema.personals',
           defaultMessage: 'Personals'
-        },
+        }
       },
       {
         schema: 'announcements-pets_1.0.0.json',
         translationName: {
           id: 'schema.pets',
           defaultMessage: 'Pets'
-        },
+        }
       },
       {
         schema: 'announcements-politics_1.0.0.json',
         translationName: {
           id: 'schema.politics',
           defaultMessage: 'Politics'
-        },
+        }
       },
       {
         schema: 'announcements-resumes_1.0.0.json',
         translationName: {
           id: 'schema.resumes',
           defaultMessage: 'Resumes'
-        },
+        }
       },
       {
         schema: 'announcements-volunteers_1.0.0.json',
         translationName: {
           id: 'schema.volunteers',
           defaultMessage: 'Volunteers'
-        },
-      },
+        }
+      }
     ],
     forRent: [
       {
@@ -372,7 +372,7 @@ const listingSchemaMetadata = {
           id: 'schema.videoGaming',
           defaultMessage: 'Video Gaming'
         }
-      },
+      }
     ],
     forSale: [
       {

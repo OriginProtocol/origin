@@ -4,7 +4,7 @@ import get from 'lodash/get'
 async function generatePhoneCode(_, { email }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
-    return { success: false }
+    return { success: false, reason: 'No bridge server configured' }
   }
   const url = `${bridgeServer}/api/attestations/email/generate-code`
 
@@ -21,7 +21,6 @@ async function generatePhoneCode(_, { email }) {
 
   const data = await response.json()
   return { success: false, reason: get(data, 'errors.email[0]') }
-
 }
 
 export default generatePhoneCode

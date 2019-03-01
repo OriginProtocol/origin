@@ -10,40 +10,49 @@ To allow the listener to be compatible with [infura.io](https://infura.io/), it 
 
 # Running
 
-First you'll need a blockchain network to listen to. To get a local network work, you can start up the origin box, or you can run `npm start run` from the origin.js directory.
+You can either start the listener via docker compose or via lerna.
 
-A simple way to see the listener in action:
+## Docker compose
 
-    cd origin-discovery
-    npm run install:dev
-    cp src/listener/dev.env src/listener/.env
-    node src/listener/listener.js
+    docker-compose up event-listener
 
-## Command line options
+## Lerna
+### Prerequisite
+ - Setup Postgres locally.
+ - Create DB schema:
+```
+lerna run migrate --scope origin-discovery
+lerna run migrate --scope origin-growth
+lerna run migrate --scope origin-identity
+```
 
-Output:
+### Start the listener
+```
+export DATABASE_URL=postgres://origin:origin@localhost/origin
+export ELASTICSEARCH=localhost:9200
+export LOG_LEVEL=DEBUG
+lerna run start:listener:development --scope origin-discovery --stream
+```
 
-`--verbose` Output json for all event information to stdout
+# Command line options
+ - `--verbose` Output json for all event information to stdout.
+ - `--webhook=<URL>` Post json for each event to the URL.
+ - `--discord-webhook=<discord URL>` Post a short Discord notification for each marketplace event.
+ - `--email-webhook=<Email URL>` For internal use only.
+ - `--elasticsearch` Experimental support for recording listings directly into elastic search.
+ - `--marketplace` Index marketplace data.
+ - `--identity` Index identity data.
+ - `--growth` Index growth data.
+ - `--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
 
-`--webhook=yoururl` Post json for each event to the URL
-
-`--discord-webhook=discordurl` Post a short Discord notification for each marketplace event.
-
-`--elasticsearch` Experimental support for recording listings directly into elastic search
-
-`--db` Experimental support for recording listings directly into postgres (see instructions for setting up the db [here](../README.md))
-
-Events:
-
-`--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
-
-## Env variables
+# Env variables
 
 The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:
   - ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.
   - AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affiliate account.
   - ATTESTATION_ACCOUNT: Ethereum address of the Origin attestation account.
   - BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.
+  - LOG_LEVEL: Logging level (debug, info, warn, error).
 
 Those values can be found via the DApp info page:
   - Mainnet: https://dapp.originprotocol.com/#/dapp-info
@@ -66,3 +75,36 @@ After being annotated with more information, the event is then output to the pla
 - When an error is raised when outputting to specific output handler (webhook, db, etc), the listener will attempt retries with increasing delays, up to two minutes. These retries will block all further event processing until the event goes through. If a maximum number of retries on one event has failed, then listener will quit, allowing it to be restarted from outside.
 
 - When an error is raised when getting event or block number information, the same retry strategy as for output errors is tried (increasing delays).
+
+# Indexing Mainnet data
+This can be useful to validate code changes against production data or to reproduce a production issue.
+It is recommended to use the lerna local setup rather than docker compose.
+
+### Copy Mainnet contracts
+```
+rm origin-contracts/build/contracts/*
+cp origin-contracts/releases/0.8.6/build/contracts/* origin-contracts/build/contracts
+```
+
+### Build origin-js
+`lerna run build --scope origin --stream`
+
+### Configure and start the listener
+```
+export WEB3_URL=https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2
+export BLOCK_EPOCH=6425000
+export CONTINUE_BLOCK=6425000
+export IPFS_URL=https://ipfs.originprotocol.com
+export ARBITRATOR_ACCOUNT=0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a
+export AFFILIATE_ACCOUNT=0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8
+export ATTESTATION_ACCOUNT=0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa
+export DATABASE_URL=postgres://origin:origin@localhost/origin
+export ELASTICSEARCH=true
+export ELASTICSEARCH_HOST=localhost:9200
+export INDEX_MARKETPLACE=true
+export INDEX_IDENTITY=true
+export INDEX_GROWTH=true
+export LOG_LEVEL=INFO
+lerna run start:listener:development --scope origin-discovery --stream
+```
+

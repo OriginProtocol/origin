@@ -4,6 +4,10 @@
     "defaultMessage": "each"
   },
   {
+    "id": "listing-card-prices.multiUnitListing.averagePrice",
+    "defaultMessage": "average price"
+  },
+  {
     "id": "listing-card-prices.loadingMessage",
     "defaultMessage": "Loading..."
   }

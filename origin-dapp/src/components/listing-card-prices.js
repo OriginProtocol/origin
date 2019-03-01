@@ -17,6 +17,10 @@ class ListingCardPrices extends Component {
       each: {
         id: 'listing-card-prices.multiUnitListing.each',
         defaultMessage: 'each'
+      },
+      averagePrice: {
+        id: 'listing-card-prices.multiUnitListing.averagePrice',
+        defaultMessage: 'average price'
       }
     })
   }
@@ -36,7 +40,8 @@ class ListingCardPrices extends Component {
     const { fiatCurrencyCode, cryptoCurrencyCode } = this.state
     const {
       price,
-      isMultiUnit
+      isMultiUnit,
+      isFractional
     } = this.props
 
     const fiatPrice = getFiatPrice(
@@ -73,6 +78,9 @@ class ListingCardPrices extends Component {
                     </span>
                     {isMultiUnit && (<span className="append">
                       &nbsp;{this.props.intl.formatMessage(this.intlMessages.each)}
+                    </span>)}
+                    {isFractional && (<span className="append">
+                      &nbsp;{this.props.intl.formatMessage(this.intlMessages.averagePrice)}
                     </span>)}
                   </div>
                   <div className="fiat">

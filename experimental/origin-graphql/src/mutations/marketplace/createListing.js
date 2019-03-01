@@ -3,18 +3,21 @@ import validator from 'origin-validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
+import dapp1Compatibility from './_dapp1Compat'
 
-export function listingInputToIPFS(data) {
+export function listingInputToIPFS(data, unitData, fractionalData) {
+  const listingType = fractionalData ? 'fractional' : 'unit'
   const ipfsData = {
+    __typename: data.typename || 'UnitListing',
     schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
-    listingType: 'unit',
-    category: data.category,
-    subCategory: data.subCategory,
+    listingType,
+    category: data.category || '',
+    subCategory: data.subCategory || '',
     language: 'en-US',
     title: data.title,
     description: data.description,
     media: data.media,
-    unitsTotal: data.unitsTotal,
     price: data.price,
     commission: {
       currency: 'OGN',
@@ -25,15 +28,35 @@ export function listingInputToIPFS(data) {
       amount: data.commissionPerUnit || '0'
     }
   }
+
+  if (data.marketplacePublisher) {
+    ipfsData.marketplacePublisher = data.marketplacePublisher
+  }
+  if (fractionalData) {
+    ipfsData.weekendPrice =
+      fractionalData.weekendPrice || fractionalData.price || '0'
+    ipfsData.unavailable = fractionalData.unavailable || []
+    ipfsData.customPricing = fractionalData.customPricing || []
+    ipfsData.booked = fractionalData.booked || []
+  } else if (unitData) {
+    ipfsData.unitsTotal = unitData.unitsTotal
+  } else {
+    ipfsData.unitsTotal = 1
+  }
+
+  // Dapp1 compatibility:
+  dapp1Compatibility(ipfsData)
+
   validator('https://schema.originprotocol.com/listing_1.0.0.json', ipfsData)
   return ipfsData
 }
 
 async function createListing(_, input) {
-  const { depositManager, data, from, autoApprove } = input
+  const { depositManager, data, unitData, fractionalData, autoApprove } = input
+  const from = input.from || contracts.defaultLinkerAccount
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data)
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall
@@ -61,7 +84,7 @@ async function createListing(_, input) {
     )
   }
 
-  const tx = createListingCall.send({ gas: 4612388, from })
+  const tx = createListingCall.send({ gas: cost.createListing, from })
   return txHelper({ tx, from, mutation: 'createListing' })
 }
 

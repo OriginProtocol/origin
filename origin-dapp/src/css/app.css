@@ -1701,186 +1701,6 @@ textarea:-moz-ui-invalid {
   width: auto;
 }
 
-.onboarding .modal-backdrop {
-  z-index: 1000;
-}
-
-.onboarding .split-container {
-  height: 100%;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1001;
-}
-
-.onboarding .btn {
-  width: auto;
-}
-
-.onboarding .close-icon {
-  cursor: pointer;
-}
-
-.onboarding-modal {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  bottom: auto;
-}
-
-.onboarding-modal .modal-lg {
-  max-width: 770px;
-}
-
-.onboarding-modal .left-panel,
-.onboarding-modal .right-panel {
-  border-radius: 0 10px 10px 0;
-  min-height: 530px;
-}
-
-.onboarding-modal .left-panel {
-  padding: 4px;
-  padding-left: 15px;
-}
-
-.onboarding-modal .left-panel .content:first-child {
-  border-top-left-radius: 10px;
-}
-
-.onboarding-modal .left-panel .content:last-child {
-  border-bottom-left-radius: 10px;
-}
-
-.onboarding-modal .left-panel .content div {
-  margin-top: 40px;
-}
-
-.onboarding-modal .left-panel .panel-text {
-  margin-left: 10px;
-}
-
-.onboarding-modal .left-panel .panel-text p {
-  font-weight: 300;
-}
-
-.onboarding-modal .step-text,
-.onboarding-modal .eth {
-  margin: auto 60px;
-  padding-bottom: 15px;
-  font-family: var(--default-font);
-  font-weight: 300;
-  font-size: 1.125rem;
-}
-
-.onboarding-modal .eth,
-.onboarding-modal .ogn {
-  font-weight: 400;
-  margin: 0;
-  background: none;
-}
-
-.onboarding-modal .eth {
-  color: var(--dark-purple);
-}
-
-.onboarding-modal .ogn {
-  color: var(--clear-blue);
-}
-
-.onboarding-modal.show {
-  display: block;
-}
-
-.onboarding-modal .modal-content {
-  background-color: var(--dark);
-}
-
-.onboarding-modal .modal-content,
-.onboarding-modal .modal-body {
-  padding: 0;
-}
-
-.onboarding-modal .modal-body .container-fluid {
-  padding-left: 0.25rem;
-}
-
-.onboarding-modal .left-panel .content {
-  padding: 10px;
-  flex: 1 0 auto;
-}
-
-.onboarding-modal .left-panel .rounded-circle {
-  display: inline-block;
-  width: 34px;
-  height: 34px;
-}
-
-.onboarding-modal .left-panel .complete {
-  flex-basis: 16%;
-}
-
-.onboarding-modal .left-panel .complete.rounded-circle:after {
-  content: " ";
-  display: inline-block;
-  width: 8px;
-  height: 16px;
-  border: solid var(--dark-grey-blue);
-  border-width: 0 0.2em 0.2em 0;
-  position: absolute;
-  left: 13px;
-  top: 12px;
-  margin-top: -0.2em;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-.onboarding-modal a:not(.btn) {
-  font-size: 0.825rem;
-  padding-top: 1rem;
-}
-
-.onboarding-modal .content-container {
-  flex-grow: 1;
-  /* height of the close icon */
-  margin-bottom: 36px;
-}
-
-.onboarding-modal .content-container img {
-  height: 125px;
-}
-
-.onboarding-modal .selected,
-.onboarding-modal .right-panel {
-  background-color: var(--dark-grey-blue);
-}
-
-.onboarding-modal .right-panel .btn-lg {
-  min-width: 270px;
-  max-width: 333px;
-}
-
-.onboarding-modal .right-panel h3 {
-  font-size: 1.5rem;
-  margin: 1.125rem;
-}
-
-.onboarding-modal .incomplete {
-  border: solid 3px var(--greenblue);
-}
-
-.onboarding-modal .complete {
-  background-color: var(--greenblue);
-}
-
-.onboarding-modal span,
-.onboarding-modal p {
-  font-size: 0.875rem;
-  vertical-align: super;
-}
-
 .offer-modal .modal-content {
   width: 420px;
 }
@@ -5679,6 +5499,11 @@ a:not([href]):not([tabindex]).span-link {
   width: auto;
 }
 
+.beta .disclaimer a {
+  color: white;
+  text-decoration: underline;
+}
+
 /* Warning */
 
 .warning .badge {
@@ -5696,6 +5521,11 @@ a:not([href]):not([tabindex]).span-link {
 .warning p {
   font-weight: normal;
   margin-bottom: 0;
+}
+
+.warning .reminders:not([href]):not([tabindex]) {
+  color: var(--clear-blue);
+  cursor: pointer;
 }
 
 /* Media queries */
@@ -5719,14 +5549,6 @@ a:not([href]):not([tabindex]).span-link {
 
   .onboarding .modal-dialog {
     margin: 1rem;
-  }
-
-  .onboarding-modal .row {
-    margin-left: -4px;
-  }
-
-  .onboarding-modal .step-text {
-    margin: auto 20px;
   }
 
   .modal.getting-started {

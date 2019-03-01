@@ -283,7 +283,7 @@ const listingSchemaMetadata = {
         }
       },
       {
-        schema: 'forRent-housing_1.0.0.json',
+        schema: 'forRent-housing_2.0.0.json',
         translationName: {
           id: 'schema.housing',
           defaultMessage: 'Housing'
@@ -729,15 +729,6 @@ const listingSchemaMetadata = {
       }
     ]
   }
-}
-
-// TODO(John) - Remove this once all fractional usage schemas are released
-if (process.env.ENABLE_FRACTIONAL === 'true') {
-  listingSchemaMetadata.listingSchemasByCategory.forRent.forEach(schemaObj => {
-    if (schemaObj.schema === 'forRent-housing_1.0.0.json') {
-      schemaObj.schema = schemaObj.schema.replace('1.0.0', '2.0.0')
-    }
-  })
 }
 
 export default listingSchemaMetadata

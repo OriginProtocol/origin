@@ -35,17 +35,18 @@ class SendMessage extends Component {
     this.state = { message: '', images: '' }
   }
 
-  componentDidMount() {
-    if (this.input) {
-      this.input.focus()
-    }
-  }
+  // TODO: Focusing an offscreen element causes page to jump
+  // componentDidMount() {
+  //   if (this.input) {
+  //     this.input.focus()
+  //   }
+  // }
 
-  componentDidUpdate(prevProps) {
-    if (this.input && this.props.to !== prevProps.to) {
-      this.input.focus()
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.input && this.props.to !== prevProps.to) {
+  //     this.input.focus()
+  //   }
+  // }
 
   handleClick() {
     this.fileInput.current.click()
@@ -79,16 +80,18 @@ class SendMessage extends Component {
               }
             }}
           >
-            { images.length ? (
+            {images.length ? (
               <div className="images-preview">
-                {images.map((image) => (
+                {images.map(image => (
                   <div key={image.url} className="images-container">
                     <img className="img" src={image.url} />
                     <a
                       className="image-overlay-btn"
                       aria-label="Close"
                       onClick={() => {
-                        this.setState({ images: images.filter((img) => img !== image) })
+                        this.setState({
+                          images: images.filter(img => img !== image)
+                        })
                       }}
                     >
                       <span aria-hidden="true">&times;</span>
@@ -96,10 +99,11 @@ class SendMessage extends Component {
                   </div>
                 ))}
               </div>
-            ) : null }
-            { !images.length && (
-              <textarea
+            ) : null}
+            {images.length ? null : (
+              <input
                 type="text"
+                className="form-control"
                 placeholder="Type something..."
                 ref={input => (this.input = input)}
                 value={this.state.message}
@@ -119,11 +123,8 @@ class SendMessage extends Component {
               ref={this.fileInput}
               className="d-none"
               onChange={async e => {
-                const newImages = await getImages(
-                  config,
-                  e.currentTarget.files
-                )
-                this.setState((state) => ({
+                const newImages = await getImages(config, e.currentTarget.files)
+                this.setState(state => ({
                   images: [...state.images, ...newImages]
                 }))
               }}
@@ -149,19 +150,13 @@ require('react-styl')(`
     margin-top: 1rem
     .form-control
       margin-right: 1rem
-    textarea
-      background-color: transparent
       border: 0
-      padding: 10px 0 0
-      flex-grow: 1
-      resize: none
       outline: none
     button
       margin: auto 0
       width: auto
-    img
-      &.add-photo
-        padding: 0 10px
+    img.add-photo
+      padding: 0 10px
     .images-preview
       flex: 1
       padding: 10px 0

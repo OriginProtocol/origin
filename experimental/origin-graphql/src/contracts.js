@@ -1,38 +1,59 @@
 import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
-import UserRegistryContract from 'origin-contracts/build/contracts/V00_UserRegistry'
-import ClaimHolderRegisteredContract from 'origin-contracts/build/contracts/ClaimHolderRegistered'
-import ClaimHolderPresignedContract from 'origin-contracts/build/contracts/ClaimHolderPresigned'
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
+import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
+import get from 'lodash/get'
 
 import eventCache from './utils/eventCache'
+import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
-// import OriginMessaging from 'origin-messaging-client'
 
-let metaMask, metaMaskEnabled, web3WS, wsSub, web3
+let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
+// We need a separate LINKER_HOST for the mobile wallet, because cookie sharing
+// between http and ws only works when using non-localhost linker URLs. At the
+// same time, js-ipfs only works for non-secure http when the URL is localhost.
+// So, the hostname in the DApp URL can't be the same as the linker hostname
+// when testing locally.
+const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
 if (typeof window !== 'undefined') {
   OriginMessaging = require('origin-messaging-client').default
 }
 
+let OriginLinkerClient
+if (typeof window !== 'undefined') {
+  OriginLinkerClient = require('origin-linker-client').default
+}
+
 const Configs = {
   mainnet: {
-    provider: 'https://mainnet.infura.io',
-    providerWS: 'wss://mainnet.infura.io/ws',
+    provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+    // providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
-    ipfsEventCache: 'QmQT7tfMA21xsxRiVKitGSxHqiAqnX3J1mXJEqWjWcPrR9',
     discovery: 'https://discovery.originprotocol.com',
-    V00_UserRegistry: '0xa4428439ec214cc68240552ec93298d1da391114',
-    OriginIdentity: '0x1af44feeb5737736b6beb42fe8e5e6b7bb7391cd',
+    growth: 'http://growth.originprotocol.com',
+    bridge: 'https://bridge.originprotocol.com',
+    IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
+    IdentityEvents_Epoch: '7046530',
+    IdentityEvents_EventCache: 'QmWkUzib3YaGBMtrF5Wam7KLPFZ4VhWqS3NrAd5aVS3qeP',
+    attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
+    ipfsEventCache: 'QmSjXV4HRo39USnpzbE9cK5Qs989fAEsnv165bZxoJDWPg',
+    messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.originprotocol.com/tcp/443/wss/ipfs/Qmc2YF8broVfy3BmUoUEnrHFgQnC5ZPe1jypnsPAtdnunX',
+      messagingNamespace: 'origin',
+      globalKeyServer: 'https://messaging-api.originprotocol.com'
+    },
     tokens: [
       {
         id: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
@@ -55,64 +76,104 @@ const Configs = {
         symbol: 'GUSD',
         decimals: '2'
       }
-    ]
+    ],
+    affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a',
+    linker: `https://linking.originprotocol.com`,
+    linkerWS: `wss://linking.originprotocol.com`
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
-    providerWS: 'wss://rinkeby.infura.io/ws',
+    // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     discovery: 'https://discovery.staging.originprotocol.com',
-    V00_UserRegistry: '0x56727c8a51b276aec911afa8d6d80d485c89d5cc',
-    OriginIdentity: '0x8a294aaece85ca472f09ab6c09d75448bf3b25c1',
+    growth: 'http://growth.staging.originprotocol.com',
+    bridge: 'https://bridge.staging.originprotocol.com',
+    IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
+    IdentityEvents_Epoch: '3670528',
     OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
     V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',
-    V00_Marketplace_Epoch: '3086315'
+    V00_Marketplace_Epoch: '3086315',
+    ipfsEventCache: 'QmbmjqFhoQyBq27u9F969L15QivjZF9xo4P8DiV8xqgqTf',
+    affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
+    arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+      messagingNamespace: 'origin:staging',
+      globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
+    },
+    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
+    linker: `https://linking.staging.originprotocol.com`,
+    linkerWS: `wss://linking.staging.originprotocol.com`
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
-    providerWS: 'wss://rinkeby.infura.io/ws',
+    // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
-    ipfsRPC: `https://ipfs.staging.originprotocol.com`
+    ipfsRPC: `https://ipfs.staging.originprotocol.com`,
+    bridge: 'https://bridge.staging.originprotocol.com'
   },
   kovanTst: {
     provider: 'https://kovan.infura.io',
-    providerWS: 'wss://kovan.infura.io/ws',
+    // providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    OriginToken: '0xf2D5AeA9057269a1d97A952BAf5E1887462c67b6',
-    V00_Marketplace: '0x66E8c312dC89599c84A93353d6914631ce7857Cc',
-    V00_Marketplace_Epoch: '10135260'
+    discovery: 'https://discovery.staging.originprotocol.com',
+    bridge: 'https://bridge.staging.originprotocol.com',
+    OriginToken: '0xb0efa5A1f199B7562Dd4f34758497594797C05E9',
+    V00_Marketplace: '0xaE145bE14b9369fE5DF917B58daDe2589ddB48C9',
+    ipfsEventCache: 'QmaXMXUws4mq6MQ114Pjqv25hhpYdS6P6cD1z4x5R2ZAja',
+    V00_Marketplace_Epoch: '10329348',
+    IdentityEvents: '0x967DB2Ed91000efA8d5Ce860d5A8B34a6BCfb6E2',
+    IdentityEvents_Epoch: '10339753',
+    IdentityEvents_EventCache: 'QmQ5vJa5oFy9rj3E9aEtVb637G3xiJLnHFyAuwvwfj6XTN',
+    affiliate: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C',
+    arbitrator: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C'
   },
   localhost: {
     provider: `http://${HOST}:8545`,
     providerWS: `ws://${HOST}:8545`,
-    ipfsGateway: `http://${HOST}:9090`,
+    ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
+    growth: `http://${HOST}:4001`,
     bridge: 'https://bridge.staging.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
-    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
-
-    // messaging: {
-    //   ipfsSwarm:
-    //     '/ip4/127.0.0.1/tcp/9012/ws/ipfs/QmYsCaLzzso7kYuAZ8b5DwhpwGvgzKyFtvs37bG95GTQGA',
-    //   messagingNamespace: 'dev',
-    //   globalKeyServer: 'http://127.0.0.1:6647'
-    // }
+    attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    linker: `http://${LINKER_HOST}:3008`,
+    linkerWS: `ws://${LINKER_HOST}:3008`
+  },
+  docker: {
+    provider: `http://localhost:8545`,
+    providerWS: `ws://localhost:8545`,
+    ipfsGateway: `http://localhost:9999`,
+    ipfsRPC: `http://localhost:9999`,
+    bridge: 'http://localhost:5000',
+    discovery: 'http://localhost:4000/graphql',
+    automine: 2000,
+    OriginToken: get(OriginTokenContract, 'networks.999.address'),
+    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
+    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    messaging: {
+      ipfsSwarm: process.env.IPFS_SWARM,
+      messagingNamespace: 'origin:docker',
+      globalKeyServer: 'http://localhost:6647'
+    }
   },
   test: {
     provider: `http://${HOST}:8545`,
     providerWS: `ws://${HOST}:8545`,
-    ipfsGateway: `http://${HOST}:9090`,
+    ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`
   }
 }
 
 const DefaultMessagingConfig = {
-  // ipfsSwarm:
-  //   '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-  // messagingNamespace: 'origin:staging'
   ipfsSwarm:
     '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
   messagingNamespace: 'origin:dev',
@@ -132,8 +193,45 @@ function applyWeb3Hack(web3Instance) {
   return web3Instance
 }
 
+let lastBlock
+function newBlock(blockHeaders) {
+  if (!blockHeaders) return
+  if (blockHeaders.number <= lastBlock) return
+  lastBlock = blockHeaders.number
+  context.marketplace.eventCache.updateBlock(blockHeaders.number)
+  context.identityEvents.eventCache.updateBlock(blockHeaders.number)
+  context.eventSource.resetCache()
+  pubsub.publish('NEW_BLOCK', {
+    newBlock: { ...blockHeaders, id: blockHeaders.hash }
+  })
+}
+
+function pollForBlocks() {
+  blockInterval = setInterval(() => {
+    web3.eth.getBlockNumber().then(block => {
+      if (block > lastBlock) {
+        web3.eth.getBlock(block).then(newBlock)
+      }
+    })
+  }, 5000)
+}
+
 export function setNetwork(net, customConfig) {
+  if (process.env.DOCKER && net !== 'test') {
+    net = 'docker'
+  }
   let config = JSON.parse(JSON.stringify(Configs[net]))
+  if (
+    typeof window !== 'undefined' &&
+    window.localStorage.customConfig &&
+    window.localStorage.customConfig !== 'undefined'
+  ) {
+    try {
+      config = { ...config, ...JSON.parse(window.localStorage.customConfig) }
+    } catch (error) {
+      console.log('Could not load custom config: ', error)
+    }
+  }
   if (!config) {
     return
   }
@@ -142,7 +240,7 @@ export function setNetwork(net, customConfig) {
   } else if (net === 'localhost') {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.V00_UserRegistry = window.localStorage.userRegistryContract
+    config.IdentityEvents = window.localStorage.identityEventsContract
   }
   context.net = net
   context.config = config
@@ -151,6 +249,7 @@ export function setNetwork(net, customConfig) {
   context.ipfsGateway = config.ipfsGateway
   context.ipfsRPC = config.ipfsRPC
   context.discovery = config.discovery
+  context.growth = config.growth
 
   delete context.marketplace
   delete context.marketplaceExec
@@ -158,11 +257,12 @@ export function setNetwork(net, customConfig) {
   delete context.ognExec
   delete context.marketplaces
   delete context.tokens
-  delete context.claimHolderRegistered
+  delete context.identityEvents
   delete context.metaMask
   if (wsSub) {
     wsSub.unsubscribe()
   }
+  clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
   if (typeof window !== 'undefined') {
@@ -175,7 +275,16 @@ export function setNetwork(net, customConfig) {
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    context.messaging = OriginMessaging({ ...MessagingConfig, web3 })
+    context.linker = OriginLinkerClient({
+      httpUrl: config.linker,
+      wsUrl: config.linkerWS,
+      web3: context.web3
+    })
+    context.messaging = OriginMessaging({
+      ...MessagingConfig,
+      web3,
+      walletLinker: context.linker
+    })
   }
 
   context.metaMaskEnabled = metaMaskEnabled
@@ -188,38 +297,24 @@ export function setNetwork(net, customConfig) {
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0
 
-  context.claimHolderRegistered = new web3.eth.Contract(
-    ClaimHolderRegisteredContract.abi
-  )
-  context.claimHolderPresigned = new web3.eth.Contract(
-    ClaimHolderPresignedContract.abi
-  )
-
-  context.userRegistry = new web3.eth.Contract(
-    UserRegistryContract.abi,
-    config.V00_UserRegistry
-  )
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
+  setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   if (typeof window !== 'undefined') {
-    web3WS = applyWeb3Hack(new Web3(config.providerWS))
-    wsSub = web3WS.eth.subscribe('newBlockHeaders').on('data', blockHeaders => {
-      context.marketplace.eventCache.updateBlock(blockHeaders.number)
-      context.eventSource.resetCache()
-      pubsub.publish('NEW_BLOCK', {
-        newBlock: { ...blockHeaders, id: blockHeaders.hash }
-      })
-    })
+    if (config.providerWS) {
+      web3WS = applyWeb3Hack(new Web3(config.providerWS))
+      wsSub = web3WS.eth
+        .subscribe('newBlockHeaders')
+        .on('data', newBlock)
+        .on('error', () => {
+          console.log('WS connection error. Polling for new blocks...')
+          pollForBlocks()
+        })
+    } else {
+      pollForBlocks()
+    }
     web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(blockHeaders => {
-        if (blockHeaders) {
-          context.marketplace.eventCache.updateBlock(blockHeaders.number)
-          context.eventSource.resetCache()
-          pubsub.publish('NEW_BLOCK', {
-            newBlock: { ...blockHeaders, id: blockHeaders.hash }
-          })
-        }
-      })
+      web3.eth.getBlock(block).then(newBlock)
     })
     context.pubsub = pubsub
   }
@@ -281,6 +376,7 @@ export function setNetwork(net, customConfig) {
     })
   }
   setMetaMask()
+  setLinkerClient()
 }
 
 function setMetaMask() {
@@ -300,6 +396,48 @@ function setMetaMask() {
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec
   }
+}
+
+function setLinkerClient() {
+  const linkingEnabled =
+    (typeof window !== 'undefined' && window.linkingEnabled) ||
+    process.env.ORIGIN_LINKING
+
+  if (context.metaMaskEnabled) return
+  if (!linkingEnabled) return
+  if (!context.linker) return
+  if (metaMask && metaMaskEnabled) return
+
+  const linkerProvider = context.linker.getProvider()
+  context.web3Exec = applyWeb3Hack(new Web3(linkerProvider))
+  context.defaultLinkerAccount = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+
+  // Funnel marketplace contract transactions through mobile wallet
+  context.marketplaceL = new context.web3Exec.eth.Contract(
+    MarketplaceContract.abi,
+    context.marketplace._address
+  )
+  context.marketplaceExec = context.marketplaceL
+
+  // Funnel token contract transactions through mobile wallet
+  context.ognExecL = new context.web3Exec.eth.Contract(
+    OriginTokenContract.abi,
+    context.ogn._address
+  )
+  context.ognExec = context.ognExecL
+
+  // Funnel identity contract transactions through mobile wallet
+  context.identityEventsExecL = new context.web3Exec.eth.Contract(
+    IdentityEventsContract.abi,
+    context.identityEvents._address
+  )
+  context.identityEventsExec = context.identityEventsExecL
+
+  if (context.messaging) {
+    context.messaging.web3 = context.web3Exec
+  }
+
+  context.linker.start()
 }
 
 export function toggleMetaMask(enabled) {
@@ -328,8 +466,7 @@ export function setMarketplace(address, epoch) {
   context.eventSource = new EventSource({
     marketplaceContract: context.marketplace,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3,
-    arbitrator: context.config.arbitrator
+    web3: context.web3
   })
   context.marketplaceExec = context.marketplace
 
@@ -344,9 +481,37 @@ export function setMarketplace(address, epoch) {
   }
 }
 
+export function setIdentityEvents(address, epoch) {
+  context.identityEvents = new web3.eth.Contract(
+    IdentityEventsContract.abi,
+    address
+  )
+  context.identityEvents.eventCache = genericEventCache(
+    context.identityEvents,
+    epoch,
+    context.web3,
+    context.config,
+    context.config.IdentityEvents_EventCache
+  )
+  context.identityEventsExec = context.identityEvents
+
+  if (metaMask) {
+    context.identityEventsMM = new metaMask.eth.Contract(
+      IdentityEventsContract.abi,
+      context.identityEvents.options.address
+    )
+    if (metaMaskEnabled) {
+      context.identityEventsExec = context.identityEventsMM
+    }
+  }
+}
+
 if (typeof window !== 'undefined') {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
+    metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
+  } else if (window.web3) {
+    metaMask = applyWeb3Hack(new Web3(window.web3.currentProvider))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   }
 

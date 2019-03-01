@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   type Subscription {
     newBlock: Block
     newTransaction: NewTransaction
@@ -29,8 +29,17 @@ export default `
     configObj: Config
   }
 
+  input ConfigInput {
+    discovery: String
+    bridge: String
+    ipfsRPC: String
+    ipfsGateway: String
+    provider: String
+    providerWS: String
+  }
+
   type Config {
-    affilliate: String
+    affiliate: String
     arbitrator: String
     discovery: String
     bridge: String
@@ -45,11 +54,12 @@ export default `
 
   type Mutation {
     refetch: Boolean
-    setNetwork(network: String): Boolean
+    setNetwork(network: String, customConfig: ConfigInput): Boolean
     toggleMetaMask(enabled: Boolean): Boolean
     deployToken(name: String!, symbol: String!, decimals: String!, supply: String!, type: String, from: String): Transaction
     transferToken(token: String!, from: String!, to: String!, value: String!): Transaction
     updateTokenAllowance(token: String!, from: String!, to: String!, value: String!): Transaction
+    useFaucet(wallet: String!, networkId: String): Boolean
 
     sendFromNode(from: String!, to: String!, value: String!): Transaction
     sendFromWallet(from: String!, to: String!, value: String!): Transaction
@@ -58,6 +68,7 @@ export default `
     importWallet(role: String, name: String, privateKey: String!): Account
     importWallets(accounts: [WalletInput]): Boolean
     removeWallet(address: String!): String
+    signMessage(address: ID!, message: String!): String
   }
 
   type Web3 {
@@ -79,11 +90,9 @@ export default `
     metaMaskAccount: Account
     metaMaskNetworkId: Int
     metaMaskNetworkName: String
-  }
-
-  type Price {
-    currency: String
-    amount: String
+    walletType: String
+    mobileWalletAccount: Account
+    primaryAccount: Account
   }
 
   type Account {

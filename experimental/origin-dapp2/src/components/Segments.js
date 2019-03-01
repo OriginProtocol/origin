@@ -13,7 +13,7 @@ const Segments = ({ filled = 0, size = 100 }) => (
           stroke={filled >= idx ? 'var(--greenblue)' : 'var(--pale-grey-two)'}
           strokeWidth="5"
           strokeDasharray="14 86"
-          strokeDashoffset={(idx) * -16.66 - 51.5}
+          strokeDashoffset={idx * -16.66 - 51.5}
         />
       ))}
     </svg>

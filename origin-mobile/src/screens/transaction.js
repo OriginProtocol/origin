@@ -55,6 +55,9 @@ class TransactionScreen extends Component {
       case 'addData':
         title = 'Leave Review'
         break
+      case 'emitIdentityUpdated':
+        title = 'Publish Identity'
+        break
       default:
         title = 'Blockchain Transaction'
     }
@@ -102,10 +105,11 @@ class TransactionScreen extends Component {
   render() {
     const { navigation, users, wallet } = this.props
     const item = navigation.getParam('item')
-    const { cost, gas_cost, ogn_cost, listing, to } = item
+    const { cost, gas_cost, ogn_cost, identity, listing, to } = item
     const counterpartyAddress = (listing && listing.seller) || to
     const { price = { amount: '', currency: '' } } = listing || {}
-    const picture = listing && listing.media && listing.media[0]
+    const picture = (listing && listing.media && listing.media[0]) || (identity && identity.profile && identity.profile.avatar)
+    const { profile } = identity || {}
     const hasSufficientFunds = sufficientFunds(wallet, item)
     const { width } = Dimensions.get('window')
     const innerWidth = width - DETAIL_PADDING * 2
@@ -116,14 +120,15 @@ class TransactionScreen extends Component {
     const ognCost = toOgns(ogn_cost)
     const gasCostInETH = Number(web3.utils.fromWei(web3.utils.toBN(gas_cost).toString())).toFixed(5)
     const fiatGasCost = getFiatPrice(gasCostInETH)
+    const fullName = profile ? `${profile.firstName || ''} ${profile.lastName || ''}`.trim() : 'Unnamed User'
 
     return (
       <View style={styles.container}>
         <View style={styles.details}>
-          {picture &&
+          {!!picture &&
             <View style={[styles.imageContainer, { height: innerWidth * 0.75 }]}>
               <Image
-                source={{ uri: picture.url }}
+                source={{ uri: picture.url || picture }}
                 resizeMethod={'resize'}
                 resizeMode={'cover'}
                 style={{ flex: 1 }}
@@ -132,6 +137,9 @@ class TransactionScreen extends Component {
           }
           {listing &&
             <Text numberOfLines={1} style={styles.title}>{listing.title}</Text>
+          }
+          {identity &&
+            <Text numberOfLines={1} style={styles.title}>{fullName}</Text>
           }
           <View style={styles.accounts}>
             <Avatar
@@ -174,7 +182,7 @@ class TransactionScreen extends Component {
               />
             </View>
           </View>
-          {!!cost &&
+          {priceInETH > 0 &&
             <View style={styles.lineItem}>
               <Image source={currencies['eth'].icon} style={styles.icon} />
               <Text style={styles.label}>Price</Text>
@@ -185,7 +193,7 @@ class TransactionScreen extends Component {
               </View>
             </View>
           }
-          {!!gas_cost &&
+          {gasCostInETH > 0 &&
             <View style={styles.lineItem}>
               <Image source={currencies['eth'].icon} style={styles.icon} />
               <Text style={styles.label}>Gas Cost</Text>
@@ -212,11 +220,12 @@ class TransactionScreen extends Component {
             size="large"
             type="primary"
             style={styles.button}
+            deactivate={true}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={hasSufficientFunds ? 'Confirm' : 'Continue'}
             onPress={hasSufficientFunds ? this.handleApprove : () => {
               navigation.navigate('WalletFunding', {
-                currency: price.currency.toLowerCase(),
+                currency: price.amount ? price.currency.toLowerCase() : 'eth',
                 item,
               })
             }}

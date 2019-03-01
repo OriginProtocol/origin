@@ -1,6 +1,7 @@
 import ContractService from './services/contract-service'
 import DiscoveryService from './services/discovery-service'
 import IpfsService from './services/ipfs-service'
+import HotService from './services/hot-service'
 import { Attestations } from './resources/attestations'
 import Marketplace from './resources/marketplace'
 import Discovery from './resources/discovery'
@@ -38,6 +39,7 @@ export default class Origin {
     OrbitDB,
     ecies,
     messagingNamespace,
+    messagingApiUrl,
     blockEpoch,
     blockAttestattionV1,
     ethereum,
@@ -50,6 +52,8 @@ export default class Origin {
     //
     this.contractService = new ContractService({ contractAddresses, web3, ethereum, walletLinkerUrl, 
       activeWalletLinker, fetch, ecies })
+
+    this.hotService = new HotService({ serverUrl: walletLinkerUrl })
     this.ipfsService = new IpfsService({
       ipfsDomain,
       ipfsApiPort,
@@ -72,6 +76,7 @@ export default class Origin {
         contractService: this.contractService,
         discoveryService: this.discoveryService,
         ipfsService: this.ipfsService,
+        hotService: this.hotService,
         affiliate,
         arbitrator,
         store,
@@ -96,7 +101,9 @@ export default class Origin {
         ipfsCreator,
         OrbitDB,
         ecies,
-        messagingNamespace
+        messagingNamespace,
+        messagingApiUrl,
+        fetch
       })
 
       this.token = new Token({
@@ -108,7 +115,8 @@ export default class Origin {
       this.reflection = new Reflection({
         contractService: this.contractService,
         marketplace: this.marketplace,
-        token: this.token
+        token: this.token,
+        users: this.users
       })
     }
     this.initInstance()

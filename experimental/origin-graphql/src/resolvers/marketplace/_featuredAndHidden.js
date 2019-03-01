@@ -1,4 +1,5 @@
-const featured = {}, hidden = {}
+const featured = {},
+  hidden = {}
 
 export async function getFeatured(net) {
   if (net === 'localhost') return [1]

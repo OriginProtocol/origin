@@ -8,7 +8,7 @@
     <link rel="icon" href="favicon.ico" />
     <% _.forEach(htmlWebpackPlugin.files.css, function(file) { %><link rel="stylesheet" href="<%- file %>" /><% }); %>
   </head>
-  <body><div id="app"><div class="p-3">Please wait...</div></div></body>
+  <body><div id="app"><div class="loading-screen"></div></div></body>
   <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
   <script>
     if (typeof window.openpgp !== 'undefined') {
@@ -18,8 +18,20 @@
     }
   </script> -->
   <script>
-    localStorage.ognNetwork = "mainnet"
+    localStorage.ognNetwork = "<%= htmlWebpackPlugin.options.network %>"
     localStorage.metaMaskEnabled = "true"
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2"></script>
+  <script>
+    var hostname = window.location.hostname
+    window.dataLayer = window.dataLayer || []
+    if (window.gtag == undefined) {
+      function gtag(){ dataLayer.push(arguments) }
+    }
+    if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
+      gtag('js', new Date());
+      gtag('config', 'UA-106384880-2');
+    }
   </script>
   <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
 </html>

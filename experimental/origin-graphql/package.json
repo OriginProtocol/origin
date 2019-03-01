@@ -14,25 +14,31 @@
   ],
   "scripts": {
     "start": "node -r @babel/register server",
-    "test": "mocha -r @babel/register --file test/setup test",
-    "test:watch": "mocha -r @babel/register --file test/setup test -w"
+    "test": "NODE_ENV=test mocha -r @babel/register --file test/setup test",
+    "test:watch": "NODE_ENV=test mocha -r @babel/register --file test/setup test -w",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/register": "^7.0.0",
-    "apollo-link-http": "^1.5.9",
+    "apollo-link-http": "^1.5.10",
+    "dayjs": "^1.8.0",
+    "json-stable-stringify-without-jsonify": "^1.0.1",
     "mocha": "^5.2.0",
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
+    "origin-linker-client": "^0.1.0",
     "origin-messaging-client": "^0.1.0",
     "origin-services": "^0.1.0",
     "origin-validator": "^0.1.0",
+    "prettier": "^1.16.3",
     "rlp": "^2.2.2"
   },
   "prettier": {
     "semi": false,
-    "singleQuote": true,
-    "bracketSpacing": true
+    "singleQuote": true
   },
   "babel": {
     "presets": [
@@ -57,24 +63,23 @@
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.2.0",
-    "ajv": "^6.7.0",
+    "@babel/runtime": "^7.3.1",
     "apollo-cache-inmemory": "^1.4.2",
     "apollo-client": "^2.4.12",
-    "apollo-link": "^1.2.6",
-    "apollo-link-schema": "^1.1.4",
-    "apollo-server": "^2.3.1",
+    "apollo-link": "^1.2.7",
+    "apollo-link-schema": "^1.1.5",
+    "apollo-server": "^2.3.3",
     "debug": "^4.1.1",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.1",
     "graphql-subscriptions": "^1.0.0",
     "graphql-tag": "^2.10.1",
-    "graphql-tools": "^4.0.3",
+    "graphql-tools": "^4.0.4",
     "lodash-es": "^4.17.11",
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
     "subscriptions-transport-ws": "^0.9.15",
-    "web3": "1.0.0-beta.37",
+    "web3": "1.0.0-beta.34",
     "webpack": "^4.29.0"
   }
 }

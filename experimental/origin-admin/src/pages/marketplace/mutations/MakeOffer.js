@@ -34,7 +34,7 @@ class MakeOffer extends Component {
     this.state = {
       finalizes: new Date(+new Date() + 1000 * 60 * 60 * 24 * 3),
       affiliate: affiliate ? affiliate.id : ZeroAddress,
-      commission: '2',
+      commission: '5',
       value: '0.1',
       quantity: 1,
       currency: ZeroAddress,
@@ -80,10 +80,10 @@ class MakeOffer extends Component {
                     />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1, marginRight: 20 }} >
-                      <FormGroup label="Quantity">
-                      <InputGroup {...input('quantity')} />
-                      </FormGroup>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Quantity">
+                    <InputGroup {...input('quantity')} />
+                  </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Finalizes">
@@ -175,12 +175,16 @@ class MakeOffer extends Component {
 
   getVars() {
     const { affiliate } = this.state
+    const commission =
+      affiliate === ZeroAddress
+        ? '0'
+        : web3.utils.toWei(this.state.commission, 'ether')
     const variables = {
       listingID: String(this.props.listing.id),
       from: this.state.from,
       finalizes: Math.floor(Number(this.state.finalizes) / 1000),
       affiliate,
-      commission: affiliate === ZeroAddress ? '0' : this.state.commission,
+      commission,
       value: this.state.value,
       currency: ZeroAddress,
       arbitrator: this.state.arbitrator,

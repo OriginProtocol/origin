@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+
+import PageTitle from 'components/PageTitle'
 
 import Step1 from '../create-listing/Step1'
 import Step2 from '../create-listing/Step2'
-import Step3 from '../create-listing/Step3'
+import Boost from '../create-listing/Boost'
+import Availability from '../create-listing/Availability'
 import Review from '../create-listing/Review'
 
 class EditListing extends Component {
@@ -12,7 +16,14 @@ class EditListing extends Component {
     super(props)
     this.state = {
       listing: {
+        // HomeShare fields:
+        weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
+        booked: get(props, 'listing.booked', []),
+        customPricing: get(props, 'listing.customPricing', []),
+        unavailable: get(props, 'listing.unavailable', []),
+
         ...pick(props.listing, [
+          '__typename',
           'title',
           'description',
           'category',
@@ -21,6 +32,7 @@ class EditListing extends Component {
         quantity: String(props.listing.unitsTotal),
         price: String(props.listing.price.amount),
         boost: '0',
+        boostLimit: '0',
         media: props.listing.media
       }
     }
@@ -35,18 +47,25 @@ class EditListing extends Component {
     }
     return (
       <div className="container create-listing">
+        <PageTitle>Edit Listing</PageTitle>
         <Switch>
           <Route
-            path="/listings/:listingID/edit/step-2"
+            path="/listing/:listingID/edit/step-2"
             render={() => <Step2 {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/step-3"
-            render={() => <Step3 {...stepProps} />}
+            path="/listing/:listingID/edit/boost"
+            render={() => <Boost {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/review"
-            render={() => <Review {...stepProps} />}
+            path="/listing/:listingID/edit/availability"
+            render={() => <Availability {...stepProps} />}
+          />
+          <Route
+            path="/listing/:listingID/edit/review"
+            render={() => (
+              <Review {...stepProps} refetch={this.props.refetch} />
+            )}
           />
           <Route render={() => <Step1 {...stepProps} />} />
         </Switch>

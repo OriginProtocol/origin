@@ -1,6 +1,5 @@
 'use strict'
 
-import { withRouter } from 'react-router-dom'
 import React from 'react'
 
 import MarketplaceIcon from '!react-svg-loader!../assets/marketplace-icon.svg'
@@ -29,21 +28,26 @@ class Steps extends React.Component {
           icon: <SettingsIcon />
         },
         {
-          path: '/metamask',
+          path: '/metamask'
         },
         {
-          path: '/resolver',
+          path: '/resolver'
         },
         {
-          path: '/success',
+          path: '/success'
+        },
+        {
+          path: '/customdomain'
         }
-       ]
+      ]
     }
   }
 
-
-  stepClassNames (step, i) {
+  stepClassNames(step, i) {
     let classNames = `step step-${i}`
+    if (!this.props.location) {
+      return classNames
+    }
     if (this.props.location.pathname === step.path) {
       classNames += ' active'
     }
@@ -54,32 +58,38 @@ class Steps extends React.Component {
   }
 
   currentStepIndex() {
-    const currentStep = this.state.steps.find((step) => {
+    if (!this.props.location) {
+      return -1
+    }
+    const currentStep = this.state.steps.find(step => {
       return this.props.location.pathname === step.path
     })
     return this.state.steps.indexOf(currentStep)
   }
 
-  render () {
+  render() {
     return (
       <div className="steps">
-        {this.state.steps.map((step, i) => step.title &&
-          <div className={this.stepClassNames(step, i)} key={i}>
-            <div className="svg-wrapper">
-              {step.icon}
-              {this.currentStepIndex() > i &&
-                  <img src="images/checkmark-icon.svg" />
-              }
-            </div>
-            {step.title}
-          </div>
+        {this.state.steps.map(
+          (step, i) =>
+            step.title && (
+              <div className={this.stepClassNames(step, i)} key={i}>
+                <div className="svg-wrapper">
+                  {step.icon}
+                  {this.currentStepIndex() > i && (
+                    <img src="images/checkmark-icon.svg" />
+                  )}
+                </div>
+                {step.title}
+              </div>
+            )
         )}
       </div>
     )
   }
 }
 
-export default withRouter(props => <Steps {...props} />)
+export default Steps
 
 require('react-styl')(`
   .steps
@@ -128,4 +138,3 @@ require('react-styl')(`
     &:after
       left: 54%
 `)
-

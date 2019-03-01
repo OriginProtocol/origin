@@ -1,15 +1,6 @@
+import { getIdsForPage, getConnection } from '../_pagination'
+
 import sortBy from 'lodash/sortBy'
-function bota(input) {
-  return new Buffer(input.toString(), 'binary').toString('base64')
-}
-
-function convertCursorToOffset(cursor) {
-  return atob(cursor)
-}
-
-function atob(input) {
-  return new Buffer(input, 'base64').toString('binary')
-}
 
 export default async function users(contract, { first = 10, after, sort }) {
   if (!contract) {
@@ -46,28 +37,17 @@ export default async function users(contract, { first = 10, after, sort }) {
   } else if (sort === 'lastAction') {
     nodes = sortBy(nodes, n => -n.lastEvent.blockNumber)
   }
-  const ids = nodes.map(n => n.id)
-  const totalCount = ids.length
 
-  let start = 0
-  if (after) {
-    start = ids.indexOf(convertCursorToOffset(after)) + 1
-  }
-  const end = start + first
-  nodes = nodes.slice(start, end)
+  const allIds = nodes.map(n => n.id)
+  const totalCount = allIds.length
 
-  const firstNodeId = nodes[0].id
-  const lastNodeId = nodes[nodes.length - 1].id
+  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
 
-  return {
-    totalCount,
-    nodes,
-    pageInfo: {
-      endCursor: bota(lastNodeId),
-      hasNextPage: end < totalCount,
-      hasPreviousPage: firstNodeId > totalCount,
-      startCursor: bota(firstNodeId)
-    },
-    edges: nodes.map(node => ({ cursor: bota(node.id), node }))
-  }
+  return getConnection({
+    start,
+    first,
+    nodes: nodes.filter(n => ids.indexOf(n.id) >= 0),
+    ids,
+    totalCount
+  })
 }

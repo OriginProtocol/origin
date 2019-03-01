@@ -46,6 +46,10 @@ label {
   margin-top: 0.5rem;
 }
 
+video {
+  margin-bottom: 3rem;
+}
+
 .form-actions {
   text-align: center;
   margin-top: 3rem;
@@ -59,10 +63,14 @@ label {
   float: right;
 }
 
+.metamask-prompt {
+  text-align: center;
+  padding: 4rem 0;
+}
+
 .copyright {
   color: var(--steel);
   text-align: center;
   font-size: 12px;
   margin: 2rem 0 4rem;
 }
-

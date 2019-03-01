@@ -27,6 +27,10 @@ class TransactionDescription extends Component {
       receipt.events.find(e => Events.indexOf(e.event) >= 0) ||
       receipt.events[0]
 
+    if (!event) {
+      return null
+    }
+
     let description = 'Transaction: ' + event.id
 
     const name = event.event
@@ -44,6 +48,8 @@ class TransactionDescription extends Component {
       description = 'You created a listing'
     } else if (name === 'ListingUpdated') {
       description = 'You updated a listing'
+    } else if (name === 'IdentityUpdated') {
+      description = 'You updated your profile'
     }
 
     return <div>{description}</div>

@@ -18,21 +18,23 @@ export default ListingBadge
 
 require('react-styl')(`
   .badge
-    background: gray
-    color: white
-
     &-sold
       background: var(--dark)
+      color: white
 
     &-unavailable
       background: var(--dark)
+      color: white
 
     &-soldout
       background: var(--dark)
+      color: white
 
     &-pending
       background: var(--dark)
+      color: white
 
     &-featured
       background: var(--gold)
+      color: white
 `)

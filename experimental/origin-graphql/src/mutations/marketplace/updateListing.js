@@ -1,15 +1,17 @@
 import { post } from 'origin-ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import { listingInputToIPFS } from './createListing'
 
 async function updateListing(_, args) {
-  const { data, from, autoApprove } = args
+  const { data, unitData, fractionalData, autoApprove } = args
+  const from = args.from || contracts.defaultLinkerAccount
   const { listingId } = parseId(args.listingID)
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data)
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let updateListingCall
@@ -49,7 +51,7 @@ async function updateListing(_, args) {
     )
   }
 
-  const tx = updateListingCall.send({ gas: 4612388, from })
+  const tx = updateListingCall.send({ gas: cost.updateListing, from })
   return txHelper({ tx, from, mutation: 'updateListing' })
 }
 

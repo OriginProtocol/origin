@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   extend type Query {
     messaging(id: String!): Messaging
   }
@@ -6,6 +6,7 @@ export default `
   extend type Mutation {
     enableMessaging: Boolean
     sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
+    markConversationRead(id: String!): Boolean
   }
 
   type Messaging {
@@ -17,6 +18,8 @@ export default `
     pubSig: String
     conversations: [Conversation]
     conversation(id: String!): Conversation
+    canConverseWith(id: String!): Boolean
+    totalUnread: Int
   }
 
   type Conversation {
@@ -24,6 +27,7 @@ export default `
     timestamp: Int
     messages: [Message]
     lastMessage: Message
+    totalUnread: Int
   }
 
   type Message {
@@ -34,6 +38,7 @@ export default `
     content: String
     media: [Media]
     timestamp: Int
+    status: String
   }
 
 `

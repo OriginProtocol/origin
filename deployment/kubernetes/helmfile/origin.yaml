@@ -29,6 +29,8 @@ releases:
   - name: {{ requiredEnv "NAMESPACE" }}-redis
     namespace: {{ requiredEnv "NAMESPACE" }}
     chart: stable/redis
+    # https://github.com/helm/charts/issues/10733
+    version: 5.2.0
     values:
       - ../values/origin/redis/values-{{ requiredEnv "NAMESPACE" }}.yaml
 

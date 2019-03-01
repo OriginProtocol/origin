@@ -13,13 +13,15 @@ const IMAGES_PATH = '../../assets/images/'
 class TransactionItem extends Component {
   render() {
     const { activation, item, address = '', handleApprove, handlePress, handleReject, navigation, style, wallet } = this.props
-    const { cost, gas_cost, ogn_cost, listing = {}, meta, status, to } = item
+    const { cost, gas_cost, ogn_cost, identity = {}, listing = {}, meta, status, to } = item
     const hasNotificationsEnabled = activation.notifications.permissions.hard.alert
     // To Do: account for possible commission
     const hasSufficientFunds = sufficientFunds(wallet, item)
-    const counterpartyAddress = (listing && listing.seller) || to
+    const counterpartyAddress = listing.seller || to
     const { price = { amount: '', currency: '' } } = listing
-    const picture = listing && listing.media && listing.media[0]
+    const { profile = {} } = identity
+    const { avatar, firstName = '', lastName = '' } = profile
+    const picture = (listing.media && listing.media[0]) || avatar
     const costEth = Number(web3.utils.fromWei(cost.toString())).toFixed(5)
     const gasEth = Number(web3.utils.fromWei(gas_cost.toString())).toFixed(5)
     const totalEth = Number(web3.utils.fromWei(
@@ -27,6 +29,7 @@ class TransactionItem extends Component {
     )).toFixed(5)
     const totalOgn = toOgns(ogn_cost)
     let activitySummary, heading
+    const fullName = `${profile.firstName} ${profile.lastName}`.trim() || 'Unnamed User'
 
     switch(meta.method) {
       case 'createListing':
@@ -59,6 +62,10 @@ class TransactionItem extends Component {
         activitySummary = status === 'completed' ? 'Reviewed sale' : 'Review canceled'
         heading = 'Leaving a review'
         break
+      case 'emitIdentityUpdated':
+        activitySummary = status === 'completed' ? 'Identity published' : 'Identity canceled'
+        heading = 'Publishing an identity'
+        break
       default:
         activitySummary = status === 'completed' ? 'Confirmed transaction' : 'Canceled transaction'
         heading = 'Transaction in progress'
@@ -67,10 +74,15 @@ class TransactionItem extends Component {
     return ['completed', 'rejected'].find(s => s === status) ? (
       <TouchableHighlight onPress={handlePress}>
         <View style={[ styles.listItem, styles.completed, style ]}>
-          {!picture && <View style={{ ...styles.thumbnail, ...styles.imageless }} />}
-          {picture && <Image source={{ uri: picture.url }} style={styles.thumbnail} />}
+          {!picture && meta.method === 'emitIdentityUpdated' &&
+            <Image source={require(`${IMAGES_PATH}placeholder-user.png`)} style={{ ...styles.thumbnail }} />
+          }
+          {!picture && meta.method !== 'emitIdentityUpdated' &&
+            <Image source={require(`${IMAGES_PATH}placeholder-listing.png`)} style={{ ...styles.thumbnail }} />
+          }
+          {!!picture && <Image source={{ uri: picture.url || picture }} style={styles.thumbnail} />}
           <View style={styles.content}>
-            {listing &&
+            {(listing.ipfsHash || identity.profile) &&
               <View>
                 <Text style={styles.imperative}>{activitySummary}</Text>
                 <View style={styles.counterparties}>
@@ -80,7 +92,7 @@ class TransactionItem extends Component {
                 </View>
               </View>
             }
-            {!listing &&
+            {(!listing.ipfsHash && !identity.profile) &&
               <View>
                 <Text style={styles.imperative}>called <Text style={styles.subject}>{meta.contract}.{meta.method}</Text></Text>
                 <View style={styles.counterparties}>
@@ -113,10 +125,10 @@ class TransactionItem extends Component {
           navigation.navigate('Transaction', { item })
         }}>
           <View style={styles.listingCard}>
-            {picture &&
+            {!!picture &&
               <View style={styles.imageContainer}>
                 <Image
-                  source={{ uri: picture.url }}
+                  source={{ uri: picture.url || picture }}
                   style={styles.picture}
                   resizeMethod={'resize'}
                   resizeMode={'cover'}
@@ -125,7 +137,7 @@ class TransactionItem extends Component {
             }
             <View style={styles.main}>
               <View style={styles.detailsContainer}>
-                <Text numberOfLines={1} style={styles.subject}>{listing.title}</Text>
+                <Text numberOfLines={1} style={styles.subject}>{listing.title || fullName}</Text>
                 <View style={styles.counterparties}>
                   <Address address={address} label="From Address" style={styles.address} />
                   <Image source={require(`${IMAGES_PATH}arrow-forward.png`)} style={styles.arrow} />
@@ -137,11 +149,12 @@ class TransactionItem extends Component {
                   <Text style={styles.abbreviation}>ETH</Text>
                 </View>
                 {ogn_cost > 0 &&
-                <View style={styles.price}>
-                  <Image source={require(`${IMAGES_PATH}ogn-icon.png`)} style={styles.currencyIcon} />
-                  <Text style={styles.amount}>{totalOgn} </Text>
-                  <Text style={styles.abbreviation}>OGN</Text>
-                </View>}
+                  <View style={styles.price}>
+                    <Image source={require(`${IMAGES_PATH}ogn-icon.png`)} style={styles.currencyIcon} />
+                    <Text style={styles.amount}>{totalOgn} </Text>
+                    <Text style={styles.abbreviation}>OGN</Text>
+                  </View>
+                }
               </View>
               <View style={styles.nav}>
                 <Image source={require(`${IMAGES_PATH}nav-arrow.png`)} />
@@ -184,7 +197,7 @@ class TransactionItem extends Component {
               navigation.navigate('Transaction', { item })
             } else {
               navigation.navigate('WalletFunding', {
-                currency: price.currency.toLowerCase(),
+                currency: price.amount ? price.currency.toLowerCase() : 'eth',
                 item,
               })
             }
@@ -276,12 +289,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginBottom: 10,
   },
-  imageless: {
-    backgroundColor: '#f7f8f8',
-  },
   imperative: {
     fontSize: 17,
-    fontWeight: '300',
+    fontWeight: 'normal',
     marginBottom: 4,
   },
   listingCard: {
@@ -350,7 +360,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     height: 50,
-    marginRight: 10,
+    marginRight: 20,
     width: 50,
   },
 })

@@ -1,11 +1,13 @@
 import contracts from '../contracts'
 
 export default {
-  balance: async (tokenHolder) => {
+  balance: async tokenHolder => {
     try {
       const token = contracts.tokens.find(t => t.id === tokenHolder.token.id)
-      return await token.contract.methods.balanceOf(tokenHolder.account.id).call()
-    } catch(e) {
+      return await token.contract.methods
+        .balanceOf(tokenHolder.account.id)
+        .call()
+    } catch (e) {
       return null
     }
   },

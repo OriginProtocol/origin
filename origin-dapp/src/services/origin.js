@@ -30,6 +30,7 @@ const walletLinkerBaseUrl = mobilize(process.env.WALLET_LINKER_URL)
 const walletLinkerUrl = walletLinkerBaseUrl && `${walletLinkerBaseUrl}/api/wallet-linker`
 const ipfsSwarm = mobilize(process.env.IPFS_SWARM)
 const activeWalletLinker = process.env.SHOW_WALLET_LINKER
+const messagingApiUrl = mobilize(process.env.MESSAGING_API_URL)
 
 // See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
 const getWeb3 = () => {
@@ -67,6 +68,9 @@ const ipfsCreator = repo_key => {
       Addresses: {
        //Swarm: ['/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star']
       }
+    },
+    preload: {
+      enabled: false
     }
   }
 
@@ -88,13 +92,14 @@ const config = {
   ipfsApiPort: process.env.IPFS_API_PORT,
   ipfsGatewayPort: process.env.IPFS_GATEWAY_PORT,
   ipfsGatewayProtocol: process.env.IPFS_GATEWAY_PROTOCOL,
-  discoveryServerUrl: process.env.DISCOVERY_SERVER_URL,
+  discoveryServerUrl: mobilize(process.env.DISCOVERY_SERVER_URL),
   messagingNamespace: process.env.MESSAGING_NAMESPACE,
   arbitrator: process.env.ARBITRATOR_ACCOUNT,
   affiliate: process.env.AFFILIATE_ACCOUNT,
   attestationAccount: process.env.ATTESTATION_ACCOUNT,
   blockEpoch: process.env.BLOCK_EPOCH,
   blockAttestattionV1: process.env.BLOCK_ATTESTATION_V1,
+  messagingApiUrl,
   attestationServerUrl,
   walletLinkerUrl,
   activeWalletLinker,

@@ -2,16 +2,42 @@ import React from 'react'
 import TokenPrice from 'components/TokenPrice'
 import dayjs from 'dayjs'
 
+function paymentStatus(status) {
+  if (status === 'Pending') {
+    return 'In Escrow'
+  }
+  return status
+}
+
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
-    {/* <li className="price-unit">
-      <span>Price/unit</span>
-      <span><TokenPrice {...offer.listing.price} /></span>
-    </li>
-    <li className="quantity">
-      <span>Quantity</span>
-      <span>5</span>
-    </li> */}
+    {offer.listing.__typename === 'FractionalListing' ||
+    offer.quantity === 1 ? null : (
+      <>
+        <li className="price-unit">
+          <span>Price / unit</span>
+          <span>
+            <TokenPrice {...offer.listing.price} />
+          </span>
+        </li>
+        <li className="quantity">
+          <span>Quantity</span>
+          <span>{offer.quantity}</span>
+        </li>
+      </>
+    )}
+    {!offer.startDate ? null : (
+      <li className="start-date">
+        <span>Check in</span>
+        <span>{dayjs(offer.startDate).format('MMM. D, YYYY')}</span>
+      </li>
+    )}
+    {!offer.endDate ? null : (
+      <li className="end-date">
+        <span>Check out</span>
+        <span>{dayjs(offer.endDate).format('MMM. D, YYYY')}</span>
+      </li>
+    )}
     <li className="total-price">
       <span>Total Price</span>
       <span>
@@ -20,7 +46,7 @@ const OfferDetails = ({ offer }) => (
     </li>
     <li className="payment-status">
       <span>Payment Status</span>
-      <span>{offer.statusStr}</span>
+      <span>{paymentStatus(offer.statusStr)}</span>
     </li>
     <li className="offer-date">
       <span>Offer Date</span>
@@ -35,14 +61,6 @@ const OfferDetails = ({ offer }) => (
       <span>{offer.id}</span>
     </li>
     {/*
-    <li className="start-date">
-      <span>Start Date</span>
-      <span>Nov. 15, 2018</span>
-    </li>
-    <li className="end-date">
-      <span>End Date</span>
-      <span>Nov. 20, 2018</span>
-    </li>
     <li className="security-deposit">
       <span>Security Deposit</span>
       <span>$200.00</span>
@@ -60,7 +78,7 @@ export default OfferDetails
 require('react-styl')(`
   .offer-details
     background: var(--pale-grey-eight)
-    border-radius: 5px
+    border-radius: var(--default-radius)
     font-size: 18px
     font-weight: normal
     padding: 1rem 1.5rem

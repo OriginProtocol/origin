@@ -70,6 +70,7 @@ class ListingsGrid extends Component {
             </div>
           </div>
         )}
+
         {contractFound && (
           <div className="listings-grid">
             {resultsCount > 0 && (
@@ -105,84 +106,36 @@ class ListingsGrid extends Component {
               />
             </>
           )}
-          {resultsCount == 0 && this.props.isWhiteLabel && (
+
+          {resultsCount == 0 && this.props.renderMode !== 'search' && this.props.isWhiteLabel && (
             <div className="row">
               <div className="col-12 text-center">
                 <img src="images/empty-listings-graphic.svg" />
                 <h1>
                   <FormattedMessage
-                    id={'listings.no-listings'}
-                    defaultMessage={"You don't have any listings yet."}
+                    id={'listings.no-listings-whitelabel'}
+                    defaultMessage={"Your marketplace doesn't have any listings yet."}
                   />
                 </h1>
                 <p>
                   <FormattedMessage
-                    id={'listings.no-listings-steps'}
+                    id={'listings.no-listings-whitelabel-message'}
                     defaultMessage={
-                      'Follow the steps below to create your first listing!'
+                      'You can create listings yourself or invite sellers to join your platform!'
                     }
                   />
                 </p>
                 <br />
                 <br />
                 <div className="row">
-                  <div className="col-12 col-sm-4 col-lg-2 offset-lg-3 text-center">
-                    <div className="numberCircle">
-                      <h1 className="circle-text">
-                        1
-                      </h1>
-                    </div>
-                    <p>
-                      <FormattedMessage
-                        id={'listings.step-one'}
-                        defaultMessage={
-                          'Choose the right category for your listing.'
-                        }
-                      />
-                    </p>
-                  </div>
-                  <div className="col-12 col-sm-4 col-lg-2 text-center">
-                    <div className="numberCircle">
-                      <h1 className="circle-text">
-                        2
-                      </h1>
-                    </div>
-                    <p>
-                      <FormattedMessage
-                        id={'listings.step-two'}
-                        defaultMessage={
-                          'Give your listing a name, description, and price.'
-                        }
-                      />
-                    </p>
-                  </div>
-                  <div className="col-12 col-sm-4 col-lg-2 text-center">
-                    <div className="numberCircle">
-                      <h1 className="circle-text">
-                        3
-                      </h1>
-                    </div>
-                    <p>
-                      <FormattedMessage
-                        id={'listings.step-three'}
-                        defaultMessage={
-                          'Preview your listing and publish it to the blockchain.'
-                        }
-                      />
-                    </p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 text-center">
-                    <br />
-                    <br />
+                  <div className="col text-center">
                     <a
                       href="#/create"
                       className="btn btn-lrg btn-primary btn-auto-width"
                     >
                       <FormattedMessage
                         id={'listings.create-listing'}
-                        defaultMessage={'Create Your First Listing'}
+                        defaultMessage={'Create a Listing'}
                       />
                     </a>
                   </div>
@@ -190,9 +143,23 @@ class ListingsGrid extends Component {
               </div>
             </div>
           )}
-          </div>
-        )}
-      </div>
+
+          {resultsCount == 0 && this.props.renderMode === 'search' && (
+            <div className="row">
+              <div className="col-12 text-center">
+                <img src="images/empty-listings-graphic.svg" />
+                <h1>
+                  <FormattedMessage
+                    id={'listings.no-search-results'}
+                    defaultMessage={'No search results found.'}
+                  />
+                </h1>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
     )
   }
 }

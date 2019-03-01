@@ -1,38 +1,54 @@
 import { extractCallParams } from './../utils/contract-decoder'
 import { Listing } from '../models/listing'
 import {
-  LISTING_DATA_TYPE
+  IDENTITY_DATA_TYPE,
+  LISTING_DATA_TYPE,
 } from '../ipfsInterface/store'
 
 
 export default class Reflection {
-  constructor({ contractService, marketplace, token }) {
+  constructor({ contractService, marketplace, token, users }) {
     this.contractService = contractService
     this.marketplace = marketplace
     this.token = token
+    this.users = users
+  }
+
+  makeSignedListingId(networkId, listingID) {
+    return this.marketplace.resolver.makeListingId(networkId, 'VA_Marketplace', listingID)
   }
 
   async _addOriginMeta(networkId, address, meta) {
     if (this.contractService.marketplaceContracts[meta.contract])
     {
       meta.marketplace = true
-      const params = meta.params
-      if (params.listingID)
+      if (meta.params.listingID)
       {
         // listingId is actually the listingIndex
-        const listingId = this.marketplace.resolver.makeListingId(networkId, meta.contract, params.listingID)
+        const listingId = this.marketplace.resolver.makeListingId(networkId, meta.contract, meta.params.listingID)
         meta.listing = await this.marketplace.getListing(listingId)
       }
-      else if (params._ipfsHash)
+      else if (meta.params._ipfsHash)
       {
         const realIpfsHash = this.contractService.getIpfsHashFromBytes32(
-          params._ipfsHash
+          meta.params._ipfsHash
         )
         const ipfsListing = await this.marketplace.ipfsDataStore.load(LISTING_DATA_TYPE, realIpfsHash)
-        meta.listing = Listing.init(undefined, { ipfsHash: params._ipfsHash }, ipfsListing)
+        meta.listing = Listing.init(undefined, { ipfsHash: meta.params._ipfsHash }, ipfsListing)
       }
     }
-    else if (meta.contract == 'OriginToken')
+    else if (meta.contract === 'IdentityEvents')
+    {
+      console.log('ipfsPro', meta)
+      meta.users = true
+      if (meta.params.ipfsHash) {
+        const realIpfsHash = this.contractService.getIpfsHashFromBytes32(
+          meta.params.ipfsHash
+        )
+        meta.identity = await this.users.ipfsDataStore.load(IDENTITY_DATA_TYPE, realIpfsHash)
+      }
+    }
+    else if (meta.contract === 'OriginToken')
     {
       meta.originToken = true
       if (meta.params._value) {

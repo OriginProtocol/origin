@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
-import pick from 'lodash/pick'
+import { Query, Mutation } from 'react-apollo'
+import get from 'lodash/get'
 
 import Modal from 'components/Modal'
 
 import VerifyFacebookMutation from 'mutations/VerifyFacebook'
+import query from 'queries/FacebookAuthUrl'
 
 class FacebookAttestation extends Component {
   state = {
-    stage: 'GenerateCode',
-    email: '',
-    code: ''
+    stage: 'GenerateCode'
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -41,25 +40,33 @@ class FacebookAttestation extends Component {
           this.props.onClose()
         }}
       >
-        <div>{this[`render${this.state.stage}`]()}</div>
+        <Query query={query}>
+          {({ data }) => {
+            const authUrl = get(data, 'identityEvents.facebookAuthUrl')
+            return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
+          }}
+        </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode() {
+  renderGenerateCode({ authUrl }) {
     return (
       <>
         <h2>Verify your Facebook Account</h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
+        <div className="alert alert-danger mt-3 d-block d-sm-none">
+          <b>Warning:</b> Currently unavailable on mobile devices
+        </div>
         <div className="help">
           Other users will know that you have a verified Facebook account, but
           your account details will not be published on the blockchain. We will
           never post on your behalf.
         </div>
         <div className="actions">
-          {this.renderVerifyButton()}
+          {this.renderVerifyButton({ authUrl })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -70,7 +77,7 @@ class FacebookAttestation extends Component {
     )
   }
 
-  renderVerifyButton() {
+  renderVerifyButton({ authUrl }) {
     return (
       <Mutation
         mutation={VerifyFacebookMutation}
@@ -79,9 +86,6 @@ class FacebookAttestation extends Component {
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
-              topic: result.claimType,
-              issuer: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', //result.issuer,
-              signature: result.signature,
               data: result.data,
               loading: false
             })
@@ -96,15 +100,14 @@ class FacebookAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light"
+            className="btn btn-outline-light d-none d-sm-block"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  email: this.state.email,
-                  code: this.state.code
+                  authUrl
                 }
               })
             }}
@@ -130,9 +133,7 @@ class FacebookAttestation extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => {
-              this.props.onComplete(
-                pick(this.state, 'topic', 'issuer', 'signature', 'data')
-              )
+              this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
             children="Continue"

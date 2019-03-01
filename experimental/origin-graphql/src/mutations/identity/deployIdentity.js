@@ -1,53 +1,53 @@
-import ClaimHolderPresigned from 'origin-contracts/build/contracts/ClaimHolderPresigned'
+import { post } from 'origin-ipfs'
+import validator from 'origin-validator'
 
-import attestationArgs from './_attestationArgs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import validateAttestation from '../../utils/validateAttestation'
+import costs from '../_gasCost.js'
 
-async function deployIdentity(_, { from, profile, attestations = [] }) {
+async function deployIdentity(
+  _,
+  { from = contracts.defaultLinkerAccount, profile = {}, attestations = [] }
+) {
+  console.log('deployIdentity:', from)
   await checkMetaMask(from)
-  const web3 = contracts.web3Exec
 
-  const attArgs = await attestationArgs(profile, attestations)
-  const args = [window.localStorage.userRegistryContract, ...attArgs]
+  attestations = attestations
+    .map(a => {
+      try {
+        return {
+          ...JSON.parse(a),
+          schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json'
+        }
+      } catch (e) {
+        console.log('Error parsing attestation', a)
+        return null
+      }
+    })
+    .filter(a => validateAttestation(from, a))
 
-  const Contract = new web3.eth.Contract(ClaimHolderPresigned.abi)
-  const tx = Contract.deploy({ data: getLinkedData(), arguments: args }).send({
-    gas: 5500000,
-    from
+  profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
+  profile.ethAddress = from
+
+  const data = {
+    schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
+    profile,
+    attestations
+  }
+
+  validator('https://schema.originprotocol.com/identity_1.0.0.json', data)
+  validator('https://schema.originprotocol.com/profile_2.0.0.json', profile)
+  attestations.forEach(a => {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
   })
 
-  return txHelper({
-    tx,
-    from,
-    mutation: 'deployIdentity',
-    onReceipt: receipt => {
-      Contract.options.address = receipt.contractAddress
-    }
-  })
-}
+  const ipfsHash = await post(contracts.ipfsRPC, data)
+  const tx = contracts.identityEventsExec.methods
+    .emitIdentityUpdated(ipfsHash)
+    .send({ gas: costs.emitIdentityUpdated, from })
 
-function getLinkedData() {
-  let data = ClaimHolderPresigned.bytecode
-  if (!window.localStorage.KeyHolderLibrary) {
-    throw 'Could not link KeyHolderLibrary'
-  }
-  if (!window.localStorage.ClaimHolderLibrary) {
-    throw 'Could not link ClaimHolderLibrary'
-  }
-  if (!window.localStorage.userRegistryContract) {
-    throw 'No UserRegistry'
-  }
-  data = data
-    .replace(
-      /__KeyHolderLibrary______________________/g,
-      window.localStorage.KeyHolderLibrary.slice(2)
-    )
-    .replace(
-      /__ClaimHolderLibrary____________________/g,
-      window.localStorage.ClaimHolderLibrary.slice(2)
-    )
-  return data
+  return txHelper({ tx, from, mutation: 'deployIdentity' })
 }
 
 export default deployIdentity

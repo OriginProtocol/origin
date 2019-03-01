@@ -14,12 +14,18 @@ class Step1 extends Component {
     this.state = { ...props.listing, fields: Object.keys(props.listing) }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.category !== this.state.category && this.catRef) {
+      this.catRef.focus()
+    }
+  }
+
   render() {
     const isEdit = this.props.mode === 'edit'
     if (this.state.valid) {
       if (isEdit) {
         return (
-          <Redirect to={`/listings/${this.props.listingId}/edit/step-2`} push />
+          <Redirect to={`/listing/${this.props.listingId}/edit/step-2`} push />
         )
       } else {
         return <Redirect to="/create/step-2" push />
@@ -36,12 +42,15 @@ class Step1 extends Component {
         <div
           key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-          onClick={() => this.setState({ category: id, subCategory: '' })}
+          onClick={e => {
+            if (e.target.tagName == 'SELECT') return
+            this.setState({ category: id, subCategory: '' })
+          }}
         >
           <div className="title">{title}</div>
           {!active ? null : (
             <div className="sub-cat">
-              <select {...input('subCategory')}>
+              <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">Select</option>
                 {Categories[id].map(([id, title]) => (
                   <option key={id} value={id}>
@@ -60,11 +69,7 @@ class Step1 extends Component {
       <div className="row">
         <div className="col-md-8">
           <div className="create-listing-step-1">
-            {isEdit ? (
-              <h2>Let’s update your listing</h2>
-            ) : (
-              <h2>Hi there! Let’s get started creating your listing</h2>
-            )}
+            {!isEdit ? null : <h2>Let’s update your listing</h2>}
             <div className="wrap">
               <div className="step">Step 1</div>
               <div className="step-description">
@@ -95,7 +100,7 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <Wallet />
         </div>
       </div>
@@ -105,17 +110,33 @@ class Step1 extends Component {
   validate() {
     const newState = {}
 
-    if (!this.state.subCategory) {
+    const { category, subCategory } = this.state
+
+    if (!subCategory) {
       newState.subCategoryError = 'Category is required'
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
+    let __typename = 'UnitListing'
+    if (category === 'schema.announcements') {
+      __typename = 'AnnouncementListing'
+    } else if (
+      category === 'schema.forRent' &&
+      subCategory === 'schema.housing'
+    ) {
+      __typename = 'FractionalListing'
+    }
+
     if (!newState.valid) {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
-      this.props.onChange(pick(this.state, this.state.fields))
+      this.props.onChange({
+        ...pick(this.state, this.state.fields),
+        __typename
+      })
     }
+
     this.setState(newState)
     return newState.valid
   }
@@ -124,21 +145,22 @@ class Step1 extends Component {
 export default Step1
 
 require('react-styl')(`
-  .create-listing-step-1
+  .create-listing .create-listing-step-1
     max-width: 570px
     > .wrap
       max-width: 460px
     h2
-      font-family: Poppins;
-      font-size: 40px;
-      font-weight: 200;
+      font-family: var(--heading-font)
+      font-size: 40px
+      font-weight: 200
+      line-height: 1.25
     .category
       border: 1px solid var(--light)
       font-size: 24px
       font-weight: normal
       color: var(--dark)
       margin-bottom: 0.75rem
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       &.inactive
         cursor: pointer
       &.inactive:hover
@@ -176,13 +198,20 @@ require('react-styl')(`
         padding: 0.5rem 1rem 1rem 1rem
 
     .actions
-      margin-top: 2rem
-      display: flex;
-      justify-content: flex-end;
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+      justify-content: flex-end
 
+
+
+  @media (max-width: 767.98px)
+    .create-listing .create-listing-step-1
+      h2
+        font-size: 32px
+        line-height: 1.25
+      .category .title::before
+        width: 7rem
+        height: 4rem
+
+      .actions
+        justify-content: center
+        margin-bottom: 2.5rem
 `)

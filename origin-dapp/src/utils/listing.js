@@ -67,7 +67,7 @@ export function dappFormDataToOriginListing(formData) {
         amount: formData.boostValue.toString(),
         currency: 'OGN'
       },
-      slots: formData.slots,
+      availability: formData.availability,
       slotLength: formData.slotLength,
       slotLengthUnit: formData.slotLengthUnit
     }
@@ -151,10 +151,11 @@ export async function originToDAppListing(originListing) {
     isFractional,
     isMultiUnit,
     listingType: originListing.type,
-    slots: originListing.slots,
+    availability: originListing.availability,
     fractionalTimeIncrement: isFractional && slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily',
     offers: originListing.offers,
-    events: originListing.events
+    events: originListing.events,
+    isEmptySeller: originListing.isEmptySeller
   }
 
   if (isMultiUnit) {
@@ -212,7 +213,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     seller,
     unitsRemaining,
     isFractional,
-    boostRemaining
+    boostRemaining,
+    availability
   } = listing
 
   /* Find the most relevant offer where user is a seller. If there is a pending offer choose
@@ -260,11 +262,33 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     })
   }
 
+  let total = 0
+  let priceCount = 0
+  let averagePrice = 0
+  if (isFractional) {
+    availability.map((event) => {
+      if (Array.isArray(event)) {
+        event.map((arr) => {
+          if (Array.isArray(arr)) {
+            const isPriceArr = arr.includes('x-price')
+
+            if (isPriceArr) {
+              total += (arr[3] && parseFloat(arr[3]))
+              priceCount++
+            }
+          }
+        })
+      }
+    })
+
+    averagePrice = total / priceCount
+  }
+
   const isWithdrawn = status === 'inactive'
   const isPending = isMultiUnit ? false : offerWithStatusExists('pending')
   const isSold = isMultiUnit ? multiUnitListingIsSold() : offerWithStatusExists('sold')
   const isAvailable = isMultiUnit ? unitsRemaining > 0 : (!isPending && !isSold && !isWithdrawn)
-  const showPendingBadge = isPending && !isWithdrawn && !isFractional
+  const showPendingBadge = isPending && !isWithdrawn && !isFractional && !listing.isEmptySeller
   const showSoldBadge = (isSold || isWithdrawn) && !isFractional
   const showRemainingBoost = isMultiUnit && boostRemaining > 0
 
@@ -291,7 +315,8 @@ export function getDerivedListingData(listing, usersWalletAddress = null) {
     userIsBuyerOffer: userIsBuyerOffers.length > 0 ? userIsBuyerOffers[0] : undefined,
     userIsBuyer: userIsBuyerOffers.length > 0,
     userIsSeller: usersWalletAddress !== null && formattedAddress(usersWalletAddress) === formattedAddress(seller),
-    showRemainingBoost
+    showRemainingBoost,
+    averagePrice
   }
 }
 

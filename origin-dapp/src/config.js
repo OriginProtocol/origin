@@ -3,7 +3,7 @@ export const baseConfig = {
   about: '',
   subdomain: '',
   logoUrl: '',
-  iconUrl: '',
+  faviconUrl: '',
   cssVars: {
     // Fonts
     defaultFont: ['Lato', 'Helvetica Neue', 'Arial', 'Sans-Serif'],

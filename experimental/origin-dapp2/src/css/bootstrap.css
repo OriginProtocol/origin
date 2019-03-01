@@ -1,9 +1,6 @@
 /* This should probably use scss to properly override Bootstrap variables */
 
 .badge {
-  border-radius: 3px;
-  font-size: 0.6rem;
-  padding: 0.4em;
   text-transform: uppercase;
 }
 
@@ -58,4 +55,8 @@
 }
 .form-control.dark::-webkit-input-placeholder {
   color: var(--dusk);
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: var(--dusk)
 }

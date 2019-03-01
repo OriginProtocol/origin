@@ -12,7 +12,7 @@ const acceptedFileTypes = [
   'image/x-icon',
   // Not valid but sometimes used for icons
   'image/ico',
-  'image/icon',
+  'image/icon'
 ]
 
 class ImagePicker extends React.Component {
@@ -20,7 +20,7 @@ class ImagePicker extends React.Component {
     super(props)
 
     this.state = {
-      imageUrl: null,
+      imageUrl: this.props.imageUrl,
       loading: false,
       uploadError: null
     }
@@ -34,8 +34,8 @@ class ImagePicker extends React.Component {
     const { files } = target
 
     this.setState({
-      loading: true,
-      uploadError: null
+      uploadError: null,
+      loading: true
     })
 
     if (files && files[0]) {
@@ -48,24 +48,29 @@ class ImagePicker extends React.Component {
         await superagent
           .post(`${process.env.IPFS_API_URL}/api/v0/add`)
           .send(body)
-          .then((response) => {
-            const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${response.body.Hash}`
+          .then(response => {
+            const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${
+              response.body.Hash
+            }`
             this.setState({ imageUrl: imageUrl })
             if (this.props.onUpload) {
               this.props.onUpload(this.props.name, imageUrl)
             }
           })
-          .catch((error) => {
-            if (error.response.status === 413) {
-              this.setState({
-                uploadError: 'Image is too large, please choose something below 2mb.',
-                loading: false
-              })
-            } else if (error.response.status === 415) {
-              this.setState({
-                uploadError: 'Image is an invalid type.',
-                loading: false
-              })
+          .catch(error => {
+            if (error.response) {
+              if (error.response.status === 413) {
+                this.setState({
+                  uploadError:
+                    'Image is too large, please choose something below 2mb.',
+                  loading: false
+                })
+              } else if (error.response.status === 415) {
+                this.setState({
+                  uploadError: 'Image is an invalid type.',
+                  loading: false
+                })
+              }
             } else {
               this.setState({
                 uploadError: 'An error occurred uploading your image.',
@@ -74,7 +79,11 @@ class ImagePicker extends React.Component {
             }
           })
       } else {
-        console.log('Invalid file type: ', file.type)
+        this.setState({
+          uploadError:
+            'That file type is not supported, please use JPEG or PNG.',
+          loading: false
+        })
       }
     }
   }
@@ -90,45 +99,49 @@ class ImagePicker extends React.Component {
           id={this.props.name + '-picker'}
           className="form-control-file"
           type="file"
-          accept="image/*"
+          accept={acceptedFileTypes}
           onChange={this.handleFileChange}
         />
 
-        {this.state.imageUrl !== null ? this.renderPreview() :
-          <div
-            className="image-picker"
-            onClick={this.handlePreviewClick}
-          >
+        {this.state.imageUrl ? (
+          this.renderPreview()
+        ) : (
+          <div className="image-picker" onClick={this.handlePreviewClick}>
             <div className="upload-wrapper">
               <img src="images/upload-icon.svg" />
               <p className="title">{this.props.title}</p>
               <p>
-                Recommended Size: <br/>
+                Recommended Size: <br />
                 {this.props.recommendedSize}
               </p>
             </div>
-            <label htmlFor={this.props.name + '-picker'}
-                className="btn btn-outline-primary"
-                disabled={this.state.loading}>
+            <label
+              htmlFor={this.props.name + '-picker'}
+              className="btn btn-outline-primary"
+              disabled={this.state.loading}
+            >
               Upload
             </label>
           </div>
-        }
+        )}
 
-        {this.state.uploadError &&
+        {this.state.uploadError && (
           <div className="invalid-feedback">{this.state.uploadError}</div>
-        }
+        )}
       </div>
     )
   }
 
-  renderPreview () {
+  renderPreview() {
     return (
       <div className="preview">
         <div className="upload-wrapper">
           <img src={this.state.imageUrl} />
         </div>
-        <label htmlFor={this.props.name + '-picker'} className="btn btn-outline-primary">
+        <label
+          htmlFor={this.props.name + '-picker'}
+          className="btn btn-outline-primary"
+        >
           Change
         </label>
       </div>

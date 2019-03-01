@@ -2,6 +2,7 @@ import { post } from 'origin-ipfs'
 import validator from 'origin-validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -9,7 +10,7 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
 
-  const buyer = data.from
+  const buyer = data.from || contracts.defaultLinkerAccount
   const marketplace = contracts.marketplaceExec
   const ipfsData = await toIpfsData(data)
 
@@ -56,11 +57,11 @@ async function makeOffer(_, data) {
   }
 
   const tx = marketplace.methods.makeOffer(...args).send({
-    gas: 4612388,
+    gas: cost.makeOffer,
     from: buyer,
     value
   })
-  return txHelper({ tx, from: data.from, mutation: 'makeOffer' })
+  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
 
 async function toIpfsData(data) {
@@ -72,16 +73,19 @@ async function toIpfsData(data) {
   const unitsAvailable = Number(listing.unitsAvailable)
   const offerQuantity = Number(data.quantity)
   if (offerQuantity > unitsAvailable) {
-    throw new Error(`Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`)
+    throw new Error(
+      `Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`
+    )
   }
 
-  let commission = { currency: 'OGN', amount: '0' }
+  const commission = { currency: 'OGN', amount: '0' }
   if (data.commission) {
     // Passed in commission takes precedence
     commission.amount = web3.utils.fromWei(data.commission, 'ether')
   } else if (listing.commissionPerUnit) {
     // Default commission to min(depositAvailable, commissionPerUnit)
-    const amount = web3.utils.toBN(listing.commissionPerUnit)
+    const amount = web3.utils
+      .toBN(listing.commissionPerUnit)
       .mul(web3.utils.toBN(data.quantity))
     const depositAvailable = web3.utils.toBN(listing.depositAvailable)
     const commissionWei = amount.lt(depositAvailable)
@@ -92,7 +96,7 @@ async function toIpfsData(data) {
 
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
-    listingId,
+    listingId: data.listingID,
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
@@ -100,8 +104,8 @@ async function toIpfsData(data) {
       currency: 'ETH'
     },
     commission,
-    finalizes:
-      data.finalizes || Math.round(+new Date() / 1000) + 60 * 60 * 24 * 365
+    finalizes: data.finalizes || 60 * 60 * 24 * 365,
+    ...(data.fractionalData || {})
   }
 
   validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
