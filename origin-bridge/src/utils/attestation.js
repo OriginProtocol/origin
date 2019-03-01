@@ -5,6 +5,7 @@ const Web3 = require('web3')
 const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 const Attestation = require('../models/index').Attestation
 const constants = require('../constants')
+const stringify = require('json-stable-stringify')
 
 async function generateAttestation(
   attestationType,
@@ -19,13 +20,13 @@ async function generateAttestation(
     attestation: attestationBody
   }
 
-  // TODO: verify determinism of JSONifying data for hashing
-
   const signature = {
     bytes: generateAttestationSignature(
       process.env.ATTESTATION_SIGNING_KEY,
       ethAddress,
-      JSON.stringify(data)
+      // Use stringify rather than JSON.stringify to produce deterministic JSON
+      // so the validation of the signature works.
+      stringify(data)
     ),
     version: '1.0.0'
   }
