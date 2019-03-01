@@ -11,7 +11,7 @@
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"**/*.js\"",
     "start": "per-env",
-    "start:development": "nodemon -r src/env.js src/app.js",
+    "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./dist/env.js dist/app.js",
     "test": "mocha --exit"
   },
