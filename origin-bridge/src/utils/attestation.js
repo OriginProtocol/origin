@@ -1,5 +1,8 @@
+'use strict'
+
 const eth = require('web3-eth')
-const web3 = require('web3')
+const Web3 = require('web3')
+const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 const Attestation = require('../models/index').Attestation
 const constants = require('../constants')
 

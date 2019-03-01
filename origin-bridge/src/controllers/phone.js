@@ -1,6 +1,9 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
 const request = require('superagent')
+const get = require('lodash/get')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -16,7 +19,7 @@ const logger = require('../logger')
 router.post('/generate-code', phoneGenerateCode, async (req, res) => {
   const params = {
     country_code: req.body.country_calling_code,
-    phone_number: req.body.phone_number,
+    phone_number: req.body.phone,
     via: req.body.method,
     code_length: 6
   }
@@ -75,18 +78,18 @@ router.post('/generate-code', phoneGenerateCode, async (req, res) => {
 router.post('/verify', phoneVerifyCode, async (req, res) => {
   const params = {
     country_code: req.body.country_calling_code,
-    phone_number: req.body.phone_number,
-    code: req.body.code
+    phone_number: req.body.phone,
+    verification_code: req.body.code
   }
 
   let response
   try {
     response = await request
-      .post('https://api.authy.com/protected/json/phones/verification/check')
-      .send(params)
+      .get('https://api.authy.com/protected/json/phones/verification/check')
+      .query(params)
       .set('X-Authy-API-Key', process.env.TWILIO_VERIFY_API_KEY)
   } catch (error) {
-    const twilioErrorCode = error.response.body['error_code']
+    const twilioErrorCode = get(error, 'response.body.error_code')
     if (twilioErrorCode === '60023') {
       return res.status(400).send({
         errors: {
@@ -100,7 +103,11 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
         }
       })
     } else {
-      logger.error(`Could not verify phone verification code: ${error}`)
+      if (twilioErrorCode) {
+        logger.error(`Could not verify phone verification code: ${error.response.text}`)
+      } else {
+        logger.error(`Could not verify phone verification code: ${error}`)
+      }
       return res.status(500).send({
         errors: [
           'Could not verify phone verification code, please try again shortly.'
@@ -130,7 +137,7 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
     }
   }
   const attestationValue = `${req.body.country_calling_code} ${
-    req.body.phone_number
+    req.body.phone
   }`
 
   const attestation = await generateAttestation(

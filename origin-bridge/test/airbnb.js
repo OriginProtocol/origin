@@ -22,7 +22,7 @@ describe('airbnb attestations', () => {
 
   it('should generate a verification code', async () => {
     const response = await request(app)
-      .get('/airbnb/generate-code')
+      .get('/api/attestations/airbnb/generate-code')
       .query({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 123456
@@ -46,7 +46,7 @@ describe('airbnb attestations', () => {
       )
 
     const response = await request(app)
-      .post('/airbnb/verify')
+      .post('/api/attestations/airbnb/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 123456
@@ -75,7 +75,7 @@ describe('airbnb attestations', () => {
 
   it('should error on invalid airbnb user id format', async () => {
     const response = await request(app)
-      .post('/airbnb/verify')
+      .post('/api/attestations/airbnb/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 'ab123456'
@@ -92,7 +92,7 @@ describe('airbnb attestations', () => {
       .reply(200, 'Hello!')
 
     const response = await request(app)
-      .post('/airbnb/verify')
+      .post('/api/attestations/airbnb/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 123456
@@ -110,7 +110,7 @@ describe('airbnb attestations', () => {
       .reply(404)
 
     const response = await request(app)
-      .post('/airbnb/verify')
+      .post('/api/attestations/airbnb/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 123456
@@ -126,7 +126,7 @@ describe('airbnb attestations', () => {
       .reply(500)
 
     const response = await request(app)
-      .post('/airbnb/verify')
+      .post('/api/attestations/airbnb/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
         airbnbUserId: 654321

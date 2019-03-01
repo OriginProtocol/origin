@@ -24,7 +24,7 @@ describe('email attestations', () => {
     const sendStub = sinon.stub(sendgridMail, 'send')
 
     await request(app)
-      .post('/email/generate-code')
+      .post('/api/attestations/email/generate-code')
       .send({ email: 'origin@protocol.foo' })
       .expect(200)
 
@@ -37,7 +37,7 @@ describe('email attestations', () => {
     const sendStub = sinon.stub(sendgridMail, 'send').throws()
 
     const response = await request(app)
-      .post('/email/generate-code')
+      .post('/api/attestations/email/generate-code')
       .send({ email: 'origin@protocol.foo' })
       .expect(500)
 
@@ -58,7 +58,7 @@ describe('email attestations', () => {
       req.session = {}
       next()
     })
-    parentApp.post('/email/verify', (req, res, next) => {
+    parentApp.post('/api/attestations/email/verify', (req, res, next) => {
       req.session.emailAttestation = {
         // origin@protocol.foo
         emailHash:
@@ -71,7 +71,7 @@ describe('email attestations', () => {
     parentApp.use(app)
 
     const response = await request(parentApp)
-      .post('/email/verify')
+      .post('/api/attestations/email/verify')
       .send({
         email: 'origin@protocol.foo',
         code: '123456',
@@ -106,7 +106,7 @@ describe('email attestations', () => {
       req.session = {}
       next()
     })
-    parentApp.post('/email/verify', (req, res, next) => {
+    parentApp.post('/api/attestations/email/verify', (req, res, next) => {
       req.session.emailAttestation = {
         // origin@protocol.foo
         emailHash:
@@ -119,7 +119,7 @@ describe('email attestations', () => {
     parentApp.use(app)
 
     const response = await request(parentApp)
-      .post('/email/verify')
+      .post('/api/attestations/email/verify')
       .send({
         email: 'origin@protocol.foo',
         code: '123456',
@@ -137,7 +137,7 @@ describe('email attestations', () => {
       req.session = {}
       next()
     })
-    parentApp.post('/email/verify', (req, res, next) => {
+    parentApp.post('/api/attestations/email/verify', (req, res, next) => {
       const now = new Date()
       req.session.emailAttestation = {
         // origin@protocol.foo
@@ -151,7 +151,7 @@ describe('email attestations', () => {
     parentApp.use(app)
 
     const response = await request(parentApp)
-      .post('/email/verify')
+      .post('/api/attestations/email/verify')
       .send({
         email: 'origin@protocol.foo',
         code: '123456',
@@ -166,7 +166,7 @@ describe('email attestations', () => {
 
   it('should error on missing verification code', async () => {
     const response = await request(app)
-      .post('/email/verify')
+      .post('/api/attestations/email/verify')
       .send({
         email: 'origin@protocol.foo',
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
@@ -178,7 +178,7 @@ describe('email attestations', () => {
 
   it('should error on incorrect email format', async () => {
     const response = await request(app)
-      .post('/email/verify')
+      .post('/api/attestations/email/verify')
       .send({
         email: 'originprotocol.foo',
         code: '123456',

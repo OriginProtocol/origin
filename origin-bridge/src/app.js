@@ -1,5 +1,8 @@
+'use strict'
+
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 
@@ -18,6 +21,7 @@ if (process.env.NODE_ENV == 'production') {
   sess.cookie.secure = true
 }
 app.use(session(sess))
+app.use(cors({ origin:true, credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 

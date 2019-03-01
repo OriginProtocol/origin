@@ -1,3 +1,5 @@
+'use strict'
+
 // 128 words to map character codes to words
 const words = [
   'surprise',

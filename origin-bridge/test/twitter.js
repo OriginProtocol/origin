@@ -31,7 +31,7 @@ describe('twitter attestations', async () => {
       .reply(200, 'oauth_token=origin&oauth_token_secret=protocol')
 
     const response = await request(app)
-      .get('/twitter/auth-url')
+      .get('/api/attestations/twitter/auth-url')
       .expect(200)
 
     expect(response.body.url).to.equal(
@@ -49,7 +49,7 @@ describe('twitter attestations', async () => {
       .reply(200, { screen_name: 'Origin Protocol' })
 
     const response = await request(app)
-      .post('/twitter/verify')
+      .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
         'oauth-verifier': 'verifier'
@@ -85,7 +85,7 @@ describe('twitter attestations', async () => {
       .reply(401)
 
     const response = await request(app)
-      .post('/twitter/verify')
+      .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
         'oauth-verifier': 'invalid-verifier'
@@ -99,7 +99,7 @@ describe('twitter attestations', async () => {
 
   it('should error on missing verifier', async () => {
     const response = await request(app)
-      .post('/twitter/verify')
+      .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress
       })

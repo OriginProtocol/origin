@@ -30,7 +30,7 @@ describe('facebook attestations', () => {
     const redirectUrl = getAbsoluteUrl('/redirects/facebook/')
 
     const response = await request(app)
-      .get('/facebook/auth-url')
+      .get('/api/attestations/facebook/auth-url')
       .expect(200)
 
     expect(response.body.url).to.equal(
@@ -67,7 +67,7 @@ describe('facebook attestations', () => {
       .reply(200, { name: 'Origin Protocol' })
 
     const response = await request(app)
-      .post('/facebook/verify')
+      .post('/api/attestations/facebook/verify')
       .send({
         identity: ethAddress,
         code: 'abcdefg'
@@ -101,7 +101,7 @@ describe('facebook attestations', () => {
 
   it('should error on missing verification code', async () => {
     const response = await request(app)
-      .post('/facebook/verify')
+      .post('/api/attestations/facebook/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
       })

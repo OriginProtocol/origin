@@ -77,7 +77,7 @@ const phoneGenerateCode = [
     .not()
     .isEmpty()
     .trim(),
-  check('phone_number')
+  check('phone')
     .not()
     .isEmpty()
     .withMessage('Must not be empty')
@@ -98,7 +98,7 @@ const phoneVerifyCode = [
     .isEmpty()
     .withMessage('Must not be empty')
     .trim(),
-  check('phone_number')
+  check('phone')
     .not()
     .isEmpty()
     .withMessage('Must not be empty')

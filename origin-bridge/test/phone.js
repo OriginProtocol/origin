@@ -22,7 +22,7 @@ describe('phone attestations', () => {
   it('should generate a verification code', async () => {
     const params = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms',
       locale: 'en'
     }
@@ -32,7 +32,7 @@ describe('phone attestations', () => {
       .reply(200)
 
     await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(200)
   })
@@ -40,13 +40,13 @@ describe('phone attestations', () => {
   it('should error on generate code with invalid method', async () => {
     const params = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'magic',
       locale: 'en'
     }
 
     const response = await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(400)
 
@@ -58,7 +58,7 @@ describe('phone attestations', () => {
   it('should error on generate code with incorrect number format', async () => {
     const params = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms'
     }
 
@@ -69,7 +69,7 @@ describe('phone attestations', () => {
       })
 
     const response = await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(400)
 
@@ -79,7 +79,7 @@ describe('phone attestations', () => {
   it('should error on generate code using sms on landline number', async () => {
     const params = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms'
     }
 
@@ -90,7 +90,7 @@ describe('phone attestations', () => {
       })
 
     const response = await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(400)
 
@@ -100,7 +100,7 @@ describe('phone attestations', () => {
   it('should return a message on twilio api error', async () => {
     const params = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms'
     }
 
@@ -109,7 +109,7 @@ describe('phone attestations', () => {
       .reply(500)
 
     const response = await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(500)
 
@@ -123,7 +123,7 @@ describe('phone attestations', () => {
     // phoneVerificationMethod
     const verifyParams = {
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms',
       locale: 'en'
     }
@@ -134,7 +134,7 @@ describe('phone attestations', () => {
 
     let cookie
     await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(verifyParams)
       .expect(200)
       .then(response => {
@@ -147,19 +147,24 @@ describe('phone attestations', () => {
     const checkParams = {
       identity: identity,
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       code: '123456'
     }
 
     nock('https://api.authy.com')
-      .post('/protected/json/phones/verification/check')
+      .get('/protected/json/phones/verification/check')
+      .query({
+        country_code: '1',
+        phone_number: '12341234',
+        verification_code: '123456'
+      })
       .reply(200, {
         message: 'Verification code is correct',
         success: true
       })
 
     const response = await request(app)
-      .post('/phone/verify')
+      .post('/api/attestations/phone/verify')
       .set('Cookie', cookie)
       .send(checkParams)
       .expect(200)
@@ -186,33 +191,38 @@ describe('phone attestations', () => {
     const params = {
       identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone_numberr: '12341234'
+      phoner: '12341234'
     }
 
     const response = await request(app)
-      .post('/phone/verify')
+      .post('/api/attestations/phone/verify')
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone_number).to.equal('Must not be empty')
+    expect(response.body.errors.phone).to.equal('Must not be empty')
   })
 
   it('should error on incorrect verification code', async () => {
     const params = {
       identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       code: '5678'
     }
 
     nock('https://api.authy.com')
-      .post('/protected/json/phones/verification/check')
+      .get('/protected/json/phones/verification/check')
+      .query({
+        country_code: '1',
+        phone_number: '12341234',
+        verification_code: '5678'
+      })
       .reply(400, {
         error_code: '60022'
       })
 
     const response = await request(app)
-      .post('/phone/verify')
+      .post('/api/attestations/phone/verify')
       .send(params)
       .expect(400)
 
@@ -225,18 +235,23 @@ describe('phone attestations', () => {
     const params = {
       identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
       country_calling_code: '1',
-      phone_number: '12341234',
+      phone: '12341234',
       code: '1234'
     }
 
     nock('https://api.authy.com')
-      .post('/protected/json/phones/verification/check')
+      .get('/protected/json/phones/verification/check')
+      .query({
+        country_code: '1',
+        phone_number: '12341234',
+        verification_code: '1234'
+      })
       .reply(400, {
         error_code: '60023'
       })
 
     const response = await request(app)
-      .post('/phone/verify')
+      .post('/api/attestations/phone/verify')
       .send(params)
       .expect(400)
 
@@ -248,7 +263,7 @@ describe('phone attestations', () => {
   it('should use en locale for sms in india', async () => {
     const params = {
       country_calling_code: '91',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms'
     }
 
@@ -261,7 +276,7 @@ describe('phone attestations', () => {
       .reply(200)
 
     await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(200)
 
@@ -271,7 +286,7 @@ describe('phone attestations', () => {
   it('should allow locale override for sms in india', async () => {
     const params = {
       country_calling_code: '91',
-      phone_number: '12341234',
+      phone: '12341234',
       method: 'sms',
       locale: 'de'
     }
@@ -285,7 +300,7 @@ describe('phone attestations', () => {
       .reply(200)
 
     await request(app)
-      .post('/phone/generate-code')
+      .post('/api/attestations/phone/generate-code')
       .send(params)
       .expect(200)
 
