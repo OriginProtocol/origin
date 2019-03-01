@@ -159,9 +159,7 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal(
-      'Verification code is incorrect.'
-    )
+    expect(response.body.errors[0]).to.equal('Verification code is incorrect.')
   })
 
   it('should error on missing verification code', async () => {
@@ -186,6 +184,8 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Email is not a valid email address.')
+    expect(response.body.errors[0]).to.equal(
+      'Email is not a valid email address.'
+    )
   })
 })

@@ -226,9 +226,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal(
-      'Verification code is incorrect.'
-    )
+    expect(response.body.errors[0]).to.equal('Verification code is incorrect.')
   })
 
   it('should error on expired verification code', async () => {
@@ -255,9 +253,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal(
-      'Verification code has expired.'
-    )
+    expect(response.body.errors[0]).to.equal('Verification code has expired.')
   })
 
   it('should use en locale for sms in india', async () => {
