@@ -2,6 +2,7 @@
 import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
+import url from 'url'
 import { MessageTypes,EthNotificationTypes } from 'origin/common/enums'
 import MessageQueue from './../utils/message-queue'
 import origin, {providerUrl, perfModeEnabled, discoveryServerUrl, web3} from './../services/origin'
@@ -10,10 +11,13 @@ import apn from 'apn'
 import * as firebase from 'firebase-admin' // AKA "admin"
 
 const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
-const DAPP_URL = process.env.DAPP_URL
-const MESSAGING_URL = `${DAPP_URL}/#/messages?no-nav=true&skip-onboarding=true&wallet-container=`
-const PROFILE_URL = `${DAPP_URL}/#/profile`
-const SELLING_URL = `${DAPP_URL}/#/create`
+const DAPP_URL = url.resolve(process.env.DAPP_URL, '/#/')
+const MESSAGING_URL = url.resolve(
+  DAPP_URL,
+  '/#/messages?no-nav=true&skip-onboarding=true&wallet-container='
+)
+const PROFILE_URL = url.resolve(DAPP_URL, '/#/profile')
+const SELLING_URL = url.resolve(DAPP_URL, '/#/create')
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
@@ -277,7 +281,7 @@ class Linker {
     }
     return {clientToken, sessionToken, code:linkedObj.code, linked:linkedObj.linked}
   }
-  
+
   async getLinkInfo(code) {
     const linkedObjs = await this.findUnexpiredCode(code)
     if (linkedObjs.length > 0)
@@ -396,7 +400,7 @@ class Linker {
 
   _getContextMsg(linkedObj, sessionToken) {
     const linked = linkedObj.linked
-    return { type:MessageTypes.CONTEXT, 
+    return { type:MessageTypes.CONTEXT,
       data:{session_token:sessionToken, linked, device:linked && linkedObj.currentDeviceContext}}
   }
 

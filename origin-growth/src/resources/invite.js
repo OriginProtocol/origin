@@ -5,7 +5,7 @@ const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
 const { GrowthCampaign } = require('./campaign')
-const { CampaignRules } = require('../rules/rules')
+const { CampaignRules } = require('./rules')
 
 class GrowthInvite {
   /**
