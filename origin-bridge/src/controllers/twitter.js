@@ -63,7 +63,7 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
   } catch (error) {
     if (error.statusCode == 401) {
       return res.status(401).send({
-        errors: ['The verifier you have provided is invalid.']
+        errors: ['The oauth-verifier provided is invalid.']
       })
     }
     logger.error(error)

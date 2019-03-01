@@ -42,7 +42,7 @@ describe('email attestations', () => {
       .expect(500)
 
     expect(response.body.errors[0]).to.equal(
-      'Could not send email verification code, please try again shortly'
+      'Could not send email verification code, please try again shortly.'
     )
 
     sendStub.restore()
@@ -63,7 +63,7 @@ describe('email attestations', () => {
         // origin@protocol.foo
         emailHash:
           '$2b$10$aTtwdUXxMmlC1NQYwr7rI.afspPUJ32M/42PW8DNZmm8DMP5b6MQy',
-        code: '123456',
+        code: 123456,
         expiry: now.setMinutes(now.getMinutes() + 10)
       }
       next()
@@ -127,7 +127,7 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.code).to.equal('Verification code has expired.')
+    expect(response.body.errors[0]).to.equal('Verification code has expired.')
   })
 
   it('should error on incorrect verification code', async () => {
@@ -159,7 +159,7 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.code).to.equal(
+    expect(response.body.errors[0]).to.equal(
       'Verification code is incorrect.'
     )
   })
@@ -173,7 +173,7 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.code).to.equal('Invalid value')
+    expect(response.body.errors[0]).to.equal('Field code must not be empty.')
   })
 
   it('should error on incorrect email format', async () => {
@@ -186,6 +186,6 @@ describe('email attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.email).to.equal('Invalid value')
+    expect(response.body.errors[0]).to.equal('Email is not a valid email address.')
   })
 })

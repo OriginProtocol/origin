@@ -42,15 +42,15 @@ router.post('/generate-code', phoneGenerateCode, async (req, res) => {
     const twilioErrorCode = error.response.body['error_code']
     if (twilioErrorCode === '60033') {
       return res.status(400).send({
-        errors: {
-          phone: 'Phone number is invalid.'
-        }
+        errors: [
+          'Phone number is invalid.'
+        ]
       })
     } else if (twilioErrorCode === '60083') {
       return res.status(400).send({
-        errors: {
-          phone: 'Cannot send SMS to landline.'
-        }
+        errors: [
+          'Cannot send SMS to landline.'
+        ]
       })
     } else {
       logger.error(`Could not send phone verification code: ${error}`)
@@ -92,15 +92,15 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
     const twilioErrorCode = get(error, 'response.body.error_code')
     if (twilioErrorCode === '60023') {
       return res.status(400).send({
-        errors: {
-          phone: 'Verification code has expired.'
-        }
+        errors: [
+          'Verification code has expired.'
+        ]
       })
     } else if (twilioErrorCode === '60022') {
       return res.status(400).send({
-        errors: {
-          phone: 'Verification code is incorrect.'
-        }
+        errors: [
+          'Verification code is incorrect.'
+        ]
       })
     } else {
       if (twilioErrorCode) {

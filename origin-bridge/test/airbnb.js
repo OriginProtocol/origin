@@ -82,7 +82,7 @@ describe('airbnb attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.airbnbUserId).to.equal('Must be an integer')
+    expect(response.body.errors[0]).to.equal('Field airbnbUserId must be an integer.')
   })
 
   it('should error on incorrect verification code', async () => {
@@ -116,7 +116,7 @@ describe('airbnb attestations', () => {
         airbnbUserId: 123456
       })
 
-    expect(response.body.errors.airbnbUserId).to.equal('Airbnb user not found.')
+    expect(response.body.errors[0]).to.equal('Airbnb user not found.')
   })
 
   it('should return a message on internal server error', async () => {

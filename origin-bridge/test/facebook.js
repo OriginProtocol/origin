@@ -107,6 +107,6 @@ describe('facebook attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors.code).to.equal('Must not be empty')
+    expect(response.body.errors[0]).to.equal('Field code must not be empty.')
   })
 })

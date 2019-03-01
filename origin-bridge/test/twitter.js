@@ -93,7 +93,7 @@ describe('twitter attestations', async () => {
       .expect(401)
 
     expect(response.body.errors[0]).to.equal(
-      'The verifier you have provided is invalid.'
+      'The oauth-verifier provided is invalid.'
     )
   })
 
@@ -105,7 +105,7 @@ describe('twitter attestations', async () => {
       })
       .expect(400)
 
-    expect(response.body.errors['oauth-verifier']).to.equal('Must not be empty')
+    expect(response.body.errors[0]).to.equal('Field oauth-verifier must not be empty.')
   })
 
   it('should error on invalid session', async () => {})

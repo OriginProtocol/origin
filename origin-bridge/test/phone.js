@@ -50,8 +50,8 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.method).to.equal(
-      'Invalid phone verification method'
+    expect(response.body.errors[0]).to.equal(
+      'Invalid phone verification method.'
     )
   })
 
@@ -73,7 +73,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone).to.equal('Phone number is invalid.')
+    expect(response.body.errors[0]).to.equal('Phone number is invalid.')
   })
 
   it('should error on generate code using sms on landline number', async () => {
@@ -94,7 +94,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone).to.equal('Cannot send SMS to landline.')
+    expect(response.body.errors[0]).to.equal('Cannot send SMS to landline.')
   })
 
   it('should return a message on twilio api error', async () => {
@@ -199,7 +199,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone).to.equal('Must not be empty')
+    expect(response.body.errors[0]).to.equal('Field phone must not be empty.')
   })
 
   it('should error on incorrect verification code', async () => {
@@ -226,7 +226,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone).to.equal(
+    expect(response.body.errors[0]).to.equal(
       'Verification code is incorrect.'
     )
   })
@@ -255,7 +255,7 @@ describe('phone attestations', () => {
       .send(params)
       .expect(400)
 
-    expect(response.body.errors.phone).to.equal(
+    expect(response.body.errors[0]).to.equal(
       'Verification code has expired.'
     )
   })

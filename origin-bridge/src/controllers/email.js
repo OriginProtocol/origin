@@ -12,6 +12,8 @@ const { emailGenerateCode, emailVerifyCode } = require('../utils/validation')
 const { generateSixDigitCode } = require('../utils')
 const logger = require('../logger')
 
+sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 router.post('/generate-code', emailGenerateCode, async (req, res) => {
   const code = generateSixDigitCode()
 
@@ -39,7 +41,7 @@ router.post('/generate-code', emailGenerateCode, async (req, res) => {
     logger.error(`Could not send verification code via Sendgrid: ${error}`)
     return res.status(500).send({
       errors: [
-        'Could not send email verification code, please try again shortly'
+        'Could not send email verification code, please try again shortly.'
       ]
     })
   }
@@ -53,9 +55,9 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
     !req.session.emailAttestation.emailHash
   ) {
     return res.status(400).send({
-      errors: {
-        email: 'No verification code was found for that email.'
-      }
+      errors: [
+        'No verification code was found for that email.'
+      ]
     })
   }
 
@@ -66,25 +68,25 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
 
   if (!validHash) {
     return res.status(400).send({
-      errors: {
-        email: 'No verification code was not found that email.'
-      }
+      errors: [
+        'No verification code was not found that email.'
+      ]
     })
   }
 
   if (req.session.emailAttestation.expiry < new Date()) {
     return res.status(400).send({
-      errors: {
-        code: 'Verification code has expired.'
-      }
+      errors: [
+        'Verification code has expired.'
+      ]
     })
   }
 
   if (req.session.emailAttestation.code !== req.body.code) {
     return res.status(400).send({
-      errors: {
-        code: 'Verification code is incorrect.'
-      }
+      errors: [
+        'Verification code is incorrect.'
+      ]
     })
   }
 

@@ -6,26 +6,28 @@ const handleValidationError = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
-      errors: {
-        [errors.array()[0].param]: errors.array()[0].msg
-      }
+      errors: [
+        errors.array()[0].msg
+      ]
     })
   } else {
     next()
   }
 }
 
-const airbnbGenerateCode = [
-  check('identity')
+const identityValidation = check('identity')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
-    .trim(),
-  check('airbnbUserId')
+    .withMessage('Field identity must not be empty.')
+    .trim()
+
+const airbnbGenerateCode = [
+  identityValidation,
+ check('airbnbUserId')
     .isInt()
-    .withMessage('Must be an integer')
+    .withMessage('Field airbnbUserId must be an integer.')
     .isLength({ min: 2 })
-    .withMessage('must have length greater than 2'),
+    .withMessage('Field airbnbUserId must have length greater than 2.'),
   handleValidationError
 ]
 
@@ -35,39 +37,35 @@ const emailGenerateCode = [
   check('email')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field email must not be empty.')
     .isEmail()
-    .withMessage('Must be a valid email')
+    .withMessage('Field email is not a valid email address.')
     .trim(),
   handleValidationError
 ]
 
 const emailVerifyCode = [
-  check('identity')
-    .not()
-    .isEmpty()
-    .withMessage('Must not be empty'),
+  identityValidation,
   check('email')
     .not()
     .isEmpty()
-    .isEmail()
+    .withMessage('Field email must not be empty.')
+    .isEmail().withMessage('Email is not a valid email address.')
     .trim(),
   check('code')
     .not()
-    .isEmpty()
-    .trim(),
+    .isEmpty().withMessage('Field code must not be empty.')
+    .trim()
+    .toInt(),
   handleValidationError
 ]
 
 const facebookVerify = [
-  check('identity')
-    .not()
-    .isEmpty()
-    .withMessage('Must not be empty'),
+  identityValidation,
   check('code')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field code must not be empty.')
     .trim(),
   handleValidationError
 ]
@@ -80,46 +78,40 @@ const phoneGenerateCode = [
   check('phone')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field phone must not be empty.')
     .trim(),
-  check('method', 'Invalid phone verification method')
+  check('method', 'Invalid phone verification method.')
     .isIn(['sms', 'call'])
     .trim(),
   handleValidationError
 ]
 
 const phoneVerifyCode = [
-  check('identity')
-    .not()
-    .isEmpty()
-    .withMessage('Must not be empty'),
+  identityValidation,
   check('country_calling_code')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field country_calling_code must not be empty.')
     .trim(),
   check('phone')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field phone must not be empty.')
     .trim(),
   check('code')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty')
+    .withMessage('Field code must not be empty.')
     .trim(),
   handleValidationError
 ]
 
 const twitterVerifyCode = [
-  check('identity')
-    .not()
-    .isEmpty()
-    .withMessage('Must not be empty'),
+  identityValidation,
   check('oauth-verifier')
     .not()
     .isEmpty()
-    .withMessage('Must not be empty'),
+    .withMessage('Field oauth-verifier must not be empty.'),
   handleValidationError
 ]
 
