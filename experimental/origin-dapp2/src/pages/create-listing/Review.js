@@ -48,7 +48,7 @@ class Review extends Component {
               <div className="col-sm-8 col-lg-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-sm-4 col-lg-3 label">Cagegory</div>
+              <div className="col-sm-4 col-lg-3 label">Category</div>
               <div className="col-sm-8 col-lg-9">
                 <Category listing={listing} />
               </div>
