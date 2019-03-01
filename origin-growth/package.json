@@ -19,6 +19,7 @@
     "express": "^4.16.4",
     "express-prom-bundle": "^4.2.1",
     "graphql": "^0.13.2",
+    "graphql-iso-date": "3.6.1",
     "graphql-type-json": "^0.2.1",
     "http": "0.0.0",
     "node-fetch": "^2.3.0",
@@ -28,9 +29,11 @@
     "origin-token": "^0.1.0",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
+    "@sendgrid/mail": "^6.3.1",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
     "url": "^0.11.0",
+    "validator": "^10.11.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
@@ -49,8 +52,8 @@
     "fixtures": "node src/util/fixtures.js",
     "start": "per-env",
     "start:development": "nodemon src/apollo/app.js",
-    "start:gproduction": "node src/apollo/app.js",
-    "test": "mocha --timeout 10000 --exit"
+    "start:production": "node src/apollo/app.js",
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit"
   },
   "prettier": {
     "semi": false,

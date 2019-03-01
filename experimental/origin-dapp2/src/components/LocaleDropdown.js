@@ -19,7 +19,7 @@ class LocaleDropdown extends Component {
   render() {
     return (
       <Dropdown
-        className="dropup"
+        className={this.props.dropup ? 'dropup' : 'dropdown'}
         content={
           <div className="dropdown-menu show">
             {Languages.map(lang => (

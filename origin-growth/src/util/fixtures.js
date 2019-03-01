@@ -52,7 +52,9 @@ const rule = {
             visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.profile.and.email.requirement',
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]
@@ -65,7 +67,7 @@ const rule = {
           config: {
             eventType: 'PhoneAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(10),
+              amount: tokenNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -79,7 +81,7 @@ const rule = {
           config: {
             eventType: 'FacebookAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(10),
+              amount: tokenNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -93,7 +95,7 @@ const rule = {
           config: {
             eventType: 'AirbnbAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(10),
+              amount: tokenNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -107,7 +109,7 @@ const rule = {
           config: {
             eventType: 'TwitterAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(10),
+              amount: tokenNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -128,7 +130,9 @@ const rule = {
             visible: false,
             numEventsRequired: 2,
             reward: null,
-            nextLevelCondition: true
+            nextLevelCondition: true,
+            conditionTranslateKey: 'growth.two.attestations.requirement',
+            conditionIcon: 'images/growth/email-icon-small.svg'
           }
         }
       ]
@@ -139,27 +143,27 @@ const rule = {
           id: 'Referral',
           class: 'Referral',
           config: {
-            requiredLevel: 2,
+            levelRequired: 2,
             reward: {
-              amount: tokenNaturalUnits(10),
+              amount: tokenNaturalUnits(50),
               currency: 'OGN'
             },
-            limit: 100,
+            limit: 25,
             visible: true,
             nextLevelCondition: false
           }
         },
         {
-          id: 'ListingCreation',
+          id: 'ListingSold',
           class: 'SingleEvent',
           config: {
-            eventType: 'ListingCreated',
+            eventType: 'ListingSold',
             reward: {
-              amount: tokenNaturalUnits(5),
+              amount: tokenNaturalUnits(100),
               currency: 'OGN'
             },
             visible: true,
-            limit: 10,
+            limit: 1,
             nextLevelCondition: false
           }
         },
@@ -169,11 +173,11 @@ const rule = {
           config: {
             eventType: 'ListingPurchased',
             reward: {
-              amount: tokenNaturalUnits(5),
+              amount: tokenNaturalUnits(100),
               currency: 'OGN'
             },
             visible: true,
-            limit: 10,
+            limit: 1,
             nextLevelCondition: false
           }
         }

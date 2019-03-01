@@ -9,8 +9,8 @@ const {
 } = require('../enums')
 const logger = require('../logger')
 
-// System cap for number of rewards per rule.
-const MAX_NUM_REWARDS_PER_RULE = 1000
+// System cap for max number of rewards per rule.
+const maxNumRewardsPerRule = 1000
 
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
@@ -49,7 +49,7 @@ class CampaignRules {
       if (!this.config.levels[i]) {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
-      this.levels[i] = new Level(this.campaign, i, this.config.levels[i])
+      this.levels[i] = new Level(this, i, this.config.levels[i])
     }
   }
 
@@ -214,14 +214,14 @@ class CampaignRules {
 }
 
 class Level {
-  constructor(campaign, levelId, config) {
-    this.campaign = campaign
-    this.campaignId = campaign.id
+  constructor(crules, levelId, config) {
+    this.crules = crules
+    this.campaignId = crules.campaign.id
     this.id = levelId
     this.config = config
 
     this.rules = config.rules.map(ruleConfig =>
-      ruleFactory(campaign, levelId, ruleConfig)
+      ruleFactory(crules, levelId, ruleConfig)
     )
   }
 
@@ -237,26 +237,26 @@ class Level {
 
   async getRewards(ethAddress, events) {
     const rewards = []
-    this.rules.forEach(async rule => {
-      const ruleReward = await rule.getRewards(ethAddress, events)
-      rewards.push(...ruleReward)
-    })
+    for (const rule of this.rules) {
+      const ruleRewards = await rule.getRewards(ethAddress, events)
+      rewards.push(...ruleRewards)
+    }
 
     return rewards
   }
 }
 
-function ruleFactory(campaign, levelId, config) {
+function ruleFactory(crules, levelId, config) {
   let rule
   switch (config.class) {
     case 'SingleEvent':
-      rule = new SingleEventRule(campaign, levelId, config)
+      rule = new SingleEventRule(crules, levelId, config)
       break
     case 'MultiEvents':
-      rule = new MultiEventsRule(campaign, levelId, config)
+      rule = new MultiEventsRule(crules, levelId, config)
       break
     case 'Referral':
-      rule = new ReferralRule(campaign, levelId, config)
+      rule = new ReferralRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
@@ -265,9 +265,10 @@ function ruleFactory(campaign, levelId, config) {
 }
 
 class BaseRule {
-  constructor(campaign, levelId, config) {
-    this.campaign = campaign
-    this.campaignId = campaign.id
+  constructor(crules, levelId, config) {
+    this.crules = crules
+    this.campaign = crules.campaign
+    this.campaignId = crules.campaign.id
     this.levelId = levelId
     this.id = config.id
     this.config = config.config
@@ -278,7 +279,16 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
-    this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
+    if (
+      this.config.nextLevelCondition === true &&
+      (!this.config.conditionTranslateKey || !this.config.conditionIcon)
+    ) {
+      throw new Error('Missing translation key and icon.')
+    }
+    this.limit = this.config.limit
+    if (this.limit > maxNumRewardsPerRule) {
+      throw new Error(`Rule limit of ${this.config.limit} exceeds max allowed.`)
+    }
 
     if (this.config.reward) {
       this.rewardValue = {
@@ -389,8 +399,8 @@ class BaseRule {
  * A rule that requires 1 event.
  */
 class SingleEventRule extends BaseRule {
-  constructor(campaign, levelId, config) {
-    super(campaign, levelId, config)
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
     const eventType = this.config.eventType
     if (!eventType) {
@@ -411,7 +421,7 @@ class SingleEventRule extends BaseRule {
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     // SingleEventRule has at most 1 event in tally count.
-    return Object.keys(tally).length == 1
+    return Object.keys(tally).length === 1
       ? Math.min(Object.values(tally)[0], this.limit)
       : 0
   }
@@ -441,8 +451,8 @@ class SingleEventRule extends BaseRule {
  *   => rule passes in campaign C2 but NO reward is granted.
  */
 class MultiEventsRule extends BaseRule {
-  constructor(campaign, levelId, config) {
-    super(campaign, levelId, config)
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
     if (!this.config.eventTypes) {
       throw new Error(`${this.str()}: missing eventTypes field`)
@@ -515,14 +525,14 @@ class MultiEventsRule extends BaseRule {
  * the referee must reached the required level during that campaign's window.
  */
 class ReferralRule extends BaseRule {
-  constructor(campaign, levelId, config) {
-    super(campaign, levelId, config)
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
     // Level the referee is required to reach for the referrer to get the reward.
-    if (!this.config.requiredLevel) {
-      throw new Error(`${this.str()}: missing requiredLevel field`)
+    if (!this.config.levelRequired) {
+      throw new Error(`${this.str()}: missing levelRequired field`)
     }
-    this.requiredLevel = this.config.requiredLevel
+    this.levelRequired = this.config.levelRequired
   }
 
   /**
@@ -568,17 +578,14 @@ class ReferralRule extends BaseRule {
     }
 
     const rewards = []
-    const crules = new CampaignRules(
-      this.campaign,
-      JSON.parse(this.campaign.rules)
-    )
 
     // Go thru each referee and check if they meet the referral reward conditions.
     const referees = await this._getReferees(ethAddress)
     for (const referee of referees) {
       // Check the referee is at or above required level.
-      const refereeLevel = crules.getCurrentLevel(referee)
-      if (refereeLevel < this.requiredLevel) {
+      const refereeLevel = await this.crules.getCurrentLevel(referee)
+
+      if (refereeLevel < this.levelRequired) {
         logger.debug(
           `Referee ${referee} does not meet level requirement. skipping.`
         )
@@ -587,8 +594,8 @@ class ReferralRule extends BaseRule {
 
       // Check the referee reached the level during this campaign as opposed
       // to prior to the campaign.
-      const refereePriorLevel = crules.getPriorLevel(referee)
-      if (refereePriorLevel >= this.requiredLevel) {
+      const refereePriorLevel = await this.crules.getPriorLevel(referee)
+      if (refereePriorLevel >= this.levelRequired) {
         logger.debug(
           `Referee ${referee} reached level prior to campaign start. skipping`
         )

@@ -1,12 +1,13 @@
 import pick from 'lodash/pick'
 
 export default function applyListingData(props, data) {
-  const { listing, listingType } = props
+  const { listing } = props
 
   const variables = {
     ...data,
     autoApprove: true,
     data: {
+      typename: listing.__typename,
       title: listing.title,
       description: listing.description,
       price: { currency: 'ETH', amount: listing.price },
@@ -17,11 +18,12 @@ export default function applyListingData(props, data) {
       marketplacePublisher: listing.marketplacePublisher
     }
   }
-  if (listingType === 'unit') {
+
+  if (listing.__typename === 'UnitListing') {
     const unitsTotal = Number(listing.quantity)
     variables.unitData = { unitsTotal }
     variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
-  } else if (listingType === 'fractional') {
+  } else if (listing.__typename === 'FractionalListing') {
     variables.fractionalData = {
       weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
       booked: listing.booked,

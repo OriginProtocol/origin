@@ -166,6 +166,10 @@ export default {
             amount
             currency
           }
+          unlockConditions {
+            messageKey
+            iconSource
+          }
           ... on ReferralAction {
             rewardPending {
               amount

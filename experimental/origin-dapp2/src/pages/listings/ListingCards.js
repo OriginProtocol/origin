@@ -8,7 +8,7 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-class Listings extends Component {
+class ListingCards extends Component {
   state = {}
   render() {
     const { listings } = this.props
@@ -41,22 +41,24 @@ class Listings extends Component {
             )}
             <div className="header">
               <div className="category">
-                <Category listing={a} />
+                <Category listing={a} showPrimary={this.props.showCategory} />
               </div>
               <ListingBadge status={a.status} featured={a.featured} />
             </div>
             <h5>
               <a href={`#/listing/${a.id}`}>{a.title}</a>
             </h5>
-            <div className="price">
-              <div className="eth">
-                {`${a.price.amount} ETH`}
-                {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+            {a.__typename === 'AnnouncementListing' ? null : (
+              <div className="price">
+                <div className="eth">
+                  {`${a.price.amount} ETH`}
+                  {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+                </div>
+                <div className="usd">
+                  <Price amount={a.price.amount} />
+                </div>
               </div>
-              <div className="usd">
-                <Price amount={a.price.amount} />
-              </div>
-            </div>
+            )}
           </div>
         ))}
       </div>
@@ -64,7 +66,7 @@ class Listings extends Component {
   }
 }
 
-export default Listings
+export default ListingCards
 
 require('react-styl')(`
   .listing-card
@@ -72,7 +74,7 @@ require('react-styl')(`
     overflow: hidden
     display: flex
     flex-direction: column
-    justify-content: center
+    justify-content: flex-start
     margin-bottom: 2rem
     margin-top: 1rem
     cursor: pointer
@@ -96,9 +98,11 @@ require('react-styl')(`
       font-family: var(--default-font)
       font-size: 14px
       color: var(--dusk)
-      font-weight: normal
       text-transform: uppercase
       margin-top: 0.75rem
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
 
     .badge
       margin-top: 0.75rem
