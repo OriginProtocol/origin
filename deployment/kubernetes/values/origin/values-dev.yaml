@@ -26,7 +26,7 @@ faucetImageTag: '4bf6568'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '3e74bbf'
+eventlistenerImageTag: 'f569cf4'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -59,4 +59,4 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '9dda30c'
+linkingImageTag: '89c47be'
