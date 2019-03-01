@@ -30,6 +30,7 @@ const walletLinkerBaseUrl = mobilize(process.env.WALLET_LINKER_URL)
 const walletLinkerUrl = walletLinkerBaseUrl && `${walletLinkerBaseUrl}/api/wallet-linker`
 const ipfsSwarm = mobilize(process.env.IPFS_SWARM)
 const activeWalletLinker = process.env.SHOW_WALLET_LINKER
+const messagingApiUrl = mobilize(process.env.MESSAGING_API_URL)
 
 // See: https://gist.github.com/bitpshr/076b164843f0414077164fe7fe3278d9#file-provider-enable-js
 const getWeb3 = () => {
@@ -98,6 +99,7 @@ const config = {
   attestationAccount: process.env.ATTESTATION_ACCOUNT,
   blockEpoch: process.env.BLOCK_EPOCH,
   blockAttestattionV1: process.env.BLOCK_ATTESTATION_V1,
+  messagingApiUrl,
   attestationServerUrl,
   walletLinkerUrl,
   activeWalletLinker,

@@ -6,7 +6,7 @@ bridgeImageTag: '12ac36f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'fe9d43b'
+dappImageTag: 'f569cf4'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
@@ -22,11 +22,11 @@ ipfsProxyImageTag: '899b2e7'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '02fe2e6'
+faucetImageTag: '4bf6568'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '3e74bbf'
+eventlistenerImageTag: 'f569cf4'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -34,7 +34,7 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '7143ac1'
+growthImageTag: 'f654dca'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -59,4 +59,4 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '9dda30c'
+linkingImageTag: '89c47be'
