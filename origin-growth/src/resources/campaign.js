@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 
 const db = require('../models')
-const { CampaignRules } = require('../rules/rules')
+const { CampaignRules } = require('./rules')
 
 class GrowthCampaign {
   /**
