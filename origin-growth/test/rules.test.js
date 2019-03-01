@@ -5,7 +5,6 @@ const expect = chai.expect
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
 
-
 function tokenNaturalUnits(x) {
   return BigNumber(x)
     .times(BigNumber(10).pow(18))
@@ -515,6 +514,9 @@ describe('Growth Engine rules', () => {
       this.ethAddress = '0x123'
       this.referee = '0x456'
       this.expectedRewards = []
+
+      // Mock the _getReferees method of the Referral rule.
+      this.crules.levels[2].rules[0]._getReferees = () => { return [] }
     })
 
     it(`Should start at level 0`, async () => {
@@ -598,6 +600,7 @@ describe('Growth Engine rules', () => {
 
     it(`Should remain on level 2 when referees sign up`, async () => {
       this.crules.levels[2].rules[0]._getReferees = () => { return [this.referee] }
+      this.crules.getPriorLevel = () => { return 0 }
       this.events.push(
         {
           id: 7,
