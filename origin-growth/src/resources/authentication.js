@@ -109,9 +109,10 @@ async function createInviteCode(accountId) {
     return
   }
 
-  const code = `${accountId.substring(2, 5)}-` +
-      `${accountId.substring(5, 8)}-` +
-      `${accountId.substring(accountId.length - 3, accountId.length)}`
+  const code =
+    `${accountId.substring(2, 5)}-` +
+    `${accountId.substring(5, 8)}-` +
+    `${accountId.substring(accountId.length - 3, accountId.length)}`
 
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
