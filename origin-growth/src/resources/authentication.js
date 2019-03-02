@@ -7,7 +7,7 @@ const enums = require('../enums')
 const crypto = require('crypto')
 
 const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
-// TODO: have this stores somewhere in the db
+// TODO: have this stored somewhere in the db
 const currentAgreementMessage =
   'I accept the terms of growth campaign version: 1.0'
 
@@ -41,6 +41,7 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     participant !== null &&
     participant.status === enums.GrowthParticipantStatuses.Banned
   ) {
+    logger.warn(`Banned user: ${accountId} tried to enroll`)
     throw new Error('This user is banned')
   }
 
@@ -48,6 +49,7 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     participant === null
       ? crypto.randomBytes(64).toString('hex')
       : participant.authToken
+
   const participantData = {
     ethAddress: accountId,
     status: enums.GrowthParticipantStatuses.Active,
@@ -57,9 +59,11 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   }
 
   if (participant !== null) {
-    participant.update(participantData)
+    await participant.update(participantData)
+    logger.info(`Existing user enrolled into growth campaign: ${accountId}`)
   } else {
     await db.GrowthParticipant.create(participantData)
+    logger.info(`New user enrolled into growth campaign: ${accountId}`)
   }
 
   await createInviteCode(accountId)
@@ -100,18 +104,22 @@ async function createInviteCode(accountId) {
     }
   })
 
+  // don't override the existing invite code
   if (existingInvite !== null) {
     return
   }
 
+  const code = `${accountId.substring(2, 5)}-` +
+      `${accountId.substring(5, 8)}-` +
+      `${accountId.substring(accountId.length - 3, accountId.length)}`
+
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
     // Consists of first 6 and last 3 ether address letters
-    code:
-      `${accountId.substring(2, 5)}-` +
-      `${accountId.substring(5, 8)}-` +
-      `${accountId.substring(accountId.length - 3, accountId.length)}`
+    code
   })
+
+  logger.info(`Invite code: ${code}: created for user: ${accountId}`)
 }
 
 module.exports = { authenticateEnrollment, getUserAuthenticationStatus }

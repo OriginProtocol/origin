@@ -131,7 +131,6 @@ function Action(props) {
   } = props.action
 
   const actionLocked = status === 'Inactive'
-  //const actionLocked = false
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   const backgroundImgSrc = actionCompleted

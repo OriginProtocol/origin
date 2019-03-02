@@ -10,7 +10,7 @@ const { sendInviteEmails } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
-const requireAuthenticatedUser = context => {
+const requireEnrolledUser = context => {
   if (
     context.authentication !==
     enums.GrowthParticipantAuthenticationStatus.Enrolled
@@ -38,7 +38,7 @@ const resolvers = {
   },
   Query: {
     async campaigns(_, args, context) {
-      requireAuthenticatedUser(context)
+      requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
       return {
         totalCount: campaigns.length,
@@ -55,13 +55,13 @@ const resolvers = {
       }
     },
     async campaign(root, args, context) {
-      requireAuthenticatedUser(context)
+      requireEnrolledUser(context)
 
       const campaign = await GrowthCampaign.get(args.id)
       return await campaignToApolloObject(campaign, args.walletAddress)
     },
     async inviteInfo(root, args, context) {
-      requireAuthenticatedUser(context)
+      requireEnrolledUser(context)
       return await GrowthInvite.getReferrerInfo(args.code)
     },
     async isEligible(obj, args, context) {
@@ -101,7 +101,7 @@ const resolvers = {
   Mutation: {
     // Sends email invites with referral code on behalf of the referrer.
     async invite(_, args, context) {
-      requireAuthenticatedUser(context)
+      requireEnrolledUser(context)
 
       logger.info('invite mutation called.')
       // FIXME:
@@ -109,7 +109,7 @@ const resolvers = {
       await sendInviteEmails(args.walletAddress, args.emails)
       return true
     },
-    async enroll(_, args, context) {
+    async enroll(_, args) {
       try {
         return {
           authToken: await authenticateEnrollment(
