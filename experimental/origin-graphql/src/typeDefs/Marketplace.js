@@ -258,7 +258,11 @@ module.exports = `
     booked: [String]
   }
 
-  union ListingResult = UnitListing | FractionalListing
+  type AnnouncementListing implements Listing {
+    ${ListingInterface}
+  }
+
+  union ListingResult = UnitListing | FractionalListing | AnnouncementListing
 
   type Media {
     url: String
@@ -339,6 +343,7 @@ module.exports = `
   }
 
   input ListingInput {
+    typename: String
     title: String!
     description: String
     category: String

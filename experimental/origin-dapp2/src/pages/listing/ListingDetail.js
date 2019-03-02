@@ -11,6 +11,7 @@ import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
 import Category from 'components/Category'
 import Price from 'components/Price'
+import Tooltip from 'components/Tooltip'
 
 import Buy from './mutations/Buy'
 
@@ -70,7 +71,7 @@ const SingleUnit = ({ listing, from, refetch }) => (
       value={listing.price.amount}
       quantity={1}
       className="btn btn-primary"
-      children="Buy Now"
+      children="Purchase"
     />
   </div>
 )
@@ -139,9 +140,19 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         </div>
       </div>
       <div className="choose-dates form-control">
-        <div>{checkIn}</div>
+        <Tooltip
+          tooltip="Scroll down for availability calendar"
+          placement="top"
+        >
+          <div>{checkIn}</div>
+        </Tooltip>
         <div className="arr" />
-        <div>{checkOut}</div>
+        <Tooltip
+          tooltip="Scroll down for availability calendar"
+          placement="top"
+        >
+          <div>{checkOut}</div>
+        </Tooltip>
       </div>
       {!showUnavailable ? null : <div className="total">Unavailable</div>}
       {!totalPrice ? null : (
@@ -166,14 +177,16 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   )
 }
 
-const ForSeller = ({ listing }) => (
+const ForSeller = ({ listing, isAnnouncement }) => (
   <div className="listing-buy">
-    <div className="price">
-      <div className="eth">{`${listing.price.amount} ETH`}</div>
-      <div className="usd">
-        <Price amount={listing.price.amount} />
+    {isAnnouncement ? null : (
+      <div className="price">
+        <div className="eth">{`${listing.price.amount} ETH`}</div>
+        <div className="usd">
+          <Price amount={listing.price.amount} />
+        </div>
       </div>
-    </div>
+    )}
     <Link
       className="btn btn-primary mt-2"
       to={`/listing/${listing.id}/edit`}
@@ -203,7 +216,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const sold = listing.status === 'sold'
     const pending = listing.status === 'pending'
-    const isAnnouncement = get(listing, 'category', '').match(/announcement/i)
+    const isAnnouncement = listing.__typename === 'AnnouncementListing'
 
     return (
       <div className="listing-detail">
@@ -227,6 +240,9 @@ class ListingDetail extends Component {
                   onChange={state => this.setState(state)}
                   availability={this.state.availability}
                 />
+                <div className="availability-help">
+                  * Click and drag to select a date range
+                </div>
               </>
             )}
             <hr />
@@ -234,8 +250,8 @@ class ListingDetail extends Component {
           </div>
           <div className="col-md-4">
             {listing.seller.id === this.props.from ? (
-              <ForSeller {...this.props} />
-            ) : sold ? (
+              <ForSeller {...this.props} isAnnouncement={isAnnouncement} />
+            ) : isAnnouncement ? null : sold ? (
               <Sold />
             ) : pending ? (
               <Pending />
@@ -299,8 +315,9 @@ require('react-styl')(`
     .description
       white-space: pre-wrap
 
-    .gallery
-      margin-bottom: 2rem
+    .availability-help
+      font-size: 14px
+      margin-bottom: 1rem
 
     .listing-buy
       padding: 1.5rem

@@ -186,6 +186,10 @@ class Conversation extends Component {
     }
 
     this.setState({ counterparty })
+
+    origin.messaging.canConverseWith(address).then(result => {
+      this.setState({ canConverseCounterparty: result })
+      })
     this.loadPurchase()
   }
 
@@ -357,12 +361,12 @@ class Conversation extends Component {
       counterparty,
       files,
       invalidTextInput,
-      purchase
+      purchase,
+      canConverseCounterparty
     } = this.state
-    const counterpartyAddress = formattedAddress(counterparty.address)
     const canDeliverMessage =
       counterparty.address &&
-      origin.messaging.canConverseWith(counterpartyAddress)
+      canConverseCounterparty
     const shouldEnableForm = id &&
       origin.messaging.getRecipients(id).includes(formattedAddress(wallet.address)) &&
       canDeliverMessage
