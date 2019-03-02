@@ -62,7 +62,11 @@ const GrowthEventTypes = new Enum(
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
 
-const GrowthParticipantAuthenticationStatus = new Enum('Enrolled', 'Banned', 'NotEnrolled')
+const GrowthParticipantAuthenticationStatus = new Enum(
+  'Enrolled',
+  'Banned',
+  'NotEnrolled'
+)
 
 const GrowthRewardStatuses = new Enum(
   'Pending',

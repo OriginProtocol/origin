@@ -55,7 +55,7 @@ const server = new ApolloServer({
       try {
         const authToken = JSON.parse(headers.authorization).growth_auth_token
         authStatus = await getUserAuthenticationStatus(authToken)
-      } catch(e) {
+      } catch (e) {
         console.error('Error authenticating user: ', e)
       }
     }

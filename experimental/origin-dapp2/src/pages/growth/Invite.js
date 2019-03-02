@@ -26,10 +26,12 @@ class GrowthInvite extends Component {
     this.state = {
       subPage: 'sendInvites',
       inviteCode: 'origin-invite-code',
-      showCopyConfirmation: false 
+      showCopyConfirmation: false
     }
 
-    this.inviteCode = `${location.protocol}//${location.hostname}/#/welcome/${this.state.inviteCode}`
+    this.inviteCode = `${location.protocol}//${location.hostname}/#/welcome/${
+      this.state.inviteCode
+    }`
 
     this.handleNavigationClick = this.handleNavigationClick.bind(this)
     this.renderSendInvites = this.renderSendInvites.bind(this)
@@ -39,15 +41,15 @@ class GrowthInvite extends Component {
   }
 
   handleCopyClick(e) {
-    const inviteField = document.getElementById("growth-invite-text")
+    const inviteField = document.getElementById('growth-invite-text')
     inviteField.value = this.inviteCode
     inviteField.select()
-    document.execCommand('copy');
+    document.execCommand('copy')
     inviteField.value = `${this.state.inviteCode}`
-    this.setState({ showCopyConfirmation: true})
+    this.setState({ showCopyConfirmation: true })
     // reset copy confirmation after 3 seconds
     setTimeout(() => {
-      this.setState({ showCopyConfirmation: false})
+      this.setState({ showCopyConfirmation: false })
     }, 3000)
   }
 
@@ -56,13 +58,15 @@ class GrowthInvite extends Component {
   }
 
   handleFbShareClick() {
-    window.open([
-      'https://www.facebook.com/dialog/share?',
-      'app_id=87741124305', // TODO use origin's one
-      `&href=${this.inviteCode}`,
-      '&display=popup',
-      `&redirect_uri=${window.location.href}`
-    ].join(''))
+    window.open(
+      [
+        'https://www.facebook.com/dialog/share?',
+        'app_id=87741124305', // TODO use origin's one
+        `&href=${this.inviteCode}`,
+        '&display=popup',
+        `&redirect_uri=${window.location.href}`
+      ].join('')
+    )
   }
 
   handleFbShareClick() {
@@ -70,10 +74,7 @@ class GrowthInvite extends Component {
   }
 
   renderSendInvites() {
-    const {
-      showCopyConfirmation,
-      inviteCode
-    } = this.state
+    const { showCopyConfirmation, inviteCode } = this.state
     return (
       <div className="send-invites mt-4 pt-2">
         <div className="empasis">Invite with your code</div>
@@ -90,14 +91,16 @@ class GrowthInvite extends Component {
                 value={inviteCode}
                 readOnly
               />
-              <div 
+              <div
                 className="copy-button d-flex align-items-center justify-content-center"
                 onClick={this.handleCopyClick}
               >
-                {showCopyConfirmation && <Fragment>
-                  <img src="/images/growth/checkmark.svg" />
-                  <div className="ml-2">Copied</div>
-                </Fragment>}
+                {showCopyConfirmation && (
+                  <Fragment>
+                    <img src="/images/growth/checkmark.svg" />
+                    <div className="ml-2">Copied</div>
+                  </Fragment>
+                )}
                 {!showCopyConfirmation && <div>Copy</div>}
               </div>
             </div>

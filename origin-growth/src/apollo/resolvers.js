@@ -10,8 +10,11 @@ const { sendInviteEmails } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
-const requireAuthenticatedUser = (context) => {
-  if (context.authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+const requireAuthenticatedUser = context => {
+  if (
+    context.authentication !==
+    enums.GrowthParticipantAuthenticationStatus.Enrolled
+  ) {
     throw new Error('User not authenticatex!')
   }
 }
@@ -109,7 +112,11 @@ const resolvers = {
     async enroll(_, args, context) {
       try {
         return {
-          authToken: await authenticateEnrollment(args.accountId, args.agreementMessage, args.signature)
+          authToken: await authenticateEnrollment(
+            args.accountId,
+            args.agreementMessage,
+            args.signature
+          )
         }
       } catch (e) {
         return {

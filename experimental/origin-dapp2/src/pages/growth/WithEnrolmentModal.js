@@ -7,7 +7,6 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
 
-
 function withEnrolmentModal(WrappedComponent) {
   class WithEnrolmentModal extends Component {
     constructor(props) {
@@ -207,7 +206,7 @@ function withEnrolmentModal(WrappedComponent) {
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
-            
+
             const { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
@@ -229,7 +228,7 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return "Error: can not detect coutry"
+              return 'Error: can not detect coutry'
             }
           }}
         </Query>
@@ -237,9 +236,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return (
-        <Enroll />
-      )
+      return <Enroll />
     }
 
     render() {
@@ -253,21 +250,26 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
 
-            return(<Fragment>
-              <WrappedComponent {...this.props} onClick={(e) => this.handleClick(e, data.enrollmentStatus)} />
-              {open && (
-                <Modal
-                  className="growth-enrollment-modal"
-                  onClose={() => {
-                    this.setState({
-                      open: false
-                    })
-                  }}
-                >
-                  {this[`render${this.state.stage}`]()}
-                </Modal>
-              )}
-            </Fragment>)
+            return (
+              <Fragment>
+                <WrappedComponent
+                  {...this.props}
+                  onClick={e => this.handleClick(e, data.enrollmentStatus)}
+                />
+                {open && (
+                  <Modal
+                    className="growth-enrollment-modal"
+                    onClose={() => {
+                      this.setState({
+                        open: false
+                      })
+                    }}
+                  >
+                    {this[`render${this.state.stage}`]()}
+                  </Modal>
+                )}
+              </Fragment>
+            )
           }}
         </Query>
       )

@@ -28,24 +28,28 @@ class Enroll extends Component {
             <Mutation
               mutation={GrowthEnroll}
               onCompleted={({ enroll }) => {
-                if (enroll.error === null && enroll.authToken){
+                if (enroll.error === null && enroll.authToken) {
                   localStorage.setItem('growth_auth_token', enroll.authToken)
                   this.props.history.push('/campaigns')
                 } else {
                   console.log('Error occurred: ', enroll)
-                  this.setState({ error: 'Can not enroll into growht campaign' })
+                  this.setState({
+                    error: 'Can not enroll into growht campaign'
+                  })
                 }
               }}
               onError={errorData => {
                 console.log('Error: ', errorData)
-                this.setState({ error: 'Problems enrolling into growth campaign.' })
+                this.setState({
+                  error: 'Problems enrolling into growth campaign.'
+                })
               }}
             >
-              {(enroll) => (
+              {enroll => (
                 <Mutation
                   mutation={SignMessageMutation}
                   onCompleted={({ signMessage }) => {
-                    console.log("Message successfuly signed: ", signMessage)
+                    console.log('Message successfuly signed: ', signMessage)
                     enroll({
                       variables: {
                         accountId: accountId,
@@ -55,10 +59,13 @@ class Enroll extends Component {
                     })
                   }}
                   onError={errorData =>
-                    this.setState({ error: 'Message signature unsuccessful', errorData })
+                    this.setState({
+                      error: 'Message signature unsuccessful',
+                      errorData
+                    })
                   }
                 >
-                  {(signMessage) => (
+                  {signMessage => (
                     <Fragment>
                       <div className="growth-enrollment">
                         <video
@@ -70,7 +77,8 @@ class Enroll extends Component {
                               variables: {
                                 address: accountId,
                                 // TODO: change version programatically
-                                message: 'I accept the terms of growth campaign version: 1.0'
+                                message:
+                                  'I accept the terms of growth campaign version: 1.0'
                               }
                             })
                           }}
@@ -85,9 +93,12 @@ class Enroll extends Component {
                         </video>
                         <div className="title">Confirm Metamask Signature</div>
                         <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-                          {!this.state.error &&
-                            <span>Open your Metamask browser extension and confirm your signature.</span>
-                          }
+                          {!this.state.error && (
+                            <span>
+                              Open your Metamask browser extension and confirm
+                              your signature.
+                            </span>
+                          )}
                           {this.state.error && (
                             <span className="error">{this.state.error}</span>
                           )}
@@ -98,7 +109,7 @@ class Enroll extends Component {
                 </Mutation>
               )}
             </Mutation>
-            )
+          )
         }}
       </Query>
     )
