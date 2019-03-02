@@ -20,6 +20,9 @@ module.exports = {
       agreement_id: {
         type: Sequelize.STRING
       },
+      auth_token: {
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

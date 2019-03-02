@@ -2,11 +2,9 @@ import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
 import { withApollo, Query } from 'react-apollo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
-import profileQuery from 'queries/Profile'
-import signMessageMutation from 'mutations/SignMessage'
 import QueryError from 'components/QueryError'
-//TODO: delete this
-import { withRouter } from 'react-router-dom'
+import Enroll from 'pages/growth/mutations/Enroll'
+
 
 function withEnrolmentModal(WrappedComponent) {
   const MyComponent = class WithEnrolmentModal extends Component {
@@ -26,32 +24,13 @@ function withEnrolmentModal(WrappedComponent) {
 
       this.state = {
         open: false,
-        stage: 'TermsAndEligibilityCheck',
-        //stage: 'MetamaskSignature',
+        //stage: 'TermsAndEligibilityCheck',
+        stage: 'MetamaskSignature',
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
         userAlreadyEnrolled: false
       }
-    }
-
-    async componentDidMount() {
-      //TODO: check if user already enrolled
-      //this.setState({ userAlreadyEnrolled: e.target.checked })
-      //
-      //TODO: remove this later
-      // const gql = require('graphql-tag')
-      // const ToggleMetaMaskMutation = gql`
-      //   mutation ToggleMetaMask($enabled: Boolean) {
-      //     toggleMetaMask(enabled: $enabled)
-      //   }
-      // `
-      // console.log("METAMASK TOGGLE MUTATION", await this.props.client.mutate({
-      //   mutation: ToggleMetaMaskMutation,
-      //   variables: {
-      //     enabled: false
-      //   }
-      // }))
     }
 
     handleClick(e) {
@@ -75,32 +54,6 @@ function withEnrolmentModal(WrappedComponent) {
       }
 
       this.setState({ stage: 'MetamaskSignature' })
-
-      const { data } = await this.props.client.query({
-        query: profileQuery
-      })
-
-      const account_id = data.web3.primaryAccount.id
-
-      //TODO: delete this. Is just for demonstration purposes
-      const delay = ms => new Promise(res => setTimeout(res, ms))
-      await delay(300)
-      //TODO: end delete
-
-      try {
-        const result = await this.props.client.mutate({
-          mutation: signMessageMutation,
-          variables: {
-            address: account_id,
-            // TODO: change version programatically
-            message: 'I accept the terms of growth campaign version: 1.0'
-          }
-        })
-      } catch (e) {
-        console.error('Error executing sign message mutation: ', e)
-      }
-
-      this.props.history.push('/campaigns')
     }
 
     handleCloseModal() {
@@ -248,7 +201,6 @@ function withEnrolmentModal(WrappedComponent) {
             }
             
             const { countryName, eligibility } = data.isEligible
-            console.log("YOYO", countryName, eligibility)
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
             // const country = 'Saudi Arabia'
@@ -278,25 +230,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderMetamaskSignature() {
       return (
-        <div className="metamask">
-          <video
-            className="metamask-video"
-            width="320"
-            heigh="240"
-            autoPlay
-            loop
-          >
-            <source
-              src="images/growth/metamask_in_browser_dark_bg.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-          <div className="title">Confirm Metamask Signature</div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-            Open your Metamask browser extension and confirm your signature.
-          </div>
-        </div>
+        <Enroll />
       )
     }
 
@@ -322,7 +256,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  return withRouter(withApollo(MyComponent))
+  return withApollo(MyComponent)
 }
 
 export default withEnrolmentModal
@@ -407,11 +341,4 @@ require('react-styl')(`
       text-align: left;
       padding: 22px 31px 15px 22px;
       font-weight: 300;
-    .metamask-video
-      margin-top: 90px;
-      margin-bottom: 42px;
-    .metamask .title
-      font-weight: 300;
-    .metamask .info-text
-      margin-bottom: 75px;
 `)

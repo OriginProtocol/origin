@@ -1,6 +1,5 @@
-export default async (_, { address, message }) => {
+import contracts from '../../contracts'
 
-  //TODO: get this right
-  const result = await window.web3.eth.sign(message, address)
-  return result
+export default async (_, { address, message }) => {
+  return await contracts.web3Exec.eth.personal.sign(message, address)
 }

@@ -2,6 +2,7 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
+const { authenticateEnrollment } = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
@@ -79,7 +80,7 @@ const resolvers = {
   },
   Mutation: {
     // Sends email invites with referral code on behalf of the referrer.
-    async invite(root, args) {
+    async invite(_, args) {
       logger.info('invite mutation called.')
       // FIXME:
       //  a. Check the referrer against Auth token.
@@ -87,10 +88,17 @@ const resolvers = {
       await sendInviteEmails(args.walletAddress, args.emails)
       return true
     },
-    enroll() {
-      // TODO: implement
-      logger.info('enroll mutation called.')
-      return true
+    async enroll(_, args) {
+
+      try {
+        return {
+          authToken: await authenticateEnrollment(args.accountId, args.agreementMessage, args.signature)
+        }
+      } catch (e) {
+        return {
+          error: 'Can not authenticate user'
+        }
+      }
     },
     log() {
       // TODO: implement

@@ -125,6 +125,11 @@ module.exports =
     countryCode: String
   }
 
+  type EnrollResponse {
+    authToken: String
+    error: String
+  }
+
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
@@ -138,7 +143,7 @@ module.exports =
     # Sends email invites with referral code on behalf of the referrer.
     invite(walletAddress: ID!, emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
-    enroll(campaignId: Int!, notResidentCertification: Boolean): Boolean
+    enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
     # Records a growth engine event.
     log(event: JSON!): Boolean
   }
