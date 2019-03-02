@@ -1,13 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
 import { withApollo, Query } from 'react-apollo'
+import { withRouter } from 'react-router-dom'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
+import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
 
 
 function withEnrolmentModal(WrappedComponent) {
-  const MyComponent = class WithEnrolmentModal extends Component {
+  class WithEnrolmentModal extends Component {
     constructor(props) {
       super(props)
       this.handleClick = this.handleClick.bind(this)
@@ -24,8 +26,7 @@ function withEnrolmentModal(WrappedComponent) {
 
       this.state = {
         open: false,
-        //stage: 'TermsAndEligibilityCheck',
-        stage: 'MetamaskSignature',
+        stage: 'TermsAndEligibilityCheck',
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
@@ -33,11 +34,18 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
-    handleClick(e) {
+    handleClick(e, enrollmentStatus) {
       e.preventDefault()
-      this.setState({
-        open: true
-      })
+
+      if (enrollmentStatus === 'Enrolled') {
+        this.props.history.push('/campaigns')
+      } else if (enrollmentStatus === 'NotEnrolled') {
+        this.setState({
+          open: true
+        })
+      } else if (enrollmentStatus === 'Banned') {
+        alert('You have been banned from earning tokens')
+      }
     }
 
     handleNotCitizenClick(e) {
@@ -237,26 +245,37 @@ function withEnrolmentModal(WrappedComponent) {
     render() {
       const { open } = this.state
       return (
-        <Fragment>
-          <WrappedComponent {...this.props} onClick={this.handleClick} />
-          {open && (
-            <Modal
-              className="growth-enrollment-modal"
-              onClose={() => {
-                this.setState({
-                  open: false
-                })
-              }}
-            >
-              {this[`render${this.state.stage}`]()}
-            </Modal>
-          )}
-        </Fragment>
+        <Query query={enrollmentStatusQuery}>
+          {({ networkStatus, error, loading, data }) => {
+            if (networkStatus === 1 || loading) {
+              return ''
+            } else if (error) {
+              return <QueryError error={error} query={growthEligibilityQuery} />
+            }
+
+            return(<Fragment>
+              <WrappedComponent {...this.props} onClick={(e) => this.handleClick(e, data.enrollmentStatus)} />
+              {open && (
+                <Modal
+                  className="growth-enrollment-modal"
+                  onClose={() => {
+                    this.setState({
+                      open: false
+                    })
+                  }}
+                >
+                  {this[`render${this.state.stage}`]()}
+                </Modal>
+              )}
+            </Fragment>)
+          }}
+        </Query>
       )
     }
   }
 
-  return withApollo(MyComponent)
+  //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
+  return withRouter(withApollo(WithEnrolmentModal))
 }
 
 export default withEnrolmentModal

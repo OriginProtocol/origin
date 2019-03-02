@@ -6,7 +6,7 @@ import messagingSync from './messagingSync'
 import fragmentMatcher from './typeDefs/fragmentTypes'
 
 const cache = new InMemoryCache({ fragmentMatcher })
-const client = new ApolloClient({ link, cache })
+const client = new ApolloClient({ link: link, cache })
 
 if (typeof window !== 'undefined') {
   metaMaskSync(client)

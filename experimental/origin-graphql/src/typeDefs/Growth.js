@@ -50,6 +50,12 @@ module.exports =
     Forbidden
   }
 
+  enum EnrollmentStatus {
+    Enrolled
+    NotEnrolled
+    Banned
+  }
+
   type Invite {
     status: GrowthInviteStatus!
     walletAddress: ID!
@@ -137,6 +143,7 @@ module.exports =
     campaign(id: String, walletAddress: ID!): GrowthCampaign
     inviteInfo(code: String): InviteInfo
     isEligible: EligibilityInfo
+    enrollmentStatus: EnrollmentStatus!
   }
 
   type Mutation {

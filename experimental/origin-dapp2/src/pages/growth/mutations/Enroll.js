@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
-import { withApollo, Query } from 'react-apollo'
+import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
@@ -27,23 +27,26 @@ class Enroll extends Component {
           return (
             <Mutation
               mutation={GrowthEnroll}
-              onCompleted={({ growthEnroll }) => {
-                // TODO: store authentication token into local storage
-                console.log("Enrollment completed ", growthEnroll)
-                
-                this.props.history.push('/campaigns')
+              onCompleted={({ enroll }) => {
+                if (enroll.error === null && enroll.authToken){
+                  localStorage.setItem('growth_auth_token', enroll.authToken)
+                  this.props.history.push('/campaigns')
+                } else {
+                  console.log('Error occurred: ', enroll)
+                  this.setState({ error: 'Can not enroll into growht campaign' })
+                }
               }}
               onError={errorData => {
                 console.log('Error: ', errorData)
-                this.setState({ error: 'Problems enrolling into growth campaign.', errorData })
+                this.setState({ error: 'Problems enrolling into growth campaign.' })
               }}
             >
-              {(growthEnroll) => (
+              {(enroll) => (
                 <Mutation
                   mutation={SignMessageMutation}
                   onCompleted={({ signMessage }) => {
                     console.log("Message successfuly signed: ", signMessage)
-                    growthEnroll({
+                    enroll({
                       variables: {
                         accountId: accountId,
                         agreementMessage: this.state.message,

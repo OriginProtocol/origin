@@ -9,6 +9,7 @@ const crypto = require('crypto')
 const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 // TODO: have this stores somewhere in the db
 const currentAgreementMessage = 'I accept the terms of growth campaign version: 1.0'
+
 /**
  * Authenticates user's enrollment to the growth campaign
  * @param {string} referrer - Eth address of the referrer.
@@ -51,6 +52,29 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   return authToken
 }
 
+/**
+ * Fetches user's authentication status
+ * @param {string} token - Growth authentication token
+ *
+ * returns GrowthParticipantAuthenticationStatus
+ *  - Enrolled -> user participates in growth campaign
+ *  - Banned -> user is banned
+ *  - NotEnrolled -> user not a participant yet
+ */
+async function getUserAuthenticationStatus(token) {
+  const growthParticipant =  await db.GrowthParticipant.findOne({ where: {
+    authToken: token
+  }})
+
+  if (growthParticipant === null) {
+    return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+  } else if (growthParticipant.status === enums.GrowthParticipantStatuses.Banned) {
+    return enums.GrowthParticipantAuthenticationStatus.Banned
+  } else {
+    return enums.GrowthParticipantAuthenticationStatus.Enrolled
+  }
+}
+
 async function createInviteCode(accountId) {
   const existingInvite = await db.GrowthInviteCode.findOne({ where: {
     ethAddress: accountId
@@ -67,4 +91,4 @@ async function createInviteCode(accountId) {
   })
 }
 
-module.exports = { authenticateEnrollment }
+module.exports = { authenticateEnrollment, getUserAuthenticationStatus }
