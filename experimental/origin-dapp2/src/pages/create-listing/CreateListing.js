@@ -9,6 +9,7 @@ import withCreatorConfig from 'hoc/withCreatorConfig'
 import PageTitle from 'components/PageTitle'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
+import FractionalListing from './listing-types/FractionalListing/FractionalListing'
 
 import ChooseListingType from './ChooseListingType'
 import Step2 from './Step2'
@@ -58,15 +59,27 @@ class CreateListing extends Component {
   }
 
   render() {
+
+    const listingTypeMapping = {
+      'UnitListing' : UnitListing,
+      // 'AnnouncementListing' : AnnouncementListing,
+      'FractionalListing' : FractionalListing
+    }
+    const ListingTypeComponent =
+      (this.state.listing.__typename in listingTypeMapping) ?
+      listingTypeMapping[this.state.listing.__typename] :
+      UnitListing
+
     return (
       <div className="container create-listing">
         <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
-            path="/create/details"
+            path="/create/details/:step?"
             render={({match}) => (
-              <UnitListing
+              <ListingTypeComponent
                 listing={this.state.listing}
+                step={match.params.step}
                 onChange={listing => this.setListing(listing)}
               />
             )}
