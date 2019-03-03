@@ -5,10 +5,15 @@ module.exports = `
 
   extend type Mutation {
     unlinkMobileWallet: Boolean
+    linkMobileWallet: LinkMobileWalletResult
   }
 
   type WalletLinker {
     linkCode: String
     linked: Boolean!
+  }
+
+  type LinkMobileWalletResult {
+    code: String
   }
 `
