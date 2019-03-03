@@ -402,7 +402,8 @@ function setMetaMask() {
 function setLinkerClient() {
   const linkingEnabled =
     (typeof window !== 'undefined' && window.linkingEnabled) ||
-    process.env.ORIGIN_LINKING || context.config.linkingEnabled
+    process.env.ORIGIN_LINKING ||
+    context.config.linkingEnabled
 
   if (context.metaMaskEnabled) return
   if (!linkingEnabled) return
