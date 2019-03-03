@@ -149,7 +149,7 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
 
   const apolloActions = await Promise.all(
     rules
-      .filter(async rule => rule.isVisible())
+      .filter(rule => rule.isVisible())
       .map(rule => {
         if (rule.constructor.name === 'SingleEventRule')
           return singleEventRuleApolloObject(
