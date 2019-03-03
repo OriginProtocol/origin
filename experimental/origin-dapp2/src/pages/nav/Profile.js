@@ -87,15 +87,15 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Balances balance={balance} account={id} />
           <Identity id={id} />
           {mobileWallet && (
-            <Link
+            <a
+              className="unlink-wallet"
               onClick={e => {
-                unlinkMutation()
                 e.preventDefault()
+                unlinkMutation()
               }}
-              to="#"
-            >
-              Unlink Mobile
-            </Link>
+              href="#"
+              children="Unlink Mobile"
+            />
           )}
           <Link onClick={() => onClose()} to="/profile">
             Edit Profile
@@ -108,12 +108,9 @@ const ProfileDropdown = ({ data, onClose }) => {
 
 const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
-    {({ data, loading, error }) => {
-      if (loading || error) return null
-      const profile = get(data, 'web3.account.identity')
-      if (!profile) {
-        return null
-      }
+    {({ data, error }) => {
+      if (error) return null
+      const profile = get(data, 'web3.account.identity') || {}
 
       return (
         <div className="identity">
@@ -121,7 +118,7 @@ const Identity = ({ id }) => (
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{profile.fullName}</div>
+              <div className="name">{profile.fullName || 'Unnamed User'}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
@@ -144,10 +141,10 @@ const Identity = ({ id }) => (
             <div className="progress">
               <div
                 className="progress-bar"
-                style={{ width: `${profile.strength}%` }}
+                style={{ width: `${profile.strength || '0'}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength}%`}
+            {`Profile Strength - ${profile.strength || '0'}%`}
           </div>
         </div>
       )
@@ -228,6 +225,9 @@ require('react-styl')(`
       padding: 0.75rem 1rem;
       font-weight: bold;
       border-radius: 0 0 5px 5px;
+      &.unlink-wallet
+        border-bottom: 1px solid black
+        border-radius: 0
 
   .attestations
     display: flex

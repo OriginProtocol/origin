@@ -157,7 +157,9 @@ class UserProfile extends Component {
 
             <div className="actions">
               <DeployIdentity
-                className="btn btn-primary btn-rounded btn-lg"
+                className={`btn btn-primary btn-rounded btn-lg${
+                  this.state.valid ? '' : ' disabled'
+                }`}
                 identity={get(this.props, 'identity.id')}
                 refetch={this.props.identityRefetch}
                 profile={pick(this.state, [
@@ -197,7 +199,9 @@ class UserProfile extends Component {
               'avatar'
             ])}
             onClose={() => this.setState({ editProfile: false })}
-            onChange={newState => this.setState(newState)}
+            onChange={newState =>
+              this.setState(newState, () => this.validate())
+            }
           />
         )}
       </div>
@@ -252,16 +256,11 @@ class UserProfile extends Component {
 
   validate() {
     const newState = {}
-
     if (!this.state.firstName) {
       newState.firstNameError = 'First Name is required'
     }
-
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
-    if (!newState.valid) {
-      window.scrollTo(0, 0)
-    }
     this.setState(newState)
     return newState.valid
   }
