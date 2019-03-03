@@ -106,7 +106,8 @@ const Configs = {
     },
     messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
     linker: `https://linking.staging.originprotocol.com`,
-    linkerWS: `wss://linking.staging.originprotocol.com`
+    linkerWS: `wss://linking.staging.originprotocol.com`,
+    linkingEnabled: true
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -401,7 +402,7 @@ function setMetaMask() {
 function setLinkerClient() {
   const linkingEnabled =
     (typeof window !== 'undefined' && window.linkingEnabled) ||
-    process.env.ORIGIN_LINKING
+    process.env.ORIGIN_LINKING || context.config.linkingEnabled
 
   if (context.metaMaskEnabled) return
   if (!linkingEnabled) return

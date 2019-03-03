@@ -1,21 +1,14 @@
 import React, { Component } from 'react'
 
-import MobileLinkerCode from 'components/MobileLinkerCode'
+import Link from 'components/Link'
 
 class GetStarted extends Component {
   state = { open: false }
   render() {
     return (
-      <ul className="navbar-nav ml-auto">
+      <ul className="navbar-nav">
         <li className="nav-item">
-          <a
-            className="nav-link"
-            href="#"
-            onClick={() => this.setState({ open: true })}
-          >
-            Get Started
-          </a>
-          {!this.state.open ? null : <MobileLinkerCode />}
+          <Link to="/onboard" className="nav-link">Get Started</Link>
         </li>
       </ul>
     )
