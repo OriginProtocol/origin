@@ -50,9 +50,9 @@ class Footer extends Component {
   render() {
     return (
       <footer className="light-footer">
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
-            <div className="col-12 col-lg-6">
+            <div className="col-12 col-lg-6 offset-1">
               <div className="logo-container">
                 <a
                   href="https://www.originprotocol.com"
@@ -77,114 +77,155 @@ class Footer extends Component {
                       />
                     )}
                   </p>
-                  <p>&copy; {new Date().getFullYear()} Origin Protocol, Inc.</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-lg-6">
-              {!this.props.isWhiteLabel &&
-                <div className="d-lg-flex footer-links-container justify-content-between">
-                    <Dropdown
-                      className="d-flex dropup"
-                      open={this.state.dropdown}
-                      onClose={() => this.setState({ dropdown: false })}
-                    >
+                  <div className="row">
+                    <div className="col-lg-5">
+                      <p>&copy; {new Date().getFullYear()} Origin Protocol, Inc.</p>
+                    </div>
+                    <div className="d-lg-inline-block link-container col-lg-3">
                       <a
-                        className="dropdown-toggle"
-                        id="languageDropdown"
-                        role="button"
-                        onClick={() =>
-                          this.setState({
-                            dropdown: this.state.dropdown ? false : true
-                          })
-                        }
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        {this.props.selectedLanguageFull}
-                      </a>
-                      <div
-                        className={`dropdown-menu dropdown-menu-left${
-                          this.state.dropdown ? ' show' : ''
-                        }`}
-                        aria-labelledby="languageDropdown"
-                      >
-                        <div className="triangle-container d-flex justify-content-end">
-                          <div className="triangle" />
-                        </div>
-                        <div className="actual-menu">
-                          <div className="language-list">
-                            <ul className="list-group">
-                              <li
-                                className="language d-flex flex-wrap"
-                                onClick={() => {
-                                  this.localizeApp('en-US')
-                                }}
-                                data-locale="en-US"
-                              >
-                                English
-                              </li>
-                              {this.props.availableLanguages &&
-                                this.props.availableLanguages.map(langObj => (
-                                  <li
-                                    className="language d-flex flex-wrap"
-                                    key={langObj.selectedLanguageCode}
-                                    onClick={() => {
-                                      this.localizeApp(langObj.selectedLanguageCode)
-                                    }}
-                                    data-locale={langObj.selectedLanguageCode}
-                                  >
-                                    {langObj.selectedLanguageFull}
-                                  </li>
-                                ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </Dropdown>
-                  <div className="d-lg-inline-block link-container">
-                    <a
-                      href="https://www.originprotocol.com"
-                      className="footer-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FormattedMessage
-                        id={'footer.websiteLink'}
-                        defaultMessage={'Visit our Website'}
-                      />
-                    </a>
-                  </div>
-                  <div className="d-lg-inline-block link-container">
-                    <a
-                      href="https://github.com/OriginProtocol"
-                      className="footer-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FormattedMessage
-                        id={'footer.githubLink'}
-                        defaultMessage={'Visit our Github'}
-                      />
-                    </a>
-                  </div>
-                  {/* For when the FAQ page is ready
-                    <div className="d-lg-inline-block link-container">
-                      <a
-                        href="/FAQ"
+                        href="https://www.originprotocol.com/aup"
                         className="footer-link"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <FormattedMessage
-                          id={'footer.faqLink'}
-                          defaultMessage={'View FAQs'}
+                          id={'footer.aupLink'}
+                          defaultMessage={'Acceptable Use Policy'}
                         />
                       </a>
                     </div>
-                  */}
+                    <div className="d-lg-inline-block link-container col-lg-2">
+                      <a
+                        href="https://www.originprotocol.com/tos"
+                        className="footer-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FormattedMessage
+                          id={'footer.tosLink'}
+                          defaultMessage={'Terms'}
+                        />
+                      </a>
+                    </div>
+                    <div className="d-lg-inline-block link-container col-lg-2">
+                      <a
+                        href="https://www.originprotocol.com/privacy"
+                        className="footer-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FormattedMessage
+                          id={'footer.privacyLink'}
+                          defaultMessage={'Privacy'}
+                        />
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              }
+              </div>
+            </div>
+            <div className="col-12 col-lg-4">
+              <div className="d-lg-flex footer-links-container justify-content-between">
+                  <Dropdown
+                    className="d-flex dropup"
+                    open={this.state.dropdown}
+                    onClose={() => this.setState({ dropdown: false })}
+                  >
+                    <a
+                      className="dropdown-toggle"
+                      id="languageDropdown"
+                      role="button"
+                      onClick={() =>
+                        this.setState({
+                          dropdown: this.state.dropdown ? false : true
+                        })
+                      }
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      {this.props.selectedLanguageFull}
+                    </a>
+                    <div
+                      className={`dropdown-menu dropdown-menu-left${
+                        this.state.dropdown ? ' show' : ''
+                      }`}
+                      aria-labelledby="languageDropdown"
+                    >
+                      <div className="triangle-container d-flex justify-content-end">
+                        <div className="triangle" />
+                      </div>
+                      <div className="actual-menu">
+                        <div className="language-list">
+                          <ul className="list-group">
+                            <li
+                              className="language d-flex flex-wrap"
+                              onClick={() => {
+                                this.localizeApp('en-US')
+                              }}
+                              data-locale="en-US"
+                            >
+                              English
+                            </li>
+                            {this.props.availableLanguages &&
+                              this.props.availableLanguages.map(langObj => (
+                                <li
+                                  className="language d-flex flex-wrap"
+                                  key={langObj.selectedLanguageCode}
+                                  onClick={() => {
+                                    this.localizeApp(langObj.selectedLanguageCode)
+                                  }}
+                                  data-locale={langObj.selectedLanguageCode}
+                                >
+                                  {langObj.selectedLanguageFull}
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </Dropdown>
+                <div className="d-lg-inline-block link-container">
+                  <a
+                    href="https://www.originprotocol.com"
+                    className="footer-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id={'footer.websiteLink'}
+                      defaultMessage={'Learn more about Origin'}
+                    />
+                  </a>
+                </div>
+                <div className="d-lg-inline-block link-container">
+                  <a
+                    href="https://www.originprotocol.com/creator"
+                    className="footer-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id={'footer.creatorLink'}
+                      defaultMessage={'Create Your Own Marketplace'}
+                    />
+                  </a>
+                </div>
+                {/* For when the FAQ page is ready
+                  <div className="d-lg-inline-block link-container">
+                    <a
+                      href="/FAQ"
+                      className="footer-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FormattedMessage
+                        id={'footer.faqLink'}
+                        defaultMessage={'View FAQs'}
+                      />
+                    </a>
+                  </div>
+                */}
+              </div>
             </div>
           </div>
         </div>
@@ -195,7 +236,6 @@ class Footer extends Component {
 
 const mapStateToProps = state => ({
   about: state.config.about,
-  isWhiteLabel: state.config.isWhiteLabel,
   selectedLanguageCode: state.app.translations.selectedLanguageCode,
   selectedLanguageFull: state.app.translations.selectedLanguageFull,
   availableLanguages: state.app.translations.availableLanguages,
