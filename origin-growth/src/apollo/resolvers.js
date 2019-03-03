@@ -15,7 +15,7 @@ const requireEnrolledUser = context => {
     context.authentication !==
     enums.GrowthParticipantAuthenticationStatus.Enrolled
   ) {
-    throw new Error('User not authenticatex!')
+    throw new Error('User not authenticated!')
   }
 }
 

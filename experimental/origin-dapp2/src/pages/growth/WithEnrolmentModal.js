@@ -16,12 +16,6 @@ function withEnrolmentModal(WrappedComponent) {
       this.renderTermsAndEligibilityCheck = this.renderTermsAndEligibilityCheck.bind(
         this
       )
-      this.handleCloseModal = this.handleCloseModal.bind(this)
-      this.handleEligibilityContinue = this.handleEligibilityContinue.bind(this)
-      this.renderRestrictedModal = this.renderRestrictedModal.bind(this)
-      this.renderTermsModal = this.renderTermsModal.bind(this)
-      this.handleAcceptTermsCheck = this.handleAcceptTermsCheck.bind(this)
-      this.handleTermsContinue = this.handleTermsContinue.bind(this)
 
       this.state = {
         open: false,
@@ -110,7 +104,7 @@ function withEnrolmentModal(WrappedComponent) {
               <input
                 type="checkbox"
                 className="country-check"
-                onChange={this.handleAcceptTermsCheck}
+                onChange={(e) => this.handleAcceptTermsCheck(e)}
                 value="cofirm-citizenship"
               />
               <span className="checkmark" />
@@ -121,14 +115,14 @@ function withEnrolmentModal(WrappedComponent) {
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-outline-light mr-2"
-              onClick={this.handleCloseModal}
+              onClick={() => this.handleCloseModal()}
               children="Cancel"
             />
             <button
               className={`btn btn-lg ml-2 ${
                 termsAccepted ? 'btn-primary btn-rounded' : 'btn-outline-light'
               }`}
-              onClick={this.handleTermsContinue}
+              onClick={() => this.handleTermsContinue()}
               disabled={termsAccepted ? undefined : 'disabled'}
               children="Accept Terms"
             />
@@ -188,7 +182,7 @@ function withEnrolmentModal(WrappedComponent) {
           {isRestricted && notCitizenChecked && (
             <button
               className="btn btn-primary btn-rounded btn-lg"
-              onClick={this.handleEligibilityContinue}
+              onClick={() => this.handleEligibilityContinue()}
               children="Continue"
             />
           )}

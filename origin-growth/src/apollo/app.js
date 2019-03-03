@@ -51,9 +51,9 @@ const server = new ApolloServer({
     }
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-    if (headers.authorization) {
+    if (headers.authentication) {
       try {
-        const authToken = JSON.parse(headers.authorization).growth_auth_token
+        const authToken = JSON.parse(headers.authentication).growth_auth_token
         authStatus = await getUserAuthenticationStatus(authToken)
       } catch (e) {
         console.error('Error authenticating user: ', e)

@@ -29,7 +29,7 @@ const authLink = setContext((_, { headers }) => {
   }
 
   if (token) {
-    returnObject.headers['authorization'] = `{"growth_auth_token": "${token}"}`
+    returnObject.headers['authentication'] = `{"growth_auth_token": "${token}"}`
   }
 
   // return the headers to the context so httpLink can read them

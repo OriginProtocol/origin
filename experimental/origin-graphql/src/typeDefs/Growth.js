@@ -36,6 +36,7 @@ module.exports =
     Profile
     ListingCreated
     ListingPurchased
+    ListingSold
   }
 
   enum GrowthInviteStatus {

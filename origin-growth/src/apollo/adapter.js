@@ -36,6 +36,7 @@ const eventTypeToActionType = eventType => {
     PhoneAttestationPublished: 'Phone',
     RefereeSignedUp: 'Referral',
     ListingCreated: 'ListingCreated',
+    ListingSold: 'ListingSold',
     ListingPurchased: 'ListingPurchased'
   }
 
@@ -70,7 +71,7 @@ const multiEventRuleApolloObject = async (
   return {
     // TODO: we need event types for MultiEventsRule
     type: eventTypeToActionType(rule.config.eventTypes[0]),
-    status: rule.getStatus(ethAddress, events, currentUserLevel),
+    status: await rule.getStatus(ethAddress, events, currentUserLevel),
     rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward,
     unlockConditions: conditionToUnlockRule(rule, allRules)
@@ -93,7 +94,7 @@ const singleEventRuleApolloObject = async (
   const ruleRewards = _rewardsForRule(rule, rewards)
   return {
     type: eventTypeToActionType(rule.config.eventType),
-    status: rule.getStatus(ethAddress, events, currentUserLevel),
+    status: await rule.getStatus(ethAddress, events, currentUserLevel),
     rewardEarned: sumUpRewards(ruleRewards, rule.campaign.currency),
     reward: rule.config.reward,
     unlockConditions: conditionToUnlockRule(rule, allRules)
@@ -146,17 +147,9 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
   const currentLevel = await campaign.getCurrentLevel(ethAddress, false)
   const rewards = await campaign.getRewards(ethAddress)
 
-  return {
-    id: campaign.campaign.id,
-    nameKey: campaign.campaign.nameKey,
-    shortNameKey: campaign.campaign.shortNameKey,
-    name: campaign.campaign.name,
-    startDate: campaign.campaign.startDate,
-    endDate: campaign.campaign.endDate,
-    distributionDate: campaign.campaign.distributionDate,
-    status: campaign.getStatus(),
-    actions: rules
-      .filter(rule => rule.isVisible())
+  const apolloActions = await Promise.all(
+    rules
+      .filter(async rule => rule.isVisible())
       .map(rule => {
         if (rule.constructor.name === 'SingleEventRule')
           return singleEventRuleApolloObject(
@@ -185,7 +178,18 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
             currentLevel,
             rules
           )
-      }),
+      }))
+
+  return {
+    id: campaign.campaign.id,
+    nameKey: campaign.campaign.nameKey,
+    shortNameKey: campaign.campaign.shortNameKey,
+    name: campaign.campaign.name,
+    startDate: campaign.campaign.startDate,
+    endDate: campaign.campaign.endDate,
+    distributionDate: campaign.campaign.distributionDate,
+    status: campaign.getStatus(),
+    actions: apolloActions,
     rewardEarned: sumUpRewards(rewards, campaign.campaign.currency)
   }
 }

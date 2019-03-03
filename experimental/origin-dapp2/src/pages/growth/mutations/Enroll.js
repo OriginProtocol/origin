@@ -49,7 +49,6 @@ class Enroll extends Component {
                 <Mutation
                   mutation={SignMessageMutation}
                   onCompleted={({ signMessage }) => {
-                    console.log('Message successfuly signed: ', signMessage)
                     enroll({
                       variables: {
                         accountId: accountId,
