@@ -169,24 +169,25 @@ class OnboardMessaging extends Component {
   }
 }
 
-const Messaging = ({ listing }) => (
-  <>
-    <div className="step">Step 2</div>
-    <h3>Enable Messaging</h3>
-    <div className="row">
-      <div className="col-md-8">
-        <Steps steps={4} step={2} />
-        <OnboardMessaging
-          nextLink={`/listing/${listing.id}/onboard/notifications`}
-        />
+const Messaging = ({ listing }) => {
+  const linkPrefix = listing ? `/listing/${listing.id}` : ''
+  return (
+    <>
+      <div className="step">Step 2</div>
+      <h3>Enable Messaging</h3>
+      <div className="row">
+        <div className="col-md-8">
+          <Steps steps={4} step={2} />
+          <OnboardMessaging nextLink={`${linkPrefix}/onboard/notifications`} />
+        </div>
+        <div className="col-md-4">
+          <ListingPreview listing={listing} />
+          <HelpMessaging />
+        </div>
       </div>
-      <div className="col-md-4">
-        <ListingPreview listing={listing} />
-        <HelpMessaging />
-      </div>
-    </div>
-  </>
-)
+    </>
+  )
+}
 
 export { Messaging, OnboardMessaging }
 
