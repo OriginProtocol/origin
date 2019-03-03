@@ -8,7 +8,9 @@ class GetStarted extends Component {
     return (
       <ul className="navbar-nav">
         <li className="nav-item">
-          <Link to="/onboard" className="nav-link">Get Started</Link>
+          <Link to="/onboard" className="nav-link">
+            Get Started
+          </Link>
         </li>
       </ul>
     )
