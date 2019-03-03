@@ -10,6 +10,7 @@ import PageTitle from 'components/PageTitle'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
+import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
 
 import ChooseListingType from './ChooseListingType'
 import Step2 from './Step2'
@@ -25,7 +26,7 @@ class CreateListing extends Component {
     super(props)
     this.state = {
       listing: {
-        __typename: 'UnitListing',
+        __typename: 'UnitListing', // Default
         title: '',
         description: '',
         category: '',
@@ -62,7 +63,7 @@ class CreateListing extends Component {
 
     const listingTypeMapping = {
       'UnitListing' : UnitListing,
-      // 'AnnouncementListing' : AnnouncementListing,
+      'AnnouncementListing' : AnnouncementListing,
       'FractionalListing' : FractionalListing
     }
     const ListingTypeComponent =
