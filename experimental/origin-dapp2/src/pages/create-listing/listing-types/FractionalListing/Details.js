@@ -65,7 +65,9 @@ class Details extends Component {
                 {/* BEGIN Homeshare specific code */}
 
                 <div className="form-group">
-                  <label>Default Weekday Pricing (Sunday - Thursday nights)</label>
+                  <label>
+                    Default Weekday Pricing (Sunday - Thursday nights)
+                  </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
                       <div className="with-symbol">
@@ -90,7 +92,9 @@ class Details extends Component {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Default Weekend Pricing (Friday &amp; Saturday nights)</label>
+                  <label>
+                    Default Weekend Pricing (Friday &amp; Saturday nights)
+                  </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
                       <div className="with-symbol">
@@ -125,7 +129,12 @@ class Details extends Component {
                 </div>
 
                 <div className="actions">
-                  <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}}>
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => {
+                      this.props.onPrev()
+                    }}
+                  >
                     Back
                   </button>
                   <button type="submit" className="btn btn-primary">

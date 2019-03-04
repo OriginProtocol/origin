@@ -71,7 +71,7 @@ class ChooseListingType extends Component {
           <div className="create-listing-choose-listingtype">
             {!isEdit ? null : <h2>Let’s update your listing</h2>}
             <div className="wrap">
-              <div className="step"></div>
+              <div className="step" />
               <div className="step-description">
                 {isEdit
                   ? `Update listing type`

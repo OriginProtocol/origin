@@ -8,7 +8,6 @@ import Availability from './Availability'
 import Review from './Review'
 
 class FractionalListing extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -27,20 +26,18 @@ class FractionalListing extends Component {
   }
 
   render() {
-    const steps=3
+    const steps = 3
     switch (this.state.step) {
       case 0:
-        return (
-          <Redirect to={`/create/new`} />
-        )
+        return <Redirect to={`/create/new`} />
       case 1:
         return (
           <Details
             listing={this.props.listing}
-            steps = {steps}
-            step = {1}
-            onPrev={() => this.setState({step: 0})}
-            onNext={() => this.setState({step: 2})}
+            steps={steps}
+            step={1}
+            onPrev={() => this.setState({ step: 0 })}
+            onNext={() => this.setState({ step: 2 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
@@ -48,11 +45,11 @@ class FractionalListing extends Component {
         return (
           <Availability
             listing={this.props.listing}
-            steps = {steps}
-            step = {2}
+            steps={steps}
+            step={2}
             tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 1})}
-            onNext={() => this.setState({step: 3})}
+            onPrev={() => this.setState({ step: 1 })}
+            onNext={() => this.setState({ step: 3 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
@@ -60,11 +57,11 @@ class FractionalListing extends Component {
         return (
           <Boost
             listing={this.props.listing}
-            steps = {steps}
-            step = {3}
+            steps={steps}
+            step={3}
             tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 2})}
-            onNext={() => this.setState({step: 4})}
+            onPrev={() => this.setState({ step: 2 })}
+            onNext={() => this.setState({ step: 4 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
@@ -72,18 +69,16 @@ class FractionalListing extends Component {
         return (
           <Review
             listing={this.props.listing}
-            steps = {steps}
-            step = {4}
+            steps={steps}
+            step={4}
             tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 3})}
-            onNext={() => this.setState({step: 5})}
+            onPrev={() => this.setState({ step: 3 })}
+            onNext={() => this.setState({ step: 5 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
       default:
-        return (
-          <div>Something went wrong</div>
-        )
+        return <div>Something went wrong</div>
     }
   }
 }

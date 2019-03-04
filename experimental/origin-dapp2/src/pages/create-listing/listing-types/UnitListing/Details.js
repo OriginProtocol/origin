@@ -67,7 +67,10 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>Quantity</label>
-                  <input {...input('quantity')} placeholder="How many are you selling?" />
+                  <input
+                    {...input('quantity')}
+                    placeholder="How many are you selling?"
+                  />
                   {Feedback('quantity')}
                 </div>
                 <div className="form-group">
@@ -92,8 +95,8 @@ class Details extends Component {
                   </div>
                   {Feedback('price')}
                   <div className="help-text price">
-                    The cost to buy this listing. Price is always in ETH, USD is an
-                    estimate.
+                    The cost to buy this listing. Price is always in ETH, USD is
+                    an estimate.
                   </div>
                 </div>
 
@@ -122,7 +125,12 @@ class Details extends Component {
                 </div>
 
                 <div className="actions">
-                  <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}}>
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => {
+                      this.props.onPrev()
+                    }}
+                  >
                     Back
                   </button>
                   <button type="submit" className="btn btn-primary">

@@ -51,16 +51,15 @@ class CreateListing extends Component {
   }
 
   render() {
-
     const listingTypeMapping = {
-      'UnitListing': UnitListing,
-      'AnnouncementListing': AnnouncementListing,
-      'FractionalListing': FractionalListing
+      UnitListing: UnitListing,
+      AnnouncementListing: AnnouncementListing,
+      FractionalListing: FractionalListing
     }
     const ListingTypeComponent =
-      (this.state.listing.__typename in listingTypeMapping) ?
-      listingTypeMapping[this.state.listing.__typename] :
-      UnitListing
+      this.state.listing.__typename in listingTypeMapping
+        ? listingTypeMapping[this.state.listing.__typename]
+        : UnitListing
 
     return (
       <div className="container create-listing">
@@ -68,7 +67,7 @@ class CreateListing extends Component {
         <Switch>
           <Route
             path="/create/details/:step?"
-            render={( {match }) => (
+            render={({ match }) => (
               <ListingTypeComponent
                 listing={this.state.listing}
                 step={match.params.step}

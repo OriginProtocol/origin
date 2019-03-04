@@ -9,7 +9,6 @@ import UpdateListing from '../../mutations/UpdateListing'
 class Review extends Component {
   state = {}
   render() {
-
     const isEdit = this.props.mode === 'edit'
 
     const { listing, tokenBalance } = this.props
@@ -57,7 +56,12 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-            <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}} >
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => {
+                this.props.onPrev()
+              }}
+            >
               Back
             </button>
             {isEdit ? (

@@ -11,7 +11,6 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 class UnitListing extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -29,20 +28,18 @@ class UnitListing extends Component {
   }
 
   render() {
-    const steps=2
+    const steps = 2
     switch (this.state.step) {
       case 0:
-        return (
-          <Redirect to={`/create`} />
-        )
+        return <Redirect to={`/create`} />
       case 1:
         return (
           <Details
             listing={this.props.listing}
-            steps = {steps}
-            step = {1}
-            onPrev={() => this.setState({step: 0})}
-            onNext={() => this.setState({step: 2})}
+            steps={steps}
+            step={1}
+            onPrev={() => this.setState({ step: 0 })}
+            onNext={() => this.setState({ step: 2 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
@@ -50,11 +47,11 @@ class UnitListing extends Component {
         return (
           <Boost
             listing={this.props.listing}
-            steps = {steps}
-            step = {2}
+            steps={steps}
+            step={2}
             tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 1})}
-            onNext={() => this.setState({step: 3})}
+            onPrev={() => this.setState({ step: 1 })}
+            onNext={() => this.setState({ step: 3 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
@@ -62,18 +59,16 @@ class UnitListing extends Component {
         return (
           <Review
             listing={this.props.listing}
-            steps = {steps}
-            step = {3}
+            steps={steps}
+            step={3}
             tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 2})}
-            onNext={() => this.setState({step: 4})}
+            onPrev={() => this.setState({ step: 2 })}
+            onNext={() => this.setState({ step: 4 })}
             onChange={listing => this.props.onChange(listing)}
           />
         )
       default:
-        return (
-          <div>Something went wrong</div>
-        )
+        return <div>Something went wrong</div>
     }
   }
 }

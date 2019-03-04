@@ -92,7 +92,12 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-            <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}} >
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => {
+                this.props.onPrev()
+              }}
+            >
               Back
             </button>
             {isEdit ? (

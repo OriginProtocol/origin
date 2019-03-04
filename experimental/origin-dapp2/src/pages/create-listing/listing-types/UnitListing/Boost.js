@@ -77,7 +77,12 @@ class Boost extends Component {
                 )}
 
                 <div className="actions">
-                  <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}} >
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => {
+                      this.props.onPrev()
+                    }}
+                  >
                     Back
                   </button>
                   <button type="submit" className="btn btn-primary">

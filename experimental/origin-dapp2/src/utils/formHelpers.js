@@ -5,10 +5,11 @@ export const formInput = (state, setState, className) => field => ({
   className: `form-control form-control-lg${
     state[`${field}Error`] ? ' is-invalid' : ''
   }${className ? ` ${className}` : ''}`,
-  onChange: e => setState({
-    [field]: e.target.value,
-    [`${field}Error`]: false
-  })
+  onChange: e =>
+    setState({
+      [field]: e.target.value,
+      [`${field}Error`]: false
+    })
 })
 
 export const formFeedback = state =>

@@ -35,12 +35,7 @@ class EditListing extends Component {
   }
 
   render() {
-    return (
-      <CreateListing
-        listing={this.state.listing}
-        mode="edit"
-      />
-    )
+    return <CreateListing listing={this.state.listing} mode="edit" />
   }
 }
 
