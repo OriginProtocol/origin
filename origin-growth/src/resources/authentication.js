@@ -33,7 +33,7 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
 
   const participant = await db.GrowthParticipant.findOne({
     where: {
-      ethAddress: accountId
+      ethAddress: accountId.toLowerCase()
     }
   })
 
@@ -48,13 +48,16 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   const authToken =
     participant === null
       ? crypto.randomBytes(64).toString('hex')
+      /* If user uses growth from 2 devices let them share the same auth token.
+       * The caveat is user will need to agree to the terms also on the second
+       * device.
+       */
       : participant.authToken
 
   const participantData = {
-    ethAddress: accountId,
+    ethAddress: accountId.toLowerCase(),
     status: enums.GrowthParticipantStatuses.Active,
     agreementId: agreementMessage,
-    // if user uses growth from 2 devices let them share the same auth token
     authToken: authToken
   }
 
@@ -100,7 +103,7 @@ async function getUserAuthenticationStatus(token) {
 async function createInviteCode(accountId) {
   const existingInvite = await db.GrowthInviteCode.findOne({
     where: {
-      ethAddress: accountId
+      ethAddress: accountId.toLowerCase()
     }
   })
 
@@ -109,18 +112,40 @@ async function createInviteCode(accountId) {
     return
   }
 
+  const inviteCodesCount = await db.GrowthInviteCode.count({})
+
   const code =
     `${accountId.substring(2, 5)}-` +
-    `${accountId.substring(5, 8)}-` +
-    `${accountId.substring(accountId.length - 3, accountId.length)}`
+    `${accountId.substring(accountId.length - 3, accountId.length)}-` +
+    `${toReadableHex(inviteCodesCount)}`
 
   await db.GrowthInviteCode.create({
-    ethAddress: accountId,
+    ethAddress: accountId.toLowerCase(),
     // Consists of first 6 and last 3 ether address letters
     code
   })
 
   logger.info(`Invite code: ${code}: created for user: ${accountId}`)
+}
+
+/* Converts integer to readable hex Example:
+ * inputNumber: 1 -> returns 'aab'
+ * inputNumber: 12 -> returns 'aam'
+ * inputNumber: 99 -> returns 'aed'
+ * inputNumber: 12345 -> returns 'zkj'
+ * inputNumber: 591231 -> returns 'bttkp'
+ */
+function toReadableHex(inputNumber) {
+
+  let hash = ''
+  const alphabet = 'abcdefghijklmnoprstuvzyw'
+
+  do {
+    hash = alphabet[inputNumber % alphabet.length] + hash
+    inputNumber = parseInt(inputNumber / alphabet.length, 10)
+  } while (inputNumber)
+
+  return hash.padStart(3, 'a')
 }
 
 module.exports = { authenticateEnrollment, getUserAuthenticationStatus }
