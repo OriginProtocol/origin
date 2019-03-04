@@ -5,6 +5,7 @@ const chai = require('chai')
 const expect = chai.expect
 const nock = require('nock')
 const request = require('supertest')
+const querystring = require('querystring')
 
 const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -35,10 +36,15 @@ describe('facebook attestations', () => {
       .get('/api/attestations/facebook/auth-url')
       .expect(200)
 
+    const params = {
+      client_id: process.env.FACEBOOK_CLIENT_ID,
+      redirect_uri: getAbsoluteUrl('/redirects/facebook/')
+    }
+
     expect(response.body.url).to.equal(
-      `https://www.facebook.com/v3.2/dialog/oauth?client_id=${
-        process.env.FACEBOOK_CLIENT_ID
-      }&redirect_uri=${redirectUrl}`
+      `https://www.facebook.com/v3.2/dialog/oauth?${querystring.stringify(
+        params
+      )}`
     )
   })
 

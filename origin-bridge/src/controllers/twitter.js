@@ -2,6 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
+const querystring = require('querystring')
 
 const {
   getTwitterOAuthRequestToken,
@@ -9,7 +10,6 @@ const {
   verifyTwitterCredentials
 } = require('../utils/twitter')
 const { generateAttestation } = require('../utils/attestation')
-const { mapObjectToQueryParams } = require('../utils')
 const { twitterVerifyCode } = require('../utils/validation')
 const constants = require('../constants')
 const Attestation = require('../models/index').Attestation
@@ -40,7 +40,7 @@ router.get('/auth-url', async (req, res) => {
 
   const url =
     constants.TWITTER_BASE_AUTH_URL +
-    mapObjectToQueryParams({ oauth_token: oAuthToken })
+    querystring.stringify({ oauth_token: oAuthToken })
 
   res.send({ url })
 })

@@ -24,15 +24,8 @@ function getAbsoluteUrl(relativeUrl, dappRedirectUrl = null) {
   return url
 }
 
-function mapObjectToQueryParams(obj) {
-  return Object.keys(obj)
-    .map(key => key + '=' + obj[key])
-    .join('&')
-}
-
 module.exports = {
   generateAirbnbCode,
   generateSixDigitCode,
-  getAbsoluteUrl,
-  mapObjectToQueryParams
+  getAbsoluteUrl
 }

@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const request = require('superagent')
 const crypto = require('crypto')
+const querystring = require('querystring')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -11,7 +12,7 @@ const { generateAttestation } = require('../utils/attestation')
 const { facebookVerify } = require('../utils/validation')
 const logger = require('../logger')
 
-const { getAbsoluteUrl, mapObjectToQueryParams } = require('../utils')
+const { getAbsoluteUrl } = require('../utils')
 const constants = require('../constants')
 
 /* Generate a URL for the user to be redirected to that prompts for a Facebook
@@ -24,7 +25,7 @@ router.get('/auth-url', (req, res) => {
     client_id: process.env.FACEBOOK_CLIENT_ID,
     redirect_uri: getAbsoluteUrl('/redirects/facebook/', dappRedirectUrl)
   }
-  const url = constants.FACEBOOK_BASE_AUTH_URL + mapObjectToQueryParams(params)
+  const url = constants.FACEBOOK_BASE_AUTH_URL + querystring.stringify(params)
   res.send({ url: url })
 })
 
