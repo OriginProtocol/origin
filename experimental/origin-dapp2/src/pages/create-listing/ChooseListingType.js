@@ -71,13 +71,13 @@ class ChooseListingType extends Component {
           <div className="create-listing-choose-listingtype">
             {!isEdit ? null : <h2>Let’s update your listing</h2>}
             <div className="wrap">
-              <div className="step">Step 1</div>
+              <div className="step"></div>
               <div className="step-description">
                 {isEdit
                   ? `Update listing type`
                   : `What type of listing do you want to create?`}
               </div>
-              <Steps steps={3} step={1} />
+              <Steps steps={1} step={0} />
               <form
                 onSubmit={e => {
                   e.preventDefault()

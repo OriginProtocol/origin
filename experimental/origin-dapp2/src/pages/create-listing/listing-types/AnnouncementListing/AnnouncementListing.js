@@ -18,9 +18,8 @@ class AnnouncementListing extends Component {
       step: this.props.step ? parseInt(this.props.step) : 1
     }
     if (this.props.onChange) {
-      // TODO: (Stan) Add custom fields for this ListingType
       this.props.onChange({
-        farts: 1,
+        // No AnnouncementListing specific fields
         ...this.props.listing
       })
     }
@@ -32,7 +31,7 @@ class AnnouncementListing extends Component {
   }
 
   render() {
-    const steps=3
+    const steps=1
     switch (this.state.step) {
       case 0:
         return (
@@ -46,7 +45,7 @@ class AnnouncementListing extends Component {
             step = {1}
             onPrev={() => this.setState({step: 0})}
             onNext={() => this.setState({step: 2})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       case 2:
@@ -58,7 +57,7 @@ class AnnouncementListing extends Component {
             tokenBalance={this.props.tokenBalance}
             onPrev={() => this.setState({step: 1})}
             onNext={() => this.setState({step: 3})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       default:

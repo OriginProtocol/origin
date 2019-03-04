@@ -6,7 +6,6 @@ import get from 'lodash/get'
 import PageTitle from 'components/PageTitle'
 
 import ChooseListingType from '../create-listing/ChooseListingType'
-import Step2 from '../create-listing/Step2'
 import Boost from '../create-listing/Boost'
 import Availability from '../create-listing/Availability'
 import Review from '../create-listing/Review'
@@ -45,32 +44,32 @@ class EditListing extends Component {
       mode: 'edit',
       onChange: listing => this.setState({ listing })
     }
-    return (
-      <div className="container create-listing">
-        <PageTitle>Edit Listing</PageTitle>
-        <Switch>
-          <Route
-            path="/listing/:listingID/edit/step-2"
-            render={() => <Step2 {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/boost"
-            render={() => <Boost {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/availability"
-            render={() => <Availability {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/review"
-            render={() => (
-              <Review {...stepProps} refetch={this.props.refetch} />
-            )}
-          />
-          <Route render={() => <ChooseListingType {...stepProps} />} />
-        </Switch>
-      </div>
-    )
+    // return (
+    //   <div className="container create-listing">
+    //     <PageTitle>Edit Listing</PageTitle>
+    //     <Switch>
+    //       <Route
+    //         path="/listing/:listingID/edit/step-2"
+    //         render={() => <Step2 {...stepProps} />}
+    //       />
+    //       <Route
+    //         path="/listing/:listingID/edit/boost"
+    //         render={() => <Boost {...stepProps} />}
+    //       />
+    //       <Route
+    //         path="/listing/:listingID/edit/availability"
+    //         render={() => <Availability {...stepProps} />}
+    //       />
+    //       <Route
+    //         path="/listing/:listingID/edit/review"
+    //         render={() => (
+    //           <Review {...stepProps} refetch={this.props.refetch} />
+    //         )}
+    //       />
+    //       <Route render={() => <ChooseListingType {...stepProps} />} />
+    //     </Switch>
+    //   </div>
+    // )
   }
 }
 

@@ -20,7 +20,9 @@ class UnitListing extends Component {
     if (this.props.onChange) {
       // Add custom fields for this ListingType
       this.props.onChange({
-        farts: 1,
+        // UnitListing specific fields
+        quantity: '1',
+        price: '',
         ...this.props.listing
       })
     }
@@ -32,7 +34,7 @@ class UnitListing extends Component {
   }
 
   render() {
-    const steps=3
+    const steps=2
     switch (this.state.step) {
       case 0:
         return (

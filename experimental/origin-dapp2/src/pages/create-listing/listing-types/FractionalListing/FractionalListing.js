@@ -19,8 +19,8 @@ class FractionalListing extends Component {
       step: this.props.step ? parseInt(this.props.step) : 1
     }
     if (this.props.onChange) {
-      // Add custom fields for this ListingType
       this.props.onChange({
+        // FractionalListing specific fields
         weekendPrice: '',
         booked: [],
         customPricing: [],
@@ -36,7 +36,7 @@ class FractionalListing extends Component {
   }
 
   render() {
-    const steps=4
+    const steps=3
     switch (this.state.step) {
       case 0:
         return (

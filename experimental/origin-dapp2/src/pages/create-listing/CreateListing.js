@@ -13,7 +13,6 @@ import FractionalListing from './listing-types/FractionalListing/FractionalListi
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
 
 import ChooseListingType from './ChooseListingType'
-import Step2 from './Step2'
 import Boost from './Boost'
 import Availability from './Availability'
 import Review from './Review'
@@ -39,12 +38,6 @@ class CreateListing extends Component {
         // Unit fields:
         quantity: '1',
         price: '',
-
-        // HomeShare fields:
-        weekendPrice: '',
-        booked: [],
-        customPricing: [],
-        unavailable: [],
 
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
@@ -94,54 +87,6 @@ class CreateListing extends Component {
               />
             )}
           />
-{/*}
-          <Route
-            path="/create/step-2"
-            render={() => (
-              <Step2
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
-            )}
-          />
-          <Route
-            path="/create/boost"
-            render={() => (
-              <Boost
-                listing={this.state.listing}
-                tokenBalance={this.props.tokenBalance}
-                onChange={listing => this.setListing(listing)}
-              />
-            )}
-          />
-          <Route
-            path="/create/review"
-            render={() => (
-              <Review
-                tokenBalance={this.props.tokenBalance}
-                listing={this.state.listing}
-              />
-            )}
-          />
-          <Route
-            path="/create/availability"
-            render={() => (
-              <Availability
-                tokenBalance={this.props.tokenBalance}
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
-            )}
-          />
-          <Route
-            render={() => (
-              <ChooseListingType
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
-            )}
-          />
-*/}
         </Switch>
       </div>
     )

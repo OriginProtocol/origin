@@ -39,7 +39,7 @@ class Details extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-2">
             <div className="wrap">
-              <div className="step">Step 2</div>
+              <div className="step">{`Step ${this.props.step}`}</div>
               <div className="step-description">Provide listing details</div>
               <Steps steps={this.props.steps} step={this.props.step} />
 

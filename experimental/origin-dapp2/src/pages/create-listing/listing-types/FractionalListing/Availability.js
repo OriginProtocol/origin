@@ -40,7 +40,7 @@ class Availability extends Component {
         <div className="col-md-8">
           <div className="create-listing-calendar">
             <div className="wrap">
-              <div className="step">Step 3</div>
+              <div className="step">{`Step ${this.props.step}`}</div>
               <div className="step-description">
                 Edit availability &amp; Pricing
               </div>
@@ -61,7 +61,11 @@ class Availability extends Component {
                 <Calendar
                   range={this.state.range}
                   availability={this.state.calculator}
-                  onChange={state => {console.log('yo');console.log(state); this.setState(state)}}
+                  onChange={state => {
+                    console.log('yo');
+                    console.log(state);
+                    this.setState(state)}
+                  }
                   showBooked={true}
                 />
 
