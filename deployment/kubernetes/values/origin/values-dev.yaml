@@ -10,7 +10,7 @@ dappImageTag: '5699a57'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
-dapp2ImageTag: '947c16c'
+dapp2ImageTag: '671e4e1'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
