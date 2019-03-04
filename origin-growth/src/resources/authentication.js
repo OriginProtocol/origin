@@ -84,6 +84,10 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
  *  - NotEnrolled -> user not a participant yet
  */
 async function getUserAuthenticationStatus(token, accountId) {
+  if (!token) {
+    return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+  }
+
   const whereFilter = {
     where: {
       authToken: token
@@ -106,9 +110,10 @@ async function getUserAuthenticationStatus(token, accountId) {
 }
 
 async function createInviteCode(accountId) {
+  accountId = accountId.toLowerCase()
   const existingInvite = await db.GrowthInviteCode.findOne({
     where: {
-      ethAddress: accountId.toLowerCase()
+      ethAddress: accountId
     }
   })
 
@@ -117,16 +122,16 @@ async function createInviteCode(accountId) {
     return
   }
 
-  const inviteCodesCount = await db.GrowthInviteCode.count({})
-
+  /* Consists of first 3 and last 3 ether address letters plus hex
+   * representation of a random number
+   */
   const code =
-    `${accountId.substring(2, 5)}-` +
-    `${accountId.substring(accountId.length - 3, accountId.length)}-` +
-    `${toReadableHex(inviteCodesCount)}`
+    `${accountId.substring(2, 5)}` +
+    `${accountId.substring(accountId.length - 3, accountId.length)}` +
+    `${toReadableHex(Math.round(Math.random() * 1000000))}`
 
   await db.GrowthInviteCode.create({
-    ethAddress: accountId.toLowerCase(),
-    // Consists of first 6 and last 3 ether address letters
+    ethAddress: accountId,
     code
   })
 

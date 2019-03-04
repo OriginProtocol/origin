@@ -194,7 +194,7 @@ function withEnrolmentModal(WrappedComponent) {
     renderTermsAndEligibilityCheck() {
       const { notCitizenChecked, notCitizenConfirmed } = this.state
 
-      return(
+      return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
             if (networkStatus === 1 || loading) return 'Loading...'
@@ -236,61 +236,59 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
-      
+
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-                return 'Loading...'
-              } else if (error) {
-                return (
-                  <QueryError
-                    error={error}
-                    query={allCampaignsQuery}
-                    vars={vars}
-                  />
-                )
-              }
-
-              const walletAddress = data.web3.primaryAccount.id
-
-              return (
-                <Query 
-                  query={enrollmentStatusQuery}
-                  variables={{ walletAddress }}
-                >
-                  {({ networkStatus, error, loading, data }) => {
-                    if (networkStatus === 1 || loading) {
-                      return ''
-                    } else if (error) {
-                      return <QueryError error={error} query={growthEligibilityQuery} />
-                    }
-
-                    return (
-                      <Fragment>
-                        <WrappedComponent
-                          {...this.props}
-                          onClick={e => this.handleClick(e, data.enrollmentStatus)}
-                        />
-                        {open && (
-                          <Modal
-                            className="growth-enrollment-modal"
-                            onClose={() => {
-                              this.setState({
-                                open: false
-                              })
-                            }}
-                          >
-                            {this[`render${this.state.stage}`]()}
-                          </Modal>
-                        )}
-                      </Fragment>
-                    )
-                  }}
-                </Query>
-              )
+              return 'Loading...'
+            } else if (error) {
+              return <QueryError error={error} query={profileQuery} />
             }
-          }
+
+            const walletAddress = data.web3.primaryAccount.id
+            return (
+              <Query
+                query={enrollmentStatusQuery}
+                variables={{ walletAddress }}
+                // enrollment info can change, do not cache it
+                fetchPolicy="network-only"
+              >
+                {({ networkStatus, error, loading, data }) => {
+                  if (networkStatus === 1 || loading) {
+                    return 'Loading...'
+                  } else if (error) {
+                    return (
+                      <QueryError error={error} query={enrollmentStatusQuery} />
+                    )
+                  }
+
+                  return (
+                    <Fragment>
+                      <WrappedComponent
+                        {...this.props}
+                        onClick={e =>
+                          this.handleClick(e, data.enrollmentStatus)
+                        }
+                      />
+                      {open && (
+                        <Modal
+                          className="growth-enrollment-modal"
+                          onClose={() => {
+                            this.setState({
+                              open: false
+                            })
+                          }}
+                        >
+                          {this[`render${this.state.stage}`]()}
+                        </Modal>
+                      )}
+                    </Fragment>
+                  )
+                }}
+              </Query>
+            )
+          }}
         </Query>
       )
     }

@@ -437,22 +437,17 @@ class GrowthCampaigns extends Component {
             if (networkStatus === 1 || loading) {
               return <h5 className="p-2">Loading...</h5>
             } else if (error) {
-              return (
-                <QueryError
-                  error={error}
-                  query={profileQuery}
-                />
-              )
+              return <QueryError error={error} query={profileQuery} />
             }
 
             const accountId = data.web3.primaryAccount.id
-
-            const vars = { walletAddress: accountId }
             return (
               <Query
                 query={enrollmentStatusQuery}
-                variables={vars}
+                variables={{ walletAddress: accountId }}
                 notifyOnNetworkStatusChange={true}
+                // enrollment info can change, do not cache it
+                fetchPolicy="network-only"
                 onCompleted={({ enrollmentStatus }) => {
                   // if user is not enrolled redirect him to welcome page
                   if (enrollmentStatus !== 'Enrolled') {
@@ -460,26 +455,22 @@ class GrowthCampaigns extends Component {
                   }
                 }}
               >
-                {({ error, data, networkStatus, loading }) => {
+                {({ error, networkStatus, loading }) => {
                   if (networkStatus === 1 || loading) {
                     return <h5 className="p-2">Loading...</h5>
                   } else if (error) {
                     return (
-                      <QueryError
-                        error={error}
-                        query={enrollmentStatusQuery}
-                        vars={vars}
-                      />
+                      <QueryError error={error} query={enrollmentStatusQuery} />
                     )
                   }
 
-                  const vars_campaign = pick(this.state, 'first')
-                  vars_campaign.walletAddress = accountId
+                  const vars = pick(this.state, 'first')
+                  vars.walletAddress = accountId
 
                   return (
                     <Query
                       query={allCampaignsQuery}
-                      variables={vars_campaign}
+                      variables={vars}
                       notifyOnNetworkStatusChange={true}
                     >
                       {({ error, data, networkStatus, loading }) => {
@@ -490,7 +481,7 @@ class GrowthCampaigns extends Component {
                             <QueryError
                               error={error}
                               query={allCampaignsQuery}
-                              vars={vars_campaign}
+                              vars={vars}
                             />
                           )
                         }
@@ -522,7 +513,9 @@ class GrowthCampaigns extends Component {
                             <CampaignNavList
                               campaigns={campaigns}
                               onCampaignClick={campaignId => {
-                                this.setState({ selectedCampaignId: campaignId })
+                                this.setState({
+                                  selectedCampaignId: campaignId
+                                })
                               }}
                               selectedCampaignId={selectedCampaignId}
                             />

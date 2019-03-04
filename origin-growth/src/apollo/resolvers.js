@@ -77,6 +77,8 @@ const resolvers = {
       }
 
       const locationInfo = getLocationInfo(context.countryCode)
+      logger.debug('Location info received:', JSON.stringify(locationInfo))
+
       if (!locationInfo) {
         return {
           eligibility: 'Unknown',
