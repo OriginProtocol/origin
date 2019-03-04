@@ -13,9 +13,6 @@ import FractionalListing from './listing-types/FractionalListing/FractionalListi
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
 
 import ChooseListingType from './ChooseListingType'
-import Boost from './Boost'
-import Availability from './Availability'
-import Review from './Review'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -56,9 +53,9 @@ class CreateListing extends Component {
   render() {
 
     const listingTypeMapping = {
-      'UnitListing' : UnitListing,
-      'AnnouncementListing' : AnnouncementListing,
-      'FractionalListing' : FractionalListing
+      'UnitListing': UnitListing,
+      'AnnouncementListing': AnnouncementListing,
+      'FractionalListing': FractionalListing
     }
     const ListingTypeComponent =
       (this.state.listing.__typename in listingTypeMapping) ?
@@ -71,7 +68,7 @@ class CreateListing extends Component {
         <Switch>
           <Route
             path="/create/details/:step?"
-            render={({match}) => (
+            render={( {match }) => (
               <ListingTypeComponent
                 listing={this.state.listing}
                 step={match.params.step}
@@ -81,7 +78,7 @@ class CreateListing extends Component {
           />
           <Route
             path="/listing/:listingId/edit/:step?"
-            render={({match}) => (
+            render={({ match }) => (
               <ListingTypeComponent
                 listing={this.state.listing}
                 step={match.params.step}

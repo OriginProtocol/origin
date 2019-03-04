@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
-import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
@@ -42,7 +41,6 @@ class Boost extends Component {
 
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
 
     if (this.state.valid) {
       // return <Redirect to={`${prefix}/review`} push />

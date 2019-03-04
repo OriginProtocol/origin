@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
-import Redirect from 'components/Redirect'
-import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -24,11 +22,6 @@ class Details extends Component {
   }
 
   render() {
-    const prefix =
-      this.props.mode === 'edit'
-        ? `/listing/${this.props.listingId}/edit`
-        : '/create'
-
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 

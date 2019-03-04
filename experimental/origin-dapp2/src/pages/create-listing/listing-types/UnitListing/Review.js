@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
-import Redirect from 'components/Redirect'
-import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
-import Calendar from 'components/Calendar'
 import Category from 'components/Category'
 
 import CreateListing from '../../mutations/CreateListing'
@@ -17,10 +13,7 @@ class Review extends Component {
   render() {
 
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
-
     const { listing, tokenBalance } = this.props
-
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'

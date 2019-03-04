@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
-import Redirect from 'components/Redirect'
-import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
@@ -16,14 +14,7 @@ class Review extends Component {
   state = {}
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
-
     const { listing, tokenBalance } = this.props
-    if (!listing.subCategory) {
-      return <Redirect to={`${prefix}/step-1`} />
-    } else if (!listing.title) {
-      return <Redirect to={`${prefix}/step-2`} />
-    }
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (

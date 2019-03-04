@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
 
-import { Switch, Route } from 'react-router-dom'
 import Redirect from 'components/Redirect'
 
 import Details from './Details'
-import Boost from './Boost'
 import Review from './Review'
-
-import Store from 'utils/store'
-const store = Store('sessionStorage')
 
 class AnnouncementListing extends Component {
 
@@ -35,24 +30,24 @@ class AnnouncementListing extends Component {
       case 1:
         return (
           <Details
-            listing={this.props.listing}
-            steps = {steps}
-            step = {1}
-            onPrev={() => this.setState({step: 0})}
-            onNext={() => this.setState({step: 2})}
-            onChange={listing => this.props.onChange(listing)}
+            listing={ this.props.listing }
+            steps = { steps }
+            step = { 1 }
+            onPrev={ () => this.setState({step: 0}) }
+            onNext={ () => this.setState({step: 2}) }
+            onChange={ listing => this.props.onChange(listing) }
           />
         )
       case 2:
         return (
           <Review
-            listing={this.props.listing}
-            steps = {steps}
-            step = {2}
-            tokenBalance={this.props.tokenBalance}
-            onPrev={() => this.setState({step: 1})}
-            onNext={() => this.setState({step: 3})}
-            onChange={listing => this.props.onChange(listing)}
+            listing={ this.props.listing }
+            steps = { steps }
+            step = { 2 }
+            tokenBalance={ this.props.tokenBalance }
+            onPrev={ () => this.setState({step: 1}) }
+            onNext={ () => this.setState({step: 3}) }
+            onChange={ listing => this.props.onChange(listing) }
           />
         )
       default:

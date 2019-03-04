@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
@@ -39,7 +38,7 @@ class EditListing extends Component {
     return (
       <CreateListing
         listing={this.state.listing}
-        mode='edit'
+        mode="edit"
       />
     )
   }

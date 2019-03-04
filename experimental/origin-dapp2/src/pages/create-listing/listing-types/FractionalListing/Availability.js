@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Steps from 'components/Steps'
-import Link from 'components/Link'
 import Calendar from 'components/Calendar'
 import Price from 'components/Price'
-import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -28,12 +26,7 @@ class Availability extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
-
-    // if (this.state.valid) {
-    //   return <Redirect to={`${prefix}/boost`} push />
-    // }
+    // const isEdit = this.props.mode === 'edit'
 
     return (
       <div className="row">
