@@ -35,7 +35,8 @@ class TwitterAttestation extends Component {
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            loading: false
           })
           this.props.onClose()
         }}

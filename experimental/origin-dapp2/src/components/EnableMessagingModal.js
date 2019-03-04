@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import Link from 'components/Link'
-import Steps from 'components/Steps'
-
-import ListingPreview from './_ListingPreview'
-import HelpMessaging from './_HelpMessaging'
+import EnableMessagingMutation from 'mutations/EnableMessaging'
 
 const query = gql`
   query WalletStatus {
@@ -26,14 +22,8 @@ const query = gql`
   }
 `
 
-const EnableMessagingMutation = gql`
-  mutation EnableMessaging {
-    enableMessaging
-  }
-`
-
 const MessagingInitializing = () => (
-  <div className="onboard-box">
+  <div className="enable-messaging">
     <div className="messaging-logo" />
     <div className="status">Origin Messaging</div>
     <div className="spinner" />
@@ -41,7 +31,7 @@ const MessagingInitializing = () => (
 )
 
 const MessagingSyncing = ({ pct }) => (
-  <div className="onboard-box messaging-sync">
+  <div className="enable-messaging messaging-sync">
     <div className="messaging-logo" />
     <div className="status">Origin Messaging Syncing</div>
     <div className="progress">
@@ -51,7 +41,7 @@ const MessagingSyncing = ({ pct }) => (
 )
 
 const EnableMessaging = ({ next }) => (
-  <div className="onboard-box">
+  <div className="enable-messaging">
     <div className="messaging-logo">
       <div className="qm" />
       <div className="qm" />
@@ -65,7 +55,7 @@ const EnableMessaging = ({ next }) => (
     <Mutation mutation={EnableMessagingMutation}>
       {enableMessaging => (
         <button
-          className="btn btn-outline-primary"
+          className="btn btn-primary"
           onClick={() => {
             next()
             enableMessaging()
@@ -74,15 +64,11 @@ const EnableMessaging = ({ next }) => (
         />
       )}
     </Mutation>
-
-    <a href="#" className="cancel">
-      Tell me more
-    </a>
   </div>
 )
 
 const SignMessage = ({ num }) => (
-  <div className="onboard-box">
+  <div className="enable-messaging">
     <div className="messaging-logo">
       <div className="qm" />
       <div className={`qm${num === 2 ? ' active' : ''}`} />
@@ -96,7 +82,7 @@ const SignMessage = ({ num }) => (
 )
 
 const MessagingEnabled = () => (
-  <div className="onboard-box">
+  <div className="enable-messaging">
     <div className="messaging-logo">
       <div className="qm active" />
       <div className="qm active" />
@@ -110,10 +96,9 @@ const MessagingEnabled = () => (
   </div>
 )
 
-class OnboardMessaging extends Component {
+class EnableMessagingModal extends Component {
   state = {}
   render() {
-    const { nextLink } = this.props
     return (
       <Query query={query} notifyOnNetworkStatusChange={true}>
         {({ data, error, networkStatus }) => {
@@ -124,8 +109,6 @@ class OnboardMessaging extends Component {
           } else if (!data || !data.web3) {
             return <p className="p-3">No Web3</p>
           }
-
-          let nextEnabled = false
 
           let cmp
           if (!data.messaging.synced) {
@@ -141,58 +124,76 @@ class OnboardMessaging extends Component {
           } else if (!data.messaging.pubSig) {
             cmp = <SignMessage num={2} />
           } else {
-            nextEnabled = true
             cmp = <MessagingEnabled />
           }
 
-          return (
-            <>
-              {cmp}
-              <div className="continue-btn">
-                {nextLink && (
-                  <Link
-                    to={nextLink}
-                    className={`btn btn-primary${
-                      nextEnabled ? '' : ' disabled'
-                    }`}
-                  >
-                    Continue
-                  </Link>
-                )}
-              </div>
-              {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
-            </>
-          )
+          return cmp
         }}
       </Query>
     )
   }
 }
 
-const Messaging = ({ listing }) => {
-  const linkPrefix = listing ? `/listing/${listing.id}` : ''
-  return (
-    <>
-      <div className="step">Step 2</div>
-      <h3>Enable Messaging</h3>
-      <div className="row">
-        <div className="col-md-8">
-          <Steps steps={4} step={2} />
-          <OnboardMessaging nextLink={`${linkPrefix}/onboard/notifications`} />
-        </div>
-        <div className="col-md-4">
-          <ListingPreview listing={listing} />
-          <HelpMessaging />
-        </div>
-      </div>
-    </>
-  )
-}
-
-export { Messaging, OnboardMessaging }
+export default EnableMessagingModal
 
 require('react-styl')(`
-  .onboard-box
+  .enable-messaging
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    .status
+      font-family: var(--heading-font)
+      font-size: 24px
+      font-weight: 300
+      margin: 2rem 0 0.5rem 0
+      &.mb
+        margin-bottom: 4rem
+      i
+        font-size: 20px
+        display: block
+        margin-bottom: 1rem
+    .help.mb
+      margin-bottom: 2rem
+    em
+      font-weight: normal
+      margin-top: 1rem
+      margin-bottom: 2rem
+    a.cancel
+      font-size: 14px
+      font-weight: normal
+      margin-top: 1rem
+      &.big
+        font-size: 18px
+        font-weight: 900
+    .qm
+      width: 2rem
+      height: 2rem
+      background: var(--golden-rod)
+      position: absolute
+      border-radius: 2rem
+      bottom: -0.75rem
+      right: -2rem
+      color: white
+      font-weight: 700
+      font-size: 1.5rem
+      line-height: 2rem
+      &::after
+        content: "?"
+      &:nth-child(2)
+        right: 0.25rem
+      &.active
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
+        background-size: 1.2rem
+        &::after
+          content: ""
+      &.error
+        background: var(--orange-red)
+        font-size: 2.2rem
+        line-height: 1.8rem
+        &::after
+          content: "×"
+
     .messaging-logo
       margin-bottom: 1rem
       width: 6.5rem
@@ -201,7 +202,4 @@ require('react-styl')(`
       background: var(--dusk) url(images/messages-icon.svg) no-repeat center
       background-size: 3.5rem
       position: relative
-  .messaging-sync > .progress
-    width: 50%
-    margin-top: 2rem
 `)

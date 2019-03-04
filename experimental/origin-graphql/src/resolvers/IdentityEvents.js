@@ -91,6 +91,13 @@ export function identity({ id, ipfsHash }) {
       ipfsHash
     }
 
+    if (identity.firstName) {
+      identity.firstName = identity.firstName.substr(0, 20)
+    }
+    if (identity.lastName) {
+      identity.lastName = identity.lastName.substr(0, 20)
+    }
+
     identity.fullName = [identity.firstName, identity.lastName]
       .filter(n => n)
       .join(' ')

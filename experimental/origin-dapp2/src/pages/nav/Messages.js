@@ -10,26 +10,8 @@ import withWallet from 'hoc/withWallet'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
+import EnableMessaging from 'components/EnableMessaging'
 import RoomStatus from 'pages/messaging/RoomStatus'
-
-const MessagingDisabled = ({ onClose }) => (
-  <div className="dropdown-menu dropdown-menu-right show">
-    <div className="count">
-      <div className="total">1</div>
-      <div className="title">Unread Message</div>
-      <Link
-        to="/messages"
-        onClick={() => onClose()}
-        className="btn btn-primary btn-rounded btn-sm"
-      >
-        Enable Messaging
-      </Link>
-    </div>
-    <Link to="/messages" onClick={() => onClose()}>
-      View Messages
-    </Link>
-  </div>
-)
 
 class MessagesNav extends Component {
   constructor() {
@@ -41,22 +23,9 @@ class MessagesNav extends Component {
       <Query query={MessagingQuery} pollInterval={2000}>
         {({ data, loading, error }) => {
           if (loading || error) return null
-          const messagingEnabled = get(data, 'messaging.enabled', false)
+          const enabled = get(data, 'messaging.enabled', false)
           const totalUnread = get(data, 'messaging.totalUnread', 0)
           const hasUnread = totalUnread > 0 ? ' active' : ''
-
-          let content = (
-            <MessagingDisabled onClose={() => this.props.onClose()} />
-          )
-          if (this.props.open && messagingEnabled) {
-            content = (
-              <MessagesDropdownWithRouter
-                onClick={() => this.props.onClose()}
-                totalUnread={totalUnread}
-                wallet={this.props.wallet}
-              />
-            )
-          }
 
           return (
             <Dropdown
@@ -64,7 +33,14 @@ class MessagesNav extends Component {
               className="nav-item messages d-none d-md-flex"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={content}
+              content={
+                <MessagesDropdownWithRouter
+                  enabled={enabled}
+                  onClick={() => this.props.onClose()}
+                  totalUnread={totalUnread}
+                  wallet={this.props.wallet}
+                />
+              }
             >
               <a
                 className="nav-link"
@@ -90,7 +66,7 @@ class MessagesNav extends Component {
 class MessagesDropdown extends Component {
   state = {}
   render() {
-    const { onClick, totalUnread } = this.props
+    const { onClick, totalUnread, enabled } = this.props
 
     return (
       <div className="dropdown-menu dropdown-menu-right show">
@@ -106,8 +82,14 @@ class MessagesDropdown extends Component {
                 <div className="count">
                   <div className="total">{totalUnread}</div>
                   <div className="title">Unread Messages</div>
+                  {enabled ? null : (
+                    <EnableMessaging
+                      className="btn-sm"
+                      onClose={() => onClick()}
+                    />
+                  )}
                 </div>
-                <div>
+                <div className="messaging-dropdown-content">
                   {conversations.map((conv, idx) => (
                     <RoomStatus
                       onClick={() => {
@@ -163,4 +145,8 @@ require('react-styl')(`
       background-image: url(images/messages-icon-selected.svg)
     .count .btn
       margin-left: 1.5rem
+    .count.title
+      margin-right: auto
+    .messaging-dropdown-content
+      max-width: 450px
 `)

@@ -71,7 +71,7 @@ const SingleUnit = ({ listing, from, refetch }) => (
       value={listing.price.amount}
       quantity={1}
       className="btn btn-primary"
-      children="Buy Now"
+      children="Purchase"
     />
   </div>
 )
@@ -105,7 +105,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
         value={amount}
         quantity={quantity}
         className="btn btn-primary"
-        children="Buy Now"
+        children="Purchase"
       />
     </div>
   )
@@ -219,7 +219,7 @@ class ListingDetail extends Component {
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
 
     return (
-      <div className="listing-detail">
+      <div className="container listing-detail">
         <PageTitle>{listing.title}</PageTitle>
         <div className="header">
           <div className="category">
@@ -306,11 +306,15 @@ require('react-styl')(`
     .badge
       margin-top: 0.75rem
 
+    .gallery
+      margin-bottom: 1rem
+
     .main-pic
       padding-top: 56.6%
       background-size: contain
       background-repeat: no-repeat
       background-position: top center
+      border: 1px solid var(--pale-grey-two)
 
     .description
       white-space: pre-wrap
@@ -361,7 +365,9 @@ require('react-styl')(`
           margin-left: 1rem
           font-size: 16px
       &.multi .price
+        padding-bottom: 1.5rem
         border-bottom: 1px solid var(--light)
+        margin-bottom: 0
       &.fractional
         .choose-dates
           display: flex;
