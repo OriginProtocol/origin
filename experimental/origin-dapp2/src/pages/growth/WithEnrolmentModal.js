@@ -246,14 +246,12 @@ function withEnrolmentModal(WrappedComponent) {
                 return (
                   <QueryError
                     error={error}
-                    query={allCampaignsQuery}
-                    vars={vars}
+                    query={profileQuery}
                   />
                 )
               }
 
               const walletAddress = data.web3.primaryAccount.id
-
               return (
                 <Query 
                   query={enrollmentStatusQuery}
@@ -261,9 +259,9 @@ function withEnrolmentModal(WrappedComponent) {
                 >
                   {({ networkStatus, error, loading, data }) => {
                     if (networkStatus === 1 || loading) {
-                      return ''
+                      return 'Loading...'
                     } else if (error) {
-                      return <QueryError error={error} query={growthEligibilityQuery} />
+                      return <QueryError error={error} query={enrollmentStatusQuery} />
                     }
 
                     return (
