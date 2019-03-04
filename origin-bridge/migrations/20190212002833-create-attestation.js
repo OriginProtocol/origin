@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       eth_address: {
-        type: Sequelize.CHAR(42)
+        type: Sequelize.STRING
       },
       method: {
         type: Sequelize.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER')
