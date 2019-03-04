@@ -166,7 +166,7 @@ class OriginEventSource {
         urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
       }))
     } else {
-      data.media = [] // If invalid, send something clean onward
+      data.media = [] // If invalid, set a clean, empty media array
     }
 
     let __typename = data.__typename
