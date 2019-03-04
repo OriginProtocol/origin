@@ -78,9 +78,8 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
 
   if (!fields || fields.nodes) {
     nodes = (await Promise.all(
-      ids.map(id => contracts.eventSource.getListing(id).catch(e => e) )
-    ))
-    .filter(node => !(node instanceof Error))
+      ids.map(id => contracts.eventSource.getListing(id).catch(e => e))
+    )).filter(node => !(node instanceof Error))
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
