@@ -8,6 +8,7 @@ import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
+import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import { Link } from 'react-router-dom'
 import AccountTokenBalance from 'queries/TokenBalance'
 
@@ -439,20 +440,25 @@ class GrowthCampaigns extends Component {
               return (
                 <QueryError
                   error={error}
-                  query={allCampaignsQuery}
-                  vars={vars}
+                  query={profileQuery}
                 />
               )
             }
 
-            const vars = pick(this.state, 'first')
             const accountId = data.web3.primaryAccount.id
-            vars.walletAddress = accountId
+
+            const vars = { walletAddress: accountId }
             return (
               <Query
-                query={allCampaignsQuery}
+                query={enrollmentStatusQuery}
                 variables={vars}
                 notifyOnNetworkStatusChange={true}
+                onCompleted={({ enrollmentStatus }) => {
+                  // if user is not enrolled redirect him to welcome page
+                  if (enrollmentStatus !== 'Enrolled') {
+                    this.props.history.push('/welcome')
+                  }
+                }}
               >
                 {({ error, data, networkStatus, loading }) => {
                   if (networkStatus === 1 || loading) {
@@ -461,48 +467,73 @@ class GrowthCampaigns extends Component {
                     return (
                       <QueryError
                         error={error}
-                        query={allCampaignsQuery}
+                        query={enrollmentStatusQuery}
                         vars={vars}
                       />
                     )
                   }
 
-                  const campaigns = data.campaigns.nodes
-                  if (campaigns.length == 0) {
-                    return <h5 className="p-2">No campaigns detected</h5>
-                  }
-
-                  if (selectedCampaignId === null) {
-                    const activeCampaign = campaigns.find(
-                      campaign => campaign.status === 'Active'
-                    )
-
-                    if (activeCampaign !== undefined) {
-                      selectedCampaignId = activeCampaign.id
-                    } else {
-                      selectedCampaignId = campaigns[0].id
-                    }
-                  }
-
-                  const selectedCampaign = find(
-                    campaigns,
-                    campaign => campaign.id === selectedCampaignId
-                  )
+                  const vars_campaign = pick(this.state, 'first')
+                  vars_campaign.walletAddress = accountId
 
                   return (
-                    <Fragment>
-                      <CampaignNavList
-                        campaigns={campaigns}
-                        onCampaignClick={campaignId => {
-                          this.setState({ selectedCampaignId: campaignId })
-                        }}
-                        selectedCampaignId={selectedCampaignId}
-                      />
-                      <Campaign
-                        campaign={selectedCampaign}
-                        accountId={accountId}
-                      />
-                    </Fragment>
+                    <Query
+                      query={allCampaignsQuery}
+                      variables={vars_campaign}
+                      notifyOnNetworkStatusChange={true}
+                    >
+                      {({ error, data, networkStatus, loading }) => {
+                        if (networkStatus === 1 || loading) {
+                          return <h5 className="p-2">Loading...</h5>
+                        } else if (error) {
+                          return (
+                            <QueryError
+                              error={error}
+                              query={allCampaignsQuery}
+                              vars={vars_campaign}
+                            />
+                          )
+                        }
+
+                        const campaigns = data.campaigns.nodes
+                        if (campaigns.length == 0) {
+                          return <h5 className="p-2">No campaigns detected</h5>
+                        }
+
+                        if (selectedCampaignId === null) {
+                          const activeCampaign = campaigns.find(
+                            campaign => campaign.status === 'Active'
+                          )
+
+                          if (activeCampaign !== undefined) {
+                            selectedCampaignId = activeCampaign.id
+                          } else {
+                            selectedCampaignId = campaigns[0].id
+                          }
+                        }
+
+                        const selectedCampaign = find(
+                          campaigns,
+                          campaign => campaign.id === selectedCampaignId
+                        )
+
+                        return (
+                          <Fragment>
+                            <CampaignNavList
+                              campaigns={campaigns}
+                              onCampaignClick={campaignId => {
+                                this.setState({ selectedCampaignId: campaignId })
+                              }}
+                              selectedCampaignId={selectedCampaignId}
+                            />
+                            <Campaign
+                              campaign={selectedCampaign}
+                              accountId={accountId}
+                            />
+                          </Fragment>
+                        )
+                      }}
+                    </Query>
                   )
                 }}
               </Query>
