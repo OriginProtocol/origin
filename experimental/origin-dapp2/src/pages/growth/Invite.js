@@ -10,7 +10,7 @@ function NavigationItem(props) {
         e.preventDefault()
         onClick()
       }}
-      className="pt-4 pb-43 pr-4"
+      className="pt-4 pr-4"
     >
       <div className="d-flex flex-column align-items-center">
         <div className={`title ${selected ? 'active' : ''}`}>{title}</div>
@@ -175,75 +175,74 @@ export default GrowthInvite
 
 require('react-styl')(`
   .growth-invite.container
-    max-width: 760px;
+    max-width: 760px
   .growth-invite
-    margin-top: 70px;
+    margin-top: 70px
     .back img
-      width: 15px;
-      margin-right: 6px;
-      -webkit-transform: rotate(270deg);
-      transform: rotate(270deg);
+      width: 15px
+      margin-right: 6px
+      transform: rotate(270deg)
     .back
-      font-weight: bold;
-      color: var(--clear-blue);
+      font-weight: bold
+      color: var(--clear-blue)
     .navigation-list 
       .select-bar
-        background-color: var(--clear-blue);
-        height: 4px;
-        width: 100%;
+        background-color: var(--clear-blue)
+        height: 4px
+        width: 100%
       .title
-        font-size: 0.88rem;
-        line-height: 1.93;
-        color: var(--bluey-grey);
-        font-weight: normal;
+        font-size: 0.88rem
+        line-height: 1.93
+        color: var(--bluey-grey)
+        font-weight: normal
       .title.active
-        color: var(--dark);
+        color: var(--dark)
     .send-invites
       .empasis
-        font-weight: bold;
+        font-weight: bold
       .normal
-        font-weight: normal;
+        font-weight: normal
       .invite-code
-        height: 50px;
-        border: 1px solid var(--light);
-        border-radius: 5px 0px 0px 5px;
-        width: 68%;
-        color: var(--dark);
-        font-weight: 300;
-        padding-left: 18px;
+        height: 50px
+        border: 1px solid var(--light)
+        border-radius: 5px 0px 0px 5px
+        width: 68%
+        color: var(--dark)
+        font-weight: 300
+        padding-left: 18px
       .copy-button
-        height: 50px;
-        border: 1px solid var(--light);
-        border-radius: 0px 5px 5px 0px;
-        width: 32%;
-        margin-left: -1px;
-        font-weight: normal;
-        cursor: pointer;
+        height: 50px
+        border: 1px solid var(--light)
+        border-radius: 0px 5px 5px 0px
+        width: 32%
+        margin-left: -1px
+        font-weight: normal
+        cursor: pointer
       .copy-button:hover
         background-color: var(--pale-grey)
       .email-text
-        width: 100%;
-        heigh: 140px;
-        border-radius: 5px;
-        border: 1px solid var(--light);
-        resize: none;
-        margin-top: 12px;
+        width: 100%
+        heigh: 140px
+        border-radius: 5px
+        border: 1px solid var(--light)
+        resize: none
+        margin-top: 12px
       .email-text::-webkit-input-placeholder
-        font-weight: 300;
-        color: var(--steel);
+        font-weight: 300
+        color: var(--steel)
       .btn
-        font-weight: 18px;
-        padding-bottom: 10px;
-        padding-top: 10px;
+        font-weight: 18px
+        padding-bottom: 10px
+        padding-top: 10px
       .social-btn
-        border-radius: 5px;
-        border: 1px solid var(--light);
-        height: 50px;
-        width: 50%;
+        border-radius: 5px
+        border: 1px solid var(--light)
+        height: 50px
+        width: 50%
       .social-btn.fb
-        margin-right: 5px;
+        margin-right: 5px
       .social-btn.tw
-        margin-left: 5px;
+        margin-left: 5px
       .social-btn:hover
         background-color: var(--pale-grey)
 `)

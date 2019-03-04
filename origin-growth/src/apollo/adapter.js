@@ -178,7 +178,8 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
             currentLevel,
             rules
           )
-      }))
+      })
+  )
 
   return {
     id: campaign.campaign.id,

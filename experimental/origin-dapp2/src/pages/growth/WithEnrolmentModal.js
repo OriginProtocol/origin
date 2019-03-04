@@ -276,84 +276,81 @@ function withEnrolmentModal(WrappedComponent) {
 
 export default withEnrolmentModal
 
-//margin-right: 10px;
-//vertical-align: middle;
-//margin-bottom: 5px;
 require('react-styl')(`
   .growth-enrollment-modal .input:checked ~ .checkmark
-      background-color: #2196F3;
+      background-color: #2196F3
   .growth-enrollment-modal
-    padding-top: 20px;
-    max-width: 620px !important;
+    padding-top: 20px
+    max-width: 620px !important
     .normal-line-height
-      line-height: normal;
+      line-height: normal
     .title
-      font-family: Poppins;
-      font-size: 24px;
+      font-family: Poppins
+      font-size: 24px
     .title-light
-      font-weight: 300;
+      font-weight: 300
     .image-holder
-      position: relative;
-      width: 400px;
+      position: relative
+      width: 400px
     .info-text
-      max-width: 400px;
+      max-width: 400px
     .red-x-image
-      position: absolute;
-      right: 110px;
-      bottom: 10px;
+      position: absolute
+      right: 110px
+      bottom: 10px
     .checkbox-holder input:checked ~ .checkmark:after
-      display: block;
+      display: block
     .btn
-      margin-top: 30px;
-      min-width: 9rem;
+      margin-top: 30px
+      min-width: 9rem
     .checkbox-holder
-      display: block;
-      position: relative;
-      padding-left: 28px;
-      margin-bottom: 0px;
-      cursor: pointer;
-      font-size: 22px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      display: block
+      position: relative
+      padding-left: 28px
+      margin-bottom: 0px
+      cursor: pointer
+      font-size: 22px
+      -webkit-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
+      user-select: none
       .country-check
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
+        position: absolute
+        opacity: 0
+        cursor: pointer
+        height: 0
+        width: 0
       .checkmark
-        position: absolute;
-        top: 4px;
-        left: 0;
-        height: 20px;
-        width: 20px;
-        border-radius: 5px;
-        background-color: var(--dark);
+        position: absolute
+        top: 4px
+        left: 0
+        height: 20px
+        width: 20px
+        border-radius: 5px
+        background-color: var(--dark)
       .checkmark:after
-        content: "";
-        position: absolute;
-        display: none;
+        content: ""
+        position: absolute
+        display: none
       .checkmark:after
-        left: 7px;
-        top: 2px;
-        width: 7px;
-        height: 13px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        transform: rotate(45deg);
+        left: 7px
+        top: 2px
+        width: 7px
+        height: 13px
+        border: solid white
+        border-width: 0 3px 3px 0
+        -webkit-transform: rotate(45deg)
+        -ms-transform: rotate(45deg)
+        transform: rotate(45deg)
     .country-check-label
-      font-weight: 300;
+      font-weight: 300
     .terms
-      font-size: 14px;
-      overflow-y: scroll;
-      height: 250px;
-      background-color: var(--dark-two);
-      margin: 24px 0px;
-      text-align: left;
-      padding: 22px 31px 15px 22px;
-      font-weight: 300;
+      font-size: 14px
+      overflow-y: scroll
+      height: 250px
+      background-color: var(--dark-two)
+      margin: 24px 0px
+      text-align: left
+      padding: 22px 31px 15px 22px
+      font-weight: 300
 `)

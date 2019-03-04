@@ -518,169 +518,169 @@ export default withApollo(GrowthCampaigns)
 
 require('react-styl')(`
   .growth-campaigns.container
-    max-width: 760px;
+    max-width: 760px
   .growth-campaigns
     .info-icon
-      padding-top: 30px;
+      padding-top: 30px
     .info-icon img
-      width: 28px;
+      width: 28px
     .indicators
-      font-size: 10px;
-      color: #455d75;
+      font-size: 10px
+      color: #455d75
     .campaign-progress
       .background
-        background-color: var(--pale-grey-two);
-        border-radius: 5px;
-        border: 1px solid #c2cbd3;
-        height: 10px;
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        background-color: var(--pale-grey-two)
+        border-radius: 5px
+        border: 1px solid #c2cbd3
+        height: 10px
+        position: absolute
+        z-index: 1
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
       .foreground
-        background-color: var(--clear-blue);
-        border: 1px solid var(--greenblue);
-        border-radius: 5px;
-        height: 100%;
-        z-index: 2;
-        position: relative;
-        -webkit-transition: width 0.5s;
-        transition: width 0.5s;
-      height: 10px;
-      width: 100%;
-      position: relative;
+        background-color: var(--clear-blue)
+        border: 1px solid var(--greenblue)
+        border-radius: 5px
+        height: 100%
+        z-index: 2
+        position: relative
+        -webkit-transition: width 0.5s
+        transition: width 0.5s
+      height: 10px
+      width: 100%
+      position: relative
     .ogn-amount
-      color: var(--clear-blue);
+      color: var(--clear-blue)
     .ogn-icon
-      position: relative;
-      top: -3px;
+      position: relative
+      top: -3px
     .campaign-info
-      padding-top: 40px;
+      padding-top: 40px
     h5
-      text-align: center;
+      text-align: center
     .action-title
-      font-weight: bold;
-      color: var(--steel);
-      margin-top: 30px;
-      margin-left: 5px;
-      margin-bottom: -5px;
+      font-weight: bold
+      color: var(--steel)
+      margin-top: 30px
+      margin-left: 5px
+      margin-bottom: -5px
     .campaign-list
       .status
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
+        width: 20px
+        height: 20px
+        border-radius: 50%
       .status.inactive
-          background-color: var(--light);
+          background-color: var(--light)
       .status.active
-          background-color: var(--greenblue);
+          background-color: var(--greenblue)
       .campaign
         .name
-          font-size: 0.88rem;
-          line-height: 1.93;
-          color: var(--bluey-grey);
-          font-weight: normal;
+          font-size: 0.88rem
+          line-height: 1.93
+          color: var(--bluey-grey)
+          font-weight: normal
         .name.active
-          color: var(--dark);
+          color: var(--dark)
         .select-bar
-          background-color: var(--clear-blue);
-          height: 4px;
-          width: 100%;
+          background-color: var(--clear-blue)
+          height: 4px
+          width: 100%
       img
-        width: 20px;
-        height: 20px;
-        vertical-align: inherit;
+        width: 20px
+        height: 20px
+        vertical-align: inherit
     .action
-      height: 140px;
-      border: 1px solid var(--light);
-      border-radius: 5px;
-      margin-top: 20px;
-      padding: 20px;
+      height: 140px
+      border: 1px solid var(--light)
+      border-radius: 5px
+      margin-top: 20px
+      padding: 20px
       .background
-        width: 72px;
+        width: 72px
       .profile
-        position: absolute;
-        left: 20px;
-        top: 27px;
-        width: 30px;
+        position: absolute
+        left: 20px
+        top: 27px
+        width: 30px
       .email
-        position: absolute;
-        left: 20px;
-        top: 27px;
-        width: 30px;
+        position: absolute
+        left: 20px
+        top: 27px
+        width: 30px
       .phone
-        position: absolute;
-        left: 25px;
-        top: 20px;
-        width: 22px;
+        position: absolute
+        left: 25px
+        top: 20px
+        width: 22px
       .facebook
-        position: absolute;
-        left: 24px;
-        top: 18px;
-        width: 21px;
+        position: absolute
+        left: 24px
+        top: 18px
+        width: 21px
       .airbnb
-        position: absolute;
-        left: 15px;
-        top: 19px;
-        width: 44px;
+        position: absolute
+        left: 15px
+        top: 19px
+        width: 44px
       .twitter
-        position: absolute;
-        left: 17px;
-        top: 22px;
-        width: 39px;
+        position: absolute
+        left: 17px
+        top: 22px
+        width: 39px
       .lock
-        position: absolute;
-        right: -12px;
-        bottom: 0px;
-        width: 30px;
+        position: absolute
+        right: -12px
+        bottom: 0px
+        width: 30px
       .image-holder
-        position: relative;
+        position: relative
       .title
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 18px
+        font-weight: bold
       .info-text
-        font-size: 18px;
-        font-weight: 300;
+        font-size: 18px
+        font-weight: 300
       .reward
-        padding-right: 10px;
-        height: 28px;
-        background-color: var(--pale-grey);
-        border-radius: 52px;
-        font-size: 14px;
-        font-weight: bold;
-        color: var(--clear-blue);
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
       .reward .value
-        padding-bottom: 1px;
+        padding-bottom: 1px
       .sub-text
-        font-size: 14px;
-        font-weight: bold;
-        padding-top: 5px;
-        margin-right: 6px;
+        font-size: 14px
+        font-weight: bold
+        padding-top: 5px
+        margin-right: 6px
       .reward img
-        margin-right: 6px;
+        margin-right: 6px
       .requirement
-        padding-right: 10px;
-        height: 28px;
-        background-color: var(--pale-grey);
-        border-radius: 52px;
-        font-size: 14px;
-        font-weight: bold;
-        color: var(--clear-blue);
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
       .requirement .value
-        padding-bottom: 1px;
-        font-size: 14px;
-        font-weight: bold;
+        padding-bottom: 1px
+        font-size: 14px
+        font-weight: bold
       .requirement img
-        margin-right: 6px;
+        margin-right: 6px
       .emphasis
-        font-size: 14px;
-        font-weight: bold;
+        font-size: 14px
+        font-weight: bold
       img
-        width: 19px;
+        width: 19px
       .astronaut
-        width: 77px;
-        margin-top: -10px;
-        margin-left: -15px;
+        width: 77px
+        margin-top: -10px
+        margin-left: -15px
 
 `)

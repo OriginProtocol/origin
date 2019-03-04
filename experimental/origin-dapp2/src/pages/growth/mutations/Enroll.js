@@ -34,7 +34,7 @@ class Enroll extends Component {
                 } else {
                   console.log('Error occurred: ', enroll)
                   this.setState({
-                    error: 'Can not enroll into growht campaign'
+                    error: 'Can not enroll into growth campaign'
                   })
                 }
               }}
@@ -93,6 +93,7 @@ class Enroll extends Component {
                         <div className="title">Confirm Metamask Signature</div>
                         <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
                           {!this.state.error && (
+                          {/* TODO: Wallet provider should be set dynamicly in here */}
                             <span>
                               Open your Metamask browser extension and confirm
                               your signature.

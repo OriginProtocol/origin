@@ -97,44 +97,44 @@ export default GrowthWelcome
 
 require('react-styl')(`
   .growth-welcome
-    margin-top: 100px;
+    margin-top: 100px
     .logo
-      width: 118px;
+      width: 118px
     .title-text
-      margin-top: 40px;
-      margin-bottom: 16px;
-      font-family: Poppins;
-      font-size: 50px;
-      font-weight: 200;
-      line-height: 1.3;
+      margin-top: 40px
+      margin-bottom: 16px
+      font-family: Poppins
+      font-size: 50px
+      font-weight: 200
+      line-height: 1.3
     .btn
-      margin-top: 40px;
-      width: 336px;
-      height: 60px;
-      font-size: 24px;
-      font-weight: 900;
+      margin-top: 40px
+      width: 336px
+      height: 60px
+      font-size: 24px
+      font-weight: 900
     .info-title
-      font-size: 28px;
-      font-family: Poppins;
-      font-weight: bold;
-      text-align: center;
+      font-size: 28px
+      font-family: Poppins
+      font-weight: bold
+      text-align: center
     .token-stack-holder
       position: relative
     .token-stack
-      width: 440px;
+      width: 440px
     .free-badge
-      position: absolute;
-      width: 168px;
-      right: 15px;
-      bottom: 35px;
+      position: absolute
+      width: 168px
+      right: 15px
+      bottom: 35px
     .infographics
-      background-color: #f1f6f9;
-      border-radius: 5px;
-      height: 317px;
+      background-color: #f1f6f9
+      border-radius: 5px
+      height: 317px
       .title
-        text-align: center;
-        font-weight: bold;
+        text-align: center
+        font-weight: bold
       .text
-        text-align: center;
-        font-size: 14px;
+        text-align: center
+        font-size: 14px
 `)
