@@ -58,6 +58,8 @@ class Listings extends Component {
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
+    const showCategory = get(this.state, 'search.category.type') ? false : true
+
     return (
       <>
         <PageTitle>Listings</PageTitle>
@@ -172,6 +174,7 @@ class Listings extends Component {
                         <ListingsGallery
                           listings={nodes}
                           hasNextPage={hasNextPage}
+                          showCategory={showCategory}
                         />
                         {!hasNextPage ? null : (
                           <button
@@ -216,6 +219,6 @@ require('react-styl')(`
     margin-top: 10rem
   @media (max-width: 767.98px)
     .listings-count
-      margin: 1rem 0 0 0
+      margin: 2rem 0 0 0
       font-size: 32px
 `)

@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import Modal from 'components/Modal'
 import MobileLinkerCode from 'components/MobileLinkerCode'
 import query from 'queries/TransactionReceipt'
+import withWallet from 'hoc/withWallet'
 
 // Returns the role of an Ethereum event, which is used by the web site to
 // render the correct call-to-action for downloading the mobile wallet.
@@ -28,7 +29,13 @@ class WaitForTransaction extends Component {
       return (
         <>
           <MobileLinkerCode role={role} />
-          <Modal>
+          <Modal
+            onClose={() => {
+              if (this.props.onClose) {
+                this.props.onClose()
+              }
+            }}
+          >
             <div className="make-offer-modal">
               <div className="spinner light" />
               <div>
@@ -103,4 +110,4 @@ class WaitForTransaction extends Component {
   }
 }
 
-export default WaitForTransaction
+export default withWallet(WaitForTransaction)

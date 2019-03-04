@@ -23,6 +23,7 @@ class EditListing extends Component {
         unavailable: get(props, 'listing.unavailable', []),
 
         ...pick(props.listing, [
+          '__typename',
           'title',
           'description',
           'category',
@@ -38,15 +39,9 @@ class EditListing extends Component {
   }
 
   render() {
-    const { category, subCategory } = this.state.listing
-    let listingType = 'unit'
-    if (category === 'schema.forRent' && subCategory === 'schema.housing') {
-      listingType = 'fractional'
-    }
     const stepProps = {
       listing: this.state.listing,
       listingId: this.props.listing.id,
-      listingType,
       mode: 'edit',
       onChange: listing => this.setState({ listing })
     }
@@ -55,19 +50,19 @@ class EditListing extends Component {
         <PageTitle>Edit Listing</PageTitle>
         <Switch>
           <Route
-            path="/listings/:listingID/edit/step-2"
+            path="/listing/:listingID/edit/step-2"
             render={() => <Step2 {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/boost"
+            path="/listing/:listingID/edit/boost"
             render={() => <Boost {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/availability"
+            path="/listing/:listingID/edit/availability"
             render={() => <Availability {...stepProps} />}
           />
           <Route
-            path="/listings/:listingID/edit/review"
+            path="/listing/:listingID/edit/review"
             render={() => (
               <Review {...stepProps} refetch={this.props.refetch} />
             )}

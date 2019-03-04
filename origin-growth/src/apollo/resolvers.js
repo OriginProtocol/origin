@@ -1,10 +1,12 @@
 //const GraphQLJSON = require('graphql-type-json')
 const { GraphQLDateTime } = require('graphql-iso-date')
-//const db = require('./db')
-const { Fetcher } = require('../rules/rules')
+
+const { GrowthCampaign } = require('../resources/campaign')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
-// const { GrowthInvite } = require('../resources/invite')
+const { GrowthInvite } = require('../resources/invite')
+const { sendInviteEmails } = require('../resources/email')
+const logger = require('../logger')
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -25,7 +27,7 @@ const resolvers = {
   },
   Query: {
     async campaigns(_, args) {
-      const campaigns = await Fetcher.getAllCampaigns()
+      const campaigns = await GrowthCampaign.getAll()
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
@@ -40,15 +42,12 @@ const resolvers = {
         }
       }
     },
-    async campaign() {
-      return null
+    async campaign(root, args) {
+      const campaign = await GrowthCampaign.get(args.id)
+      return await campaignToApolloObject(campaign, args.walletAddress)
     },
-    async inviteInfo() {
-      //return await GrowthInvite.getInfo(args.code)
-      return {
-        firstName: 'TODO: to be implemented',
-        lastName: 'TODO: to be implemented'
-      }
+    async inviteInfo(root, args) {
+      return await GrowthInvite.getReferrerInfo(args.code)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
@@ -79,26 +78,24 @@ const resolvers = {
     }
   },
   Mutation: {
-    async invite() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    // Sends email invites with referral code on behalf of the referrer.
+    async invite(root, args) {
+      logger.info('invite mutation called.')
+      // FIXME:
+      //  a. Check the referrer against Auth token.
+      //  b. Implement rate limiting to avoid spam attack.
+      await sendInviteEmails(args.walletAddress, args.emails)
+      return true
     },
-    async enroll() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    enroll() {
+      // TODO: implement
+      logger.info('enroll mutation called.')
+      return true
     },
-    async log() {
-      return {
-        code: '418',
-        success: false,
-        message: 'I am a teapot'
-      }
+    log() {
+      // TODO: implement
+      logger.info('log mutation called.')
+      return true
     }
   }
 }

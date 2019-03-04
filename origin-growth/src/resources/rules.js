@@ -7,9 +7,10 @@ const {
   GrowthCampaignStatuses,
   GrowthActionStatus
 } = require('../enums')
+const logger = require('../logger')
 
-// System cap for number of rewards per rule.
-const MAX_NUM_REWARDS_PER_RULE = 1000
+// System cap for max number of rewards per rule.
+const maxNumRewardsPerRule = 1000
 
 class Reward {
   constructor(campaignId, levelId, ruleId, value) {
@@ -20,7 +21,14 @@ class Reward {
   }
 }
 
-class Campaign {
+class ReferralReward extends Reward {
+  constructor(campaignId, levelId, ruleId, value, referee) {
+    super(campaignId, levelId, ruleId, value)
+    this.refereeEthAddress = referee
+  }
+}
+
+class CampaignRules {
   constructor(campaign, config) {
     this.campaign = campaign
     this.config = config
@@ -41,35 +49,61 @@ class Campaign {
       if (!this.config.levels[i]) {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
-      this.levels[i] = new Level(this.campaign.id, i, this.config.levels[i])
+      this.levels[i] = new Level(this, i, this.config.levels[i])
     }
+  }
+
+  /**
+   * Returns the value of the referral reward, if any, defined in the campaign
+   * @returns {{amount: string, currency: string}||null}
+   */
+  getReferralRewardValue() {
+    // Go thru each rule and check if it is of type Referral.
+    for (let i = 0; i < this.config.numLevels; i++) {
+      for (const rule of this.levels[i].rules) {
+        if (rule.constructor.name === 'ReferralRule') {
+          return rule.rewardValue
+        }
+      }
+    }
+    return null
   }
 
   /**
    * Reads events related to a user from the DB.
    * @param {string} ethAddress - User's account.
-   * @param {boolean} duringCampaign - Restricts query to events that occurred
+   * @param {Object} Options:
+   *   - duringCampaign - Restricts query to events that occurred
    *  during the campaign vs since user signed up.
-   * @param {boolean} onlyVerified - Only returns events with status
+   *   - beforeCampaign - Restricts query to events that occurred
+   *   prior to the campaign start vs since user signed up.
+   *   - onlyVerified - Only returns events with status
    *   Verified. Otherwise returns events with status Verified or Logged.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
-  async getEvents(ethAddress, duringCampaign, onlyVerified) {
+  async getEvents(ethAddress, opts = {}) {
+    if (opts.beforeCampaign && opts.duringCampaign) {
+      throw new Error('beforeCampaign and duringCampaign args are incompatible')
+    }
     const whereClause = {
       ethAddress: ethAddress.toLowerCase()
     }
 
-    if (duringCampaign) {
-      // Note: restrict the query by using the capReachedDate (that's the case where the
-      // campaign was exhausted before its end date) or the campaign end date.
-      const endDate = this.campaign.capReachedDate || this.campaign.endDate
+    const endDate = opts.beforeCampaign
+      ? this.campaign.startDate
+      : this.campaign.capReachedDate || this.campaign.endDate
+    if (opts.duringCampaign) {
       whereClause.createdAt = {
         [Sequelize.Op.gte]: this.campaign.startDate,
         [Sequelize.Op.lt]: endDate
       }
+    } else {
+      whereClause.createdAt = {
+        [Sequelize.Op.lt]: endDate
+      }
     }
 
-    if (onlyVerified) {
+    if (opts.onlyVerified) {
       whereClause.status = GrowthEventStatuses.Verified
     } else {
       whereClause.status = {
@@ -88,23 +122,50 @@ class Campaign {
   }
 
   /**
-   * Calculates the current campaign level the user is at.
-   * Considers events that occurred since user joined the platform.
-   *
-   * @param {string} ethAddress - User's account.
-   * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
-   *   for the calculation. Otherwise uses events with status Verified or Logged.
-   * @returns {Promise<number>}
+   * Helper method to calculate level based on a set of events.
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
    */
-  async getCurrentLevel(ethAddress, onlyVerifiedEvents) {
-    const events = await this.getEvents(ethAddress, false, onlyVerifiedEvents)
+  async _calculateLevel(ethAddress, events) {
     let level
     for (level = 0; level < this.config.numLevels - 1; level++) {
-      if (!this.levels[level].qualifyForNextLevel(ethAddress, events)) {
+      const qualify = await this.levels[level].qualifyForNextLevel(
+        ethAddress,
+        events
+      )
+      if (!qualify) {
         break
       }
     }
     return level
+  }
+
+  /**
+   * Returns the user level.
+   * Considers events that occurred until the campaign ended.
+   *
+   * @param {string} ethAddress - User's account.
+   * @param {boolean} onlyVerifiedEvents - If true, only uses events with
+   *  status Verified for the calculation. By default uses events with
+   *  status Verified or Logged.
+   * @returns {Promise<number>}
+   */
+  async getCurrentLevel(ethAddress, onlyVerifiedEvents = false) {
+    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
+    return await this._calculateLevel(ethAddress, events)
+  }
+
+  /**
+   * Returns the user level prior to the campaign starting.
+   *
+   * @param ethAddress
+   * @returns {Promise<number>}
+   */
+  async getPriorLevel(ethAddress) {
+    const events = await this.getEvents(ethAddress, { beforeCampaign: true })
+    return await this._calculateLevel(ethAddress, events)
   }
 
   /**
@@ -113,18 +174,22 @@ class Campaign {
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
-   *   for the calculation. Otherwise uses events with status Verified or Logged.
+   *   for the calculation. By default uses events with status Verified or Logged.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
-  async getRewards(ethAddress, onlyVerifiedEvents) {
+  async getRewards(ethAddress, onlyVerifiedEvents = false) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, true, onlyVerifiedEvents)
+    const events = await this.getEvents(ethAddress, {
+      duringCampaign: true,
+      onlyVerifiedEvents
+    })
     const currentLevel = await this.getCurrentLevel(
       ethAddress,
       onlyVerifiedEvents
     )
     for (let i = 0; i <= currentLevel; i++) {
-      rewards.push(...this.levels[i].getRewards(ethAddress, events))
+      const levelRewards = await this.levels[i].getRewards(ethAddress, events)
+      rewards.push(...levelRewards)
     }
     return rewards
   }
@@ -134,38 +199,35 @@ class Campaign {
    *
    * @returns {Enum<GrowthCampaignStatuses>} - campaign status
    */
-
   getStatus() {
-    if (this.campaign.startDate > Date.now()) {
+    const now = new Date()
+    if (this.campaign.startDate > now) {
       return GrowthCampaignStatuses.Pending
-    } else if (
-      this.campaign.startDate < Date.now() &&
-      this.campaign.endDate > Date.now()
-    ) {
+    } else if (this.campaign.startDate < now && this.campaign.endDate > now) {
       //TODO: check if cap reached
       return GrowthCampaignStatuses.Active
-    } else if (this.campaign.endDate < Date.now()) {
+    } else if (this.campaign.endDate < now) {
       return GrowthCampaignStatuses.Completed
-    } else {
-      throw new Error(`Unexpected campaign id: ${this.campaign.id} status`)
     }
+    throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
   }
 }
 
 class Level {
-  constructor(campaignId, levelId, config) {
-    this.campaignId = campaignId
+  constructor(crules, levelId, config) {
+    this.crules = crules
+    this.campaignId = crules.campaign.id
     this.id = levelId
     this.config = config
 
     this.rules = config.rules.map(ruleConfig =>
-      ruleFactory(campaignId, levelId, ruleConfig)
+      ruleFactory(crules, levelId, ruleConfig)
     )
   }
 
-  qualifyForNextLevel(ethAddress, events) {
-    for (let i = 0; i < this.rules.length; i++) {
-      const result = this.rules[i].qualifyForNextLevel(ethAddress, events)
+  async qualifyForNextLevel(ethAddress, events) {
+    for (const rule of this.rules) {
+      const result = await rule.qualifyForNextLevel(ethAddress, events)
       if (result !== null && result === false) {
         return false
       }
@@ -173,24 +235,28 @@ class Level {
     return true
   }
 
-  getRewards(ethAddress, events) {
+  async getRewards(ethAddress, events) {
     const rewards = []
-    this.rules.forEach(rule => {
-      rewards.push(...rule.getRewards(ethAddress, events))
-    })
+    for (const rule of this.rules) {
+      const ruleRewards = await rule.getRewards(ethAddress, events)
+      rewards.push(...ruleRewards)
+    }
 
     return rewards
   }
 }
 
-function ruleFactory(campaignId, levelId, config) {
+function ruleFactory(crules, levelId, config) {
   let rule
   switch (config.class) {
     case 'SingleEvent':
-      rule = new SingleEventRule(campaignId, levelId, config)
+      rule = new SingleEventRule(crules, levelId, config)
       break
     case 'MultiEvents':
-      rule = new MultiEventsRule(campaignId, levelId, config)
+      rule = new MultiEventsRule(crules, levelId, config)
+      break
+    case 'Referral':
+      rule = new ReferralRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
@@ -199,8 +265,10 @@ function ruleFactory(campaignId, levelId, config) {
 }
 
 class BaseRule {
-  constructor(campaignId, levelId, config) {
-    this.campaignId = campaignId
+  constructor(crules, levelId, config) {
+    this.crules = crules
+    this.campaign = crules.campaign
+    this.campaignId = crules.campaign.id
     this.levelId = levelId
     this.id = config.id
     this.config = config.config
@@ -211,15 +279,30 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
-    this.limit = Math.min(this.config.limit, MAX_NUM_REWARDS_PER_RULE)
+    if (
+      this.config.nextLevelCondition === true &&
+      (!this.config.conditionTranslateKey || !this.config.conditionIcon)
+    ) {
+      throw new Error('Missing translation key and icon.')
+    }
+    this.limit = this.config.limit
+    if (this.limit > maxNumRewardsPerRule) {
+      throw new Error(`Rule limit of ${this.config.limit} exceeds max allowed.`)
+    }
 
     if (this.config.reward) {
-      const value = {
+      this.rewardValue = {
         amount: this.config.reward.amount,
         currency: this.config.reward.currency
       }
-      this.reward = new Reward(this.campaignId, this.levelId, this.id, value)
+      this.reward = new Reward(
+        this.campaignId,
+        this.levelId,
+        this.id,
+        this.rewardValue
+      )
     } else {
+      this.rewardValue = null
       this.reward = null
     }
   }
@@ -237,14 +320,14 @@ class BaseRule {
    * @returns {boolean|null} - Null indicates the rule does not participate in
    *   the condition to qualify for next level.
    */
-  qualifyForNextLevel(ethAddress, events) {
+  async qualifyForNextLevel(ethAddress, events) {
     // If the rule is not part of the next level condition, return right away.
     if (!this.config.nextLevelCondition) {
       return null
     }
 
     // Evaluate the rule based on events.
-    return this.evaluate(ethAddress, events)
+    return await this.evaluate(ethAddress, events)
   }
 
   /**
@@ -273,14 +356,14 @@ class BaseRule {
     return tally
   }
 
-  getRewards(ethAddress, events) {
+  async getRewards(ethAddress, events) {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
     }
 
     const numRewards = this._numRewards(ethAddress, events)
-    const rewards = Array(numRewards).fill(this.reward.value)
+    const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
   }
@@ -300,11 +383,11 @@ class BaseRule {
    *
    * @returns {Enum<GrowthActionStatus>}
    */
-  getStatus(ethAddress, events, currentUserLevel) {
+  async getStatus(ethAddress, events, currentUserLevel) {
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
     } else {
-      if (this.evaluate(ethAddress, events)) {
+      if (await this.evaluate(ethAddress, events)) {
         return GrowthActionStatus.Completed
       }
       return GrowthActionStatus.Active
@@ -316,8 +399,8 @@ class BaseRule {
  * A rule that requires 1 event.
  */
 class SingleEventRule extends BaseRule {
-  constructor(campaignId, levelId, config) {
-    super(campaignId, levelId, config)
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
     const eventType = this.config.eventType
     if (!eventType) {
@@ -338,18 +421,18 @@ class SingleEventRule extends BaseRule {
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     // SingleEventRule has at most 1 event in tally count.
-    return Object.keys(tally).length == 1
+    return Object.keys(tally).length === 1
       ? Math.min(Object.values(tally)[0], this.limit)
       : 0
   }
 
   /**
-   * Calculates if the rule passes.
+   * Returns true if the rule passes, false otherwise.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  evaluate(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
@@ -368,8 +451,8 @@ class SingleEventRule extends BaseRule {
  *   => rule passes in campaign C2 but NO reward is granted.
  */
 class MultiEventsRule extends BaseRule {
-  constructor(campaignId, levelId, config) {
-    super(campaignId, levelId, config)
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
     if (!this.config.eventTypes) {
       throw new Error(`${this.str()}: missing eventTypes field`)
@@ -429,23 +512,112 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  evaluate(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
 }
 
-const Fetcher = {
-  getAllCampaigns: async () => {
-    const campaigns = await db.GrowthCampaign.findAll({})
+/**
+ * A rule for rewarding a referrer when their referees reaches a certain level.
+ *
+ * Note: For the referrer to obtain the reward during a given campaign,
+ * the referee must reached the required level during that campaign's window.
+ */
+class ReferralRule extends BaseRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
 
-    return campaigns.map(
-      campaign => new Campaign(campaign, JSON.parse(campaign.rules))
-    )
+    // Level the referee is required to reach for the referrer to get the reward.
+    if (!this.config.levelRequired) {
+      throw new Error(`${this.str()}: missing levelRequired field`)
+    }
+    this.levelRequired = this.config.levelRequired
+  }
+
+  /**
+   * Return true if the referrer qualifies for at least one referral reward
+   * as part of the campaign.
+   * Note: this could become configurable if needed in the future. For example
+   * to require N rewards.
+   * @param {string} ethAddress - Referrer's account.
+   * @returns {boolean}
+   */
+  async evaluate(ethAddress) {
+    return (await this.getRewards(ethAddress).length) > 0
+  }
+
+  /**
+   * Returns list of address of referees for a referrer.
+   * @param {string} referrer - Referrer's eth address.
+   * @returns {Promise<Array<string>>}
+   * @private
+   */
+  async _getReferees(referrer) {
+    const invites = await db.GrowthInvite.findAll({
+      where: {
+        referrerEthAddress: referrer,
+        createdAt: { [Sequelize.Op.lte]: this.campaign.endDate }
+      }
+    })
+    return invites.map(i => i.refereeEthAddress)
+  }
+
+  /**
+   * Calculates referral rewards:
+   *  - load list of referee's of the referrer
+   *  - for each referee, check they are at required level and that level
+   *  was reaching during this campaign.
+   * @param {string} ethAddress - Referrer's account.
+   * @returns {Array<ReferralReward>}
+   */
+  async getRewards(ethAddress) {
+    // If this rule does not give out reward, return right away.
+    if (!this.reward) {
+      return []
+    }
+
+    const rewards = []
+
+    // Go thru each referee and check if they meet the referral reward conditions.
+    const referees = await this._getReferees(ethAddress)
+    for (const referee of referees) {
+      // Check the referee is at or above required level.
+      const refereeLevel = await this.crules.getCurrentLevel(referee)
+
+      if (refereeLevel < this.levelRequired) {
+        logger.debug(
+          `Referee ${referee} does not meet level requirement. skipping.`
+        )
+        continue
+      }
+
+      // Check the referee reached the level during this campaign as opposed
+      // to prior to the campaign.
+      const refereePriorLevel = await this.crules.getPriorLevel(referee)
+      if (refereePriorLevel >= this.levelRequired) {
+        logger.debug(
+          `Referee ${referee} reached level prior to campaign start. skipping`
+        )
+        continue
+      }
+
+      // Referral is valid. Referrer should get a reward for it.
+      logger.debug(
+        `Referrer ${ethAddress} gets credit for referring ${referee}`
+      )
+      const reward = new ReferralReward(
+        this.campaignId,
+        this.levelId,
+        this.id,
+        this.rewardValue,
+        referee
+      )
+      rewards.push(reward)
+    }
+
+    return rewards
   }
 }
 
-module.exports = {
-  Campaign,
-  Fetcher
-}
+module.exports = { CampaignRules }

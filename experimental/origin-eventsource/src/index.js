@@ -78,11 +78,11 @@ class OriginEventSource {
 
     let data
     try {
-      data = await get(this.ipfsGateway, ipfsHash)
+      const rawData = await get(this.ipfsGateway, ipfsHash)
       data = pick(
-        data,
+        rawData,
+        '__typename',
         'valid',
-        'listingType',
         'title',
         'description',
         'currencyId',
@@ -100,9 +100,26 @@ class OriginEventSource {
         'customPricing'
       )
       data.valid = true
+
       // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
+      }
+
+      // TODO: Dapp1 fractional compat
+      if (rawData.availability && !rawData.weekendPrice) {
+        try {
+          const isWeekly = _get(rawData, 'availability.2.6.0') === 'x-price'
+          const weekdayPrice = _get(rawData, 'availability.2.6.3')
+          const isWeekend = _get(rawData, 'availability.3.6.0') === 'x-price'
+          const weekendPrice = _get(rawData, 'availability.3.6.3')
+          if (isWeekly && isWeekend) {
+            data.price = { amount: weekdayPrice, currency: 'ETH' }
+            data.weekendPrice = { amount: weekendPrice, currency: 'ETH' }
+          }
+        } catch (e) {
+          /* Ignore */
+        }
       }
     } catch (e) {
       console.log(`Error retrieving IPFS data for ${ipfsHash}`)
@@ -150,10 +167,23 @@ class OriginEventSource {
       }))
     }
 
-    const type = 'unit'
+    let __typename = data.__typename
+    if (!__typename) {
+      if (
+        data.category === 'schema.forRent' &&
+        data.subCategory === 'schema.housing'
+      ) {
+        __typename = 'FractionalListing'
+      } else if (data.category === 'schema.announcements') {
+        __typename = 'AnnouncementListing'
+      } else {
+        __typename = 'UnitListing'
+      }
+    }
+
     let commissionPerUnit = '0',
       commission = '0'
-    if (type === 'unit') {
+    if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
         data.unitsTotal === 1
           ? (data.commission && data.commission.amount) || '0'
@@ -166,8 +196,7 @@ class OriginEventSource {
 
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
-      __typename:
-        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
+      __typename,
       id: `${networkId}-000-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
@@ -180,8 +209,7 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      type,
-      multiUnit: type === 'unit' && data.unitsTotal > 1,
+      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
@@ -207,9 +235,10 @@ class OriginEventSource {
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
+    let pendingUnits = 0
     const booked = []
 
-    if (listing.listingType === 'fractional') {
+    if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -217,7 +246,7 @@ class OriginEventSource {
           booked.push(`${offer.startDate}-${offer.endDate}`)
         }
       })
-    } else if (listing.type === 'unit') {
+    } else if (listing.__typename !== 'AnnouncementListing') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -228,6 +257,9 @@ class OriginEventSource {
         } else {
           try {
             unitsAvailable -= offer.quantity
+            if (offer.status === '1' || offer.status === '2') {
+              pendingUnits += offer.quantity
+            }
 
             // Validate offer commission.
             const normalCommission = commissionPerUnit.mul(
@@ -257,9 +289,15 @@ class OriginEventSource {
     commissionAvailable = !commissionAvailable.isNeg()
       ? commissionAvailable.toString()
       : '0'
+
     if (listing.status === 'active' && unitsAvailable <= 0) {
-      listing.status = 'sold'
+      if (listing.unitsTotal === 1 && pendingUnits > 0) {
+        listing.status = 'pending'
+      } else {
+        listing.status = 'sold'
+      }
     }
+
     return Object.assign({}, listing, {
       allOffers,
       booked,
@@ -394,7 +432,7 @@ class OriginEventSource {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
-    if (listing.type !== 'unit') {
+    if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
       return
     }

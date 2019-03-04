@@ -4,9 +4,9 @@ import get from 'lodash/get'
 
 import mutation from 'mutations/SendMessage'
 import withIdentity from 'hoc/withIdentity'
-import query from 'queries/Conversations'
+import query from 'queries/CanConverseWith'
 
-import { OnboardMessaging } from 'pages/onboard/Messaging'
+import EnableMessagingModal from 'components/EnableMessagingModal'
 import Modal from 'components/Modal'
 import QueryError from 'components/QueryError'
 
@@ -25,48 +25,63 @@ class SendMessage extends Component {
   }
 
   render() {
+    const account = this.props.to
     return (
-      <Query query={query} pollInterval={2000}>
-        {({ error, data, loading }) => {
-          if (error) {
-            return <QueryError query={query} error={error} />
-          } else if (loading) {
-            return <div>Checking if messaging enabled...</div>
-          } else if (!data || !data.messaging) {
-            return null
-          }
+      <>
+        <button
+          className={this.props.className}
+          onClick={e => {
+            e.stopPropagation()
+            this.setState({ open: true })
+          }}
+          children={this.props.children}
+        />
+        {!this.state.open ? null : (
+          <Modal
+            shouldClose={this.state.shouldClose}
+            onClose={() =>
+              this.setState({ shouldClose: false, open: false, sent: false })
+            }
+            className="message-modal"
+          >
+            <Query query={query} variables={{ account }} skip={!account}>
+              {({ error, data, loading }) => {
+                if (error) {
+                  return <QueryError query={query} error={error} />
+                } else if (loading) {
+                  return <div>Checking if messaging enabled...</div>
+                } else if (!get(data, 'messaging.enabled')) {
+                  return <EnableMessagingModal />
+                } else if (!data.messaging.canConverseWith) {
+                  return this.renderCannotConverse()
+                } else if (this.state.sent) {
+                  return this.renderSent()
+                } else {
+                  return this.renderSend()
+                }
+              }}
+            </Query>
+          </Modal>
+        )}
+      </>
+    )
+  }
 
-          return (
-            <>
-              <button
-                className={this.props.className}
-                onClick={e => {
-                  e.stopPropagation()
-                  this.setState({ open: true })
-                }}
-                children={this.props.children}
-              />
-              {!this.state.open ? null : (
-                <Modal
-                  shouldClose={this.state.shouldClose}
-                  onClose={() =>
-                    this.setState({ shouldClose: false, open: false })
-                  }
-                  className="message-modal"
-                >
-                  {!data.messaging.enabled ? (
-                    <OnboardMessaging />
-                  ) : this.state.sent ? (
-                    this.renderSent()
-                  ) : (
-                    this.renderSend()
-                  )}
-                </Modal>
-              )}
-            </>
-          )
-        }}
-      </Query>
+  renderCannotConverse() {
+    return (
+      <>
+        <div>
+          This user has not yet enabled Origin Messaging. Unfortunately, you
+          will not be able to contact them until they do.
+        </div>
+        <div className="actions">
+          <button
+            className="btn btn-outline-light btn-rounded"
+            children="OK"
+            onClick={() => this.setState({ shouldClose: true })}
+          />
+        </div>
+      </>
     )
   }
 
@@ -134,6 +149,8 @@ export default withIdentity(SendMessage, 'to')
 
 require('react-styl')(`
   .message-modal
+    textarea
+      min-height: 6rem
     .to
       white-space: nowrap
       overflow: hidden

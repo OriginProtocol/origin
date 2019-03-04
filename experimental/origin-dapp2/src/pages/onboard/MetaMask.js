@@ -139,6 +139,8 @@ class OnboardMetaMask extends Component {
   state = {}
   render() {
     const { listing } = this.props
+    const linkPrefix = listing ? `/listing/${listing.id}` : ''
+
     return (
       <>
         <div className="step">Step 1</div>
@@ -156,8 +158,8 @@ class OnboardMetaMask extends Component {
                   return <p className="p-3">No Web3</p>
                 }
 
-                const backLink = `/listings/${listing.id}/onboard`
-                const nextLink = `/listings/${listing.id}/onboard/messaging`
+                const backLink = `${linkPrefix}/onboard`
+                const nextLink = `${linkPrefix}/onboard/messaging`
                 let nextEnabled = false
                 const { web3 } = data
 
@@ -200,13 +202,10 @@ class OnboardMetaMask extends Component {
                         Continue
                       </Link>
                     </div>
-                    {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
                   </>
                 )
-                // return cmp
               }}
             </Query>
-            {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
           </div>
           <div className="col-md-4">
             <ListingPreview listing={listing} />

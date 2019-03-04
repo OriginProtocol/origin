@@ -1,60 +1,94 @@
 import React from 'react'
+import { Query } from 'react-apollo'
+import get from 'lodash/get'
+
 import Link from 'components/Link'
+import Redirect from 'components/Redirect'
+import QueryError from 'components/QueryError'
 import Steps from 'components/Steps'
+import LinkMobileWallet from 'components/LinkMobileWallet'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
-const Step1 = ({ listing }) => (
-  <>
-    <div className="step">Step 1</div>
-    <h3>Connect a Crypto Wallet</h3>
-    <div className="row">
-      <div className="col-md-8">
-        <Steps steps={4} step={1} />
-        <div className="connect mobile-wallet">
-          <div className="image">
-            <div />
-          </div>
-          <div>
-            <h4>Origin Mobile Wallet</h4>
-            <div className="description">
-              Origin’s Mobile Wallet will allow you to store crypto currency so
-              you can buy and sell on our DApp.
-            </div>
-            <div className="note">Currently only available for iOS</div>
-            <button className="btn btn-outline-primary">
-              Connect Origin Wallet
-            </button>
-          </div>
+import query from 'queries/Wallet'
+
+const Step1 = ({ listing }) => {
+  const linkPrefix = listing ? `/listing/${listing.id}` : ''
+
+  return (
+    <>
+      <div className="step">Step 1</div>
+      <h3>Connect a Crypto Wallet</h3>
+      <div className="row">
+        <div className="col-md-8">
+          <Steps steps={4} step={1} />
+          <Query query={query} notifyOnNetworkStatusChange={true}>
+            {({ error, data, networkStatus }) => {
+              if (networkStatus === 1) {
+                return <div>Loading...</div>
+              } else if (error) {
+                return <QueryError query={query} />
+              }
+              if (
+                get(data, 'web3.metaMask.id') ||
+                get(data, 'web3.mobileWalletAccount.id')
+              ) {
+                return <Redirect to={`${linkPrefix}/onboard/messaging`} />
+              }
+
+              return (
+                <>
+                  <div className="connect mobile-wallet">
+                    <div className="image">
+                      <div />
+                    </div>
+                    <div>
+                      <h4>Origin Mobile Wallet</h4>
+                      <div className="description">
+                        Origin’s Mobile Wallet will allow you to store crypto
+                        currency so you can buy and sell on our DApp.
+                      </div>
+                      <div className="note">
+                        Currently only available for iOS
+                      </div>
+                      <LinkMobileWallet className="btn btn-outline-primary">
+                        Connect Origin Wallet
+                      </LinkMobileWallet>
+                    </div>
+                  </div>
+                  <div className="connect metamask">
+                    <div className="image">
+                      <div />
+                    </div>
+                    <div>
+                      <h4>MetaMask</h4>
+                      <div className="description">
+                        MetaMask is a browser extension for Chrome that will
+                        allow you to access the decentralized web.
+                      </div>
+                      <div className="note">Available for Google Chrome</div>
+                      <Link
+                        to={`${linkPrefix}/onboard/metamask`}
+                        className="btn btn-outline-primary"
+                      >
+                        Connect MetaMask
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )
+            }}
+          </Query>
         </div>
-        <div className="connect metamask">
-          <div className="image">
-            <div />
-          </div>
-          <div>
-            <h4>MetaMask</h4>
-            <div className="description">
-              MetaMask is a browser extension for Chrome that will allow you to
-              access the decentralized web.
-            </div>
-            <div className="note">Available for Google Chrome</div>
-            <Link
-              to={`/listings/${listing.id}/onboard/metamask`}
-              className="btn btn-outline-primary"
-            >
-              Connect MetaMask
-            </Link>
-          </div>
+        <div className="col-md-4">
+          <ListingPreview listing={listing} />
+          <HelpWallet />
         </div>
       </div>
-      <div className="col-md-4">
-        <ListingPreview listing={listing} />
-        <HelpWallet />
-      </div>
-    </div>
-  </>
-)
+    </>
+  )
+}
 
 export default Step1
 

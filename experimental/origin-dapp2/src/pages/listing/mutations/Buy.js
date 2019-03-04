@@ -79,12 +79,11 @@ class Buy extends Component {
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
-    const walletType = this.props.web3.walletType
     return (
       <WaitForTransaction
         hash={this.state.waitFor}
         event="OfferCreated"
-        walletType={walletType}
+        onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
           <div className="make-offer-modal success">

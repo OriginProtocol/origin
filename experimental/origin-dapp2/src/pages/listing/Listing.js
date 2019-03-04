@@ -20,7 +20,7 @@ class Listing extends Component {
     const vars = { listingId }
 
     return (
-      <div className="container">
+      <>
         <PageTitle>Listing {listingId}</PageTitle>
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
@@ -44,13 +44,13 @@ class Listing extends Component {
             return (
               <Switch>
                 <Route
-                  path="/listings/:listingID/onboard"
+                  path="/listing/:listingID/onboard"
                   render={() => (
                     <Onboard listing={listing} quantity={this.state.quantity} />
                   )}
                 />
                 <Route
-                  path="/listings/:listingID/edit"
+                  path="/listing/:listingID/edit"
                   render={() => (
                     <EditListing listing={listing} refetch={refetch} />
                   )}
@@ -70,7 +70,7 @@ class Listing extends Component {
             )
           }}
         </Query>
-      </div>
+      </>
     )
   }
 }
