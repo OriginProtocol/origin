@@ -92,8 +92,8 @@ class Enroll extends Component {
                         </video>
                         <div className="title">Confirm Metamask Signature</div>
                         <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-                          {!this.state.error && (
-                          {/* TODO: Wallet provider should be set dynamicly in here */}
+                          { /* TODO: Wallet provider should be set dynamicly in here */
+                          !this.state.error && (
                             <span>
                               Open your Metamask browser extension and confirm
                               your signature.
