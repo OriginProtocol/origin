@@ -61,6 +61,7 @@ export default {
           unitsTotal
           unitsAvailable
           unitsSold
+          multiUnit
         }
         ... on FractionalListing {
           weekendPrice {

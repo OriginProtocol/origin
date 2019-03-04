@@ -2,19 +2,20 @@ import React from 'react'
 
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
+import withEthBalance from 'hoc/withEthBalance'
 
-const Balances = ({ balance, account }) => (
+const Balances = ({ ethBalance, account }) => (
   <div className="balances">
     <h5>Account Balance</h5>
     <div className="account eth">
       <div className="icon" />
       <div className="balance">
         <div className="coin">
-          {balance.eth}
+          {ethBalance}
           <span>ETH</span>
         </div>
         <div className="usd">
-          <Price amount={balance.eth} />
+          <Price amount={ethBalance} />
         </div>
       </div>
     </div>
@@ -30,7 +31,7 @@ const Balances = ({ balance, account }) => (
   </div>
 )
 
-export default Balances
+export default withEthBalance(Balances)
 
 require('react-styl')(`
   .balances

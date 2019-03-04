@@ -45,7 +45,12 @@ export default class MobileLinkerCode extends Component {
           return (
             <Modal
               shouldClose={this.state.shouldClose}
-              onClose={() => this.setState({ shouldClose: false })}
+              onClose={() => {
+                this.setState({ shouldClose: false })
+                if (this.props.onClose) {
+                  this.props.onClose()
+                }
+              }}
             >
               {isMobileDevice && (
                 <>

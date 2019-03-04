@@ -75,6 +75,7 @@ class WalletLinkerClient {
         // We do not handle wait for this promise to resolve, because prelinking
         // changes internal state that will trigger a UI refresh anyway.
         try {
+          debug('Trying to plink...')
           await this.prelink(plink)
           prelinked = true
         } catch (e) {
