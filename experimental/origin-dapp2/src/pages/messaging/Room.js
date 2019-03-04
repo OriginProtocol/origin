@@ -1,14 +1,26 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import find from 'lodash/find'
+import filter from 'lodash/filter'
 
 import withWallet from 'hoc/withWallet'
-import withOfferEvents from 'hoc/withOfferEvents'
+import withOffers from 'hoc/withOffers'
+import withPurchases from 'hoc/withPurchases'
 
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
+
+function parseEvents(offers, purchases, { address }) {
+  return filter([...offers, ...purchases], (offer) => {
+    const seller = get(offer, 'listing.seller.id')
+    const buyer = get(offer, 'buyer.id')
+
+    return buyer === address || seller === address
+  })
+}
 
 class AllMessages extends Component {
   componentDidMount() {
@@ -31,29 +43,38 @@ class AllMessages extends Component {
     }
   }
   render() {
-    const { messages } = this.props
+    const { messages, offers = [], purchases = [], wallet } = this.props
+    const counterparty = find(messages, ({ address }) => address !== wallet) || { address: this.props.wallet }
+    const offerEvents = parseEvents(offers, purchases, counterparty) || []
+    const transactionMessages = offerEvents.map((offer) => {
+      return { ...offer, timestamp: get(offer, 'createdEvent.timestamp') }
+    })
+    const combinedMessages = [...messages, ...transactionMessages]
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => (
-          <MessageWithIdentity
-            message={message}
-            lastMessage={idx > 0 ? messages[idx - 1] : null}
-            nextMessage={messages[idx + 1]}
-            key={idx}
-            wallet={get(message, 'address')}
-            isUser={this.props.wallet === get(message, 'address')}
-          />
-        ))}
+        {combinedMessages.map((message, idx) => {
+          return (
+            <MessageWithIdentity
+              message={message}
+              lastMessage={idx > 0 ? messages[idx - 1] : null}
+              nextMessage={messages[idx + 1]}
+              key={idx}
+              wallet={get(message, 'address')}
+              isUser={wallet === get(message, 'address')}
+            />
+          )
+        })}
       </div>
     )
   }
 }
 
+const MessagesWithOffers = withOffers(AllMessages)
+
 class Room extends Component {
   render() {
-    const { id, wallet, markRead, offers = [] } = this.props
-    console.log("WHATS ALL IN THE ROOM?", this.props)
+    const { id, wallet, markRead, purchases = [] } = this.props
     return (
       <div className="container">
         <Query
@@ -73,16 +94,14 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
-            const transactionMessages = offers.map((offer) => {
-              return { ...offer, timestamp: get(offer, 'createdEvent.timestamp') }
-            })
             return (
               <>
-                <AllMessages
-                  messages={[...messages, ...transactionMessages]}
+                <MessagesWithOffers
+                  messages={messages}
                   wallet={wallet}
                   convId={id}
                   markRead={() => markRead({ variables: { id } })}
+                  purchases={purchases}
                 />
                 <SendMessage to={this.props.id} />
               </>
@@ -94,7 +113,7 @@ class Room extends Component {
   }
 }
 
-export default withWallet(withOfferEvents(Room))
+export default withWallet(withPurchases(Room))
 
 require('react-styl')(`
   .messages-page .messages

@@ -88,8 +88,14 @@ const Message = props => {
   // console.log("WHATS ALL IN THE ROOM?", dayjs.unix(message.timestamp).format('MMM Do h:mmA'), messageContent)
   const transactionMessage = null
   if (message.__typename === 'Offer') {
-    console.log("AnD THE MESSAGE", message)
-    return <OfferMessage message={message} identity={identity} userName={userName} userAddress={userAddress} />
+    return (
+      <OfferMessage
+        message={message}
+        identity={identity}
+        userName={userName}
+        userAddress={userAddress}
+      />
+    )
   }
   return (
     <>

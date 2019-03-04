@@ -7,18 +7,18 @@ import PurchaseQuery from 'queries/Purchases'
 function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
   const WithOfferEvents = props => {
     const id = get(props, walletProp)
-    // console.log("IS THERE AN ID", id)
     if (!id) {
       return <WrappedComponent {...props} />
     }
+
     return (
-      <Query query={PurchaseQuery} variables={{ id, filter: 'pending' }}>
+      <Query query={PurchaseQuery} variables={{ id }}>
         {({ data, refetch }) => {
-          const offers = get(data, 'marketplace.user.offers.nodes', [])
+          const purchases = get(data, 'marketplace.user.offers.nodes', [])
           return (
             <WrappedComponent
               {...props}
-              offers={offers}
+              purchases={purchases}
             />
           )
         }}

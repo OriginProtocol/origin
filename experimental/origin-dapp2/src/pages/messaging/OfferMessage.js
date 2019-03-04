@@ -7,7 +7,6 @@ dayjs.extend(advancedFormat)
 
 const OfferMessage = (props) => {
   const { userName, message: { createdEvent, status, listing, timestamp }} = props
-  console.log("WHAT IS THE PROPS IN OFFER MESSAGE", props)
   const offerMessages = {
     1: (
       <div>
