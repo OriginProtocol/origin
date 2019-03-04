@@ -128,7 +128,7 @@ async function createInviteCode(accountId) {
   const code =
     `${accountId.substring(2, 5)}` +
     `${accountId.substring(accountId.length - 3, accountId.length)}` +
-    `${(Math.round(Math.random() * 1000000)).toString(16)}`
+    `${Math.round(Math.random() * 1000000).toString(16)}`
 
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
