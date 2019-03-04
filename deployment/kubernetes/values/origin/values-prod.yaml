@@ -34,7 +34,7 @@ growthImageTag: 'latest'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '5688898'
+messagingImageTag: 'd1ba847'
 
 # origin-notifications
 notificationsImage: origin-notifications
