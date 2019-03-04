@@ -66,7 +66,7 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
 
   if (!validHash) {
     return res.status(400).send({
-      errors: ['No verification code was not found that email.']
+      errors: ['No verification code was found for that email.']
     })
   }
 
