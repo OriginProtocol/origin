@@ -1,6 +1,6 @@
 {
   "name": "origin-bridge",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Third party identity verification attestation server",
   "main": "src/app.js",
   "scripts": {
