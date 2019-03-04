@@ -9,6 +9,8 @@ const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+
 describe('email attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -49,7 +51,6 @@ describe('email attestations', () => {
   })
 
   it('should generate attestation on valid verification code', async () => {
-    const ethAddress = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
     const now = new Date()
 
     // Fake a session

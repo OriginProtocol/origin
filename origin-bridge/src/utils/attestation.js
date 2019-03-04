@@ -13,6 +13,8 @@ async function generateAttestation(
   ethAddress,
   remoteAddress
 ) {
+  ethAddress = ethAddress.toLowerCase()
+
   const data = {
     issuer: constants.ISSUER,
     issueDate: new Date(),

@@ -10,7 +10,7 @@ const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
-const ethAddress = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('twitter attestations', async () => {
   beforeEach(() => {

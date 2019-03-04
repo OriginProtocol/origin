@@ -9,6 +9,8 @@ const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+
 describe('airbnb attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -24,7 +26,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .get('/api/attestations/airbnb/generate-code')
       .query({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 123456
       })
       .expect(200)
@@ -35,8 +37,6 @@ describe('airbnb attestations', () => {
   })
 
   it('should generate attestation on valid verification code', async () => {
-    const ethAddress = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
-
     nock('https://www.airbnb.com')
       .get('/users/show/123456')
       .once()
@@ -48,7 +48,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .post('/api/attestations/airbnb/verify')
       .send({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 123456
       })
 
@@ -77,7 +77,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .post('/api/attestations/airbnb/verify')
       .send({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 'ab123456'
       })
       .expect(400)
@@ -96,7 +96,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .post('/api/attestations/airbnb/verify')
       .send({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 123456
       })
 
@@ -114,7 +114,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .post('/api/attestations/airbnb/verify')
       .send({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 123456
       })
 
@@ -130,7 +130,7 @@ describe('airbnb attestations', () => {
     const response = await request(app)
       .post('/api/attestations/airbnb/verify')
       .send({
-        identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+        identity: ethAddress,
         airbnbUserId: 654321
       })
 

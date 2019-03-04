@@ -11,6 +11,8 @@ const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 const { getAbsoluteUrl } = require('../src/utils')
 
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+
 describe('facebook attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -41,8 +43,6 @@ describe('facebook attestations', () => {
   })
 
   it('should generate attestation on valid verification code', async () => {
-    const ethAddress = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
-
     nock(process.env.FACEBOOK_BASE_GRAPH_URL)
       .get('/v3.2/oauth/access_token')
       .query({

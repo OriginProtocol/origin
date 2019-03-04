@@ -7,6 +7,8 @@ const Attestation = require('../src/models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+
 describe('phone attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -142,10 +144,8 @@ describe('phone attestations', () => {
         cookie = response.headers['set-cookie']
       })
 
-    const identity = '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
-
     const checkParams = {
-      identity: identity,
+      identity: ethAddress,
       country_calling_code: '1',
       phone: '12341234',
       code: '123456'
@@ -182,14 +182,14 @@ describe('phone attestations', () => {
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
-    expect(results[0].ethAddress).to.equal(identity)
+    expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.PHONE)
     expect(results[0].value).to.equal('1 12341234')
   })
 
   it('should error on missing verification code', async () => {
     const params = {
-      identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      identity: ethAddress,
       country_calling_code: '1',
       phoner: '12341234'
     }
@@ -204,7 +204,7 @@ describe('phone attestations', () => {
 
   it('should error on incorrect verification code', async () => {
     const params = {
-      identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      identity: ethAddress,
       country_calling_code: '1',
       phone: '12341234',
       code: '5678'
@@ -231,7 +231,7 @@ describe('phone attestations', () => {
 
   it('should error on expired verification code', async () => {
     const params = {
-      identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010',
+      identity: ethAddress,
       country_calling_code: '1',
       phone: '12341234',
       code: '1234'
