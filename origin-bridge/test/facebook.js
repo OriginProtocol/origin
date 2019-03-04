@@ -30,8 +30,6 @@ describe('facebook attestations', () => {
   })
 
   it('should generate a correct auth url', async () => {
-    const redirectUrl = getAbsoluteUrl('/redirects/facebook/')
-
     const response = await request(app)
       .get('/api/attestations/facebook/auth-url')
       .expect(200)
