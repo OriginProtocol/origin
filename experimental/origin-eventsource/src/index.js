@@ -160,11 +160,13 @@ class OriginEventSource {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
 
-    if (data.media && data.media.length) {
+    if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
         urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
       }))
+    } else {
+      data.media = [] // If invalid, set a clean, empty media array
     }
 
     let __typename = data.__typename
