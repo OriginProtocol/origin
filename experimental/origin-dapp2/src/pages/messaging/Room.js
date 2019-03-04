@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
+import withOfferEvents from 'hoc/withOfferEvents'
 
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
@@ -51,7 +52,8 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, markRead } = this.props
+    const { id, wallet, markRead, offers = [] } = this.props
+    console.log("WHATS ALL IN THE ROOM?", this.props)
     return (
       <div className="container">
         <Query
@@ -71,10 +73,13 @@ class Room extends Component {
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])
+            const transactionMessages = offers.map((offer) => {
+              return { ...offer, timestamp: get(offer, 'createdEvent.timestamp') }
+            })
             return (
               <>
                 <AllMessages
-                  messages={messages}
+                  messages={[...messages, ...transactionMessages]}
                   wallet={wallet}
                   convId={id}
                   markRead={() => markRead({ variables: { id } })}
@@ -89,7 +94,7 @@ class Room extends Component {
   }
 }
 
-export default withWallet(Room)
+export default withWallet(withOfferEvents(Room))
 
 require('react-styl')(`
   .messages-page .messages
