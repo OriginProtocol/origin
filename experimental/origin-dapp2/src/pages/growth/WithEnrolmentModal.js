@@ -104,7 +104,7 @@ function withEnrolmentModal(WrappedComponent) {
               <input
                 type="checkbox"
                 className="country-check"
-                onChange={(e) => this.handleAcceptTermsCheck(e)}
+                onChange={e => this.handleAcceptTermsCheck(e)}
                 value="cofirm-citizenship"
               />
               <span className="checkmark" />
