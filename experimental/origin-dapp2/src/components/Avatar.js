@@ -1,27 +1,22 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class Avatar extends Component {
-  render() {
-    const props = { style: {}, className: 'avatar' }
-    if (this.props.size) {
-      props.style = {
-        width: this.props.size || 50,
-        paddingTop: this.props.size || 50
-      }
-    }
-
-    if (!this.props.avatar) {
-      props.className += ' empty'
-    } else {
-      props.style.backgroundImage = `url(${this.props.avatar})`
-    }
-
-    if (this.props.className) {
-      props.className += ` ${this.props.className}`
-    }
-
-    return <div {...props} />
+const Avatar = ({ size, avatar, className }) => {
+  const props = { style: {}, className: 'avatar' }
+  if (size) {
+    props.style = { width: size || 50, paddingTop: size || 50 }
   }
+
+  if (!avatar) {
+    props.className += ' empty'
+  } else {
+    props.style.backgroundImage = `url(${avatar})`
+  }
+
+  if (className) {
+    props.className += ` ${className}`
+  }
+
+  return <div {...props} />
 }
 
 export default Avatar
