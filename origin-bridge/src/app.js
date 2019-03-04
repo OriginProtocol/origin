@@ -6,9 +6,17 @@ const cors = require('cors')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 
+const db = require('./models')
+// Initalize sequelize with session store
+const SequelizeStore = require('connect-session-sequelize')(session.Store)
+const sessionStore = new SequelizeStore({
+    db: db.sequelize
+})
+
 app.use(express.json())
 
 const sess = {
+  store: sessionStore,
   name: process.env.COOKIE_NAME || 'origin-bridge',
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
@@ -17,9 +25,13 @@ const sess = {
     maxAge: 60000
   }
 }
+
+sessionStore.sync()
+
 if (process.env.NODE_ENV == 'production') {
   sess.cookie.secure = true
 }
+
 app.use(session(sess))
 app.use(cors({ origin: true, credentials: true }))
 app.use(bodyParser.json())
