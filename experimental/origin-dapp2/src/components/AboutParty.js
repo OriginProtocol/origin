@@ -42,7 +42,7 @@ class AboutParty extends Component {
                 onClick={() => this.setState({ redirect: true })}
               >
                 <Avatar avatar={profile.avatar} size={50} />
-                <div>
+                <div className="user-detail">
                   <div className="name">{profile.fullName}</div>
                   <div className="attestations">
                     {profile.twitterVerified && (
@@ -130,6 +130,8 @@ require('react-styl')(`
       display: flex
       margin-bottom: 1rem
       cursor: pointer
+      .user-detail
+        min-width: 0
       .avatar
         margin-right: 1rem
       .name
@@ -137,6 +139,9 @@ require('react-styl')(`
         font-weight: bold
         line-height: 1.25rem
         margin-bottom: 0.5rem
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
     .eth-address
       display: flex
       > img

@@ -9,6 +9,7 @@ import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
+import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
 import Transaction from './transaction/Transaction'
@@ -74,6 +75,7 @@ class App extends Component {
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
+            <Route path="/onboard" component={Onboard} />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
