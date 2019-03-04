@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
 import { withApollo, Query } from 'react-apollo'
-import growthEligibilityQuery from 'queries/GrowthEligibility'
-import profileQuery from 'queries/Profile'
-import signMessageMutation from 'mutations/SignMessage'
-import QueryError from 'components/QueryError'
-//TODO: delete this
 import { withRouter } from 'react-router-dom'
+import growthEligibilityQuery from 'queries/GrowthEligibility'
+import enrollmentStatusQuery from 'queries/EnrollmentStatus'
+import profileQuery from 'queries/Profile'
+import QueryError from 'components/QueryError'
+import Enroll from 'pages/growth/mutations/Enroll'
 
 function withEnrolmentModal(WrappedComponent) {
-  const MyComponent = class WithEnrolmentModal extends Component {
+  class WithEnrolmentModal extends Component {
     constructor(props) {
       super(props)
       this.handleClick = this.handleClick.bind(this)
@@ -17,17 +17,10 @@ function withEnrolmentModal(WrappedComponent) {
       this.renderTermsAndEligibilityCheck = this.renderTermsAndEligibilityCheck.bind(
         this
       )
-      this.handleCloseModal = this.handleCloseModal.bind(this)
-      this.handleEligibilityContinue = this.handleEligibilityContinue.bind(this)
-      this.renderRestrictedModal = this.renderRestrictedModal.bind(this)
-      this.renderTermsModal = this.renderTermsModal.bind(this)
-      this.handleAcceptTermsCheck = this.handleAcceptTermsCheck.bind(this)
-      this.handleTermsContinue = this.handleTermsContinue.bind(this)
 
       this.state = {
         open: false,
         stage: 'TermsAndEligibilityCheck',
-        //stage: 'MetamaskSignature',
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
@@ -35,30 +28,18 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
-    async componentDidMount() {
-      //TODO: check if user already enrolled
-      //this.setState({ userAlreadyEnrolled: e.target.checked })
-      //
-      //TODO: remove this later
-      // const gql = require('graphql-tag')
-      // const ToggleMetaMaskMutation = gql`
-      //   mutation ToggleMetaMask($enabled: Boolean) {
-      //     toggleMetaMask(enabled: $enabled)
-      //   }
-      // `
-      // console.log("METAMASK TOGGLE MUTATION", await this.props.client.mutate({
-      //   mutation: ToggleMetaMaskMutation,
-      //   variables: {
-      //     enabled: false
-      //   }
-      // }))
-    }
-
-    handleClick(e) {
+    handleClick(e, enrollmentStatus) {
       e.preventDefault()
-      this.setState({
-        open: true
-      })
+
+      if (enrollmentStatus === 'Enrolled') {
+        this.props.history.push('/campaigns')
+      } else if (enrollmentStatus === 'NotEnrolled') {
+        this.setState({
+          open: true
+        })
+      } else if (enrollmentStatus === 'Banned') {
+        alert('You have been banned from earning tokens')
+      }
     }
 
     handleNotCitizenClick(e) {
@@ -75,29 +56,6 @@ function withEnrolmentModal(WrappedComponent) {
       }
 
       this.setState({ stage: 'MetamaskSignature' })
-
-      const { data } = await this.props.client.query({
-        query: profileQuery
-      })
-
-      const account_id = data.web3.metaMaskAccount.id
-
-      //TODO: delete this. Is just for demonstration purposes
-      const delay = ms => new Promise(res => setTimeout(res, ms))
-      await delay(3000)
-      //TODO: end delete
-
-      const result = await this.props.client.mutate({
-        mutation: signMessageMutation,
-        variables: {
-          address: account_id,
-          // TODO: change version programatically
-          message: 'I accept the terms of growth campaign version: 1.0'
-        }
-      })
-
-      console.log('MUTATION RESULT', result)
-      this.props.history.push('/campaigns')
     }
 
     handleCloseModal() {
@@ -147,7 +105,7 @@ function withEnrolmentModal(WrappedComponent) {
               <input
                 type="checkbox"
                 className="country-check"
-                onChange={this.handleAcceptTermsCheck}
+                onChange={e => this.handleAcceptTermsCheck(e)}
                 value="cofirm-citizenship"
               />
               <span className="checkmark" />
@@ -158,14 +116,14 @@ function withEnrolmentModal(WrappedComponent) {
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-outline-light mr-2"
-              onClick={this.handleCloseModal}
+              onClick={() => this.handleCloseModal()}
               children="Cancel"
             />
             <button
               className={`btn btn-lg ml-2 ${
                 termsAccepted ? 'btn-primary btn-rounded' : 'btn-outline-light'
               }`}
-              onClick={this.handleTermsContinue}
+              onClick={() => this.handleTermsContinue()}
               disabled={termsAccepted ? undefined : 'disabled'}
               children="Accept Terms"
             />
@@ -175,8 +133,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
-      const isRestricted = eligibility === 'Restricted'
-      const isForbidden = eligibility === 'Forbidden'
+      const isRestricted = eligibility === 'restricted'
+      const isForbidden = eligibility === 'forbidden'
 
       return (
         <div>
@@ -225,7 +183,7 @@ function withEnrolmentModal(WrappedComponent) {
           {isRestricted && notCitizenChecked && (
             <button
               className="btn btn-primary btn-rounded btn-lg"
-              onClick={this.handleEligibilityContinue}
+              onClick={() => this.handleEligibilityContinue()}
               children="Continue"
             />
           )}
@@ -239,7 +197,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) return `Loading...`
+            if (networkStatus === 1 || loading) return 'Loading...'
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
@@ -251,19 +209,21 @@ function withEnrolmentModal(WrappedComponent) {
             // const eligibility = 'Forbidden'
 
             if (
-              eligibility === 'eligible' ||
-              (eligibility === 'restricted' && notCitizenConfirmed)
+              eligibility === 'Eligible' ||
+              (eligibility === 'Restricted' && notCitizenConfirmed)
             ) {
               return this.renderTermsModal()
             } else if (
-              eligibility === 'restricted' ||
-              eligibility === 'forbidden'
+              eligibility === 'Restricted' ||
+              eligibility === 'Forbidden'
             ) {
               return this.renderRestrictedModal(
                 countryName,
                 eligibility,
                 notCitizenChecked
               )
+            } else {
+              return 'Error: can not detect coutry'
             }
           }}
         </Query>
@@ -271,141 +231,150 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return (
-        <div className="metamask">
-          <video
-            className="metamask-video"
-            width="320"
-            heigh="240"
-            autoPlay
-            loop
-          >
-            <source
-              src="images/growth/metamask_in_browser_dark_bg.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-          <div className="title">Confirm Metamask Signature</div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-            Open your Metamask browser extension and confirm your signature.
-          </div>
-        </div>
-      )
+      return <Enroll />
     }
 
     render() {
       const { open } = this.state
+
       return (
-        <Fragment>
-          <WrappedComponent {...this.props} onClick={this.handleClick} />
-          {open && (
-            <Modal
-              className="growth-enrollment-modal"
-              onClose={() => {
-                this.setState({
-                  open: false
-                })
-              }}
-            >
-              {this[`render${this.state.stage}`]()}
-            </Modal>
-          )}
-        </Fragment>
+        <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
+          {({ error, data, networkStatus, loading }) => {
+            if (networkStatus === 1 || loading) {
+              return 'Loading...'
+            } else if (error) {
+              return <QueryError error={error} query={profileQuery} />
+            }
+
+            const walletAddress = data.web3.primaryAccount.id
+            return (
+              <Query
+                query={enrollmentStatusQuery}
+                variables={{ walletAddress }}
+                // enrollment info can change, do not cache it
+                fetchPolicy="network-only"
+              >
+                {({ networkStatus, error, loading, data }) => {
+                  if (networkStatus === 1 || loading) {
+                    return 'Loading...'
+                  } else if (error) {
+                    return (
+                      <QueryError error={error} query={enrollmentStatusQuery} />
+                    )
+                  }
+
+                  return (
+                    <Fragment>
+                      <WrappedComponent
+                        {...this.props}
+                        onClick={e =>
+                          this.handleClick(e, data.enrollmentStatus)
+                        }
+                      />
+                      {open && (
+                        <Modal
+                          className="growth-enrollment-modal"
+                          onClose={() => {
+                            this.setState({
+                              open: false
+                            })
+                          }}
+                        >
+                          {this[`render${this.state.stage}`]()}
+                        </Modal>
+                      )}
+                    </Fragment>
+                  )
+                }}
+              </Query>
+            )
+          }}
+        </Query>
       )
     }
   }
 
-  return withRouter(withApollo(MyComponent))
+  //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
+  return withRouter(withApollo(WithEnrolmentModal))
 }
 
 export default withEnrolmentModal
 
-//margin-right: 10px;
-//vertical-align: middle;
-//margin-bottom: 5px;
 require('react-styl')(`
   .growth-enrollment-modal .input:checked ~ .checkmark
-      background-color: #2196F3;
+      background-color: #2196F3
   .growth-enrollment-modal
-    padding-top: 20px;
-    max-width: 620px !important;
+    padding-top: 20px
+    max-width: 620px !important
     .normal-line-height
-      line-height: normal;
+      line-height: normal
     .title
-      font-family: Poppins;
-      font-size: 24px;
+      font-family: Poppins
+      font-size: 24px
     .title-light
-      font-weight: 300;
+      font-weight: 300
     .image-holder
-      position: relative;
-      width: 400px;
+      position: relative
+      width: 400px
     .info-text
-      max-width: 400px;
+      max-width: 400px
     .red-x-image
-      position: absolute;
-      right: 110px;
-      bottom: 10px;
+      position: absolute
+      right: 110px
+      bottom: 10px
     .checkbox-holder input:checked ~ .checkmark:after
-      display: block;
+      display: block
     .btn
-      margin-top: 30px;
-      min-width: 9rem;
+      margin-top: 30px
+      min-width: 9rem
     .checkbox-holder
-      display: block;
-      position: relative;
-      padding-left: 28px;
-      margin-bottom: 0px;
-      cursor: pointer;
-      font-size: 22px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      display: block
+      position: relative
+      padding-left: 28px
+      margin-bottom: 0px
+      cursor: pointer
+      font-size: 22px
+      -webkit-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
+      user-select: none
       .country-check
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
+        position: absolute
+        opacity: 0
+        cursor: pointer
+        height: 0
+        width: 0
       .checkmark
-        position: absolute;
-        top: 4px;
-        left: 0;
-        height: 20px;
-        width: 20px;
-        border-radius: 5px;
-        background-color: var(--dark);
+        position: absolute
+        top: 4px
+        left: 0
+        height: 20px
+        width: 20px
+        border-radius: 5px
+        background-color: var(--dark)
       .checkmark:after
-        content: "";
-        position: absolute;
-        display: none;
+        content: ""
+        position: absolute
+        display: none
       .checkmark:after
-        left: 7px;
-        top: 2px;
-        width: 7px;
-        height: 13px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        transform: rotate(45deg);
+        left: 7px
+        top: 2px
+        width: 7px
+        height: 13px
+        border: solid white
+        border-width: 0 3px 3px 0
+        -webkit-transform: rotate(45deg)
+        -ms-transform: rotate(45deg)
+        transform: rotate(45deg)
     .country-check-label
-      font-weight: 300;
+      font-weight: 300
     .terms
-      font-size: 14px;
-      overflow-y: scroll;
-      height: 250px;
-      background-color: var(--dark-two);
-      margin: 24px 0px;
-      text-align: left;
-      padding: 22px 31px 15px 22px;
-      font-weight: 300;
-    .metamask-video
-      margin-top: 90px;
-      margin-bottom: 42px;
-    .metamask .title
-      font-weight: 300;
-    .metamask .info-text
-      margin-bottom: 75px;
+      font-size: 14px
+      overflow-y: scroll
+      height: 250px
+      background-color: var(--dark-two)
+      margin: 24px 0px
+      text-align: left
+      padding: 22px 31px 15px 22px
+      font-weight: 300
 `)
