@@ -71,7 +71,7 @@ class Details extends Component {
                   {Feedback('description')}
                 </div>
 
-{/* unit specific code */}
+                {/* BEGIN Unit specific code */}
 
                 <div className="form-group">
                   <label>Quantity</label>
@@ -105,7 +105,7 @@ class Details extends Component {
                   </div>
                 </div>
 
-{/* END unit specific code */}
+                {/* END Unit specific code */}
 
                 <div className="form-group">
                   <label>Select photos</label>

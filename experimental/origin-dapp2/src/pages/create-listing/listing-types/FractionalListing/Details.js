@@ -70,7 +70,7 @@ class Details extends Component {
                   {Feedback('description')}
                 </div>
 
-{/* homeshare specific code */}
+                {/* BEGIN Homeshare specific code */}
 
                 <div className="form-group">
                   <label>Default Weekday Pricing (Sunday - Thursday nights)</label>
@@ -120,8 +120,7 @@ class Details extends Component {
                   {Feedback('weekendPrice')}
                 </div>
 
-
-{/* END homeshare specific code */}
+                {/* END Homeshare specific code */}
 
                 <div className="form-group">
                   <label>Add Photos</label>
