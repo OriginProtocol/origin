@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
-import Steps from '../../../../components/Steps'
-import Link from '../../../../components/Link'
-import Calendar from '../../../../components/Calendar'
-import Price from '../../../../components/Price'
-import Redirect from '../../../../components/Redirect'
+import Steps from 'components/Steps'
+import Link from 'components/Link'
+import Calendar from 'components/Calendar'
+import Price from 'components/Price'
+import Redirect from 'components/Redirect'
 
-import { formInput, formFeedback } from '../../../../utils/formHelpers'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Availability extends Component {
   constructor(props) {

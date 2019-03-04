@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
-import Steps from '../../../../components/Steps'
-import Redirect from '../../../../components/Redirect'
-import Link from '../../../../components/Link'
-import Wallet from '../../../../components/Wallet'
-import ImagePicker from '../../../../components/ImagePicker'
+import Steps from 'components/Steps'
+import Redirect from 'components/Redirect'
+import Link from 'components/Link'
+import Wallet from 'components/Wallet'
+import ImagePicker from 'components/ImagePicker'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Details extends Component {

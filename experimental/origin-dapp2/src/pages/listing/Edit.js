@@ -10,7 +10,8 @@ class EditListing extends Component {
     super(props)
     // Translate listing from schema representation to form
     // representation.
-    // TODO: Can we unify field names or otherwise simplify this?
+    // TODO: Can we unify field names or otherwise keep knowledge of
+    // special fields limited to their file in `listings-types` dir?
     this.state = {
       listing: {
         // HomeShare fields:
