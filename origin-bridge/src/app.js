@@ -10,7 +10,7 @@ const db = require('./models')
 // Initalize sequelize with session store
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const sessionStore = new SequelizeStore({
-    db: db.sequelize
+  db: db.sequelize
 })
 
 app.use(express.json())
