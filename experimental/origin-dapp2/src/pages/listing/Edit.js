@@ -3,12 +3,14 @@ import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
-import PageTitle from 'components/PageTitle'
+// import PageTitle from 'components/PageTitle'
 
-import ChooseListingType from '../create-listing/ChooseListingType'
-import Boost from '../create-listing/Boost'
-import Availability from '../create-listing/Availability'
-import Review from '../create-listing/Review'
+// import ChooseListingType from '../create-listing/ChooseListingType'
+// import Boost from '../create-listing/Boost'
+// import Availability from '../create-listing/Availability'
+// import Review from '../create-listing/Review'
+
+import CreateListing from '../create-listing/CreateListing'
 
 class EditListing extends Component {
   constructor(props) {
@@ -38,12 +40,18 @@ class EditListing extends Component {
   }
 
   render() {
-    const stepProps = {
-      listing: this.state.listing,
-      listingId: this.props.listing.id,
-      mode: 'edit',
-      onChange: listing => this.setState({ listing })
-    }
+    // const stepProps = {
+    //   listing: this.state.listing,
+    //   listingId: this.props.listing.id,
+    //   mode: 'edit',
+    //   onChange: listing => this.setState({ listing })
+    // }
+    return (
+      <CreateListing
+        listing={this.state.listing}
+        mode='edit'
+      />
+    )
     // return (
     //   <div className="container create-listing">
     //     <PageTitle>Edit Listing</PageTitle>

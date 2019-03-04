@@ -42,6 +42,7 @@ class CreateListing extends Component {
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
+        ...props.listing,
         ...store.get('create-listing', {})
       }
     }
@@ -79,6 +80,16 @@ class CreateListing extends Component {
         <Switch>
           <Route
             path="/create/details/:step?"
+            render={({match}) => (
+              <ListingTypeComponent
+                listing={this.state.listing}
+                step={match.params.step}
+                onChange={listing => this.setListing(listing)}
+              />
+            )}
+          />
+          <Route
+            path="/listing/:listingId/edit/:step?"
             render={({match}) => (
               <ListingTypeComponent
                 listing={this.state.listing}
