@@ -48,7 +48,7 @@ async function generateAttestation(
 
 function generateAttestationSignature(privateKey, subject, data) {
   if (!Web3.utils.isHexStrict(privateKey)) {
-    throw 'Invalid private key, not a hex string'
+    throw new Error('Invalid private key, not a hex string')
   }
   const hashToSign = Web3.utils.soliditySha3(
     {
