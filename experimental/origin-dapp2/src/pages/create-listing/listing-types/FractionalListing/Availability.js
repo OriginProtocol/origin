@@ -61,11 +61,7 @@ class Availability extends Component {
                 <Calendar
                   range={this.state.range}
                   availability={this.state.calculator}
-                  onChange={state => {
-                    console.log('yo'); // TODO(STAN)
-                    console.log(state);
-                    this.setState(state)}
-                  }
+                  onChange={state => this.setState(state)}
                   showBooked={true}
                 />
 
