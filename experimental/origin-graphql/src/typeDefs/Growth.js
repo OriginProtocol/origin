@@ -144,7 +144,7 @@ module.exports =
     campaign(id: String, walletAddress: ID!): GrowthCampaign
     inviteInfo(code: String): InviteInfo
     isEligible: EligibilityInfo
-    enrollmentStatus: EnrollmentStatus!
+    enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }
 
   type Mutation {

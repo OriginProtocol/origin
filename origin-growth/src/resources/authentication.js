@@ -48,11 +48,11 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   const authToken =
     participant === null
       ? crypto.randomBytes(64).toString('hex')
-      /* If user uses growth from 2 devices let them share the same auth token.
-       * The caveat is user will need to agree to the terms also on the second
-       * device.
-       */
-      : participant.authToken
+      : /* If user uses growth from 2 devices let them share the same auth token.
+         * The caveat is user will need to agree to the terms also on the second
+         * device.
+         */
+        participant.authToken
 
   const participantData = {
     ethAddress: accountId.toLowerCase(),
@@ -61,7 +61,9 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     authToken: authToken
   }
 
+  console.log("PARTICIPANT: ", JSON.stringify(participant))
   if (participant !== null) {
+    console.log("Auth TOKEN: ", authToken, JSON.stringify(participant))
     await participant.update(participantData)
     logger.info(`Existing user enrolled into growth campaign: ${accountId}`)
   } else {
@@ -76,18 +78,23 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
 /**
  * Fetches user's authentication status
  * @param {string} token - Growth authentication token
+ * @param {string} accountId - Optional accountIOd parameter
  *
  * returns GrowthParticipantAuthenticationStatus
  *  - Enrolled -> user participates in growth campaign
  *  - Banned -> user is banned
  *  - NotEnrolled -> user not a participant yet
  */
-async function getUserAuthenticationStatus(token) {
-  const growthParticipant = await db.GrowthParticipant.findOne({
+async function getUserAuthenticationStatus(token, accountId) {
+  const whereFilter = {
     where: {
       authToken: token
     }
-  })
+  }
+  if (accountId !== undefined)
+    whereFilter.where.ethAddress = accountId.toLowerCase()
+
+  const growthParticipant = await db.GrowthParticipant.findOne(whereFilter)
 
   if (growthParticipant === null) {
     return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
@@ -136,7 +143,6 @@ async function createInviteCode(accountId) {
  * inputNumber: 591231 -> returns 'bttkp'
  */
 function toReadableHex(inputNumber) {
-
   let hash = ''
   const alphabet = 'abcdefghijklmnoprstuvzyw'
 

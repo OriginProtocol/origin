@@ -2,7 +2,7 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
-const { authenticateEnrollment } = require('../resources/authentication')
+const { authenticateEnrollment, getUserAuthenticationStatus } = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
@@ -94,8 +94,11 @@ const resolvers = {
         countryCode: locationInfo.countryCode
       }
     },
-    async enrollmentStatus(_, __, context) {
-      return context.authentication
+    async enrollmentStatus(_, args, context) {
+      return await getUserAuthenticationStatus(
+        context.authToken,
+        args.walletAddress
+      )
     }
   },
   Mutation: {
