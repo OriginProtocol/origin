@@ -19,6 +19,7 @@ function withWallet(WrappedComponent) {
               <WrappedComponent
                 {...props}
                 wallet={wallet}
+                walletType={walletType}
                 walletLoading={networkStatus === 1}
               />
             )
@@ -28,6 +29,7 @@ function withWallet(WrappedComponent) {
             <WrappedComponent
               {...props}
               wallet={wallet}
+              walletType={walletType}
               walletLoading={networkStatus === 1}
             />
           )
