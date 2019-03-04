@@ -2,7 +2,10 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
-const { authenticateEnrollment, getUserAuthenticationStatus } = require('../resources/authentication')
+const {
+  authenticateEnrollment,
+  getUserAuthenticationStatus
+} = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
