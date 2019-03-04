@@ -13,8 +13,7 @@ class Details extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      ...props.listing,
-      fields: Object.keys(props.listing)
+      ...props.listing
     }
   }
 
@@ -183,7 +182,7 @@ class Details extends Component {
     if (!newState.valid) {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
-      this.props.onChange(pick(this.state, this.state.fields))
+      this.props.onChange(this.state)
       this.props.onNext() // Advance to next step
     }
     this.setState(newState)
