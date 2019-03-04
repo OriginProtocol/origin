@@ -1,13 +1,14 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query Profile {
+  query EthBalance {
     web3 {
       primaryAccount {
         id
-        checksumAddress
+        balance {
+          eth
+        }
       }
-      walletType
     }
   }
 `
