@@ -128,7 +128,7 @@ async function createInviteCode(accountId) {
   const code =
     `${accountId.substring(2, 5)}` +
     `${accountId.substring(accountId.length - 3, accountId.length)}` +
-    `${toReadableHex(Math.round(Math.random() * 1000000))}`
+    `${(Math.round(Math.random() * 1000000)).toString(16)}`
 
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
@@ -136,25 +136,6 @@ async function createInviteCode(accountId) {
   })
 
   logger.info(`Invite code: ${code}: created for user: ${accountId}`)
-}
-
-/* Converts integer to readable hex Example:
- * inputNumber: 1 -> returns 'aab'
- * inputNumber: 12 -> returns 'aam'
- * inputNumber: 99 -> returns 'aed'
- * inputNumber: 12345 -> returns 'zkj'
- * inputNumber: 591231 -> returns 'bttkp'
- */
-function toReadableHex(inputNumber) {
-  let hash = ''
-  const alphabet = 'abcdefghijklmnoprstuvzyw'
-
-  do {
-    hash = alphabet[inputNumber % alphabet.length] + hash
-    inputNumber = parseInt(inputNumber / alphabet.length, 10)
-  } while (inputNumber)
-
-  return hash.padStart(3, 'a')
 }
 
 module.exports = { authenticateEnrollment, getUserAuthenticationStatus }
