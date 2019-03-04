@@ -2,7 +2,6 @@
 
 const eth = require('web3-eth')
 const Web3 = require('web3')
-const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 const Attestation = require('../models/index').Attestation
 const constants = require('../constants')
 const stringify = require('json-stable-stringify')
@@ -48,17 +47,17 @@ async function generateAttestation(
 }
 
 function generateAttestationSignature(privateKey, subject, data) {
-  if (!web3.utils.isHexStrict(privateKey)) {
+  if (!Web3.utils.isHexStrict(privateKey)) {
     throw 'Invalid private key, not a hex string'
   }
-  const hashToSign = web3.utils.soliditySha3(
+  const hashToSign = Web3.utils.soliditySha3(
     {
       t: 'address',
-      v: web3.utils.toChecksumAddress(subject)
+      v: Web3.utils.toChecksumAddress(subject)
     },
     {
       t: 'bytes32',
-      v: web3.utils.sha3(data)
+      v: Web3.utils.sha3(data)
     }
   )
   const signedMessage = new eth().accounts.sign(hashToSign, privateKey)

@@ -1,11 +1,10 @@
 'use strict'
 
 const Web3 = require('web3')
-const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 const dictionary = require('./dictionary')
 
 function generateAirbnbCode(ethAddress, userId) {
-  const hashCode = web3.utils.sha3(ethAddress + userId).substr(-7)
+  const hashCode = Web3.utils.sha3(ethAddress + userId).substr(-7)
   return Array.prototype.map
     .call(hashCode, i => dictionary[i.charCodeAt(0)])
     .join(' ')
