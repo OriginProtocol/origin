@@ -53,8 +53,14 @@ const rule = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
-            conditionTranslateKey: 'growth.profile.and.email.requirement',
-            conditionIcon: 'images/growth/email-icon-small.svg'
+            unlockConditionMsg: [{
+              conditionTranslateKey: 'growth.profile.requirement',
+              conditionIcon: 'images/growth/email-icon-small.svg'
+            },
+            {
+              conditionTranslateKey: 'growth.email.requirement',
+              conditionIcon: 'images/growth/email-icon-small.svg'
+            }]
           }
         }
       ]
@@ -131,8 +137,10 @@ const rule = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
-            conditionTranslateKey: 'growth.two.attestations.requirement',
-            conditionIcon: 'images/growth/email-icon-small.svg'
+            unlockConditionMsg: [ {
+              conditionTranslateKey: 'growth.two.attestations.requirement',
+              conditionIcon: 'images/growth/attestation-icon.svg'
+            }]
           }
         }
       ]

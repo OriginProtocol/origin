@@ -152,33 +152,40 @@ function Action(props) {
   if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
     title = 'Verify your Email'
-    infoText = 'Confirm your email in attestations'
+    infoText = 'Confirm your email address in Attestations.'
   } else if (type === 'Profile') {
-    foregroundImgSrc = '/images/identity/email-icon-light.svg'
-    title = 'Update your name and picture'
-    infoText = 'Edit your profile and update your name and picture'
+    foregroundImgSrc = '/images/growth/profile-icon.svg'
+    title = 'Verify your Origin Profile'
+    infoText = 'Connect your Origin Profile in Attestations.'
   } else if (type === 'Phone') {
     foregroundImgSrc = '/images/identity/phone-icon-light.svg'
     title = 'Verify your Phone Number'
-    infoText = 'Confirm your phone number in attestations'
+    infoText = 'Confirm your phone number in Attestations.'
   } else if (type === 'Twitter') {
     foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
     title = 'Connect your Twitter Profile'
-    infoText = 'Connect your Twitter Profile in attestationts'
+    infoText = 'Connect your Twitter Profile in Attestationts.'
   } else if (type === 'Airbnb') {
     foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
     title = 'Connect your Airbnb Profile'
-    infoText = 'Connect your Airbnb Profile in attestations'
+    infoText = 'Connect your Airbnb Profile in Attestations.'
   } else if (type === 'Facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = 'Connect your Facebook Profile'
-    infoText = 'Connect your Facebook Profile in attestations'
+    infoText = 'Connect your Facebook Profile in Attestations.'
   } else if (type === 'ListingCreated') {
-    title = 'Create a listing'
-    infoText = 'Create a new listing on the marketplace'
+    foregroundImgSrc = '/images/growth/purchase-icon.svg'
+    title = 'Create a Listing'
+    infoText = 'Successfully complete the purchase of any one listing.'
     buttonLink = '/create'
   } else if (type === 'ListingPurchased') {
-    title = 'Purchase a listing'
+    foregroundImgSrc = '/images/growth/purchase-icon.svg'
+    title = 'Purchase a Listing'
+    infoText = 'Successfully complete the sale of any one listing.'
+    buttonLink = '/'
+  } else if (type === 'ListingSold') {
+    foregroundImgSrc = '/images/growth/sell-icon.svg'
+    title = 'Sell a Listing'
     infoText = 'Purchase a listing on marketplace'
     buttonLink = '/'
   } else if (type === 'Referral') {
@@ -250,7 +257,7 @@ function Action(props) {
               {unlockConditions.map(unlockCondition => {
                 return (
                   <div
-                    className="requirement d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2"
+                    className="requirement d-flex align-items-center pl-2 pt-2 pb-2 mt-2"
                     key={unlockCondition.messageKey}
                   >
                     <img src={unlockCondition.iconSource} />
@@ -601,9 +608,9 @@ require('react-styl')(`
         width: 72px
       .profile
         position: absolute
-        left: 20px
-        top: 27px
-        width: 30px
+        left: 19px
+        top: 18px
+        width: 35px
       .email
         position: absolute
         left: 20px
@@ -629,6 +636,16 @@ require('react-styl')(`
         left: 17px
         top: 22px
         width: 39px
+      .listingsold
+        position: absolute
+        left: 15px
+        top: 20px
+        width: 45px
+      .listingpurchased
+        position: absolute
+        left: 17px
+        top: 21px
+        width: 40px
       .lock
         position: absolute
         right: -12px
@@ -661,6 +678,7 @@ require('react-styl')(`
         margin-right: 6px
       .requirement
         padding-right: 10px
+        margin-right: 10px
         height: 28px
         background-color: var(--pale-grey)
         border-radius: 52px

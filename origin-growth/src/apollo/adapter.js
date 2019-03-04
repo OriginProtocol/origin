@@ -126,12 +126,17 @@ const conditionToUnlockRule = (rule, allRules) => {
   return allRules
     .filter(allRule => allRule.levelId === rule.levelId - 1)
     .filter(allRule => allRule.config.nextLevelCondition === true)
-    .map(allRule => {
-      return {
-        messageKey: allRule.config.conditionTranslateKey,
-        iconSource: allRule.config.conditionIcon
-      }
-    })
+    .flatMap(allRule =>
+      allRule
+      .config
+      .unlockConditionMsg
+      .map(conditionMessage => {
+        return {
+          messageKey: conditionMessage.conditionTranslateKey,
+          iconSource: conditionMessage.conditionIcon
+        }
+      })
+    )
 }
 
 /**
