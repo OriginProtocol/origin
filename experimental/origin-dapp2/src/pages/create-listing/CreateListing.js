@@ -48,6 +48,15 @@ class CreateListing extends Component {
   }
 
   setListing(listing) {
+    console.log('Saving Listing Changes. New listing:')
+    console.log(listing)
+    console.log('Old listing:')
+    console.log(this.state.listing)
+    console.log('Diff:')
+    // Debugging
+    // See: https://stackoverflow.com/a/25651677
+    const diff = _.omit(listing, function(v,k) { return this.state.listing[k] === v; })
+    console.log(diff)
     store.set('create-listing', listing)
     this.setState({ listing })
   }

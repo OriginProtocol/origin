@@ -7,7 +7,7 @@ import Link from '../../../../components/Link'
 import Wallet from '../../../../components/Wallet'
 import ImagePicker from '../../../../components/ImagePicker'
 import Price from '../../../../components/Price'
-import { formInput, formFeedback } from '../../../../utils/formHelpers'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Details extends Component {
   constructor(props) {

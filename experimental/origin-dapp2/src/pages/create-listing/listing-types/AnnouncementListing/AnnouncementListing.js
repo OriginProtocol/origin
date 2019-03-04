@@ -25,11 +25,6 @@ class AnnouncementListing extends Component {
     }
   }
 
-  setListing(listing, step) {
-    this.setState({listing})
-    store.set('create-listing', listing)
-  }
-
   render() {
     const steps=1
     switch (this.state.step) {

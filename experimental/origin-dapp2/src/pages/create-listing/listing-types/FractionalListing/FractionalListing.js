@@ -30,11 +30,6 @@ class FractionalListing extends Component {
     }
   }
 
-  setListing(listing, step) {
-    this.setState({listing})
-    store.set('create-listing', listing)
-  }
-
   render() {
     const steps=3
     switch (this.state.step) {
@@ -50,7 +45,7 @@ class FractionalListing extends Component {
             step = {1}
             onPrev={() => this.setState({step: 0})}
             onNext={() => this.setState({step: 2})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       case 2:
@@ -62,7 +57,7 @@ class FractionalListing extends Component {
             tokenBalance={this.props.tokenBalance}
             onPrev={() => this.setState({step: 1})}
             onNext={() => this.setState({step: 3})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       case 3:
@@ -74,7 +69,7 @@ class FractionalListing extends Component {
             tokenBalance={this.props.tokenBalance}
             onPrev={() => this.setState({step: 2})}
             onNext={() => this.setState({step: 4})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       case 4:
@@ -86,7 +81,7 @@ class FractionalListing extends Component {
             tokenBalance={this.props.tokenBalance}
             onPrev={() => this.setState({step: 3})}
             onNext={() => this.setState({step: 5})}
-            onChange={listing => this.setListing(listing)}
+            onChange={listing => this.props.onChange(listing)}
           />
         )
       default:

@@ -62,7 +62,7 @@ class Availability extends Component {
                   range={this.state.range}
                   availability={this.state.calculator}
                   onChange={state => {
-                    console.log('yo');
+                    console.log('yo'); // TODO(STAN)
                     console.log(state);
                     this.setState(state)}
                   }

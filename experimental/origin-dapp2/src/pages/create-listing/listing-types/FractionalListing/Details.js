@@ -86,7 +86,7 @@ class Details extends Component {
                       <div className="with-symbol corner">
                         <Price
                           el="input"
-                          amount={this.state.price}
+                          amount={this.props.listing.price}
                           className="form-control form-control-lg"
                         />
                         <span className="usd">USD</span>
