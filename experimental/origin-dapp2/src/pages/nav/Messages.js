@@ -22,7 +22,6 @@ class MessagesNav extends Component {
     return (
       <Query query={MessagingQuery} pollInterval={2000}>
         {({ data, loading, error }) => {
-          if (loading || error) return null
           const enabled = get(data, 'messaging.enabled', false)
           const totalUnread = get(data, 'messaging.totalUnread', 0)
           const hasUnread = totalUnread > 0 ? ' active' : ''
@@ -35,6 +34,8 @@ class MessagesNav extends Component {
               onClose={() => this.props.onClose()}
               content={
                 <MessagesDropdownWithRouter
+                  error={error}
+                  loading={loading}
                   enabled={enabled}
                   onClick={() => this.props.onClose()}
                   totalUnread={totalUnread}
@@ -66,7 +67,22 @@ class MessagesNav extends Component {
 class MessagesDropdown extends Component {
   state = {}
   render() {
-    const { onClick, totalUnread, enabled } = this.props
+    const { onClick, totalUnread, enabled, loading, error } = this.props
+
+    if (loading) {
+      return (
+        <div className="dropdown-menu dropdown-menu-right show p-3">
+          Loading...
+        </div>
+      )
+    }
+    if (error) {
+      return (
+        <div className="dropdown-menu dropdown-menu-right show p-3">
+          Error loading messages
+        </div>
+      )
+    }
 
     return (
       <div className="dropdown-menu dropdown-menu-right show">

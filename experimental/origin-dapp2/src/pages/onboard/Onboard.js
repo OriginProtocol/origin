@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
+
+import store from 'utils/store'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
 import { Messaging } from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
+
+const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
   render() {
@@ -37,6 +41,10 @@ class Onboard extends Component {
           <Route
             path={`${linkPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} />}
+          />
+          <Redirect
+            from={`${linkPrefix}/onboard/back`}
+            to={sessionStore.get('getStartedRedirect', '/')}
           />
           <Route render={() => <Wallet listing={listing} />} />
         </Switch>
