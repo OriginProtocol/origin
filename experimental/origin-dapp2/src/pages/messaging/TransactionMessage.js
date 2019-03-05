@@ -7,6 +7,13 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { truncateAddress } from 'utils/user'
 dayjs.extend(advancedFormat)
 
+function withdrawnOrRejected(buyer, user) {
+  const withdrawnMessage = `${buyer} withdrew their offer for`
+  const rejectedMessage = `${user} rejected the offer for`
+
+  return buyer === user ? withdrawnMessage : rejectedMessage
+}
+
 const TransactionMessage = props => {
   const { identity, message, userAddress } = props
   const listingTitle = get(message, 'listing.title')
@@ -15,18 +22,25 @@ const TransactionMessage = props => {
   const seller = get(message, 'listing.seller.id')
   const user = get(message, 'address')
   const roomParticipant = user === buyer || user === seller
+  const date = dayjs.unix(message.timestamp).format('MMM Do h:mmA')
 
   const offerMessages = {
     createdEvent: (
       <>
-        {truncateAddress(buyer)} made an offer on {listingTitle} on {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
+        {truncateAddress(buyer)} made an offer on {listingTitle} on {date}
       </>
     ),
     acceptedEvent: (
       <>
-        {truncateAddress(seller)} accepted the offer for {listingTitle} on {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
-      </  >
-    )
+        {truncateAddress(seller)} accepted the offer for {listingTitle} on {date}
+      </>
+    ),
+    withdrawnEvent: (
+      <>
+        {withdrawnOrRejected(buyer, user)} {listingTitle} on {date}
+      </>
+    ),
+
   }
 
   if (!roomParticipant || !message) return null

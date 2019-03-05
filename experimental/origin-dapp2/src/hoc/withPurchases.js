@@ -1,12 +1,24 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import pick from 'lodash/pick'
+import isNil from 'lodash/isNil'
+import flatten from 'lodash/flatten'
 
 import PurchaseQuery from 'queries/Purchases'
+
+const eventKeys = [
+  'createdEvent',
+  'acceptedEvent',
+  'disputedEvent',
+  'rulingEvent',
+  'finalizedEvent'
+]
 
 function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
   const WithOfferEvents = props => {
     const id = get(props, walletProp)
+    console.log("SO NO WALLET THEN", id)
     if (!id) {
       return <WrappedComponent {...props} />
     }
@@ -15,7 +27,6 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
       <Query query={PurchaseQuery} variables={{ id }}>
         {({ data }) => {
           const purchases = get(data, 'marketplace.user.offers.nodes', [])
-
           const updatedPurchaseEvents = purchases.map(purchase => {
             const purchaseEvents = pick(purchase, eventKeys)
             const purchaseProps = pick(purchase, [
@@ -35,7 +46,7 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
                     offerEvent: purchaseEvents[value],
                     offerTitle: value,
                     ...purchaseProps,
-                    address: get(offer, 'listing.seller.id')
+                    address: get(purchase, 'buyer.id')
                   }
                 ]
               return result
@@ -46,7 +57,7 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
             <WrappedComponent
               {...props}
               purchases={purchases}
-              purchaseEvents={updatedPurchaseEvents}
+              purchaseEvents={flatten(updatedPurchaseEvents)}
             />
           )
         }}

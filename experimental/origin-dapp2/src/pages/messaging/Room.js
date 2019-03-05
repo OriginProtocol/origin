@@ -131,7 +131,7 @@ const MessagesWithOffers = withOffers(AllMessages)
 
 class Room extends Component {
   render() {
-    const { id, wallet, markRead, purchases = [] } = this.props
+    const { id, wallet, markRead, purchaseEvents = [] } = this.props
     return (
       <div className="container">
         <Query
@@ -158,7 +158,7 @@ class Room extends Component {
                   wallet={wallet}
                   convId={id}
                   markRead={() => markRead({ variables: { id } })}
-                  purchases={purchases}
+                  purchaseEvents={purchaseEvents}
                 />
                 <SendMessage to={this.props.id} />
               </>
