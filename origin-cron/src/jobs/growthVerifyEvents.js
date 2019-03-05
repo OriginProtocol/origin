@@ -1,4 +1,4 @@
-const logger = require('./logger')
+const logger = require('../logger')
 const VerifyEvents = require('origin-growth/src/scripts/verifyEvents')
 
 async function GrowthVerifyEventsJob(job) {
@@ -25,18 +25,9 @@ async function GrowthVerifyEventsJob(job) {
 
   const stats = verifier.stats
   logger.info('Events verification stats:')
-  logger.info(
-    '  Number of events processed:          ',
-    stats.numProcessed
-  )
-  logger.info(
-    '  Number of events marked as verified :',
-    stats.numVerified
-  )
-  logger.info(
-    '  Number of events marked as fraud    :',
-    stats.numFraud
-  )
+  logger.info('  Number of events processed:          ', stats.numProcessed)
+  logger.info('  Number of events marked as verified :', stats.numVerified)
+  logger.info('  Number of events marked as fraud    :', stats.numFraud)
 
   logger.info(`Job GrowthVerifyEventsJob id=${job.id} finished.`)
   job.progress(100)
