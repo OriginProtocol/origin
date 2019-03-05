@@ -43,8 +43,6 @@ class Boost extends Component {
     // const isEdit = this.props.mode === 'edit'
 
     if (this.state.valid) {
-      // return <Redirect to={`${prefix}/review`} push />
-
       // Advance to next step
       this.props.onNext()
     }
