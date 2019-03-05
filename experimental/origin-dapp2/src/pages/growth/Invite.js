@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import Link from 'components/Link'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import inviteCodeQuery from 'queries/InviteCode'
+import { formInput, formFeedback } from 'utils/formHelpers'
+import InviteFriends from 'mutations/InviteFriends'
 
 function NavigationItem(props) {
   const { selected, onClick, title } = props
@@ -28,7 +30,11 @@ class GrowthInvite extends Component {
     this.state = {
       subPage: 'sendInvites',
       inviteCode: 'origin-invite-code',
-      showCopyConfirmation: false
+      inviteEmails: '',
+      inviteEmailsConfirmation: false,
+      inviteEmailsMutationError: false,
+      showCopyConfirmation: false,
+      valid: true
     }
   }
 
@@ -48,7 +54,7 @@ class GrowthInvite extends Component {
     // reset copy confirmation after 3 seconds
     setTimeout(() => {
       this.setState({ showCopyConfirmation: false })
-    }, 3000)
+    }, 5000)
   }
 
   handleNavigationClick(navigationState) {
@@ -71,8 +77,22 @@ class GrowthInvite extends Component {
     window.open('https://twitter.com/intent/tweet?text=')
   }
 
+  resetEmailFormMessages(timeout = 5000) {
+    setTimeout(() => {
+      this.setState({
+        inviteEmailsConfirmation: false,
+        inviteEmailsMutationError: false,
+      })
+    }, timeout)
+  }
+
   renderSendInvites() {
-    const { showCopyConfirmation, inviteCode } = this.state
+    const {
+      showCopyConfirmation,
+      inviteCode,
+      inviteEmailsConfirmation,
+      inviteEmailsMutationError
+    } = this.state
 
     return (<Query
       query={inviteCodeQuery}
@@ -88,6 +108,9 @@ class GrowthInvite extends Component {
         } else if (error) {
           return <QueryError error={error} query={inviteCodeQuery} />
         }
+
+        const input = formInput(this.state, state => this.setState(state))
+        const Feedback = formFeedback(this.state)
 
         return (
           <div className="send-invites mt-4 pt-2">
@@ -138,23 +161,105 @@ class GrowthInvite extends Component {
               </div>
             </div>
 
-            <div className="empasis mt-5">Invite via Email</div>
-            <div>Enter email addresses of friends you want to invite</div>
-            <textarea
-              name="invite-email"
-              className="email-text p-3"
-              cols="50"
-              rows="5"
-              placeholder="Separate email addresses with commas."
-            />
-            <button
-              className="btn btn-primary btn-rounded mt-2"
-              children="Invite Friends"
-            />
+            <Mutation
+              mutation={InviteFriends}
+              onCompleted={({ invite }) => {
+                if (invite) {
+                  this.setState({
+                    inviteEmailsConfirmation: `Total ${this.state.emails.length} Email invitation(s) sent!`
+                  })
+                } else {
+                  this.setState({
+                    inviteEmailsMutationError: 'Can not invite friends. Please try again later.'
+                  })
+                }
+                this.resetEmailFormMessages()
+              }}
+              onError={errorData => {
+                console.log('Error: ', errorData)
+                this.setState({
+                  inviteEmailsMutationError: 'Error inviting friends. Please try again later.'
+                })
+                this.resetEmailFormMessages()
+              }}
+            >
+              {invite => (
+                <form
+                  onSubmit={e => {
+                    e.preventDefault()
+                    this.validateEmailsInput(invite)
+                  }}
+                >
+                  <div className="empasis mt-5">Invite via Email</div>
+                  <div>Enter email addresses of friends you want to invite</div>
+                  <textarea
+                    {...input('inviteEmails')}
+                    className="email-text p-3"
+                    cols="50"
+                    rows="5"
+                    placeholder="Separate email addresses with commas."
+                  />
+                  {Feedback('inviteEmails')}
+                  {inviteEmailsConfirmation && <div
+                    className="invite-confirmation"
+                  >
+                    {inviteEmailsConfirmation}
+                  </div>}
+                  {inviteEmailsMutationError && <div
+                    className="invite-error"
+                  >
+                    {inviteEmailsMutationError}
+                  </div>}
+                  <button
+                    className="btn btn-primary btn-rounded mt-2"
+                    type="submit"
+                    children="Invite Friends"
+                  />
+                </form>
+              )}
+            </Mutation>
           </div>
         )
       }}
     </Query>)
+  }
+
+  extractEmails(commaSeparatedEmails) {
+    return commaSeparatedEmails
+      .split(',')
+      .map(email => email.trim().toLowerCase())
+      .filter(email => email.length > 4)
+  }
+
+  validateEmailsInput(invite) {
+    const newState = {
+      valid: true
+    }
+
+    const emails = this.extractEmails(this.state.inviteEmails)
+
+    var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const errorneousEmails = emails
+      .filter(email => !emailRegex.test(email))
+    
+
+    if (errorneousEmails.length > 0) {
+      newState.inviteEmailsError = `Incorrect email format: ${errorneousEmails.join(',')}`
+      newState.valid = false 
+    } else if (emails.length === 0) {
+      newState.inviteEmailsError = 'Insert at least 1 valid email address'
+      newState.valid = false 
+    }
+    
+    newState.emails = emails 
+    if (newState.valid) {
+      invite({
+        variables: { emails }
+      })
+    }
+
+    this.setState(newState)
+    return newState.valid
   }
 
   renderTrackInvites() {
@@ -267,4 +372,11 @@ require('react-styl')(`
         margin-left: 5px
       .social-btn:hover
         background-color: var(--pale-grey)
+      .invite-confirmation
+        font-size: 18px
+      .invalid-feedback
+        font-size: 18px
+      .invite-error
+        font-size: 18px
+        color: var(--red)
 `)

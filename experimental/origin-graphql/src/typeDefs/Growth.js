@@ -150,7 +150,7 @@ module.exports =
 
   type Mutation {
     # Sends email invites with referral code on behalf of the referrer.
-    invite(walletAddress: ID!, emails: [String!]!): Boolean
+    invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
     enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
     # Records a growth engine event.

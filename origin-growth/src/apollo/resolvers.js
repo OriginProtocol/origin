@@ -10,7 +10,7 @@ const {
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
-const { sendInviteEmails } = require('../resources/email')
+const { sendInvites } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -115,11 +115,12 @@ const resolvers = {
     // Sends email invites with referral code on behalf of the referrer.
     async invite(_, args, context) {
       requireEnrolledUser(context)
+      const walletAddress = (await getUser(context.authToken)).ethAddress
 
       logger.info('invite mutation called.')
       // FIXME:
       //  b. Implement rate limiting to avoid spam attack.
-      await sendInviteEmails(args.walletAddress, args.emails)
+      await sendInvites(walletAddress, args.emails)
       return true
     },
     async enroll(_, args) {
