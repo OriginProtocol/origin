@@ -1,6 +1,5 @@
 ---
 steps:
-  # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
@@ -78,6 +77,13 @@ steps:
           _ENVKEY=$(cat $${_SECRETS_FILE} | grep ${_ENVKEY_FIELD} | cut -d " " -f 2)
         else
           _ENVKEY=false
+        fi
+
+        # Checkout private fraud code if deploying origin-growth
+        if [[ "${_CONTAINER}" = "origin-growth" ]]; then
+          git clone ssh://tom@originprotocol.com@source.developers.google.com:2022/p/origin-214503/r/origin-fraud
+          mv ./origin-fraud/prod.js ./origin-growth/src/fraud
+          rm -rf origin-fraud
         fi
 
         # Build container
