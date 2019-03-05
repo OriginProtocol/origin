@@ -13,10 +13,12 @@ Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
 
 let FraudEngine
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_FRAUD) {
   FraudEngine = require('../fraud/prod')
+  logger.info('Loaded PROD fraud engine.')
 } else {
   FraudEngine = require('../fraud/dev')
+  logger.info('Loaded DEV fraud engine.')
 }
 
 class VerifyEvents {
