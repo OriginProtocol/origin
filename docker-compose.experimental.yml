@@ -51,6 +51,7 @@ services:
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
       - ./experimental/origin-validator:/app/experimental/origin-validator/
+      - ./origin-bridge/:/app/origin-bridge/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/
@@ -69,6 +70,7 @@ services:
       - /app/experimental/origin-messaging-client/node_modules/
       - /app/experimental/origin-linker-client/node_modules/
       - /app/experimental/origin-validator/node_modules/
+      - /app/origin-bridge/node_modules/
       - /app/origin-discovery/node_modules/
       - /app/origin-ipfs-proxy/node_modules/
       - /app/origin-messaging/node_modules/
@@ -204,20 +206,16 @@ services:
 
   origin-bridge:
     container_name: origin-bridge
-    image: origin-bridge
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-bridge
-    volumes:
-      - ./origin-bridge:/app
-      # Set the envfile from the local envfile
-      - ./development/envfiles/origin-bridge.env:/app/.env
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     depends_on:
       - postgres
-    environment:
-      - FLASK_APP=/app/main.py
-      - FLASK_DEBUG=True
-      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
-    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-bridge &&
+      npm run start --prefix origin-bridge"

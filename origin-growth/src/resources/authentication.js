@@ -33,7 +33,7 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
 
   const participant = await db.GrowthParticipant.findOne({
     where: {
-      ethAddress: accountId
+      ethAddress: accountId.toLowerCase()
     }
   })
 
@@ -48,13 +48,16 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   const authToken =
     participant === null
       ? crypto.randomBytes(64).toString('hex')
-      : participant.authToken
+      : /* If user uses growth from 2 devices let them share the same auth token.
+         * The caveat is user will need to agree to the terms also on the second
+         * device.
+         */
+        participant.authToken
 
   const participantData = {
-    ethAddress: accountId,
+    ethAddress: accountId.toLowerCase(),
     status: enums.GrowthParticipantStatuses.Active,
     agreementId: agreementMessage,
-    // if user uses growth from 2 devices let them share the same auth token
     authToken: authToken
   }
 
@@ -73,18 +76,27 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
 /**
  * Fetches user's authentication status
  * @param {string} token - Growth authentication token
+ * @param {string} accountId - Optional accountIOd parameter
  *
  * returns GrowthParticipantAuthenticationStatus
  *  - Enrolled -> user participates in growth campaign
  *  - Banned -> user is banned
  *  - NotEnrolled -> user not a participant yet
  */
-async function getUserAuthenticationStatus(token) {
-  const growthParticipant = await db.GrowthParticipant.findOne({
+async function getUserAuthenticationStatus(token, accountId) {
+  if (!token) {
+    return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+  }
+
+  const whereFilter = {
     where: {
       authToken: token
     }
-  })
+  }
+  if (accountId !== undefined)
+    whereFilter.where.ethAddress = accountId.toLowerCase()
+
+  const growthParticipant = await db.GrowthParticipant.findOne(whereFilter)
 
   if (growthParticipant === null) {
     return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
@@ -98,6 +110,7 @@ async function getUserAuthenticationStatus(token) {
 }
 
 async function createInviteCode(accountId) {
+  accountId = accountId.toLowerCase()
   const existingInvite = await db.GrowthInviteCode.findOne({
     where: {
       ethAddress: accountId
@@ -109,14 +122,16 @@ async function createInviteCode(accountId) {
     return
   }
 
+  /* Consists of first 3 and last 3 ether address letters plus hex
+   * representation of a random number
+   */
   const code =
-    `${accountId.substring(2, 5)}-` +
-    `${accountId.substring(5, 8)}-` +
-    `${accountId.substring(accountId.length - 3, accountId.length)}`
+    `${accountId.substring(2, 5)}` +
+    `${accountId.substring(accountId.length - 3, accountId.length)}` +
+    `${Math.round(Math.random() * 1000000).toString(16)}`
 
   await db.GrowthInviteCode.create({
     ethAddress: accountId,
-    // Consists of first 6 and last 3 ether address letters
     code
   })
 

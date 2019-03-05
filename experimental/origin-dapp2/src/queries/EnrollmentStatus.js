@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query {
-    enrollmentStatus
+  query EnrollmentStatus($walletAddress: ID!) {
+    enrollmentStatus(walletAddress: $walletAddress)
   }
 `

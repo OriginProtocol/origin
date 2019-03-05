@@ -4,6 +4,7 @@ import { withApollo, Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
+import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
 
@@ -196,7 +197,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) return `Loading...`
+            if (networkStatus === 1 || loading) return 'Loading...'
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
@@ -235,34 +236,57 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
+
       return (
-        <Query query={enrollmentStatusQuery}>
-          {({ networkStatus, error, loading, data }) => {
+        <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
+          {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return ''
+              return 'Loading...'
             } else if (error) {
-              return <QueryError error={error} query={growthEligibilityQuery} />
+              return <QueryError error={error} query={profileQuery} />
             }
 
+            const walletAddress = data.web3.primaryAccount.id
             return (
-              <Fragment>
-                <WrappedComponent
-                  {...this.props}
-                  onClick={e => this.handleClick(e, data.enrollmentStatus)}
-                />
-                {open && (
-                  <Modal
-                    className="growth-enrollment-modal"
-                    onClose={() => {
-                      this.setState({
-                        open: false
-                      })
-                    }}
-                  >
-                    {this[`render${this.state.stage}`]()}
-                  </Modal>
-                )}
-              </Fragment>
+              <Query
+                query={enrollmentStatusQuery}
+                variables={{ walletAddress }}
+                // enrollment info can change, do not cache it
+                fetchPolicy="network-only"
+              >
+                {({ networkStatus, error, loading, data }) => {
+                  if (networkStatus === 1 || loading) {
+                    return 'Loading...'
+                  } else if (error) {
+                    return (
+                      <QueryError error={error} query={enrollmentStatusQuery} />
+                    )
+                  }
+
+                  return (
+                    <Fragment>
+                      <WrappedComponent
+                        {...this.props}
+                        onClick={e =>
+                          this.handleClick(e, data.enrollmentStatus)
+                        }
+                      />
+                      {open && (
+                        <Modal
+                          className="growth-enrollment-modal"
+                          onClose={() => {
+                            this.setState({
+                              open: false
+                            })
+                          }}
+                        >
+                          {this[`render${this.state.stage}`]()}
+                        </Modal>
+                      )}
+                    </Fragment>
+                  )
+                }}
+              </Query>
             )
           }}
         </Query>

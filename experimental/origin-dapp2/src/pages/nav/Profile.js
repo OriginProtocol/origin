@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
 import get from 'lodash/get'
 
+import withNetwork from 'hoc/withNetwork'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 import UnlinkMobileWalletMutation from 'mutations/UnlinkMobileWallet'
@@ -19,9 +20,8 @@ class ProfileNav extends Component {
   }
 
   render() {
-    // TODO: Bring back pollInterval={1000} for wallet linking?
     return (
-      <Query query={ProfileQuery}>
+      <Query query={ProfileQuery} pollInterval={1000}>
         {({ data, loading, error }) => {
           if (error) console.error(error)
           if (loading || error) return null
@@ -64,17 +64,21 @@ class ProfileNav extends Component {
   }
 }
 
+const Network = withNetwork(({ networkName }) => (
+  <div className="connected">
+    {`Connected to `}
+    <span className="net">{networkName}</span>
+  </div>
+))
+
 const ProfileDropdown = ({ data, onClose }) => {
-  const { checksumAddress, balance, id } = data.web3.primaryAccount
+  const { checksumAddress, id } = data.web3.primaryAccount
   const mobileWallet = data.web3.walletType.startsWith('mobile-')
   return (
     <Mutation mutation={UnlinkMobileWalletMutation}>
       {unlinkMutation => (
         <div className="dropdown-menu dark dropdown-menu-right show profile">
-          <div className="connected">
-            {`Connected to `}
-            <span className="net">{data.web3.networkName}</span>
-          </div>
+          <Network />
           <div className="wallet-info">
             <div>
               <h5>ETH Address</h5>
@@ -84,7 +88,7 @@ const ProfileDropdown = ({ data, onClose }) => {
               <Identicon size={50} address={checksumAddress} />
             </div>
           </div>
-          <Balances balance={balance} account={id} />
+          <Balances account={id} />
           <Identity id={id} />
           {mobileWallet && (
             <a

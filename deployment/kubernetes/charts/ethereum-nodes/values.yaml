@@ -6,7 +6,7 @@ ethstatsImage: ethereumex/eth-stats-dashboard
 ethstatsImageTag: latest
 
 gethImage: ethereum/client-go
-gethImageTag: v1.8.13
+gethImageTag: v1.8.23
 gethTxReplicas: 1
 
 storageClass: ssd
