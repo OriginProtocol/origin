@@ -56,10 +56,7 @@ class Details extends Component {
                     Make sure to include any product variant details here. Learn
                     more
                   </div>
-                  <textarea
-                    {...input('description')}
-                    placeholder="Tell us a bit about this listing"
-                  />
+                  <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
 
@@ -67,10 +64,7 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>Quantity</label>
-                  <input
-                    {...input('quantity')}
-                    placeholder="How many are you selling?"
-                  />
+                  <input {...input('quantity')} />
                   {Feedback('quantity')}
                 </div>
                 <div className="form-group">

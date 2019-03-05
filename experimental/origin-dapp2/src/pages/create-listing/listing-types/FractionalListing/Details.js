@@ -55,10 +55,7 @@ class Details extends Component {
                     Make sure to include any product variant details here. Learn
                     more
                   </div>
-                  <textarea
-                    {...input('description')}
-                    placeholder="Tell us a bit about this listing"
-                  />
+                  <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
 
@@ -79,7 +76,7 @@ class Details extends Component {
                       <div className="with-symbol corner">
                         <Price
                           el="input"
-                          amount={this.props.listing.price}
+                          amount={this.state.price}
                           className="form-control form-control-lg"
                         />
                         <span className="usd">USD</span>
@@ -119,13 +116,25 @@ class Details extends Component {
                 {/* END Homeshare specific code */}
 
                 <div className="form-group">
-                  <label>Add Photos</label>
+                  <label>Select photos</label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
                   >
-                    <div className="add-photos">Add photo</div>
+                    <div className="add-photos">Select photos</div>
                   </ImagePicker>
+                  <ul className="help-text photo-help list-unstyled">
+                    <li>
+                      Hold down &apos;command&apos; (⌘) to select multiple
+                      images.
+                    </li>
+                    <li>Maximum 10 images per listing.</li>
+                    <li>
+                      First image will be featured - drag and drop images to
+                      reorder.
+                    </li>
+                    <li>Recommended aspect ratio is 4:3</li>
+                  </ul>
                 </div>
 
                 <div className="actions">
@@ -145,7 +154,7 @@ class Details extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <Wallet />
           <div className="gray-box">
             <h5>Add Listing Details</h5>
@@ -173,13 +182,21 @@ class Details extends Component {
       newState.descriptionError = 'Description is too short'
     }
 
-    // if (!this.state.price) {
-    //   newState.priceError = 'Price is required'
-    // } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
-    //   newState.priceError = 'Price must be a number'
-    // } else if (Number(this.state.price) <= 0) {
-    //   newState.priceError = 'Price must be greater than zero'
-    // }
+    if (!this.state.price) {
+      newState.priceError = 'Price is required'
+    } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
+      newState.priceError = 'Price must be a number'
+    } else if (Number(this.state.price) <= 0) {
+      newState.priceError = 'Price must be greater than zero'
+    }
+
+    if (!this.state.weekendPrice) {
+      newState.weekendPriceError = 'Price is required'
+    } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
+      newState.weekendPriceError = 'Price must be a number'
+    } else if (Number(this.state.weekendPrice) <= 0) {
+      newState.weekendPriceError = 'Price must be greater than zero'
+    }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
@@ -211,6 +228,7 @@ require('react-styl')(`
       font-size: 18px;
       &.is-invalid
         border-color: #dc3545
+        background-image: none
       &::-webkit-input-placeholder
         color: var(--bluey-grey)
         font-size: 18px;
@@ -250,6 +268,9 @@ require('react-styl')(`
       &.price
         color: var(--bluey-grey)
         margin-top: 0.5rem
+      &.photo-help
+        font-weight: 300
+
   .with-symbol
     position: relative
     &.corner::before
