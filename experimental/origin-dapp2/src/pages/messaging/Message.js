@@ -4,11 +4,10 @@ import get from 'lodash/get'
 import isNil from 'lodash/isNil'
 import dayjs from 'dayjs'
 
-import withIdentity from 'hoc/withIdentity'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 
 import Avatar from 'components/Avatar'
-import OfferMessage from './OfferMessage'
+import TransactionMessage from './TransactionMessage'
 import { abbreviateName, truncateAddress } from 'utils/user'
 
 dayjs.extend(advancedFormat)
@@ -88,11 +87,11 @@ const Message = props => {
 
   if (message.offerTitle) {
     return (
-      <OfferMessage
+      <TransactionMessage
         message={message}
         identity={identity}
         userName={userName}
-        userAddress={userAddress}
+        wallet={props.wallet}
       />
     )
   }
@@ -138,7 +137,7 @@ const Message = props => {
   )
 }
 
-export default withIdentity(Message)
+export default Message
 
 require('react-styl')(`
   .message

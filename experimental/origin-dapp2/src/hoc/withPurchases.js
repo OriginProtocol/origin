@@ -13,12 +13,39 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
 
     return (
       <Query query={PurchaseQuery} variables={{ id }}>
-        {({ data, refetch }) => {
+        {({ data }) => {
           const purchases = get(data, 'marketplace.user.offers.nodes', [])
+
+          const updatedPurchaseEvents = purchases.map(purchase => {
+            const purchaseEvents = pick(purchase, eventKeys)
+            const purchaseProps = pick(purchase, [
+              'offerId',
+              'listing',
+              'buyer'
+            ])
+
+            return Object.keys(purchaseEvents).reduce((result, value) => {
+              if (
+                eventKeys.find(key => key === value) &&
+                !isNil(purchaseEvents[value])
+              )
+                return [
+                  ...result,
+                  {
+                    offerEvent: purchaseEvents[value],
+                    offerTitle: value,
+                    ...purchaseProps
+                  }
+                ]
+              return result
+            }, [])
+          })
+
           return (
             <WrappedComponent
               {...props}
               purchases={purchases}
+              purchaseEvents={updatedPurchaseEvents}
             />
           )
         }}

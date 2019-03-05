@@ -10,11 +10,12 @@ import last from 'lodash/last'
 import withWallet from 'hoc/withWallet'
 import withOffers from 'hoc/withOffers'
 import withPurchases from 'hoc/withPurchases'
+import withIdentity from 'hoc/withIdentity'
 
 import OfferEvents from 'queries/OfferEvents'
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
-import MessageWithIdentity from './Message'
+import Message from './Message'
 import QueryError from 'components/QueryError'
 
 const eventKeys = [
@@ -33,6 +34,8 @@ function getRoomEvents(offers, purchases, { address }) {
     return buyer === address || seller === address
   })
 }
+
+const MessageWithIdentity = withIdentity(Message)
 
 class AllMessages extends Component {
   componentDidMount() {
@@ -60,13 +63,15 @@ class AllMessages extends Component {
       offers = [],
       purchases = [],
       wallet,
-      offerEvents
+      offerEvents,
+      purchaseEvents = []
     } = this.props
     const counterparty = find(
       messages,
       ({ address }) => address !== wallet
     ) || { address: this.props.wallet }
-    const roomEvents = getRoomEvents(offerEvents, purchases, counterparty) || []
+    const roomEvents =
+      getRoomEvents(offerEvents, purchaseEvents, counterparty) || []
 
     const transactionMessages = roomEvents.map(event => {
       return { ...event, timestamp: get(event, 'offerEvent.timestamp') }
