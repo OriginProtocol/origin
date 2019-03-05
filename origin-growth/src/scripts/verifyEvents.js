@@ -12,11 +12,10 @@ const parseArgv = require('../util/args')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
 
-// Load the production fraud engine if available, and fall back to the dev one otherwise.
 let FraudEngine
-try {
+if (process.env.NODE_ENV === 'production') {
   FraudEngine = require('../fraud/prod')
-} catch {
+} else {
   FraudEngine = require('../fraud/dev')
 }
 
