@@ -121,6 +121,7 @@ class Details extends Component {
                 <div className="actions">
                   <button
                     className="btn btn-outline-primary"
+                    type="button"
                     onClick={() => {
                       this.props.onPrev()
                     }}

@@ -61,6 +61,7 @@ class Availability extends Component {
                 <div className="actions">
                   <button
                     className="btn btn-outline-primary"
+                    type="button"
                     onClick={() => {
                       this.props.onPrev()
                     }}
@@ -69,6 +70,7 @@ class Availability extends Component {
                   </button>
                   <button
                     className="btn btn-primary"
+                    type="submit"
                     onClick={() => {
                       this.props.onNext()
                     }}
