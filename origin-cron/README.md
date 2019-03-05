@@ -11,6 +11,14 @@ Steps:
 ## Important notes
   * Jobs should be idempotent since the framework only provides at least once guarantees. For more details, read Bull's [documentation](https://github.com/OptimalBits/bull#important-notes).
 
+## Running in local environment
+  * Install Redis locally
+  * Start the scheduler:
+```
+lerna bootstrap --scope origin-cron
+lerna run start -- scope origin-cron --stream
+```
+
 ## TODO
   * Currently all jobs run on the same node. Consider adding clustering.
   * Bring up a UI for making it easier to inspect the state of the system. [Arena](https://github.com/bee-queue/arena#readme) could be a good choice. We would have to figure how to make that data only accessible to Origin team members. 

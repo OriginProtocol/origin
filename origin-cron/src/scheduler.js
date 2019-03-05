@@ -4,14 +4,10 @@ const path = require('path')
 const Queue = require('bull')
 const logger = require('./logger')
 
-const growthVerifyEventQueue = new Queue(
-  'growthVerifyEvent',
-  'redis://127.0.0.1:6379'
-)
-const growthUpdateCampaignQueue = new Queue(
-  'growthUpdateCampaign',
-  'redis://127.0.0.1:6379'
-)
+const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
+
+const growthVerifyEventQueue = new Queue('growthVerifyEvent', redisUrl)
+const growthUpdateCampaignQueue = new Queue('growthUpdateCampaign', redisUrl)
 
 /**
  * Helper function to log events emitted by a queue.
