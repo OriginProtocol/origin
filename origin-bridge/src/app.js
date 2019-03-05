@@ -28,10 +28,6 @@ const sess = {
 // needed
 sessionStore.sync()
 
-if (process.env.NODE_ENV == 'production') {
-  sess.cookie.secure = true
-}
-
 app.use(session(sess))
 app.use(express.json())
 app.use(cors({ origin: true, credentials: true }))
