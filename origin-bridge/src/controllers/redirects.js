@@ -8,7 +8,7 @@ router.get('/facebook', (req, res) => {
     const dappRedirectUrl = req.query.dappRedirectUrl
     res.redirect(`${dappRedirectUrl}?origin-code=${req.query.code}`)
   } else {
-    res.sendfile('src/static/facebook.html')
+    res.sendFile('src/static/facebook.html')
   }
 })
 
@@ -17,7 +17,7 @@ router.get('/twitter', (req, res) => {
     const dappRedirectUrl = req.query.dappRedirectUrl
     res.redirect(`${dappRedirectUrl}?origin-code=${req.query.oauth_verifier}`)
   } else {
-    res.sendfile('src/static/twitter.html')
+    res.sendFile('src/static/twitter.html')
   }
 })
 

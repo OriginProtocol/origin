@@ -12,12 +12,18 @@ module.exports = {
         type: Sequelize.STRING
       },
       status: {
+        allowNull: false,
         type: Sequelize.ENUM(GrowthParticipantStatuses)
       },
       data: {
         type: Sequelize.JSONB
       },
       agreement_id: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      auth_token: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       created_at: {
