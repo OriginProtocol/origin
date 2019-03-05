@@ -1,9 +1,9 @@
 const logger = require('./logger')
 const VerifyEvents = require('origin-growth/src/scripts/verifyEvents')
 
-async function VerifyGrowthEventsJob(job) {
+async function GrowthVerifyEventsJob(job) {
   logger.info(
-    `Starting job VerifyGrowthEventsJob id=${job.id} data=${job.data} pid=${
+    `Starting job GrowthVerifyEventsJob id=${job.id} data=${job.data} pid=${
       process.pid
     }`
   )
@@ -23,23 +23,24 @@ async function VerifyGrowthEventsJob(job) {
     return Promise.reject(err)
   }
 
+  const stats = verifier.stats
   logger.info('Events verification stats:')
   logger.info(
     '  Number of events processed:          ',
-    verifier.stats.numProcessed
+    stats.numProcessed
   )
   logger.info(
     '  Number of events marked as verified :',
-    verifier.stats.numVerified
+    stats.numVerified
   )
   logger.info(
     '  Number of events marked as fraud    :',
-    verifier.stats.numFraud
+    stats.numFraud
   )
 
-  logger.info(`Job id=${job.id} finished.`)
+  logger.info(`Job GrowthVerifyEventsJob id=${job.id} finished.`)
   job.progress(100)
-  return Promise.resolve({ stats: verifier.stats })
+  return Promise.resolve({ stats })
 }
 
-module.exports = VerifyGrowthEventsJob
+module.exports = GrowthVerifyEventsJob

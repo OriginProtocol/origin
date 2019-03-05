@@ -2,7 +2,8 @@ const path = require('path')
 const Queue = require('bull')
 const logger = require('./logger')
 
-const growthQueue = new Queue('growth', 'redis://127.0.0.1:6379')
+const growthVerifyEventQueue = new Queue('growthVerifyEvent', 'redis://127.0.0.1:6379')
+const growthUpdateCampaignQueue = new Queue('growthUpdateCampaign', 'redis://127.0.0.1:6379')
 
 /**
  * Helper function to log events emitted by a queue.
@@ -71,8 +72,12 @@ logger.info('Starting cron scheduler loop.')
 const absPath = path.dirname(__filename) + path.sep
 
 // Growth verifier job. Runs daily at 20:00UTC (~noon PST).
-watch(growthQueue)
-growthQueue.process(absPath + 'jobVerifyGrowthEvents.js')
-growthQueue.add({ persist: false }, { repeat: { cron: '* 20 * * *' } })
+watch(growthVerifyEventQueue)
+growthVerifyEventQueue.process(absPath + 'jobGrowthVerifyEvents.js')
+growthVerifyEventQueue.add({ persist: false }, { repeat: { cron: '* 20 * * *' } })
 
-// TODO: add other jobs
+// Growth campaign update job. Runs daily at 20:30UTC (~12:30 PST).
+watch(growthUpdateCampaignQueue)
+growthUpdateCampaignQueue.process(absPath + 'jobGrowthUpdateCampaign.js')
+//growthUpdateCampaignQueue.add({ persist: false }, { repeat: { cron: '* 20 * * *' } })
+growthUpdateCampaignQueue.add({ persist: false })
