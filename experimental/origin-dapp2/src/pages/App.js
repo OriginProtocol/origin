@@ -9,6 +9,7 @@ import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
+import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
 import Transaction from './transaction/Transaction'
@@ -24,6 +25,7 @@ import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
+import GrowthInvite from './growth/Invite'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -73,6 +75,7 @@ class App extends Component {
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
+            <Route path="/onboard" component={Onboard} />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
@@ -96,7 +99,10 @@ class App extends Component {
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
             {enableGrowth && (
-              <Route path="/campaigns" component={GrowthCampaigns} />
+              <Route exact path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route exact path="/campaigns/invite" component={GrowthInvite} />
             )}
             {enableGrowth && (
               <Route path="/welcome" component={GrowthWelcome} />
