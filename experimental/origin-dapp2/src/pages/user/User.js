@@ -16,58 +16,62 @@ class User extends Component {
         <Query query={IdentityQuery} variables={{ id }}>
           {({ data, loading, error }) => {
             if (loading || error) return null
-            const profile = get(data, 'web3.account.identity')
-            if (!profile) {
-              return <div>User Not Found</div>
-            }
+            const profile = get(data, 'web3.account.identity') || {}
+            const noVerifications = !Object.keys(profile).some(k =>
+              k.match(/verified/i)
+            )
 
             return (
               <>
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
                     <Avatar avatar={profile.avatar} className="main-avatar" />
-                    <div className="verified-info">
-                      <h5>Verified Info</h5>
-                      {profile.phoneVerified && (
-                        <div>
-                          <div className="attestation phone" />
-                          Phone
-                        </div>
-                      )}
-                      {profile.emailVerified && (
-                        <div>
-                          <div className="attestation email" />
-                          Email
-                        </div>
-                      )}
-                      {profile.facebookVerified && (
-                        <div>
-                          <div className="attestation facebook" />
-                          Facebook
-                        </div>
-                      )}
-                      {profile.twitterVerified && (
-                        <div>
-                          <div className="attestation twitter" />
-                          Twitter
-                        </div>
-                      )}
-                      {profile.googleVerified && (
-                        <div>
-                          <div className="attestation google" />
-                          Google
-                        </div>
-                      )}
-                      {profile.airbnbVerified && (
-                        <div>
-                          <div className="attestation airbnb" />
-                          AirBnb
-                        </div>
-                      )}
-                    </div>
+                    {noVerifications ? null : (
+                      <div className="verified-info">
+                        <h5>Verified Info</h5>
+                        {profile.phoneVerified && (
+                          <div>
+                            <div className="attestation phone" />
+                            Phone
+                          </div>
+                        )}
+                        {profile.emailVerified && (
+                          <div>
+                            <div className="attestation email" />
+                            Email
+                          </div>
+                        )}
+                        {profile.facebookVerified && (
+                          <div>
+                            <div className="attestation facebook" />
+                            Facebook
+                          </div>
+                        )}
+                        {profile.twitterVerified && (
+                          <div>
+                            <div className="attestation twitter" />
+                            Twitter
+                          </div>
+                        )}
+                        {profile.googleVerified && (
+                          <div>
+                            <div className="attestation google" />
+                            Google
+                          </div>
+                        )}
+                        {profile.airbnbVerified && (
+                          <div>
+                            <div className="attestation airbnb" />
+                            AirBnb
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="col-lg-10 col-md-9">
-                    <h1 className="mb-0">{profile.fullName}</h1>
+                    <h1 className="mb-0">
+                      {profile.fullName || 'Unnamed User'}
+                    </h1>
                     <div className="description">{profile.description}</div>
 
                     <div className="reviews-container">

@@ -1,9 +1,9 @@
-import get from 'lodash/get'
+import messaging from './messaging/_messaging'
 
 import contracts from '../contracts'
 import creatorConfig from '../constants/CreatorConfig'
 
-let ethPrice, activeMessaging
+let ethPrice
 const marketplaceExists = {}
 
 import { identity } from './IdentityEvents'
@@ -89,42 +89,29 @@ export default {
         })
         .catch(reject)
     }),
-  messaging: (_, args) =>
-    new Promise(async resolve => {
-      if (
-        typeof window !== 'undefined' &&
-        window.localStorage.disableMessaging
-      ) {
-        return resolve(null)
+  messaging: async (_, args) => {
+    if (typeof window !== 'undefined' && window.localStorage.disableMessaging) {
+      return null
+    }
+
+    let id = args.id
+    if (id === 'defaultAccount') {
+      // web3Exec is either MetaMask or a web3 instance using the linker
+      // client provider
+      const accounts = await contracts.web3Exec.eth.getAccounts()
+      if (!accounts || !accounts.length) {
+        return null
       }
-      let id = args.id
-      if (id === 'defaultAccount') {
-        // web3Exec is either MetaMask or a web3 instance using the linker
-        // client provider
-        const accounts = await contracts.web3Exec.eth.getAccounts()
-        if (!accounts || !accounts.length) {
-          return resolve(null)
-        }
-        id = accounts[0]
-      } else if (id === 'currentAccount') {
-        if (contracts.messaging.account_key) {
-          id = contracts.messaging.account_key
-        }
+      id = accounts[0]
+    } else if (id === 'currentAccount') {
+      if (contracts.messaging.account_key) {
+        id = contracts.messaging.account_key
       }
-      id = contracts.web3.utils.toChecksumAddress(id)
-      if (activeMessaging === id) {
-        return resolve({ id })
-      }
-      contracts.messaging.events.once('initRemote', async () => {
-        activeMessaging = id
-        setTimeout(() => resolve({ id }), 500)
-      })
-      const messagingData = get(contracts, 'linker.session.privData.messaging')
-      if (contracts.linker && messagingData) {
-        await contracts.messaging.onPreGenKeys(messagingData)
-      }
-      await contracts.messaging.init(id)
-    }),
+    }
+    id = contracts.web3.utils.toChecksumAddress(id)
+
+    return await messaging(id)
+  },
 
   notifications: () => {
     return {

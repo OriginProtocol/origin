@@ -33,7 +33,7 @@ if (typeof window !== 'undefined') {
 const Configs = {
   mainnet: {
     provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
-    providerWS: 'wss://mainnet.infura.io/ws',
+    // providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
     ipfsRPC: 'https://ipfs.originprotocol.com',
     discovery: 'https://discovery.originprotocol.com',
@@ -47,6 +47,13 @@ const Configs = {
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
     ipfsEventCache: 'QmSjXV4HRo39USnpzbE9cK5Qs989fAEsnv165bZxoJDWPg',
+    messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.originprotocol.com/tcp/443/wss/ipfs/Qmc2YF8broVfy3BmUoUEnrHFgQnC5ZPe1jypnsPAtdnunX',
+      messagingNamespace: 'origin',
+      globalKeyServer: 'https://messaging-api.originprotocol.com'
+    },
     tokens: [
       {
         id: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
@@ -77,7 +84,7 @@ const Configs = {
   },
   rinkeby: {
     provider: 'https://rinkeby.infura.io',
-    providerWS: 'wss://rinkeby.infura.io/ws',
+    // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     discovery: 'https://discovery.staging.originprotocol.com',
@@ -97,19 +104,21 @@ const Configs = {
       messagingNamespace: 'origin:staging',
       globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
     },
+    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
     linker: `https://linking.staging.originprotocol.com`,
-    linkerWS: `wss://linking.staging.originprotocol.com`
+    linkerWS: `wss://linking.staging.originprotocol.com`,
+    linkingEnabled: true
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
-    providerWS: 'wss://rinkeby.infura.io/ws',
+    // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     bridge: 'https://bridge.staging.originprotocol.com'
   },
   kovanTst: {
     provider: 'https://kovan.infura.io',
-    providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
+    // providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
     discovery: 'https://discovery.staging.originprotocol.com',
@@ -198,6 +207,16 @@ function newBlock(blockHeaders) {
   })
 }
 
+function pollForBlocks() {
+  blockInterval = setInterval(() => {
+    web3.eth.getBlockNumber().then(block => {
+      if (block > lastBlock) {
+        web3.eth.getBlock(block).then(newBlock)
+      }
+    })
+  }, 5000)
+}
+
 export function setNetwork(net, customConfig) {
   if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
@@ -283,20 +302,18 @@ export function setNetwork(net, customConfig) {
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   if (typeof window !== 'undefined') {
-    web3WS = applyWeb3Hack(new Web3(config.providerWS))
-    wsSub = web3WS.eth
-      .subscribe('newBlockHeaders')
-      .on('data', newBlock)
-      .on('error', () => {
-        console.log('WS connection error. Polling for new blocks...')
-        blockInterval = setInterval(() => {
-          web3.eth.getBlockNumber().then(block => {
-            if (block > lastBlock) {
-              web3.eth.getBlock(block).then(newBlock)
-            }
-          })
-        }, 3000)
-      })
+    if (config.providerWS) {
+      web3WS = applyWeb3Hack(new Web3(config.providerWS))
+      wsSub = web3WS.eth
+        .subscribe('newBlockHeaders')
+        .on('data', newBlock)
+        .on('error', () => {
+          console.log('WS connection error. Polling for new blocks...')
+          pollForBlocks()
+        })
+    } else {
+      pollForBlocks()
+    }
     web3.eth.getBlockNumber().then(block => {
       web3.eth.getBlock(block).then(newBlock)
     })
@@ -385,7 +402,8 @@ function setMetaMask() {
 function setLinkerClient() {
   const linkingEnabled =
     (typeof window !== 'undefined' && window.linkingEnabled) ||
-    process.env.ORIGIN_LINKING
+    process.env.ORIGIN_LINKING ||
+    context.config.linkingEnabled
 
   if (context.metaMaskEnabled) return
   if (!linkingEnabled) return

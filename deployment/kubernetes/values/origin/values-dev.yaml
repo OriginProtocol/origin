@@ -2,15 +2,15 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '12ac36f'
+bridgeImageTag: '82f1a3e'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'fe9d43b'
+dappImageTag: '5699a57'
 
 # origin-dapp2
 dapp2Image: origin-dapp2
-dapp2ImageTag: '65b4ef8'
+dapp2ImageTag: 'aca3407'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -26,7 +26,7 @@ faucetImageTag: '4bf6568'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '3e74bbf'
+eventlistenerImageTag: 'f569cf4'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -34,7 +34,7 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'f654dca'
+growthImageTag: 'aca3407'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -59,4 +59,4 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '9dda30c'
+linkingImageTag: '89c47be'

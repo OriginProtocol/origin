@@ -21,6 +21,13 @@ class MessageNew extends Component {
     this.state = { content: '' }
   }
 
+  async componentDidMount() {
+    const { recipientAddress } = this.props
+    const canDeliverMessage = await origin.messaging.canConverseWith(recipientAddress)
+    const canReceiveMessages = await origin.messaging.canReceiveMessages(recipientAddress)
+    this.setState({ canDeliverMessage, canReceiveMessages })
+  }
+
   handleChange(e) {
     e.preventDefault
 
@@ -58,11 +65,7 @@ class MessageNew extends Component {
       recipientAddress,
       handleToggle
     } = this.props
-    const { content } = this.state
-    const canReceiveMessages = origin.messaging.canReceiveMessages(
-      recipientAddress
-    )
-    const canDeliverMessage = origin.messaging.canConverseWith(recipientAddress)
+    const { content, canDeliverMessage, canReceiveMessages } = this.state
 
     return messagingEnabled ? (
       <Modal

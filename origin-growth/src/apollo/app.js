@@ -4,6 +4,8 @@
  */
 require('dotenv').config()
 
+const { getUserAuthenticationStatus } = require('../resources/authentication')
+
 try {
   require('envkey')
 } catch (error) {
@@ -15,6 +17,7 @@ const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
+const enums = require('../enums')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
 
@@ -38,7 +41,7 @@ const server = new ApolloServer({
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
-  context: context => {
+  context: async context => {
     let countryCode = null
     const headers = context.req.headers
     /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
@@ -47,9 +50,22 @@ const server = new ApolloServer({
       countryCode = headers['X-AppEngine-Country'] || null
     }
 
+    let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+    let authToken
+    if (headers.authentication) {
+      try {
+        authToken = JSON.parse(headers.authentication).growth_auth_token
+        authStatus = await getUserAuthenticationStatus(authToken)
+      } catch (e) {
+        console.error('Error authenticating user: ', e)
+      }
+    }
+
     return {
       ...context,
-      countryCode
+      countryCode,
+      authToken,
+      authentication: authStatus
     }
   }
 })
