@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 
-import { Switch, Route } from 'react-router-dom'
 import Redirect from 'components/Redirect'
 
 import Details from './Details'
 import Boost from './Boost'
 import Review from './Review'
-
-import Store from 'utils/store'
-const store = Store('sessionStorage')
 
 class UnitListing extends Component {
   constructor(props) {

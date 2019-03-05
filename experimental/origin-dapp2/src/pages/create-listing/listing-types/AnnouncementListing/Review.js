@@ -11,9 +11,7 @@ class Review extends Component {
   render() {
     const isEdit = this.props.mode === 'edit'
 
-    const { listing, tokenBalance } = this.props
-
-    const quantity = Number(listing.quantity || 0)
+    const { listing } = this.props
 
     return (
       <div className="row create-listing-review">

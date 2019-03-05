@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
+import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
 
@@ -38,7 +40,7 @@ class Boost extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
+    //const isEdit = this.props.mode === 'edit'
 
     if (this.state.valid) {
       // Advance to next step
