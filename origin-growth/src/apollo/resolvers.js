@@ -4,7 +4,8 @@ const { GraphQLDateTime } = require('graphql-iso-date')
 const { GrowthCampaign } = require('../resources/campaign')
 const {
   authenticateEnrollment,
-  getUserAuthenticationStatus
+  getUserAuthenticationStatus,
+  getUser
 } = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
@@ -64,8 +65,12 @@ const resolvers = {
       return await campaignToApolloObject(campaign, args.walletAddress)
     },
     async inviteInfo(root, args, context) {
-      requireEnrolledUser(context)
       return await GrowthInvite.getReferrerInfo(args.code)
+    },
+    async inviteCode(root, args, context) {
+      requireEnrolledUser(context)
+      const walletAddress = (await getUser(context.authToken)).ethAddress
+      return GrowthInvite.getInviteCode(walletAddress)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {

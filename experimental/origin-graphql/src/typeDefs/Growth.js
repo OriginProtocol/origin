@@ -143,6 +143,7 @@ module.exports =
     campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
     campaign(id: String, walletAddress: ID!): GrowthCampaign
     inviteInfo(code: String): InviteInfo
+    inviteCode: String!
     isEligible: EligibilityInfo
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }

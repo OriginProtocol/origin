@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import Link from 'components/Link'
+import { Query } from 'react-apollo'
+import inviteCodeQuery from 'queries/InviteCode'
 
 function NavigationItem(props) {
   const { selected, onClick, title } = props
@@ -28,15 +30,17 @@ class GrowthInvite extends Component {
       inviteCode: 'origin-invite-code',
       showCopyConfirmation: false
     }
+  }
 
-    this.inviteCode = `${location.protocol}//${location.hostname}/#/welcome/${
+  getInviteCode() {
+    return `${location.protocol}//${location.hostname}/#/welcome/${
       this.state.inviteCode
     }`
   }
 
   handleCopyClick() {
     const inviteField = document.getElementById('growth-invite-text')
-    inviteField.value = this.inviteCode
+    inviteField.value = this.getInviteCode()
     inviteField.select()
     document.execCommand('copy')
     inviteField.value = `${this.state.inviteCode}`
@@ -56,7 +60,7 @@ class GrowthInvite extends Component {
       [
         'https://www.facebook.com/dialog/share?',
         'app_id=87741124305', // TODO use origin's one
-        `&href=${this.inviteCode}`,
+        `&href=${this.getInviteCode()}`,
         '&display=popup',
         `&redirect_uri=${window.location.href}`
       ].join('')
@@ -69,70 +73,88 @@ class GrowthInvite extends Component {
 
   renderSendInvites() {
     const { showCopyConfirmation, inviteCode } = this.state
-    return (
-      <div className="send-invites mt-4 pt-2">
-        <div className="empasis">Invite with your code</div>
-        <div>Send your friend your unique invite code.</div>
 
-        <div className="d-flex pt-3">
-          <div className="col-8 pl-0 pr-0">
-            <div className="normal">Copy code</div>
-            <div className="d-flex mt-2">
-              <input
-                id="growth-invite-text"
-                type="text"
-                className="invite-code"
-                value={inviteCode}
-                readOnly
-              />
-              <div
-                className="copy-button d-flex align-items-center justify-content-center"
-                onClick={() => this.handleCopyClick()}
-              >
-                {showCopyConfirmation && (
-                  <Fragment>
-                    <img src="/images/growth/checkmark.svg" />
-                    <div className="ml-2">Copied</div>
-                  </Fragment>
-                )}
-                {!showCopyConfirmation && <div>Copy</div>}
+    return (<Query
+      query={inviteCodeQuery}
+      onCompleted={({ inviteCode }) => {
+        if (inviteCode !== this.state.inviteCode) {
+          this.setState({ inviteCode })
+        }
+      }}
+    >
+      {({ loading, error, networkStatus }) => {
+        if (networkStatus === 1 || loading) {
+          return <h5 className="p-2">Loading...</h5>
+        } else if (error) {
+          return <QueryError error={error} query={inviteCodeQuery} />
+        }
+
+        return (
+          <div className="send-invites mt-4 pt-2">
+            <div className="empasis">Invite with your code</div>
+            <div>Send your friend your unique invite code.</div>
+
+            <div className="d-flex pt-3">
+              <div className="col-8 pl-0 pr-0">
+                <div className="normal">Copy code</div>
+                <div className="d-flex mt-2">
+                  <input
+                    id="growth-invite-text"
+                    type="text"
+                    className="invite-code"
+                    value={inviteCode}
+                    readOnly
+                  />
+                  <div
+                    className="copy-button d-flex align-items-center justify-content-center"
+                    onClick={() => this.handleCopyClick()}
+                  >
+                    {showCopyConfirmation && (
+                      <Fragment>
+                        <img src="/images/growth/checkmark.svg" />
+                        <div className="ml-2">Copied</div>
+                      </Fragment>
+                    )}
+                    {!showCopyConfirmation && <div>Copy</div>}
+                  </div>
+                </div>
+              </div>
+              <div className="col-4 pl-4 pr-0">
+                <div className="normal">Share or Tweet</div>
+                <div className="d-flex mt-2">
+                  <button
+                    className="social-btn fb"
+                    onClick={() => this.handleFbShareClick()}
+                  >
+                    <img src="/images/growth/facebook-icon.svg" />
+                  </button>
+                  <button
+                    className="social-btn tw"
+                    onClick={() => this.handleTwitterShareClick()}
+                  >
+                    <img src="/images/growth/twitter-icon.svg" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-4 pl-4 pr-0">
-            <div className="normal">Share or Tweet</div>
-            <div className="d-flex mt-2">
-              <button
-                className="social-btn fb"
-                onClick={() => this.handleFbShareClick()}
-              >
-                <img src="/images/growth/facebook-icon.svg" />
-              </button>
-              <button
-                className="social-btn tw"
-                onClick={() => this.handleTwitterShareClick()}
-              >
-                <img src="/images/growth/twitter-icon.svg" />
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div className="empasis mt-5">Invite via Email</div>
-        <div>Enter email addresses of friends you want to invite</div>
-        <textarea
-          name="invite-email"
-          className="email-text p-3"
-          cols="50"
-          rows="5"
-          placeholder="Separate email addresses with commas."
-        />
-        <button
-          className="btn btn-primary btn-rounded mt-2"
-          children="Invite Friends"
-        />
-      </div>
-    )
+            <div className="empasis mt-5">Invite via Email</div>
+            <div>Enter email addresses of friends you want to invite</div>
+            <textarea
+              name="invite-email"
+              className="email-text p-3"
+              cols="50"
+              rows="5"
+              placeholder="Separate email addresses with commas."
+            />
+            <button
+              className="btn btn-primary btn-rounded mt-2"
+              children="Invite Friends"
+            />
+          </div>
+        )
+      }}
+    </Query>)
   }
 
   renderTrackInvites() {

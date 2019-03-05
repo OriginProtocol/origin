@@ -61,6 +61,8 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     authToken: authToken
   }
 
+  console.log("PARTICIPANT DATA: ", JSON.stringify(participantData))
+
   if (participant !== null) {
     await participant.update(participantData)
     logger.info(`Existing user enrolled into growth campaign: ${accountId}`)
@@ -71,6 +73,13 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
 
   await createInviteCode(accountId)
   return authToken
+}
+
+// get user from authentication token
+async function getUser(token) {
+  return await db.GrowthParticipant.findOne({ where: {
+    authToken: token
+  }})
 }
 
 /**
@@ -138,4 +147,4 @@ async function createInviteCode(accountId) {
   logger.info(`Invite code: ${code}: created for user: ${accountId}`)
 }
 
-module.exports = { authenticateEnrollment, getUserAuthenticationStatus }
+module.exports = { authenticateEnrollment, getUserAuthenticationStatus, getUser }
