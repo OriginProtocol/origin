@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       ethAddress: { type: DataTypes.STRING, primaryKey: true },
       status: DataTypes.ENUM(enums.GrowthParticipantStatuses),
       data: DataTypes.JSONB,
-      agreementId: DataTypes.STRING
+      agreementId: DataTypes.STRING,
+      authToken: DataTypes.STRING
     },
     {
       tableName: 'growth_participant'

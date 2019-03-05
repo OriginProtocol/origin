@@ -25,6 +25,7 @@ import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
+import GrowthInvite from './growth/Invite'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -98,7 +99,10 @@ class App extends Component {
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
             {enableGrowth && (
-              <Route path="/campaigns" component={GrowthCampaigns} />
+              <Route exact path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route exact path="/campaigns/invite" component={GrowthInvite} />
             )}
             {enableGrowth && (
               <Route path="/welcome" component={GrowthWelcome} />

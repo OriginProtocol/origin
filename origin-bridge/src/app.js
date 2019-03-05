@@ -17,7 +17,7 @@ const sess = {
   store: sessionStore,
   name: process.env.COOKIE_NAME || 'origin-bridge',
   secret: process.env.SESSION_SECRET || 'secret',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   cookie: {
     maxAge: 60000
@@ -28,8 +28,9 @@ const sess = {
 // needed
 sessionStore.sync()
 
-if (process.env.NODE_ENV == 'production') {
-  sess.cookie.secure = true
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
 }
 
 app.use(session(sess))
