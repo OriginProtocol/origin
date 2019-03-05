@@ -12,8 +12,8 @@ Each directory contains a master "controller" component which determines the ord
 	- `/FractionalListing`
 		- `FractionalListing.js` : Controller
 		- `Details.js` : Details step
-		- `Availability.js` : Details step
-		- `Boost.js` : Details step
+		- `Availability.js` : Availability calendar step
+		- `Boost.js` : Boost step
 		- `Review.js` : Review step
 	- `/<Listing Type Name>`
 		- `<Listing Type Name>.js` : Controller
