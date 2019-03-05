@@ -42,7 +42,8 @@ function withOffers(WrappedComponent, walletProp = 'wallet') {
                   {
                     offerEvent: offerEvents[value],
                     offerTitle: value,
-                    ...offerProps
+                    ...offerProps,
+                    address: get(offer, 'listing.seller.id')
                   }
                 ]
               return result

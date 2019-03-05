@@ -34,7 +34,8 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
                   {
                     offerEvent: purchaseEvents[value],
                     offerTitle: value,
-                    ...purchaseProps
+                    ...purchaseProps,
+                    address: get(offer, 'listing.seller.id')
                   }
                 ]
               return result
