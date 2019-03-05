@@ -5,7 +5,7 @@ module.exports = {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
-      timestamps: true,
+      timestamps: false,
       // Disable the modification of table names.
       freezeTableName: true,
       // Underscore style for field names.
@@ -18,7 +18,7 @@ module.exports = {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
-      timestamps: true,
+      timestamps: false,
       // Disable the modification of table names.
       freezeTableName: true,
       // Underscore style for field names.
@@ -31,7 +31,7 @@ module.exports = {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
-      timestamps: true,
+      timestamps: false,
       // Disable the modification of table names.
       freezeTableName: true,
       // Underscore style for field names.

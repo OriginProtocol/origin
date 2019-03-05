@@ -1,5 +1,7 @@
 'use strict'
 
+const Sequelize = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   const Attestation = sequelize.define(
     'Attestation',
@@ -22,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       // IP address of the user the attestation was generated for
       remoteIpAddress: DataTypes.INET,
       // Creation date
-      createdAt: DataTypes.DATE
+      createdAt: {
+        type: DataTypes.DATE,
+        default: Sequelize.fn('NOW')
+      }
     },
     {
       tableName: 'attestation'
