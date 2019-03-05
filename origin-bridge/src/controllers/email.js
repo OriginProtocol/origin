@@ -73,7 +73,9 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
   }
 
   if (req.session.emailAttestation.expiry < new Date()) {
-    logger.warn(`Attempted attestation for ${req.body.email} with expired code.`)
+    logger.warn(
+      `Attempted attestation for ${req.body.email} with expired code.`
+    )
     return res.status(400).send({
       errors: ['Verification code has expired.']
     })
