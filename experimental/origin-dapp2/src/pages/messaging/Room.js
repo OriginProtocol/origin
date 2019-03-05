@@ -3,18 +3,30 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import sortBy from 'lodash/sortBy'
+import pick from 'lodash/pick'
+import last from 'lodash/last'
 
 import withWallet from 'hoc/withWallet'
 import withOffers from 'hoc/withOffers'
 import withPurchases from 'hoc/withPurchases'
 
+import OfferEvents from 'queries/OfferEvents'
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
 
-function parseEvents(offers, purchases, { address }) {
-  return filter([...offers, ...purchases], (offer) => {
+const eventKeys = [
+  'createdEvent',
+  'acceptedEvent',
+  'disputedEvent',
+  'rulingEvent',
+  'finalizedEvent'
+]
+
+function getRoomEvents(offers, purchases, { address }) {
+  return filter([...offers, ...purchases], offer => {
     const seller = get(offer, 'listing.seller.id')
     const buyer = get(offer, 'buyer.id')
 
@@ -43,13 +55,26 @@ class AllMessages extends Component {
     }
   }
   render() {
-    const { messages, offers = [], purchases = [], wallet } = this.props
-    const counterparty = find(messages, ({ address }) => address !== wallet) || { address: this.props.wallet }
-    const offerEvents = parseEvents(offers, purchases, counterparty) || []
-    const transactionMessages = offerEvents.map((offer) => {
-      return { ...offer, timestamp: get(offer, 'createdEvent.timestamp') }
+    const {
+      messages,
+      offers = [],
+      purchases = [],
+      wallet,
+      offerEvents
+    } = this.props
+    const counterparty = find(
+      messages,
+      ({ address }) => address !== wallet
+    ) || { address: this.props.wallet }
+    const roomEvents = getRoomEvents(offerEvents, purchases, counterparty) || []
+
+    const transactionMessages = roomEvents.map(event => {
+      return { ...event, timestamp: get(event, 'offerEvent.timestamp') }
     })
-    const combinedMessages = [...messages, ...transactionMessages]
+    const combinedMessages = sortBy(
+      [...messages, ...transactionMessages],
+      'timestamp'
+    )
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
@@ -69,6 +94,33 @@ class AllMessages extends Component {
     )
   }
 }
+
+// class MessagesWithOfferEvents extends Component {
+//   render() {
+//     const { messages, offers = [], purchases = [], wallet } = this.props
+//     const counterparty = find(messages, ({ address }) => address !== wallet) || { address: this.props.wallet }
+//     const offerEvents = getRoomEvents(offers, purchases, counterparty) || []
+//     const transactionMessages = offerEvents.map((offer) => {
+//       return { ...offer, timestamp: get(offer, 'createdEvent.timestamp') }
+//     })
+//     const offerIds = offerEvents.map((offer) => pick(offer, 'offerId'))
+//     const combinedMessages = sortBy([...messages, ...transactionMessages], 'timestamp')
+//     const offerId = get(last(offerIds), 'offerId')
+//     return (
+//       <Query
+//         query={OfferEvents}
+//         variables={{ offerId }}
+//         skip={!offerId}
+//         notifyOnNetworkStatusChange={true}
+//       >
+//       {({ data }) => {
+//         console.log("DATA", data, offerIds)
+//         return null
+//       }}
+//       </Query>
+//     )
+//   }
+// }
 
 const MessagesWithOffers = withOffers(AllMessages)
 
