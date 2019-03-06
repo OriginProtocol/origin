@@ -4,7 +4,10 @@
  */
 require('dotenv').config()
 
-const { getUserAuthenticationStatus } = require('../resources/authentication')
+const {
+  getUserAuthenticationStatus,
+  getUser
+} = require('../resources/authentication')
 
 try {
   require('envkey')
@@ -51,11 +54,13 @@ const server = new ApolloServer({
     }
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-    let authToken
+    let authToken, walletAddress
     if (headers.authentication) {
       try {
         authToken = JSON.parse(headers.authentication).growth_auth_token
         authStatus = await getUserAuthenticationStatus(authToken)
+
+        walletAddress = (await getUser(authToken)).ethAddress
       } catch (e) {
         console.error('Error authenticating user: ', e)
       }
@@ -65,6 +70,7 @@ const server = new ApolloServer({
       ...context,
       countryCode,
       authToken,
+      walletAddress,
       authentication: authStatus
     }
   }

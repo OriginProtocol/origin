@@ -10,7 +10,7 @@ import { setGrants, setSessionEmail } from '../actions'
 class Grants extends Component {
   refreshGrants = () => {
     fetch('/api/grants', { cache: 'no-store' })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) {
           if (response.status === 401) {
             this.props.setSessionEmail(undefined)
@@ -22,8 +22,8 @@ class Grants extends Component {
         this.props.setSessionEmail(email)
         return response
       })
-      .then((response) => response.json())
-      .then((grants) => this.props.setGrants(grants))
+      .then(response => response.json())
+      .then(grants => this.props.setGrants(grants))
       .catch(err => console.error(err)) // TODO: replace with some alert
   }
 
@@ -67,4 +67,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grants)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Grants)

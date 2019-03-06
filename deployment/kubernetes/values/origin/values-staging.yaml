@@ -56,3 +56,7 @@ creatorIssuerIp: '35.233.135.239'
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
 creatorIssuerImageTag: 'latest'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'latest'

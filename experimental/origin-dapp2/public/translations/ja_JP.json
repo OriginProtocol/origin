@@ -88,7 +88,7 @@
   "3i2AJC": "掲載を追加する",
   "2AYKWR": "This page has been machine translated, see any errors?",
   "rlRRa": "Help Translate",
-  "16M9FE": {
+  "4oqNDF": {
     "growth.jan2019.name": "January 2019 Campaign",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "February 2019 Campaign",
@@ -98,7 +98,9 @@
     "growth.apr2019.name": "April 2019 Campaign",
     "growth.apr2019.short_name": "Apr 2019",
     "growth.profile.and.email.requirement": "Verified email and Origin profile",
-    "growth.two.attestations.requirement": "Two attestations"
+    "growth.two.attestations.requirement": "2 out of 4 attestations",
+    "growth.profile.requirement": "Verified profile",
+    "growth.email.requirement": "Verified email"
   },
   "1r15SU": "Airbnb アカウントを認証してください。",
   "4iptAy": "Airbnbの プロフィールURLを入力してください",

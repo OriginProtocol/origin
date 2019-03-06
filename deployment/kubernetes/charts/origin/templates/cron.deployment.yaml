@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "cron.fullname" . }}
+  labels:
+    app: {{ template "cron.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "cron.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "cron.fullname" . }}
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-cron
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.cronImage }}:{{ .Values.cronImageTag }}"
+        imagePullPolicy: Always
+        env:
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "cron.fullname" . }}
+              key: ENVKEY
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances={{ .Values.databaseInstance }}=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+        - name: cloudsql-instance-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
