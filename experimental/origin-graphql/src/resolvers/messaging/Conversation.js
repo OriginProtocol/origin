@@ -1,5 +1,7 @@
 import contracts from '../../contracts'
 
+import sortBy from 'lodash/sortBy'
+
 function isEnabled() {
   return contracts.messaging.pub_sig &&
     contracts.messaging.account &&
@@ -15,21 +17,24 @@ Get started with messaging in two steps. First, you will use your Ethereum walle
 const congratsMessage = `Congratulations! You can now message other users on Origin. Why not start by taking a look around and telling us what you think about our DApp?`
 
 export async function getAllMessages(conversationId) {
-  const messages =
+  let messages =
     (await contracts.messaging.getAllMessages(conversationId)) || []
+
+  messages = sortBy(messages, m => m.msg.created)
 
   const supportAccount = contracts.config.messagingAccount
   if (supportAccount && conversationId === supportAccount) {
+    const created = messages.length ? messages[0].msg.created : +new Date()
     if (isEnabled()) {
       messages.unshift({
-        msg: { content: congratsMessage, created: +new Date() },
+        msg: { content: congratsMessage, created },
         hash: 'origin-congrats-message',
         address: supportAccount,
         index: -1
       })
     }
     messages.unshift({
-      msg: { content: welcomeMessage, created: +new Date() },
+      msg: { content: welcomeMessage, created },
       hash: 'origin-welcome-message',
       address: supportAccount,
       index: -2

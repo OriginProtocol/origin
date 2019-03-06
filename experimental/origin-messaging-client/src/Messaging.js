@@ -701,7 +701,12 @@ class Messaging {
     for (const v of entry.payload.value) {
       if (v.type == 'key') {
         if (v.address == this.account_key) {
-          const key = this.ec_decrypt(v.ekey)
+          let key
+          try {
+            key = this.ec_decrypt(v.ekey)
+          } catch (e) {
+            /* Ignore */
+          }
           if (key && !conv_obj.keys.includes(key)) {
             conv_obj.keys.push(key)
           }
