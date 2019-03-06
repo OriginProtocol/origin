@@ -256,9 +256,9 @@ class UserProfile extends Component {
 
   validate() {
     const newState = {}
-    if (!this.state.firstName) {
-      newState.firstNameError = 'First Name is required'
-    }
+    // if (!this.state.firstName) {
+    //   newState.firstNameError = 'First Name is required'
+    // }
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     this.setState(newState)

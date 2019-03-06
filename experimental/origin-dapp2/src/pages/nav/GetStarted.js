@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import store from 'utils/store'
+const sessionStore = store('sessionStorage')
 
 import Link from 'components/Link'
 
@@ -8,7 +11,14 @@ class GetStarted extends Component {
     return (
       <ul className="navbar-nav">
         <li className="nav-item">
-          <Link to="/onboard" className="nav-link">
+          <Link
+            to="/onboard"
+            className="nav-link"
+            onClick={() => {
+              const { pathname, search } = this.props.location
+              sessionStore.set('getStartedRedirect', { pathname, search })
+            }}
+          >
             Get Started
           </Link>
         </li>
@@ -17,7 +27,7 @@ class GetStarted extends Component {
   }
 }
 
-export default GetStarted
+export default withRouter(GetStarted)
 
 require('react-styl')(`
 `)

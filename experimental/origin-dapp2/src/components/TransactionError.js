@@ -30,7 +30,11 @@ class CannotTransact extends Component {
       if (get(this.props, 'data.message', '').match(UserDenied)) {
         reason = 'You declined to sign the transaction'
       } else {
-        reason = 'Error with transaction. Please see console for details.'
+        reason = (
+          <div onClick={() => alert(this.props.data)}>
+            Error with transaction. Please see console for details.
+          </div>
+        )
         console.log(this.props.data)
       }
     }

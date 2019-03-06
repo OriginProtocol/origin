@@ -22,9 +22,11 @@ class ProfileNav extends Component {
   render() {
     return (
       <Query query={ProfileQuery} pollInterval={1000}>
-        {({ data, loading, error }) => {
-          if (error) console.error(error)
-          if (loading || error) return null
+        {({ data, error }) => {
+          if (error) {
+            console.error(error)
+            return null
+          }
           if (!data || !data.web3 || !data.web3.primaryAccount) {
             return null
           }

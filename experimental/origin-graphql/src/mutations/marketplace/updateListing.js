@@ -25,8 +25,8 @@ async function updateListing(_, args) {
   // negative.
   const newUnitsTotal = Number(ipfsData.unitsTotal) || 0
   const listing = await contracts.eventSource.getListing(listingId)
-  if (newUnitsTotal < listing.unitsSold) {
-    throw new Error('New unitsTotal is lower than units already sold')
+  if (newUnitsTotal < listing.unitsPending) {
+    throw new Error('New unitsTotal is lower than units pending sale')
   }
 
   if (autoApprove && additionalDeposit > 0) {
