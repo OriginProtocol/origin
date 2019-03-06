@@ -21,4 +21,4 @@ lerna run start --scope origin-cron --stream
 
 ## TODO
   * Currently all jobs run on the same node. Consider adding clustering.
-  * Bring up a UI for making it easier to inspect the state of the system. [Arena](https://github.com/bee-queue/arena#readme) could be a good choice. We would have to figure how to make that data only accessible to Origin team members. 
+  * Bring up a UI for making it easier to inspect the state of the system. [Arena](https://github.com/bee-queue/arena#readme) could be a good choice. We would have to figure how to make that data only accessible to Origin team members. kubectl port-forward could be a simple solution for this. 
