@@ -95,7 +95,6 @@ class ImagePicker extends Component {
             src={this.state.images[this.state.crop].src}
             onClose={() => this.setState({ crop: undefined })}
             onChange={async imageBlob => {
-              debugger
               const [newImage] = await getImages(ipfsRPC, [imageBlob])
               const images = [...this.state.images]
               images[this.state.crop] = newImage
