@@ -35,7 +35,6 @@ const Balances = ({ ethBalance, account }) => {
         </div>
         <EnrollButton
           className="btn get-ogn d-flex"
-          onClick={() => this.handleJoinCampaignContinue()}
           children="Get Started"
           skipjoincampaign="false"
         >
