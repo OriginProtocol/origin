@@ -88,5 +88,5 @@ watch(growthUpdateCampaignQueue)
 growthUpdateCampaignQueue.process(jobsPath + 'growthUpdateCampaigns.js')
 growthUpdateCampaignQueue.add(
   { persist: false },
-  { repeat: { cron: '20 20 * * *' } }
+  { repeat: { cron: '20 30 * * *' } }
 )

@@ -1,7 +1,7 @@
 # origin-cron
 
 A framework for scheduling recurring jobs, based on the [Bull](https://github.com/OptimalBits/bull) queueing system and Redis.
-Each job runs as a separate process
+Each job runs as a separate process.
 
 ## Adding a new job
 Steps:
