@@ -18912,7 +18912,7 @@
     "listing-card-prices.multiUnitListing.averagePrice": "average price",
     "listing-card-prices.loadingMessage": "Loading...",
     "listing-card.multiUnitListing.each": "each",
-    "listing-create.navigationWarning": "Are you sure you want to leave? If you leave this page your progress will be lost.",
+    "listing-create.navigationWarning": "Are you sure you want to leave? Your listing is not yet created.",
     "schema.boostLimitInOgn": "Boost Limit",
     "schema.positiveNumber": "should be a positive number",
     "schema.notEnoughOgnFunds": "not enough funds in wallet.",

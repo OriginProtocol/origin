@@ -7,7 +7,6 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl'
 import Form from 'react-jsonschema-form'
 import queryString from 'query-string'
 
-
 import { originToDAppListing } from 'utils/listing'
 
 import { handleNotificationsSubscription } from 'actions/Activation'
@@ -17,6 +16,7 @@ import {
   upsert as upsertTransaction
 } from 'actions/Transaction'
 import { getOgnBalance } from 'actions/Wallet'
+import { updateState, clearState } from 'actions/ListingCreate'
 
 import BoostSlider from 'components/boost-slider'
 import StepsProgress from 'components/steps-progress'
@@ -27,11 +27,12 @@ import QuantityField from 'components/form-widgets/quantity-field'
 import Modal from 'components/modal'
 import Calendar from './calendar'
 
-import { getListing } from 'utils/listing'
+import { getListing, getRenderDetailsForm } from 'utils/listing'
 import { generateDefaultPricing } from 'utils/calendarHelpers'
 import listingSchemaMetadata from 'utils/listingSchemaMetadata'
 import WalletCard from 'components/wallet-card'
 import { ProviderModal, ProcessingModal } from 'components/modals/wait-modals'
+import { ListingDraftModal } from 'components/modals/listing-draft-modals'
 
 import { getBoostLevel, defaultBoostValue } from 'utils/boostUtils'
 import { dappFormDataToOriginListing } from 'utils/listing'
@@ -70,34 +71,15 @@ class ListingCreate extends Component {
       return listingType
     })
 
+    props.updateState({
+      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0
+    })
     this.defaultState = {
-      boostCapTooLow: false,
-      step: this.STEP.PICK_CATEGORY,
-      selectedBoostAmount: props.wallet.ognBalance ? defaultBoostValue : 0,
-      selectedCategory: null,
-      selectedCategoryName: null,
-      selectedCategorySchemas: null,
-      selectedSchemaId: null,
-      translatedSchema: null,
-      schemaFetched: false,
-      isFractionalListing: false,
-      isEditMode: false,
-      fractionalTimeIncrement: null,
-      showNoCategorySelectedError: false,
-      showNoSchemaSelectedError: false,
-      formListing: {
-        formData: {
-          boostValue: defaultBoostValue,
-          boostLevel: getBoostLevel(defaultBoostValue)
-        }
-      },
-      showDetailsFormErrorMsg: false,
-      showBoostFormErrorMsg: false,
-      showBoostTutorial: false,
       verifyObj: JSON.stringify({ verifyURL: 'https://api.github.com/repos/OriginProtocol/origin/issues/<put issue number here>',
         checkArg: 'state',
         matchValue: 'closed',
-        verifyFee: '100' })
+        verifyFee: '100' }),
+      showDraftModal: false
     }
 
     this.state = { ...this.defaultState }
@@ -106,7 +88,12 @@ class ListingCreate extends Component {
       navigationWarning: {
         id: 'listing-create.navigationWarning',
         defaultMessage:
-          'Are you sure you want to leave? If you leave this page your progress will be lost.'
+          'Are you sure you want to leave? Your listing is not yet created.'
+      },
+      navigationWarningEditing: {
+        id: 'listing-create.navigationWarningEditing',
+        defaultMessage:
+          'Are you sure you want to leave? Your listing is not yet updated.'
       },
       boostLimit: {
          id: 'schema.boostLimitInOgn',
@@ -163,6 +150,9 @@ class ListingCreate extends Component {
     this.resetToPreview = this.resetToPreview.bind(this)
     this.setBoost = this.setBoost.bind(this)
     this.ensureUserIsSeller = this.ensureUserIsSeller.bind(this)
+    this.handleContinue = this.handleContinue.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
+    this.showDraftModal = this.showDraftModal.bind(this)
     this.transformFormErrors = this.transformFormErrors.bind(this)
     this.updateBoostCap = this.updateBoostCap.bind(this)
     this.validateBoostForm = this.validateBoostForm.bind(this)
@@ -170,6 +160,7 @@ class ListingCreate extends Component {
   }
 
   async componentDidMount() {
+    const listingId = this.props.listingId
 
     const { location } = this.props
     const query = queryString.parse(location.search)
@@ -181,7 +172,10 @@ class ListingCreate extends Component {
     }
 
     // If listingId prop is passed in, we're in edit mode, so fetch listing data
-    if (this.props.listingId) {
+    if (listingId) {
+      // clear listing localStorage
+      this.props.clearState()
+
       this.props.storeWeb3Intent('edit a listing')
 
       try {
@@ -199,25 +193,27 @@ class ListingCreate extends Component {
           },
           selectedSchemaId: listing.dappSchemaId,
           selectedBoostAmount: listing.boostValue,
-          isEditMode: true
+          isEditMode: true,
+          editListingId: this.props.listingId
         }
 
         if (listing.pictures.length) {
           const pictures = await getDataURIsFromImgURLs(listing.pictures)
-          this.setState({
+          
+          this.props.updateState({
             ...state,
             formListing: {
               formData: { ...listing, pictures }
             }
           })
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
         } else {
-          this.setState(state)
-          this.renderDetailsForm(listing.schema)
-          this.setState({ step: this.STEP.DETAILS })
+          this.props.updateState(state)
         }
-
+          
+        this.renderDetailsForm(listing.schema)
+        this.props.updateState({
+          step: this.STEP.DETAILS,
+        })
       } catch (error) {
         console.error(`Error fetching contract or IPFS info for listing: ${this.props.listingId}`)
         console.error(error)
@@ -232,6 +228,16 @@ class ListingCreate extends Component {
         origin.contractService.showLinkPopUp()
       }
       this.props.storeWeb3Intent('create a listing')
+    } else if (
+      !this.props.listingId &&
+      this.props.selectedSchemaId &&
+      !this.props.isEditMode
+    ) {
+      this.handleSchemaSelection(null, this.props.selectedSchemaId)
+      this.showDraftModal()
+    } else {
+      // clear listing localStorage
+      this.props.clearState()
     }
   }
 
@@ -248,7 +254,7 @@ class ListingCreate extends Component {
 
   componentDidUpdate(prevProps) {
     // conditionally show boost tutorial
-    if (!this.state.showBoostTutorial) {
+    if (!this.props.showBoostTutorial) {
       this.detectNeedForBoostTutorial()
     }
 
@@ -256,8 +262,8 @@ class ListingCreate extends Component {
     // apply OGN detection to slider
     if (ognBalance !== prevProps.wallet.ognBalance) {
       // only if prior to boost selection step
-      this.state.step < this.STEP.BOOST &&
-        this.setState({
+      this.props.step < this.STEP.BOOST &&
+        this.props.updateState({
           selectedBoostAmount: ognBalance ? defaultBoostValue : 0
         })
     }
@@ -272,9 +278,34 @@ class ListingCreate extends Component {
     !Number(this.props.wallet.ognBalance) &&
       // ...tutorial has not been expanded or skipped via "Review"
       // !JSON.parse(localStorage.getItem('boostTutorialViewed')) &&
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: true
       })
+  }
+
+  showDraftModal() {
+    this.setState({
+      showDraftModal: true
+    })
+  }
+
+  handleContinue(e) {
+    this.setState({
+      showDraftModal: false
+    })
+
+    if (!web3.givenProvider || !this.props.web3Account) {
+      e.preventDefault()
+    }
+  }
+
+  handleRemove(e) {
+    e.preventDefault()
+
+    this.props.clearState()
+    this.setState({
+      showDraftModal: false
+    })
   }
 
   pollOgnBalance() {
@@ -305,23 +336,22 @@ class ListingCreate extends Component {
       stateToSet.step = this.STEP.PICK_SUBCATEGORY
       window.scrollTo(0, 0)
     }
-
-    this.setState(stateToSet)
+    this.props.updateState(stateToSet)
   }
 
   handleCategorySelectNextBtn() {
     // (The button that calls this method is only visibile on non-mobile devices)
     // check for category and schema selection and send to DETAILS step or show error
-    if (!this.state.selectedCategory) {
-      this.setState({
+    if (!this.props.selectedCategory) {
+      this.props.updateState({
         showNoCategorySelectedError: true
       })
-    } else if (!this.state.selectedSchemaId) {
-      this.setState({
+    } else if (!this.props.selectedSchemaId) {
+      this.props.updateState({
         showNoSchemaSelectedError: true
       })
     } else {
-      this.setState({
+      this.props.updateState({
         step: this.STEP.DETAILS,
         showNoCategorySelectedError: false,
         showNoSchemaSelectedError: false
@@ -329,20 +359,23 @@ class ListingCreate extends Component {
     }
   }
 
-  handleSchemaSelection(e, selectedSchemaId) {
+  async handleSchemaSelection(e, selectedSchemaId) {
     let schemaFileName = selectedSchemaId
 
     // On desktop screen sizes, we use the onChange event of a <select> to call this method.
-    if (!selectedSchemaId) {
+    if (e && typeof e.target === 'object') {
       schemaFileName = e.target.value
     }
 
-    return fetch(`schemas/${schemaFileName}`)
-      .then(response => response.json())
-      .then(schemaJson => {
-        this.setState({ selectedSchemaId: schemaFileName })
-        this.renderDetailsForm(schemaJson)
-      })
+    const dappSchemaData = {
+      dappSchemaId: `schemas/${schemaFileName}`
+    }
+    const schemaJson = await getRenderDetailsForm(dappSchemaData)
+
+    this.props.updateState({
+      selectedSchemaId: schemaFileName,
+    })
+    this.renderDetailsForm(schemaJson)
   }
 
   renderDetailsForm(schemaJson) {
@@ -398,12 +431,12 @@ class ListingCreate extends Component {
       properties.listingType.const === 'fractional'
 
     const slotLength = properties &&
-        properties.slotLength &&
-        properties.slotLength.default
+      properties.slotLength &&
+      properties.slotLength.default
 
     const slotLengthUnit = properties &&
-        properties.slotLengthUnit &&
-        properties.slotLengthUnit.default
+      properties.slotLengthUnit &&
+      properties.slotLengthUnit.default
 
     const fractionalTimeIncrement = slotLengthUnit === 'schema.hours' ? 'hourly' : 'daily'
 
@@ -424,7 +457,7 @@ class ListingCreate extends Component {
       }
     }
 
-    if (this.state.isEditMode && isFractionalListing) {
+    if (this.props.isEditMode && isFractionalListing) {
       this.uiSchema = {
         ...this.uiSchema,
         ...{
@@ -440,7 +473,7 @@ class ListingCreate extends Component {
 
     const translatedSchema = translateSchema(schemaJson)
 
-    this.setState(prevState => ({
+    this.props.updateState({
       schemaFetched: true,
       fractionalTimeIncrement,
       showNoSchemaSelectedError: false,
@@ -448,8 +481,8 @@ class ListingCreate extends Component {
       isFractionalListing,
       formListing: {
         formData: {
-          ...prevState.formListing.formData,
           ...schemaSetValues,
+          ...this.props.formListing.formData,
           dappSchemaId: properties.dappSchemaId.const,
           category: properties.category.const,
           subCategory: properties.subCategory.const,
@@ -457,17 +490,17 @@ class ListingCreate extends Component {
           slotLengthUnit,
         }
       }
-    }))
+    })
   }
 
   goToDetailsStep() {
-    if (this.state.schemaFetched) {
-      this.setState({
+    if (this.props.schemaFetched) {
+      this.props.updateState({
         step: this.STEP.DETAILS
       })
       window.scrollTo(0, 0)
     } else {
-      this.setState({
+      this.props.updateState({
         showNoSchemaSelectedError: true
       })
     }
@@ -477,7 +510,7 @@ class ListingCreate extends Component {
     let nextStep
     switch(direction) {
       case 'forward':
-        this.state.isEditMode ?
+        this.props.isEditMode ?
           nextStep = 'PREVIEW' :
           nextStep = 'BOOST'
         break
@@ -487,11 +520,11 @@ class ListingCreate extends Component {
         break
     }
 
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           availability: slots
         }
       },
@@ -502,14 +535,14 @@ class ListingCreate extends Component {
   backFromDetailsStep() {
     const step = this.props.mobileDevice ? this.STEP.PICK_SUBCATEGORY : this.STEP.PICK_CATEGORY
 
-    this.setState({
+    this.props.updateState({
       step,
       selectedSchema: null,
       schemaFetched: false,
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           unitsTotal: 1
         }
       }
@@ -517,14 +550,14 @@ class ListingCreate extends Component {
   }
 
   backFromBoostStep() {
-    const previousStep = this.state.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
-    this.setState({ step: previousStep })
+    const previousStep = this.props.isFractionalListing ? this.STEP.AVAILABILITY : this.STEP.DETAILS
+    this.props.updateState({ step: previousStep })
   }
 
   onDetailsEntered(formListing) {
-    const [nextStep, listingType] = this.state.isFractionalListing ?
+    const [nextStep, listingType] = this.props.isFractionalListing ?
       [this.STEP.AVAILABILITY, 'fractional'] :
-      this.state.isEditMode ?
+      this.props.isEditMode ?
         [this.STEP.PREVIEW, 'unit'] :
         [this.STEP.BOOST, 'unit']
 
@@ -535,12 +568,12 @@ class ListingCreate extends Component {
     formListing.formData.listingType = listingType
     // multiUnit listings specify unitsTotal, others default to 1
     formListing.formData.unitsTotal = formListing.formData.unitsTotal || 1
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         ...formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formListing.formData
         }
       },
@@ -555,11 +588,11 @@ class ListingCreate extends Component {
   onFormDataChange({ formData }) {
   const pictures = picURIsOnly(formData.pictures)
 
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           ...formData,
           pictures
         }
@@ -573,7 +606,7 @@ class ListingCreate extends Component {
       this.props.wallet.ognBalance &&
       parseFloat(this.props.wallet.ognBalance) > 0
     ) {
-      this.setState({
+      this.props.updateState({
         showBoostTutorial: false
       })
     }
@@ -581,13 +614,13 @@ class ListingCreate extends Component {
 
   onBoostLimitChange({ formData }) {
     const boostLimit = formData.boostLimit
-    if (boostLimit !== undefined && boostLimit !== this.state.formListing.formData.boostLimit
+    if (boostLimit !== undefined && boostLimit !== this.props.formListing.formData.boostLimit
     ) {
-      this.setState({
+      this.props.updateState({
         formListing: {
-          ...this.state.formListing,
+          ...this.props.formListing,
           formData: {
-            ...this.state.formListing.formData,
+            ...this.props.formListing.formData,
             boostLimit: formData.boostLimit
           }
         }
@@ -597,11 +630,11 @@ class ListingCreate extends Component {
   }
 
   setBoost(boostValue, boostLevel) {
-    this.setState({
+    this.props.updateState({
       formListing: {
-        ...this.state.formListing,
+        ...this.props.formListing,
         formData: {
-          ...this.state.formListing.formData,
+          ...this.props.formListing.formData,
           boostValue,
           boostLevel
         }
@@ -618,17 +651,17 @@ class ListingCreate extends Component {
    * message can appear for a short time and then dissapear. This workaround prevents
    * that sort of twitching.
    */
-  updateBoostCap(){
-    const formData = this.state.formListing.formData
-    const boostAmount = formData.boostValue || this.state.selectedBoostAmount
+  updateBoostCap() {
+    const formData = this.props.formListing.formData
+    const boostAmount = formData.boostValue || this.props.selectedBoostAmount
     const requiredBoost = formData.unitsTotal * boostAmount
 
     if (this.updateBoostTimeout)
       clearTimeout(this.updateBoostTimeout)
 
     this.updateBoostTimeout = setTimeout(() => {
-      this.setState({
-        boostCapTooLow: requiredBoost > this.state.formListing.formData.boostLimit
+      this.props.updateState({
+        boostCapTooLow: requiredBoost > this.props.formListing.formData.boostLimit
       })
     })
   }
@@ -640,11 +673,11 @@ class ListingCreate extends Component {
       localStorage.setItem('boostTutorialViewed', true)
     }
 
-    if (ognBalance < this.state.formListing.formData.boostValue) {
+    if (ognBalance < this.props.formListing.formData.boostValue) {
       this.setBoost(ognBalance, getBoostLevel(ognBalance))
     }
 
-    this.setState({
+    this.props.updateState({
       step: this.STEP.PREVIEW
     })
 
@@ -712,10 +745,10 @@ class ListingCreate extends Component {
   }
 
   async onSubmitListing(formListing) {
-    const { isEditMode } = this.state
+    const { isEditMode } = this.props
 
     try {
-      this.setState({ step: this.STEP.METAMASK })
+      this.props.updateState({ step: this.STEP.METAMASK })
       const listing = dappFormDataToOriginListing(formListing.formData)
       if (this.props.marketplacePublisher) {
         listing['marketplacePublisher'] = this.props.marketplacePublisher
@@ -759,22 +792,22 @@ class ListingCreate extends Component {
         transactionTypeKey
       })
       this.props.getOgnBalance()
-      this.setState({ step: this.STEP.SUCCESS })
+      this.props.updateState({ step: this.STEP.SUCCESS })
       this.props.handleNotificationsSubscription('seller', this.props)
     } catch (error) {
       console.error(error)
-      this.setState({ step: this.STEP.ERROR })
+      this.props.updateState({ step: this.STEP.ERROR })
     }
   }
 
   resetForm() {
-    this.setState(this.defaultState)
+    this.props.clearState()
   }
 
   resetToPreview(e) {
     e.preventDefault()
 
-    this.setState({ step: this.STEP.PREVIEW })
+    this.props.updateState({ step: this.STEP.PREVIEW })
   }
 
   renderBoostButtons(isMultiUnitListing) {
@@ -818,7 +851,7 @@ class ListingCreate extends Component {
   }
 
   validateBoostForm(data, errors) {
-    const formData = this.state.formListing.formData
+    const formData = this.prpos.formListing.formData
     // clear errors
     errors.boostLimit.__errors = []
     let boostLimit = formData.boostLimit
@@ -841,7 +874,7 @@ class ListingCreate extends Component {
     }
 
     if (!errorFound){
-      this.setState({
+      this.props.updateState({
         showBoostFormErrorMsg: false
       })
     }
@@ -852,7 +885,7 @@ class ListingCreate extends Component {
     const {
       isEditMode,
       formListing
-    } = this.state
+    } = this.props
 
     const formData = formListing.formData
     const {
@@ -889,7 +922,7 @@ class ListingCreate extends Component {
     // mobile vs. desktop and fractional vs. unit.
     // This method ensures that the step numbers that display at the top of the view are correct
     const isMobile = this.props.mobileDevice
-    const { isFractionalListing } = this.state
+    const { isFractionalListing } = this.props
 
     switch (stepNum) {
       case 1:
@@ -911,9 +944,7 @@ class ListingCreate extends Component {
   render() {
     const {
       wallet,
-      intl
-    } = this.props
-    const {
+      intl,
       boostCapTooLow,
       formListing,
       fractionalTimeIncrement,
@@ -931,7 +962,7 @@ class ListingCreate extends Component {
       showBoostTutorial,
       isFractionalListing,
       isEditMode
-    } = this.state
+    } = this.props
     const totalNumberOfSteps = isFractionalListing ? 5 : 4
     const { formData } = formListing
     const usdListingPrice = getFiatPrice(formListing.formData.price, 'USD')
@@ -1056,7 +1087,7 @@ class ListingCreate extends Component {
                   />
                 </h2>
                 <button
-                  onClick={() => this.setState({
+                  onClick={() => this.props.updateState({
                     step: this.STEP.PICK_CATEGORY,
                     selectedSchemaId: null
                   })}
@@ -1126,7 +1157,7 @@ class ListingCreate extends Component {
                   formData={formListing.formData}
                   onError={(error) => {
                     console.error('Listing form errors: ', error)
-                    this.setState({ showDetailsFormErrorMsg: true })
+                    this.props.updateState({ showDetailsFormErrorMsg: true })
                   }}
                   onChange={this.onFormDataChange}
                   uiSchema={this.uiSchema}
@@ -1295,7 +1326,7 @@ class ListingCreate extends Component {
                           className="rjsf mt-2"
                           schema={this.boostSchema}
                           onError={() => {
-                            this.setState({ showBoostFormErrorMsg: true })
+                            this.props.updateState({ showBoostFormErrorMsg: true })
                           }}
                           onSubmit={this.onReview}
                           onChange={this.onBoostLimitChange}
@@ -1611,7 +1642,7 @@ class ListingCreate extends Component {
                           this.STEP.AVAILABILITY :
                           this.STEP.DETAILS
                         : this.STEP.BOOST
-                      this.setState({ step })
+                      this.props.updateState({ step })
                     }}
                     ga-category="create_listing"
                     ga-label="review_step_back"
@@ -1859,6 +1890,7 @@ class ListingCreate extends Component {
                     to="/"
                     className="btn btn-clear"
                     ga-category="create_listing"
+                    onClick={ this.resetForm }
                     ga-label="listing_creation_confirmation_modal_see_all_listings"
                   >
                     <FormattedMessage
@@ -1898,18 +1930,27 @@ class ListingCreate extends Component {
                 </div>
               </Modal>
             )}
+            <ListingDraftModal
+              isOpen={this.state.showDraftModal}
+              handleContinue={this.handleContinue}
+              handleRemove={this.handleRemove}
+            />
           </div>
         </div>
         <Prompt
-          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS}
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS && !this.props.listingId}
           message={intl.formatMessage(this.intlMessages.navigationWarning)}
+        />
+        <Prompt
+          when={step !== this.STEP.PICK_CATEGORY && step !== this.STEP.SUCCESS && !!this.props.listingId}
+          message={intl.formatMessage(this.intlMessages.navigationWarningEditing)}
         />
       </div>
     ) : null
   }
 }
 
-const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => {
+const mapStateToProps = ({ activation, app, config, exchangeRates, wallet, listingCreate }) => {
   return {
     exchangeRates,
     marketplacePublisher: config.marketplacePublisher,
@@ -1921,7 +1962,8 @@ const mapStateToProps = ({ activation, app, config, exchangeRates, wallet }) => 
     serviceWorkerRegistration: activation.notifications.serviceWorkerRegistration,
     wallet,
     web3Intent: app.web3.intent,
-    mobileDevice: app.mobileDevice
+    mobileDevice: app.mobileDevice,
+    ...listingCreate
   }
 }
 
@@ -1932,7 +1974,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(updateTransaction(hash, confirmationCount)),
   upsertTransaction: transaction => dispatch(upsertTransaction(transaction)),
   getOgnBalance: () => dispatch(getOgnBalance()),
-  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent))
+  storeWeb3Intent: intent => dispatch(storeWeb3Intent(intent)),
+  updateState: payload => dispatch(updateState(payload)),
+  clearState: () => dispatch(clearState())
 })
 
 export default withRouter(

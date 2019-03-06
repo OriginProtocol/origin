@@ -348,6 +348,20 @@ export async function getListing(id, opts = {}) {
 }
 
 /**
+ * Loads a listing render details form.
+ * @param {string} selectedSchemaId - Listing selectedSchemaId.
+ * @return {Promise<object>} DApp compatible listing details form object.
+ */
+export async function getRenderDetailsForm(dappSchemaData) {
+  const schemaData = await fetchSchema(dappSchemaData)
+  const {
+    schema
+  } = schemaData
+
+  return schema
+}
+
+/**
  * Takes a string with a hyphen in it and returns a camel case version of the string
  * e.g. for-sale becomes forSale
  * @param {string} string - a string with a hyphen
