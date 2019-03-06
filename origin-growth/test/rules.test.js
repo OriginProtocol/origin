@@ -368,8 +368,12 @@ describe('Growth Engine rules', () => {
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
-                  conditionTranslateKey: 'growth.profile.and.email.requirement',
-                  conditionIcon: 'images/growth/email-icon-small.svg'
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg'
+                    }
+                  ],
                 }
               }
             ],
@@ -445,8 +449,12 @@ describe('Growth Engine rules', () => {
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
-                  conditionTranslateKey: 'growth.profile.and.email.requirement',
-                  conditionIcon: 'images/growth/email-icon-small.svg',
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg',
+                    }
+                  ],
                   visible: false
                 }
               }
@@ -782,8 +790,12 @@ describe('Growth Engine rules', () => {
                   eventType: GrowthEventTypes.ListingSold,
                   reward: null,
                   nextLevelCondition: true,
-                  conditionTranslateKey: 'growth.profile.and.email.requirement',
-                  conditionIcon: 'images/growth/email-icon-small.svg',
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg',
+                    }
+                  ],
                   visible: false
                 }
               }
