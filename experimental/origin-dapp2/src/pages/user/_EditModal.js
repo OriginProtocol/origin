@@ -73,11 +73,7 @@ class EditProfileModal extends Component {
               onClick={() => {
                 if (this.validate()) {
                   this.props.onChange(
-                    pick(this.state, [
-                      'firstName',
-                      'lastName',
-                      'description'
-                    ])
+                    pick(this.state, ['firstName', 'lastName', 'description'])
                   )
                   this.setState({ shouldClose: true })
                 }
