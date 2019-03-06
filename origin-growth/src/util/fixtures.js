@@ -198,7 +198,7 @@ async function createTestData() {
   })
 
   /* IMPORTANT when adding new translatable fields update the enums document:
-   * experimental/origin-dapp2/src/constants/Growth$FbtEnum.js
+   * origin-dapp/src/constants/Growth$FbtEnum.js
    */
 
   await db.GrowthCampaign.upsert({

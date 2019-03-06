@@ -27,139 +27,158 @@ services:
     logging:
       driver: none
 
-  # NOTE/TODO: This container is only responsible for running ganache and IPFS,
-  # this functionality should be moved to dedicated containers
-  origin:
-    container_name: origin
+  origin-dapp:
+    container_name: origin-dapp
     image: origin
-    build: .
-    ports:
-      - "8545:8545"  # Ganache
-    volumes:
-      # Addresses for deployment of contracts to local blockchain will get
-      # written to the build files
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - origin-messaging
+    volumes: &volumes
+      # origin-contracts build directory, the DApp will run a contract deploy
+      # and the contract address here, and other services will then parse these
+      # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin-contracts/migrations:/app/origin-contracts/migrations
-      - ./origin-js/scripts:/app/origin-js/scripts
-      - ./origin-js/package.json:/app/origin-js/package.json
-      - ./origin-js/test:/app/origin-js/test
-      - ./origin-js/src:/app/origin-js/src
-    command: npm run start --prefix origin-js
-
-  origin-ipfs-proxy:
-    container_name: origin-ipfs-proxy
-    image: origin
+      # if new origin module is added the whole container does not need to be rebuilt
+      - ./lerna.json:/app/lerna.json
+      # Mount source code for all packages from host
+      - ./origin-dapp/:/app/origin-dapp/
+      - ./origin-services/:/app/origin-services/
+      - ./origin-graphql/:/app/origin-graphql/
+      - ./origin-eventsource/:/app/origin-eventsource/
+      - ./origin-ipfs/:/app/origin-ipfs/
+      - ./origin-messaging-client/:/app/origin-messaging-client/
+      - ./origin-linker-client/:/app/origin-linker-client/
+      - ./origin-validator:/app/origin-validator/
+      - ./origin-bridge/:/app/origin-bridge/
+      - ./origin-discovery/:/app/origin-discovery/
+      - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
+      - ./origin-messaging/:/app/origin-messaging/
+      - ./origin-notifications/:/app/origin-notifications/
+      - ./origin-growth/:/app/origin-growth/
+      - ./origin-identity/:/app/origin-identity/
+      - ./origin-token/:/app/origin-token/
+    # Required by the dapp translation plugin
+      - ./origin-dapp/translations:/app/origin-dapp/translations
+    # Exclude all node_modules
+      - /app/origin-dapp/node_modules/
+      - /app/origin-services/node_modules/
+      - /app/origin-graphql/node_modules/
+      - /app/origin-eventsource/node_modules/
+      - /app/origin-ipfs/node_modules/
+      - /app/origin-messaging-client/node_modules/
+      - /app/origin-linker-client/node_modules/
+      - /app/origin-validator/node_modules/
+      - /app/origin-bridge/node_modules/
+      - /app/origin-discovery/node_modules/
+      - /app/origin-ipfs-proxy/node_modules/
+      - /app/origin-messaging/node_modules/
+      - /app/origin-notifications/node_modules/
+      - /app/origin-growth/node_modules/
+      - /app/origin-token/node_modules/
+      - /app/origin-identity/node_modules/
+    # IPFS data
+      - ipfs:/app/ipfs
     ports:
-      - "9999:9999"
+      - "3000:3000"
+      - "8083:8083" # Webpack
+      - "8545:8545"
+      - "8080:8080"
     environment:
-      - IPFS_API_URL=http://origin:5002
-      - IPFS_GATEWAY_URL=http://origin:8080
-    volumes:
-      - ./origin-ipfs-proxy/src:/app/origin-ipfs-proxy/src
-      - ./origin-ipfs-proxy/package.json:/app/origin-ipfs-proxy/package.json
-    command: npm run start --prefix origin-ipfs-proxy
-
-  origin-discovery:
-    container_name: origin-discovery
-    image: origin
-    volumes:
-      - ./origin-js/src:/app/origin-js/src
-      - ./origin-discovery/src:/app/origin-discovery/src
-      - ./origin-discovery/config:/app/origin-discovery/config
-      - ./origin-discovery/package.json:/app/origin-discovery/package.json
-    environment:
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - ELASTICSEARCH_HOST=elasticsearch:9200
-      - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
-      - ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
-      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-    depends_on:
-      - origin
-      - postgres
-      - elasticsearch
-    ports:
-      - "4000:4000"
-    command: npm run start:discovery --prefix origin-discovery
-
-  origin-growth:
-    container_name: origin-growth
-    image: origin
-    volumes:
-      - ./experimental/origin-graphql/src:/app/experimental/origin-graphql/src
-      - ./origin-growth/src:/app/origin-growth/src
-      - ./origin-growth/config:/app/origin-growth/config
-      - ./origin-growth/package.json:/app/origin-growth/package.json
-      - ./development/envfiles/origin-growth.env:/app/origin-growth/.env
-    environment:
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-    depends_on:
-      - postgres
-    ports:
-      - "4001:4001"
-    command: npm run start --prefix origin-growth
-
-  event-listener:
-    container_name: event-listener
-    image: origin
-    volumes:
-      - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin-js/src:/app/origin-js/src
-      - ./origin-discovery/src:/app/origin-discovery/src
-      - ./origin-discovery/migrations:/app/origin-discovery/migrations
-      - ./origin-discovery/config:/app/origin-discovery/config
-      - ./development/envfiles/event-listener.env:/app/origin-discovery/.env
-    depends_on:
-      - origin
-      - postgres
-      - elasticsearch
-      - origin-ipfs-proxy
+      - DEPLOY_CONTRACTS=true
+      - DOCKER=true
+      - ENABLE_GROWTH=false
     command:
+      # Waits for origin-messaging to start then uses a script to read the
+      # origin-messaging IPFS peer id and export the IPFS_SWARM variable
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin:8080 --
-      wait-for.sh -t 0 -q elasticsearch:9200 --
-      npm run migrate --prefix origin-discovery &&
-      npm run start:listener --prefix origin-discovery"
+      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
+      . set-ipfs-swarm.sh /app/ipfs/config &&
+      npm run start --prefix origin-dapp"
 
   origin-messaging:
     container_name: origin-messaging
     image: origin
-    ports:
-      - "9012:9012"
-    volumes:
-      - ./origin-messaging/src:/app/origin-messaging/src
-      - ./origin-messaging/package.json:/app/origin-messaging/package.json
-      - ipfs:/app/ipfs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes: *volumes
     environment:
       - MESSAGING_NAMESPACE=dev
       - IPFS_REPO_PATH=/app/ipfs
+    ports:
+      - "9012:9012"
+      - "6647:6647"
     command: npm run start --prefix origin-messaging
 
-  origin-bridge:
-    container_name: origin-bridge
+  origin-ipfs-proxy:
+    container_name: origin-ipfs-proxy
     image: origin
-    volumes:
-      - ./origin-bridge/src:/app/origin-bridge/src
-      - ./origin-bridge/package.json:/app/origin-bridge/package.json
+    volumes: *volumes
+    ports:
+      - "9999:9999"
+    environment:
+      - IPFS_API_URL=http://origin-dapp:5002
+      - IPFS_GATEWAY_URL=http://origin-dapp:8080
+    command: npm run start --prefix origin-ipfs-proxy
+
+  origin-event-listener:
+    container_name: origin-event-listener
+    image: origin
+    volumes: *volumes
+    environment:
+      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - INDEX_MARKETPLACE=true
+      - INDEX_IDENTITY=true
+      - INDEX_GROWTH=true
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH=true
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp:8545
     depends_on:
       - postgres
-    ports:
-      - "5000:5000"
-    environment:
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - elasticsearch
+      - origin-dapp
+      - origin-ipfs-proxy
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix origin-bridge &&
-      npm run start --prefix origin-bridge"
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 --
+      wait-for.sh -t 0 -q elasticsearch:9200 --
+      npm run migrate --prefix origin-discovery &&
+      npm run migrate --prefix origin-growth &&
+      npm run migrate --prefix origin-identity &&
+      npm run start:listener --prefix origin-discovery"
+
+  origin-discovery:
+    container_name: origin-discovery
+    image: origin
+    volumes: *volumes
+    environment:
+      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - WEB3_URL=http://origin-dapp:8545
+    depends_on:
+      - postgres
+      - elasticsearch
+    ports:
+      - "4000:4000"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 &&
+      npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:
     container_name: origin-notifications
     image: origin
-    volumes:
-      - ./origin-notifications/src:/app/origin-notifications/src
-      - ./origin-notifications/migrations:/app/origin-notifications/migrations
-      - ./origin-notifications/package.json:/app/origin-notifications/package.json
-      - ./development/envfiles/origin-notifications.env:/app/origin-notifications/.env
+    volumes: *volumes
     depends_on:
       - postgres
     environment:
@@ -172,39 +191,31 @@ services:
       npm run migrate --prefix origin-notifications &&
       npm run start --prefix origin-notifications"
 
-  origin-dapp:
-    container_name: origin-dapp
+  origin-growth:
+    container_name: origin-growth
     image: origin
-    volumes:
-      # Include origin-contracts build files so the DApp has access to the
-      # address of the contracts on the local blockchain
-      - ./origin-contracts/build:/app/origin-contracts/build
-      - ./origin-js/src:/app/origin-js/src
-      # Mount origin-dapp inside the container
-      - ./origin-dapp/src:/app/origin-dapp/src
-      - ./origin-dapp/public:/app/origin-dapp/public
-      - ./origin-dapp/translations:/app/origin-dapp/translations
-      - ./origin-dapp/webpack.config.js:/app/origin-dapp/webpack.config.js
-      - ./origin-dapp/package.json:/app/origin-dapp/package.json
-      # Set the envfile from the local envfile
-      - ./development/envfiles/origin-dapp.env:/app/origin-dapp/.env
-      - ipfs:/app/ipfs
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     depends_on:
-      - origin-ipfs-proxy
-      - event-listener
-      - origin
-      - origin-discovery
-      - origin-messaging
-      - origin-bridge
-      - origin-notifications
+      - postgres
     ports:
-      - "3000:3000"
+      - "4001:4001"
+    #command: sleep infinity
+    command: npm run start --prefix origin-growth
+
+  origin-bridge:
+    container_name: origin-bridge
+    image: origin
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
     command:
-      # Waits for origin-messaging to start then uses a script to read the
-      # origin-messaging IPFS peer id and write the configuration key/pair to
-      # the .env file.
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
-      . set-ipfs-swarm.sh /app/ipfs/config &&
-      wait-for.sh -t 0 -q origin:8080 --
-      npm run start --prefix origin-dapp"
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-bridge &&
+      npm run start --prefix origin-bridge"

@@ -7,7 +7,7 @@ import camelToDash from 'utils/camelToDash'
 function isWhiteLabelHostname() {
   const { hostname } = window.location
   const exceptionNeedles = [
-    /dapp2?\.((staging|dev)\.)?originprotocol\.com/,
+    /dapp?\.((staging|dev)\.)?originprotocol\.com/,
     /localhost/,
     /127.0.0.1/
   ]
