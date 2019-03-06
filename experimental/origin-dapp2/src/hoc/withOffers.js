@@ -8,14 +8,8 @@ import flatten from 'lodash/flatten'
 
 import PurchaseQuery from 'queries/Purchases'
 import SalesQuery from 'queries/Sales'
+import eventKeys from 'constants/offerEvents'
 
-const eventKeys = [
-  'createdEvent',
-  'acceptedEvent',
-  'disputedEvent',
-  'rulingEvent',
-  'finalizedEvent'
-]
 function withOffers(WrappedComponent, walletProp = 'wallet') {
   const WithOffers = props => {
     const id = get(props, walletProp)
@@ -30,7 +24,12 @@ function withOffers(WrappedComponent, walletProp = 'wallet') {
 
           const updatedOfferEvents = offers.map(offer => {
             const offerEvents = pick(offer, eventKeys)
-            const offerProps = pick(offer, ['offerId', 'listing', 'buyer'])
+            const offerProps = pick(offer, [
+              'offerId',
+              'listing',
+              'buyer',
+              'withdrawnBy'
+            ])
 
             return Object.keys(offerEvents).reduce((result, value) => {
               if (

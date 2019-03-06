@@ -17,14 +17,7 @@ import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import Message from './Message'
 import QueryError from 'components/QueryError'
-
-const eventKeys = [
-  'createdEvent',
-  'acceptedEvent',
-  'disputedEvent',
-  'rulingEvent',
-  'finalizedEvent'
-]
+import eventKeys from 'constants/offerEvents'
 
 function getRoomEvents(offers, purchases, { address }) {
   return filter([...offers, ...purchases], offer => {

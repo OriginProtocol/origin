@@ -6,19 +6,11 @@ import isNil from 'lodash/isNil'
 import flatten from 'lodash/flatten'
 
 import PurchaseQuery from 'queries/Purchases'
-
-const eventKeys = [
-  'createdEvent',
-  'acceptedEvent',
-  'disputedEvent',
-  'rulingEvent',
-  'finalizedEvent'
-]
+import eventKeys from 'constants/offerEvents'
 
 function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
   const WithOfferEvents = props => {
     const id = get(props, walletProp)
-    console.log("SO NO WALLET THEN", id)
     if (!id) {
       return <WrappedComponent {...props} />
     }
@@ -32,7 +24,8 @@ function withOfferEvents(WrappedComponent, walletProp = 'wallet') {
             const purchaseProps = pick(purchase, [
               'offerId',
               'listing',
-              'buyer'
+              'buyer',
+              'withdrawnBy'
             ])
 
             return Object.keys(purchaseEvents).reduce((result, value) => {
