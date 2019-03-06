@@ -126,10 +126,14 @@ export default async function listings(
   let ids = [],
     totalCount = 0
 
-  if ((search || filters.length > 0) && contracts.discovery) {
-    ;({ totalCount, ids } = await searchIds(search, filters)) // eslint-disable-line
+  if (contracts.discovery) {
+    const discoveryResult = await searchIds(search, filters)
+    ids = discoveryResult.ids
+    totalCount = ids.length
   } else {
-    ;({ totalCount, ids } = await allIds({ contract, sort, hidden })) // eslint-disable-line
+    const decentralizedResults = await allIds({ contract, sort, hidden })
+    ids = decentralizedResults.ids
+    totalCount = decentralizedResults.totalCount
   }
 
   return await resultsFromIds({ after, ids, first, totalCount })
