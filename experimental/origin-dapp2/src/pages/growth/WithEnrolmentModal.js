@@ -2,11 +2,24 @@ import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
 import { withApollo, Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
+
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
+import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
+
+const GrowthEnum = require('Growth$FbtEnum')
+
+const GrowthTranslation = (key) => {
+  return (
+    <fbt desc="growth">
+      <fbt:enum enum-range={GrowthEnum} value={key} />
+    </fbt>
+  )
+}
 
 function withEnrolmentModal(WrappedComponent) {
   class WithEnrolmentModal extends Component {
@@ -18,9 +31,12 @@ function withEnrolmentModal(WrappedComponent) {
         this
       )
 
+      this.initialStage = props.skipjoincampaign === 'false' ?
+        'JoinActiveCampaign' :
+        'TermsAndEligibilityCheck'
       this.state = {
         open: false,
-        stage: 'TermsAndEligibilityCheck',
+        stage: this.initialStage,
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
@@ -50,7 +66,7 @@ function withEnrolmentModal(WrappedComponent) {
       this.setState({ termsAccepted: e.target.checked })
     }
 
-    async handleTermsContinue() {
+    handleTermsContinue() {
       if (!this.state.termsAccepted) {
         return
       }
@@ -58,8 +74,13 @@ function withEnrolmentModal(WrappedComponent) {
       this.setState({ stage: 'MetamaskSignature' })
     }
 
+    handleJoinCampaignContinue() {
+      this.setState({ stage: 'TermsAndEligibilityCheck' })
+    }
+
     handleCloseModal() {
       this.setState({
+        stage: this.initialStage,
         open: false
       })
     }
@@ -70,6 +91,68 @@ function withEnrolmentModal(WrappedComponent) {
           notCitizenConfirmed: true
         })
       }
+    }
+
+    renderJoinActiveCampaign() {
+      const vars = { first: 10 }
+      return (
+        <Query
+          query={allCampaignsQuery}
+          variables={vars}
+          notifyOnNetworkStatusChange={true}
+        >
+          {({ error, data, networkStatus, loading }) => {
+            if (networkStatus === 1 || loading) {
+              return <h5 className="p-2">Loading...</h5>
+            } else if (error) {
+              return (
+                <QueryError
+                  error={error}
+                  query={allCampaignsQuery}
+                  vars={vars}
+                />
+              )
+            }
+            const campaigns = data.campaigns.nodes
+            const activeCampaign = campaigns.find(
+              campaign => campaign.status === 'Active'
+            )
+
+            const campaignName = activeCampaign && GrowthEnum[activeCampaign.nameKey] ?
+              GrowthTranslation(activeCampaign.nameKey) :
+              'Campaign'
+
+            return(
+              <div className="join-campaign">
+                <div>
+                  <img
+                    className="mr-auto ml-auto"
+                    src="images/growth/campaign-graphic.svg"
+                  />
+                </div>
+                <div className="title title-light mt-4 ml-5 mr-5">Join our {campaignName} to earn tokens</div>
+                <div className="mt-3 normal-line-height ml-4 mr-4">
+                  Earn OGN by completing tasks like verifying your identity and sharing Origin 
+                  with your friends. OGN can be used in a variety of ways. Earned OGN will be transferred 
+                  after the end of the {campaignName}. 
+                </div>
+                <div className="d-flex align-items-center flex-column">
+                  <button
+                    className="btn btn-outline-light"
+                    onClick={() => this.handleJoinCampaignContinue()}
+                    children="Get Started"
+                  />
+                  <button
+                    className="btn btn-no-outline"
+                    onClick={() => this.handleCloseModal()}
+                    children="Dismiss"
+                  />
+                </div>
+              </div>
+            )
+          }}
+        </Query>
+      )
     }
 
     renderTermsModal() {
@@ -140,7 +223,7 @@ function withEnrolmentModal(WrappedComponent) {
         <div>
           <div>
             <div className="image-holder mr-auto ml-auto">
-              <img className="" src="images/growth/earth-graphic.svg" />
+              <img src="images/growth/earth-graphic.svg" />
               <img
                 className="red-x-image"
                 src="images/growth/red-x-graphic.svg"
@@ -377,4 +460,13 @@ require('react-styl')(`
       text-align: left
       padding: 22px 31px 15px 22px
       font-weight: 300
+    .join-campaign
+      .btn
+        padding: 0.7rem 2rem
+      .btn-no-outline
+        border: 0px
+        font-weight: normal
+        text-decoration: underline
+        color: white
+        margin-top: 20px
 `)
