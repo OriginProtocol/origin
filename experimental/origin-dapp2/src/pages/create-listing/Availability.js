@@ -101,9 +101,7 @@ class Availability extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const [startRaw, endRaw] = this.state.range.split('-')
-    const start = startRaw.replace(/\//g, '-'),
-      end = endRaw.replace(/\//g, '-')
+    const [start, end] = this.state.range.split('/')
 
     return (
       <div className="availability-editor">
