@@ -1,0 +1,18 @@
+[
+  {
+    "id": "draft-listing.title",
+    "defaultMessage": "Listing In Progress"
+  },
+  {
+    "id": "draft-listing.explanation",
+    "defaultMessage": "You have an incomplete listing that has not yet been created. Would you like to remove it and start a new one or continue with your existing draft?"
+  },
+  {
+    "id": "draft-listing.remove",
+    "defaultMessage": "Remove"
+  },
+  {
+    "id": "draft-listing.continue",
+    "defaultMessage": "Continue"
+  }
+]

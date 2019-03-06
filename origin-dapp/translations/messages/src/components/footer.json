@@ -4,11 +4,23 @@
     "defaultMessage": "The Origin decentralized app allows buyers and sellers to transact without rent-seeking middlemen using the Ethereum blockchain and IPFS."
   },
   {
-    "id": "footer.websiteLink",
-    "defaultMessage": "Visit our Website"
+    "id": "footer.aupLink",
+    "defaultMessage": "Acceptable Use Policy"
   },
   {
-    "id": "footer.githubLink",
-    "defaultMessage": "Visit our Github"
+    "id": "footer.tosLink",
+    "defaultMessage": "Terms"
+  },
+  {
+    "id": "footer.privacyLink",
+    "defaultMessage": "Privacy"
+  },
+  {
+    "id": "footer.websiteLink",
+    "defaultMessage": "Learn more about Origin"
+  },
+  {
+    "id": "footer.creatorLink",
+    "defaultMessage": "Create Your Own Marketplace"
   }
 ]

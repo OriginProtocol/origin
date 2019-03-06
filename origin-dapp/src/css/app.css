@@ -5315,7 +5315,11 @@ footer .origin-logo {
 
 footer .description {
   margin-left: 40px;
-  max-width: 360px;
+  max-width: 660px;
+}
+
+footer .description .footer-link {
+  font-size: 0.75rem;
 }
 
 footer p {
