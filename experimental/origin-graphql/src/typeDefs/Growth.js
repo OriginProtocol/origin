@@ -104,7 +104,7 @@ module.exports =
     reward: Price            # information about reward
     # first property specifies the number of items to return
     # after is the cursor
-    invites(first: Int, after: String): [GrowthInviteConnection]
+    invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
   }
 
@@ -140,16 +140,17 @@ module.exports =
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
-    campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
-    campaign(id: String, walletAddress: ID!): GrowthCampaign
+    campaigns(first: Int, after: String): GrowthCampaignConnection
+    campaign(id: String): GrowthCampaign
     inviteInfo(code: String): InviteInfo
+    inviteCode: String!
     isEligible: EligibilityInfo
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }
 
   type Mutation {
     # Sends email invites with referral code on behalf of the referrer.
-    invite(walletAddress: ID!, emails: [String!]!): Boolean
+    invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
     enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
     # Records a growth engine event.

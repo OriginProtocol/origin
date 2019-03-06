@@ -17,7 +17,7 @@ async function deployIdentity(
       try {
         return {
           ...JSON.parse(a),
-          schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json'
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
         }
       } catch (e) {
         console.log('Error parsing attestation', a)

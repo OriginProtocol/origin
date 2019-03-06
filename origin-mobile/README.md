@@ -143,6 +143,8 @@ MAINNET_API_SERVER=https://linking.originprotocol.com
 RINKEBY_API_SERVER=https://linking.staging.originprotocol.com
 PROVIDER_URL=http://localhost:8545/
 CB_BW_CODE=
+
+GCM_SENDER_ID=
 ```
 
 **origin-notifications/.env**
@@ -251,7 +253,7 @@ This is likely a network error because your tunnels are not setup.  See [Android
 
 > FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
 
-Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this: 
+Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this:
 
     NODE_OPTIONS="--max_old_space_size=8196" npm run start
 

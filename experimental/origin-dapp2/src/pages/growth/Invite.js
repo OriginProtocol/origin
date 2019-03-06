@@ -1,5 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Link from 'components/Link'
+import { Query, Mutation } from 'react-apollo'
+import QueryError from 'components/QueryError'
+import inviteCodeQuery from 'queries/InviteCode'
+import { formInput, formFeedback } from 'utils/formHelpers'
+import InviteFriends from 'mutations/InviteFriends'
 
 function NavigationItem(props) {
   const { selected, onClick, title } = props
@@ -26,17 +30,23 @@ class GrowthInvite extends Component {
     this.state = {
       subPage: 'sendInvites',
       inviteCode: 'origin-invite-code',
-      showCopyConfirmation: false
+      inviteEmails: '',
+      inviteEmailsConfirmation: false,
+      inviteEmailsMutationError: false,
+      showCopyConfirmation: false,
+      valid: true
     }
+  }
 
-    this.inviteCode = `${location.protocol}//${location.hostname}/#/welcome/${
+  getInviteCode() {
+    return `${location.protocol}//${location.hostname}/#/welcome/${
       this.state.inviteCode
     }`
   }
 
   handleCopyClick() {
     const inviteField = document.getElementById('growth-invite-text')
-    inviteField.value = this.inviteCode
+    inviteField.value = this.getInviteCode()
     inviteField.select()
     document.execCommand('copy')
     inviteField.value = `${this.state.inviteCode}`
@@ -44,7 +54,7 @@ class GrowthInvite extends Component {
     // reset copy confirmation after 3 seconds
     setTimeout(() => {
       this.setState({ showCopyConfirmation: false })
-    }, 3000)
+    }, 5000)
   }
 
   handleNavigationClick(navigationState) {
@@ -56,7 +66,7 @@ class GrowthInvite extends Component {
       [
         'https://www.facebook.com/dialog/share?',
         'app_id=87741124305', // TODO use origin's one
-        `&href=${this.inviteCode}`,
+        `&href=${this.getInviteCode()}`,
         '&display=popup',
         `&redirect_uri=${window.location.href}`
       ].join('')
@@ -67,87 +77,313 @@ class GrowthInvite extends Component {
     window.open('https://twitter.com/intent/tweet?text=')
   }
 
+  resetEmailFormMessages(timeout = 5000) {
+    setTimeout(() => {
+      this.setState({
+        inviteEmailsConfirmation: false,
+        inviteEmailsMutationError: false
+      })
+    }, timeout)
+  }
+
   renderSendInvites() {
-    const { showCopyConfirmation, inviteCode } = this.state
+    const {
+      showCopyConfirmation,
+      inviteCode,
+      inviteEmailsConfirmation,
+      inviteEmailsMutationError
+    } = this.state
+
     return (
-      <div className="send-invites mt-4 pt-2">
-        <div className="empasis">Invite with your code</div>
-        <div>Send your friend your unique invite code.</div>
+      <Query
+        query={inviteCodeQuery}
+        onCompleted={({ inviteCode }) => {
+          if (inviteCode !== this.state.inviteCode) {
+            this.setState({ inviteCode })
+          }
+        }}
+      >
+        {({ loading, error, networkStatus }) => {
+          if (networkStatus === 1 || loading) {
+            return <h5 className="p-2">Loading...</h5>
+          } else if (error) {
+            return <QueryError error={error} query={inviteCodeQuery} />
+          }
 
-        <div className="d-flex pt-3">
-          <div className="col-8 pl-0 pr-0">
-            <div className="normal">Copy code</div>
-            <div className="d-flex mt-2">
-              <input
-                id="growth-invite-text"
-                type="text"
-                className="invite-code"
-                value={inviteCode}
-                readOnly
-              />
-              <div
-                className="copy-button d-flex align-items-center justify-content-center"
-                onClick={() => this.handleCopyClick()}
-              >
-                {showCopyConfirmation && (
-                  <Fragment>
-                    <img src="/images/growth/checkmark.svg" />
-                    <div className="ml-2">Copied</div>
-                  </Fragment>
-                )}
-                {!showCopyConfirmation && <div>Copy</div>}
+          const input = formInput(this.state, state => this.setState(state))
+          const Feedback = formFeedback(this.state)
+
+          return (
+            <div className="send-invites mt-4 pt-2">
+              <div className="emphasis">Invite with your code</div>
+              <div>Send your friend your unique invite code.</div>
+
+              <div className="d-flex pt-3">
+                <div className="col-8 pl-0 pr-0">
+                  <div className="normal">Copy code</div>
+                  <div className="d-flex mt-2">
+                    <input
+                      id="growth-invite-text"
+                      type="text"
+                      className="invite-code"
+                      value={inviteCode}
+                      readOnly
+                    />
+                    <div
+                      className="copy-button d-flex align-items-center justify-content-center"
+                      onClick={() => this.handleCopyClick()}
+                    >
+                      {showCopyConfirmation && (
+                        <Fragment>
+                          <img src="/images/growth/checkmark.svg" />
+                          <div className="ml-2">Copied</div>
+                        </Fragment>
+                      )}
+                      {!showCopyConfirmation && <div>Copy</div>}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-4 pl-4 pr-0">
+                  <div className="normal">Share or Tweet</div>
+                  <div className="d-flex mt-2">
+                    <button
+                      className="social-btn fb"
+                      onClick={() => this.handleFbShareClick()}
+                    >
+                      <img src="/images/growth/facebook-icon.svg" />
+                    </button>
+                    <button
+                      className="social-btn tw"
+                      onClick={() => this.handleTwitterShareClick()}
+                    >
+                      <img src="/images/growth/twitter-icon.svg" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col-4 pl-4 pr-0">
-            <div className="normal">Share or Tweet</div>
-            <div className="d-flex mt-2">
-              <button
-                className="social-btn fb"
-                onClick={() => this.handleFbShareClick()}
-              >
-                <img src="/images/growth/facebook-icon.svg" />
-              </button>
-              <button
-                className="social-btn tw"
-                onClick={() => this.handleTwitterShareClick()}
-              >
-                <img src="/images/growth/twitter-icon.svg" />
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div className="empasis mt-5">Invite via Email</div>
-        <div>Enter email addresses of friends you want to invite</div>
-        <textarea
-          name="invite-email"
-          className="email-text p-3"
-          cols="50"
-          rows="5"
-          placeholder="Separate email addresses with commas."
-        />
-        <button
-          className="btn btn-primary btn-rounded mt-2"
-          children="Invite Friends"
-        />
-      </div>
+              <Mutation
+                mutation={InviteFriends}
+                onCompleted={({ invite }) => {
+                  if (invite) {
+                    this.setState({
+                      inviteEmailsConfirmation: `Total ${
+                        this.state.emails.length
+                      } Email invitation(s) sent!`
+                    })
+                  } else {
+                    this.setState({
+                      inviteEmailsMutationError:
+                        'Can not invite friends. Please try again later.'
+                    })
+                  }
+                  this.resetEmailFormMessages()
+                }}
+                onError={errorData => {
+                  console.log('Error: ', errorData)
+                  this.setState({
+                    inviteEmailsMutationError:
+                      'Error inviting friends. Please try again later.'
+                  })
+                  this.resetEmailFormMessages()
+                }}
+              >
+                {invite => (
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      this.validateEmailsInput(invite)
+                    }}
+                  >
+                    <div className="emphasis mt-5">Invite via Email</div>
+                    <div>
+                      Enter email addresses of friends you want to invite
+                    </div>
+                    <textarea
+                      {...input('inviteEmails')}
+                      className="email-text p-3"
+                      cols="50"
+                      rows="5"
+                      placeholder="Separate email addresses with commas."
+                    />
+                    {Feedback('inviteEmails')}
+                    {inviteEmailsConfirmation && (
+                      <div className="invite-confirmation">
+                        {inviteEmailsConfirmation}
+                      </div>
+                    )}
+                    {inviteEmailsMutationError && (
+                      <div className="invite-error">
+                        {inviteEmailsMutationError}
+                      </div>
+                    )}
+                    <button
+                      className="btn btn-primary btn-rounded mt-2"
+                      type="submit"
+                      children="Invite Friends"
+                    />
+                  </form>
+                )}
+              </Mutation>
+            </div>
+          )
+        }}
+      </Query>
     )
   }
 
-  renderTrackInvites() {
-    return <div />
+  extractEmails(commaSeparatedEmails) {
+    return commaSeparatedEmails
+      .split(',')
+      .map(email => email.trim().toLowerCase())
+      .filter(email => email.length > 4)
+  }
+
+  validateEmailsInput(invite) {
+    const newState = {
+      valid: true
+    }
+
+    const emails = this.extractEmails(this.state.inviteEmails)
+
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const errorneousEmails = emails.filter(email => !emailRegex.test(email))
+
+    if (errorneousEmails.length > 0) {
+      newState.inviteEmailsError = `Incorrect email format: ${errorneousEmails.join(
+        ','
+      )}`
+      newState.valid = false
+    } else if (emails.length === 0) {
+      newState.inviteEmailsError = 'Insert at least 1 valid email address'
+      newState.valid = false
+    }
+
+    newState.emails = emails
+    if (newState.valid) {
+      invite({
+        variables: { emails }
+      })
+    }
+
+    this.setState(newState)
+    return newState.valid
+  }
+
+  renderTrackInvites(referralAction) {
+    const formatTokens = tokenAmount => {
+      return web3.utils
+        .toBN(tokenAmount)
+        .div(this.props.decimalDivision)
+        .toString()
+    }
+
+    const renderReward = (amount, renderPlusSign, isBig = false) => {
+      return (
+        <div
+          className={`reward ${
+            isBig ? 'big' : ''
+          } d-flex align-items-center pl-2 pt-2 pb-2 mt-2`}
+        >
+          <img src="images/ogn-icon.svg" />
+          <div className="value">
+            {renderPlusSign ? '+' : ''}
+            {formatTokens(amount)}
+          </div>
+        </div>
+      )
+    }
+
+    const renderInvitesTable = (
+      title,
+      subTitle,
+      invites,
+      reward,
+      rewardTitle,
+      showStatus
+    ) => {
+      return (
+        <div className="track-invites">
+          <div className="pt-2 d-flex justify-content-between">
+            <div>
+              <div className="emphasis">{title}</div>
+              <div>{subTitle}</div>
+            </div>
+            <div className="reward-holder d-flex flex-column align-items-center">
+              <div>{rewardTitle}</div>
+              {renderReward(reward, true, true)}
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="emphasis d-flex pb-2">
+              <div className="col-4 p-0">Contact</div>
+              <div className="col-2 p-0">Reward</div>
+              <div className="col-6 p-0">{showStatus ? 'Status' : ''}</div>
+            </div>
+            {invites.map((invite, index) => {
+              const name = invite.contactName
+                ? invite.contactName
+                : invite.walletAddress
+              return (
+                <div className="invite-row d-flex pt-2 pb-2" key={index}>
+                  <div className="col-4 p-0 d-flex align-items-center">
+                    <div className="name">{name}</div>
+                  </div>
+                  <div className="col-2 p-0 d-flex">
+                    {renderReward(invite.reward.amount, true, false)}
+                  </div>
+                  <div className="col-6 p-0">
+                    {showStatus ? 'Hasn’t completed user activation' : ''}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <Fragment>
+        {renderInvitesTable(
+          'Pending Invites',
+          'Track progress of friends who sign up with your invite code.',
+          referralAction.invites.nodes.filter(
+            invite => invite.status !== 'Successful'
+          ),
+          referralAction.rewardPending.amount,
+          'Pending',
+          true
+        )}
+        <div className="mt-5" />
+        {renderInvitesTable(
+          'Successful Invites',
+          'Help your friends earn OGN just like you.',
+          referralAction.invites.nodes.filter(
+            invite => invite.status === 'Successful'
+          ),
+          referralAction.rewardEarned.amount,
+          'Earned',
+          false
+        )}
+      </Fragment>
+    )
   }
 
   render() {
     const { subPage } = this.state
+    const { referralAction, handleNavigationChange } = this.props
+
     return (
       <div className="container growth-invite">
         <div>
-          <Link to="/campaigns" className="back d-flex mr-auto">
+          <div
+            className="back d-flex mr-auto"
+            onClick={() => handleNavigationChange('Campaigns')}
+          >
             <img src="/images/caret-blue.svg" />
             <div>Back to Campaign</div>
-          </Link>
+          </div>
           <h1 className="mb-2 pt-3 mt-3">Invite your friends to Origin</h1>
           <div>Get Origin Tokens by completing the tasks below.</div>
         </div>
@@ -165,7 +401,7 @@ class GrowthInvite extends Component {
           />
         </div>
         {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' && this.renderTrackInvites()}
+        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction)}
       </div>
     )
   }
@@ -185,6 +421,7 @@ require('react-styl')(`
     .back
       font-weight: bold
       color: var(--clear-blue)
+      cursor: pointer
     .navigation-list 
       .select-bar
         background-color: var(--clear-blue)
@@ -198,7 +435,7 @@ require('react-styl')(`
       .title.active
         color: var(--dark)
     .send-invites
-      .empasis
+      .emphasis
         font-weight: bold
       .normal
         font-weight: normal
@@ -245,4 +482,47 @@ require('react-styl')(`
         margin-left: 5px
       .social-btn:hover
         background-color: var(--pale-grey)
+      .invite-confirmation
+        font-size: 18px
+      .invalid-feedback
+        font-size: 18px
+      .invite-error
+        font-size: 18px
+        color: var(--red)
+    .track-invites
+      margin-top: 30px
+      .emphasis
+        font-weight: bold
+      .reward-holder
+        margin-top: -20px
+        font-size: 14px
+        font-weight: normal
+      .reward
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
+      .reward .value
+        padding-bottom: 1px
+      .reward img
+        margin-right: 6px
+      .reward.big
+        padding-right: 15px
+        height: 38px
+        font-size: 22px
+      .reward.big .value
+        padding-bottom: 1px
+      .reward.big img
+        margin-right: 9px
+        width: 24px
+      .invite-row
+        border-top: 1px solid var(--pale-grey-two)
+      .name
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
+        max-width: 95%
 `)
