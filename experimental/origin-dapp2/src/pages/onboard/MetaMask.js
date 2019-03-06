@@ -8,8 +8,7 @@ import Link from 'components/Link'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
-const MetaMaskURL =
-  'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related'
+const MetaMaskURL = 'https://metamask.io'
 
 const query = gql`
   query WalletStatus {
@@ -41,12 +40,9 @@ const NotInstalled = ({ onInstall, back }) => (
       target="blank"
       className="btn btn-outline-primary"
       onClick={() => onInstall()}
-    >
-      Install MetaMask
-    </a>
-    <Link to={back} className="cancel">
-      Cancel
-    </Link>
+      children="Install MetaMask"
+    />
+    <Link to={back} className="cancel" children="Cancel" />
   </div>
 )
 
