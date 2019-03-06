@@ -80,33 +80,37 @@ class UpdateCampaigns {
   }
 }
 
+module.exports = UpdateCampaigns
+
 /**
  * MAIN
  */
-logger.info('Starting campaigns update job.')
+if (require.main === module) {
+  logger.info('Starting campaigns update job.')
 
-const args = parseArgv()
-const config = {
-  // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] ? args['--persist'] : false
+  const args = parseArgv()
+  const config = {
+    // By default run in dry-run mode unless explicitly specified using persist.
+    persist: args['--persist'] ? args['--persist'] : false
+  }
+  logger.info('Config:')
+  logger.info(config)
+
+  const job = new UpdateCampaigns(config)
+
+  job
+    .process()
+    .then(() => {
+      logger.info('Campaigns update stats:')
+      logger.info('  Num processed:            ', job.stats.numProcessed)
+      logger.info('  Num marked as calc. ready:', job.stats.numStatusReady)
+      logger.info('  Num usedCap updated:      ', job.stats.numUsedCapUpdated)
+      logger.info('Finished')
+      process.exit()
+    })
+    .catch(err => {
+      logger.error('Job failed: ', err)
+      logger.error('Exiting')
+      process.exit(-1)
+    })
 }
-logger.info('Config:')
-logger.info(config)
-
-const job = new UpdateCampaigns(config)
-
-job
-  .process()
-  .then(() => {
-    logger.info('Campaigns update stats:')
-    logger.info('  Num processed:            ', job.stats.numProcessed)
-    logger.info('  Num marked as calc. ready:', job.stats.numStatusReady)
-    logger.info('  Num usedCap updated:      ', job.stats.numUsedCapUpdated)
-    logger.info('Finished')
-    process.exit()
-  })
-  .catch(err => {
-    logger.error('Job failed: ', err)
-    logger.error('Exiting')
-    process.exit(-1)
-  })
