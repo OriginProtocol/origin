@@ -10,6 +10,7 @@ const ListingInterface = `
   offers: [Offer]
   allOffers: [Offer]
   offer(id: ID!): Offer
+  pendingBuyers: [Account]
   totalOffers: Int
   events: [Event]
   totalEvents: Int
