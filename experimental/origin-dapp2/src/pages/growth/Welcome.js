@@ -52,7 +52,6 @@ class GrowthWelcome extends Component {
               className="btn btn-primary btn-rounded"
               type="submit"
               children="Sign up for Origin"
-              skipjoincampaign="false"
             />
           </div>
           <div className="col-6 token-stack-holder">

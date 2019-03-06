@@ -37,6 +37,7 @@ const Balances = ({ ethBalance, account }) => {
           className="btn get-ogn d-flex"
           onClick={() => this.handleJoinCampaignContinue()}
           children="Get Started"
+          skipjoincampaign="false"
         >
           <img className="mr-1" src="images/growth/blue-add-icon.svg" />
           <div className="mr-2 value">Get OGN</div>
