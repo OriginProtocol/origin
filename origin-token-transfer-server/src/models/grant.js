@@ -4,15 +4,19 @@ const BigNumber = require('bignumber.js')
 const moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-  const Grant = sequelize.define('Grant', {
-    email: { type: DataTypes.TEXT, allowNull: false },
-    grantedAt: { type: DataTypes.DATE, allowNull: false },
-    amount: { type: DataTypes.INTEGER, allowNull: false },
-    totalMonths: { type: DataTypes.INTEGER, allowNull: false },
-    cliffMonths: { type: DataTypes.INTEGER, allowNull: false },
-    vested: { type: DataTypes.INTEGER, allowNull: false },
-    transferred: { type: DataTypes.INTEGER, allowNull: false }
-  }, {})
+  const Grant = sequelize.define(
+    'Grant',
+    {
+      email: { type: DataTypes.TEXT, allowNull: false },
+      grantedAt: { type: DataTypes.DATE, allowNull: false },
+      amount: { type: DataTypes.INTEGER, allowNull: false },
+      totalMonths: { type: DataTypes.INTEGER, allowNull: false },
+      cliffMonths: { type: DataTypes.INTEGER, allowNull: false },
+      vested: { type: DataTypes.INTEGER, allowNull: false },
+      transferred: { type: DataTypes.INTEGER, allowNull: false }
+    },
+    {}
+  )
 
   /**
    * Returns the vesting schedule for this grant.
@@ -23,13 +27,12 @@ module.exports = (sequelize, DataTypes) => {
       return []
     }
 
-    const monthlyAmount = BigNumber(this.amount)
-      .div(this.totalMonths)
+    const monthlyAmount = BigNumber(this.amount).div(this.totalMonths)
     const cliffAmount = BigNumber(this.cliffMonths)
       .times(this.amount)
       .div(this.totalMonths)
 
-      // Construct monthly vesting schedule.
+    // Construct monthly vesting schedule.
     const schedule = []
     for (let month = 1; month <= this.totalMonths; month++) {
       if (month < this.cliffMonths) {
@@ -38,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       schedule.push({
         date: moment(this.grantedAt).add(month, 'M'),
         month,
-        amount: (month == this.cliffMonths) ? cliffAmount : monthlyAmount
+        amount: month == this.cliffMonths ? cliffAmount : monthlyAmount
       })
     }
 
@@ -48,12 +51,18 @@ module.exports = (sequelize, DataTypes) => {
     const scheduledAmountMinusLast = schedule
       .slice(0, schedule.length - 1)
       .reduce((sum, s) => sum.plus(s.amount), BigNumber(0))
-    schedule[schedule.length - 1].amount = BigNumber(this.amount).minus(scheduledAmountMinusLast)
+    schedule[schedule.length - 1].amount = BigNumber(this.amount).minus(
+      scheduledAmountMinusLast
+    )
 
     // Sanity check.
-    const scheduledAmount = scheduledAmountMinusLast.plus(schedule[schedule.length - 1].amount)
+    const scheduledAmount = scheduledAmountMinusLast.plus(
+      schedule[schedule.length - 1].amount
+    )
     if (scheduledAmount != this.amount) {
-      throw new Error(`total amount vested ${scheduledAmount} != total ${this.amount}`)
+      throw new Error(
+        `total amount vested ${scheduledAmount} != total ${this.amount}`
+      )
     }
 
     return schedule
@@ -64,7 +73,9 @@ module.exports = (sequelize, DataTypes) => {
     const now = this.now || moment()
 
     if (this.totalMonths === 0) {
-      return BigNumber(moment(this.grantedAt).isSameOrBefore(now) ? this.amount : 0)
+      return BigNumber(
+        moment(this.grantedAt).isSameOrBefore(now) ? this.amount : 0
+      )
     }
 
     const schedule = this.vestingSchedule()
@@ -94,4 +105,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return Grant
 }
-

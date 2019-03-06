@@ -17,7 +17,7 @@ const { createProviders } = require('origin-token/src/config')
 
 const { LOGIN } = require('./constants/events')
 const { transferTokens } = require('./lib/transfer')
-const { Event, Grant  } = require('./models')
+const { Event, Grant } = require('./models')
 
 const Web3 = require('web3')
 
@@ -31,22 +31,26 @@ if (!sessionSecret) {
 const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 
 // Setup sessions.
-app.use(session({
-  cookie: { maxAge: 60 * 60 * 1000 },
-  resave: false,
-  secure: false,
-  saveUninitialized: true,
-  secret: sessionSecret,
-  store: new SQLiteStore({
-    dir: path.resolve(__dirname + '/../data'),
-    db: 'sessions.sqlite3'
+app.use(
+  session({
+    cookie: { maxAge: 60 * 60 * 1000 },
+    resave: false,
+    secure: false,
+    saveUninitialized: true,
+    secret: sessionSecret,
+    store: new SQLiteStore({
+      dir: path.resolve(__dirname + '/../data'),
+      db: 'sessions.sqlite3'
+    })
   })
-}))
+)
 
 // Expose extra headers.
-app.use(cors({
-  exposedHeaders: ['X-Authenticated-Email'],
-}))
+app.use(
+  cors({
+    exposedHeaders: ['X-Authenticated-Email']
+  })
+)
 
 // Parse request bodies.
 app.use(bodyParser.json())
@@ -55,11 +59,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 /**
  * Allows use of async functions for an Express route.
  */
-const asyncMiddleware = fn =>
-  (req, res, next) => {
-    Promise.resolve(fn(req, res, next))
-      .catch(next)
-  }
+const asyncMiddleware = fn => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next)
+}
 
 const logDate = () => moment().toString()
 
@@ -79,14 +81,18 @@ function withSession(req, res, next) {
 /**
  * Returns grants for the authenticated user.
  */
-app.get('/api/grants', withSession, asyncMiddleware(async (req, res) => {
-  const grants = await Grant.findAll({ where: { email: req.session.email } })
-  const augmentedGrants = grants.map((grant) => ({
-    ...grant.get({ plain: true }),
-    nextVest: grant.nextVesting()
-  }))
-  res.json(augmentedGrants)
-}))
+app.get(
+  '/api/grants',
+  withSession,
+  asyncMiddleware(async (req, res) => {
+    const grants = await Grant.findAll({ where: { email: req.session.email } })
+    const augmentedGrants = grants.map(grant => ({
+      ...grant.get({ plain: true }),
+      nextVest: grant.nextVesting()
+    }))
+    res.json(augmentedGrants)
+  })
+)
 
 const isEthereumAddress = value => {
   if (!Web3.utils.isAddress(value)) {
@@ -98,42 +104,48 @@ const isEthereumAddress = value => {
 /**
  * Transfers tokens from hot wallet to address of user's choosing.
  */
-app.post('/api/transfer', [
+app.post(
+  '/api/transfer',
+  [
     check('grantId').isInt(),
     check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
     withSession
   ],
   asyncMiddleware(async (req, res) => {
-
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() })
-  }
-
-  // Retrieve the grant, validating email in the process.
-  const { grantId, address, amount } = req.body
-  try {
-    const grant = await transferTokens({
-      grantId,
-      email: req.session.email,
-      ip: req.connection.remoteAddress,
-      networkId,
-      address,
-      amount
-    })
-    res.send(grant.get({ plain: true }))
-
-    const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
-    console.log(`${logDate()} ${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`)
-  } catch(e) {
-    if (e instanceof ReferenceError || e instanceof RangeError) {
-      res.status(422).send(e.message)
-    } else {
-      throw e
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() })
     }
-  }
-}))
+
+    // Retrieve the grant, validating email in the process.
+    const { grantId, address, amount } = req.body
+    try {
+      const grant = await transferTokens({
+        grantId,
+        email: req.session.email,
+        ip: req.connection.remoteAddress,
+        networkId,
+        address,
+        amount
+      })
+      res.send(grant.get({ plain: true }))
+
+      const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
+      console.log(
+        `${logDate()} ${
+          grant.email
+        } grant ${grantedAt} transferred ${amount} OGN to ${address}`
+      )
+    } catch (e) {
+      if (e instanceof ReferenceError || e instanceof RangeError) {
+        res.status(422).send(e.message)
+      } else {
+        throw e
+      }
+    }
+  })
+)
 
 // TODO: review this for security
 app.post(
@@ -175,31 +187,35 @@ app.post(
 /**
  * Return the events pertaining to the user.
  */
-app.get('/api/events', withSession, asyncMiddleware(async (req, res) => {
-  // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
-  // Sequelize supports this natively.
-  const events = await Event.findAll({
-    where: { email: req.session.email },
-    order: [ ['id', 'DESC'] ]
+app.get(
+  '/api/events',
+  withSession,
+  asyncMiddleware(async (req, res) => {
+    // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
+    // Sequelize supports this natively.
+    const events = await Event.findAll({
+      where: { email: req.session.email },
+      order: [['id', 'DESC']]
+    })
+    const grantIds = Array.from(new Set(events.map(e => e.grantId)))
+    const grants = await Grant.findAll({
+      where: {
+        id: { [Op.in]: grantIds },
+        email: req.session.email // extra safeguard
+      }
+    })
+    const grantsById = grants.reduce((map, grant) => {
+      map[grant.id] = grant.get({ plain: true })
+      return map
+    }, {})
+    // Populate each returned event with the corresponding grant.
+    const returnedEvents = events.map(e => ({
+      ...e.get({ plain: true }),
+      grant: e.grantId ? grantsById[e.grantId] : null
+    }))
+    res.json(returnedEvents)
   })
-  const grantIds = Array.from(new Set(events.map(e => e.grantId)))
-  const grants = await Grant.findAll({
-    where: {
-      id: { [Op.in]: grantIds },
-      email: req.session.email  // extra safeguard
-    }
-  })
-  const grantsById = grants.reduce((map, grant) => {
-    map[grant.id] = grant.get({ plain: true })
-    return map
-  }, {})
-  // Populate each returned event with the corresponding grant.
-  const returnedEvents = events.map(e => ({
-    ...e.get({ plain: true }),
-    grant: e.grantId ? grantsById[e.grantId] : null
-  }))
-  res.json(returnedEvents)
-}))
+)
 
 // Destroys the user's session cookie.
 app.post('/api/logout', withSession, (req, res) => {
@@ -213,8 +229,7 @@ app.post('/api/logout', withSession, (req, res) => {
   res.send('logged out')
 })
 
-createProviders([ networkId ]) // Ensure web3 credentials are set up
+createProviders([networkId]) // Ensure web3 credentials are set up
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
-

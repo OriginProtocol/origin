@@ -6,7 +6,7 @@ import moment from 'moment'
 import { setTransferDialogGrant, setTransferDialogOpen } from '../actions'
 
 class GrantRow extends Component {
-  handleTransferClicked = (grant) => {
+  handleTransferClicked = grant => {
     this.props.setTransferDialogGrant(grant)
     this.props.setTransferDialogOpen(true)
   }
@@ -20,11 +20,12 @@ class GrantRow extends Component {
     const vestYears = grant.totalMonths / 12
     const transferrable = grant.vested - grant.transferred
     const onTransferClicked = () => this.handleTransferClicked(grant)
-    const transferButton = transferrable > 0
-      ? <Button className="bp3-intent-success" onClick={onTransferClicked}>
+    const transferButton =
+      transferrable > 0 ? (
+        <Button className="bp3-intent-success" onClick={onTransferClicked}>
           Transfer up to {transferrable.toLocaleString()} OGN
         </Button>
-      : null
+      ) : null
     let nextVest
     if (grant.nextVest) {
       const nextVestDate = moment(grant.nextVest.date).format('YYYY-MM-DD')
@@ -56,4 +57,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(GrantRow)
+export default connect(
+  null,
+  mapDispatchToProps
+)(GrantRow)

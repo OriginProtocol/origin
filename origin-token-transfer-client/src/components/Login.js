@@ -14,10 +14,10 @@ class Login extends Component {
     })
   }
 
-  handleSuccess = async (response) => {
+  handleSuccess = async response => {
     // Send token to server endpoint, which will authenticate it with Google.
     const tokenBlob = new Blob(
-      [ JSON.stringify({ access_token: response.accessToken }, null, 2) ],
+      [JSON.stringify({ access_token: response.accessToken }, null, 2)],
       { type: 'application/json' }
     )
     const opts = {
@@ -26,7 +26,7 @@ class Login extends Component {
     }
     const sessionEmail = response.profileObj.email
 
-    fetch('/api/auth_google', opts).then((response) => {
+    fetch('/api/auth_google', opts).then(response => {
       if (response.ok) {
         this.props.setSessionEmail(sessionEmail)
       } else {
@@ -39,14 +39,13 @@ class Login extends Component {
   render() {
     return (
       <div>
-        {
-          this.props.sessionEmail
-          && this.props.sessionEmail !== '(need to login)'
-          && <Redirect to="/grants" />
-        }
+        {this.props.sessionEmail &&
+          this.props.sessionEmail !== '(need to login)' && (
+            <Redirect to="/grants" />
+          )}
         <Dialog id="loginDialog" isOpen={true}>
           <div className="bp3-dialog-header">
-            <span className="bp3-icon-large bp3-icon-arrow-right"></span>
+            <span className="bp3-icon-large bp3-icon-arrow-right" />
             <h4 className="bp3-heading">Origin T3</h4>
           </div>
 
@@ -60,11 +59,11 @@ class Login extends Component {
           <div className="bp3-dialog-footer" id="loginFooter">
             {/* TODO: extract client ID into EnvPack */}
             <GoogleLogin
-                clientId="715174050235-s2a22mca961has0fea8k4406mlqhg5b6.apps.googleusercontent.com"
-                buttonText="Login"
-                onSuccess={r => this.handleSuccess(r)}
-                onFailure={this.handleError}
-                />
+              clientId="715174050235-s2a22mca961has0fea8k4406mlqhg5b6.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={r => this.handleSuccess(r)}
+              onFailure={this.handleError}
+            />
           </div>
         </Dialog>
       </div>
@@ -84,4 +83,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)
