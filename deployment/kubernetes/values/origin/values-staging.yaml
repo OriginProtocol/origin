@@ -11,7 +11,7 @@ dapp2ImageTag: 'c3b43d4'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '456da61'
+dappImageTag: 'c3b43d4'
 dappReplicas: 2
 
 # Rinkeby network configuration
