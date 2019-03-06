@@ -29,7 +29,7 @@
     "@babel/core": "^7.2.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "ajv": "^6.6.1",
+    "ajv": "^6.9.1",
     "bs58": "^4.0.1",
     "ethereumjs-abi": "^0.6.5",
     "openzeppelin-solidity": "^1.10.0",
