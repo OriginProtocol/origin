@@ -32,8 +32,8 @@ class Calendar extends Component {
       max = lastDay <= 35 ? 35 : 42,
       days = [],
       dayAvailability = this.props.availability.getAvailability(
-        date.format('YYYY/MM/DD'),
-        date.endOf('month').format('YYYY/MM/DD')
+        date.format('YYYY-MM-DD'),
+        date.endOf('month').format('YYYY-MM-DD')
       )
 
     let currentDay = 0
@@ -142,9 +142,9 @@ class Calendar extends Component {
           this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
           if (this.props.onChange) {
             const start = dayjs(this.state.startDate)
-            let range = `${this.state.startDate}-${day.date}`
+            let range = `${this.state.startDate}/${day.date}`
             if (start.isAfter(day.date)) {
-              range = `${day.date}-${this.state.startDate}`
+              range = `${day.date}/${this.state.startDate}`
             }
             this.props.onChange({ range })
           }
