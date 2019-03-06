@@ -32,7 +32,9 @@ function Action(props) {
   let title
   let infoText
   let buttonLink = '/profile'
-  let buttonOnClick = () => { window.scrollTo(0, 0) }
+  let buttonOnClick = () => {
+    window.scrollTo(0, 0)
+  }
 
   if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
@@ -96,7 +98,7 @@ function Action(props) {
     )
   }
 
-  const renderActionButton = (handleOnClick) => {
+  const renderActionButton = handleOnClick => {
     return (
       <button
         className="btn btn-primary btn-rounded mr-2"
@@ -183,12 +185,16 @@ function Action(props) {
       <div className={`d-flex ${actionLocked ? '' : 'col-2'}`}>
         {!actionCompleted && !actionLocked && (
           <Fragment>
-            {buttonLink && <Link to={buttonLink} className="mt-auto mb-auto">
-              {renderActionButton(buttonOnClick)}
-            </Link>}
-            {!buttonLink && <div className="mt-auto mb-auto">
-              {renderActionButton(buttonOnClick)}
-            </div>}
+            {buttonLink && (
+              <Link to={buttonLink} className="mt-auto mb-auto">
+                {renderActionButton(buttonOnClick)}
+              </Link>
+            )}
+            {!buttonLink && (
+              <div className="mt-auto mb-auto">
+                {renderActionButton(buttonOnClick)}
+              </div>
+            )}
           </Fragment>
         )}
       </div>

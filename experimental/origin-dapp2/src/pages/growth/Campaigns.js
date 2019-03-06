@@ -122,7 +122,6 @@ class ProgressBar extends Component {
   }
 }
 
-
 function ActionList(props) {
   return (
     <Fragment>
@@ -179,20 +178,16 @@ function Campaign(props) {
 
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
-      .toBN(rewardEarned ? rewardEarned.amount : 0)
-      .div(decimalDevision)
+    .toBN(rewardEarned ? rewardEarned.amount : 0)
+    .div(decimalDevision)
   const tokenEarnProgress = Math.min(100, tokensEarned.toString())
 
   const actionCompleted = action => {
     return ['Exhausted', 'Completed'].includes(action.status)
   }
 
-  const completedActions = actions.filter(action =>
-    actionCompleted(action)
-  )
-  const nonCompletedActions = actions.filter(
-    action => !actionCompleted(action)
-  )
+  const completedActions = actions.filter(action => actionCompleted(action))
+  const nonCompletedActions = actions.filter(action => !actionCompleted(action))
 
   return (
     <Fragment>
@@ -214,10 +209,7 @@ function Campaign(props) {
           {status !== 'Pending' && (
             <Fragment>
               <span className="font-weight-bold">Tokens earned</span>
-              <img
-                className="ogn-icon pl-2 pr-1"
-                src="images/ogn-icon.svg"
-              />
+              <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
               <span className="ogn-amount font-weight-bold">
                 {tokensEarned.toString()}
               </span>
@@ -343,7 +335,7 @@ class GrowthCampaigns extends Component {
                           campaign => campaign.id === selectedCampaignId
                         )
 
-                        return(
+                        return (
                           <Query
                             query={AccountTokenBalance}
                             variables={{ account: accountId, token: 'OGN' }}
@@ -356,37 +348,51 @@ class GrowthCampaigns extends Component {
                                 if (tokenHolder && tokenHolder.token) {
                                   decimalDevision = web3.utils
                                     .toBN(10)
-                                    .pow(web3.utils.toBN(tokenHolder.token.decimals))
+                                    .pow(
+                                      web3.utils.toBN(
+                                        tokenHolder.token.decimals
+                                      )
+                                    )
                                 }
                               }
 
                               return (
                                 <Fragment>
-                                  {navigation === 'Campaigns' && <Fragment>
-                                    <CampaignNavList
-                                      campaigns={campaigns}
-                                      onCampaignClick={campaignId => {
-                                        this.setState({
-                                          selectedCampaignId: campaignId
-                                        })
-                                      }}
-                                      selectedCampaignId={selectedCampaignId}
-                                    />
-                                    <Campaign
-                                      campaign={selectedCampaign}
-                                      accountId={accountId}
-                                      handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
-                                      setReferralAction={(action) => this.setReferralAction(action)}
-                                      decimalDevision={decimalDevision}
-                                    />
-                                  </Fragment>}
-                                  {navigation === 'Invite' &&
+                                  {navigation === 'Campaigns' && (
+                                    <Fragment>
+                                      <CampaignNavList
+                                        campaigns={campaigns}
+                                        onCampaignClick={campaignId => {
+                                          this.setState({
+                                            selectedCampaignId: campaignId
+                                          })
+                                        }}
+                                        selectedCampaignId={selectedCampaignId}
+                                      />
+                                      <Campaign
+                                        campaign={selectedCampaign}
+                                        accountId={accountId}
+                                        handleNavigationChange={navigation =>
+                                          this.handleNavigationChange(
+                                            navigation
+                                          )
+                                        }
+                                        setReferralAction={action =>
+                                          this.setReferralAction(action)
+                                        }
+                                        decimalDevision={decimalDevision}
+                                      />
+                                    </Fragment>
+                                  )}
+                                  {navigation === 'Invite' && (
                                     <GrowthInvite
-                                      handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
+                                      handleNavigationChange={navigation =>
+                                        this.handleNavigationChange(navigation)
+                                      }
                                       referralAction={referralAction}
                                       decimalDevision={decimalDevision}
                                     />
-                                  }
+                                  )}
                                 </Fragment>
                               )
                             }}
