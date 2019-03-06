@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import withEnrolmentModal from './WithEnrolmentModal'
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Link from 'components/Link'
 
 function InfographicsBox(props) {
