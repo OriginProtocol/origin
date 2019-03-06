@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Mutation } from 'react-apollo'
-import { Query } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'

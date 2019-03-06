@@ -9,7 +9,7 @@ const {
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
-const { sendInviteEmails } = require('../resources/email')
+const { sendInvites } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -43,11 +43,12 @@ const resolvers = {
     async campaigns(_, args, context) {
       requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
+
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
           async campaign =>
-            await campaignToApolloObject(campaign, args.walletAddress)
+            await campaignToApolloObject(campaign, context.walletAddress)
         ),
         pageInfo: {
           endCursor: 'TODO implement',
@@ -61,11 +62,14 @@ const resolvers = {
       requireEnrolledUser(context)
 
       const campaign = await GrowthCampaign.get(args.id)
-      return await campaignToApolloObject(campaign, args.walletAddress)
+      return await campaignToApolloObject(campaign, context.walletAddress)
     },
-    async inviteInfo(root, args, context) {
-      requireEnrolledUser(context)
+    async inviteInfo(root, args) {
       return await GrowthInvite.getReferrerInfo(args.code)
+    },
+    async inviteCode(root, args, context) {
+      requireEnrolledUser(context)
+      return GrowthInvite.getInviteCode(context.walletAddress)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
@@ -114,7 +118,7 @@ const resolvers = {
       logger.info('invite mutation called.')
       // FIXME:
       //  b. Implement rate limiting to avoid spam attack.
-      await sendInviteEmails(args.walletAddress, args.emails)
+      await sendInvites(context.walletAddress, args.emails)
       return true
     },
     async enroll(_, args) {
