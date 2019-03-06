@@ -1,12 +1,12 @@
 import React from 'react'
 import { toDataUrl } from 'myetherwallet-blockies'
 
-import { formattedAddress } from 'utils/user'
-
 const Identicon = ({ address, size = 30 }) => {
-  // base64 encoded 1x1 blank white pixel when address is not defined
-  const blankDataUrl = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
-  const dataUrl = address ? toDataUrl(formattedAddress(address)) : blankDataUrl
+  const blankDataUrl =
+    'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
+  const dataUrl = address
+    ? toDataUrl(web3.utils.toChecksumAddress(address))
+    : blankDataUrl
 
   return (
     <img
