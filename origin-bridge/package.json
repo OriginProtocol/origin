@@ -46,7 +46,7 @@
     "per-env": "^1.0.2",
     "pg": "^7.8.0",
     "pg-hstore": "^2.3.2",
-    "prettier": "^1.16.4",
+    "prettier": "^1.16.3",
     "sequelize": "^5.0.0-beta.16",
     "sequelize-cli": "^5.4.0",
     "sinon": "^7.2.4",

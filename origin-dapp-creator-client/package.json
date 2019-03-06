@@ -25,11 +25,11 @@
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.2.0",
+    "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.0",
-    "@babel/plugin-proposal-decorators": "^7.2.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "@sentry/browser": "^4.5.3",
     "acorn": "^6.0.5",
@@ -58,16 +58,16 @@
     "style-loader": "0.23.1",
     "superagent": "^4.0.0",
     "terser": "3.14.1",
-    "terser-webpack-plugin": "^1.1.0",
+    "terser-webpack-plugin": "^1.2.2",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.27.0",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.2.1"
   },
   "devDependencies": {
     "bootstrap": "^4.2.1",
     "typeface-lato": "0.0.54",
     "typeface-poppins": "0.0.54",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.1.14"
   },
   "babel": {
     "presets": [
