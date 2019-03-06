@@ -239,7 +239,7 @@ class OriginEventSource {
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
-    const booked = []
+    const booked = [], pendingBuyers = []
 
     if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
@@ -264,6 +264,7 @@ class OriginEventSource {
             if (status === 1 || status === 2 || status === 3) {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
+              pendingBuyers.push({ id: offer.buyer.id })
             } else if (status === 4 || status === 5) {
               // Finalized or Ruling
               unitsSold += offer.quantity
@@ -312,6 +313,7 @@ class OriginEventSource {
       unitsAvailable,
       unitsPending,
       unitsSold,
+      pendingBuyers,
       depositAvailable: commissionAvailable
     })
   }

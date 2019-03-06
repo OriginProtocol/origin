@@ -8,6 +8,9 @@ import Avatar from 'components/Avatar'
 
 const RoomStatus = ({ conversation, identity, onClick, active }) => {
   const name = get(identity, 'fullName', conversation.id)
+  if (!conversation.lastMessage) {
+    return null
+  }
   const timestamp = conversation.lastMessage
     ? conversation.lastMessage.timestamp
     : conversation.timestamp
