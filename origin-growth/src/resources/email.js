@@ -49,7 +49,7 @@ async function sendInvites(referrer, recipients) {
     // TODO: should we have an html version of the email ?
     const email = {
       to: recipient,
-      from: process.env.INVITE_FROM_EMAIL,
+      from: process.env.SENDGRID_FROM_EMAIL,
       subject: `${contactName} invited you to join Origin`,
       text: `Check out the Origin DApp at https://dapp.originprotocol.com/invite/${code}`,
       html: `Check out the <a href="https://dapp.originprotocol.com/invite/${code}">Origin Protocol DApp</a>`
