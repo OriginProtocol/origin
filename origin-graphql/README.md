@@ -1,6 +1,6 @@
 # Origin GraphQL
 
-This experimental package provides a GraphQL interface to Origin Protocol
+This package provides a GraphQL interface to Origin Protocol
 intended to be consumed by ApolloClient. It uses `apollo-link-schema` to
 expose a client-side GraphQL server that can also be used server side.
 
