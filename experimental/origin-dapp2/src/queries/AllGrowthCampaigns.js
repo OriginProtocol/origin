@@ -2,8 +2,8 @@ import gql from 'graphql-tag'
 import fragments from './Fragments'
 
 const AllGrowthCampaignsQuery = gql`
-  query GrowthCampaigns($first: Int, $after: String, $walletAddress: ID!) {
-    campaigns(first: $first, after: $after, walletAddress: $walletAddress) {
+  query GrowthCampaigns($first: Int, $after: String) {
+    campaigns(first: $first, after: $after) {
       totalCount
       pageInfo {
         hasNextPage

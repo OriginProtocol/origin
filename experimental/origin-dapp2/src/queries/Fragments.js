@@ -176,6 +176,21 @@ export default {
               amount
               currency
             }
+            rewardEarned {
+              amount
+              currency
+            }
+            invites {
+              nodes {
+                status
+                walletAddress
+                contactName
+                reward {
+                  amount
+                  currency
+                }
+              }
+            }
           }
         }
         rewardEarned {

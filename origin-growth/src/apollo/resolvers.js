@@ -44,11 +44,13 @@ const resolvers = {
     async campaigns(_, args, context) {
       requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
+      const walletAddress = (await getUser(context.authToken)).ethAddress
+
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
           async campaign =>
-            await campaignToApolloObject(campaign, args.walletAddress)
+            await campaignToApolloObject(campaign, walletAddress)
         ),
         pageInfo: {
           endCursor: 'TODO implement',
@@ -60,9 +62,10 @@ const resolvers = {
     },
     async campaign(root, args, context) {
       requireEnrolledUser(context)
+      const walletAddress = (await getUser(context.authToken)).ethAddress
 
       const campaign = await GrowthCampaign.get(args.id)
-      return await campaignToApolloObject(campaign, args.walletAddress)
+      return await campaignToApolloObject(campaign, walletAddress)
     },
     async inviteInfo(root, args, context) {
       return await GrowthInvite.getReferrerInfo(args.code)

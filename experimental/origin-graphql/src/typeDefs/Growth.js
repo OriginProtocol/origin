@@ -104,7 +104,7 @@ module.exports =
     reward: Price            # information about reward
     # first property specifies the number of items to return
     # after is the cursor
-    invites(first: Int, after: String): [GrowthInviteConnection]
+    invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
   }
 
@@ -140,8 +140,8 @@ module.exports =
   type Query {
     # first property specifies the number of items to return
     # after is the cursor
-    campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
-    campaign(id: String, walletAddress: ID!): GrowthCampaign
+    campaigns(first: Int, after: String): GrowthCampaignConnection
+    campaign(id: String): GrowthCampaign
     inviteInfo(code: String): InviteInfo
     inviteCode: String!
     isEligible: EligibilityInfo

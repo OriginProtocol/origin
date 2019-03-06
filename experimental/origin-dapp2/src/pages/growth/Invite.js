@@ -94,6 +94,7 @@ class GrowthInvite extends Component {
       inviteEmailsMutationError
     } = this.state
 
+
     return (<Query
       query={inviteCodeQuery}
       onCompleted={({ inviteCode }) => {
@@ -224,6 +225,10 @@ class GrowthInvite extends Component {
     </Query>)
   }
 
+  renderTrackInvites() {
+
+  }
+
   extractEmails(commaSeparatedEmails) {
     return commaSeparatedEmails
       .split(',')
@@ -241,17 +246,17 @@ class GrowthInvite extends Component {
     var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const errorneousEmails = emails
       .filter(email => !emailRegex.test(email))
-    
+
 
     if (errorneousEmails.length > 0) {
       newState.inviteEmailsError = `Incorrect email format: ${errorneousEmails.join(',')}`
-      newState.valid = false 
+      newState.valid = false
     } else if (emails.length === 0) {
       newState.inviteEmailsError = 'Insert at least 1 valid email address'
-      newState.valid = false 
+      newState.valid = false
     }
     
-    newState.emails = emails 
+    newState.emails = emails
     if (newState.valid) {
       invite({
         variables: { emails }
@@ -268,13 +273,18 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
+    const { referralAction, handleNavigationChange } = this.props
+    console.log("REFERRAL ACTION", referralAction)
     return (
       <div className="container growth-invite">
         <div>
-          <Link to="/campaigns" className="back d-flex mr-auto">
+          <div
+            className="back d-flex mr-auto"
+            onClick={() => handleNavigationChange('Campaigns')}
+          >
             <img src="/images/caret-blue.svg" />
             <div>Back to Campaign</div>
-          </Link>
+          </div>
           <h1 className="mb-2 pt-3 mt-3">Invite your friends to Origin</h1>
           <div>Get Origin Tokens by completing the tasks below.</div>
         </div>
@@ -312,6 +322,7 @@ require('react-styl')(`
     .back
       font-weight: bold
       color: var(--clear-blue)
+      cursor: pointer
     .navigation-list 
       .select-bar
         background-color: var(--clear-blue)
