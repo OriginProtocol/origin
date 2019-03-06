@@ -12,6 +12,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
+import Pic from './_Pic'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Sales'
@@ -27,12 +28,12 @@ class Sales extends Component {
     }
 
     return (
-      <div className="container purchases">
+      <div className="container transactions">
         <PageTitle>My Sales</PageTitle>
         <h1>My Sales</h1>
         <div className="row">
           <div className="col-md-3">
-            <ul className="nav nav-pills flex-column">
+            <ul className="nav nav-pills">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-sales" exact>
                   Pending
@@ -86,16 +87,7 @@ class Sales extends Component {
                           className="purchase"
                           key={`${listing.id}-${offer.id}`}
                         >
-                          {listing.media && listing.media.length ? (
-                            <div
-                              className="main-pic"
-                              style={{
-                                backgroundImage: `url(${
-                                  listing.media[0].urlExpanded
-                                })`
-                              }}
-                            />
-                          ) : null}
+                          <Pic listing={listing} />
                           <div className="details">
                             <div className="top">
                               <div className="category">

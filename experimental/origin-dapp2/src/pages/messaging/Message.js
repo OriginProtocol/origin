@@ -18,6 +18,13 @@ function renderContent(message) {
   const { content, media } = message
 
   if (!media || !media.length) {
+    if (content.match(/^data:image\/jpeg/)) {
+      return (
+        <div className="image-container mx-auto">
+          <img src={content} alt={'fileName'} />
+        </div>
+      )
+    }
     return (
       <>
         {content.split('\n').map((c, idx) => (
@@ -186,6 +193,7 @@ require('react-styl')(`
       .content
         font-weight: normal
         font-size: 16px
+        word-break: break-all
         .image-container
           overflow: auto
       &.tail::after

@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import store from 'utils/store'
 
+import Link from 'components/Link'
 import EnableMessagingMutation from 'mutations/EnableMessaging'
+
+const sessionStore = store('sessionStorage')
 
 const query = gql`
   query WalletStatus {
@@ -29,6 +34,27 @@ const MessagingInitializing = () => (
     <div className="spinner" />
   </div>
 )
+
+const Onboard = withRouter(({ location }) => (
+  <div className="message-modal">
+    <div>
+      You&apos;ll need Get Started using Origin before you can send this user a
+      message
+    </div>
+    <div className="actions">
+      <Link
+        to="/onboard"
+        className="btn btn-primary"
+        onClick={() => {
+          const { pathname, search } = location
+          sessionStore.set('getStartedRedirect', { pathname, search })
+        }}
+      >
+        Get Started
+      </Link>
+    </div>
+  </div>
+))
 
 const MessagingSyncing = ({ pct }) => (
   <div className="enable-messaging messaging-sync">
@@ -111,7 +137,9 @@ class EnableMessagingModal extends Component {
           }
 
           let cmp
-          if (!data.messaging.synced) {
+          if (!data.messaging) {
+            cmp = <Onboard />
+          } else if (!data.messaging.synced) {
             cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
           } else if (!data.messaging.enabled && !this.state.waitForSignature) {
             cmp = (

@@ -37,6 +37,9 @@ export default {
         createdEvent {
           timestamp
         }
+        pendingBuyers {
+          id
+        }
 
         category
         categoryStr

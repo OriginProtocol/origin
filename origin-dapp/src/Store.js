@@ -4,6 +4,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import notifications from 'reducers/Notifications'
 import exchangeRates from 'reducers/ExchangeRates'
 import transactions from 'reducers/Transactions'
+import listingCreate from 'reducers/ListingCreate'
 import activation from 'reducers/Activation'
 import listings from 'reducers/Listings'
 import messages from 'reducers/Messages'
@@ -25,6 +26,7 @@ if (process.env.REDUX_LOGGER) {
 const store = createStore(
   combineReducers({
     notifications,
+    listingCreate,
     exchangeRates,
     transactions,
     activation,
