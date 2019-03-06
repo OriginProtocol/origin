@@ -151,7 +151,8 @@ function Campaign(props) {
     campaign,
     accountId,
     handleNavigationChange,
-    setReferralAction
+    setReferralAction,
+    decimalDevision
   } = props
 
   const {
@@ -176,93 +177,72 @@ function Campaign(props) {
     subTitleText = 'This campaign has finished'
   }
 
+  // campaign rewards converted normalized to token value according to number of decimals
+  const tokensEarned = web3.utils
+      .toBN(rewardEarned ? rewardEarned.amount : 0)
+      .div(decimalDevision)
+  const tokenEarnProgress = Math.min(100, tokensEarned.toString())
+
+  const actionCompleted = action => {
+    return ['Exhausted', 'Completed'].includes(action.status)
+  }
+
+  const completedActions = actions.filter(action =>
+    actionCompleted(action)
+  )
+  const nonCompletedActions = actions.filter(
+    action => !actionCompleted(action)
+  )
+
   return (
-    <Query
-      query={AccountTokenBalance}
-      variables={{ account: accountId, token: 'OGN' }}
-    >
-      {({ loading, error, data }) => {
-        let tokensEarned = web3.utils.toBN(0)
-        let tokenEarnProgress = 0
-        let decimalDevision = web3.utils.toBN(1)
-
-        if (!loading && !error) {
-          const tokenHolder = data.web3.account.token
-          if (tokenHolder && tokenHolder.token) {
-            decimalDevision = web3.utils
-              .toBN(10)
-              .pow(web3.utils.toBN(tokenHolder.token.decimals))
-            // campaign rewards converted normalized to token value according to number of decimals
-            tokensEarned = web3.utils
-              .toBN(rewardEarned ? rewardEarned.amount : 0)
-              .div(decimalDevision)
-            tokenEarnProgress = Math.min(100, tokensEarned.toString())
-          }
-        }
-
-        const actionCompleted = action => {
-          return ['Exhausted', 'Completed'].includes(action.status)
-        }
-
-        const completedActions = actions.filter(action =>
-          actionCompleted(action)
-        )
-        const nonCompletedActions = actions.filter(
-          action => !actionCompleted(action)
-        )
-
-        return (
-          <Fragment>
-            <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">
-                {GrowthEnum[nameKey] ? (
-                  <GrowthTranslation stringKey={nameKey} />
-                ) : (
-                  'Campaign'
-                )}
-              </h1>
-              <a className="info-icon">
-                <img src="images/growth/info-icon-inactive.svg" />
-              </a>
-            </div>
-            <div>{subTitleText}</div>
-            <div className="d-flex justify-content-between campaign-info">
-              <div>
-                {status !== 'Pending' && (
-                  <Fragment>
-                    <span className="font-weight-bold">Tokens earned</span>
-                    <img
-                      className="ogn-icon pl-2 pr-1"
-                      src="images/ogn-icon.svg"
-                    />
-                    <span className="ogn-amount font-weight-bold">
-                      {tokensEarned.toString()}
-                    </span>
-                  </Fragment>
-                )}
-              </div>
-              <div className="font-weight-bold">{timeLabel}</div>
-            </div>
-            <ProgressBar progress={tokenEarnProgress} />
-            {status === 'Active' && nonCompletedActions.length > 0 && (
-              <ActionList
-                actions={nonCompletedActions}
-                decimalDevision={decimalDevision}
-                handleNavigationChange={handleNavigationChange}
-                setReferralAction={setReferralAction}
+    <Fragment>
+      <div className="d-flex justify-content-between">
+        <h1 className="mb-2 pt-3">
+          {GrowthEnum[nameKey] ? (
+            <GrowthTranslation stringKey={nameKey} />
+          ) : (
+            'Campaign'
+          )}
+        </h1>
+        <a className="info-icon">
+          <img src="images/growth/info-icon-inactive.svg" />
+        </a>
+      </div>
+      <div>{subTitleText}</div>
+      <div className="d-flex justify-content-between campaign-info">
+        <div>
+          {status !== 'Pending' && (
+            <Fragment>
+              <span className="font-weight-bold">Tokens earned</span>
+              <img
+                className="ogn-icon pl-2 pr-1"
+                src="images/ogn-icon.svg"
               />
-            )}
-            {status !== 'Pending' && completedActions.length > 0 && (
-              <ActionList
-                title="Completed"
-                actions={completedActions}
-                decimalDevision={decimalDevision}
-              />
-            )}
-          </Fragment>
-        )
-      }}
-    </Query>
+              <span className="ogn-amount font-weight-bold">
+                {tokensEarned.toString()}
+              </span>
+            </Fragment>
+          )}
+        </div>
+        <div className="font-weight-bold">{timeLabel}</div>
+      </div>
+      <ProgressBar progress={tokenEarnProgress} />
+      {status === 'Active' && nonCompletedActions.length > 0 && (
+        <ActionList
+          actions={nonCompletedActions}
+          decimalDevision={decimalDevision}
+          handleNavigationChange={handleNavigationChange}
+          setReferralAction={setReferralAction}
+        />
+      )}
+      {status !== 'Pending' && completedActions.length > 0 && (
+        <ActionList
+          title="Completed"
+          actions={completedActions}
+          decimalDevision={decimalDevision}
+        />
+      )}
+    </Fragment>
   )
 }
 
@@ -363,31 +343,55 @@ class GrowthCampaigns extends Component {
                           campaign => campaign.id === selectedCampaignId
                         )
 
-                        return (<Fragment>
-                          {navigation === 'Campaigns' && <Fragment>
-                            <CampaignNavList
-                              campaigns={campaigns}
-                              onCampaignClick={campaignId => {
-                                this.setState({
-                                  selectedCampaignId: campaignId
-                                })
-                              }}
-                              selectedCampaignId={selectedCampaignId}
-                            />
-                            <Campaign
-                              campaign={selectedCampaign}
-                              accountId={accountId}
-                              handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
-                              setReferralAction={(action) => this.setReferralAction(action)}
-                            />
-                          </Fragment>}
-                          {navigation === 'Invite' &&
-                            <GrowthInvite
-                              handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
-                              referralAction={referralAction}
-                            />
-                          }
-                        </Fragment>)
+                        return(
+                          <Query
+                            query={AccountTokenBalance}
+                            variables={{ account: accountId, token: 'OGN' }}
+                          >
+                            {({ loading, error, data }) => {
+                              let decimalDevision = web3.utils.toBN(18)
+
+                              if (!loading && !error) {
+                                const tokenHolder = data.web3.account.token
+                                if (tokenHolder && tokenHolder.token) {
+                                  decimalDevision = web3.utils
+                                    .toBN(10)
+                                    .pow(web3.utils.toBN(tokenHolder.token.decimals))
+                                }
+                              }
+
+                              return (
+                                <Fragment>
+                                  {navigation === 'Campaigns' && <Fragment>
+                                    <CampaignNavList
+                                      campaigns={campaigns}
+                                      onCampaignClick={campaignId => {
+                                        this.setState({
+                                          selectedCampaignId: campaignId
+                                        })
+                                      }}
+                                      selectedCampaignId={selectedCampaignId}
+                                    />
+                                    <Campaign
+                                      campaign={selectedCampaign}
+                                      accountId={accountId}
+                                      handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
+                                      setReferralAction={(action) => this.setReferralAction(action)}
+                                      decimalDevision={decimalDevision}
+                                    />
+                                  </Fragment>}
+                                  {navigation === 'Invite' &&
+                                    <GrowthInvite
+                                      handleNavigationChange={(navigation) => this.handleNavigationChange(navigation)}
+                                      referralAction={referralAction}
+                                      decimalDevision={decimalDevision}
+                                    />
+                                  }
+                                </Fragment>
+                              )
+                            }}
+                          </Query>
+                        )
                       }}
                     </Query>
                   )

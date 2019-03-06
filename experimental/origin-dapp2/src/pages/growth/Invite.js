@@ -115,7 +115,7 @@ class GrowthInvite extends Component {
 
         return (
           <div className="send-invites mt-4 pt-2">
-            <div className="empasis">Invite with your code</div>
+            <div className="emphasis">Invite with your code</div>
             <div>Send your friend your unique invite code.</div>
 
             <div className="d-flex pt-3">
@@ -191,7 +191,7 @@ class GrowthInvite extends Component {
                     this.validateEmailsInput(invite)
                   }}
                 >
-                  <div className="empasis mt-5">Invite via Email</div>
+                  <div className="emphasis mt-5">Invite via Email</div>
                   <div>Enter email addresses of friends you want to invite</div>
                   <textarea
                     {...input('inviteEmails')}
@@ -223,10 +223,6 @@ class GrowthInvite extends Component {
         )
       }}
     </Query>)
-  }
-
-  renderTrackInvites() {
-
   }
 
   extractEmails(commaSeparatedEmails) {
@@ -267,14 +263,90 @@ class GrowthInvite extends Component {
     return newState.valid
   }
 
-  renderTrackInvites() {
-    return <div />
+  renderTrackInvites(referralAction) {
+    const formatTokens = tokenAmount => {
+      return web3.utils
+        .toBN(tokenAmount)
+        .div(this.props.decimalDevision)
+        .toString()
+    }
+
+    const renderReward = (amount, renderPlusSign, isBig = false) => {
+      return (
+        <div className={`reward ${isBig ? 'big' : ''} d-flex align-items-center pl-2 pt-2 pb-2 mt-2`}>
+          <img src="images/ogn-icon.svg" />
+          <div className="value">
+            {renderPlusSign ? '+' : ''}
+            {formatTokens(amount)}
+          </div>
+        </div>
+      )
+    }
+
+    const renderInvitesTable = (title, subTitle, invites, reward, rewardTitle, showStatus) => {
+
+      return (
+        <div className="track-invites">
+          <div className="pt-2 d-flex justify-content-between">
+            <div>
+              <div className="emphasis">{title}</div>
+              <div>{subTitle}</div>
+            </div>
+            <div className="reward-holder d-flex flex-column align-items-center">
+              <div>{rewardTitle}</div>
+              {renderReward(reward, true, true)}
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="emphasis d-flex pb-2">
+              <div className="col-4 p-0">Contact</div>
+              <div className="col-2 p-0">Reward</div>
+              <div className="col-6 p-0">{showStatus ? 'Status' : ''}</div>
+            </div>
+            {invites.map(invite => {
+              const name = invite.contactName ? invite.contactName : invite.walletAddress
+              return (
+                <div className="invite-row d-flex pt-2 pb-2">
+                  <div className="col-4 p-0 d-flex align-items-center">
+                    <div className="name">{name}</div>
+                  </div>
+                  <div className="col-2 p-0 d-flex">{renderReward(invite.reward.amount, true, false)}</div>
+                  <div className="col-6 p-0">{showStatus ? 'Hasn’t completed user activation' : ''}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <Fragment>
+        {renderInvitesTable(
+          'Pending Invites',
+          'Track progress of friends who sign up with your invite code.',
+          referralAction.invites.nodes.filter(invite => invite.status !== 'Successful'),
+          referralAction.rewardPending.amount,
+          'Pending',
+          true
+        )}
+        <div className="mt-5"/>
+        {renderInvitesTable(
+          'Successful Invites',
+          'Help your friends earn OGN just like you.',
+          referralAction.invites.nodes.filter(invite => invite.status === 'Successful'),
+          referralAction.rewardEarned.amount,
+          'Earned',
+          false
+        )}
+      </Fragment>
+    )
   }
 
   render() {
     const { subPage } = this.state
     const { referralAction, handleNavigationChange } = this.props
-    console.log("REFERRAL ACTION", referralAction)
+
     return (
       <div className="container growth-invite">
         <div>
@@ -302,7 +374,7 @@ class GrowthInvite extends Component {
           />
         </div>
         {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' && this.renderTrackInvites()}
+        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction)}
       </div>
     )
   }
@@ -336,7 +408,7 @@ require('react-styl')(`
       .title.active
         color: var(--dark)
     .send-invites
-      .empasis
+      .emphasis
         font-weight: bold
       .normal
         font-weight: normal
@@ -390,4 +462,40 @@ require('react-styl')(`
       .invite-error
         font-size: 18px
         color: var(--red)
+    .track-invites
+      margin-top: 30px
+      .emphasis
+        font-weight: bold
+      .reward-holder
+        margin-top: -20px
+        font-size: 14px
+        font-weight: normal
+      .reward
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
+      .reward .value
+        padding-bottom: 1px
+      .reward img
+        margin-right: 6px
+      .reward.big
+        padding-right: 15px
+        height: 38px
+        font-size: 22px
+      .reward.big .value
+        padding-bottom: 1px
+      .reward.big img
+        margin-right: 9px
+        width: 24px
+      .invite-row
+        border-top: 1px solid var(--pale-grey-two)
+      .name
+        text-overflow: ellipsis
+        overflow: hidden
+        white-space: nowrap
+        max-width: 95%
 `)
