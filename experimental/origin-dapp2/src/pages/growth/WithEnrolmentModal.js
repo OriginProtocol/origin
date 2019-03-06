@@ -13,7 +13,7 @@ import Enroll from 'pages/growth/mutations/Enroll'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
-const GrowthTranslation = (key) => {
+const GrowthTranslation = key => {
   return (
     <fbt desc="growth">
       <fbt:enum enum-range={GrowthEnum} value={key} />
@@ -31,9 +31,10 @@ function withEnrolmentModal(WrappedComponent) {
         this
       )
 
-      this.initialStage = props.skipjoincampaign === 'false' ?
-        'JoinActiveCampaign' :
-        'TermsAndEligibilityCheck'
+      this.initialStage =
+        props.skipjoincampaign === 'false'
+          ? 'JoinActiveCampaign'
+          : 'TermsAndEligibilityCheck'
       this.state = {
         open: false,
         stage: this.initialStage,
@@ -118,11 +119,12 @@ function withEnrolmentModal(WrappedComponent) {
               campaign => campaign.status === 'Active'
             )
 
-            const campaignName = activeCampaign && GrowthEnum[activeCampaign.nameKey] ?
-              GrowthTranslation(activeCampaign.nameKey) :
-              'Campaign'
+            const campaignName =
+              activeCampaign && GrowthEnum[activeCampaign.nameKey]
+                ? GrowthTranslation(activeCampaign.nameKey)
+                : 'Campaign'
 
-            return(
+            return (
               <div className="join-campaign">
                 <div>
                   <img
@@ -130,11 +132,14 @@ function withEnrolmentModal(WrappedComponent) {
                     src="images/growth/campaign-graphic.svg"
                   />
                 </div>
-                <div className="title title-light mt-4 ml-5 mr-5">Join our {campaignName} to earn tokens</div>
+                <div className="title title-light mt-4 ml-5 mr-5">
+                  Join our {campaignName} to earn tokens
+                </div>
                 <div className="mt-3 normal-line-height ml-4 mr-4">
-                  Earn OGN by completing tasks like verifying your identity and sharing Origin 
-                  with your friends. OGN can be used in a variety of ways. Earned OGN will be transferred 
-                  after the end of the {campaignName}. 
+                  Earn OGN by completing tasks like verifying your identity and
+                  sharing Origin with your friends. OGN can be used in a variety
+                  of ways. Earned OGN will be transferred after the end of the{' '}
+                  {campaignName}.
                 </div>
                 <div className="d-flex align-items-center flex-column">
                   <button
