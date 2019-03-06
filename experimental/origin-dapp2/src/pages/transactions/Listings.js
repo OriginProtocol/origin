@@ -12,6 +12,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import PageTitle from 'components/PageTitle'
+import Pic from './_Pic'
 
 import WithdrawListing from './mutations/WithdrawListing'
 
@@ -29,13 +30,13 @@ class Listings extends Component {
     }
 
     return (
-      <div className="container purchases">
+      <div className="container transactions">
         <PageTitle>My Listings</PageTitle>
 
         <h1>My Listings</h1>
         <div className="row">
           <div className="col-md-3">
-            <ul className="nav nav-pills flex-column">
+            <ul className="nav nav-pills">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-listings" exact>
                   All
@@ -86,16 +87,7 @@ class Listings extends Component {
                       {totalCount > 0 ? null : <NoListings />}
                       {nodes.map(listing => (
                         <div className="purchase" key={`${listing.id}`}>
-                          {listing.media && listing.media.length ? (
-                            <div
-                              className="main-pic"
-                              style={{
-                                backgroundImage: `url(${
-                                  listing.media[0].urlExpanded
-                                })`
-                              }}
-                            />
-                          ) : null}
+                          <Pic listing={listing} />
                           <div className="details">
                             <div className="top">
                               <div className="category">
