@@ -11,6 +11,7 @@
     "origin-eventsource",
     "origin-faucet",
     "origin-graphql",
+    "origin-graphql-simple-demo",
     "origin-growth",
     "origin-identity",
     "origin-ipfs-proxy",
