@@ -152,8 +152,8 @@ class GrowthInvite {
 
   // Returns enrolled user's invite code
   static async getInviteCode(accountId) {
-    const inviteCode = await db.GrowthInviteCode.findOne({ where:
-      { ethAddress: accountId }
+    const inviteCode = await db.GrowthInviteCode.findOne({
+      where: { ethAddress: accountId }
     })
     if (!inviteCode) {
       throw new Error(`Can not fetch invite code for user: ${accountId}`)

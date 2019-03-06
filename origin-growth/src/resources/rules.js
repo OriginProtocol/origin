@@ -281,7 +281,8 @@ class BaseRule {
     }
     if (
       this.config.nextLevelCondition === true &&
-      (!this.config.unlockConditionMsg || this.config.unlockConditionMsg.length === 0)
+      (!this.config.unlockConditionMsg ||
+        this.config.unlockConditionMsg.length === 0)
     ) {
       throw new Error('Missing unlock condition configuration.')
     }

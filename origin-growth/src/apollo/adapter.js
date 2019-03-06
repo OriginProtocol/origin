@@ -114,6 +114,7 @@ const referralRuleApolloObject = async (
     ethAddress,
     rule.campaignId
   )
+
   return {
     type: 'Referral',
     unlockConditions: conditionToUnlockRule(rule, allRules),
@@ -127,10 +128,7 @@ const conditionToUnlockRule = (rule, allRules) => {
     .filter(allRule => allRule.levelId === rule.levelId - 1)
     .filter(allRule => allRule.config.nextLevelCondition === true)
     .flatMap(allRule =>
-      allRule
-      .config
-      .unlockConditionMsg
-      .map(conditionMessage => {
+      allRule.config.unlockConditionMsg.map(conditionMessage => {
         return {
           messageKey: conditionMessage.conditionTranslateKey,
           iconSource: conditionMessage.conditionIcon

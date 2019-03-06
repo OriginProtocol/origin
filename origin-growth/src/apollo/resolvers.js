@@ -44,7 +44,7 @@ const resolvers = {
     async campaigns(_, args, context) {
       requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
-      
+
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
@@ -65,7 +65,7 @@ const resolvers = {
       const campaign = await GrowthCampaign.get(args.id)
       return await campaignToApolloObject(campaign, context.walletAddress)
     },
-    async inviteInfo(root, args, context) {
+    async inviteInfo(root, args) {
       return await GrowthInvite.getReferrerInfo(args.code)
     },
     async inviteCode(root, args, context) {
