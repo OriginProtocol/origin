@@ -239,7 +239,8 @@ class OriginEventSource {
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
-    const booked = [], pendingBuyers = []
+    const booked = [],
+      pendingBuyers = []
 
     if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
