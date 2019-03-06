@@ -41,7 +41,7 @@
     "@babel/register": "^7.0.0",
     "acorn": "^6.0.5",
     "ajv": "^6.9.1",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^8.0.5",
     "bignumber.js": "8.0.2",
     "bs58": "^4.0.1",
     "cross-fetch": "^2.2.3",
