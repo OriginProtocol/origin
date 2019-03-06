@@ -1,5 +1,22 @@
-const baseConfig = require('../../origin-dapp/.eslintrc.js')
+const baseConfig = require('../.eslintrc.js')
 
 module.exports = {
-  ...baseConfig
+  ...baseConfig,
+  'globals': {
+    'web3': true,
+    'originTest': true
+  },
+  'extends': [
+    ...baseConfig.extends,
+    'plugin:react/recommended'
+  ],
+  'plugins': [
+    'react'
+  ],
+  'rules': {
+    ...baseConfig.rules,
+    'react/no-deprecated': 'off',
+    'react/no-children-prop': 'off',
+    'react/prop-types': 'off',
+  }
 }
