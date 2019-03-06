@@ -6,7 +6,7 @@ const {
   authenticateEnrollment,
   getUserAuthenticationStatus
 } = require('../resources/authentication')
-const { getLocationInfo } = require('../util/locationInfo')
+//const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
 const { sendInvites } = require('../resources/email')
@@ -71,37 +71,43 @@ const resolvers = {
       requireEnrolledUser(context)
       return GrowthInvite.getInviteCode(context.walletAddress)
     },
-    async isEligible(obj, args, context) {
-      if (process.env.NODE_ENV !== 'production') {
-        return {
-          eligibility: 'Eligible',
-          countryName: 'N/A',
-          countryCode: 'N/A'
-        }
-      }
-
-      const locationInfo = getLocationInfo(context.countryCode)
-      logger.debug('Location info received:', JSON.stringify(locationInfo))
-
-      if (!locationInfo) {
-        return {
-          eligibility: 'Unknown',
-          countryName: 'N/A',
-          countryCode: 'N/A'
-        }
-      }
-      let eligibility = 'Eligible'
-      if (locationInfo.isForbidden) {
-        eligibility = 'Forbidden'
-      } else if (locationInfo.isRestricted) {
-        eligibility = 'Restricted'
-      }
-
+    //async isEligible(obj, args, context) {
+    async isEligible() {
       return {
-        eligibility: eligibility,
-        countryName: locationInfo.countryName,
-        countryCode: locationInfo.countryCode
+        eligibility: 'Eligible',
+        countryName: 'N/A',
+        countryCode: 'N/A'
       }
+      //if (process.env.NODE_ENV !== 'production') {
+      //   return {
+      //     eligibility: 'Eligible',
+      //     countryName: 'N/A',
+      //     countryCode: 'N/A'
+      //   }
+      // }
+
+      // const locationInfo = getLocationInfo(context.countryCode)
+      // logger.debug('Location info received:', JSON.stringify(locationInfo))
+
+      // if (!locationInfo) {
+      //   return {
+      //     eligibility: 'Unknown',
+      //     countryName: 'N/A',
+      //     countryCode: 'N/A'
+      //   }
+      // }
+      // let eligibility = 'Eligible'
+      // if (locationInfo.isForbidden) {
+      //   eligibility = 'Forbidden'
+      // } else if (locationInfo.isRestricted) {
+      //   eligibility = 'Restricted'
+      // }
+
+      // return {
+      //   eligibility: eligibility,
+      //   countryName: locationInfo.countryName,
+      //   countryCode: locationInfo.countryCode
+      // }
     },
     async enrollmentStatus(_, args, context) {
       return await getUserAuthenticationStatus(
