@@ -14,7 +14,6 @@ try {
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
 
-
 /**
  * Helper function to log events emitted by a queue.
  * @param queue
@@ -101,4 +100,3 @@ growthUpdateCampaignsQueue.add(
   { repeat: { cron: '30 20 * * *' } }
 )
 logger.info('Scheduled growthUpdateCampaigns job.')
-
