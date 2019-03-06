@@ -1,6 +1,6 @@
 import { Route, Switch } from 'react-router-dom'
 import { Web3Provider } from 'react-web3'
-import { baseConfig } from 'origin-dapp/src/config'
+import { baseConfig } from 'origin-graphql/src/constants/CreatorConfig'
 import React from 'react'
 import superagent from 'superagent'
 

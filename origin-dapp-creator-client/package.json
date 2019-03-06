@@ -45,7 +45,7 @@
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.4.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "origin-dapp": "^0.3.0",
+    "origin-graphql": "^0.1.1",
     "per-env": "^1.0.2",
     "react": "^16.6.3",
     "react-color": "^2.14.1",
