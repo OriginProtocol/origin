@@ -3,9 +3,9 @@ import React from 'react'
 import Link from 'components/Link'
 import Price from 'components/Price'
 
-const EditOnly = ({ listing, isAnnouncement }) => (
+const EditOnly = ({ listing, isAnnouncement, isFractional }) => (
   <div className="listing-buy">
-    {isAnnouncement ? null : (
+    {isAnnouncement || isFractional ? null : (
       <div className="price">
         <div className="eth">{`${listing.price.amount} ETH`}</div>
         <div className="usd">
@@ -13,20 +13,22 @@ const EditOnly = ({ listing, isAnnouncement }) => (
         </div>
       </div>
     )}
-    <div className="listing-buy-editonly">
-      <div className="row">
-        <div>Sold</div>
-        <div>{listing.unitsSold}</div>
+    {isFractional ? null : (
+      <div className="listing-buy-editonly">
+        <div className="row">
+          <div>Sold</div>
+          <div>{listing.unitsSold}</div>
+        </div>
+        <div className="row">
+          <div>Pending</div>
+          <div>{listing.unitsPending}</div>
+        </div>
+        <div className="row">
+          <div>Available</div>
+          <div>{listing.unitsAvailable}</div>
+        </div>
       </div>
-      <div className="row">
-        <div>Pending</div>
-        <div>{listing.unitsPending}</div>
-      </div>
-      <div className="row">
-        <div>Available</div>
-        <div>{listing.unitsAvailable}</div>
-      </div>
-    </div>
+    )}
     <Link
       className="btn btn-primary mt-2"
       to={`/listing/${listing.id}/edit`}

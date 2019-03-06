@@ -121,7 +121,13 @@ class ListingDetail extends Component {
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
 
     if (listing.seller.id === this.props.from) {
-      return <EditOnly {...this.props} isAnnouncement={isAnnouncement} />
+      return (
+        <EditOnly
+          {...this.props}
+          isAnnouncement={isAnnouncement}
+          isFractional={isFractional}
+        />
+      )
     } else if (isAnnouncement) {
       return null
     } else if (listing.status === 'sold') {
