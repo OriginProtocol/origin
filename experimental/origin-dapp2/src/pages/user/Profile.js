@@ -14,6 +14,7 @@ import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import PageTitle from 'components/PageTitle'
+import ImageCropper from 'components/ImageCropper'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -91,9 +92,19 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <Avatar avatar={this.state.avatar} />
+                <ImageCropper onChange={avatar => this.setState({ avatar })}>
+                  <Avatar className="with-cam" avatar={this.state.avatar} />
+                </ImageCropper>
               </div>
               <div className="info">
+                <a
+                  className="edit"
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault()
+                    this.setState({ editProfile: true })
+                  }}
+                />
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
                   {this.state.description ||
@@ -103,14 +114,6 @@ class UserProfile extends Component {
                     )}
                 </div>
               </div>
-              <a
-                className="edit"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.setState({ editProfile: true })
-                }}
-              />
             </div>
             <h3>
               <fbt desc="Profile.verifyYourselfHeading">
@@ -157,9 +160,7 @@ class UserProfile extends Component {
 
             <div className="actions">
               <DeployIdentity
-                className={`btn btn-primary btn-rounded btn-lg${
-                  this.state.valid ? '' : ' disabled'
-                }`}
+                className={`btn btn-primary btn-rounded btn-lg`}
                 identity={get(this.props, 'identity.id')}
                 refetch={this.props.identityRefetch}
                 profile={pick(this.state, [
@@ -298,15 +299,16 @@ require('react-styl')(`
       h1
         margin: 0
       margin-bottom: 2rem
+      .info
+        flex: 1
       a.edit
+        float: right
         background: url(images/edit-icon.svg) no-repeat center
         background-size: cover
         width: 2rem
         height: 2rem
         display: block
-        position: absolute
-        top: 0
-        right: 0
+        margin: 0.75rem 0 0 0.5rem
     .profile-help
       font-size: 14px;
       background: url(images/identity/identity.svg) no-repeat center 1.5rem;
@@ -319,7 +321,11 @@ require('react-styl')(`
       .avatar-wrap
         margin-right: 1rem
       .profile
+        flex-direction: column
         margin-bottom: 1rem
+        .avatar-wrap
+          width: 8rem
+          align-self: center
       .profile-strength
         margin-bottom: 1rem
       .actions

@@ -22,12 +22,14 @@ module.exports = function() {
     clientSecret: clientSecret
   }
 
-  passport.use(new GoogleTokenStrategy(config, (accessToken, _, profile, done) => {
-    return done(null, {
-      id: profile.id,
-      name: profile.displayName,
-      email: profile.emails[0].value,
-      token: accessToken
+  passport.use(
+    new GoogleTokenStrategy(config, (accessToken, _, profile, done) => {
+      return done(null, {
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails[0].value,
+        token: accessToken
+      })
     })
-  }))
+  )
 }
