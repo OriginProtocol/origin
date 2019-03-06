@@ -44,13 +44,12 @@ const resolvers = {
     async campaigns(_, args, context) {
       requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
-      const walletAddress = (await getUser(context.authToken)).ethAddress
-
+      
       return {
         totalCount: campaigns.length,
         nodes: campaigns.map(
           async campaign =>
-            await campaignToApolloObject(campaign, walletAddress)
+            await campaignToApolloObject(campaign, context.walletAddress)
         ),
         pageInfo: {
           endCursor: 'TODO implement',
@@ -62,18 +61,16 @@ const resolvers = {
     },
     async campaign(root, args, context) {
       requireEnrolledUser(context)
-      const walletAddress = (await getUser(context.authToken)).ethAddress
 
       const campaign = await GrowthCampaign.get(args.id)
-      return await campaignToApolloObject(campaign, walletAddress)
+      return await campaignToApolloObject(campaign, context.walletAddress)
     },
     async inviteInfo(root, args, context) {
       return await GrowthInvite.getReferrerInfo(args.code)
     },
     async inviteCode(root, args, context) {
       requireEnrolledUser(context)
-      const walletAddress = (await getUser(context.authToken)).ethAddress
-      return GrowthInvite.getInviteCode(walletAddress)
+      return GrowthInvite.getInviteCode(context.walletAddress)
     },
     async isEligible(obj, args, context) {
       if (process.env.NODE_ENV !== 'production') {
@@ -118,12 +115,11 @@ const resolvers = {
     // Sends email invites with referral code on behalf of the referrer.
     async invite(_, args, context) {
       requireEnrolledUser(context)
-      const walletAddress = (await getUser(context.authToken)).ethAddress
 
       logger.info('invite mutation called.')
       // FIXME:
       //  b. Implement rate limiting to avoid spam attack.
-      await sendInvites(walletAddress, args.emails)
+      await sendInvites(context.walletAddress, args.emails)
       return true
     },
     async enroll(_, args) {
