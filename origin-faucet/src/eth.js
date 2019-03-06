@@ -202,9 +202,7 @@ class EthDistributor {
       providerUrl = 'http://localhost:8545'
     } else {
       hotWalletPk = process.env.HOT_WALLET_PK
-      providerUrl = `https://mainnet.infura.io/${
-        process.env.INFURA_ACCESS_TOKEN
-      }`
+      providerUrl = process.env.PROVIDER_URL
     }
 
     const provider = new Web3.providers.HttpProvider(providerUrl)
