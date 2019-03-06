@@ -1,87 +1,75 @@
-const webpack = require('webpack')
 const path = require('path')
-const Dotenv = require('dotenv-webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const prepareMessagesPlugin = require('./translations/scripts/prepareMessagesPlugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+
+const gitRevisionPlugin = new GitRevisionPlugin()
+
+let gitCommitHash = process.env.GIT_COMMIT_HASH || process.env.DEPLOY_TAG,
+  gitBranch = process.env.GIT_BRANCH
+
+try {
+  gitCommitHash = gitRevisionPlugin.commithash()
+  gitBranch = gitRevisionPlugin.branch()
+} catch (e) {
+  /* No Git repo found  */
+}
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-// Only env vars that are keys in this object will get passed through to
-// the DApp when webpack runs. If no env var is present, the value here
-// will be used as the default. See /#/dapp-info page on running Dapp
-// to see all env vars.
-const env = {
-  ARBITRATOR_ACCOUNT: null,
-  AFFILIATE_ACCOUNT: null,
-  ATTESTATION_ACCOUNT: null,
-  BLOCK_EPOCH: 0,
-  BRIDGE_SERVER_DOMAIN: 'bridge.originprotocol.com',
-  BRIDGE_SERVER_PROTOCOL: 'https',
-  CONTRACT_ADDRESSES: '{}',
-  DEPLOY_TAG: false,
-  DISCOVERY_SERVER_URL: 'https://discovery.originprotocol.com',
-  ENABLE_PERFORMANCE_MODE: false,
-  ETH_NETWORK_ID: null,
-  FORCE_HTTPS: false,
-  GA_TRACKING_ID: null, // must also be hard-coded in dev.html - this is used in components/analytics.js
-  IMAGE_MAX_SIZE: null,
-  INSTRUCTIONS_URL: 'https://www.originprotocol.com',
-  IPFS_API_PORT: '443',
-  IPFS_DOMAIN: 'ipfs.originprotocol.com',
-  IPFS_GATEWAY_PORT: '443',
-  IPFS_GATEWAY_PROTOCOL: 'https',
-  IPFS_SWARM: 'None',
-  MESSAGING_ACCOUNT: null,
-  MESSAGING_NAMESPACE: null,
-  MESSAGING_API_URL: null,
-  MAINNET_DAPP_BASEURL: 'https://dapp.originprotocol.com',
-  NOTIFICATIONS_KEY: null,
-  NOTIFICATIONS_URL: 'https://notifications.originprotocol.com',
-  PROVIDER_URL: null,
-  REDUX_LOGGER: false,
-  RINKEBY_DAPP_BASEURL: 'https://dapp.staging.originprotocol.com',
-  SHOW_WALLET_LINKER: true,
-  WALLET_LANDING_URL: null,
-  WALLET_LINKER_URL: null
-}
-
-var config = {
-  entry: { app: './src/index.js' },
-  devtool: isProduction ? false : 'inline-cheap-module-source-map',
+const config = {
+  entry: {
+    app: './src/index.js'
+  },
+  devtool: isProduction ? false : 'cheap-module-source-map',
   output: {
-    path: path.resolve(__dirname, 'build'),
-    pathinfo: true,
-    filename: '[name].[hash:8].js',
-    publicPath: ''
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'public')
+  },
+  externals: {
+    Web3: 'web3'
   },
   module: {
     noParse: [/^react$/],
     rules: [
+      { test: /\.flow$/, loader: 'ignore-loader' },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        query: {
+          plugins: [
+            [
+              'babel-plugin-fbt',
+              {
+                fbtEnumManifest: require('./translations/.enum_manifest.json')
+              }
+            ],
+            'babel-plugin-fbt-runtime'
+          ]
+        }
+      },
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto'
       },
       {
         test: /\.css$/,
         use: [
-          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader'
+          },
           {
             loader: 'css-loader',
-            options: { url: false }
-          }
-        ],
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
             options: {
-              name: 'images/[name].[hash:8].[ext]'
+              url: url => {
+                return url.match(/(svg|png)/)
+              }
             }
           }
         ]
@@ -90,27 +78,24 @@ var config = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: [
           {
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[hash:8].[ext]'
-            }
+            loader: isProduction ? 'file-loader' : 'url-loader',
+            options: isProduction ? { name: 'fonts/[name].[ext]' } : {}
           }
         ]
-      },
+      }
     ]
   },
+  resolve: {
+    extensions: ['.js', '.json'],
+    modules: [path.resolve(__dirname, 'src/constants'), './node_modules']
+  },
+  node: {
+    fs: 'empty'
+  },
   devServer: {
-    contentBase: './public',
-    host: "0.0.0.0",
-    port: 3000,
-    public: 'localhost:3000',
+    port: 8081,
     headers: {
       'Access-Control-Allow-Origin': '*'
-    },
-    disableHostCheck: true,
-    overlay: {
-      warnings: true,
-      errors: true
     }
   },
   watchOptions: {
@@ -118,46 +103,89 @@ var config = {
     ignored: [
       // Ignore node_modules in watch except for the origin-js directory
       /node_modules([\\]+|\/)+(?!origin)/,
-      /\origin([\\]+|\/)node_modules/
+      /\origin([\\]+|\/)node_modules/ // eslint-disable-line no-useless-escape
     ]
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
-    new CleanWebpackPlugin(['build']),
     new HtmlWebpackPlugin({
-      template: isProduction ? 'public/index.html' : 'public/dev.html'
+      template: 'public/template.html',
+      inject: false,
+      network: 'rinkeby'
     }),
-    new Dotenv(),
-    new webpack.EnvironmentPlugin(env),
-    new CopyWebpackPlugin([
-      'public/favicon.ico',
-      'public/sw.js',
-      'public/swAnalytics.js',
-      { from: 'public/images', to: 'images' },
-      { from: 'public/fonts', to: 'fonts' },
-      { from: 'public/schemas', to: 'schemas' }
-    ]),
-    new prepareMessagesPlugin()
-  ]
+    new webpack.EnvironmentPlugin({
+      HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      LINKER_HOST: 'localhost',
+      DOCKER: false,
+      ENABLE_GROWTH: false,
+      IPFS_SWARM: '',
+      GIT_COMMIT_HASH: gitCommitHash,
+      GIT_BRANCH: gitBranch,
+      BUILD_TIMESTAMP: +new Date()
+    })
+  ],
+
+  optimization: {
+    // splitChunks: {
+    //   cacheGroups: {
+    //     app: {
+    //       chunks: 'all',
+    //       name: 'app',
+    //       enforce: true,
+    //       reuseExistingChunk: true,
+    //     }
+    //   }
+    // },
+  }
 }
 
 if (isProduction) {
-  config.plugins.push(new MiniCssExtractPlugin({
-    filename: '[name].[hash].css',
-    chunkFilename: '[id].[hash].css'
-  }))
-} else {
-  config.module.rules.push({
-    test: /\.js$/,
-    use: 'source-map-loader',
-    exclude: [
-      // Don't load source maps from anything in node_modules except for the
-      // origin-js directory
-      /node_modules([\\]+|\/)+(?!origin)/,
-      /\origin([\\]+|\/)node_modules/
-    ],
-    enforce: 'pre'
-  })
+  config.output.filename = '[name].[hash:8].js'
+  config.optimization.minimizer = [
+    new TerserPlugin({ cache: true, parallel: true }),
+    new OptimizeCSSAssetsPlugin({})
+  ]
+  config.plugins.push(
+    new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
+    new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
+    new webpack.IgnorePlugin(/redux-logger/),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'mainnet.html',
+      network: 'mainnet'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'kovan.html',
+      network: 'kovanTst'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'rinkeby.html',
+      network: 'rinkeby'
+    })
+  )
+  config.resolve.alias = {
+    'react-styl': 'react-styl/prod.js'
+  }
+  config.module.noParse = [/^(react-styl)$/]
+  // config.resolve.alias = {
+  //   react: 'react/umd/react.production.min.js',
+  //   'react-dom': 'react-dom/umd/react-dom.production.min.js',
+  //   'react-styl': 'react-styl/prod.js',
+  //   web3: path.resolve(__dirname, 'public/web3.min'),
+  //   redux: 'redux/dist/redux.min.js',
+  //   'react-redux': 'react-redux/dist/react-redux.min.js',
+  //   'react-router-dom': 'react-router-dom/umd/react-router-dom.min.js'
+  // }
+  // config.module.noParse = [
+  //   /^(react|react-dom|react-styl|redux|react-redux|react-router-dom)$/,
+  //   /web3/
+  // ]
 }
 
 module.exports = config
