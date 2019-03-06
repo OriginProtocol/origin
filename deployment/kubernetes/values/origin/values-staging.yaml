@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp2
 dapp2Image: origin-dapp2
-dapp2ImageTag: '6710511'
+dapp2ImageTag: '377f15d'
 
 # origin-dapp
 dappImage: origin-dapp
