@@ -65,7 +65,7 @@ class GrowthInvite extends Component {
     window.open(
       [
         'https://www.facebook.com/dialog/share?',
-        `app_id=${process.env.FACEBOOK_CLIENT_ID}`, // TODO use origin's one
+        `app_id=${process.env.FACEBOOK_CLIENT_ID}`,
         `&href=${this.getInviteCode()}`,
         '&display=popup',
         `&redirect_uri=${window.location.href}`
