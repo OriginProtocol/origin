@@ -145,7 +145,7 @@ class Step2 extends Component {
       newState.titleError = 'Title is required'
     } else if (this.state.title.length < 3) {
       newState.titleError = 'Title is too short'
-    } else if (this.state.title.length < 100) {
+    } else if (this.state.title.length > 100) {
       // Limit from origin-validator/src/schemas/listing.json
       newState.titleError = 'Title is too long'
     }

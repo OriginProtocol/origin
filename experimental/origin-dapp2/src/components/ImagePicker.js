@@ -81,7 +81,7 @@ class ImagePicker extends Component {
               onChange={async e => {
                 const { files } = e.currentTarget
                 const newImages = await getImages(ipfsRPC, files)
-                this.onChange([...this.state.images, ...newImages])
+                this.onChange([...this.state.images, ...newImages].slice(0,50))
                 this.uploadRef.value = ''
               }}
               style={{ display: 'none' }}
@@ -95,6 +95,7 @@ class ImagePicker extends Component {
             src={this.state.images[this.state.crop].src}
             onClose={() => this.setState({ crop: undefined })}
             onChange={async imageBlob => {
+              debugger
               const [newImage] = await getImages(ipfsRPC, [imageBlob])
               const images = [...this.state.images]
               images[this.state.crop] = newImage
