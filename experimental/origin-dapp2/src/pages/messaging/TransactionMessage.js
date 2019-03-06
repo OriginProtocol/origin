@@ -68,7 +68,11 @@ const TransactionMessage = props => {
 
   if (!message) return null
 
-  return <div className="transaction-message">{offerMessages[offerTitle]}</div>
+  return (
+    <div className="transaction-message align-self-center">
+      {offerMessages[offerTitle]}
+    </div>
+  )
 }
 
 export default TransactionMessage
@@ -76,8 +80,8 @@ export default TransactionMessage
 require('react-styl')(`
   .transaction-message
     color: var(--bluey-grey)
-    font-style: italic
     text-align: center
+    font-style: italic
     padding-top: 15px
     padding-bottom: 15px
 `)

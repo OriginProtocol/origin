@@ -84,7 +84,7 @@ const UserInfo = ({ userName, userAddress }) => (
 const Message = props => {
   const message = get(props, 'message', {})
   const identity = isNil(props.identity) ? {} : props.identity
-  const messageContent = renderContent(message)
+  const messageContent = !message.offerTitle && renderContent(message)
   const userName = abbreviateName(identity, 'Unnamed User')
   const userAddress = truncateAddress(props.wallet)
   const { showTime, showTailAndAvatar } = showItems(props)
