@@ -69,4 +69,4 @@ linkingImageTag: '60a88bb'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'latest'
+cronImageTag: '456da61'
