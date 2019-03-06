@@ -56,3 +56,7 @@ creatorIssuerIp: '35.185.236.254'
 # origin-linking
 linkingImage: origin-linking
 linkingImageTag: 'latest'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'latest'
