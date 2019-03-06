@@ -27,8 +27,10 @@ export default gql`
               id
               createdBlock
               listing {
-                id
-                title
+                ... on Listing {
+                  id
+                  title
+                }
               }
             }
           }

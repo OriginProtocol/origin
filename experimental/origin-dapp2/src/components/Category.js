@@ -1,22 +1,31 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
+import startCase from 'lodash/startCase'
 
 const CategoriesEnum = require('Categories$FbtEnum')
-const Category = ({ listing, separator = '|' }) => {
+const Category = ({ listing, separator = '|', showPrimary }) => {
   const { category, subCategory } = listing
+  if (!category && !subCategory) return null
+
   const splitSubCat = (subCategory || '').split('.')
+  const subCatStr = splitSubCat[splitSubCat.length - 1] || ''
+
   return (
     <>
-      {CategoriesEnum[category] ? (
-        <CategoryName category={listing.category} />
-      ) : (
-        category
+      {showPrimary === false ? null : (
+        <>
+          {CategoriesEnum[category] ? (
+            <CategoryName category={category} />
+          ) : (
+            category
+          )}
+          {` ${separator} `}
+        </>
       )}
-      {` ${separator} `}
       {CategoriesEnum[subCategory] ? (
-        <CategoryName category={listing.subCategory} />
+        <CategoryName category={subCategory} />
       ) : (
-        splitSubCat[splitSubCat.length - 1]
+        startCase(subCatStr)
       )}
     </>
   )

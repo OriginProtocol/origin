@@ -40,6 +40,8 @@ services:
       # and the contract address here, and other services will then parse these
       # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
+      # if new origin module is added the whole container does not need to be rebuilt
+      - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
       - ./experimental/origin-dapp2/:/app/experimental/origin-dapp2/
       - ./experimental/origin-services/:/app/experimental/origin-services/
@@ -48,13 +50,17 @@ services:
       - ./experimental/origin-ipfs/:/app/experimental/origin-ipfs/
       - ./experimental/origin-messaging-client/:/app/experimental/origin-messaging-client/
       - ./experimental/origin-linker-client/:/app/experimental/origin-linker-client/
-      - ./experimental/origin-validator/src:/app/experimental/origin-validator/
+      - ./experimental/origin-validator:/app/experimental/origin-validator/
+      - ./origin-bridge/:/app/origin-bridge/
       - ./origin-discovery/:/app/origin-discovery/
       - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
       - ./origin-messaging/:/app/origin-messaging/
       - ./origin-notifications/:/app/origin-notifications/
       - ./origin-growth/:/app/origin-growth/
+      - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
+    # Required by the dapp2 translation plugin
+      - ./origin-dapp/translations:/app/origin-dapp/translations
     # Exclude all node_modules
       - /app/experimental/origin-dapp2/node_modules/
       - /app/experimental/origin-services/node_modules/
@@ -64,13 +70,15 @@ services:
       - /app/experimental/origin-messaging-client/node_modules/
       - /app/experimental/origin-linker-client/node_modules/
       - /app/experimental/origin-validator/node_modules/
+      - /app/origin-bridge/node_modules/
       - /app/origin-discovery/node_modules/
       - /app/origin-ipfs-proxy/node_modules/
       - /app/origin-messaging/node_modules/
       - /app/origin-notifications/node_modules/
       - /app/origin-growth/node_modules/
       - /app/origin-token/node_modules/
-      # IPFS data
+      - /app/origin-identity/node_modules/
+    # IPFS data
       - ipfs:/app/ipfs
     ports:
       - "3000:3000"
@@ -142,6 +150,7 @@ services:
       wait-for.sh -t 0 -q elasticsearch:9200 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
+      npm run migrate --prefix origin-identity &&
       npm run start:listener --prefix origin-discovery"
 
   origin-discovery:
@@ -193,24 +202,20 @@ services:
     ports:
       - "4001:4001"
     #command: sleep infinity
-    command: npm run start:growth --prefix origin-growth
+    command: npm run start --prefix origin-growth
 
   origin-bridge:
     container_name: origin-bridge
-    image: origin-bridge
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-bridge
-    volumes:
-      - ./origin-bridge:/app
-      # Set the envfile from the local envfile
-      - ./development/envfiles/origin-bridge.env:/app/.env
+    image: origin-experimental
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     depends_on:
       - postgres
-    environment:
-      - FLASK_APP=/app/main.py
-      - FLASK_DEBUG=True
-      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
-    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-bridge &&
+      npm run start --prefix origin-bridge"

@@ -10,9 +10,10 @@ import Profile from './Profile'
 class Onboard extends Component {
   render() {
     const { listing } = this.props
+    const linkPrefix = listing ? '/listing/:listingID' : ''
 
     return (
-      <div className="onboard">
+      <div className="container onboard">
         <h2>Getting started on Origin</h2>
         <div className="explanation">
           In order to successfully transact with others on our DApp, you’ll need
@@ -22,19 +23,19 @@ class Onboard extends Component {
 
         <Switch>
           <Route
-            path="/listings/:listingID/onboard/metamask"
+            path={`${linkPrefix}/onboard/metamask`}
             render={() => <MetaMask listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/messaging"
+            path={`${linkPrefix}/onboard/messaging`}
             render={() => <Messaging listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/notifications"
+            path={`${linkPrefix}/onboard/notifications`}
             render={() => <Notifications listing={listing} />}
           />
           <Route
-            path="/listings/:listingID/onboard/profile"
+            path={`${linkPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} />}
           />
           <Route render={() => <Wallet listing={listing} />} />
@@ -49,7 +50,6 @@ export default Onboard
 require('react-styl')(`
   .onboard
     margin-top: 3.5rem
-
     .btn
       border-radius: 2rem
       padding: 0.75rem 2rem
@@ -178,4 +178,9 @@ require('react-styl')(`
     background-size: contain
     height: 3.5rem
 
+  @media (max-width: 767.98px)
+    .onboard
+      margin: 2rem 0 0 0
+      h2
+        line-height: 1.25
 `)

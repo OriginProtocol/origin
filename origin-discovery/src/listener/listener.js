@@ -47,7 +47,7 @@ const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
  *             handler: [...] } }
  *  }
  */
-function buildSignatureToRules (config, origin, web3) {
+function buildSignatureToRules(config, origin, web3) {
   const signatureLookup = {}
   for (const contractName in EVENT_TO_HANDLER_MAP) {
     const eventHandlers = EVENT_TO_HANDLER_MAP[contractName]
@@ -55,23 +55,25 @@ function buildSignatureToRules (config, origin, web3) {
     if (contract === undefined) {
       throw Error("Can't find contract " + contractName)
     }
-    contract.abi.filter(x => x.type === 'event').forEach(eventAbi => {
-      const handlerClass = eventHandlers[eventAbi.name]
-      if (handlerClass === undefined) {
-        return
-      }
-      const handler = new handlerClass(config, origin)
-      const signature = web3.eth.abi.encodeEventSignature(eventAbi)
-      if (signatureLookup[signature] === undefined) {
-        signatureLookup[signature] = {}
-      }
-      signatureLookup[signature][contractName] = {
-        contractName,
-        eventName: eventAbi.name,
-        eventAbi,
-        handler
-      }
-    })
+    contract.abi
+      .filter(x => x.type === 'event')
+      .forEach(eventAbi => {
+        const handlerClass = eventHandlers[eventAbi.name]
+        if (handlerClass === undefined) {
+          return
+        }
+        const handler = new handlerClass(config, origin)
+        const signature = web3.eth.abi.encodeEventSignature(eventAbi)
+        if (signatureLookup[signature] === undefined) {
+          signatureLookup[signature] = {}
+        }
+        signatureLookup[signature][contractName] = {
+          contractName,
+          eventName: eventAbi.name,
+          eventAbi,
+          handler
+        }
+      })
   }
   return signatureLookup
 }
@@ -85,7 +87,7 @@ function buildSignatureToRules (config, origin, web3) {
  *      { versionKey: '000', contractName: 'V00_Marketplace' }
  *  }
  */
-async function buildAddressToVersion (origin) {
+async function buildAddressToVersion(origin) {
   async function extractVersions(adapters, excludeVersions) {
     for (const versionKey of Object.keys(adapters)) {
       if (excludeVersions.includes(versionKey)) {
@@ -113,7 +115,7 @@ async function buildAddressToVersion (origin) {
 /**
  * Creates an Origin object based on config.
  */
-function setupOriginJS (config, web3) {
+function setupOriginJS(config, web3) {
   const ipfsUrl = new urllib.URL(config.ipfsUrl)
 
   // Error out if any mandatory env var is not set.
@@ -148,7 +150,7 @@ function setupOriginJS (config, web3) {
  * Helper class passed to logic methods containing config and shared resources.
  */
 class Context {
-  constructor () {
+  constructor() {
     this.config = undefined
     this.web3 = undefined
     this.origin = undefined
@@ -157,7 +159,7 @@ class Context {
     this.networkId = undefined
   }
 
-  async init (config, errorCounter) {
+  async init(config, errorCounter) {
     this.config = config
     this.errorCounter = errorCounter
 
@@ -167,7 +169,11 @@ class Context {
 
     this.origin = setupOriginJS(config, this.web3)
 
-    this.signatureToRules = buildSignatureToRules(config, this.origin, this.web3)
+    this.signatureToRules = buildSignatureToRules(
+      config,
+      this.origin,
+      this.web3
+    )
     this.addressToVersion = await buildAddressToVersion(this.origin)
     return this
   }
@@ -176,12 +182,14 @@ class Context {
 /**
  * runBatch - gets and processes logs for a range of blocks
  */
-async function runBatch (opts, context) {
+async function runBatch(opts, context) {
   const fromBlock = opts.fromBlock
   const toBlock = opts.toBlock
   let lastLogBlock
 
-  logger.info(`Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`)
+  logger.info(
+    `Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`
+  )
 
   const eventTopics = Object.keys(context.signatureToRules)
   const logs = await context.web3.eth.getPastLogs({
@@ -216,7 +224,7 @@ async function runBatch (opts, context) {
  *  - checks for a new block every checkIntervalSeconds
  *  - if new block appeared, look for all events after the last found event
  */
-async function liveTracking (context) {
+async function liveTracking(context) {
   let lastLogBlock = await getLastBlock(context.config)
   let lastCheckedBlock = 0
   const checkIntervalSeconds = 5
@@ -278,23 +286,32 @@ const config = {
   // Mailing list webhook URL.
   emailWebhook: args['--email-webhook'] || process.env.EMAIL_WEBHOOK,
   // Index events in the search index.
-  elasticsearch: args['--elasticsearch'] || (process.env.ELASTICSEARCH === 'true'),
+  elasticsearch:
+    args['--elasticsearch'] || process.env.ELASTICSEARCH === 'true',
+  // Google Cloud pub/sub topic
+  gcloudPubsubTopic:
+    args['--gcloud-pubsub-topic'] || process.env.GCLOUD_PUBSUB_TOPIC,
+  // Google Cloud project id for pub/sub
+  gcloudProjectId: args['--gcloud-project-id'] || process.env.GCLOUD_PROJECT_ID,
   // Index marketplace events.
-  marketplace: args['--marketplace'] || (process.env.INDEX_MARKETPLACE === 'true'),
+  marketplace:
+    args['--marketplace'] || process.env.INDEX_MARKETPLACE === 'true',
   // Index identity events.
-  identity: args['--identity'] || (process.env.INDEX_IDENTITY === 'true'),
+  identity: args['--identity'] || process.env.INDEX_IDENTITY === 'true',
   // Index growth events.
-  growth: args['--growth'] || (process.env.INDEX_GROWTH === 'true'),
+  growth: args['--growth'] || process.env.INDEX_GROWTH === 'true',
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
-  trailBlocks:
-    parseInt(args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0),
+  trailBlocks: parseInt(
+    args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
+  ),
   // web3 provider url
   web3Url:
     args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
   // ipfs url
-  ipfsUrl: args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
+  ipfsUrl:
+    args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
   // Origin-js configs
   arbitratorAccount: process.env.ARBITRATOR_ACCOUNT,
   affiliateAccount: process.env.AFFILIATE_ACCOUNT,
@@ -343,6 +360,6 @@ app.listen({ port: port }, () => {
 
   // Start the listener.
   logger.info(`Starting event-listener with config:\n
-    ${JSON.stringify(config, (k, v) => v === undefined ? null : v, 2)}`)
+    ${JSON.stringify(config, (k, v) => (v === undefined ? null : v), 2)}`)
   main()
 })

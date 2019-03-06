@@ -46,6 +46,7 @@ import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 
 import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
+import linkMobileWallet from './walletLinker/linkMobileWallet'
 
 export default {
   acceptOffer,
@@ -67,6 +68,7 @@ export default {
   generatePhoneCode,
   importWallet,
   importWallets,
+  linkMobileWallet,
   makeOffer,
   markConversationRead,
   removeWallet,

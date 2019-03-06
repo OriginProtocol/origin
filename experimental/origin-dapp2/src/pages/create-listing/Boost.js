@@ -42,8 +42,8 @@ class Boost extends Component {
 
   render() {
     const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
-    const isFractional = this.props.listingType === 'fractional'
+    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
+    const isFractional = this.props.__typename === 'FractionalListing'
     const step = isFractional ? 4 : 3
 
     if (this.state.valid) {
@@ -92,7 +92,7 @@ class Boost extends Component {
           </div>
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-4 d-none d-md-block">
           <Wallet />
           <div className="gray-box">
             <h5>About Visibility</h5>
@@ -116,7 +116,7 @@ class Boost extends Component {
   renderBoostSlider() {
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
     const isMulti = Number(this.state.quantity || 0) > 1
-    const isFractional = this.props.listingType === 'fractional'
+    const isFractional = this.props.__typename === 'FractionalListing'
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)

@@ -1,6 +1,7 @@
 const restrictedCountryCodes = ['US', 'CA']
 const forbiddenCountryCodes = []
 
+//TODO: localise these country names
 const countryMap = {
   AD: 'Andorra',
   AE: 'United Arab Emirates',

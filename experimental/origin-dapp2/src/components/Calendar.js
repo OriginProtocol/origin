@@ -117,7 +117,7 @@ class Calendar extends Component {
       )
     }
 
-    let content = `${day.price} ETH`
+    let content = `${day.price || '?'} ETH`
     if (day.booked && this.props.showBooked) {
       content = 'Booked'
     } else if (day.unavailable) {

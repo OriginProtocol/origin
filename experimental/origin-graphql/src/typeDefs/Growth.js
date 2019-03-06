@@ -36,6 +36,7 @@ module.exports =
     Profile
     ListingCreated
     ListingPurchased
+    ListingSold
   }
 
   enum GrowthInviteStatus {
@@ -50,6 +51,12 @@ module.exports =
     Forbidden
   }
 
+  enum EnrollmentStatus {
+    Enrolled
+    NotEnrolled
+    Banned
+  }
+
   type Invite {
     status: GrowthInviteStatus!
     walletAddress: ID!
@@ -62,11 +69,17 @@ module.exports =
     lastName: String
   }
 
+  type UnlockCondition {
+    messageKey: String!
+    iconSource: String!
+  }
+
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
     rewardEarned: Price
     reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthAction implements GrowthBaseAction {
@@ -74,6 +87,7 @@ module.exports =
     status: GrowthActionStatus!
     rewardEarned: Price
     reward: Price            # information about reward
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthInviteConnection {
@@ -91,11 +105,13 @@ module.exports =
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): [GrowthInviteConnection]
+    unlockConditions: [UnlockCondition]
   }
 
   type GrowthCampaign {
     id: Int!
-    name: String!
+    nameKey: String!
+    shortNameKey: String!
     startDate: DateTime
     endDate: DateTime
     distributionDate: DateTime
@@ -110,36 +126,15 @@ module.exports =
     totalCount: Int!
   }
 
-  interface MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-  }
-
-  type InviteResponse implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    invites: [Invite]
-  }
-
-  type EnrollResponse implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    campaign: GrowthCampaign
-  }
-
-  type SimpleResponse implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-  }
-
   type EligibilityInfo {
     eligibility: Eligibility
     countryName: String
     countryCode: String
+  }
+
+  type EnrollResponse {
+    authToken: String
+    error: String
   }
 
   type Query {
@@ -147,15 +142,17 @@ module.exports =
     # after is the cursor
     campaigns(first: Int, after: String, walletAddress: ID!): GrowthCampaignConnection
     campaign(id: String, walletAddress: ID!): GrowthCampaign
-    isEligible: EligibilityInfo
     inviteInfo(code: String): InviteInfo
+    isEligible: EligibilityInfo
+    enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }
 
   type Mutation {
-    invite(emails: [String!]!): InviteResponse
-    enroll(campaignId: Int!, notResidentCertification: Boolean): EnrollResponse
-    gasForIdentity(walletAddress: ID!): SimpleResponse
-    invited(walletAddress: ID!, inviteCode: String!): SimpleResponse
-    log(event: JSON!): SimpleResponse
+    # Sends email invites with referral code on behalf of the referrer.
+    invite(walletAddress: ID!, emails: [String!]!): Boolean
+    # Enrolls user into the growth engine program.
+    enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
+    # Records a growth engine event.
+    log(event: JSON!): Boolean
   }
 `

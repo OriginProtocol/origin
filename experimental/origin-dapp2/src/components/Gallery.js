@@ -4,7 +4,7 @@ import get from 'lodash/get'
 class Gallery extends Component {
   state = { active: 0 }
   render() {
-    const pics = get(this.props, 'pics', [])
+    const pics = get(this.props, 'pics') || []
     const active = pics[this.state.active]
     if (!active) return null
 

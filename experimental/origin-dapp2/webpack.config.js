@@ -5,6 +5,19 @@ const TerserPlugin = require('terser-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+
+const gitRevisionPlugin = new GitRevisionPlugin()
+
+let gitCommitHash = process.env.GIT_COMMIT_HASH || process.env.DEPLOY_TAG,
+  gitBranch = process.env.GIT_BRANCH
+
+try {
+  gitCommitHash = gitRevisionPlugin.commithash()
+  gitBranch = gitRevisionPlugin.branch()
+} catch (e) {
+  /* No Git repo found  */
+}
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -106,7 +119,10 @@ const config = {
       LINKER_HOST: 'localhost',
       DOCKER: false,
       ENABLE_GROWTH: false,
-      IPFS_SWARM: ''
+      IPFS_SWARM: '',
+      GIT_COMMIT_HASH: gitCommitHash,
+      GIT_BRANCH: gitBranch,
+      BUILD_TIMESTAMP: +new Date()
     })
   ],
 
@@ -145,6 +161,12 @@ if (isProduction) {
       inject: false,
       filename: 'kovan.html',
       network: 'kovanTst'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'rinkeby.html',
+      network: 'rinkeby'
     })
   )
   config.resolve.alias = {

@@ -74,7 +74,7 @@ class ListingsGrid extends Component {
         {contractFound && (
           <div className="listings-grid">
             {resultsCount > 0 && (
-              <>
+              <div>
                 <h1>
                   <FormattedMessage
                     id={'listings-grid.listingsCount'}
@@ -104,7 +104,7 @@ class ListingsGrid extends Component {
                 linkClass="page-link"
                 hideDisabled="true"
               />
-            </>
+            </div>
           )}
 
           {resultsCount == 0 && this.props.renderMode !== 'search' && this.props.isWhiteLabel && (

@@ -35,12 +35,11 @@ You can start the faucet using either docker or lerna.
         
   Start a local blockchain
   
-        lerna run start --scope origin-js
+        lerna run start --scope origin --stream
         
   Start the faucet server
   
-        cd origin-faucet
-        node src/app.js --network_ids=999
+        lerna run start --scope origin-faucet --stream
         
  ### Access the faucet
    The server should start and you can point your browser to http://localhost:5000 to access the faucet web UI.

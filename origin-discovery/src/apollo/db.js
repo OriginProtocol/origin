@@ -9,7 +9,7 @@ const listingMetadata = require('./listing-metadata')
  * @return {Object}
  * @private
  */
-function _makeListing (row) {
+function _makeListing(row) {
   return {
     id: row.id,
     blockInfo: {
@@ -54,13 +54,13 @@ function _makeListing (row) {
  * @return {Promise<Array<Listing>>}
  * @private
  */
-async function _getListings (whereClause, orderByIds = []) {
+async function _getListings(whereClause, orderByIds = []) {
   const rows = await db.Listing.findAll({
     where: whereClause,
-    attributes: [
-      Sequelize.literal('DISTINCT ON(id) 1')
-    ].concat(Object.keys(db.Listing.rawAttributes)),
-    order: [ ['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC'] ]
+    attributes: [Sequelize.literal('DISTINCT ON(id) 1')].concat(
+      Object.keys(db.Listing.rawAttributes)
+    ),
+    order: [['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC']]
   })
   if (rows.length === 0) {
     return []
@@ -72,10 +72,14 @@ async function _getListings (whereClause, orderByIds = []) {
   } else {
     // Return results in oder specified by orderIds.
     const rowDict = {}
-    rows.forEach(row => { rowDict[row.id] = row })
+    rows.forEach(row => {
+      rowDict[row.id] = row
+    })
     orderByIds.forEach(id => {
       if (!rowDict[id]) {
-        console.log(`ERROR: Data inconsistency - Listing id ${id} in ES but not in DB.`)
+        console.log(
+          `ERROR: Data inconsistency - Listing id ${id} in ES but not in DB.`
+        )
         return
       }
       listings.push(_makeListing(rowDict[id]))
@@ -90,7 +94,7 @@ async function _getListings (whereClause, orderByIds = []) {
  * @param {Array<string>} listingIds - Listing ids.
  * @return {Promise<Array|null>}
  */
-async function getListingsById (listingIds) {
+async function getListingsById(listingIds) {
   const whereClause = { id: { [Sequelize.Op.in]: listingIds } }
   return _getListings(whereClause, listingIds)
 }
@@ -100,7 +104,7 @@ async function getListingsById (listingIds) {
  * @param {Array<string>} listingIds - Listing ids.
  * @return {Promise<Array|null>}
  */
-async function getListingsBySeller (sellerAddress) {
+async function getListingsBySeller(sellerAddress) {
   const whereClause = { sellerAddress: sellerAddress.toLowerCase() }
   return _getListings(whereClause)
 }
@@ -120,7 +124,7 @@ async function getListingsBySeller (sellerAddress) {
  *   version (blockNum=1, logIndex=34).
  * @return {Promise<Object|null>}
  */
-async function getListing (listingId, blockInfo = null) {
+async function getListing(listingId, blockInfo = null) {
   let row
   if (blockInfo) {
     // Build a query that looks like:
@@ -148,7 +152,7 @@ async function getListing (listingId, blockInfo = null) {
     // Return most recent row for the listing.
     row = await db.Listing.findOne({
       where: { id: listingId },
-      order: [ ['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC'] ],
+      order: [['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC']],
       limit: 1
     })
   }
@@ -165,8 +169,11 @@ async function getListing (listingId, blockInfo = null) {
  * @return {Object}
  * @private
  */
-function _makeOffer (row) {
-  if (row.data.events.length === 0 || row.data.events[0].event !== 'OfferCreated') {
+function _makeOffer(row) {
+  if (
+    row.data.events.length === 0 ||
+    row.data.events[0].event !== 'OfferCreated'
+  ) {
     throw new Error('Can not find OfferCreated event')
   }
   return {
@@ -184,7 +191,7 @@ function _makeOffer (row) {
     unitsPurchased: row.data.unitsPurchased,
     // See https://github.com/OriginProtocol/origin/issues/1087
     // as to why we extract commission from the ipfs data.
-    commission: row.data.ipfs.data.commission,
+    commission: row.data.ipfs.data.commission
   }
 }
 
@@ -195,7 +202,11 @@ function _makeOffer (row) {
  * @param {string} sellerAddress - optional seller address
  * @return {Promise<Array<Object>>}
  */
-async function getOffers ({ listingId = null, buyerAddress = null, sellerAddress = null }) {
+async function getOffers({
+  listingId = null,
+  buyerAddress = null,
+  sellerAddress = null
+}) {
   const whereClause = {}
 
   if (listingId) {
@@ -208,7 +219,9 @@ async function getOffers ({ listingId = null, buyerAddress = null, sellerAddress
     whereClause.sellerAddress = sellerAddress.toLowerCase()
   }
   if (Object.keys(whereClause).length === 0) {
-    throw new Error('A filter must be specified: listingId, buyerAddress or sellerAddress')
+    throw new Error(
+      'A filter must be specified: listingId, buyerAddress or sellerAddress'
+    )
   }
   const rows = await db.Offer.findAll({ where: whereClause })
 
@@ -220,7 +233,7 @@ async function getOffers ({ listingId = null, buyerAddress = null, sellerAddress
  * @param offerId
  * @return {Promise<Object|null>}
  */
-async function getOffer (offerId) {
+async function getOffer(offerId) {
   const row = await db.Offer.findByPk(offerId)
   if (!row) {
     return null

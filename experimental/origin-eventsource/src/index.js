@@ -71,12 +71,6 @@ class OriginEventSource {
       if (e.event === 'ListingWithdrawn') {
         status = 'withdrawn'
       }
-      if (e.event === 'OfferFinalized') {
-        status = 'sold'
-      }
-      if (e.event === 'OfferRuling') {
-        status = 'sold'
-      }
       if (blockNumber && e.blockNumber <= blockNumber) {
         oldIpfsHash = ipfsHash
       }
@@ -84,10 +78,11 @@ class OriginEventSource {
 
     let data
     try {
-      data = await get(this.ipfsGateway, ipfsHash)
+      const rawData = await get(this.ipfsGateway, ipfsHash)
       data = pick(
-        data,
-        'listingType',
+        rawData,
+        '__typename',
+        'valid',
         'title',
         'description',
         'currencyId',
@@ -104,9 +99,35 @@ class OriginEventSource {
         'unavailable',
         'customPricing'
       )
+      data.valid = true
+
+      // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
+      if (data.unitsTotal < 0) {
+        data.unitsTotal = 1
+      }
+
+      // TODO: Dapp1 fractional compat
+      if (rawData.availability && !rawData.weekendPrice) {
+        try {
+          const isWeekly = _get(rawData, 'availability.2.6.0') === 'x-price'
+          const weekdayPrice = _get(rawData, 'availability.2.6.3')
+          const isWeekend = _get(rawData, 'availability.3.6.0') === 'x-price'
+          const weekendPrice = _get(rawData, 'availability.3.6.3')
+          if (isWeekly && isWeekend) {
+            data.price = { amount: weekdayPrice, currency: 'ETH' }
+            data.weekendPrice = { amount: weekendPrice, currency: 'ETH' }
+          }
+        } catch (e) {
+          /* Ignore */
+        }
+      }
     } catch (e) {
       console.log(`Error retrieving IPFS data for ${ipfsHash}`)
-      return null
+      data = {
+        ...data,
+        valid: false,
+        validationError: 'No IPFS data'
+      }
     }
 
     // If a blockNumber has been specified, override certain fields with the
@@ -127,7 +148,11 @@ class OriginEventSource {
         }
       } catch (e) {
         console.log(`Error retrieving old IPFS data for ${ipfsHash}`)
-        return null
+        data = {
+          ...data,
+          valid: false,
+          validationError: 'No IPFS data'
+        }
       }
     }
 
@@ -135,17 +160,32 @@ class OriginEventSource {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
 
-    if (data.media && data.media.length) {
+    if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
         urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
       }))
+    } else {
+      data.media = [] // If invalid, set a clean, empty media array
     }
 
-    const type = 'unit'
+    let __typename = data.__typename
+    if (!__typename) {
+      if (
+        data.category === 'schema.forRent' &&
+        data.subCategory === 'schema.housing'
+      ) {
+        __typename = 'FractionalListing'
+      } else if (data.category === 'schema.announcements') {
+        __typename = 'AnnouncementListing'
+      } else {
+        __typename = 'UnitListing'
+      }
+    }
+
     let commissionPerUnit = '0',
       commission = '0'
-    if (type === 'unit') {
+    if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
         data.unitsTotal === 1
           ? (data.commission && data.commission.amount) || '0'
@@ -158,8 +198,7 @@ class OriginEventSource {
 
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
-      __typename:
-        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
+      __typename,
       id: `${networkId}-000-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
@@ -172,8 +211,7 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      type,
-      multiUnit: type === 'unit' && data.unitsTotal > 1,
+      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
@@ -199,9 +237,10 @@ class OriginEventSource {
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
     let unitsAvailable = listing.unitsTotal
+    let pendingUnits = 0
     const booked = []
 
-    if (listing.listingType === 'fractional') {
+    if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -209,7 +248,7 @@ class OriginEventSource {
           booked.push(`${offer.startDate}-${offer.endDate}`)
         }
       })
-    } else if (listing.type === 'unit') {
+    } else if (listing.__typename !== 'AnnouncementListing') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -220,6 +259,9 @@ class OriginEventSource {
         } else {
           try {
             unitsAvailable -= offer.quantity
+            if (offer.status === '1' || offer.status === '2') {
+              pendingUnits += offer.quantity
+            }
 
             // Validate offer commission.
             const normalCommission = commissionPerUnit.mul(
@@ -249,6 +291,15 @@ class OriginEventSource {
     commissionAvailable = !commissionAvailable.isNeg()
       ? commissionAvailable.toString()
       : '0'
+
+    if (listing.status === 'active' && unitsAvailable <= 0) {
+      if (listing.unitsTotal === 1 && pendingUnits > 0) {
+        listing.status = 'pending'
+      } else {
+        listing.status = 'sold'
+      }
+    }
+
     return Object.assign({}, listing, {
       allOffers,
       booked,
@@ -383,7 +434,7 @@ class OriginEventSource {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
-    if (listing.type !== 'unit') {
+    if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
       return
     }

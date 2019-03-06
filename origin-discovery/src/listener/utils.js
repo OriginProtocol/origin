@@ -9,7 +9,7 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * Returns the first block the listener should start at for following events.
  * Reads the persisted state from either DB or continue file.
  */
-async function getLastBlock (config) {
+async function getLastBlock(config) {
   let lastBlock
   if (config.continueFile) {
     // Read state from continue file.
@@ -44,7 +44,7 @@ async function getLastBlock (config) {
  * Stores the last block we have read up.
  * Writes in either DB or continue file.
  */
-async function setLastBlock (config, blockNumber) {
+async function setLastBlock(config, blockNumber) {
   if (config.continueFile) {
     const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
     fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
@@ -64,8 +64,11 @@ async function setLastBlock (config, blockNumber) {
 function checkEventsFreshness(events, blockInfo) {
   // Find at least 1 event that is as fresh as blockInfo.
   const fresh = events.some(event => {
-    return (event.blockNumber > blockInfo.blockNumber) ||
-      (event.blockNumber === blockInfo.blockNumber && event.logIndex >= blockInfo.logIndex)
+    return (
+      event.blockNumber > blockInfo.blockNumber ||
+      (event.blockNumber === blockInfo.blockNumber &&
+        event.logIndex >= blockInfo.logIndex)
+    )
   })
   if (!fresh) {
     throw new Error('Freshness check failed')
@@ -79,9 +82,10 @@ function checkEventsFreshness(events, blockInfo) {
  *   max number of attempts reached.
  * @return {Promise<*>}
  */
-async function withRetrys (fn, exitOnError = true) {
+async function withRetrys(fn, exitOnError = true) {
   let tryCount = 0
-  while (true) {  // eslint-disable-line no-constant-condition
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     try {
       return await fn() // Do our action.
     } catch (e) {

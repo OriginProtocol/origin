@@ -14,6 +14,7 @@ import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import Message from './Message'
 import QueryError from 'components/QueryError'
+import EnableMessaging from 'components/EnableMessaging'
 
 function getRoomEvents(offers, purchases, party = {}) {
   return filter([...offers, ...purchases], offer => {
@@ -83,7 +84,8 @@ const MessagesWithOffers = withOffers(AllMessages)
 
 class Room extends Component {
   render() {
-    const { id, wallet, markRead, purchaseEvents = [] } = this.props
+    const { id, wallet, markRead, purchaseEvents = [], enabled } = this.props
+
     return (
       <div className="container">
         <Query
@@ -112,7 +114,13 @@ class Room extends Component {
                   markRead={() => markRead({ variables: { id } })}
                   purchaseEvents={purchaseEvents}
                 />
-                <SendMessage to={this.props.id} />
+                {enabled ? (
+                  <SendMessage to={this.props.id} />
+                ) : (
+                  <div className="col-12">
+                    <EnableMessaging />
+                  </div>
+                )}
               </>
             )
           }}

@@ -55,13 +55,18 @@ const GrowthEventTypes = new Enum(
   'AirbnbAttestationPublished',
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
-  'RefereeSignedUp',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold' // Seller side event.
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
+
+const GrowthParticipantAuthenticationStatus = new Enum(
+  'Enrolled',
+  'Banned',
+  'NotEnrolled'
+)
 
 const GrowthRewardStatuses = new Enum(
   'Pending',
@@ -82,6 +87,7 @@ module.exports = {
   GrowthEventStatuses,
   GrowthEventTypes,
   GrowthParticipantStatuses,
+  GrowthParticipantAuthenticationStatus,
   GrowthRewardStatuses,
   GrowthInviteContactTypes,
   GrowthInviteStatuses,

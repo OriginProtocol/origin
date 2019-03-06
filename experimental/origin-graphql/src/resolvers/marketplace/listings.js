@@ -43,7 +43,9 @@ async function searchIds(search, filters) {
       .then(response => response.json())
       .then(response => resolve(response.data.listings))
   })
-  const ids = searchResult.nodes.map(n => Number(n.id.split('-')[2]))
+  const ids = searchResult.nodes
+    .map(n => Number(n.id.split('-')[2]))
+    .filter(id => id >= 0)
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
@@ -75,9 +77,9 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   ids = ids.slice(start, end)
 
   if (!fields || fields.nodes) {
-    nodes = await Promise.all(
-      ids.map(id => contracts.eventSource.getListing(id))
-    )
+    nodes = (await Promise.all(
+      ids.map(id => contracts.eventSource.getListing(id).catch(e => e))
+    )).filter(node => !(node instanceof Error))
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0

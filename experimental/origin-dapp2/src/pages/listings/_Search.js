@@ -140,6 +140,8 @@ require('react-styl')(`
         font-size: 14px
         font-weight: normal
         color: var(--dusk)
+        &:hover,&:active,&:focus
+          color: var(--white)
       .dropdown-toggle::after
         margin-left: 0.5rem
       .form-control

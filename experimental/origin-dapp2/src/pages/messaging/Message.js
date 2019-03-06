@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import isNil from 'lodash/isNil'
@@ -16,10 +16,18 @@ const MAX_MINUTES = 10
 
 function renderContent(message) {
   const { content, media } = message
-  const contentWithLineBreak = `${content}\n`
 
   if (!media || !media.length) {
-    return contentWithLineBreak
+    return (
+      <>
+        {content.split('\n').map((c, idx) => (
+          <Fragment key={idx}>
+            {c}
+            <br />
+          </Fragment>
+        ))}
+      </>
+    )
   } else {
     return media.map(image => (
       <div key={image.url} className="image-container mx-auto">
@@ -149,12 +157,12 @@ require('react-styl')(`
       margin-bottom: 0
     &.counterparty
       &.content-only
-        margin-left: 60px
+        padding-left: 60px
       .account, .name
         color: var(--dark-blue-grey)
     &.user
       &.content-only
-        margin-right: 60px
+        padding-right: 60px
       .account, .name
         color: white
     .bubble

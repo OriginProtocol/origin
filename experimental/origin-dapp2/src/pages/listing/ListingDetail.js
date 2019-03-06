@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import get from 'lodash/get'
 
 import Gallery from 'components/Gallery'
-import Link from 'components/Link'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
@@ -10,180 +10,51 @@ import Calendar from 'components/Calendar'
 import PageTitle from 'components/PageTitle'
 import Category from 'components/Category'
 
-import Buy from './mutations/Buy'
-
-const SelectQuantity = ({ quantity, onChange, available }) => {
-  return (
-    <div className="quantity">
-      <span>Quantity</span>
-      <span>
-        <select value={quantity} onChange={e => onChange(e.target.value)}>
-          {Array(available)
-            .fill(0)
-            .map((v, idx) => (
-              <option key={idx}>{idx + 1}</option>
-            ))}
-        </select>
-      </span>
-    </div>
-  )
-}
-
-const Sold = () => (
-  <div className="listing-buy pending">
-    <div>This listing is</div>
-    <div>Sold</div>
-    <div>
-      This listing is sold out. Try visiting the listings page and searching for
-      something similar.
-    </div>
-    <Link to="/listings">View Listings</Link>
-  </div>
-)
-
-const Pending = () => (
-  <div className="listing-buy pending">
-    <div>This listing is</div>
-    <div>Pending</div>
-    <div>
-      Another buyer has already made an offer on this listing. Try visiting the
-      listings page and searching for something similar.
-    </div>
-    <Link to="/listings">View Listings</Link>
-  </div>
-)
-
-const SingleUnit = ({ listing, from, refetch }) => (
-  <div className="listing-buy">
-    <div className="price">{`${listing.price.amount} ETH`}</div>
-    <Buy
-      refetch={refetch}
-      listing={listing}
-      from={from}
-      value={listing.price.amount}
-      quantity={1}
-      className="btn btn-primary"
-      children="Buy Now"
-    />
-  </div>
-)
-
-const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
-  const amount = String(Number(listing.price.amount) * Number(quantity))
-  return (
-    <div className="listing-buy multi">
-      <div className="price">
-        {`${listing.price.amount} ETH`}
-        {listing.multiUnit ? <span>{` / each`}</span> : null}
-      </div>
-      <SelectQuantity
-        quantity={quantity}
-        onChange={val => updateQuantity(val)}
-        available={listing.unitsAvailable}
-      />
-      <div className="total">
-        <span>Total Price</span>
-        <span>{`${amount} ETH`}</span>
-      </div>
-      <Buy
-        refetch={refetch}
-        listing={listing}
-        from={from}
-        value={amount}
-        quantity={quantity}
-        className="btn btn-primary"
-        children="Buy Now"
-      />
-    </div>
-  )
-}
-
-const Fractional = ({ listing, from, range, availability, refetch }) => {
-  let checkIn = 'Check in',
-    checkOut = 'Check out',
-    totalPrice,
-    available = false,
-    showUnavailable = false
-
-  if (range) {
-    const split = range.split('-')
-    checkIn = split[0]
-    checkOut = split[1]
-    const priceEstimate = availability.estimatePrice(range)
-    available = priceEstimate.available
-    if (available) {
-      totalPrice = String(priceEstimate.price)
-    } else {
-      showUnavailable = true
-    }
-  }
-
-  return (
-    <div className="listing-buy fractional">
-      <div className="price">{`${listing.price.amount} ETH / night`}</div>
-      <div className="choose-dates form-control">
-        <div>{checkIn}</div>
-        <div className="arr" />
-        <div>{checkOut}</div>
-      </div>
-      {!showUnavailable ? null : <div className="total">Unavailable</div>}
-      {!totalPrice ? null : (
-        <div className="total">
-          <span>Total Price</span>
-          <span>{`${totalPrice} ETH`}</span>
-        </div>
-      )}
-      <Buy
-        refetch={refetch}
-        listing={listing}
-        from={from}
-        value={totalPrice}
-        quantity={1}
-        disabled={available ? false : true}
-        startDate={checkIn}
-        endDate={checkOut}
-        className={`btn btn-primary${available ? '' : ' disabled'}`}
-        children="Book"
-      />
-    </div>
-  )
-}
-
-const ForSeller = ({ listing }) => (
-  <div className="listing-buy">
-    <div className="price">{`${listing.price.amount} ETH`}</div>
-    <Link
-      className="btn btn-primary mt-2"
-      to={`/listings/${listing.id}/edit`}
-      children={'Edit Listing'}
-    />
-  </div>
-)
+import Sold from './_ListingSold'
+import Pending from './_ListingPending'
+import EditOnly from './_ListingEditOnly'
+import SingleUnit from './_BuySingleUnit'
+import MultiUnit from './_BuyMultiUnit'
+import Fractional from './_BuyFractional'
 
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { mobile: window.innerWidth < 767 }
+    this.onResize = this.onResize.bind(this)
     if (props.listing.__typename === 'FractionalListing') {
       this.state.availability = new AvailabilityCalculator({
-        weekdayPrice: props.listing.price.amount,
-        weekendPrice: props.listing.weekendPrice.amount,
-        booked: props.listing.booked,
-        unavailable: props.listing.unavailable,
-        customPricing: props.listing.customPricing
+        weekdayPrice: get(props, 'listing.price.amount'),
+        weekendPrice: get(props, 'listing.weekendPrice.amount'),
+        booked: get(props, 'listing.booked'),
+        unavailable: get(props, 'listing.unavailable'),
+        customPricing: get(props, 'listing.customPricing')
       })
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnount() {
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.mobile) {
+      this.setState({ mobile: true })
+    } else if (window.innerWidth >= 767 && this.state.mobile) {
+      this.setState({ mobile: false })
     }
   }
 
   render() {
     const { listing } = this.props
-
-    const isFractional = listing.__typename === 'FractionalListing'
-    const sold = listing.unitsSold >= listing.unitsTotal
-    const pending = listing.unitsAvailable <= 0
+    const isMobile = this.state.mobile
 
     return (
-      <div className="listing-detail">
+      <div className="container listing-detail">
         <PageTitle>{listing.title}</PageTitle>
         <div className="header">
           <div className="category">
@@ -192,48 +63,83 @@ class ListingDetail extends Component {
           <ListingBadge status={listing.status} featured={listing.featured} />
         </div>
         <h2>{listing.title}</h2>
-        <div className="row">
-          <div className="col-md-8 pb-3">
-            <Gallery pics={listing.media} />
-            <div className="description">{listing.description}</div>
-            {!isFractional ? null : (
-              <>
-                <hr />
-                <Calendar
-                  small={true}
-                  onChange={state => this.setState(state)}
-                  availability={this.state.availability}
-                />
-              </>
-            )}
-          </div>
-          <div className="col-md-4">
-            {listing.seller.id === this.props.from ? (
-              <ForSeller {...this.props} />
-            ) : sold ? (
-              <Sold />
-            ) : pending ? (
-              <Pending />
-            ) : isFractional ? (
-              <Fractional
-                {...this.props}
-                range={this.state.range}
-                availability={this.state.availability}
-              />
-            ) : listing.multiUnit ? (
-              <MultiUnit {...this.props} />
-            ) : (
-              <SingleUnit {...this.props} />
-            )}
 
-            <h5 className="mt-3">About the Seller</h5>
+        {isMobile ? (
+          <>
+            {this.renderListing()}
+            {this.renderAction()}
+            <h5>About the Seller</h5>
             <AboutParty id={listing.seller.id} />
+            <Reviews id={listing.seller.id} />
+          </>
+        ) : (
+          <div className="row">
+            <div className="col-md-8 pb-3">
+              {this.renderListing()}
+              <hr />
+              <Reviews id={listing.seller.id} />
+            </div>
+            <div className="col-md-4">
+              {this.renderAction()}
+              <h5>About the Seller</h5>
+              <AboutParty id={listing.seller.id} />
+            </div>
           </div>
-        </div>
-        <hr />
-        <Reviews id={listing.seller.id} />
+        )}
       </div>
     )
+  }
+
+  renderListing() {
+    const { listing } = this.props
+    const isFractional = listing.__typename === 'FractionalListing'
+
+    return (
+      <>
+        <Gallery pics={listing.media} />
+        <div className="description">{listing.description}</div>
+        {!isFractional ? null : (
+          <>
+            <hr />
+            <Calendar
+              small={true}
+              onChange={state => this.setState(state)}
+              availability={this.state.availability}
+            />
+            <div className="availability-help">
+              * Click and drag to select a date range
+            </div>
+          </>
+        )}
+      </>
+    )
+  }
+
+  renderAction() {
+    const { listing } = this.props
+    const isFractional = listing.__typename === 'FractionalListing'
+    const isAnnouncement = listing.__typename === 'AnnouncementListing'
+
+    if (listing.seller.id === this.props.from) {
+      return <EditOnly {...this.props} isAnnouncement={isAnnouncement} />
+    } else if (isAnnouncement) {
+      return null
+    } else if (listing.status === 'sold') {
+      return <Sold />
+    } else if (listing.status === 'pending') {
+      return <Pending />
+    } else if (isFractional) {
+      return (
+        <Fractional
+          {...this.props}
+          range={this.state.range}
+          availability={this.state.availability}
+        />
+      )
+    } else if (listing.multiUnit) {
+      return <MultiUnit {...this.props} />
+    }
+    return <SingleUnit {...this.props} />
   }
 }
 
@@ -249,6 +155,7 @@ require('react-styl')(`
       font-weight: 200
       font-style: normal
       color: var(--dark)
+      line-height: 1.25
 
     .header
       display: flex
@@ -266,20 +173,28 @@ require('react-styl')(`
     .badge
       margin-top: 0.75rem
 
+    .gallery
+      margin-bottom: 1rem
+
     .main-pic
       padding-top: 56.6%
       background-size: contain
       background-repeat: no-repeat
       background-position: top center
+      border: 1px solid var(--pale-grey-two)
 
     .description
-      margin-top: 2rem
       white-space: pre-wrap
+
+    .availability-help
+      font-size: 14px
+      margin-bottom: 1rem
 
     .listing-buy
       padding: 1.5rem
       border-radius: var(--default-radius);
       background-color: var(--pale-grey-eight)
+      margin-bottom: 1rem
       > .btn
         border-radius: 2rem
         padding: 0.5rem 1rem
@@ -294,19 +209,32 @@ require('react-styl')(`
       .total
         padding-top: 0
       .price
-        background: url(images/eth-icon.svg) no-repeat
-        background-size: 1.5rem
-        padding: 0.2rem 0 1.5rem 2rem
-        line-height: 1rem
-        font-family: var(--default-font)
-        font-size: 24px
-        font-weight: bold
-        font-style: normal
-        color: #000000
-        > span
+        display: flex
+        align-items: baseline
+        margin-bottom: 1.5rem
+        white-space: nowrap
+        flex-wrap: wrap
+        .eth
+          background: url(images/eth-icon.svg) no-repeat
+          background-size: 1.5rem
+          padding-left: 2rem
+          line-height: 1.5rem
+          font-family: var(--default-font)
+          font-size: 24px
+          font-weight: bold
+          font-style: normal
+          color: #000000
+          > span
+            font-weight: normal
+        .usd
+          color: var(--steel)
           font-weight: normal
+          margin-left: 1rem
+          font-size: 16px
       &.multi .price
+        padding-bottom: 1.5rem
         border-bottom: 1px solid var(--light)
+        margin-bottom: 0
       &.fractional
         .choose-dates
           display: flex;
@@ -346,5 +274,7 @@ require('react-styl')(`
         font-size: 32px
       .description
         margin-top: 1rem
-
+        margin-bottom: 2rem
+      .about-party
+        margin-bottom: 2rem
 `)

@@ -10,6 +10,7 @@ import withWallet from 'hoc/withWallet'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
+import EnableMessaging from 'components/EnableMessaging'
 import RoomStatus from 'pages/messaging/RoomStatus'
 
 class MessagesNav extends Component {
@@ -22,13 +23,10 @@ class MessagesNav extends Component {
       <Query query={MessagingQuery} pollInterval={2000}>
         {({ data, loading, error }) => {
           if (loading || error) return null
-          if (!get(data, 'messaging.enabled')) {
-            return null
-          }
-
+          const enabled = get(data, 'messaging.enabled', false)
           const totalUnread = get(data, 'messaging.totalUnread', 0)
-
           const hasUnread = totalUnread > 0 ? ' active' : ''
+
           return (
             <Dropdown
               el="li"
@@ -37,6 +35,7 @@ class MessagesNav extends Component {
               onClose={() => this.props.onClose()}
               content={
                 <MessagesDropdownWithRouter
+                  enabled={enabled}
                   onClick={() => this.props.onClose()}
                   totalUnread={totalUnread}
                   wallet={this.props.wallet}
@@ -67,7 +66,7 @@ class MessagesNav extends Component {
 class MessagesDropdown extends Component {
   state = {}
   render() {
-    const { onClick, totalUnread } = this.props
+    const { onClick, totalUnread, enabled } = this.props
 
     return (
       <div className="dropdown-menu dropdown-menu-right show">
@@ -83,8 +82,14 @@ class MessagesDropdown extends Component {
                 <div className="count">
                   <div className="total">{totalUnread}</div>
                   <div className="title">Unread Messages</div>
+                  {enabled ? null : (
+                    <EnableMessaging
+                      className="btn-sm"
+                      onClose={() => onClick()}
+                    />
+                  )}
                 </div>
-                <div>
+                <div className="messaging-dropdown-content">
                   {conversations.map((conv, idx) => (
                     <RoomStatus
                       onClick={() => {
@@ -138,4 +143,10 @@ require('react-styl')(`
           right: -3px
     &.show .messages-icon
       background-image: url(images/messages-icon-selected.svg)
+    .count .btn
+      margin-left: 1.5rem
+    .count.title
+      margin-right: auto
+    .messaging-dropdown-content
+      max-width: 450px
 `)

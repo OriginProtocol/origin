@@ -96,7 +96,7 @@ services:
       - postgres
     ports:
       - "4001:4001"
-    command: npm run start:growth --prefix origin-growth
+    command: npm run start --prefix origin-growth
 
   event-listener:
     container_name: event-listener
@@ -136,23 +136,21 @@ services:
 
   origin-bridge:
     container_name: origin-bridge
-    image: origin-bridge
-    build:
-      context: .
-      dockerfile: development/dockerfiles/origin-bridge
+    image: origin
     volumes:
-      - ./origin-bridge:/app
-      # Set the envfile from the local envfile
-      - ./development/envfiles/origin-bridge.env:/app/.env
+      - ./origin-bridge/src:/app/origin-bridge/src
+      - ./origin-bridge/package.json:/app/origin-bridge/package.json
     depends_on:
       - postgres
-    environment:
-      - FLASK_APP=/app/main.py
-      - FLASK_DEBUG=True
-      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
-    command: /bin/bash -c "flask db upgrade && flask run --host=0.0.0.0"
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix origin-bridge &&
+      npm run start --prefix origin-bridge"
 
   origin-notifications:
     container_name: origin-notifications

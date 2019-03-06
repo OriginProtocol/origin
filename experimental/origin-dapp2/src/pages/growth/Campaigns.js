@@ -2,13 +2,25 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
 import find from 'lodash/find'
+import { fbt } from 'fbt-runtime'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
+import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import { Link } from 'react-router-dom'
 import AccountTokenBalance from 'queries/TokenBalance'
+
+const GrowthEnum = require('Growth$FbtEnum')
+
+const GrowthTranslation = ({ stringKey }) => {
+  return (
+    <fbt desc="growth">
+      <fbt:enum enum-range={GrowthEnum} value={stringKey} />
+    </fbt>
+  )
+}
 
 function CampaignNavItem(props) {
   const { campaign, selected, onClick } = props
@@ -36,7 +48,11 @@ function CampaignNavItem(props) {
           {completedIndicator && <img src="images/circular-check-button.svg" />}
         </div>
         <div className={`name ${selected ? 'active' : ''}`}>
-          {campaign.name}
+          {GrowthEnum[campaign.shortNameKey] ? (
+            <GrowthTranslation stringKey={campaign.shortNameKey} />
+          ) : (
+            'Campaign'
+          )}
         </div>
         {selected && <div className="select-bar" />}
       </div>
@@ -106,7 +122,15 @@ class ProgressBar extends Component {
 }
 
 function Action(props) {
-  const { type, status, reward, rewardEarned, rewardPending } = props.action
+  const {
+    type,
+    status,
+    reward,
+    rewardEarned,
+    rewardPending,
+    unlockConditions
+  } = props.action
+
   const actionLocked = status === 'Inactive'
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
@@ -124,6 +148,7 @@ function Action(props) {
   let foregroundImgSrc
   let title
   let infoText
+  let buttonLink = '/profile'
 
   if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
@@ -152,12 +177,15 @@ function Action(props) {
   } else if (type === 'ListingCreated') {
     title = 'Create a listing'
     infoText = 'Create a new listing on the marketplace'
+    buttonLink = '/create'
   } else if (type === 'ListingPurchased') {
     title = 'Purchase a listing'
     infoText = 'Purchase a listing on marketplace'
+    buttonLink = '/'
   } else if (type === 'Referral') {
     title = 'Invite Friends'
     infoText = 'Get your friends to join Origin with active accounts.'
+    buttonLink = '/campaigns/invite'
   }
 
   const renderReward = (amount, renderPlusSign) => {
@@ -190,7 +218,9 @@ function Action(props) {
           )}
         </div>
       </div>
-      <div className="col-8 d-flex flex-column">
+      <div
+        className={`d-flex flex-column ${actionLocked ? 'col-10' : 'col-8'}`}
+      >
         <div className="title">{title}</div>
         <div className="info-text">{infoText}</div>
         <div className="d-flex">
@@ -213,11 +243,40 @@ function Action(props) {
           {!actionCompleted &&
             reward !== null &&
             renderReward(reward.amount, true)}
+          {actionLocked && unlockConditions.length > 0 && (
+            <Fragment>
+              <div className="emphasis pr-2 pt-1 d-flex align-items-center ">
+                Requires
+              </div>
+              {unlockConditions.map(unlockCondition => {
+                return (
+                  <div
+                    className="requirement d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2"
+                    key={unlockCondition.messageKey}
+                  >
+                    <img src={unlockCondition.iconSource} />
+                    <div className="value">
+                      {GrowthEnum[unlockCondition.messageKey] ? (
+                        <fbt desc="growth">
+                          <fbt:enum
+                            enum-range={GrowthEnum}
+                            value={unlockCondition.messageKey}
+                          />
+                        </fbt>
+                      ) : (
+                        'Missing translation'
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </Fragment>
+          )}
         </div>
       </div>
-      <div className="col-2 d-flex">
+      <div className={`d-flex ${actionLocked ? '' : 'col-2'}`}>
         {!actionCompleted && !actionLocked && (
-          <Link to="/profile" className="mt-auto mb-auto">
+          <Link to={buttonLink} className="mt-auto mb-auto">
             <button
               className="btn btn-primary btn-rounded mr-2"
               children="Go"
@@ -252,7 +311,14 @@ function ActionList(props) {
 
 function Campaign(props) {
   const { campaign, accountId } = props
-  const { startDate, endDate, status, rewardEarned, actions, name } = campaign
+  const {
+    startDate,
+    endDate,
+    status,
+    rewardEarned,
+    actions,
+    nameKey
+  } = campaign
 
   let timeLabel = ''
   let subTitleText = ''
@@ -305,7 +371,13 @@ function Campaign(props) {
         return (
           <Fragment>
             <div className="d-flex justify-content-between">
-              <h1 className="mb-2 pt-3">{name}</h1>
+              <h1 className="mb-2 pt-3">
+                {GrowthEnum[nameKey] ? (
+                  <GrowthTranslation stringKey={nameKey} />
+                ) : (
+                  'Campaign'
+                )}
+              </h1>
               <a className="info-icon">
                 <img src="images/growth/info-icon-inactive.svg" />
               </a>
@@ -365,72 +437,96 @@ class GrowthCampaigns extends Component {
             if (networkStatus === 1 || loading) {
               return <h5 className="p-2">Loading...</h5>
             } else if (error) {
-              return (
-                <QueryError
-                  error={error}
-                  query={allCampaignsQuery}
-                  vars={vars}
-                />
-              )
+              return <QueryError error={error} query={profileQuery} />
             }
 
-            const vars = pick(this.state, 'first')
             const accountId = data.web3.primaryAccount.id
-            vars.walletAddress = accountId
             return (
               <Query
-                query={allCampaignsQuery}
-                variables={vars}
+                query={enrollmentStatusQuery}
+                variables={{ walletAddress: accountId }}
                 notifyOnNetworkStatusChange={true}
+                // enrollment info can change, do not cache it
+                fetchPolicy="network-only"
+                onCompleted={({ enrollmentStatus }) => {
+                  // if user is not enrolled redirect him to welcome page
+                  if (enrollmentStatus !== 'Enrolled') {
+                    this.props.history.push('/welcome')
+                  }
+                }}
               >
-                {({ error, data, networkStatus, loading }) => {
+                {({ error, networkStatus, loading }) => {
                   if (networkStatus === 1 || loading) {
                     return <h5 className="p-2">Loading...</h5>
                   } else if (error) {
                     return (
-                      <QueryError
-                        error={error}
-                        query={allCampaignsQuery}
-                        vars={vars}
-                      />
+                      <QueryError error={error} query={enrollmentStatusQuery} />
                     )
                   }
 
-                  const campaigns = data.campaigns.nodes
-                  if (campaigns.length == 0) {
-                    return <h5 className="p-2">No campaigns detected</h5>
-                  }
-
-                  if (selectedCampaignId === null) {
-                    const activeCampaign = campaigns.find(
-                      campaign => campaign.status === 'active'
-                    )
-                    if (activeCampaign !== undefined) {
-                      selectedCampaignId = activeCampaign.id
-                    } else {
-                      selectedCampaignId = campaigns[0].id
-                    }
-                  }
-
-                  const selectedCampaign = find(
-                    campaigns,
-                    campaign => campaign.id === selectedCampaignId
-                  )
+                  const vars = pick(this.state, 'first')
+                  vars.walletAddress = accountId
 
                   return (
-                    <Fragment>
-                      <CampaignNavList
-                        campaigns={campaigns}
-                        onCampaignClick={campaignId => {
-                          this.setState({ selectedCampaignId: campaignId })
-                        }}
-                        selectedCampaignId={selectedCampaignId}
-                      />
-                      <Campaign
-                        campaign={selectedCampaign}
-                        accountId={accountId}
-                      />
-                    </Fragment>
+                    <Query
+                      query={allCampaignsQuery}
+                      variables={vars}
+                      notifyOnNetworkStatusChange={true}
+                    >
+                      {({ error, data, networkStatus, loading }) => {
+                        if (networkStatus === 1 || loading) {
+                          return <h5 className="p-2">Loading...</h5>
+                        } else if (error) {
+                          return (
+                            <QueryError
+                              error={error}
+                              query={allCampaignsQuery}
+                              vars={vars}
+                            />
+                          )
+                        }
+
+                        const campaigns = data.campaigns.nodes
+                        if (campaigns.length == 0) {
+                          return <h5 className="p-2">No campaigns detected</h5>
+                        }
+
+                        if (selectedCampaignId === null) {
+                          const activeCampaign = campaigns.find(
+                            campaign => campaign.status === 'Active'
+                          )
+
+                          if (activeCampaign !== undefined) {
+                            selectedCampaignId = activeCampaign.id
+                          } else {
+                            selectedCampaignId = campaigns[0].id
+                          }
+                        }
+
+                        const selectedCampaign = find(
+                          campaigns,
+                          campaign => campaign.id === selectedCampaignId
+                        )
+
+                        return (
+                          <Fragment>
+                            <CampaignNavList
+                              campaigns={campaigns}
+                              onCampaignClick={campaignId => {
+                                this.setState({
+                                  selectedCampaignId: campaignId
+                                })
+                              }}
+                              selectedCampaignId={selectedCampaignId}
+                            />
+                            <Campaign
+                              campaign={selectedCampaign}
+                              accountId={accountId}
+                            />
+                          </Fragment>
+                        )
+                      }}
+                    </Query>
                   )
                 }}
               </Query>
@@ -446,152 +542,169 @@ export default withApollo(GrowthCampaigns)
 
 require('react-styl')(`
   .growth-campaigns.container
-    max-width: 760px;
+    max-width: 760px
   .growth-campaigns
     .info-icon
-      padding-top: 30px;
+      padding-top: 30px
     .info-icon img
-      width: 28px;
+      width: 28px
     .indicators
-      font-size: 10px;
-      color: #455d75;
+      font-size: 10px
+      color: #455d75
     .campaign-progress
       .background
-        background-color: var(--pale-grey-two);
-        border-radius: 5px;
-        border: 1px solid #c2cbd3;
-        height: 10px;
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        background-color: var(--pale-grey-two)
+        border-radius: 5px
+        border: 1px solid #c2cbd3
+        height: 10px
+        position: absolute
+        z-index: 1
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
       .foreground
-        background-color: var(--clear-blue);
-        border: 1px solid var(--greenblue);
-        border-radius: 5px;
-        height: 100%;
-        z-index: 2;
-        position: relative;
-        -webkit-transition: width 0.5s;
-        transition: width 0.5s;
-      height: 10px;
-      width: 100%;
-      position: relative;
+        background-color: var(--clear-blue)
+        border: 1px solid var(--greenblue)
+        border-radius: 5px
+        height: 100%
+        z-index: 2
+        position: relative
+        -webkit-transition: width 0.5s
+        transition: width 0.5s
+      height: 10px
+      width: 100%
+      position: relative
     .ogn-amount
-      color: var(--clear-blue);
+      color: var(--clear-blue)
     .ogn-icon
-      position: relative;
-      top: -3px;
+      position: relative
+      top: -3px
     .campaign-info
-      padding-top: 40px;
+      padding-top: 40px
     h5
-      text-align: center;
+      text-align: center
     .action-title
-      font-weight: bold;
-      color: var(--steel);
-      margin-top: 30px;
-      margin-left: 5px;
-      margin-bottom: -5px;
+      font-weight: bold
+      color: var(--steel)
+      margin-top: 30px
+      margin-left: 5px
+      margin-bottom: -5px
     .campaign-list
       .status
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
+        width: 20px
+        height: 20px
+        border-radius: 50%
       .status.inactive
-          background-color: var(--light);
+          background-color: var(--light)
       .status.active
-          background-color: var(--greenblue);
+          background-color: var(--greenblue)
       .campaign
         .name
-          font-size: 0.88rem;
-          line-height: 1.93;
-          color: var(--bluey-grey);
-          font-weight: normal;
+          font-size: 0.88rem
+          line-height: 1.93
+          color: var(--bluey-grey)
+          font-weight: normal
         .name.active
-          color: var(--dark);
+          color: var(--dark)
         .select-bar
-          background-color: var(--clear-blue);
-          height: 4px;
-          width: 100%;
+          background-color: var(--clear-blue)
+          height: 4px
+          width: 100%
       img
-        width: 20px;
-        height: 20px;
-        vertical-align: inherit;
+        width: 20px
+        height: 20px
+        vertical-align: inherit
     .action
-      height: 140px;
-      border: 1px solid var(--light);
-      border-radius: 5px;
-      margin-top: 20px;
-      padding: 20px;
+      height: 140px
+      border: 1px solid var(--light)
+      border-radius: 5px
+      margin-top: 20px
+      padding: 20px
       .background
-        width: 72px;
+        width: 72px
       .profile
-        position: absolute;
-        left: 20px;
-        top: 27px;
-        width: 30px;
+        position: absolute
+        left: 20px
+        top: 27px
+        width: 30px
       .email
-        position: absolute;
-        left: 20px;
-        top: 27px;
-        width: 30px;
+        position: absolute
+        left: 20px
+        top: 27px
+        width: 30px
       .phone
-        position: absolute;
-        left: 25px;
-        top: 20px;
-        width: 22px;
+        position: absolute
+        left: 25px
+        top: 20px
+        width: 22px
       .facebook
-        position: absolute;
-        left: 24px;
-        top: 18px;
-        width: 21px;
+        position: absolute
+        left: 24px
+        top: 18px
+        width: 21px
       .airbnb
-        position: absolute;
-        left: 15px;
-        top: 19px;
-        width: 44px;
+        position: absolute
+        left: 15px
+        top: 19px
+        width: 44px
       .twitter
-        position: absolute;
-        left: 17px;
-        top: 22px;
-        width: 39px;
+        position: absolute
+        left: 17px
+        top: 22px
+        width: 39px
       .lock
-        position: absolute;
-        right: -12px;
-        bottom: 0px;
-        width: 30px;
+        position: absolute
+        right: -12px
+        bottom: 0px
+        width: 30px
       .image-holder
-        position: relative;
+        position: relative
       .title
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 18px
+        font-weight: bold
       .info-text
-        font-size: 18px;
-        font-weight: 300;
+        font-size: 18px
+        font-weight: 300
       .reward
-        padding-right: 10px;
-        height: 28px;
-        background-color: var(--pale-grey);
-        border-radius: 52px;
-        font-size: 14px;
-        font-weight: bold;
-        color: var(--clear-blue);
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
       .reward .value
-        padding-bottom: 1px;
+        padding-bottom: 1px
       .sub-text
-        font-size: 14px;
-        font-weight: bold;
-        padding-top: 5px;
-        margin-right: 6px;
+        font-size: 14px
+        font-weight: bold
+        padding-top: 5px
+        margin-right: 6px
       .reward img
-        margin-right: 6px;
+        margin-right: 6px
+      .requirement
+        padding-right: 10px
+        height: 28px
+        background-color: var(--pale-grey)
+        border-radius: 52px
+        font-size: 14px
+        font-weight: bold
+        color: var(--clear-blue)
+      .requirement .value
+        padding-bottom: 1px
+        font-size: 14px
+        font-weight: bold
+      .requirement img
+        margin-right: 6px
+      .emphasis
+        font-size: 14px
+        font-weight: bold
       img
-        width: 19px;
+        width: 19px
       .astronaut
-        width: 77px;
-        margin-top: -10px;
-        margin-left: -15px;
+        width: 77px
+        margin-top: -10px
+        margin-left: -15px
 
 `)

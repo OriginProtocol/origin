@@ -75,7 +75,6 @@ const GetListing = gql`
           createdEvent {
             timestamp
           }
-
           category
           categoryStr
           subCategory

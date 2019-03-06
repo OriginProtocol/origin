@@ -2,36 +2,36 @@ import React from 'react'
 
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
+import withEthBalance from 'hoc/withEthBalance'
 
-const Balances = ({ balance, account }) => (
+const Balances = ({ ethBalance, account }) => (
   <div className="balances">
     <h5>Account Balance</h5>
     <div className="account eth">
       <div className="icon" />
       <div className="balance">
         <div className="coin">
-          {balance.eth}
+          {ethBalance}
           <span>ETH</span>
         </div>
         <div className="usd">
-          <Price amount={balance.eth} />
+          <Price amount={ethBalance} />
         </div>
       </div>
     </div>
     <div className="account ogn">
       <div className="icon" />
       <div className="balance">
-        <div className="coin">
+        <div className="coin ogn">
           <TokenBalance account={account} token="OGN" />
           <span>OGN</span>
         </div>
-        <div className="usd">0.00 USD</div>
       </div>
     </div>
   </div>
 )
 
-export default Balances
+export default withEthBalance(Balances)
 
 require('react-styl')(`
   .balances
@@ -58,6 +58,8 @@ require('react-styl')(`
             color: var(--dark-purple)
             font-size: 10px
             margin-left: 0.25rem
+          &.ogn > span
+            color: #007bff
         .usd
           font-size: 10px
           line-height: 10px
