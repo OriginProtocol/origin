@@ -44,15 +44,15 @@ class App extends Component {
     }
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true }
+  static getDerivedStateFromError(err) {
+    return { hasError: true, err }
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <div className="app-spinner">
-          <h5>Error!</h5>
+          <h5 onClick={() => alert(this.state.err)}>Error!</h5>
           <div>Please refresh the page</div>
         </div>
       )
