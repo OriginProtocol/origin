@@ -3,7 +3,6 @@ import contracts from '../contracts'
 import get from 'lodash/get'
 
 import { getTransaction, getTransactionReceipt } from './web3/transactions'
-import balancesFromWei from '../utils/balancesFromWei'
 
 function networkName(netId) {
   if (netId === 1) return 'Ethereum Main Network'
@@ -96,19 +95,8 @@ const web3Resolver = {
     ) {
       return null
     }
-    const id = contracts.linker.session.accounts[0]
-    let balance
-    try {
-      const wei = await contracts.web3.eth.getBalance(id)
-      balance = balancesFromWei(wei)
-    } catch (e) {
-      console.error('balance error:', e)
-      balance = null
-    }
     return {
-      id,
-      checksumAddress: contracts.web3.utils.toChecksumAddress(id),
-      balance
+      id: contracts.linker.session.accounts[0]
     }
   },
   primaryAccount: async () => {

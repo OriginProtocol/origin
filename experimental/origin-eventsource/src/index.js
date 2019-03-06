@@ -236,8 +236,9 @@ class OriginEventSource {
 
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
-    let unitsAvailable = listing.unitsTotal
-    let pendingUnits = 0
+    let unitsAvailable = listing.unitsTotal,
+      unitsPending = 0,
+      unitsSold = 0
     const booked = []
 
     if (listing.__typename === 'FractionalListing') {
@@ -251,7 +252,8 @@ class OriginEventSource {
     } else if (listing.__typename !== 'AnnouncementListing') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
-        if (!offer.valid || offer.status === 0) {
+        const status = Number(offer.status)
+        if (!offer.valid || status === 0) {
           // No need to do anything here.
         } else if (offer.quantity > unitsAvailable) {
           offer.valid = false
@@ -259,8 +261,12 @@ class OriginEventSource {
         } else {
           try {
             unitsAvailable -= offer.quantity
-            if (offer.status === '1' || offer.status === '2') {
-              pendingUnits += offer.quantity
+            if (status === 1 || status === 2 || status === 3) {
+              // Created, Accepted or Disputed
+              unitsPending += offer.quantity
+            } else if (status === 4 || status === 5) {
+              // Finalized or Ruling
+              unitsSold += offer.quantity
             }
 
             // Validate offer commission.
@@ -293,7 +299,7 @@ class OriginEventSource {
       : '0'
 
     if (listing.status === 'active' && unitsAvailable <= 0) {
-      if (listing.unitsTotal === 1 && pendingUnits > 0) {
+      if (listing.unitsTotal === 1 && unitsPending > 0) {
         listing.status = 'pending'
       } else {
         listing.status = 'sold'
@@ -304,7 +310,8 @@ class OriginEventSource {
       allOffers,
       booked,
       unitsAvailable,
-      unitsSold: listing.unitsTotal - unitsAvailable,
+      unitsPending,
+      unitsSold,
       depositAvailable: commissionAvailable
     })
   }

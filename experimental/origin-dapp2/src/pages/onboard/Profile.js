@@ -94,16 +94,18 @@ class OnboardProfile extends Component {
               >
                 <div className={hasBalance ? null : 'mask'}>
                   <div className="row">
-                    <div className="col-4">
-                      <ImageCropper
-                        onChange={a => this.setState({ avatar: a })}
-                      >
-                        <Avatar className="with-cam" avatar={avatar} />
-                      </ImageCropper>
+                    <div className="col-md-4">
+                      <div className="avatar-wrap">
+                        <ImageCropper
+                          onChange={a => this.setState({ avatar: a })}
+                        >
+                          <Avatar className="with-cam" avatar={avatar} />
+                        </ImageCropper>
+                      </div>
                     </div>
-                    <div className="col-8">
+                    <div className="col-md-8">
                       <div className="row">
-                        <div className="form-group col-6">
+                        <div className="form-group col-md-6">
                           <label>First Name</label>
                           <input
                             type="text"
@@ -112,7 +114,7 @@ class OnboardProfile extends Component {
                           />
                           {Feedback('firstName')}
                         </div>
-                        <div className="form-group col-6">
+                        <div className="form-group col-md-6">
                           <label>Last Name</label>
                           <input
                             type="text"
@@ -292,6 +294,9 @@ require('react-styl')(`
     > form
       text-align: left
       width: 100%
+      .image-cropper
+        max-width: 10rem
+        margin: 0 auto 1rem auto
       label
         font-weight: normal
         color: black
