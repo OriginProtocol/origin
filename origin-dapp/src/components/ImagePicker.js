@@ -81,7 +81,7 @@ class ImagePicker extends Component {
               onChange={async e => {
                 const { files } = e.currentTarget
                 const newImages = await getImages(ipfsRPC, files)
-                this.onChange([...this.state.images, ...newImages])
+                this.onChange([...this.state.images, ...newImages].slice(0, 50))
                 this.uploadRef.value = ''
               }}
               style={{ display: 'none' }}
