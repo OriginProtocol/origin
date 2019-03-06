@@ -11,7 +11,7 @@ function EventRow(props) {
   const { event } = props
   const createdAt = moment(event.createdAt).format('YYYY-MM-DD h:mm a')
   let action
-  switch(event.action) {
+  switch (event.action) {
     case 'login':
       action = 'Web login'
       break
@@ -19,13 +19,21 @@ function EventRow(props) {
     case 'grant/vest': {
       const amount = JSON.parse(event.data).amount
       const grantDate = moment(event.grant.grantedAt).format('YYYY-MM-DD')
-      action = <span>Vested <strong>{amount} OGN</strong> from grant {grantDate}</span>
+      action = (
+        <span>
+          Vested <strong>{amount} OGN</strong> from grant {grantDate}
+        </span>
+      )
       break
     }
 
     case 'grant/transfer': {
       const { amount, to } = JSON.parse(event.data)
-      action = <span>Transferred <strong>{amount} OGN </strong> to {to}</span>
+      action = (
+        <span>
+          Transferred <strong>{amount} OGN </strong> to {to}
+        </span>
+      )
       break
     }
 
@@ -54,7 +62,7 @@ class Events extends Component {
 
   refreshEvents = () => {
     fetch('/api/events', { cache: 'no-store' })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) {
           if (response.status === 401) {
             this.props.setSessionEmail(undefined)
@@ -67,15 +75,17 @@ class Events extends Component {
         this.props.setSessionEmail(email)
         return response
       })
-      .then((response) => response.json())
-      .then((events) => {
+      .then(response => response.json())
+      .then(events => {
         this.setState({ ...this.state, events })
         console.log(events)
       })
-      .catch(err => Toaster.create().show({
-        message: `Error fetching events: ${err}`,
-        intent: Intent.DANGER
-      }))
+      .catch(err =>
+        Toaster.create().show({
+          message: `Error fetching events: ${err}`,
+          intent: Intent.DANGER
+        })
+      )
   }
 
   render() {
@@ -101,7 +111,7 @@ class Events extends Component {
               </tr>
             </thead>
             <tbody>
-              { events && events.map(e => <EventRow event={e} key={e.id} />) }
+              {events && events.map(e => <EventRow event={e} key={e.id} />)}
             </tbody>
           </table>
         </div>
@@ -122,4 +132,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Events)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Events)

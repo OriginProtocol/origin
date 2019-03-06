@@ -20,7 +20,7 @@ class Listing extends Component {
     const vars = { listingId }
 
     return (
-      <div className="container">
+      <>
         <PageTitle>Listing {listingId}</PageTitle>
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
@@ -70,7 +70,7 @@ class Listing extends Component {
             )
           }}
         </Query>
-      </div>
+      </>
     )
   }
 }

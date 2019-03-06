@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
@@ -13,105 +13,102 @@ import Link from 'components/Link'
 
 import query from 'queries/Identity'
 
-class AboutParty extends Component {
-  state = {}
-  render() {
-    const { id } = this.props
+const AboutParty = ({ id }) => {
+  const [redirect, setRedirect] = useState(false)
 
-    if (this.state.redirect) {
-      return <Redirect to={`/user/${id}`} />
-    }
+  if (redirect) {
+    return <Redirect to={`/user/${id}`} />
+  }
 
-    return (
-      <div className="about-party">
-        <Query query={query} variables={{ id }}>
-          {({ data, loading, error }) => {
-            if (error) {
-              return <QueryError error={error} query={query} vars={{ id }} />
-            }
-            if (loading) return null
+  return (
+    <div className="about-party">
+      <Query query={query} variables={{ id }}>
+        {({ data, loading, error }) => {
+          if (error) {
+            return <QueryError error={error} query={query} vars={{ id }} />
+          }
+          if (loading) return null
 
-            const profile = get(data, 'web3.account.identity')
-            if (!profile) {
-              return null
-            }
+          const profile = get(data, 'web3.account.identity')
+          if (!profile) {
+            return null
+          }
 
-            return (
-              <div
-                className="profile"
-                onClick={() => this.setState({ redirect: true })}
-              >
-                <Avatar avatar={profile.avatar} size={50} />
-                <div>
-                  <div className="name">{profile.fullName}</div>
-                  <div className="attestations">
-                    {profile.twitterVerified && (
-                      <Tooltip
-                        tooltip="Twitter Account Verified"
-                        placement="bottom"
-                      >
-                        <div className="attestation twitter" />
-                      </Tooltip>
-                    )}
-                    {profile.googleVerified && (
-                      <Tooltip
-                        tooltip="Google Account Verified"
-                        placement="bottom"
-                      >
-                        <div className="attestation google" />
-                      </Tooltip>
-                    )}
-                    {profile.phoneVerified && (
-                      <Tooltip tooltip="Phone Verified" placement="bottom">
-                        <div className="attestation phone" />
-                      </Tooltip>
-                    )}
-                    {profile.emailVerified && (
-                      <Tooltip tooltip="Email Verified" placement="bottom">
-                        <div className="attestation email" />
-                      </Tooltip>
-                    )}
-                    {profile.facebookVerified && (
-                      <Tooltip tooltip="Facebook Verified" placement="bottom">
-                        <div className="attestation facebook" />
-                      </Tooltip>
-                    )}
-                    {profile.airbnbVerified && (
-                      <Tooltip
-                        tooltip="Airbnb Account Verified"
-                        placement="bottom"
-                      >
-                        <div className="attestation airbnb" />
-                      </Tooltip>
-                    )}
-                  </div>
+          return (
+            <div className="profile" onClick={() => setRedirect(true)}>
+              <Avatar avatar={profile.avatar} size={50} />
+              <div className="user-detail">
+                <div className="name">{profile.fullName}</div>
+                <div className="attestations">
+                  {profile.twitterVerified && (
+                    <Tooltip
+                      tooltip="Twitter Account Verified"
+                      placement="bottom"
+                    >
+                      <div className="attestation twitter" />
+                    </Tooltip>
+                  )}
+                  {profile.googleVerified && (
+                    <Tooltip
+                      tooltip="Google Account Verified"
+                      placement="bottom"
+                    >
+                      <div className="attestation google" />
+                    </Tooltip>
+                  )}
+                  {profile.phoneVerified && (
+                    <Tooltip tooltip="Phone Verified" placement="bottom">
+                      <div className="attestation phone" />
+                    </Tooltip>
+                  )}
+                  {profile.emailVerified && (
+                    <Tooltip tooltip="Email Verified" placement="bottom">
+                      <div className="attestation email" />
+                    </Tooltip>
+                  )}
+                  {profile.facebookVerified && (
+                    <Tooltip tooltip="Facebook Verified" placement="bottom">
+                      <div className="attestation facebook" />
+                    </Tooltip>
+                  )}
+                  {profile.airbnbVerified && (
+                    <Tooltip
+                      tooltip="Airbnb Account Verified"
+                      placement="bottom"
+                    >
+                      <div className="attestation airbnb" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
-            )
-          }}
-        </Query>
-        <div className="eth-address">
-          <Identicon size={40} address={id} />
-          <div>
-            <div>ETH Address:</div>
-            <div>
-              <EthAddress address={id} />
             </div>
+          )
+        }}
+      </Query>
+      <div className="eth-address">
+        <Identicon size={40} address={id} />
+        <div>
+          <div>ETH Address:</div>
+          <div>
+            <EthAddress address={id} />
           </div>
         </div>
-        <div className="actions">
-          <SendMessage
-            to={id}
-            className="btn btn-primary btn-rounded"
-            children="Send Message"
-          />
-          <Link to={`/user/${id}`} className="btn btn-primary btn-rounded">
-            View Profile
-          </Link>
-        </div>
       </div>
-    )
-  }
+      <div className="actions">
+        <SendMessage
+          to={id}
+          className="btn btn-outline-primary btn-rounded"
+          children="Send Message"
+        />
+        <Link
+          to={`/user/${id}`}
+          className="btn btn-outline-primary btn-rounded"
+        >
+          View Profile
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export default AboutParty
@@ -127,6 +124,8 @@ require('react-styl')(`
       display: flex
       margin-bottom: 1rem
       cursor: pointer
+      .user-detail
+        min-width: 0
       .avatar
         margin-right: 1rem
       .name
@@ -134,6 +133,9 @@ require('react-styl')(`
         font-weight: bold
         line-height: 1.25rem
         margin-bottom: 0.5rem
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
     .eth-address
       display: flex
       > img

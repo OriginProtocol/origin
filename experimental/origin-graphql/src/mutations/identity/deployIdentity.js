@@ -10,7 +10,6 @@ async function deployIdentity(
   _,
   { from = contracts.defaultLinkerAccount, profile = {}, attestations = [] }
 ) {
-  console.log('deployIdentity:', from)
   await checkMetaMask(from)
 
   attestations = attestations

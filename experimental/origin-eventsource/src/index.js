@@ -81,8 +81,8 @@ class OriginEventSource {
       const rawData = await get(this.ipfsGateway, ipfsHash)
       data = pick(
         rawData,
+        '__typename',
         'valid',
-        'listingType',
         'title',
         'description',
         'currencyId',
@@ -160,17 +160,32 @@ class OriginEventSource {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
 
-    if (data.media && data.media.length) {
+    if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
         urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
       }))
+    } else {
+      data.media = [] // If invalid, set a clean, empty media array
     }
 
-    const type = 'unit'
+    let __typename = data.__typename
+    if (!__typename) {
+      if (
+        data.category === 'schema.forRent' &&
+        data.subCategory === 'schema.housing'
+      ) {
+        __typename = 'FractionalListing'
+      } else if (data.category === 'schema.announcements') {
+        __typename = 'AnnouncementListing'
+      } else {
+        __typename = 'UnitListing'
+      }
+    }
+
     let commissionPerUnit = '0',
       commission = '0'
-    if (type === 'unit') {
+    if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
         data.unitsTotal === 1
           ? (data.commission && data.commission.amount) || '0'
@@ -183,8 +198,7 @@ class OriginEventSource {
 
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
-      __typename:
-        data.listingType === 'fractional' ? 'FractionalListing' : 'UnitListing',
+      __typename,
       id: `${networkId}-000-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
@@ -197,8 +211,7 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      type,
-      multiUnit: type === 'unit' && data.unitsTotal > 1,
+      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
@@ -223,11 +236,12 @@ class OriginEventSource {
 
     // Compute fields from valid offers.
     let commissionAvailable = this.web3.utils.toBN(listing.commission)
-    let unitsAvailable = listing.unitsTotal
-    let pendingUnits = 0
+    let unitsAvailable = listing.unitsTotal,
+      unitsPending = 0,
+      unitsSold = 0
     const booked = []
 
-    if (listing.listingType === 'fractional') {
+    if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
@@ -235,10 +249,11 @@ class OriginEventSource {
           booked.push(`${offer.startDate}-${offer.endDate}`)
         }
       })
-    } else if (listing.type === 'unit') {
+    } else if (listing.__typename !== 'AnnouncementListing') {
       const commissionPerUnit = this.web3.utils.toBN(listing.commissionPerUnit)
       allOffers.forEach(offer => {
-        if (!offer.valid || offer.status === 0) {
+        const status = Number(offer.status)
+        if (!offer.valid || status === 0) {
           // No need to do anything here.
         } else if (offer.quantity > unitsAvailable) {
           offer.valid = false
@@ -246,8 +261,12 @@ class OriginEventSource {
         } else {
           try {
             unitsAvailable -= offer.quantity
-            if (offer.status === '1' || offer.status === '2') {
-              pendingUnits += offer.quantity
+            if (status === 1 || status === 2 || status === 3) {
+              // Created, Accepted or Disputed
+              unitsPending += offer.quantity
+            } else if (status === 4 || status === 5) {
+              // Finalized or Ruling
+              unitsSold += offer.quantity
             }
 
             // Validate offer commission.
@@ -280,7 +299,7 @@ class OriginEventSource {
       : '0'
 
     if (listing.status === 'active' && unitsAvailable <= 0) {
-      if (listing.unitsTotal === 1 && pendingUnits > 0) {
+      if (listing.unitsTotal === 1 && unitsPending > 0) {
         listing.status = 'pending'
       } else {
         listing.status = 'sold'
@@ -291,7 +310,8 @@ class OriginEventSource {
       allOffers,
       booked,
       unitsAvailable,
-      unitsSold: listing.unitsTotal - unitsAvailable,
+      unitsPending,
+      unitsSold,
       depositAvailable: commissionAvailable
     })
   }
@@ -421,7 +441,7 @@ class OriginEventSource {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }
 
-    if (listing.type !== 'unit') {
+    if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
       return
     }

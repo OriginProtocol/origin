@@ -21,14 +21,10 @@ const nextPage = nextPageFactory('marketplace.user.notifications')
 const NavPills = () => (
   <ul className="nav nav-pills flex-column">
     <li className="nav-item">
-      <NavLink
-        className="nav-link"
-        to="/notifications"
-        exact
-        children="Pending"
-      />
+      <NavLink className="nav-link" to="/notifications" exact children="All" />
     </li>
-    <li className="nav-item">
+    {/* TODO: Re-enable filters
+    <li clas sName="nav-item">
       <NavLink className="nav-link" to="/notifications/all" children="All" />
     </li>
     <li className="nav-item">
@@ -37,6 +33,7 @@ const NavPills = () => (
     <li className="nav-item">
       <NavLink className="nav-link" to="/notifications/sell" children="Sell" />
     </li>
+    */}
   </ul>
 )
 

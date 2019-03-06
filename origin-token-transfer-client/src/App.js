@@ -8,20 +8,14 @@ import '@blueprintjs/core/lib/css/blueprint.css'
 
 import { Provider } from 'react-redux'
 import store from './store'
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 
 import Events from './components/Events'
 import Grants from './components/Grants'
 import Login from './components/Login'
 
 function redirectToGrants() {
-  return (
-    <Redirect to="/grants" />
-  )
+  return <Redirect to="/grants" />
 }
 
 function App() {

@@ -18,6 +18,7 @@ module.exports = `
     pubSig: String
     conversations: [Conversation]
     conversation(id: String!): Conversation
+    canConverseWith(id: String!): Boolean
     totalUnread: Int
   }
 

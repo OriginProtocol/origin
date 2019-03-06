@@ -12,7 +12,7 @@ const Token = require('origin-token/src/token')
 
 const enums = require('../enums')
 const db = require('../models')
-const { CampaignRules } = require('../rules/rules')
+const { CampaignRules } = require('../resources/rules')
 const parseArgv = require('../util/args')
 
 // We allow a campaign to go a bit over budget since the capUsed field

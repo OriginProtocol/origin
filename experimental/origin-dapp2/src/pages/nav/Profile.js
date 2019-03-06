@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
 import get from 'lodash/get'
 
+import withNetwork from 'hoc/withNetwork'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 import UnlinkMobileWalletMutation from 'mutations/UnlinkMobileWallet'
@@ -19,12 +20,13 @@ class ProfileNav extends Component {
   }
 
   render() {
-    // TODO: Bring back pollInterval={1000} for wallet linking?
     return (
-      <Query query={ProfileQuery}>
-        {({ data, loading, error }) => {
-          if (error) console.error(error)
-          if (loading || error) return null
+      <Query query={ProfileQuery} pollInterval={1000}>
+        {({ data, error }) => {
+          if (error) {
+            console.error(error)
+            return null
+          }
           if (!data || !data.web3 || !data.web3.primaryAccount) {
             return null
           }
@@ -64,17 +66,21 @@ class ProfileNav extends Component {
   }
 }
 
+const Network = withNetwork(({ networkName }) => (
+  <div className="connected">
+    {`Connected to `}
+    <span className="net">{networkName}</span>
+  </div>
+))
+
 const ProfileDropdown = ({ data, onClose }) => {
-  const { checksumAddress, balance, id } = data.web3.primaryAccount
+  const { checksumAddress, id } = data.web3.primaryAccount
   const mobileWallet = data.web3.walletType.startsWith('mobile-')
   return (
     <Mutation mutation={UnlinkMobileWalletMutation}>
       {unlinkMutation => (
         <div className="dropdown-menu dark dropdown-menu-right show profile">
-          <div className="connected">
-            {`Connected to `}
-            <span className="net">{data.web3.networkName}</span>
-          </div>
+          <Network />
           <div className="wallet-info">
             <div>
               <h5>ETH Address</h5>
@@ -84,18 +90,18 @@ const ProfileDropdown = ({ data, onClose }) => {
               <Identicon size={50} address={checksumAddress} />
             </div>
           </div>
-          <Balances balance={balance} account={id} />
+          <Balances account={id} />
           <Identity id={id} />
           {mobileWallet && (
-            <Link
+            <a
+              className="unlink-wallet"
               onClick={e => {
-                unlinkMutation()
                 e.preventDefault()
+                unlinkMutation()
               }}
-              to="#"
-            >
-              Unlink Mobile
-            </Link>
+              href="#"
+              children="Unlink Mobile"
+            />
           )}
           <Link onClick={() => onClose()} to="/profile">
             Edit Profile
@@ -108,12 +114,9 @@ const ProfileDropdown = ({ data, onClose }) => {
 
 const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>
-    {({ data, loading, error }) => {
-      if (loading || error) return null
-      const profile = get(data, 'web3.account.identity')
-      if (!profile) {
-        return null
-      }
+    {({ data, error }) => {
+      if (error) return null
+      const profile = get(data, 'web3.account.identity') || {}
 
       return (
         <div className="identity">
@@ -121,7 +124,7 @@ const Identity = ({ id }) => (
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{profile.fullName}</div>
+              <div className="name">{profile.fullName || 'Unnamed User'}</div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
@@ -144,10 +147,10 @@ const Identity = ({ id }) => (
             <div className="progress">
               <div
                 className="progress-bar"
-                style={{ width: `${profile.strength}%` }}
+                style={{ width: `${profile.strength || '0'}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength}%`}
+            {`Profile Strength - ${profile.strength || '0'}%`}
           </div>
         </div>
       )
@@ -228,6 +231,9 @@ require('react-styl')(`
       padding: 0.75rem 1rem;
       font-weight: bold;
       border-radius: 0 0 5px 5px;
+      &.unlink-wallet
+        border-bottom: 1px solid black
+        border-radius: 0
 
   .attestations
     display: flex

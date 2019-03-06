@@ -2,6 +2,8 @@
   "packages": [
     "experimental/*",
     "origin-contracts",
+    "origin-bridge",
+    "origin-cron",
     "origin-dapp",
     "origin-dapp-creator-client",
     "origin-dapp-creator-server",

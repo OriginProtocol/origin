@@ -1,9 +1,15 @@
+const BigNumber = require('bignumber.js')
 const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { CampaignRules } = require('../src/rules/rules')
+const { CampaignRules } = require('../src/resources/rules')
 
+function tokenNaturalUnits(x) {
+  return BigNumber(x)
+    .times(BigNumber(10).pow(18))
+    .toFixed()
+}
 
 describe('Growth Engine rules', () => {
 
@@ -26,7 +32,7 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 2,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: false
                 }
               }
             ],
@@ -173,8 +179,8 @@ describe('Growth Engine rules', () => {
                     currency: 'OGN'
                   },
                   limit: 1,
-                  nextLevelCondition: true,
-                  visible: true
+                  nextLevelCondition: false,
+                  visible: false
                 }
               }
             ],
@@ -333,17 +339,41 @@ describe('Growth Engine rules', () => {
           0: {
             rules: [
               {
-                id: 'PreRequisite',
+                id: 'ProfilePublished',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'ProfilePublished',
+                  reward: null,
+                  nextLevelCondition: false,
+                  visible: true
+                }
+              },
+              {
+                id: 'EmailAttestation',
+                class: 'SingleEvent',
+                config: {
+                  eventType: 'EmailAttestationPublished',
+                  reward: null,
+                  visible: true,
+                  limit: 1,
+                  nextLevelCondition: false
+                }
+              },
+              {
+                id: 'BasicProfile',
                 class: 'MultiEvents',
                 config: {
-                  eventTypes: [
-                    'ProfilePublished',
-                    'EmailAttestationPublished'
-                  ],
+                  eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
+                  visible: false,
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
-                  visible: true
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg'
+                    }
+                  ],
                 }
               }
             ],
@@ -356,7 +386,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'PhoneAttestationPublished',
                   reward: {
-                    amount: 10,
+                    amount: tokenNaturalUnits(25),
                     currency: 'OGN'
                   },
                   limit: 1,
@@ -370,7 +400,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'FacebookAttestationPublished',
                   reward: {
-                    amount: 10,
+                    amount: tokenNaturalUnits(25),
                     currency: 'OGN'
                   },
                   limit: 1,
@@ -384,7 +414,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'AirbnbAttestationPublished',
                   reward: {
-                    amount: 10,
+                    amount: tokenNaturalUnits(25),
                     currency: 'OGN'
                   },
                   limit: 1,
@@ -398,7 +428,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'TwitterAttestationPublished',
                   reward: {
-                    amount: 10,
+                    amount: tokenNaturalUnits(25),
                     currency: 'OGN'
                   },
                   limit: 1,
@@ -419,7 +449,13 @@ describe('Growth Engine rules', () => {
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
-                  visible: true
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg',
+                    }
+                  ],
+                  visible: false
                 }
               }
             ],
@@ -430,26 +466,12 @@ describe('Growth Engine rules', () => {
                 id: 'Referral',
                 class: 'Referral',
                 config: {
-                  requiredLevel: 1,
+                  levelRequired: 1,
                   reward: {
-                    amount: 10,
+                    amount: tokenNaturalUnits(50),
                     currency: 'OGN'
                   },
-                  limit: 100,
-                  nextLevelCondition: false,
-                  visible: true
-                }
-              },
-              {
-                id: 'ListingCreation',
-                class: 'SingleEvent',
-                config: {
-                  eventType: 'ListingCreated',
-                  reward: {
-                    amount: 5,
-                    currency: 'OGN'
-                  },
-                  limit: 10,
+                  limit: 25,
                   nextLevelCondition: false,
                   visible: true
                 }
@@ -460,10 +482,10 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'ListingPurchased',
                   reward: {
-                    amount: 5,
+                    amount: tokenNaturalUnits(100),
                     currency: 'OGN'
                   },
-                  limit: 10,
+                  limit: 1,
                   nextLevelCondition: false,
                   visible: true
                 }
@@ -474,10 +496,10 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventType: 'ListingSold',
                   reward: {
-                    amount: 5,
+                    amount: tokenNaturalUnits(100),
                     currency: 'OGN'
                   },
-                  limit: 10,
+                  limit: 1,
                   nextLevelCondition: false,
                   visible: true
                 }
@@ -491,15 +513,18 @@ describe('Growth Engine rules', () => {
       expect(this.crules).to.be.an('object')
       expect(this.crules.numLevels).to.equal(3)
       expect(this.crules.levels[0]).to.be.an('object')
-      expect(this.crules.levels[0].rules.length).to.equal(1)
+      expect(this.crules.levels[0].rules.length).to.equal(3)
       expect(this.crules.levels[1]).to.be.an('object')
       expect(this.crules.levels[1].rules.length).to.equal(5)
       expect(this.crules.levels[2]).to.be.an('object')
-      expect(this.crules.levels[2].rules.length).to.equal(4)
+      expect(this.crules.levels[2].rules.length).to.equal(3)
 
       this.ethAddress = '0x123'
       this.referee = '0x456'
       this.expectedRewards = []
+
+      // Mock the _getReferees method of the Referral rule.
+      this.crules.levels[2].rules[0]._getReferees = () => { return [] }
     })
 
     it(`Should start at level 0`, async () => {
@@ -562,7 +587,7 @@ describe('Growth Engine rules', () => {
           ruleId: 'FacebookAttestation',
           value: {
             currency: 'OGN',
-            amount: 10
+            amount: tokenNaturalUnits(25)
           },
         },
         {
@@ -571,7 +596,7 @@ describe('Growth Engine rules', () => {
           ruleId: 'TwitterAttestation',
           value: {
             currency: 'OGN',
-            amount: 10
+            amount: tokenNaturalUnits(25)
           }
         }
       )
@@ -583,6 +608,7 @@ describe('Growth Engine rules', () => {
 
     it(`Should remain on level 2 when referees sign up`, async () => {
       this.crules.levels[2].rules[0]._getReferees = () => { return [this.referee] }
+      this.crules.getPriorLevel = () => { return 0 }
       this.events.push(
         {
           id: 7,
@@ -618,36 +644,9 @@ describe('Growth Engine rules', () => {
         ruleId: 'Referral',
         value: {
           currency: 'OGN',
-          amount: 10
+          amount: tokenNaturalUnits(50)
         },
         refereeEthAddress: this.referee
-      })
-      expect(rewards).to.deep.equal(this.expectedRewards)
-
-      const level = await this.crules.getCurrentLevel(this.ethAddress)
-      expect(level).to.equal(2)
-    })
-
-    it(`Should remain on level 2 when a listing is created`, async () => {
-      this.events.push(
-        {
-          id: 5,
-          type: GrowthEventTypes.ListingCreated,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        }
-      )
-      this.crules.getEvents = () => { return this.events }
-
-      const rewards = await this.crules.getRewards(this.ethAddress)
-      this.expectedRewards.push({
-        campaignId: 1,
-        levelId: 2,
-        ruleId: 'ListingCreation',
-        value: {
-          currency: 'OGN',
-          amount: 5
-        }
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
 
@@ -673,7 +672,7 @@ describe('Growth Engine rules', () => {
         ruleId: 'ListingPurchase',
         value: {
           currency: 'OGN',
-          amount: 5
+          amount: tokenNaturalUnits(100)
         }
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
@@ -700,7 +699,7 @@ describe('Growth Engine rules', () => {
         ruleId: 'ListingSold',
         value: {
           currency: 'OGN',
-          amount: 5
+          amount: tokenNaturalUnits(100)
         }
       })
       expect(rewards).to.deep.equal(this.expectedRewards)
@@ -711,12 +710,6 @@ describe('Growth Engine rules', () => {
 
     it(`Should honor limits`, async () => {
       this.events.push(
-        ...Array(200).fill({
-          id: 12,
-            type: GrowthEventTypes.ListingCreated,
-          status: GrowthEventStatuses.Logged,
-          ethAddress: this.ethAddress
-        }),
         ...Array(200).fill({
           id: 16,
             type: GrowthEventTypes.ListingPurchased,
@@ -738,48 +731,42 @@ describe('Growth Engine rules', () => {
           campaignId: 1,
           levelId: 1,
           ruleId: 'FacebookAttestation',
-          value: { amount: 10, currency: 'OGN' }
+          value: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         {
           campaignId: 1,
           levelId: 1,
           ruleId: 'TwitterAttestation',
-          value: { amount: 10, currency: 'OGN' }
+          value: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         {
           campaignId: 1,
           levelId: 2,
+          refereeEthAddress: '0x456',
           ruleId: 'Referral',
-          value: { amount: 10, currency: 'OGN' },
-          refereeEthAddress: this.referee
-        },
-        ...Array(10).fill({
-          campaignId: 1,
-          levelId: 2,
-          ruleId: 'ListingCreation',
           value: {
             currency: 'OGN',
-            amount: 5
+            amount: tokenNaturalUnits(50)
           }
-        }),
-        ...Array(10).fill({
+        },
+        {
           campaignId: 1,
           levelId: 2,
           ruleId: 'ListingPurchase',
           value: {
             currency: 'OGN',
-            amount: 5
+            amount: tokenNaturalUnits(100)
           }
-        }),
-        ...Array(10).fill({
+        },
+        {
           campaignId: 1,
           levelId: 2,
           ruleId: 'ListingSold',
           value: {
             currency: 'OGN',
-            amount: 5
+            amount: tokenNaturalUnits(100)
           }
-        })
+        }
       ]
       expect(rewards).to.deep.equal(this.expectedRewards)
 
@@ -803,7 +790,13 @@ describe('Growth Engine rules', () => {
                   eventType: GrowthEventTypes.ListingSold,
                   reward: null,
                   nextLevelCondition: true,
-                  visible: true
+                  unlockConditionMsg: [
+                    {
+                      conditionTranslateKey: 'growth.profile.and.email.requirement',
+                      conditionIcon: 'images/growth/email-icon-small.svg',
+                    }
+                  ],
+                  visible: false
                 }
               }
             ],
@@ -821,7 +814,7 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 10,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: false
                 }
               }
             ],

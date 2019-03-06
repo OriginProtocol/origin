@@ -1,28 +1,33 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import store from 'utils/store'
+const sessionStore = store('sessionStorage')
 
-import MobileLinkerCode from 'components/MobileLinkerCode'
+import Link from 'components/Link'
 
 class GetStarted extends Component {
   state = { open: false }
   render() {
     return (
-      <ul className="navbar-nav ml-auto">
+      <ul className="navbar-nav">
         <li className="nav-item">
-          <a
+          <Link
+            to="/onboard"
             className="nav-link"
-            href="#"
-            onClick={() => this.setState({ open: true })}
+            onClick={() => {
+              const { pathname, search } = this.props.location
+              sessionStore.set('getStartedRedirect', { pathname, search })
+            }}
           >
             Get Started
-          </a>
-          {!this.state.open ? null : <MobileLinkerCode />}
+          </Link>
         </li>
       </ul>
     )
   }
 }
 
-export default GetStarted
+export default withRouter(GetStarted)
 
 require('react-styl')(`
 `)

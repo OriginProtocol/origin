@@ -239,13 +239,20 @@ module.exports = `
   type UnitListing implements Listing {
     ${ListingInterface}
 
-    # Computed
-    unitsAvailable: Int
-    unitsSold: Int
-    multiUnit: Boolean
-
-    # IPFS
+    # Number of units available for sale (IPFS)
     unitsTotal: Int
+
+    # Number of Units Created, Accepted or Disputed (computed)
+    unitsPending: Int
+
+    # Number of units Finalized or Ruling (computed)
+    unitsSold: Int
+
+    # unitsTotal - unitsPending - unitsSold (computed)
+    unitsAvailable: Int
+
+    # Is this is a multi-unit listing or not (computed)
+    multiUnit: Boolean
   }
 
   type FractionalListing implements Listing {
@@ -258,7 +265,11 @@ module.exports = `
     booked: [String]
   }
 
-  union ListingResult = UnitListing | FractionalListing
+  type AnnouncementListing implements Listing {
+    ${ListingInterface}
+  }
+
+  union ListingResult = UnitListing | FractionalListing | AnnouncementListing
 
   type Media {
     url: String
@@ -339,6 +350,7 @@ module.exports = `
   }
 
   input ListingInput {
+    typename: String
     title: String!
     description: String
     category: String

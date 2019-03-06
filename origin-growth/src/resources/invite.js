@@ -5,7 +5,7 @@ const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
 const { GrowthCampaign } = require('./campaign')
-const { CampaignRules } = require('../rules/rules')
+const { CampaignRules } = require('./rules')
 
 class GrowthInvite {
   /**
@@ -21,8 +21,6 @@ class GrowthInvite {
    * @returns {Promise<*>}
    * @private
    */
-  //
-  //
   static async _getPendingRewards(referrer, ignore, rewardValue) {
     // Load all invites.
     const referrals = db.GrowthReferall.findAll({
@@ -150,6 +148,17 @@ class GrowthInvite {
         totalCount: allInvites.length
       }
     }
+  }
+
+  // Returns enrolled user's invite code
+  static async getInviteCode(accountId) {
+    const inviteCode = await db.GrowthInviteCode.findOne({
+      where: { ethAddress: accountId }
+    })
+    if (!inviteCode) {
+      throw new Error(`Can not fetch invite code for user: ${accountId}`)
+    }
+    return inviteCode.code
   }
 
   // Returns referrer's information based on an invite code.

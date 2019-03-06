@@ -9,6 +9,7 @@ import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
+import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
 import Transaction from './transaction/Transaction'
@@ -42,15 +43,15 @@ class App extends Component {
     }
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true }
+  static getDerivedStateFromError(err) {
+    return { hasError: true, err }
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <div className="app-spinner">
-          <h5>Error!</h5>
+          <h5 onClick={() => alert(this.state.err)}>Error!</h5>
           <div>Please refresh the page</div>
         </div>
       )
@@ -73,6 +74,7 @@ class App extends Component {
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>
+            <Route path="/onboard" component={Onboard} />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
@@ -96,7 +98,7 @@ class App extends Component {
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
             {enableGrowth && (
-              <Route path="/campaigns" component={GrowthCampaigns} />
+              <Route exact path="/campaigns" component={GrowthCampaigns} />
             )}
             {enableGrowth && (
               <Route path="/welcome" component={GrowthWelcome} />

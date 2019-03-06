@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
+
+import store from 'utils/store'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
@@ -7,12 +9,15 @@ import { Messaging } from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
 
+const sessionStore = store('sessionStorage')
+
 class Onboard extends Component {
   render() {
     const { listing } = this.props
+    const linkPrefix = listing ? '/listing/:listingID' : ''
 
     return (
-      <div className="onboard">
+      <div className="container onboard">
         <h2>Getting started on Origin</h2>
         <div className="explanation">
           In order to successfully transact with others on our DApp, you’ll need
@@ -22,20 +27,24 @@ class Onboard extends Component {
 
         <Switch>
           <Route
-            path="/listing/:listingID/onboard/metamask"
+            path={`${linkPrefix}/onboard/metamask`}
             render={() => <MetaMask listing={listing} />}
           />
           <Route
-            path="/listing/:listingID/onboard/messaging"
+            path={`${linkPrefix}/onboard/messaging`}
             render={() => <Messaging listing={listing} />}
           />
           <Route
-            path="/listing/:listingID/onboard/notifications"
+            path={`${linkPrefix}/onboard/notifications`}
             render={() => <Notifications listing={listing} />}
           />
           <Route
-            path="/listing/:listingID/onboard/profile"
+            path={`${linkPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} />}
+          />
+          <Redirect
+            from={`${linkPrefix}/onboard/back`}
+            to={sessionStore.get('getStartedRedirect', '/')}
           />
           <Route render={() => <Wallet listing={listing} />} />
         </Switch>
@@ -49,7 +58,6 @@ export default Onboard
 require('react-styl')(`
   .onboard
     margin-top: 3.5rem
-
     .btn
       border-radius: 2rem
       padding: 0.75rem 2rem
@@ -178,4 +186,9 @@ require('react-styl')(`
     background-size: contain
     height: 3.5rem
 
+  @media (max-width: 767.98px)
+    .onboard
+      margin: 2rem 0 0 0
+      h2
+        line-height: 1.25
 `)

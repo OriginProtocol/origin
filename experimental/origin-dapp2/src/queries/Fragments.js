@@ -61,6 +61,8 @@ export default {
           unitsTotal
           unitsAvailable
           unitsSold
+          unitsPending
+          multiUnit
         }
         ... on FractionalListing {
           weekendPrice {
@@ -174,6 +176,21 @@ export default {
             rewardPending {
               amount
               currency
+            }
+            rewardEarned {
+              amount
+              currency
+            }
+            invites {
+              nodes {
+                status
+                walletAddress
+                contactName
+                reward {
+                  amount
+                  currency
+                }
+              }
             }
           }
         }
