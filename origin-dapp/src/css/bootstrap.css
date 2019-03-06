@@ -1,6 +1,9 @@
 /* This should probably use scss to properly override Bootstrap variables */
 
 .badge {
+  border-radius: 3px;
+  font-size: 0.6rem;
+  padding: 0.4em;
   text-transform: uppercase;
 }
 
@@ -12,24 +15,8 @@
   background-color: var(--greenblue);
 }
 
-.btn-primary {
-  border-color: var(--clear-blue);
-  background-color: var(--clear-blue);
-}
-
-.btn-rounded {
-  border-radius: 10rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
 .btn-success {
   background-color: var(--greenblue);
-}
-
-.btn-outline-danger {
-  color: var(--orange-red);
-  border-color: var(--orange-red);
 }
 
 .btn-success:hover {
@@ -46,17 +33,4 @@
 
 .alert-warning {
   background-color: #fff8de;
-}
-
-.form-control.dark {
-  background-color: var(--dark-two);
-  border: 0;
-  color: var(--white);
-}
-.form-control.dark::-webkit-input-placeholder {
-  color: var(--dusk);
-}
-
-.dropdown-item.active, .dropdown-item:active {
-  background-color: var(--dusk)
 }

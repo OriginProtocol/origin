@@ -1,0 +1,38 @@
+[
+  {
+    "id": "offer-status-event.created",
+    "defaultMessage": "Offer made on {date}"
+  },
+  {
+    "id": "offer-status-event.accepted",
+    "defaultMessage": "Offer accepted on {date}"
+  },
+  {
+    "id": "offer-status-event.withdrawn",
+    "defaultMessage": "Offer withdrawn on {date}"
+  },
+  {
+    "id": "offer-status-event.rejected",
+    "defaultMessage": "Offer rejected on {date}"
+  },
+  {
+    "id": "offer-status-event.disputed",
+    "defaultMessage": "Dispute started on {date}"
+  },
+  {
+    "id": "offer-status-event.ruling",
+    "defaultMessage": "Ruling made on {date}"
+  },
+  {
+    "id": "offer-status-event.finalized",
+    "defaultMessage": "Sale completed on {date}"
+  },
+  {
+    "id": "offer-status-event.reviewed",
+    "defaultMessage": "Sale reviewed on {date}"
+  },
+  {
+    "id": "offer-status-event.unknown",
+    "defaultMessage": "Offer status unknown"
+  }
+]

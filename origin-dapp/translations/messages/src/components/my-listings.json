@@ -1,0 +1,46 @@
+[
+  {
+    "id": "my-listings.loading",
+    "defaultMessage": "Loading..."
+  },
+  {
+    "id": "my-listings.no-listings",
+    "defaultMessage": "You don't have any listings yet."
+  },
+  {
+    "id": "my-listings.no-listings-steps",
+    "defaultMessage": "Follow the steps below to create your first listing!"
+  },
+  {
+    "id": "my-listings.step-one",
+    "defaultMessage": "Choose the right category for your listing."
+  },
+  {
+    "id": "my-listings.step-two",
+    "defaultMessage": "Give your listing a name, description, and price."
+  },
+  {
+    "id": "my-listings.step-three",
+    "defaultMessage": "Preview your listing and publish it to the blockchain."
+  },
+  {
+    "id": "my-listings.create-listing",
+    "defaultMessage": "Create Your First Listing"
+  },
+  {
+    "id": "my-listings.myListingsHeading",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "my-listings.all",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "my-listings.active",
+    "defaultMessage": "Active"
+  },
+  {
+    "id": "my-listings.inactive",
+    "defaultMessage": "Inactive"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "message.enable",
+    "defaultMessage": "Enable Messaging"
+  },
+  {
+    "id": "message.unrecognizedData",
+    "defaultMessage": "Message data cannot be rendered."
+  },
+  {
+    "id": "message.imageTooLarge",
+    "defaultMessage": "Message image is too large to display."
+  }
+]

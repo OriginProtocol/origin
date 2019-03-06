@@ -1,0 +1,18 @@
+[
+  {
+    "id": "searchbar.search",
+    "defaultMessage": "Search"
+  },
+  {
+    "id": "searchbar.searchInCategory",
+    "defaultMessage": "Search in {category}"
+  },
+  {
+    "id": "searchbar.allCategories",
+    "defaultMessage": "All Categories"
+  },
+  {
+    "id": "searchbar.back",
+    "defaultMessage": "Back"
+  }
+]

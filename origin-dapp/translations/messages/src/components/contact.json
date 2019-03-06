@@ -1,0 +1,18 @@
+[
+  {
+    "id": "contact.sendMessages",
+    "defaultMessage": "send messages"
+  },
+  {
+    "id": "contact.generic",
+    "defaultMessage": "Contact"
+  },
+  {
+    "id": "contact.buyer",
+    "defaultMessage": "Contact Buyer"
+  },
+  {
+    "id": "contact.seller",
+    "defaultMessage": "Contact Seller"
+  }
+]

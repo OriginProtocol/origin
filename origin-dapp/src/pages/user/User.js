@@ -1,125 +1,157 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
-import get from 'lodash/get'
+import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
 
-import IdentityQuery from 'queries/Identity'
-import Reviews from 'components/Reviews'
-import Avatar from 'components/Avatar'
+import { fetchUser } from 'actions/User'
 
-import UserListings from './_UserListings'
+import Avatar from 'components/avatar'
+import Reviews from 'components/reviews'
+import UnnamedUser from 'components/unnamed-user'
+import WalletCard from 'components/wallet-card'
+
+import { formattedAddress } from 'utils/user'
 
 class User extends Component {
+  async componentDidMount() {
+    fetchUser(this.props.userAddress)
+  }
+
   render() {
-    const id = this.props.match.params.id
+    const { user, userAddress } = this.props
+    const { attestations, fullName, profile } = user
+    const description =
+      (profile && profile.description) || 'An Origin user without a description'
+
     return (
-      <div className="container user-profile">
-        <Query query={IdentityQuery} variables={{ id }}>
-          {({ data, loading, error }) => {
-            if (loading || error) return null
-            const profile = get(data, 'web3.account.identity') || {}
-            const noVerifications = !Object.keys(profile).some(k =>
-              k.match(/verified/i)
-            )
-
-            return (
-              <>
-                <div className="row">
-                  <div className="col-lg-2 col-md-3">
-                    <Avatar avatar={profile.avatar} className="main-avatar" />
-                    {noVerifications ? null : (
-                      <div className="verified-info">
-                        <h5>Verified Info</h5>
-                        {profile.phoneVerified && (
-                          <div>
-                            <div className="attestation phone" />
-                            Phone
-                          </div>
-                        )}
-                        {profile.emailVerified && (
-                          <div>
-                            <div className="attestation email" />
-                            Email
-                          </div>
-                        )}
-                        {profile.facebookVerified && (
-                          <div>
-                            <div className="attestation facebook" />
-                            Facebook
-                          </div>
-                        )}
-                        {profile.twitterVerified && (
-                          <div>
-                            <div className="attestation twitter" />
-                            Twitter
-                          </div>
-                        )}
-                        {profile.googleVerified && (
-                          <div>
-                            <div className="attestation google" />
-                            Google
-                          </div>
-                        )}
-                        {profile.airbnbVerified && (
-                          <div>
-                            <div className="attestation airbnb" />
-                            AirBnb
-                          </div>
-                        )}
+      <div className="public-user profile-wrapper">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-md-4 col-lg-4 order-md-3">
+              <WalletCard
+                address={userAddress}
+                withProfile={false}
+              />
+            </div>
+            <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-1">
+              <Avatar
+                image={profile && profile.avatar}
+                className="primary"
+                placeholderStyle="purple"
+              />
+            </div>
+            <div className="col-12 col-sm-8 col-md-5 col-lg-6 order-md-2">
+              <div className="name d-flex">
+                <h1>{fullName || <UnnamedUser />}</h1>
+              </div>
+              <p className="ws-aware">{description}</p>
+            </div>
+            <div className="col-12 col-sm-4 col-md-3 col-lg-2 order-md-4">
+              {attestations &&
+                !!attestations.length && (
+                <div className="verifications-box">
+                  <h3>
+                    <FormattedMessage
+                      id={'User.verifiedInto'}
+                      defaultMessage={'Verified Info'}
+                    />
+                  </h3>
+                  {/* need to know how to verify signature instead of just finding object by key */}
+                  {attestations.find(a => a.service === 'phone') && (
+                    <div className="service d-flex">
+                      <img
+                        src="images/phone-icon-verified.svg"
+                        alt="phone verified icon"
+                      />
+                      <div>
+                        <FormattedMessage
+                          id={'User.phone'}
+                          defaultMessage={'Phone'}
+                        />
                       </div>
-                    )}
-                  </div>
-                  <div className="col-lg-10 col-md-9">
-                    <h1 className="mb-0">
-                      {profile.fullName || 'Unnamed User'}
-                    </h1>
-                    <div className="description">{profile.description}</div>
-
-                    <div className="reviews-container">
-                      <Reviews id={id} />
                     </div>
-
-                    <UserListings user={id} />
-                  </div>
+                  )}
+                  {attestations.find(a => a.service === 'email') && (
+                    <div className="service d-flex">
+                      <img
+                        src="images/email-icon-verified.svg"
+                        alt="email verified icon"
+                      />
+                      <div>
+                        <FormattedMessage
+                          id={'User.email'}
+                          defaultMessage={'Email'}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {attestations.find(a => a.service === 'facebook') && (
+                    <div className="service d-flex">
+                      <img
+                        src="images/facebook-icon-verified.svg"
+                        alt="Facebook verified icon"
+                      />
+                      <div>
+                        <FormattedMessage
+                          id={'User.facebook'}
+                          defaultMessage={'Facebook'}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {attestations.find(a => a.service === 'twitter') && (
+                    <div className="service d-flex">
+                      <img
+                        src="images/twitter-icon-verified.svg"
+                        alt="Twitter verified icon"
+                      />
+                      <div>
+                        <FormattedMessage
+                          id={'User.twitter'}
+                          defaultMessage={'Twitter'}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {attestations.find(a => a.service === 'airbnb') && (
+                    <div className="service d-flex">
+                      <img
+                        src="images/airbnb-icon-verified.svg"
+                        alt="Airbnb verified icon"
+                      />
+                      <div>
+                        <FormattedMessage
+                          id={'User.airbnb'}
+                          defaultMessage={'Airbnb'}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </>
-            )
-          }}
-        </Query>
+              )}
+            </div>
+            <div className="col-12 col-sm-8 col-md-9 col-lg-10 order-md-5">
+              <Reviews userAddress={userAddress} />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 }
 
-export default User
+const mapStateToProps = (state, { userAddress }) => {
+  return {
+    user: state.users.find(u => {
+      return formattedAddress(u.address) === formattedAddress(userAddress)
+    }) || {}
+  }
+}
 
-require('react-styl')(`
-  .user-profile
-    padding-top: 3rem
-    .main-avatar
-      border-radius: 1rem;
-    .description
-      max-width: 50rem
+const mapDispatchToProps = dispatch => ({
+  fetchUser: addr => dispatch(fetchUser(addr))
+})
 
-    .verified-info
-      background-color: var(--pale-grey)
-      padding: 1rem
-      margin-top: 2rem
-      border-radius: 1rem
-      font-size: 14px
-      h5
-        font-size: 14px
-        margin-bottom: 0.75rem
-      > div
-        display: flex
-        align-items: center
-        margin-bottom: 0.5rem
-        &:last-child
-          margin-bottom: 0
-        .attestation
-          margin-right: 0.5rem
-          width: 1.5rem
-          height: 1.5rem
-    .reviews-container
-      margin-top: 2rem
-
-`)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(User)

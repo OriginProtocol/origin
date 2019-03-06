@@ -10,11 +10,7 @@ export function mobileDevice() {
   } else if (userAgent.match(/Mobi/)) {
     return unrecognized
   } else {
-    const connection =
-      navigator.connection ||
-      navigator.mozConnection ||
-      navigator.webkitConnection ||
-      {}
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {}
 
     return connection.type === 'cellular' ? unrecognized : null
   }

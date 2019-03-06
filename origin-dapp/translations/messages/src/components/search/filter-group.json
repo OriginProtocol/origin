@@ -1,0 +1,10 @@
+[
+  {
+    "id": "SearchResults.filterGroup.searchFiltersClear",
+    "defaultMessage": "Clear"
+  },
+  {
+    "id": "SearchResults.filterGroup.searchFiltersApply",
+    "defaultMessage": "Apply"
+  }
+]

@@ -1,44 +1,54 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 class Analytics extends Component {
-  constructor(props) {
-    super(props)
-    this._unlisten = () => {}
-    this._afterTitleTimeout = undefined
-    if (window.gtag == undefined) {
-      window.gtag = () => {}
+
+  componentDidUpdate(props) {
+    this.trackHashChange(props)
+  }
+
+  trackHashChange({ location, history }) {
+    const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-106384880-2'
+    const gtag = window.gtag || function() {}
+    const path = this.props.location.pathname
+
+    if (location.pathname === path) {
+      return
+    }
+
+    if (history.action === 'PUSH') {
+      gtag('config', gaTrackingId, {
+        'page_title': this.getPageTitle(path),
+        'page_path': path,
+      })
     }
   }
 
-  /**
-   * Records routing path changes to Google Analytics.
-   *
-   * Uses setTimeout to wait until the intial page rendering is complete
-   * so that it can collect the correct document title.
-   */
+  getPageTitle(path) {
+    const pathNoSlash = path.substring(1)
+    const nextParamIdx = pathNoSlash.indexOf('/')
+    let pageTitle = nextParamIdx > -1 ? 
+      pathNoSlash.substring(0, nextParamIdx) :
+      pathNoSlash.substring(0, pathNoSlash.length)
 
-  componentDidMount() {
-    const { history } = this.props
-    this._unlisten = history.listen(location => {
-      clearTimeout(this._afterTitleTimeout)
-      this._afterTitleTimeout = setTimeout(() => {
-        const gaTrackingId = process.env.GA_TRACKING_ID || 'UA-106384880-2'
-        window.gtag('config', gaTrackingId, {
-          page_title: document.title,
-          page_path: location.pathname
-        })
-      })
-    })
-  }
+    if (!pageTitle) {
+      pageTitle = 'home'
+    }
 
-  componentWillUnmount() {
-    this._unlisten()
+    return pageTitle
   }
 
   render() {
-    return <>{this.props.children}</>
+    return (
+      <Fragment>
+        {this.props.children}
+      </Fragment>
+    )
   }
 }
 
-export default withRouter(Analytics)
+
+export default withRouter(
+  connect()(Analytics)
+)

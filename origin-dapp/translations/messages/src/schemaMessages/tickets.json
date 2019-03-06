@@ -1,0 +1,90 @@
+[
+  {
+    "id": "schema.tickets.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.tickets.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.tickets.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.tickets.when",
+    "defaultMessage": "When"
+  },
+  {
+    "id": "schema.tickets.where",
+    "defaultMessage": "Where"
+  },
+  {
+    "id": "schema.tickets.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.tickets.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.tickets.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.tickets.arts",
+    "defaultMessage": "Arts"
+  },
+  {
+    "id": "schema.tickets.classesWorkshops",
+    "defaultMessage": "Classes & Workshops"
+  },
+  {
+    "id": "schema.tickets.conference",
+    "defaultMessage": "Conference"
+  },
+  {
+    "id": "schema.tickets.fundraisers",
+    "defaultMessage": "Fundraisers"
+  },
+  {
+    "id": "schema.tickets.music",
+    "defaultMessage": "Music"
+  },
+  {
+    "id": "schema.tickets.nonProfitEvent",
+    "defaultMessage": "Non-profit event"
+  },
+  {
+    "id": "schema.tickets.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.tickets.sports",
+    "defaultMessage": "Sports"
+  },
+  {
+    "id": "schema.tickets.theater",
+    "defaultMessage": "Theater"
+  },
+  {
+    "id": "schema.tickets.tradeshow",
+    "defaultMessage": "Tradeshow"
+  },
+  {
+    "id": "schema.tickets.shipItem",
+    "defaultMessage": "Arrange for delivery or pickup"
+  },
+  {
+    "id": "schema.tickets.messageBuyer",
+    "defaultMessage": "Message the buyer with an update"
+  },
+  {
+    "id": "schema.tickets.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.tickets.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
+  }
+]

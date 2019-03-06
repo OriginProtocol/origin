@@ -1,0 +1,46 @@
+[
+  {
+    "id": "connectivity.mainEthereumNetwork",
+    "defaultMessage": "Main Ethereum Network"
+  },
+  {
+    "id": "connectivity.mordenTestNetwork",
+    "defaultMessage": "Morden Test Network"
+  },
+  {
+    "id": "connectivity.ropstenTestNetwork",
+    "defaultMessage": "Ropsten Test Network"
+  },
+  {
+    "id": "connectivity.rinkebyTestNetwork",
+    "defaultMessage": "Rinkeby Test Network"
+  },
+  {
+    "id": "connectivity.kovanTestNetwork",
+    "defaultMessage": "Kovan Test Network"
+  },
+  {
+    "id": "connectivity.localhost",
+    "defaultMessage": "Localhost"
+  },
+  {
+    "id": "connectivity.ethereumNetwork",
+    "defaultMessage": "Ethereum Network:"
+  },
+  {
+    "id": "connectivity.connecting",
+    "defaultMessage": "Connecting..."
+  },
+  {
+    "id": "connectivity.ipfsGateway",
+    "defaultMessage": "IPFS Gateway:"
+  },
+  {
+    "id": "connectivity.bridgeServer",
+    "defaultMessage": "Bridge Server:"
+  },
+  {
+    "id": "connectivity.messaging",
+    "defaultMessage": "Messaging Server:"
+  }
+]

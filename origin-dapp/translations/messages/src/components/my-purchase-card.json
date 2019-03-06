@@ -1,0 +1,14 @@
+[
+  {
+    "id": "my-purchase-card.quantity",
+    "defaultMessage": "Quantity:"
+  },
+  {
+    "id": "my-purchase-card.pricePerUnit",
+    "defaultMessage": "Price/Unit:"
+  },
+  {
+    "id": "my-purchase-card.totalPrice",
+    "defaultMessage": "Total Price:"
+  }
+]

@@ -36,17 +36,15 @@ class Dropdown extends Component {
   render() {
     let className = `dropdown${this.props.open ? ' show' : ''}`
     if (this.props.className) className += ` ${this.props.className}`
-    const El = this.props.el || 'div'
 
     return (
-      <El
+      <div
         className={className}
-        onMouseOver={() => (this.mouseOver = true)}
-        onMouseOut={() => (this.mouseOver = false)}
+        onMouseOver={() => this.mouseOver = true}
+        onMouseOut={() => this.mouseOver = false}
       >
         {this.props.children}
-        {this.props.content && this.props.open ? this.props.content : null}
-      </El>
+      </div>
     )
   }
 }

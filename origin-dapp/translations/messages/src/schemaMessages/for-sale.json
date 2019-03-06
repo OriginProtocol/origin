@@ -1,0 +1,222 @@
+[
+  {
+    "id": "schema.forSale.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.forSale.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.forSale.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.forSale.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.forSale.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.forSale.unitsTotal",
+    "defaultMessage": "Quantity"
+  },
+  {
+    "id": "schema.forSale.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.forSale.antiques",
+    "defaultMessage": "Antiques"
+  },
+  {
+    "id": "schema.forSale.appliances",
+    "defaultMessage": "Appliances"
+  },
+  {
+    "id": "schema.forSale.artsCrafts",
+    "defaultMessage": "Arts & Crafts"
+  },
+  {
+    "id": "schema.forSale.atvsUtvsSnowmobiles",
+    "defaultMessage": "Atvs, UTVs, Snowmobiles"
+  },
+  {
+    "id": "schema.forSale.autoParts",
+    "defaultMessage": "Auto Parts"
+  },
+  {
+    "id": "schema.forSale.autoWheelsTires",
+    "defaultMessage": "Auto Wheels & Tires"
+  },
+  {
+    "id": "schema.forSale.babyKidStuff",
+    "defaultMessage": "Baby & Kid Stuff"
+  },
+  {
+    "id": "schema.forSale.barter",
+    "defaultMessage": "Barter"
+  },
+  {
+    "id": "schema.forSale.bicycleParts",
+    "defaultMessage": "Bicycle Parts"
+  },
+  {
+    "id": "schema.forSale.bicycles",
+    "defaultMessage": "Bicycles"
+  },
+  {
+    "id": "schema.forSale.boatPartsAccessories",
+    "defaultMessage": "Boat Parts & Accessories"
+  },
+  {
+    "id": "schema.forSale.boats",
+    "defaultMessage": "Boats"
+  },
+  {
+    "id": "schema.forSale.booksMagazines",
+    "defaultMessage": "Books & Magazines"
+  },
+  {
+    "id": "schema.forSale.business",
+    "defaultMessage": "Business"
+  },
+  {
+    "id": "schema.forSale.carsTrucks",
+    "defaultMessage": "Cars & Trucks"
+  },
+  {
+    "id": "schema.forSale.cdsDvdsVhs",
+    "defaultMessage": "CDs / DVDs / VHS"
+  },
+  {
+    "id": "schema.forSale.cellPhones",
+    "defaultMessage": "Cell Phones"
+  },
+  {
+    "id": "schema.forSale.clothingAccessories",
+    "defaultMessage": "Clothing & Accessories"
+  },
+  {
+    "id": "schema.forSale.collectibles",
+    "defaultMessage": "Collectibles"
+  },
+  {
+    "id": "schema.forSale.computerParts",
+    "defaultMessage": "Computer Parts"
+  },
+  {
+    "id": "schema.forSale.computers",
+    "defaultMessage": "Computers"
+  },
+  {
+    "id": "schema.forSale.electronics",
+    "defaultMessage": "Electronics"
+  },
+  {
+    "id": "schema.forSale.farmGarden",
+    "defaultMessage": "Farm & Garden"
+  },
+  {
+    "id": "schema.forSale.freeStuff",
+    "defaultMessage": "Free Stuff"
+  },
+  {
+    "id": "schema.forSale.furniture",
+    "defaultMessage": "Furniture"
+  },
+  {
+    "id": "schema.forSale.garageMovingSales",
+    "defaultMessage": "Garage & Moving Sales"
+  },
+  {
+    "id": "schema.forSale.generalForSale",
+    "defaultMessage": "General For Sale"
+  },
+  {
+    "id": "schema.forSale.healthBeauty",
+    "defaultMessage": "Health & Beauty"
+  },
+  {
+    "id": "schema.forSale.heavyEquipment",
+    "defaultMessage": "Heavy Equipment"
+  },
+  {
+    "id": "schema.forSale.householdItems",
+    "defaultMessage": "Household Items"
+  },
+  {
+    "id": "schema.forSale.jewelry",
+    "defaultMessage": "Jewelry"
+  },
+  {
+    "id": "schema.forSale.materials",
+    "defaultMessage": "Materials"
+  },
+  {
+    "id": "schema.forSale.motorcyclePartsAccessories",
+    "defaultMessage": "Motorcycle Parts & Accessories"
+  },
+  {
+    "id": "schema.forSale.motorcyclesScooters",
+    "defaultMessage": "Motorcycles & Scooters"
+  },
+  {
+    "id": "schema.forSale.musicalInstruments",
+    "defaultMessage": "Musical Instruments"
+  },
+  {
+    "id": "schema.forSale.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.forSale.photoVideo",
+    "defaultMessage": "Photo & Video"
+  },
+  {
+    "id": "schema.forSale.recreationalVehicles",
+    "defaultMessage": "Recreational Vehicles"
+  },
+  {
+    "id": "schema.forSale.sportingGoods",
+    "defaultMessage": "Sporting Goods"
+  },
+  {
+    "id": "schema.forSale.tickets",
+    "defaultMessage": "Tickets"
+  },
+  {
+    "id": "schema.forSale.tools",
+    "defaultMessage": "Tools"
+  },
+  {
+    "id": "schema.forSale.toysGames",
+    "defaultMessage": "Toys & Games"
+  },
+  {
+    "id": "schema.forSale.trailers",
+    "defaultMessage": "Trailers"
+  },
+  {
+    "id": "schema.forSale.videoGaming",
+    "defaultMessage": "Video Gaming"
+  },
+  {
+    "id": "schema.forSale.deliverProduct",
+    "defaultMessage": "Arrange for delivery or pickup"
+  },
+  {
+    "id": "schema.forSale.messageBuyer",
+    "defaultMessage": "Message the buyer with an update"
+  },
+  {
+    "id": "schema.forSale.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.forSale.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
+  }
+]

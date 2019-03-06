@@ -1,0 +1,38 @@
+[
+  {
+    "id": "my-sale-card.pendingBuyerNameLink",
+    "defaultMessage": "selling to {linkToBuyer}"
+  },
+  {
+    "id": "my-sale-card.completedBuyerNameLink",
+    "defaultMessage": "sold to {linkToBuyer}"
+  },
+  {
+    "id": "my-sale-card.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "my-sale-card.nextStep",
+    "defaultMessage": "Next Step"
+  },
+  {
+    "id": "my-sale-card.accept",
+    "defaultMessage": "Accept or reject the buyer's offer"
+  },
+  {
+    "id": "my-sale-card.awaitConfirmation",
+    "defaultMessage": "Wait for the buyer to complete the sale"
+  },
+  {
+    "id": "my-sale-card.awaitContact",
+    "defaultMessage": "Wait to be contacted by an Origin team member"
+  },
+  {
+    "id": "my-sale-card.reviewSale",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "my-sale-card.viewDetails",
+    "defaultMessage": "View Details"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "user-dropdown.UnlinkMobile",
+    "defaultMessage": "Unlink Mobile"
+  },
+  {
+    "id": "user-dropdown.EditProfile",
+    "defaultMessage": "Edit Profile"
+  }
+]

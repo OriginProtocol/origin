@@ -1,0 +1,30 @@
+[
+  {
+    "id": "offerModals.withdrawHeading",
+    "defaultMessage": "Withdraw Offer"
+  },
+  {
+    "id": "offerModals.withdrawText",
+    "defaultMessage": "Are you sure you want to withdraw your offer? Your escrowed payment wil be returned to your wallet."
+  },
+  {
+    "id": "offerModals.withdrawCancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "offerModals.withdrawSubmit",
+    "defaultMessage": "Withdraw"
+  },
+  {
+    "id": "offerModals.rejectionHeading",
+    "defaultMessage": "This offer has been rejected."
+  },
+  {
+    "id": "offerModals.rejectionText",
+    "defaultMessage": "Your listing is now available for other buyers to purchase."
+  },
+  {
+    "id": "arbitrationModals.rejectionListings",
+    "defaultMessage": "View Listings"
+  }
+]

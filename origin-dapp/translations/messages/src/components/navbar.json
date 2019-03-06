@@ -1,0 +1,26 @@
+[
+  {
+    "id": "navbar.listings",
+    "defaultMessage": "Listings"
+  },
+  {
+    "id": "navbar.buying",
+    "defaultMessage": "Buying"
+  },
+  {
+    "id": "navbar.selling",
+    "defaultMessage": "Selling"
+  },
+  {
+    "id": "navbar.myListings",
+    "defaultMessage": "My Listings"
+  },
+  {
+    "id": "navbar.mySales",
+    "defaultMessage": "My Sales"
+  },
+  {
+    "id": "navbar.addListing",
+    "defaultMessage": "Add a Listing"
+  }
+]

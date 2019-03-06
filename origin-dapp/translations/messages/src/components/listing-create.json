@@ -1,0 +1,262 @@
+[
+  {
+    "id": "listing-create.navigationWarning",
+    "defaultMessage": "Are you sure you want to leave? If you leave this page your progress will be lost."
+  },
+  {
+    "id": "schema.boostLimitInOgn",
+    "defaultMessage": "Boost Limit"
+  },
+  {
+    "id": "schema.positiveNumber",
+    "defaultMessage": "should be a positive number"
+  },
+  {
+    "id": "schema.notEnoughOgnFunds",
+    "defaultMessage": "not enough funds in wallet."
+  },
+  {
+    "id": "schema.boostLimitTooHigh",
+    "defaultMessage": "value too high. Should be equal or smaller of the Total boost required."
+  },
+  {
+    "id": "listing-create.selectOne",
+    "defaultMessage": "Select One"
+  },
+  {
+    "id": "listing-create.incorrectQuantity",
+    "defaultMessage": "Buyers have active (and finalized) purchases for {unitsInOffers} units. The quantity can not be lower than that."
+  },
+  {
+    "id": "backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.review",
+    "defaultMessage": "Review"
+  },
+  {
+    "id": "listing-create.stepNumberLabel",
+    "defaultMessage": "STEP {stepNumber}"
+  },
+  {
+    "id": "listing-create.whatTypeOfListing",
+    "defaultMessage": "What type of listing do you want to create?"
+  },
+  {
+    "id": "listing-create.noSchemaSelectedError",
+    "defaultMessage": "You must first select a listing type"
+  },
+  {
+    "id": "listing-create.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.backButtonLabel",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "listing-create.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "listing-create.createListingHeading",
+    "defaultMessage": "Listing Details"
+  },
+  {
+    "id": "listing-create.showDetailsFormErrorMsg",
+    "defaultMessage": "Please fix errors before continuing."
+  },
+  {
+    "id": "continueButtonLabel",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "listing-create.availabilityHeading",
+    "defaultMessage": "Pricing & Availability"
+  },
+  {
+    "id": "listing-create.boost-your-listing",
+    "defaultMessage": "Boost Your Listing"
+  },
+  {
+    "id": "listing-create.form-help-boost",
+    "defaultMessage": "You can boost your listing to get higher visibility in the Origin DApp. More buyers will see your listing, which increases the chances of a fast and successful sale."
+  },
+  {
+    "id": "listing-create.no-ogn",
+    "defaultMessage": "You have 0 {ogn} in your wallet."
+  },
+  {
+    "id": "listing-create.post-acquisition",
+    "defaultMessage": "Once you acquire some OGN you will be able to boost your listing."
+  },
+  {
+    "id": "listing-create.totalNumberOfUnits",
+    "defaultMessage": "Total number of units: {units}"
+  },
+  {
+    "id": "listing-create.totalBoostRequired",
+    "defaultMessage": "Total boost required: {boost}"
+  },
+  {
+    "id": "listing-create.boostCapTooLow",
+    "defaultMessage": "Your boost limit is lower than the total amount needed to boost all your units. After the limit is reached, the remaining units will not be boosted."
+  },
+  {
+    "id": "listing-create.showBoostFormErrorMsg",
+    "defaultMessage": "Please fix errors before continuing."
+  },
+  {
+    "id": "listing-create.reviewListingHeading",
+    "defaultMessage": "Review your listing"
+  },
+  {
+    "id": "listing-create.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "listing-create.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "listing-create.subcategory",
+    "defaultMessage": "Subcategory"
+  },
+  {
+    "id": "listing-create.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "listing-create.quantity",
+    "defaultMessage": "Quantity"
+  },
+  {
+    "id": "listing-create.listing-price",
+    "defaultMessage": "Listing Price"
+  },
+  {
+    "id": "listing-create.fractional-price-varies",
+    "defaultMessage": "Price varies by date"
+  },
+  {
+    "id": "listing-create.appropriate-value",
+    "defaultMessage": "Approximate Value"
+  },
+  {
+    "id": "listing-create.boost-level",
+    "defaultMessage": "Boost Level"
+  },
+  {
+    "id": "listing-create.boostLimit",
+    "defaultMessage": "Boost Limit"
+  },
+  {
+    "id": "listing-create.doneButtonLabel",
+    "defaultMessage": "Done"
+  },
+  {
+    "id": "listing-create.offerButtonLabel",
+    "defaultMessage": "I want this"
+  },
+  {
+    "id": "listing-create.create-a-listing",
+    "defaultMessage": "Create A Listing On The Origin DApp"
+  },
+  {
+    "id": "listing-create.form-help-schema",
+    "defaultMessage": "Get started by selecting the type of listing you want to create. You will then be able to set a price and listing details."
+  },
+  {
+    "id": "listing-create.add-details",
+    "defaultMessage": "Add Listing Details"
+  },
+  {
+    "id": "listing-create.form-help-details",
+    "defaultMessage": "Be sure to give your listing an appropriate title and description to let others know what you're offering. Adding some photos will increase the chances of selling your listing."
+  },
+  {
+    "id": "listing-create.form-help-details-fractional",
+    "defaultMessage": "You will be able to customize pricing and availability in the next step."
+  },
+  {
+    "id": "listing-create.about-visibility",
+    "defaultMessage": "About Visibility"
+  },
+  {
+    "id": "listing-create.form-help-visibility",
+    "defaultMessage": "Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often."
+  },
+  {
+    "id": "listing-create.origin-tokens",
+    "defaultMessage": "Origin Tokens"
+  },
+  {
+    "id": "listing-create.form-help-ogn",
+    "defaultMessage": "OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance."
+  },
+  {
+    "id": "listing-create.learn-more",
+    "defaultMessage": "Learn More"
+  },
+  {
+    "id": "listing-create.whatHappensNextHeading",
+    "defaultMessage": "What happens next?"
+  },
+  {
+    "id": "listing-create.whatHappensNextContent1",
+    "defaultMessage": "When you submit this listing, you will be asked to confirm your transaction in MetaMask. Buyers will then be able to see your listing and make offers on it."
+  },
+  {
+    "id": "listing-create.whatHappensNextContent2",
+    "defaultMessage": "{selectedBoostAmount} OGN will be transferred for boosting. If you close your listing before accepting an offer, the OGN will be refunded to you."
+  },
+  {
+    "id": "listing-create.updateSuccessMessage",
+    "defaultMessage": "Your listing has been updated!"
+  },
+  {
+    "id": "listing-create.successMessage",
+    "defaultMessage": "Your listing has been created!"
+  },
+  {
+    "id": "listing-create.successDisclaimer",
+    "defaultMessage": "Your listing will be visible within a few seconds. Here's what happens next:"
+  },
+  {
+    "id": "listing-create.success-1",
+    "defaultMessage": "Buyers will now see your listing on the marketplace."
+  },
+  {
+    "id": "listing-create.success-2",
+    "defaultMessage": "When a buyer makes an offer on your listing, you can choose to accept or reject it."
+  },
+  {
+    "id": "listing-create.success-3",
+    "defaultMessage": "Once the offer is accepted, you will be expected to fulfill the order."
+  },
+  {
+    "id": "listing-create.success-4",
+    "defaultMessage": "You will receive payment once the buyer confirms that the order has been fulfilled."
+  },
+  {
+    "id": "listing-create.createAnother",
+    "defaultMessage": "Create Another Listing"
+  },
+  {
+    "id": "listing-create.seeAllListings",
+    "defaultMessage": "See All Listings"
+  },
+  {
+    "id": "listing-create.error1",
+    "defaultMessage": "There was a problem creating this listing."
+  },
+  {
+    "id": "listing-create.error2",
+    "defaultMessage": "See the console for more details."
+  },
+  {
+    "id": "listing-create.OK",
+    "defaultMessage": "OK"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "transactions.pendingBlockchainTransactionsHeading",
+    "defaultMessage": "Pending Blockchain Transactions"
+  },
+  {
+    "id": "transactions.pendingBlockchainTransactionHeading",
+    "defaultMessage": "Pending Blockchain Transaction"
+  },
+  {
+    "id": "transactions.blockchainTransactionsHeading",
+    "defaultMessage": "Blockchain Transactions"
+  },
+  {
+    "id": "transactions.transactionsHeading",
+    "defaultMessage": "Transactions"
+  },
+  {
+    "id": "transactions.clear",
+    "defaultMessage": "Clear"
+  }
+]

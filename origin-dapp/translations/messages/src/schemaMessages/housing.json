@@ -1,0 +1,74 @@
+[
+  {
+    "id": "schema.housing.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.housing.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.housing.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.housing.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.housing.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.housing.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.housing.aptsHousingForRent",
+    "defaultMessage": "Apts/Housing for Rent"
+  },
+  {
+    "id": "schema.housing.officeCommercial",
+    "defaultMessage": "Office & Commercial"
+  },
+  {
+    "id": "schema.housing.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.housing.parkingStorage",
+    "defaultMessage": "Parking & Storage"
+  },
+  {
+    "id": "schema.housing.realEstate",
+    "defaultMessage": "Real Estate"
+  },
+  {
+    "id": "schema.housing.roomShares",
+    "defaultMessage": "Room Shares"
+  },
+  {
+    "id": "schema.housing.subletsTemporary",
+    "defaultMessage": "Sublets & Temporary"
+  },
+  {
+    "id": "schema.housing.vacationRentals",
+    "defaultMessage": "Vacation Rentals"
+  },
+  {
+    "id": "schema.housing.messageBuyer",
+    "defaultMessage": "Message the buyer with any relevant details"
+  },
+  {
+    "id": "schema.housing.prepareProperty",
+    "defaultMessage": "Make sure the property is clean and ready"
+  },
+  {
+    "id": "schema.housing.rateBuyer",
+    "defaultMessage": "Leave a review of the buyer"
+  },
+  {
+    "id": "schema.housing.sellerSteps",
+    "defaultMessage": "Fulfillment Checklist"
+  }
+]

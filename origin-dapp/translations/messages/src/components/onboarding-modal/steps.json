@@ -1,0 +1,62 @@
+[
+  {
+    "id": "onboarding-steps.stepOneName",
+    "defaultMessage": "Overview"
+  },
+  {
+    "id": "onboarding-steps.stepOneDescription",
+    "defaultMessage": "Get started selling on the Origin DApp."
+  },
+  {
+    "id": "onboarding-steps.stepOneHeading",
+    "defaultMessage": "Get started selling on Origin."
+  },
+  {
+    "id": "onboarding-steps.stepOneContentPartOneWithWallet",
+    "defaultMessage": "You will use your Ethereum wallet to create listings and accept payment."
+  },
+  {
+    "id": "onboarding-steps.stepOneContentPartOneWithoutWallet",
+    "defaultMessage": "You will need an Ethereum wallet to create listings and accept payment."
+  },
+  {
+    "id": "onboarding-steps.stepOneContentPartTwo",
+    "defaultMessage": "Transactions on the Origin DApp are always made using {ethMark}."
+  },
+  {
+    "id": "onboarding-steps.stepTwoName",
+    "defaultMessage": "Identity"
+  },
+  {
+    "id": "onboarding-steps.stepTwoDescription",
+    "defaultMessage": "Increase trust and gain reputation with buyers."
+  },
+  {
+    "id": "onboarding-steps.stepTwoHeading",
+    "defaultMessage": "Get verified on Origin."
+  },
+  {
+    "id": "onboarding-steps.stepTwoContent",
+    "defaultMessage": "Verifying your profile allows other users to know that you are a real person and increases the chances of successful transactions on Origin."
+  },
+  {
+    "id": "onboarding-steps.stepThreeName",
+    "defaultMessage": "Origin Tokens"
+  },
+  {
+    "id": "onboarding-steps.stepThreeDescription",
+    "defaultMessage": "Improve the chances of selling your good or service."
+  },
+  {
+    "id": "onboarding-steps.stepThreeHeading",
+    "defaultMessage": "Boost your listings with Origin Tokens"
+  },
+  {
+    "id": "onboarding-steps.stepThreeContentPartOne",
+    "defaultMessage": "Origin Tokens (Symbol: {ognMark}) are used on the Origin DApp to boost your listings."
+  },
+  {
+    "id": "onboarding-steps.stepThreeContentPartTwo",
+    "defaultMessage": "Boosting will give your listing more visibility and increase the likelihood of successfully selling."
+  }
+]

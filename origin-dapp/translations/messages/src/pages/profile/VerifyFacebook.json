@@ -1,0 +1,18 @@
+[
+  {
+    "id": "VerifyFacebook.verifyFBHeading",
+    "defaultMessage": "Verify Your Facebook Account"
+  },
+  {
+    "id": "VerifyFacebook.accountNotPublic",
+    "defaultMessage": "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+  },
+  {
+    "id": "VerifyFacebook.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "VerifyFacebook.continue",
+    "defaultMessage": "Continue"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "conversation.newMessagePlaceholder",
+    "defaultMessage": "Type something..."
+  },
+  {
+    "id": "conversation.offerCreated",
+    "defaultMessage": "{party} made an offer on {name} on {date}"
+  },
+  {
+    "id": "conversation.offerWithdrawnOrRejected",
+    "defaultMessage": "{party} {action} {name} on {date}"
+  },
+  {
+    "id": "conversation.offerAccepted",
+    "defaultMessage": "{party} accepted the offer for {name} on {date}"
+  },
+  {
+    "id": "conversation.offerDisputed",
+    "defaultMessage": "{party} initiated a dispute for {name} on {date}"
+  },
+  {
+    "id": "conversation.offerRuling",
+    "defaultMessage": "{party} made a ruling on the dispute for {name} on {date}"
+  },
+  {
+    "id": "conversation.offerFinalized",
+    "defaultMessage": "{party} finalized the offer for {name} on {date}"
+  },
+  {
+    "id": "conversation.offerData",
+    "defaultMessage": "{party} updated information for {name} on {date}"
+  },
+  {
+    "id": "conversation.invalidTextInput",
+    "defaultMessage": "Please add a message to send."
+  }
+]

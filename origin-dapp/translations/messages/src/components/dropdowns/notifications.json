@@ -1,0 +1,14 @@
+[
+  {
+    "id": "notificationsDropdown.notificationHeading",
+    "defaultMessage": "Unread Notification"
+  },
+  {
+    "id": "notificationsDropdown.notificationsHeading",
+    "defaultMessage": "Unread Notifications"
+  },
+  {
+    "id": "notificationsDropdown.viewAll",
+    "defaultMessage": "View All"
+  }
+]

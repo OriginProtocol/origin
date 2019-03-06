@@ -1,0 +1,30 @@
+[
+  {
+    "id": "badges.beta",
+    "defaultMessage": "Beta"
+  },
+  {
+    "id": "badges.buyer",
+    "defaultMessage": "Buyer"
+  },
+  {
+    "id": "badges.pending",
+    "defaultMessage": "Pending"
+  },
+  {
+    "id": "badges.seller",
+    "defaultMessage": "Seller"
+  },
+  {
+    "id": "badges.soldOut",
+    "defaultMessage": "Sold Out"
+  },
+  {
+    "id": "badges.sold",
+    "defaultMessage": "Sold"
+  },
+  {
+    "id": "badges.featured",
+    "defaultMessage": "Featured"
+  }
+]

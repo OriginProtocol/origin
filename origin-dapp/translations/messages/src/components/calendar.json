@@ -1,0 +1,94 @@
+[
+  {
+    "id": "calendar.goToToday",
+    "defaultMessage": "Go to today"
+  },
+  {
+    "id": "calendar.showNoEventsEnteredErrorMessage",
+    "defaultMessage": "Please enter availability on the calendar"
+  },
+  {
+    "id": "calendar.back",
+    "defaultMessage": "Back"
+  },
+  {
+    "id": "calendar.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "listing-create.calendarCustomize",
+    "defaultMessage": "Customize Pricing & Availability"
+  },
+  {
+    "id": "calendar.calendarTipsSeller1",
+    "defaultMessage": "Select one or more dates by clicking and dragging on the calendar."
+  },
+  {
+    "id": "calendar.calendarTipsSeller2",
+    "defaultMessage": "All dates are available by default and are priced according to your weekday and weekend pricing set in the listing details."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer1",
+    "defaultMessage": "Select one or more dates that you would like to reserve by clicking and dragging on the calendar."
+  },
+  {
+    "id": "calendar.calendarTipsBuyer2",
+    "defaultMessage": "Your reservation will be for the night of each date that you include in your selection. Be sure to review the listing description for any special circumstances."
+  },
+  {
+    "id": "calendar.selectedDates",
+    "defaultMessage": "Selected Dates"
+  },
+  {
+    "id": "calendar.selectedTimes",
+    "defaultMessage": "Selected Times"
+  },
+  {
+    "id": "calendar.available",
+    "defaultMessage": "Available"
+  },
+  {
+    "id": "calendar.yes",
+    "defaultMessage": "Yes"
+  },
+  {
+    "id": "calendar.no",
+    "defaultMessage": "No"
+  },
+  {
+    "id": "calendar.pricing",
+    "defaultMessage": "Pricing"
+  },
+  {
+    "id": "calendar.perHour",
+    "defaultMessage": "per hour"
+  },
+  {
+    "id": "calendar.perDay",
+    "defaultMessage": "per day"
+  },
+  {
+    "id": "calendar.cancel",
+    "defaultMessage": "Cancel"
+  },
+  {
+    "id": "calendar.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "calendar.price",
+    "defaultMessage": "Price"
+  },
+  {
+    "id": "calendar.reserve",
+    "defaultMessage": "Reserve"
+  },
+  {
+    "id": "calendar.selectionUnavailable",
+    "defaultMessage": "Your selection contains one or more unavailable dates."
+  },
+  {
+    "id": "calendar.showPastDateSelectedError",
+    "defaultMessage": "Past dates may not be selected."
+  }
+]

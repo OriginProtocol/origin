@@ -1,0 +1,34 @@
+[
+  {
+    "id": "messages.moment.sec",
+    "defaultMessage": "Now"
+  },
+  {
+    "id": "messages.moment.seconds",
+    "defaultMessage": "s"
+  },
+  {
+    "id": "messages.moment.minutes",
+    "defaultMessage": "min"
+  },
+  {
+    "id": "messages.moment.hours",
+    "defaultMessage": "h"
+  },
+  {
+    "id": "messages.moment.days",
+    "defaultMessage": "d"
+  },
+  {
+    "id": "messages.moment.week",
+    "defaultMessage": "wk"
+  },
+  {
+    "id": "messages.moment.months",
+    "defaultMessage": "mo"
+  },
+  {
+    "id": "messages.moment.years",
+    "defaultMessage": "y"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "transaction-history.offerMade",
+    "defaultMessage": "Offer Made"
+  },
+  {
+    "id": "transaction-history.offerRejected",
+    "defaultMessage": "Offer Rejected"
+  },
+  {
+    "id": "transaction-history.offerWithdrawn",
+    "defaultMessage": "Offer Withdrawn"
+  },
+  {
+    "id": "transaction-history.offerAccepted",
+    "defaultMessage": "Offer Accepted"
+  },
+  {
+    "id": "transaction-history.offerDisputed",
+    "defaultMessage": "Dispute Started"
+  },
+  {
+    "id": "transaction-history.offerRuling",
+    "defaultMessage": "Ruling Made"
+  },
+  {
+    "id": "transaction-history.saleCompleted",
+    "defaultMessage": "Sale Completed"
+  },
+  {
+    "id": "transaction-history.saleReviewed",
+    "defaultMessage": "Sale Reviewed"
+  },
+  {
+    "id": "purchase-detail.txName",
+    "defaultMessage": "TxName"
+  },
+  {
+    "id": "purchase-detail.txHash",
+    "defaultMessage": "TxHash"
+  }
+]

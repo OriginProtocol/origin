@@ -1,0 +1,46 @@
+[
+  {
+    "id": "EditProfile.descriptionPlaceholder",
+    "defaultMessage": "Tell us a little something about yourself"
+  },
+  {
+    "id": "EditProfile.firstNamePlaceholder",
+    "defaultMessage": "Your First Name"
+  },
+  {
+    "id": "EditProfile.lastNamePlaceholder",
+    "defaultMessage": "Your Last Name"
+  },
+  {
+    "id": "EditProfile.editProfileHeading",
+    "defaultMessage": "Edit Profile"
+  },
+  {
+    "id": "EditProfile.firstName",
+    "defaultMessage": "First Name"
+  },
+  {
+    "id": "EditProfile.lastName",
+    "defaultMessage": "Last Name"
+  },
+  {
+    "id": "EditProfile.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "EditProfile.publicDataNotice",
+    "defaultMessage": "This information will be published on the blockchain and will be visible to everyone."
+  },
+  {
+    "id": "EditProfile.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "EditProfile.continue",
+    "defaultMessage": "Continue"
+  },
+  {
+    "id": "EditProfile.cancel",
+    "defaultMessage": "Cancel"
+  }
+]

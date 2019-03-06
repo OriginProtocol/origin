@@ -1,44 +1,31 @@
-import React from 'react'
-import TooltipTrigger from 'react-popper-tooltip'
-// Docs: https://github.com/mohsinulhaq/react-popper-tooltip#props
+import React, { Component } from 'react'
+import TooltipBS from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
-const Tooltip = ({
-  tooltip,
-  className = '',
-  children,
-  hideArrow,
-  ...props
-}) => (
-  <TooltipTrigger
-    {...props}
-    tooltip={({
-      getTooltipProps,
-      getArrowProps,
-      tooltipRef,
-      arrowRef,
-      placement
-    }) => {
-      const props = getTooltipProps({
-        ref: tooltipRef,
-        className: `tooltip bs-tooltip-${placement} fade show ${className}`
-      })
-      const arrowProps = getArrowProps({
-        ref: arrowRef,
-        'data-placement': placement,
-        className: 'arrow'
-      })
-      return (
-        <div {...props}>
-          {hideArrow ? null : <div {...arrowProps} />}
-          <div className="tooltip-inner">{tooltip}</div>
-        </div>
-      )
-    }}
-  >
-    {({ getTriggerProps, triggerRef }) =>
-      React.cloneElement(children, getTriggerProps({ ref: triggerRef }))
-    }
-  </TooltipTrigger>
-)
+let counter = 0
+
+class Tooltip extends Component {
+  constructor() {
+    super()
+    this.id = `tooltip-${counter++}`
+  }
+
+  render() {
+    const { trigger, placement, content, children, delay, triggerClass } = this.props
+    const overlay = <TooltipBS id={this.id}>{content}</TooltipBS>
+    const overlayProps = { trigger, placement, overlay, delay }
+
+    return (
+      <OverlayTrigger {...overlayProps}>
+        <a
+          href="javascript:void(0);"
+          className={triggerClass}
+        >
+          {children}
+        </a>
+      </OverlayTrigger>
+    )
+  }
+}
 
 export default Tooltip

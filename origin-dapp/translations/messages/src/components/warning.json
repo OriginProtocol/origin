@@ -1,0 +1,14 @@
+[
+  {
+    "id": "warning.desktopMessage",
+    "defaultMessage": "You're currently using {title} Beta on {networkType}."
+  },
+  {
+    "id": "warning.mobileMessage",
+    "defaultMessage": "Welcome to {title} Beta!"
+  },
+  {
+    "id": "warning.invitation",
+    "defaultMessage": "Found a bug or have feedback? Send an email to {email}, open an issue on {github}, or post in our #bug-reports channel on {discord}."
+  }
+]

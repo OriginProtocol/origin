@@ -1,0 +1,86 @@
+[
+  {
+    "id": "schema.announcements.title",
+    "defaultMessage": "Title"
+  },
+  {
+    "id": "schema.announcements.examples",
+    "defaultMessage": "Examples"
+  },
+  {
+    "id": "schema.announcements.category",
+    "defaultMessage": "Category"
+  },
+  {
+    "id": "schema.announcements.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "schema.announcements.priceInETH",
+    "defaultMessage": "Price in ETH"
+  },
+  {
+    "id": "schema.announcements.selectPhotos",
+    "defaultMessage": "Select photos"
+  },
+  {
+    "id": "schema.announcements.activities",
+    "defaultMessage": "Activities"
+  },
+  {
+    "id": "schema.announcements.artists",
+    "defaultMessage": "Artists"
+  },
+  {
+    "id": "schema.announcements.childcare",
+    "defaultMessage": "Childcare"
+  },
+  {
+    "id": "schema.announcements.classes",
+    "defaultMessage": "Classes"
+  },
+  {
+    "id": "schema.announcements.general",
+    "defaultMessage": "General"
+  },
+  {
+    "id": "schema.announcements.groups",
+    "defaultMessage": "Groups"
+  },
+  {
+    "id": "schema.announcements.localNews",
+    "defaultMessage": "Local News"
+  },
+  {
+    "id": "schema.announcements.lostFound",
+    "defaultMessage": "Lost & Found"
+  },
+  {
+    "id": "schema.announcements.musicians",
+    "defaultMessage": "Musicians"
+  },
+  {
+    "id": "schema.announcements.other",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "schema.announcements.personals",
+    "defaultMessage": "Personals"
+  },
+  {
+    "id": "schema.announcements.pets",
+    "defaultMessage": "Pets"
+  },
+  {
+    "id": "schema.announcements.politics",
+    "defaultMessage": "Politics"
+  },
+  {
+    "id": "schema.announcements.resumes",
+    "defaultMessage": "Resumes"
+  },
+  {
+    "id": "schema.announcements.volunteers",
+    "defaultMessage": "Volunteers"
+  }
+]
