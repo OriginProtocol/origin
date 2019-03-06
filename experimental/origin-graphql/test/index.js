@@ -448,11 +448,10 @@ describe('Marketplace', function() {
         query: queries.GetListing,
         variables: { id: '999-000-2' }
       })
-
-      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
-      assert.strictEqual(unitsSold, 2)
-      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
-      assert.strictEqual(unitsAvailable, 2)
+      const listing = get(res, 'data.marketplace.listing', {})
+      assert.strictEqual(listing.unitsPending, 2)
+      assert.strictEqual(listing.unitsSold, 0)
+      assert.strictEqual(listing.unitsAvailable, 2)
     })
 
     it('should create third offer with no commission', async function() {
@@ -482,11 +481,10 @@ describe('Marketplace', function() {
         query: queries.GetListing,
         variables: { id: '999-000-2' }
       })
-
-      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
-      assert.strictEqual(unitsSold, 4)
-      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
-      assert.strictEqual(unitsAvailable, 0)
+      const listing = get(res, 'data.marketplace.listing', {})
+      assert.strictEqual(listing.unitsPending, 4)
+      assert.strictEqual(listing.unitsSold, 0)
+      assert.strictEqual(listing.unitsAvailable, 0)
     })
 
     it('should withdraw first offer', async function() {
@@ -501,16 +499,15 @@ describe('Marketplace', function() {
       assert(events.OfferWithdrawn)
     })
 
-    it('should not count withdrawn offer as units sold', async function() {
+    it('should not count withdrawn offer as units pending', async function() {
       const res = await client.query({
         query: queries.GetListing,
         variables: { id: '999-000-2' }
       })
 
-      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
-      assert.strictEqual(unitsSold, 3)
-      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
-      assert.strictEqual(unitsAvailable, 1)
+      const listing = get(res, 'data.marketplace.listing', {})
+      assert.strictEqual(listing.unitsPending, 3)
+      assert.strictEqual(listing.unitsAvailable, 1)
     })
 
     it('should refuse to decrease total units below units sold', async function() {
@@ -530,7 +527,7 @@ describe('Marketplace', function() {
         ),
         {
           message:
-            'GraphQL error: New unitsTotal is lower than units already sold'
+            'GraphQL error: New unitsTotal is lower than units pending sale'
         }
       )
     })
@@ -554,24 +551,21 @@ describe('Marketplace', function() {
         variables: { id: '999-000-2' }
       })
 
-      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
-      assert.strictEqual(unitsSold, 1)
-      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
-      assert.strictEqual(unitsAvailable, 3)
+      const listing = get(res, 'data.marketplace.listing', {})
+      assert.strictEqual(listing.unitsPending, 1)
+      assert.strictEqual(listing.unitsAvailable, 3)
     })
 
     it('should finalize the second offer', async function() {
-      it('should allow an offer to be finalized', async function() {
-        const events = await mutate(
-          mutations.FinalizeOffer,
-          {
-            offerID: '999-000-2-1',
-            from: Buyer
-          },
-          true
-        )
-        assert(events.OfferFinalized)
-      })
+      const events = await mutate(
+        mutations.FinalizeOffer,
+        {
+          offerID: '999-000-2-1',
+          from: Buyer
+        },
+        true
+      )
+      assert(events.OfferFinalized)
     })
 
     it('should count units sold and available', async function() {
@@ -580,10 +574,10 @@ describe('Marketplace', function() {
         variables: { id: '999-000-2' }
       })
 
-      const unitsSold = get(res, 'data.marketplace.listing.unitsSold')
-      assert.strictEqual(unitsSold, 1)
-      const unitsAvailable = get(res, 'data.marketplace.listing.unitsAvailable')
-      assert.strictEqual(unitsAvailable, 3)
+      const listing = get(res, 'data.marketplace.listing', {})
+      assert.strictEqual(listing.unitsPending, 0)
+      assert.strictEqual(listing.unitsSold, 1)
+      assert.strictEqual(listing.unitsAvailable, 3)
     })
 
     it('should decrease unitsTotal', async function() {

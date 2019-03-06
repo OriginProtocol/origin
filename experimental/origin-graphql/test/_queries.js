@@ -75,7 +75,6 @@ const GetListing = gql`
           createdEvent {
             timestamp
           }
-
           category
           categoryStr
           subCategory
@@ -99,6 +98,7 @@ const GetListing = gql`
         ... on UnitListing {
           unitsTotal
           unitsAvailable
+          unitsPending
           unitsSold
         }
         ... on FractionalListing {

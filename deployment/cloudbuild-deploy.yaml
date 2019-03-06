@@ -1,6 +1,5 @@
 ---
 steps:
-  # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
@@ -19,7 +18,7 @@ steps:
             ;;
         esac
 
-  # Decrypt the secrets file for the current namespace
+  # Add encrypted secrets and private code
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
@@ -32,6 +31,13 @@ steps:
           --location=global \
           --keyring=origin \
           --key=cloudbuild
+        # Checkout private fraud code if deploying origin-growth
+        if [ "${_CONTAINER}" = "origin-growth" ]; then
+          echo "Cloning origin-fraud"
+          gcloud source repos clone origin-fraud --project=origin-214503
+          mv ./origin-fraud/prod.js ./origin-growth/src/fraud/
+          rm -rf origin-fraud
+        fi
 
   # Decrypt the file containing the SSH key for GitHub
   - name: 'gcr.io/cloud-builders/gcloud'

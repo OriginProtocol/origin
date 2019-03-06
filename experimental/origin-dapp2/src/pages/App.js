@@ -25,6 +25,7 @@ import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
+import GrowthInvite from './growth/Invite'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -43,15 +44,15 @@ class App extends Component {
     }
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true }
+  static getDerivedStateFromError(err) {
+    return { hasError: true, err }
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <div className="app-spinner">
-          <h5>Error!</h5>
+          <h5 onClick={() => alert(this.state.err)}>Error!</h5>
           <div>Please refresh the page</div>
         </div>
       )
@@ -98,7 +99,10 @@ class App extends Component {
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/tokens" component={AboutToken} />
             {enableGrowth && (
-              <Route path="/campaigns" component={GrowthCampaigns} />
+              <Route exact path="/campaigns" component={GrowthCampaigns} />
+            )}
+            {enableGrowth && (
+              <Route exact path="/campaigns/invite" component={GrowthInvite} />
             )}
             {enableGrowth && (
               <Route path="/welcome" component={GrowthWelcome} />

@@ -90,14 +90,21 @@ const Denied = () => (
 )
 
 class OnboardNotifications extends Component {
-  state = { permission: Notification.permission }
+  state = {
+    permission:
+      typeof Notification === 'undefined'
+        ? 'unavailable'
+        : Notification.permission
+  }
   render() {
     const { listing } = this.props
     const linkPrefix = listing ? `/listing/${listing.id}` : ''
     const nextLink = `${linkPrefix}/onboard/profile`
+    if (this.state.redirect || this.state.permission === 'unavailable') {
+      return <Redirect to={nextLink} />
+    }
     return (
       <>
-        {this.state.redirect && <Redirect to={nextLink} />}
         <div className="step">Step 3</div>
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
@@ -197,6 +204,7 @@ class OnboardNotifications extends Component {
   }
 
   requestPermission() {
+    if (typeof Notification == 'undefined') return
     this.setState({ permissionRequested: true, shouldClose: true })
     Notification.requestPermission().then(permission => {
       this.setState({ permission })

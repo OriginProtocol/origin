@@ -2,11 +2,25 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
+const {
+  authenticateEnrollment,
+  getUserAuthenticationStatus
+} = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
 const { sendInviteEmails } = require('../resources/email')
+const enums = require('../enums')
 const logger = require('../logger')
+
+const requireEnrolledUser = context => {
+  if (
+    context.authentication !==
+    enums.GrowthParticipantAuthenticationStatus.Enrolled
+  ) {
+    throw new Error('User not authenticated!')
+  }
+}
 
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
@@ -26,7 +40,8 @@ const resolvers = {
     }
   },
   Query: {
-    async campaigns(_, args) {
+    async campaigns(_, args, context) {
+      requireEnrolledUser(context)
       const campaigns = await GrowthCampaign.getAll()
       return {
         totalCount: campaigns.length,
@@ -42,11 +57,14 @@ const resolvers = {
         }
       }
     },
-    async campaign(root, args) {
+    async campaign(root, args, context) {
+      requireEnrolledUser(context)
+
       const campaign = await GrowthCampaign.get(args.id)
       return await campaignToApolloObject(campaign, args.walletAddress)
     },
-    async inviteInfo(root, args) {
+    async inviteInfo(root, args, context) {
+      requireEnrolledUser(context)
       return await GrowthInvite.getReferrerInfo(args.code)
     },
     async isEligible(obj, args, context) {
@@ -59,6 +77,8 @@ const resolvers = {
       }
 
       const locationInfo = getLocationInfo(context.countryCode)
+      logger.debug('Location info received:', JSON.stringify(locationInfo))
+
       if (!locationInfo) {
         return {
           eligibility: 'Unknown',
@@ -67,30 +87,50 @@ const resolvers = {
         }
       }
       let eligibility = 'Eligible'
-      if (locationInfo.isForbidden) eligibility = 'Forbidden'
-      else if (locationInfo.isRestricted) eligibility = 'Restricted'
+      if (locationInfo.isForbidden) {
+        eligibility = 'Forbidden'
+      } else if (locationInfo.isRestricted) {
+        eligibility = 'Restricted'
+      }
 
       return {
         eligibility: eligibility,
         countryName: locationInfo.countryName,
         countryCode: locationInfo.countryCode
       }
+    },
+    async enrollmentStatus(_, args, context) {
+      return await getUserAuthenticationStatus(
+        context.authToken,
+        args.walletAddress
+      )
     }
   },
   Mutation: {
     // Sends email invites with referral code on behalf of the referrer.
-    async invite(root, args) {
+    async invite(_, args, context) {
+      requireEnrolledUser(context)
+
       logger.info('invite mutation called.')
       // FIXME:
-      //  a. Check the referrer against Auth token.
       //  b. Implement rate limiting to avoid spam attack.
       await sendInviteEmails(args.walletAddress, args.emails)
       return true
     },
-    enroll() {
-      // TODO: implement
-      logger.info('enroll mutation called.')
-      return true
+    async enroll(_, args) {
+      try {
+        return {
+          authToken: await authenticateEnrollment(
+            args.accountId,
+            args.agreementMessage,
+            args.signature
+          )
+        }
+      } catch (e) {
+        return {
+          error: 'Can not authenticate user'
+        }
+      }
     },
     log() {
       // TODO: implement

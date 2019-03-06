@@ -4,12 +4,14 @@ import get from 'lodash/get'
 
 import ImageCropper from 'components/ImageCropper'
 import Steps from 'components/Steps'
+import Link from 'components/Link'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withEthBalance from 'hoc/withEthBalance'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -63,6 +65,8 @@ class OnboardProfile extends Component {
     const { listing } = this.props
     const { avatar } = this.state
 
+    const linkPrefix = listing ? `/listing/${listing.id}` : ''
+
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -72,6 +76,8 @@ class OnboardProfile extends Component {
       return m
     }, [])
 
+    const hasBalance = Number(this.props.ethBalance || 0) > 0
+
     return (
       <>
         <div className="step">Step 4</div>
@@ -79,87 +85,103 @@ class OnboardProfile extends Component {
         <div className="row">
           <div className="col-md-8">
             <Steps steps={4} step={4} />
-            <div className="onboard-box pt-3">
+            <div className="onboard-box profile pt-3">
               <form
-                className="profile"
                 onSubmit={e => {
                   e.preventDefault()
                   this.validate()
                 }}
               >
-                <div className="row">
-                  <div className="col-4">
-                    <ImageCropper onChange={a => this.setState({ avatar: a })}>
-                      <Avatar className="with-cam" avatar={avatar} />
-                    </ImageCropper>
-                  </div>
-                  <div className="col-8">
-                    <div className="row">
-                      <div className="form-group col-6">
-                        <label>First Name</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          {...input('firstName')}
-                        />
-                        {Feedback('firstName')}
-                      </div>
-                      <div className="form-group col-6">
-                        <label>Last Name</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          {...input('lastName')}
-                        />
-                        {Feedback('lastName')}
+                <div className={hasBalance ? null : 'mask'}>
+                  <div className="row">
+                    <div className="col-md-4">
+                      <div className="avatar-wrap">
+                        <ImageCropper
+                          onChange={a => this.setState({ avatar: a })}
+                        >
+                          <Avatar className="with-cam" avatar={avatar} />
+                        </ImageCropper>
                       </div>
                     </div>
-                    <div className="form-group">
-                      <label>Description</label>
-                      <textarea
-                        className="form-control"
-                        placeholder="Tell us a bit about yourself"
-                        {...input('description')}
-                      />
-                      {Feedback('description')}
+                    <div className="col-md-8">
+                      <div className="row">
+                        <div className="form-group col-md-6">
+                          <label>First Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            {...input('firstName')}
+                          />
+                          {Feedback('firstName')}
+                        </div>
+                        <div className="form-group col-md-6">
+                          <label>Last Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            {...input('lastName')}
+                          />
+                          {Feedback('lastName')}
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label>Description</label>
+                        <textarea
+                          className="form-control"
+                          placeholder="Tell us a bit about yourself"
+                          {...input('description')}
+                        />
+                        {Feedback('description')}
+                      </div>
                     </div>
                   </div>
+
+                  <label className="mt-3">Attestations</label>
+                  <div className="profile-attestations with-checkmarks">
+                    {this.renderAtt('phone', 'Phone Number')}
+                    {this.renderAtt('email', 'Email')}
+                    {this.renderAtt('airbnb', 'Airbnb')}
+                    {this.renderAtt('facebook', 'Facebook')}
+                    {this.renderAtt('twitter', 'Twitter')}
+                    {this.renderAtt('google', 'Google', true)}
+                  </div>
+
+                  <ProfileStrength
+                    published={get(this.props, 'identity.strength', 0)}
+                    unpublished={unpublishedProfileStrength(this)}
+                  />
                 </div>
 
-                <label className="mt-3">Attestations</label>
-                <div className="profile-attestations with-checkmarks">
-                  {this.renderAtt('phone', 'Phone Number')}
-                  {this.renderAtt('email', 'Email')}
-                  {this.renderAtt('airbnb', 'Airbnb')}
-                  {this.renderAtt('facebook', 'Facebook')}
-                  {this.renderAtt('twitter', 'Twitter')}
-                  {this.renderAtt('google', 'Google', true)}
-                </div>
-
-                <ProfileStrength
-                  published={get(this.props, 'identity.strength', 0)}
-                  unpublished={unpublishedProfileStrength(this)}
-                />
-
-                {/* <div className="no-funds">
-                  <h5>You don&apos;t have funds</h5>
-                  You need to have funds in your wallet to create an
-                  identity. You can always do this later after you fund
-                  your wallet by going to your settings.
-                </div> */}
+                {hasBalance ? null : (
+                  <div className="no-funds">
+                    <h5>You don&apos;t have funds</h5>
+                    You need to have funds in your wallet to create an identity.
+                    You can always do this later after you fund your wallet by
+                    going to your settings.
+                  </div>
+                )}
               </form>
-              <DeployIdentity
-                className="btn btn-primary"
-                identity={get(this.props, 'identity.id')}
-                profile={pick(this.state, [
-                  'firstName',
-                  'lastName',
-                  'description',
-                  'avatar'
-                ])}
-                attestations={attestations}
-                validate={() => this.validate()}
-                children="Publish"
+              {!hasBalance ? null : (
+                <DeployIdentity
+                  className="btn btn-primary"
+                  identity={get(this.props, 'identity.id')}
+                  profile={pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatar'
+                  ])}
+                  attestations={attestations}
+                  validate={() => this.validate()}
+                  children="Publish"
+                />
+              )}
+            </div>
+            <div className="continue-btn">
+              <Link
+                to={`${linkPrefix}/onboard/back`}
+                className={`btn btn-outline-primary`}
+                children={hasBalance ? 'Done' : 'Skip for now'}
               />
             </div>
           </div>
@@ -232,36 +254,49 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(OnboardProfile))
+export default withWallet(withEthBalance(withIdentity(OnboardProfile)))
 
 require('react-styl')(`
-  .onboard .onboard-box
+  .onboard .onboard-box.profile
+    padding: 1rem
+    .mask
+      position: relative
+      &::after
+        content: ""
+        position: absolute
+        background: rgba(255,255,255,0.6)
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
     .no-funds
       background-color: rgba(244, 193, 16, 0.1)
       border: 1px solid var(--golden-rod)
       border-radius: var(--default-radius)
-      padding: 2rem 2rem 2rem 5rem
+      padding: 1.6rem 2rem 2rem 5rem
       position: relative
       &::before
         content: ""
-        background-color: var(--steel);
-        border-radius: 2rem;
-        width: 3rem;
-        height: 3rem;
-        position: absolute;
-        left: 1rem;
-        top: 1rem;
+        background-color: var(--steel)
+        border-radius: 2rem
+        width: 3rem
+        height: 3rem
+        position: absolute
+        left: 1rem
+        top: 1rem
       h5
-        font-family: var(--heading-font);
-        font-size: 24px;
-        font-weight: 200;
+        font-family: var(--heading-font)
+        font-size: 24px
+        font-weight: 200
     .avatar
       border-radius: 1rem
 
-    form.profile
+    > form
       text-align: left
-      margin-top: 1rem
       width: 100%
+      .image-cropper
+        max-width: 10rem
+        margin: 0 auto 1rem auto
       label
         font-weight: normal
         color: black
@@ -364,7 +399,6 @@ require('react-styl')(`
         border-color: var(--greenblue)
         > i
           background-image: url(images/identity/verification-shape-green.svg)
-
 
   .profile-attestations.with-checkmarks
     .profile-attestation

@@ -121,7 +121,7 @@ class OnboardMessaging extends Component {
             return <MessagingInitializing />
           } else if (error) {
             return <p className="p-3">Error :(</p>
-          } else if (!data || !data.web3) {
+          } else if (!data || !data.messaging) {
             return <p className="p-3">No Web3</p>
           }
 

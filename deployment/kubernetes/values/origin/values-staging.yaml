@@ -66,3 +66,7 @@ creatorIssuerIp: '35.233.135.239'
 # origin-linking
 linkingImage: origin-linking
 linkingImageTag: '60a88bb'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'latest'
