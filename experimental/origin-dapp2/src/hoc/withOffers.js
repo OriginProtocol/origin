@@ -2,11 +2,9 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import pick from 'lodash/pick'
-import find from 'lodash/find'
 import isNil from 'lodash/isNil'
 import flatten from 'lodash/flatten'
 
-import PurchaseQuery from 'queries/Purchases'
 import SalesQuery from 'queries/Sales'
 import eventKeys from 'constants/offerEvents'
 
@@ -41,8 +39,7 @@ function withOffers(WrappedComponent, walletProp = 'wallet') {
                   {
                     offerEvent: offerEvents[value],
                     offerTitle: value,
-                    ...offerProps,
-                    address: get(offer, 'listing.seller.id')
+                    ...offerProps
                   }
                 ]
               return result

@@ -85,16 +85,8 @@ const Message = props => {
     showTailAndAvatar
   )
 
-  if (message.offerTitle) {
-    return (
-      <TransactionMessage
-        message={message}
-        identity={identity}
-        userName={userName}
-        wallet={props.wallet}
-      />
-    )
-  }
+  if (message.offerTitle) return <TransactionMessage message={message} />
+
   return (
     <>
       {showTime && (

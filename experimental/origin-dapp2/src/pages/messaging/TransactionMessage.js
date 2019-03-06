@@ -19,13 +19,12 @@ function withdrawnOrRejected(buyer, seller, withdrawnBy) {
 }
 
 const TransactionMessage = props => {
-  const { identity, message, userAddress } = props
+  const { message } = props
   const listingTitle = get(message, 'listing.title')
   const offerTitle = get(message, 'offerTitle')
   const buyer = get(message, 'buyer.id')
   const seller = get(message, 'listing.seller.id')
-  const user = get(message, 'address')
-  const roomParticipant = user === buyer || user === seller
+
   const date = dayjs.unix(message.timestamp).format('MMM Do h:mmA')
   const withdrawnBy = get(message, 'withdrawnBy.id')
   const arbitrator = get(message, 'listing.arbitrator.id')
@@ -67,7 +66,7 @@ const TransactionMessage = props => {
     )
   }
 
-  if (!roomParticipant || !message) return null
+  if (!message) return null
 
   return <div className="transaction-message">{offerMessages[offerTitle]}</div>
 }
