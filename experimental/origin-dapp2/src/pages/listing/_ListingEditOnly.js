@@ -46,7 +46,6 @@ require('react-styl')(`
       margin-bottom: 16px
       .row
         div:nth-child(1)
-          width: auto
           flex: 1
           padding-left: 16px
         div:nth-child(2)
