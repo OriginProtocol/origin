@@ -61,8 +61,6 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     authToken: authToken
   }
 
-  console.log("PARTICIPANT DATA: ", JSON.stringify(participantData))
-
   if (participant !== null) {
     await participant.update(participantData)
     logger.info(`Existing user enrolled into growth campaign: ${accountId}`)
