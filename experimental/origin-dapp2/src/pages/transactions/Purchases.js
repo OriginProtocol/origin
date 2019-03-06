@@ -12,6 +12,7 @@ import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
+import Pic from './_Pic'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Purchases'
@@ -27,12 +28,12 @@ class Purchases extends Component {
     }
 
     return (
-      <div className="container purchases">
+      <div className="container transactions">
         <PageTitle>My Purchases</PageTitle>
         <h1>My Purchases</h1>
         <div className="row">
           <div className="col-md-3">
-            <ul className="nav nav-pills flex-column">
+            <ul className="nav nav-pills">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-purchases" exact>
                   Pending
@@ -86,16 +87,7 @@ class Purchases extends Component {
                           className="purchase"
                           key={`${listing.id}-${offer.id}`}
                         >
-                          {listing.media && listing.media.length ? (
-                            <div
-                              className="main-pic"
-                              style={{
-                                backgroundImage: `url(${
-                                  listing.media[0].urlExpanded
-                                })`
-                              }}
-                            />
-                          ) : null}
+                          <Pic listing={listing} />
                           <div className="details">
                             <div className="top">
                               <div className="category">
@@ -157,25 +149,36 @@ const NoPurchases = () => (
 export default withWallet(Purchases)
 
 require('react-styl')(`
-  .purchases
+  .transactions
     padding-top: 3rem
-    .nav-pills .nav-link
-      color: var(--dark-grey-blue)
-      &.active
-        background-color: var(--dark-grey-blue)
-        color: var(--white)
+    .nav-pills
+      margin-bottom: 2rem
+      flex-direction: column
+      .nav-link
+        color: var(--dark-grey-blue)
+        &.active
+          background-color: var(--dark-grey-blue)
+          color: var(--white)
     .purchase
       border: 1px solid var(--pale-grey-two);
       border-radius: var(--default-radius);
       padding: 0.5rem;
       display: flex
       margin-bottom: 1rem
-      .main-pic
-        width: 360px
+      .main-pic-wrap
+        width: 100%
+        max-width: 300px
         margin-right: 1rem
-        background-size: contain
+      .main-pic
+        width: 100%
+        padding-top: 66.6%
+        background-size: cover
         background-repeat: no-repeat
-        height: 260px
+        background-position: center top
+        &.empty
+          background: var(--light) url(images/default-image.svg)
+          background-repeat: no-repeat
+          background-position: center
       .details
         flex: 1
         display: flex
@@ -210,4 +213,21 @@ require('react-styl')(`
         font-weight: normal
         > a
           margin-right: 1rem
+
+  @media (max-width: 767.98px)
+    .transactions
+      padding-top: 2rem
+      h1
+        font-size: 32px
+        margin-bottom: 1rem
+        line-height: 1.25
+      .nav-pills
+        flex-direction: row
+        .nav-item
+          flex: 1
+          text-align: center
+      .purchase
+        flex-direction: column
+        .main-pic-wrap
+          margin: 0 auto 1rem auto
 `)

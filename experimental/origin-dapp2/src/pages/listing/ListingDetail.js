@@ -13,6 +13,7 @@ import Category from 'components/Category'
 import Sold from './_ListingSold'
 import Pending from './_ListingPending'
 import EditOnly from './_ListingEditOnly'
+import OfferMade from './_ListingOfferMade'
 import SingleUnit from './_BuySingleUnit'
 import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
@@ -119,6 +120,9 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
+    const isPendingBuyer = listing.pendingBuyers.some(
+      b => b.id === this.props.from
+    )
 
     if (listing.seller.id === this.props.from) {
       return (
@@ -132,6 +136,8 @@ class ListingDetail extends Component {
       return null
     } else if (listing.status === 'sold') {
       return <Sold />
+    } else if (isPendingBuyer) {
+      return <OfferMade />
     } else if (listing.status === 'pending') {
       return <Pending />
     } else if (isFractional) {
