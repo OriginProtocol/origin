@@ -24,7 +24,7 @@ function Action(props) {
   const formatTokens = tokenAmount => {
     return web3.utils
       .toBN(tokenAmount)
-      .div(props.decimalDevision)
+      .div(props.decimalDivision)
       .toString()
   }
 

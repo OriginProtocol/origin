@@ -133,7 +133,7 @@ function ActionList(props) {
           return (
             <Action
               action={action}
-              decimalDevision={props.decimalDevision}
+              decimalDivision={props.decimalDivision}
               key={`${action.type}:${action.status}`}
               handleNavigationChange={props.handleNavigationChange}
               setReferralAction={props.setReferralAction}
@@ -148,10 +148,9 @@ function ActionList(props) {
 function Campaign(props) {
   const {
     campaign,
-    accountId,
     handleNavigationChange,
     setReferralAction,
-    decimalDevision
+    decimalDivision
   } = props
 
   const {
@@ -179,7 +178,7 @@ function Campaign(props) {
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
-    .div(decimalDevision)
+    .div(decimalDivision)
   const tokenEarnProgress = Math.min(100, tokensEarned.toString())
 
   const actionCompleted = action => {
@@ -222,7 +221,7 @@ function Campaign(props) {
       {status === 'Active' && nonCompletedActions.length > 0 && (
         <ActionList
           actions={nonCompletedActions}
-          decimalDevision={decimalDevision}
+          decimalDivision={decimalDivision}
           handleNavigationChange={handleNavigationChange}
           setReferralAction={setReferralAction}
         />
@@ -231,7 +230,7 @@ function Campaign(props) {
         <ActionList
           title="Completed"
           actions={completedActions}
-          decimalDevision={decimalDevision}
+          decimalDivision={decimalDivision}
         />
       )}
     </Fragment>
@@ -341,12 +340,14 @@ class GrowthCampaigns extends Component {
                             variables={{ account: accountId, token: 'OGN' }}
                           >
                             {({ loading, error, data }) => {
-                              let decimalDevision = web3.utils.toBN(18)
+                              let decimalDivision = web3.utils
+                                .toBN(10)
+                                .pow(web3.utils.toBN(18))
 
                               if (!loading && !error) {
                                 const tokenHolder = data.web3.account.token
                                 if (tokenHolder && tokenHolder.token) {
-                                  decimalDevision = web3.utils
+                                  decimalDivision = web3.utils
                                     .toBN(10)
                                     .pow(
                                       web3.utils.toBN(
@@ -380,7 +381,7 @@ class GrowthCampaigns extends Component {
                                         setReferralAction={action =>
                                           this.setReferralAction(action)
                                         }
-                                        decimalDevision={decimalDevision}
+                                        decimalDivision={decimalDivision}
                                       />
                                     </Fragment>
                                   )}
@@ -390,7 +391,7 @@ class GrowthCampaigns extends Component {
                                         this.handleNavigationChange(navigation)
                                       }
                                       referralAction={referralAction}
-                                      decimalDevision={decimalDevision}
+                                      decimalDivision={decimalDivision}
                                     />
                                   )}
                                 </Fragment>

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import Link from 'components/Link'
 import { Query, Mutation } from 'react-apollo'
+import QueryError from 'components/QueryError'
 import inviteCodeQuery from 'queries/InviteCode'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import InviteFriends from 'mutations/InviteFriends'
@@ -246,7 +246,7 @@ class GrowthInvite extends Component {
 
     const emails = this.extractEmails(this.state.inviteEmails)
 
-    var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const errorneousEmails = emails.filter(email => !emailRegex.test(email))
 
     if (errorneousEmails.length > 0) {
@@ -274,7 +274,7 @@ class GrowthInvite extends Component {
     const formatTokens = tokenAmount => {
       return web3.utils
         .toBN(tokenAmount)
-        .div(this.props.decimalDevision)
+        .div(this.props.decimalDivision)
         .toString()
     }
 
@@ -320,12 +320,12 @@ class GrowthInvite extends Component {
               <div className="col-2 p-0">Reward</div>
               <div className="col-6 p-0">{showStatus ? 'Status' : ''}</div>
             </div>
-            {invites.map(invite => {
+            {invites.map((invite, index) => {
               const name = invite.contactName
                 ? invite.contactName
                 : invite.walletAddress
               return (
-                <div className="invite-row d-flex pt-2 pb-2">
+                <div className="invite-row d-flex pt-2 pb-2" key={index}>
                   <div className="col-4 p-0 d-flex align-items-center">
                     <div className="name">{name}</div>
                   </div>
