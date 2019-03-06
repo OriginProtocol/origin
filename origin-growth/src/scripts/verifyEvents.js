@@ -12,6 +12,15 @@ const parseArgv = require('../util/args')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('verifyEvents', { showTimestamp: false })
 
+let FraudEngine
+if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_FRAUD) {
+  FraudEngine = require('../fraud/prod')
+  logger.info('Loaded PROD fraud engine.')
+} else {
+  FraudEngine = require('../fraud/dev')
+  logger.info('Loaded DEV fraud engine.')
+}
+
 class VerifyEvents {
   constructor(config) {
     this.config = config
@@ -20,15 +29,12 @@ class VerifyEvents {
       numVerified: 0,
       numFraud: 0
     }
-  }
-
-  // TODO(franck): IMPLEMENT ME
-  _isFraud(event) {
-    logger.debug(`Checking fraud for event ${event.id}`)
-    return false
+    this.fraudEngine = new FraudEngine()
   }
 
   async process() {
+    await this.fraudEngine.init()
+
     // Look for events with status 'Logged'.
     // TODO(franck): consider some delay before processing events to allow
     // for more efficient fraud detection ?
@@ -38,7 +44,7 @@ class VerifyEvents {
 
     for (const event of events) {
       let status
-      if (this._isFraud(event)) {
+      if (await this.fraudEngine.isFraudEvent(event)) {
         status = enums.GrowthEventStatuses.Fraud
         this.stats.numFraud++
       } else {
@@ -55,39 +61,43 @@ class VerifyEvents {
   }
 }
 
+module.exports = VerifyEvents
+
 /**
  * MAIN
  */
-logger.info('Starting events verification job.')
+if (require.main === module) {
+  logger.info('Starting events verification job.')
 
-const args = parseArgv()
-const config = {
-  // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] ? args['--persist'] : false
+  const args = parseArgv()
+  const config = {
+    // By default run in dry-run mode unless explicitly specified using persist.
+    persist: args['--persist'] ? args['--persist'] : false
+  }
+  logger.info('Config:')
+  logger.info(config)
+
+  const job = new VerifyEvents(config)
+
+  job
+    .process()
+    .then(() => {
+      logger.info('Events verification stats:')
+      logger.info(
+        '  Number of events processed:          ',
+        job.stats.numProcessed
+      )
+      logger.info(
+        '  Number of events marked as verified :',
+        job.stats.numVerified
+      )
+      logger.info('  Number of events marked as fraud    :', job.stats.numFraud)
+      logger.info('Finished')
+      process.exit()
+    })
+    .catch(err => {
+      logger.error('Job failed: ', err)
+      logger.error('Exiting')
+      process.exit(-1)
+    })
 }
-logger.info('Config:')
-logger.info(config)
-
-const job = new VerifyEvents(config)
-
-job
-  .process()
-  .then(() => {
-    logger.info('Events verification stats:')
-    logger.info(
-      '  Number of events processed:          ',
-      job.stats.numProcessed
-    )
-    logger.info(
-      '  Number of events marked as verified :',
-      job.stats.numVerified
-    )
-    logger.info('  Number of events marked as fraud    :', job.stats.numFraud)
-    logger.info('Finished')
-    process.exit()
-  })
-  .catch(err => {
-    logger.error('Job failed: ', err)
-    logger.error('Exiting')
-    process.exit(-1)
-  })

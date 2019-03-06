@@ -160,7 +160,7 @@ class Messaging {
 
   registerWalletLinker() {
     const walletLinker = this.contractService.walletLinker
-    if(walletLinker) 
+    if(walletLinker)
     {
       walletLinker.registerCallback('messaging', this.onPreGenKeys.bind(this))
     }
