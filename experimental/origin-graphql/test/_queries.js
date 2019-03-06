@@ -98,6 +98,7 @@ const GetListing = gql`
         ... on UnitListing {
           unitsTotal
           unitsAvailable
+          unitsPending
           unitsSold
         }
         ... on FractionalListing {

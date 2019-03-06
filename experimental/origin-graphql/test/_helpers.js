@@ -38,7 +38,7 @@ export async function mutate(mutation, variables, getEvents) {
   // Produce a nice object in the following format:
   // { event1Name: { param1: value, param2: value }, event2Name: { param1: value } }
   const res = events.reduce((m, o) => {
-    m[o.event] = o.returnValuesArr.reduce((am, ao) => {
+    m[o.event] = (o.returnValuesArr || []).reduce((am, ao) => {
       am[ao.field] = ao.value
       return am
     }, {})
