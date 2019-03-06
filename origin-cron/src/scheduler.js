@@ -4,10 +4,16 @@ const path = require('path')
 const Queue = require('bull')
 const logger = require('./logger')
 
+require('dotenv').config()
+try {
+  require('envkey')
+  logger.info('Envkey configured')
+} catch (error) {
+  logger.error('EnvKey not configured')
+}
+
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379'
 
-const growthVerifyEventQueue = new Queue('growthVerifyEvent', redisUrl)
-const growthUpdateCampaignQueue = new Queue('growthUpdateCampaign', redisUrl)
 
 /**
  * Helper function to log events emitted by a queue.
@@ -75,18 +81,24 @@ logger.info('Starting cron scheduler loop.')
 
 const jobsPath = path.dirname(__filename) + '/jobs/'
 
+const growthVerifyEventsQueue = new Queue('growthVerifyEvents', redisUrl)
+const growthUpdateCampaignsQueue = new Queue('growthUpdateCampaigns', redisUrl)
+
 // Growth verifier job. Runs daily at 20:00UTC (~noon PST).
-watch(growthVerifyEventQueue)
-growthVerifyEventQueue.process(jobsPath + 'growthVerifyEvents.js')
-growthVerifyEventQueue.add(
+watch(growthVerifyEventsQueue)
+growthVerifyEventsQueue.process(jobsPath + 'growthVerifyEvents.js')
+growthVerifyEventsQueue.add(
   { persist: false },
   { repeat: { cron: '* 20 * * *' } }
 )
+logger.info('Scheduled growthVerifyEvents job.')
 
 // Growth campaign update job. Runs daily at 20:30UTC (~12:30 PST).
-watch(growthUpdateCampaignQueue)
-growthUpdateCampaignQueue.process(jobsPath + 'growthUpdateCampaigns.js')
-growthUpdateCampaignQueue.add(
+watch(growthUpdateCampaignsQueue)
+growthUpdateCampaignsQueue.process(jobsPath + 'growthUpdateCampaigns.js')
+growthUpdateCampaignsQueue.add(
   { persist: false },
-  { repeat: { cron: '20 30 * * *' } }
+  { repeat: { cron: '30 20 * * *' } }
 )
+logger.info('Scheduled growthUpdateCampaigns job.')
+
