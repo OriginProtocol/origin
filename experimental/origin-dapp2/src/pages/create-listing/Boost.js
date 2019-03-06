@@ -105,7 +105,7 @@ class Boost extends Component {
             rewards, reputation incentives, spam prevention, developer rewards,
             and platform governance.
             <div className="mt-3">
-              <Link to="/about-tokens">Learn More</Link>
+              <Link to="/about/tokens">Learn More</Link>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ class Boost extends Component {
 
         <div className="info">
           {'Boosts are always calculated and charged in OGN. '}
-          <Link to="/about-tokens">Learn more</Link>
+          <Link to="/about/tokens">Learn more</Link>
         </div>
 
         {!isMulti && !isFractional ? null : (
