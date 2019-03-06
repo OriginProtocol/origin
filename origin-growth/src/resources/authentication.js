@@ -73,6 +73,15 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
   return authToken
 }
 
+// get user from authentication token
+async function getUser(token) {
+  return await db.GrowthParticipant.findOne({
+    where: {
+      authToken: token
+    }
+  })
+}
+
 /**
  * Fetches user's authentication status
  * @param {string} token - Growth authentication token
@@ -138,4 +147,8 @@ async function createInviteCode(accountId) {
   logger.info(`Invite code: ${code}: created for user: ${accountId}`)
 }
 
-module.exports = { authenticateEnrollment, getUserAuthenticationStatus }
+module.exports = {
+  authenticateEnrollment,
+  getUserAuthenticationStatus,
+  getUser
+}

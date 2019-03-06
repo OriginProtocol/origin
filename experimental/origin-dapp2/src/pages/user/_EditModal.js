@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
-import ImageCropper from 'components/ImageCropper'
 import Modal from 'components/Modal'
-import Avatar from 'components/Avatar'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class EditProfileModal extends Component {
   constructor(props) {
     super(props)
-    this.state = pick(props, ['firstName', 'lastName', 'description', 'avatar'])
+    this.state = pick(props, ['firstName', 'lastName', 'description'])
   }
 
   componentDidMount() {
@@ -20,7 +18,6 @@ class EditProfileModal extends Component {
   }
 
   render() {
-    const { avatar } = this.state
     const input = formInput(this.state, state => this.setState(state), 'dark')
     const Feedback = formFeedback(this.state)
 
@@ -38,12 +35,7 @@ class EditProfileModal extends Component {
         >
           <h2>Edit Profile</h2>
           <div className="row">
-            <div className="col-6">
-              <ImageCropper onChange={a => this.setState({ avatar: a })}>
-                <Avatar avatar={avatar} className="dark with-cam" />
-              </ImageCropper>
-            </div>
-            <div className="col-6">
+            <div className="col-12">
               <div className="form-group">
                 <label>First Name</label>
                 <input
@@ -81,12 +73,7 @@ class EditProfileModal extends Component {
               onClick={() => {
                 if (this.validate()) {
                   this.props.onChange(
-                    pick(this.state, [
-                      'firstName',
-                      'lastName',
-                      'description',
-                      'avatar'
-                    ])
+                    pick(this.state, ['firstName', 'lastName', 'description'])
                   )
                   this.setState({ shouldClose: true })
                 }
