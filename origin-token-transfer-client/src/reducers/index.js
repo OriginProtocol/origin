@@ -15,7 +15,7 @@ const initialState = {
 }
 
 const rootReducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case REFRESH_GRANTS:
       return { ...state, grantsVersion: state.grantsVersion + 1 }
 

@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import {
-  Button,
-  Dialog,
-  FormGroup,
-  Label
-} from '@blueprintjs/core'
+import { Button, Dialog, FormGroup, Label } from '@blueprintjs/core'
 
 import { refreshGrants, setTransferDialogOpen } from '../actions'
 import { connect } from 'react-redux'
@@ -40,20 +35,22 @@ class TransferDialog extends Component {
       address: this.state.address
     }
 
-    const postBody = new Blob(
-      [ JSON.stringify(transferRequest) ],
-      { type: 'application/json' }
-    )
-    fetch('/api/transfer', { method: 'POST', body: postBody })
-      .then((response) => {
+    const postBody = new Blob([JSON.stringify(transferRequest)], {
+      type: 'application/json'
+    })
+    fetch('/api/transfer', { method: 'POST', body: postBody }).then(
+      response => {
         if (response.ok) {
           console.log('success!')
         } else {
-          console.error(`token transfer error: ${response.status} ${response.statusText}`)
+          console.error(
+            `token transfer error: ${response.status} ${response.statusText}`
+          )
         }
         this.handleClose()
         this.props.refreshGrants()
-      })
+      }
+    )
   }
 
   handleAmountChange = event => {
@@ -69,9 +66,7 @@ class TransferDialog extends Component {
   render() {
     const { isOpen, grant } = this.props
     if (!grant) {
-      return (
-        <div></div>
-      )
+      return <div />
     }
 
     const grantDate = moment(grant.grantedAt).format('YYYY-MM-DD')
@@ -82,19 +77,19 @@ class TransferDialog extends Component {
     return (
       <Dialog onClose={this.handleClose} isOpen={isOpen} id="transferDialog">
         <div className="bp3-dialog-header">
-          <span className="bp3-icon-large bp3-icon-arrow-right"></span>
+          <span className="bp3-icon-large bp3-icon-arrow-right" />
           <h4 className="bp3-heading">Transfer Tokens</h4>
           <button
             aria-label="Close"
             className="bp3-dialog-close-button bp3-icon-small-cross"
             onClick={this.handleClose}
-            disabled={this.state.transferInProgress}></button>
+            disabled={this.state.transferInProgress}
+          />
         </div>
         <div className="bp3-dialog-body">
           You have <strong>{availableStr} OGN</strong> available to transfer
-          from your grant dated {' '} <strong>{grantDate}</strong>. How many
-          tokens would you like to transfer?
-
+          from your grant dated <strong>{grantDate}</strong>. How many tokens
+          would you like to transfer?
           <div id="transferForm">
             {/* TODO: add form validation */}
             <FormGroup>
@@ -104,7 +99,7 @@ class TransferDialog extends Component {
                 onChange={this.handleAmountChange}
                 value={amount}
                 disabled={this.state.transferInProgress}
-                />
+              />
               <Label>Address to transfer to:</Label>
               {/* TODO: add dropdown of previously used addresses */}
               <input
@@ -112,7 +107,7 @@ class TransferDialog extends Component {
                 onChange={this.handleAddressChange}
                 value={address}
                 disabled={this.state.transferInProgress}
-                />
+              />
             </FormGroup>
           </div>
         </div>
@@ -123,14 +118,17 @@ class TransferDialog extends Component {
               type="button"
               className="bp3-button"
               onClick={this.handleClose}
-              disabled={this.state.transferInProgress}>
+              disabled={this.state.transferInProgress}
+            >
               Cancel
             </button>
-            <Button type="submit"
-                    className="bp3-button bp3-intent-primary"
-                    onClick={this.handleTransfer}
-                    disabled={this.state.transferInProgress}
-                    loading={this.state.transferInProgress}>
+            <Button
+              type="submit"
+              className="bp3-button bp3-intent-primary"
+              onClick={this.handleTransfer}
+              disabled={this.state.transferInProgress}
+              loading={this.state.transferInProgress}
+            >
               Transfer
             </Button>
           </div>
@@ -150,8 +148,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     refreshGrants: () => dispatch(refreshGrants()),
-    setOpen: (open) => dispatch(setTransferDialogOpen(open))
+    setOpen: open => dispatch(setTransferDialogOpen(open))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransferDialog)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TransferDialog)

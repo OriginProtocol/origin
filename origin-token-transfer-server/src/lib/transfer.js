@@ -1,9 +1,8 @@
-
 const Token = require('origin-token/src/token')
 const { createProviders } = require('origin-token/src/config')
 
 const { GRANT_TRANSFER } = require('../constants/events')
-const { Event, Grant, sequelize  } = require('../models')
+const { Event, Grant, sequelize } = require('../models')
 /**
  * Transfers tokens for the given grant to an address. This function uses the
  * first account in the wallet.
@@ -18,24 +17,34 @@ const { Event, Grant, sequelize  } = require('../models')
  * @return {Grant} = The updated grant that was transferred from
  */
 async function transferTokens({
-  grantId, email, ip, networkId, address, amount, tokenForTests = null
+  grantId,
+  email,
+  ip,
+  networkId,
+  address,
+  amount,
+  tokenForTests = null
 }) {
-  const grant = await Grant.findOne({ where: {
-    id: grantId,
-    email: email
-  } })
+  const grant = await Grant.findOne({
+    where: {
+      id: grantId,
+      email: email
+    }
+  })
   if (!grant) {
     throw new ReferenceError(`Could not find specified grant`)
   }
 
   const available = grant.vested - grant.transferred
   if (amount > available) {
-    throw new RangeError(`Amount of ${amount} OGN exceeds the ${available} OGN available for the grant`)
+    throw new RangeError(
+      `Amount of ${amount} OGN exceeds the ${available} OGN available for the grant`
+    )
   }
 
   // Setup token library
   const config = {
-    providers: createProviders([ networkId ])
+    providers: createProviders([networkId])
   }
   const token = tokenForTests || new Token(config)
 
@@ -61,9 +70,9 @@ async function transferTokens({
       })
     })
     await txn.commit()
-  } catch(e) {
+  } catch (e) {
     await txn.rollback()
-    throw(e)
+    throw e
   }
 
   return grant

@@ -17,14 +17,18 @@ function GrantsTable(props) {
             <th>Vesting period</th>
             <th>Next vesting event</th>
             <th>Vested</th>
-            <th>Previously<br />transferred</th>
+            <th>
+              Previously
+              <br />
+              transferred
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {props.grants.map((grant) =>
+          {props.grants.map(grant => (
             <GrantRow grant={grant} key={grant.id} />
-          )}
+          ))}
         </tbody>
       </table>
     </div>

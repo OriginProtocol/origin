@@ -41,7 +41,11 @@ async function vestGrant(grant) {
       })
       newlyVested = newlyVested.plus(vestingEvent.amount)
       if (process.env.NODE_ENV !== 'test') {
-        console.log(chalk`{bold.hex('#26d198') ⬢}  Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${grant.email} (effective ${vestingDateStr})`)
+        console.log(
+          chalk`{bold.hex('#26d198') ⬢}  Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${
+            grant.email
+          } (effective ${vestingDateStr})`
+        )
       }
     }
 
@@ -49,18 +53,24 @@ async function vestGrant(grant) {
     grant.vested += newlyVested.toNumber()
     const calculatedVested = grant.calculateVested()
     if (grant.vested != calculatedVested) {
-      throw new Error(`vested amount ${grant.vested} != calculated amount ${calculatedVested}`)
+      throw new Error(
+        `vested amount ${grant.vested} != calculated amount ${calculatedVested}`
+      )
     }
     if (grant.vested > grant.amount) {
-      throw new Error(`vested ${grant.vested} > grant ${grant.amount} for ${grant.email} ${grantedAt}`)
+      throw new Error(
+        `vested ${grant.vested} > grant ${grant.amount} for ${
+          grant.email
+        } ${grantedAt}`
+      )
     }
 
     await grant.save()
     await txn.commit()
     return grant.id
-  } catch(e) {
+  } catch (e) {
     await txn.rollback()
-    throw(e)
+    throw e
   }
 }
 

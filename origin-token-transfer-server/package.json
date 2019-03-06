@@ -8,7 +8,9 @@
   "main": "app/app.js",
   "scripts": {
     "initdb": "npm run migrate && npm run seed && npm run vest",
-    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "per-env",
@@ -61,5 +63,9 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7",
     "react-scripts": "^2.1.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

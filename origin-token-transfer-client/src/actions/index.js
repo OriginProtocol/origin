@@ -9,5 +9,11 @@ import {
 export const refreshGrants = () => ({ type: REFRESH_GRANTS })
 export const setGrants = grants => ({ type: SET_GRANTS, grants })
 export const setSessionEmail = email => ({ type: SET_SESSION_EMAIL, email })
-export const setTransferDialogGrant = grant => ({ type: SET_TRANSFER_DIALOG_GRANT, grant })
-export const setTransferDialogOpen = open => ({ type: SET_TRANSFER_DIALOG_OPEN, open })
+export const setTransferDialogGrant = grant => ({
+  type: SET_TRANSFER_DIALOG_GRANT,
+  grant
+})
+export const setTransferDialogOpen = open => ({
+  type: SET_TRANSFER_DIALOG_OPEN,
+  open
+})

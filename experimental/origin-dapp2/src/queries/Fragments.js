@@ -61,6 +61,7 @@ export default {
           unitsTotal
           unitsAvailable
           unitsSold
+          unitsPending
           multiUnit
         }
         ... on FractionalListing {
