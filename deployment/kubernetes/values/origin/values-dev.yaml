@@ -55,7 +55,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '89c47be'
+linkingImageTag: '119f60b'
 
 # origin-cron
 cronImage: origin-cron
