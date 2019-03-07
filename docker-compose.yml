@@ -30,9 +30,6 @@ services:
   origin-dapp:
     container_name: origin-dapp
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on:
       - origin-messaging
     volumes: &volumes
@@ -88,7 +85,7 @@ services:
     environment:
       - DEPLOY_CONTRACTS=true
       - DOCKER=true
-      - ENABLE_GROWTH=false
+      - ENABLE_GROWTH=true
     command:
       # Waits for origin-messaging to start then uses a script to read the
       # origin-messaging IPFS peer id and export the IPFS_SWARM variable
@@ -115,9 +112,6 @@ services:
   origin-ipfs-proxy:
     container_name: origin-ipfs-proxy
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     ports:
       - "9999:9999"
@@ -129,9 +123,6 @@ services:
   origin-event-listener:
     container_name: origin-event-listener
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
@@ -149,7 +140,6 @@ services:
       - postgres
       - elasticsearch
       - origin-dapp
-      - origin-ipfs-proxy
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 --
@@ -162,9 +152,6 @@ services:
   origin-discovery:
     container_name: origin-discovery
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
@@ -187,9 +174,6 @@ services:
   origin-notifications:
     container_name: origin-notifications
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     depends_on:
       - postgres
@@ -206,9 +190,6 @@ services:
   origin-growth:
     container_name: origin-growth
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
@@ -222,9 +203,6 @@ services:
   origin-bridge:
     container_name: origin-bridge
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
