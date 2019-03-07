@@ -220,6 +220,9 @@ export function setNetwork(net, customConfig) {
   if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
   }
+  if (!Configs[net]) {
+    net = 'rinkeby'
+  }
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
     typeof window !== 'undefined' &&

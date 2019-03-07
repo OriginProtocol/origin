@@ -1,4 +1,5 @@
 import React from 'react'
+import dayjs from 'dayjs'
 
 import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
@@ -13,9 +14,9 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     showUnavailable = false
 
   if (range) {
-    const split = range.split('-')
-    checkIn = split[0]
-    checkOut = split[1]
+    const split = range.split('/')
+    checkIn = dayjs(split[0]).format('ddd, MMM D')
+    checkOut = dayjs(split[1]).format('ddd, MMM D')
     const priceEstimate = availability.estimatePrice(range)
     available = priceEstimate.available
     if (available) {

@@ -1,4 +1,4 @@
-const baseConfig = require('../origin-dapp/.eslintrc.js')
+const baseConfig = require('../.eslintrc.react.js')
 
 module.exports = {
   ...baseConfig

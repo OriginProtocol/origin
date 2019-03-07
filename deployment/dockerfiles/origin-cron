@@ -6,13 +6,13 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./experimental/origin-eventsource ./experimental/origin-eventsource
-COPY ./experimental/origin-graphql ./experimental/origin-graphql
-COPY ./experimental/origin-ipfs ./experimental/origin-ipfs
-COPY ./experimental/origin-linker-client ./experimental/origin-linker-client
-COPY ./experimental/origin-messaging-client ./experimental/origin-messaging-client
-COPY ./experimental/origin-services ./experimental/origin-services
-COPY ./experimental/origin-validator ./experimental/origin-validator
+COPY ./origin-eventsource ./origin-eventsource
+COPY ./origin-graphql ./origin-graphql
+COPY ./origin-ipfs ./origin-ipfs
+COPY ./origin-linker-client ./origin-linker-client
+COPY ./origin-messaging-client ./origin-messaging-client
+COPY ./origin-services ./origin-services
+COPY ./origin-validator ./origin-validator
 COPY ./origin-cron ./origin-cron
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-growth ./origin-growth

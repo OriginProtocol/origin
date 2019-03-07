@@ -17,7 +17,13 @@ const MAX_MINUTES = 10
 function renderContent(message) {
   const { content, media } = message
 
-  if (!media || !media.length) {
+  if (media && media.length) {
+    return media.map(image => (
+      <div key={image.url} className="image-container mx-auto">
+        <img src={image.url} alt={'fileName'} />
+      </div>
+    ))
+  } else if (content && typeof content === 'string') {
     if (content.match(/^data:image\/jpeg/)) {
       return (
         <div className="image-container mx-auto">
@@ -35,12 +41,6 @@ function renderContent(message) {
         ))}
       </>
     )
-  } else {
-    return media.map(image => (
-      <div key={image.url} className="image-container mx-auto">
-        <img src={image.url} alt={'fileName'} />
-      </div>
-    ))
   }
 }
 

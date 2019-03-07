@@ -4,6 +4,6 @@ module.exports = {
   ...baseConfig,
   rules: {
     ...baseConfig.rules,
-    camelcase: ['error', { properties: 'never' }]
+    camelcase: ['warn', { properties: 'never' }]
   }
 }

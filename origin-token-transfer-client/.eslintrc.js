@@ -1,6 +1,5 @@
-const baseConfig = require('../.eslintrc.js')
+const baseConfig = require('../.eslintrc.react.js')
 
 module.exports = {
-  ...baseConfig,
-  extends: 'react-app'
+  ...baseConfig
 }

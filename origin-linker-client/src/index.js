@@ -236,9 +236,9 @@ class WalletLinkerClient {
   }
 
   ecDecrypt(buffer) {
-    const priv_key = this.getLinkPrivKey()
+    const privKey = this.getLinkPrivKey()
     return ecies
-      .decrypt(new Buffer(priv_key, 'hex'), new Buffer(buffer, 'hex'))
+      .decrypt(new Buffer(privKey, 'hex'), new Buffer(buffer, 'hex'))
       .toString('utf8')
   }
 
