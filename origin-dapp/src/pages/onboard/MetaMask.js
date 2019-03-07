@@ -144,7 +144,7 @@ class OnboardMetaMask extends Component {
         <div className="row">
           <div className="col-md-8">
             <Steps steps={4} step={1} />
-            <Query query={query} notifyOnNetworkStatusChange={true}>
+            <Query query={query} notifyOnNetworkStatusChange>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
                   return <div>Loading...</div>

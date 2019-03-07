@@ -7,6 +7,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 const Balances = ({ ethBalance, account }) => {
   const EnrollButton = withEnrolmentModal('button')
+  const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
   return (
     <div className="balances">
@@ -33,14 +34,16 @@ const Balances = ({ ethBalance, account }) => {
             </div>
           </div>
         </div>
-        <EnrollButton
-          className="btn get-ogn d-flex"
-          children="Get Started"
-          skipjoincampaign="false"
-        >
-          <img className="mr-1" src="images/growth/blue-add-icon.svg" />
-          <div className="mr-2 value">Get OGN</div>
-        </EnrollButton>
+        {!enableGrowth ? null : (
+          <EnrollButton
+            className="btn get-ogn d-flex"
+            children="Get Started"
+            skipjoincampaign="false"
+          >
+            <img className="mr-1" src="images/growth/blue-add-icon.svg" />
+            <div className="mr-2 value">Get OGN</div>
+          </EnrollButton>
+        )}
       </div>
     </div>
   )

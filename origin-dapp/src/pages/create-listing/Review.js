@@ -27,8 +27,10 @@ class Review extends Component {
 
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
-    const isFractional = this.props.__typename === 'FractionalListing'
+    const isFractional = listing.__typename === 'FractionalListing'
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
+    const boostLimit =
+      tokenBalance >= Number(listing.boostLimit) ? listing.boostLimit : '0'
 
     const description = listing.description.split('\n').map((d, idx) => (
       <Fragment key={idx}>
@@ -84,11 +86,11 @@ class Review extends Component {
                     {isFractional ? ' / night' : ''}
                   </div>
                 </div>
-                {!isMulti && !isFractional ? null : (
+                {(!isMulti && !isFractional) || boostLimit === '0' ? null : (
                   <div className="row">
                     <div className="col-sm-4 col-lg-3 label">Boost Cap</div>
                     <div className="col-sm-8 col-lg-9">
-                      <CoinPrice price={listing.boostLimit} coin="ogn" />
+                      <CoinPrice price={boostLimit} coin="ogn" />
                     </div>
                   </div>
                 )}
