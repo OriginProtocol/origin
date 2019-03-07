@@ -1,4 +1,5 @@
 'use strict'
+
 import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
@@ -31,7 +32,7 @@ const FIREBASE_DB_URL =
   process.env.FIREBASE_DB_URL || 'https://origin-wallet.firebaseio.com'
 
 class Linker {
-  constructor({} = {}) {
+  constructor() {
     this.messages = new MessageQueue()
 
     if (process.env.APNS_KEY_FILE) {
@@ -240,9 +241,8 @@ class Linker {
     this.sendNotify(notify, msg, data)
   }
 
-  generateInitSession(linkedObj) {
-    const sessionToken = uuidv4()
-    return sessionToken
+  generateInitSession() {
+    return uuidv4()
   }
 
   async generateCode(
@@ -341,7 +341,7 @@ class Linker {
     }
   }
 
-  async getMetaFromCall({ call, net_id, params: { txn_object } }) {
+  async getMetaFromCall({ net_id, params: { txn_object } }) {
     if (txn_object) {
       return origin.reflection.extractContractCallMeta(
         net_id || txn_object.chainId,
@@ -483,7 +483,7 @@ class Linker {
     const pendingCallContext = linkedObj.pendingCallContext
     const appInfo = linkedObj.appInfo
 
-    const notify = await this.getWalletNotification(walletToken)
+    await this.getWalletNotification(walletToken)
 
     linkedObj.walletToken = walletToken
     linkedObj.linked = true

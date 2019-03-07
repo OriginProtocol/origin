@@ -10,7 +10,7 @@ const ALLOWED_CALLS = {
 }
 
 class Hot {
-  constructor({} = {}) {
+  constructor() {
     // grab the version that allows for behalf submits
     this.marketplace_adapter = origin.marketplace.resolver.adapters['A']
     this.account = web3.eth.accounts.wallet.add(HOT_WALLET_PK)
@@ -59,7 +59,6 @@ class Hot {
       origin.contractService.getIpfsHashFromBytes32(offer.acceptIpfsHash)
     )
 
-    const verifyFee = verifyTerms.verifyFee
     const verifyURL = verifyTerms.verifyURL
     const checkArg = verifyTerms.checkArg
     const matchValue = verifyTerms.matchValue

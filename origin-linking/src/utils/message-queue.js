@@ -39,8 +39,6 @@ class MessageQueue {
     const msgCount = await this.getMessageCount(queueKey)
 
     return new Promise((resolve, reject) => {
-      //two steps, increment the message
-      const hrtime = process.hrtime()
       const timestamp = this.getLatestId()
       const multi_call = this.redis.multi()
 

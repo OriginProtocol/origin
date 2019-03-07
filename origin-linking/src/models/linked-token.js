@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'linked_token'
     }
   )
-  LinkedToken.associate = function(models) {
+  LinkedToken.associate = function() {
     // associations can be defined here
   }
   return LinkedToken
