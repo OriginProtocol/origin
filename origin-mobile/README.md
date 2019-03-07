@@ -169,19 +169,10 @@ If you want to test with mobile Safari on the same device as the application, fi
 - origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
 - origin/origin-linking $ `npm run migrate`
 
-##### Startup (w/dapp)
-- origin/origin-js $ `npm run start`
+#### Startup
 - origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
 - origin/origin-linking $ `npm run start`
-- origin/origin-dapp $ `npm run start`
-- origin/origin-mobile $ `npm run install-local`
-- origin/origin-mobile $ `npm run start -- --reset-cache`
-- Open Xcode and build for your desired device
-
-#### Startup (w/dapp2)
-- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
-- origin/origin-linking $ `npm run start`
-- origin/experimental/origin-dapp2 $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
+- origin/origin-dapp $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
 - origin/origin-mobile $ `npm run install-local`
 - origin/origin-mobile $ `npm run start -- --reset-cache`
 - Open Xcode and build for your desired device

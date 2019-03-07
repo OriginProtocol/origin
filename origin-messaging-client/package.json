@@ -1,0 +1,22 @@
+{
+  "name": "origin-messaging-client",
+  "version": "0.1.0",
+  "description": "Origin Messaging Client",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "eth-ecies": "^1.0.3",
+    "orbit-db": "^0.19.9",
+    "ipfs": "^0.34.4",
+    "secp256k1": "^3.5.2",
+    "crypto-js": "^3.1.9-1",
+    "crypto-random-string": "^1.0.0",
+    "ajv": "^6.9.1"
+  },
+  "devDependencies": {
+  }
+}

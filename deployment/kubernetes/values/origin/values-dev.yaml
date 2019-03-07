@@ -8,10 +8,6 @@ bridgeImageTag: '4ee7b40'
 dappImage: origin-dapp
 dappImageTag: 'd003ca6'
 
-# origin-dapp2
-dapp2Image: origin-dapp2
-dapp2ImageTag: '948da80'
-
 # ipfs
 ipfsImage: ipfs/go-ipfs
 ipfsImageTag: master

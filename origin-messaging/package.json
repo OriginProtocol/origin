@@ -29,13 +29,13 @@
   },
   "dependencies": {
     "@babel/cli": "^7.2.0",
-    "@babel/core": "^7.2.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "cross-fetch": "^3.0.0",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
-    "ipfs": "^0.33.1",
+    "ipfs": "^0.34.4",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.4",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@babel/node": "^7.2.0",
-    "eslint": "^5.9.0",
+    "eslint": "^5.13.0",
     "nodemon": "^1.18.7"
   },
   "prettier": {

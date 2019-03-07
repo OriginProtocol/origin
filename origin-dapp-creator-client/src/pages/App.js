@@ -1,6 +1,6 @@
 import { Route, Switch } from 'react-router-dom'
 import { Web3Provider } from 'react-web3'
-import { baseConfig } from 'origin-dapp/src/config'
+import creatorConfig from 'origin-graphql/src/constants/CreatorConfig'
 import React from 'react'
 import superagent from 'superagent'
 
@@ -24,7 +24,7 @@ class App extends React.Component {
 
     this.state = {
       config: store.get('creator-config', {
-        ...baseConfig,
+        ...creatorConfig,
         marketplacePublisher: ''
       }),
       publishedIpfsHash: null
