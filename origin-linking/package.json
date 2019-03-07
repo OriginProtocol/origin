@@ -9,6 +9,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "babel src -d dist",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "per-env",
     "start:development": "nodemon -r @babel/register -r source-map-support src/index.js",
@@ -19,12 +22,12 @@
   "license": "MIT",
   "dependencies": {
     "@babel/cli": "^7.2.0",
-    "@babel/core": "^7.2.0",
+    "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "@babel/runtime": "^7.2.0",
+    "@babel/runtime": "^7.3.1",
     "apn": "^2.2.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
@@ -65,5 +68,9 @@
     "plugins": [
       "@babel/plugin-transform-runtime"
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

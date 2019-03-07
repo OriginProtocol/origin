@@ -2,6 +2,7 @@
  * Implementation of the Origin Growth GraphQL server.
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
+const logger = require('../logger')
 require('dotenv').config()
 
 const {
@@ -47,6 +48,8 @@ const server = new ApolloServer({
   context: async context => {
     let countryCode = null
     const headers = context.req.headers
+
+    logger.debug('Received request headers: ', JSON.stringify(headers))
     /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
      */
     if (headers) {
