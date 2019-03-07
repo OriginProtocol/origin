@@ -140,7 +140,6 @@ services:
       - postgres
       - elasticsearch
       - origin-dapp
-      - origin-ipfs-proxy
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 --
