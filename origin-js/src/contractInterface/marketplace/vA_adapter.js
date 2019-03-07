@@ -429,7 +429,7 @@ class VA_MarketplaceAdapter {
    * @return {Promise<*>}
    */
   async getListings() {
-    // TODO actually process the listing correctly without discovery(dapp2)
+    // TODO actually process the listing correctly without discovery (dapp2)
     return []
   }
 

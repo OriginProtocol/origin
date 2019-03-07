@@ -8,7 +8,9 @@
   "main": "app/app.js",
   "scripts": {
     "initdb": "npm run migrate && npm run seed && npm run vest",
-    "lint": "eslint '**/*.js' --rulesdir ../../",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "per-env",
@@ -29,7 +31,7 @@
     "envkey": "^1.2.4",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "express-validator": "^5.3.0",
+    "express-validator": "^5.3.1",
     "ip": "^1.1.5",
     "moment": "^2.22.2",
     "momentjs": "^2.0.0",
@@ -50,9 +52,9 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -61,5 +63,9 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7",
     "react-scripts": "^2.1.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

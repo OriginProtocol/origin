@@ -2,7 +2,7 @@
 
 import React from 'react'
 import superagent from 'superagent'
-import { baseConfig } from 'origin-dapp/src/config'
+import creatorConfig from 'origin-graphql/src/constants/CreatorConfig'
 
 import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'
@@ -21,19 +21,19 @@ class Customize extends React.Component {
       themes: [
         {
           title: 'Origin',
-          cssVars: baseConfig.cssVars
+          cssVars: creatorConfig.cssVars
         },
         {
           title: 'Eco Green',
           cssVars: {
-            ...baseConfig.cssVars,
+            ...creatorConfig.cssVars,
             dusk: '#3BA54E'
           }
         },
         {
           title: 'Royal Purple',
           cssVars: {
-            ...baseConfig.cssVars,
+            ...creatorConfig.cssVars,
             dusk: '#833AAB'
           }
         }
@@ -74,7 +74,7 @@ class Customize extends React.Component {
     }
 
     const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
-    window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
+    window.open(`${process.env.DAPP_URL}/#/?config=${ipfsPath}`, '_blank')
   }
 
   onColorChange(name, color) {

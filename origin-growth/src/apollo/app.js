@@ -2,7 +2,13 @@
  * Implementation of the Origin Growth GraphQL server.
  * Uses the Apollo framework: https://www.apollographql.com/server
  */
+const logger = require('../logger')
 require('dotenv').config()
+
+const {
+  getUserAuthenticationStatus,
+  getUser
+} = require('../resources/authentication')
 
 try {
   require('envkey')
@@ -15,6 +21,7 @@ const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
+const enums = require('../enums')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
 
@@ -38,18 +45,36 @@ const server = new ApolloServer({
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
-  context: context => {
+  context: async context => {
     let countryCode = null
     const headers = context.req.headers
+
+    logger.debug('Received request headers: ', JSON.stringify(headers))
     /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
      */
     if (headers) {
       countryCode = headers['X-AppEngine-Country'] || null
     }
 
+    let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
+    let authToken, walletAddress
+    if (headers.authentication) {
+      try {
+        authToken = JSON.parse(headers.authentication).growth_auth_token
+        authStatus = await getUserAuthenticationStatus(authToken)
+
+        walletAddress = (await getUser(authToken)).ethAddress
+      } catch (e) {
+        console.error('Error authenticating user: ', e)
+      }
+    }
+
     return {
       ...context,
-      countryCode
+      countryCode,
+      authToken,
+      walletAddress,
+      authentication: authStatus
     }
   }
 })

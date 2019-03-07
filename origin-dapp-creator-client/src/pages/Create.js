@@ -1,6 +1,5 @@
 'use strict'
 
-import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
 import pick from 'lodash/pick'
 import superagent from 'superagent'
@@ -8,6 +7,7 @@ import debounce from 'lodash/debounce'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
+import languages from '../constants/Languages'
 
 class Create extends React.Component {
   constructor(props) {
@@ -16,13 +16,14 @@ class Create extends React.Component {
     this.state = {
       ...props.config,
       fields: Object.keys(props.config),
-      subdomainValidationRequest: null
+      subdomainValidationRequest: null,
+      subdomainValidationRequestActive: false
     }
 
-    this.availableLanguages = getAvailableLanguages().map(language => {
+    this.availableLanguages = languages.map(language => {
       return {
-        value: language.selectedLanguageCode,
-        label: language.selectedLanguageFull
+        value: language[0],
+        label: language[1]
       }
     })
     // Add English to the list of available languages
@@ -76,6 +77,8 @@ class Create extends React.Component {
   }
 
   handleSubdomainChange() {
+    this.setState({ subdomainValidationRequestActive: true })
+
     if (this.state.subdomainValidationRequest) {
       this.state.subdomainValidationRequest.cancel()
     }
@@ -95,8 +98,13 @@ class Create extends React.Component {
               subdomainError: error.response.text
             })
           } else {
-            // TODO
+            this.setState({
+              subdomainError: 'An error occurred validating your subdomain.'
+            })
           }
+        })
+        .finally(() => {
+          this.setState({ subdomainValidationRequestActive: false })
         })
     }, 500)
 
@@ -167,7 +175,11 @@ class Create extends React.Component {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="btn btn-primary btn-lg">
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              disabled={this.state.subdomainValidationRequestActive}
+            >
               Continue
             </button>
           </div>

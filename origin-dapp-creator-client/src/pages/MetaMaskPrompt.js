@@ -20,8 +20,7 @@ class MetaMaskPrompt extends React.Component {
   }
 
   async componentDidMount() {
-    const signature = await this.requestSignature()
-    await this.publish(signature)
+    await this.requestSignature()
   }
 
   async requestSignature() {
@@ -35,14 +34,14 @@ class MetaMaskPrompt extends React.Component {
       })
     }
 
-    this.setState({
-      signature: signature
-    })
+    if (signature) {
+      await this.publish(signature)
+    }
   }
 
-  async publish() {
+  async publish(signature) {
     try {
-      await this.props.handlePublish(this.state.signature)
+      await this.props.handlePublish(signature)
     } catch (error) {
       this.setState({
         isError: true

@@ -41,18 +41,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
-{{- define "dapp2.fullname" -}}
-{{- printf "%s-%s" .Release.Name "dapp2" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "dapp2.host" -}}
-{{- if ne .Release.Namespace "prod" -}}
-{{- printf "dapp2.%s.originprotocol.com" .Release.Namespace -}}
-{{- else -}}
-{{- printf "dapp2.originprotocol.com" -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "faucet.fullname" -}}
 {{- printf "%s-%s" .Release.Name "faucet" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -190,4 +178,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 
 {{- define "creator-issuer.fullname" -}}
 {{- printf "%s-%s" .Release.Name "creator-issuer" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "cron.fullname" -}}
+{{- printf "%s-%s" .Release.Name "cron" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
