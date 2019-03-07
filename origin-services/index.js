@@ -81,7 +81,7 @@ const populateIpfs = () =>
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populate IPFS:')
     ipfs.util.addFromFs(
-      '../../origin-js/test/fixtures',
+      '../origin-js/test/fixtures',
       { recursive: true },
       (err, result) => {
         if (err) {

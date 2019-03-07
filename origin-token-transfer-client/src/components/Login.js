@@ -51,7 +51,7 @@ class Login extends Component {
 
           <div className="bp3-dialog-body">
             <p>
-              Please login through Google Login. We don't ever receive your
+              Please login through Google Login. We don&apos;t ever receive your
               password.
             </p>
           </div>
