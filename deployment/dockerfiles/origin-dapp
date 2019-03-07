@@ -1,16 +1,14 @@
+ARG NAMESPACE=dev
+
 FROM node:10 as build
+
+ARG GIT_COMMIT_HASH=dev
+ARG GIT_BRANCH=dev
+ARG ENVKEY
 
 WORKDIR /app
 
-ARG DEPLOY_TAG
-ARG ENVKEY
-
-# Set environment variables. NODE_ENV is set to production to avoid installing
-# any dependencies that aren't necessary for the build. The DEPLOY_TAG is to
-# make the commit hash of the currently built version available in the DApp
-# info screen. ENVKEY is used to make the correct environment variables
-# available to the build.
-ENV NODE_ENV=production DEPLOY_TAG=$DEPLOY_TAG ENVKEY=$ENVKEY
+ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH GIT_BRANCH=$GIT_BRANCH
 
 # Install envkey-source
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
@@ -21,20 +19,36 @@ RUN mv envkey-source /usr/local/bin
 # Copy the necessary files for building origin-dapp
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./origin-js ./origin-js
 COPY ./origin-contracts ./origin-contracts
-COPY ./origin-dapp ./origin-dapp
+COPY ./origin-dapp/ ./origin-dapp/
+COPY ./origin-eventsource/ ./origin-eventsource/
+COPY ./origin-graphql/ ./origin-graphql/
+COPY ./origin-ipfs/ ./origin-ipfs/
+COPY ./origin-linker-client/ ./origin-linker-client/
+COPY ./origin-messaging-client/ ./origin-messaging-client/
+COPY ./origin-services/ ./origin-services/
+COPY ./origin-validator/ ./origin-validator/
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
-
-# Use EnvKey so that environment variables are available to DApp at build time
 RUN eval $(envkey-source) && npm run build --prefix origin-dapp
+
+# Conditional copy of config depending on NAMESPACE build arg using multi stage
+# builds
+FROM build as build-dev
+RUN mv /app/origin-dapp/public/kovan.html /app/origin-dapp/public/index.html
+
+FROM build as build-staging
+RUN mv /app/origin-dapp/public/rinkeby.html /app/origin-dapp/public/index.html
+
+FROM build as build-prod
+RUN mv /app/origin-dapp/public/mainnet.html /app/origin-dapp/public/index.html
+
+FROM build-${NAMESPACE} AS build-complete
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build /app/origin-dapp/build /usr/share/nginx/html
+COPY --from=build-complete /app/origin-dapp/public /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -32,7 +32,7 @@ steps:
           --keyring=origin \
           --key=cloudbuild
         # Checkout private fraud code if deploying origin-growth
-        if [ "${_CONTAINER}" = "origin-growth" ]; then
+        if [ "${_CONTAINER}" = "origin-cron" ]; then
           echo "Cloning origin-fraud"
           gcloud source repos clone origin-fraud --project=origin-214503
           mv ./origin-fraud/prod.js ./origin-growth/src/fraud/

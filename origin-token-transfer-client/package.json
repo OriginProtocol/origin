@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.9.0",
+    "@blueprintjs/core": "^3.13.0",
     "moment": "^2.22.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
     "react-google-login": "^4.0.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",

@@ -4,6 +4,9 @@ services:
   origin-tests:
     container_name: origin-tests
     image: origin
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
     volumes:

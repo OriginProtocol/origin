@@ -10,7 +10,7 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-linker-client --scope origin-graphql
       script:
-        - npm run test --prefix experimental/origin-graphql
+        - npm run test --prefix origin-graphql
 
     # Run integration tests using docker compose
     - name: "integration tests"
