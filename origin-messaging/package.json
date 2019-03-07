@@ -35,7 +35,7 @@
     "cross-fetch": "^3.0.0",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
-    "ipfs": "^0.34.4",
+    "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.4",
