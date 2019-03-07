@@ -311,7 +311,7 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return 'Error: can not detect coutry'
+              return 'Error: can not detect country'
             }
           }}
         </Query>
