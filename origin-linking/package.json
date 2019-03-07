@@ -9,6 +9,9 @@
   "scripts": {
     "build": "per-env",
     "build:production": "babel src -d dist",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "migrate": "sequelize db:migrate",
     "start": "per-env",
     "start:development": "nodemon -r @babel/register -r source-map-support src/index.js",
@@ -65,5 +68,9 @@
     "plugins": [
       "@babel/plugin-transform-runtime"
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
