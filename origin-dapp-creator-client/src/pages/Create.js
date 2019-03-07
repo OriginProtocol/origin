@@ -16,7 +16,8 @@ class Create extends React.Component {
     this.state = {
       ...props.config,
       fields: Object.keys(props.config),
-      subdomainValidationRequest: null
+      subdomainValidationRequest: null,
+      subdomainValidationRequestActive: false
     }
 
     this.availableLanguages = languages.map(language => {
@@ -76,6 +77,8 @@ class Create extends React.Component {
   }
 
   handleSubdomainChange() {
+    this.setState({ subdomainValidationRequestActive: true })
+
     if (this.state.subdomainValidationRequest) {
       this.state.subdomainValidationRequest.cancel()
     }
@@ -95,8 +98,13 @@ class Create extends React.Component {
               subdomainError: error.response.text
             })
           } else {
-            // TODO
+            this.setState({
+              subdomainError: 'An error occurred validating your subdomain.'
+            })
           }
+        })
+        .finally(() => {
+          this.setState({ subdomainValidationRequestActive: false })
         })
     }, 500)
 
@@ -167,7 +175,9 @@ class Create extends React.Component {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="btn btn-primary btn-lg">
+            <button type="submit"
+                className="btn btn-primary btn-lg"
+                disabled={this.state.subdomainValidationRequestActive}>
               Continue
             </button>
           </div>
