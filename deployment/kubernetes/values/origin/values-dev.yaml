@@ -18,7 +18,7 @@ ipfsProxyImageTag: '899b2e7'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '664c4dd'
+faucetImageTag: 'c86af29'
 
 # event-listener
 eventlistenerImage: event-listener
@@ -30,11 +30,11 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '119f60b'
+growthImageTag: 'c86af29'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'fa2c609'
+messagingImageTag: 'c86af29'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -55,8 +55,8 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-linking
 linkingImage: origin-linking
-linkingImageTag: '119f60b'
+linkingImageTag: '2328b60'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '35ef8fe'
+cronImageTag: '2328b60'
