@@ -21,4 +21,3 @@ export default [
   ['zh_TW', '繁體中文'],
   ['en_US', 'English']
 ]
-

@@ -245,24 +245,20 @@ class Configure extends React.Component {
                   </div>
                   {this.isExpandedCategory(category) &&
                     categories[category[0]].map((subcategory, y) => (
-                        <div className="subcategory" key={y}>
-                          <input
-                            type="checkbox"
-                            checked={this.isCheckedSubcategory(
-                              category,
-                              subcategory
-                            )}
-                            onChange={() =>
-                              this.onSubcategoryCheck(
-                                category,
-                                subcategory
-                              )
-                            }
-                          />
-                          {subcategory[1]}
-                        </div>
-                      )
-                    )}
+                      <div className="subcategory" key={y}>
+                        <input
+                          type="checkbox"
+                          checked={this.isCheckedSubcategory(
+                            category,
+                            subcategory
+                          )}
+                          onChange={() =>
+                            this.onSubcategoryCheck(category, subcategory)
+                          }
+                        />
+                        {subcategory[1]}
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
