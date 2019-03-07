@@ -121,7 +121,6 @@ const Configs = {
     // providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    discovery: 'https://discovery.staging.originprotocol.com',
     bridge: 'https://bridge.staging.originprotocol.com',
     OriginToken: '0xb0efa5A1f199B7562Dd4f34758497594797C05E9',
     V00_Marketplace: '0xaE145bE14b9369fE5DF917B58daDe2589ddB48C9',
