@@ -3,7 +3,7 @@
 import React from 'react'
 
 import Redirect from 'components/Redirect'
-import listingSchemaMetadata from 'origin-dapp/src/utils/listingSchemaMetadata'
+import categories from 'origin-graphql/src/constants/Categories'
 
 class Configure extends React.Component {
   constructor(props) {
@@ -12,8 +12,6 @@ class Configure extends React.Component {
     this.state = {
       expandedCategories: [],
       filterByTypeEnabled: this.getCategoryFromConfig(),
-      listingTypes: listingSchemaMetadata.listingTypes,
-      listingSchemasByCategory: listingSchemaMetadata.listingSchemasByCategory,
       redirect: null
     }
 
@@ -54,9 +52,8 @@ class Configure extends React.Component {
   // Retrieve the category object from the filter value in the config
   getCategoryFromConfig() {
     if (!this.props.config.filters.listings.category) return null
-    const translationId = this.props.config.filters.listings.category
-    return listingSchemaMetadata.listingTypes.find(listingType => {
-      return listingType.translationName.id == translationId
+    return categories.root.find(category => {
+      return category[0] === this.props.config.filters.listings.category
     })
   }
 
@@ -69,12 +66,8 @@ class Configure extends React.Component {
       return false
     }
 
-    const subCategories =
-      listingSchemaMetadata.listingSchemasByCategory[category.type]
-    const translationId = this.props.config.filters.listings.subCategory
-
-    return subCategories.find(subCategory => {
-      return subCategory.translationName.id == translationId
+    return categories[category[0]].find(subCategory => {
+      return subCategory[0] === this.props.config.filters.listings.subCategory
     })
   }
 
@@ -129,7 +122,7 @@ class Configure extends React.Component {
       })
     } else {
       this.setListingFilters({
-        category: category.translationName.id,
+        category: category[0],
         subCategory: null
       })
     }
@@ -144,8 +137,8 @@ class Configure extends React.Component {
       })
     } else {
       this.setListingFilters({
-        category: category.translationName.id,
-        subCategory: subcategory.translationName.id
+        category: category[0],
+        subCategory: subcategory[0]
       })
     }
   }
@@ -233,41 +226,40 @@ class Configure extends React.Component {
 
           {this.isCategoryDropdownDisplayed() && (
             <div className="category-dropdown">
-              {this.state.listingTypes.map((listingType, i) => (
+              {categories.root.map((category, i) => (
                 <div key={i}>
                   <div
                     className={`category ${
-                      this.isExpandedCategory(listingType)
+                      this.isExpandedCategory(category)
                         ? 'expanded'
                         : 'collapsed'
                     }`}
-                    onClick={event => this.toggleCategory(event, listingType)}
+                    onClick={event => this.toggleCategory(event, category)}
                   >
                     <input
                       type="checkbox"
-                      checked={this.getCategoryFromConfig() === listingType}
-                      onChange={() => this.onCategoryCheck(listingType)}
+                      checked={this.getCategoryFromConfig() === category}
+                      onChange={() => this.onCategoryCheck(category)}
                     />
-                    {listingType.translationName.defaultMessage}
+                    {category[1]}
                   </div>
-                  {this.isExpandedCategory(listingType) &&
-                    this.state.listingSchemasByCategory[listingType.type].map(
-                      (listingSchema, y) => (
+                  {this.isExpandedCategory(category) &&
+                    categories[category[0]].map((subcategory, y) => (
                         <div className="subcategory" key={y}>
                           <input
                             type="checkbox"
                             checked={this.isCheckedSubcategory(
-                              listingType,
-                              listingSchema
+                              category,
+                              subcategory
                             )}
                             onChange={() =>
                               this.onSubcategoryCheck(
-                                listingType,
-                                listingSchema
+                                category,
+                                subcategory
                               )
                             }
                           />
-                          {listingSchema.translationName.defaultMessage}
+                          {subcategory[1]}
                         </div>
                       )
                     )}

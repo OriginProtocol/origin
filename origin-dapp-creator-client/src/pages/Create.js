@@ -1,6 +1,5 @@
 'use strict'
 
-import { getAvailableLanguages } from 'origin-dapp/src/utils/translationUtils.js'
 import React from 'react'
 import pick from 'lodash/pick'
 import superagent from 'superagent'
@@ -8,6 +7,7 @@ import debounce from 'lodash/debounce'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
+import languages from '../constants/Languages'
 
 class Create extends React.Component {
   constructor(props) {
@@ -19,10 +19,10 @@ class Create extends React.Component {
       subdomainValidationRequest: null
     }
 
-    this.availableLanguages = getAvailableLanguages().map(language => {
+    this.availableLanguages = languages.map(language => {
       return {
-        value: language.selectedLanguageCode,
-        label: language.selectedLanguageFull
+        value: language[0],
+        label: language[1]
       }
     })
     // Add English to the list of available languages
