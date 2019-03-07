@@ -25,7 +25,8 @@ class App extends React.Component {
     this.state = {
       config: store.get('creator-config', {
         ...creatorConfig,
-        marketplacePublisher: ''
+        marketplacePublisher: '',
+        subdomain: ''
       }),
       publishedIpfsHash: null
     }
