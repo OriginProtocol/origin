@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '119f60b'
+bridgeImageTag: 'c86af29'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -38,7 +38,7 @@ messagingImageTag: 'fa2c609'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '119f60b'
+notificationsImageTag: 'c86af29'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
