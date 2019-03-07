@@ -32,8 +32,6 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.5/build/ ./origin-contracts/build/
-
 RUN eval $(envkey-source) && npm run build --prefix origin-dapp
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
