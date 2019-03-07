@@ -20,7 +20,7 @@ matrix:
         # Setting required for Elasticsearch to run
         - sudo sysctl -w vm.max_map_count=262144
       script:
-        - docker-compose build origin-dapp
+        - docker-compose build origin-ipfs-proxy
         - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from origin-tests
 
     - name: "javascript linting"
