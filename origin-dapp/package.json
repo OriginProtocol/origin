@@ -51,7 +51,7 @@
     "myetherwallet-blockies": "^0.1.1",
     "node-fetch": "^2.3.0",
     "origin-contracts": "^0.8.6",
-    "origin-graphql": "^0.1.0",
+    "origin-graphql": "^0.1.1",
     "origin-services": "^0.1.0",
     "prettier": "^1.16.3",
     "qrcode.react": "^0.8.0",
