@@ -63,14 +63,14 @@ The Origin Docker Compose configuration runs the following packages:
 
 ```
 - origin-bridge on http://localhost:5000
-- origin-dapp on http://localhost:3000
-- origin-discovery (event-listener)
+- origin-dapp on http://localhost:3000 (ethereum blockchain using ganache on http://localhost:8545)
+- origin-event-listener
 - origin-discovery (apollo server on http://localhost:4000)
+- origin-growth (apollo server on http://localhost:4001)
 - origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
-- origin-js (ipfs server)
-- origin-js (ethereum blockchain using ganache on http://localhost:8545)
+- origin-ipfs-proxy (ipfs server http://localhost:9999)
 - postgresql
 - elasticsearch on http://localhost:9200
 ```
@@ -108,9 +108,12 @@ Please note this can take some time. If you see an error in the logs please [rai
 Please refer to the [docker-compose](https://docs.docker.com/compose/reference/overview/) documentation for usage. Some commands that may be useful are included below.
 
 Start and stop the environment:
-
+```
 	docker-compose up
-	docker-compose down
+	docker-compose stop
+```
+
+⚠️ When docker builds an image part of the build process is `npm install` meaning that dependant node_modules are built into the image. This image is immutable. With `docker-compose up` a container is created where image gets a volume where any changes are stored. Running `docker-compose down` will remove that volume and any changes to the container after the image build will be lost.
 
 Spawn a shell (command line) in a container:
 
@@ -131,7 +134,39 @@ Rebuild containers (takes some time), in case you update dependencies (including
 
 Configure environment variables in `development/envfiles`
 
+### Suggested workflow
+
+Switching between branches or developing on a fresh one can cause the dependancies in one of the `package.lock` files to change. Dependancies in `node_modules` are not mapped to host machines and are present only inside docker containers. For that reason installing dependancies needs to be ran inside the containers. One solution is to rebuild the image with `docker-compose build` but that can be very time consuming. To install new dependancies ssh to the container that lacks them (usually indicated by an NPM error in docker logs) and run install
+
+```
+host-machine$ docker exec -ti <container_name> /bin/bash
+docker-container$ npm run bootstrap # run inside /app directory
+# close connection
+host-machine$ docker-compose restart <container_name>
+```
+
+⚠️ Don't run `docker-compose down` when stopping containers! It will prune the container volumes and any changes after the initial image build shall be lost. Instead use `docker-compose stop`
+
 ### Troubleshooting
+
+### Docker Desktop Mac
+
+Running `docker down/up` and rebuilding image `docker-compose build` will consume disk space that docker might have problems releasing. One indication of this is that containers are unable to start. Check available disk space in `Disk` tab under Docker Desktop preferences. To free disk space:
+
+```
+$docker system prune
+$docker volume prune
+```
+
+In some cases that might still not free up the disk space in that case do a hard delete of Docker data
+
+```
+# Stop Docker for Desktop process
+$rm -rf ~/Library/Containers/com.docker.docker/Data/*  # delete Docker data 
+# Start Docker for Desktop process
+```
+
+When doing a hard delete of Docker data origin images need to be rebuilt `docker-compose build`
 
 #### Elasticsearch fails to start with virtual memory error
 
