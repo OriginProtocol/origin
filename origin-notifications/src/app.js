@@ -20,28 +20,27 @@ const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
-const linking_notify_endpoint = process.env.LINKING_NOTIFY_ENDPOINT
-const linking_notify_token = process.env.LINKING_NOTIFY_TOKEN
-const dapp_offer_url = process.env.DAPP_OFFER_URL
+const linkingNotifyEndpoint = process.env.LINKING_NOTIFY_ENDPOINT
+const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
+const dappOfferUrl = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
-  console.log(
-    'Warning: VAPID public or private key not defined, generating one'
-  )
+  console.log('Warning: VAPID public or private key not defined, generating one')
   const vapidKeys = webpush.generateVAPIDKeys()
   publicKey = vapidKeys.publicKey
   privateKey = vapidKeys.privateKey
 }
 
-webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
+webpush.setVapidDetails(
+  `mailto:${emailAddress}`,
+  publicKey,
+  privateKey
+)
 
 // should be tightened up for security
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 
   next()
 })
@@ -49,13 +48,12 @@ app.use((req, res, next) => {
 // limit request to one per minute
 const rateLimiterOptions = {
   points: 1,
-  duration: 60
+  duration: 60,
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 // use rate limiter on all root path methods
 app.all((req, res, next) => {
-  rateLimiter
-    .consume(req.connection.remoteAddress)
+  rateLimiter.consume(req.connection.remoteAddress)
     .then(() => {
       next()
     })
@@ -78,12 +76,7 @@ app.get('/', async (req, res) => {
   if (app.get('env') === 'development') {
     const subs = await PushSubscription.findAll()
 
-    markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
-      s =>
-        `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(
-          s
-        )}</pre></li>`
-    )}</ul>`
+    markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(s => `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(s)}</pre></li>`)}</ul>`
   }
 
   res.send(markup)
@@ -92,7 +85,7 @@ app.get('/', async (req, res) => {
 /**
  * Endpoint called by the DApp to record a subscription for an account.
  */
-app.post('/', async (req, res) => {
+app.post('/', async(req, res) => {
   const { account, endpoint, keys } = req.body
 
   // Validate the input.
@@ -128,9 +121,7 @@ app.post('/events', async (req, res) => {
   const { log = {}, related = {} } = req.body
   const { decoded = {}, eventName } = log
   const { buyer = {}, listing, offer, seller = {} } = related
-  const eventDetails = `eventName=${eventName} blockNumber=${
-    log.blockNumber
-  } logIndex=${log.logIndex}`
+  const eventDetails = `eventName=${eventName} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`
 
   // Return 200 to the event-listener without
   // waiting for processing of the event.
@@ -160,46 +151,32 @@ app.post('/events', async (req, res) => {
 
   console.log(`Info: Processing event ${eventDetails}`)
 
-  if (linking_notify_endpoint) {
-    const receivers = {}
-    const buyerMessage = getNotificationMessage(
-      eventName,
-      party,
-      buyerAddress,
-      'buyer'
-    )
-    const sellerMessage = getNotificationMessage(
-      eventName,
-      party,
-      sellerAddress,
-      'seller'
-    )
-    const event_data = {
-      url: offer && path.join(dapp_offer_url, offer.id),
-      to_dapp: true
-    }
 
-    if (buyerMessage || sellerMessage) {
-      if (buyerMessage) {
-        receivers[buyerAddress] = Object.assign(
-          { msg: buyerMessage },
-          event_data
-        )
+  if (linkingNotifyEndpoint) {
+    const receivers = {}
+    const buyerMessage = getNotificationMessage(eventName, party, buyerAddress, 'buyer')
+    const sellerMessage = getNotificationMessage(eventName, party, sellerAddress, 'seller')
+    const eventData = { url: offer && path.join(dappOfferUrl, offer.id), to_dapp: true }
+
+    if (buyerMessage || sellerMessage)
+    {
+
+      if (buyerMessage)
+      {
+        receivers[buyerAddress] = Object.assign({ msg: buyerMessage }, eventData)
       }
-      if (sellerMessage) {
-        receivers[sellerAddress] = Object.assign(
-          { msg: sellerMessage },
-          event_data
-        )
+      if (sellerMessage)
+      {
+        receivers[sellerAddress] = Object.assign({ msg: sellerMessage }, eventData)
       }
       try {
-        fetch(linking_notify_endpoint, {
+        fetch(linkingNotifyEndpoint, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ receivers, token: linking_notify_token })
+          body: JSON.stringify({ receivers, token: linkingNotifyToken })
         })
       } catch (error) {
         console.log('Error notifying linking api ', error)
@@ -216,59 +193,48 @@ app.post('/events', async (req, res) => {
   const subs = await PushSubscription.findAll({
     where: {
       account: {
-        [Sequelize.Op.in]: [buyerAddress, sellerAddress].filter(
-          a => a && a !== party
-        )
+        [Sequelize.Op.in]: [buyerAddress, sellerAddress].filter(a => a && a !== party)
       }
     }
   })
 
   // Filter out redundant endpoints before iterating.
-  await subs
-    .filter((s, i, self) => {
-      return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
-    })
-    .forEach(async s => {
-      try {
-        const recipient = s.account
-        const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
+  await subs.filter((s, i, self) => {
+    return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
+  }).forEach(async s => {
+    try {
+      const recipient = s.account
+      const recipientRole = (recipient === sellerAddress) ? 'seller' : 'buyer'
 
-        const message = getNotificationMessage(
-          eventName,
-          party,
-          recipient,
-          recipientRole
-        )
-        if (!message) {
-          return
-        }
-
-        // Send the push notification.
-        // TODO: Add safeguard against sending duplicate messages since the
-        // event-listener only provides at-least-once guarantees and may
-        // call this webhook more than once for the same event.
-        const pushSubscription = {
-          endpoint: s.endpoint,
-          keys: s.keys
-        }
-        const pushPayload = JSON.stringify({
-          title: message.title,
-          body: message.body,
-          account: recipient,
-          offerId: offer.id
-        })
-        await webpush.sendNotification(pushSubscription, pushPayload)
-      } catch (e) {
-        // Subscription is no longer valid - delete it in the DB.
-        if (e.statusCode === 410) {
-          s.destroy()
-        } else {
-          console.log(e)
-        }
+      const message = getNotificationMessage(eventName, party, recipient, recipientRole)
+      if (!message) {
+        return
       }
-    })
+
+      // Send the push notification.
+      // TODO: Add safeguard against sending duplicate messages since the
+      // event-listener only provides at-least-once guarantees and may
+      // call this webhook more than once for the same event.
+      const pushSubscription = {
+        endpoint: s.endpoint,
+        keys: s.keys
+      }
+      const pushPayload = JSON.stringify({
+        title: message.title,
+        body: message.body,
+        account: recipient,
+        offerId: offer.id
+      })
+      await webpush.sendNotification(pushSubscription, pushPayload)
+    } catch(e) {
+      // Subscription is no longer valid - delete it in the DB.
+      if (e.statusCode === 410) {
+        s.destroy()
+      } else {
+        console.log(e)
+      }
+    }
+  })
 })
 
-app.listen(port, () =>
-  console.log(`Notifications server listening on port ${port}!`)
-)
+app.listen(port, () => console.log(`Notifications server listening on port ${port}!`))
