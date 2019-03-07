@@ -175,9 +175,11 @@ class Create extends React.Component {
           </div>
 
           <div className="form-actions">
-            <button type="submit"
-                className="btn btn-primary btn-lg"
-                disabled={this.state.subdomainValidationRequestActive}>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              disabled={this.state.subdomainValidationRequestActive}
+            >
               Continue
             </button>
           </div>
