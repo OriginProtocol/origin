@@ -87,9 +87,28 @@ class CreateListing extends Component {
         onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
-          <div className="make-offer-modal">
+          <div className="make-offer-modal success">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div>Your listing has been created!</div>
+            <div>
+              Your listing will be visible within a few seconds. Here's what
+              happens next:
+              <ul>
+                <li>Buyers will now see your listing on the marketplace.</li>
+                <li>
+                  When a buyer makes an offer on your listing, you can choose
+                  to accept or reject it.
+                </li>
+                <li>
+                  Once the offer is accepted, you will be expected to fulfill
+                  the order.
+                </li>
+                <li>
+                  You will receive payment once the buyer confirms that the
+                  order has been fulfilled.
+                </li>
+              </ul>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"
