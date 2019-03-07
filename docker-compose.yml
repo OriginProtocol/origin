@@ -30,9 +30,6 @@ services:
   origin-dapp:
     container_name: origin-dapp
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on:
       - origin-messaging
     volumes: &volumes
@@ -100,6 +97,9 @@ services:
   origin-messaging:
     container_name: origin-messaging
     image: origin
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - MESSAGING_NAMESPACE=dev
