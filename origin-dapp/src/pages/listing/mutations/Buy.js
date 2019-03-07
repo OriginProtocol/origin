@@ -157,6 +157,8 @@ require('react-styl')(`
         margin-top: 1rem
         li
           margin-bottom: 0.5rem
+    .metamask-video
+      margin-bottom: 1rem
 
   @media (max-width: 767.98px)
     .make-offer-modal

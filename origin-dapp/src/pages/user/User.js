@@ -25,7 +25,9 @@ class User extends Component {
               <>
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
-                    <Avatar avatar={profile.avatar} className="main-avatar" />
+                    <div className="avatar-wrap">
+                      <Avatar avatar={profile.avatar} className="main-avatar" />
+                    </div>
                     {noVerifications ? null : (
                       <div className="verified-info">
                         <h5>Verified Info</h5>
@@ -72,11 +74,11 @@ class User extends Component {
                     <h1 className="mb-0">
                       {profile.fullName || 'Unnamed User'}
                     </h1>
-                    <div className="description">{profile.description}</div>
-
-                    <div className="reviews-container">
-                      <Reviews id={id} />
+                    <div className="description">
+                      {profile.description || <i>No description</i>}
                     </div>
+
+                    <Reviews id={id} hideWhenZero />
 
                     <UserListings user={id} />
                   </div>
@@ -95,8 +97,13 @@ export default User
 require('react-styl')(`
   .user-profile
     padding-top: 3rem
-    .main-avatar
-      border-radius: 1rem;
+    h1
+      line-height: 1.25
+    .listings-count
+      font-size: 32px
+    .avatar-wrap
+      .main-avatar
+        border-radius: 1rem
     .description
       max-width: 50rem
 
@@ -119,7 +126,12 @@ require('react-styl')(`
           margin-right: 0.5rem
           width: 1.5rem
           height: 1.5rem
-    .reviews-container
+    .reviews
       margin-top: 2rem
-
+  @media (max-width: 767.98px)
+    .user-profile
+      padding-top: 2rem
+      .avatar-wrap
+        max-width: 8rem
+        margin: 0 auto 1rem auto
 `)
