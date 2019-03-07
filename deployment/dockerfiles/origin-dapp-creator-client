@@ -15,7 +15,17 @@ RUN mv envkey-source /usr/local/bin
 # Copy the necessary files for building origin-dapp
 COPY package*.json ./
 COPY lerna.json ./
+
+# origin-graphql and its dependencies
 COPY ./origin-graphql ./origin-graphql
+COPY ./origin-eventsource ./origin-eventsource
+COPY ./origin-ipfs ./origin-ipfs
+COPY ./origin-linker-client ./origin-linker-client
+COPY ./origin-messaging-client ./origin-messaging-client
+COPY ./origin-services ./origin-services
+COPY ./origin-validator ./origin-validator
+COPY ./origin-contracts ./origin-contracts
+
 COPY ./origin-dapp-creator-client ./origin-dapp-creator-client
 COPY ./scripts ./scripts
 
