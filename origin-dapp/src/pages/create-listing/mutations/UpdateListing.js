@@ -85,12 +85,12 @@ class UpdateListing extends Component {
         onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
-          <div className="make-offer-modal">
+          <div className="make-offer-modal success">
             <div className="success-icon" />
             <div>Your listing has been updated!</div>
             <div>
-              Your listing will be visible within a few seconds. Here&apos;s what
-              happens next:
+              Your listing will be visible within a few seconds. Here&apos;s
+              what happens next:
               <ul>
                 <li>Buyers will now see your listing on the marketplace.</li>
                 <li>
