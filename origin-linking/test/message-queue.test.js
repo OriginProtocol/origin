@@ -35,7 +35,7 @@ describe('Message Queue', () => {
     mqueue = new MessageQueue({ redis: redis, maxQueueSize })
     let lastRead = 0
 
-    const dreq = mqueue.subscribeMessage(testKey, async msgId => {
+    mqueue.subscribeMessage(testKey, async msgId => {
       if (lastRead < msgId) {
         const msg_array = await mqueue.getMessages(testKey, lastRead)
         if (msg_array.length) {

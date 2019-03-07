@@ -94,6 +94,7 @@ class Linker {
   }
 
   async _generateNonConflictingCode() {
+    // eslint-disable-next-line no-unused-vars
     for (const i of Array(10)) {
       const code = this._generateNewCode(CODE_SIZE)
       const existing = await this.findUnexpiredCode(code)
@@ -101,7 +102,7 @@ class Linker {
         return code
       }
     }
-    throw 'We hit max retries without finding a none repreated code!'
+    throw 'We hit max retries without finding a none repeated code!'
   }
 
   async initClientSession(clientToken, sessionToken, lastMessageId) {
