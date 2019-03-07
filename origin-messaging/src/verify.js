@@ -66,16 +66,16 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
     )
     const entry = keysMap.get(key)
 
-    const db_store = orbitGlobal.stores[message.id]
+    const dbStore = orbitGlobal.stores[message.id]
     if (
       config.LINKING_NOTIFY_ENDPOINT &&
-      db_store &&
-      db_store.__snapshot_loaded &&
-      db_store.access.write.includes(key)
+      dbStore &&
+      dbStore.__snapshot_loaded &&
+      dbStore.access.write.includes(key)
     ) {
       const value = message.payload.value
       if (value.length && value[0].emsg) {
-        const receivers = db_store.access.write
+        const receivers = dbStore.access.write
           .filter(address => address != key)
           .reduce((acc, i) => {
             acc[i] = { newMessage: true }
