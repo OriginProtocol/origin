@@ -44,12 +44,12 @@
     "nock": "^10.0.6",
     "oauth": "^0.9.15",
     "per-env": "^1.0.2",
-    "pg": "^7.8.0",
+    "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
     "prettier": "^1.16.3",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
-    "sinon": "^7.2.4",
+    "sinon": "^7.1.1",
     "superagent": "^4.1.0",
     "web3": "1.0.0-beta.34"
   },
@@ -57,7 +57,7 @@
     "chai": "^4.2.0",
     "eslint": "^5.13.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.18.7",
     "supertest": "^3.3.0"
   },
   "prettier": {

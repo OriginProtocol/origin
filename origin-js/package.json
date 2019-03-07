@@ -53,7 +53,7 @@
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "map-cache": "^0.2.2",
     "origin-contracts": "^0.8.6",
-    "rlp": "^2.1.0",
+    "rlp": "^2.2.2",
     "store": "^2.0.12",
     "truffle": "^4.1.14",
     "truffle-hdwallet-provider": "0.0.6",

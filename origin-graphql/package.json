@@ -25,7 +25,7 @@
     "@babel/register": "^7.0.0",
     "apollo-link-http": "^1.5.10",
     "apollo-link-context": "^1.0.14",
-    "dayjs": "^1.8.0",
+    "dayjs": "^1.8.5",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "mocha": "^5.2.0",
     "origin-eventsource": "^0.1.0",
