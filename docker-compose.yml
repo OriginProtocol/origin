@@ -100,9 +100,6 @@ services:
   origin-messaging:
     container_name: origin-messaging
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - MESSAGING_NAMESPACE=dev
@@ -115,9 +112,6 @@ services:
   origin-ipfs-proxy:
     container_name: origin-ipfs-proxy
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     ports:
       - "9999:9999"
@@ -129,9 +123,6 @@ services:
   origin-event-listener:
     container_name: origin-event-listener
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
@@ -162,9 +153,6 @@ services:
   origin-discovery:
     container_name: origin-discovery
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
@@ -187,9 +175,6 @@ services:
   origin-notifications:
     container_name: origin-notifications
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     depends_on:
       - postgres
@@ -206,9 +191,6 @@ services:
   origin-growth:
     container_name: origin-growth
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
@@ -222,9 +204,6 @@ services:
   origin-bridge:
     container_name: origin-bridge
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
