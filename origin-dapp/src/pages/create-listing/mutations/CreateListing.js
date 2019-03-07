@@ -96,8 +96,8 @@ class CreateListing extends Component {
               <ul>
                 <li>Buyers will now see your listing on the marketplace.</li>
                 <li>
-                  When a buyer makes an offer on your listing, you can choose
-                  to accept or reject it.
+                  When a buyer makes an offer on your listing, you can choose to
+                  accept or reject it.
                 </li>
                 <li>
                   Once the offer is accepted, you will be expected to fulfill
