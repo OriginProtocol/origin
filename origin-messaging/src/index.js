@@ -158,11 +158,11 @@ async function loadSnapshotDB(db) {
     } else {
       const values = snapshotData.values
       while (values.length) {
-        const push_values = values.splice(0, snapshotBatchSize)
+        const pushValues = values.splice(0, snapshotBatchSize)
         const log = new Log(
           db._ipfs,
           snapshotData.id,
-          push_values,
+          pushValues,
           undefined,
           null,
           db._key,
