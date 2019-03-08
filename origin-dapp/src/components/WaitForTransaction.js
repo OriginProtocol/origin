@@ -16,6 +16,16 @@ function roleForEvent(e) {
   if (e.startsWith('Identity')) return ''
 }
 
+const MetaMaskAnimation = () => (
+  <video className="metamask-video" width="320" heigh="240" autoPlay loop>
+    <source
+      src="images/growth/metamask_in_browser_dark_bg.mp4"
+      type="video/mp4"
+    />
+    Your browser does not support the video tag.
+  </video>
+)
+
 class WaitForTransaction extends Component {
   render() {
     const id = this.props.hash
@@ -25,7 +35,7 @@ class WaitForTransaction extends Component {
       const provider =
         walletType && walletType.startsWith('mobile-')
           ? 'mobile wallet'
-          : 'MetaMask'
+          : walletType
       return (
         <>
           <MobileLinkerCode role={role} />
@@ -37,10 +47,16 @@ class WaitForTransaction extends Component {
             }}
           >
             <div className="make-offer-modal">
-              <div className="spinner light" />
-              <div>
-                <b>Confirm Transaction</b>
-              </div>
+              {provider === 'MetaMask' ? (
+                <MetaMaskAnimation />
+              ) : (
+                <>
+                  <div className="spinner light" />
+                  <div>
+                    <b>Confirm Transaction</b>
+                  </div>
+                </>
+              )}
               <div>Please confirm this transaction in {provider}</div>
             </div>
           </Modal>
@@ -76,7 +92,11 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Mining...</b>
+                  <b>
+                    Waiting on the blockchain.
+                    <br />
+                    This might take a minute.
+                  </b>
                 </div>
               </div>
             )
@@ -85,7 +105,11 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Waiting for confirmation...</b>
+                  <b>
+                    Waiting for confirmation.
+                    <br />
+                    This might take a minute.
+                  </b>
                 </div>
               </div>
             )

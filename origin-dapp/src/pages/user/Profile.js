@@ -63,7 +63,7 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const storedAttestations = store.get('attestations', {})
+    const storedAttestations = store.get(`attestations-${props.wallet}`, {})
     this.state = { ...getState(profile), ...storedAttestations }
   }
 
@@ -174,7 +174,9 @@ class UserProfile extends Component {
                   ...attestations
                 ]}
                 validate={() => this.validate()}
-                onComplete={() => store.set('attestations', undefined)}
+                onComplete={() =>
+                  store.set(`attestations-${this.props.wallet}`, undefined)
+                }
                 children={fbt('Publish Now', 'Profile.publishNow')}
               />
             </div>
@@ -273,7 +275,7 @@ class UserProfile extends Component {
       }
       return m
     }, {})
-    store.set('attestations', attestations)
+    store.set(`attestations-${this.props.wallet}`, attestations)
   }
 }
 

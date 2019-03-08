@@ -48,73 +48,6 @@ class EmailAttestation extends Component {
 
   renderGenerateCode() {
     return (
-      <>
-        <h2>Verify your Email Address</h2>
-        <div className="instructions">
-          Enter your email address below and OriginID will send you a
-          verification code
-        </div>
-        <div className="mt-3">
-          <input
-            type="email"
-            ref={ref => (this.inputRef = ref)}
-            className="form-control form-control-lg text-center"
-            placeholder="Verify email address"
-            value={this.state.email}
-            onChange={e => this.setState({ email: e.target.value })}
-          />
-        </div>
-        {this.state.error && (
-          <div className="alert alert-danger mt-3">{this.state.error}</div>
-        )}
-        <div className="help">
-          Other users will know that you have a verified email address. Your
-          actual email will not be published on the blockchain.
-        </div>
-        <div className="actions">
-          {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
-          />
-        </div>
-      </>
-    )
-  }
-
-  renderVerifyCode() {
-    return (
-      <>
-        <h2>Verify your Email Address</h2>
-        <div className="instructions">Enter the code we sent you below</div>
-        <div className="my-3 verification-code">
-          <input
-            type="tel"
-            ref={ref => (this.inputRef = ref)}
-            className="form-control form-control-lg"
-            placeholder="Verification code"
-            value={this.state.code}
-            onChange={e => this.setState({ code: e.target.value })}
-          />
-          {this.state.error && (
-            <div className="alert alert-danger mt-3">{this.state.error}</div>
-          )}
-        </div>
-        <div className="actions">
-          {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
-          />
-        </div>
-      </>
-    )
-  }
-
-  renderCodeButton() {
-    return (
       <Mutation
         mutation={GenerateEmailCodeMutation}
         onCompleted={res => {
@@ -131,23 +64,58 @@ class EmailAttestation extends Component {
         }}
       >
         {generateCode => (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
+          <form
+            onSubmit={e => {
+              e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               generateCode({
                 variables: { email: this.state.email }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
-          />
+          >
+            <h2>Verify your Email Address</h2>
+            <div className="instructions">
+              Enter your email address below and OriginID will send you a
+              verification code
+            </div>
+            <div className="mt-3">
+              <input
+                type="email"
+                ref={ref => (this.inputRef = ref)}
+                className="form-control form-control-lg text-center"
+                placeholder="Verify email address"
+                value={this.state.email}
+                onChange={e => this.setState({ email: e.target.value })}
+              />
+            </div>
+            {this.state.error && (
+              <div className="alert alert-danger mt-3">{this.state.error}</div>
+            )}
+            <div className="help">
+              Other users will know that you have a verified email address. Your
+              actual email will not be published on the blockchain.
+            </div>
+            <div className="actions">
+              <button
+                className="btn btn-outline-light"
+                type="submit"
+                children={this.state.loading ? 'Loading...' : 'Continue'}
+              />
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="Cancel"
+              />
+            </div>
+          </form>
         )}
       </Mutation>
     )
   }
 
-  renderVerifyButton() {
+  renderVerifyCode() {
+    const { email, code } = this.state
     return (
       <Mutation
         mutation={VerifyEmailCodeMutation}
@@ -169,21 +137,46 @@ class EmailAttestation extends Component {
         }}
       >
         {verifyCode => (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
+          <form
+            onSubmit={e => {
+              e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
-                variables: {
-                  identity: this.props.wallet,
-                  email: this.state.email,
-                  code: this.state.code
-                }
+                variables: { identity: this.props.wallet, email, code }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
-          />
+          >
+            <h2>Verify your Email Address</h2>
+            <div className="instructions">Enter the code we sent you below</div>
+            <div className="my-3 verification-code">
+              <input
+                type="tel"
+                ref={ref => (this.inputRef = ref)}
+                className="form-control form-control-lg"
+                placeholder="Verification code"
+                value={this.state.code}
+                onChange={e => this.setState({ code: e.target.value })}
+              />
+              {this.state.error && (
+                <div className="alert alert-danger mt-3">
+                  {this.state.error}
+                </div>
+              )}
+            </div>
+            <div className="actions">
+              <button
+                type="submit"
+                className="btn btn-outline-light"
+                children={this.state.loading ? 'Loading...' : 'Continue'}
+              />
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="Cancel"
+              />
+            </div>
+          </form>
         )}
       </Mutation>
     )

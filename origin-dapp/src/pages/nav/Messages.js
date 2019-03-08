@@ -64,71 +64,74 @@ class MessagesNav extends Component {
   }
 }
 
+const Error = () => (
+  <div className="dropdown-menu dropdown-menu-right show p-3">
+    Error loading messages
+  </div>
+)
+const Loading = () => (
+  <div className="dropdown-menu dropdown-menu-right show p-3">Loading...</div>
+)
+
 class MessagesDropdown extends Component {
   state = {}
   render() {
     const { onClick, totalUnread, enabled, loading, error } = this.props
 
-    if (loading) {
-      return (
-        <div className="dropdown-menu dropdown-menu-right show p-3">
-          Loading...
-        </div>
-      )
-    }
     if (error) {
-      return (
-        <div className="dropdown-menu dropdown-menu-right show p-3">
-          Error loading messages
-        </div>
-      )
+      return <Error />
+    } else if (loading) {
+      return <Loading />
     }
 
     return (
-      <div className="dropdown-menu dropdown-menu-right show">
-        <Query query={ConversationsQuery} pollInterval={2000}>
-          {({ data, error, loading }) => {
-            if (loading || error) return null
-            const conversations = get(data, 'messaging.conversations', [])
-              .filter(c => c.totalUnread > 0)
-              .slice(0, 5)
+      <Query query={ConversationsQuery} pollInterval={500}>
+        {({ data, error, loading }) => {
+          if (error) {
+            return <Error />
+          } else if (loading) {
+            return <Loading />
+          }
 
-            return (
-              <>
-                <div className="count">
-                  <div className="total">{totalUnread}</div>
-                  <div className="title">Unread Messages</div>
-                  {enabled ? null : (
-                    <EnableMessaging
-                      className="btn-sm"
-                      onClose={() => onClick()}
-                    />
-                  )}
-                </div>
-                <div className="messaging-dropdown-content">
-                  {conversations.map((conv, idx) => (
-                    <RoomStatus
-                      onClick={() => {
-                        this.props.history.push({
-                          pathname: `/messages/${conv.id}`,
-                          state: { scrollToTop: true }
-                        })
-                        onClick()
-                      }}
-                      key={idx}
-                      conversation={conv}
-                      wallet={conv.id}
-                    />
-                  ))}
-                </div>
-                <Link to="/messages" onClick={() => onClick()}>
-                  View Messages
-                </Link>
-              </>
-            )
-          }}
-        </Query>
-      </div>
+          const conversations = get(data, 'messaging.conversations', [])
+            .filter(c => c.totalUnread > 0)
+            .slice(0, 5)
+
+          return (
+            <div className="dropdown-menu dropdown-menu-right show">
+              <div className="count">
+                <div className="total">{totalUnread}</div>
+                <div className="title">Unread Messages</div>
+                {enabled ? null : (
+                  <EnableMessaging
+                    className="btn-sm"
+                    onClose={() => onClick()}
+                  />
+                )}
+              </div>
+              <div className="messaging-dropdown-content">
+                {conversations.map((conv, idx) => (
+                  <RoomStatus
+                    onClick={() => {
+                      this.props.history.push({
+                        pathname: `/messages/${conv.id}`,
+                        state: { scrollToTop: true }
+                      })
+                      onClick()
+                    }}
+                    key={idx}
+                    conversation={conv}
+                    wallet={conv.id}
+                  />
+                ))}
+              </div>
+              <Link to="/messages" onClick={() => onClick()}>
+                View Messages
+              </Link>
+            </div>
+          )
+        }}
+      </Query>
     )
   }
 }
