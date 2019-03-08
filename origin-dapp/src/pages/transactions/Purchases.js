@@ -12,7 +12,9 @@ import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
+import Stages from 'components/TransactionStages'
 import Pic from './_Pic'
+import OfferStatus from './_OfferStatus'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Purchases'
@@ -93,7 +95,7 @@ class Purchases extends Component {
                               <div className="category">
                                 {listing.categoryStr}
                               </div>
-                              <div className="status">{offer.statusStr}</div>
+                              <OfferStatus offer={offer} />
                             </div>
                             <div className="title">
                               <Link to={`/purchases/${offer.id}`}>
@@ -106,6 +108,7 @@ class Purchases extends Component {
                             <div className="price">
                               <TokenPrice {...offer} />
                             </div>
+                            <Stages offer={offer} />
                           </div>
                         </div>
                       ))}
@@ -197,6 +200,8 @@ require('react-styl')(`
           text-transform: uppercase
           font-weight: 900
           font-size: 11px
+          &.pending
+            color: var(--gold)
       .title
         font-size: 24px
         font-weight: normal
@@ -207,6 +212,8 @@ require('react-styl')(`
       .price
         font-weight: normal
         margin-top: 0.5rem
+      .stages
+        margin: 1rem 0
         flex: 1
       .actions
         font-size: 12px
