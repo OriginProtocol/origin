@@ -12,7 +12,9 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
+import Stages from 'components/TransactionStages'
 import Pic from './_Pic'
+import OfferStatus from './_OfferStatus'
 
 import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/Sales'
@@ -93,7 +95,7 @@ class Sales extends Component {
                               <div className="category">
                                 {listing.categoryStr}
                               </div>
-                              <div className="status">{offer.statusStr}</div>
+                              <OfferStatus offer={offer} />
                             </div>
                             <div className="title">
                               <Link to={`/purchases/${offer.id}`}>
@@ -106,6 +108,7 @@ class Sales extends Component {
                             <div className="price">
                               <TokenPrice {...offer} />
                             </div>
+                            <Stages offer={offer} />
                           </div>
                         </div>
                       ))}
