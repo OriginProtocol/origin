@@ -50,13 +50,10 @@ class ListingCards extends Component {
             </h5>
             {a.__typename === 'AnnouncementListing' ? null : (
               <div className="price">
-                <div className="eth">
-                  {`${a.price.amount} ETH`}
-                  {a.__typename !== 'FractionalListing' ? '' : ' / night'}
-                </div>
-                <div className="usd">
-                  <Price amount={a.price.amount} />
-                </div>
+                <Price amount={a.price.amount} />
+                {a.__typename !== 'FractionalListing' ? null : (
+                  <span className="desc">per night</span>
+                )}
               </div>
             )}
           </div>
@@ -115,24 +112,20 @@ require('react-styl')(`
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
-      margin-top: 0.5rem
+      margin: 0.25rem 0
+      line-height: 1.5
       a
         color: var(--dark)
 
     .price
-      background: url(images/eth-icon.svg) no-repeat
-      padding-left: 2rem
-      line-height: 1.25rem
       font-family: var(--default-font)
-
-      .eth
-        font-size: 18px
-        font-weight: normal
-        color: var(--bluish-purple)
-
-      .usd
-        font-size: 10px
-        font-weight: normal
-        letter-spacing: 0.8px
+      font-size: 22px
+      color: var(--dark)
+      font-weight: bold
+      line-height: 1
+      span.desc
         color: var(--steel)
+        font-size: 14px
+        font-weight: normal
+        margin-left: 0.25rem
 `)

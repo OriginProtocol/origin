@@ -42,3 +42,15 @@ const Tooltip = ({
 )
 
 export default Tooltip
+
+require('react-styl')(`
+  .tooltip
+    .tooltip-inner
+      background: var(--dark-grey-blue)
+      font-size: 14px
+      font-weight: normal
+      line-height: normal
+      padding: 0.75rem
+    .arrow::before
+      border-top-color: var(--dark-grey-blue)
+`)

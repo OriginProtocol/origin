@@ -13,7 +13,7 @@ const CurrentPrice = gql`
 
 class Price extends Component {
   render() {
-    const { amount, className, el } = this.props
+    const { amount, className, el, useCode } = this.props
     if (!amount) {
       this.renderEmpty()
     }
@@ -35,7 +35,8 @@ class Price extends Component {
               />
             )
           }
-          return <span className={className}>{`${rounded} USD`}</span>
+          const content = useCode ? `${rounded} USD` : `$${rounded}`
+          return <span className={className}>{content}</span>
         }}
       </Query>
     )
