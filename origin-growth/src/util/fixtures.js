@@ -304,109 +304,109 @@ async function createTestData() {
   //
   // Events
   //
-  console.log('Creating test event data...')
+  // console.log('Creating test event data...')
 
-  await db.GrowthEvent.destroy({
-    where: {},
-    truncate: true
-  })
+  // await db.GrowthEvent.destroy({
+  //   where: {},
+  //   truncate: true
+  // })
 
-  await db.GrowthEvent.upsert({
-    id: 1,
-    customId: null,
-    type: enums.GrowthEventTypes.ProfilePublished,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 2, 2019') },
-    { where: { id: 1 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 1,
+  //   customId: null,
+  //   type: enums.GrowthEventTypes.ProfilePublished,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 2, 2019') },
+  //   { where: { id: 1 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 2,
-    customId: null,
-    type: enums.GrowthEventTypes.EmailAttestationPublished,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 2, 2019') },
-    { where: { id: 2 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 2,
+  //   customId: null,
+  //   type: enums.GrowthEventTypes.EmailAttestationPublished,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 2, 2019') },
+  //   { where: { id: 2 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 3,
-    customId: null,
-    type: enums.GrowthEventTypes.AirbnbAttestationPublished,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 3, 2019') },
-    { where: { id: 3 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 3,
+  //   customId: null,
+  //   type: enums.GrowthEventTypes.AirbnbAttestationPublished,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 3, 2019') },
+  //   { where: { id: 3 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 4,
-    customId: null,
-    type: enums.GrowthEventTypes.TwitterAttestationPublished,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 3, 2019') },
-    { where: { id: 4 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 4,
+  //   customId: null,
+  //   type: enums.GrowthEventTypes.TwitterAttestationPublished,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 3, 2019') },
+  //   { where: { id: 4 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 5,
-    customId: null,
-    type: enums.GrowthEventTypes.RefereeSignedUp,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 4, 2019') },
-    { where: { id: 5 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 5,
+  //   customId: null,
+  //   type: enums.GrowthEventTypes.RefereeSignedUp,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 4, 2019') },
+  //   { where: { id: 5 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 6,
-    customId: '1-000-456',
-    type: enums.GrowthEventTypes.ListingCreated,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 5, 2019') },
-    { where: { id: 6 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 6,
+  //   customId: '1-000-456',
+  //   type: enums.GrowthEventTypes.ListingCreated,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 5, 2019') },
+  //   { where: { id: 6 } }
+  // )
 
-  await db.GrowthEvent.upsert({
-    id: 7,
-    customId: '1-000-789-1',
-    type: enums.GrowthEventTypes.ListingPurchased,
-    status: enums.GrowthEventStatuses.Logged,
-    ethAddress: account2,
-    data: null
-  })
-  await db.GrowthEvent.update(
-    { createdAt: Date.parse('January 6, 2019') },
-    { where: { id: 7 } }
-  )
+  // await db.GrowthEvent.upsert({
+  //   id: 7,
+  //   customId: '1-000-789-1',
+  //   type: enums.GrowthEventTypes.ListingPurchased,
+  //   status: enums.GrowthEventStatuses.Logged,
+  //   ethAddress: account2,
+  //   data: null
+  // })
+  // await db.GrowthEvent.update(
+  //   { createdAt: Date.parse('January 6, 2019') },
+  //   { where: { id: 7 } }
+  // )
 
-  // Wipe out any previous rewards.
-  await db.GrowthReward.destroy({
-    where: {},
-    truncate: true
-  })
+  // // Wipe out any previous rewards.
+  // await db.GrowthReward.destroy({
+  //   where: {},
+  //   truncate: true
+  // })
 }
 
 createTestData().then(() => {
