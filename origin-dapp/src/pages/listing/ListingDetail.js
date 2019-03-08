@@ -220,7 +220,19 @@ require('react-styl')(`
         justify-content: space-between
       .total
         padding-top: 0
+
       .price
+        font-family: var(--default-font)
+        font-size: 22px
+        color: var(--dark)
+        font-weight: bold
+        line-height: 1
+        span.desc
+          color: var(--steel)
+          font-size: 14px
+          font-weight: normal
+          margin-left: 0.25rem
+      .price-old
         display: flex
         align-items: baseline
         margin-bottom: 1.5rem

@@ -9,13 +9,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
   return (
     <div className="listing-buy multi">
       <div className="price">
-        <div className="eth">
-          {`${listing.price.amount} ETH`}
-          {listing.multiUnit ? <span>{` / each`}</span> : null}
-        </div>
-        <div className="usd">
-          <Price amount={listing.price.amount} />
-        </div>
+        <Price amount={listing.price.amount} />
       </div>
       <SelectQuantity
         quantity={quantity}
