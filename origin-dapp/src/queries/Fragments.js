@@ -115,6 +115,9 @@ export default {
         }
         withdrawnEvent {
           timestamp
+          returnValues {
+            party
+          }
         }
         disputedEvent {
           timestamp

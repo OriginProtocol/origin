@@ -10,7 +10,7 @@ const sentenceCase = str =>
 const EventTick = ({ className, children, event }) => {
   const stageName = children
   const tickEl = <div className={className}>{stageName}</div>
-  if (event === undefined) {
+  if (!event || !event.timestamp) {
     return tickEl
   }
   const tip = (
