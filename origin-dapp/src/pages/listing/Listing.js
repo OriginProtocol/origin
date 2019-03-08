@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import QueryError from 'components/QueryError'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
+import Redirect from 'components/Redirect'
 
 import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
@@ -18,6 +19,10 @@ class Listing extends Component {
   render() {
     const listingId = this.props.match.params.listingID
     const vars = { listingId }
+
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} push />
+    }
 
     return (
       <>
@@ -41,6 +46,11 @@ class Listing extends Component {
 
             const from = get(data, 'web3.metaMaskAccount.id')
 
+            const wrappedRefetch = async redirect => {
+              await refetch()
+              this.setState({ redirect })
+            }
+
             return (
               <Switch>
                 <Route
@@ -52,14 +62,14 @@ class Listing extends Component {
                 <Route
                   path="/listing/:listingID/edit"
                   render={() => (
-                    <EditListing listing={listing} refetch={refetch} />
+                    <EditListing listing={listing} refetch={wrappedRefetch} />
                   )}
                 />
                 <Route
                   render={() => (
                     <ListingDetail
                       listing={listing}
-                      refetch={refetch}
+                      refetch={wrappedRefetch}
                       from={from}
                       quantity={this.state.quantity}
                       updateQuantity={quantity => this.setState({ quantity })}

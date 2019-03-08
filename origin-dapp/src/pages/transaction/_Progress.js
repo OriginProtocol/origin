@@ -6,10 +6,11 @@ import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 import DisputeOffer from './mutations/DisputeOffer'
 
-import WaitForFinalize from './_WaitForFinalize'
-import EventTick from './_EventTick'
 import StarRating from 'components/StarRating'
 import SendMessage from 'components/SendMessage'
+import Stages from 'components/TransactionStages'
+
+import WaitForFinalize from './_WaitForFinalize'
 
 const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
   const props = { offer, loading }
@@ -36,6 +37,7 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
   } else if (offer.status === 4) {
     return <Finalized party="buyer" {...props} />
   }
+
   if (offer.status === 2) {
     return <ReviewAndFinalize {...props} refetch={refetch} />
   } else if (offer.status === 0) {
@@ -74,14 +76,7 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
         </AcceptOffer>
       </div>
     </div>
-    <div className="stages">
-      <EventTick className="active" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick>Offer Accepted</EventTick>
-      <EventTick>Sale Completed</EventTick>
-      <EventTick>Funds withdrawn</EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -128,15 +123,7 @@ class ReviewAndFinalize extends Component {
             </DisputeOffer>
           </div>
         </div>
-        <div className="stages">
-          <EventTick className="active bg" event={offer.createdEvent}>
-            Offer Placed
-          </EventTick>
-          <EventTick className="active bgl" event={offer.acceptedEvent}>
-            Offer Accepted
-          </EventTick>
-          <EventTick>Sale Completed</EventTick>
-        </div>
+        <Stages offer={offer} />
       </div>
     )
   }
@@ -153,13 +140,7 @@ const MessageSeller = ({ offer, refetch, loading }) => (
       </SendMessage>
       <WithdrawOffer offer={offer} refetch={refetch} />
     </div>
-    <div className="stages">
-      <EventTick className="active" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick>Offer Accepted</EventTick>
-      <EventTick>Sale Completed</EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -171,13 +152,7 @@ const WaitForSeller = ({ offer, refetch, loading }) => (
       <div className="help">The seller will review your booking</div>
       <WithdrawOffer offer={offer} refetch={refetch} />
     </div>
-    <div className="stages">
-      <EventTick className="active" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick>Offer Accepted</EventTick>
-      <EventTick>Sale Completed</EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -191,14 +166,7 @@ const OfferWithdrawn = ({ offer, party, loading }) => (
           : 'You withdrew your offer'}
       </div>
     </div>
-    <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick className="active bg" event={offer.withdrawnEvent}>
-        Offer Withdrawn
-      </EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -212,14 +180,7 @@ const OfferRejected = ({ offer, party, loading }) => (
           : 'Your offer was rejected by the seller'}
       </div>
     </div>
-    <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick className="active bg" event={offer.withdrawnEvent}>
-        Offer Rejected
-      </EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -231,18 +192,7 @@ const Disputed = ({ offer, loading }) => (
         Wait to be contacted by an Origin team member
       </div>
     </div>
-    <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>
-        Offer Accepted
-      </EventTick>
-      <EventTick className="danger bgl" event={offer.disputedEvent}>
-        Dispute Started
-      </EventTick>
-      <EventTick>Ruling Made</EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -252,20 +202,7 @@ const DisputeResolved = ({ offer, loading }) => (
       <h4>Dispute Resolved</h4>
       <div className="help mb-0">Origin have resolved this dispute</div>
     </div>
-    <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>
-        Offer Accepted
-      </EventTick>
-      <EventTick className="danger bg" event={offer.disputedEvent}>
-        Dispute Started
-      </EventTick>
-      <EventTick className="active bg" event={offer.rulingEvent}>
-        Ruling Made
-      </EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -278,17 +215,7 @@ const Finalized = ({ offer, loading }) => (
         released to the seller.
       </div>
     </div>
-    <div className="stages">
-      <EventTick className="active bg" event={offer.createdEvent}>
-        Offer Placed
-      </EventTick>
-      <EventTick className="active bg" event={offer.acceptedEvent}>
-        Offer Accepted
-      </EventTick>
-      <EventTick className="active bg" event={offer.finalizedEvent}>
-        Sale Completed
-      </EventTick>
-    </div>
+    <Stages offer={offer} />
   </div>
 )
 
@@ -370,61 +297,9 @@ require('react-styl')(`
     .stages
       background-color: var(--pale-grey-eight)
       border-radius: 0 0 5px 5px
-      width: 100%
       margin-top: 1rem
       padding: 1rem
-      display: flex
-      justify-content: space-evenly
-      align-items: flex-start
-      font-size: 14px
-      color: var(--dark)
-      font-weight: normal
-      position: relative
-      > div
-        flex: 1
-        display: flex
-        flex-direction: column
-        align-items: center
-        position: relative
-        text-align: center
-        line-height: normal
-        padding: 0 0.25rem
-        &::before
-          content: ""
-          background-color: var(--pale-grey-two)
-          background-size: 0.75rem
-          border-radius: 2rem
-          width: 1.2rem
-          height: 1.2rem
-          margin-bottom: 0.25rem
-          z-index: 5
-        &::after
-          content: ""
-          background-color: var(--pale-grey-two)
-          height: 5px
-          left: 0
-          right: 0
-          top: 0.45rem
-          position: absolute
-          z-index: 4
-        &.active::before
-          background: var(--greenblue) url(images/checkmark.svg) center no-repeat
-        &.danger::before
-          background: var(--orange-red)
-          content: "!";
-          font-weight: 900;
-          color: var(--white);
-          text-align: center;
-          font-size: 14px;
-          line-height: 19px;
-        &:first-child::after
-          left: 50%
-        &:last-child::after
-          right: 50%
-        &.bg::after
-          background: var(--greenblue)
-        &.bgl::after
-          background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) 50%, var(--pale-grey-two) 50%, var(--pale-grey-two))
+
   @media (max-width: 767.98px)
     .transaction-progress
       .actions
