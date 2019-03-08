@@ -272,34 +272,34 @@ async function createTestData() {
   //
   // Participants
   //
-  console.log('Creating test participant data...')
+  // console.log('Creating test participant data...')
 
-  await db.GrowthParticipant.destroy({
-    where: {},
-    truncate: true
-  })
+  // await db.GrowthParticipant.destroy({
+  //   where: {},
+  //   truncate: true
+  // })
 
-  await db.GrowthParticipant.upsert({
-    ethAddress: account2,
-    status: enums.GrowthParticipantStatuses.Active,
-    data: null,
-    agreementId: 'Test agreement'
-  })
-  await db.GrowthParticipant.update(
-    { createdAt: Date.parse('January 1, 2019') },
-    { where: { ethAddress: account2 } }
-  )
+  // await db.GrowthParticipant.upsert({
+  //   ethAddress: account2,
+  //   status: enums.GrowthParticipantStatuses.Active,
+  //   data: null,
+  //   agreementId: 'Test agreement'
+  // })
+  // await db.GrowthParticipant.update(
+  //   { createdAt: Date.parse('January 1, 2019') },
+  //   { where: { ethAddress: account2 } }
+  // )
 
-  await db.GrowthParticipant.upsert({
-    ethAddress: account2,
-    status: enums.GrowthParticipantStatuses.Active,
-    data: null,
-    agreementId: 'Test agreement'
-  })
-  await db.GrowthParticipant.update(
-    { createdAt: Date.parse('January 1, 2019') },
-    { where: { ethAddress: account2 } }
-  )
+  // await db.GrowthParticipant.upsert({
+  //   ethAddress: account2,
+  //   status: enums.GrowthParticipantStatuses.Active,
+  //   data: null,
+  //   agreementId: 'Test agreement'
+  // })
+  // await db.GrowthParticipant.update(
+  //   { createdAt: Date.parse('January 1, 2019') },
+  //   { where: { ethAddress: account2 } }
+  // )
 
   //
   // Events
