@@ -15,10 +15,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: elasticsearch
-    build:
-      context: .
-      dockerfile: development/dockerfiles/elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
     ports:
       - "9200:9200"
     environment:
@@ -150,7 +147,11 @@ services:
       - elasticsearch
     ports:
       - "4000:4000"
-    command: npm run start:discovery --prefix origin-discovery
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
+      node ./origin-discovery/devops/es-cli.js createIndex listings &&
+      npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:
     container_name: origin-notifications
