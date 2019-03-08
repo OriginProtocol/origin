@@ -280,7 +280,10 @@ async function waitForInput() {
     const indexName = process.argv[3]
     await validateCliResponse(createIndexWithName, [indexName], response => {
       // Don't error if success or if index already exists
-      return JSON.parse(response).acknowledged === true || JSON.parse(response).reason === 'index_already_exists_exception'
+      return (
+        JSON.parse(response).acknowledged === true ||
+        JSON.parse(response).reason === 'index_already_exists_exception'
+      )
     })
     console.log(`Index ${indexName} created!`)
     process.exit(0)
