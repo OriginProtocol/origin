@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
+import withCreatorConfig from 'hoc/withCreatorConfig'
+
 import PageTitle from 'components/PageTitle'
 
 import Step1 from '../create-listing/Step1'
@@ -21,6 +23,9 @@ class EditListing extends Component {
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
+
+        // Marketplace creator fields:
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...pick(props.listing, [
           '__typename',
@@ -74,7 +79,7 @@ class EditListing extends Component {
   }
 }
 
-export default EditListing
+export default withCreatorConfig(EditListing)
 
 require('react-styl')(`
 `)
