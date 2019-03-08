@@ -1,5 +1,6 @@
 const BigNumber = require('bignumber.js')
 const { GrowthInvite } = require('../resources/invite')
+const enums = require('../enums')
 
 const sumUpRewards = (rewards, currency) => {
   if (rewards === null || rewards.length === 0) {
@@ -138,12 +139,32 @@ const conditionToUnlockRule = (rule, allRules) => {
 }
 
 /**
- * Formats the campaign object according to the Growth GraphQL schema.
+ * Formats the campaign object according to the Growth GraphQL schema. If user is not authenticated only basic campaign data is
+ * available without actions and rewards.
+ * 
  * @param {CampaignRules} campaign
- * @param {string} ethAddress - User's Eth address.
+ * @param {GrowthParticipantAuthenticationStatus} authentication - user's authentication status
+ * @param {string} ethAddress - User's Eth address. This is undefined when user is not authenticated
  * @returns {Promise<{id: *, name: string, startDate: *, endDate: *, distributionDate: (where.distributionDate|{}), status: (Enum<GrowthCampaignStatuses>|Enum<GrowthActionStatus>), actions: any[], rewardEarned: {amount, currency}}>}
  */
-const campaignToApolloObject = async (campaign, ethAddress) => {
+const campaignToApolloObject = async (campaign, authentication, ethAddress) => {
+  const apolloCampaign = {
+    id: campaign.campaign.id,
+    nameKey: campaign.campaign.nameKey,
+    shortNameKey: campaign.campaign.shortNameKey,
+    name: campaign.campaign.name,
+    startDate: campaign.campaign.startDate,
+    endDate: campaign.campaign.endDate,
+    distributionDate: campaign.campaign.distributionDate,
+    status: campaign.getStatus()
+  }
+
+  // user is not enrolled return only basic campaign data
+  if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+    return apolloCampaign
+  }
+
+
   const events = await campaign.getEvents(ethAddress)
   const levels = Object.values(campaign.levels)
   const rules = levels.flatMap(level => level.rules)
@@ -184,18 +205,10 @@ const campaignToApolloObject = async (campaign, ethAddress) => {
       })
   )
 
-  return {
-    id: campaign.campaign.id,
-    nameKey: campaign.campaign.nameKey,
-    shortNameKey: campaign.campaign.shortNameKey,
-    name: campaign.campaign.name,
-    startDate: campaign.campaign.startDate,
-    endDate: campaign.campaign.endDate,
-    distributionDate: campaign.campaign.distributionDate,
-    status: campaign.getStatus(),
-    actions: apolloActions,
-    rewardEarned: sumUpRewards(rewards, campaign.campaign.currency)
-  }
+  apolloCampaign.actions = apolloActions
+  apolloCampaign.rewardEarned = sumUpRewards(rewards, campaign.campaign.currency)
+
+  return apolloCampaign
 }
 
 module.exports = { campaignToApolloObject }
