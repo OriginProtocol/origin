@@ -2,9 +2,7 @@ const start = require('./index.js')
 
 start({
   ganache:
-    process.env.START_GANACHE !== undefined
-      ? process.env.START_GANACHE
-      : true,
+    process.env.START_GANACHE !== undefined ? process.env.START_GANACHE : true,
   deployContracts:
     process.env.DEPLOY_CONTRACTS !== undefined
       ? process.env.DEPLOY_CONTRACTS
