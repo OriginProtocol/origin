@@ -62,7 +62,7 @@ async function createListing(_, input) {
   let createListingCall
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
-  if (autoApprove) {
+  if (autoApprove && input.deposit > 0) {
     const fnSig = contracts.web3.eth.abi.encodeFunctionSignature(
       'createListingWithSender(address,bytes32,uint256,address)'
     )

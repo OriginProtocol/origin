@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Modal from 'components/Modal'
 
 import DisputeOffer from './mutations/DisputeOffer'
-import EventTick from './_EventTick'
+import EventTick from 'components/EventTick'
 
 class WaitForFinalize extends Component {
   state = {}
@@ -43,7 +43,6 @@ class WaitForFinalize extends Component {
             Offer Accepted
           </EventTick>
           <EventTick>Sale Completed</EventTick>
-          <EventTick>Funds withdrawn</EventTick>
         </div>
         {!this.state.open ? null : (
           <Modal

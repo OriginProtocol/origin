@@ -6,7 +6,6 @@ import MakeOfferMutation from 'mutations/MakeOffer'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
-import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
@@ -14,9 +13,6 @@ import withWeb3 from 'hoc/withWeb3'
 class Buy extends Component {
   state = {}
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} push />
-    }
     return (
       <>
         <Mutation
@@ -109,15 +105,16 @@ class Buy extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={async () => {
+              onClick={() => {
                 this.setState({ loading: true })
-                if (this.props.refetch) {
-                  await this.props.refetch()
-                }
                 const netId = get(this.props, 'web3.networkId')
                 const { listingID, offerID } = event.returnValues
                 const offerId = `${netId}-000-${listingID}-${offerID}`
-                this.setState({ redirect: `/purchases/${offerId}` })
+                const redirect = `/purchases/${offerId}`
+
+                if (this.props.refetch) {
+                  this.props.refetch(redirect)
+                }
               }}
               children={this.state.loading ? 'Loading...' : 'View Purchase'}
             />
@@ -157,6 +154,8 @@ require('react-styl')(`
         margin-top: 1rem
         li
           margin-bottom: 0.5rem
+    .metamask-video
+      margin-bottom: 1rem
 
   @media (max-width: 767.98px)
     .make-offer-modal
