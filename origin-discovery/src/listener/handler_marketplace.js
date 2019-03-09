@@ -212,7 +212,6 @@ class MarketplaceEventHandler {
 
     logger.info(`Indexing listing in DB: \
       id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
-    console.log(listing)
     const listingData = {
       id: listingId,
       blockNumber: log.blockNumber,
