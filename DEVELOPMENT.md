@@ -4,15 +4,13 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Development
 
-Origin has two development setups. One is the "light" version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.
-
-The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin features, include messaging, browser notifications, and attestation services.
+In most cases developers who are new to Origin will want to work on our marketplace DApp. The DApp has some required an optional backend services that it needs to run, for example an Ethereum network, or an attestation server. The default development setup allows you to develop with the DApp backed by services in our development deployment. You can also alternatively run your own set of local services using `docker-compose`.
 
 ## About the Origin repository
 
 Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
 
-## Using NPM & Lerna
+## Developing with the DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the necessary dependencies:
 
@@ -21,58 +19,49 @@ git clone https://github.com/OriginProtocol/origin
 cd origin && npm install
 ```
 
-2. Configure the DApp with default environment variables:
-
-```
-cp origin-dapp/dev.env origin-dapp/.env
-```
-
-3. You can then start a light development environment by executing:
+2. You can then start the DApp using:
 
 ```
 npm start
 ```
 
-4. You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:
+This will start a `webpack-dev-server` with hot reloading on `http://localhost:3000.`.
 
-- Log out of MetaMask.
+3. You will then need to connect to your testnet. Using MetaMask follow these steps:
 
-- Click `Restore from seed phrase`
+- Open MetaMask by clicking on the extension.
+- Open MetaMask's settings by clicking on the account icon in the top right and selecting `Settings` from the menu.
+- Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC URL.
+- Select the Origin Testnet from the network selection in MetaMask.
+- To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth` and use the invitation code `decentralize`.
 
-- Enter the following seed phrase (Mnemonic):
+### Network selection
 
-```
-candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-```
+By default the DApp will use a set of Origin's deployed development services. You can change the environment used by the DApp by accessing the following URLs:
 
-This is the default seed phrase used by [Truffle](https://github.com/trufflesuite/truffle) for development.
+- http://localhost:3000/docker - Local Ganache and services runn by Docker Compose (see below for further instructions)
+- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging services (e.g. https://dapp.staging.originprotocol.com)
+- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production services (e.g. https://dapp.originprotocol.com)
 
- ⚠️  Be careful not to mix up your test wallet with your real one on the Main Network.
+### Other settings
 
-- Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
+The DApp includes a settings page at `http://localhost:3000/settings` which is useful if you want to switch individual services, e.g. use a different Web3 provider or atteestation server.
 
-- You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
+## Running Docker Compose
 
-### Troubleshooting
- - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
-```rm -rf ~/.jsipfs/```
-
-## Using Docker Compose
-
-The Origin Docker Compose configuration runs the following packages:
+The `docker-compose` configuration runs the following packages:
 
 ```
+- elasticsearch on http://localhost:9200
+- postgresql
+- origin-services (ipfs server)
+- origin-services (ethereum blockchain using ganache on http://localhost:8545)
 - origin-bridge on http://localhost:5000
-- origin-dapp on http://localhost:3000
 - origin-discovery (event-listener)
 - origin-discovery (apollo server on http://localhost:4000)
 - origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
-- origin-js (ipfs server)
-- origin-js (ethereum blockchain using ganache on http://localhost:8545)
-- postgresql
-- elasticsearch on http://localhost:9200
 ```
 
 ### System Requirements
@@ -128,8 +117,6 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:
 
 	docker-compose build --no-cache origin
-
-Configure environment variables in `development/envfiles`
 
 ### Troubleshooting
 
