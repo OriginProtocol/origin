@@ -2,6 +2,7 @@ import messaging from './messaging/_messaging'
 
 import contracts from '../contracts'
 import creatorConfig from '../constants/CreatorConfig'
+import Currencies from '../constants/Currencies'
 
 let ethPrice
 const marketplaceExists = {}
@@ -126,5 +127,8 @@ export default {
       nodes: []
     }
   },
-  walletLinker: () => ({})
+  walletLinker: () => ({}),
+
+  currency: (_, args) => Currencies[args.id],
+  currencies: () => Object.keys(Currencies).map(id => Currencies[id])
 }

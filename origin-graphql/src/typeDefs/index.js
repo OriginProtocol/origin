@@ -7,6 +7,7 @@ import Messaging from './Messaging'
 import Notifications from './Notifications'
 import CreatorConfig from './CreatorConfig'
 import WalletLinker from './WalletLinker'
+import Currency from './Currency'
 
 export default [
   ...Object.values(Common),
@@ -17,5 +18,6 @@ export default [
   Notifications,
   Attestations,
   CreatorConfig,
-  WalletLinker
+  WalletLinker,
+  Currency
 ]

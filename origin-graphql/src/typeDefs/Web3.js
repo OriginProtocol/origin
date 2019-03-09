@@ -126,7 +126,7 @@ module.exports = `
     symbol: String
     decimals: Int
     totalSupply: String
-    exchangeRate(currency: String!): Int
+    exchangeRate(currency: String!): Float
   }
 
   type Contract {
