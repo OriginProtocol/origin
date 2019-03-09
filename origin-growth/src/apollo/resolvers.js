@@ -47,7 +47,11 @@ const resolvers = {
         totalCount: campaigns.length,
         nodes: campaigns.map(
           async campaign =>
-            await campaignToApolloObject(campaign, context.authentication, context.walletAddress)
+            await campaignToApolloObject(
+              campaign,
+              context.authentication,
+              context.walletAddress
+            )
         ),
         pageInfo: {
           endCursor: 'TODO implement',
@@ -59,7 +63,11 @@ const resolvers = {
     },
     async campaign(root, args, context) {
       const campaign = await GrowthCampaign.get(args.id)
-      return await campaignToApolloObject(campaign, context.authentication, context.walletAddress)
+      return await campaignToApolloObject(
+        campaign,
+        context.authentication,
+        context.walletAddress
+      )
     },
     async inviteInfo(root, args) {
       return await GrowthInvite.getReferrerInfo(args.code)

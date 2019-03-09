@@ -141,7 +141,7 @@ const conditionToUnlockRule = (rule, allRules) => {
 /**
  * Formats the campaign object according to the Growth GraphQL schema. If user is not authenticated only basic campaign data is
  * available without actions and rewards.
- * 
+ *
  * @param {CampaignRules} campaign
  * @param {GrowthParticipantAuthenticationStatus} authentication - user's authentication status
  * @param {string} ethAddress - User's Eth address. This is undefined when user is not authenticated
@@ -163,7 +163,6 @@ const campaignToApolloObject = async (campaign, authentication, ethAddress) => {
   if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
     return apolloCampaign
   }
-
 
   const events = await campaign.getEvents(ethAddress)
   const levels = Object.values(campaign.levels)
@@ -206,7 +205,10 @@ const campaignToApolloObject = async (campaign, authentication, ethAddress) => {
   )
 
   apolloCampaign.actions = apolloActions
-  apolloCampaign.rewardEarned = sumUpRewards(rewards, campaign.campaign.currency)
+  apolloCampaign.rewardEarned = sumUpRewards(
+    rewards,
+    campaign.campaign.currency
+  )
 
   return apolloCampaign
 }
