@@ -1,19 +1,16 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
-import PageTitle from 'components/PageTitle'
-
-import Step1 from '../create-listing/Step1'
-import Step2 from '../create-listing/Step2'
-import Boost from '../create-listing/Boost'
-import Availability from '../create-listing/Availability'
-import Review from '../create-listing/Review'
+import CreateListing from '../create-listing/CreateListing'
 
 class EditListing extends Component {
   constructor(props) {
     super(props)
+    // Translate listing from schema representation to form
+    // representation.
+    // TODO: Can we unify field names or otherwise keep knowledge of
+    // special fields limited to their file in `listings-types` dir?
     this.state = {
       listing: {
         // HomeShare fields:
@@ -21,7 +18,6 @@ class EditListing extends Component {
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
-
         ...pick(props.listing, [
           '__typename',
           'title',
@@ -39,38 +35,7 @@ class EditListing extends Component {
   }
 
   render() {
-    const stepProps = {
-      listing: this.state.listing,
-      listingId: this.props.listing.id,
-      mode: 'edit',
-      onChange: listing => this.setState({ listing })
-    }
-    return (
-      <div className="container create-listing">
-        <PageTitle>Edit Listing</PageTitle>
-        <Switch>
-          <Route
-            path="/listing/:listingID/edit/step-2"
-            render={() => <Step2 {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/boost"
-            render={() => <Boost {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/availability"
-            render={() => <Availability {...stepProps} />}
-          />
-          <Route
-            path="/listing/:listingID/edit/review"
-            render={() => (
-              <Review {...stepProps} refetch={this.props.refetch} />
-            )}
-          />
-          <Route render={() => <Step1 {...stepProps} />} />
-        </Switch>
-      </div>
-    )
+    return <CreateListing listing={this.state.listing} mode="edit" />
   }
 }
 

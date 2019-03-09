@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
-import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
@@ -41,13 +40,11 @@ class Boost extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
-    const isFractional = this.props.listing.__typename === 'FractionalListing'
-    const step = isFractional ? 4 : 3
+    // const isEdit = this.props.mode === 'edit'
 
     if (this.state.valid) {
-      return <Redirect to={`${prefix}/review`} push />
+      // Advance to next step
+      this.props.onNext()
     }
 
     return (
@@ -55,9 +52,9 @@ class Boost extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-3">
             <div className="wrap">
-              <div className="step">{`Step ${step}`}</div>
+              <div className="step">{`Step ${this.props.step}`}</div>
               <div className="step-description">Boost your listing</div>
-              <Steps steps={step} step={step} />
+              <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
                 onSubmit={e => {
@@ -78,11 +75,15 @@ class Boost extends Component {
                 )}
 
                 <div className="actions">
-                  <Link
+                  <button
                     className="btn btn-outline-primary"
-                    to={`${prefix}/${isFractional ? 'availability' : 'step-2'}`}
-                    children="Back"
-                  />
+                    type="button"
+                    onClick={() => {
+                      this.props.onPrev()
+                    }}
+                  >
+                    Back
+                  </button>
                   <button type="submit" className="btn btn-primary">
                     Review
                   </button>
@@ -92,7 +93,7 @@ class Boost extends Component {
           </div>
         </div>
 
-        <div className="col-md-4 d-none d-md-block">
+        <div className="col-md-4">
           <Wallet />
           <div className="gray-box">
             <h5>About Visibility</h5>
@@ -105,7 +106,7 @@ class Boost extends Component {
             rewards, reputation incentives, spam prevention, developer rewards,
             and platform governance.
             <div className="mt-3">
-              <Link to="/about/tokens">Learn More</Link>
+              <Link to="/about-tokens">Learn More</Link>
             </div>
           </div>
         </div>
@@ -116,7 +117,7 @@ class Boost extends Component {
   renderBoostSlider() {
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
     const isMulti = Number(this.state.quantity || 0) > 1
-    const isFractional = this.props.listing.__typename === 'FractionalListing'
+    const isFractional = this.props.listingType === 'fractional'
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -151,7 +152,7 @@ class Boost extends Component {
 
         <div className="info">
           {'Boosts are always calculated and charged in OGN. '}
-          <Link to="/about/tokens">Learn more</Link>
+          <Link to="/about-tokens">Learn more</Link>
         </div>
 
         {!isMulti && !isFractional ? null : (
@@ -235,7 +236,7 @@ require('react-styl')(`
     .boost-totals,.no-ogn
       padding: 2rem
       border: 1px solid var(--golden-rod)
-      border-radius: var(--default-radius)
+      border-radius: 5px
       text-align: center
       background-color: var(--golden-rod-light)
     .boost-totals
@@ -344,4 +345,13 @@ require('react-styl')(`
       &.premium input::-webkit-slider-thumb
         box-shadow: -1000px 0 0 990px var(--boost-premium)
 
+    .actions
+      margin-top: 2.5rem
+      display: flex
+      justify-content: space-between
+      .btn
+        min-width: 10rem
+        border-radius: 2rem
+        padding: 0.625rem
+        font-size: 18px
 `)

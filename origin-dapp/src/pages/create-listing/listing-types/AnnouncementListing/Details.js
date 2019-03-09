@@ -1,24 +1,15 @@
 import React, { Component } from 'react'
-import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'
-import Redirect from 'components/Redirect'
-import Link from 'components/Link'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-
-import UnitListing from './listing-types/Unit'
-import HomeShareListing from './listing-types/HomeShare'
-import AnnouncementListing from './listing-types/Announcement'
-
 import { formInput, formFeedback } from 'utils/formHelpers'
 
-class Step2 extends Component {
+class Details extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      ...props.listing,
-      fields: Object.keys(props.listing)
+      ...props.listing
     }
   }
 
@@ -29,29 +20,6 @@ class Step2 extends Component {
   }
 
   render() {
-    const prefix =
-      this.props.mode === 'edit'
-        ? `/listing/${this.props.listingId}/edit`
-        : '/create'
-
-    let ListingType = UnitListing
-    if (this.state.__typename === 'FractionalListing') {
-      ListingType = HomeShareListing
-    } else if (this.state.__typename === 'AnnouncementListing') {
-      ListingType = AnnouncementListing
-    }
-    const isFractional = this.state.__typename === 'FractionalListing'
-
-    if (this.state.valid) {
-      if (isFractional) {
-        return <Redirect to={`${prefix}/availability`} push />
-      } else {
-        return <Redirect to={`${prefix}/boost`} push />
-      }
-    } else if (!this.state.subCategory) {
-      return <Redirect to={`${prefix}/step-1`} />
-    }
-
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -60,9 +28,9 @@ class Step2 extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-2">
             <div className="wrap">
-              <div className="step">Step 2</div>
+              <div className="step">{`Step ${this.props.step}`}</div>
               <div className="step-description">Provide listing details</div>
-              <Steps steps={isFractional ? 4 : 3} step={2} />
+              <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
                 onSubmit={e => {
@@ -86,10 +54,7 @@ class Step2 extends Component {
                   {Feedback('description')}
                 </div>
 
-                <ListingType
-                  listing={this.state}
-                  onChange={state => this.setState(state)}
-                />
+                {/* Listing specific fields go here, but Announcements have none. */}
 
                 <div className="form-group">
                   <label>Select photos</label>
@@ -114,9 +79,15 @@ class Step2 extends Component {
                 </div>
 
                 <div className="actions">
-                  <Link className="btn btn-outline-primary" to={prefix}>
+                  <button
+                    className="btn btn-outline-primary"
+                    type="button"
+                    onClick={() => {
+                      this.props.onPrev()
+                    }}
+                  >
                     Back
-                  </Link>
+                  </button>
                   <button type="submit" className="btn btn-primary">
                     Continue
                   </button>
@@ -145,50 +116,12 @@ class Step2 extends Component {
       newState.titleError = 'Title is required'
     } else if (this.state.title.length < 3) {
       newState.titleError = 'Title is too short'
-    } else if (this.state.title.length > 100) {
-      // Limit from origin-validator/src/schemas/listing.json
-      newState.titleError = 'Title is too long'
     }
 
     if (!this.state.description) {
       newState.descriptionError = 'Description is required'
     } else if (this.state.description.length < 10) {
       newState.descriptionError = 'Description is too short'
-    } else if (this.state.description.length > 1024) {
-      // Limit from origin-validator/src/schemas/listing.json
-      newState.descriptionError = 'Description is too long'
-    }
-
-    if (this.state.__typename !== 'AnnouncementListing') {
-      if (!this.state.price) {
-        newState.priceError = 'Price is required'
-      } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
-        newState.priceError = 'Price must be a number'
-      } else if (Number(this.state.price) <= 0) {
-        newState.priceError = 'Price must be greater than zero'
-      } else if (Number(this.state.price) > 1000000) {
-        newState.priceError = 'Price must be less than 1000000'
-      }
-    }
-
-    if (this.state.__typename === 'UnitListing') {
-      if (!this.state.quantity) {
-        newState.quantityError = 'Quantity is required'
-      } else if (!this.state.quantity.match(/^-?[0-9]+$/)) {
-        newState.quantityError = 'Quantity must be a number'
-      } else if (Number(this.state.quantity) <= 0) {
-        newState.quantityError = 'Quantity must be greater than zero'
-      } else if (Number(this.state.quantity) > 1000000) {
-        newState.quantityError = 'Quantity must be less than than 1000000'
-      }
-    } else if (this.state.__typename === 'FractionalListing') {
-      if (!this.state.weekendPrice) {
-        newState.weekendPriceError = 'Price is required'
-      } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
-        newState.weekendPriceError = 'Price must be a number'
-      } else if (Number(this.state.weekendPrice) <= 0) {
-        newState.weekendPriceError = 'Price must be greater than zero'
-      }
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -196,14 +129,15 @@ class Step2 extends Component {
     if (!newState.valid) {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
-      this.props.onChange(pick(this.state, this.state.fields))
+      this.props.onChange(this.state)
+      this.props.onNext() // Advance to next step
     }
     this.setState(newState)
     return newState.valid
   }
 }
 
-export default Step2
+export default Details
 
 require('react-styl')(`
   .create-listing .create-listing-step-2
