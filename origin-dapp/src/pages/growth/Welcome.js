@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Link from 'components/Link'
-import get from 'lodash/get'
+//import get from 'lodash/get'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
