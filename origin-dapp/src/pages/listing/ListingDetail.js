@@ -212,12 +212,15 @@ require('react-styl')(`
         padding: 0.5rem 1rem
         width: 100%
       .quantity,.total
-        padding: 1rem
         font-family: var(--default-font)
         font-size: 18px
+        color: #000
         font-weight: normal
         display: flex
         justify-content: space-between
+        margin-bottom: 1rem
+        span:last-child
+          font-weight: bold
       .total
         padding-top: 0
 
@@ -227,9 +230,8 @@ require('react-styl')(`
         color: var(--dark)
         font-weight: bold
         line-height: 1
+        margin-bottom: 1rem
         span.desc
-          color: var(--steel)
-          font-size: 14px
           font-weight: normal
           margin-left: 0.25rem
       .price-old
@@ -255,10 +257,6 @@ require('react-styl')(`
           font-weight: normal
           margin-left: 1rem
           font-size: 16px
-      &.multi .price
-        padding-bottom: 1.5rem
-        border-bottom: 1px solid var(--light)
-        margin-bottom: 0
       &.fractional
         .choose-dates
           display: flex;

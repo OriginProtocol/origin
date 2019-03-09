@@ -41,4 +41,5 @@ require('react-styl')(`
         color: #007bff
     &.lg
       background-size: 1.5rem
+      background-position: 0px 2px
 `)

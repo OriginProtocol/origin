@@ -29,10 +29,8 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   return (
     <div className="listing-buy fractional">
       <div className="price">
-        <div className="eth">{`${listing.price.amount} ETH / night`}</div>
-        <div className="usd">
-          <Price amount={listing.price.amount} />
-        </div>
+        <Price amount={listing.price.amount} />
+        <span className="desc">/ night</span>
       </div>
       <div className="choose-dates form-control">
         <Tooltip

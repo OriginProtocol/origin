@@ -6,10 +6,7 @@ import Buy from './mutations/Buy'
 const SingleUnit = ({ listing, from, refetch }) => (
   <div className="listing-buy">
     <div className="price">
-      <div className="eth">{`${listing.price.amount} ETH`}</div>
-      <div className="usd">
-        <Price amount={listing.price.amount} />
-      </div>
+      <Price amount={listing.price.amount} />
     </div>
     <Buy
       refetch={refetch}
