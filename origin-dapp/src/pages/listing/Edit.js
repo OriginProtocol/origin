@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
+import withCreatorConfig from 'hoc/withCreatorConfig'
 import CreateListing from '../create-listing/CreateListing'
 
 class EditListing extends Component {
@@ -18,6 +19,10 @@ class EditListing extends Component {
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
+
+        // Marketplace creator fields:
+        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
+
         ...pick(props.listing, [
           '__typename',
           'title',
@@ -39,7 +44,7 @@ class EditListing extends Component {
   }
 }
 
-export default EditListing
+export default withCreatorConfig(EditListing)
 
 require('react-styl')(`
 `)
