@@ -11,12 +11,13 @@ import { storeNotificationsPermissions, updateBackupWarningStatus, updateCarouse
 import { setDevices } from 'actions/Devices'
 import { add as addNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
-import { getBalance, init } from 'actions/Wallet'
+import { getBalance, init, updateAccounts } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import Onboarding from 'components/onboarding'
 
 import DevicesScreen from 'screens/devices'
+import ForkScreen from 'screens/fork'
 import HomeScreen from 'screens/home'
 import MessagingScreen from 'screens/messaging'
 import ProfileScreen from 'screens/profile'
@@ -24,6 +25,8 @@ import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
 import TransactionScreen from 'screens/transaction'
 import WalletFundingScreen from 'screens/wallet-funding'
+import AccountScreen from 'screens/account'
+import AccountsScreen from 'screens/accounts'
 
 import { loadData } from './tools'
 
@@ -65,12 +68,33 @@ const ScanStack = createStackNavigator({
 })
 
 const SettingsStack = createStackNavigator({
+  Account: AccountScreen,
+  Accounts: AccountsScreen,
   Devices: DevicesScreen,
   Profile: ProfileScreen,
   Settings: SettingsScreen,
 }, {
   initialRouteName: 'Settings',
   navigationOptions,
+})
+
+const OnboardingStack = createStackNavigator({
+  Fork: ForkScreen,
+}, {
+  initialRouteName: 'Fork',
+  navigationOptions: ({ navigation }) => ({
+    headerBackTitle: ' ',
+    headerStyle: {
+      backgroundColor: '#293f55',
+      borderBottomWidth: 0,
+    },
+    headerTitleStyle: {
+      color: 'white',
+      fontFamily: 'Poppins',
+      fontSize: 17,
+      fontWeight: 'normal',
+    },
+  }),
 })
 
 const OriginNavigator = createBottomTabNavigator({
@@ -127,6 +151,12 @@ const OriginNavigator = createBottomTabNavigator({
 
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
+  constructor(props) {
+    super(props)
+    
+    this.balancePoll = null
+  }
+
   componentDidMount() {
     if (Platform.OS === 'ios') {
       PushNotificationIOS.checkPermissions(permissions => {
@@ -154,10 +184,19 @@ class OriginNavWrapper extends Component {
       NavigationService.navigate('Home')
     })
 
-    originWallet.events.on(Events.NEW_ACCOUNT, ({ address }, matcher) => {
+    originWallet.events.on(Events.CURRENT_ACCOUNT, ({ address }, matcher) => {
       this.props.initWallet(address)
       this.props.fetchUser(address)
       this.props.getBalance()
+
+      if (!this.balancePoll) {
+        // get the balance every five seconds
+        this.balancePoll = setInterval(() => this.props.getBalance(), 5000)
+      }
+    })
+
+    originWallet.events.on(Events.AVAILABLE_ACCOUNTS, ({ addresses }, matcher) => {
+      this.props.updateAccounts(addresses)
     })
 
     originWallet.events.on(Events.LINKED, (data, matcher) => {
@@ -206,8 +245,6 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.openWallet()
-    // get the balance every five seconds
-    setInterval(() => this.props.getBalance(), 5000)
   }
 
   componentDidUpdate() {
@@ -224,12 +261,16 @@ class OriginNavWrapper extends Component {
 
   componentWillUnmount() {
     originWallet.closeWallet()
+
+    clearInterval(this.balancePoll)
   }
 
   render() {
-    return <OriginNavigator ref={navigatorRef =>
-      NavigationService.setTopLevelNavigator(navigatorRef)
-    } />
+    return this.props.wallet.address ?
+      <OriginNavigator ref={navigatorRef =>
+        NavigationService.setTopLevelNavigator(navigatorRef)
+      } /> :
+      <OnboardingStack screenProps={{ smallScreen: this.props.smallScreen }} />
   }
 }
 
@@ -321,7 +362,7 @@ class OriginWrapper extends Component {
           />
         }
         {carouselCompleted &&
-          <OriginNavWrapper {...this.props} />
+          <OriginNavWrapper {...this.props} smallScreen={smallScreen} />
         }
       </Fragment>
   }
@@ -344,6 +385,7 @@ const mapDispatchToProps = dispatch => ({
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
   storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateBackupWarningStatus: bool => dispatch(updateBackupWarningStatus(bool)),
   updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),

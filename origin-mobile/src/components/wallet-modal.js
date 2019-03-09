@@ -25,6 +25,7 @@ class WalletModal extends Component {
 
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleFunding = this.handleFunding.bind(this)
+    this.showPrivateKey = this.showPrivateKey.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -39,7 +40,7 @@ class WalletModal extends Component {
               this.props.updateBackupWarningStatus(true, Date.now())
             }},
             { text: 'Show Private Key', onPress: () => {
-              originWallet.showPrivateKey()
+              this.showPrivateKey()
 
               this.props.updateBackupWarningStatus(true)
             }},
@@ -96,13 +97,19 @@ class WalletModal extends Component {
     }
   }
 
+  showPrivateKey() {
+    const privateKey = originWallet.getPrivateKey(this.props.address)
+
+    Alert.alert('Private Key', privateKey)
+  }
+
   render() {
     const { address, backupWarning, onPress, visible, wallet, onRequestClose } = this.props
     const { /*dai, */eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     const ognBalance = toOgns(ogn)
-    const privateKey = address ? web3.eth.accounts.wallet[0].privateKey : ''
+    const privateKey = originWallet.getPrivateKey(address)
 
     return (
       <Modal
@@ -167,7 +174,7 @@ class WalletModal extends Component {
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Show Private Key'}
-              onPress={originWallet.showPrivateKey}
+              onPress={this.showPrivateKey}
             />
             <OriginButton
               size="large"
