@@ -79,6 +79,7 @@ services:
       - "8545:8545"
     environment:
       - DOCKER=true
+      - DEPLOY_CONTRACTS=true
     command: npm run start --prefix origin-services
 
   origin-messaging:
@@ -124,7 +125,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q origin-services:8545 --
+      wait-for.sh -t 0 -q origin-services:8080 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
       npm run migrate --prefix origin-identity &&
@@ -179,7 +180,6 @@ services:
       - postgres
     ports:
       - "4001:4001"
-    #command: sleep infinity
     command: npm run start --prefix origin-growth
 
   origin-bridge:
