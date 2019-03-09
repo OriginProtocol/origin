@@ -82,7 +82,7 @@ class Messages extends Component {
         <PageTitle>Messaging</PageTitle>
         <Mutation mutation={MarkConversationRead}>
           {markConversationRead => (
-            <Query query={query} pollInterval={2000}>
+            <Query query={query} pollInterval={500}>
               {({ error, data, loading }) => {
                 if (error) {
                   return <QueryError query={query} error={error} />

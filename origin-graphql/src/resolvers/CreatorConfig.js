@@ -5,12 +5,14 @@ export default {
     const filters = []
     const listingFilterConfig = get(config.filters, 'listings', {})
     for (const [name, value] of Object.entries(listingFilterConfig)) {
-      filters.push({
-        name: name,
-        value: value,
-        valueType: 'STRING',
-        operator: 'EQUALS'
-      })
+      if (value) {
+        filters.push({
+          name: name,
+          value: value,
+          valueType: 'STRING',
+          operator: 'EQUALS'
+        })
+      }
     }
     return filters
   }

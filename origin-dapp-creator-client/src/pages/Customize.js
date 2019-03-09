@@ -74,7 +74,7 @@ class Customize extends React.Component {
     }
 
     const ipfsPath = `${process.env.IPFS_GATEWAY_URL}/ipfs/${response.text}`
-    window.open(`${process.env.DAPP_URL}/?config=${ipfsPath}`, '_blank')
+    window.open(`${process.env.DAPP_URL}/#/?config=${ipfsPath}`, '_blank')
   }
 
   onColorChange(name, color) {

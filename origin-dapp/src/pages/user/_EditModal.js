@@ -40,6 +40,7 @@ class EditProfileModal extends Component {
                 <label>First Name</label>
                 <input
                   type="text"
+                  maxLength="40"
                   {...input('firstName')}
                   ref={r => (this.input = r)}
                 />
@@ -47,7 +48,7 @@ class EditProfileModal extends Component {
               </div>
               <div className="form-group">
                 <label>Last Name</label>
-                <input type="text" {...input('lastName')} />
+                <input type="text" maxLength="40" {...input('lastName')} />
                 {Feedback('lastName')}
               </div>
             </div>
