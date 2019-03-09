@@ -35,7 +35,7 @@ class GrowthWelcome extends Component {
 
   render() {
     const personalised = true
-    const inviteCode = get(this.props, 'match.params.inviteCode')
+    //const inviteCode = get(this.props, 'match.params.inviteCode')
 
     return (
       <div className="container growth-welcome">
