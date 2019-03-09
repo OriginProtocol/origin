@@ -59,12 +59,14 @@ class GrowthWelcome extends Component {
             />
           </div>
           <div className="col-6 token-stack-holder">
-            {personalised &&
+            {personalised && (
               <div className="personalised-holder d-flex flex-column">
-                <div className="message-bubble ml-auto d-flex align-items-center">Hey, come earn some tokens on Origin!</div>
+                <div className="message-bubble ml-auto d-flex align-items-center">
+                  Hey, come earn some tokens on Origin!
+                </div>
                 <div className="d-flex justify-content-end">
                   <div className="d-flex flex-column align-items-end">
-                    <div className="triangle"/>
+                    <div className="triangle" />
                     <div className="referrer">Aure G.</div>
                   </div>
                   <div className="profile-holder d-flex justify-content-center">
@@ -72,7 +74,7 @@ class GrowthWelcome extends Component {
                   </div>
                 </div>
               </div>
-            }
+            )}
             <img
               className="m-4 token-stack"
               src="images/growth/token-stack.svg"
