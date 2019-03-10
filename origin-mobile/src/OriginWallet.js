@@ -30,7 +30,6 @@ const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
 const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
 const ACCOUNT_MAPPING = "ACCOUNT_MAPPING"
-const WALLET_ACTIVE = "WALLET_ACTIVE"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
@@ -266,10 +265,6 @@ class OriginWallet {
       }
     }
     this.events.emit(event_type, event, matcher)
-  }
-
-  getAccount() {
-    return this.state.ethAddress;
   }
 
   syncLastMessages() {
@@ -1088,7 +1083,11 @@ class OriginWallet {
 
   async saveActiveAccount(address) {
     try {
-      await storeData(WALLET_ACTIVE, address)
+      let accounts = (await this.getAccountMapping()) || []
+      //move flag to selected account
+      accounts = accounts.map(account => Object.assign({}, account, { active: account.address === address }))
+      await storeData(ACCOUNT_MAPPING, accounts)
+      return accounts.find(account => account.address === address)
     } catch (error) {
       console.log("Cannot store active wallet account:", address)
     }
@@ -1266,7 +1265,7 @@ class OriginWallet {
 
   //reconcile, store, and emit account objects
   async syncAccountMapping() {
-    let accounts = (await loadData(ACCOUNT_MAPPING)) || []
+    let accounts = (await this.getAccountMapping()) || []
     //exclude any that were removed from the wallet
     accounts = accounts.filter(({ address }) => web3.eth.accounts.wallet[address])
     //include any that were added to the wallet
@@ -1286,11 +1285,17 @@ class OriginWallet {
 
   //retrieve account addresses from wallet keys since indexes can get deleted
   getAddresses() {
-    return Object.keys(web3.eth.accounts.wallet).filter(k => web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k))
+    return Object.keys(web3.eth.accounts.wallet).filter(k => {
+      return web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k)
+    })
+  }
+
+  async getAccountMapping() {
+    return await loadData(ACCOUNT_MAPPING)
   }
 
   async setWeb3Address(ethAddress) {
-    if (ethAddress != this.state.ethAddress)
+    if (ethAddress !== this.state.ethAddress)
     {
       web3.eth.defaultAccount = ethAddress
       Object.assign(this.state, {ethAddress})
@@ -1307,10 +1312,15 @@ class OriginWallet {
   }
 
   createAccount() {
-    const { length } = web3.eth.accounts.wallet
+    //record prior state
+    const prevAddresses = this.getAddresses()
     const wallet = web3.eth.accounts.wallet.create(1)
     this.syncAccountMapping()
-    return true
+    //identify change in state
+    const address = this.getAddresses().find(address => !prevAddresses.find(addr => addr === address))
+    //use only if solitary
+    !this.state.ethAddress && this.setWeb3Address(address)
+    return address
   }
 
   openWallet() {
@@ -1357,9 +1367,9 @@ class OriginWallet {
         const { length } = web3.eth.accounts.wallet
         if (length)
         {
-          const accounts = this.syncAccountMapping()
-          const activeAddress = await loadData(WALLET_ACTIVE)
-          this.setWeb3Address(activeAddress || accounts[0].address)
+          const accounts = await this.syncAccountMapping()
+          const active = accounts.find(({ active }) => active)
+          this.setWeb3Address(active.address || accounts[0].address)
         }
       }
     })
