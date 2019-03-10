@@ -64,7 +64,7 @@ class AccountModal extends Component {
         visible={!!visible}
         onRequestClose={() => {
           onRequestClose()
-        } }
+        }}
       >
         <SafeAreaView style={styles.container}>
           <View style={styles.nav}>
@@ -92,6 +92,7 @@ class AccountModal extends Component {
             <OriginButton
               size="large"
               type="primary"
+              disabled={!this.state.keyValue}
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Submit Private Key'}

@@ -10,7 +10,7 @@ const IMAGES_PATH = '../../assets/images/'
 export default class DeviceItem extends Component {
   render() {
     const { item, navigation, wallet } = this.props
-    const { address, name = 'Unnamed Account' } = item
+    const { address, name } = item
 
     return (
       <TouchableHighlight onPress={() => navigation.navigate('Account', {
@@ -21,7 +21,7 @@ export default class DeviceItem extends Component {
       })}>
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name}>{name || 'Unnamed Account'}</Text>
             <Address address={address} label={'Address'} style={styles.address} />
           </View>
           <View style={styles.iconContainer}>

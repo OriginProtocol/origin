@@ -18,6 +18,15 @@ class AccountScreen extends Component {
     this.handleActivate = this.handleActivate.bind(this)
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
+    this.handleNameChange = this.handleNameChange.bind(this)
+    this.handleNameUpdate = this.handleNameUpdate.bind(this)
+
+    const nameValue = props.navigation.getParam('account').name
+
+    this.state = {
+      nameValue,
+      priorNameValue: nameValue,
+    }
   }
 
   static navigationOptions = {
@@ -88,6 +97,20 @@ class AccountScreen extends Component {
     )
   }
 
+  handleNameChange(e) {
+    const nameValue = e.nativeEvent.text.trim()
+
+    this.setState({ nameValue })
+  }
+
+  handleNameUpdate() {
+    const { nameValue, priorNameValue } = this.state
+    const { navigation } = this.props
+    const { address } = navigation.getParam('account')
+
+    nameValue !== priorNameValue && originWallet.nameAccount(address, nameValue)
+  }
+
   showPrivateKey(address) {
     const privateKey = originWallet.getPrivateKey(address)
 
@@ -95,6 +118,7 @@ class AccountScreen extends Component {
   }
 
   render() {
+    const { nameValue, priorNameValue } = this.state
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
     const { address, name } = account
@@ -109,9 +133,11 @@ class AccountScreen extends Component {
             <Text style={styles.heading}>NAME</Text>
           </View>
           <TextInput
-            editable={false}
-            value={name}
+            placeholder={'Unnamed Account'}
+            value={name === priorNameValue ? nameValue : name}
             style={styles.input}
+            onChange={this.handleNameChange}
+            onSubmitEditing={this.handleNameUpdate}
           />
           <View style={styles.header}>
             <Text style={styles.heading}>ETH ADDRESS</Text>

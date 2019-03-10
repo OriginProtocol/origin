@@ -1263,6 +1263,24 @@ class OriginWallet {
     return result
   }
 
+  async nameAccount(address, name) {
+    try {
+      let accounts = await this.getAccountMapping()
+      accounts = accounts.map(account => {
+        if (address !== account.address) {
+          return account
+        }
+
+        return Object.assign({}, account, { name })
+      })
+      await storeData(ACCOUNT_MAPPING, accounts)
+      this.fireEvent(Events.AVAILABLE_ACCOUNTS, { accounts })
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   //reconcile, store, and emit account objects
   async syncAccountMapping() {
     let accounts = (await this.getAccountMapping()) || []
