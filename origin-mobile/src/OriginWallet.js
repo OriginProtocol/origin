@@ -1248,6 +1248,8 @@ class OriginWallet {
       const { address } = web3.eth.accounts.wallet.add(privateKey)
       this.saveWallet()
       this.syncAccountMapping()
+      //use only if necessary
+      !this.state.ethAddress && this.setWeb3Address(address)
       return true
     }
   }
@@ -1386,7 +1388,7 @@ class OriginWallet {
         if (length)
         {
           const accounts = await this.syncAccountMapping()
-          const active = accounts.find(({ active }) => active)
+          const active = accounts.find(({ active }) => active) || {}
           this.setWeb3Address(active.address || accounts[0].address)
         }
       }

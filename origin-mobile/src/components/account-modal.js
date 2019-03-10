@@ -56,7 +56,7 @@ class AccountModal extends Component {
   }
 
   render() {
-    const { onPress, visible, onRequestClose } = this.props
+    const { dark, heading, onPress, visible, onRequestClose } = this.props
 
     return (
       <Modal
@@ -66,18 +66,18 @@ class AccountModal extends Component {
           onRequestClose()
         }}
       >
-        <SafeAreaView style={styles.container}>
-          <View style={styles.nav}>
+        <SafeAreaView style={[styles.container, dark ? styles.containerDark : {}]}>
+          <View style={[styles.nav, dark ? styles.navDark : {}]}>
             <TouchableOpacity onPress={onPress} style={styles.navImageContainer}>
               <Image source={require(`${IMAGES_PATH}close-icon.png`)} style={styles.close} />
             </TouchableOpacity>
             <View style={styles.navHeadingContainer}>
-              <Text style={styles.heading}>Add Account</Text>
+              <Text style={[styles.heading, dark ? styles.headingDark : {}]}>{heading || 'Add Account'}</Text>
             </View>
             <View style={styles.navImageContainer} />
           </View>
-          <View style={styles.body}>
-            <Text style={styles.label}>Enter Your Private Key</Text>
+          <View style={[styles.body, dark ? styles.bodyDark : {}]}>
+            <Text style={[styles.label, dark ? styles.labelDark : {}]}>Enter Your Private Key</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -85,10 +85,14 @@ class AccountModal extends Component {
               onChangeText={this.handleChange}
               onSubmitEditing={this.handleSubmit}
               value={this.state.keyValue}
-              style={[styles.input, this.state.keyError ? styles.invalid : {}]}
+              style={[
+                styles.input,
+                dark ? styles.inputDark : {},
+                this.state.keyError ? styles.invalid : {},
+              ]}
             />
           </View>
-          <View style={styles.buttonContainer}>
+          <View style={[styles.buttonContainer, dark ? styles.buttonContainerDark : {}]}>
             <OriginButton
               size="large"
               type="primary"
@@ -120,6 +124,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  bodyDark: {
+    backgroundColor: '#293f55',
+  },
   button: {
     marginBottom: 10,
     marginHorizontal: 20,
@@ -128,15 +135,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f8f8',
     paddingTop: 10,
   },
+  buttonContainerDark: {
+    backgroundColor: '#293f55',
+  },
   container: {
     backgroundColor: 'white',
     flex: 1,
+  },
+  containerDark: {
+    backgroundColor: '#293f55',
   },
   heading: {
     fontFamily: 'Poppins',
     fontSize: 17,
     marginVertical: 'auto',
     textAlign: 'center',
+  },
+  headingDark: {
+    color: 'white',
   },
   input: {
     backgroundColor: '#eaf0f3',
@@ -149,6 +165,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 300,
   },
+  inputDark: {
+    backgroundColor: '#0b1823',
+    borderColor: '#6a8296',
+    color: '#6a8296',
+  },
   invalid: {
     borderColor: '#ff0000',
     color: '#ff0000',
@@ -160,11 +181,17 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     marginBottom: 24,
   },
+  labelDark: {
+    color: 'white',
+  },
   nav: {
     borderBottomWidth: 1,
     borderColor: '#cccccc',
     flexDirection: 'row',
     height: 44,
+  },
+  navDark: {
+    borderColor: '#293f55',
   },
   navHeadingContainer: {
     alignItems: 'center',

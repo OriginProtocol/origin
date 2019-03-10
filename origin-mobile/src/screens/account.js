@@ -98,7 +98,7 @@ class AccountScreen extends Component {
   }
 
   handleNameChange(e) {
-    const nameValue = e.nativeEvent.text.trim()
+    const nameValue = e.nativeEvent.text
 
     this.setState({ nameValue })
   }
@@ -108,7 +108,7 @@ class AccountScreen extends Component {
     const { navigation } = this.props
     const { address } = navigation.getParam('account')
 
-    nameValue !== priorNameValue && originWallet.nameAccount(address, nameValue)
+    nameValue !== priorNameValue && originWallet.nameAccount(address, nameValue.trim())
   }
 
   showPrivateKey(address) {

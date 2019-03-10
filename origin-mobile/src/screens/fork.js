@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
 
 import originWallet from '../OriginWallet'
@@ -9,8 +10,21 @@ import originWallet from '../OriginWallet'
 const IMAGES_PATH = '../../assets/images/'
 
 class ForkScreen extends Component {
+  constructor(props) {
+    super(props)
+
+    this.toggleModal = this.toggleModal.bind(this)
+    this.state = {
+      modalOpen: false,
+    }
+  }
+
   static navigationOptions = {
     title: 'Get Started',
+  }
+
+  toggleModal() {
+    this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
@@ -41,9 +55,10 @@ class ForkScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Import Existing Wallet'}
-            onPress={() => Alert.alert('Import')}
+            onPress={this.toggleModal}
           />
         </View>
+        <AccountModal dark={true} heading="Import Wallet" visible={this.state.modalOpen} onPress={this.toggleModal} onRequestClose={this.toggleModal} />
       </SafeAreaView>
     )
   }
