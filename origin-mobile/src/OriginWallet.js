@@ -29,6 +29,7 @@ const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
 const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
+const ACCOUNT_MAPPING = "ACCOUNT_MAPPING"
 const WALLET_ACTIVE = "WALLET_ACTIVE"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
@@ -1096,11 +1097,12 @@ class OriginWallet {
   async saveWallet() {
     //save the freaking wallet
     const encrypted_accounts = []
-    for (let i=0; i< web3.eth.accounts.wallet.length; i++) {
-      const account = web3.eth.accounts.wallet[i]
+    const addresses = this.getAddresses()
+    addresses.forEach(address => {
+      const account = web3.eth.accounts.wallet[address]
       encrypted_accounts.push({crypt:"aes",
         enc:CryptoJS.AES.encrypt(account.privateKey, WALLET_PASSWORD).toString()})
-    }
+    })
     try {
       await storeData(WALLET_STORE, encrypted_accounts)
     } catch (error) {
@@ -1244,35 +1246,47 @@ class OriginWallet {
     }
     if (privateKey)
     {
-      // try private key first and then clear and add again
-      // web3.eth.accounts.wallet.add(privateKey)
-      // web3.eth.accounts.wallet.clear()
       const { address } = web3.eth.accounts.wallet.add(privateKey)
       this.saveWallet()
-      const addresses = Array.from(Array(web3.eth.accounts.wallet.length).keys()).map(i => {
-        return web3.eth.accounts.wallet[i].address
-      })
-      this.fireEvent(Events.AVAILABLE_ACCOUNTS, { addresses })
+      this.syncAccountMapping()
       return true
     }
   }
 
-  removeAccount(address) {
+  async removeAccount(address) {
+    const accounts = await web3.eth.getAccounts()
     const result = web3.eth.accounts.wallet.remove(address)
     if (result)
     {
       this.saveWallet()
-      const addresses = Array.from(Array(web3.eth.accounts.wallet.length).keys()).map(i => {
-        return web3.eth.accounts.wallet[i].address
-      })
-      this.fireEvent(Events.AVAILABLE_ACCOUNTS, { addresses })
+      this.syncAccountMapping()
     }
     return result
   }
 
+  //reconcile, store, and emit account objects
+  async syncAccountMapping() {
+    let accounts = (await loadData(ACCOUNT_MAPPING)) || []
+    //exclude any that were removed from the wallet
+    accounts = accounts.filter(({ address }) => web3.eth.accounts.wallet[address])
+    //include any that were added to the wallet
+    this.getAddresses().filter(address => !accounts.find(account => account.address === address)).forEach(address => {
+      accounts.push({ address })
+    })
+    //update listeners
+    this.fireEvent(Events.AVAILABLE_ACCOUNTS, { accounts })
+    await storeData(ACCOUNT_MAPPING, accounts)
+    return accounts
+  }
+
   getPrivateKey(address) {
-    const account = address ? web3.eth.accounts.wallet[address] : this.getCurrentWeb3Account()
+    const account = (address ? web3.eth.accounts.wallet[address] : this.getCurrentWeb3Account()) || {}
     return account.privateKey 
+  }
+
+  //retrieve account addresses from wallet keys since indexes can get deleted
+  getAddresses() {
+    return Object.keys(web3.eth.accounts.wallet).filter(k => web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k))
   }
 
   async setWeb3Address(ethAddress) {
@@ -1295,11 +1309,7 @@ class OriginWallet {
   createAccount() {
     const { length } = web3.eth.accounts.wallet
     const wallet = web3.eth.accounts.wallet.create(1)
-    const addresses = Array.from(Array(wallet.length).keys()).map(i => {
-      return web3.eth.accounts.wallet[i].address
-    })
-    this.fireEvent(Events.AVAILABLE_ACCOUNTS, { addresses })
-    this.setWeb3Address(wallet[length].address)
+    this.syncAccountMapping()
     return true
   }
 
@@ -1347,12 +1357,9 @@ class OriginWallet {
         const { length } = web3.eth.accounts.wallet
         if (length)
         {
-          const addresses = Array.from(Array(length).keys()).map(i => {
-            return web3.eth.accounts.wallet[i].address
-          })
-          this.fireEvent(Events.AVAILABLE_ACCOUNTS, { addresses })
+          const accounts = this.syncAccountMapping()
           const activeAddress = await loadData(WALLET_ACTIVE)
-          this.setWeb3Address(activeAddress || addresses[0])
+          this.setWeb3Address(activeAddress || accounts[0].address)
         }
       }
     })

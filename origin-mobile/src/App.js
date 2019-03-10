@@ -153,7 +153,7 @@ const OriginNavigator = createBottomTabNavigator({
 class OriginNavWrapper extends Component {
   constructor(props) {
     super(props)
-    
+
     this.balancePoll = null
   }
 
@@ -195,8 +195,8 @@ class OriginNavWrapper extends Component {
       }
     })
 
-    originWallet.events.on(Events.AVAILABLE_ACCOUNTS, ({ addresses }, matcher) => {
-      this.props.updateAccounts(addresses)
+    originWallet.events.on(Events.AVAILABLE_ACCOUNTS, ({ accounts }, matcher) => {
+      this.props.updateAccounts(accounts)
     })
 
     originWallet.events.on(Events.LINKED, (data, matcher) => {

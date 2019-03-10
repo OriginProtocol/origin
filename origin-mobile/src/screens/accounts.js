@@ -53,10 +53,10 @@ class AccountsScreen extends Component {
       <Fragment>
         <FlatList
           data={wallet.accounts}
-          renderItem={({ item, index }) => (
-            <AccountItem item={{ address: item, number: index + 1 }} navigation={navigation} wallet={wallet} />
+          renderItem={({ item }) => (
+            <AccountItem item={item} navigation={navigation} wallet={wallet} />
           )}
-          keyExtractor={(item, index) => item}
+          keyExtractor={({ address }) => address}
           ItemSeparatorComponent={({ highlighted }) => (
             <View style={styles.separator} />
           )}

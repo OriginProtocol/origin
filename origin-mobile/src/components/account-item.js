@@ -10,8 +10,7 @@ const IMAGES_PATH = '../../assets/images/'
 export default class DeviceItem extends Component {
   render() {
     const { item, navigation, wallet } = this.props
-    const { address, number } = item
-    const name = `Account ${number}`
+    const { address, name = 'Unnamed Account' } = item
 
     return (
       <TouchableHighlight onPress={() => navigation.navigate('Account', {
