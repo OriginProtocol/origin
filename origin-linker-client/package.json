@@ -1,0 +1,26 @@
+{
+  "name": "origin-linker-client",
+  "version": "0.1.0",
+  "description": "Origin Wallet Linker Client",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
+  },
+  "dependencies": {
+    "crypto-random-string": "^1.0.0",
+    "eth-ecies": "^1.0.3",
+    "prettier": "^1.16.3",
+    "query-string": "^6.3.0",
+    "uuid": "^3.3.2",
+    "web3-provider-engine": "^14.1.0"
+  },
+  "devDependencies": {},
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

@@ -1,27 +1,39 @@
 {
   "packages": [
-    "experimental/*",
+    "origin-admin",
+    "origin-bridge",
     "origin-contracts",
+    "origin-cron",
     "origin-dapp",
     "origin-dapp-creator-client",
     "origin-dapp-creator-server",
     "origin-discovery",
-    "origin-growth",
+    "origin-eventsource",
     "origin-faucet",
+    "origin-graphql",
+    "origin-graphql-simple-demo",
+    "origin-growth",
+    "origin-identity",
     "origin-ipfs-proxy",
+    "origin-ipfs",
     "origin-js",
+    "origin-linker-client",
     "origin-linking",
+    "origin-messaging-client",
     "origin-messaging",
     "origin-mobile",
     "origin-notifications",
+    "origin-services",
     "origin-tests",
-    "origin-token-transfer/*"
+    "origin-token",
+    "origin-token-transfer-client",
+    "origin-token-transfer-server",
+    "origin-validator"
   ],
   "command": {
     "bootstrap": {
       "nohoist": [
-        "openzeppelin-solidity",
-        "babel-plugin-fbt"
+        "openzeppelin-solidity"
       ]
     }
   },

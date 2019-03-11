@@ -21,7 +21,9 @@ You can either start the listener via docker compose or via lerna.
  - Setup Postgres locally.
  - Create DB schema:
 ```
+lerna run migrate --scope origin-discovery
 lerna run migrate --scope origin-growth
+lerna run migrate --scope origin-identity
 ```
 
 ### Start the listener
@@ -81,7 +83,7 @@ It is recommended to use the lerna local setup rather than docker compose.
 ### Copy Mainnet contracts
 ```
 rm origin-contracts/build/contracts/*
-cp origin-contracts/releases/0.8.5/build/contracts/* origin-contracts/build/contracts
+cp origin-contracts/releases/0.8.6/build/contracts/* origin-contracts/build/contracts
 ```
 
 ### Build origin-js

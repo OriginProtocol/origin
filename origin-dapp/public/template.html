@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Origin Protocol DApp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Language" content="en">
+    <meta http-equiv="expires" content="0">
+    <link rel="icon" href="favicon.ico" />
+    <% _.forEach(htmlWebpackPlugin.files.css, function(file) { %><link rel="stylesheet" href="<%- file %>" /><% }); %>
+  </head>
+  <body><div id="app"><div class="loading-screen"></div></div></body>
+  <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
+  <script>
+    if (typeof window.openpgp !== 'undefined') {
+      openpgp.config.show_comment = false
+      openpgp.config.show_version = false
+      openpgp.initWorker({ path: 'vendor/openpgp.worker.min.js' })
+    }
+  </script> -->
+  <script>
+    localStorage.ognNetwork = "<%= htmlWebpackPlugin.options.network %>"
+    localStorage.metaMaskEnabled = "true"
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2"></script>
+  <script>
+    var hostname = window.location.hostname
+    window.dataLayer = window.dataLayer || []
+    if (window.gtag == undefined) {
+      function gtag(){ dataLayer.push(arguments) }
+    }
+    if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
+      gtag('js', new Date());
+      gtag('config', 'UA-106384880-2');
+    }
+  </script>
+  <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
+</html>

@@ -3,18 +3,15 @@
 import React from 'react'
 
 import Redirect from 'components/Redirect'
-import listingSchemaMetadata from 'origin-dapp/src/utils/listingSchemaMetadata'
+import categories from 'origin-graphql/src/constants/Categories'
 
 class Configure extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      config: props.config,
       expandedCategories: [],
       filterByTypeEnabled: this.getCategoryFromConfig(),
-      listingTypes: listingSchemaMetadata.listingTypes,
-      listingSchemasByCategory: listingSchemaMetadata.listingSchemasByCategory,
       redirect: null
     }
 
@@ -37,12 +34,26 @@ class Configure extends React.Component {
     this.setState({ redirect: '/metamask' })
   }
 
+  componentDidMount() {
+    // Handle the case where filter by own listings is enabled but the Ethereum
+    // address is different to the currently active web3 account (which will
+    // populate the config.marketplacePublisher attribute)
+    if (
+      this.props.config.filters.listings.marketplacePublisher &&
+      this.props.config.filters.listings.marketplacePublisher !==
+        web3.eth.accounts[0]
+    ) {
+      this.setListingFilters({
+        marketplacePublisher: web3.eth.accounts[0]
+      })
+    }
+  }
+
   // Retrieve the category object from the filter value in the config
   getCategoryFromConfig() {
     if (!this.props.config.filters.listings.category) return null
-    const translationId = this.props.config.filters.listings.category
-    return listingSchemaMetadata.listingTypes.find(listingType => {
-      return listingType.translationName.id == translationId
+    return categories.root.find(category => {
+      return category[0] === this.props.config.filters.listings.category
     })
   }
 
@@ -55,12 +66,8 @@ class Configure extends React.Component {
       return false
     }
 
-    const subCategories =
-      listingSchemaMetadata.listingSchemasByCategory[category.type]
-    const translationId = this.props.config.filters.listings.subCategory
-
-    return subCategories.find(subCategory => {
-      return subCategory.translationName.id == translationId
+    return categories[category[0]].find(subCategory => {
+      return subCategory[0] === this.props.config.filters.listings.subCategory
     })
   }
 
@@ -93,18 +100,15 @@ class Configure extends React.Component {
 
   setListingFilters(obj) {
     const newConfig = {
-      ...this.state.config,
+      ...this.props.config,
       filters: {
-        ...this.state.config.filters,
+        ...this.props.config.filters,
         listings: {
-          ...this.state.config.filters.listings,
+          ...this.props.config.filters.listings,
           ...obj
         }
       }
     }
-
-    // Update config for this component
-    this.setState({ config: newConfig })
     // Propagate to parent
     this.props.onChange(newConfig)
   }
@@ -118,7 +122,7 @@ class Configure extends React.Component {
       })
     } else {
       this.setListingFilters({
-        category: category.translationName.id,
+        category: category[0],
         subCategory: null
       })
     }
@@ -133,8 +137,8 @@ class Configure extends React.Component {
       })
     } else {
       this.setListingFilters({
-        category: category.translationName.id,
-        subCategory: subcategory.translationName.id
+        category: category[0],
+        subCategory: subcategory[0]
       })
     }
   }
@@ -160,7 +164,7 @@ class Configure extends React.Component {
 
   toggleFilterByOwn(event) {
     this.setListingFilters({
-      marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : null
+      marketplacePublisher: event.target.checked ? web3.eth.accounts[0] : ''
     })
   }
 
@@ -200,7 +204,7 @@ class Configure extends React.Component {
             <input
               className="form-check-input"
               type="checkbox"
-              checked={this.state.config.filters.listings.marketplacePublisher}
+              checked={this.props.config.filters.listings.marketplacePublisher}
               onChange={this.toggleFilterByOwn}
             />
             Only use listings from my marketplace
@@ -222,44 +226,39 @@ class Configure extends React.Component {
 
           {this.isCategoryDropdownDisplayed() && (
             <div className="category-dropdown">
-              {this.state.listingTypes.map((listingType, i) => (
+              {categories.root.map((category, i) => (
                 <div key={i}>
                   <div
                     className={`category ${
-                      this.isExpandedCategory(listingType)
+                      this.isExpandedCategory(category)
                         ? 'expanded'
                         : 'collapsed'
                     }`}
-                    onClick={event => this.toggleCategory(event, listingType)}
+                    onClick={event => this.toggleCategory(event, category)}
                   >
                     <input
                       type="checkbox"
-                      checked={this.getCategoryFromConfig() === listingType}
-                      onChange={() => this.onCategoryCheck(listingType)}
+                      checked={this.getCategoryFromConfig() === category}
+                      onChange={() => this.onCategoryCheck(category)}
                     />
-                    {listingType.translationName.defaultMessage}
+                    {category[1]}
                   </div>
-                  {this.isExpandedCategory(listingType) &&
-                    this.state.listingSchemasByCategory[listingType.type].map(
-                      (listingSchema, y) => (
-                        <div className="subcategory" key={y}>
-                          <input
-                            type="checkbox"
-                            checked={this.isCheckedSubcategory(
-                              listingType,
-                              listingSchema
-                            )}
-                            onChange={() =>
-                              this.onSubcategoryCheck(
-                                listingType,
-                                listingSchema
-                              )
-                            }
-                          />
-                          {listingSchema.translationName.defaultMessage}
-                        </div>
-                      )
-                    )}
+                  {this.isExpandedCategory(category) &&
+                    categories[category[0]].map((subcategory, y) => (
+                      <div className="subcategory" key={y}>
+                        <input
+                          type="checkbox"
+                          checked={this.isCheckedSubcategory(
+                            category,
+                            subcategory
+                          )}
+                          onChange={() =>
+                            this.onSubcategoryCheck(category, subcategory)
+                          }
+                        />
+                        {subcategory[1]}
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>

@@ -1,6 +1,8 @@
 'use strict'
 
 const tableName = 'growth_campaign'
+const { GrowthCampaignRewardStatuses } = require('../src/enums')
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -11,7 +13,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      name_key: {
+        type: Sequelize.STRING
+      },
+      short_name_key: {
         type: Sequelize.STRING
       },
       rules: {
@@ -32,8 +37,14 @@ module.exports = {
       cap_used: {
         type: Sequelize.DECIMAL
       },
+      cap_reached_date: {
+        type: Sequelize.DATE
+      },
       currency: {
         type: Sequelize.STRING,
+      },
+      reward_status: {
+        type: Sequelize.ENUM(GrowthCampaignRewardStatuses)
       },
       created_at: {
         allowNull: false,
@@ -43,7 +54,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)

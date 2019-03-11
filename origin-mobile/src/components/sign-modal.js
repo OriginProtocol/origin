@@ -9,14 +9,17 @@ const IMAGES_PATH = '../../assets/images/'
 export default class SignModal extends Component {
   render() {
     const { item, address, handleApprove, handleReject, toggleModal } = this.props
-    const msg = item.sign && item.sign.params.msg
+    const msg = item.msg && JSON.stringify(item.msg).substr(0, 100)
 
     return (
       <Modal
         animationType="slide"
         transparent={true}
         visible={!!item}
-        onRequestClose={() => { console.log('Modal closed') } }
+        onRequestClose={() => {
+          console.log('Modal closed')
+          toggleModal()
+        } }
       >
         <TouchableOpacity onPress={toggleModal}>
           <View style={styles.above}></View>

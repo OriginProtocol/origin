@@ -27,7 +27,7 @@
     "busboy": "^0.2.14",
     "file-type": "^10.7.1",
     "http-proxy": "^1.17.0",
-    "ipfs": "^0.33.1",
+    "ipfs": "^0.34.4",
     "ipfsd-ctl": "^0.40.1",
     "is-json": "^2.0.1",
     "logplease": "^1.2.15",
@@ -35,8 +35,8 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
     "autocannon": "^3.2.0",
     "chai": "^4.2.0",

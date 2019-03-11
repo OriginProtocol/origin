@@ -1,17 +1,21 @@
+{{- $root := . -}}
+{{- range $i, $e := until ($.Values.replicas|int) }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "ethereum.fullname" . }}-discovery
+  name: {{ template "ethereum.fullname" $root }}-discovery-{{ $i }}
   labels:
-    app: {{ template "ethereum.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app: {{ template "ethereum.fullname" $root }}
+    chart: "{{ $root.Chart.Name }}-{{ $root.Chart.Version }}"
+    release: "{{ $root.Release.Name }}"
+    heritage: "{{ $root.Release.Service }}"
 spec:
   type: LoadBalancer
   selector:
-    app: {{ template "ethereum.fullname" . }}-tx-node
+    statefulset.kubernetes.io/pod-name: {{ template "ethereum.fullname" $root }}-tx-node-{{ $i }}
   ports:
     - name: discovery-udp
       port: 30303
       protocol: UDP
+---
+{{- end }}

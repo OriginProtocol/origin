@@ -6,6 +6,7 @@ export const ActivationConstants = keyMirror(
   {
     PROMPT_FOR_NOTIFICATIONS: null,
     STORE_NOTIFICATIONS_PERMISSIONS: null,
+    UPDATE_BACKUP_WARNING_STATUS: null,
     UPDATE_CAROUSEL_STATUS: null,
   },
   'App'
@@ -22,6 +23,15 @@ export function storeNotificationsPermissions(permissions) {
   return {
     type: ActivationConstants.STORE_NOTIFICATIONS_PERMISSIONS,
     permissions,
+  }
+}
+
+export function updateBackupWarningStatus(dismissed, hidden) {
+  hidden && storeData('backupWarningDismissed', hidden)
+
+  return {
+    type: ActivationConstants.UPDATE_BACKUP_WARNING_STATUS,
+    dismissed,
   }
 }
 

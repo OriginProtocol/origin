@@ -14,8 +14,10 @@
   },
   "main": "app.js",
   "scripts": {
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
     "migrate": "sequelize db:migrate",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\"",
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
@@ -38,8 +40,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.9.0",
+    "eslint": "^5.13.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }
