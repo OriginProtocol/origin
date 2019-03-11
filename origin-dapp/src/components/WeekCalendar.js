@@ -47,7 +47,7 @@ class WeekCalendar extends Component {
         // hours.push(null)
         hours.push({
           hour: weekStartDate.add(i*24+j, 'hour'),
-          price: 'TODO',
+          price: '1',
           unavailable: false,
           customPrice: null,
           booked: false
@@ -259,13 +259,19 @@ require('react-styl')(`
       grid-template-rows: repeat(24, 1fr)
       grid-auto-flow: column
       user-select: none
+      border-style: solid
+      border-color: #c2cbd3
+      border-width: 1px 1px 1px 1px
       > .empty.first-row
         border-bottom: 1px solid #c2cbd3
       > .time-column-label
         border-style: solid
         border-color: #c2cbd3
-        border-width: 0 0 1px 0px
-        text-align: center
+        border-width: 0 1px 0 0
+        text-align: right
+        padding-right: 0.5rem
+        > div
+          margin-top: -1rem
       > .hour
         height: 50px
         min-height: 3.5rem
@@ -335,11 +341,12 @@ require('react-styl')(`
 
     .day-header
       display: flex
-      border-width: 1px 0
+      border-width: 0 0 0 0
       border-style: solid
       border-color: #c2cbd3
       justify-content: space-between;
-      text-align: center
+      text-align: left
+      padding-left: 1rem
       font-size: 14px
       font-weight: normal
       color: var(--bluey-grey)
@@ -351,6 +358,7 @@ require('react-styl')(`
           text-transform: uppercase
         .day-column-number
           font-size: 24px
+          color: var(--dark)
 
     .week-chooser
       display: flex
