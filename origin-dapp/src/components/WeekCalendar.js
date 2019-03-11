@@ -11,9 +11,7 @@ class WeekCalendar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      //year: dayjs().year(),
-      //month: dayjs().month()
-      weekStartDate: dayjs().startOf('week')
+      weekStartDate: dayjs().startOf('week') // Default to current week
     }
     this.scrollComponentRef = React.createRef()
   }
@@ -35,25 +33,10 @@ class WeekCalendar extends Component {
       // date = dayjs(startOfMonth),
       isBeginning = weekStartDate.isBefore(dayjs()), // Is it before now?
       lastDay = weekStartDate.add(1, 'week'),
-      hours = []
-      // dayAvailability = this.props.availability.getAvailability(
-      //   weekStartDate.format('YYYY/MM/DD'),
-      //   weekStartDate.endOf('month').format('YYYY/MM/DD')
-      // )
-
-    let currentHour = 0
-    for (let i = 0; i < 7; i++) { // Days
-      for (let j = 0; j < 24; j++) { // Hours
-        // hours.push(null)
-        hours.push({
-          hour: weekStartDate.add(i*24+j, 'hour'),
-          price: '1',
-          unavailable: false,
-          customPrice: null,
-          booked: false
-        })
-      }
-    }
+      hours = this.props.availability.getAvailability(
+        weekStartDate.format('YYYY-MM-DDTHH:00:00'),
+        weekStartDate.add(27*7, 'hour').format('YYYY-MM-DDTHH:00:00')
+      )
 
     return (
       <div className={`weekCalendar${this.props.small ? ' calendar-sm' : ''}`}>
@@ -124,6 +107,9 @@ class WeekCalendar extends Component {
   }
 
   renderHour(hours, idx) {
+    console.log(`Rendering hour ${idx}`)
+    console.log(hours[idx])
+
     const hour = hours[idx]
     if (!hour) {
       return (
@@ -138,7 +124,7 @@ class WeekCalendar extends Component {
 
     // Hour in past
 
-    if (hour.hour.isBefore(dayjs())) {
+    if (dayjs(hour.hour).isBefore(dayjs())) {
       return (
         <div
           key={idx}
@@ -170,7 +156,6 @@ class WeekCalendar extends Component {
           })
         },
         onMouseUp: () => {
-
           // TODO: Unlike for montly, we probably need to add an hour here.
           // If user drags to selec the 4pm slot, that means thier booking
           // acutally ends at 5pm.
@@ -179,19 +164,14 @@ class WeekCalendar extends Component {
           if (this.props.onChange) {
             const start = dayjs(this.state.startDate)
 
-            // TODO: Handle if "enddate" is before startdate
+            // TODO (Stan): Handle if "enddate" is before startdate
 
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
             let range = (dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') + '/' +
-              hour.hour.format('YYYY-MM-DDTHH:mm:ss'))
+              dayjs(hour.hour).format('YYYY-MM-DDTHH:mm:ss'))
 
-            // let range = `${this.state.startDate}-${hour.hour}`
-            // if (start.isAfter(hour.hour)) {
-            //   range = `${hour.hour}-${this.state.startDate}`
-            // }
             this.props.onChange({ range })
-            // this.props.onChange({range:'2019/02/27-2019/02/28'})
           }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
