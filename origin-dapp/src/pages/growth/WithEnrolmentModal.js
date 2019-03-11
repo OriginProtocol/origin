@@ -221,8 +221,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
-      const isRestricted = eligibility === 'restricted'
-      const isForbidden = eligibility === 'forbidden'
+      const isRestricted = eligibility === 'Restricted'
+      const isForbidden = eligibility === 'Forbidden'
 
       return (
         <div>
@@ -293,7 +293,7 @@ function withEnrolmentModal(WrappedComponent) {
             const { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
-            // const country = 'Saudi Arabia'
+            // const countryName = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
 
             if (
@@ -311,7 +311,7 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return 'Error: can not detect coutry'
+              return 'Error: can not detect country'
             }
           }}
         </Query>

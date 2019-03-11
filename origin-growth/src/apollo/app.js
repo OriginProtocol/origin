@@ -13,7 +13,7 @@ const {
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  logger.log('EnvKey not configured')
 }
 
 const { ApolloServer } = require('apollo-server-express')
@@ -65,7 +65,11 @@ const server = new ApolloServer({
 
         walletAddress = (await getUser(authToken)).ethAddress
       } catch (e) {
-        console.error('Error authenticating user: ', e)
+        logger.error(
+          'Authentication header present but unable to authenticate user ',
+          e.message,
+          e.stack
+        )
       }
     }
 
@@ -84,7 +88,7 @@ server.applyMiddleware({ app })
 const port = process.env.PORT || 4001
 
 app.listen({ port: port }, () =>
-  console.log(
+  logger.info(
     `Apollo server ready at http://localhost:${port}${server.graphqlPath}`
   )
 )
