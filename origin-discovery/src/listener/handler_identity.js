@@ -1,7 +1,7 @@
 const Web3 = require('web3')
 const logger = require('./logger')
 
-const _bridgeModels = require('origin-bridge')
+const _bridgeModels = require('origin-bridge/src/models')
 const _discoveryModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
