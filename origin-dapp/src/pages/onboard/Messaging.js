@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 
 import Link from 'components/Link'
 import Steps from 'components/Steps'
+import MetaMaskAnimation from 'components/MetaMaskAnimation'
 
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
@@ -52,16 +53,16 @@ const MessagingSyncing = ({ pct }) => (
 
 const EnableMessaging = ({ next }) => (
   <div className="onboard-box">
-    <div className="messaging-logo">
-      <div className="qm" />
-      <div className="qm" />
-    </div>
+    <div className="messaging-logo" />
     <div className="status">Origin Messaging</div>
-    <div className="help">
-      Origin messaging will allow you to chat with other buyers and sellers on
-      our DApp.
+    <div className="connected">
+      <span className="oval warn" />
+      <span className="oval warn" />0 of 2 MetaMask messages signed
     </div>
-    <em>Metamask will ask you to sign 2 messages</em>
+
+    <div className="help mb">
+      Messaging will allow you to chat with other buyers and sellers.
+    </div>
     <Mutation mutation={EnableMessagingMutation}>
       {enableMessaging => (
         <button
@@ -83,11 +84,14 @@ const EnableMessaging = ({ next }) => (
 
 const SignMessage = ({ num }) => (
   <div className="onboard-box">
-    <div className="messaging-logo">
-      <div className="qm" />
-      <div className={`qm${num === 2 ? ' active' : ''}`} />
-    </div>
+    <MetaMaskAnimation light />
     <div className="status">{`Waiting for you to sign message #${num}`}</div>
+    <div className="connected">
+      <span className={`oval ${num === 2 ? '' : 'warn'}`} />
+      <span className={`oval warn`} />
+      {`${num === 2 ? '1' : '0'} of 2 MetaMask messages signed`}
+    </div>
+
     <div className="help">
       The Metamask icon is located on the top right of your browser tool bar.
     </div>
@@ -99,9 +103,12 @@ const MessagingEnabled = () => (
   <div className="onboard-box">
     <div className="messaging-logo">
       <div className="qm active" />
-      <div className="qm active" />
     </div>
     <div className="status">Messaging Enabled</div>
+    <div className="connected">
+      <span className="oval" />
+      <span className="oval" /> 2 of 2 MetaMask messages signed
+    </div>
     <div className="help">
       Congratulations! You can now message other users on Origin and stay up to
       date with all your purchases and sales.
@@ -194,12 +201,16 @@ require('react-styl')(`
   .onboard-box
     .messaging-logo
       margin-bottom: 1rem
-      width: 6.5rem
-      height: 6.5rem
-      border-radius: 1rem
-      background: var(--dusk) url(images/messages-icon.svg) no-repeat center
-      background-size: 3.5rem
+      width: 10rem
+      height: 10rem
+      background: url(images/chat-bubble-icon.svg) no-repeat center
+      background-size: contain
       position: relative
+      .qm.active
+        background-size: 2rem;
+        width: 3.5rem
+        height: 3.5rem
+        right: -1.5rem
   .messaging-sync > .progress
     width: 50%
     margin-top: 2rem

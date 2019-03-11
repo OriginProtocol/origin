@@ -138,12 +138,7 @@ class OnboardProfile extends Component {
 
                   <label className="mt-3">Attestations</label>
                   <div className="profile-attestations with-checkmarks">
-                    {this.renderAtt('phone', 'Phone Number')}
                     {this.renderAtt('email', 'Email')}
-                    {this.renderAtt('airbnb', 'Airbnb')}
-                    {this.renderAtt('facebook', 'Facebook')}
-                    {this.renderAtt('twitter', 'Twitter')}
-                    {this.renderAtt('google', 'Google', true)}
                   </div>
 
                   <ProfileStrength
@@ -314,6 +309,7 @@ require('react-styl')(`
         min-height: 3rem
     .profile-attestations
       margin-bottom: 2rem
+      display: block
 
   .profile-attestations
     display: grid
