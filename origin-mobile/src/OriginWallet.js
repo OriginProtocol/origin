@@ -47,6 +47,7 @@ const Events = keyMirror({
   PROMPT_SIGN:null,
   CURRENT_ACCOUNT:null,
   AVAILABLE_ACCOUNTS:null,
+  LOADED:null,
   LINKED:null,
   TRANSACTED:null,
   UNLINKED:null,
@@ -1392,6 +1393,8 @@ class OriginWallet {
           this.setWeb3Address(active.address || accounts[0].address)
         }
       }
+
+      this.fireEvent(Events.LOADED)
     })
 
     Linking.getInitialURL().then((url) => {

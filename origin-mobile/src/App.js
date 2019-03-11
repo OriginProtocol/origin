@@ -155,6 +155,10 @@ class OriginNavWrapper extends Component {
     super(props)
 
     this.balancePoll = null
+
+    this.state = {
+      loading: true,
+    }
   }
 
   componentDidMount() {
@@ -171,6 +175,10 @@ class OriginNavWrapper extends Component {
       // this.props.setActiveEvent(data)
       // NavigationService.navigate('Home')
     // })
+
+    originWallet.events.on(Events.LOADED, () => {
+      this.setState({ loading: false })
+    })
 
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
@@ -266,6 +274,14 @@ class OriginNavWrapper extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )
+    }
+
     return this.props.wallet.address ?
       <OriginNavigator ref={navigatorRef =>
         NavigationService.setTopLevelNavigator(navigatorRef)
