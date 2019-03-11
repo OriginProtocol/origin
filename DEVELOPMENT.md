@@ -70,11 +70,13 @@ The `docker-compose` configuration runs the following packages:
 ```
 - elasticsearch on http://localhost:9200
 - postgresql
-- origin-services (ipfs server)
-- origin-services (ethereum blockchain using ganache on http://localhost:8545)
+- origin-services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
 - origin-bridge on http://localhost:5000
-- origin-discovery (event-listener)
+- origin-discovery
+- origin-dapp on http://localhost:3000
+- origin-event-listener
 - origin-discovery (apollo server on http://localhost:4000)
+- origin-growth (apollo server on http://localhost:4001)
 - origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
@@ -113,9 +115,12 @@ Please note this can take some time. If you see an error in the logs please [rai
 Please refer to the [docker-compose](https://docs.docker.com/compose/reference/overview/) documentation for usage. Some commands that may be useful are included below.
 
 Start and stop the environment:
-
+```
 	docker-compose up
-	docker-compose down
+	docker-compose stop
+```
+
+⚠️ When docker builds an image part of the build process is `npm install` meaning that dependent packages from `package.json` are built into the image. This image is immutable. With `docker-compose up` a container is created where image gets a volume where any changes are stored. Running `docker-compose down` will remove that volume and any changes to the container after the image build will be lost.
 
 Spawn a shell (command line) in a container:
 
@@ -134,7 +139,32 @@ Rebuild containers (takes some time), in case you update dependencies (including
 
 	docker-compose build --no-cache origin
 
+Configure environment variables in `development/envfiles`
+
+### Suggested workflow
+
+Switching between branches or developing on a fresh branch can cause the dependencies in one of the `package.json` files to change. The host `node_modules` directories are not mounted inside the Docker container. For that reason installing dependencies needs to be done inside the containers. One solution is to rebuild the image with `docker-compose build` but that can be time consuming. To install new dependencies get a shell in the container and run `npm install`.
+
+```
+host-machine$ docker exec -ti <container_name> /bin/bash
+docker-container$ npm run bootstrap # run inside /app directory
+# close connection
+host-machine$ docker-compose restart <container_name>
+```
+
+⚠️ Don't run `docker-compose down` when stopping containers! Any changes made since the initial Docker build will be lost. Instead use `docker-compose stop`
+
 ### Troubleshooting
+
+#### Docker Desktop Mac
+
+Running `docker down/up` and rebuilding image `docker-compose build` will consume disk space that docker might have problems releasing. One indication of this is that containers are unable to start. Check available disk space in `Disk` tab under Docker Desktop preferences. To free disk space:
+
+```
+$docker system prune --volumes --all
+```
+
+When doing a hard delete of Docker data Origin images need to be rebuilt `docker-compose build`
 
 #### Elasticsearch fails to start with virtual memory error
 

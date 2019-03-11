@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'c86af29'
+bridgeImageTag: 'c72a2dd'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'dfe710b'
+dappImageTag: '4cc343e'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -30,7 +30,7 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'c86af29'
+growthImageTag: '44177d7'
 
 # origin-messaging
 messagingImage: origin-messaging

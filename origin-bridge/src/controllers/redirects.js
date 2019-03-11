@@ -16,7 +16,6 @@ router.get('/facebook', (req, res) => {
 })
 
 router.get('/twitter', (req, res) => {
-  console.log(__dirname)
   if (req.query.dappRedirectUrl) {
     const dappRedirectUrl = req.query.dappRedirectUrl
     res.redirect(`${dappRedirectUrl}?origin-code=${req.query.oauth_verifier}`)

@@ -73,7 +73,7 @@ function Action(props) {
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
     title = 'Sell a Listing'
-    infoText = 'Purchase a listing on marketplace'
+    infoText = 'Sell a listing on marketplace'
     buttonLink = '/'
   } else if (type === 'Referral') {
     title = 'Invite Friends'
