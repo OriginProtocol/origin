@@ -13,8 +13,56 @@ import HelpWallet from './_HelpWallet'
 
 import query from 'queries/Wallet'
 
+const isFirefox = typeof InstallTrigger !== 'undefined'
+const isChrome =
+  !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+
+const OriginWallet = () => (
+  <div className="connect mobile-wallet">
+    <div className="image">
+      <div />
+    </div>
+    <div>
+      <h4>Origin Mobile Wallet</h4>
+      <div className="description">
+        Origin’s Mobile Wallet will allow you to store crypto currency so you
+        can buy and sell on our DApp.
+      </div>
+      <div className="note">Currently only available for iOS</div>
+      <LinkMobileWallet className="btn btn-outline-primary">
+        Connect Origin Wallet
+      </LinkMobileWallet>
+    </div>
+  </div>
+)
+
+const MetaMask = ({ linkPrefix }) => (
+  <div className="connect metamask">
+    <div className="image">
+      <div />
+    </div>
+    <div>
+      <h4>MetaMask</h4>
+      <div className="description">
+        MetaMask is a browser extension that will allow you to access the
+        decentralized web.
+      </div>
+      <div className="note">{`Available for ${
+        isFirefox ? 'Firefox' : 'Google Chrome'
+      }`}</div>
+      <Link
+        to={`${linkPrefix}/onboard/metamask`}
+        className="btn btn-outline-primary"
+      >
+        Connect MetaMask
+      </Link>
+    </div>
+  </div>
+)
+
 const Step1 = ({ listing }) => {
   const linkPrefix = listing ? `/listing/${listing.id}` : ''
+  const showMetaMask = isChrome || isFirefox
 
   return (
     <>
@@ -39,43 +87,8 @@ const Step1 = ({ listing }) => {
 
               return (
                 <>
-                  <div className="connect mobile-wallet">
-                    <div className="image">
-                      <div />
-                    </div>
-                    <div>
-                      <h4>Origin Mobile Wallet</h4>
-                      <div className="description">
-                        Origin’s Mobile Wallet will allow you to store crypto
-                        currency so you can buy and sell on our DApp.
-                      </div>
-                      <div className="note">
-                        Currently only available for iOS
-                      </div>
-                      <LinkMobileWallet className="btn btn-outline-primary">
-                        Connect Origin Wallet
-                      </LinkMobileWallet>
-                    </div>
-                  </div>
-                  <div className="connect metamask">
-                    <div className="image">
-                      <div />
-                    </div>
-                    <div>
-                      <h4>MetaMask</h4>
-                      <div className="description">
-                        MetaMask is a browser extension for Chrome that will
-                        allow you to access the decentralized web.
-                      </div>
-                      <div className="note">Available for Google Chrome</div>
-                      <Link
-                        to={`${linkPrefix}/onboard/metamask`}
-                        className="btn btn-outline-primary"
-                      >
-                        Connect MetaMask
-                      </Link>
-                    </div>
-                  </div>
+                  <OriginWallet />
+                  {!showMetaMask ? null : <MetaMask linkPrefix={linkPrefix} />}
                 </>
               )
             }}

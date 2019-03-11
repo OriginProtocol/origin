@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 
 import Steps from 'components/Steps'
 import Link from 'components/Link'
+import MetaMaskAnimation from 'components/MetaMaskAnimation'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
@@ -62,12 +63,11 @@ const ConfirmInstalled = () => (
 
 const AwaitingLogin = ({ back }) => (
   <div className="onboard-box">
-    <div className="metamask-logo" />
+    <MetaMaskAnimation light />
     <div className="status">Waiting for you to login to MetaMask</div>
     <div className="help">
       The MetaMask icon is located on the top right of your browser tool bar.
     </div>
-    <div className="click-metamask-extension" />
     <Link to={back} className="cancel">
       Cancel
     </Link>
@@ -75,26 +75,52 @@ const AwaitingLogin = ({ back }) => (
 )
 
 class AwaitingApproval extends Component {
+  state = {}
   componentDidMount() {
-    setTimeout(() => window.ethereum.enable(), 50)
+    this.timeout = setTimeout(
+      () =>
+        window.ethereum.enable().catch(() => {
+          this.setState({ declined: true })
+        }),
+      50
+    )
   }
   render() {
     const { back } = this.props
+    if (this.state.declined) {
+      return (
+        <div className="onboard-box">
+          <div className="metamask-logo" />
+          <div className="status">Oops, you denied permission</div>
+          <div className="help">
+            You must grant Origin permission to access your MetaMask account so
+            you can buy and sell on our DApp.
+          </div>
+          <button
+            className="btn btn-outline-primary mt-4"
+            onClick={() => {
+              window.ethereum
+                .enable()
+                .catch(() => this.setState({ declined: true }))
+              this.setState({ declined: false })
+            }}
+          >
+            Grant Permission
+          </button>
+          <Link to={back} className="cancel">
+            Cancel
+          </Link>
+        </div>
+      )
+    }
     return (
       <div className="onboard-box">
-        <div className="metamask-logo" />
+        <MetaMaskAnimation light />
         <div className="status">Waiting for you to grant permission</div>
         <div className="help">
           Please grant Origin permission to access your MetaMask account so you
           can buy and sell on our DApp.
         </div>
-        <div className="click-metamask-extension" />
-        <button
-          className="btn btn-outline-primary"
-          onClick={() => window.ethereum.enable()}
-        >
-          Grant Permission
-        </button>
         <Link to={back} className="cancel">
           Cancel
         </Link>
@@ -126,7 +152,8 @@ const Connected = ({ networkName }) => (
       {networkName}
     </div>
     <div className="help mb">
-      MetaMask is connected and you’re ready to transact on Origin.
+      MetaMask is connected and you’re ready to transact on Origin. Click
+      Continue below.
     </div>
   </div>
 )
@@ -222,12 +249,8 @@ require('react-styl')(`
       background-size: 7rem
       height: 7rem
       width: 7rem
-    .click-metamask-extension
-      background: url(images/onboarding-metamask.png) no-repeat center
-      background-size: 100%
-      width: 73px
-      height: 81px
-      margin: 2rem 0
+    .help
+      max-width: 32rem
     .connected
       margin: -0.5rem 0 1.5rem 0
       .oval
@@ -239,4 +262,6 @@ require('react-styl')(`
         margin-right: 0.5rem
         &.warn
           background-color: var(--golden-rod)
+        &.danger
+          background-color: var(--orange-red)
 `)
