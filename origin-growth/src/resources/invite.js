@@ -77,7 +77,8 @@ class GrowthInvite {
     return {
       status,
       walletAddress: referee,
-      contactName: (identity.firstName || '') + ' ' + (identity.lastName || ''),
+      // TODO: when we only have users' email on the record show that
+      contact: (identity.firstName || '') + ' ' + (identity.lastName || ''),
       reward: reward.value
     }
   }

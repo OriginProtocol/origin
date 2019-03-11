@@ -80,7 +80,7 @@ const GrowthRewardStatuses = new Enum(
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
-const GrowthInviteStatuses = new Enum('Sent', 'Visited', 'Completed')
+const GrowthInviteStatuses = new Enum('Sent', 'Completed')
 
 module.exports = {
   GrowthCampaignRewardStatuses,

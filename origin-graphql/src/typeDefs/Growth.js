@@ -60,7 +60,8 @@ module.exports =
   type Invite {
     status: GrowthInviteStatus!
     walletAddress: ID!
-    contactName: String
+    # email or firstName + lastName of the contact
+    contact: String
     reward: Price
   }
 
