@@ -42,7 +42,7 @@ module.exports = {
           })
       })
   },
-  down: (queryInterface) => {
+  down: queryInterface => {
     // Note: we don't remove the hstore extension since it could be used
     // by other tables.
     return queryInterface.dropTable(TableName)
