@@ -4,6 +4,8 @@ import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalcula
 import Steps from 'components/Steps'
 import Calendar from 'components/Calendar'
 import Price from 'components/Price'
+import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -26,6 +28,9 @@ class Availability extends Component {
   }
 
   render() {
+    if (this.state.valid) {
+      return <Redirect to={this.props.next} push />
+    }
     return (
       <div className="row">
         <div className="col-md-8">
@@ -57,23 +62,14 @@ class Availability extends Component {
                 />
 
                 <div className="actions">
-                  <button
+                  <Link
                     className="btn btn-outline-primary"
-                    type="button"
-                    onClick={() => {
-                      this.props.onPrev()
-                    }}
+                    to={this.props.prev}
                   >
                     Back
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    type="submit"
-                    onClick={() => {
-                      this.props.onNext()
-                    }}
-                  >
-                    Continue
+                  </Link>
+                  <button className="btn btn-primary" type="submit">
+                    Review
                   </button>
                 </div>
               </form>

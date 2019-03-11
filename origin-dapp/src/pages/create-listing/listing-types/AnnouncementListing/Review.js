@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Wallet from 'components/Wallet'
 import Category from 'components/Category'
+import Link from 'components/Link'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -9,8 +10,6 @@ import UpdateListing from '../../mutations/UpdateListing'
 class Review extends Component {
   state = {}
   render() {
-    const isEdit = this.props.mode === 'edit'
-
     const { listing } = this.props
 
     return (
@@ -54,19 +53,12 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-            <button
-              className="btn btn-outline-primary"
-              onClick={() => {
-                this.props.onPrev()
-              }}
-            >
+            <Link className="btn btn-outline-primary" to={this.props.prev}>
               Back
-            </button>
-            {isEdit ? (
+            </Link>
+            {listing.id ? (
               <UpdateListing
                 listing={this.props.listing}
-                listingId={this.props.listingId}
-                tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
                 children="Done"
@@ -74,7 +66,6 @@ class Review extends Component {
             ) : (
               <CreateListing
                 listing={this.props.listing}
-                tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
               />
@@ -96,49 +87,3 @@ class Review extends Component {
 }
 
 export default Review
-
-require('react-styl')(`
-  .create-listing .create-listing-review
-    .fiat
-      display: inline-block
-      margin-left: 0.75rem
-      font-size: 14px
-    h2
-      font-size: 28px
-    .detail
-      border: 1px solid var(--light)
-      border-radius: 5px
-      padding: 1rem 2rem
-      font-size: 18px
-      font-weight: normal
-      .row
-        margin-bottom: 1rem
-        .label
-          color: var(--dusk)
-    .photos
-      margin-bottom: 1rem
-      display: grid
-      grid-column-gap: 10px;
-      grid-row-gap: 10px;
-      grid-template-columns: repeat(auto-fill,minmax(90px, 1fr));
-      .photo-row
-        font-size: 12px
-        box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
-        background: #fff
-        padding: 5px;
-        background-position: center
-        width: 100%
-        height: 80px
-        background-size: contain
-        background-repeat: no-repeat
-
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
-`)

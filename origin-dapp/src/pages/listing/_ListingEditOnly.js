@@ -13,7 +13,7 @@ const EditOnly = ({ listing, isAnnouncement, isFractional }) => (
         </div>
       </div>
     )}
-    {isFractional ? null : (
+    {isFractional || isAnnouncement ? null : (
       <div className="listing-buy-editonly">
         <div className="row">
           <div>Sold</div>
