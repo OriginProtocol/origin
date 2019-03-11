@@ -42,8 +42,8 @@ class ChooseListingType extends Component {
         <div
           key={id}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-          onClick={e => {
-            if (e.target.tagName == 'SELECT') return
+          onClick={() => {
+            if (active) return
             this.setState({ category: id, subCategory: '' })
           }}
         >
