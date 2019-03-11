@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
 
-// const instance = new AvailabilityCalculator({
+// const instance = new AvailabilityCalculatorHourly({
 //   weekdayPrice: '0.5',
 //   weekendPrice: '0.75',
 //   advanceNotice: 3, // Number of days of advanced notice
@@ -14,7 +14,7 @@ dayjs.extend(isBetween)
 
 // const Keys = ['unavailable', 'booked', 'customPricing']
 
-class AvailabilityCalculator {
+class AvailabilityCalculatorHourly {
   constructor(opts) {
     this.opts = opts
     this.opts.unavailable = this.opts.unavailable || []
@@ -150,6 +150,8 @@ class AvailabilityCalculator {
 
     const customPricing = {}
     this.opts.customPricing.forEach(customStr => {
+      // TODO: Change delimier from `:`, as this is used by ISO standard for times
+      // Hourly uses `~` which would be a good choice.
       const [range, price] = customStr.split(':')
       const [startStr, endStr] = range.split('/')
       let start = dayjs(startStr)
@@ -206,4 +208,4 @@ class AvailabilityCalculator {
 //   }
 // })
 
-export default AvailabilityCalculator
+export default AvailabilityCalculatorHourly

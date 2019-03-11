@@ -170,6 +170,11 @@ class WeekCalendar extends Component {
           })
         },
         onMouseUp: () => {
+
+          // TODO: Unlike for montly, we probably need to add an hour here.
+          // If user drags to selec the 4pm slot, that means thier booking
+          // acutally ends at 5pm.
+
           this.setState({ dragEnd: idx, dragging: false, endDate: hour.hour })
           if (this.props.onChange) {
             const start = dayjs(this.state.startDate)

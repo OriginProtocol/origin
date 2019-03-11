@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculatorHourly from 'origin-graphql/src/utils/AvailabilityCalculatorHourly'
 
 import Steps from 'components/Steps'
 import WeekCalendar from 'components/WeekCalendar'
@@ -15,19 +15,17 @@ class Availability extends Component {
       customPrice: false,
       available: true,
       range: '',
-      calculator: new AvailabilityCalculator({
-        weekdayPrice: props.listing.price,
-        weekendPrice: props.listing.weekendPrice,
-        booked: props.listing.booked,
-        unavailable: props.listing.unavailable,
+      calculator: new AvailabilityCalculatorHourly({
+        // price: props.listing.price,
+        // weekendPrice: props.listing.weekendPrice,
+        // booked: props.listing.booked,
+        // unavailable: props.listing.unavailable,
         customPricing: props.listing.customPricing
       })
     }
   }
 
   render() {
-    // const isEdit = this.props.mode === 'edit'
-
     return (
       <div className="row">
         <div className="col-md-8">
