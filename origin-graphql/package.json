@@ -23,11 +23,13 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/register": "^7.0.0",
-    "apollo-link-http": "^1.5.10",
     "apollo-link-context": "^1.0.14",
+    "apollo-link-http": "^1.5.10",
     "dayjs": "^1.8.5",
+    "json-stable-stringify": "^1.0.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "mocha": "^5.2.0",
+    "origin-contracts": "^0.8.6",
     "origin-eventsource": "^0.1.0",
     "origin-ipfs": "^0.1.0",
     "origin-linker-client": "^0.1.0",
@@ -78,7 +80,6 @@
     "graphql-tools": "^4.0.4",
     "lodash-es": "^4.17.11",
     "node-fetch": "^2.3.0",
-    "origin-contracts": "^0.8.6",
     "subscriptions-transport-ws": "^0.9.15",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.29.3"

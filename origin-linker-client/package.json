@@ -11,12 +11,14 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
+    "crypto-random-string": "^1.0.0",
+    "eth-ecies": "^1.0.3",
     "prettier": "^1.16.3",
+    "query-string": "^6.3.0",
     "uuid": "^3.3.2",
     "web3-provider-engine": "^14.1.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "prettier": {
     "semi": false,
     "singleQuote": true
