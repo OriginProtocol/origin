@@ -56,6 +56,8 @@ class CreateListing extends Component {
       AnnouncementListing: AnnouncementListing,
       FractionalListing: FractionalListing
     }
+    // Get creation component for listing type (__typename),
+    // defaulting to UnitListing
     const ListingTypeComponent =
       this.state.listing.__typename in listingTypeMapping
         ? listingTypeMapping[this.state.listing.__typename]

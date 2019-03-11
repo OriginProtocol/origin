@@ -26,8 +26,6 @@ class Availability extends Component {
   }
 
   render() {
-    // const isEdit = this.props.mode === 'edit'
-
     return (
       <div className="row">
         <div className="col-md-8">
@@ -208,10 +206,6 @@ class Availability extends Component {
               this.setState({ calculator, range: '' })
 
               const { booked, customPricing, unavailable } = calculator.opts
-
-              console.log(booked)
-              console.log(customPricing)
-              console.log(unavailable)
 
               this.props.onChange({
                 ...this.props.listing,

@@ -101,7 +101,6 @@ class Review extends Component {
               <UpdateListing
                 listing={this.props.listing}
                 listingId={this.props.listingId}
-                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
@@ -110,7 +109,6 @@ class Review extends Component {
             ) : (
               <CreateListing
                 listing={this.props.listing}
-                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"

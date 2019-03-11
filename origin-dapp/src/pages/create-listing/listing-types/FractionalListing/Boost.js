@@ -40,8 +40,6 @@ class Boost extends Component {
   }
 
   render() {
-    //const isEdit = this.props.mode === 'edit'
-
     if (this.state.valid) {
       // Advance to next step
       this.props.onNext()
@@ -117,7 +115,7 @@ class Boost extends Component {
   renderBoostSlider() {
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
     const isMulti = Number(this.state.quantity || 0) > 1
-    const isFractional = this.props.listingType === 'fractional'
+    const isFractional = this.props.__typename === 'fractional'
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
