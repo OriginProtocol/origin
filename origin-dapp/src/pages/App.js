@@ -101,7 +101,7 @@ class App extends Component {
               <Route exact path="/campaigns" component={GrowthCampaigns} />
             )}
             {enableGrowth && (
-              <Route path="/welcome" component={GrowthWelcome} />
+              <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             )}
             <Route component={Listings} />
           </Switch>

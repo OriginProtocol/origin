@@ -25,10 +25,6 @@ const GetMetaMaskStateQuery = gql`
       }
       primaryAccount {
         id
-        checksumAddress
-        balance {
-          eth
-        }
       }
       walletType
     }
@@ -44,13 +40,8 @@ export default function(client) {
     // configStore.on('notification', () => {
     //   console.log("MM Notification")
     // })
-    let currentState
-    configStore.on('update', state => {
-      // console.log("MM Update", ok)
-      if (currentState === JSON.stringify(state)) {
-        return
-      }
-      currentState = JSON.stringify(state)
+    configStore.on('update', () => {
+      // console.log('MM Update', state)
       client
         .query({
           query: GetMetaMaskStateQuery,

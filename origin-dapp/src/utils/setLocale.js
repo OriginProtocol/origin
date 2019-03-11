@@ -6,7 +6,9 @@ export default async function setLocale(newLocale) {
   if (newLocale) {
     localStorage.locale = newLocale
   } else if (!userLocale) {
-    userLocale = (navigator.language || 'en_US').replace('-', '_')
+    // Default to English until our translations are improved.
+    userLocale = 'en_US'
+    //userLocale = (navigator.language || 'en_US').replace('-', '_')
   }
 
   const hasLanguage = Languages.find(l => l[0].indexOf(userLocale) === 0)

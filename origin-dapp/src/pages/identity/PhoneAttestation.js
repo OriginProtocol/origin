@@ -54,81 +54,6 @@ class PhoneAttestation extends Component {
 
   renderGenerateCode() {
     return (
-      <>
-        <h2>Verify your Phone Number</h2>
-        <div className="instructions">
-          Enter your phone number below and OriginID will send you a
-          verification code via SMS.
-        </div>
-        <div className="d-flex mt-3">
-          <CountryDropdown
-            onChange={({ code, prefix }) =>
-              this.setState({ active: code, prefix })
-            }
-            active={this.state.active}
-          />
-          <div className="form-control-wrap">
-            <input
-              type="tel"
-              ref={ref => (this.inputRef = ref)}
-              className="form-control form-control-lg"
-              placeholder="Area code and phone number"
-              value={this.state.phone}
-              onChange={e => this.setState({ phone: e.target.value })}
-            />
-          </div>
-        </div>
-        {this.state.error && (
-          <div className="alert alert-danger mt-3">{this.state.error}</div>
-        )}
-        <div className="help">
-          Other users will know that you have a verified phone number. Your
-          actual phone number will not be published on the blockchain.
-        </div>
-        <div className="actions">
-          {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
-          />
-        </div>
-      </>
-    )
-  }
-
-  renderVerifyCode() {
-    return (
-      <>
-        <h2>Verify your Phone Number</h2>
-        <div className="instructions">Enter the code we sent you below</div>
-        <div className="my-3 verification-code">
-          <input
-            type="tel"
-            ref={ref => (this.inputRef = ref)}
-            className="form-control form-control-lg"
-            placeholder="Verification code"
-            value={this.state.code}
-            onChange={e => this.setState({ code: e.target.value })}
-          />
-          {this.state.error && (
-            <div className="alert alert-danger mt-3">{this.state.error}</div>
-          )}
-        </div>
-        <div className="actions">
-          {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
-          />
-        </div>
-      </>
-    )
-  }
-
-  renderCodeButton() {
-    return (
       <Mutation
         mutation={GeneratePhoneCodeMutation}
         onCompleted={res => {
@@ -145,23 +70,65 @@ class PhoneAttestation extends Component {
         }}
       >
         {generateCode => (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
+          <form
+            onSubmit={e => {
+              e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               generateCode({
                 variables: pick(this.state, ['prefix', 'method', 'phone'])
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
-          />
+          >
+            <h2>Verify your Phone Number</h2>
+            <div className="instructions">
+              Enter your phone number below and OriginID will send you a
+              verification code via SMS.
+            </div>
+            <div className="d-flex mt-3">
+              <CountryDropdown
+                onChange={({ code, prefix }) =>
+                  this.setState({ active: code, prefix })
+                }
+                active={this.state.active}
+              />
+              <div className="form-control-wrap">
+                <input
+                  type="tel"
+                  ref={ref => (this.inputRef = ref)}
+                  className="form-control form-control-lg"
+                  placeholder="Area code and phone number"
+                  value={this.state.phone}
+                  onChange={e => this.setState({ phone: e.target.value })}
+                />
+              </div>
+            </div>
+            {this.state.error && (
+              <div className="alert alert-danger mt-3">{this.state.error}</div>
+            )}
+            <div className="help">
+              Other users will know that you have a verified phone number. Your
+              actual phone number will not be published on the blockchain.
+            </div>
+            <div className="actions">
+              <button
+                type="submit"
+                className="btn btn-outline-light"
+                children={this.state.loading ? 'Loading...' : 'Continue'}
+              />
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="Cancel"
+              />
+            </div>
+          </form>
         )}
       </Mutation>
     )
   }
 
-  renderVerifyButton() {
+  renderVerifyCode() {
     return (
       <Mutation
         mutation={VerifyPhoneCodeMutation}
@@ -183,9 +150,9 @@ class PhoneAttestation extends Component {
         }}
       >
         {verifyCode => (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
+          <form
+            onSubmit={e => {
+              e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
@@ -197,8 +164,37 @@ class PhoneAttestation extends Component {
                 }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
-          />
+          >
+            <h2>Verify your Phone Number</h2>
+            <div className="instructions">Enter the code we sent you below</div>
+            <div className="my-3 verification-code">
+              <input
+                type="tel"
+                ref={ref => (this.inputRef = ref)}
+                className="form-control form-control-lg"
+                placeholder="Verification code"
+                value={this.state.code}
+                onChange={e => this.setState({ code: e.target.value })}
+              />
+              {this.state.error && (
+                <div className="alert alert-danger mt-3">
+                  {this.state.error}
+                </div>
+              )}
+            </div>
+            <div className="actions">
+              <button
+                type="submit"
+                className="btn btn-outline-light"
+                children={this.state.loading ? 'Loading...' : 'Continue'}
+              />
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children="Cancel"
+              />
+            </div>
+          </form>
         )}
       </Mutation>
     )

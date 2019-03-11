@@ -57,7 +57,7 @@ class Room extends Component {
       <div className="container">
         <Query
           query={query}
-          pollInterval={2000}
+          pollInterval={500}
           variables={{ id }}
           skip={!id}
           notifyOnNetworkStatusChange={true}

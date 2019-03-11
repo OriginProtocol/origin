@@ -32,6 +32,10 @@ export default class Reviews extends Component {
           const reviews = get(data, 'marketplace.user.reviews.nodes', [])
           const count = get(data, 'marketplace.user.reviews.totalCount', 0)
 
+          if (this.props.hideWhenZero && !count) {
+            return null
+          }
+
           return (
             <div className="reviews">
               <h3>
