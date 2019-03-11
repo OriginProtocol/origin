@@ -142,6 +142,7 @@ const resolvers = {
           )
         }
       } catch (e) {
+        logger.warn('Authenticating user failed: ', e.message, e.stack)
         return {
           error: 'Can not authenticate user'
         }
