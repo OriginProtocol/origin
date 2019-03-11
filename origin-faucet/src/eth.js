@@ -230,11 +230,11 @@ class EthDistributor {
   // Returns HTML with amount and transaction hash.
   _success(res, to, amount, txnHash) {
     const amountEth = Web3.utils.fromWei(amount.toFixed(), 'ether')
-    const resp = `
+    let resp = `
       Initiated transaction for crediting <b>${amountEth}</b> ETH to account <b>${to}</b>
     `
     // Etherscan link for mainnet transactions
-    if (config.networkIds[0] === 1) {
+    if (this.config.networkIds[0] === 1) {
       resp += `
       </br></br>
       Pending transaction hash: <a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
@@ -303,7 +303,7 @@ class EthDistributor {
       }
 
       // Check for existing transaction for this account on non-testnet networks
-      if (config.networkIds[0] !== 2222) {
+      if (this.config.networkIds[0] !== 2222) {
         // Check the ethAddress hasn't already been used for this campaign.
         const existingTxn = await db.FaucetTxn.findOne({
           where: {
