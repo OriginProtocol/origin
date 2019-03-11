@@ -2,17 +2,16 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
-import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import PageTitle from 'components/PageTitle'
 
-import Step1 from './Step1'
-import Step2 from './Step2'
-import Boost from './Boost'
-import Availability from './Availability'
-import Review from './Review'
+import UnitListing from './listing-types/UnitListing/UnitListing'
+import FractionalListing from './listing-types/FractionalListing/FractionalListing'
+import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
+
+import ChooseListingType from './ChooseListingType'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -22,7 +21,7 @@ class CreateListing extends Component {
     super(props)
     this.state = {
       listing: {
-        __typename: 'UnitListing',
+        __typename: 'UnitListing', // Default
         title: '',
         description: '',
         category: '',
@@ -36,7 +35,7 @@ class CreateListing extends Component {
         quantity: '1',
         price: '',
 
-        // HomeShare fields:
+        // Fractional fields:
         weekendPrice: '',
         booked: [],
         customPricing: [],
@@ -45,6 +44,7 @@ class CreateListing extends Component {
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
+        ...props.listing,
         ...store.get('create-listing', {})
       }
     }
@@ -56,54 +56,54 @@ class CreateListing extends Component {
   }
 
   render() {
+    const listingTypeMapping = {
+      UnitListing,
+      AnnouncementListing,
+      FractionalListing
+    }
+    // Get creation component for listing type (__typename),
+    // defaulting to UnitListing
+    const ListingTypeComponent =
+      listingTypeMapping[this.state.listing.__typename] || UnitListing
+
+    const props = {
+      listing: this.state.listing,
+      onChange: listing => this.setListing(listing)
+    }
+
     return (
       <div className="container create-listing">
         <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
-            path="/create/step-2"
+            path="/create/details"
             render={() => (
-              <Step2
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
+              <ListingTypeComponent linkPrefix="/create/details" {...props} />
+            )}
+          />
+          <Route
+            path="/listing/:listingId/edit/:step"
+            render={({ match }) => (
+              <ListingTypeComponent
+                linkPrefix={`/listing/${match.params.listingId}/edit/details`}
+                refetch={this.props.refetch}
+                {...props}
               />
             )}
           />
           <Route
-            path="/create/boost"
-            render={() => (
-              <Boost
-                listing={this.state.listing}
-                tokenBalance={this.props.tokenBalance}
-                onChange={listing => this.setListing(listing)}
+            path="/listing/:listingId/edit"
+            render={({ match }) => (
+              <ChooseListingType
+                next={`/listing/${match.params.listingId}/edit/details`}
+                {...props}
               />
             )}
           />
           <Route
-            path="/create/review"
+            path="/create"
             render={() => (
-              <Review
-                tokenBalance={this.props.tokenBalance}
-                listing={this.state.listing}
-              />
-            )}
-          />
-          <Route
-            path="/create/availability"
-            render={() => (
-              <Availability
-                tokenBalance={this.props.tokenBalance}
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
-            )}
-          />
-          <Route
-            render={() => (
-              <Step1
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
+              <ChooseListingType next="/create/details" {...props} />
             )}
           />
         </Switch>
@@ -112,7 +112,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
+export default withCreatorConfig(withWallet(CreateListing))
 
 require('react-styl')(`
   .create-listing
