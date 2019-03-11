@@ -6,6 +6,7 @@ import Steps from 'components/Steps'
 import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 
+import Header from './_Header'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
@@ -166,6 +167,7 @@ class OnboardMetaMask extends Component {
 
     return (
       <>
+        <Header />
         <div className="step">Step 1</div>
         <h3>Connect a Crypto Wallet</h3>
         <div className="row">

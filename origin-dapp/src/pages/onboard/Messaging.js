@@ -6,6 +6,7 @@ import Link from 'components/Link'
 import Steps from 'components/Steps'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 
+import Header from './_Header'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
 
@@ -179,6 +180,7 @@ const Messaging = ({ listing }) => {
   const linkPrefix = listing ? `/listing/${listing.id}` : ''
   return (
     <>
+      <Header />
       <div className="step">Step 2</div>
       <h3>Enable Messaging</h3>
       <div className="row">

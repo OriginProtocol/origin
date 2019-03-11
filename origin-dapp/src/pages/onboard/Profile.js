@@ -22,6 +22,7 @@ import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
+import Header from './_Header'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
@@ -80,6 +81,7 @@ class OnboardProfile extends Component {
 
     return (
       <>
+        <Header />
         <div className="step">Step 4</div>
         <h3>Enter Your Profile Information</h3>
         <div className="row">
@@ -174,7 +176,7 @@ class OnboardProfile extends Component {
             </div>
             <div className="continue-btn">
               <Link
-                to={`${linkPrefix}/onboard/back`}
+                to={`${linkPrefix}/onboard/finished`}
                 className={`btn btn-outline-primary`}
                 children={hasBalance ? 'Done' : 'Skip for now'}
               />

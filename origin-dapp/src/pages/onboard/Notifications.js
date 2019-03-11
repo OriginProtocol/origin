@@ -6,6 +6,7 @@ import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import Steps from 'components/Steps'
 
+import Header from './_Header'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
 
@@ -128,6 +129,7 @@ class OnboardNotifications extends Component {
     }
     return (
       <>
+        <Header />
         <div className="step">Step 3</div>
         <h3>Turn On Desktop Notifications</h3>
         <div className="row">
