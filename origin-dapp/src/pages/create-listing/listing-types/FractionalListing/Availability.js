@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
 import Steps from 'components/Steps'
-import Link from 'components/Link'
 import Calendar from 'components/Calendar'
 import Price from 'components/Price'
+import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -28,23 +28,19 @@ class Availability extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listing/${this.props.listingId}/edit` : '/create'
-
     if (this.state.valid) {
-      return <Redirect to={`${prefix}/boost`} push />
+      return <Redirect to={this.props.next} push />
     }
-
     return (
       <div className="row">
         <div className="col-md-8">
           <div className="create-listing-calendar">
             <div className="wrap">
-              <div className="step">Step 3</div>
+              <div className="step">{`Step ${this.props.step}`}</div>
               <div className="step-description">
                 Edit availability &amp; Pricing
               </div>
-              <Steps steps={4} step={3} />
+              <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
                 onSubmit={e => {
@@ -68,12 +64,12 @@ class Availability extends Component {
                 <div className="actions">
                   <Link
                     className="btn btn-outline-primary"
-                    to={'/create/step-2'}
+                    to={this.props.prev}
                   >
                     Back
                   </Link>
-                  <button type="submit" className="btn btn-primary">
-                    Continue
+                  <button className="btn btn-primary" type="submit">
+                    Review
                   </button>
                 </div>
               </form>
@@ -206,6 +202,7 @@ class Availability extends Component {
               this.setState({ calculator, range: '' })
 
               const { booked, customPricing, unavailable } = calculator.opts
+
               this.props.onChange({
                 ...this.props.listing,
                 booked,
@@ -234,7 +231,7 @@ require('react-styl')(`
     .availability-editor
       margin-top: 10.5rem
       border: 1px solid var(--light)
-      border-radius: var(--default-radius)
+      border-radius: 5px
       padding: 1rem
       font-size: 18px
       font-weight: normal

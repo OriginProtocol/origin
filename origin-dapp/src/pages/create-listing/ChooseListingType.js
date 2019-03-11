@@ -8,7 +8,7 @@ import Wallet from 'components/Wallet'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
-class Step1 extends Component {
+class ChooseListingType extends Component {
   constructor(props) {
     super(props)
     this.state = { ...props.listing, fields: Object.keys(props.listing) }
@@ -21,15 +21,9 @@ class Step1 extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
+    const isEdit = this.props.listing.id ? true : false
     if (this.state.valid) {
-      if (isEdit) {
-        return (
-          <Redirect to={`/listing/${this.props.listingId}/edit/step-2`} push />
-        )
-      } else {
-        return <Redirect to="/create/step-2" push />
-      }
+      return <Redirect to={this.props.next} push />
     }
 
     const input = formInput(this.state, state => this.setState(state))
@@ -68,16 +62,16 @@ class Step1 extends Component {
     return (
       <div className="row">
         <div className="col-md-8">
-          <div className="create-listing-step-1">
+          <div className="create-listing-choose-listingtype">
             {!isEdit ? null : <h2>Let’s update your listing</h2>}
             <div className="wrap">
-              <div className="step">Step 1</div>
+              <div className="step" />
               <div className="step-description">
                 {isEdit
                   ? `Update listing type`
                   : `What type of listing do you want to create?`}
               </div>
-              <Steps steps={3} step={1} />
+              <Steps steps={1} step={0} />
               <form
                 onSubmit={e => {
                   e.preventDefault()
@@ -118,6 +112,7 @@ class Step1 extends Component {
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
+    // Derive ListingType from category+subcategory
     let __typename = 'UnitListing'
     if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
@@ -142,10 +137,10 @@ class Step1 extends Component {
   }
 }
 
-export default Step1
+export default ChooseListingType
 
 require('react-styl')(`
-  .create-listing .create-listing-step-1
+  .create-listing .create-listing-choose-listingtype
     max-width: 570px
     > .wrap
       max-width: 460px
@@ -203,7 +198,7 @@ require('react-styl')(`
 
 
   @media (max-width: 767.98px)
-    .create-listing .create-listing-step-1
+    .create-listing .create-listing-choose-listingtype
       h2
         font-size: 32px
         line-height: 1.25

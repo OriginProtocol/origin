@@ -14,6 +14,9 @@ import withWeb3 from 'hoc/withWeb3'
 
 import applyListingData from './_listingData'
 
+import Store from 'utils/store'
+const store = Store('sessionStorage')
+
 class UpdateListing extends Component {
   state = {}
   render() {
@@ -66,7 +69,7 @@ class UpdateListing extends Component {
 
     updateListing({
       variables: applyListingData(this.props, {
-        listingID: this.props.listingId,
+        listingID: this.props.listing.id,
         additionalDeposit:
           tokenBalance >= Number(listing.boost) ? listing.boost : '0',
         from: wallet
@@ -85,9 +88,28 @@ class UpdateListing extends Component {
         onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
-          <div className="make-offer-modal">
+          <div className="make-offer-modal success">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div>Your listing has been updated!</div>
+            <div>
+              Your listing will be visible within a few seconds. Here&apos;s
+              what happens next:
+              <ul>
+                <li>Buyers will now see your listing on the marketplace.</li>
+                <li>
+                  When a buyer makes an offer on your listing, you can choose to
+                  accept or reject it.
+                </li>
+                <li>
+                  Once the offer is accepted, you will be expected to fulfill
+                  the order.
+                </li>
+                <li>
+                  You will receive payment once the buyer confirms that the
+                  order has been fulfilled.
+                </li>
+              </ul>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"
@@ -97,6 +119,7 @@ class UpdateListing extends Component {
                   await this.props.refetch()
                 }
                 const { listingID } = event.returnValues
+                store.set('create-listing', undefined)
                 this.setState({
                   redirect: `/listing/${netId}-000-${listingID}`
                 })

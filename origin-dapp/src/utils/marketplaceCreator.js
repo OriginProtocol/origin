@@ -40,10 +40,10 @@ function applyConfiguration(config) {
 
   // Set the favicon
   if (config.faviconUrl) {
-    let faviconElement = document.querySelector('link[rel="shortcut icon"]')
+    let faviconElement = document.querySelector('link[rel="icon"]')
     if (!faviconElement) {
       faviconElement = document.createElement('link')
-      faviconElement.setAttribute('rel', 'shortcut icon')
+      faviconElement.setAttribute('rel', 'icon')
       const head = document.querySelector('head')
       head.appendChild(faviconElement)
     }
