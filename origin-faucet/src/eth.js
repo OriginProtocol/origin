@@ -232,8 +232,13 @@ class EthDistributor {
     const amountEth = Web3.utils.fromWei(amount.toFixed(), 'ether')
     const resp = `
       Initiated transaction for crediting <b>${amountEth}</b> ETH to account <b>${to}</b>
+    `
+    // Etherscan link for mainnet transactions
+    if (config.networkIds[0] === 1) {
+      resp += `
       </br></br>
       Pending transaction hash: <a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
+    }
     res.send(resp)
   }
 
@@ -297,21 +302,27 @@ class EthDistributor {
         return this._error(res, `Campaign budget exhausted.`)
       }
 
-      // Check the ethAddress hasn't already been used for this campaign.
-      const existingTxn = await db.FaucetTxn.findOne({
-        where: {
-          campaignId: campaign.id,
-          toAddress: ethAddress.toLowerCase(),
-          status: {
-            [Sequelize.Op.in]: [
-              enums.FaucetTxnStatuses.Pending,
-              enums.FaucetTxnStatuses.Confirmed
-            ]
+      // Check for existing transaction for this account on non-testnet networks
+      if (config.networkIds[0] !== 2222) {
+        // Check the ethAddress hasn't already been used for this campaign.
+        const existingTxn = await db.FaucetTxn.findOne({
+          where: {
+            campaignId: campaign.id,
+            toAddress: ethAddress.toLowerCase(),
+            status: {
+              [Sequelize.Op.in]: [
+                enums.FaucetTxnStatuses.Pending,
+                enums.FaucetTxnStatuses.Confirmed
+              ]
+            }
           }
+        })
+        if (existingTxn) {
+          return this._error(
+            res,
+            `Address ${ethAddress} already used this code.`
+          )
         }
-      })
-      if (existingTxn) {
-        return this._error(res, `Address ${ethAddress} already used this code.`)
       }
 
       // Safety valve ! Refuse to submit too many pending transactions.
