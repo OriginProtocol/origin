@@ -175,12 +175,18 @@ class Details extends Component {
       newState.titleError = 'Title is required'
     } else if (this.state.title.length < 3) {
       newState.titleError = 'Title is too short'
+    } else if (this.state.title.length > 100) {
+      // Limit from origin-validator/src/schemas/listing.json
+      newState.titleError = 'Title is too long'
     }
 
     if (!this.state.description) {
       newState.descriptionError = 'Description is required'
     } else if (this.state.description.length < 10) {
       newState.descriptionError = 'Description is too short'
+    } else if (this.state.description.length > 1024) {
+      // Limit from origin-validator/src/schemas/listing.json
+      newState.descriptionError = 'Description is too long'
     }
 
     if (!this.state.price) {
