@@ -27,7 +27,6 @@
     "apollo-link-http": "^1.5.12",
     "dayjs": "^1.8.10",
     "json-stable-stringify": "^1.0.1",
-    "json-stable-stringify-without-jsonify": "^1.0.1",
     "mocha": "^6.0.2",
     "origin-contracts": "^0.8.6",
     "origin-eventsource": "^0.1.0",
