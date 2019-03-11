@@ -22,26 +22,42 @@ cd origin && npm install
 2. You can then start the DApp using:
 
 ```
-npm start
+cd origin-dapp && npm start
 ```
 
-This will start a `webpack-dev-server` with hot reloading on `http://localhost:3000.`.
+This will start a `webpack-dev-server` with hot reloading on `http://localhost:3000.`. When you open it you should see the message `No marketplace contract?`.
 
-3. You will then need to connect to your testnet. Using MetaMask follow these steps:
+3. Deploy contracts (optional)
+
+By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network you'll need to deploy some contracts and create some sample listings using the `origin-admin` tool. This can be done by running:
+
+```
+cd origin-admin && npm start
+```
+
+Then open your browser to `http://localhost:3001` and:
+
+- Select the Settings page (last icon on the right)
+- Click the green `Populate` button.
+- Copy and pasting the commands at the bottom of the page into the console for `origin-dapp`.
+
+### Network selection
+
+You can also change the Ethereum network being used by `origin-dapp` by appending a network name to the URL.
+
+- http://localhost:3000/docker - Local Ganache and services run by Docker Compose (see below for further instructions)
+
+- http://localhost:3000/origin - Origin testnet backed by origin dev services (e.g. https://dapp.dev.originprotocol.com)
+- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging services (e.g. https://dapp.staging.originprotocol.com)
+- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production services (e.g. https://dapp.originprotocol.com)
+
+### Configuring Origin's Ethereum Testnet
 
 - Open MetaMask by clicking on the extension.
 - Open MetaMask's settings by clicking on the account icon in the top right and selecting `Settings` from the menu.
 - Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC URL.
 - Select the Origin Testnet from the network selection in MetaMask.
-- To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth` and use the invitation code `decentralize`.
-
-### Network selection
-
-By default the DApp will use a set of Origin's deployed development services. You can change the environment used by the DApp by accessing the following URLs:
-
-- http://localhost:3000/docker - Local Ganache and services runn by Docker Compose (see below for further instructions)
-- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging services (e.g. https://dapp.staging.originprotocol.com)
-- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production services (e.g. https://dapp.originprotocol.com)
+- To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your wallet address.
 
 ### Other settings
 
