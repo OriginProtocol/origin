@@ -127,6 +127,11 @@ class ChooseListingType extends Component {
       subCategory === 'schema.housing'
     ) {
       __typename = 'FractionalListing'
+    } else if (
+      category === 'schema.forRent' &&
+      subCategory === 'schema.carsTrucks'
+    ) {
+      __typename = 'FractionalHourlyListing'
     }
 
     if (!newState.valid) {

@@ -11,6 +11,7 @@ import PageTitle from 'components/PageTitle'
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
+import FractionalHourlyListing from './listing-types/FractionalHourlyListing/FractionalHourlyListing'
 
 import ChooseListingType from './ChooseListingType'
 
@@ -54,7 +55,8 @@ class CreateListing extends Component {
     const listingTypeMapping = {
       UnitListing: UnitListing,
       AnnouncementListing: AnnouncementListing,
-      FractionalListing: FractionalListing
+      FractionalListing: FractionalListing,
+      FractionalHourlyListing: FractionalHourlyListing
     }
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing
