@@ -69,10 +69,10 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
-  console.log(args)
+  // console.log(args)
 
   const tx = marketplace.methods.makeOffer(...args).send({
-    gas: 400000,
+    gas: cost.makeOffer,
     from: buyer,
     value: currencyAddress === ZeroAddress ? value : 0
   })

@@ -243,11 +243,12 @@ const Spaceman = {
   title: 'Origin Spaceman Shirt',
   description:
     'The amazing Origin Spaceman shirt. Available exclusively on the Origin Marketplace. These shirts are 90% cotton and 10% polyester and 100% amazing.',
-  unitsTotal: 1,
+  unitsTotal: 10,
   price: {
     currency: 'fiat-USD',
     amount: '12'
   },
+  acceptedTokens: ['token-DAI', 'token-ETH'],
   commission: {
     currency: 'OGN',
     amount: '10'

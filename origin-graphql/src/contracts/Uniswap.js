@@ -567,3 +567,9 @@ const configs = {
     factoryAddress: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'
   }
 }
+
+export default {
+  factoryABI,
+  exchangeAbi,
+  configs
+}
