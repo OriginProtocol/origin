@@ -146,6 +146,23 @@ const Configs = {
     linker: `http://${LINKER_HOST}:3008`,
     linkerWS: `ws://${LINKER_HOST}:3008`
   },
+  truffle: {
+    provider: `http://${HOST}:8545`,
+    providerWS: `ws://${HOST}:8545`,
+    ipfsGateway: `http://${HOST}:8080`,
+    ipfsRPC: `http://${HOST}:5002`,
+    growth: `http://${HOST}:4001`,
+    bridge: 'https://bridge.staging.originprotocol.com',
+    automine: 2000,
+    OriginToken: get(OriginTokenContract, 'networks.999.address'),
+    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
+    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
+    attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    linker: `http://${LINKER_HOST}:3008`,
+    linkerWS: `ws://${LINKER_HOST}:3008`
+  },
   docker: {
     provider: `http://localhost:8545`,
     providerWS: `ws://localhost:8545`,
