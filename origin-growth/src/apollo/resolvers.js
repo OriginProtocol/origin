@@ -127,8 +127,7 @@ const resolvers = {
       requireEnrolledUser(context)
 
       logger.info('invite mutation called.')
-      // FIXME:
-      //  b. Implement rate limiting to avoid spam attack.
+      // FIXME: implement rate limiting to avoid spam attack.
       await sendInvites(context.walletAddress, args.emails)
       return true
     },
