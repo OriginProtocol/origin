@@ -13,6 +13,7 @@
     "test": "mocha -r @babel/register test -t 10000",
     "test:watch": "mocha -r @babel/register -w --watch-extensions sol -t 5000 test",
     "start": "node -r @babel/register index",
+    "start:development": "DEPLOY_CONTRACTS=1 node -r @babel/register index",
     "build:js": "NODE_ENV=production webpack --loglevel notice",
     "build:css": "node scripts/getCss > public/app.css",
     "build": "npm run build:css && npm run build:js",

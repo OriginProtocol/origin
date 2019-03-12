@@ -4,6 +4,7 @@ import logger from './logger'
 import Web3 from 'web3'
 import * as config from './config'
 import fetch from 'cross-fetch'
+import stringify from 'json-stable-stringify'
 
 const web3 = new Web3(config.RPC_SERVER)
 
@@ -53,6 +54,14 @@ function verifyConversers(conversee, keysMap) {
     return false
   }
 }
+
+function verifyNewMessageSignature(signature, conversationId, conversationIndex, content, address) {
+  const buffer = stringify({conversationId, conversationIndex, content})
+  const recoveredAddress = web3.eth.accounts.recover(buffer, signature)
+  return recoveredAddress = address
+}
+
+
 
 function verifyMessageSignature(keysMap, orbitGlobal) {
   return (signature, key, message, buffer) => {
@@ -129,5 +138,6 @@ module.exports = {
   verifyConversationSignature,
   verifyConversers,
   verifyMessageSignature,
-  verifyRegistrySignature
+  verifyRegistrySignature,
+  verifyNewMessageSignature
 }

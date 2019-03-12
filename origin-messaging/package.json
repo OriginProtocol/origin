@@ -14,9 +14,11 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
     "prestart:production": "npm run build",
     "start": "per-env",
+    "orbit-to-db": "babel-node src/orbit-to-db.js --presets @babel/env",
     "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
     "start:production": "node dist/index.js",
-    "test": "echo \"Warning: no tests specified\""
+    "test": "echo \"Warning: no tests specified\"",
+    "migrate": "sequelize db:migrate"
   },
   "repository": {
     "type": "git",
@@ -39,16 +41,23 @@
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.4",
+    "json-stable-stringify": "^1.0.1",
     "logplease": "^1.2.15",
     "orbit-db": "^0.19.9",
     "per-env": "^1.0.2",
+    "pg": "^7.7.1",
+    "pg-hstore": "^2.3.2",
     "rate-limiter-flexible": "^0.19.4",
-    "web3": "1.0.0-beta.34"
+    "sequelize": "^5.0.0-beta.14",
+    "web3": "1.0.0-beta.34",
+    "redis": "^2.8.0",
+    "express-ws": "^4.0.0"
   },
   "devDependencies": {
     "@babel/node": "^7.2.0",
     "eslint": "^5.13.0",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "sequelize-cli": "^5.4.0"
   },
   "prettier": {
     "semi": false,
