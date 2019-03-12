@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'c72a2dd'
+bridgeImageTag: 'ffa6c30'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -22,7 +22,7 @@ faucetImageTag: '0a9c4b3'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '119f60b'
+eventlistenerImageTag: 'ffa6c30'
 
 # origin-discovery
 discoveryImage: origin-discovery
