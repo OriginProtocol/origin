@@ -88,7 +88,7 @@ const parseIncomingData = data => {
     } else {
       console.log('No IPFS media hashes found in listing data')
     }
-  } if (eventName === 'IdentityUpdated') {
+  } else if (eventName === 'IdentityUpdated') {
     console.log(`Processing event ${eventName}`)
     const ipfsData = data.related.user.ipfs
     hashesToPin.push(ipfsData.hash)
