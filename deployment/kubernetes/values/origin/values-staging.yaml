@@ -4,10 +4,6 @@ databaseInstance: origin-214503:us-west1:staging
 bridgeImage: origin-bridge
 bridgeImageTag: '0a36fe4'
 
-# origin-dapp2
-dapp2Image: origin-dapp2
-dapp2ImageTag: 'latest'
-
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: '0a36fe4'
@@ -36,6 +32,10 @@ eventlistenerImageTag: '7dfaa5d'
 discoveryImage: origin-discovery
 discoveryImageTag: '4aa5387'
 
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
+
 # origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '4aa5387'
@@ -56,3 +56,7 @@ creatorIssuerIp: '35.233.135.239'
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
 creatorIssuerImageTag: 'latest'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'latest'

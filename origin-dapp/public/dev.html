@@ -1,56 +1,38 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="/images/favicon/site.webmanifest">
-    <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#2585FB">
-    <link rel="shortcut icon" href="/images/favicon/favicon.ico">
-    <meta name="msapplication-TileColor" content="#2585FB">
-    <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
-    <meta name="theme-color" content="#2585FB">
-
-    <title>Origin Protocol DApp</title>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2%22%3E"></script>
-    <script>
-      /*eslint-disable */
-      var hostname = window.location.hostname
-      if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-106384880-2');
+    <title>Origin Protocol DApp - devel</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" href="favicon.ico" />
+    <style>
+      .loading-screen {
+        background: url(images/spinner-animation-dark.svg) no-repeat center;
+        background-size: cover;
+        position: fixed;
+        top: calc(50% - 1.5rem);
+        left: calc(50% - 1.5rem);
+        width: 3rem;
+        height: 3rem;
       }
-      /*eslint-enable */
-    </script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
-    <!-- End Google Analytics -->
-    <!-- Crowdin -->
-    <script>
-      /*eslint-disable */
-      // If URL query string contains "?translator=true", run Crowdin's In Context Translation
-      // https://support.crowdin.com/in-context-localization/
-      // https://crowdin.com/project/originprotocol/settings#in-context
-      if (window.location.href.indexOf('translator=true') > -1) {
-        var _jipt = [];
-        _jipt.push(['project', 'originprotocol']);
-        var crowdinScript = document.createElement('script');
-        crowdinScript.setAttribute('src', '//cdn.crowdin.com/jipt/jipt.js');
-        document.head.appendChild(crowdinScript);
-      }
-      /*eslint-enable */
-    </script>
-    <!-- End Crowdin -->
+    </style>
   </head>
   <body>
-    <div id="root">
-      <!-- will render before src/css styles and be replaced by ReactDOM -->
-      <div style="display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw;">
-        <img src="images/spinner-animation-dark.svg" role="presentation" />
-      </div>
-    </div>
+    <div id="app"><div class="loading-screen"></div></div>
   </body>
+  <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
+  <script>
+    openpgp.config.show_comment = false
+    openpgp.config.show_version = false
+    openpgp.initWorker({ path: 'vendor/openpgp.worker.min.js' })
+  </script> -->
+  <script>
+    localStorage.ognNetwork = '{NET}'
+    localStorage.metaMaskEnabled = 'true'
+  </script>
+  <script crossorigin src="{HOST}app.js"></script>
 </html>

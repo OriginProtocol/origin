@@ -10,7 +10,7 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-linker-client --scope origin-graphql
       script:
-        - npm run test --prefix experimental/origin-graphql
+        - npm run test --prefix origin-graphql
 
     # Run integration tests using docker compose
     - name: "integration tests"
@@ -20,6 +20,7 @@ matrix:
         # Setting required for Elasticsearch to run
         - sudo sysctl -w vm.max_map_count=262144
       script:
+        - docker-compose build
         - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from origin-tests
 
     - name: "javascript linting"
@@ -37,13 +38,22 @@ matrix:
         - npm run lint
 
     - name: "origin-bridge unit tests"
-      language: python
-      python: 3.6
+      language: node_js
+      node_js: 10
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
-        - cd origin-bridge
-        - pip install -r requirements.txt
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-bridge
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-bridge
       script:
-        - pytest --flakes --codestyle
+        - npm run test --prefix origin-bridge
 
     - name: "origin-contracts unit tests"
       language: node_js
@@ -70,11 +80,31 @@ matrix:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope origin-discovery
         - lerna run migrate --scope origin-growth
+        - lerna run migrate --scope origin-identity
       install:
         - npm install
         - lerna run build --scope origin
       script:
         - npm run test --prefix origin-discovery
+
+    - name: "origin-growth unit tests"
+      language: node_js
+      node_js: 10
+      addons:
+          postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope origin-growth
+        - lerna run migrate --scope origin-identity
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope origin-contracts --scope origin-eventsource --scope origin-ipfs --scope origin-messaging-client --scope origin-services --scope origin-validator --scope origin-linker-client --scope origin-graphql --scope origin-identity --scope origin-token --scope origin-growth
+      script:
+        - npm run test --prefix origin-growth
 
     - name: "origin-js unit tests"
       language: node_js
@@ -101,5 +131,5 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope origin-contracts --scope origin-token --scope origin-token-transfer-client --scope origin-token-transfer-server
       script:
-        - npm run test --prefix origin-token-transfer/server
-        - npm run test --prefix origin-token-transfer/client
+        - npm run test --prefix origin-token-transfer-server
+        - npm run test --prefix origin-token-transfer-client

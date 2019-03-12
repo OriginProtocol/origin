@@ -130,8 +130,12 @@ class Messaging {
     ipfsCreator,
     OrbitDB,
     ecies,
-    messagingNamespace
+    messagingNamespace,
+    messagingApiUrl,
+    fetch
   }) {
+    this.messagingApiUrl = messagingApiUrl
+    this.fetch = fetch
     this.contractService = contractService
     this.web3 = this.contractService.web3
     this.ipfsCreator = ipfsCreator
@@ -150,11 +154,13 @@ class Messaging {
     this.currentStorage = this.cookieStorage
 
     this.registerWalletLinker()
+
+    this._registryCache = {}
   }
 
   registerWalletLinker() {
     const walletLinker = this.contractService.walletLinker
-    if(walletLinker) 
+    if(walletLinker)
     {
       walletLinker.registerCallback('messaging', this.onPreGenKeys.bind(this))
     }
@@ -367,27 +373,8 @@ class Messaging {
             { keystore: main_keystore }
           )
 
-          main_keystore.registerSignVerify(
-            this.GLOBAL_KEYS,
-            this.signRegistry.bind(this),
-            this.verifyRegistrySignature.bind(this),
-            this.postVerifyRegistry.bind(this)
-          )
-
-          // took a hint from peerpad
-          this.global_keys = await this.main_orbit.kvstore(
-            this.GLOBAL_KEYS,
-            this.orbitStoreOptions({ write: ['*'] })
-          )
-
-          try {
-            await this.global_keys.load()
-          } catch (error) {
-            console.error(error)
-          }
-
           this.ipfs_bound_account = this.account_key
-          resolve(this.global_keys)
+          resolve(true)
         })
         .on('error', reject)
     })
@@ -412,23 +399,17 @@ class Messaging {
     }
   }
 
-  postVerifyRegistry(message) {
-    const set_key = message.payload.key
-    this.events.emit('registered-' + set_key, message.payload.value)
-  }
-
   async getRegisteredKey(key) {
-    const entry = this.global_keys.get(key)
+    const entry = this._registryCache[key]
     if (entry) {
       return entry
-    } else {
-      return new Promise(resolve => {
-        //resolve to nothing after a second
-        setTimeout(resolve, 5000)
-        this.events.on('registered-' + key, entry => {
-          resolve(entry)
-        })
-      })
+    }
+    const serverResponse = await this.fetch(`${this.messagingApiUrl}/accounts/${key}`)
+    if (serverResponse.status === 200)
+    {
+      const j_entry = await serverResponse.json()
+      this._registryCache[key] = j_entry
+      return j_entry
     }
   }
 
@@ -477,7 +458,7 @@ class Messaging {
   }
 
   async initMessaging() {
-    const entry = this.getRemoteMessagingSig()
+    const entry = await this.getRemoteMessagingSig()
     const account_match = entry && entry.address == this.account.address
 
     if (!(this.pub_sig && this.pub_msg)) {
@@ -494,22 +475,32 @@ class Messaging {
     this.loadMyConvs()
   }
 
-  getRemoteMessagingSig() {
-    const entry = this.global_keys.get(this.account_key)
+  async getRemoteMessagingSig() {
+    const entry = await this.getRegisteredKey(this.account_key)
     if (entry && entry.address == this.account.address) {
       return entry
     }
   }
 
-  setRemoteMessagingSig() {
+  async setRemoteMessagingSig() {
     const msg = this.getMessagingPhrase()
-    this.global_keys.set(this.account_key, {
-      address: this.account.address,
-      msg: this.pub_msg,
-      pub_key: this.account.publicKey,
-      ph: msg,
-      phs: this.account.sign(msg).signature
-    })
+    const body = { signature: this.pub_sig,
+      data: {
+        address: this.account.address,
+        msg: this.pub_msg,
+        pub_key: this.account.publicKey,
+        ph: msg,
+        phs: this.account.sign(msg).signature
+      } }
+    const response = await this.fetch(`${this.messagingApiUrl}/accounts/${this.account_key}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: { 'content-type': 'application/json' }
+      })
+    if (response.status != 200) {
+      console.log('setting registry failed:', response)
+    }
   }
 
   setAccount(key_str, phrase_str) {
@@ -528,8 +519,6 @@ class Messaging {
     this.setKeyItem(scopedMessagingPhraseName, phrase_str)
     this.initMessaging()
   }
-
-
 
 
   async promptInit() {
@@ -865,33 +854,31 @@ class Messaging {
     }
   }
 
-  canConverseWith(remote_eth_address) {
-    const { account_key, global_keys } = this
+  async canConverseWith(remote_eth_address) {
+    const { account_key } = this
     const address = this.web3.utils.toChecksumAddress(remote_eth_address)
+    const entry = await this.getRegisteredKey(address)
 
     return (
       this.canSendMessages() &&
       account_key !== address &&
-      global_keys &&
-      global_keys.get(address)
+      entry
     )
   }
 
-  canReceiveMessages(remote_eth_address) {
-    const { global_keys } = this
+  async canReceiveMessages(remote_eth_address) {
     const address = this.web3.utils.toChecksumAddress(remote_eth_address)
 
-    return global_keys && global_keys.get(address)
+    return Boolean(await this.getRegisteredKey(address))
   }
 
   canSendMessages() {
     const { account, account_key } = this
-
     return account && account_key
   }
 
   async startConv(remote_eth_address) {
-    const entry = this.global_keys.get(remote_eth_address)
+    const entry = await this.getRegisteredKey(remote_eth_address)
 
     // remote account does not have messaging enabled
     if (!entry) {

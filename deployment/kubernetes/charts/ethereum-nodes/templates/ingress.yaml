@@ -18,6 +18,12 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-name: "ingress"
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     nginx.ingress.kubernetes.io/limit-rps: "20"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    # Increase timeouts for websockets
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
   tls:
     - secretName: {{ .Values.host }}
@@ -35,7 +41,6 @@ spec:
         backend:
           serviceName: {{ template "ethereum.fullname" . }}
           servicePort: 8545
-      # TODO use separate ingress and adjust for websocket
       - path: /ws
         backend:
           serviceName: {{ template "ethereum.fullname" . }}

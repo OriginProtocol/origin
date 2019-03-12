@@ -39,6 +39,7 @@ export default class Origin {
     OrbitDB,
     ecies,
     messagingNamespace,
+    messagingApiUrl,
     blockEpoch,
     blockAttestattionV1,
     ethereum,
@@ -100,7 +101,9 @@ export default class Origin {
         ipfsCreator,
         OrbitDB,
         ecies,
-        messagingNamespace
+        messagingNamespace,
+        messagingApiUrl,
+        fetch
       })
 
       this.token = new Token({

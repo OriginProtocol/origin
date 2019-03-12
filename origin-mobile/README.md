@@ -143,6 +143,8 @@ MAINNET_API_SERVER=https://linking.originprotocol.com
 RINKEBY_API_SERVER=https://linking.staging.originprotocol.com
 PROVIDER_URL=http://localhost:8545/
 CB_BW_CODE=
+
+GCM_SENDER_ID=
 ```
 
 **origin-notifications/.env**
@@ -167,19 +169,10 @@ If you want to test with mobile Safari on the same device as the application, fi
 - origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
 - origin/origin-linking $ `npm run migrate`
 
-##### Startup (w/dapp)
-- origin/origin-js $ `npm run start`
+#### Startup
 - origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
 - origin/origin-linking $ `npm run start`
-- origin/origin-dapp $ `npm run start`
-- origin/origin-mobile $ `npm run install-local`
-- origin/origin-mobile $ `npm run start -- --reset-cache`
-- Open Xcode and build for your desired device
-
-#### Startup (w/dapp2)
-- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
-- origin/origin-linking $ `npm run start`
-- origin/experimental/origin-dapp2 $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
+- origin/origin-dapp $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
 - origin/origin-mobile $ `npm run install-local`
 - origin/origin-mobile $ `npm run start -- --reset-cache`
 - Open Xcode and build for your desired device
@@ -251,7 +244,7 @@ This is likely a network error because your tunnels are not setup.  See [Android
 
 > FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
 
-Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this: 
+Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this:
 
     NODE_OPTIONS="--max_old_space_size=8196" npm run start
 

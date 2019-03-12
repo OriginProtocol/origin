@@ -1,13 +1,11 @@
 const BigNumber = require('bignumber.js')
 
-const db = require('../models')
-// FIXME(franck): create origin-identity package
-//const db2 = require('origin-identity/src/models')
-const db2 = {}
+const _growthModels = require('../models')
+const _identityModels = require('origin-identity/src/models')
+const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-
 const { GrowthCampaign } = require('./campaign')
-const { CampaignRules } = require('../rules/rules')
+const { CampaignRules } = require('./rules')
 
 class GrowthInvite {
   /**
@@ -23,8 +21,6 @@ class GrowthInvite {
    * @returns {Promise<*>}
    * @private
    */
-  //
-  //
   static async _getPendingRewards(referrer, ignore, rewardValue) {
     // Load all invites.
     const referrals = db.GrowthReferall.findAll({
@@ -69,7 +65,7 @@ class GrowthInvite {
   static async _decorate(reward, status) {
     const referee = reward.refereeEthAddress
 
-    let identity = await db2.Identity.findOne({
+    let identity = await db.Identity.findOne({
       where: { ethAddress: referee }
     })
     if (!identity) {
@@ -154,6 +150,17 @@ class GrowthInvite {
     }
   }
 
+  // Returns enrolled user's invite code
+  static async getInviteCode(accountId) {
+    const inviteCode = await db.GrowthInviteCode.findOne({
+      where: { ethAddress: accountId }
+    })
+    if (!inviteCode) {
+      throw new Error(`Can not fetch invite code for user: ${accountId}`)
+    }
+    return inviteCode.code
+  }
+
   // Returns referrer's information based on an invite code.
   static async getReferrerInfo(code) {
     // Lookup the code.
@@ -168,7 +175,7 @@ class GrowthInvite {
     // stable, we should consider:
     //  a. fetching identity by making a call to the identity graphql endpoint.
     //  b. putting all the identity code in a separate origin-identity package.
-    const identity = await db2.Identity.findOne({
+    const identity = await db.Identity.findOne({
       where: { ethAddress: referrer }
     })
     if (!identity) {
