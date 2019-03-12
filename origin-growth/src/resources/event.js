@@ -30,7 +30,7 @@ class GrowthEvent {
    * @param {GrowthEventTypes} eventType
    * @param {string} customId - Optional custom id. For ex can hold listing or offer Id.
    * @param {Object} data - Optional data to record along with the event.
-   * @param {Date} createdAt - Optional creation time. If not set will use current time.
+   * @param {Date} createdAt - Creation time.
    * @returns {Promise<void>}
    */
   static async insert(
@@ -65,10 +65,8 @@ class GrowthEvent {
       type: eventType,
       status: GrowthEventStatuses.Logged,
       customId,
-      data
-    }
-    if (createdAt) {
-      eventData.createdAt = createdAt
+      data,
+      createdAt
     }
     await db.GrowthEvent.create(eventData)
     logger.info(

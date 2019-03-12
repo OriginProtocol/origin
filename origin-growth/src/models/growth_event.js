@@ -13,11 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.ENUM(enums.GrowthEventStatuses),
       ethAddress: DataTypes.STRING,
       data: DataTypes.JSONB,
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      },
-      // Creation date
+      createdAt: DataTypes.DATE,
       updatedAt: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn('NOW')
