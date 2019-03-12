@@ -39,9 +39,7 @@ export default class Reviews extends Component {
           return (
             <div className="reviews">
               <h3>
-                <fbt desc="reviews.heading">
-                  Reviews of this Seller
-                </fbt>
+                <fbt desc="reviews.heading">Reviews of this Seller</fbt>
               </h3>
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
