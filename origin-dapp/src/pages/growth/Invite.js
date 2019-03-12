@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { withApollo, Query, Mutation } from 'react-apollo'
 import QueryError from 'components/QueryError'
 import inviteCodeQuery from 'queries/InviteCode'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import InviteFriends from 'mutations/InviteFriends'
+import InviteRemind from 'mutations/InviteRemind'
 
 function NavigationItem(props) {
   const { selected, onClick, title } = props
@@ -270,6 +271,31 @@ class GrowthInvite extends Component {
     return newState.valid
   }
 
+  setButtonTextWithDelay(button, text, delay) {
+    setTimeout(() => {
+      button.innerHTML = text
+    }, delay)
+  }
+
+  async handleRemindClick(inviteId, e) {
+    const button = e.target
+    const mutationResult = await this.props.client.mutate({
+      mutation: InviteRemind,
+      variables: {
+        invitationId: parseInt(inviteId)
+      }
+    })
+
+    const wasSuccessful = mutationResult.data.inviteRemind
+    if (wasSuccessful) {
+      button.innerHTML = "Reminder sent!"
+    } else {
+      button.innerHTML = "Error"
+    }
+
+    this.setButtonTextWithDelay(button, 'Remind', 2500)
+  }
+
   renderTrackInvites(referralAction) {
     const formatTokens = tokenAmount => {
       return web3.utils
@@ -283,7 +309,7 @@ class GrowthInvite extends Component {
         <div
           className={`reward ${
             isBig ? 'big' : ''
-          } d-flex align-items-center pl-2 pt-2 pb-2 mt-2`}
+          } d-flex align-items-center pl-2 pt-2 pb-2 mt-1`}
         >
           <img src="images/ogn-icon.svg" />
           <div className="value">
@@ -300,7 +326,8 @@ class GrowthInvite extends Component {
       invites,
       reward,
       rewardTitle,
-      showStatus
+      showStatus,
+      showRemindButton
     ) => {
       return (
         <div className="track-invites">
@@ -332,8 +359,17 @@ class GrowthInvite extends Component {
                   <div className="col-2 p-0 d-flex">
                     {renderReward(invite.reward.amount, true, false)}
                   </div>
-                  <div className="col-6 p-0">
-                    {showStatus ? 'Hasn’t completed user activation' : ''}
+                  <div className="col-6 p-0 d-flex justify-content-between align-items-center">
+                    <div>
+                      {showStatus ? 'Hasn’t completed user activation' : ''}
+                    </div>
+                    <div className="pr-3">
+                      {showRemindButton && <button
+                        className="remind-button"
+                        onClick={async e => await this.handleRemindClick(invite.id, e)}
+                        children="Remind"
+                      />}
+                    </div>
                   </div>
                   
                 </div>
@@ -354,6 +390,7 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardPending.amount,
           'Pending',
+          true,
           true
         )}
         <div className="mt-5" />
@@ -365,6 +402,7 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardEarned.amount,
           'Earned',
+          false,
           false
         )}
       </Fragment>
@@ -408,7 +446,7 @@ class GrowthInvite extends Component {
   }
 }
 
-export default GrowthInvite
+export default withApollo(GrowthInvite)
 
 require('react-styl')(`
   .growth-invite.container
@@ -526,4 +564,7 @@ require('react-styl')(`
         overflow: hidden
         white-space: nowrap
         max-width: 95%
+      .remind-button
+        border: 0px
+        color: var(--clear-blue)
 `)

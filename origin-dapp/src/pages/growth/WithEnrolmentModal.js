@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
-import { withApollo, Query } from 'react-apollo'
+import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
@@ -392,7 +392,7 @@ function withEnrolmentModal(WrappedComponent) {
   }
 
   //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
-  return withRouter(withApollo(WithEnrolmentModal))
+  return withRouter(WithEnrolmentModal)
 }
 
 export default withEnrolmentModal

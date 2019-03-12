@@ -158,6 +158,6 @@ module.exports =
     # Records a growth engine event.
     log(event: JSON!): Boolean
     # Remind a user that his invitation is still pending
-    inviteRemind(email: String!): Boolean
+    inviteRemind(invitationId: Int!): Boolean
   }
 `

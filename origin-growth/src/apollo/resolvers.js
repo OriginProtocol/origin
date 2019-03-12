@@ -160,6 +160,11 @@ const resolvers = {
         }
       }
     },
+    async inviteRemind(_, args, context) {
+      requireEnrolledUser(context)
+      // TODO: implement
+      return true
+    },
     log() {
       // TODO: implement
       logger.info('log mutation called.')
