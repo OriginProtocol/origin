@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
 
-import Redirect from 'components/Redirect'
-import Link from 'components/Link'
+import withTokenBalance from 'hoc/withTokenBalance'
+
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
 import Calendar from 'components/Calendar'
 import Category from 'components/Category'
+import Link from 'components/Link'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -15,15 +16,7 @@ import UpdateListing from '../../mutations/UpdateListing'
 class Review extends Component {
   state = {}
   render() {
-    const isEdit = this.props.mode === 'edit'
-    const prefix = isEdit ? `/listings/${this.props.listingId}/edit` : '/create'
-
     const { listing, tokenBalance } = this.props
-    if (!listing.subCategory) {
-      return <Redirect to={`${prefix}/step-1`} />
-    } else if (!listing.title) {
-      return <Redirect to={`${prefix}/step-2`} />
-    }
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
@@ -47,11 +40,20 @@ class Review extends Component {
               <div className="col-9">{listing.description}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Listing Price</div>
+              <div className="col-3 label">Weekdays</div>
               <div className="col-9">
                 <CoinPrice price={listing.price} coin="eth" />
                 <div className="fiat">
                   ~ <Price amount={listing.price} />
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-3 label">Weekends</div>
+              <div className="col-9">
+                <CoinPrice price={listing.weekendPrice} coin="eth" />
+                <div className="fiat">
+                  ~ <Price amount={listing.weekendPrice} />
                 </div>
               </div>
             </div>
@@ -101,14 +103,12 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-            <button className="btn btn-outline-primary" onClick={() => {this.props.onPrev()}} >
+            <Link className="btn btn-outline-primary" to={this.props.prev}>
               Back
-            </button>
-            {isEdit ? (
+            </Link>
+            {this.props.listing.id ? (
               <UpdateListing
                 listing={this.props.listing}
-                listingId={this.props.listingId}
-                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
@@ -117,7 +117,6 @@ class Review extends Component {
             ) : (
               <CreateListing
                 listing={this.props.listing}
-                listingType={this.props.listingType}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
@@ -139,7 +138,7 @@ class Review extends Component {
   }
 }
 
-export default Review
+export default withTokenBalance(Review)
 
 require('react-styl')(`
   .create-listing .create-listing-review
