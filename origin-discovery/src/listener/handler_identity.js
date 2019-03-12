@@ -1,9 +1,10 @@
 const Web3 = require('web3')
 const logger = require('./logger')
 
+const _bridgeModels = require('origin-bridge/src/models')
 const _discoveryModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
-const db = { ..._discoveryModels, ..._identityModels }
+const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const {
@@ -25,20 +26,16 @@ class IdentityEventHandler {
    * @private
    */
   async _loadValueFromAttestation(ethAddress, method) {
-    // Notes:
-    //  - Use a raw query since attestation model not ported yet to JS.
-    //  - The attestation table stores eth addresses checksummed.
-    const attestations = await db.sequelize.query(
-      'SELECT * FROM attestation WHERE eth_address=(:ethAddress) AND method=(:method) ORDER BY ID DESC LIMIT 1',
-      {
-        replacements: {
-          ethAddress: Web3.utils.toChecksumAddress(ethAddress),
-          method
-        },
-        type: db.sequelize.QueryTypes.SELECT
-      }
-    )
-    return attestations.length === 1 ? attestations[0].value : null
+    // Loads the most recent value.
+    const attestation = db.Attestation.findOne({
+      where: {
+        ethAddress: ethAddress.toLowerCase(),
+        method
+      },
+      order: [['id', 'DESC']],
+      limit: 1
+    })
+    return attestation ? attestation.value : null
   }
 
   /**
