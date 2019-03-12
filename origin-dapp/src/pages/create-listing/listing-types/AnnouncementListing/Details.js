@@ -1,29 +1,17 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD
-=======
 import omit from 'lodash/omit'
->>>>>>> master
 
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-<<<<<<< HEAD
-=======
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
->>>>>>> master
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Details extends Component {
   constructor(props) {
     super(props)
-<<<<<<< HEAD
-    this.state = {
-      ...props.listing
-    }
-=======
     this.state = omit(props.listing, 'valid')
->>>>>>> master
   }
 
   componentDidMount() {
@@ -33,13 +21,10 @@ class Details extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-=======
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
 
->>>>>>> master
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -99,24 +84,12 @@ class Details extends Component {
                 </div>
 
                 <div className="actions">
-<<<<<<< HEAD
-                  <button
-                    className="btn btn-outline-primary"
-                    type="button"
-                    onClick={() => {
-                      this.props.onPrev()
-                    }}
-                  >
-                    Back
-                  </button>
-=======
                   <Link
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
                     Back
                   </Link>
->>>>>>> master
                   <button type="submit" className="btn btn-primary">
                     Continue
                   </button>
@@ -165,128 +138,12 @@ class Details extends Component {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
       this.props.onChange(this.state)
-<<<<<<< HEAD
       this.props.onNext() // Advance to next step
     }
-=======
-    }
-
->>>>>>> master
     this.setState(newState)
     return newState.valid
   }
 }
 
 export default Details
-<<<<<<< HEAD
 
-require('react-styl')(`
-  .create-listing .create-listing-step-2
-    max-width: 460px
-    .step-description
-      font-size: 28px
-    label
-      font-size: 18px;
-      font-weight: normal;
-      color: var(--dusk)
-      margin-bottom: 0.25rem
-    .form-control
-      border-color: var(--light)
-      font-size: 18px;
-      &.is-invalid
-        border-color: #dc3545
-        background-image: none
-      &::-webkit-input-placeholder
-        color: var(--bluey-grey)
-        font-size: 18px;
-    .invalid-feedback
-      font-weight: normal
-    textarea
-      min-height: 120px
-    .image-picker label
-      margin: 0
-    .add-photos
-      border: 1px dashed var(--light)
-      font-size: 14px;
-      font-weight: normal;
-      color: var(--bluey-grey);
-      height: 100%
-      min-height: 9rem
-      display: flex
-      align-items: center
-      justify-content: center
-      flex-direction: column
-
-      &::before
-        content: ""
-        background: url(images/camera-icon-circle.svg) no-repeat
-        width: 5rem;
-        height: 3rem;
-        background-size: 100%;
-        background-position: center;
-        opacity: 0.4;
-      &:hover::before
-        opacity: 0.6
-    .help-text
-      font-size: 14px
-      font-weight: normal
-      margin-bottom: 0.5rem
-      color: var(--dusk)
-      &.price
-        color: var(--bluey-grey)
-        margin-top: 0.5rem
-      &.photo-help
-        font-weight: 300
-
-  .with-symbol
-    position: relative
-    &.corner::before
-      content: '';
-      position: absolute;
-      left: -8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-top: 9px solid transparent;
-      border-right: 9px solid var(--light);
-      border-bottom: 9px solid transparent;
-    &.corner::after
-      content: '';
-      position: absolute;
-      left: -6px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-top: 7px solid transparent;
-      border-right: 7px solid #e9ecef;
-      border-bottom: 7px solid transparent;
-    > span
-      position: absolute
-      right: 10px
-      top: 50%
-      transform: translateY(-50%)
-      padding: 2px 9px 2px 9px
-      border-radius: 12px
-      background: var(--pale-grey)
-      background-repeat: no-repeat
-      background-position: 6px center
-      background-size: 17px
-      font-weight: bold
-      font-size: 14px
-      &.eth
-        padding-left: 1.75rem
-        color: var(--bluish-purple)
-        background-image: url(images/eth-icon.svg)
-      &.ogn
-        padding-left: 1.75rem
-        color: var(--clear-blue)
-        background-image: url(images/ogn-icon.svg)
-      &.usd
-        &::before
-          content: "$"
-          margin-right: 0.25rem
-`)
-=======
->>>>>>> master

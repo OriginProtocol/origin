@@ -62,7 +62,7 @@ class Availability extends Component {
                 />
 
                 <div className="actions">
-                  <button
+                  <Link
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
