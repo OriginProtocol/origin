@@ -266,11 +266,20 @@ module.exports = `
     booked: [String]
   }
 
+  type FractionalHourlyListing implements Listing {
+    ${ListingInterface}
+
+    # IPFS
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
+  }
+
   type AnnouncementListing implements Listing {
     ${ListingInterface}
   }
 
-  union ListingResult = UnitListing | FractionalListing | AnnouncementListing
+  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing
 
   type Media {
     url: String
