@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'growth_event',
-      // Do not automatically add the timestamp attributes (updatedAt, createdAt).
+      // Do not automatically populate the timestamp attributes (updatedAt, createdAt).
       timestamps: false
     }
   )
