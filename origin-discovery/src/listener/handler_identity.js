@@ -173,8 +173,6 @@ class IdentityEventHandler {
     )
   }
 
-
-
   /**
    * Main entry point for the identity event handler.
    * @param {Object} log
