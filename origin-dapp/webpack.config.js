@@ -169,6 +169,12 @@ if (isProduction) {
       inject: false,
       filename: 'rinkeby.html',
       network: 'rinkeby'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'origin.html',
+      network: 'origin'
     })
   )
   config.resolve.alias = {

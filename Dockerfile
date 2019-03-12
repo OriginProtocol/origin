@@ -2,10 +2,8 @@ FROM node:10
 
 WORKDIR /app
 
-# Copy utility scripts
-COPY ./development/scripts/* /usr/local/bin/
-
-COPY ./scripts/ ./scripts/
+# Copy wait-for.sh for waiting for required services to start
+COPY ./scripts/wait-for.sh /usr/local/bin/
 
 # Copy all package files for dependency installs, this is done here to allow
 # Docker to cache the npm install steps if none of the dependencies have changed
@@ -29,6 +27,7 @@ COPY ./origin-messaging-client/package.json ./origin-messaging-client/
 COPY ./origin-linker-client/package.json ./origin-linker-client/
 COPY ./origin-eventsource/package.json ./origin-eventsource/
 COPY ./origin-services/package.json ./origin-services/
+COPY ./scripts/ ./scripts/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
 # which is calleed by the prepare script can succeed

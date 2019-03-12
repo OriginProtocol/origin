@@ -232,28 +232,31 @@ const ZincHouse = {
   ]
 }
 
-const Bike = {
+const Spaceman = {
   schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  dappSchemaId:
+    'https://dapp.originprotocol.com/schemas/forSale-clothingAccessories_1.0.0.json',
   listingType: 'unit',
   category: 'schema.forSale',
-  subCategory: 'schema.householdItems',
+  subCategory: 'schema.clothingAccessories',
   language: 'en-US',
-  title: 'Bike',
-  description: 'A nice red bike',
+  title: 'Origin Spaceman Shirt',
+  description:
+    'The amazing Origin Spaceman shirt. Available exclusively on the Origin Marketplace. These shirts are 90% cotton and 10% polyester and 100% amazing.',
   unitsTotal: 1,
   price: {
     currency: 'fiat-USD',
-    amount: '15'
+    amount: '12'
   },
-  acceptedTokens: ['token-ETH', 'token-DAI'],
   commission: {
     currency: 'OGN',
-    amount: '0'
+    amount: '10'
   },
+  marketplacePublisher: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
   media: [
     {
-      contentType: 'image/jpeg',
-      url: 'ipfs://QmQyKBQtqH5yDd4nrksUANyrBDFJdcF8TdAcaY6cNnSNu1'
+      url: 'ipfs://QmdjjwsF7bbejYJ7CecAmMpGB9RMNtFN1Gbs79KmKSGdHD',
+      contentType: 'image/jpeg'
     }
   ]
 }
@@ -264,5 +267,5 @@ export default [
   ZincHouse,
   Car,
   TaylorSwiftTickets,
-  Bike
+  Spaceman
 ]
