@@ -23,21 +23,21 @@ describe('Hourly Availability Calculator ', function() {
         hour: `${year}-02-16T01:00:00`,
         unavailable: true,
         booked: false,
-        price: 0, //dayjs(`${year}-02-16`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       },
       {
         hour: `${year}-02-16T02:00:00`,
         unavailable: true,
         booked: false,
-        price: 0, //dayjs(`${year}-02-17`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       },
       {
         hour: `${year}-02-16T03:00:00`,
         unavailable: true,
         booked: false,
-        price: 0, //dayjs(`${year}-02-18`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       }
     ])
@@ -50,14 +50,14 @@ describe('Hourly Availability Calculator ', function() {
         hour: `${year}-02-01T03:00:00`,
         unavailable: true,
         booked: false,
-        price: 0, // dayjs(`${year}-02-01`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       },
       {
         hour: `${year}-02-01T04:00:00`,
         unavailable: true,
         booked: false,
-        price: 0, //dayjs(`${year}-02-02`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       }
     ])
@@ -70,14 +70,14 @@ describe('Hourly Availability Calculator ', function() {
         hour: `${year}-02-01T04:00:00`,
         unavailable: false,
         booked: false,
-        price: 0, //dayjs(`${year}-02-01`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       },
       {
         hour: `${year}-02-01T05:00:00`,
         unavailable: false,
         booked: false,
-        price: 0, // dayjs(`${year}-02-02`).day() >= 5 ? '0.75' : '0.5',
+        price: 0,
         customPrice: false
       }
     ])

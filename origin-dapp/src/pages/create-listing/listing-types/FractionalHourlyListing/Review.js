@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculatorHourly from 'origin-graphql/src/utils/AvailabilityCalculatorHourly'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
-import Calendar from 'components/Calendar'
+import WeekCalendar from 'components/WeekCalendar'
 import Category from 'components/Category'
 import Link from 'components/Link'
 
@@ -85,11 +85,11 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Availability</div>
               <div className="col-9">
-                <Calendar
+                <WeekCalendar
                   interactive={false}
                   small={true}
                   availability={
-                    new AvailabilityCalculator({
+                    new AvailabilityCalculatorHourly({
                       weekdayPrice: listing.price,
                       weekendPrice: listing.weekendPrice,
                       booked: listing.booked,
