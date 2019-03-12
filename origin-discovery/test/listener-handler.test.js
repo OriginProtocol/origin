@@ -227,6 +227,9 @@ describe('Listener Handlers', () => {
     // Check output.
     expect(result.user).to.be.an('object')
     expect(result.user.address).to.equal(this.seller)
+    expect(result.user.ipfsHash).to.equal(
+      'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
+    )
 
     // Check expected entry was added into user DB table.
     const user = await db.Identity.findAll({
@@ -239,9 +242,6 @@ describe('Listener Handlers', () => {
       }
     })
     expect(user.length).to.equal(1)
-    expect(user.ipfsHash).to.equal(
-      'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
-    )
 
     // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(
