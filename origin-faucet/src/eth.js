@@ -13,6 +13,11 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
 // Max number of transactions that can be waiting to be mined.
 const MaxNumberPendingTxnCount = 50
 
+// 21k is the gas needed for sending ETH to an address. Adding an extra 2.3k
+// in case we are sending to a contract (for ex. if it is a managed wallet).
+// For details see https://solidity.readthedocs.io/en/v0.4.24/contracts.html#fallback-function
+const gasAmount = 21000 + 2300
+
 // Gas price multiplier to apply to default gas price when sending transactions.
 const gasPriceMultiplier = 1.3 // 30% over default gas price.
 
@@ -132,7 +137,7 @@ class TxnManager {
             from,
             to,
             value,
-            gas: 21000,
+            gas: gasAmount,
             gasPrice,
             nonce: this.nonce
           })
