@@ -121,10 +121,11 @@ class IdentityEventHandler {
    * Records a ProfilePublished event in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthProfileEvent(user, blockInfo) {
+  async _recordGrowthProfileEvent(user, blockInfo, date) {
     // Check profile is populated.
     const profile = user.profile
     const validProfile =
@@ -140,7 +141,8 @@ class IdentityEventHandler {
       user.address,
       GrowthEventTypes.ProfilePublished,
       null,
-      { blockInfo }
+      { blockInfo },
+      date
     )
   }
 
@@ -148,10 +150,11 @@ class IdentityEventHandler {
    * Records AttestationPublished events in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthAttestationEvents(user, blockInfo) {
+  async _recordGrowthAttestationEvents(user, blockInfo, date) {
     await Promise.all(
       user.attestations.map(attestation => {
         const eventType = AttestationServiceToEventType[attestation.service]
@@ -164,9 +167,14 @@ class IdentityEventHandler {
           return
         }
 
-        return GrowthEvent.insert(logger, user.address, eventType, null, {
-          blockInfo
-        })
+        return GrowthEvent.insert(
+          logger,
+          user.address,
+          eventType,
+          null,
+          { blockInfo },
+          date
+          )
       })
     )
   }
@@ -212,8 +220,8 @@ class IdentityEventHandler {
     await this._indexIdentity(user, blockInfo)
 
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(user, blockInfo)
-      await this._recordGrowthAttestationEvents(user, blockInfo)
+      await this._recordGrowthProfileEvent(user, blockInfo, log.date)
+      await this._recordGrowthAttestationEvents(user, blockInfo, log.date)
     }
 
     return { user }
