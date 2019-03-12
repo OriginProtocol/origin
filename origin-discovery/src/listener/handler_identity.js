@@ -1,6 +1,7 @@
 const Web3 = require('web3')
 const logger = require('./logger')
 
+const { bytes32ToIpfsHash } = require('./utils')
 const _discoveryModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._discoveryModels, ..._identityModels }
@@ -244,6 +245,7 @@ class IdentityEventHandler {
     }
 
     const account = log.decoded.account
+
     logger.info(`Processing Identity event for account ${account}`)
 
     const user = await this.origin.users.get(account)
@@ -257,6 +259,8 @@ class IdentityEventHandler {
     if (user.profile.avatar) {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
+
+    user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
 
     // Decorate the user object with extra attestation related info.
     await this._decorateUser(user)
@@ -293,7 +297,7 @@ class IdentityEventHandler {
   }
 
   gcloudPubsubEnabled() {
-    return false
+    return true
   }
 }
 

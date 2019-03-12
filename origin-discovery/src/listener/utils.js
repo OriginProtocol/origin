@@ -1,3 +1,4 @@
+const bs58 = require('bs58')
 const logger = require('./logger')
 const db = require('../models')
 const fs = require('fs')
@@ -112,7 +113,13 @@ async function withRetrys(fn, exitOnError = true) {
   }
 }
 
+function bytes32ToIpfsHash(hashHex) {
+  let buf = new Buffer.from(hashHex.replace(/^0x/, '1220'), 'hex')
+  return bs58.encode(buf)
+}
+
 module.exports = {
+  bytes32ToIpfsHash,
   getLastBlock,
   setLastBlock,
   checkEventsFreshness,
