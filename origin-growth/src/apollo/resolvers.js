@@ -134,13 +134,18 @@ const resolvers = {
     },
     async enroll(_, args) {
       try {
-        return {
-          authToken: await authenticateEnrollment(
-            args.accountId,
-            args.agreementMessage,
-            args.signature
-          )
+        const authToken = await authenticateEnrollment(
+          args.accountId,
+          args.agreementMessage,
+          args.signature
+        )
+
+        // make referral connection after we are sure user provided the correct accountId
+        if (args.inviteCode !== undefined) {
+          await GrowthInvite.makeReferralConnection(args.inviteCode, args.accountId)
         }
+
+        return { authToken }
       } catch (e) {
         logger.warn('Authenticating user failed: ', e.message, e.stack)
         return {

@@ -56,6 +56,50 @@ class GrowthInvite {
   }
 
   /**
+   * Creates a referrer - referee connection in case this referee does not have a referrer yet
+   *
+   * @param {string} code - growth invitation code
+   */
+  static async makeReferralConnection(code, walletAddress) {
+    try {
+      const referralLink = await db.GrowthReferral.findOne({
+        where: {
+          refereeEthAddress: walletAddress
+        }
+      })
+      const referrer = await GrowthInvite._getReferrer(code)
+
+      console.log("Referral link: ", JSON.stringify(referralLink))
+      if (referralLink && referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()) {
+        /* The referrer present in the referee's identity does not match
+         * with the referral data recorded in the DB.
+         * A corner case scenario this might happen is as follow:
+         *  - referee receives multiple invites.
+         *  - referee clicks on an invite and enrolls into growth campaing
+         *  - referee clicks on another invite link and enrolls again into
+         *  growth campaign.
+         *
+         * When this happens we ignore the subsequent invites and attribute all
+         * referees actions to the initial referrer.
+         *
+         */
+        logger.warn(`Referee ${walletAddress} already referred by ${referralLink.referrerEthAddress}`)
+        return
+      }
+
+      await db.GrowthReferral.create({
+        referrerEthAddress: referrer,
+        refereeEthAddress: walletAddress
+      })
+
+      logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`)
+
+    } catch (e) {
+      logger.warn(`Can not make referral connection for user ${walletAddress}: `, e.message, e.stack)
+    }
+  }
+
+  /**
    *
    * @param {ReferralReward} reward of type referral.
    * @param {string} status to set
@@ -162,14 +206,18 @@ class GrowthInvite {
     return inviteCode.code
   }
 
-  // Returns referrer's information based on an invite code.
-  static async getReferrerInfo(code) {
+  static async _getReferrer(code) {
     // Lookup the code.
     const inviteCode = await db.GrowthInviteCode.findOne({ where: { code } })
     if (!inviteCode) {
       throw new Error('Invalid invite code')
     }
-    const referrer = inviteCode.ethAddress
+    return inviteCode.ethAddress
+  }
+
+  // Returns referrer's information based on an invite code.
+  static async getReferrerInfo(code) {
+    const referrer = await GrowthInvite._getReferrer(code)
 
     // Load the referrer's identity.
     // TODO(franck): Once our data model and GraphQL services interfaces are

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Link from 'components/Link'
-//import get from 'lodash/get'
+import get from 'lodash/get'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
@@ -25,6 +25,15 @@ class GrowthWelcome extends Component {
     this.EnrollButton = withEnrolmentModal('button')
   }
 
+  componentDidMount() {
+    const inviteCode = get(this.props, 'match.params.inviteCode')
+    const localStorageKey = 'growth_invite_code'
+    
+    if (localStorage.getItem(localStorageKey) === null && inviteCode !== undefined) {
+      localStorage.setItem(localStorageKey, inviteCode)
+    }
+  }
+
   onSignUp(setOpenedModal) {
     setOpenedModal({
       variables: {
@@ -35,7 +44,6 @@ class GrowthWelcome extends Component {
 
   render() {
     const personalised = true
-    //const inviteCode = get(this.props, 'match.params.inviteCode')
 
     return (
       <div className="container growth-welcome">

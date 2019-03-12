@@ -153,7 +153,7 @@ module.exports =
     # Sends email invites with referral code on behalf of the referrer.
     invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
-    enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
+    enroll(accountId: ID!, agreementMessage: String!, signature: String!, inviteCode: String): EnrollResponse
     # Records a growth engine event.
     log(event: JSON!): Boolean
   }
