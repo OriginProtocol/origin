@@ -186,7 +186,7 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .onboard
-      margin: 2rem 0 0 0
+      margin-top: 2rem
       h2
         line-height: 1.25
 `)
