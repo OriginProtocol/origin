@@ -5,6 +5,7 @@ const validator = require('validator')
 const _growthModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
+const enums = require('../enums')
 const logger = require('../logger')
 
 // Do not allow referrer to blast invites to more than maxNumInvites recipients.
@@ -60,6 +61,14 @@ async function sendInvites(referrer, recipients) {
       logger.error(`Failed sending invite: ${error}`)
       throw new Error(`Failed sending invite: ${error}`)
     }
+
+    // Record the invite in the growth_invite table.
+    await db.GrowthInvite.create({
+      referrerEthAddress: referrer.toLowerCase(),
+      refereeContactType: enums.GrowthInviteContactTypes.Email,
+      refereeContact: recipient,
+      status: enums.GrowthInviteStatuses.Sent
+    })
   }
 }
 
