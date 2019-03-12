@@ -9,6 +9,7 @@ function networkName(netId) {
   if (netId === 3) return 'Ropsten Network'
   if (netId === 4) return 'Rinkeby Network'
   if (netId === 42) return 'Kovan Network'
+  if (netId === 2222) return 'Origin Network'
   return `Private Network (${netId})`
 }
 

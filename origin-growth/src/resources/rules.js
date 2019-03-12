@@ -555,7 +555,7 @@ class ReferralRule extends BaseRule {
    * @private
    */
   async _getReferees(referrer) {
-    const invites = await db.GrowthInvite.findAll({
+    const invites = await db.GrowthReferral.findAll({
       where: {
         referrerEthAddress: referrer,
         createdAt: { [Sequelize.Op.lte]: this.campaign.endDate }

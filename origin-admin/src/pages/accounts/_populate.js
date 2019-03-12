@@ -165,6 +165,22 @@ export default async function populate(NodeAccount, gqlClient) {
 
   for (const listing of demoListings) {
     const commissionPerUnit = listing.commissionPerUnit || '0'
+    const listingData = {
+      title: listing.title,
+      description: listing.description,
+      price: {
+        currency: '0x0000000000000000000000000000000000000000',
+        amount: listing.price.amount
+      },
+      category: listing.category,
+      subCategory: listing.subCategory,
+      media: listing.media,
+      commissionPerUnit,
+      commission: listing.commission ? listing.commission.amount : '0'
+    }
+    if (listing.marketplacePublisher) {
+      listingData.marketplacePublisher = listing.marketplacePublisher
+    }
     hash = (await gqlClient.mutate({
       mutation: CreateListingMutation,
       variables: {
@@ -172,19 +188,7 @@ export default async function populate(NodeAccount, gqlClient) {
         depositManager: Arbitrator,
         from: Seller,
         autoApprove: true,
-        data: {
-          title: listing.title,
-          description: listing.description,
-          price: {
-            currency: '0x0000000000000000000000000000000000000000',
-            amount: listing.price.amount
-          },
-          category: listing.category,
-          subCategory: listing.subCategory,
-          media: listing.media,
-          commissionPerUnit,
-          commission: listing.commission ? listing.commission.amount : '0'
-        },
+        data: listingData,
         unitData: {
           unitsTotal: listing.unitsTotal
         }
