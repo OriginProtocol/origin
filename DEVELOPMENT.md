@@ -65,7 +65,7 @@ The DApp includes a settings page at `http://localhost:3000/settings` which is u
 
 ## Running Docker Compose
 
-The `docker-compose` configuration runs the following packages:
+There is a Docker Compose configuration available for running a variety of backend services the DApp integrates with. The `docker-compose` configuration runs the following packages:
 
 ```
 - elasticsearch on http://localhost:9200
@@ -81,6 +81,8 @@ The `docker-compose` configuration runs the following packages:
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
 ```
+
+⚠️  If you want to run the Docker Compose setup ensure that both `origin-dapp` and `origin-admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
 
 ### System Requirements
 
@@ -110,6 +112,11 @@ git checkout --track origin/stable
 
 Please note this can take some time. If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues). When the containers are running you can access the DApp at `http://localhost:3000`.
 
+
+### Modifying settings
+
+Origin packages are configured using environment variables. The `docker-compose.yml` file has an environment section for each package where you can configure settings.
+
 ### Usage and commands
 
 Please refer to the [docker-compose](https://docs.docker.com/compose/reference/overview/) documentation for usage. Some commands that may be useful are included below.
@@ -138,8 +145,6 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including npm). In a new terminal window:
 
 	docker-compose build --no-cache origin
-
-Configure environment variables in `development/envfiles`
 
 ### Suggested workflow
 
@@ -180,7 +185,7 @@ If a container is failing with code 137 it could be that it has encountered Out 
 
 #### Port errors
 
-The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail.
+The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail. This includes `origin-dapp` and `origin-admin`. Ensure you start those after you run `docker-compose up`.
 
 #### Metamask errors
 

@@ -110,14 +110,22 @@ services:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - BLOCK_EPOCH=
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - DISCORD_WEBHOOK=
+      - ELASTICSEARCH=true
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - EMAIL_WEBHOOK=
+			- ENVKEY=
+      - GCLOUD_PUBSUB_TOPIC=
+      - GCLOUD_PROJECT_ID=
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - ELASTICSEARCH=true
-      - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
+      - TRAIL_BEHIND_BLOCKS=
       - WEB3_URL=http://origin-services:8545
+      - WEBHOOK=
     depends_on:
       - postgres
       - elasticsearch
@@ -136,13 +144,18 @@ services:
     image: origin
     volumes: *volumes
     environment:
+			# MetaMask account 4 (default local blockchain) aka accounts[3]
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+				# MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+			# MetaMask account 5 (default local blockchain) aka accounts[4]
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
+			- NETWORK_ID=999
       - WEB3_URL=http://origin-services:8545
+			- ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
@@ -176,6 +189,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+			- ENVKEY=
     depends_on:
       - postgres
     ports:
@@ -188,6 +202,18 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - FACEBOOK_CLIENT_ID=
+      - FACEBOOK_CLIENT_SECRET=
+			# Sendgrid settings for email attestations
+			# sendgrid.com
+      - SENDGRID_FROM_EMAIL=
+      - SENDGRID_API_KEY=
+      # Twilio verify API key for phone attestations
+      # https://www.twilio.com/console/verify/applications
+      - TWILIO_VERIFY_API_KEY
+      - TWITTER_CONSUMER_KEY=
+      - TWITTER_CONSUMER_SECRET=
+			- ENVKEY=
     depends_on:
       - postgres
     ports:
