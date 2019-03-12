@@ -13,10 +13,10 @@ import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
 export default class Reviews extends Component {
-  state = { lastReviewShown: 3 }
+  state = { lastReviewShown: 5 }
 
   readMore() {
-    this.setState({ lastReviewShown: this.state.lastReviewShown + 1 })
+    this.setState({ lastReviewShown: this.state.lastReviewShown + 5 })
   }
 
   render() {
@@ -40,9 +40,7 @@ export default class Reviews extends Component {
             <div className="reviews">
               <h3>
                 <fbt desc="reviews.heading">
-                  <fbt:plural count={count} showCount="yes">
-                    Review
-                  </fbt:plural>
+                  Reviews of this Seller
                 </fbt>
               </h3>
               {reviews.map((review, idx) => {
