@@ -64,15 +64,13 @@ class GrowthInvite {
     try {
       const referralLink = await db.GrowthReferral.findOne({
         where: {
-          refereeEthAddress: walletAddress
+          refereeEthAddress: walletAddress.toLowerCase()
         }
       })
       const referrer = await GrowthInvite._getReferrer(code)
 
-      console.log("Referral link: ", JSON.stringify(referralLink))
       if (referralLink && referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()) {
-        /* The referrer present in the referee's identity does not match
-         * with the referral data recorded in the DB.
+        /* The referrer associated with the invite code does not match previously stored referrer.
          * A corner case scenario this might happen is as follow:
          *  - referee receives multiple invites.
          *  - referee clicks on an invite and enrolls into growth campaing
@@ -89,7 +87,7 @@ class GrowthInvite {
 
       await db.GrowthReferral.create({
         referrerEthAddress: referrer,
-        refereeEthAddress: walletAddress
+        refereeEthAddress: walletAddress.toLowerCase()
       })
 
       logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`)

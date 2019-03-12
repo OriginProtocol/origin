@@ -189,6 +189,7 @@ export default {
             }
             invites {
               nodes {
+                id
                 status
                 walletAddress
                 contactName

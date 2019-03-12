@@ -80,6 +80,7 @@ const GrowthRewardStatuses = new Enum(
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
+// currently Completed state is not used in the database.
 const GrowthInviteStatuses = new Enum('Sent', 'Completed')
 
 module.exports = {

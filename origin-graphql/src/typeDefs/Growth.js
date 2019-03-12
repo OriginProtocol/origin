@@ -58,6 +58,7 @@ module.exports =
   }
 
   type Invite {
+    id: ID!
     status: GrowthInviteStatus!
     walletAddress: ID!
     # email or firstName + lastName of the contact
@@ -156,5 +157,7 @@ module.exports =
     enroll(accountId: ID!, agreementMessage: String!, signature: String!, inviteCode: String): EnrollResponse
     # Records a growth engine event.
     log(event: JSON!): Boolean
+    # Remind a user that his invitation is still pending
+    inviteRemind(email: String!): Boolean
   }
 `
