@@ -205,7 +205,7 @@ async function validateCliResponse(callback, args, validationPredicate) {
   if (validationPredicate(response)) {
     return
   }
-  console.error('Unexpected repsonse: ', response)
+  console.error('Unexpected response: ', response)
   process.exit(1)
 }
 
@@ -279,17 +279,21 @@ async function waitForInput() {
   if (process.argv[2] === 'createIndex' && process.argv.length === 4) {
     const indexName = process.argv[3]
     await validateCliResponse(createIndexWithName, [indexName], response => {
-      return JSON.parse(response).acknowledged === true
+      // Don't error if success or if index already exists
+      return (
+        JSON.parse(response).acknowledged === true ||
+        JSON.parse(response).error.type === 'resource_already_exists_exception'
+      )
     })
     console.log(`Index ${indexName} created!`)
-    process.exit(1)
+    process.exit(0)
   } else if (process.argv[2] === 'deleteIndex' && process.argv.length === 4) {
     const indexName = process.argv[3]
     await validateCliResponse(deleteIndexWithName, [indexName], response => {
       return JSON.parse(response).acknowledged === true
     })
     console.log(`Index ${indexName} deleted!`)
-    process.exit(1)
+    process.exit(0)
   }
   // interactive mode
   else if (process.argv[2] === '-i' && process.argv.length === 3) {
@@ -328,6 +332,6 @@ async function waitForInput() {
     })
   } else {
     printUsage()
-    process.exit(1)
+    process.exit(0)
   }
 })()

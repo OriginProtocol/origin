@@ -10,9 +10,7 @@ const { CampaignRules } = require('./rules')
 class GrowthInvite {
   /**
    * Returns a list of pending rewards:
-   *  - get list of referees from growth_referral. Note: for now we only care
-   *    about referees that published their profiles. We ignore others
-   *    that haven't made it that far.
+   *  - get list of referees from growth_referral.
    *  - filter out invites completed during the current campaign.
    *  - filter out invites completed during prior campaigns.
    * @param {string} referrer: ethAddress of the referrer.
@@ -152,6 +150,7 @@ class GrowthInvite {
     // Get list of referrals completed during the campaign by evaluating its rules.
     const crules = new CampaignRules(campaign, JSON.parse(campaign.rules))
     const rewards = await crules.getRewards(ethAddress, false)
+    const rewardValue = crules.getReferralRewardValue()
     const completedInvites = rewards
       .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
       .map(r => GrowthInvite._decorate(r, 'Completed')) // Decorate with extra info.
@@ -175,7 +174,6 @@ class GrowthInvite {
     const allInvites = completedInvites.concat(pendingInvites)
 
     // Calculate total rewards earned and pending.
-    const rewardValue = crules.getReferralRewardValue()
     const rewardAmount = rewardValue
       ? BigNumber(rewardValue.amount)
       : BigNumber(0)

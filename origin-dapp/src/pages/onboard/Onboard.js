@@ -8,6 +8,7 @@ import MetaMask from './MetaMask'
 import { Messaging } from './Messaging'
 import Notifications from './Notifications'
 import Profile from './Profile'
+import Finished from './Finished'
 
 const sessionStore = store('sessionStorage')
 
@@ -18,13 +19,6 @@ class Onboard extends Component {
 
     return (
       <div className="container onboard">
-        <h2>Getting started on Origin</h2>
-        <div className="explanation">
-          In order to successfully transact with others on our DApp, you’ll need
-          a few things before you get started.{' '}
-          <a href="#">Why do I need to do this?</a>
-        </div>
-
         <Switch>
           <Route
             path={`${linkPrefix}/onboard/metamask`}
@@ -41,6 +35,10 @@ class Onboard extends Component {
           <Route
             path={`${linkPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} />}
+          />
+          <Route
+            path={`${linkPrefix}/onboard/finished`}
+            render={() => <Finished />}
           />
           <Redirect
             from={`${linkPrefix}/onboard/back`}
@@ -188,7 +186,13 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .onboard
-      margin: 2rem 0 0 0
+      margin-top: 1.5rem
       h2
         line-height: 1.25
+      h3
+        line-height: 1.25
+        font-size: 24px
+        margin-bottom: 0
+      .step
+        font-size: 12px
 `)
