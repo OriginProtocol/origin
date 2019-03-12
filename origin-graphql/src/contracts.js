@@ -136,6 +136,7 @@ const Configs = {
     provider: 'https://testnet.originprotocol.com/rpc',
     ipfsGateway: 'https://ipfs.dev.originprotocol.com',
     ipfsRPC: 'https://ipfs.dev.originprotocol.com',
+    discovery: 'https://discovery.dev.originprotocol.com',
     OriginToken: '0xc341384f6fe00179b33ef7ae638ed2937a9e4501',
     V00_Marketplace: '0xf3884ecbc6c43383bf7a38c891021380f50abc49',
     V00_Marketplace_Epoch: '0',
