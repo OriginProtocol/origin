@@ -260,7 +260,9 @@ class IdentityEventHandler {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
 
-    user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+    if (log.decoded.ipfsHash) {
+      user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+    }
 
     // Decorate the user object with extra attestation related info.
     await this._decorateUser(user)
