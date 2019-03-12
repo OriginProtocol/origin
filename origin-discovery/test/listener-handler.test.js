@@ -132,7 +132,11 @@ describe('Listener Handlers', () => {
 
     this.identityLog = {
       address: this.seller,
-      decoded: { account: this.seller },
+      decoded: {
+        account: this.seller,
+        ipfsHash:
+          '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
+      },
       contractName: this.identityContractVersion.contractName,
       eventName: this.identityRule.eventName,
       contractVersionKey: this.identityContractVersion.versionKey,
@@ -235,6 +239,9 @@ describe('Listener Handlers', () => {
       }
     })
     expect(user.length).to.equal(1)
+    expect(user.ipfsHash).to.equal(
+      'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
+    )
 
     // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(
