@@ -1,3 +1,4 @@
+---
 version: "3"
 
 volumes:
@@ -35,7 +36,6 @@ services:
       # and the contract address here, and other services will then parse these
       # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
-      # if new origin module is added the whole container does not need to be rebuilt
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
       - ./origin-services/:/app/origin-services/
@@ -53,7 +53,7 @@ services:
       - ./origin-growth/:/app/origin-growth/
       - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
-    # Exclude all node_modules
+      # Exclude all node_modules
       - /app/origin-services/node_modules/
       - /app/origin-graphql/node_modules/
       - /app/origin-eventsource/node_modules/
@@ -69,7 +69,7 @@ services:
       - /app/origin-growth/node_modules/
       - /app/origin-token/node_modules/
       - /app/origin-identity/node_modules/
-    # IPFS data
+      # IPFS data
       - ipfs:/app/ipfs
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
@@ -116,7 +116,7 @@ services:
       - ELASTICSEARCH=true
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - EMAIL_WEBHOOK=
-			- ENVKEY=
+      - ENVKEY=
       - GCLOUD_PUBSUB_TOPIC=
       - GCLOUD_PROJECT_ID=
       - INDEX_MARKETPLACE=true
@@ -144,18 +144,18 @@ services:
     image: origin
     volumes: *volumes
     environment:
-			# MetaMask account 4 (default local blockchain) aka accounts[3]
+      # MetaMask account 4 (default local blockchain) aka accounts[3]
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
-				# MetaMask account 5 (default local blockchain) aka accounts[4]
+      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-			# MetaMask account 5 (default local blockchain) aka accounts[4]
+      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
-			- NETWORK_ID=999
+      - NETWORK_ID=999
       - WEB3_URL=http://origin-services:8545
-			- ENVKEY=
+      - ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
@@ -189,7 +189,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-			- ENVKEY=
+      - ENVKEY=
     depends_on:
       - postgres
     ports:
@@ -204,8 +204,8 @@ services:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - FACEBOOK_CLIENT_ID=
       - FACEBOOK_CLIENT_SECRET=
-			# Sendgrid settings for email attestations
-			# sendgrid.com
+      # Sendgrid settings for email attestations
+      # sendgrid.com
       - SENDGRID_FROM_EMAIL=
       - SENDGRID_API_KEY=
       # Twilio verify API key for phone attestations
@@ -213,7 +213,7 @@ services:
       - TWILIO_VERIFY_API_KEY
       - TWITTER_CONSUMER_KEY=
       - TWITTER_CONSUMER_SECRET=
-			- ENVKEY=
+      - ENVKEY=
     depends_on:
       - postgres
     ports:

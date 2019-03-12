@@ -205,7 +205,7 @@ async function validateCliResponse(callback, args, validationPredicate) {
   if (validationPredicate(response)) {
     return
   }
-  console.error('Unexpected repsonse: ', response)
+  console.error('Unexpected response: ', response)
   process.exit(1)
 }
 
@@ -282,7 +282,7 @@ async function waitForInput() {
       // Don't error if success or if index already exists
       return (
         JSON.parse(response).acknowledged === true ||
-        JSON.parse(response).reason === 'index_already_exists_exception'
+        JSON.parse(response).error.type === 'resource_already_exists_exception'
       )
     })
     console.log(`Index ${indexName} created!`)
