@@ -59,6 +59,8 @@ You can also change the Ethereum network being used by `origin-dapp` by appendin
 - Select the Origin Testnet from the network selection in MetaMask.
 - To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your wallet address.
 
+You can view the state of the network at https://testnet.originprotocol.com/.
+
 ### Other settings
 
 The DApp includes a settings page at `http://localhost:3000/settings` which is useful if you want to switch individual services, e.g. use a different Web3 provider or atteestation server.
