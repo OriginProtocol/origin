@@ -22,6 +22,7 @@ import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
+import Header from './_Header'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
@@ -80,6 +81,7 @@ class OnboardProfile extends Component {
 
     return (
       <>
+        <Header />
         <div className="step">Step 4</div>
         <h3>Enter Your Profile Information</h3>
         <div className="row">
@@ -138,12 +140,7 @@ class OnboardProfile extends Component {
 
                   <label className="mt-3">Attestations</label>
                   <div className="profile-attestations with-checkmarks">
-                    {this.renderAtt('phone', 'Phone Number')}
                     {this.renderAtt('email', 'Email')}
-                    {this.renderAtt('airbnb', 'Airbnb')}
-                    {this.renderAtt('facebook', 'Facebook')}
-                    {this.renderAtt('twitter', 'Twitter')}
-                    {this.renderAtt('google', 'Google', true)}
                   </div>
 
                   <ProfileStrength
@@ -179,7 +176,7 @@ class OnboardProfile extends Component {
             </div>
             <div className="continue-btn">
               <Link
-                to={`${linkPrefix}/onboard/back`}
+                to={`${linkPrefix}/onboard/finished`}
                 className={`btn btn-outline-primary`}
                 children={hasBalance ? 'Done' : 'Skip for now'}
               />
@@ -314,6 +311,7 @@ require('react-styl')(`
         min-height: 3rem
     .profile-attestations
       margin-bottom: 2rem
+      display: block
 
   .profile-attestations
     display: grid
@@ -410,4 +408,10 @@ require('react-styl')(`
         border-radius: 2rem;
         margin-left: auto;
         background-size: 59%;
+
+  @media (max-width: 767.98px)
+    .onboard .onboard-box.profile
+      > form .image-cropper
+        max-width: 6rem
+
 `)

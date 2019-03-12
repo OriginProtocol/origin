@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import Modal from 'components/Modal'
 import MobileLinkerCode from 'components/MobileLinkerCode'
+import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
 
@@ -15,16 +16,6 @@ function roleForEvent(e) {
   if (e.startsWith('Offer')) return 'buyer'
   if (e.startsWith('Identity')) return ''
 }
-
-const MetaMaskAnimation = () => (
-  <video className="metamask-video" width="320" heigh="240" autoPlay loop>
-    <source
-      src="images/growth/metamask_in_browser_dark_bg.mp4"
-      type="video/mp4"
-    />
-    Your browser does not support the video tag.
-  </video>
-)
 
 class WaitForTransaction extends Component {
   render() {

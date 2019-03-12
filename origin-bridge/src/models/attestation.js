@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       // Attestation method
       method: DataTypes.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER'),
-      // Ethereum address of the attestation
+      // Ethereum address of the attestation. Lowercase.
       ethAddress: DataTypes.CHAR(42),
       // Value of the attestation
       value: DataTypes.STRING,
