@@ -107,9 +107,6 @@ class WeekCalendar extends Component {
   }
 
   renderHour(hours, idx) {
-    console.log(`Rendering hour ${idx}`)
-    console.log(hours[idx])
-
     const hour = hours[idx]
     if (!hour) {
       return (
@@ -169,7 +166,7 @@ class WeekCalendar extends Component {
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
             let range = (dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') + '/' +
-              dayjs(hour.hour).format('YYYY-MM-DDTHH:mm:ss'))
+              dayjs(hour.hour).add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss'))
 
             this.props.onChange({ range })
           }

@@ -2,19 +2,14 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
 
+// Example:
 // const instance = new AvailabilityCalculator({
-//   weekdayPrice: '0.5',
-//   weekendPrice: '0.75',
-//   advanceNotice: 3, // Number of days of advanced notice
-//   bookingWindow: 180, // Book up to this many days in the future
-//   unavailable: ['2019-02-01/2019-02-07'],
-//   booked: ['2019-02-16/2019-02-18'],
-//   customPricing: ['2019-03-01/2019-03-05~0.6']
+//   customPricing: ['2019-03-01T01:00:00/2019-03-01T02:00:00~0.6']
 // })
 
 // const Keys = ['unavailable', 'booked', 'customPricing']
 
-class AvailabilityCalculator {
+class AvailabilityCalculatorHourly {
   constructor(opts) {
     this.opts = opts
     this.opts.unavailable = this.opts.unavailable || []
@@ -23,16 +18,20 @@ class AvailabilityCalculator {
   }
 
   /**
-   * @param range         Date range (eg 2019-01-01/2019-02-01)
+   * Update availability for a given datetime range.
+   * @param range         Datetime range (eg `2019-03-01T01:00:00/2019-03-01T02:00:00``)
    * @param availability  'available', 'unavailable', 'booked'
-   * @param price         '0.1', 'reset'
+   * @param price         '0.1', 'reset' (Reset=return to default price for this time)
    */
   update(range, availability, price) {
-    // Get availabitilty for one year into the future
+    // Get availabitilty for one year into the future from now for each hour
     const slots = this.getAvailability(dayjs(), dayjs().add(1, 'year'))
+
     const [startStr, endStr] = range.split('/')
-    const start = dayjs(startStr).subtract(1, 'day'),
-      end = dayjs(endStr).add(1, 'day')
+    const start = dayjs(startStr),
+      // We subtract 1 hour because the human-readable range
+      // e.g. 6-7pm is actually just the 6pm slot -- so range is 6pm-6pm
+      end = dayjs(endStr).add(-1, 'hour')
 
     const modifiedSlots = []
     let bookedRange, unavailableRange, customPriceRange
@@ -41,8 +40,9 @@ class AvailabilityCalculator {
       newCustomPrice = []
 
     slots.forEach(slot => {
-      // Apply slot transform
-      if (dayjs(slot.date).isBetween(start, end)) {
+      // '[' in isBetween() indicates inclusive of start date
+      if (dayjs(slot.hour).isBetween(start, end, null, '[')) {
+        // Hour is part of range we're modifying
         if (availability === 'available') {
           slot.booked = false
           slot.unavailable = false
@@ -64,9 +64,9 @@ class AvailabilityCalculator {
 
       if (slot.booked) {
         if (bookedRange) {
-          bookedRange = `${bookedRange.split('/')[0]}/${slot.date}`
+          bookedRange = `${bookedRange.split('/')[0]}/${slot.hour}`
         } else {
-          bookedRange = `${slot.date}/${slot.date}`
+          bookedRange = `${slot.hour}/${slot.hour}`
         }
       } else if (bookedRange) {
         newBooked.push(bookedRange)
@@ -74,9 +74,9 @@ class AvailabilityCalculator {
       }
       if (slot.unavailable) {
         if (unavailableRange) {
-          unavailableRange = `${unavailableRange.split('/')[0]}/${slot.date}`
+          unavailableRange = `${unavailableRange.split('/')[0]}/${slot.hour}`
         } else {
-          unavailableRange = `${slot.date}/${slot.date}`
+          unavailableRange = `${slot.hour}/${slot.hour}`
         }
       } else if (unavailableRange) {
         newUnavailable.push(unavailableRange)
@@ -85,13 +85,16 @@ class AvailabilityCalculator {
 
       if (slot.customPrice) {
         if (customPriceRange) {
-          customPriceRange = `${customPriceRange.split('/')[0]}/${slot.date}:${
+          // Extend range to include this hour
+          customPriceRange = `${customPriceRange.split('/')[0]}/${slot.hour}~${
             slot.price
           }`
         } else {
-          customPriceRange = `${slot.date}/${slot.date}:${slot.price}`
+          // Begin new range
+          customPriceRange = `${slot.hour}/${slot.hour}~${slot.price}`
         }
       } else if (customPriceRange) {
+        // Range has ended, so save it
         newCustomPrice.push(customPriceRange)
         customPriceRange = ''
       }
@@ -99,6 +102,7 @@ class AvailabilityCalculator {
       return slot
     })
 
+    // Change our availability
     this.opts.booked = newBooked
     this.opts.unavailable = newUnavailable.filter(a => newBooked.indexOf(a) < 0)
     this.opts.customPricing = newCustomPrice
@@ -126,13 +130,15 @@ class AvailabilityCalculator {
       end = newEnd
     }
 
+    // Handle custom pricing ranges
     const customPricing = {}
     this.opts.customPricing.forEach(customStr => {
       // customStr will look like `2019-03-01T01:00:00/2019-03-05T02:00:00~0.6`
       const [range, price] = customStr.split('~')
       const [startStr, endStr] = range.split('/')
       let start = dayjs(startStr)
-      const end = dayjs(endStr)
+      // We have to add one to include the final hour in range
+      const end = dayjs(endStr).add(1, 'hour')
 
       // Iterate over all hours between `start` and `end`
       while (start.isBefore(end)) {
@@ -183,4 +189,4 @@ class AvailabilityCalculator {
 //   }
 // })
 
-export default AvailabilityCalculator
+export default AvailabilityCalculatorHourly

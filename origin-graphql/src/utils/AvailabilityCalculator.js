@@ -14,7 +14,7 @@ dayjs.extend(isBetween)
 
 // const Keys = ['unavailable', 'booked', 'customPricing']
 
-class AvailabilityCalculatorHourly {
+class AvailabilityCalculator {
   constructor(opts) {
     this.opts = opts
     this.opts.unavailable = this.opts.unavailable || []
@@ -208,4 +208,4 @@ class AvailabilityCalculatorHourly {
 //   }
 // })
 
-export default AvailabilityCalculatorHourly
+export default AvailabilityCalculator

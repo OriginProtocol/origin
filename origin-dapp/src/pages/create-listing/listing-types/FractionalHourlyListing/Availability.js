@@ -20,10 +20,10 @@ class Availability extends Component {
       calculator: new AvailabilityCalculatorHourly({
         // price: props.listing.price,
         // weekendPrice: props.listing.weekendPrice,
-        // booked: props.listing.booked,
-        // unavailable: props.listing.unavailable,
-        // customPricing: props.listing.customPricing
-        customPricing: ['2019-03-11T018:00:00/2019-03-23T02:00:00~0.6'] // TODO (Stan): fixture for development
+        booked: props.listing.booked,
+        unavailable: props.listing.unavailable,
+        customPricing: props.listing.customPricing
+        // customPricing: ['2019-03-11T018:00:00/2019-03-23T02:00:00~0.666'] // TODO (Stan): fixture for development
       })
     }
   }
