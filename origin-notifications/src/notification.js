@@ -50,8 +50,10 @@ const buyerEventNotificationMap = {
  * @return {boolean}
  */
 function processableEvent(eventName) {
-  return (buyerEventNotificationMap[eventName] ||
-    sellerEventNotificationMap[eventName]) !== undefined
+  return (
+    (buyerEventNotificationMap[eventName] ||
+      sellerEventNotificationMap[eventName]) !== undefined
+  )
 }
 
 /**
@@ -65,7 +67,12 @@ function processableEvent(eventName) {
  * @return {title: string, body: string} - Notification message or null if no notification
  *   should be sent.
  */
-function getNotificationMessage(eventName, initiator, recipient, recipientRole) {
+function getNotificationMessage(
+  eventName,
+  initiator,
+  recipient,
+  recipientRole
+) {
   // No need to send a notification if recipient initiated the action.
   if (initiator === recipient) {
     return null
