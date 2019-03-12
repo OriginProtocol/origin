@@ -4,15 +4,13 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Development
 
-Origin has two development setups. One is the "light" version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.
-
-The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin features, include messaging, browser notifications, and attestation services.
+In most cases developers who are new to Origin will want to work on our marketplace DApp. The DApp has some required an optional backend services that it needs to run, for example an Ethereum network, or an attestation server. The default development setup allows you to develop with the DApp backed by services in our development deployment. You can also alternatively run your own set of local services using `docker-compose`.
 
 ## About the Origin repository
 
 Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
 
-## Using NPM & Lerna
+## Developing with the DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the necessary dependencies:
 
@@ -21,59 +19,72 @@ git clone https://github.com/OriginProtocol/origin
 cd origin && npm install
 ```
 
-2. Configure the DApp with default environment variables:
+2. You can then start the DApp using:
 
 ```
-cp origin-dapp/dev.env origin-dapp/.env
+cd origin-dapp && npm start
 ```
 
-3. You can then start a light development environment by executing:
+This will start a `webpack-dev-server` with hot reloading on `http://localhost:3000.`. When you open it you should see the message `No marketplace contract?`.
+
+3. Deploy contracts (optional)
+
+By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network you'll need to deploy some contracts and create some sample listings using the `origin-admin` tool. This can be done by running:
 
 ```
-npm start
+cd origin-admin && npm start
 ```
 
-4. You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:
+Then open your browser to `http://localhost:3001` and:
 
-- Log out of MetaMask.
+- Select the Settings page (last icon on the right)
+- Click the green `Populate` button.
+- Copy and pasting the commands at the bottom of the page into the console for `origin-dapp`.
 
-- Click `Restore from seed phrase`
+### Network selection
 
-- Enter the following seed phrase (Mnemonic):
+You can also change the Ethereum network being used by `origin-dapp` by appending a network name to the URL.
+
+- http://localhost:3000/docker - Local Ganache and services run by Docker Compose (see below for further instructions)
+
+- http://localhost:3000/origin - Origin testnet backed by origin dev services (e.g. https://dapp.dev.originprotocol.com)
+- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging services (e.g. https://dapp.staging.originprotocol.com)
+- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production services (e.g. https://dapp.originprotocol.com)
+
+### Configuring Origin's Ethereum Testnet
+
+- Open MetaMask by clicking on the extension.
+- Open MetaMask's settings by clicking on the account icon in the top right and selecting `Settings` from the menu.
+- Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC URL.
+- Select the Origin Testnet from the network selection in MetaMask.
+- To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your wallet address.
+
+You can view the state of the network at https://testnet.originprotocol.com/.
+
+### Other settings
+
+The DApp includes a settings page at `http://localhost:3000/settings` which is useful if you want to switch individual services, e.g. use a different Web3 provider or atteestation server.
+
+## Running Docker Compose
+
+There is a Docker Compose configuration available for running a variety of backend services the DApp integrates with. The `docker-compose` configuration runs the following packages:
 
 ```
-candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-```
-
-This is the default seed phrase used by [Truffle](https://github.com/trufflesuite/truffle) for development.
-
- ⚠️  Be careful not to mix up your test wallet with your real one on the Main Network.
-
-- Click where it says "Ethereum Main Network" and select "Localhost 8545". Click the back arrow to return to your account.
-
-- You should see your first test account now has 100 ETH and the address `0x627306090abaB3A6e1400e9345bC60c78a8BEf57`. Additional generated accounts will also have this amount.
-
-### Troubleshooting
- - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
-```rm -rf ~/.jsipfs/```
-
-## Using Docker Compose
-
-The Origin Docker Compose configuration runs the following packages:
-
-```
+- elasticsearch on http://localhost:9200
+- postgresql
+- origin-services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
 - origin-bridge on http://localhost:5000
-- origin-dapp on http://localhost:3000 (Ethereum blockchain using Ganache on http://localhost:8545)
+- origin-discovery
+- origin-dapp on http://localhost:3000
 - origin-event-listener
 - origin-discovery (apollo server on http://localhost:4000)
 - origin-growth (apollo server on http://localhost:4001)
 - origin-ipfs-proxy on http://localhost:9999
 - origin-messaging on http://localhost:9012
 - origin-notifications on http://localhost:3456)
-- origin-ipfs-proxy (ipfs server http://localhost:9999)
-- postgresql
-- elasticsearch on http://localhost:9200
 ```
+
+⚠️  If you want to run the Docker Compose setup ensure that both `origin-dapp` and `origin-admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
 
 ### System Requirements
 
@@ -102,6 +113,11 @@ git checkout --track origin/stable
 3. From the root of the repository run `docker-compose up`. The first time this command runs it will take some time to complete due to the initial building of the containers.
 
 Please note this can take some time. If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues). When the containers are running you can access the DApp at `http://localhost:3000`.
+
+
+### Modifying settings
+
+Origin packages are configured using environment variables. The `docker-compose.yml` file has an environment section for each package where you can configure settings.
 
 ### Usage and commands
 
@@ -132,8 +148,6 @@ Rebuild containers (takes some time), in case you update dependencies (including
 
 	docker-compose build --no-cache origin
 
-Configure environment variables in `development/envfiles`
-
 ### Suggested workflow
 
 Switching between branches or developing on a fresh branch can cause the dependencies in one of the `package.json` files to change. The host `node_modules` directories are not mounted inside the Docker container. For that reason installing dependencies needs to be done inside the containers. One solution is to rebuild the image with `docker-compose build` but that can be time consuming. To install new dependencies get a shell in the container and run `npm install`.
@@ -149,7 +163,7 @@ host-machine$ docker-compose restart <container_name>
 
 ### Troubleshooting
 
-### Docker Desktop Mac
+#### Docker Desktop Mac
 
 Running `docker down/up` and rebuilding image `docker-compose build` will consume disk space that docker might have problems releasing. One indication of this is that containers are unable to start. Check available disk space in `Disk` tab under Docker Desktop preferences. To free disk space:
 
@@ -173,7 +187,7 @@ If a container is failing with code 137 it could be that it has encountered Out 
 
 #### Port errors
 
-The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail.
+The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail. This includes `origin-dapp` and `origin-admin`. Ensure you start those after you run `docker-compose up`.
 
 #### Metamask errors
 

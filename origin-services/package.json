@@ -10,6 +10,7 @@
     "url": "https://github.com/OriginProtocol/origin"
   },
   "scripts": {
+    "start": "node start.js",
     "clean": "rm -rf data/db && rm -rf data/ipfs && rm -rf data/geth",
     "geth": "geth --nodiscover --datadir ./data/geth --maxpeers 0 --dev --rpc --ws --wsorigins=* --rpccorsdomain=* --rpcaddr=0.0.0.0 --wsaddr=0.0.0.0 --rpcvhosts=*",
     "lint": "eslint . && npm run prettier:check",
