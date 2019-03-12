@@ -132,7 +132,7 @@ const resolvers = {
       return true
     },
     async enroll(_, args) {
-      //TODO: check country eligibility here also 
+      //TODO: check country eligibility here also
       // const locationInfo = getLocationInfo(context.countryCode)
       // if (locationInfo.isForbidden) {
       //   return {
@@ -149,7 +149,10 @@ const resolvers = {
 
         // make referral connection after we are sure user provided the correct accountId
         if (args.inviteCode !== undefined) {
-          await GrowthInvite.makeReferralConnection(args.inviteCode, args.accountId)
+          await GrowthInvite.makeReferralConnection(
+            args.inviteCode,
+            args.accountId
+          )
         }
 
         return { authToken }

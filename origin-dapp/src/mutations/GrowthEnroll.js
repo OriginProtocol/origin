@@ -4,7 +4,7 @@ export default gql`
   mutation Enroll(
     $accountId: ID!
     $agreementMessage: String!
-    $signature: String!,
+    $signature: String!
     $inviteCode: String!
   ) {
     enroll(

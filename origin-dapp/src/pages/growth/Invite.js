@@ -288,9 +288,9 @@ class GrowthInvite extends Component {
 
     const wasSuccessful = mutationResult.data.inviteRemind
     if (wasSuccessful) {
-      button.innerHTML = "Reminder sent!"
+      button.innerHTML = 'Reminder sent!'
     } else {
-      button.innerHTML = "Error"
+      button.innerHTML = 'Error'
     }
 
     this.setButtonTextWithDelay(button, 'Remind', 2500)
@@ -347,7 +347,7 @@ class GrowthInvite extends Component {
               <div className="col-2 p-0">Reward</div>
               <div className="col-6 p-0">{showStatus ? 'Status' : ''}</div>
             </div>
-            {invites.map((invite) => {
+            {invites.map(invite => {
               const name = invite.contact
                 ? invite.contact
                 : invite.walletAddress
@@ -364,14 +364,17 @@ class GrowthInvite extends Component {
                       {showStatus ? 'Hasn’t completed user activation' : ''}
                     </div>
                     <div className="pr-3">
-                      {showRemindButton && <button
-                        className="remind-button"
-                        onClick={async e => await this.handleRemindClick(invite.id, e)}
-                        children="Remind"
-                      />}
+                      {showRemindButton && (
+                        <button
+                          className="remind-button"
+                          onClick={async e =>
+                            await this.handleRemindClick(invite.id, e)
+                          }
+                          children="Remind"
+                        />
+                      )}
                     </div>
                   </div>
-                  
                 </div>
               )
             })}

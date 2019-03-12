@@ -28,7 +28,9 @@ class GrowthInvite {
     })
 
     // Filter out referrals we are supposed to ignore.
-    const pendingReferees = referrals.filter(r => !ignore.includes(r.refereeEthAddress))
+    const pendingReferees = referrals.filter(
+      r => !ignore.includes(r.refereeEthAddress)
+    )
 
     // Load prior campaigns and filter out referrals completed during those.
     const pastCampaigns = GrowthCampaign.getPast(referrer)
@@ -69,7 +71,10 @@ class GrowthInvite {
       })
       const referrer = await GrowthInvite._getReferrer(code)
 
-      if (referralLink && referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()) {
+      if (
+        referralLink &&
+        referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()
+      ) {
         /* The referrer associated with the invite code does not match previously stored referrer.
          * A corner case scenario this might happen is as follow:
          *  - referee receives multiple invites.
@@ -81,7 +86,11 @@ class GrowthInvite {
          * referees actions to the initial referrer.
          *
          */
-        logger.warn(`Referee ${walletAddress} already referred by ${referralLink.referrerEthAddress}`)
+        logger.warn(
+          `Referee ${walletAddress} already referred by ${
+            referralLink.referrerEthAddress
+          }`
+        )
         return
       }
 
@@ -90,10 +99,15 @@ class GrowthInvite {
         refereeEthAddress: walletAddress.toLowerCase()
       })
 
-      logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`)
-
+      logger.info(
+        `Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`
+      )
     } catch (e) {
-      logger.warn(`Can not make referral connection for user ${walletAddress}: `, e.message, e.stack)
+      logger.warn(
+        `Can not make referral connection for user ${walletAddress}: `,
+        e.message,
+        e.stack
+      )
     }
   }
 

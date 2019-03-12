@@ -28,8 +28,11 @@ class GrowthWelcome extends Component {
   componentDidMount() {
     const inviteCode = get(this.props, 'match.params.inviteCode')
     const localStorageKey = 'growth_invite_code'
-    
-    if (localStorage.getItem(localStorageKey) === null && inviteCode !== undefined) {
+
+    if (
+      localStorage.getItem(localStorageKey) === null &&
+      inviteCode !== undefined
+    ) {
       localStorage.setItem(localStorageKey, inviteCode)
     }
   }
