@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 import React, { Component } from 'react'
 
 import Redirect from 'components/Redirect'
 
+=======
+import React from 'react'
+
+import Steps from '../Steps'
+>>>>>>> master
 import Details from './Details'
 import Boost from './Boost'
 import Review from './Review'
 
+<<<<<<< HEAD
 class UnitListing extends Component {
   constructor(props) {
     super(props)
@@ -68,5 +75,17 @@ class UnitListing extends Component {
     }
   }
 }
+=======
+const UnitListing = props => (
+  <Steps
+    {...props}
+    steps={[
+      { step: 1, component: Details, require: 'subCategory' },
+      { step: 2, component: Boost, path: 'boost', require: 'title' },
+      { step: 3, component: Review, path: 'review' }
+    ]}
+  />
+)
+>>>>>>> master
 
 export default UnitListing

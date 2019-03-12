@@ -24,6 +24,7 @@ class EditListing extends Component {
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
         ...pick(props.listing, [
+          'id',
           '__typename',
           'title',
           'description',
@@ -40,7 +41,12 @@ class EditListing extends Component {
   }
 
   render() {
-    return <CreateListing listing={this.state.listing} mode="edit" />
+    return (
+      <CreateListing
+        listing={this.state.listing}
+        refetch={this.props.refetch}
+      />
+    )
   }
 }
 

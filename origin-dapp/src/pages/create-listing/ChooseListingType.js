@@ -21,15 +21,9 @@ class ChooseListingType extends Component {
   }
 
   render() {
-    const isEdit = this.props.mode === 'edit'
+    const isEdit = this.props.listing.id ? true : false
     if (this.state.valid) {
-      if (isEdit) {
-        return (
-          <Redirect to={`/listing/${this.props.listingId}/edit/details`} push />
-        )
-      } else {
-        return <Redirect to="/create/details" push />
-      }
+      return <Redirect to={this.props.next} push />
     }
 
     const input = formInput(this.state, state => this.setState(state))

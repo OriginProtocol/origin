@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 
 import Wallet from 'components/Wallet'
 import Category from 'components/Category'
+<<<<<<< HEAD
+=======
+import Link from 'components/Link'
+>>>>>>> master
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -9,8 +13,11 @@ import UpdateListing from '../../mutations/UpdateListing'
 class Review extends Component {
   state = {}
   render() {
+<<<<<<< HEAD
     const isEdit = this.props.mode === 'edit'
 
+=======
+>>>>>>> master
     const { listing } = this.props
 
     return (
@@ -54,6 +61,7 @@ class Review extends Component {
           </div>
 
           <div className="actions">
+<<<<<<< HEAD
             <button
               className="btn btn-outline-primary"
               onClick={() => {
@@ -67,6 +75,14 @@ class Review extends Component {
                 listing={this.props.listing}
                 listingId={this.props.listingId}
                 tokenBalance={this.props.tokenBalance}
+=======
+            <Link className="btn btn-outline-primary" to={this.props.prev}>
+              Back
+            </Link>
+            {listing.id ? (
+              <UpdateListing
+                listing={this.props.listing}
+>>>>>>> master
                 refetch={this.props.refetch}
                 className="btn btn-primary"
                 children="Done"
@@ -74,7 +90,10 @@ class Review extends Component {
             ) : (
               <CreateListing
                 listing={this.props.listing}
+<<<<<<< HEAD
                 tokenBalance={this.props.tokenBalance}
+=======
+>>>>>>> master
                 className="btn btn-primary"
                 children="Done"
               />
@@ -96,6 +115,7 @@ class Review extends Component {
 }
 
 export default Review
+<<<<<<< HEAD
 
 require('react-styl')(`
   .create-listing .create-listing-review
@@ -142,3 +162,5 @@ require('react-styl')(`
         padding: 0.625rem
         font-size: 18px
 `)
+=======
+>>>>>>> master

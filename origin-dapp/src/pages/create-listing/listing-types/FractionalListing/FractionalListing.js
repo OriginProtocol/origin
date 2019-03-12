@@ -1,12 +1,19 @@
+<<<<<<< HEAD
 import React, { Component } from 'react'
 
 import Redirect from 'components/Redirect'
 
+=======
+import React from 'react'
+
+import Steps from '../Steps'
+>>>>>>> master
 import Details from './Details'
 import Boost from './Boost'
 import Availability from './Availability'
 import Review from './Review'
 
+<<<<<<< HEAD
 class FractionalListing extends Component {
   constructor(props) {
     super(props)
@@ -82,5 +89,18 @@ class FractionalListing extends Component {
     }
   }
 }
+=======
+const FractionalListing = props => (
+  <Steps
+    {...props}
+    steps={[
+      { step: 1, component: Details, require: 'subCategory' },
+      { step: 2, component: Boost, path: 'boost', require: 'title' },
+      { step: 3, component: Availability, path: 'availability' },
+      { step: 4, component: Review, path: 'review' }
+    ]}
+  />
+)
+>>>>>>> master
 
 export default FractionalListing

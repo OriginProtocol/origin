@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
+import omit from 'lodash/omit'
 
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
 import Price from 'components/Price'
+import Redirect from 'components/Redirect'
+import Link from 'components/Link'
+
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Details extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      ...props.listing
-    }
+    this.state = omit(props.listing, 'valid')
   }
 
   componentDidMount() {
@@ -21,6 +23,10 @@ class Details extends Component {
   }
 
   render() {
+    if (this.state.valid) {
+      return <Redirect to={this.props.next} push />
+    }
+
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -138,15 +144,12 @@ class Details extends Component {
                 </div>
 
                 <div className="actions">
-                  <button
+                  <Link
                     className="btn btn-outline-primary"
-                    type="button"
-                    onClick={() => {
-                      this.props.onPrev()
-                    }}
+                    to={this.props.prev}
                   >
                     Back
-                  </button>
+                  </Link>
                   <button type="submit" className="btn btn-primary">
                     Continue
                   </button>
@@ -198,11 +201,11 @@ class Details extends Component {
     }
 
     if (!this.state.weekendPrice) {
-      newState.weekendPriceError = 'Price is required'
+      newState.weekendPriceError = 'Weekend pricing is required'
     } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
-      newState.weekendPriceError = 'Price must be a number'
+      newState.weekendPriceError = 'Weekend pricing must be a number'
     } else if (Number(this.state.weekendPrice) <= 0) {
-      newState.weekendPriceError = 'Price must be greater than zero'
+      newState.weekendPriceError = 'Weekend pricing must be greater than zero'
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
@@ -211,7 +214,6 @@ class Details extends Component {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
       this.props.onChange(this.state)
-      this.props.onNext() // Advance to next step
     }
     this.setState(newState)
     return newState.valid

@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
 
+<<<<<<< HEAD
+=======
+import withTokenBalance from 'hoc/withTokenBalance'
+
+>>>>>>> master
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
+<<<<<<< HEAD
+=======
+import Link from 'components/Link'
+>>>>>>> master
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -11,7 +20,10 @@ import UpdateListing from '../../mutations/UpdateListing'
 class Review extends Component {
   state = {}
   render() {
+<<<<<<< HEAD
     const isEdit = this.props.mode === 'edit'
+=======
+>>>>>>> master
     const { listing, tokenBalance } = this.props
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
@@ -88,6 +100,7 @@ class Review extends Component {
           </div>
 
           <div className="actions">
+<<<<<<< HEAD
             <button
               className="btn btn-outline-primary"
               type="button"
@@ -101,6 +114,14 @@ class Review extends Component {
               <UpdateListing
                 listing={this.props.listing}
                 listingId={this.props.listingId}
+=======
+            <Link className="btn btn-outline-primary" to={this.props.prev}>
+              Back
+            </Link>
+            {listing.id ? (
+              <UpdateListing
+                listing={listing}
+>>>>>>> master
                 tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
@@ -108,7 +129,11 @@ class Review extends Component {
               />
             ) : (
               <CreateListing
+<<<<<<< HEAD
                 listing={this.props.listing}
+=======
+                listing={listing}
+>>>>>>> master
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
                 children="Done"
@@ -130,6 +155,7 @@ class Review extends Component {
   }
 }
 
+<<<<<<< HEAD
 export default Review
 
 require('react-styl')(`
@@ -177,3 +203,6 @@ require('react-styl')(`
         padding: 0.625rem
         font-size: 18px
 `)
+=======
+export default withTokenBalance(Review)
+>>>>>>> master

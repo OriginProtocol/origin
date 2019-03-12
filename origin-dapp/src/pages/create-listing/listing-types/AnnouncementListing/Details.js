@@ -1,16 +1,29 @@
 import React, { Component } from 'react'
+<<<<<<< HEAD
+=======
+import omit from 'lodash/omit'
+>>>>>>> master
 
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
+<<<<<<< HEAD
+=======
+import Redirect from 'components/Redirect'
+import Link from 'components/Link'
+>>>>>>> master
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class Details extends Component {
   constructor(props) {
     super(props)
+<<<<<<< HEAD
     this.state = {
       ...props.listing
     }
+=======
+    this.state = omit(props.listing, 'valid')
+>>>>>>> master
   }
 
   componentDidMount() {
@@ -20,6 +33,13 @@ class Details extends Component {
   }
 
   render() {
+<<<<<<< HEAD
+=======
+    if (this.state.valid) {
+      return <Redirect to={this.props.next} push />
+    }
+
+>>>>>>> master
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -79,6 +99,7 @@ class Details extends Component {
                 </div>
 
                 <div className="actions">
+<<<<<<< HEAD
                   <button
                     className="btn btn-outline-primary"
                     type="button"
@@ -88,6 +109,14 @@ class Details extends Component {
                   >
                     Back
                   </button>
+=======
+                  <Link
+                    className="btn btn-outline-primary"
+                    to={this.props.prev}
+                  >
+                    Back
+                  </Link>
+>>>>>>> master
                   <button type="submit" className="btn btn-primary">
                     Continue
                   </button>
@@ -136,14 +165,20 @@ class Details extends Component {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
       this.props.onChange(this.state)
+<<<<<<< HEAD
       this.props.onNext() // Advance to next step
     }
+=======
+    }
+
+>>>>>>> master
     this.setState(newState)
     return newState.valid
   }
 }
 
 export default Details
+<<<<<<< HEAD
 
 require('react-styl')(`
   .create-listing .create-listing-step-2
@@ -253,3 +288,5 @@ require('react-styl')(`
           content: "$"
           margin-right: 0.25rem
 `)
+=======
+>>>>>>> master

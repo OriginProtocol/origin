@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
 
+import withTokenBalance from 'hoc/withTokenBalance'
+
 import Steps from 'components/Steps'
 import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
 
@@ -41,8 +44,7 @@ class Boost extends Component {
 
   render() {
     if (this.state.valid) {
-      // Advance to next step
-      this.props.onNext()
+      return <Redirect to={this.props.next} push />
     }
 
     return (
@@ -73,17 +75,14 @@ class Boost extends Component {
                 )}
 
                 <div className="actions">
-                  <button
+                  <Link
                     className="btn btn-outline-primary"
-                    type="button"
-                    onClick={() => {
-                      this.props.onPrev()
-                    }}
+                    to={this.props.prev}
                   >
                     Back
-                  </button>
+                  </Link>
                   <button type="submit" className="btn btn-primary">
-                    Review
+                    Continue
                   </button>
                 </div>
               </form>
@@ -114,21 +113,14 @@ class Boost extends Component {
 
   renderBoostSlider() {
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
-    const isMulti = Number(this.state.quantity || 0) > 1
-    const isFractional = this.props.__typename === 'fractional'
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const boostRequired = Number(this.state.quantity) * Number(this.state.boost)
-    const enoughBoost = boostRequired <= Number(this.state.boostLimit)
-
     return (
       <>
         <div className="boost-info">
-          <h5>{`Boost Level${isMulti ? ' (per unit)' : ''}${
-            isFractional ? ' (per night)' : ''
-          }`}</h5>
+          <h5>Boost Level (per night)</h5>
           <i />
         </div>
         <div className={`boost-value ${level[1]}`}>
@@ -153,40 +145,23 @@ class Boost extends Component {
           <Link to="/about-tokens">Learn more</Link>
         </div>
 
-        {!isMulti && !isFractional ? null : (
-          <div className="form-group boost-limit">
-            <label>Boost Limit</label>
-            <div className="d-flex">
-              <div style={{ flex: 1, marginRight: '1rem' }}>
-                <div className="with-symbol">
-                  <input {...input('boostLimit')} />
-                  <span className="ogn">OGN</span>
-                </div>
+        <div className="form-group boost-limit">
+          <label>Boost Limit</label>
+          <div className="d-flex">
+            <div style={{ flex: 1, marginRight: '1rem' }}>
+              <div className="with-symbol">
+                <input {...input('boostLimit')} />
+                <span className="ogn">OGN</span>
               </div>
-              <div style={{ flex: 1 }} />
             </div>
-            {Feedback('price')}
-            <div className="help-text price">
-              Maximum amount that will be spent to boost this listing. Boosts
-              are always in OGN, <b>USD is an estimate.</b>
-            </div>
+            <div style={{ flex: 1 }} />
           </div>
-        )}
-
-        {enoughBoost || !isMulti ? null : (
-          <div className="boost-totals">
-            <div className="totals">
-              <div>{`Total number of units: ${this.state.quantity}`}</div>
-              <div>{`Total boost required: ${boostRequired}`}</div>
-            </div>
-            <div>
-              Your boost cap is lower than the total amount needed to boost all
-              your units. After the cap is reached, the remaining units will not
-              be boosted.
-            </div>
-            <button className="btn btn-link">Get OGN</button>
+          {Feedback('price')}
+          <div className="help-text price">
+            Maximum amount that will be spent to boost this listing. Boosts are
+            always in OGN, <b>USD is an estimate.</b>
           </div>
-        )}
+        </div>
       </>
     )
   }
@@ -214,7 +189,7 @@ class Boost extends Component {
   }
 }
 
-export default Boost
+export default withTokenBalance(Boost)
 
 require('react-styl')(`
   .create-listing .create-listing-step-3

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
 
-import withTokenBalance from 'hoc/withTokenBalance'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
@@ -37,6 +36,12 @@ class CreateListing extends Component {
         quantity: '1',
         price: '',
 
+        // Fractional fields:
+        weekendPrice: '',
+        booked: [],
+        customPricing: [],
+        unavailable: [],
+
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
@@ -53,49 +58,54 @@ class CreateListing extends Component {
 
   render() {
     const listingTypeMapping = {
-      UnitListing: UnitListing,
-      AnnouncementListing: AnnouncementListing,
-      FractionalListing: FractionalListing,
-      FractionalHourlyListing: FractionalHourlyListing
+      UnitListing,
+      AnnouncementListing,
+      FractionalListing,
+      FractionalHourlyListing
     }
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing
     const ListingTypeComponent =
-      this.state.listing.__typename in listingTypeMapping
-        ? listingTypeMapping[this.state.listing.__typename]
-        : UnitListing
+      listingTypeMapping[this.state.listing.__typename] || UnitListing
+
+    const props = {
+      listing: this.state.listing,
+      onChange: listing => this.setListing(listing)
+    }
 
     return (
       <div className="container create-listing">
         <PageTitle>Add a Listing</PageTitle>
         <Switch>
           <Route
-            path="/create/details/:step?"
+            path="/create/details"
+            render={() => (
+              <ListingTypeComponent linkPrefix="/create/details" {...props} />
+            )}
+          />
+          <Route
+            path="/listing/:listingId/edit/:step"
             render={({ match }) => (
               <ListingTypeComponent
-                listing={this.state.listing}
-                step={match.params.step}
-                onChange={listing => this.setListing(listing)}
+                linkPrefix={`/listing/${match.params.listingId}/edit/details`}
+                refetch={this.props.refetch}
+                {...props}
               />
             )}
           />
           <Route
-            path="/listing/:listingId/edit/:step?"
+            path="/listing/:listingId/edit"
             render={({ match }) => (
-              <ListingTypeComponent
-                listing={this.state.listing}
-                step={match.params.step}
-                onChange={listing => this.setListing(listing)}
+              <ChooseListingType
+                next={`/listing/${match.params.listingId}/edit/details`}
+                {...props}
               />
             )}
           />
           <Route
             path="/create"
             render={() => (
-              <ChooseListingType
-                listing={this.state.listing}
-                onChange={listing => this.setListing(listing)}
-              />
+              <ChooseListingType next="/create/details" {...props} />
             )}
           />
         </Switch>
@@ -104,7 +114,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withCreatorConfig(withWallet(withTokenBalance(CreateListing)))
+export default withCreatorConfig(withWallet(CreateListing))
 
 require('react-styl')(`
   .create-listing
