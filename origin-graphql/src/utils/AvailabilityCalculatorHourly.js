@@ -121,7 +121,8 @@ class AvailabilityCalculatorHourly {
   getAvailability(startStr, endStr) {
     // Get hourly availabilty between startStr and endStr
     let start = typeof startStr === 'string' ? dayjs(startStr) : startStr
-    let end = typeof endStr === 'string' ? dayjs(endStr) : endStr
+    // We add one hour so that `end` hour will also be included
+    let end = typeof endStr === 'string' ? dayjs(endStr).add(1, 'hour') : endStr.add(1, 'hour')
     const hours = []
 
     if (end.isBefore(start)) {
@@ -129,6 +130,19 @@ class AvailabilityCalculatorHourly {
       start = end
       end = newEnd
     }
+
+    // Handle booked ranges
+    const booked = {}
+    this.opts.booked.forEach(range => {
+      const [startStr, endStr] = range.split('/')
+      let start = dayjs(startStr)
+      const end = dayjs(endStr).add(1, 'hour')
+
+      while (start.isBefore(end)) {
+        booked[start.format('YYYY-MM-DDTHH:00:00')] = true
+        start = start.add(1, 'hour')
+      }
+    })
 
     // Handle custom pricing ranges
     const customPricing = {}
@@ -156,8 +170,9 @@ class AvailabilityCalculatorHourly {
       }
       hours.push({
         hour,
-        price,
         unavailable: customPricing[hour] ? false : true,
+        booked: booked[hour] ? true : false,
+        price,
         customPrice: customPricing[hour] ? true : false
       })
       start = start.add(1, 'hour')

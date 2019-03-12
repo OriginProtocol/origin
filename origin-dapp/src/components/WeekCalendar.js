@@ -276,7 +276,7 @@ require('react-styl')(`
         &.in-past,&.unavailable
           background-color: var(--pale-grey)
         &.unavailable
-          div:nth-child(2)
+          div:nth-child(1)
             color: var(--light)
 
         > div:nth-child(2)
