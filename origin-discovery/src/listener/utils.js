@@ -114,7 +114,7 @@ async function withRetrys(fn, exitOnError = true) {
 }
 
 function bytes32ToIpfsHash(hashHex) {
-  let buf = new Buffer.from(hashHex.replace(/^0x/, '1220'), 'hex')
+  const buf = new Buffer.from(hashHex.replace(/^0x/, '1220'), 'hex')
   return bs58.encode(buf)
 }
 
