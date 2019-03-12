@@ -69,9 +69,7 @@ class GrowthEvent {
       createdAt
     }
     await db.GrowthEvent.create(eventData)
-    logger.info(
-      `Inserted growth event ${eventType} for account  ${ethAddress}`
-    )
+    logger.info(`Inserted growth event ${eventType} for account  ${ethAddress}`)
   }
 
   /**
