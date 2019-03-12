@@ -13,13 +13,24 @@ class GetStarted extends Component {
         <li className="nav-item">
           <Link
             to="/onboard"
-            className="nav-link"
+            className="nav-link px-3"
             onClick={() => {
               const { pathname, search } = this.props.location
               sessionStore.set('getStartedRedirect', { pathname, search })
             }}
           >
             Get Started
+          </Link>
+        </li>
+        <li className="nav-item d-none d-md-block">
+          <Link
+            to="/onboard"
+            className="nav-link px-3"
+            onClick={() =>
+              sessionStore.set('getStartedRedirect', { pathname: '/create' })
+            }
+          >
+            Sell on Origin
           </Link>
         </li>
       </ul>
