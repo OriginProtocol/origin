@@ -147,7 +147,19 @@ const resolvers = {
           args.signature
         )
 
-        // make referral connection after we are sure user provided the correct accountId
+        /* Make referral connection after we are sure user provided the correct accountId
+         *
+         * Important to keep in mind: We realise making a referral connection inside enroll mutation
+         * has a downside where a referrer gets the reward only when the referee also enrolls into
+         * the growth campaign.
+         *
+         * We have decided to take this approach in favour of making the referral connection as soon
+         * as the user satisfy both conditions:
+         * - enters Welcome page with invite code
+         * - has a wallet installed
+         * as the above approach happens before a user is authenticated and this leaves us exposed
+         * to situations where bad actors could maka false referral connections to their own campaigns.
+         */
         if (args.inviteCode !== undefined) {
           await GrowthInvite.makeReferralConnection(
             args.inviteCode,

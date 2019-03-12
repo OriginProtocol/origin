@@ -291,7 +291,7 @@ function withEnrolmentModal(WrappedComponent) {
             }
 
             // used for testing purposes. No worries overriding this on frontend
-            // since another check is done on backend when calling enrol mutation
+            // since another check is done on backend when calling enroll mutation
             let countryOverride = localStorage.getItem('country_override')
             let { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
@@ -391,7 +391,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
+  //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
   return withRouter(WithEnrolmentModal)
 }
 
