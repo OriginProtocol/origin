@@ -123,7 +123,7 @@ class IpfsService {
     try {
       return await Promise.race([timeout, fetch(this.gatewayUrlForHash(ipfsHash))])
     } catch (error) {
-      throw new Error('Failure to get IPFS file: ' + error.message)
+      throw new Error('Failure to get IPFS file ' + ipfsHash + ': ' + error.message)
     }
   }
 
