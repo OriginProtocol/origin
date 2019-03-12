@@ -30,6 +30,7 @@ const ListingInterface = `
   description: String
   currencyId: String
   price: Price
+  acceptedTokens: [Token]
   category: String
   subCategory: String
   categoryStr: String
@@ -357,6 +358,7 @@ module.exports = `
     category: String
     subCategory: String
     currency: String
+    acceptedTokens: [String]
     media: [MediaInput]
     price: PriceInput
 

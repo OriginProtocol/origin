@@ -34,6 +34,11 @@ export default {
       return obj.__typename
     }
   },
+  CurrencyResult: {
+    __resolveType(obj) {
+      return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
+    }
+  },
   Currency: {
     __resolveType(obj) {
       return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'

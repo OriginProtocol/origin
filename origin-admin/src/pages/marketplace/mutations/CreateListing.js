@@ -14,12 +14,16 @@ import {
   Slider,
   Checkbox,
   TextArea,
-  Tag
+  Tag,
+  MenuItem
 } from '@blueprintjs/core'
+
+import { MultiSelect } from '@blueprintjs/select'
 
 import rnd from 'utils/rnd'
 import withAccounts from 'hoc/withAccountsAndAllowance'
 import withTokens from 'hoc/withTokens'
+import withCurrencies from 'hoc/withCurrencies'
 
 import demoListings from './_demoListings'
 import { CreateListingMutation, UpdateListingMutation } from 'queries/Mutations'
@@ -57,8 +61,11 @@ class CreateListing extends Component {
 
       this.state = {
         title: props.listing.title || '',
-        currency: props.listing.price ? props.listing.price.currency : 'ETH',
+        currency: get(props, 'listing.price.currency.id', 'token-ETH'),
         price: props.listing.price ? props.listing.price.amount : '0.1',
+        acceptedTokens: props.listing.acceptedTokens.map(t => t.id) || [
+          'token-ETH'
+        ],
         from: seller ? seller.id : '',
         deposit: 0,
         category,
@@ -73,8 +80,9 @@ class CreateListing extends Component {
     } else {
       this.state = {
         title: '',
-        currency: 'ETH',
-        price: '0.1',
+        currency: 'fiat-USD',
+        price: '5',
+        acceptedTokens: ['token-ETH', 'token-DAI'],
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
         deposit: 5,
@@ -96,16 +104,10 @@ class CreateListing extends Component {
       onChange: e => this.setState({ [field]: e.currentTarget.value })
     })
 
-    const currencyOpts = [
-      {
-        label: 'ETH',
-        value: 'ETH'
-      },
-      ...this.props.tokens.map(token => ({
-        label: token.symbol,
-        value: token.symbol
-      }))
-    ]
+    const currencyOpts = this.props.currencies.map(currency => ({
+      label: currency.code,
+      value: currency.id
+    }))
 
     const isCreate = this.props.listing && this.props.listing.id ? false : true
 
@@ -158,6 +160,12 @@ class CreateListing extends Component {
                   text="Tickets"
                   className="ml-2"
                   onClick={() => this.setDemoListing(4)}
+                />
+                <Button
+                  small="true"
+                  text="Basic"
+                  className="ml-2"
+                  onClick={() => this.setDemoListing(5)}
                 />
               </div>
               <div style={{ display: 'flex' }}>
@@ -217,12 +225,62 @@ class CreateListing extends Component {
                     </ControlGroup>
                   </FormGroup>
                 </div>
+                <div style={{ flex: 2 }}>
+                  <FormGroup label="Accepted Tokens">
+                    <MultiSelect
+                      items={currencyOpts.filter(
+                        i =>
+                          i.value.indexOf('token-') === 0 &&
+                          !this.state.acceptedTokens.find(a => a === i.value)
+                      )}
+                      itemsEqual="value"
+                      itemRenderer={(item, { handleClick, modifiers }) => (
+                        <MenuItem
+                          active={modifiers.active}
+                          disabled={modifiers.disabled}
+                          text={item.label}
+                          key={item.value}
+                          onClick={handleClick}
+                        />
+                      )}
+                      noResults={
+                        <MenuItem disabled={true} text="No results." />
+                      }
+                      selectedItems={this.state.acceptedTokens.map(a =>
+                        currencyOpts.find(c => c.value === a)
+                      )}
+                      onItemSelect={item =>
+                        this.setState({
+                          acceptedTokens: [
+                            ...this.state.acceptedTokens,
+                            item.value
+                          ]
+                        })
+                      }
+                      tagRenderer={item => item.label}
+                      popoverProps={{ targetClassName: 'w-100' }}
+                      tagInputProps={{
+                        tagProps: { minimal: true },
+                        onRemove: label => {
+                          const item = currencyOpts.find(i => i.label === label)
+                          this.setState({
+                            acceptedTokens: this.state.acceptedTokens.filter(
+                              token => token !== item.value
+                            )
+                          })
+                        }
+                      }}
+                    />
+                  </FormGroup>
+                </div>
+              </div>
+              <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1 }}>
                   <FormGroup label="Units">
                     <InputGroup {...input('unitsTotal')} />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1 }} />
+                <div style={{ flex: 2 }} />
               </div>
               <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1, marginRight: 30, padding: '0 5px' }}>
@@ -340,6 +398,7 @@ class CreateListing extends Component {
           title: this.state.title,
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
+          acceptedTokens: this.state.acceptedTokens,
           category: this.state.category,
           subCategory: this.state.subCategory,
           media: this.state.media
@@ -362,16 +421,21 @@ class CreateListing extends Component {
           title: this.state.title,
           description: this.state.description,
           price: { currency: this.state.currency, amount: this.state.price },
+          acceptedTokens: this.state.acceptedTokens,
           category: this.state.category,
           subCategory: this.state.subCategory,
           media: this.state.media.map(m => pick(m, 'contentType', 'url')),
-          unitsTotal: Number(this.state.unitsTotal),
           commission: String(this.state.deposit) || '0',
           commissionPerUnit: String(this.state.commissionPerUnit) || '0'
+        },
+        unitData: {
+          unitsTotal: Number(this.state.unitsTotal)
         }
       }
     }
   }
 }
 
-export default withTokens(withAccounts(CreateListing, 'marketplace'))
+export default withCurrencies(
+  withTokens(withAccounts(CreateListing, 'marketplace'))
+)

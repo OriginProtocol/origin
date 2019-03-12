@@ -70,7 +70,7 @@ describe('Marketplace', function() {
           title: 'Test Listing',
           description: 'Test description',
           price: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.01'
           },
           category: 'Test category',
@@ -104,7 +104,7 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.description, listingData.data.description)
       assert.strictEqual(listing.price.amount, listingData.data.price.amount)
       assert.strictEqual(
-        listing.price.currency,
+        listing.price.currency.id,
         listingData.data.price.currency
       )
       assert.strictEqual(listing.price.amount, listingData.data.price.amount)
@@ -231,7 +231,7 @@ describe('Marketplace', function() {
           title: 'Test Listing',
           description: 'Test description',
           price: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.05'
           },
           category: 'Test category',
@@ -278,7 +278,7 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.description, listingData.data.description)
       assert.strictEqual(listing.price.amount, listingData.data.price.amount)
       assert.strictEqual(
-        listing.price.currency,
+        listing.price.currency.id,
         listingData.data.price.currency
       )
       assert.strictEqual(listing.price.amount, listingData.data.price.amount)

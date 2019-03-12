@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import get from 'lodash/get'
 import { Button } from '@blueprintjs/core'
 import { DateInput } from '@blueprintjs/datetime'
 
@@ -8,11 +9,13 @@ import {
   FormGroup,
   InputGroup,
   HTMLSelect,
-  Tag
+  Tag,
+  ControlGroup
 } from '@blueprintjs/core'
 
 import rnd from 'utils/rnd'
 import withAccounts from 'hoc/withAccounts'
+import withCurrencies from 'hoc/withCurrencies'
 import { MakeOfferMutation } from 'queries/Mutations'
 import ErrorCallout from 'components/ErrorCallout'
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -37,7 +40,7 @@ class MakeOffer extends Component {
       commission: '5',
       value: '0.1',
       quantity: 1,
-      currency: ZeroAddress,
+      currency: get(props, 'listing.acceptedTokens.0.id', 'token-ETH'),
       arbitrator: arbitrator ? arbitrator.id : '',
       from: buyer ? buyer.id : ''
     }
@@ -57,6 +60,14 @@ class MakeOffer extends Component {
       }))
     affiliates.push({ label: 'None', value: ZeroAddress })
 
+    const acceptedTokens = this.props.listing.acceptedTokens || []
+    const currencyOpts = this.props.currencies
+      .filter(currency => acceptedTokens.some(t => t.id === currency.id))
+      .map(currency => ({
+        label: currency.code,
+        value: currency.id
+      }))
+
     return (
       <Mutation
         mutation={MakeOfferMutation}
@@ -74,10 +85,14 @@ class MakeOffer extends Component {
               <div style={{ display: 'flex' }}>
                 <div style={{ flex: 1, marginRight: 20 }}>
                   <FormGroup label="Amount">
-                    <InputGroup
-                      {...input('value')}
-                      rightElement={<Tag minimal={true}>ETH</Tag>}
-                    />
+                    <ControlGroup fill={true}>
+                      <InputGroup {...input('value')} />
+                      <HTMLSelect
+                        style={{ minWidth: 65 }}
+                        {...input('currency')}
+                        options={currencyOpts}
+                      />
+                    </ControlGroup>
                   </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
@@ -85,7 +100,7 @@ class MakeOffer extends Component {
                     <InputGroup {...input('quantity')} />
                   </FormGroup>
                 </div>
-                <div style={{ flex: 1, marginRight: 20 }}>
+                <div style={{ flex: 1 }}>
                   <FormGroup label="Finalizes">
                     <DateInput
                       value={this.state.finalizes}
@@ -99,17 +114,6 @@ class MakeOffer extends Component {
                         value: this.state.finalizes,
                         onChange: finalizes => this.setState({ finalizes })
                       }}
-                    />
-                  </FormGroup>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <FormGroup label="Arbitrator">
-                    <HTMLSelect
-                      fill={true}
-                      {...input('arbitrator')}
-                      options={[
-                        { label: 'Origin', value: web3.eth.defaultAccount }
-                      ]}
                     />
                   </FormGroup>
                 </div>
@@ -135,6 +139,17 @@ class MakeOffer extends Component {
                       fill={true}
                       {...input('affiliate')}
                       options={affiliates}
+                    />
+                  </FormGroup>
+                </div>
+                <div style={{ flex: 1, marginRight: 20 }}>
+                  <FormGroup label="Arbitrator">
+                    <HTMLSelect
+                      fill={true}
+                      {...input('arbitrator')}
+                      options={[
+                        { label: 'Origin', value: web3.eth.defaultAccount }
+                      ]}
                     />
                   </FormGroup>
                 </div>
@@ -186,7 +201,7 @@ class MakeOffer extends Component {
       affiliate,
       commission,
       value: this.state.value,
-      currency: ZeroAddress,
+      currency: this.state.currency,
       arbitrator: this.state.arbitrator,
       quantity: Number(this.state.quantity)
     }
@@ -197,4 +212,4 @@ class MakeOffer extends Component {
   }
 }
 
-export default withAccounts(MakeOffer, 'marketplace')
+export default withCurrencies(withAccounts(MakeOffer, 'marketplace'))

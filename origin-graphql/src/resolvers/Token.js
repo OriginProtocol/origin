@@ -1,6 +1,10 @@
+import Currencies from '../constants/Currencies'
+
 export default {
   id: contract => contract.id,
-  address: contract => contract.id,
+  address: token => {
+    return token.id
+  },
   name: async token => {
     if (token.name) return token.name
     try {
@@ -9,8 +13,11 @@ export default {
       return null
     }
   },
-  symbol: async token => {
-    if (token.symbol) return token.symbol
+  code: async token => {
+    if (Currencies[token.id]) {
+      return Currencies[token.id].code
+    }
+    if (token.code) return token.code
     try {
       return await token.contract.methods.symbol().call()
     } catch (e) {
@@ -29,7 +36,7 @@ export default {
     if (!token.contract) return null
     return await token.contract.methods.totalSupply().call()
   },
-  exchangeRate: async (token, args) => {
+  priceInUSD: async (token, args) => {
     const currency = args.currency || 'USD'
     if (currency === 'USD') {
       return 200

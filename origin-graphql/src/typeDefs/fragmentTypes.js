@@ -34,6 +34,30 @@ const introspectionQueryResultData = {
             name: 'AnnouncementListing'
           }
         ]
+      },
+      {
+        kind: 'UNION',
+        name: 'CurrencyResult',
+        possibleTypes: [
+          {
+            name: 'Token'
+          },
+          {
+            name: 'FiatCurrency'
+          }
+        ]
+      },
+      {
+        kind: 'INTERFACE',
+        name: 'Currency',
+        possibleTypes: [
+          {
+            name: 'Token'
+          },
+          {
+            name: 'FiatCurrency'
+          }
+        ]
       }
     ]
   }

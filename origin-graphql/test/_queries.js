@@ -85,7 +85,11 @@ const GetListing = gql`
           hidden
           price {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
           media {
             url
@@ -104,7 +108,11 @@ const GetListing = gql`
         ... on FractionalListing {
           weekendPrice {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
           booked
           customPricing

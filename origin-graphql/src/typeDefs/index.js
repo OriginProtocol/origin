@@ -10,7 +10,7 @@ import WalletLinker from './WalletLinker'
 import Currency from './Currency'
 
 export default [
-  ...Object.values(Common),
+  Common,
   Web3,
   Marketplace,
   Identity,

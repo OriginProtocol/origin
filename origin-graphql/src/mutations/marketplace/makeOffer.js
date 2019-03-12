@@ -4,6 +4,7 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
+import Currencies from '../../constants/Currencies'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -39,6 +40,18 @@ async function makeOffer(_, data) {
   )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
   const arbitrator = data.arbitrator || contracts.config.arbitrator
+  const currency = Currencies[data.currency]
+
+  let currencyAddress = currency.address
+  if (!currencyAddress) {
+    const contractToken = contracts.tokens.find(t => t.symbol === currency.code)
+    if (contractToken) {
+      currencyAddress = contractToken.id
+    }
+  }
+  if (!currencyAddress) {
+    throw new Error(`Could not find token address for ${data.currency}`)
+  }
 
   const { listingId } = parseId(data.listingID)
   const args = [
@@ -48,7 +61,7 @@ async function makeOffer(_, data) {
     affiliate,
     commission,
     value,
-    data.currency || ZeroAddress,
+    currencyAddress || ZeroAddress,
     arbitrator
   ]
   if (data.withdraw) {
@@ -56,10 +69,12 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
+  console.log(args)
+
   const tx = marketplace.methods.makeOffer(...args).send({
-    gas: cost.makeOffer,
+    gas: 400000,
     from: buyer,
-    value
+    value: currencyAddress === ZeroAddress ? value : 0
   })
   return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }

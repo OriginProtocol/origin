@@ -87,6 +87,7 @@ class OriginEventSource {
         'description',
         'currencyId',
         'price',
+        'acceptedTokens',
         'category',
         'subCategory',
         'media',
@@ -114,8 +115,11 @@ class OriginEventSource {
           const isWeekend = _get(rawData, 'availability.3.6.0') === 'x-price'
           const weekendPrice = _get(rawData, 'availability.3.6.3')
           if (isWeekly && isWeekend) {
-            data.price = { amount: weekdayPrice, currency: 'ETH' }
-            data.weekendPrice = { amount: weekendPrice, currency: 'ETH' }
+            data.price = { amount: weekdayPrice, currency: { id: 'token-ETH' } }
+            data.weekendPrice = {
+              amount: weekendPrice,
+              currency: { id: 'token-ETH' }
+            }
           }
         } catch (e) {
           /* Ignore */
@@ -154,6 +158,13 @@ class OriginEventSource {
           validationError: 'No IPFS data'
         }
       }
+    }
+
+    if (data.price) {
+      let currency = data.price.currency
+      if (currency === 'ETH') currency = 'token-ETH'
+      if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
+      data.price.currency = { id: currency }
     }
 
     if (data.category) {
@@ -203,6 +214,7 @@ class OriginEventSource {
         blockNumber ? `-${blockNumber}` : ''
       }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
+      acceptedTokens: (data.acceptedTokens || []).map(id => ({ id })),
       deposit: listing.deposit,
       arbitrator: listing.depositManager
         ? { id: listing.depositManager }
@@ -217,7 +229,6 @@ class OriginEventSource {
     })
 
     this.listingCache[cacheKey] = listingWithOffers
-
     return this.listingCache[cacheKey]
   }
 

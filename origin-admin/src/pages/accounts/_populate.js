@@ -84,6 +84,20 @@ export default async function populate(NodeAccount, gqlClient) {
   console.log('Deployed token')
 
   hash = (await gqlClient.mutate({
+    mutation: DeployTokenMutation,
+    variables: {
+      type: 'Standard',
+      name: 'Dai Stablecoin',
+      symbol: 'DAI',
+      decimals: '18',
+      supply: '1000000000',
+      from: Admin
+    }
+  })).data.deployToken.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Deployed DAI stablecoin')
+
+  hash = (await gqlClient.mutate({
     mutation: DeployMarketplaceMutation,
     variables: { token: OGN, version: '001', autoWhitelist: true, from: Admin }
   })).data.deployMarketplace.id
@@ -175,10 +189,8 @@ export default async function populate(NodeAccount, gqlClient) {
         data: {
           title: listing.title,
           description: listing.description,
-          price: {
-            currency: '0x0000000000000000000000000000000000000000',
-            amount: listing.price.amount
-          },
+          price: listing.price,
+          acceptedTokens: listing.acceptedTokens,
           category: listing.category,
           subCategory: listing.subCategory,
           media: listing.media,

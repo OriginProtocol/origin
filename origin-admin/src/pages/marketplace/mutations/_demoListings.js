@@ -11,7 +11,7 @@ const HawaiiHouse = {
     "Built on the slopes of Hualalai Mountain in Kailua, Hawaii, the Mamalahoa Estate knows how to make a first impression. You enter the property through a grove of citrus and macadamia trees. A floating walkway takes you across a koi pond, surrounded by lush greenery and a waterfall. Once inside, the 5,391-square-foot home is comprised of a master and two guest suites, each with a private staircase leading down to the garden courtyard. A chef's kitchen with koa cabinetry looks onto a double-height living area. Flanked by sliding doors, the room opens to a veranda that overlooks two swimming pools and the Kona coastline. Consisting of 90 acres, the grounds also feature a driving range, tennis court, bocce courts, and a three-car garage.",
   unitsTotal: 1,
   price: {
-    currency: 'ETH',
+    currency: 'token-ETH',
     amount: '8.5'
   },
   commission: {
@@ -55,7 +55,7 @@ const LakeHouse = {
     'Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.',
   unitsTotal: 1,
   price: {
-    currency: 'ETH',
+    currency: 'token-ETH',
     amount: '1.5'
   },
   commission: {
@@ -99,7 +99,7 @@ const Car = {
     "Introduced in 1971, the International Scout II rode on a stretched-wheelbase version of the rugged Scout chassis as a competitor to trucks like the larger Chevrolet Blazer. The highly customizable Scout was popular for work and racing, taking home a class win in the 1977 Baja 1000. This restored beautifully restored 1977 Scout II's customizations run more than skin deep, with a 6.0-liter GM engine and transmission to go along with the wheels and suspension lift.",
   unitsTotal: 1,
   price: {
-    currency: 'ETH',
+    currency: 'token-ETH',
     amount: '0.6'
   },
   commission: {
@@ -139,14 +139,15 @@ const TaylorSwiftTickets = {
     "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
   unitsTotal: 10,
   price: {
-    currency: 'ETH',
-    amount: '0.3'
-  },
-  commission: {
-    currency: 'OGN',
+    currency: 'fiat-USD',
     amount: '10'
   },
-  commissionPerUnit: '2',
+  acceptedTokens: ['token-DAI', 'token-ETH'],
+  commission: {
+    currency: 'OGN',
+    amount: '0'
+  },
+  commissionPerUnit: '0',
   media: [
     {
       contentType: 'image/jpeg',
@@ -231,4 +232,37 @@ const ZincHouse = {
   ]
 }
 
-export default [HawaiiHouse, LakeHouse, ZincHouse, Car, TaylorSwiftTickets]
+const Bike = {
+  schemaId: 'https://schema.originprotocol.com/listing_1.0.0.json',
+  listingType: 'unit',
+  category: 'schema.forSale',
+  subCategory: 'schema.householdItems',
+  language: 'en-US',
+  title: 'Bike',
+  description: 'A nice red bike',
+  unitsTotal: 1,
+  price: {
+    currency: 'fiat-USD',
+    amount: '15'
+  },
+  acceptedTokens: ['token-ETH', 'token-DAI'],
+  commission: {
+    currency: 'OGN',
+    amount: '0'
+  },
+  media: [
+    {
+      contentType: 'image/jpeg',
+      url: 'ipfs://QmQyKBQtqH5yDd4nrksUANyrBDFJdcF8TdAcaY6cNnSNu1'
+    }
+  ]
+}
+
+export default [
+  HawaiiHouse,
+  LakeHouse,
+  ZincHouse,
+  Car,
+  TaylorSwiftTickets,
+  Bike
+]
