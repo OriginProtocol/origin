@@ -132,6 +132,14 @@ const resolvers = {
       return true
     },
     async enroll(_, args) {
+      //TODO: check country eligibility here also 
+      // const locationInfo = getLocationInfo(context.countryCode)
+      // if (locationInfo.isForbidden) {
+      //   return {
+      //     error: `Users from ${locationInfo.countryName} are not eligible for growth campaign`
+      //   }
+      // }
+
       try {
         const authToken = await authenticateEnrollment(
           args.accountId,
