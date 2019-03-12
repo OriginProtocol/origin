@@ -58,7 +58,7 @@ module.exports =
   }
 
   type Invite {
-    id: ID!
+    id: ID
     status: GrowthInviteStatus!
     walletAddress: ID!
     # email or firstName + lastName of the contact

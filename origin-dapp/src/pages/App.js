@@ -25,7 +25,6 @@ import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
-import AccountInviteLinker from './growth/AccountInviteLinker'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 
@@ -108,7 +107,6 @@ class App extends Component {
           </Switch>
         </main>
         <TranslationModal locale={this.props.locale} />
-        {enableGrowth && <AccountInviteLinker />}
         <Footer
           locale={this.props.locale}
           onLocale={this.props.onLocale}

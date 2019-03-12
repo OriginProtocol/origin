@@ -26,10 +26,9 @@ class GrowthInvite {
     const referrals = db.GrowthReferall.findAll({
       where: { referrerEthAddress: referrer }
     })
-    const allReferees = referrals.map(r => r.refereeEthAddress)
 
     // Filter out referrals we are supposed to ignore.
-    const pendingReferees = allReferees.filter(r => !ignore.includes(r))
+    const pendingReferees = referrals.filter(r => !ignore.includes(r.refereeEthAddress))
 
     // Load prior campaigns and filter out referrals completed during those.
     const pastCampaigns = GrowthCampaign.getPast(referrer)
@@ -44,12 +43,13 @@ class GrowthInvite {
         .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
         .map(r => r.refereeEthAddress)
       // Filter out those completed referrals from our pendingReferees list.
-      pendingReferees.filter(r => !referees.includes(r))
+      pendingReferees.filter(r => !referees.includes(r.refereeEthAddress))
     }
 
     return pendingReferees.map(r => {
       return {
-        refereeEthAddress: r,
+        id: r.id,
+        refereeEthAddress: r.refereeEthAddress,
         value: rewardValue
       }
     })

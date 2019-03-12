@@ -192,7 +192,7 @@ export default {
                 id
                 status
                 walletAddress
-                contactName
+                contact
                 reward {
                   amount
                   currency
