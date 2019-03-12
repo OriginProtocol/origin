@@ -42,50 +42,54 @@ const Finished = ({ listing }) => {
 export default Finished
 
 require('react-styl')(`
-  .onboard
-    .finished
+  .onboard .finished
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    padding-top: 20rem
+    background: url(images/congratulations-icon.svg) no-repeat center top
+    background-size: 18rem
+    .help
+      max-width: 32rem
+    .lists
       display: flex
-      flex-direction: column
-      align-items: center
-      text-align: center
-      padding-top: 20rem
-      background: url(images/congratulations-icon.svg) no-repeat center top
-      background-size: 18rem
-      .help
-        max-width: 32rem
-      .lists
-        display: flex
-        flex-wrap: wrap
-        justify-content: center
-        padding: 1rem 0
-        max-width: 800px
-        width: 100%
-      .list-box
-        font-size: 18px
-        min-width: 300px
-        flex: 1
-        border: solid 1px var(--light)
-        border-radius: 5px
-        text-align: left
-        padding: 1rem 1.5rem
-        margin: 1rem
-        ul
-          margin-top: 1rem
-          li
-            margin-bottom: 0.5rem
-            padding-left: 3rem
-          li:before
-            display: inline-block
-            vertical-align: -0.3rem
-            margin-right: 1rem
-            content: ""
-            width: 1.5rem
-            height: 1.5rem
-            background: var(--light)
-            border-radius: 1rem
-            margin-left: -2.5rem
-        &.completed ul li:before
-          background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
-          background-size: 60%
+      flex-wrap: wrap
+      justify-content: center
+      padding: 1rem 0
+      max-width: 800px
+      width: 100%
+    .list-box
+      font-size: 18px
+      min-width: 300px
+      flex: 1
+      border: solid 1px var(--light)
+      border-radius: 5px
+      text-align: left
+      padding: 1rem 1.5rem
+      margin: 1rem
+      ul
+        margin-top: 1rem
+        li
+          margin-bottom: 0.5rem
+          padding-left: 3rem
+        li:before
+          display: inline-block
+          vertical-align: -0.3rem
+          margin-right: 1rem
+          content: ""
+          width: 1.5rem
+          height: 1.5rem
+          background: var(--light)
+          border-radius: 1rem
+          margin-left: -2.5rem
+      &.completed ul li:before
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
+        background-size: 60%
+
+  @media (max-width: 767.98px)
+    .onboard .finished
+      padding-top: 10rem
+      background-size: 10rem
 
 `)

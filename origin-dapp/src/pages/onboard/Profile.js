@@ -408,4 +408,10 @@ require('react-styl')(`
         border-radius: 2rem;
         margin-left: auto;
         background-size: 59%;
+
+  @media (max-width: 767.98px)
+    .onboard .onboard-box.profile
+      > form .image-cropper
+        max-width: 6rem
+
 `)
