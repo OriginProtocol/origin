@@ -50,12 +50,14 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
+    const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
+    const welcomeUrl = `${dappUrl}?inviteCode=${code}`
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
       subject: `${contactName} invited you to join Origin`,
-      text: `Check out the Origin DApp at https://dapp.originprotocol.com/invite/${code}`,
-      html: `Check out the <a href="https://dapp.originprotocol.com/invite/${code}">Origin Protocol DApp</a>`
+      text: `Check out the Origin DApp at ${welcomeUrl}`,
+      html: `Check out the <a href="${welcomeUrl}">Origin Protocol DApp</a>`
     }
     try {
       await sendgridMail.send(email)
