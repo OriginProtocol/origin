@@ -44,7 +44,7 @@ steps:
         path: /root/.ssh
 
   - id: 'Install gems for Jekyll and build docs'
-    name: 'gcr.io/origin-214503/jekyll:test'
+    name: 'gcr.io/origin-214503/jekyll'
     entrypoint: 'sh'
     args:
       - '-c'
