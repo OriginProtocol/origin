@@ -114,7 +114,8 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      date: new Date()
     }
 
     // Identity test fixtures.
@@ -145,7 +146,8 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      date: new Date()
     }
   })
 
