@@ -2,8 +2,8 @@
 # Builds and pushes documentation to the gh-pages branch
 
 steps:
-  # Decrypt the file containing the SSH key for GitHub
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - id: 'Decrypt GitHub credentials'
+    name: 'gcr.io/cloud-builders/gcloud'
     args:
       - kms
       - decrypt
@@ -16,63 +16,53 @@ steps:
       - name: 'ssh'
         path: /root/.ssh
 
-  # Decrypt the file containing the SSH key for GitHub
-  - name: 'launcher.gcr.io/google/ubuntu16_04'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        apt-get -y update && apt-get -y install ruby-full make gcc g++ zlib1g zlib1g-dev git
-        gem install bundler
-
-        # Create separate git worktree for the build folder
-        git worktree add -f /root/build gh-pages
-
-        # Build docs
-        cd origin-docs
-        bundle install
-        bundle exec jekyll build
-        cp CNAME _site/CNAME
-        rm _site/cloudbuild.yaml
-        mv _site /root/build
-    volumes:
-      - name: 'build'
-        path: /root/build
-
-  # Set up git with key and domain
-  - name: 'gcr.io/cloud-builders/git'
+  - id: 'Configure git for GitHub'
+    name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
         chmod 600 /root/.ssh/id_rsa
+
+        # Add github.com to known hosts to prevent failure
         ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
+        # Add key to github.com config
         cat <<EOF >> /root/.ssh/config
         Hostname github.com
         IdentityFile /root/.ssh/id_rsa
         EOF
+
+        # Configure git
+        git config --global user.name "OriginCI"
+        git config --global user.email "support@originprotocol.com"
+
+        # Create separate git worktree for the docs build folder
+        git worktree add -f _site gh-pages
     volumes:
       - name: 'ssh'
         path: /root/.ssh
 
-  # Commit to gh-pages branch
-  - name: 'gcr.io/cloud-builders/git'
+  - id: 'Install gems for Jekyll and build docs'
+    name: 'gcr.io/origin-214503/jekyll:test'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
-        git config --global user.name "OriginCI"
-        git config --global user.email "support@originprotocol.com"
-        git remote add upstream git@github.com:tomlinton/origin.git
+        cd origin-docs
+        bundle install
+        bundle exec jekyll build
 
-        git remote -v
-
-        cd /root/build
-        git add --all
+  - id: 'Push to GitHub'
+    name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd origin-docs/_site
+        git add .
         git commit -m "Docs build from $(git rev-parse --abbrev-ref HEAD) $(git log '--format=format:%H' -1)"
-        git push upstream gh-pages
+        git push
     volumes:
       - name: 'ssh'
         path: /root/.ssh
-      - name: 'build'
-        path: /root/build
