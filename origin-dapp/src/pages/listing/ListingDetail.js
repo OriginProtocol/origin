@@ -128,6 +128,9 @@ class ListingDetail extends Component {
         {!isFractionalHourly ? null : (
           <>
             <hr />
+            <div>
+              <div>Time Zone: {listing.timeZone}</div>
+            </div>
             <WeekCalendar
               interactive={!isOwnerViewing}
               small={true}

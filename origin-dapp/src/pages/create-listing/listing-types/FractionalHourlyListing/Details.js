@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import omit from 'lodash/omit'
 
+import IannaTimeZones from 'origin-graphql/src/constants/IannaTimeZones'
+
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
@@ -14,6 +16,7 @@ class Details extends Component {
   constructor(props) {
     super(props)
     if (!props.listing.timeZone) {
+      // Default to current timeZone if none is set
       props.listing.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     }
     this.state = omit(props.listing, 'valid')
@@ -73,7 +76,14 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label className="mb-0">Time Zone</label>
-                  <input {...input('timeZone')} />
+                  <select {...input('timeZone')}>
+                    <option value="">Select</option>
+                    {IannaTimeZones.map((id) => (
+                      <option key={id} value={id}>
+                        {id}
+                      </option>
+                    ))}
+                  </select>
                   {Feedback('timeZone')}
                 </div>
 
