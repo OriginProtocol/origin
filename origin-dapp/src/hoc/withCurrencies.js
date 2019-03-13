@@ -11,6 +11,7 @@ const query = gql`
         id
         name
         code
+        priceInUSD
       }
       ... on Token {
         decimals

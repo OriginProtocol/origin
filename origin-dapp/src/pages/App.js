@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import Store from 'utils/store'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
@@ -27,9 +28,12 @@ import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import CurrencyContext from 'constants/CurrencyContext'
+
+const store = Store('localStorage')
 
 class App extends Component {
-  state = { hasError: false }
+  state = { hasError: false, currency: store.get('currency', 'fiat-USD') }
 
   componentDidMount() {
     if (window.ethereum) {
@@ -69,7 +73,7 @@ class App extends Component {
     const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
-      <>
+      <CurrencyContext.Provider value={this.state.currency}>
         <BetaBanner />
         {shouldRenderNavbar && <Nav />}
         <main>
@@ -111,8 +115,12 @@ class App extends Component {
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
+          currency={this.state.currency}
+          onCurrency={currency => {
+            this.setState({ currency }, () => store.set('currency', currency))
+          }}
         />
-      </>
+      </CurrencyContext.Provider>
     )
   }
 }

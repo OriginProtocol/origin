@@ -1,18 +1,34 @@
 import React from 'react'
+import get from 'lodash/get'
 
 import CoinPrice from 'components/CoinPrice'
+import Price from 'components/Price2'
 
-const PaymentOptions = ({ acceptedTokens, value, onChange }) => {
+const PaymentOptions = ({ acceptedTokens, value, onChange, price, tokens }) => {
   const daiActive = value === 'token-DAI' ? ' active' : ''
   const ethActive = value === 'token-ETH' ? ' active' : ''
   const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
   const daiDisabled = acceptsDai ? '' : ' disabled'
-  const acceptsEth = acceptedTokens.find(t => t.id === 'token-ETH')
+  const acceptsEth = !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
   const ethDisabled = acceptsEth ? '' : ' disabled'
-  const shouldSwap = true
 
-  const ethPrice = '0.73823 ETH'
-  const daiPrice = '100.00 DAI'
+  let shouldSwap = false
+  let needsAllowance = false
+  const daiBalance = get(tokens, 'token-DAI.currency.balance')
+  const daiAllowance = get(tokens, 'token-DAI.currency.allowance')
+
+  if (value === 'token-DAI' && daiBalance) {
+    const availableBN = Number(web3.utils.fromWei(daiBalance, 'ether'))
+    const requiredBN = Number(price.amount)
+    shouldSwap = availableBN < requiredBN
+
+    const availableAllowance = Number(web3.utils.fromWei(daiAllowance, 'ether'))
+    const requiredAllowance = Number(price.amount)
+    needsAllowance = availableAllowance < requiredAllowance
+  }
+
+  const ethPrice = <Price price={price} target="token-ETH" />
+  const daiPrice = <Price price={price} target="token-DAI" />
 
   return (
     <div className="payment-options">
@@ -50,11 +66,13 @@ const PaymentOptions = ({ acceptedTokens, value, onChange }) => {
           <>
             Your DAI will be transferred to an escrow contract and held until
             the sale is completed.
+            {needsAllowance ? ' (needs allowance)' : null}
           </>
         ) : (
           <>
             DAI amount will be converted from ETH (ETH value is an
             approximation)
+            {needsAllowance ? ' (needs allowance)' : null}
           </>
         )}
       </div>

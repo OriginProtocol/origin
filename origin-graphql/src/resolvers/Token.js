@@ -1,4 +1,11 @@
 import Currencies from '../constants/Currencies'
+import TokenContract from 'origin-contracts/build/contracts/TestToken'
+import contracts from '../contracts'
+
+function tokenContract(id) {
+  const found = contracts.tokens.find(t => t.symbol === id)
+  return found ? found.contract : null
+}
 
 export default {
   id: contract => contract.id,
@@ -33,15 +40,36 @@ export default {
     }
   },
   totalSupply: async token => {
-    if (!token.contract) return null
-    return await token.contract.methods.totalSupply().call()
+    const contract = tokenContract(token.code)
+    if (!contract) return ''
+    return await contract.methods.totalSupply().call()
   },
   priceInUSD: async (token, args) => {
+    if (Currencies[token.id]) {
+      return Currencies[token.id].priceInUSD
+    }
     const currency = args.currency || 'USD'
     if (currency === 'USD') {
       return 200
     } else {
       return 200
     }
+  },
+  balance: async (token, { address }) => {
+    if (token.code === 'ETH') {
+      return await contracts.web3.eth.getBalance(address)
+    }
+    const contract = tokenContract(token.code)
+    if (!contract) return null
+    return await contract.methods.balanceOf(address).call()
+  },
+  allowance: async (token, { address, target }) => {
+    const contract = tokenContract(token.code)
+    if (!contract) return null
+    if (!target) return null
+    if (target === 'marketplace') {
+      target = contracts.marketplace.options.address
+    }
+    return await contract.methods.allowance(address, target).call()
   }
 }

@@ -2,11 +2,18 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import LocaleDropdown from 'components/LocaleDropdown'
+import CurrencyDropdown from 'components/CurrencyDropdown'
 
 class Footer extends Component {
   state = {}
   render() {
-    const { locale, onLocale, creatorConfig } = this.props
+    const {
+      locale,
+      onLocale,
+      creatorConfig,
+      currency = 'USD',
+      onCurrency
+    } = this.props
     return (
       <footer>
         <div className="container">
@@ -33,6 +40,11 @@ class Footer extends Component {
           </div>
           <div className="links">
             <LocaleDropdown locale={locale} onLocale={onLocale} dropup={true} />
+            <CurrencyDropdown
+              value={currency}
+              onChange={onCurrency}
+              dropup={true}
+            />
 
             <a href="https://www.originprotocol.com/">
               <fbt desc="footer.websiteLink">Learn More About Origin</fbt>

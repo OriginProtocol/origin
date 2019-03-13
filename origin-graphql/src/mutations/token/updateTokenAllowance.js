@@ -2,12 +2,13 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 
 async function updateTokenAllowance(_, { token, from, to, value }) {
-  if (!contracts[token]) {
+  const tokenContract = contracts.tokens.find(t => t.id === token)
+  if (!tokenContract) {
     throw new Error('Could not find contract to update allowance')
   }
   await checkMetaMask(from)
   value = contracts.web3.utils.toWei(value, 'ether')
-  const tx = contracts[token].methods.approve(to, value).send({
+  const tx = tokenContract.contractExec.methods.approve(to, value).send({
     gas: 4612388,
     from
   })

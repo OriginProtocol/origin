@@ -108,7 +108,7 @@ class Listings extends Component {
                   hasMore={hasNextPage}
                   onBottom={() => {
                     if (!loading) {
-                      nextPage(fetchMore, { ...vars, after })
+                      // nextPage(fetchMore, { ...vars, after })
                     }
                   }}
                 >

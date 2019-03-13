@@ -136,7 +136,7 @@ class ListingDetail extends Component {
       return null
     } else if (listing.status === 'sold') {
       return <Sold />
-    } else if (isPendingBuyer) {
+    } else if (isPendingBuyer && !listing.multiUnit) {
       return <OfferMade />
     } else if (listing.status === 'pending') {
       return <Pending />
@@ -149,7 +149,7 @@ class ListingDetail extends Component {
         />
       )
     } else if (listing.multiUnit) {
-      return <MultiUnit {...this.props} />
+      return <MultiUnit {...this.props} isPendingBuyer={isPendingBuyer} />
     }
     return <SingleUnit {...this.props} />
   }

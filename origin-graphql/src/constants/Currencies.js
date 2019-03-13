@@ -10,7 +10,7 @@ export default {
     id: 'fiat-GBP',
     name: 'British Pound',
     code: 'GBP',
-    priceInUSD: 0.77,
+    priceInUSD: 1.29,
     countryCodes: ['GB']
   },
   'fiat-EUR': {
@@ -25,6 +25,7 @@ export default {
     address: '0x0000000000000000000000000000000000000000',
     code: 'ETH',
     name: 'Ether',
+    priceInUSD: 135,
     decimals: 18
   },
   'token-DAI': {

@@ -130,5 +130,11 @@ export default {
   walletLinker: () => ({}),
 
   currency: (_, args) => Currencies[args.id],
-  currencies: () => Object.keys(Currencies).map(id => Currencies[id])
+  currencies: (_, args) => {
+    let currencies = Object.keys(Currencies)
+    if (args.tokens) {
+      currencies = currencies.filter(c => args.tokens.indexOf(c) >= 0)
+    }
+    return currencies.map(id => Currencies[id])
+  }
 }

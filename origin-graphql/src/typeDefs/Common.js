@@ -41,6 +41,12 @@ module.exports = `
 
     # Number of tokens in circulation
     totalSupply: String
+
+    # Balance of given address
+    balance(address: String!): String
+
+    # Allowance of given address
+    allowance(address: String!, target: String!): String
   }
 
   type FiatCurrency implements Currency {

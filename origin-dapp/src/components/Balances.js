@@ -24,13 +24,19 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
       </div>
-      <div className="account dai">
-        <div className="icon" />
-        <div className="balance">
-          <div className="coin dai">
-            <TokenBalance account={account} token="DAI" />
-            <span>DAI</span>
+      <div className="account dai justify-content-between">
+        <div className="d-flex">
+          <div className="icon" />
+          <div className="balance">
+            <div className="coin dai">
+              <TokenBalance account={account} token="DAI" />
+              <span>DAI</span>
+            </div>
           </div>
+        </div>
+        <div className="actions">
+          <button className="btn btn-outline-primary">Activate</button>
+          <button className="btn btn-outline-primary">Get</button>
         </div>
       </div>
       <div className="account ogn d-flex justify-content-between">
@@ -78,6 +84,28 @@ require('react-styl')(`
         background-image: url(images/ogn-icon.svg)
       &.dai .icon
         background-image: url(images/dai-icon.svg)
+      .actions
+        display: flex
+        flex-direction: row
+        .btn
+          margin-left: 0.5rem
+          height: 24px
+          padding: 0 0.25rem 0 0
+          border-radius: 1rem
+          font-weight: normal
+          font-size: 12px
+          display: flex
+          align-items: center
+          &::before
+            content: "";
+            background: url(images/growth/blue-add-icon.svg) no-repeat;
+            width: 1rem;
+            height: 1rem;
+            display: inline-block;
+            background-size: contain;
+            margin: 0 0.25rem;
+          &:hover::before
+            background-image: url(images/add-icon-white.svg)
       .balance
         font-weight: bold
         .coin
