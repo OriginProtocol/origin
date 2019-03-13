@@ -9,17 +9,18 @@ import Buy from './mutations/Buy'
 const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
   let startDateDisplay = 'Start',
     endDateDisplay = 'End',
+    startDate = null,
+    endDate = null,
     totalPrice,
     available = false,
     showUnavailable = false
 
   if (range) {
     const split = range.split('/')
-    const startDate = split[0],
-      endDate = split[1]
-    startDateDisplay = dayjs(startDate.format('ddd, MMM D h:00a')
-    endDateDisplay = dayjs(endDate).format('ddd, MMM D h:00a')
-
+    startDate = split[0]
+    endDate = split[1]
+    startDateDisplay = dayjs(startDate).format('MMM D h:00a')
+    endDateDisplay = dayjs(endDate).format('MMM D h:00a')
     const priceEstimate = availability.estimatePrice(range)
     available = priceEstimate.available
     if (available) {
@@ -42,15 +43,14 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
           tooltip="Scroll down for availability calendar"
           placement="top"
         >
-          <div>{checkInDisplay}</div>
+          <div>{startDateDisplay}</div>
         </Tooltip>
-      </div>
-      <div className="choose-dates form-control">
+        <div className="arr" />
         <Tooltip
           tooltip="Scroll down for availability calendar"
           placement="top"
         >
-          <div>{checkOutDisplay}</div>
+          <div>{endDateDisplay}</div>
         </Tooltip>
       </div>
       {!showUnavailable ? null : <div className="total">Unavailable</div>}
