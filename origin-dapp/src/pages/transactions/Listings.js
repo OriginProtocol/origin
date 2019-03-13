@@ -100,7 +100,8 @@ class Listings extends Component {
                                 {listing.title}
                               </Link>
                             </div>
-                            <div className="date">{`Listed on ${dayjs
+                            <div className="date">{listing.createdEvent &&
+                              `Listed on ${dayjs
                               .unix(listing.createdEvent.timestamp)
                               .format('MMMM D, YYYY')}`}</div>
                             <div className="price">
