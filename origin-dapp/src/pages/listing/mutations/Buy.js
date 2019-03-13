@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import { withRouter } from 'react-router-dom'
+import store from 'utils/store'
+const sessionStore = store('sessionStorage')
 
 import MakeOfferMutation from 'mutations/MakeOffer'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
@@ -13,6 +17,9 @@ import withWeb3 from 'hoc/withWeb3'
 class Buy extends Component {
   state = {}
   render() {
+    if (this.state.onboard) {
+      return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
+    }
     return (
       <>
         <Mutation
@@ -50,7 +57,13 @@ class Buy extends Component {
     if (this.props.disabled) {
       return
     }
-    if (this.props.cannotTransact) {
+
+    if (this.props.cannotTransact === 'no-wallet') {
+      const { pathname, search } = this.props.location
+      sessionStore.set('getStartedRedirect', { pathname, search })
+      this.setState({ onboard: true })
+      return
+    } else if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
         errorData: this.props.cannotTransactData
@@ -125,7 +138,7 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(Buy)))
+export default withWeb3(withWallet(withCanTransact(withRouter(Buy))))
 
 require('react-styl')(`
   .make-offer-modal

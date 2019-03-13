@@ -114,7 +114,8 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      date: new Date()
     }
 
     // Identity test fixtures.
@@ -132,7 +133,11 @@ describe('Listener Handlers', () => {
 
     this.identityLog = {
       address: this.seller,
-      decoded: { account: this.seller },
+      decoded: {
+        account: this.seller,
+        ipfsHash:
+          '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
+      },
       contractName: this.identityContractVersion.contractName,
       eventName: this.identityRule.eventName,
       contractVersionKey: this.identityContractVersion.versionKey,
@@ -141,7 +146,8 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       transactionHash: 'testTxnHash',
       transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      date: new Date()
     }
   })
 
@@ -223,6 +229,9 @@ describe('Listener Handlers', () => {
     // Check output.
     expect(result.user).to.be.an('object')
     expect(result.user.address).to.equal(this.seller)
+    expect(result.user.ipfsHash).to.equal(
+      'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
+    )
 
     // Check expected entry was added into user DB table.
     const user = await db.Identity.findAll({

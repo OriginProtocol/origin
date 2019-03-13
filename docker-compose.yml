@@ -1,3 +1,4 @@
+---
 version: "3"
 
 volumes:
@@ -15,10 +16,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: elasticsearch
-    build:
-      context: .
-      dockerfile: development/dockerfiles/elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
     ports:
       - "9200:9200"
     environment:
@@ -27,20 +25,19 @@ services:
     logging:
       driver: none
 
-  origin-dapp:
-    container_name: origin-dapp
+  origin-services:
+    container_name: origin-services
     image: origin
-    depends_on:
-      - origin-messaging
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes: &volumes
       # origin-contracts build directory, the DApp will run a contract deploy
       # and the contract address here, and other services will then parse these
       # build files to extract contract addresses
       - ./origin-contracts/build:/app/origin-contracts/build
-      # if new origin module is added the whole container does not need to be rebuilt
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
-      - ./origin-dapp/:/app/origin-dapp/
       - ./origin-services/:/app/origin-services/
       - ./origin-graphql/:/app/origin-graphql/
       - ./origin-eventsource/:/app/origin-eventsource/
@@ -56,10 +53,7 @@ services:
       - ./origin-growth/:/app/origin-growth/
       - ./origin-identity/:/app/origin-identity/
       - ./origin-token/:/app/origin-token/
-    # Required by the dapp translation plugin
-      - ./origin-dapp/translations:/app/origin-dapp/translations
-    # Exclude all node_modules
-      - /app/origin-dapp/node_modules/
+      # Exclude all node_modules
       - /app/origin-services/node_modules/
       - /app/origin-graphql/node_modules/
       - /app/origin-eventsource/node_modules/
@@ -75,35 +69,23 @@ services:
       - /app/origin-growth/node_modules/
       - /app/origin-token/node_modules/
       - /app/origin-identity/node_modules/
-    # IPFS data
+      # IPFS data
       - ipfs:/app/ipfs
     ports:
-      - "3000:3000"
-      - "8083:8083" # Webpack
-      - "8545:8545"
+      # IPFS ports are exposed here for convenience but IPFS should be
+      # interacted with via origin-ipfs-proxy
+      - "5002:5002"
       - "8080:8080"
+      - "8545:8545"
     environment:
-      - DEPLOY_CONTRACTS=true
       - DOCKER=true
-      - ENABLE_GROWTH=true
-    command:
-      # Waits for origin-messaging to start then uses a script to read the
-      # origin-messaging IPFS peer id and export the IPFS_SWARM variable
-      >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-messaging:9012 &&
-      . set-ipfs-swarm.sh /app/ipfs/config &&
-      npm run start --prefix origin-dapp"
+      - DEPLOY_CONTRACTS=true
+    command: npm run start --prefix origin-services
 
   origin-messaging:
     container_name: origin-messaging
     image: origin
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes: *volumes
-    environment:
-      - MESSAGING_NAMESPACE=dev
-      - IPFS_REPO_PATH=/app/ipfs
     ports:
       - "9012:9012"
       - "6647:6647"
@@ -116,8 +98,8 @@ services:
     ports:
       - "9999:9999"
     environment:
-      - IPFS_API_URL=http://origin-dapp:5002
-      - IPFS_GATEWAY_URL=http://origin-dapp:8080
+      - IPFS_API_URL=http://origin-services:5002
+      - IPFS_GATEWAY_URL=http://origin-services:8080
     command: npm run start --prefix origin-ipfs-proxy
 
   origin-event-listener:
@@ -128,22 +110,30 @@ services:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - BLOCK_EPOCH=
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - DISCORD_WEBHOOK=
+      - ELASTICSEARCH=true
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - EMAIL_WEBHOOK=
+      - ENVKEY=
+      - GCLOUD_PUBSUB_TOPIC=
+      - GCLOUD_PROJECT_ID=
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - ELASTICSEARCH=true
-      - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
-      - WEB3_URL=http://origin-dapp:8545
+      - TRAIL_BEHIND_BLOCKS=
+      - WEB3_URL=http://origin-services:8545
+      - WEBHOOK=
     depends_on:
       - postgres
       - elasticsearch
-      - origin-dapp
+      - origin-services
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 --
-      wait-for.sh -t 0 -q elasticsearch:9200 --
+      /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
+      wait-for.sh -t 0 -q origin-services:8080 --
       npm run migrate --prefix origin-discovery &&
       npm run migrate --prefix origin-growth &&
       npm run migrate --prefix origin-identity &&
@@ -154,13 +144,18 @@ services:
     image: origin
     volumes: *volumes
     environment:
+      # MetaMask account 4 (default local blockchain) aka accounts[3]
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
+      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://origin-ipfs-proxy:9999
-      - WEB3_URL=http://origin-dapp:8545
+      - NETWORK_ID=999
+      - WEB3_URL=http://origin-services:8545
+      - ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
@@ -168,7 +163,8 @@ services:
       - "4000:4000"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q origin-dapp:3000 &&
+      /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
+      node ./origin-discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix origin-discovery"
 
   origin-notifications:
@@ -193,11 +189,11 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ENVKEY=
     depends_on:
       - postgres
     ports:
       - "4001:4001"
-    #command: sleep infinity
     command: npm run start --prefix origin-growth
 
   origin-bridge:
@@ -206,6 +202,18 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - FACEBOOK_CLIENT_ID=
+      - FACEBOOK_CLIENT_SECRET=
+      # Sendgrid settings for email attestations
+      # sendgrid.com
+      - SENDGRID_FROM_EMAIL=
+      - SENDGRID_API_KEY=
+      # Twilio verify API key for phone attestations
+      # https://www.twilio.com/console/verify/applications
+      - TWILIO_VERIFY_API_KEY
+      - TWITTER_CONSUMER_KEY=
+      - TWITTER_CONSUMER_SECRET=
+      - ENVKEY=
     depends_on:
       - postgres
     ports:

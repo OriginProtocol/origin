@@ -298,6 +298,9 @@ class GrowthCampaigns extends Component {
                       query={allCampaignsQuery}
                       variables={vars}
                       notifyOnNetworkStatusChange={true}
+                      // do not cache, so user does not need to refresh page when an
+                      // action is completed
+                      fetchPolicy="network-only"
                     >
                       {({ error, data, networkStatus, loading }) => {
                         if (networkStatus === 1 || loading) {
