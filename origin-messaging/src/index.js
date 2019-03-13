@@ -9,7 +9,7 @@ import Web3 from 'web3'
 import db from './models'
 import logger from './logger'
 
-import { verifyNewMessageSignature } from './verify'
+import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
 
 import * as config from './config'
 
@@ -146,44 +146,49 @@ app.get('/conversations/:address', async (req, res) => {
 app.get('/messages/:conversationId', async (req, res) => {
   let { conversationId } = req.params
 
-  const messages = await db.Message.findAll({include:[{ model:db.Conversation, where:{ externalId:conversationId } }]})
+  const messages = await db.Message.findAll({include:[{ model:db.Conversation, where:{ externalId:conversationId } }], order:[['conversationIndex', 'ASC']]})
 
   if (!messages) {
     return res.status(204).end()
   }
 
   res.status(200).send(messages.map(m => { return {
-    index: m.converssationIndex,
+    conversationIndex: m.conversationIndex,
     address: m.ethAddress,
     content: m.data.content,
     ext: m.data.ext,
     signature: m.signature,
-    isKeys: m.isKeys
+    isKeys: m.isKeys,
+    timestamp: m.createdAt
   } } ))
 })
 
 app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
-  const { conversationId, messageIndex } = req.params
-  const { signature, content, address } = req.body
+  const { conversationId } = req.params
+  const conversationIndex = Number(req.params.conversationIndex)
+  const { signature, content } = req.body
+  const { address } = content
 
   const entry = await db.Registry.findOne({where:{ethAddress:address}})
 
-  if (!verifyNewMessageSignature(signature, converssationId, messageIndex, content, entry.data.address))
+  if (!verifyNewMessageSignature(signature, conversationId, conversationIndex, content, entry.data.address))
   {
     return res.status(401).send("Signature verification failed.")
   }
 
   const conv = await db.Conversation.findOne({ where:{ externalId: conversationId} })
 
+  let message
+  let conv_addresses
   if (!conv)
   {
-    const conversers = conversationId.split("-")
+    conv_addresses = conversationId.split("-")
     //let's create a conversation...
-    if (!conversers.includes(address))
+    if (!conv_addresses.includes(address))
     {
       return res.status(401).send("One of the conversers involved must initiate the conversation.")
     }
-    if (messageIndex != 0)
+    if (conversationIndex != 0)
     {
       return res.status(409).end()
     }
@@ -194,15 +199,16 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
     await db.sequelize.transaction( async (t) => {
       const conversation = await db.Conversation.create({externalId:conversationId, messageCount:1}, {transaction:t})
-      for (const converser of conversers) {
+      for (const converser of conv_addresses) {
         await db.Conversee.create({ conversationId: conversation.id, ethAddress:converser }, {transaction:t})
       }
-      return db.Message.create({ conversationId: conversation.id, conversationIndex:conversationIndex, 
+      message = await db.Message.create({ conversationId: conversation.id, conversationIndex, 
         ethAddress:address, data:{content}, signature, isKeys:true }, {transaction:t})
+      return message
     })
   } else {
     const conversees = await db.Conversee.findAll({ where:{ conversationId:conv.id } })
-    const conv_addresses = conversees.map( c => c.ethAddress )
+    conv_addresses = conversees.map( c => c.ethAddress )
 
     if ( !conv_addresses.includes(address) )
     {
@@ -211,22 +217,45 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
     //create a message that's the correct sequence
     await db.sequelize.transaction( async (t) => {
-      const conversation = await db.Conversation.findOne({ where:{ externalId:externalId }, transaction: t, lock: t.LOCK.UPDATE })
+      const conversation = await db.Conversation.findOne({ where:{ externalId:conversationId }, transaction: t, lock: t.LOCK.UPDATE })
       if (conversationIndex != conversation.messageCount) {
-        res.status(409).send("Address not part of current conversation.")
         return false
       }
-      await db.Message.create({ conversationId: conversation.id, conversationIndex:conversation.messageCount, 
-        address:ethAddress, data:{content}, signature, isKeys:(content.type == "keys") }, {transaction:t})
+      message = await db.Message.create({ conversationId: conversation.id, conversationIndex:conversation.messageCount, 
+        ethAddress:address, data:{content}, signature, isKeys:(content.type == "keys") }, {transaction:t})
       conversation.messageCount += 1
       return conversation.save({ transaction:t })
     } )
+    
   }
 
-  for (const notify_address of conv_addresses) {
-    await redis.publish(notify_address, JSON.stringify({type:content.type, address, conversationIndex, conversationId}))
+  if (message)
+  {
+    for (const notify_address of conv_addresses) {
+      await redis.publish(notify_address, JSON.stringify({content, timestamp:message.createdAt, conversationIndex, conversationId}))
+    }
+    if (config.LINKING_NOTIFY_ENDPOINT)
+    {
+      const recievers = conv_addresses.filter(a => a != address)
+      fetch(config.LINKING_NOTIFY_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          receivers,
+          token: config.LINKING_NOTIFY_TOKEN
+        })
+      })
+    }
+
+    return res.status(200).send({created:1})
   }
-  return res.status(200).send(1)
+  else
+  {
+    return res.status(400).send("cannot create message")
+  }
 })
 
 
@@ -242,8 +271,9 @@ app.ws('/message-events/:address', (ws, req) => {
   redis_sub.on('message', msg_handler)
   
   ws.on('close', () => {
+    console.log("closing ws:", address)
     redis_sub.quit()
-  }
+  })
 })
 
 app.listen(port, () => {

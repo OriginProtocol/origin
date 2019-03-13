@@ -161,7 +161,11 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    linkerWS: `ws://${LINKER_HOST}:3008`,
+    messaging: {
+      ipfsSwarm: process.env.IPFS_SWARM,
+      globalKeyServer: 'http://localhost:6647'
+    }
   },
   docker: {
     provider: `http://localhost:8545`,

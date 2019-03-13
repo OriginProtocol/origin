@@ -58,7 +58,8 @@ function verifyConversers(conversee, keysMap) {
 function verifyNewMessageSignature(signature, conversationId, conversationIndex, content, address) {
   const buffer = stringify({conversationId, conversationIndex, content})
   const recoveredAddress = web3.eth.accounts.recover(buffer, signature)
-  return recoveredAddress = address
+  console.log("recovered buffer:", buffer, " raddress:", recoveredAddress, " address:", address)
+  return recoveredAddress == address
 }
 
 
