@@ -35,13 +35,12 @@ class WeekCalendar extends Component {
       lastDay = weekStartDate.add(1, 'week'),
       hours = this.props.availability.getAvailability(
         weekStartDate.format('YYYY-MM-DDTHH:00:00'),
-        weekStartDate.add(27*7, 'hour').format('YYYY-MM-DDTHH:00:00')
+        weekStartDate.add(27 * 7, 'hour').format('YYYY-MM-DDTHH:00:00')
       )
 
     return (
       <div className={`weekCalendar${this.props.small ? ' calendar-sm' : ''}`}>
         <div className="week-chooser">
-
           <button
             type="button"
             className={`btn btn-outline-secondary prev${
@@ -51,7 +50,10 @@ class WeekCalendar extends Component {
               if (isBeginning) {
                 return
               }
-              this.setState({ weekStartDate: weekStartDate.add(-1, 'week'), ...resetDrag })
+              this.setState({
+                weekStartDate: weekStartDate.add(-1, 'week'),
+                ...resetDrag
+              })
               // if (month === 0) {
               //   this.setState({ month: 11, year: year - 1, ...resetDrag })
               // } else {
@@ -60,13 +62,18 @@ class WeekCalendar extends Component {
             }}
           />
           {weekStartDate.format('MMM ')}
-          {lastDay.month() != weekStartDate.month() ? lastDay.format('- MMM ') : ''}
+          {lastDay.month() != weekStartDate.month()
+            ? lastDay.format('- MMM ')
+            : ''}
           {weekStartDate.format('YYYY')}
           <button
             type="button"
             className="btn btn-outline-secondary next"
             onClick={() => {
-              this.setState({ weekStartDate: weekStartDate.add(+1, 'week'), ...resetDrag })
+              this.setState({
+                weekStartDate: weekStartDate.add(+1, 'week'),
+                ...resetDrag
+              })
 
               // if (month === 11) {
               //   this.setState({ month: 0, year: year + 1, ...resetDrag })
@@ -75,22 +82,26 @@ class WeekCalendar extends Component {
               // }
             }}
           />
-
         </div>
 
         <div className="day-header">
-            <div>
-              {/* Time column */}
-            </div>
+          <div>{/* Time column */}</div>
           {[...Array(7)].map((_, k) => (
             <div key={k}>
-              <div className="day-column-name">{weekStartDate.add(k, 'day').format('ddd')}</div>
-              <div className="day-column-number">{weekStartDate.add(k, 'day').format('D')}</div>
+              <div className="day-column-name">
+                {weekStartDate.add(k, 'day').format('ddd')}
+              </div>
+              <div className="day-column-number">
+                {weekStartDate.add(k, 'day').format('D')}
+              </div>
             </div>
           ))}
         </div>
 
-        <div className={`slots${this.state.dragging ? '' : ' inactive'}`} ref={this.scrollComponentRef}>
+        <div
+          className={`slots${this.state.dragging ? '' : ' inactive'}`}
+          ref={this.scrollComponentRef}
+        >
           {/* Time label column */}
           {[...Array(24)].map((_, k) => (
             <div key={k} className="time-column-label">
@@ -98,7 +109,7 @@ class WeekCalendar extends Component {
             </div>
           ))}
           {/* All selectable hours */}
-          {Array(7*24)
+          {Array(7 * 24)
             .fill(0)
             .map((v, idx) => this.renderHour(hours, idx))}
         </div>
@@ -126,8 +137,7 @@ class WeekCalendar extends Component {
         <div
           key={idx}
           className={`hour in-past${idx % 7 === 6 ? ' end-row' : ''}`}
-        >
-        </div>
+        />
       )
     }
 
@@ -165,8 +175,12 @@ class WeekCalendar extends Component {
 
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
-            let range = (dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') + '/' +
-              dayjs(hour.hour).add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss'))
+            let range =
+              dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') +
+              '/' +
+              dayjs(hour.hour)
+                .add(1, 'hour')
+                .format('YYYY-MM-DDTHH:mm:ss')
 
             this.props.onChange({ range })
           }
@@ -209,7 +223,7 @@ class WeekCalendar extends Component {
       unselected = true
     }
 
-  // TODO: (STAN) this seems to be based on days of week?? Ask Nick
+    // TODO: (STAN) this seems to be based on days of week?? Ask Nick
 
     if (!unselected && idx + 7 >= start && idx + 7 <= end) {
       cls += ' nbb'

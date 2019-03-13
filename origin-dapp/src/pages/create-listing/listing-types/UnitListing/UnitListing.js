@@ -1,11 +1,9 @@
-
 import React from 'react'
 
 import Steps from '../Steps'
 import Details from './Details'
 import Boost from './Boost'
 import Review from './Review'
-
 
 const UnitListing = props => (
   <Steps

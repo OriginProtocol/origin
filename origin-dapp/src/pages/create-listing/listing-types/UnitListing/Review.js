@@ -90,7 +90,6 @@ class Review extends Component {
           </div>
 
           <div className="actions">
-
             <Link className="btn btn-outline-primary" to={this.props.prev}>
               Back
             </Link>
@@ -125,6 +124,5 @@ class Review extends Component {
     )
   }
 }
-
 
 export default withTokenBalance(Review)

@@ -6,7 +6,6 @@ import Boost from './Boost'
 import Availability from './Availability'
 import Review from './Review'
 
-
 const FractionalHourlyListing = props => (
   <Steps
     {...props}

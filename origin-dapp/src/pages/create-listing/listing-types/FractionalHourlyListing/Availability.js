@@ -58,7 +58,7 @@ class Availability extends Component {
                 <WeekCalendar
                   range={this.state.range}
                   availability={this.state.calculator}
-                  onChange={state => {console.log('debugging here...');console.log(state); this.setState(state)}}
+                  onChange={state => this.setState(state)}
                   showBooked={true}
                 />
 
@@ -108,13 +108,33 @@ class Availability extends Component {
       <div className="availability-editor">
         <div className="form-group">
           <label>Start</label>
-          <input className="form-control" type="date" value={startDate} readOnly />
-          <input className="form-control" type="time" value={startTime} readOnly />
+          <input
+            className="form-control"
+            type="date"
+            value={startDate}
+            readOnly
+          />
+          <input
+            className="form-control"
+            type="time"
+            value={startTime}
+            readOnly
+          />
         </div>
         <div className="form-group">
           <label>End</label>
-          <input className="form-control" type="date" value={endDate} readOnly />
-          <input className="form-control" type="time" value={endTime} readOnly />
+          <input
+            className="form-control"
+            type="date"
+            value={endDate}
+            readOnly
+          />
+          <input
+            className="form-control"
+            type="time"
+            value={endTime}
+            readOnly
+          />
         </div>
         {/* <div className="form-group">
           <label>Availability</label>

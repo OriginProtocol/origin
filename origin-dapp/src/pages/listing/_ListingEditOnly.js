@@ -3,7 +3,12 @@ import React from 'react'
 import Link from 'components/Link'
 import Price from 'components/Price'
 
-const EditOnly = ({ listing, isAnnouncement, isFractional, isFractionalHourly }) => (
+const EditOnly = ({
+  listing,
+  isAnnouncement,
+  isFractional,
+  isFractionalHourly
+}) => (
   <div className="listing-buy">
     {isAnnouncement || isFractional ? null : (
       <div className="price">

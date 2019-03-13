@@ -22,7 +22,8 @@ class CreateListing extends Component {
     super(props)
     // If a listing is passed in (as when editing) use that, otherwise
     // fall back to anything in `store` (an unfinished listing creation)
-    const preexistingListingData = props.listing || store.get('create-listing') || {}
+    const preexistingListingData =
+      props.listing || store.get('create-listing') || {}
     this.state = {
       listing: {
         __typename: 'UnitListing', // Default

@@ -39,7 +39,9 @@ class Details extends Component {
           <div className="create-listing-step-2">
             <div className="wrap">
               <div className="step">{`Step ${this.props.step}`}</div>
-              <div className="step-description">Provide rental listing details</div>
+              <div className="step-description">
+                Provide rental listing details
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -76,9 +78,7 @@ class Details extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label>
-                    Default Price per Hour
-                  </label>
+                  <label>Default Price per Hour</label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
                       <div className="with-symbol">
