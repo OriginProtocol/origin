@@ -260,6 +260,7 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
+    timeZone: String
     weekendPrice: Price
     unavailable: [String]
     customPricing: [String]
@@ -270,7 +271,7 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
-    timeZone: [String]
+    timeZone: String
     unavailable: [String]
     customPricing: [String]
     booked: [String]
