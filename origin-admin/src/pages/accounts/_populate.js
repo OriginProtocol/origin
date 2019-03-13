@@ -94,7 +94,7 @@ export default async function populate(NodeAccount, gqlClient) {
       from: Admin
     }
   })).data.deployToken.id
-  await transactionConfirmed(hash, gqlClient)
+  const DAI = (await transactionConfirmed(hash, gqlClient)).contractAddress
   console.log('Deployed DAI stablecoin')
 
   hash = (await gqlClient.mutate({
@@ -132,6 +132,20 @@ export default async function populate(NodeAccount, gqlClient) {
   })).data.sendFromNode.id
   await transactionConfirmed(hash, gqlClient)
   console.log('Sent eth to buyer')
+
+  hash = (await gqlClient.mutate({
+    mutation: TransferTokenMutation,
+    variables: { token: DAI, to: Buyer, from: Admin, value: '500' }
+  })).data.transferToken.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Sent DAI to buyer')
+
+  hash = (await gqlClient.mutate({
+    mutation: UpdateTokenAllowanceMutation,
+    variables: { token: DAI, to: Marketplace, from: Buyer, value: '500' }
+  })).data.updateTokenAllowance.id
+  await transactionConfirmed(hash, gqlClient)
+  console.log('Set buyer dai token allowance')
 
   hash = (await gqlClient.mutate({
     mutation: SendFromNodeMutation,

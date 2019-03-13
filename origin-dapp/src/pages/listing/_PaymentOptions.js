@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import CoinPrice from 'components/CoinPrice'
 
-const PaymentOptions = () => {
-  const [active, setActive] = useState('dai')
-
-  const daiActive = active === 'dai' ? ' active' : ''
-  const ethActive = active === 'eth' ? ' active' : ''
-  const ethDisabled = '' //' disabled'
+const PaymentOptions = ({ acceptedTokens, value, onChange }) => {
+  const daiActive = value === 'token-DAI' ? ' active' : ''
+  const ethActive = value === 'token-ETH' ? ' active' : ''
+  const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
+  const daiDisabled = acceptsDai ? '' : ' disabled'
+  const acceptsEth = acceptedTokens.find(t => t.id === 'token-ETH')
+  const ethDisabled = acceptsEth ? '' : ' disabled'
   const shouldSwap = true
 
   const ethPrice = '0.73823 ETH'
@@ -18,15 +19,15 @@ const PaymentOptions = () => {
       <h6>Pay with</h6>
       <div className="btn-group">
         <button
-          className={`btn btn-outline-secondary${daiActive}`}
-          onClick={() => setActive('dai')}
+          className={`btn btn-outline-secondary${daiActive}${daiDisabled}`}
+          onClick={() => (daiDisabled ? null : onChange('token-DAI'))}
         >
           <CoinPrice iconOnly coin="dai" className="lg" />
           DAI
         </button>
         <button
           className={`btn btn-outline-secondary${ethActive}${ethDisabled}`}
-          onClick={() => (ethDisabled ? null : setActive('eth'))}
+          onClick={() => (ethDisabled ? null : onChange('token-ETH'))}
         >
           <CoinPrice iconOnly coin="eth" className="lg" />
           ETH
@@ -34,13 +35,13 @@ const PaymentOptions = () => {
       </div>
       <div className="payment-total">
         <span>Payment</span>
-        <span>{active === 'eth' ? ethPrice : daiPrice}</span>
+        <span>{ethActive ? ethPrice : daiPrice}</span>
       </div>
-      {active === 'eth' || !shouldSwap ? null : (
+      {ethActive || !shouldSwap ? null : (
         <div className="exchanged">{ethPrice}</div>
       )}
       <div className="help">
-        {active === 'eth' ? (
+        {ethActive ? (
           <>
             Your ETH will be transferred to an escrow contract and held until
             the sale is completed.

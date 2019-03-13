@@ -1,5 +1,5 @@
 import React from 'react'
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price2'
 import dayjs from 'dayjs'
 
 function paymentStatus(status) {
@@ -17,7 +17,7 @@ const OfferDetails = ({ offer }) => (
         <li className="price-unit">
           <span>Price / unit</span>
           <span>
-            <TokenPrice {...offer.listing.price} />
+            <Price price={offer.listing.price} />
           </span>
         </li>
         <li className="quantity">
@@ -41,7 +41,7 @@ const OfferDetails = ({ offer }) => (
     <li className="total-price">
       <span>Total Price</span>
       <span>
-        <TokenPrice {...offer} />
+        <Price price={offer.totalPrice} />
       </span>
     </li>
     <li className="payment-status">

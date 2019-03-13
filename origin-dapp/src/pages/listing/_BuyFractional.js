@@ -1,7 +1,7 @@
 import React from 'react'
 import dayjs from 'dayjs'
 
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import Tooltip from 'components/Tooltip'
 
 import Buy from './mutations/Buy'
@@ -29,7 +29,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   return (
     <div className="listing-buy fractional">
       <div className="price">
-        <Price amount={listing.price.amount} />
+        <Price price={listing.price} />
         <span className="desc">/ night</span>
       </div>
       <div className="choose-dates form-control">

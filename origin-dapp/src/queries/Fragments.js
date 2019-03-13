@@ -58,6 +58,9 @@ export default {
             }
           }
         }
+        acceptedTokens {
+          id
+        }
         media {
           url
           urlExpanded
@@ -138,6 +141,15 @@ export default {
         statusStr
         startDate
         endDate
+        totalPrice {
+          amount
+          currency {
+            ... on Currency {
+              id
+              code
+            }
+          }
+        }
       }
     `
   },

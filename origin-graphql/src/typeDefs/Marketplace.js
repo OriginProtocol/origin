@@ -316,6 +316,7 @@ module.exports = `
 
     # IPFS
     quantity: Int
+    totalPrice: Price
     startDate: String
     endDate: String
   }

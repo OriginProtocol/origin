@@ -14,56 +14,75 @@ const HelpIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
-const PricingChooser = ({ input, isMulti, Feedback }) => (
-  <div className="form-group">
-    <label>Pricing</label>
-    <div className="pricing-chooser">
-      <div className="form-group">
-        <label>{`Listing Price${isMulti ? ' (per unit)' : ''}`}</label>
-        <div className="with-symbol" style={{ maxWidth: 270 }}>
-          <input {...input('price')} />
-          <span className="usd">USD</span>
+const PricingChooser = ({ value, onChange, input, isMulti, Feedback }) => {
+  return (
+    <div className="form-group">
+      <label>Pricing</label>
+      <div className="pricing-chooser">
+        <div className="form-group">
+          <label>{`Listing Price${isMulti ? ' (per unit)' : ''}`}</label>
+          <div className="with-symbol" style={{ maxWidth: 270 }}>
+            <input {...input('price')} />
+            <span className="usd">USD</span>
+          </div>
+          {Feedback('price')}
+          <div className="help-text price">
+            Price is always an approximation of what you will receive. Learn
+            more.
+          </div>
         </div>
-        {Feedback('price')}
-        <div className="help-text price">
-          Price is always an approximation of what you will receive. Learn more.
-        </div>
-      </div>
-      <div className="form-group accepted-currencies">
-        <label className="mb-0">Accepted Cryptocurrencies</label>
-        <div className="help-text price mt-0">
-          You will be paid in these currencies.
-        </div>
-        <div className="custom-control custom-checkbox">
-          <input
-            className="custom-control-input"
-            type="checkbox"
-            id="dai-checkbox"
-          />
-          <label className="custom-control-label" htmlFor="dai-checkbox">
-            <CoinPrice coin="dai" iconOnly className="lg" />
-            Maker Dai (DAI)
-          </label>
-          <div className="help-text">Stable but less buyers</div>
-          <HelpIcon tooltip="Maker Dai is good for long term listings like rentals or property sales." />
-        </div>
-        <div className="custom-control custom-checkbox">
-          <input
-            className="custom-control-input"
-            type="checkbox"
-            id="eth-checkbox"
-          />
-          <label className="custom-control-label" htmlFor="eth-checkbox">
-            <CoinPrice coin="eth" iconOnly className="lg" />
-            Ether (ETH)
-          </label>
-          <div className="help-text">Volatile but more buyers</div>
-          <HelpIcon tooltip="Ether is good for short term listings." />
+        <div className="form-group accepted-currencies">
+          <label className="mb-0">Accepted Cryptocurrencies</label>
+          <div className="help-text price mt-0">
+            You will be paid in these currencies.
+          </div>
+          <div className="custom-control custom-checkbox">
+            <input
+              className="custom-control-input"
+              type="checkbox"
+              id="dai-checkbox"
+              checked={value.indexOf('token-DAI') >= 0}
+              onChange={() => {
+                const newVal =
+                  value.indexOf('token-DAI') >= 0
+                    ? value.filter(v => v != 'token-DAI')
+                    : [...value, 'token-DAI']
+                onChange(newVal.length ? newVal : ['token-ETH'])
+              }}
+            />
+            <label className="custom-control-label" htmlFor="dai-checkbox">
+              <CoinPrice coin="dai" iconOnly className="lg" />
+              Maker Dai (DAI)
+            </label>
+            <div className="help-text">Stable but less buyers</div>
+            <HelpIcon tooltip="Maker Dai is good for long term listings like rentals or property sales." />
+          </div>
+          <div className="custom-control custom-checkbox">
+            <input
+              className="custom-control-input"
+              type="checkbox"
+              id="eth-checkbox"
+              checked={value.indexOf('token-ETH') >= 0}
+              onChange={() => {
+                const newVal =
+                  value.indexOf('token-ETH') >= 0
+                    ? value.filter(v => v != 'token-ETH')
+                    : [...value, 'token-ETH']
+                onChange(newVal.length ? newVal : ['token-DAI'])
+              }}
+            />
+            <label className="custom-control-label" htmlFor="eth-checkbox">
+              <CoinPrice coin="eth" iconOnly className="lg" />
+              Ether (ETH)
+            </label>
+            <div className="help-text">Volatile but more buyers</div>
+            <HelpIcon tooltip="Ether is good for short term listings." />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default PricingChooser
 

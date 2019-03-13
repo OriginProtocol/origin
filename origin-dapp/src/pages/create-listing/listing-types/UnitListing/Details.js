@@ -75,7 +75,11 @@ class Details extends Component {
                   {Feedback('quantity')}
                 </div>
 
-                <PricingChooser {...{ input, isMulti, Feedback }} />
+                <PricingChooser
+                  {...{ input, isMulti, Feedback }}
+                  value={this.state.acceptedTokens}
+                  onChange={acceptedTokens => this.setState({ acceptedTokens })}
+                />
 
                 {/* END Unit specific code */}
 

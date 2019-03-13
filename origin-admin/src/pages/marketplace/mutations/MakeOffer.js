@@ -37,8 +37,8 @@ class MakeOffer extends Component {
     this.state = {
       finalizes: new Date(+new Date() + 1000 * 60 * 60 * 24 * 3),
       affiliate: affiliate ? affiliate.id : ZeroAddress,
-      commission: '5',
-      value: '0.1',
+      commission: get(props, 'listing.commission.amount', '0'),
+      value: get(props, 'listing.price.amount', '1'),
       quantity: 1,
       currency: get(props, 'listing.acceptedTokens.0.id', 'token-ETH'),
       arbitrator: arbitrator ? arbitrator.id : '',

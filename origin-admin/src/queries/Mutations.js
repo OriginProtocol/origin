@@ -239,7 +239,9 @@ export const MakeOfferMutation = gql`
 
 export const AcceptOfferMutation = gql`
   mutation AcceptOffer($offerID: String!, $from: String) {
-    acceptOffer(offerID: $offerID, from: $from)
+    acceptOffer(offerID: $offerID, from: $from) {
+      id
+    }
   }
 `
 

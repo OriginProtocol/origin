@@ -112,6 +112,15 @@ export default {
         withdrawnBy {
           id
         }
+        totalPrice {
+          amount
+          currency {
+            ... on Currency {
+              id
+              code
+            }
+          }
+        }
       }
     `
   }

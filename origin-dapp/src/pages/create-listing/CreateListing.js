@@ -34,6 +34,7 @@ class CreateListing extends Component {
         // Unit fields:
         quantity: '1',
         price: '',
+        acceptedTokens: ['token-DAI'],
 
         // Fractional fields:
         weekendPrice: '',

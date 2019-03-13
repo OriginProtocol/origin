@@ -116,7 +116,7 @@ async function toIpfsData(data) {
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
       amount: data.value,
-      currency: 'ETH'
+      currency: data.currency
     },
     commission,
     finalizes: data.finalizes || 60 * 60 * 24 * 365,

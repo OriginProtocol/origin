@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 
 import QueryError from 'components/QueryError'
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price2'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
@@ -106,7 +106,7 @@ class Sales extends Component {
                               .unix(offer.createdEvent.timestamp)
                               .format('MMMM D, YYYY')}`}</div>
                             <div className="price">
-                              <TokenPrice {...offer} />
+                              <Price price={offer.totalPrice} />
                             </div>
                             <Stages offer={offer} />
                           </div>

@@ -41,7 +41,7 @@ function updateTruffle() {
   })
 }
 
-const Accounts = props => (
+const Accounts = () => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
     {({ networkStatus, error, data, refetch, client }) => {
       if (networkStatus === 1) {
@@ -65,7 +65,6 @@ const Accounts = props => (
         <div className="p-3">
           <CreateWallet />
           <AccountBalances
-            tokens={props.tokens}
             maxNodeAccount={maxNodeAccount ? maxNodeAccount.id : null}
           />
           <NodeAccounts data={data.web3.nodeAccounts} />

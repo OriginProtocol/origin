@@ -73,13 +73,24 @@ class Buy extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { listing, from, value, quantity, startDate, endDate } = this.props
+    const {
+      listing,
+      from,
+      value,
+      quantity,
+      startDate,
+      endDate,
+      currency
+    } = this.props
+
     const variables = {
       listingID: listing.id,
       value,
+      currency: currency || 'token-ETH',
       from,
       quantity: Number(quantity)
     }
+
     if (listing.__typename === 'FractionalListing') {
       variables.fractionalData = { startDate, endDate }
     }

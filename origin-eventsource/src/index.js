@@ -7,6 +7,12 @@ const pick = require('lodash/pick')
 const _get = require('lodash/get')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+function mutatePrice(price) {
+  let currency = price.currency
+  if (currency === 'ETH') currency = 'token-ETH'
+  if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
+  price.currency = { id: currency }
+}
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
@@ -161,10 +167,7 @@ class OriginEventSource {
     }
 
     if (data.price) {
-      let currency = data.price.currency
-      if (currency === 'ETH') currency = 'token-ETH'
-      if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
-      data.price.currency = { id: currency }
+      mutatePrice(data.price)
     }
 
     if (data.category) {
@@ -403,9 +406,13 @@ class OriginEventSource {
       arbitrator: { id: offer.arbitrator },
       quantity: _get(data, 'unitsPurchased'),
       startDate: _get(data, 'startDate'),
-      endDate: _get(data, 'endDate')
+      endDate: _get(data, 'endDate'),
+      totalPrice: _get(data, 'totalPrice')
     }
     offerObj.statusStr = offerStatus(offerObj)
+    if (offerObj.totalPrice) {
+      mutatePrice(offerObj.totalPrice)
+    }
 
     if (!data) {
       offerObj.valid = false
@@ -457,6 +464,10 @@ class OriginEventSource {
 
     if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
+      return
+    }
+
+    if (listing.__typename === 'UnitListing') {
       return
     }
 

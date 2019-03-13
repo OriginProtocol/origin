@@ -3,7 +3,7 @@ import contracts from '../../contracts'
 
 async function updateTokenAllowance(_, { token, from, to, value }) {
   if (!contracts[token]) {
-    return
+    throw new Error('Could not find contract to update allowance')
   }
   await checkMetaMask(from)
   value = contracts.web3.utils.toWei(value, 'ether')

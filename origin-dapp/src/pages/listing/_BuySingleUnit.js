@@ -1,12 +1,12 @@
 import React from 'react'
 
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import Buy from './mutations/Buy'
 
 const SingleUnit = ({ listing, from, refetch }) => (
   <div className="listing-buy">
     <div className="price">
-      <Price amount={listing.price.amount} />
+      <Price price={listing.price} />
     </div>
     <Buy
       refetch={refetch}
