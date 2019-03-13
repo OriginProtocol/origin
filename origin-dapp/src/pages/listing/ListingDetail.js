@@ -131,10 +131,14 @@ class ListingDetail extends Component {
           <>
             <hr />
             <div className="timeZone">
-              <div>Time Zone: {listing.timeZone}
-              {isDifferentTimeZone &&
-                <div>NOTE: This is different from your time zone of {userTimeZone}</div>
-              }
+              <div>
+                Time Zone: {listing.timeZone}
+                {isDifferentTimeZone && (
+                  <div>
+                    NOTE: This is different from your time zone of{' '}
+                    {userTimeZone}
+                  </div>
+                )}
               </div>
             </div>
             <WeekCalendar

@@ -78,7 +78,7 @@ class Details extends Component {
                   <label className="mb-0">Time Zone</label>
                   <select {...input('timeZone')}>
                     <option value="">Select</option>
-                    {IannaTimeZones.map((id) => (
+                    {IannaTimeZones.map(id => (
                       <option key={id} value={id}>
                         {id}
                       </option>
