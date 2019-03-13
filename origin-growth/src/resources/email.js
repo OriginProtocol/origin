@@ -22,7 +22,7 @@ async function sendInvites(referrer, recipients) {
   }
 
   // Load the invite code for the referrer.
-  const code = db.GrowthInviteCode.findOne({
+  const code = await db.GrowthInviteCode.findOne({
     where: { ethAddress: referrer.toLowerCase() }
   })
   if (!code) {
@@ -64,7 +64,7 @@ async function sendInvites(referrer, recipients) {
 
     // Make sure the entry is not a duplicate and if not,
     // record the invite in the growth_invite table.
-    const existing = db.GrowthInvite.findOne({
+    const existing = await db.GrowthInvite.findOne({
       where: {
         referrerEthAddress: referrer.toLowerCase(),
         refereeContactType: enums.GrowthInviteContactTypes.Email,
