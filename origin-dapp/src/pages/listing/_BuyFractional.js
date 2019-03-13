@@ -7,16 +7,18 @@ import Tooltip from 'components/Tooltip'
 import Buy from './mutations/Buy'
 
 const Fractional = ({ listing, from, range, availability, refetch }) => {
-  let checkIn = 'Check in',
-    checkOut = 'Check out',
+  let startDateDisplay = 'Check in',
+    endDateDisplay = 'Check out',
     totalPrice,
     available = false,
     showUnavailable = false
 
   if (range) {
     const split = range.split('/')
-    checkIn = dayjs(split[0]).format('ddd, MMM D')
-    checkOut = dayjs(split[1]).format('ddd, MMM D')
+    const startDate = split[0],
+      endDate = split[1]
+    startDateDisplay = dayjs(startDate.format('ddd, MMM D')
+    endDateDisplay = dayjs(endDate).format('ddd, MMM D')
     const priceEstimate = availability.estimatePrice(range)
     available = priceEstimate.available
     if (available) {
@@ -63,8 +65,8 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         value={totalPrice}
         quantity={1}
         disabled={available ? false : true}
-        startDate={checkIn}
-        endDate={checkOut}
+        startDate={startDate}
+        endDate={endDate}
         className={`btn btn-primary${available ? '' : ' disabled'}`}
         children="Book"
       />

@@ -7,16 +7,18 @@ import Tooltip from 'components/Tooltip'
 import Buy from './mutations/Buy'
 
 const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
-  let checkIn = 'Start',
-    checkOut = 'End',
+  let startDateDisplay = 'Start',
+    endDateDisplay = 'End',
     totalPrice,
     available = false,
     showUnavailable = false
 
   if (range) {
     const split = range.split('/')
-    checkIn = dayjs(split[0]).format('ddd, MMM D h:00a') // TODO: Use users locale date time format
-    checkOut = dayjs(split[1]).format('ddd, MMM D h:00a') // TODO: Use users locale date time format
+    const startDate = split[0],
+      endDate = split[1]
+    startDateDisplay = dayjs(startDate.format('ddd, MMM D h:00a')
+    endDateDisplay = dayjs(endDate).format('ddd, MMM D h:00a')
 
     const priceEstimate = availability.estimatePrice(range)
     available = priceEstimate.available
@@ -40,7 +42,7 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
           tooltip="Scroll down for availability calendar"
           placement="top"
         >
-          <div>{checkIn}</div>
+          <div>{checkInDisplay}</div>
         </Tooltip>
       </div>
       <div className="choose-dates form-control">
@@ -48,7 +50,7 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
           tooltip="Scroll down for availability calendar"
           placement="top"
         >
-          <div>{checkOut}</div>
+          <div>{checkOutDisplay}</div>
         </Tooltip>
       </div>
       {!showUnavailable ? null : <div className="total">Unavailable</div>}
@@ -65,8 +67,8 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
         value={totalPrice}
         quantity={1}
         disabled={available ? false : true}
-        startDate={checkIn}
-        endDate={checkOut}
+        startDate={startDate}
+        endDate={endDate}
         className={`btn btn-primary${available ? '' : ' disabled'}`}
         children="Book"
       />
