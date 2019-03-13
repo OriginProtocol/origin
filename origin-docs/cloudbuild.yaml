@@ -33,12 +33,15 @@ steps:
         IdentityFile /root/.ssh/id_rsa
         EOF
 
-        # Configure git
+        git remote add upstream git@github.com:OriginProtocol/origin.git
         git config --global user.name "OriginCI"
         git config --global user.email "support@originprotocol.com"
 
+        # Configure git
+        git fetch origin gh-pages
+
         # Create separate git worktree for the docs build folder
-        git worktree add -f _site gh-pages
+        git worktree add -f origin-docs/_site gh-pages
     volumes:
       - name: 'ssh'
         path: /root/.ssh
@@ -61,8 +64,8 @@ steps:
       - |
         cd origin-docs/_site
         git add .
-        git commit -m "Docs build from $(git rev-parse --abbrev-ref HEAD) $(git log '--format=format:%H' -1)"
-        git push
+        git commit -m "Docs build from $BRANCH_NAME ($SHORT_SHA)"
+        git push upstream gh-pages
     volumes:
       - name: 'ssh'
         path: /root/.ssh
