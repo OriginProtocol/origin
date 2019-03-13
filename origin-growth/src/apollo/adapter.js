@@ -116,7 +116,7 @@ const referralRuleApolloObject = async (
     rule.campaignId
   )
 
-  // TODO: remove once referral functionality is implemented
+  // // TODO: remove once referral functionality is implemented
   // const reward = {
   //   amount: '200000000000000000000',
   //   currency: 'OGN'

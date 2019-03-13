@@ -22,7 +22,7 @@ class GrowthInvite {
   static async _getPendingRewards(referrer, ignore, rewardValue) {
     // Load all invites.
     const referrals = db.GrowthReferall.findAll({
-      where: { referrerEthAddress: referrer }
+      where: { referrerEthAddress: referrer.toLowerCase() }
     })
 
     // Filter out referrals we are supposed to ignore.

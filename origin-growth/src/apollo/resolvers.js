@@ -158,7 +158,7 @@ const resolvers = {
          * - enters Welcome page with invite code
          * - has a wallet installed
          * as the above approach happens before a user is authenticated and this leaves us exposed
-         * to situations where bad actors could maka false referral connections to their own campaigns.
+         * to situations where bad actors could make false referral connections to their own campaigns.
          */
         if (args.inviteCode !== undefined) {
           await GrowthInvite.makeReferralConnection(
@@ -177,6 +177,7 @@ const resolvers = {
     },
     async inviteRemind(_, args, context) {
       requireEnrolledUser(context)
+      logger.info(`invite remind mutation called with invitationId: ${args.invitationId}.`)
       // TODO: implement
       return true
     },

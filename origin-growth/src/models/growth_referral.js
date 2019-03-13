@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     'GrowthReferral',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      referrerEthAddress: { type: DataTypes.STRING, primaryKey: true },
+      referrerEthAddress: { type: DataTypes.STRING },
       refereeEthAddress: { type: DataTypes.STRING, unique: true }
     },
     {
