@@ -1,6 +1,7 @@
 const Web3 = require('web3')
 const logger = require('./logger')
 
+const { bytes32ToIpfsHash } = require('./utils')
 const _bridgeModels = require('origin-bridge/src/models')
 const _discoveryModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
@@ -120,10 +121,11 @@ class IdentityEventHandler {
    * Records a ProfilePublished event in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthProfileEvent(user, blockInfo) {
+  async _recordGrowthProfileEvent(user, blockInfo, date) {
     // Check profile is populated.
     const profile = user.profile
     const validProfile =
@@ -139,7 +141,8 @@ class IdentityEventHandler {
       user.address,
       GrowthEventTypes.ProfilePublished,
       null,
-      { blockInfo }
+      { blockInfo },
+      date
     )
   }
 
@@ -147,10 +150,11 @@ class IdentityEventHandler {
    * Records AttestationPublished events in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthAttestationEvents(user, blockInfo) {
+  async _recordGrowthAttestationEvents(user, blockInfo, date) {
     await Promise.all(
       user.attestations.map(attestation => {
         const eventType = AttestationServiceToEventType[attestation.service]
@@ -163,9 +167,14 @@ class IdentityEventHandler {
           return
         }
 
-        return GrowthEvent.insert(logger, user.address, eventType, null, {
-          blockInfo
-        })
+        return GrowthEvent.insert(
+          logger,
+          user.address,
+          eventType,
+          null,
+          { blockInfo },
+          date
+        )
       })
     )
   }
@@ -181,6 +190,7 @@ class IdentityEventHandler {
     }
 
     const account = log.decoded.account
+
     logger.info(`Processing Identity event for account ${account}`)
 
     const user = await this.origin.users.get(account)
@@ -195,6 +205,10 @@ class IdentityEventHandler {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
 
+    if (log.decoded.ipfsHash) {
+      user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+    }
+
     // Decorate the user object with extra attestation related info.
     await this._decorateUser(user)
 
@@ -206,8 +220,8 @@ class IdentityEventHandler {
     await this._indexIdentity(user, blockInfo)
 
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(user, blockInfo)
-      await this._recordGrowthAttestationEvents(user, blockInfo)
+      await this._recordGrowthProfileEvent(user, blockInfo, log.date)
+      await this._recordGrowthAttestationEvents(user, blockInfo, log.date)
     }
 
     return { user }
@@ -229,7 +243,7 @@ class IdentityEventHandler {
   }
 
   gcloudPubsubEnabled() {
-    return false
+    return true
   }
 }
 
