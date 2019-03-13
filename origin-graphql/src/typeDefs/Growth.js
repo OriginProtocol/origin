@@ -61,7 +61,7 @@ module.exports =
     # only pending invites require an ID - for remind functionality
     id: ID
     status: GrowthInviteStatus!
-    walletAddress: ID!
+    walletAddress: ID
     # email or firstName + lastName of the contact
     contact: String
     reward: Price
