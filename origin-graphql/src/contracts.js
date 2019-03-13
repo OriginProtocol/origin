@@ -132,13 +132,27 @@ const Configs = {
     affiliate: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C',
     arbitrator: '0x51d7b9FeC7596d573879B4ADFe6700b1CD47C16C'
   },
+  origin: {
+    provider: 'https://testnet.originprotocol.com/rpc',
+    ipfsGateway: 'https://ipfs.dev.originprotocol.com',
+    ipfsRPC: 'https://ipfs.dev.originprotocol.com',
+    discovery: 'https://discovery.dev.originprotocol.com',
+    growth: 'https://growth.dev.originprotocol.com',
+    OriginToken: '0xc341384f6fe00179b33ef7ae638ed2937a9e4501',
+    V00_Marketplace: '0xf3884ecbc6c43383bf7a38c891021380f50abc49',
+    V00_Marketplace_Epoch: '0',
+    IdentityEvents: '0xe760d066bd8bbe22d7e9d8107be878102bd8d57d',
+    IdentityEvents_Epoch: '0',
+    affiliate: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
+    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9'
+  },
   localhost: {
     provider: `http://${HOST}:8545`,
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
     growth: `http://${HOST}:4001`,
-    bridge: 'https://bridge.staging.originprotocol.com',
+    bridge: 'https://bridge.dev.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
