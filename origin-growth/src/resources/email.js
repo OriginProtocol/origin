@@ -47,7 +47,6 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    // TODO: should we have an html version of the email ?
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
@@ -57,18 +56,30 @@ async function sendInvites(referrer, recipients) {
     }
     try {
       await sendgridMail.send(email)
+      logger.info(`Sent invitation email on behalf of ${referrer}`)
     } catch (error) {
       logger.error(`Failed sending invite: ${error}`)
       throw new Error(`Failed sending invite: ${error}`)
     }
 
-    // Record the invite in the growth_invite table.
-    await db.GrowthInvite.create({
-      referrerEthAddress: referrer.toLowerCase(),
-      refereeContactType: enums.GrowthInviteContactTypes.Email,
-      refereeContact: recipient,
-      status: enums.GrowthInviteStatuses.Sent
+    // Make sure the entry is not a duplicate and if not,
+    // record the invite in the growth_invite table.
+    const existing = db.GrowthInvite.findOne({
+      where: {
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient
+      }
     })
+    if (!existing) {
+      await db.GrowthInvite.create({
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient,
+        status: enums.GrowthInviteStatuses.Sent
+      })
+      logger.info('Recorded invite in DB.')
+    }
   }
 }
 
