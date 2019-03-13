@@ -107,6 +107,8 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isOwnerViewing = listing.seller.id === this.props.from
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
       <>
         <Gallery pics={listing.media} />
@@ -128,8 +130,12 @@ class ListingDetail extends Component {
         {!isFractionalHourly ? null : (
           <>
             <hr />
-            <div>
-              <div>Time Zone: {listing.timeZone}</div>
+            <div className="timeZone">
+              <div>Time Zone: {listing.timeZone}
+              {isDifferentTimeZone &&
+                <div>NOTE: This is different from your time zone of {userTimeZone}</div>
+              }
+              </div>
             </div>
             <WeekCalendar
               interactive={!isOwnerViewing}
@@ -237,6 +243,10 @@ require('react-styl')(`
 
     .description
       white-space: pre-wrap
+
+    .timeZone
+      font-size: 1rem
+      margin-bottom: 1rem
 
     .availability-help
       font-size: 14px
