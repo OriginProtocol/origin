@@ -128,10 +128,7 @@ class WeekCalendar extends Component {
       )
     }
 
-    const date = dayjs(hour.hour)
-
     // Hour in past
-
     if (dayjs(hour.hour).isBefore(dayjs())) {
       return (
         <div
@@ -169,13 +166,11 @@ class WeekCalendar extends Component {
 
           this.setState({ dragEnd: idx, dragging: false, endDate: hour.hour })
           if (this.props.onChange) {
-            const start = dayjs(this.state.startDate)
-
             // TODO (Stan): Handle if "enddate" is before startdate
 
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
-            let range =
+            const range =
               dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') +
               '/' +
               dayjs(hour.hour)
