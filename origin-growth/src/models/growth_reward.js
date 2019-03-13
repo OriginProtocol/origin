@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   const GrowthReward = sequelize.define(
     'GrowthReward',
     {
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       status: DataTypes.ENUM(enums.GrowthRewardStatuses),
       ethAddress: DataTypes.STRING,
       campaignId: DataTypes.INTEGER,
