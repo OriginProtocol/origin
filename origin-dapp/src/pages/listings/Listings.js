@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
@@ -60,6 +61,10 @@ class Listings extends Component {
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
 
+    const isSearch =
+      get(this.state.search, 'searchInput', '') !== '' ||
+      !isEmpty(get(this.state.search, 'category', {}))
+
     return (
       <>
         <PageTitle>Listings</PageTitle>
@@ -113,7 +118,7 @@ class Listings extends Component {
                         <div className="row">
                           <div className="col text-center">
                             <img src="images/empty-listings-graphic.svg" />
-                            {this.state.search && (
+                            {isSearch && (
                               <h1>
                                 <fbt desc="listings.noListingsSearch">
                                   No search results found
@@ -121,7 +126,7 @@ class Listings extends Component {
                               </h1>
                             )}
 
-                            {isCreatedMarketplace && !this.state.search && (
+                            {isCreatedMarketplace && !isSearch && (
                               <>
                                 <h1>
                                   <fbt desc="listings.noListingsWhitelabel">
@@ -150,7 +155,7 @@ class Listings extends Component {
                               </>
                             )}
 
-                            {!isCreatedMarketplace && !this.state.search && (
+                            {!isCreatedMarketplace && !isSearch && (
                               <h1>
                                 <fbt desc="listings.noListings">
                                   No listings found

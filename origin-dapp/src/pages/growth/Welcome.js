@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Link from 'components/Link'
+import get from 'lodash/get'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
@@ -24,6 +25,18 @@ class GrowthWelcome extends Component {
     this.EnrollButton = withEnrolmentModal('button')
   }
 
+  componentDidMount() {
+    const inviteCode = get(this.props, 'match.params.inviteCode')
+    const localStorageKey = 'growth_invite_code'
+
+    if (
+      localStorage.getItem(localStorageKey) === null &&
+      inviteCode !== undefined
+    ) {
+      localStorage.setItem(localStorageKey, inviteCode)
+    }
+  }
+
   onSignUp(setOpenedModal) {
     setOpenedModal({
       variables: {
@@ -33,6 +46,8 @@ class GrowthWelcome extends Component {
   }
 
   render() {
+    const personalised = true
+
     return (
       <div className="container growth-welcome">
         <div className="row">
@@ -55,6 +70,22 @@ class GrowthWelcome extends Component {
             />
           </div>
           <div className="col-6 token-stack-holder">
+            {personalised && (
+              <div className="personalised-holder d-flex flex-column">
+                <div className="message-bubble ml-auto d-flex align-items-center">
+                  Hey, come earn some tokens on Origin!
+                </div>
+                <div className="d-flex justify-content-end">
+                  <div className="d-flex flex-column align-items-end">
+                    <div className="triangle" />
+                    <div className="referrer">Aure G.</div>
+                  </div>
+                  <div className="profile-holder d-flex justify-content-center">
+                    <img src="images/growth/profile-person.svg" />
+                  </div>
+                </div>
+              </div>
+            )}
             <img
               className="m-4 token-stack"
               src="images/growth/token-stack.svg"
@@ -137,4 +168,31 @@ require('react-styl')(`
       .text
         text-align: center
         font-size: 14px
+    .personalised-holder
+      position: absolute
+      right: 0
+    .message-bubble
+      padding: 10px 20px
+      background-color: var(--pale-grey-eight)
+      height: 77px;
+      border-radius: 45px
+      border: solid 2px var(--white)
+    .triangle
+      width: 0
+      height: 0
+      border-left: 23px solid transparent
+      border-right: 23px solid transparent
+      border-top: 23px solid var(--pale-grey-eight)
+      transform: rotate(225deg)
+      margin-top: -16px
+    .profile-holder
+      background-color: var(--dark-grey-blue)
+      width: 60px
+      height: 60px
+      border-radius: 75px
+      border: solid 2px var(--pale-grey-eight)
+      overflow: hidden
+    .referrer
+      margin-top: 20px
+      margin-right: 10px
 `)

@@ -1,9 +1,11 @@
 const Web3 = require('web3')
 const logger = require('./logger')
 
+const { bytes32ToIpfsHash } = require('./utils')
+const _bridgeModels = require('origin-bridge/src/models')
 const _discoveryModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
-const db = { ..._discoveryModels, ..._identityModels }
+const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
 
 const { GrowthEventTypes } = require('origin-growth/src/enums')
 const {
@@ -25,20 +27,16 @@ class IdentityEventHandler {
    * @private
    */
   async _loadValueFromAttestation(ethAddress, method) {
-    // Notes:
-    //  - Use a raw query since attestation model not ported yet to JS.
-    //  - The attestation table stores eth addresses checksummed.
-    const attestations = await db.sequelize.query(
-      'SELECT * FROM attestation WHERE eth_address=(:ethAddress) AND method=(:method) ORDER BY ID DESC LIMIT 1',
-      {
-        replacements: {
-          ethAddress: Web3.utils.toChecksumAddress(ethAddress),
-          method
-        },
-        type: db.sequelize.QueryTypes.SELECT
-      }
-    )
-    return attestations.length === 1 ? attestations[0].value : null
+    // Loads the most recent value.
+    const attestation = await db.Attestation.findOne({
+      where: {
+        ethAddress: ethAddress.toLowerCase(),
+        method
+      },
+      order: [['id', 'DESC']],
+      limit: 1
+    })
+    return attestation ? attestation.value : null
   }
 
   /**
@@ -123,10 +121,11 @@ class IdentityEventHandler {
    * Records a ProfilePublished event in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthProfileEvent(user, blockInfo) {
+  async _recordGrowthProfileEvent(user, blockInfo, date) {
     // Check profile is populated.
     const profile = user.profile
     const validProfile =
@@ -142,7 +141,8 @@ class IdentityEventHandler {
       user.address,
       GrowthEventTypes.ProfilePublished,
       null,
-      { blockInfo }
+      { blockInfo },
+      date
     )
   }
 
@@ -150,10 +150,11 @@ class IdentityEventHandler {
    * Records AttestationPublished events in the growth_event table.
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @param {Date} Event date.
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthAttestationEvents(user, blockInfo) {
+  async _recordGrowthAttestationEvents(user, blockInfo, date) {
     await Promise.all(
       user.attestations.map(attestation => {
         const eventType = AttestationServiceToEventType[attestation.service]
@@ -166,71 +167,16 @@ class IdentityEventHandler {
           return
         }
 
-        return GrowthEvent.insert(logger, user.address, eventType, null, {
-          blockInfo
-        })
+        return GrowthEvent.insert(
+          logger,
+          user.address,
+          eventType,
+          null,
+          { blockInfo },
+          date
+        )
       })
     )
-  }
-
-  /**
-   * If the user signed up via a referral, links the referrer and referee
-   * by inserting a row in the growth_referral table.
-   * @param {UserModel} user - Origin-js user model object.
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _recordGrowthReferral(user) {
-    if (!user.metadata || !user.metadata.referrerCode) {
-      // Nothing to record, the user did not come from referral program.
-      return
-    }
-
-    const referee = user.address.toLowerCase()
-
-    // Lookup the invite code to get the referrer.
-    const code = await db.GrowthInviteCode.findOne({
-      where: { code: user.metadata.referrerCode }
-    })
-    if (!code) {
-      logger.error(`Invalid referral code present in identity of ${referee}`)
-      return
-    }
-    const referrer = code.ethAddress
-
-    // Check for any existing referral data for this referee.
-    const row = db.GrowthReferral.findOne({
-      where: {
-        referee_eth_address: referee
-      }
-    })
-    if (row) {
-      if (row.referrerEthAddress != referrer) {
-        // The referrer present in the referee's identity does not match
-        // with the referral data recorded in the DB.
-        // A corner case scenario this might happen is as follow:
-        //  - referee receives multiple invites.
-        //  - referee clicks on an invite, publishes their profile and
-        //    an entry is created in growth_referral table.
-        //  - referee wipes out their browser local storage or uses a different
-        //    browser and clicks on an invite link from a different referrer.
-        //  - referrer updates their profile which now contains
-        //    different invite code from another referrer.
-        logger.error(
-          `Referee ${referee} already referred by ${row.referrerEthAddress}`
-        )
-      }
-      // Referral was already recorded. It could be an identity update,
-      // or it's possible the listener is reprocessing data.
-      return
-    }
-
-    // Record the referee/referrer relationship.
-    await db.GrowthReferral.create({
-      referrer_eth_address: referrer,
-      referee_eth_address: referee
-    })
-    logger.info(`Recorded referral. Referrer: ${referrer} Referee: ${referee}`)
   }
 
   /**
@@ -244,6 +190,7 @@ class IdentityEventHandler {
     }
 
     const account = log.decoded.account
+
     logger.info(`Processing Identity event for account ${account}`)
 
     const user = await this.origin.users.get(account)
@@ -258,6 +205,10 @@ class IdentityEventHandler {
       user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
     }
 
+    if (log.decoded.ipfsHash) {
+      user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+    }
+
     // Decorate the user object with extra attestation related info.
     await this._decorateUser(user)
 
@@ -269,9 +220,8 @@ class IdentityEventHandler {
     await this._indexIdentity(user, blockInfo)
 
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(user, blockInfo)
-      await this._recordGrowthAttestationEvents(user, blockInfo)
-      await this._recordGrowthReferral(user)
+      await this._recordGrowthProfileEvent(user, blockInfo, log.date)
+      await this._recordGrowthAttestationEvents(user, blockInfo, log.date)
     }
 
     return { user }
@@ -293,7 +243,7 @@ class IdentityEventHandler {
   }
 
   gcloudPubsubEnabled() {
-    return false
+    return true
   }
 }
 

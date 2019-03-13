@@ -34,10 +34,11 @@ spec:
         - "geth
           --bootnodes=`cat /root/.ethereum/bootnodes`
           --mine
+          --miner.threads 2
           --etherbase=0
           --networkid=${NETWORK_ID}
           --ethstats=${HOSTNAME}:${ETHSTATS_SECRET}@${ETHSTATS_SERVICE}
-          --verbosity=5"
+          --verbosity=3"
         env:
         - name: ETHSTATS_SERVICE
           value: {{ template "ethereum.fullname" . }}-ethstats.{{ .Release.Namespace }}.svc.cluster.local

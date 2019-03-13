@@ -73,8 +73,8 @@ function Action(props) {
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
     title = 'Sell a Listing'
-    infoText = 'Purchase a listing on marketplace'
-    buttonLink = '/'
+    infoText = 'Sell a listing on marketplace'
+    buttonLink = '/create'
   } else if (type === 'Referral') {
     title = 'Invite Friends'
     infoText = 'Get your friends to join Origin with active accounts.'
@@ -86,6 +86,8 @@ function Action(props) {
     buttonLink = null
   }
 
+  //TODO: hover button
+  // hover color of the button: #111d28
   const renderReward = (amount, renderPlusSign) => {
     return (
       <div className="reward d-flex mr-4 align-items-center pl-2 pt-2 pb-2 mt-2">

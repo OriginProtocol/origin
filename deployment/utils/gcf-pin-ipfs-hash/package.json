@@ -1,5 +1,21 @@
 {
-	"dependencies": {
-		"cross-fetch": "^3.0.0"
-	}
+  "dependencies": {
+    "cross-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
+    "prettier": "^1.16.3"
+  },
+  "scripts": {
+    "lint": "eslint '*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js",
+    "prettier:check": "prettier -c *.js",
+    "test": "mocha"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
 }

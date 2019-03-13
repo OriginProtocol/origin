@@ -30,9 +30,17 @@ class GrowthEvent {
    * @param {GrowthEventTypes} eventType
    * @param {string} customId - Optional custom id. For ex can hold listing or offer Id.
    * @param {Object} data - Optional data to record along with the event.
+   * @param {Date} createdAt - Creation time.
    * @returns {Promise<void>}
    */
-  static async insert(logger, ethAddress, eventType, customId, data) {
+  static async insert(
+    logger,
+    ethAddress,
+    eventType,
+    customId,
+    data,
+    createdAt
+  ) {
     // Check input.
     if (!Web3.utils.isAddress(ethAddress)) {
       throw new Error(`Invalid eth address ${ethAddress}`)
@@ -57,12 +65,11 @@ class GrowthEvent {
       type: eventType,
       status: GrowthEventStatuses.Logged,
       customId,
-      data
+      data,
+      createdAt
     }
     await db.GrowthEvent.create(eventData)
-    logger.debug(
-      `Inserted growth event ${eventType} for account  ${ethAddress}`
-    )
+    logger.info(`Inserted growth event ${eventType} for account  ${ethAddress}`)
   }
 
   /**

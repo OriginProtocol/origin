@@ -37,7 +37,7 @@ RUN eval $(envkey-source) && npm run build --prefix origin-dapp
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds
 FROM build as build-dev
-RUN mv /app/origin-dapp/public/kovan.html /app/origin-dapp/public/index.html
+RUN mv /app/origin-dapp/public/origin.html /app/origin-dapp/public/index.html
 
 FROM build as build-staging
 RUN mv /app/origin-dapp/public/rinkeby.html /app/origin-dapp/public/index.html

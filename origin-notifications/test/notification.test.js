@@ -1,5 +1,8 @@
 const chai = require('chai')
-const { getNotificationMessage, processableEvent } = require('../src/notification')
+const {
+  getNotificationMessage,
+  processableEvent
+} = require('../src/notification')
 const expect = chai.expect
 
 describe('processableEvent', () => {
@@ -14,8 +17,12 @@ describe('processableEvent', () => {
 describe('getNotificationMessage', () => {
   it(`Messages on buyer side`, async () => {
     let msg = getNotificationMessage('OfferAccepted', '0x123', '0x456', 'buyer')
-    expect(msg).to.have.property('title').that.is.a('string')
-    expect(msg).to.have.property('body').that.is.a('string')
+    expect(msg)
+      .to.have.property('title')
+      .that.is.a('string')
+    expect(msg)
+      .to.have.property('body')
+      .that.is.a('string')
 
     // Not an event of interest. No notification expected.
     msg = getNotificationMessage('RandomEvent', '0x123', '0x456', 'buyer')
@@ -28,8 +35,12 @@ describe('getNotificationMessage', () => {
 
   it(`Messages on seller side`, async () => {
     let msg = getNotificationMessage('OfferCreated', '0x123', '0x456', 'seller')
-    expect(msg).to.have.property('title').that.is.a('string')
-    expect(msg).to.have.property('body').that.is.a('string')
+    expect(msg)
+      .to.have.property('title')
+      .that.is.a('string')
+    expect(msg)
+      .to.have.property('body')
+      .that.is.a('string')
 
     // Not an event of interest. No notification expected.
     msg = getNotificationMessage('RandomEvent', '0x123', '0x456', 'seller')

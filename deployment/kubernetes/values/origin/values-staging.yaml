@@ -2,12 +2,12 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'e452b5c'
+bridgeImageTag: 'f658146'
 bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'c6afe7a'
+dappImageTag: 'f658146'
 dappReplicas: 2
 
 # Rinkeby network configuration
@@ -24,11 +24,11 @@ ipfsProxyImageTag: '6eb593e'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'e452b5c'
+faucetImageTag: 'f658146'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'e452b5c'
+eventlistenerImageTag: '304ea5b'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -36,7 +36,7 @@ discoveryImageTag: 'a1c52ee'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'e452b5c'
+growthImageTag: 'f658146'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -44,7 +44,7 @@ messagingImageTag: 'e452b5c'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'e452b5c'
+notificationsImageTag: '9ae1b95'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -65,4 +65,4 @@ linkingImageTag: 'e452b5c'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'e452b5c'
+cronImageTag: '9fc33f1'

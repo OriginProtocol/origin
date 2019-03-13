@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
-import { withApollo, Query } from 'react-apollo'
+import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
@@ -221,8 +221,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
-      const isRestricted = eligibility === 'restricted'
-      const isForbidden = eligibility === 'forbidden'
+      const isRestricted = eligibility === 'Restricted'
+      const isForbidden = eligibility === 'Forbidden'
 
       return (
         <div>
@@ -264,7 +264,7 @@ function withEnrolmentModal(WrappedComponent) {
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
               className="btn btn-outline-light"
-              onClick={this.handleCloseModal}
+              onClick={() => this.handleCloseModal()}
               children="Done"
             />
           )}
@@ -290,11 +290,22 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
 
-            const { countryName, eligibility } = data.isEligible
+            // used for testing purposes. No worries overriding this on frontend
+            // since another check is done on backend when calling enroll mutation
+            let countryOverride = localStorage.getItem(
+              'growth_country_override'
+            )
+            let { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
-            // const country = 'Saudi Arabia'
+            // const countryName = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
+
+            if (countryOverride !== null) {
+              countryOverride = JSON.parse(countryOverride)
+              countryName = countryOverride.countryName
+              eligibility = countryOverride.eligibility
+            }
 
             if (
               eligibility === 'Eligible' ||
@@ -311,7 +322,7 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return 'Error: can not detect coutry'
+              return 'Error: can not detect country'
             }
           }}
         </Query>
@@ -382,8 +393,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
-  return withRouter(withApollo(WithEnrolmentModal))
+  //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
+  return withRouter(WithEnrolmentModal)
 }
 
 export default withEnrolmentModal

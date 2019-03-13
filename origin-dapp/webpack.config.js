@@ -147,7 +147,9 @@ if (isProduction) {
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(
-    new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['public/app.*.css', 'public/app.*.js']
+    }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
     new webpack.IgnorePlugin(/redux-logger/),
     new HtmlWebpackPlugin({
@@ -167,6 +169,12 @@ if (isProduction) {
       inject: false,
       filename: 'rinkeby.html',
       network: 'rinkeby'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'origin.html',
+      network: 'origin'
     })
   )
   config.resolve.alias = {

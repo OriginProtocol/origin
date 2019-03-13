@@ -14,6 +14,9 @@ import withWeb3 from 'hoc/withWeb3'
 
 import applyListingData from './_listingData'
 
+import Store from 'utils/store'
+const store = Store('sessionStorage')
+
 class UpdateListing extends Component {
   state = {}
   render() {
@@ -66,7 +69,7 @@ class UpdateListing extends Component {
 
     updateListing({
       variables: applyListingData(this.props, {
-        listingID: this.props.listingId,
+        listingID: this.props.listing.id,
         additionalDeposit:
           tokenBalance >= Number(listing.boost) ? listing.boost : '0',
         from: wallet
@@ -116,6 +119,7 @@ class UpdateListing extends Component {
                   await this.props.refetch()
                 }
                 const { listingID } = event.returnValues
+                store.set('create-listing', undefined)
                 this.setState({
                   redirect: `/listing/${netId}-000-${listingID}`
                 })

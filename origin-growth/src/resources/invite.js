@@ -4,55 +4,119 @@ const _growthModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-const { GrowthCampaign } = require('./campaign')
 const { CampaignRules } = require('./rules')
+
+const DBToSchemaStatus = {
+  Sent: 'Pending',
+  Completed: 'Successful'
+}
 
 class GrowthInvite {
   /**
    * Returns a list of pending rewards:
-   *  - get list of referees from growth_referral. Note: for now we only care
-   *    about referees that published their profiles. We ignore others
-   *    that haven't made it that far.
-   *  - filter out invites completed during the current campaign.
-   *  - filter out invites completed during prior campaigns.
+   *  - get list of referees from growth_invite.
    * @param {string} referrer: ethAddress of the referrer.
    * @param {Array<string>} ignore: list of accounts to ignore
    * @param rewardValue
    * @returns {Promise<*>}
    * @private
    */
-  static async _getPendingRewards(referrer, ignore, rewardValue) {
-    // Load all invites.
-    const referrals = db.GrowthReferall.findAll({
-      where: { referrerEthAddress: referrer }
+  static async _getPendingRewards(referrer, rewardValue) {
+    /* Currenlty we only have Pending/Sent invites in GrowthInvite table
+     * and the event-listener is not yet attributing referee eth addresses
+     * to entries in this table. For that reason we can not yet filter
+     * out completed growth addresses out of pending ones.
+     *
+     * And the pending invites will carry over between different campaigns.
+     */
+
+    const referrals = await db.GrowthInvite.findAll({
+      where: { referrerEthAddress: referrer.toLowerCase() }
     })
-    const allReferees = referrals.map(r => r.refereeEthAddress)
 
-    // Filter out referrals we are supposed to ignore.
-    const pendingReferees = allReferees.filter(r => !ignore.includes(r))
+    // // Filter out referrals we are supposed to ignore.
+    // const pendingReferees = referrals.filter(
+    //   r => !ignore.includes(r.refereeEthAddress)
+    // )
 
-    // Load prior campaigns and filter out referrals completed during those.
-    const pastCampaigns = GrowthCampaign.getPast(referrer)
-    for (const campaign of pastCampaigns) {
-      // TODO(franck): for a campaign for which rewards have already been
-      // distributed, it could be faster to load the data from the
-      // growth_reward table as opposed to recalculating the rules.
-      const rewards = await campaign.getRewards(referrer, false)
-      // Get list of addresses for referees for which referral was completed
-      // during that campaign.
-      const referees = rewards
-        .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
-        .map(r => r.refereeEthAddress)
-      // Filter out those completed referrals from our pendingReferees list.
-      pendingReferees.filter(r => !referees.includes(r))
-    }
+    // // Load prior campaigns and filter out referrals completed during those.
+    // const pastCampaigns = GrowthCampaign.getPast(referrer)
+    // for (const campaign of pastCampaigns) {
+    //   // TODO(franck): for a campaign for which rewards have already been
+    //   // distributed, it could be faster to load the data from the
+    //   // growth_reward table as opposed to recalculating the rules.
+    //   const rewards = await campaign.getRewards(referrer, false)
+    //   // Get list of addresses for referees for which referral was completed
+    //   // during that campaign.
+    //   const referees = rewards
+    //     .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
+    //     .map(r => r.refereeEthAddress)
+    //   // Filter out those completed referrals from our pendingReferees list.
+    //   pendingReferees.filter(r => !referees.includes(r.refereeEthAddress))
+    // }
 
-    return pendingReferees.map(r => {
+    return referrals.map(r => {
       return {
-        refereeEthAddress: r,
-        value: rewardValue
+        id: r.id,
+        contact: r.refereeContact,
+        status: DBToSchemaStatus[r.status],
+        reward: rewardValue
       }
     })
+  }
+
+  /**
+   * Creates a referrer - referee connection in case this referee does not have a referrer yet
+   *
+   * @param {string} code - growth invitation code
+   */
+  static async makeReferralConnection(code, walletAddress) {
+    try {
+      const referralLink = await db.GrowthReferral.findOne({
+        where: {
+          refereeEthAddress: walletAddress.toLowerCase()
+        }
+      })
+      const referrer = await GrowthInvite._getReferrer(code)
+
+      if (
+        referralLink &&
+        referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()
+      ) {
+        /* The referrer associated with the invite code does not match previously stored referrer.
+         * A corner case scenario this might happen is as follow:
+         *  - referee receives multiple invites.
+         *  - referee clicks on an invite and enrolls into growth campaing
+         *  - referee clicks on another invite link and enrolls again into
+         *  growth campaign.
+         *
+         * When this happens we ignore the subsequent invites and attribute all
+         * referees actions to the initial referrer.
+         *
+         */
+        logger.warn(
+          `Referee ${walletAddress} already referred by ${
+            referralLink.referrerEthAddress
+          }`
+        )
+        return
+      }
+
+      await db.GrowthReferral.create({
+        referrerEthAddress: referrer,
+        refereeEthAddress: walletAddress.toLowerCase()
+      })
+
+      logger.info(
+        `Recorded referral. Referrer: ${referrer} Referee: ${walletAddress}`
+      )
+    } catch (e) {
+      logger.warn(
+        `Can not make referral connection for user ${walletAddress}: `,
+        e.message,
+        e.stack
+      )
+    }
   }
 
   /**
@@ -77,7 +141,8 @@ class GrowthInvite {
     return {
       status,
       walletAddress: referee,
-      contactName: (identity.firstName || '') + ' ' + (identity.lastName || ''),
+      // TODO: when we only have users' email on the record show that
+      contact: (identity.firstName || '') + ' ' + (identity.lastName || ''),
       reward: reward.value
     }
   }
@@ -95,6 +160,7 @@ class GrowthInvite {
     // Get list of referrals completed during the campaign by evaluating its rules.
     const crules = new CampaignRules(campaign, JSON.parse(campaign.rules))
     const rewards = await crules.getRewards(ethAddress, false)
+    const rewardValue = crules.getReferralRewardValue()
     const completedInvites = rewards
       .filter(r => r.constructor.name === 'ReferralReward') // Filter out non-referral rewards.
       .map(r => GrowthInvite._decorate(r, 'Completed')) // Decorate with extra info.
@@ -102,23 +168,18 @@ class GrowthInvite {
     // We need to compute pending invites only if the campaign is active.
     let pendingInvites = []
     const now = new Date()
-    const isActive = campaign.startDate >= now && campaign.endDate <= now
+    const isActive = campaign.startDate <= now && campaign.endDate >= now
     if (isActive) {
-      const ignore = completedInvites.map(i => i.walletAddress)
-      const pendingRewards = await GrowthInvite._getPendingRewards(
+      //const ignore = completedInvites.map(i => i.walletAddress)
+      pendingInvites = await GrowthInvite._getPendingRewards(
         ethAddress,
-        ignore,
         rewardValue
-      )
-      pendingInvites = pendingRewards.map(r =>
-        GrowthInvite._decorate(r, 'Pending')
       )
     }
 
     const allInvites = completedInvites.concat(pendingInvites)
 
     // Calculate total rewards earned and pending.
-    const rewardValue = crules.getReferralRewardValue()
     const rewardAmount = rewardValue
       ? BigNumber(rewardValue.amount)
       : BigNumber(0)
@@ -161,14 +222,18 @@ class GrowthInvite {
     return inviteCode.code
   }
 
-  // Returns referrer's information based on an invite code.
-  static async getReferrerInfo(code) {
+  static async _getReferrer(code) {
     // Lookup the code.
     const inviteCode = await db.GrowthInviteCode.findOne({ where: { code } })
     if (!inviteCode) {
       throw new Error('Invalid invite code')
     }
-    const referrer = inviteCode.ethAddress
+    return inviteCode.ethAddress
+  }
+
+  // Returns referrer's information based on an invite code.
+  static async getReferrerInfo(code) {
+    const referrer = await GrowthInvite._getReferrer(code)
 
     // Load the referrer's identity.
     // TODO(franck): Once our data model and GraphQL services interfaces are
