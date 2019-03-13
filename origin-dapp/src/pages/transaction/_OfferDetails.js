@@ -30,7 +30,7 @@ const OfferDetails = ({ offer }) => (
     {offer.startDate && offer.listing.__typename === 'FractionalListing' &&
       <li className="start-date">
         <span>Check in</span>
-        <span>{dayjs(offer.startDate).format('MMM. D, YYYY')}</span>
+        <span>{dayjs(offer.startDate).format('MMM. D, YYYY ')}</span>
       </li>
     }
     {offer.endDate && offer.listing.__typename === 'FractionalListing' &&
@@ -42,13 +42,13 @@ const OfferDetails = ({ offer }) => (
     {offer.startDate && offer.listing.__typename === 'FractionalHourlyListing' &&
       <li className="start-date">
         <span>Rental begin</span>
-        <span>{dayjs(offer.startDate).format('MMM. D, YYYY')}</span>
+        <span>{dayjs(offer.startDate).format('MMM. D, YYYY h:00a')}</span>
       </li>
     }
     {offer.endDate && offer.listing.__typename === 'FractionalHourlyListing' &&
       <li className="end-date">
         <span>Rental end</span>
-        <span>{dayjs(offer.endDate).format('MMM. D, YYYY')}</span>
+        <span>{dayjs(offer.endDate).format('MMM. D, YYYY h:00a')}</span>
       </li>
     }
     <li className="total-price">
