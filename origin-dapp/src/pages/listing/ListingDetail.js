@@ -105,7 +105,7 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-
+    const isOwnerViewing = listing.seller.id === this.props.from
     return (
       <>
         <Gallery pics={listing.media} />
@@ -114,6 +114,7 @@ class ListingDetail extends Component {
           <>
             <hr />
             <Calendar
+              interactive={!isOwnerViewing}
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availability}
@@ -127,6 +128,7 @@ class ListingDetail extends Component {
           <>
             <hr />
             <WeekCalendar
+              interactive={!isOwnerViewing}
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availabilityHourly}
