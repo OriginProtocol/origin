@@ -1,0 +1,1 @@
+${referrerName} invited you to check out the Origin DApp at ${targetUrl} !

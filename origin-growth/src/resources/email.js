@@ -1,3 +1,4 @@
+const fs = require('fs')
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 const validator = require('validator')
@@ -10,6 +11,33 @@ const logger = require('../logger')
 
 // Do not allow referrer to blast invites to more than maxNumInvites recipients.
 const maxNumInvites = 50
+
+const templateDir = `${__dirname}/../templates`
+const textTemplate = fs
+  .readFileSync(`${templateDir}/emailInvite.txt`)
+  .toString()
+const htmlTemplate = fs
+  .readFileSync(`${templateDir}/emailInvite.txt`)
+  .toString()
+
+/**
+ * Returns email content.
+ * @param {string} friendName
+ * @param {string} targetUrl
+ * @returns {{subject: string, html: *, text: *}}
+ * @private
+ */
+function _generateInviteEmail(referrerName, targetUrl) {
+  const text = textTemplate
+    .replace('${referrerName}', referrerName)
+    .replace('${targetUrl}', targetUrl)
+  const html = htmlTemplate
+    .replace('${referrerName}', referrerName)
+    .replace('${targetUrl}', targetUrl)
+  const subject = `${referrerName} invited you to join Origin`
+
+  return { subject, text, html }
+}
 
 /**
  * Send invite codes by email.
@@ -36,8 +64,10 @@ async function sendInvites(referrer, recipients) {
   if (!identity) {
     throw new Error(`Failed loading identity for ${referrer}`)
   }
-  const contactName =
+  const referrerName =
     (identity.firstName || '') + ' ' + (identity.lastName || '')
+
+  const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
 
   logger.info(
     `Sending ${recipients.length} invitation emails on behalf of ${referrer}`
@@ -50,14 +80,17 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
-    const welcomeUrl = `${dappUrl}/${code}`
+    const targetUrl = `${dappUrl}/${code}`
+    const { subject, text, html } = _generateInviteEmail(
+      referrerName,
+      targetUrl
+    )
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
-      subject: `${contactName} invited you to join Origin`,
-      text: `Check out the Origin DApp at ${welcomeUrl}`,
-      html: `Check out the <a href="${welcomeUrl}">Origin Protocol DApp</a>`
+      subject,
+      text,
+      html
     }
     try {
       await sendgridMail.send(email)
