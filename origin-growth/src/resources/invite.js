@@ -4,7 +4,6 @@ const _growthModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
-const { GrowthCampaign } = require('./campaign')
 const { CampaignRules } = require('./rules')
 
 const DBToSchemaStatus = {
@@ -171,7 +170,7 @@ class GrowthInvite {
     const now = new Date()
     const isActive = campaign.startDate <= now && campaign.endDate >= now
     if (isActive) {
-      const ignore = completedInvites.map(i => i.walletAddress)
+      //const ignore = completedInvites.map(i => i.walletAddress)
       pendingInvites = await GrowthInvite._getPendingRewards(
         ethAddress,
         rewardValue
