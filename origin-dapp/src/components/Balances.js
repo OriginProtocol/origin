@@ -24,6 +24,15 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
       </div>
+      <div className="account dai">
+        <div className="icon" />
+        <div className="balance">
+          <div className="coin dai">
+            <TokenBalance account={account} token="DAI" />
+            <span>DAI</span>
+          </div>
+        </div>
+      </div>
       <div className="account ogn d-flex justify-content-between">
         <div className="d-flex">
           <div className="icon" />
@@ -67,6 +76,8 @@ require('react-styl')(`
         margin-right: 0.5rem
       &.ogn .icon
         background-image: url(images/ogn-icon.svg)
+      &.dai .icon
+        background-image: url(images/dai-icon.svg)
       .balance
         font-weight: bold
         .coin
@@ -78,6 +89,8 @@ require('react-styl')(`
             margin-left: 0.25rem
           &.ogn > span
             color: #007bff
+          &.dai > span
+            color: #fec102
         .usd
           font-size: 10px
           line-height: 10px
