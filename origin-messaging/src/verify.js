@@ -55,14 +55,25 @@ function verifyConversers(conversee, keysMap) {
   }
 }
 
-function verifyNewMessageSignature(signature, conversationId, conversationIndex, content, address) {
-  const buffer = stringify({conversationId, conversationIndex, content})
+function verifyNewMessageSignature(
+  signature,
+  conversationId,
+  conversationIndex,
+  content,
+  address
+) {
+  const buffer = stringify({ conversationId, conversationIndex, content })
   const recoveredAddress = web3.eth.accounts.recover(buffer, signature)
-  console.log("recovered buffer:", buffer, " raddress:", recoveredAddress, " address:", address)
+  console.log(
+    'recovered buffer:',
+    buffer,
+    ' raddress:',
+    recoveredAddress,
+    ' address:',
+    address
+  )
   return recoveredAddress == address
 }
-
-
 
 function verifyMessageSignature(keysMap, orbitGlobal) {
   return (signature, key, message, buffer) => {

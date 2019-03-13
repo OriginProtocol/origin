@@ -1,5 +1,5 @@
-'use strict';
-const tableName = "conversee"
+'use strict'
+const tableName = 'conversee'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(tableName, {
@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'conversation', // name of Target model
-          key: 'id', // key in Target model that we're referencing
+          key: 'id' // key in Target model that we're referencing
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -25,9 +25,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(tableName);
+    return queryInterface.dropTable(tableName)
   }
-};
+}

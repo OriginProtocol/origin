@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const TableName = 'registry'
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -21,9 +21,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(TableName);
+    return queryInterface.dropTable(TableName)
   }
-};
+}

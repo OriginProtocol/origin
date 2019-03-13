@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const TableName = 'conversation'
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -12,7 +12,7 @@ module.exports = {
       external_id: {
         type: Sequelize.STRING(256),
         allowNull: false,
-        unique:true 
+        unique: true
       },
       message_count: {
         type: Sequelize.INTEGER,
@@ -30,9 +30,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(TableName);
+    return queryInterface.dropTable(TableName)
   }
-};
+}

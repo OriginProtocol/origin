@@ -25,7 +25,6 @@ import {
 const messagingRoomsMap = {}
 const snapshotBatchSize = config.SNAPSHOT_BATCH_SIZE
 
-
 const signatureBufferMap = {}
 
 function sleep(ms) {
@@ -46,8 +45,7 @@ async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
 
     logger.debug(`Room started: ${room.id}`)
 
-    if (storeType == "eventlog")
-    {
+    if (storeType == 'eventlog') {
       room.__write_messages = true
     }
 
@@ -67,17 +65,23 @@ async function onConverse(roomDb, conversee, payload) {
   logger.debug(`Started conversation between: ${converser} and ${conversee}`)
   const writers = [converser, conversee].sort()
 
-  const externalId = writers.join("-")
+  const externalId = writers.join('-')
 
-  let conversation = await db.Conversation.findOne({where:{externalId:externalId}})
+  let conversation = await db.Conversation.findOne({
+    where: { externalId: externalId }
+  })
 
   if (!conversation) {
     try {
-      conversation = await db.Conversation.create({externalId, data:{payload}})
+      conversation = await db.Conversation.create({
+        externalId,
+        data: { payload }
+      })
     } catch (error) {
-      conversation = await db.Conversation.findOne({where:{externalId:externalId}})
-      if (!conversation)
-      {
+      conversation = await db.Conversation.findOne({
+        where: { externalId: externalId }
+      })
+      if (!conversation) {
         console.log(error)
         throw error
       }
@@ -85,7 +89,10 @@ async function onConverse(roomDb, conversee, payload) {
   }
 
   for (const writer of writers) {
-    await db.Conversee.upsert({conversationId:conversation.id, ethAddress:writer}) //make sure this mapping is in place..
+    await db.Conversee.upsert({
+      conversationId: conversation.id,
+      ethAddress: writer
+    }) //make sure this mapping is in place..
   }
 
   startRoom(roomDb, config.CONV, 'eventlog', writers)
@@ -213,29 +220,28 @@ async function loadSnapshotDB(db) {
       const signature = entry.sig
       const ethAddress = entry.key
       const buffer = signatureBufferMap[signature]
-      const data = {ext:buffer}
+      const data = { ext: buffer }
       const content = entry.payload.value
       let isKeys = false
 
-      if (content.length == 2 && content[0].type == "key" && content[1].type == "key")
-      {
+      if (
+        content.length == 2 &&
+        content[0].type == 'key' &&
+        content[1].type == 'key'
+      ) {
         delete content[0].type
         delete content[1].type
-        data.content = { type:"keys", address:ethAddress, keys:content }
+        data.content = { type: 'keys', address: ethAddress, keys: content }
         isKeys = true
-      }
-      else if ( content.length == 1 ) 
-      {
+      } else if (content.length == 1) {
         data.content = content[0]
-      }
-      else
-      {
-        console.log("Invalid content:", content)
+      } else {
+        console.log('Invalid content:', content)
         return
       }
       const writers = db.access.write
 
-      console.log("data:", data, "ethAddress", ethAddress)
+      console.log('data:', data, 'ethAddress', ethAddress)
       writeDbMessage(writers, ethAddress, data, signature, isKeys)
     })
   }
@@ -269,12 +275,26 @@ async function _onPeerConnected(address, peer) {
 }
 
 function writeDbMessage(writers, ethAddress, data, signature, isKeys) {
-  const externalId = writers.sort().join("-")
-  db.sequelize.transaction( async (t) => {
-    const conversation = await db.Conversation.findOne({ where:{ externalId:externalId }, transaction: t, lock: t.LOCK.UPDATE })
-    await db.Message.create({ conversationId: conversation.id, conversationIndex:conversation.messageCount, ethAddress, data, signature, isKeys }, {transaction:t})
+  const externalId = writers.sort().join('-')
+  db.sequelize.transaction(async t => {
+    const conversation = await db.Conversation.findOne({
+      where: { externalId: externalId },
+      transaction: t,
+      lock: t.LOCK.UPDATE
+    })
+    await db.Message.create(
+      {
+        conversationId: conversation.id,
+        conversationIndex: conversation.messageCount,
+        ethAddress,
+        data,
+        signature,
+        isKeys
+      },
+      { transaction: t }
+    )
     conversation.messageCount += 1
-    return conversation.save({ transaction:t })
+    return conversation.save({ transaction: t })
   })
 }
 
@@ -291,14 +311,14 @@ const startOrbitDbServer = async ipfs => {
     config.GLOBAL_KEYS,
     undefined,
     (signature, key, message) => {
-        if (verifyRegistrySignature(signature, key, message)) {
-          const data = message.payload.value
-          const ethAddress = message.payload.key
-          db.Registry.upsert({ethAddress, data, signature})
-          return true
-        }
-        return false
-      },
+      if (verifyRegistrySignature(signature, key, message)) {
+        const data = message.payload.value
+        const ethAddress = message.payload.key
+        db.Registry.upsert({ ethAddress, data, signature })
+        return true
+      }
+      return false
+    },
     message => {
       handleGlobalRegistryWrite(orbitGlobal, message.payload)
     }
@@ -319,7 +339,10 @@ const startOrbitDbServer = async ipfs => {
     }
   )
 
-  const _verifyMessageSignature = verifyMessageSignature(globalRegistry, orbitGlobal)
+  const _verifyMessageSignature = verifyMessageSignature(
+    globalRegistry,
+    orbitGlobal
+  )
   orbitGlobal.keystore.registerSignVerify(
     config.CONV,
     undefined,
@@ -335,7 +358,6 @@ const startOrbitDbServer = async ipfs => {
 
   globalRegistry.events.on('ready', () => {
     logger.info(`Ready...`)
-
   })
 
   // testing it's best to drop this for now
