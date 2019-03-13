@@ -123,7 +123,10 @@ class AvailabilityCalculatorHourly {
     // Get hourly availabilty between startStr and endStr
     let start = typeof startStr === 'string' ? dayjs(startStr) : startStr
     // We add one hour so that `end` hour will also be included
-    let end = typeof endStr === 'string' ? dayjs(endStr).add(1, 'hour') : endStr.add(1, 'hour')
+    let end =
+      typeof endStr === 'string'
+        ? dayjs(endStr).add(1, 'hour')
+        : endStr.add(1, 'hour')
     const hours = []
 
     if (end.isBefore(start)) {

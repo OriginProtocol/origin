@@ -17,7 +17,10 @@ describe('Hourly Availability Calculator ', function() {
   })
 
   it('should allow a range of datetimes to be queried', function() {
-    const dates = instance.getAvailability(`${year}-02-16T01:00:00`, `${year}-02-16T03:00:00`)
+    const dates = instance.getAvailability(
+      `${year}-02-16T01:00:00`,
+      `${year}-02-16T03:00:00`
+    )
     assert.deepEqual(dates, [
       {
         hour: `${year}-02-16T01:00:00`,
@@ -44,7 +47,10 @@ describe('Hourly Availability Calculator ', function() {
   })
 
   it('should allow a range of datetimes to be made unavailable', function() {
-    const dates = instance.update(`${year}-02-01T03:00:00/${year}-02-01T05:00:00`, 'unavailable')
+    const dates = instance.update(
+      `${year}-02-01T03:00:00/${year}-02-01T05:00:00`,
+      'unavailable'
+    )
     assert.deepEqual(dates, [
       {
         hour: `${year}-02-01T03:00:00`,
@@ -64,7 +70,10 @@ describe('Hourly Availability Calculator ', function() {
   })
 
   it('should allow a range of datetimes to be made available', function() {
-    const dates = instance.update(`${year}-02-01T04:00:00/${year}-02-01T06:00:00`, 'available')
+    const dates = instance.update(
+      `${year}-02-01T04:00:00/${year}-02-01T06:00:00`,
+      'available'
+    )
     assert.deepEqual(dates, [
       {
         hour: `${year}-02-01T04:00:00`,

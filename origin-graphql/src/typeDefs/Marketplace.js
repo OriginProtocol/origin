@@ -385,7 +385,7 @@ module.exports = `
 
   input FractionalListingInput {
     weekendPrice: PriceInput
-    timeZone: [String]
+    timeZone: String
     unavailable: [String]
     customPricing: [String]
     booked: [String]
