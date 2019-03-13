@@ -39,6 +39,9 @@ async function sendInvites(referrer, recipients) {
   const contactName =
     (identity.firstName || '') + ' ' + (identity.lastName || '')
 
+  logger.info(
+    `Sending ${recipients.length} invitation emails on behalf of ${referrer}`
+  )
   for (const recipient of recipients) {
     // Validate recipient is a proper email.
     if (!validator.isEmail(recipient)) {
@@ -56,7 +59,6 @@ async function sendInvites(referrer, recipients) {
     }
     try {
       await sendgridMail.send(email)
-      logger.info(`Sent invitation email on behalf of ${referrer}`)
     } catch (error) {
       logger.error(`Failed sending invite: ${error}`)
       throw new Error(`Failed sending invite: ${error}`)
@@ -78,8 +80,8 @@ async function sendInvites(referrer, recipients) {
         refereeContact: recipient,
         status: enums.GrowthInviteStatuses.Sent
       })
-      logger.info('Recorded invite in DB.')
     }
+    logger.info('Invites sent and recorded in DB.')
   }
 }
 
