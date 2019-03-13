@@ -65,11 +65,11 @@ class Details extends Component {
                   {Feedback('description')}
                 </div>
 
-                {/* BEGIN Homeshare specific code */}
+                {/* BEGIN Hourly specific code */}
 
                 <div className="form-group">
                   <label>
-                    Default Weekday Pricing (Sunday - Thursday nights)
+                    Default Price per Hour
                   </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -94,32 +94,8 @@ class Details extends Component {
                     Price is always in ETH, USD is an estimate.
                   </div>
                 </div>
-                <div className="form-group">
-                  <label>
-                    Default Weekend Pricing (Friday &amp; Saturday nights)
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('weekendPrice')} />
-                        <span className="eth">ETH</span>
-                      </div>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.weekendPrice}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
-                    </div>
-                  </div>
-                  {Feedback('weekendPrice')}
-                </div>
 
-                {/* END Homeshare specific code */}
+                {/* END Hourly specific code */}
 
                 <div className="form-group">
                   <label>Select photos</label>
@@ -198,14 +174,6 @@ class Details extends Component {
       newState.priceError = 'Price must be a number'
     } else if (Number(this.state.price) <= 0) {
       newState.priceError = 'Price must be greater than zero'
-    }
-
-    if (!this.state.weekendPrice) {
-      newState.weekendPriceError = 'Weekend pricing is required'
-    } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
-      newState.weekendPriceError = 'Weekend pricing must be a number'
-    } else if (Number(this.state.weekendPrice) <= 0) {
-      newState.weekendPriceError = 'Weekend pricing must be greater than zero'
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
