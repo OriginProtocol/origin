@@ -66,8 +66,8 @@ async function sendInvites(referrer, recipients) {
       throw new Error(`Failed sending invite: ${error}`)
     }
 
-    // Make sure the entry is not a duplicate and if not,
-    // record the invite in the growth_invite table.
+    // Make sure the entry is not a duplicate then
+    // record an entry in the growth_invite table.
     const existing = await db.GrowthInvite.findOne({
       where: {
         referrerEthAddress: referrer.toLowerCase(),
