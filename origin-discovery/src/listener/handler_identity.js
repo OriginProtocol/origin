@@ -174,7 +174,7 @@ class IdentityEventHandler {
           null,
           { blockInfo },
           date
-          )
+        )
       })
     )
   }
