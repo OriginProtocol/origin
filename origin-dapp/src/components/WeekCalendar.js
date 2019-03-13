@@ -167,7 +167,9 @@ class WeekCalendar extends Component {
             let rangeStartDate = dayjs(this.state.startDate),
               rangeEndDate = dayjs(endDate)
             if (rangeEndDate.isBefore(rangeStartDate)) {
-              ;[rangeStartDate, rangeEndDate] = [rangeEndDate, rangeStartDate]
+              const temp = rangeStartDate
+              rangeStartDate = rangeEndDate
+              rangeEndDate = temp
             }
 
             // ISO 8601 Interval format
