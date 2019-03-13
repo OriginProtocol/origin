@@ -23,10 +23,9 @@ class GrowthInvite {
    * @private
    */
   static async _getPendingRewards(referrer, rewardValue) {
-
     /* Currenlty we only have Pending/Sent invites in GrowthInvite table
      * and the event-listener is not yet attributing referee eth addresses
-     * to entries in this table. For that reason we can not yet filter 
+     * to entries in this table. For that reason we can not yet filter
      * out completed growth addresses out of pending ones.
      *
      * And the pending invites will carry over between different campaigns.

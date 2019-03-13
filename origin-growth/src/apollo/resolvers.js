@@ -177,7 +177,9 @@ const resolvers = {
     },
     async inviteRemind(_, args, context) {
       requireEnrolledUser(context)
-      logger.info(`invite remind mutation called with invitationId: ${args.invitationId}.`)
+      logger.info(
+        `invite remind mutation called with invitationId: ${args.invitationId}.`
+      )
       // TODO: implement
       return true
     },

@@ -292,7 +292,9 @@ function withEnrolmentModal(WrappedComponent) {
 
             // used for testing purposes. No worries overriding this on frontend
             // since another check is done on backend when calling enroll mutation
-            let countryOverride = localStorage.getItem('growth_country_override')
+            let countryOverride = localStorage.getItem(
+              'growth_country_override'
+            )
             let { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
