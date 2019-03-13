@@ -51,7 +51,7 @@ async function sendInvites(referrer, recipients) {
 
     // Send the invite code to the recipient.
     const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
-    const welcomeUrl = `${dappUrl}?inviteCode=${code}`
+    const welcomeUrl = `${dappUrl}/${code}`
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
