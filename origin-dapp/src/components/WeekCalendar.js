@@ -160,22 +160,24 @@ class WeekCalendar extends Component {
           })
         },
         onMouseUp: () => {
-          // TODO: Unlike for montly, we probably need to add an hour here.
-          // If user drags to selec the 4pm slot, that means thier booking
-          // acutally ends at 5pm.
-
-          this.setState({ dragEnd: idx, dragging: false, endDate: hour.hour })
+          const endDate = hour.hour
+          this.setState({ dragEnd: idx, dragging: false, endDate: endDate })
           if (this.props.onChange) {
-            // TODO (Stan): Handle if "enddate" is before startdate
+            // Handle if enddate is actually before startdate
+            let rangeStartDate = dayjs(this.state.startDate),
+              rangeEndDate = dayjs(endDate)
+            if (rangeEndDate.isBefore(rangeStartDate)) {
+              ;[rangeStartDate, rangeEndDate] = [rangeEndDate, rangeStartDate]
+            }
 
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
+            // Note: We add an hour to end. If user drags to select the 4pm slot, that means thier booking
+            // acutally ends at 5pm.
             const range =
-              dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss') +
+              rangeStartDate.format('YYYY-MM-DDTHH:mm:ss') +
               '/' +
-              dayjs(hour.hour)
-                .add(1, 'hour')
-                .format('YYYY-MM-DDTHH:mm:ss')
+              rangeEndDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss')
 
             this.props.onChange({ range })
           }
