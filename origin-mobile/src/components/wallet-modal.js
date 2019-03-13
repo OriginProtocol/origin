@@ -25,28 +25,16 @@ class WalletModal extends Component {
 
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleFunding = this.handleFunding.bind(this)
+    this.showBackupWarning = this.showBackupWarning.bind(this)
     this.showPrivateKey = this.showPrivateKey.bind(this)
+    this.state = {
+      showBackupWarning: this.props.backupWarning,
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.backupWarning && !prevProps.backupWarning) {
-      // alert will block modal from opening if not delayed
-      setTimeout(() => {
-        Alert.alert(
-          'Important!',
-          `Be sure to back up your private key so that you don't lose access to your wallet. If your device is lost or you delete this app, we won't be able to help recover your funds.`,
-          [
-            { text: `Done. Don't show me this again.`, onPress: () => {
-              this.props.updateBackupWarningStatus(true, Date.now())
-            }},
-            { text: 'Show Private Key', onPress: () => {
-              this.showPrivateKey()
-
-              this.props.updateBackupWarningStatus(true)
-            }},
-          ],
-        )
-      }, 1000)
+    if (this.state.showBackupWarning || (this.props.backupWarning && !prevProps.backupWarning)) {
+      this.showBackupWarning()
     }
   }
 
@@ -95,6 +83,27 @@ class WalletModal extends Component {
         ],
       )
     }
+  }
+
+  showBackupWarning() {
+    this.setState({ showBackupWarning: false })
+    // alert will block modal from opening if not delayed
+    setTimeout(() => {
+      Alert.alert(
+        'Important!',
+        `Be sure to back up your private key so that you don't lose access to your wallet. If your device is lost or you delete this app, we won't be able to help recover your funds.`,
+        [
+          { text: `Done. Don't show me this again.`, onPress: () => {
+            this.props.updateBackupWarningStatus(true, Date.now())
+          }},
+          { text: 'Show Private Key', onPress: () => {
+            this.showPrivateKey()
+
+            this.props.updateBackupWarningStatus(true)
+          }},
+        ],
+      )
+    }, 1000)
   }
 
   showPrivateKey() {

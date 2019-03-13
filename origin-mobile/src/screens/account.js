@@ -127,7 +127,7 @@ class AccountScreen extends Component {
     const isActive = address === wallet.address
 
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+      <View style={styles.wrapper}>
         <View contentContainerStyle={styles.content} style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>NAME</Text>
@@ -188,7 +188,7 @@ class AccountScreen extends Component {
             />
           }
         </View>
-      </KeyboardAvoidingView>
+      </View>
     )
   }
 }
@@ -247,13 +247,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: '5%',
   },
-  keyboardWrapper: {
-    backgroundColor: '#f7f8f8',
-    flex: 1,
-  },
   text: {
     flex: 1,
     fontSize: 17,
     fontFamily: 'Lato',
+  },
+  wrapper: {
+    backgroundColor: '#f7f8f8',
+    flex: 1,
   },
 })
