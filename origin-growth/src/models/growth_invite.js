@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   const GrowthInvite = sequelize.define(
     'GrowthInvite',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       referrerEthAddress: DataTypes.STRING,
       refereeContactType: DataTypes.ENUM(enums.GrowthInviteContactTypes),
       refereeContact: DataTypes.STRING,
