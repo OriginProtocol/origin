@@ -58,9 +58,12 @@ module.exports = `
   }
 
   type Invite {
+    # only pending invites require an ID - for remind functionality
+    id: ID
     status: GrowthInviteStatus!
-    walletAddress: ID!
-    contactName: String
+    walletAddress: ID
+    # email or firstName + lastName of the contact
+    contact: String
     reward: Price
   }
 
@@ -152,8 +155,10 @@ module.exports = `
     # Sends email invites with referral code on behalf of the referrer.
     invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.
-    enroll(accountId: ID!, agreementMessage: String!, signature: String!): EnrollResponse
+    enroll(accountId: ID!, agreementMessage: String!, signature: String!, inviteCode: String): EnrollResponse
     # Records a growth engine event.
     log(event: JSON!): Boolean
+    # Remind a user that his invitation is still pending
+    inviteRemind(invitationId: Int!): Boolean
   }
 `
