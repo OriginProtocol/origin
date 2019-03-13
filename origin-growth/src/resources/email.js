@@ -22,7 +22,7 @@ async function sendInvites(referrer, recipients) {
   }
 
   // Load the invite code for the referrer.
-  const code = db.GrowthInviteCode.findOne({
+  const code = await db.GrowthInviteCode.findOne({
     where: { ethAddress: referrer.toLowerCase() }
   })
   if (!code) {
@@ -39,6 +39,9 @@ async function sendInvites(referrer, recipients) {
   const contactName =
     (identity.firstName || '') + ' ' + (identity.lastName || '')
 
+  logger.info(
+    `Sending ${recipients.length} invitation emails on behalf of ${referrer}`
+  )
   for (const recipient of recipients) {
     // Validate recipient is a proper email.
     if (!validator.isEmail(recipient)) {
@@ -47,13 +50,14 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    // TODO: should we have an html version of the email ?
+    const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
+    const welcomeUrl = `${dappUrl}/${code}`
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
       subject: `${contactName} invited you to join Origin`,
-      text: `Check out the Origin DApp at https://dapp.originprotocol.com/invite/${code}`,
-      html: `Check out the <a href="https://dapp.originprotocol.com/invite/${code}">Origin Protocol DApp</a>`
+      text: `Check out the Origin DApp at ${welcomeUrl}`,
+      html: `Check out the <a href="${welcomeUrl}">Origin Protocol DApp</a>`
     }
     try {
       await sendgridMail.send(email)
@@ -62,13 +66,24 @@ async function sendInvites(referrer, recipients) {
       throw new Error(`Failed sending invite: ${error}`)
     }
 
-    // Record the invite in the growth_invite table.
-    await db.GrowthInvite.create({
-      referrerEthAddress: referrer.toLowerCase(),
-      refereeContactType: enums.GrowthInviteContactTypes.Email,
-      refereeContact: recipient,
-      status: enums.GrowthInviteStatuses.Sent
+    // Make sure the entry is not a duplicate then
+    // record an entry in the growth_invite table.
+    const existing = await db.GrowthInvite.findOne({
+      where: {
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient
+      }
     })
+    if (!existing) {
+      await db.GrowthInvite.create({
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient,
+        status: enums.GrowthInviteStatuses.Sent
+      })
+    }
+    logger.info('Invites sent and recorded in DB.')
   }
 }
 

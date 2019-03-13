@@ -28,7 +28,7 @@ class IdentityEventHandler {
    */
   async _loadValueFromAttestation(ethAddress, method) {
     // Loads the most recent value.
-    const attestation = db.Attestation.findOne({
+    const attestation = await db.Attestation.findOne({
       where: {
         ethAddress: ethAddress.toLowerCase(),
         method

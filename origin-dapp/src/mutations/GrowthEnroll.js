@@ -5,7 +5,7 @@ export default gql`
     $accountId: ID!
     $agreementMessage: String!
     $signature: String!
-    $inviteCode: String!
+    $inviteCode: String
   ) {
     enroll(
       accountId: $accountId
