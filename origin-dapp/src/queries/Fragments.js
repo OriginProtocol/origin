@@ -76,6 +76,11 @@ export default {
           customPricing
           unavailable
         }
+        ... on FractionalHourlyListing {
+          booked
+          customPricing
+          unavailable
+        }
       }
     `
   },
