@@ -13,6 +13,9 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 class Details extends Component {
   constructor(props) {
     super(props)
+    if (!props.listing.timeZone) {
+      props.listing.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    }
     this.state = omit(props.listing, 'valid')
   }
 
@@ -36,7 +39,7 @@ class Details extends Component {
           <div className="create-listing-step-2">
             <div className="wrap">
               <div className="step">{`Step ${this.props.step}`}</div>
-              <div className="step-description">Provide listing details</div>
+              <div className="step-description">Provide rental listing details</div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -58,14 +61,19 @@ class Details extends Component {
                 <div className="form-group">
                   <label className="mb-0">Description</label>
                   <div className="help-text">
-                    Make sure to include any product variant details here. Learn
-                    more
+                    Make sure to include special conditions of your rental here.
                   </div>
                   <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
 
                 {/* BEGIN Hourly specific code */}
+
+                <div className="form-group">
+                  <label className="mb-0">Time Zone</label>
+                  <input {...input('timeZone')} />
+                  {Feedback('timeZone')}
+                </div>
 
                 <div className="form-group">
                   <label>
@@ -166,6 +174,12 @@ class Details extends Component {
     } else if (this.state.description.length > 1024) {
       // Limit from origin-validator/src/schemas/listing.json
       newState.descriptionError = 'Description is too long'
+    }
+
+    if (!this.state.timeZone) {
+      newState.timeZoneError = 'Time Zone is required'
+    } else if (this.state.timeZone.length > 1024) {
+      newState.timeZoneError = 'Time Zone is too long'
     }
 
     if (!this.state.price) {

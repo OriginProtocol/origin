@@ -40,20 +40,15 @@ class Review extends Component {
               <div className="col-9">{listing.description}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Weekdays</div>
+              <div className="col-3 label">Time Zone</div>
+              <div className="col-9">{listing.timeZone}</div>
+            </div>
+            <div className="row">
+              <div className="col-3 label">Price</div>
               <div className="col-9">
                 <CoinPrice price={listing.price} coin="eth" />
                 <div className="fiat">
                   ~ <Price amount={listing.price} />
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-3 label">Weekends</div>
-              <div className="col-9">
-                <CoinPrice price={listing.weekendPrice} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.weekendPrice} />
                 </div>
               </div>
             </div>
@@ -94,7 +89,8 @@ class Review extends Component {
                       weekendPrice: listing.weekendPrice,
                       booked: listing.booked,
                       unavailable: listing.unavailable,
-                      customPricing: listing.customPricing
+                      customPricing: listing.customPricing,
+                      timeZone: listing.timeZone
                     })
                   }
                 />

@@ -15,6 +15,7 @@ class AvailabilityCalculatorHourly {
     this.opts.unavailable = this.opts.unavailable || []
     this.opts.booked = this.opts.booked || []
     this.opts.customPricing = this.opts.customPricing || []
+    this.opts.timeZone = this.opts.timeZone || ''
   }
 
   /**

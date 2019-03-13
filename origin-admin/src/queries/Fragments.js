@@ -65,6 +65,7 @@ export default {
             amount
             currency
           }
+          timeZone
           booked
           customPricing
           unavailable

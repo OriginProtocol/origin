@@ -40,6 +40,7 @@ class CreateListing extends Component {
         price: '',
 
         // Fractional fields:
+        timeZone: '',
         weekendPrice: '',
         booked: [],
         customPricing: [],

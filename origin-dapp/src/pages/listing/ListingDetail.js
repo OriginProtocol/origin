@@ -39,7 +39,8 @@ class ListingDetail extends Component {
       this.state.availabilityHourly = new AvailabilityCalculatorHourly({
         booked: get(props, 'listing.booked'),
         unavailable: get(props, 'listing.unavailable'),
-        customPricing: get(props, 'listing.customPricing')
+        customPricing: get(props, 'listing.customPricing'),
+        timeZone: get(props, 'listing.timeZone')
       })
     }
   }

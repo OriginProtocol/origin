@@ -26,6 +26,7 @@ export default function applyListingData(props, data) {
   } else if (listing.__typename === 'FractionalListing' || listing.__typename === 'FractionalHourlyListing' ) {
     variables.fractionalData = {
       weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
+      timeZone: listing.timeZone,
       booked: listing.booked,
       customPricing: listing.customPricing,
       unavailable: listing.unavailable

@@ -210,10 +210,6 @@ class Availability extends Component {
 
               const { booked, customPricing, unavailable } = calculator.opts
 
-              console.log(booked)
-              console.log(customPricing)
-              console.log(unavailable)
-
               this.props.onChange({
                 ...this.props.listing,
                 booked,

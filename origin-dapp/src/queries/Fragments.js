@@ -77,6 +77,7 @@ export default {
           unavailable
         }
         ... on FractionalHourlyListing {
+          timeZone
           booked
           customPricing
           unavailable

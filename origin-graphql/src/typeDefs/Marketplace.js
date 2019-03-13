@@ -270,6 +270,7 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
+    timeZone: [String]
     unavailable: [String]
     customPricing: [String]
     booked: [String]
@@ -383,6 +384,7 @@ module.exports = `
 
   input FractionalListingInput {
     weekendPrice: PriceInput
+    timeZone: [String]
     unavailable: [String]
     customPricing: [String]
     booked: [String]
