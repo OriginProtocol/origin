@@ -41,7 +41,8 @@ class ListingDetail extends Component {
         unavailable: get(props, 'listing.unavailable'),
         customPricing: get(props, 'listing.customPricing'),
         timeZone: get(props, 'listing.timeZone'),
-        workingHours: get(props, 'workingHours')
+        workingHours: get(props, 'listing.workingHours'),
+        price: get(props, 'listing.price.amount')
       })
     }
   }
@@ -143,7 +144,6 @@ class ListingDetail extends Component {
               </div>
             </div>
             <WeekCalendar
-              workingHours={this.state.workingHours}
               interactive={!isOwnerViewing}
               small={true}
               onChange={state => this.setState(state)}

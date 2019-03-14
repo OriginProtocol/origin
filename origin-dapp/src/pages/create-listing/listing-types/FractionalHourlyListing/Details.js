@@ -29,7 +29,7 @@ class Details extends Component {
       '09:00:00/17:00:00',
       ''
     ]
-    if (!props.listing.workingHours || props.listing.workingHours.length==0) {
+    if (!props.listing.workingHours || props.listing.workingHours.length == 0) {
       props.listing.workingHours = this.defaultWorkingHours
     }
     this.state = omit(props.listing, 'valid')
@@ -196,7 +196,17 @@ class Details extends Component {
                             }}
                           >
                             {workingHoursSelect.map(([id, display]) => (
-                              <option key={id} value={id}>
+                              <option
+                                key={id}
+                                value={id}
+                                disabled={
+                                  // Disable hours after end time
+                                  id >=
+                                  this.state.workingHours[dayIndex].split(
+                                    '/'
+                                  )[1]
+                                }
+                              >
                                 {display}
                               </option>
                             ))}
@@ -222,7 +232,17 @@ class Details extends Component {
                             }}
                           >
                             {workingHoursSelect.map(([id, display]) => (
-                              <option key={id} value={id}>
+                              <option
+                                key={id}
+                                value={id}
+                                disabled={
+                                  // Disable hours before start time
+                                  id <=
+                                  this.state.workingHours[dayIndex].split(
+                                    '/'
+                                  )[0]
+                                }
+                              >
                                 {display}
                               </option>
                             ))}
