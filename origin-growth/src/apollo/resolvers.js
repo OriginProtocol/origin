@@ -6,7 +6,7 @@ const {
   authenticateEnrollment,
   getUserAuthenticationStatus
 } = require('../resources/authentication')
-//const { getLocationInfo } = require('../util/locationInfo')
+const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
 const { sendInvites } = require('../resources/email')
@@ -76,43 +76,21 @@ const resolvers = {
       requireEnrolledUser(context)
       return GrowthInvite.getInviteCode(context.walletAddress)
     },
-    //async isEligible(obj, args, context) {
-    async isEligible() {
-      return {
-        eligibility: 'Eligible',
-        countryName: 'N/A',
-        countryCode: 'N/A'
+    async isEligible(obj, args, context) {
+      let eligibility
+      if (process.env.NODE_ENV !== 'production') {
+        // In non production environment, always return eligible.
+        eligibility = {
+          eligibility: 'Eligible',
+          countryName: 'N/A',
+          countryCode: 'N/A'
+        }
+      } else {
+        // Geolocalize based on IP and check eligibility.
+        eligibility = getLocationInfo(context.req.headers['x-real-ip'])
       }
-      //if (process.env.NODE_ENV !== 'production') {
-      //   return {
-      //     eligibility: 'Eligible',
-      //     countryName: 'N/A',
-      //     countryCode: 'N/A'
-      //   }
-      // }
-
-      // const locationInfo = getLocationInfo(context.countryCode)
-      // logger.debug('Location info received:', JSON.stringify(locationInfo))
-
-      // if (!locationInfo) {
-      //   return {
-      //     eligibility: 'Unknown',
-      //     countryName: 'N/A',
-      //     countryCode: 'N/A'
-      //   }
-      // }
-      // let eligibility = 'Eligible'
-      // if (locationInfo.isForbidden) {
-      //   eligibility = 'Forbidden'
-      // } else if (locationInfo.isRestricted) {
-      //   eligibility = 'Restricted'
-      // }
-
-      // return {
-      //   eligibility: eligibility,
-      //   countryName: locationInfo.countryName,
-      //   countryCode: locationInfo.countryCode
-      // }
+      logger.debug('Eligibility:', JSON.stringify(eligibility))
+      return eligibility
     },
     async enrollmentStatus(_, args, context) {
       return await getUserAuthenticationStatus(
