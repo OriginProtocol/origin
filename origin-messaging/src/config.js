@@ -25,5 +25,44 @@ module.exports = Object.freeze({
   ORBIT_DB_PATH: process.env.ORBIT_DB_PATH || './odb',
 
   RPC_SERVER: process.env.RPC_SERVER,
-  SNAPSHOT_BATCH_SIZE: process.env.SNAPSHOT_BATCH_SIZE || 150
+  SNAPSHOT_BATCH_SIZE: process.env.SNAPSHOT_BATCH_SIZE || 150,
+  development: {
+    use_env_variable: 'DATABASE_URL',
+    define: {
+      // Add the timestamp attributes (updatedAt, createdAt).
+      timestamps: true,
+      // Disable the modification of table names.
+      freezeTableName: true,
+      // Underscore style for field names.
+      underscored: true
+    },
+    // Disable logging of SQL statements.
+    logging: false
+  },
+  test: {
+    use_env_variable: 'DATABASE_URL',
+    define: {
+      // Add the timestamp attributes (updatedAt, createdAt).
+      timestamps: true,
+      // Disable the modification of table names.
+      freezeTableName: true,
+      // Underscore style for field names.
+      underscored: true
+    },
+    // Disable logging of SQL statements.
+    logging: false
+  },
+  production: {
+    use_env_variable: 'DATABASE_URL',
+    define: {
+      // Add the timestamp attributes (updatedAt, createdAt).
+      timestamps: true,
+      // Disable the modification of table names.
+      freezeTableName: true,
+      // Underscore style for field names.
+      underscored: true
+    },
+    // Disable logging of SQL statements.
+    logging: false
+  }
 })

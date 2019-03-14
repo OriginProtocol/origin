@@ -48,7 +48,7 @@ export async function totalUnread(account) {
   const messages = await getAllMessages(account)
   return messages.reduce((m, o) => {
     const addr = o.address || ''
-    if (addr.toLowerCase() === account.toLowerCase()) return m
+    if (addr.toLowerCase() !== account.toLowerCase()) return m
     return m + (o.status === 'unread' ? 1 : 0)
   }, 0)
 }
