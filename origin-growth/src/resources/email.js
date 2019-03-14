@@ -81,7 +81,7 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    const targetUrl = `${dappUrl}/${code}`
+    const targetUrl = `${dappUrl}/#/welcome/${code}`
     const { subject, text, html } = generateInviteEmail(referrerName, targetUrl)
     const email = {
       to: recipient,
