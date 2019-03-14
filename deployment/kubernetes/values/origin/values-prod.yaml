@@ -30,7 +30,7 @@ discoveryImageTag: 'd1ba847'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'e91f196'
+growthImageTag: '808f74e'
 
 # origin-messaging
 messagingImage: origin-messaging
