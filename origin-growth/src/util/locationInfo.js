@@ -3,12 +3,17 @@ const { ip2geo } = require('./ip2geo')
 const restrictedCountryCodes = ['US', 'CA']
 const forbiddenCountryCodes = []
 
-const getLocationInfo = ip => {
+/**
+ * Returns country code + name as well as eligibilit (Eligible, Forbiddem , Restricted)
+ * @param ip
+ * @returns {{countryName: string, countryCode: string, eligibility: string}}
+ */
+async function getLocationInfo(ip) {
   if (!ip) {
     return null
   }
 
-  const response = ip2geo(ip)
+  const response = await ip2geo(ip)
   if (!response) {
     return {
       eligibility: 'Unknown',
