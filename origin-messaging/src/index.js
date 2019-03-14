@@ -1,411 +1,331 @@
 'use strict'
 
 import '@babel/polyfill'
-import OrbitDB from 'orbit-db'
 import bodyParser from 'body-parser'
 import express from 'express'
+import expressWs from 'express-ws'
+import fetch from 'cross-fetch'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
 import Web3 from 'web3'
-import {
-  setKeySignature,
-  getSignedKey,
-  keyFromData,
-  injectLogAppend
-} from './inject-log-append'
-
-const Log = require('ipfs-log')
-const IPFSApi = require('ipfs-api')
-const IPFS = require('ipfs')
-import * as config from './config'
-import InsertOnlyKeystore from './insert-only-keystore'
-import exchangeHeads from './exchange-heads'
+import db from './models'
 import logger from './logger'
-import {
-  verifyConversationSignature,
-  verifyMessageSignature,
-  verifyRegistrySignature
-} from './verify'
 
-//the OrbitDB should be the message one
-const messagingRoomsMap = {}
-const snapshotBatchSize = config.SNAPSHOT_BATCH_SIZE
+import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+import * as config from './config'
 
-async function startRoom(roomDb, roomId, storeType, writers, shareFunc) {
-  let key = roomId
-  if (writers.length != 1 || writers[0] != '*') {
-    key = roomId + '-' + writers.join('-')
-  }
+import _redis from 'redis'
 
-  logger.debug(`Checking key: ${key}`)
-
-  if (!messagingRoomsMap[key]) {
-    messagingRoomsMap[key] = 'pending'
-    const room = await roomDb[storeType](roomId, { write: writers })
-
-    logger.debug(`Room started: ${room.id}`)
-
-    if (shareFunc) {
-      shareFunc(room)
-    }
-    messagingRoomsMap[key] = room
-    rebroadcastOnReplicate(roomDb, room)
-    //for persistence replace drop with below
-    //room.load()
-    startSnapshotDB(room)
-  }
-}
-
-function onConverse(roomDb, conversee, payload) {
-  const converser = payload.key
-  logger.debug(`Started conversation between: ${converser} and ${conversee}`)
-  const writers = [converser, conversee].sort()
-  startRoom(roomDb, config.CONV, 'eventlog', writers)
-}
-
-function handleGlobalRegistryWrite(convInitDb, payload) {
-  if (payload.op == 'PUT') {
-    const ethAddress = payload.key
-    logger.debug(`Started conversation for: ${ethAddress}`)
-    startRoom(convInitDb, config.CONV_INIT_PREFIX + ethAddress, 'kvstore', [
-      '*'
-    ])
-  }
-}
-
-function rebroadcastOnReplicate(DB, db) {
-  db.events.on('replicated', (address, length, from) => {
-    // rebroadcast
-    DB._pubsub.publish(db.id, db._oplog.heads)
-    if (from != 'fromSnapshot') {
-      snapshotDB(db)
-    }
-  })
-}
-
-/*
-async function saveToIpfs(ipfs, entry, signature, key) {
-  if (!entry) {
-    logger.warn('Warning: Given input entry was null.')
-    return null
-  }
-
-  const logEntry = Object.assign({}, entry)
-  logEntry.hash = null
-
-  if (signature) {
-    logEntry.sig = signature
-  }
-
-  if (key) {
-    logEntry.key = key
-  }
-
-  return ipfs.object.put(Buffer.from(JSON.stringify(logEntry)))
-    .then((dagObj) => dagObj.toJSON().multihash)
-    .then(hash => {
-      // We need to make sure that the head message's hash actually
-      // matches the hash given by IPFS in order to verify that the
-      // message contents are authentic
-      if (entry.hash) {
-        if(entry.hash != hash) {
-          logger.warn(`Hash mismatch: ${hash} from ${entry}`)
-        }
-      }
-      else {
-        logger.warn(`Hash: ${hash} from ${logEntry}`)
-      }
-      return hash
-    })
-}
-*/
-
-async function snapshotDB(db) {
-  const unfinished = db._replicator.getQueue()
-  const snapshotData = db._oplog.toSnapshot()
-
-  await db._cache.set('queue', unfinished)
-  await db._cache.set('raw_snapshot', snapshotData)
-
-  logger.debug('Saved snapshot:', snapshotData.id, ' queue:', unfinished.length)
-}
-
-async function loadSnapshotDB(db) {
-  const queue = await db._cache.get('queue')
-  db.sync(queue || [])
-  const snapshotData = await db._cache.get('raw_snapshot')
-  if (snapshotData) {
-    /*
-     * this might be causing locks to stall
-    for (const entry of snapshotData.values){
-      await saveToIpfs(db._ipfs, entry)
-    }
-    */
-    if (snapshotData.values.length < snapshotBatchSize) {
-      const log = new Log(
-        db._ipfs,
-        snapshotData.id,
-        snapshotData.values,
-        snapshotData.heads,
-        null,
-        db._key,
-        db.access.write
-      )
-      await db._oplog.join(log)
-    } else {
-      const values = snapshotData.values
-      while (values.length) {
-        const pushValues = values.splice(0, snapshotBatchSize)
-        const log = new Log(
-          db._ipfs,
-          snapshotData.id,
-          pushValues,
-          undefined,
-          null,
-          db._key,
-          db.access.write
-        )
-        await db._oplog.join(log)
-        await sleep(100)
-      }
-    }
-    await db._updateIndex()
-    db.events.emit(
-      'replicated',
-      db.address.toString(),
-      undefined,
-      'fromSnapshot'
-    )
-  }
-  db.__snapshot_loaded = true
-  db.events.emit('ready', db.address.toString(), db._oplog.heads)
-}
-
-async function startSnapshotDB(db) {
-  await loadSnapshotDB(db)
-}
-
-async function _onPeerConnected(address, peer) {
-  const getStore = address => this.stores[address]
-  const getDirectConnection = peer => this._directConnections[peer]
-  const onChannelCreated = channel =>
-    (this._directConnections[channel._receiverID] = channel)
-  const onMessage = (address, heads) => this._onMessage(address, heads)
-
-  await exchangeHeads(
-    this._ipfs,
-    address,
-    peer,
-    getStore,
-    getDirectConnection,
-    onMessage,
-    onChannelCreated
-  )
-
-  if (getStore(address)) {
-    getStore(address).events.emit('peer', peer)
-  }
-}
+const redis = _redis.createClient(process.env.REDIS_URL)
 
 // supply an endpoint for querying global registry
-const initRESTApp = db => {
-  const app = express()
-  app.use(bodyParser.json())
-  const port = 6647
-  // limit request to one per minute
-  const rateLimiterOptions = {
-    points: 1,
-    duration: 60
-  }
-  const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
+const app = express()
+expressWs(app)
+app.use(bodyParser.json())
+const port = 6647
+// limit request to one per minute
+const rateLimiterOptions = {
+  points: 1,
+  duration: 60
+}
+const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 
-  // should be tightened up for security
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept'
-    )
+// should be tightened up for security
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
 
-    next()
-  })
+  next()
+})
 
-  app.all((req, res, next) => {
-    rateLimiter
-      .consume(req.connection.remoteAddress)
-      .then(() => {
-        next()
-      })
-      .catch(() => {
-        res.status(429).send('<h1>Too Many Requests</h1>')
-      })
-  })
+app.all((req, res, next) => {
+  rateLimiter
+    .consume(req.connection.remoteAddress)
+    .then(() => {
+      next()
+    })
+    .catch(() => {
+      res.status(429).send('<h1>Too Many Requests</h1>')
+    })
+})
 
-  app.get('/', async (req, res) => {
-    const markup =
-      '<h1>Origin Messaging</h1>' +
-      '<h2><a href="https://medium.com/originprotocol/introducing-origin-messaging-decentralized-secure-and-auditable-13c16fe0f13e">Learn More</a></h2>'
+app.get('/', async (req, res) => {
+  const markup =
+    '<h1>Origin Messaging</h1>' +
+    '<h2><a href="https://medium.com/originprotocol/introducing-origin-messaging-decentralized-secure-and-auditable-13c16fe0f13e">Learn More</a></h2>'
 
-    res.send(markup)
-  })
+  res.send(markup)
+})
 
-  app.get('/accounts', (req, res) => {
-    const kv = db.all()
+app.get('/accounts', async (req, res) => {
+  const count = db.Registry.count()
 
-    res.send({ count: Object.keys(kv).length })
-  })
+  res.send({ count })
+})
 
-  app.get('/accounts/:address', (req, res) => {
-    let { address } = req.params
+app.get('/accounts/:address', async (req, res) => {
+  let { address } = req.params
 
-    if (!Web3.utils.isAddress(address)) {
-      res.statusMessage = 'Address is not a valid Ethereum address'
+  if (!Web3.utils.isAddress(address)) {
+    res.statusMessage = 'Address is not a valid Ethereum address'
 
-      return res.status(400).end()
-    }
-
-    address = Web3.utils.toChecksumAddress(address)
-
-    const entry = db.get(address)
-
-    if (!entry) {
-      return res.status(204).end()
-    }
-
-    res.status(200).send(entry)
-  })
-
-  app.post('/accounts/:address', (req, res) => {
-    let { address } = req.params
-
-    if (!Web3.utils.isAddress(address)) {
-      res.statusMessage = 'Address is not a valid Ethereum address'
-
-      return res.status(400).end()
-    }
-
-    address = Web3.utils.toChecksumAddress(address)
-
-    const { signature, data } = req.body
-
-    if (
-      verifyRegistrySignature(signature, '', {
-        payload: { value: data, key: address }
-      })
-    ) {
-      const entry = db.get(address)
-      console.log('setting registry existing entry:', entry)
-      if (!entry || entry.sig != signature) {
-        setKeySignature(address, signature)
-        db.set(address, data)
-      }
-      return res.status(200).send(address)
-    }
-    res.statusMessage = 'Cannot verify signature of registery'
     return res.status(400).end()
-  })
+  }
 
-  app.listen(port, () => {
-    logger.debug(`REST endpoint listening on port ${port}`)
-  })
-}
+  address = Web3.utils.toChecksumAddress(address)
 
-const startOrbitDbServer = async ipfs => {
-  // Remap the peer connected to ours which will wait before exchanging heads
-  // with the same peer
-  const orbitGlobal = new OrbitDB(ipfs, config.ORBIT_DB_PATH, {
-    keystore: new InsertOnlyKeystore()
-  })
+  const entry = await db.Registry.findOne({ where: { ethAddress: address } })
 
-  orbitGlobal._onPeerConnected = _onPeerConnected
+  if (!entry) {
+    return res.status(204).end()
+  }
 
-  orbitGlobal.keystore.registerSignVerify(
-    config.GLOBAL_KEYS,
-    undefined,
-    verifyRegistrySignature,
-    message => {
-      handleGlobalRegistryWrite(orbitGlobal, message.payload)
+  res.status(200).send(entry.data)
+})
+
+app.post('/accounts/:address', async (req, res) => {
+  let { address } = req.params
+
+  if (!Web3.utils.isAddress(address)) {
+    res.statusMessage = 'Address is not a valid Ethereum address'
+
+    return res.status(400).end()
+  }
+
+  address = Web3.utils.toChecksumAddress(address)
+
+  const { signature, data } = req.body
+
+  if (
+    verifyRegistrySignature(signature, '', {
+      payload: { value: data, key: address }
+    })
+  ) {
+    const entry = await db.Registry.findOne({ where: { ethAddress: address } })
+    console.log('setting registry existing entry:', entry)
+    if (!entry || entry.signature != signature) {
+      await db.Registry.upsert({ ethAddress: address, data, signature })
     }
-  )
+    return res.status(200).send(address)
+  }
+  res.statusMessage = 'Cannot verify signature of registery'
+  return res.status(400).end()
+})
 
-  const globalRegistry = await orbitGlobal.kvstore(config.GLOBAL_KEYS, {
-    write: ['*']
-  })
-  rebroadcastOnReplicate(orbitGlobal, globalRegistry)
-  orbitGlobal.keystore.registerSignVerify(
-    config.CONV_INIT_PREFIX,
-    undefined,
-    verifyConversationSignature(globalRegistry),
-    message => {
-      // Hopefully the last 42 is the eth address
-      const ethAddress = message.id.substr(-42)
-      onConverse(orbitGlobal, ethAddress, message.payload)
-    }
-  )
-  orbitGlobal.keystore.registerSignVerify(
-    config.CONV,
-    undefined,
-    verifyMessageSignature(globalRegistry, orbitGlobal)
-  )
-  logger.debug(`Orbit registry started...: ${globalRegistry.id}`)
+app.get('/conversations/:address', async (req, res) => {
+  let { address } = req.params
 
-  globalRegistry.events.on('ready', () => {
-    logger.info(`Ready...`)
+  if (!Web3.utils.isAddress(address)) {
+    res.statusMessage = 'Address is not a valid Ethereum address'
 
-    //setup the injector to the global registry
-    injectLogAppend(globalRegistry._oplog, keyFromData, getSignedKey)
-    initRESTApp(globalRegistry)
+    return res.status(400).end()
+  }
+
+  address = Web3.utils.toChecksumAddress(address)
+
+  const convs = await db.Conversee.findAll({
+    where: { ethAddress: address },
+    include: [{ model: db.Conversation }]
   })
 
-  // testing it's best to drop this for now
-  // globalRegistry.load()
-  startSnapshotDB(globalRegistry)
-}
+  if (!convs) {
+    return res.status(204).end()
+  }
 
-const main = async () => {
-  if (config.IPFS_ADDRESS) {
-    // Server configured via env
-    const ipfs = IPFSApi(config.IPFS_ADDRESS, config.IPFS_PORT)
-    const ipfsId = ipfs.id()
-
-    await ipfsId
-      .then(peer => {
-        logger.info(`Connected to IPFS server: ${peer.id}`)
-        startOrbitDbServer(ipfs)
-      })
-      .catch(error => {
-        logger.error(
-          `Connection error ${config.IPFS_ADDRESS}:${config.IPFS_PORT}`
-        )
-        logger.error(error)
-        setTimeout(main, 5000)
-      })
-  } else {
-    // Create our own IPFS server
-    logger.debug(`Creating IPFS server`)
-
-    const ipfs = new IPFS({
-      repo: config.IPFS_REPO_PATH,
-      EXPERIMENTAL: {
-        pubsub: true
-      },
-      config: {
-        Bootstrap: [],
-        Addresses: {
-          Swarm: [config.IPFS_WS_ADDRESS]
-        }
+  res.status(200).send(
+    convs.map(c => {
+      return {
+        id: c.Conversation.externalId,
+        count: c.Conversation.messageCount
       }
     })
+  )
+})
 
-    ipfs.on('error', e => console.error(e))
-    ipfs.on('ready', async () => {
-      ipfs.setMaxListeners(config.IPFS_MAX_CONNECTIONS)
-      startOrbitDbServer(ipfs)
+app.get('/messages/:conversationId', async (req, res) => {
+  const { conversationId } = req.params
+
+  const messages = await db.Message.findAll({
+    include: [
+      { model: db.Conversation, where: { externalId: conversationId } }
+    ],
+    order: [['conversationIndex', 'ASC']]
+  })
+
+  if (!messages) {
+    return res.status(204).end()
+  }
+
+  res.status(200).send(
+    messages.map(m => {
+      return {
+        conversationIndex: m.conversationIndex,
+        address: m.ethAddress,
+        content: m.data.content,
+        ext: m.data.ext,
+        signature: m.signature,
+        isKeys: m.isKeys,
+        timestamp: m.createdAt
+      }
+    })
+  )
+})
+
+app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
+  const { conversationId } = req.params
+  const conversationIndex = Number(req.params.conversationIndex)
+  const { signature, content } = req.body
+  const { address } = content
+
+  const entry = await db.Registry.findOne({ where: { ethAddress: address } })
+
+  if (
+    !verifyNewMessageSignature(
+      signature,
+      conversationId,
+      conversationIndex,
+      content,
+      entry.data.address
+    )
+  ) {
+    return res.status(401).send('Signature verification failed.')
+  }
+
+  const conv = await db.Conversation.findOne({
+    where: { externalId: conversationId }
+  })
+
+  let message
+  let conv_addresses
+  if (!conv) {
+    conv_addresses = conversationId.split('-')
+    //let's create a conversation...
+    if (!conv_addresses.includes(address)) {
+      return res
+        .status(401)
+        .send('One of the conversers involved must initiate the conversation.')
+    }
+    if (conversationIndex != 0) {
+      return res.status(409).end()
+    } else if (content.type != 'keys') {
+      return res
+        .status(400)
+        .send('Conversations must be initiated by a keys exchange')
+    }
+
+    await db.sequelize.transaction(async t => {
+      const conversation = await db.Conversation.create(
+        { externalId: conversationId, messageCount: 1 },
+        { transaction: t }
+      )
+      for (const converser of conv_addresses) {
+        await db.Conversee.create(
+          { conversationId: conversation.id, ethAddress: converser },
+          { transaction: t }
+        )
+      }
+      message = await db.Message.create(
+        {
+          conversationId: conversation.id,
+          conversationIndex,
+          ethAddress: address,
+          data: { content },
+          signature,
+          isKeys: true
+        },
+        { transaction: t }
+      )
+      return message
+    })
+  } else {
+    const conversees = await db.Conversee.findAll({
+      where: { conversationId: conv.id }
+    })
+    conv_addresses = conversees.map(c => c.ethAddress)
+
+    if (!conv_addresses.includes(address)) {
+      return res.status(401).send('Address not part of current conversation.')
+    }
+
+    //create a message that's the correct sequence
+    await db.sequelize.transaction(async t => {
+      const conversation = await db.Conversation.findOne({
+        where: { externalId: conversationId },
+        transaction: t,
+        lock: t.LOCK.UPDATE
+      })
+      if (conversationIndex != conversation.messageCount) {
+        return false
+      }
+      message = await db.Message.create(
+        {
+          conversationId: conversation.id,
+          conversationIndex: conversation.messageCount,
+          ethAddress: address,
+          data: { content },
+          signature,
+          isKeys: content.type == 'keys'
+        },
+        { transaction: t }
+      )
+      conversation.messageCount += 1
+      return conversation.save({ transaction: t })
     })
   }
-}
 
-main()
+  if (message) {
+    for (const notify_address of conv_addresses) {
+      await redis.publish(
+        notify_address,
+        JSON.stringify({
+          content,
+          timestamp: message.createdAt,
+          conversationIndex,
+          conversationId
+        })
+      )
+    }
+    if (config.LINKING_NOTIFY_ENDPOINT) {
+      const recievers = conv_addresses.filter(a => a != address)
+      fetch(config.LINKING_NOTIFY_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          recievers,
+          token: config.LINKING_NOTIFY_TOKEN
+        })
+      })
+    }
+
+    return res.status(200).send({ created: 1 })
+  } else {
+    return res.status(400).send('cannot create message')
+  }
+})
+
+app.ws('/message-events/:address', (ws, req) => {
+  const { address } = req.params
+  const redis_sub = redis.duplicate()
+  redis_sub.subscribe(address)
+
+  const msg_handler = (channel, msg) => {
+    ws.send(msg)
+  }
+
+  redis_sub.on('message', msg_handler)
+
+  ws.on('close', () => {
+    console.log('closing ws:', address)
+    redis_sub.quit()
+  })
+})
+
+app.listen(port, () => {
+  logger.debug(`REST endpoint listening on port ${port}`)
+})
