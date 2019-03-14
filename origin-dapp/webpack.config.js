@@ -114,15 +114,16 @@ const config = {
       network: 'rinkeby'
     }),
     new webpack.EnvironmentPlugin({
-      HOST: 'localhost',
-      ORIGIN_LINKING: null,
-      LINKER_HOST: 'localhost',
+      BUILD_TIMESTAMP: +new Date(),
       DOCKER: false,
       ENABLE_GROWTH: false,
-      IPFS_SWARM: '',
+      FACEBOOK_CLIENT_ID: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
-      BUILD_TIMESTAMP: +new Date()
+      HOST: 'localhost',
+      LINKER_HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      IPFS_SWARM: ''
     })
   ],
 
