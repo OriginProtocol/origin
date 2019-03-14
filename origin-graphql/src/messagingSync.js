@@ -21,8 +21,6 @@ const MessagingStateQuery = gql`
   }
 `
 
-let syncTimer
-
 export default function messagingSync(client) {
   const msg = config.messaging
   if (!msg) {
@@ -38,7 +36,7 @@ export default function messagingSync(client) {
 
     msg.synced = false
     msg.syncProgress = '0%'
-    syncTimer = setTimeout(() => {
+    setTimeout(() => {
       msg.synced = true
       msg.syncProgress = '100%'
       refresh()
