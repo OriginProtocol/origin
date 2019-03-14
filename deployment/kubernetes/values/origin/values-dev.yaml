@@ -6,7 +6,7 @@ bridgeImageTag: '7263add'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '08de136'
+dappImageTag: '486f73a'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
