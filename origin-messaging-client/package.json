@@ -8,15 +8,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "eth-ecies": "^1.0.3",
-    "orbit-db": "^0.19.9",
-    "ipfs": "^0.33.1",
-    "secp256k1": "^3.5.2",
+    "ajv": "^6.9.1",
     "crypto-js": "^3.1.9-1",
     "crypto-random-string": "^1.0.0",
-    "ajv": "^6.9.1"
+    "debug": "^4.1.1",
+    "eth-ecies": "^1.0.3",
+    "json-stable-stringify": "^1.0.1",
+    "secp256k1": "^3.5.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
