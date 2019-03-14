@@ -2,6 +2,7 @@ import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplac
 import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
 import TokenContract from 'origin-contracts/build/contracts/TestToken'
 import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
+import UniswapExchange from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
@@ -158,7 +159,8 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    linkerWS: `ws://${LINKER_HOST}:3008`,
+    DaiExchange: '0x634c52030Bba48949f7463f129Da74eCe7234761'
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -389,6 +391,21 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
+  if (config.DaiExchange) {
+    const contract = new web3.eth.Contract(UniswapExchange, config.DaiExchange)
+    context.daiExchange = contract
+    context.daiExchangeExec = contract
+    if (metaMask) {
+      context.daiExchangeMM = new metaMask.eth.Contract(
+        UniswapExchange,
+        config.DaiExchange
+      )
+      if (metaMaskEnabled) {
+        context.daiExchangeExec = context.daiExchangeMM
+      }
+    }
+  }
+
   context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
@@ -420,12 +437,14 @@ function setMetaMask() {
     context.marketplaceExec = context.marketplaceMM
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
+    context.daiExchangeExec = context.daiExchangeMM
   } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
     context.marketplaceExec = context.marketplace
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
+    context.daiExchangeExec = context.daiExchange
   }
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec
