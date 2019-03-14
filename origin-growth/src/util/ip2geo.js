@@ -33,7 +33,7 @@ async function ip2geo(ip) {
 
   if (ipdataResponse.status !== 200) {
     const responseBody = await ipdataResponse.json()
-    console.log(
+    logger.error(
       'Unexpected response received from Ipdata: ',
       JSON.stringify(responseBody)
     )
