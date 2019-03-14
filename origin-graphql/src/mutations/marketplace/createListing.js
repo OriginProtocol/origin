@@ -38,6 +38,7 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.unavailable = fractionalData.unavailable || []
     ipfsData.customPricing = fractionalData.customPricing || []
     ipfsData.timeZone = fractionalData.timeZone || ''
+    ipfsData.workingHours = fractionalData.workingHours || []
     ipfsData.booked = fractionalData.booked || []
   } else if (unitData) {
     ipfsData.unitsTotal = unitData.unitsTotal

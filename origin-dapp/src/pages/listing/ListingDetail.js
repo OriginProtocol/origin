@@ -40,7 +40,8 @@ class ListingDetail extends Component {
         booked: get(props, 'listing.booked'),
         unavailable: get(props, 'listing.unavailable'),
         customPricing: get(props, 'listing.customPricing'),
-        timeZone: get(props, 'listing.timeZone')
+        timeZone: get(props, 'listing.timeZone'),
+        workingHours: get(props, 'workingHours')
       })
     }
   }

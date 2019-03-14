@@ -19,6 +19,19 @@ class Details extends Component {
       // Default to current timeZone if none is set
       props.listing.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     }
+    this.defaultWorkingHoursDay = '09:00:00/17:00:00'
+    this.defaultWorkingHours = [
+      '',
+      '09:00:00/17:00:00',
+      '09:00:00/17:00:00',
+      '09:00:00/17:00:00',
+      '09:00:00/17:00:00',
+      '09:00:00/17:00:00',
+      ''
+    ]
+    if (!props.listing.workingHours) {
+      props.listing.workingHours = this.defaultWorkingHours
+    }
     this.state = omit(props.listing, 'valid')
   }
 
@@ -33,6 +46,33 @@ class Details extends Component {
       return <Redirect to={this.props.next} push />
     }
 
+    // For i18n, we'll need to customize how hours are shown
+    const workingHoursSelect = [
+      ['00:00:00', '12am'],
+      ['01:00:00', '1am'],
+      ['02:00:00', '2am'],
+      ['03:00:00', '3am'],
+      ['04:00:00', '4am'],
+      ['05:00:00', '5am'],
+      ['06:00:00', '6am'],
+      ['07:00:00', '7am'],
+      ['08:00:00', '8am'],
+      ['09:00:00', '9am'],
+      ['10:00:00', '10am'],
+      ['11:00:00', '11am'],
+      ['12:00:00', '12pm'],
+      ['13:00:00', '1pm'],
+      ['14:00:00', '2pm'],
+      ['15:00:00', '3pm'],
+      ['16:00:00', '4pm'],
+      ['17:00:00', '5pm'],
+      ['18:00:00', '6pm'],
+      ['19:00:00', '7pm'],
+      ['20:00:00', '8pm'],
+      ['21:00:00', '9pm'],
+      ['22:00:00', '10pm'],
+      ['23:00:00', '11pm']
+    ]
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -75,19 +115,6 @@ class Details extends Component {
                 {/* BEGIN Hourly specific code */}
 
                 <div className="form-group">
-                  <label className="mb-0">Time Zone</label>
-                  <select {...input('timeZone')}>
-                    <option value="">Select</option>
-                    {IannaTimeZones.map(id => (
-                      <option key={id} value={id}>
-                        {id}
-                      </option>
-                    ))}
-                  </select>
-                  {Feedback('timeZone')}
-                </div>
-
-                <div className="form-group">
                   <label>Default Price per Hour</label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -111,6 +138,110 @@ class Details extends Component {
                   <div className="help-text price">
                     Price is always in ETH, USD is an estimate.
                   </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Standard Available Hours</label>
+
+                  {/* Note: For i18n, we'll need week to sometimes start on Monday */}
+                  {[
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                  ].map((dayName, dayIndex) => (
+                    <div className="d-flex" key={dayIndex}>
+                      <div style={{ height: '3.0rem' }}>
+                        <input
+                          type="checkbox"
+                          style={{ marginRight: '1rem' }}
+                          checked={
+                            this.state.workingHours[dayIndex].indexOf('/') > -1
+                          }
+                          onChange={e => {
+                            let newWorkingHours = [...this.state.workingHours]
+                            newWorkingHours[dayIndex] = newWorkingHours[
+                              dayIndex
+                            ]
+                              ? (newWorkingHours[dayIndex] = '')
+                              : (newWorkingHours[
+                                  dayIndex
+                                ] = this.defaultWorkingHoursDay)
+                            this.setState({ workingHours: newWorkingHours })
+                          }}
+                        />
+                      </div>
+                      <div style={{ flex: 1, marginRight: '1rem' }}>
+                        <div>{dayName}</div>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        {this.state.workingHours[dayIndex] && (
+                          <select
+                            className="form-control form-control-lg"
+                            value={
+                              this.state.workingHours[dayIndex].split('/')[0]
+                            }
+                            onChange={e => {
+                              let newWorkingHours = [...this.state.workingHours]
+                              newWorkingHours[dayIndex] =
+                                e.target.value +
+                                '/' +
+                                this.state.workingHours[dayIndex].split('/')[1]
+                              this.setState({ workingHours: newWorkingHours })
+                            }}
+                          >
+                            {workingHoursSelect.map(([id, display]) => (
+                              <option key={id} value={id}>
+                                {display}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        {this.state.workingHours[dayIndex] && (
+                          <select
+                            className="form-control form-control-lg"
+                            value={
+                              this.state.workingHours[dayIndex].split('/')[1]
+                            }
+                            onChange={e => {
+                              let newWorkingHours = [...this.state.workingHours]
+                              newWorkingHours[dayIndex] =
+                                this.state.workingHours[dayIndex].split(
+                                  '/'
+                                )[0] +
+                                '/' +
+                                e.target.value
+                              this.setState({ workingHours: newWorkingHours })
+                            }}
+                          >
+                            {workingHoursSelect.map(([id, display]) => (
+                              <option key={id} value={id}>
+                                {display}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="form-group">
+                  <label className="mb-0">Time Zone</label>
+                  <select {...input('timeZone')}>
+                    <option value="">UTC</option>
+                    {IannaTimeZones.map(id => (
+                      <option key={id} value={id}>
+                        {id}
+                      </option>
+                    ))}
+                  </select>
+                  {Feedback('timeZone')}
                 </div>
 
                 {/* END Hourly specific code */}

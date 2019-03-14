@@ -30,6 +30,7 @@ export default function applyListingData(props, data) {
     variables.fractionalData = {
       weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
       timeZone: listing.timeZone,
+      workingHours: listing.workingHours,
       booked: listing.booked,
       customPricing: listing.customPricing,
       unavailable: listing.unavailable

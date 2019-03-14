@@ -261,6 +261,7 @@ module.exports = `
 
     # IPFS
     timeZone: String
+    workingHours: [String]
     weekendPrice: Price
     unavailable: [String]
     customPricing: [String]
@@ -272,6 +273,7 @@ module.exports = `
 
     # IPFS
     timeZone: String
+    workingHours: [String]
     unavailable: [String]
     customPricing: [String]
     booked: [String]
@@ -385,6 +387,7 @@ module.exports = `
 
   input FractionalListingInput {
     weekendPrice: PriceInput
+    workingHours: [String]
     timeZone: String
     unavailable: [String]
     customPricing: [String]

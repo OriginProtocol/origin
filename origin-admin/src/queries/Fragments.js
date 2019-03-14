@@ -66,6 +66,7 @@ export default {
             currency
           }
           timeZone
+          workingHours
           booked
           customPricing
           unavailable

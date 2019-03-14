@@ -12,7 +12,7 @@ dayjs.extend(isBetween)
 //   customPricing: ['2019-03-01/2019-03-05:0.6']
 // })
 
-// const Keys = ['unavailable', 'booked', 'customPricing', 'timeZone']
+// const Keys = ['unavailable', 'booked', 'customPricing']
 
 class AvailabilityCalculator {
   constructor(opts) {

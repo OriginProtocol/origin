@@ -42,6 +42,7 @@ class CreateListing extends Component {
 
         // Fractional fields:
         timeZone: '',
+        workingHours: [],
         weekendPrice: '',
         booked: [],
         customPricing: [],
