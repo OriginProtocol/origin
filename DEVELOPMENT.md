@@ -4,15 +4,11 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Development
 
-Origin has two development setups. One is the "light" version and consists of only our DApp and a local IPFS server and blockchain. It is intended to be easy to get started with but lacks some of the components of our stack making some of the DApp functionality unavailable.
+To get started quickly, you can run a "light" version of the Origin DApp, which automatically sets up our DApp, a local IPFS server, and a local blockchain. 
 
-The more full featured development environment uses Docker Compose to orchestrate several containers and provides access to the full suite of Origin features, include messaging, browser notifications, and attestation services.
+Or you can use a more full featured development environment with Docker Compose orchestrating several containers and providing access to the full suite of the Origin DApp features, include messaging, browser notifications, and attestation services.
 
-## About the Origin repository
-
-Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
-
-## Using NPM & Lerna
+## Quick start - Running a local DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the necessary dependencies:
 
@@ -57,6 +53,10 @@ This is the default seed phrase used by [Truffle](https://github.com/trufflesuit
  - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
 ```rm -rf ~/.jsipfs/```
 
+### About the Origin repository
+
+Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
+
 ## Using Docker Compose
 
 The Origin Docker Compose configuration runs the following packages:
@@ -85,7 +85,7 @@ The Origin Docker Compose configuration runs the following packages:
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
 
-### Getting Started
+### Getting Started with Docker Compose
 
 ⚠️  If you have previously used  `docker-compose` with Origin, please ensure you clear out old containers by stopping any running containers and executing `docker system prune --volumes --all` before completing these steps.
 
