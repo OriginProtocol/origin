@@ -16,9 +16,6 @@ const MESSAGING_KEY = 'MK_'
 const MESSAGING_PHRASE = 'MP_'
 const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
-const PRE_GLOBAL_KEYS = ':global'
-const PRE_CONV_INIT_PREFIX = ':convo-init-'
-const PRE_CONV = ':conv'
 const UNREAD_STATUS = 'unread'
 const READ_STATUS = 'read'
 
@@ -94,15 +91,15 @@ class Messaging {
     }
   }
 
-  onAccount(account_key) {
-    if ((account_key && !this.account_key) || account_key != this.account_key) {
-      this.checkSetCurrentStorage(account_key)
-      this.init(account_key)
+  onAccount(accountKey) {
+    if ((accountKey && !this.account_key) || accountKey != this.account_key) {
+      this.checkSetCurrentStorage(accountKey)
+      this.init(accountKey)
     }
   }
 
-  checkSetCurrentStorage(account_key) {
-    if (sessionStorage.getItem(`${MESSAGING_KEY}:${account_key}`)) {
+  checkSetCurrentStorage(accountKey) {
+    if (sessionStorage.getItem(`${MESSAGING_KEY}:${accountKey}`)) {
       this.currentStorage = sessionStorage
     } else {
       this.currentStorage = this.cookieStorage
@@ -111,40 +108,40 @@ class Messaging {
 
   //helper function for use by outside services
   preGenKeys(web3Account) {
-    const sig_phrase = PROMPT_MESSAGE
-    const signature = web3Account.sign(sig_phrase).signature
+    const sigPhrase = PROMPT_MESSAGE
+    const signature = web3Account.sign(sigPhrase).signature
 
-    const sig_key = signature.substring(0, 66)
-    const msg_account = this.web3.eth.accounts.privateKeyToAccount(sig_key)
+    const sigKey = signature.substring(0, 66)
+    const msgAccount = this.web3.eth.accounts.privateKeyToAccount(sigKey)
 
-    const pub_msg = PROMPT_PUB_KEY + msg_account.address
-    const pub_sig = web3Account.sign(pub_msg).signature
+    const pubMsg = PROMPT_PUB_KEY + msgAccount.address
+    const pubSig = web3Account.sign(pubMsg).signature
     return {
       account: web3Account.address,
-      sig_phrase,
-      sig_key,
-      pub_msg,
-      pub_sig
+      sig_phrase: sigPhrase,
+      sig_key: sigKey,
+      pub_msg: pubMsg,
+      pub_sig: pubSig
     }
   }
 
   async onPreGenKeys(data) {
     debug('onPreGenKeys')
-    const account_id = data.account
-    const sig_key = data.sig_key
-    const sig_phrase = data.sig_phrase
-    const pub_msg = data.pub_msg
-    const pub_sig = data.pub_sig
+    const accountId = data.account
+    const sigKey = data.sig_key
+    const sigPhrase = data.sig_phrase
+    const pubMsg = data.pub_msg
+    const pubSig = data.pub_sig
     const accounts = await this.web3.eth.getAccounts()
-    if (account_id === accounts[0]) {
+    if (accountId === accounts[0]) {
       this.currentStorage = sessionStorage
-      this.setKeyItem(`${MESSAGING_KEY}:${account_id}`, sig_key)
-      this.setKeyItem(`${MESSAGING_PHRASE}:${account_id}`, sig_phrase)
-      this.setKeyItem(`${PUB_MESSAGING}:${account_id}`, pub_msg)
-      this.setKeyItem(`${PUB_MESSAGING_SIG}:${account_id}`, pub_sig)
-      this.pub_sig = pub_sig
-      this.pub_msg = pub_msg
-      if (account_id == this.account_key) {
+      this.setKeyItem(`${MESSAGING_KEY}:${accountId}`, sigKey)
+      this.setKeyItem(`${MESSAGING_PHRASE}:${accountId}`, sigPhrase)
+      this.setKeyItem(`${PUB_MESSAGING}:${accountId}`, pubMsg)
+      this.setKeyItem(`${PUB_MESSAGING_SIG}:${accountId}`, pubSig)
+      this.pub_sig = pubSig
+      this.pub_msg = pubMsg
+      if (accountId == this.account_key) {
         this.startConversing()
       }
     }
@@ -167,11 +164,11 @@ class Messaging {
   }
 
   initKeys() {
-    const sig_key = this.getMessagingKey()
-    const sig_phrase = this.getMessagingPhrase()
+    const sigKey = this.getMessagingKey()
+    const sigPhrase = this.getMessagingPhrase()
     // lock in the message to the hardcoded one
-    if (sig_key && sig_phrase == PROMPT_MESSAGE) {
-      this.setAccount(sig_key, sig_phrase)
+    if (sigKey && sigPhrase == PROMPT_MESSAGE) {
+      this.setAccount(sigKey, sigPhrase)
     } else {
       this.promptInit()
     }
@@ -254,7 +251,7 @@ class Messaging {
 
   async getGlobalKey(key) {
     if (!this.globalKeyServer) {
-      throw new Error("Global key server required")
+      throw new Error('Global key server required')
     }
     try {
       const res = await fetch(`${this.globalKeyServer}/accounts/${key}`, {
@@ -275,29 +272,28 @@ class Messaging {
       `${this.globalKeyServer}/accounts/${key}`
     )
     if (serverResponse.status === 200) {
-      const j_entry = await serverResponse.json()
-      this._registryCache[key] = j_entry
-      return j_entry
+      const jEntry = await serverResponse.json()
+      this._registryCache[key] = jEntry
+      return jEntry
     }
   }
 
   async initMessaging() {
     debug('initMessaging')
     const entry = await this.getRemoteMessagingSig()
-    const account_match = entry && entry.address == this.account.address
+    const accountMatch = entry && entry.address == this.account.address
     if (!(this.pub_sig && this.pub_msg)) {
-      if (account_match && entry.sig && entry.msg) {
+      if (accountMatch && entry.sig && entry.msg) {
         this.pub_sig = entry.sig
         this.pub_msg = entry.msg
       } else {
         await this.promptForSignature()
       }
-    } else if (!account_match) {
+    } else if (!accountMatch) {
       this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
     this.loadMyConvs()
-
   }
 
   async getRemoteMessagingSig() {
@@ -333,37 +329,37 @@ class Messaging {
     }
   }
 
-  setAccount(key_str, phrase_str) {
-    debug('setAccount', key_str, phrase_str)
-    this.account = this.web3.eth.accounts.privateKeyToAccount(key_str)
+  setAccount(keyStr, phraseStr) {
+    debug('setAccount', keyStr, phraseStr)
+    this.account = this.web3.eth.accounts.privateKeyToAccount(keyStr)
     this.account.publicKey =
       '0x' +
       secp256k1
-        .publicKeyCreate(new Buffer(key_str.substring(2), 'hex'), false)
+        .publicKeyCreate(new Buffer(keyStr.substring(2), 'hex'), false)
         .slice(1)
         .toString('hex')
     // send it to local storage
     const scopedMessagingKeyName = `${MESSAGING_KEY}:${this.account_key}`
-    this.setKeyItem(scopedMessagingKeyName, key_str)
+    this.setKeyItem(scopedMessagingKeyName, keyStr)
     //set phrase in the cookie
     const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
-    this.setKeyItem(scopedMessagingPhraseName, phrase_str)
+    this.setKeyItem(scopedMessagingPhraseName, phraseStr)
     this.initMessaging()
   }
 
   async promptInit() {
     debug('promptInit', this.account_key)
-    const sig_phrase = PROMPT_MESSAGE
+    const sigPhrase = PROMPT_MESSAGE
     const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
-    const signature = await signer.sign(sig_phrase, this.account_key)
+    const signature = await signer.sign(sigPhrase, this.account_key)
     debug('signedSig', signature)
     this.events.emit('signedSig')
 
     // 32 bytes in hex + 0x
-    const sig_key = signature.substring(0, 66)
+    const sigKey = signature.substring(0, 66)
 
     // Delay to prevent hidden MetaMask popup
-    setTimeout(() => this.setAccount(sig_key, sig_phrase), 500)
+    setTimeout(() => this.setAccount(sigKey, sigPhrase), 500)
   }
 
   async promptForSignature() {
@@ -395,63 +391,63 @@ class Messaging {
     return key.split('-')
   }
 
-  getSharedKeys(room_id) {
-    const room = this.convs[room_id]
+  getSharedKeys(roomId) {
+    const room = this.convs[roomId]
     return room ? room.keys || [] : []
   }
 
-  getConvo(eth_address) {
-    const room_id = this.generateRoomId(this.account_key, eth_address)
-    return this.convs[room_id]
+  getConvo(ethAddress) {
+    const roomId = this.generateRoomId(this.account_key, ethAddress)
+    return this.convs[roomId]
   }
 
-  hasConversedWith(eth_address) {
-    const room_id = this.generateRoomId(this.account_key, eth_address)
-    return this.convs[room_id]
+  hasConversedWith(ethAddress) {
+    const roomId = this.generateRoomId(this.account_key, ethAddress)
+    return this.convs[roomId]
   }
 
-  decryptMsg(iv_str, msg, key) {
+  decryptMsg(ivStr, msg, key) {
     const buffer = CryptoJS.AES.decrypt(msg, key, {
-      iv: CryptoJS.enc.Base64.parse(iv_str)
+      iv: CryptoJS.enc.Base64.parse(ivStr)
     })
-    let out_text
+    let outText
     try {
-      out_text = buffer.toString(CryptoJS.enc.Utf8)
+      outText = buffer.toString(CryptoJS.enc.Utf8)
     } catch (error) {
       return
     }
 
-    if (out_text && out_text.length > 6) {
-      const verify_text = out_text.slice(0, -6)
-      const sha_check = out_text.substr(-6)
+    if (outText && outText.length > 6) {
+      const verifyText = outText.slice(0, -6)
+      const shaCheck = outText.substr(-6)
       if (
-        sha_check ==
-        CryptoJS.enc.Base64.stringify(CryptoJS.SHA1(verify_text)).substr(0, 6)
+        shaCheck ==
+        CryptoJS.enc.Base64.stringify(CryptoJS.SHA1(verifyText)).substr(0, 6)
       ) {
-        return verify_text
+        return verifyText
       }
     }
   }
 
-  processContent(content, conv_obj, onMessage, onEncrypted) {
+  processContent(content, convObj, onMessage, onEncrypted) {
     if (content.type == 'keys') {
       for (const v of content.keys) {
         if (v.address == this.account_key) {
           let key
           try {
-            key = this.ec_decrypt(v.ekey)
+            key = this.ecDecrypt(v.ekey)
           } catch (e) {
             /* Ignore */
           }
-          if (key && !conv_obj.keys.includes(key)) {
-            conv_obj.keys.push(key)
+          if (key && !convObj.keys.includes(key)) {
+            convObj.keys.push(key)
           }
         }
       }
     } else if (content.type == 'msg') {
       const v = content
       let decrypted = false
-      for (const key of conv_obj.keys) {
+      for (const key of convObj.keys) {
         const buffer = this.decryptMsg(v.i, v.emsg, key)
         if (buffer != undefined) {
           let obj = buffer
@@ -476,29 +472,37 @@ class Messaging {
   }
 
   onMessageUpdate(entry) {
-    debug("we got a update entry:", entry)
-    const {content, conversationId, conversationIndex} = entry
+    debug('we got a update entry:', entry)
+    const { content, conversationId, conversationIndex } = entry
     if (content && conversationId) {
-      if(!this.convs[conversationId]) {
+      if (!this.convs[conversationId]) {
         this.getRoom(conversationId)
       } else {
-        const conv_obj = this.convs[conversationId]
-        if (conversationIndex != conv_obj.conversationIndex + 1) {
+        const convObj = this.convs[conversationId]
+        if (conversationIndex != convObj.conversationIndex + 1) {
           this.processContent(
             entry.content,
-            conv_obj,
+            convObj,
             (msg, address) => {
-              const message = this.toMessage(msg, conversationId, entry, address)
-              conv_obj.messages.push(message)
-              debug("message:", message)
+              const message = this.toMessage(
+                msg,
+                conversationId,
+                entry,
+                address
+              )
+              convObj.messages.push(message)
+              debug('message:', message)
               this.events.emit('msg', message)
             },
             (msg, address) => {
-              this.events.emit('emsg', this.toMessage(msg, conversationId, entry, address))
+              this.events.emit(
+                'emsg',
+                this.toMessage(msg, conversationId, entry, address)
+              )
             }
           )
-          conv_obj.lastConversationIndex = entry.conversationIndex
-          conv_obj.messageCount = entry.conversationIndex + 1
+          convObj.lastConversationIndex = entry.conversationIndex
+          convObj.messageCount = entry.conversationIndex + 1
         } else {
           // we are missing a message
           this.getRoom(conversationId)
@@ -507,56 +511,65 @@ class Messaging {
     }
   }
 
-  getMessageId(room_id, container) {
-    return room_id + "." + container.conversationIndex
+  getMessageId(roomId, container) {
+    return roomId + '.' + container.conversationIndex
   }
 
-  toMessage(msg, room_id, container, address) {
-    return { msg: msg, room_id, index:container.conversationIndex, address, hash: this.getMessageId(room_id, container)}
+  toMessage(msg, roomId, container, address) {
+    return {
+      msg: msg,
+      room_id: roomId,
+      index: container.conversationIndex,
+      address,
+      hash: this.getMessageId(roomId, container)
+    }
   }
 
-  async getRoom(room_id) {
-    const conv_obj = { keys: [], messages: [] }
-    this.convs[room_id] = conv_obj
+  async getRoom(roomId) {
+    const convObj = { keys: [], messages: [] }
+    this.convs[roomId] = convObj
 
-    const res = await fetch(`${this.globalKeyServer}/messages/${room_id}`, {
-        headers: { 'content-type': 'application/json' }
+    const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
+      headers: { 'content-type': 'application/json' }
     })
     const messages = await res.json()
 
-    messages.forEach((entry) => {
+    messages.forEach(entry => {
       this.processContent(
         entry.content,
-        conv_obj,
+        convObj,
         (msg, address) => {
-          const message = this.toMessage(msg, room_id, entry, address)
-          conv_obj.messages.push(message)
-          debug("msg:", message)
+          const message = this.toMessage(msg, roomId, entry, address)
+          convObj.messages.push(message)
+          debug('msg:', message)
           this.events.emit('msg', message)
         },
         (msg, address) => {
-          this.events.emit('emsg', this.toMessage(msg, room_id, entry, address))
+          this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
         }
       )
-      conv_obj.lastConversationIndex = entry.conversationIndex
-      conv_obj.messageCount = entry.conversationIndex + 1
+      convObj.lastConversationIndex = entry.conversationIndex
+      convObj.messageCount = entry.conversationIndex + 1
     })
   }
 
-  getMessagesCount(remote_eth_address) {
-    const room_id = this.generateRoomId(this.account_key, remote_eth_address)
-    const conv_obj = this.convs[room_id]
+  getMessagesCount(remoteEthAddress) {
+    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+    const convObj = this.convs[roomId]
 
-    if (conv_obj) {
-      return conv_obj.messageCount
+    if (convObj) {
+      return convObj.messageCount
     }
     return 0
   }
 
   async fetchConvs() {
-    const res = await fetch(`${this.globalKeyServer}/conversations/${this.account_key}`, {
-      headers: { 'content-type': 'application/json' }
-    })
+    const res = await fetch(
+      `${this.globalKeyServer}/conversations/${this.account_key}`,
+      {
+        headers: { 'content-type': 'application/json' }
+      }
+    )
     return await res.json()
   }
 
@@ -586,7 +599,7 @@ class Messaging {
   }
 
   async loadMyConvs() {
-    debug("loading convs:")
+    debug('loading convs:')
     for (const conv of await this.fetchConvs()) {
       // TODO: make use of the count and do actual lazy loading!
       this.getRoom(conv.id)
@@ -595,45 +608,42 @@ class Messaging {
   }
 
   async getMyConvs() {
-    const out_convs = {}
+    const outConvs = {}
     for (const id of Object.keys(this.convs)) {
       const recipients = this.getRecipients(id)
-      if (recipients.length == 2)
-      {
-        const remote_eth_address = recipients.find(
-            addr => addr !== this.account_key
-          )
-        out_convs[remote_eth_address] = new Date()
-      }
-      else
-      {
-        out_convs[id] = new Date()
+      if (recipients.length == 2) {
+        const remoteEthAddress = recipients.find(
+          addr => addr !== this.account_key
+        )
+        outConvs[remoteEthAddress] = new Date()
+      } else {
+        outConvs[id] = new Date()
       }
     }
-    return out_convs
+    return outConvs
   }
 
-  getAllMessages(remote_eth_address) {
-    const room_id = this.generateRoomId(this.account_key, remote_eth_address)
-    const conv_obj = this.convs[room_id]
+  getAllMessages(remoteEthAddress) {
+    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+    const convObj = this.convs[roomId]
 
-    if (conv_obj) {
-      return conv_obj.messages
+    if (convObj) {
+      return convObj.messages
     }
     return []
   }
 
-  ec_encrypt(text, pub_key) {
+  ecEncrypt(text, pubKey) {
     const plaintext = new Buffer(text)
-    if (!pub_key) {
-      pub_key = this.account.publicKey
+    if (!pubKey) {
+      pubKey = this.account.publicKey
     }
     return this.ecies
-      .encrypt(new Buffer(pub_key.substring(2), 'hex'), plaintext)
+      .encrypt(new Buffer(pubKey.substring(2), 'hex'), plaintext)
       .toString('hex')
   }
 
-  ec_decrypt(buffer) {
+  ecDecrypt(buffer) {
     if (this.account) {
       return this.ecies
         .decrypt(
@@ -644,33 +654,31 @@ class Messaging {
     }
   }
 
-  async canConverseWith(remote_eth_address) {
-    const { account_key } = this
-    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
+  async canConverseWith(remoteEthAddress) {
+    const accountKey = this.account_key
+    const address = this.web3.utils.toChecksumAddress(remoteEthAddress)
     const entry = await this.getRegisteredKey(address)
 
-    return this.canSendMessages() && account_key !== address && entry
+    return this.canSendMessages() && accountKey !== address && entry
   }
 
-  async canReceiveMessages(remote_eth_address) {
-    const address = this.web3.utils.toChecksumAddress(remote_eth_address)
+  async canReceiveMessages(remoteEthAddress) {
+    const address = this.web3.utils.toChecksumAddress(remoteEthAddress)
     return Boolean(await this.getRegisteredKey(address))
   }
 
   canSendMessages() {
-    const { account, account_key } = this
-
-    return account && account_key
+    return this.account && this.account_key
   }
 
   async addRoomMsg(conversationId, conversationIndex, content) {
-    const data = stringify({conversationId, conversationIndex, content})
+    const data = stringify({ conversationId, conversationIndex, content })
     const signature = this.account.sign(data).signature
     const response = await fetch(
       `${this.globalKeyServer}/messages/${conversationId}/${conversationIndex}`,
       {
         method: 'POST',
-        body: JSON.stringify({content, signature}),
+        body: JSON.stringify({ content, signature }),
         headers: { 'content-type': 'application/json' }
       }
     )
@@ -682,76 +690,85 @@ class Messaging {
     return true
   }
 
-  async startConv(remote_eth_address) {
-    debug('startConv', remote_eth_address)
-    const entry = await this.getRegisteredKey(remote_eth_address)
+  async startConv(remoteEthAddress) {
+    debug('startConv', remoteEthAddress)
+    const entry = await this.getRegisteredKey(remoteEthAddress)
 
     if (!entry) {
       debug('remote account messaging disabled')
       return
     }
-  
-    const room_id = this.generateRoomId(this.account_key, remote_eth_address)
-    const conv_obj = this.convs[room_id] || {keys:[], messageCount:0}
 
-    if (!conv_obj.keys.length) {
+    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+    const convObj = this.convs[roomId] || { keys: [], messageCount: 0 }
+
+    if (!convObj.keys.length) {
       //
       // a conversation haven't even been started yet
       //
-      const conversationIndex = conv_obj ? conv_obj.messageCount : 0
-      const encrypt_key = cryptoRandomString(32).toString('hex')
+      const conversationIndex = convObj ? convObj.messageCount : 0
+      const encryptKey = cryptoRandomString(32).toString('hex')
 
-      const keys_content = ({type:"keys", address:this.account_key, keys:[ {
-        ekey: this.ec_encrypt(encrypt_key),
-        maddress: this.account.address,
-        address: this.account_key
-      },
-        {
-          ekey: this.ec_encrypt(encrypt_key, entry.pub_key),
-          maddress: entry.address,
-          address: remote_eth_address
-        }
-      ]})
-      const result = await this.addRoomMsg(room_id, conversationIndex, keys_content)
+      const keysContent = {
+        type: 'keys',
+        address: this.account_key,
+        keys: [
+          {
+            ekey: this.ecEncrypt(encryptKey),
+            maddress: this.account.address,
+            address: this.account_key
+          },
+          {
+            ekey: this.ecEncrypt(encryptKey, entry.pub_key),
+            maddress: entry.address,
+            address: remoteEthAddress
+          }
+        ]
+      }
+      const result = await this.addRoomMsg(
+        roomId,
+        conversationIndex,
+        keysContent
+      )
 
       if (result) {
-        conv_obj.keys.push(encrypt_key)
-        conv_obj.messageCount += 1
+        convObj.keys.push(encryptKey)
+        convObj.messageCount += 1
       }
     }
-    return conv_obj
+    return convObj
   }
 
-  async sendConvMessage(room_id_or_address, message_obj) {
-    debug('sendConvMessage', room_id_or_address, message_obj)
+  async sendConvMessage(roomIdOrAddress, messageObj) {
+    debug('sendConvMessage', roomIdOrAddress, messageObj)
     if (this._sending_message) {
       debug('ERR: already sending message')
       return false
     }
-    let remote_eth_address, room_id
-    if (this.isRoomId(room_id_or_address)) {
-      room_id = room_id_or_address
-      remote_eth_address = this.getRecipients(room_id).find(
+    let remoteEthAddress, roomId
+    if (this.isRoomId(roomIdOrAddress)) {
+      roomId = roomIdOrAddress
+      remoteEthAddress = this.getRecipients(roomId).find(
         addr => addr !== this.account_key
       )
     } else {
-      remote_eth_address = room_id_or_address
-      if (!this.web3.utils.isAddress(remote_eth_address)) {
-        throw new Error(`${remote_eth_address} is not a valid Ethereum address`)
+      remoteEthAddress = roomIdOrAddress
+      if (!this.web3.utils.isAddress(remoteEthAddress)) {
+        throw new Error(`${remoteEthAddress} is not a valid Ethereum address`)
       }
-      room_id = this.generateRoomId(this.account_key, remote_eth_address)
+      roomId = this.generateRoomId(this.account_key, remoteEthAddress)
     }
-    remote_eth_address = this.web3.utils.toChecksumAddress(remote_eth_address)
-    const conv_obj = await this.startConv(remote_eth_address)
-    if (!conv_obj) {
+    remoteEthAddress = this.web3.utils.toChecksumAddress(remoteEthAddress)
+    const convObj = await this.startConv(remoteEthAddress)
+    if (!convObj) {
       debug('ERR: no room to send message to')
       return
     }
 
-    if (typeof message_obj == 'string') {
-      message_obj = { content: message_obj }
+    if (typeof messageObj == 'string') {
+      messageObj = { content: messageObj }
     }
-    const message = Object.assign({}, message_obj)
+    const message = Object.assign({}, messageObj)
     // set timestamp
     message.created = Date.now()
 
@@ -759,27 +776,33 @@ class Messaging {
       debug('ERR: invalid message')
       return false
     }
-    const key = conv_obj.keys[0]
+    const key = convObj.keys[0]
     const iv = CryptoJS.lib.WordArray.random(16)
-    const message_str = JSON.stringify(message)
-    const sha_sub = CryptoJS.enc.Base64.stringify(
-      CryptoJS.SHA1(message_str)
+    const messageStr = JSON.stringify(message)
+    const shaSub = CryptoJS.enc.Base64.stringify(
+      CryptoJS.SHA1(messageStr)
     ).substr(0, 6)
-    const encmsg = CryptoJS.AES.encrypt(message_str + sha_sub, key, {
+    const encmsg = CryptoJS.AES.encrypt(messageStr + shaSub, key, {
       iv: iv
     }).toString()
-    const iv_str = CryptoJS.enc.Base64.stringify(iv)
+    const ivStr = CryptoJS.enc.Base64.stringify(iv)
     this._sending_message = true
     // include a random iv str so that people can't match strings of the same message
-    if (await this.addRoomMsg(room_id, conv_obj.messageCount, { type: 'msg', emsg: encmsg, i: iv_str, address: this.account_key }))
-    {
+    if (
+      await this.addRoomMsg(roomId, convObj.messageCount, {
+        type: 'msg',
+        emsg: encmsg,
+        i: ivStr,
+        address: this.account_key
+      })
+    ) {
       debug('room.add OK')
       //do something different if this succeeds
     } else {
       debug('Err: cannot add message.')
     }
     this._sending_message = false
-    return room_id
+    return roomId
   }
 
   // messages supplied by the 'msg' event have status included
