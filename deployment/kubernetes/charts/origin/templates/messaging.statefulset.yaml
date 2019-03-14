@@ -57,7 +57,7 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
-volumeClaimTemplates:
+  volumeClaimTemplates:
   - metadata:
       name: {{ template "messaging.fullname" . }}-data
       labels:
