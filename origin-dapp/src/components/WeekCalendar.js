@@ -163,23 +163,24 @@ class WeekCalendar extends Component {
           const endDate = hour.hour
           this.setState({ dragEnd: idx, dragging: false, endDate: endDate })
           if (this.props.onChange) {
-            // Handle if enddate is actually before startdate
             let rangeStartDate = dayjs(this.state.startDate),
               rangeEndDate = dayjs(endDate)
+
+            // Handle if enddate is actually *before* startdate
             if (rangeEndDate.isBefore(rangeStartDate)) {
               const temp = rangeStartDate
               rangeStartDate = rangeEndDate
               rangeEndDate = temp
             }
-
+            // We add an hour to end. If user drags to select the 4pm slot, that means thier booking
+            // *acutally* ends at 5pm.
+            rangeEndDate = rangeEndDate.add(1, 'hour')
             // ISO 8601 Interval format
             // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
-            // Note: We add an hour to end. If user drags to select the 4pm slot, that means thier booking
-            // acutally ends at 5pm.
             const range =
               rangeStartDate.format('YYYY-MM-DDTHH:mm:ss') +
               '/' +
-              rangeEndDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss')
+              rangeEndDate.format('YYYY-MM-DDTHH:mm:ss')
 
             this.props.onChange({ range })
           }
