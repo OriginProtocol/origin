@@ -256,9 +256,9 @@ const countryMap = {
 }
 
 /**
- * Resolves an IP useing ipdata.co service.
+ * Resolves an IP using ipdata.co service.
  * @param ip
- * @returns {Promise<{countryName: string,countryCode: string}>}
+ * @returns {Promise<{countryName: string, countryCode: string}>}
  * @private
  */
 async function _ipdata(ip) {
@@ -293,7 +293,7 @@ async function _ipdata(ip) {
  * Resolves an IP using geolite static database.
  *
  * @param ip
- * @returns {Promise<{countryName: string,countryCode: string}>}
+ * @returns {Promise<{countryName: string, countryCode: string}>}
  * @private
  */
 async function _geolite(ip) {

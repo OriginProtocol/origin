@@ -4,7 +4,8 @@ const restrictedCountryCodes = ['US', 'CA']
 const forbiddenCountryCodes = []
 
 /**
- * Returns country code + name as well as eligibilit (Eligible, Forbiddem , Restricted)
+ * Returns country code, country name and
+ * eligibility (Eligible, Forbiddem , Restricted, Unknown)
  * @param ip
  * @returns {{countryName: string, countryCode: string, eligibility: string}}
  */
