@@ -17,6 +17,50 @@ function roleForEvent(e) {
   if (e.startsWith('Identity')) return ''
 }
 
+const WaitForFirstBlock = () => (
+  <div className="make-offer-modal">
+    <div className="spinner light" />
+    <div>
+      <b>
+        Waiting on the blockchain.
+        <br />
+        This might take a minute.
+      </b>
+    </div>
+  </div>
+)
+
+const WaitForConfirmation = () => (
+  <div className="make-offer-modal">
+    <div className="spinner light" />
+    <div>
+      <b>
+        Waiting for confirmation.
+        <br />
+        This might take a minute.
+      </b>
+    </div>
+  </div>
+)
+
+const Error = () => (
+  <div className="make-offer-modal">
+    <div className="spinner light" />
+    <div>
+      <b>Error - see console</b>
+    </div>
+  </div>
+)
+
+const Confirm = () => (
+  <>
+    <div className="spinner light" />
+    <div>
+      <b>Confirm Transaction</b>
+    </div>
+  </>
+)
+
 class WaitForTransaction extends Component {
   render() {
     const id = this.props.hash
@@ -27,29 +71,23 @@ class WaitForTransaction extends Component {
         walletType && walletType.startsWith('mobile-')
           ? 'mobile wallet'
           : walletType
+
+      const content = (
+        <div className="make-offer-modal">
+          {provider === 'MetaMask' ? <MetaMaskAnimation /> : <Confirm />}
+          <div>Please confirm this transaction in {provider}</div>
+        </div>
+      )
+      if (this.props.contentOnly) {
+        return content
+      }
       return (
         <>
           <MobileLinkerCode role={role} />
           <Modal
-            onClose={() => {
-              if (this.props.onClose) {
-                this.props.onClose()
-              }
-            }}
+            onClose={() => (this.props.onClose ? this.props.onClose() : null)}
           >
-            <div className="make-offer-modal">
-              {provider === 'MetaMask' ? (
-                <MetaMaskAnimation />
-              ) : (
-                <>
-                  <div className="spinner light" />
-                  <div>
-                    <b>Confirm Transaction</b>
-                  </div>
-                </>
-              )}
-              <div>Please confirm this transaction in {provider}</div>
-            </div>
+            {content}
           </Modal>
         </>
       )
@@ -70,42 +108,17 @@ class WaitForTransaction extends Component {
           let content
           if (error) {
             console.log(error)
-            content = (
-              <div className="make-offer-modal">
-                <div className="spinner light" />
-                <div>
-                  <b>Error - see console</b>
-                </div>
-              </div>
-            )
+            content = <Error />
           } else if (!event) {
-            content = (
-              <div className="make-offer-modal">
-                <div className="spinner light" />
-                <div>
-                  <b>
-                    Waiting on the blockchain.
-                    <br />
-                    This might take a minute.
-                  </b>
-                </div>
-              </div>
-            )
+            content = <WaitForFirstBlock />
           } else if (currentBlock <= confirmedBlock) {
-            content = (
-              <div className="make-offer-modal">
-                <div className="spinner light" />
-                <div>
-                  <b>
-                    Waiting for confirmation.
-                    <br />
-                    This might take a minute.
-                  </b>
-                </div>
-              </div>
-            )
+            content = <WaitForConfirmation />
           } else {
             content = this.props.children({ event, client })
+          }
+
+          if (this.props.contentOnly) {
+            return content
           }
 
           return (

@@ -48,6 +48,8 @@ import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
 import linkMobileWallet from './walletLinker/linkMobileWallet'
 
+import swapToToken from './uniswap/swapToToken'
+
 export default {
   acceptOffer,
   addAffiliate,
@@ -78,6 +80,7 @@ export default {
   setActiveWallet,
   setNetwork,
   signMessage,
+  swapToToken,
   toggleMetaMask,
   transferToken,
   unlinkMobileWallet,

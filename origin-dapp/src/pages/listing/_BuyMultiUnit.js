@@ -14,10 +14,12 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
   return (
     <WithPrices
       price={totalPrice}
+      target={token}
       targets={['token-ETH', 'token-DAI', totalPrice.currency.id]}
     >
-      {prices => {
+      {({ prices, tokenStatus }) => {
         if (!prices) return null
+        // console.log({ prices, hasBalance, hasAllowance, needsBalance, needsAllowance })
         return (
           <div className="listing-buy multi">
             <div className="price">
@@ -41,6 +43,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               acceptedTokens={listing.acceptedTokens}
               value={token}
               onChange={setToken}
+              hasBalance={tokenStatus.hasBalance}
             />
             <Buy
               refetch={refetch}
@@ -49,6 +52,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               value={prices[token].amount}
               quantity={quantity}
               currency={token}
+              tokenStatus={tokenStatus}
               className="btn btn-primary"
               children="Purchase"
             />

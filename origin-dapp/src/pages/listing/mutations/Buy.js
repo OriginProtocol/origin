@@ -6,7 +6,9 @@ import store from 'utils/store'
 const sessionStore = store('sessionStorage')
 
 import MakeOfferMutation from 'mutations/MakeOffer'
+import SwapToTokenMutation from 'mutations/SwapToToken'
 
+import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
@@ -20,54 +22,111 @@ class Buy extends Component {
     if (this.state.onboard) {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
+    const tokenStatus = this.props.tokenStatus || {}
+    let cmp
+    if (tokenStatus.hasBalance) {
+      cmp = this.renderMakeOfferMutation()
+    } else {
+      cmp = this.renderSwapTokenModal()
+    }
+
     return (
       <>
-        <Mutation
-          mutation={MakeOfferMutation}
-          onCompleted={({ makeOffer }) => {
-            this.setState({ waitFor: makeOffer.id })
-          }}
-          onError={errorData =>
-            this.setState({ waitFor: false, error: 'mutation', errorData })
-          }
-        >
-          {makeOffer => (
-            <>
-              <button
-                className={this.props.className}
-                onClick={() => this.onClick(makeOffer)}
-                children={this.props.children}
-              />
-              {this.renderWaitModal()}
-              {this.state.error && (
-                <TransactionError
-                  reason={this.state.error}
-                  data={this.state.errorData}
-                  onClose={() => this.setState({ error: false })}
-                />
-              )}
-            </>
-          )}
-        </Mutation>
+        {cmp}
+        {this.state.error && (
+          <TransactionError
+            reason={this.state.error}
+            data={this.state.errorData}
+            onClose={() => this.setState({ error: false })}
+          />
+        )}
       </>
     )
   }
 
-  onClick(makeOffer) {
-    if (this.props.disabled) {
-      return
-    }
+  renderSwapTokenModal() {
+    return (
+      <>
+        <button
+          className={this.props.className}
+          onClick={() => this.setState({ swap: true })}
+          children={this.props.children}
+        />
+        {!this.state.swap ? null : (
+          <Modal
+            onClose={() =>
+              this.setState({ swap: false, swapShouldClose: false })
+            }
+            shouldClose={this.state.swapShouldClose}
+          >
+            <h2>Swap for DAI</h2>
+            Click below to swap ETH for DAI
+            <div className="actions">
+              <button
+                className="btn btn-outline-light"
+                onClick={() => this.setState({ swapShouldClose: true })}
+                children="Cancel"
+              />
+              {this.renderSwapTokenMutation()}
+            </div>
+          </Modal>
+        )}
+      </>
+    )
+  }
 
-    if (this.props.cannotTransact === 'no-wallet') {
-      const { pathname, search } = this.props.location
-      sessionStore.set('getStartedRedirect', { pathname, search })
-      this.setState({ onboard: true })
-      return
-    } else if (this.props.cannotTransact) {
-      this.setState({
-        error: this.props.cannotTransact,
-        errorData: this.props.cannotTransactData
-      })
+  renderSwapTokenMutation() {
+    return (
+      <Mutation
+        mutation={SwapToTokenMutation}
+        onCompleted={({ swapToToken }) => {
+          this.setState({ waitForSwap: swapToToken.id })
+        }}
+        onError={errorData =>
+          this.setState({ waitForSwap: false, error: 'mutation', errorData })
+        }
+      >
+        {swapToToken => (
+          <>
+            <button
+              className={this.props.className}
+              onClick={() => this.onSwapToToken(swapToToken)}
+              children="Start Swap"
+            />
+            {this.renderWaitSwapModal()}
+          </>
+        )}
+      </Mutation>
+    )
+  }
+
+  renderMakeOfferMutation() {
+    return (
+      <Mutation
+        mutation={MakeOfferMutation}
+        onCompleted={({ makeOffer }) => {
+          this.setState({ waitFor: makeOffer.id })
+        }}
+        onError={errorData =>
+          this.setState({ waitFor: false, error: 'mutation', errorData })
+        }
+      >
+        {makeOffer => (
+          <>
+            <button
+              className={this.props.className}
+              onClick={() => this.onClick(makeOffer)}
+              children={this.props.children}
+            />
+            {this.renderWaitModal()}
+          </>
+        )}
+      </Mutation>
+    )
+  }
+
+  onClick(makeOffer) {
+    if (!this.canTransact()) {
       return
     }
 
@@ -95,6 +154,42 @@ class Buy extends Component {
       variables.fractionalData = { startDate, endDate }
     }
     makeOffer({ variables })
+  }
+
+  canTransact() {
+    if (this.props.disabled) {
+      return false
+    }
+    if (this.props.cannotTransact === 'no-wallet') {
+      const { pathname, search } = this.props.location
+      sessionStore.set('getStartedRedirect', { pathname, search })
+      this.setState({ onboard: true })
+      return false
+    } else if (this.props.cannotTransact) {
+      this.setState({
+        error: this.props.cannotTransact,
+        errorData: this.props.cannotTransactData
+      })
+      return false
+    }
+
+    return true
+  }
+
+  onSwapToToken(swapToToken) {
+    if (!this.canTransact()) {
+      return
+    }
+
+    this.setState({ waitForSwap: 'pending' })
+
+    const variables = {
+      from: this.props.from,
+      token: this.props.currency,
+      tokenValue: String(this.props.tokenStatus.needsBalance)
+    }
+
+    swapToToken({ variables })
   }
 
   renderWaitModal() {
@@ -141,6 +236,29 @@ class Buy extends Component {
                 }
               }}
               children={this.state.loading ? 'Loading...' : 'View Purchase'}
+            />
+          </div>
+        )}
+      </WaitForTransaction>
+    )
+  }
+
+  renderWaitSwapModal() {
+    if (!this.state.waitForSwap) return null
+    return (
+      <WaitForTransaction
+        hash={this.state.waitForSwap}
+        onClose={() => this.setState({ waitForSwap: null })}
+      >
+        {({ event }) => (
+          <div className="make-offer-modal success">
+            <div className="success-icon" />
+            <h5>Success!</h5>
+            <button
+              href="#"
+              className="btn btn-outline-light"
+              onClick={() => {}}
+              children={this.state.loading ? 'Loading...' : 'Next'}
             />
           </div>
         )}

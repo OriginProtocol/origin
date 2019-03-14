@@ -8,6 +8,7 @@ import Notifications from './Notifications'
 import CreatorConfig from './CreatorConfig'
 import WalletLinker from './WalletLinker'
 import Currency from './Currency'
+import Uniswap from './Uniswap'
 
 export default [
   Common,
@@ -19,5 +20,6 @@ export default [
   Attestations,
   CreatorConfig,
   WalletLinker,
-  Currency
+  Currency,
+  Uniswap
 ]

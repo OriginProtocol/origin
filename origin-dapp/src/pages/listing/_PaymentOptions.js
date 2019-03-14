@@ -1,31 +1,22 @@
 import React from 'react'
-import get from 'lodash/get'
 
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price2'
 
-const PaymentOptions = ({ acceptedTokens, value, onChange, price, tokens }) => {
+const PaymentOptions = ({
+  acceptedTokens,
+  value,
+  onChange,
+  price,
+  hasBalance
+}) => {
   const daiActive = value === 'token-DAI' ? ' active' : ''
   const ethActive = value === 'token-ETH' ? ' active' : ''
   const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
   const daiDisabled = acceptsDai ? '' : ' disabled'
-  const acceptsEth = !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
+  const acceptsEth =
+    !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
   const ethDisabled = acceptsEth ? '' : ' disabled'
-
-  let shouldSwap = false
-  let needsAllowance = false
-  const daiBalance = get(tokens, 'token-DAI.currency.balance')
-  const daiAllowance = get(tokens, 'token-DAI.currency.allowance')
-
-  if (value === 'token-DAI' && daiBalance) {
-    const availableBN = Number(web3.utils.fromWei(daiBalance, 'ether'))
-    const requiredBN = Number(price.amount)
-    shouldSwap = availableBN < requiredBN
-
-    const availableAllowance = Number(web3.utils.fromWei(daiAllowance, 'ether'))
-    const requiredAllowance = Number(price.amount)
-    needsAllowance = availableAllowance < requiredAllowance
-  }
 
   const ethPrice = <Price price={price} target="token-ETH" />
   const daiPrice = <Price price={price} target="token-DAI" />
@@ -53,7 +44,7 @@ const PaymentOptions = ({ acceptedTokens, value, onChange, price, tokens }) => {
         <span>Payment</span>
         <span>{ethActive ? ethPrice : daiPrice}</span>
       </div>
-      {ethActive || !shouldSwap ? null : (
+      {ethActive || hasBalance ? null : (
         <div className="exchanged">{ethPrice}</div>
       )}
       <div className="help">
@@ -62,17 +53,15 @@ const PaymentOptions = ({ acceptedTokens, value, onChange, price, tokens }) => {
             Your ETH will be transferred to an escrow contract and held until
             the sale is completed.
           </>
-        ) : !shouldSwap ? (
+        ) : hasBalance ? (
           <>
             Your DAI will be transferred to an escrow contract and held until
             the sale is completed.
-            {needsAllowance ? ' (needs allowance)' : null}
           </>
         ) : (
           <>
             DAI amount will be converted from ETH (ETH value is an
             approximation)
-            {needsAllowance ? ' (needs allowance)' : null}
           </>
         )}
       </div>
