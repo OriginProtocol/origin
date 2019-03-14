@@ -8,7 +8,7 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # origin-js - Deprecated
 
-⚠️ origin-js is now **deprecated**. ⚠️ origin-graphql is the new standard API to interact with the Origin Protocol. 
+⚠️ origin-js is now **deprecated**. origin-graphql is the new standard API to interact with the Origin Protocol. 
 
 origin-js is a library of javascript code and Ethereum smart contracts which allow anyone to create decentralized marketplaces, including for fractional usage. It is an open source project created by [Origin Protocol](https://www.originprotocol.com/).
 

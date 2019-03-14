@@ -21,7 +21,7 @@ You can see the Origin ecosystem in action at https://dapp.originprotocol.com.
 
 ## Development
 
-Ready to get started? Have a look at our [developer quickstart](https://github.com/OriginProtocol/origin/tree/master/DEVELOPMENT.md) and our [contributing guidelines](https://github.com/OriginProtocol/origin/tree/master/CONTRIBUTING.md).
+Ready to get started? Have a look at our [developer quickstart](DEVELOPMENT.md) and our [contributing guidelines](CONTRIBUTING.md).
 
 ## Contributing
 
