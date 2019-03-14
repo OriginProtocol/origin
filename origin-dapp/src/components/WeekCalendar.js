@@ -40,7 +40,6 @@ class WeekCalendar extends Component {
 
     return (
       <div className={`weekCalendar${this.props.small ? ' calendar-sm' : ''}`}>
-        <div>this.props.workingHours: {this.props.workingHours}</div>
         <div className="week-chooser">
           <button
             type="button"
@@ -55,11 +54,6 @@ class WeekCalendar extends Component {
                 weekStartDate: weekStartDate.add(-1, 'week'),
                 ...resetDrag
               })
-              // if (month === 0) {
-              //   this.setState({ month: 11, year: year - 1, ...resetDrag })
-              // } else {
-              //   this.setState({ month: month - 1, ...resetDrag })
-              // }
             }}
           />
           {weekStartDate.format('MMM ')}
@@ -75,12 +69,6 @@ class WeekCalendar extends Component {
                 weekStartDate: weekStartDate.add(+1, 'week'),
                 ...resetDrag
               })
-
-              // if (month === 11) {
-              //   this.setState({ month: 0, year: year + 1, ...resetDrag })
-              // } else {
-              //   this.setState({ month: this.state.month + 1, ...resetDrag })
-              // }
             }}
           />
         </div>

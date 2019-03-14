@@ -184,7 +184,7 @@ class AvailabilityCalculatorHourly {
     while (start.isBefore(end)) {
       const hour = start.format('YYYY-MM-DDTHH:00:00')
 
-      let price = 0
+      let price = this.opts.price
       let isWorkingHour = false
       if (this.opts.workingHours[start.day()]) {
         let [startString, endString] = this.opts.workingHours[start.day()].split('/')
