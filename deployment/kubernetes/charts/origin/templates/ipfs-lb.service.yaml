@@ -1,7 +1,8 @@
+{{- if eq .Release.Namespace "prod" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "ipfs.fullname" . }}
+  name: {{ template "ipfs.fullname" . }}-lb
   labels:
     app: {{ template "ipfs.fullname" . }}
     app.kubernetes.io/name: origin
@@ -13,8 +14,16 @@ metadata:
     app.kubernetes.io/part-of: ipfs
 spec:
   type: LoadBalancer
+  {{- if .Values.ipfsLoadBalancerIP }}
+  loadBalancerIP: 35.233.189.126
+  {{- end }}
   selector:
     app: {{ template "ipfs.fullname" . }}
   ports:
     - name: swarm
       port: 4001
+    - name: api
+      port: 5001
+    - name: gateway
+      port: 8080
+{{- end }}
