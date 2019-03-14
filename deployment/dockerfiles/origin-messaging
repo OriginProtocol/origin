@@ -9,4 +9,4 @@ COPY ./origin-messaging /app
 RUN npm install --loglevel notice
 RUN npm run build
 
-CMD npm run start
+CMD npm run migrate && npm run start

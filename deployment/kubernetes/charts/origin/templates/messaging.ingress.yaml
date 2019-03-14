@@ -37,4 +37,4 @@ spec:
           - path: /
             backend:
               serviceName: {{ template "messaging.fullname" . }}
-              servicePort: 9012
+              servicePort: 443
