@@ -17,6 +17,7 @@ class AvailabilityCalculatorHourly {
     this.opts.customPricing = this.opts.customPricing || []
     this.opts.timeZone = this.opts.timeZone || ''
     this.opts.workingHours = this.opts.workingHours || []
+    this.opts.price = this.opts.price || ''
   }
 
   /**
@@ -113,6 +114,7 @@ class AvailabilityCalculatorHourly {
   }
 
   estimatePrice(range) {
+    // TODO
     const [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
     const available = availability.every(slot => slot.unavailable === false)
@@ -135,6 +137,18 @@ class AvailabilityCalculatorHourly {
       start = end
       end = newEnd
     }
+
+    const unavailable = {}
+    this.opts.unavailable.forEach(range => {
+      const [startStr, endStr] = range.split('/')
+      let start = dayjs(startStr)
+      const end = dayjs(endStr).add(1, 'hour')
+
+      while (start.isBefore(end)) {
+        unavailable[start.format('YYYY-MM-DDTHH:00:00')] = true
+        start = start.add(1, 'day')
+      }
+    })
 
     // Handle booked ranges
     const booked = {}
@@ -169,13 +183,27 @@ class AvailabilityCalculatorHourly {
     // Iterate over all hours between `start` and `end`
     while (start.isBefore(end)) {
       const hour = start.format('YYYY-MM-DDTHH:00:00')
+
       let price = 0
+      let isWorkingHour = false
+      if (this.opts.workingHours[start.day()]) {
+        let [startString, endString] = this.opts.workingHours[start.day()].split('/')
+        const workingHourStart = start.startOf('day').add(parseInt(startString.slice(0, 2)), 'hour')
+        const workingHourEnd = start.startOf('day').add(parseInt(endString.slice(0, 2)), 'hour')
+        isWorkingHour = start.isBetween(workingHourStart, workingHourEnd, null, '[)')
+      }
+      else {
+        // If no hours defined, default to no
+        isWorkingHour = false
+      }
+
       if (customPricing[hour]) {
         price = customPricing[hour]
       }
+
       hours.push({
         hour,
-        unavailable: customPricing[hour] ? false : true,
+        unavailable: unavailable[hour] || booked[hour] || (!isWorkingHour && !customPricing[hour]) ? true : false,
         booked: booked[hour] ? true : false,
         price,
         customPrice: customPricing[hour] ? true : false

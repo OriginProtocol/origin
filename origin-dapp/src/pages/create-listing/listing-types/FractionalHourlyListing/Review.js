@@ -85,8 +85,7 @@ class Review extends Component {
                   small={true}
                   availability={
                     new AvailabilityCalculatorHourly({
-                      weekdayPrice: listing.price,
-                      weekendPrice: listing.weekendPrice,
+                      workingHours: this.state.workingHours,
                       booked: listing.booked,
                       unavailable: listing.unavailable,
                       customPricing: listing.customPricing,

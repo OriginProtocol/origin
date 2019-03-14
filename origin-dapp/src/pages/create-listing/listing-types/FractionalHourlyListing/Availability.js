@@ -18,12 +18,11 @@ class Availability extends Component {
       available: true,
       range: '',
       calculator: new AvailabilityCalculatorHourly({
-        // price: props.listing.price,
-        // weekendPrice: props.listing.weekendPrice,
+        price: props.listing.price,
+        workingHours: props.listing.workingHours,
         booked: props.listing.booked,
         unavailable: props.listing.unavailable,
         customPricing: props.listing.customPricing
-        // customPricing: ['2019-03-11T018:00:00/2019-03-23T02:00:00~0.666'] // TODO (Stan): fixture for development
       })
     }
   }
@@ -58,6 +57,7 @@ class Availability extends Component {
                 <WeekCalendar
                   range={this.state.range}
                   availability={this.state.calculator}
+                  workingHours={this.state.workingHours}
                   onChange={state => this.setState(state)}
                   showBooked={true}
                 />

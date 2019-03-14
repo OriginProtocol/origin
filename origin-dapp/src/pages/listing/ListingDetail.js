@@ -143,6 +143,7 @@ class ListingDetail extends Component {
               </div>
             </div>
             <WeekCalendar
+              workingHours={this.state.workingHours}
               interactive={!isOwnerViewing}
               small={true}
               onChange={state => this.setState(state)}

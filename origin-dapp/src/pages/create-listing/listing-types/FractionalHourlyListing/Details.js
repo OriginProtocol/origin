@@ -29,10 +29,11 @@ class Details extends Component {
       '09:00:00/17:00:00',
       ''
     ]
-    if (!props.listing.workingHours) {
+    if (!props.listing.workingHours || props.listing.workingHours.length==0) {
       props.listing.workingHours = this.defaultWorkingHours
     }
     this.state = omit(props.listing, 'valid')
+    console.log(this.state)
   }
 
   componentDidMount() {
@@ -159,6 +160,7 @@ class Details extends Component {
                           type="checkbox"
                           style={{ marginRight: '1rem' }}
                           checked={
+                            this.state.workingHours.length > 0 &&
                             this.state.workingHours[dayIndex].indexOf('/') > -1
                           }
                           onChange={e => {
