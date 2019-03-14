@@ -40,6 +40,7 @@ class WeekCalendar extends Component {
 
     return (
       <div className={`weekCalendar${this.props.small ? ' calendar-sm' : ''}`}>
+        <div>this.props.workingHours: {this.props.workingHours}</div>
         <div className="week-chooser">
           <button
             type="button"
