@@ -2,10 +2,6 @@
 
 import '@babel/polyfill'
 import OrbitDB from 'orbit-db'
-import bodyParser from 'body-parser'
-import express from 'express'
-import { RateLimiterMemory } from 'rate-limiter-flexible'
-import Web3 from 'web3'
 import db from './models'
 
 const Log = require('ipfs-log')

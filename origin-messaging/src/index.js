@@ -17,14 +17,6 @@ import _redis from 'redis'
 
 const redis = _redis.createClient(process.env.REDIS_URL)
 
-//the OrbitDB should be the message one
-const messagingRoomsMap = {}
-const snapshotBatchSize = config.SNAPSHOT_BATCH_SIZE
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 // supply an endpoint for querying global registry
 const app = express()
 expressWs(app)
@@ -153,7 +145,7 @@ app.get('/conversations/:address', async (req, res) => {
 })
 
 app.get('/messages/:conversationId', async (req, res) => {
-  let { conversationId } = req.params
+  const { conversationId } = req.params
 
   const messages = await db.Message.findAll({
     include: [
@@ -304,7 +296,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          receivers,
+          recievers,
           token: config.LINKING_NOTIFY_TOKEN
         })
       })

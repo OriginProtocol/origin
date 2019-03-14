@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'registry'
     }
   )
-  Registry.associate = function(models) {
+  Registry.associate = function() {
     // associations can be defined here
   }
   return Registry
