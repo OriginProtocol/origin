@@ -48,6 +48,7 @@
     "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
     "rate-limiter-flexible": "^0.19.4",
+    "sequelize-cli": "^5.4.0",
     "sequelize": "^5.0.0-beta.14",
     "web3": "1.0.0-beta.34",
     "redis": "^2.8.0",
@@ -57,7 +58,6 @@
     "@babel/node": "^7.2.0",
     "eslint": "^5.13.0",
     "nodemon": "^1.18.7",
-    "sequelize-cli": "^5.4.0"
   },
   "prettier": {
     "semi": false,

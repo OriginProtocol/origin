@@ -4,9 +4,15 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+# Install envkey-source to make environment available for sequelize migration
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
+
 COPY ./origin-messaging /app
 
 RUN npm install --loglevel notice
 RUN npm run build
 
-CMD npm run migrate && npm run start
+CMD eval $(envkey-source) && npm run migrate && npm start
