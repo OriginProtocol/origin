@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "ipfs.fullname" . }}
+  name: {{ template "ipfs.fullname" . }}-lb
   labels:
     app: {{ template "ipfs.fullname" . }}
     app.kubernetes.io/name: origin
@@ -18,3 +18,7 @@ spec:
   ports:
     - name: swarm
       port: 4001
+    - name: api
+      port: 5001
+    - name: gateway
+      port: 8080
