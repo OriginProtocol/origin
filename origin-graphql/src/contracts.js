@@ -137,6 +137,7 @@ const Configs = {
     ipfsGateway: 'https://ipfs.dev.originprotocol.com',
     ipfsRPC: 'https://ipfs.dev.originprotocol.com',
     discovery: 'https://discovery.dev.originprotocol.com',
+    growth: 'https://growth.dev.originprotocol.com',
     OriginToken: '0xc341384f6fe00179b33ef7ae638ed2937a9e4501',
     V00_Marketplace: '0xf3884ecbc6c43383bf7a38c891021380f50abc49',
     V00_Marketplace_Epoch: '0',
@@ -174,7 +175,11 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    linkerWS: `ws://${LINKER_HOST}:3008`,
+    messaging: {
+      ipfsSwarm: process.env.IPFS_SWARM,
+      globalKeyServer: 'http://localhost:6647'
+    }
   },
   docker: {
     provider: `http://localhost:8545`,
