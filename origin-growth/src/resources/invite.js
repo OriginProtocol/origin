@@ -8,7 +8,7 @@ const { CampaignRules } = require('./rules')
 
 const DBToSchemaStatus = {
   Sent: 'Pending',
-  Completed: 'Successful'
+  Completed: 'Completed'
 }
 
 class GrowthInvite {
