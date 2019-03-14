@@ -79,6 +79,11 @@ class GrowthInvite {
       })
       const referrer = await GrowthInvite._getReferrer(code)
 
+      if (referrer === walletAddress.toLowerCase()) {
+        logger.debug(`Referrer ${referrer} can't use own referral code`)
+        return
+      }
+
       if (
         referralLink &&
         referralLink.referrerEthAddress.toLowerCase() !== referrer.toLowerCase()
