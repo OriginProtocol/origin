@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       isKeys: DataTypes.BOOLEAN
     },
     {
-      tableName: 'message'
+      tableName: 'msg_message'
     }
   )
   Message.associate = function(models) {

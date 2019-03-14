@@ -1,12 +1,12 @@
 'use strict'
-const tableName = 'message'
+const tableName = 'msg_message'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(tableName, {
       conversation_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'conversation', // name of Target model
+          model: 'msg_conversation', // name of Target model
           key: 'id' // key in Target model that we're referencing
         },
         onUpdate: 'CASCADE',

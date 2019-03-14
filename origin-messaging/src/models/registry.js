@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       signature: DataTypes.STRING(256)
     },
     {
-      tableName: 'registry'
+      tableName: 'msg_registry'
     }
   )
   Registry.associate = function() {

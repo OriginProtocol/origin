@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       messageCount: { type: DataTypes.INTEGER, defaultValue: 0 }
     },
     {
-      tableName: 'conversation'
+      tableName: 'msg_conversation'
     }
   )
   Conversation.associate = function() {

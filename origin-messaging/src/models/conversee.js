@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       conversationId: { type: DataTypes.INTEGER, primaryKey: true }
     },
     {
-      tableName: 'conversee'
+      tableName: 'msg_conversee'
     }
   )
   Conversee.associate = function(models) {

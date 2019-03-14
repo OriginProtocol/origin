@@ -1,5 +1,5 @@
 'use strict'
-const TableName = 'registry'
+const TableName = 'msg_registry'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable(TableName, {

@@ -20,7 +20,6 @@ const MessagingStateQuery = gql`
     }
   }
 `
-let syncTimer
 
 export default function messagingSync(client) {
   const msg = config.messaging
@@ -81,12 +80,12 @@ export default function messagingSync(client) {
   // })
 
   // detect new decrypted messages
-  msg.events.on('msg', obj => {
+  /*msg.events.on('msg', obj => {
     // debug('New msg', obj)
     // this.props.addMessage(obj)
     //
     // this.debouncedFetchUser(obj.senderAddress)
-  })
+  })*/
 
   // To Do: handle incoming messages when no Origin Messaging Private Key is available
   // msg.events.on('emsg', obj => {
