@@ -21,6 +21,8 @@ const MessagingStateQuery = gql`
   }
 `
 
+let syncTimer
+
 export default function messagingSync(client) {
   const msg = config.messaging
   if (!msg) {
