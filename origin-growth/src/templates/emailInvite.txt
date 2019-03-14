@@ -1,1 +1,5 @@
-${referrerName} invited you to check out the Origin DApp at ${targetUrl} !
+${referrerName} has invited you to join Origin.
+
+You’ve been invited to buy and sell on Origin. You and ${referrerName} will both earn Origin cryptocurrency tokens (OGN) when you sign up. Origin tokens are a new cryptocurrency used on Origin. Earn tokens for verifying your profile, inviting your other friends, and buying and selling on the marketplace.
+
+Sign up and earn OGN at ${targetUrl}

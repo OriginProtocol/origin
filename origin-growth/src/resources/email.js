@@ -21,20 +21,21 @@ const htmlTemplate = fs
   .toString()
 
 /**
- * Returns email content.
+ * Returns the content for invite email.
+ * TODO: localize the content.
+ *
  * @param {string} friendName
  * @param {string} targetUrl
  * @returns {{subject: string, html: *, text: *}}
- * @private
  */
-function _generateInviteEmail(referrerName, targetUrl) {
+function generateInviteEmail(referrerName, targetUrl) {
+  const subject = 'Join Origin and earn free cryptocurrency'
   const text = textTemplate
     .replace('${referrerName}', referrerName)
     .replace('${targetUrl}', targetUrl)
   const html = htmlTemplate
     .replace('${referrerName}', referrerName)
     .replace('${targetUrl}', targetUrl)
-  const subject = `${referrerName} invited you to join Origin`
 
   return { subject, text, html }
 }
@@ -81,10 +82,7 @@ async function sendInvites(referrer, recipients) {
 
     // Send the invite code to the recipient.
     const targetUrl = `${dappUrl}/${code}`
-    const { subject, text, html } = _generateInviteEmail(
-      referrerName,
-      targetUrl
-    )
+    const { subject, text, html } = generateInviteEmail(referrerName, targetUrl)
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
@@ -120,4 +118,4 @@ async function sendInvites(referrer, recipients) {
   }
 }
 
-module.exports = { sendInvites }
+module.exports = { generateInviteEmail, sendInvites }
