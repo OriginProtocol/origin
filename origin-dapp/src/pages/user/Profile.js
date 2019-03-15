@@ -77,7 +77,7 @@ class UserProfile extends Component {
   }
 
   render() {
-    return(
+    return (
       <Fragment>
         <PageTitle>Welcome to Origin Protocol</PageTitle>
         <Switch>
@@ -95,9 +95,7 @@ class UserProfile extends Component {
             path="/profile/continue"
             render={() => this.renderProfile(true)}
           />
-          <Route
-            render={() => this.renderProfile(false)}
-          />
+          <Route render={() => this.renderProfile(false)} />
         </Switch>
       </Fragment>
     )
@@ -213,9 +211,7 @@ class UserProfile extends Component {
           </div>
           <div className="col-md-4">
             <Wallet />
-            <GrowthCampaignBox
-              openmodalonstart={arrivedFromOnboarding}
-            />
+            <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
                 <b>Verifying your profile</b> allows other users to know that

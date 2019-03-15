@@ -42,7 +42,7 @@ class GrowthWelcome extends Component {
     const storedInviteCode = localStorage.getItem(localStorageKey)
     // prefer the stored invite code, than newly fetched invite code
     this.setState({
-      inviteCode: storedInviteCode || inviteCode || null
+      inviteCode: storedInviteCode || inviteCode || null
     })
     if (storedInviteCode === null && inviteCode !== undefined) {
       localStorage.setItem(localStorageKey, inviteCode)
@@ -58,7 +58,7 @@ class GrowthWelcome extends Component {
   }
 
   render() {
-    return(
+    return (
       <Fragment>
         <PageTitle>Welcome to Origin Protocol</PageTitle>
         <Switch>
@@ -100,9 +100,9 @@ class GrowthWelcome extends Component {
 
   renderWelcomePage(arrivedFromOnboarding) {
     const personalised = true
-    const urlForOnboarding = '/welcome/onboard' + (this.state.inviteCode ?
-      `/${this.state.inviteCode}` :
-      '')
+    const urlForOnboarding =
+      '/welcome/onboard' +
+      (this.state.inviteCode ? `/${this.state.inviteCode}` : '')
 
     return (
       <div className="container growth-welcome">

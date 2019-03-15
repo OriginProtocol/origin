@@ -3,9 +3,7 @@ import React from 'react'
 import Link from 'components/Link'
 
 const Finished = ({ linkPrefix, redirectto }) => {
-
-  const continueTo = redirectto ? redirectto :
-    `${linkPrefix}/onboard/back`
+  const continueTo = redirectto ? redirectto : `${linkPrefix}/onboard/back`
 
   return (
     <div className="finished">
@@ -32,11 +30,7 @@ const Finished = ({ linkPrefix, redirectto }) => {
         </div>
       </div>
 
-      <Link
-        to={continueTo}
-        className={`btn btn-primary`}
-        children={'OK'}
-      />
+      <Link to={continueTo} className={`btn btn-primary`} children={'OK'} />
     </div>
   )
 }

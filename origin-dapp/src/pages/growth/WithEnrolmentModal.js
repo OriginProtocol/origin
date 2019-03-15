@@ -48,7 +48,6 @@ function withEnrolmentModal(WrappedComponent) {
     handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
-      console.log("URL FOR ONBOARDING: ", this.props.urlforonboarding)
       if (!walletPresent) {
         this.props.history.push(this.props.urlforonboarding)
       } else if (enrollmentStatus === 'Enrolled') {
@@ -348,12 +347,16 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount ? data.web3.primaryAccount.id : null
+            const walletAddress = data.web3.primaryAccount
+              ? data.web3.primaryAccount.id
+              : null
             return (
               <Query
                 query={enrollmentStatusQuery}
                 variables={{
-                  walletAddress: walletAddress ? walletAddress : '0xdummyAddress'
+                  walletAddress: walletAddress
+                    ? walletAddress
+                    : '0xdummyAddress'
                 }}
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
@@ -372,7 +375,11 @@ function withEnrolmentModal(WrappedComponent) {
                       <WrappedComponent
                         {...this.props}
                         onClick={e =>
-                          this.handleClick(e, data.enrollmentStatus, walletAddress)
+                          this.handleClick(
+                            e,
+                            data.enrollmentStatus,
+                            walletAddress
+                          )
                         }
                       />
                       {open && (
