@@ -46,15 +46,7 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: async context => {
-    let countryCode = null
     const headers = context.req.headers
-
-    logger.debug('Received request headers: ', JSON.stringify(headers))
-    /* TODO: this needs to be tested on production that google rightly sets X-AppEngine-Country
-     */
-    if (headers) {
-      countryCode = headers['X-AppEngine-Country'] || null
-    }
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
     let authToken, walletAddress
@@ -75,7 +67,6 @@ const server = new ApolloServer({
 
     return {
       ...context,
-      countryCode,
       authToken,
       walletAddress,
       authentication: authStatus

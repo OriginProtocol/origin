@@ -14,37 +14,55 @@ const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
   render() {
-    const { listing } = this.props
-    const linkPrefix = listing ? '/listing/:listingID' : ''
+    const { listing, showoriginwallet, linkprefix, redirectTo } = this.props
+    const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
+    const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')
 
     return (
       <div className="container onboard">
         <Switch>
           <Route
-            path={`${linkPrefix}/onboard/metamask`}
-            render={() => <MetaMask listing={listing} />}
+            path={`${linkPathPrefix}/onboard/metamask`}
+            render={() => (
+              <MetaMask listing={listing} linkPrefix={linkPrefix} />
+            )}
           />
           <Route
-            path={`${linkPrefix}/onboard/messaging`}
-            render={() => <Messaging listing={listing} />}
+            path={`${linkPathPrefix}/onboard/messaging`}
+            render={() => (
+              <Messaging listing={listing} linkPrefix={linkPrefix} />
+            )}
           />
           <Route
-            path={`${linkPrefix}/onboard/notifications`}
-            render={() => <Notifications listing={listing} />}
+            path={`${linkPathPrefix}/onboard/notifications`}
+            render={() => (
+              <Notifications listing={listing} linkPrefix={linkPrefix} />
+            )}
           />
           <Route
-            path={`${linkPrefix}/onboard/profile`}
-            render={() => <Profile listing={listing} />}
+            path={`${linkPathPrefix}/onboard/profile`}
+            render={() => <Profile listing={listing} linkPrefix={linkPrefix} />}
           />
           <Route
-            path={`${linkPrefix}/onboard/finished`}
-            render={() => <Finished />}
+            path={`${linkPathPrefix}/onboard/finished`}
+            render={() => (
+              <Finished redirectto={redirectTo} linkPrefix={linkPrefix} />
+            )}
           />
           <Redirect
-            from={`${linkPrefix}/onboard/back`}
+            from={`${linkPathPrefix}/onboard/back`}
             to={sessionStore.get('getStartedRedirect', '/')}
           />
-          <Route render={() => <Wallet listing={listing} />} />
+          <Route
+            render={() => (
+              <Wallet
+                listing={listing}
+                linkPrefix={linkPrefix}
+                // Growth engine does not support Origin Wallet for now
+                showoriginwallet={showoriginwallet}
+              />
+            )}
+          />
         </Switch>
       </div>
     )

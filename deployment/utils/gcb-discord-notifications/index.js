@@ -18,6 +18,11 @@ module.exports.subscribe = async (event, callback) => {
     return;
   }
 
+  // Don't announce anything if _CONTAINER isn't present
+  if (!build.substitutions._CONTAINER) {
+    return
+  }
+
   // Send message to Discord.
   const webhook = await createDiscordWebhook(build);
   if (webhook.message) {

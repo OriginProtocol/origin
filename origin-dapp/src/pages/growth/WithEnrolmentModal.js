@@ -10,6 +10,7 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
+import { mobileDevice } from 'utils/mobile'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -36,7 +37,7 @@ function withEnrolmentModal(WrappedComponent) {
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
       this.state = {
-        open: false,
+        open: props.startopen === 'true',
         stage: this.initialStage,
         notCitizenChecked: false,
         notCitizenConfirmed: false,
@@ -45,10 +46,17 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
-    handleClick(e, enrollmentStatus) {
+    handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
-      if (enrollmentStatus === 'Enrolled') {
+      if (mobileDevice() !== null) {
+        this.setState({
+          open: true,
+          stage: 'NotSupportedOnMobile'
+        })
+      } else if (!walletPresent) {
+        this.props.history.push(this.props.urlforonboarding)
+      } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
         this.setState({
@@ -333,6 +341,22 @@ function withEnrolmentModal(WrappedComponent) {
       return <Enroll />
     }
 
+    renderNotSupportedOnMobile() {
+      return (
+        <div>
+          <div className="title mt-4">Mobile not supported</div>
+          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+            Use desktop device in order to earn Origin tokens.
+          </div>
+          <button
+            className="btn btn-primary btn-rounded btn-lg"
+            onClick={() => this.handleCloseModal()}
+            children="Ok"
+          />
+        </div>
+      )
+    }
+
     render() {
       const { open } = this.state
 
@@ -345,11 +369,17 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount.id
+            const walletAddress = data.web3.primaryAccount
+              ? data.web3.primaryAccount.id
+              : null
             return (
               <Query
                 query={enrollmentStatusQuery}
-                variables={{ walletAddress }}
+                variables={{
+                  walletAddress: walletAddress
+                    ? walletAddress
+                    : '0xdummyAddress'
+                }}
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
@@ -367,7 +397,11 @@ function withEnrolmentModal(WrappedComponent) {
                       <WrappedComponent
                         {...this.props}
                         onClick={e =>
-                          this.handleClick(e, data.enrollmentStatus)
+                          this.handleClick(
+                            e,
+                            data.enrollmentStatus,
+                            walletAddress
+                          )
                         }
                       />
                       {open && (
