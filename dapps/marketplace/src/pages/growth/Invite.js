@@ -397,7 +397,7 @@ class GrowthInvite extends Component {
           'Pending Invites',
           'Track progress of friends who sign up with your invite code.',
           referralAction.invites.nodes.filter(
-            invite => invite.status !== 'Successful'
+            invite => invite.status !== 'Completed'
           ),
           referralAction.rewardPending.amount,
           'Pending',
@@ -409,7 +409,7 @@ class GrowthInvite extends Component {
           'Successful Invites',
           'Help your friends earn OGN just like you.',
           referralAction.invites.nodes.filter(
-            invite => invite.status === 'Successful'
+            invite => invite.status === 'Completed'
           ),
           referralAction.rewardEarned.amount,
           'Earned',
