@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 
 import Steps from 'components/Steps'
 import Calendar from 'components/Calendar'

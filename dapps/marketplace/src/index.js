@@ -5,7 +5,7 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 
 import Styl from 'react-styl'
-import client from 'origin-graphql'
+import client from '@origin/graphql'
 
 import setLocale from 'utils/setLocale'
 

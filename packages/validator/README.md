@@ -5,7 +5,7 @@ Origin Protocol JSON Schema validator.
 ## Usage
 
 ```
-import validator from 'origin-validator'
+import validator from '@origin/validator'
 
 const data = {
   "schemaId": "https://schema.originprotocol.com/offer_1.0.0.json",

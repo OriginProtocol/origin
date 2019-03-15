@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { fbt } from 'fbt-runtime'
-import Categories from 'origin-graphql/src/constants/Categories'
+import Categories from '@origin/graphql/src/constants/Categories'
 
 // import PriceFilter from './filters/Price'
 

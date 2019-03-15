@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
 import { Route, HashRouter } from 'react-router-dom'
 
-import client from 'origin-graphql'
+import client from '@origin/graphql'
 import App from './pages/App'
 
 ReactDOM.render(

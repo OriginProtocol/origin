@@ -1,5 +1,5 @@
-import { get } from 'origin-ipfs'
-// import { post } from 'origin-ipfs'
+import { get } from '@origin/ipfs'
+// import { post } from '@origin/ipfs'
 import uniqBy from 'lodash/uniqBy'
 import createDebug from 'debug'
 

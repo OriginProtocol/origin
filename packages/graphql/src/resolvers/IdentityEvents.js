@@ -1,5 +1,5 @@
 import graphqlFields from 'graphql-fields'
-import originIpfs from 'origin-ipfs'
+import originIpfs from '@origin/ipfs'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import contracts from '../contracts'

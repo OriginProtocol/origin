@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Categories from 'origin-graphql/src/constants/Categories'
+import Categories from '@origin/graphql/src/constants/Categories'
 import pick from 'lodash/pick'
 
 import Steps from 'components/Steps'

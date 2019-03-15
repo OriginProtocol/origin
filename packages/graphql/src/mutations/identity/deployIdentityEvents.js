@@ -1,4 +1,4 @@
-import IdentityEvents from 'origin-contracts/build/contracts/IdentityEvents'
+import IdentityEvents from '@origin/contracts/build/contracts/IdentityEvents'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setIdentityEvents } from '../../contracts'

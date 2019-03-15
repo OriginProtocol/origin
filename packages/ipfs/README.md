@@ -5,7 +5,7 @@ Convenience methods for getting and setting data in IPFS
 ## Usage
 
 ```
-import { get, post } from 'origin-ipfs'
+import { get, post } from '@origin/ipfs'
 
 const ipfsHash = await post("https://ipfs.originprotocol.com", { my: "data" })
 console.log(ipfsHash)

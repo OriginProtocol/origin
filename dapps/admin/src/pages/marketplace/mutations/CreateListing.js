@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
-import Categories from 'origin-graphql/src/constants/Categories'
+import Categories from '@origin/graphql/src/constants/Categories'
 
 import {
   Button,

@@ -1,7 +1,7 @@
 import ContractService from '../src/services/contract-service'
 import Token from '../src/resources/token.js'
 
-import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken.json'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken.json'
 
 import assert from 'assert'
 

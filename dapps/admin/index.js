@@ -5,7 +5,7 @@ import opener from 'opener'
 import fs from 'fs'
 import bodyParser from 'body-parser'
 
-import services from 'origin-services'
+import services from '@origin/services'
 
 const HOST = process.env.HOST || 'localhost'
 const app = express()

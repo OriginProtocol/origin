@@ -3,7 +3,7 @@
 import React from 'react'
 
 import Redirect from 'components/Redirect'
-import categories from 'origin-graphql/src/constants/Categories'
+import categories from '@origin/graphql/src/constants/Categories'
 
 class Configure extends React.Component {
   constructor(props) {

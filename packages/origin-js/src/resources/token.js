@@ -1,4 +1,4 @@
-import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken.json'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken.json'
 
 // Token is a light wrapper around the OriginToken contract.
 class Token {

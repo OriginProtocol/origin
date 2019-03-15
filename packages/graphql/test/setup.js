@@ -5,7 +5,7 @@
  */
 
 import client from '../src/index'
-import services from 'origin-services'
+import services from '@origin/services'
 import { setNetwork } from '../src/contracts'
 
 const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')

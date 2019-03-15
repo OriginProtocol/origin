@@ -20,7 +20,7 @@ Watch the [video tutorial](https://drive.google.com/a/originprotocol.com/file/d/
 From the top level of your local repo:
 
 ```
-cd experimental/origin-services
+cd packages/services
 num run clean
 ```
 

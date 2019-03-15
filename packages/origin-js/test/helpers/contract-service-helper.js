@@ -1,5 +1,5 @@
 import ContractService from '../../src/services/contract-service'
-import V00_Marketplace from 'origin-contracts/build/contracts/V00_Marketplace.json'
+import V00_Marketplace from '@origin/contracts/build/contracts/V00_Marketplace.json'
 
 /*
   Returns a contract service instance with a clean marketplace contract

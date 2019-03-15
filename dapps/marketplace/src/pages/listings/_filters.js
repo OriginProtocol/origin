@@ -1,5 +1,5 @@
 import queryString from 'query-string'
-import Categories from 'origin-graphql/src/constants/Categories'
+import Categories from '@origin/graphql/src/constants/Categories'
 import store from 'utils/store'
 const memStore = store('memory')
 import get from 'lodash/get'

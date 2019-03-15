@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import gqlClient from 'origin-graphql'
+import gqlClient from '@origin/graphql'
 
 import { ProgressBar } from '@blueprintjs/core'
 import { RefetchMutation } from 'queries/Mutations'

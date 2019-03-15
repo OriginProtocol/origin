@@ -8,7 +8,7 @@ const config = {
   },
   devtool: false,
   output: {
-    filename: 'origin-graphql.js',
+    filename: '@origin/graphql.js',
     path: path.resolve(__dirname, 'dist')
   },
   module: {

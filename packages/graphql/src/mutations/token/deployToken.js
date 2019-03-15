@@ -1,5 +1,5 @@
-import OriginToken from 'origin-contracts/build/contracts/OriginToken'
-import StandardToken from 'origin-contracts/build/contracts/TestToken'
+import OriginToken from '@origin/contracts/build/contracts/OriginToken'
+import StandardToken from '@origin/contracts/build/contracts/TestToken'
 import contracts from '../../contracts'
 import txHelper, { checkMetaMask } from '../_txHelper'
 

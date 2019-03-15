@@ -1,4 +1,4 @@
-import Marketplace from 'origin-contracts/build/contracts/V00_Marketplace'
+import Marketplace from '@origin/contracts/build/contracts/V00_Marketplace'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
 const data = Marketplace.bytecode

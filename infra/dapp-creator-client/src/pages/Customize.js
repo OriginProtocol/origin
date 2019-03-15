@@ -2,7 +2,7 @@
 
 import React from 'react'
 import superagent from 'superagent'
-import creatorConfig from 'origin-graphql/src/constants/CreatorConfig'
+import creatorConfig from '@origin/graphql/src/constants/CreatorConfig'
 
 import ColorPicker from 'components/ColorPicker'
 import ImagePicker from 'components/ImagePicker'

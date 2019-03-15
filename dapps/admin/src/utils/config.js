@@ -1,4 +1,4 @@
-import config from 'origin-graphql/src/contracts'
+import config from '@origin/graphql/src/contracts'
 
 export function getIpfsGateway() {
   return config.ipfsGateway

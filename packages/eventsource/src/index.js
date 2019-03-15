@@ -1,7 +1,7 @@
 const ipfs = require('@origin/ipfs')
 const offerStatus = require('./offerStatus')
 const get = ipfs.get
-// import { get } from 'origin-ipfs'
+// import { get } from '@origin/ipfs'
 const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
 const _get = require('lodash/get')

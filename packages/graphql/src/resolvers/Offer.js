@@ -1,7 +1,7 @@
 import contracts from '../contracts'
 import parseId from '../utils/parseId'
 
-import { getIpfsHashFromBytes32 } from 'origin-ipfs'
+import { getIpfsHashFromBytes32 } from '@origin/ipfs'
 
 const _firstEventByType = async (offer, eventType) => {
   const { listingId, offerId } = parseId(offer.id)

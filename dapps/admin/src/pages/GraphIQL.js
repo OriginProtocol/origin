@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import GraphiQL from 'graphiql'
 import { parse } from 'graphql/language/parser'
 import { execute } from 'apollo-link'
-import gqlClient from 'origin-graphql'
+import gqlClient from '@origin/graphql'
 
 const DefaultQuery = `{
   marketplace {
