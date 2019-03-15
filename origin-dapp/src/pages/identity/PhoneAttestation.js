@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 import CountryDropdown from './_CountryDropdown'
@@ -107,8 +108,10 @@ class PhoneAttestation extends Component {
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
             <div className="help">
-              Other users will know that you have a verified phone number. Your
-              actual phone number will not be published on the blockchain.
+              <fbt desc="Attestation.phonePublishClarification">
+                By verifying your phone number, you give Origin permission to send
+                you occasional emails such as notifications about your transactions.
+              </fbt>
             </div>
             <div className="actions">
               <button
