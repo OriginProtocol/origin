@@ -20,7 +20,6 @@ const MessagingStateQuery = gql`
     }
   }
 `
-let syncTimer
 
 export default function messagingSync(client) {
   const msg = config.messaging
@@ -37,32 +36,12 @@ export default function messagingSync(client) {
 
     msg.synced = false
     msg.syncProgress = '0%'
-    syncTimer = setTimeout(() => {
+    setTimeout(() => {
       msg.synced = true
       msg.syncProgress = '100%'
       refresh()
     }, 2000)
 
-    if (msg.global_keys && msg.global_keys.events) {
-      msg.global_keys.events.on(
-        'replicate.progress',
-        (address, hash, entry, progress, have) => {
-          // debug('replicate.progress', address, hash, entry, progress, have, msg.global_keys._replicationStatus.buffered, msg.global_keys._replicationStatus.queued)
-          debug('replicate.progress', progress, have)
-          clearTimeout(syncTimer)
-          syncTimer = setTimeout(() => {
-            msg.synced = true
-            msg.syncProgress = '100%'
-            refresh()
-          }, 2000) // If no sync event in 1 second, assume we're synced
-          let pct = Math.round((progress / have) * 1000) / 10
-          if (pct > 99) pct = 99
-          msg.syncProgress = `${pct}%`
-          msg.synced = false
-          refresh()
-        }
-      )
-    }
     // msg.global_keys.events.on(
     //   'load.progress',
     //   (address, hash, entry, progress, have) => {
@@ -101,16 +80,12 @@ export default function messagingSync(client) {
   // })
 
   // detect new decrypted messages
-  msg.events.on('msg', obj => {
-    if (obj.decryption) {
-      const { roomId, keys } = obj.decryption
-      origin.messaging.initRoom(roomId, keys)
-    }
+  /*msg.events.on('msg', obj => {
     // debug('New msg', obj)
     // this.props.addMessage(obj)
     //
     // this.debouncedFetchUser(obj.senderAddress)
-  })
+  })*/
 
   // To Do: handle incoming messages when no Origin Messaging Private Key is available
   // msg.events.on('emsg', obj => {

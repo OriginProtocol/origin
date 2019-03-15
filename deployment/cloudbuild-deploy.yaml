@@ -1,6 +1,7 @@
 ---
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'Configure deployment namespace'
+    name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -19,7 +20,8 @@ steps:
         esac
 
   # Add encrypted secrets and private code
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - id: 'Decrypt secrets required for Kubernetes deployment'
+    name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -40,7 +42,8 @@ steps:
         fi
 
   # Decrypt the file containing the SSH key for GitHub
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - id: 'Decrypt secrets required for GitHub push'
+    name: 'gcr.io/cloud-builders/gcloud'
     args:
       - kms
       - decrypt
@@ -54,7 +57,8 @@ steps:
         path: /root/.ssh
 
   # Set up git with key and domain
-  - name: 'gcr.io/cloud-builders/git'
+  - id: 'Configure for GitHub'
+    name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -70,7 +74,8 @@ steps:
         path: /root/.ssh
 
   # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'Build the container image'
+    name: 'gcr.io/cloud-builders/docker'
     # Must use bash here due to if statement/string cmp
     entrypoint: '/bin/bash'
     args:
@@ -97,7 +102,8 @@ steps:
           .
 
   # Push the container image
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'Push the container image to GCR'
+    name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -106,7 +112,8 @@ steps:
           gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA}
 
   # Add latest tag to the container
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - id: 'Add `latest` tag to pushed container image'
+    name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -117,7 +124,8 @@ steps:
           --quiet
 
   # Commit deployment tags
-  - name: 'gcr.io/cloud-builders/git'
+  - id: 'Push deploiyment tags to GitHub'
+    name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
     args:
       - '-c'
@@ -141,7 +149,8 @@ steps:
         path: /root/.ssh
 
   # Generate a kubeconfig file for the given GKE cluster and upgrade with Helm
-  - name: 'gcr.io/$PROJECT_ID/helm'
+  - id: 'Update Kubernetes using Helm'
+    name: 'gcr.io/$PROJECT_ID/helm'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
       - 'CLOUDSDK_CONTAINER_CLUSTER=origin'
@@ -163,5 +172,3 @@ steps:
           -f deployment/kubernetes/values/origin/secrets-$(cat .namespace).yaml
 
 timeout: "3600s"
-options:
-  machineType: 'N1_HIGHCPU_8'

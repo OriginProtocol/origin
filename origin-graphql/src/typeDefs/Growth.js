@@ -41,7 +41,7 @@ module.exports =
 
   enum GrowthInviteStatus {
     Pending
-    Successful
+    Completed
   }
 
   enum Eligibility {
