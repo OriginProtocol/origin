@@ -9,7 +9,7 @@ const {
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
-const { sendInvites } = require('../resources/email')
+const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -155,10 +155,8 @@ const resolvers = {
     },
     async inviteRemind(_, args, context) {
       requireEnrolledUser(context)
-      logger.info(
-        `invite remind mutation called with invitationId: ${args.invitationId}.`
-      )
-      // TODO: implement
+
+      sendInviteReminder(context.walletAddress, args.invitationId)
       return true
     },
     log() {
