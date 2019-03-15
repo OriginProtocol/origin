@@ -176,10 +176,9 @@ function Campaign(props) {
   }
 
   // campaign rewards converted normalized to token value according to number of decimals
-  // const tokensEarned = web3.utils
-  //   .toBN(rewardEarned ? rewardEarned.amount : 0)
-  //   .div(decimalDivision)
-  const tokensEarned = web3.utils.toBN(345)
+  const tokensEarned = web3.utils
+    .toBN(rewardEarned ? rewardEarned.amount : 0)
+    .div(decimalDivision)
   const tokenEarnProgress = Math.min(maxProgressBarTokens, tokensEarned.toString())
 
   const actionCompleted = action => {
