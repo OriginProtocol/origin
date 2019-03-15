@@ -12,15 +12,16 @@ async function swapToToken(_, { from, token, tokenValue }) {
 
   const blockNumber = await contracts.web3.eth.getBlockNumber()
   const block = await contracts.web3.eth.getBlock(blockNumber)
-  const deadline = block.timestamp + 300
-  const dai = contracts.web3.utils.toWei(tokenValue, 'ether')
+  const now = Math.round(+new Date() / 1000)
+  const deadline = (block.timestamp < now - 60 ? now : block.timestamp) + 300
+
   const value = await contracts.daiExchange.methods
-    .getEthToTokenOutputPrice(dai)
+    .getEthToTokenOutputPrice(tokenValue)
     .call()
 
   const tx = contracts.daiExchangeExec.methods
-    .ethToTokenSwapOutput(dai, deadline)
-    .send({ from, value, gas: 50455 })
+    .ethToTokenSwapOutput(tokenValue, deadline)
+    .send({ from, value, gas: 103828 })
 
   return txHelper({ tx, from, mutation: 'swapToToken' })
 }

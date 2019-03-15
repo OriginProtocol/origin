@@ -39,20 +39,26 @@ class CannotTransact extends Component {
       }
     }
 
-    return (
-      <Modal {...modalProps}>
-        <div className="make-offer-modal">
-          <div className="error-icon" />
-          <div>{reason}</div>
-          <button
-            href="#"
-            className="btn btn-outline-light"
-            onClick={() => this.setState({ shouldClose: true })}
-            children="OK"
-          />
-        </div>
-      </Modal>
+    const content = (
+      <div className="make-offer-modal">
+        <div className="error-icon" />
+        <div>{reason}</div>
+        <button
+          href="#"
+          className="btn btn-outline-light"
+          onClick={() =>
+            this.props.contentOnly && this.props.onClose
+              ? this.props.onClose()
+              : this.setState({ shouldClose: true })
+          }
+          children="OK"
+        />
+      </div>
     )
+
+    if (this.props.contentOnly) return content
+
+    return <Modal {...modalProps}>{content}</Modal>
   }
 }
 

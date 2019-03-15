@@ -53,7 +53,7 @@ const Configs = {
       ipfsSwarm:
         '/dnsaddr/messaging.originprotocol.com/tcp/443/wss/ipfs/Qmc2YF8broVfy3BmUoUEnrHFgQnC5ZPe1jypnsPAtdnunX',
       messagingNamespace: 'origin',
-      globalKeyServer: 'https://messaging-api.originprotocol.com'
+      globalKeyServer: 'https://messaging.originprotocol.com'
     },
     tokens: [
       {
@@ -103,7 +103,7 @@ const Configs = {
       ipfsSwarm:
         '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
       messagingNamespace: 'origin:staging',
-      globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
+      globalKeyServer: 'https://messaging.staging.originprotocol.com'
     },
     messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
     linker: `https://linking.staging.originprotocol.com`,
@@ -207,6 +207,38 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`
+  },
+  dai: {
+    provider: 'https://rinkeby.infura.io',
+    ipfsGateway: 'https://ipfs.dev.originprotocol.com',
+    ipfsRPC: 'https://ipfs.dev.originprotocol.com',
+    OriginToken: '0x804Ac2c5663fA7dA1F10E9B9C917c61e86474C74',
+    V00_Marketplace: '0x12008630685dD64560bFcBFaB7828A4510eF0A23',
+    V00_Marketplace_Epoch: '4000000',
+    IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
+    IdentityEvents_Epoch: '3670528',
+    affiliate: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
+    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
+    tokens: [
+      {
+        id: '0x2448eE2641d78CC42D7AD76498917359D961A783',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ],
+    DaiExchange: '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
+    messaging: {
+      ipfsSwarm:
+        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
+      messagingNamespace: 'origin:staging',
+      globalKeyServer: 'https://messaging.staging.originprotocol.com'
+    },
+    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
+    linker: `https://linking.staging.originprotocol.com`,
+    linkerWS: `wss://linking.staging.originprotocol.com`,
+    linkingEnabled: true
   }
 }
 
@@ -214,7 +246,7 @@ const DefaultMessagingConfig = {
   ipfsSwarm:
     '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
   messagingNamespace: 'origin:dev',
-  globalKeyServer: 'https://messaging-api.dev.originprotocol.com'
+  globalKeyServer: 'https://messaging.dev.originprotocol.com'
 }
 
 const context = {}

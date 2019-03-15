@@ -19,7 +19,10 @@ export async function getTransactionReceipt(id) {
 
   const jsonInterfaces = [
     ...contracts.marketplace.options.jsonInterface,
-    ...contracts.identityEvents.options.jsonInterface
+    ...contracts.identityEvents.options.jsonInterface,
+    ...(contracts.daiExchange
+      ? contracts.daiExchange.options.jsonInterface
+      : [])
   ]
 
   const events = rawReceipt.logs.map(log => {

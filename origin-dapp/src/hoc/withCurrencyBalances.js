@@ -28,6 +28,7 @@ function withCurrencyBalances(WrappedComponent) {
     <Query
       query={query}
       variables={{ account: props.wallet, tokens: props.targets }}
+      fetchPolicy="network-only"
     >
       {({ data }) => (
         <WrappedComponent

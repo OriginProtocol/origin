@@ -5,6 +5,7 @@ public/index.html
 public/mainnet.html
 public/kovan.html
 public/rinkeby.html
+public/origin.html
 public/fonts
 data/db
 data/ipfs

@@ -34,10 +34,10 @@ const Balances = ({ ethBalance, account }) => {
             </div>
           </div>
         </div>
-        <div className="actions">
+        {/* <div className="actions">
           <button className="btn btn-outline-primary">Activate</button>
           <button className="btn btn-outline-primary">Get</button>
-        </div>
+        </div> */}
       </div>
       <div className="account ogn d-flex justify-content-between">
         <div className="d-flex">

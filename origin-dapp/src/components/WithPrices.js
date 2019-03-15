@@ -1,6 +1,5 @@
 import withCurrencyBalances from 'hoc/withCurrencyBalances'
 import withWallet from 'hoc/withWallet'
-import round from 'lodash/round'
 import get from 'lodash/get'
 
 const WithPrices = ({
@@ -26,36 +25,39 @@ const WithPrices = ({
     if (!targetCurrency) return memo
 
     const amountUSD = amount * foundCurrency.priceInUSD
-    const targetAmount = round(amountUSD / targetCurrency.priceInUSD, 5)
+    const targetAmount = amountUSD / targetCurrency.priceInUSD
 
     memo[target] = { amount: String(targetAmount), currency: targetCurrency }
     return memo
   }, {})
 
-  if (target) {
+  if (target === 'token-ETH') {
+    hasBalance = true
+    hasAllowance = true
+  } else if (target) {
     const targetBalance = get(results, `${target}.currency.balance`, '0')
     const targetAllowance = get(results, `${target}.currency.allowance`, '0')
+    const amountBN = web3.utils.toBN(web3.utils.toWei(amount, 'ether'))
 
-    const availableBalance = Number(web3.utils.fromWei(targetBalance, 'ether'))
-    hasBalance = availableBalance >= Number(amount)
-    needsBalance = hasBalance ? 0 : Number(amount) - availableBalance
+    const availableBalance = web3.utils.toBN(targetBalance)
+    hasBalance = availableBalance.gte(amountBN)
+    needsBalance = hasBalance ? 0 : amountBN.sub(availableBalance).toString()
 
-    const availableAllowance = Number(
-      web3.utils.fromWei(targetAllowance, 'ether')
-    )
-    hasAllowance = availableAllowance >= Number(amount)
-    needsAllowance = hasAllowance ? 0 : Number(amount) - availableAllowance
+    const availableAllowance = web3.utils.toBN(targetAllowance)
+    hasAllowance = availableAllowance.gte(amountBN)
+    needsAllowance = hasAllowance
+      ? 0
+      : amountBN.sub(availableAllowance).toString()
   }
 
-  return children({
-    prices: results,
-    tokenStatus: {
-      hasBalance,
-      hasAllowance,
-      needsAllowance,
-      needsBalance
-    }
-  })
+  const tokenStatus = {
+    hasBalance,
+    hasAllowance,
+    needsAllowance,
+    needsBalance
+  }
+
+  return children({ prices: results, tokenStatus })
 }
 
 export default withWallet(withCurrencyBalances(WithPrices))

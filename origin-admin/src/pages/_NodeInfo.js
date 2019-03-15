@@ -69,6 +69,13 @@ const Subs = () => (
                       client.resetStore()
                     }}
                   />
+                  <Menu.Item
+                    text="Stablecoin Test"
+                    onClick={() => {
+                      setNetwork({ variables: { network: 'dai' } })
+                      client.resetStore()
+                    }}
+                  />
                 </Menu>
               }
               position={Position.BOTTOM}
