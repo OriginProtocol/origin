@@ -109,8 +109,9 @@ class PhoneAttestation extends Component {
             )}
             <div className="help">
               <fbt desc="Attestation.phonePublishClarification">
-                By verifying your phone number, you give Origin permission to send
-                you occasional emails such as notifications about your transactions.
+                By verifying your phone number, you give Origin permission to
+                send you occasional emails such as notifications about your
+                transactions.
               </fbt>
             </div>
             <div className="actions">
