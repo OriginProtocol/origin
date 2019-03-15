@@ -140,48 +140,4 @@ class Review extends Component {
 
 export default withTokenBalance(Review)
 
-require('react-styl')(`
-  .create-listing .create-listing-review
-    .fiat
-      display: inline-block
-      margin-left: 0.75rem
-      font-size: 14px
-    h2
-      font-size: 28px
-    .detail
-      border: 1px solid var(--light)
-      border-radius: 5px
-      padding: 1rem 2rem
-      font-size: 18px
-      font-weight: normal
-      .row
-        margin-bottom: 1rem
-        .label
-          color: var(--dusk)
-    .photos
-      margin-bottom: 1rem
-      display: grid
-      grid-column-gap: 10px;
-      grid-row-gap: 10px;
-      grid-template-columns: repeat(auto-fill,minmax(90px, 1fr));
-      .photo-row
-        font-size: 12px
-        box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
-        background: #fff
-        padding: 5px;
-        background-position: center
-        width: 100%
-        height: 80px
-        background-size: contain
-        background-repeat: no-repeat
 
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
-`)
