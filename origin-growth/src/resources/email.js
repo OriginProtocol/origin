@@ -114,7 +114,11 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    const { subject, text, html } = generateEmail(referrerName, targetUrl)
+    const { subject, text, html } = generateEmail(
+      'invite',
+      referrerName,
+      targetUrl
+    )
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
@@ -169,16 +173,20 @@ async function sendInviteReminder(referrer, inviteId) {
     throw new Error(`No invite with id ${inviteId} for referrer ${referrer}`)
   }
   if (invite.refereeContactType !== enums.GrowthInviteContactTypes.Email) {
-    logger.error('Reminder sending only supports email for now.')
+    logger.error('Can only send reminder by email for now.')
     return
   }
 
-  logger.info(`Sending reminder email on behalf od ${referrer}`)
+  logger.info(`Sending reminder email on behalf of ${referrer}`)
   const { referrerName, targetUrl } = await _getEmailVars(referrer)
   const recipient = invite.refereeContact
 
   // Send the reminder email.
-  const { subject, text, html } = generateEmail(referrerName, targetUrl)
+  const { subject, text, html } = generateEmail(
+    'reminder',
+    referrerName,
+    targetUrl
+  )
   const email = {
     to: recipient,
     from: process.env.SENDGRID_FROM_EMAIL,
