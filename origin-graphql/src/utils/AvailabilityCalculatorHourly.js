@@ -187,9 +187,10 @@ class AvailabilityCalculatorHourly {
       let price = this.opts.price
       let isWorkingHour = false
       if (this.opts.workingHours[start.day()]) {
-        let [startString, endString] = this.opts.workingHours[start.day()].split('/')
-        const workingHourStart = start.startOf('day').add(parseInt(startString.slice(0, 2)), 'hour')
-        const workingHourEnd = start.startOf('day').add(parseInt(endString.slice(0, 2)), 'hour')
+        const [startString, endString] = this.opts.workingHours[start.day()].split('/'),
+          // `.slice(0, 2)` gets the hour portion of the time, which is all we care about. E.g. '09'
+          workingHourStart = start.startOf('day').add(parseInt(startString.slice(0, 2)), 'hour'),
+          workingHourEnd = start.startOf('day').add(parseInt(endString.slice(0, 2)), 'hour')
         isWorkingHour = start.isBetween(workingHourStart, workingHourEnd, null, '[)')
       }
       else {
