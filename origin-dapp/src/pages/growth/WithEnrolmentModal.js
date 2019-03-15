@@ -10,6 +10,7 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
+import { mobileDevice } from 'utils/mobile'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -47,8 +48,14 @@ function withEnrolmentModal(WrappedComponent) {
 
     handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
+      
 
-      if (!walletPresent) {
+      if (mobileDevice() !== null) {
+        this.setState({
+          open: true,
+          stage: 'NotSupportedOnMobile'
+        })
+      } else if (!walletPresent) {
         this.props.history.push(this.props.urlforonboarding)
       } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
@@ -333,6 +340,21 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderMetamaskSignature() {
       return <Enroll />
+    }
+
+    renderNotSupportedOnMobile() {
+      return(<div>
+        <div className="title mt-4">Mobile not supported</div>
+        <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+          Use desktop device in order to earn Origin tokens.
+        </div>
+        <button
+          className="btn btn-primary btn-rounded btn-lg"
+          onClick={() => this.handleCloseModal()}
+          children="Ok"
+        />
+      </div>
+      )
     }
 
     render() {
