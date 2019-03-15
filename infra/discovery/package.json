@@ -1,0 +1,53 @@
+{
+	"name": "origin-discovery",
+	"description": "Origin event-listener and discovery server",
+	"version": "0.1.0",
+	"engines": {
+		"node": "10.x"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/OriginProtocol/origin/origin-discovery"
+	},
+	"author": "Origin Protocol Inc",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/OriginProtocol/origin/issues"
+	},
+	"dependencies": {
+		"@google-cloud/pubsub": "^0.24.1",
+		"apollo-server-express": "^2.2.6",
+		"bs58": "^4.0.1",
+		"cors": "^2.8.5",
+		"dotenv": "^6.2.0",
+		"elasticsearch": "^15.2.0",
+		"envkey": "^1.2.4",
+		"express": "^4.16.4",
+		"express-prom-bundle": "^4.2.1",
+		"graphql": "^14.1.1",
+		"graphql-iso-date": "3.6.1",
+		"graphql-type-json": "^0.2.1",
+		"http": "0.0.0",
+		"logplease": "^1.2.15",
+		"per-env": "^1.0.2",
+		"pg": "^7.7.1",
+		"pg-hstore": "^2.3.2",
+		"sequelize": "^5.0.0-beta.14",
+		"sequelize-cli": "^5.4.0",
+		"url": "^0.11.0",
+		"web3": "1.0.0-beta.34"
+	},
+	"devDependencies": {
+		"chai": "^4.2.0",
+		"chai-things": "^0.2.0",
+		"chalk": "^2.4.1",
+		"mocha": "^5.2.0",
+		"nodemon": "^1.18.7",
+		"rewire": "^4.0.1",
+		"sinon": "^7.1.1"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true
+	}
+}

@@ -1,8 +1,0 @@
-npx truffle migrate --network rinkeby
-Using network 'rinkeby'.
-
-Running migration: 16_whitelist_vA_token.js
-Saving successful migration to network...
-  ... 0x36e226769e066842d962a9e2e51fef49dd7c1b41edb104b1e052fea87eefb113
-  ... 0x13bca7240b281784f109c035f7ea18d0ba634137ab320d4d7866b17627b5f799
-Saving artifacts...
