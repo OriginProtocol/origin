@@ -183,7 +183,7 @@ function withEnrolmentModal(WrappedComponent) {
               Terms and conditions apply.
             </fbt>
           </div>
-          <div className="mt-4 normal-line-height pale-grey explanation">
+          <div className="pt-1 mt-4 normal-line-height pale-grey explanation">
             <fbt desc="EnrollmentModal.termsExplanationParagraph1">
               Earned OGN will be distributed at the end of each campaign. OGN is currently
               locked for usage on the Origin platform and cannot be transferred. It is expected
@@ -520,6 +520,7 @@ require('react-styl')(`
       text-align: left
       padding-left: 25px
       padding-right: 25px
+      line-height: 1.58
     .terms
       font-size: 12px
       overflow-y: scroll
