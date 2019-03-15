@@ -40,7 +40,7 @@ class GrowthWelcome extends Component {
     const localStorageKey = 'growth_invite_code'
 
     const storedInviteCode = localStorage.getItem(localStorageKey)
-    // prefer the stored invite code, than newly fetched invite code
+    // prefer the stored invite code, over newly fetched invite code
     this.setState({
       inviteCode: storedInviteCode || inviteCode || null
     })
