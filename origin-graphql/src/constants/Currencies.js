@@ -20,6 +20,27 @@ export default {
     priceInUSD: 1.13,
     countryCodes: ['FR']
   },
+  'fiat-KRW': {
+    id: 'fiat-KRW',
+    name: 'South Korean Won',
+    code: 'KRW',
+    priceInUSD: 1 / 1123,
+    countryCodes: ['KR']
+  },
+  'fiat-JPY': {
+    id: 'fiat-JPY',
+    name: 'Japanese Yen',
+    code: 'JPY',
+    priceInUSD: 1 / 110,
+    countryCodes: ['JP']
+  },
+  'fiat-CNY': {
+    id: 'fiat-CNY',
+    name: 'Chinese Yuan',
+    code: 'CNY',
+    priceInUSD: 0.14895,
+    countryCodes: ['JP']
+  },
   'token-ETH': {
     id: 'token-ETH',
     address: '0x0000000000000000000000000000000000000000',

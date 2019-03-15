@@ -2,6 +2,7 @@ import React from 'react'
 
 import CoinPrice from 'components/CoinPrice'
 import Tooltip from 'components/Tooltip'
+import CurrencySelect from 'components/CurrencySelect'
 
 const HelpIcon = ({ tooltip }) => (
   <Tooltip tooltip={tooltip} placement="top">
@@ -14,7 +15,7 @@ const HelpIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
-const PricingChooser = ({ value, onChange, input, isMulti, Feedback }) => {
+const PricingChooser = ({ currency, onChangeCurrency, value, onChange, input, isMulti, Feedback }) => {
   return (
     <div className="form-group">
       <label>Pricing</label>
@@ -23,7 +24,7 @@ const PricingChooser = ({ value, onChange, input, isMulti, Feedback }) => {
           <label>{`Listing Price${isMulti ? ' (per unit)' : ''}`}</label>
           <div className="with-symbol" style={{ maxWidth: 270 }}>
             <input {...input('price')} />
-            <span className="usd">USD</span>
+            <CurrencySelect value={currency} onChange={onChangeCurrency} />
           </div>
           {Feedback('price')}
           <div className="help-text price">

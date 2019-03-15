@@ -234,6 +234,11 @@ require('react-styl')(`
         span.desc
           font-weight: normal
           margin-left: 0.25rem
+        .orig
+          color: var(--steel)
+          font-weight: normal
+          margin-left: 1rem
+          font-size: 16px
       .price-old
         display: flex
         align-items: baseline

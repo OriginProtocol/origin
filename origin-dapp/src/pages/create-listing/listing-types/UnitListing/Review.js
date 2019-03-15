@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
 import Link from 'components/Link'
@@ -42,10 +42,13 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Listing Price</div>
               <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.price,
+                    currency: { id: listing.currency }
+                  }}
+                />
               </div>
             </div>
             {quantity <= 1 ? null : (

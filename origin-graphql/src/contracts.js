@@ -88,7 +88,7 @@ const Configs = {
     // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,
-    discovery: 'https://discovery.staging.originprotocol.com',
+    // discovery: 'https://discovery.staging.originprotocol.com',
     growth: 'https://growth.staging.originprotocol.com',
     bridge: 'https://bridge.staging.originprotocol.com',
     IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',

@@ -32,6 +32,7 @@ class EditListing extends Component {
           'subCategory'
         ]),
         quantity: String(props.listing.unitsTotal),
+        currency: String(props.listing.price.currency),
         price: String(props.listing.price.amount),
         boost: '0',
         boostLimit: '0',

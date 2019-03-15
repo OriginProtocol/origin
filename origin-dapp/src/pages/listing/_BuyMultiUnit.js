@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 
+import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price2'
 import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
@@ -7,6 +8,7 @@ import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
 
 const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
+  const selectedCurrency = useContext(CurrencyContext)
   const amount = String(Number(listing.price.amount) * Number(quantity))
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
@@ -19,12 +21,19 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
     >
       {({ prices, tokenStatus }) => {
         if (!prices) return null
-        // console.log({ prices, hasBalance, hasAllowance, needsBalance, needsAllowance })
         return (
           <div className="listing-buy multi">
             <div className="price">
               <Price price={listing.price} />
               <span className="desc">{' / each'}</span>
+              {listing.price.currency.id === selectedCurrency ? null : (
+                <span className="orig">
+                  <Price
+                    price={listing.price}
+                    target={listing.price.currency.id}
+                  />
+                </span>
+              )}
             </div>
             <SelectQuantity
               quantity={quantity}

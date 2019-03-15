@@ -305,18 +305,45 @@ require('react-styl')(`
       border-right: 7px solid #e9ecef;
       border-bottom: 7px solid transparent;
     > span
-      position: absolute
-      right: 10px
-      top: 50%
+      cursor: pointer
+      position: absolute;
+      right: 10px;
+      top: 50%;
       transform: translateY(-50%)
-      padding: 2px 9px 2px 9px
-      border-radius: 12px
-      background: var(--pale-grey)
-      background-repeat: no-repeat
-      background-position: 6px center
-      background-size: 17px
-      font-weight: bold
-      font-size: 14px
+      padding: 4px 12px 4px 12px;
+      border-radius: 16px;
+      background: var(--pale-grey);
+      background-repeat: no-repeat;
+      background-position: 6px center;
+      background-size: 17px;
+      font-weight: bold;
+      font-size: 14px;
+      > i
+        position: relative
+        display: inline-block
+        // height should be double border
+        height: 12px
+        vertical-align: -4px
+        margin: 0 8px 0 2px
+        &:before,&:after
+          position: absolute
+          display: block
+          content: ""
+          // adjust size
+          border: 6px solid transparent;
+        &:before
+          top: 0
+          // color
+          border-top-color: var(--steel)
+        &:after
+          // thickness
+          top: -3px;
+          // background color
+          border-top-color: var(--pale-grey);
+      &:hover > i:before
+        border-top-color: var(--pale-grey)
+      &:hover > i:after
+        border-top-color: var(--steel)
       &.eth
         padding-left: 1.75rem
         color: var(--bluish-purple)
@@ -326,7 +353,24 @@ require('react-styl')(`
         color: var(--clear-blue)
         background-image: url(images/ogn-icon.svg)
       &.usd
+        color: var(--steel)
         &::before
-          content: "$"
-          margin-right: 0.25rem
+          content: "$";
+          margin-right: 0.25rem;
+          background-color: var(--steel);
+          color: var(--white);
+          width: 18px;
+          display: inline-block;
+          border-radius: 1rem;
+          line-height: 18px;
+          text-align: center;
+          font-weight: bold;
+          font-size: 14px;
+        &:hover
+          background-color: var(--steel);
+          color: var(--white)
+          &::before
+            background-color: var(--white);
+            color: var(--steel);
+
 `)

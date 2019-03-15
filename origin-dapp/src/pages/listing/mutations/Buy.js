@@ -377,9 +377,7 @@ class Buy extends Component {
           <div className="make-offer-modal success">
             <div className="success-icon-lg" />
             <h5>Success</h5>
-            <div className="help">
-              Origin may now move DAI on your behalf.
-            </div>
+            <div className="help">Origin may now move DAI on your behalf.</div>
             {this.renderMakeOfferMutation('Continue')}
           </div>
         )}

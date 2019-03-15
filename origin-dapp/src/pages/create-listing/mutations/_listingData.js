@@ -10,7 +10,7 @@ export default function applyListingData(props, data) {
       typename: listing.__typename,
       title: listing.title,
       description: listing.description,
-      price: { currency: 'fiat-USD', amount: listing.price },
+      price: { currency: listing.currency, amount: listing.price },
       acceptedTokens: listing.acceptedTokens,
       category: listing.category,
       subCategory: listing.subCategory,
@@ -26,7 +26,7 @@ export default function applyListingData(props, data) {
     variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
   } else if (listing.__typename === 'FractionalListing') {
     variables.fractionalData = {
-      weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
+      weekendPrice: { currency: listing.currency, amount: listing.weekendPrice },
       booked: listing.booked,
       customPricing: listing.customPricing,
       unavailable: listing.unavailable

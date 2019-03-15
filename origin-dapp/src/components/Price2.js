@@ -2,8 +2,11 @@ import React, { useContext } from 'react'
 
 import withCurrencies from 'hoc/withCurrencies'
 import round from 'lodash/round'
+import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
 import CurrencyContext from 'constants/CurrencyContext'
+
+import { CurrenciesByKey } from 'constants/Currencies'
 
 const Price = ({
   className,
@@ -24,17 +27,15 @@ const Price = ({
   amount = amountUSD / targetCurrency.priceInUSD
   amount = round(amount, 5)
 
-  if (targetCurrency.code === 'USD') {
-    const formatted = numberFormat(amount, 2).replace('.00', '')
-    return <span className={className}>{`$${formatted}`}</span>
-  } else if (targetCurrency.code === 'EUR') {
-    const formatted = numberFormat(amount, 2).replace('.00', '')
-    return <span className={className}>{`€${formatted}`}</span>
-  } else if (targetCurrency.code === 'GBP') {
-    const formatted = numberFormat(amount, 2).replace('.00', '')
-    return <span className={className}>{`£${formatted}`}</span>
-  }
-  return <span className={className}>{`${amount} ${targetCurrency.code}`}</span>
+  const showCode = !targetCurrency.code.match(/^(USD|EUR|GBP)$/)
+  const formatted = numberFormat(amount, 2).replace('.00', '')
+  const symbol = get(CurrenciesByKey, `${targetCurrency.id}.2`, '')
+
+  return (
+    <span className={className}>{`${symbol}${formatted}${
+      showCode ? ` ${targetCurrency.code}` : ''
+    }`}</span>
+  )
 }
 
 export default withCurrencies(Price)

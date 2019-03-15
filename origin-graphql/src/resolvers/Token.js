@@ -1,5 +1,4 @@
 import Currencies from '../constants/Currencies'
-import TokenContract from 'origin-contracts/build/contracts/TestToken'
 import contracts from '../contracts'
 
 function tokenContract(id) {

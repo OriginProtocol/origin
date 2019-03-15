@@ -79,6 +79,8 @@ class Details extends Component {
                   {...{ input, isMulti, Feedback }}
                   value={this.state.acceptedTokens}
                   onChange={acceptedTokens => this.setState({ acceptedTokens })}
+                  currency={this.state.currency}
+                  onChangeCurrency={currency => this.setState({ currency })}
                 />
 
                 {/* END Unit specific code */}

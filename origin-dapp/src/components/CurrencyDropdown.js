@@ -2,16 +2,7 @@ import React, { useState } from 'react'
 
 import Dropdown from 'components/Dropdown'
 
-const Currencies = [
-  ['as-listed', 'As Listed'],
-  ['fiat-USD', '$ USD'],
-  ['fiat-GBP', '£ GBP'],
-  ['fiat-EUR', '€ EUR'],
-]
-const CurrenciesByKey = Currencies.reduce((m, o) => {
-  m[o[0]] = o[1]
-  return m
-}, {})
+import { Currencies, CurrenciesByKey } from 'constants/Currencies'
 
 const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
   const [open, setOpen] = useState(false)
@@ -34,7 +25,7 @@ const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
                 onChange(cur[0])
                 setOpen(false)
               }}
-              children={cur[1]}
+              children={`${cur[2]} ${cur[1]}`}
             />
           ))}
         </div>
@@ -49,7 +40,7 @@ const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
           e.preventDefault()
           setOpen(!open)
         }}
-        children={CurrenciesByKey[value]}
+        children={`${CurrenciesByKey[value][2]} ${CurrenciesByKey[value][1]}`}
       />
     </Dropdown>
   )

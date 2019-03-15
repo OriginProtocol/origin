@@ -9,10 +9,10 @@ import services from 'origin-services'
 const HOST = process.env.HOST || 'localhost'
 const app = express()
 
-app.get('/:net(mainnet|rinkeby|kovan|docker|origin|truffle|dai)?', (req, res) => {
+app.get('/:config([a-z]+)?', (req, res) => {
   let html = fs.readFileSync(__dirname + '/public/dev.html').toString()
   html = html.replace(/\{HOST\}/g, `http://${HOST}:8083/`)
-  html = html.replace(/\{NET\}/g, req.params.net || 'localhost')
+  html = html.replace(/\{CONFIG\}/g, req.params.config || 'localhost')
   res.send(html)
 })
 

@@ -34,6 +34,7 @@ class CreateListing extends Component {
         // Unit fields:
         quantity: '1',
         price: '',
+        currency: 'fiat-USD',
         acceptedTokens: ['token-DAI'],
 
         // Fractional fields:
