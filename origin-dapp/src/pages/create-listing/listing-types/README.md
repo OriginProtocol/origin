@@ -1,10 +1,6 @@
 # Listing Types
 
-<<<<<<< HEAD
-This dir contains directories for each Origin Listing Type, and components for dispalying the UI for generating a listing of each type.
-=======
 This dir contains directories for each Origin Listing Type, and components for displaying the UI for generating a listing of each type.
->>>>>>> master
 
 Each directory contains a master "controller" component which determines the order in which creation steps are shown, and how forward-back navigation works. It is expected that the final step (Presumably the `Review.js` step) will actually create the listing.
 
