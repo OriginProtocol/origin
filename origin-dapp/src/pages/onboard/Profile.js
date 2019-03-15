@@ -63,10 +63,8 @@ class OnboardProfile extends Component {
   }
 
   render() {
-    const { listing } = this.props
+    const { listing, linkPrefix } = this.props
     const { avatar } = this.state
-
-    const linkPrefix = listing ? `/listing/${listing.id}` : ''
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)

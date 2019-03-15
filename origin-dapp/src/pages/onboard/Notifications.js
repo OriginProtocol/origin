@@ -121,8 +121,8 @@ class OnboardNotifications extends Component {
         : Notification.permission
   }
   render() {
-    const { listing } = this.props
-    const linkPrefix = listing ? `/listing/${listing.id}` : ''
+    const { listing, linkPrefix } = this.props
+
     const nextLink = `${linkPrefix}/onboard/profile`
     if (this.state.redirect || this.state.permission === 'unavailable') {
       return <Redirect to={nextLink} />
