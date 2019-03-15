@@ -2,8 +2,10 @@ import React from 'react'
 
 import Link from 'components/Link'
 
-const Finished = ({ listing }) => {
-  const linkPrefix = listing ? `/listing/${listing.id}` : ''
+const Finished = ({ linkPrefix, redirectto }) => {
+
+  const continueTo = redirectto ? redirectto :
+    `${linkPrefix}/onboard/back`
 
   return (
     <div className="finished">
@@ -31,7 +33,7 @@ const Finished = ({ listing }) => {
       </div>
 
       <Link
-        to={`${linkPrefix}/onboard/back`}
+        to={continueTo}
         className={`btn btn-primary`}
         children={'OK'}
       />

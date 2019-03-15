@@ -36,7 +36,7 @@ function withEnrolmentModal(WrappedComponent) {
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
       this.state = {
-        open: false,
+        open: props.startopen === 'true',
         stage: this.initialStage,
         notCitizenChecked: false,
         notCitizenConfirmed: false,
@@ -45,10 +45,13 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
-    handleClick(e, enrollmentStatus) {
+    handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
-      if (enrollmentStatus === 'Enrolled') {
+      console.log("URL FOR ONBOARDING: ", this.props.urlforonboarding)
+      if (!walletPresent) {
+        this.props.history.push(this.props.urlforonboarding)
+      } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
         this.setState({
@@ -345,11 +348,13 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount.id
+            const walletAddress = data.web3.primaryAccount ? data.web3.primaryAccount.id : null
             return (
               <Query
                 query={enrollmentStatusQuery}
-                variables={{ walletAddress }}
+                variables={{
+                  walletAddress: walletAddress ? walletAddress : '0xdummyAddress'
+                }}
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
@@ -367,7 +372,7 @@ function withEnrolmentModal(WrappedComponent) {
                       <WrappedComponent
                         {...this.props}
                         onClick={e =>
-                          this.handleClick(e, data.enrollmentStatus)
+                          this.handleClick(e, data.enrollmentStatus, walletAddress)
                         }
                       />
                       {open && (

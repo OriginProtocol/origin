@@ -1,7 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
-import Link from 'components/Link'
+import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
+
+import PageTitle from 'components/PageTitle'
+import Onboard from 'pages/onboard/Onboard'
+import Link from 'components/Link'
 
 function InfographicsBox(props) {
   const { image, title, text } = props
@@ -20,19 +24,27 @@ function InfographicsBox(props) {
 class GrowthWelcome extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      inviteCode: null
+    }
 
     this.EnrollButton = withEnrolmentModal('button')
   }
 
   componentDidMount() {
-    const inviteCode = get(this.props, 'match.params.inviteCode')
+    let inviteCode = get(this.props, 'match.params.inviteCode')
+    // onboarding url is also going to match the path. Not a valid invite
+    // code so ignore it.
+    inviteCode = inviteCode !== 'onboard' ? inviteCode : undefined
+
     const localStorageKey = 'growth_invite_code'
 
-    if (
-      localStorage.getItem(localStorageKey) === null &&
-      inviteCode !== undefined
-    ) {
+    const storedInviteCode = localStorage.getItem(localStorageKey)
+    // prefer the stored invite code, than newly fetched invite code
+    this.setState({
+      inviteCode: storedInviteCode || inviteCode || null
+    })
+    if (storedInviteCode === null && inviteCode !== undefined) {
       localStorage.setItem(localStorageKey, inviteCode)
     }
   }
@@ -46,13 +58,57 @@ class GrowthWelcome extends Component {
   }
 
   render() {
+    return(
+      <Fragment>
+        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <Switch>
+          <Route
+            exact
+            path="/welcome/onboard"
+            render={() => (
+              <Onboard
+                showoriginwallet={false}
+                linkprefix="/welcome"
+                redirectTo="/welcome/continue"
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/welcome/:inviteCode?"
+            render={() => this.renderWelcomePage(false)}
+          />
+          <Route
+            exact
+            path="/welcome/continue/:inviteCode?"
+            render={() => this.renderWelcomePage(true)}
+          />
+          <Route
+            path="/welcome/onboard/:inviteCode?"
+            render={() => (
+              <Onboard
+                showoriginwallet={false}
+                linkprefix="/welcome"
+                redirectTo={`/welcome/continue/${this.state.inviteCode}`}
+              />
+            )}
+          />
+        </Switch>
+      </Fragment>
+    )
+  }
+
+  renderWelcomePage(arrivedFromOnboarding) {
     const personalised = true
+    const urlForOnboarding = '/welcome/onboard' + (this.state.inviteCode ?
+      `/${this.state.inviteCode}` :
+      '')
 
     return (
       <div className="container growth-welcome">
         <div className="row">
           <div className="col-6 d-flex flex-column">
-            <Link to="/">
+            <Link to="/" className="mr-auto">
               <img className="logo" src="/images/origin-logo-footer.svg" />
             </Link>
             <div className="title-text">
@@ -67,6 +123,8 @@ class GrowthWelcome extends Component {
               className="btn btn-primary btn-rounded"
               type="submit"
               children="Sign up for Origin"
+              urlforonboarding={urlForOnboarding}
+              startopen={arrivedFromOnboarding.toString()}
             />
           </div>
           <div className="col-6 token-stack-holder">
