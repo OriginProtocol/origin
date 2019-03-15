@@ -112,6 +112,7 @@ class UserProfile extends Component {
     const name = []
     if (this.state.firstName) name.push(this.state.firstName)
     if (this.state.lastName) name.push(this.state.lastName)
+    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
     return (
       <div className="container profile-edit">
@@ -211,7 +212,7 @@ class UserProfile extends Component {
           </div>
           <div className="col-md-4">
             <Wallet />
-            <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
+            {enableGrowth && <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
                 <b>Verifying your profile</b> allows other users to know that
