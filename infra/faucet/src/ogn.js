@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-const Token = require('origin-token/src/token')
+const Token = require('@origin/token/src/token')
 const logger = require('./logger')
 
 // Credit 100 tokens per request.

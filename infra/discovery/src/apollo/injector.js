@@ -10,7 +10,7 @@ try {
 
 const search = require('../lib/search.js')
 const urllib = require('url')
-const Origin = require('origin').default
+const Origin = require('@origin/js').default
 const Web3 = require('web3')
 
 const generateListingId = ({ network, version, uniqueId }) => {

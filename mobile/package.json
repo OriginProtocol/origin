@@ -1,5 +1,5 @@
 {
-  "name": "origin-mobile",
+  "name": "@origin/mobile",
   "version": "0.1.11",
   "private": true,
   "devDependencies": {
@@ -24,11 +24,11 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "@origin/js": "^0.8.6",
     "cross-fetch": "^2.2.3",
     "eth-ecies": "^1.0.3",
     "moment": "^2.22.2",
     "node-libs-react-native": "^1.0.3",
-    "origin": "^0.8.6",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-moment": "^0.7.5",

@@ -1,7 +1,7 @@
-import MarketplaceContract from 'origin-contracts/build/contracts/V00_Marketplace'
-import OriginTokenContract from 'origin-contracts/build/contracts/OriginToken'
-import TokenContract from 'origin-contracts/build/contracts/TestToken'
-import IdentityEventsContract from 'origin-contracts/build/contracts/IdentityEvents'
+import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
+import TokenContract from '@origin/contracts/build/contracts/TestToken'
+import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
 
 import Web3 from 'web3'
 import EventSource from 'origin-eventsource'
@@ -22,12 +22,12 @@ const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
 if (typeof window !== 'undefined') {
-  OriginMessaging = require('origin-messaging-client').default
+  OriginMessaging = require('@origin/messaging-client').default
 }
 
 let OriginLinkerClient
 if (typeof window !== 'undefined') {
-  OriginLinkerClient = require('origin-linker-client').default
+  OriginLinkerClient = require('@origin/linker-client').default
 }
 
 const Configs = {

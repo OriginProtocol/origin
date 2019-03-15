@@ -1,5 +1,5 @@
 const _growthModels = require('../models')
-const _identityModels = require('origin-identity/src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
 const Web3 = require('web3')

@@ -4,7 +4,7 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 const validator = require('validator')
 
 const _growthModels = require('../models')
-const _identityModels = require('origin-identity/src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const enums = require('../enums')
 const logger = require('../logger')

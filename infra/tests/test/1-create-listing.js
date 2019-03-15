@@ -5,11 +5,11 @@ const Web3 = require('web3')
 const web3Provider = new Web3.providers.HttpProvider('http://origin:8545')
 const web3 = new Web3(web3Provider)
 
-const Origin = require('origin').default
-const listingValid = require('origin/test/fixtures/listing-valid.json')
+const Origin = require('@origin/js').default
+const listingValid = require('@origin/js/test/fixtures/listing-valid.json')
 const listingData = Object.assign({}, listingValid)
 
-const offerValid = require('origin/test/fixtures/offer-valid.json')
+const offerValid = require('@origin/js/test/fixtures/offer-valid.json')
 const offerData = Object.assign({}, offerValid)
 
 

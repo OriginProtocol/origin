@@ -8,7 +8,7 @@ const BigNumber = require('bignumber.js')
 const Logger = require('logplease')
 const Sequelize = require('sequelize')
 
-const Token = require('origin-token/src/token')
+const Token = require('@origin/token/src/token')
 
 const enums = require('../enums')
 const db = require('../models')

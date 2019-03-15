@@ -1,6 +1,6 @@
 'use strict'
 
-const { EthNotificationTypes } = require('origin/common/enums')
+const { EthNotificationTypes } = require('@origin/js/common/enums')
 const TableName = 'wallet_notification_endpoint'
 
 module.exports = {

@@ -2,16 +2,16 @@ const Web3 = require('web3')
 const logger = require('./logger')
 
 const { bytes32ToIpfsHash } = require('./utils')
-const _bridgeModels = require('origin-bridge/src/models')
+const _bridgeModels = require('@origin/bridge/src/models')
+const _identityModels = require('@origin/dentity/src/models')
 const _discoveryModels = require('../models')
-const _identityModels = require('origin-identity/src/models')
 const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
 
-const { GrowthEventTypes } = require('origin-growth/src/enums')
+const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const {
   AttestationServiceToEventType,
   GrowthEvent
-} = require('origin-growth/src/resources/event')
+} = require('@origin/growth/src/resources/event')
 
 class IdentityEventHandler {
   constructor(config, origin) {

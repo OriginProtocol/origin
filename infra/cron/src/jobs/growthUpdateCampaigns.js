@@ -1,5 +1,5 @@
 const logger = require('../logger')
-const UpdateCampaigns = require('origin-growth/src/scripts/updateCampaigns')
+const UpdateCampaigns = require('@origin/growth/src/scripts/updateCampaigns')
 
 async function GrowthUpdateCampaignJob(job) {
   logger.info(

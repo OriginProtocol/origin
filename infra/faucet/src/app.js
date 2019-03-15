@@ -8,7 +8,7 @@ try {
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const Config = require('origin-token/src/config')
+const Config = require('@origin/token/src/config')
 
 const logger = require('./logger')
 

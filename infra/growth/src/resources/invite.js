@@ -1,7 +1,7 @@
 const BigNumber = require('bignumber.js')
 
 const _growthModels = require('../models')
-const _identityModels = require('origin-identity/src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
 const logger = require('../logger')
 const { CampaignRules } = require('./rules')

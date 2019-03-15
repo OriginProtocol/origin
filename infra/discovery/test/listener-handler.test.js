@@ -3,11 +3,11 @@ const sinon = require('sinon')
 
 const expect = chai.expect
 
-const { GrowthEvent } = require('origin-growth/src/resources/event')
-const { GrowthEventTypes } = require('origin-growth/src/enums')
+const { GrowthEvent } = require('@origin/growth/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth/src/enums')
 
 const _discoveryModels = require('../src/models')
-const _identityModels = require('origin-identity/src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._discoveryModels, ..._identityModels }
 
 const { handleLog } = require('../src/listener/handler')

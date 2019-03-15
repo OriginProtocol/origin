@@ -5,7 +5,7 @@ chai.use(require('chai-bignumber')(BigNumber))
 chai.use(require('chai-moment'))
 const expect = chai.expect
 
-const Token = require('origin-token/src/token')
+const Token = require('@origin/token/src/token')
 
 const { GRANT_TRANSFER } = require('../src/constants/events')
 const { transferTokens } = require('../src/lib/transfer')

@@ -13,7 +13,7 @@ require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
 
-const { createProviders } = require('origin-token/src/config')
+const { createProviders } = require('@origin/token/src/config')
 
 const { LOGIN } = require('./constants/events')
 const { transferTokens } = require('./lib/transfer')

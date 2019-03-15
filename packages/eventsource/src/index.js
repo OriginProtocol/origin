@@ -1,4 +1,4 @@
-const ipfs = require('origin-ipfs')
+const ipfs = require('@origin/ipfs')
 const offerStatus = require('./offerStatus')
 const get = ipfs.get
 // import { get } from 'origin-ipfs'

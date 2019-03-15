@@ -1,6 +1,6 @@
 const BigNumber = require('bignumber.js')
 
-const TokenContract = require('origin-contracts/build/contracts/OriginToken.json')
+const TokenContract = require('@origin/contracts/build/contracts/OriginToken.json')
 
 const { withRetries } = require('./util')
 const ContractHelper = require('./contractHelper')

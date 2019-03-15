@@ -1,5 +1,5 @@
 {
-  "name": "origin-gcb-notifier",
+  "name": "@origin/gcb-notifier",
   "version": "1.0.0",
   "description": "Google Cloud Function for sending Google Cloud Build results to Discord",
   "main": "index.js",

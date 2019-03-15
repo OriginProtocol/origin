@@ -3,8 +3,8 @@ const search = require('../lib/search')
 const db = require('../models')
 const base58 = require('bs58')
 const web3 = require('web3')
-const { GrowthEvent } = require('origin-growth/src/resources/event')
-const { GrowthEventTypes } = require('origin-growth/src/enums')
+const { GrowthEvent } = require('@origin/growth/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
 
 const LISTING_EVENTS = [

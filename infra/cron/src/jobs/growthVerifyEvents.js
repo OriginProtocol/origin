@@ -1,5 +1,5 @@
 const logger = require('../logger')
-const VerifyEvents = require('origin-growth/src/scripts/verifyEvents')
+const VerifyEvents = require('@origin/growth/src/scripts/verifyEvents')
 
 async function GrowthVerifyEventsJob(job) {
   logger.info(

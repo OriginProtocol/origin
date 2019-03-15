@@ -4,7 +4,7 @@ Provides Ganache and IPFS services for use when developing locally or for runnin
 
 ## Usage
 
-    const services = require('origin-services')
+    const services = require('@origin/services')
 
     const shutdown = await services({ ganache: true, ipfs: true })
 
