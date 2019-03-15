@@ -1,5 +1,5 @@
 {
-  "name": "origin",
+  "name": "@origin/js",
   "version": "0.8.6",
   "description": "",
   "engines": {
@@ -23,7 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/origin-js"
+    "url": "https://github.com/OriginProtocol/origin"
   },
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
@@ -39,6 +39,7 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
+    "@origin/contracts": "^0.8.6",
     "acorn": "^6.0.5",
     "ajv": "^6.9.1",
     "babel-loader": "^8.0.5",
@@ -52,7 +53,6 @@
     "form-data": "^2.3.3",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "map-cache": "^0.2.2",
-    "origin-contracts": "^0.8.6",
     "rlp": "^2.2.2",
     "store": "^2.0.12",
     "truffle": "^4.1.14",

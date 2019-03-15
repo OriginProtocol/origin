@@ -1,5 +1,5 @@
 {
-  "name": "origin-cron",
+  "name": "@origin/cron",
   "description": "Origin distributed cron jobs framework",
   "version": "0.1.0",
   "engines": {
@@ -11,11 +11,11 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/growth": "^0.1.0",
     "bull": "^3.7.0",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "logplease": "^1.2.15",
-    "origin-growth": "^0.1.0",
     "per-env": "^1.0.2"
   },
   "devDependencies": {

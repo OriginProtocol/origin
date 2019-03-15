@@ -1,5 +1,5 @@
 {
-  "name": "origin-token",
+  "name": "@origin/token",
   "description": "Origin Token library",
   "author": "Origin Protocol Inc",
   "license": "MIT",
@@ -21,8 +21,8 @@
     "test": "mocha --timeout 10000 --exit test"
   },
   "dependencies": {
+    "@origin/contracts": "^0.8.6",
     "bignumber.js": "8.0.2",
-    "origin-contracts": "^0.8.6",
     "truffle-hdwallet-provider": "0.0.6",
     "truffle-privatekey-provider": "^0.1.0",
     "web3": "1.0.0-beta.34"

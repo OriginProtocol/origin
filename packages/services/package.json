@@ -1,6 +1,6 @@
 {
   "author": "Nick Poulden <nick@originprotocol.com>",
-  "name": "origin-services",
+  "name": "@origin/services",
   "version": "0.1.0",
   "license": "MIT",
   "description": "Origin Services",

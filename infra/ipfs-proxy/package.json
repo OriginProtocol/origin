@@ -1,8 +1,9 @@
 {
-  "name": "origin-ipfs-proxy",
+  "name": "@origin/ipfs-proxy",
   "version": "1.0.0",
   "description": "A proxy that validates Origin content being uploaded and downloaded from Origin's IPFS servers",
-  "main": "app.js",
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
@@ -17,8 +18,6 @@
     "type": "git",
     "url": "git+https://github.com/OriginProtocol/origin.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
   },

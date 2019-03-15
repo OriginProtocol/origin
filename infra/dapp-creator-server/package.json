@@ -1,49 +1,61 @@
 {
-	"name": "origin-dapp-creator-server",
-	"version": "1.0.0",
-	"description": "Server for managing configuration files for Origin DApps",
-	"main": "src/app.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/OriginProtocol/origin/origin-dapp-creator"
-	},
-	"keywords": [
-		"Origin Protocol",
-		"DApp",
-		"Ethereum"
-	],
-	"author": "Tom Linton <tom@originprotocol.com>",
-	"license": "MIT",
-	"dependencies": {
-		"@babel/cli": "^7.2.0",
-		"@babel/core": "^7.2.2",
-		"@babel/node": "^7.2.0",
-		"@babel/preset-env": "^7.3.1",
-		"@google-cloud/dns": "^0.9.1",
-		"body-parser": "^1.18.3",
-		"cors": "^2.8.5",
-		"dotenv": "^6.2.0",
-		"envkey": "^1.2.4",
-		"express": "^4.16.4",
-		"ipfs-http-client": "^29.1.0",
-		"logplease": "^1.2.15",
-		"per-env": "^1.0.2",
-		"raven": "^2.6.4",
-		"web3": "1.0.0-beta.34"
-	},
-	"devDependencies": {
-		"chai": "^4.2.0",
-		"mocha": "^5.2.0",
-		"nodemon": "^1.18.7",
-		"supertest": "^3.4.1"
-	},
-	"babel": {
-		"presets": [
-			"@babel/preset-env"
-		]
-	},
-	"prettier": {
-		"semi": false,
-		"singleQuote": true
-	}
+  "name": "@origin/dapp-creator-server",
+  "version": "1.0.0",
+  "description": "Server for managing configuration files for Origin DApps",
+  "main": "src/app.js",
+  "scripts": {
+    "build": "per-env",
+    "build:production": "babel -d dist --presets @babel/env src",
+    "lint": "eslint \"src/**/*.js\" && npm run prettier:check",
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "prettier:check": "prettier -c \"src/**/*.js\"",
+    "start": "per-env",
+    "start:development": "nodemon --exec 'babel-node' -r src/env.js src/app.js --presets @babel/env",
+    "prestart:production": "npm run build",
+    "start:production": "node -r ./dist/env.js dist/app.js",
+    "test": "mocha -r @babel/register --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/infra/dapp-creator-server"
+  },
+  "keywords": [
+    "Origin Protocol",
+    "DApp",
+    "Ethereum"
+  ],
+  "author": "Tom Linton <tom@originprotocol.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.0",
+    "@babel/preset-env": "^7.3.1",
+    "@google-cloud/dns": "^0.9.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
+    "express": "^4.16.4",
+    "ipfs-http-client": "^29.1.0",
+    "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
+    "raven": "^2.6.4",
+    "web3": "1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7",
+    "supertest": "^3.4.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
 }

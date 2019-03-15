@@ -1,5 +1,5 @@
 {
-  "name": "origin-validator",
+  "name": "@origin/validator",
   "version": "0.1.0",
   "description": "Origin Schema Validator",
   "author": "Nick Poulden <nick@poulden.com>",

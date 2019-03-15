@@ -1,6 +1,6 @@
 {
-  "name": "origin-identity",
-  "description": "Origin identity",
+  "name": "@origin/identity",
+  "description": "Origin Identity",
   "version": "0.1.0",
   "engines": {
     "node": "10.x"

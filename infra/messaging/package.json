@@ -1,5 +1,5 @@
 {
-  "name": "origin-messaging",
+  "name": "@origin/messaging",
   "version": "1.0.0",
   "description": "Node server for IPFS pubsub persistent communications",
   "main": "src/index.js",

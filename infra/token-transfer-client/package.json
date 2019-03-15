@@ -1,5 +1,5 @@
 {
-  "name": "origin-token-transfer-client",
+  "name": "@origin/token-transfer-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

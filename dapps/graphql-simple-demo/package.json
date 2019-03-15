@@ -1,5 +1,5 @@
 {
-  "name": "origin-graphql-simple-demo",
+  "name": "@origin/graphql-simple-demo",
   "version": "0.1.0",
   "description": "Origin Simple Demo",
   "author": "Nick Poulden <nick@poulden.com>",
@@ -19,7 +19,7 @@
     "start": "webpack-dev-server --open"
   },
   "dependencies": {
-    "origin-graphql": "^0.1.0"
+    "@origin/graphql": "^0.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

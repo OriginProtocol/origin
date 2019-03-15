@@ -1,5 +1,5 @@
 {
-  "name": "origin-dapp-creator-client",
+  "name": "@origin/dapp-creator-client",
   "version": "1.0.0",
   "description": "Tool of creating configuration files for Origin DApps",
   "main": "src/index.js",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/origin-dapp-creator-client"
+    "url": "https://github.com/OriginProtocol/origin"
   },
   "keywords": [
     "Origin Protocol",
     "DApp",
     "Ethereum"
   ],
-  "author": "Tom Linton <tom@originprotocol.com>",
+  "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -31,6 +31,7 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
+    "@origin/graphql": "^0.1.1",
     "@sentry/browser": "^4.5.3",
     "acorn": "^6.0.5",
     "babel-loader": "^8.0.5",
@@ -45,7 +46,6 @@
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.5.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "origin-graphql": "^0.1.1",
     "per-env": "^1.0.2",
     "react": "^16.8.1",
     "react-color": "^2.14.1",

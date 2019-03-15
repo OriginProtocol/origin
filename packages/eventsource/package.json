@@ -1,5 +1,5 @@
 {
-  "name": "origin-eventsource",
+  "name": "@origin/eventsource",
   "version": "0.1.0",
   "description": "Origin Event Source",
   "author": "Nick Poulden <nick@poulden.com>",
@@ -12,7 +12,7 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
-    "origin-ipfs": "^0.1.0"
+    "@origin/ipfs": "^0.1.0"
   },
   "devDependencies": {
     "lodash-es": "^4.17.11",

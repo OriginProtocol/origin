@@ -1,5 +1,5 @@
 {
-  "name": "origin-messaging-client",
+  "name": "@origin/messaging-client",
   "version": "0.1.0",
   "description": "Origin Messaging Client",
   "license": "MIT",

@@ -1,5 +1,5 @@
 {
-  "name": "origin-token-transfer-server",
+  "name": "@origin/token-transfer-server",
   "version": "1.0.0",
   "description": "Tools for distributing Origin tokens",
   "engines": {
@@ -22,6 +22,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@origin/contracts": "^0.8.6",
+    "@origin/token": "^0.1.0",
     "bignumber.js": "8.0.2",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
@@ -35,8 +37,6 @@
     "ip": "^1.1.5",
     "moment": "^2.22.2",
     "momentjs": "^2.0.0",
-    "origin-contracts": "^0.8.6",
-    "origin-token": "^0.1.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "per-env": "^1.0.2",

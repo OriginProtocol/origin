@@ -1,5 +1,5 @@
 {
-  "name": "origin-notifications",
+  "name": "@origin/notifications",
   "version": "0.0.1",
   "description": "Origin Notifications Service",
   "engines": {
@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OriginProtocol/origin/origin-notifications"
+    "url": "https://github.com/OriginProtocol/origin"
   },
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
