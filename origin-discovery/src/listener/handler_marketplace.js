@@ -277,7 +277,8 @@ class MarketplaceEventHandler {
           details.listing.seller.toLowerCase(),
           GrowthEventTypes.ListingCreated,
           details.listing.id,
-          { blockInfo }
+          { blockInfo },
+          log.date
         )
         break
       case 'OfferFinalized':
@@ -288,14 +289,16 @@ class MarketplaceEventHandler {
           details.offer.buyer.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
           details.offer.id,
-          { blockInfo }
+          { blockInfo },
+          log.date
         )
         await GrowthEvent.insert(
           logger,
           details.listing.seller.toLowerCase(),
           GrowthEventTypes.ListingSold,
           details.offer.id,
-          { blockInfo }
+          { blockInfo },
+          log.date
         )
         break
     }

@@ -13,10 +13,10 @@ import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
 export default class Reviews extends Component {
-  state = { lastReviewShown: 3 }
+  state = { lastReviewShown: 5 }
 
   readMore() {
-    this.setState({ lastReviewShown: this.state.lastReviewShown + 1 })
+    this.setState({ lastReviewShown: this.state.lastReviewShown + 5 })
   }
 
   render() {
@@ -32,14 +32,19 @@ export default class Reviews extends Component {
           const reviews = get(data, 'marketplace.user.reviews.nodes', [])
           const count = get(data, 'marketplace.user.reviews.totalCount', 0)
 
+          if (this.props.hideWhenZero && !count) {
+            return null
+          }
+
           return (
             <div className="reviews">
               <h3>
-                <fbt desc="reviews.heading">
-                  <fbt:plural count={count} showCount="yes">
-                    Review
-                  </fbt:plural>
-                </fbt>
+                {this.props.seller && (
+                  <fbt desc="reviews.headingSeller">Reviews of this seller</fbt>
+                )}
+                {!this.props.seller && (
+                  <fbt desc="reviews.headingUser">Reviews of this user</fbt>
+                )}
               </h3>
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}

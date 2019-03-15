@@ -115,6 +115,9 @@ export default {
         }
         withdrawnEvent {
           timestamp
+          returnValues {
+            party
+          }
         }
         disputedEvent {
           timestamp
@@ -186,9 +189,10 @@ export default {
             }
             invites {
               nodes {
+                id
                 status
                 walletAddress
-                contactName
+                contact
                 reward {
                   amount
                   currency

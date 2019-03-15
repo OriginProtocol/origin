@@ -114,15 +114,16 @@ const config = {
       network: 'rinkeby'
     }),
     new webpack.EnvironmentPlugin({
-      HOST: 'localhost',
-      ORIGIN_LINKING: null,
-      LINKER_HOST: 'localhost',
+      BUILD_TIMESTAMP: +new Date(),
       DOCKER: false,
       ENABLE_GROWTH: false,
-      IPFS_SWARM: '',
+      FACEBOOK_CLIENT_ID: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
-      BUILD_TIMESTAMP: +new Date()
+      HOST: 'localhost',
+      LINKER_HOST: 'localhost',
+      ORIGIN_LINKING: null,
+      IPFS_SWARM: ''
     })
   ],
 
@@ -147,7 +148,9 @@ if (isProduction) {
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(
-    new CleanWebpackPlugin(['public/app.*.css', 'public/app.*.js']),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['public/app.*.css', 'public/app.*.js']
+    }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
     new webpack.IgnorePlugin(/redux-logger/),
     new HtmlWebpackPlugin({
@@ -167,6 +170,12 @@ if (isProduction) {
       inject: false,
       filename: 'rinkeby.html',
       network: 'rinkeby'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/template.html',
+      inject: false,
+      filename: 'origin.html',
+      network: 'origin'
     })
   )
   config.resolve.alias = {

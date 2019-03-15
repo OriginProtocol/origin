@@ -13,6 +13,11 @@ const html = fs.readFileSync(`${__dirname}/../public/eth.html`).toString()
 // Max number of transactions that can be waiting to be mined.
 const MaxNumberPendingTxnCount = 50
 
+// 21k is the gas needed for sending ETH to an address. Adding an extra 2.3k
+// to support sending to a contract (for ex. a managed wallet).
+// For details see https://solidity.readthedocs.io/en/v0.4.24/contracts.html#fallback-function
+const gasAmount = 21000 + 2300
+
 // Gas price multiplier to apply to default gas price when sending transactions.
 const gasPriceMultiplier = 1.3 // 30% over default gas price.
 
@@ -132,7 +137,7 @@ class TxnManager {
             from,
             to,
             value,
-            gas: 21000,
+            gas: gasAmount,
             gasPrice,
             nonce: this.nonce
           })
@@ -230,10 +235,15 @@ class EthDistributor {
   // Returns HTML with amount and transaction hash.
   _success(res, to, amount, txnHash) {
     const amountEth = Web3.utils.fromWei(amount.toFixed(), 'ether')
-    const resp = `
+    let resp = `
       Initiated transaction for crediting <b>${amountEth}</b> ETH to account <b>${to}</b>
+    `
+    // Etherscan link for mainnet transactions
+    if (this.config.networkIds[0] === 1) {
+      resp += `
       </br></br>
       Pending transaction hash: <a href="https://etherscan.io/tx/${txnHash}">${txnHash}</a>`
+    }
     res.send(resp)
   }
 
@@ -297,21 +307,27 @@ class EthDistributor {
         return this._error(res, `Campaign budget exhausted.`)
       }
 
-      // Check the ethAddress hasn't already been used for this campaign.
-      const existingTxn = await db.FaucetTxn.findOne({
-        where: {
-          campaignId: campaign.id,
-          toAddress: ethAddress.toLowerCase(),
-          status: {
-            [Sequelize.Op.in]: [
-              enums.FaucetTxnStatuses.Pending,
-              enums.FaucetTxnStatuses.Confirmed
-            ]
+      // Check for existing transaction for this account on non-testnet networks
+      if (this.config.networkIds[0] !== 2222) {
+        // Check the ethAddress hasn't already been used for this campaign.
+        const existingTxn = await db.FaucetTxn.findOne({
+          where: {
+            campaignId: campaign.id,
+            toAddress: ethAddress.toLowerCase(),
+            status: {
+              [Sequelize.Op.in]: [
+                enums.FaucetTxnStatuses.Pending,
+                enums.FaucetTxnStatuses.Confirmed
+              ]
+            }
           }
+        })
+        if (existingTxn) {
+          return this._error(
+            res,
+            `Address ${ethAddress} already used this code.`
+          )
         }
-      })
-      if (existingTxn) {
-        return this._error(res, `Address ${ethAddress} already used this code.`)
       }
 
       // Safety valve ! Refuse to submit too many pending transactions.

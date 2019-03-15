@@ -9,6 +9,7 @@ function networkName(netId) {
   if (netId === 3) return 'Ropsten Network'
   if (netId === 4) return 'Rinkeby Network'
   if (netId === 42) return 'Kovan Network'
+  if (netId === 2222) return 'Origin Network'
   return `Private Network (${netId})`
 }
 
@@ -81,7 +82,19 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   walletType: () => {
-    if (contracts.metaMaskEnabled) return 'metaMask'
+    if (contracts.metaMaskEnabled) {
+      const provider = get(contracts, 'web3Exec.currentProvider') || {}
+      if (provider.isOrigin) return 'Origin Wallet'
+      if (provider.isMetaMask) return 'MetaMask'
+      if (provider.isTrust) return 'Trust Wallet'
+      if (provider.isToshi) return 'Coinbase Wallet'
+      if (typeof window.__CIPHER__ !== 'undefined') return 'Cipher'
+      if (get(provider, 'constructor.name') === 'EthereumProvider')
+        return 'Mist'
+      if (get(provider, 'constructor.name') === 'Web3FrameProvider')
+        return 'Parity'
+      return 'Meta Mask'
+    }
     if (!contracts.linker) return null
     return contracts.linker.session.linked && contracts.linker.session.accounts
       ? 'mobile-linked'

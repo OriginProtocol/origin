@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { withApollo, Query, Mutation } from 'react-apollo'
 import QueryError from 'components/QueryError'
 import inviteCodeQuery from 'queries/InviteCode'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import InviteFriends from 'mutations/InviteFriends'
+import InviteRemind from 'mutations/InviteRemind'
 
 function NavigationItem(props) {
   const { selected, onClick, title } = props
@@ -62,11 +63,15 @@ class GrowthInvite extends Component {
   }
 
   handleFbShareClick() {
+    // TODO: localize this string.
+    const text =
+      'Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.'
     window.open(
       [
         'https://www.facebook.com/dialog/share?',
         `app_id=${process.env.FACEBOOK_CLIENT_ID}`,
         `&href=${this.getInviteCode()}`,
+        `&quote=${text}`,
         '&display=popup',
         `&redirect_uri=${window.location.href}`
       ].join('')
@@ -74,7 +79,11 @@ class GrowthInvite extends Component {
   }
 
   handleTwitterShareClick() {
-    window.open('https://twitter.com/intent/tweet?text=')
+    // TODO: localize this string.
+    let text =
+      'Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.'
+    text += ' ' + this.getInviteCode()
+    window.open(`https://twitter.com/intent/tweet?text=${text}`)
   }
 
   resetEmailFormMessages(timeout = 5000) {
@@ -270,6 +279,31 @@ class GrowthInvite extends Component {
     return newState.valid
   }
 
+  setButtonTextWithDelay(button, text, delay) {
+    setTimeout(() => {
+      button.innerHTML = text
+    }, delay)
+  }
+
+  async handleRemindClick(inviteId, e) {
+    const button = e.target
+    const mutationResult = await this.props.client.mutate({
+      mutation: InviteRemind,
+      variables: {
+        invitationId: parseInt(inviteId)
+      }
+    })
+
+    const wasSuccessful = mutationResult.data.inviteRemind
+    if (wasSuccessful) {
+      button.innerHTML = 'Reminder sent!'
+    } else {
+      button.innerHTML = 'Error'
+    }
+
+    this.setButtonTextWithDelay(button, 'Remind', 2500)
+  }
+
   renderTrackInvites(referralAction) {
     const formatTokens = tokenAmount => {
       return web3.utils
@@ -283,7 +317,7 @@ class GrowthInvite extends Component {
         <div
           className={`reward ${
             isBig ? 'big' : ''
-          } d-flex align-items-center pl-2 pt-2 pb-2 mt-2`}
+          } d-flex align-items-center pl-2 pt-2 pb-2 mt-1`}
         >
           <img src="images/ogn-icon.svg" />
           <div className="value">
@@ -300,7 +334,8 @@ class GrowthInvite extends Component {
       invites,
       reward,
       rewardTitle,
-      showStatus
+      showStatus,
+      showRemindButton
     ) => {
       return (
         <div className="track-invites">
@@ -320,20 +355,33 @@ class GrowthInvite extends Component {
               <div className="col-2 p-0">Reward</div>
               <div className="col-6 p-0">{showStatus ? 'Status' : ''}</div>
             </div>
-            {invites.map((invite, index) => {
-              const name = invite.contactName
-                ? invite.contactName
+            {invites.map(invite => {
+              const name = invite.contact
+                ? invite.contact
                 : invite.walletAddress
               return (
-                <div className="invite-row d-flex pt-2 pb-2" key={index}>
+                <div className="invite-row d-flex pt-2 pb-2" key={invite.id}>
                   <div className="col-4 p-0 d-flex align-items-center">
                     <div className="name">{name}</div>
                   </div>
                   <div className="col-2 p-0 d-flex">
                     {renderReward(invite.reward.amount, true, false)}
                   </div>
-                  <div className="col-6 p-0">
-                    {showStatus ? 'Hasn’t completed user activation' : ''}
+                  <div className="col-6 p-0 d-flex justify-content-between align-items-center">
+                    <div>
+                      {showStatus ? 'Hasn’t completed user activation' : ''}
+                    </div>
+                    <div className="pr-3">
+                      {showRemindButton && (
+                        <button
+                          className="remind-button"
+                          onClick={async e =>
+                            await this.handleRemindClick(invite.id, e)
+                          }
+                          children="Remind"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               )
@@ -349,10 +397,11 @@ class GrowthInvite extends Component {
           'Pending Invites',
           'Track progress of friends who sign up with your invite code.',
           referralAction.invites.nodes.filter(
-            invite => invite.status !== 'Successful'
+            invite => invite.status !== 'Completed'
           ),
           referralAction.rewardPending.amount,
           'Pending',
+          true,
           true
         )}
         <div className="mt-5" />
@@ -360,10 +409,11 @@ class GrowthInvite extends Component {
           'Successful Invites',
           'Help your friends earn OGN just like you.',
           referralAction.invites.nodes.filter(
-            invite => invite.status === 'Successful'
+            invite => invite.status === 'Completed'
           ),
           referralAction.rewardEarned.amount,
           'Earned',
+          false,
           false
         )}
       </Fragment>
@@ -407,7 +457,7 @@ class GrowthInvite extends Component {
   }
 }
 
-export default GrowthInvite
+export default withApollo(GrowthInvite)
 
 require('react-styl')(`
   .growth-invite.container
@@ -525,4 +575,7 @@ require('react-styl')(`
         overflow: hidden
         white-space: nowrap
         max-width: 95%
+      .remind-button
+        border: 0px
+        color: var(--clear-blue)
 `)

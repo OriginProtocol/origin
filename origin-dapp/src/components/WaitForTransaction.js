@@ -4,6 +4,7 @@ import get from 'lodash/get'
 
 import Modal from 'components/Modal'
 import MobileLinkerCode from 'components/MobileLinkerCode'
+import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
 
@@ -25,7 +26,7 @@ class WaitForTransaction extends Component {
       const provider =
         walletType && walletType.startsWith('mobile-')
           ? 'mobile wallet'
-          : 'MetaMask'
+          : walletType
       return (
         <>
           <MobileLinkerCode role={role} />
@@ -37,10 +38,16 @@ class WaitForTransaction extends Component {
             }}
           >
             <div className="make-offer-modal">
-              <div className="spinner light" />
-              <div>
-                <b>Confirm Transaction</b>
-              </div>
+              {provider === 'MetaMask' ? (
+                <MetaMaskAnimation />
+              ) : (
+                <>
+                  <div className="spinner light" />
+                  <div>
+                    <b>Confirm Transaction</b>
+                  </div>
+                </>
+              )}
               <div>Please confirm this transaction in {provider}</div>
             </div>
           </Modal>
@@ -76,7 +83,11 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Mining...</b>
+                  <b>
+                    Waiting on the blockchain.
+                    <br />
+                    This might take a minute.
+                  </b>
                 </div>
               </div>
             )
@@ -85,7 +96,11 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Waiting for confirmation...</b>
+                  <b>
+                    Waiting for confirmation.
+                    <br />
+                    This might take a minute.
+                  </b>
                 </div>
               </div>
             )

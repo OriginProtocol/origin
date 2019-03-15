@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
-import { withApollo, Query } from 'react-apollo'
+import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
@@ -10,6 +10,7 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
+import { mobileDevice } from 'utils/mobile'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -36,7 +37,7 @@ function withEnrolmentModal(WrappedComponent) {
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
       this.state = {
-        open: false,
+        open: props.startopen === 'true',
         stage: this.initialStage,
         notCitizenChecked: false,
         notCitizenConfirmed: false,
@@ -45,10 +46,17 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
-    handleClick(e, enrollmentStatus) {
+    handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
-      if (enrollmentStatus === 'Enrolled') {
+      if (mobileDevice() !== null) {
+        this.setState({
+          open: true,
+          stage: 'NotSupportedOnMobile'
+        })
+      } else if (!walletPresent) {
+        this.props.history.push(this.props.urlforonboarding)
+      } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
         this.setState({
@@ -221,8 +229,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
-      const isRestricted = eligibility === 'restricted'
-      const isForbidden = eligibility === 'forbidden'
+      const isRestricted = eligibility === 'Restricted'
+      const isForbidden = eligibility === 'Forbidden'
 
       return (
         <div>
@@ -264,7 +272,7 @@ function withEnrolmentModal(WrappedComponent) {
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
               className="btn btn-outline-light"
-              onClick={this.handleCloseModal}
+              onClick={() => this.handleCloseModal()}
               children="Done"
             />
           )}
@@ -290,11 +298,22 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
 
-            const { countryName, eligibility } = data.isEligible
+            // used for testing purposes. No worries overriding this on frontend
+            // since another check is done on backend when calling enroll mutation
+            let countryOverride = localStorage.getItem(
+              'growth_country_override'
+            )
+            let { countryName, eligibility } = data.isEligible
             // const countryName = 'Canada'
             // const eligibility = 'Restricted'
-            // const country = 'Saudi Arabia'
+            // const countryName = 'Saudi Arabia'
             // const eligibility = 'Forbidden'
+
+            if (countryOverride !== null) {
+              countryOverride = JSON.parse(countryOverride)
+              countryName = countryOverride.countryName
+              eligibility = countryOverride.eligibility
+            }
 
             if (
               eligibility === 'Eligible' ||
@@ -311,7 +330,7 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return 'Error: can not detect coutry'
+              return 'Error: can not detect country'
             }
           }}
         </Query>
@@ -320,6 +339,22 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderMetamaskSignature() {
       return <Enroll />
+    }
+
+    renderNotSupportedOnMobile() {
+      return (
+        <div>
+          <div className="title mt-4">Mobile not supported</div>
+          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+            Use desktop device in order to earn Origin tokens.
+          </div>
+          <button
+            className="btn btn-primary btn-rounded btn-lg"
+            onClick={() => this.handleCloseModal()}
+            children="Ok"
+          />
+        </div>
+      )
     }
 
     render() {
@@ -334,11 +369,17 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount.id
+            const walletAddress = data.web3.primaryAccount
+              ? data.web3.primaryAccount.id
+              : null
             return (
               <Query
                 query={enrollmentStatusQuery}
-                variables={{ walletAddress }}
+                variables={{
+                  walletAddress: walletAddress
+                    ? walletAddress
+                    : '0xdummyAddress'
+                }}
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
@@ -356,7 +397,11 @@ function withEnrolmentModal(WrappedComponent) {
                       <WrappedComponent
                         {...this.props}
                         onClick={e =>
-                          this.handleClick(e, data.enrollmentStatus)
+                          this.handleClick(
+                            e,
+                            data.enrollmentStatus,
+                            walletAddress
+                          )
                         }
                       />
                       {open && (
@@ -382,8 +427,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  //TODO: withRouter is firing some king of unknown 'staticContext' Dom element in console
-  return withRouter(withApollo(WithEnrolmentModal))
+  //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
+  return withRouter(WithEnrolmentModal)
 }
 
 export default withEnrolmentModal

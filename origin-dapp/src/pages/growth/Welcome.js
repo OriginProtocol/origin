@@ -1,5 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+import { Switch, Route } from 'react-router-dom'
+import get from 'lodash/get'
+
+import PageTitle from 'components/PageTitle'
+import Onboard from 'pages/onboard/Onboard'
 import Link from 'components/Link'
 
 function InfographicsBox(props) {
@@ -19,9 +24,29 @@ function InfographicsBox(props) {
 class GrowthWelcome extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      inviteCode: null
+    }
 
     this.EnrollButton = withEnrolmentModal('button')
+  }
+
+  componentDidMount() {
+    let inviteCode = get(this.props, 'match.params.inviteCode')
+    // onboarding url is also going to match the path. Not a valid invite
+    // code so ignore it.
+    inviteCode = inviteCode !== 'onboard' ? inviteCode : undefined
+
+    const localStorageKey = 'growth_invite_code'
+
+    const storedInviteCode = localStorage.getItem(localStorageKey)
+    // prefer the stored invite code, over newly fetched invite code
+    this.setState({
+      inviteCode: storedInviteCode || inviteCode || null
+    })
+    if (storedInviteCode === null && inviteCode !== undefined) {
+      localStorage.setItem(localStorageKey, inviteCode)
+    }
   }
 
   onSignUp(setOpenedModal) {
@@ -34,10 +59,56 @@ class GrowthWelcome extends Component {
 
   render() {
     return (
+      <Fragment>
+        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <Switch>
+          <Route
+            exact
+            path="/welcome/onboard"
+            render={() => (
+              <Onboard
+                showoriginwallet={false}
+                linkprefix="/welcome"
+                redirectTo="/welcome/continue"
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/welcome/:inviteCode?"
+            render={() => this.renderWelcomePage(false)}
+          />
+          <Route
+            exact
+            path="/welcome/continue/:inviteCode?"
+            render={() => this.renderWelcomePage(true)}
+          />
+          <Route
+            path="/welcome/onboard/:inviteCode?"
+            render={() => (
+              <Onboard
+                showoriginwallet={false}
+                linkprefix="/welcome"
+                redirectTo={`/welcome/continue/${this.state.inviteCode}`}
+              />
+            )}
+          />
+        </Switch>
+      </Fragment>
+    )
+  }
+
+  renderWelcomePage(arrivedFromOnboarding) {
+    const personalised = true
+    const urlForOnboarding =
+      '/welcome/onboard' +
+      (this.state.inviteCode ? `/${this.state.inviteCode}` : '')
+
+    return (
       <div className="container growth-welcome">
         <div className="row">
           <div className="col-6 d-flex flex-column">
-            <Link to="/">
+            <Link to="/" className="mr-auto">
               <img className="logo" src="/images/origin-logo-footer.svg" />
             </Link>
             <div className="title-text">
@@ -52,9 +123,27 @@ class GrowthWelcome extends Component {
               className="btn btn-primary btn-rounded"
               type="submit"
               children="Sign up for Origin"
+              urlforonboarding={urlForOnboarding}
+              startopen={arrivedFromOnboarding.toString()}
             />
           </div>
           <div className="col-6 token-stack-holder">
+            {personalised && (
+              <div className="personalised-holder d-flex flex-column">
+                <div className="message-bubble ml-auto d-flex align-items-center">
+                  Hey, come earn some tokens on Origin!
+                </div>
+                <div className="d-flex justify-content-end">
+                  <div className="d-flex flex-column align-items-end">
+                    <div className="triangle" />
+                    <div className="referrer">Aure G.</div>
+                  </div>
+                  <div className="profile-holder d-flex justify-content-center">
+                    <img src="images/growth/profile-person.svg" />
+                  </div>
+                </div>
+              </div>
+            )}
             <img
               className="m-4 token-stack"
               src="images/growth/token-stack.svg"
@@ -137,4 +226,31 @@ require('react-styl')(`
       .text
         text-align: center
         font-size: 14px
+    .personalised-holder
+      position: absolute
+      right: 0
+    .message-bubble
+      padding: 10px 20px
+      background-color: var(--pale-grey-eight)
+      height: 77px;
+      border-radius: 45px
+      border: solid 2px var(--white)
+    .triangle
+      width: 0
+      height: 0
+      border-left: 23px solid transparent
+      border-right: 23px solid transparent
+      border-top: 23px solid var(--pale-grey-eight)
+      transform: rotate(225deg)
+      margin-top: -16px
+    .profile-holder
+      background-color: var(--dark-grey-blue)
+      width: 60px
+      height: 60px
+      border-radius: 75px
+      border: solid 2px var(--pale-grey-eight)
+      overflow: hidden
+    .referrer
+      margin-top: 20px
+      margin-right: 10px
 `)

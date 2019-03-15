@@ -33,7 +33,7 @@ class Enroll extends Component {
                 } else {
                   console.log('Error occurred: ', enroll)
                   this.setState({
-                    error: 'Can not enroll into growth campaign'
+                    error: 'Can not enroll into growth campaign.'
                   })
                 }
               }}
@@ -52,7 +52,8 @@ class Enroll extends Component {
                       variables: {
                         accountId: accountId,
                         agreementMessage: this.state.message,
-                        signature: signMessage
+                        signature: signMessage,
+                        inviteCode: localStorage.getItem('growth_invite_code')
                       }
                     })
                   }}

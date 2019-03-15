@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import { withRouter } from 'react-router-dom'
+import store from 'utils/store'
+const sessionStore = store('sessionStorage')
 
 import MakeOfferMutation from 'mutations/MakeOffer'
 
@@ -14,8 +17,8 @@ import withWeb3 from 'hoc/withWeb3'
 class Buy extends Component {
   state = {}
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} push />
+    if (this.state.onboard) {
+      return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     return (
       <>
@@ -54,7 +57,13 @@ class Buy extends Component {
     if (this.props.disabled) {
       return
     }
-    if (this.props.cannotTransact) {
+
+    if (this.props.cannotTransact === 'no-wallet') {
+      const { pathname, search } = this.props.location
+      sessionStore.set('getStartedRedirect', { pathname, search })
+      this.setState({ onboard: true })
+      return
+    } else if (this.props.cannotTransact) {
       this.setState({
         error: this.props.cannotTransact,
         errorData: this.props.cannotTransactData
@@ -109,15 +118,16 @@ class Buy extends Component {
             <button
               href="#"
               className="btn btn-outline-light"
-              onClick={async () => {
+              onClick={() => {
                 this.setState({ loading: true })
-                if (this.props.refetch) {
-                  await this.props.refetch()
-                }
                 const netId = get(this.props, 'web3.networkId')
                 const { listingID, offerID } = event.returnValues
                 const offerId = `${netId}-000-${listingID}-${offerID}`
-                this.setState({ redirect: `/purchases/${offerId}` })
+                const redirect = `/purchases/${offerId}`
+
+                if (this.props.refetch) {
+                  this.props.refetch(redirect)
+                }
               }}
               children={this.state.loading ? 'Loading...' : 'View Purchase'}
             />
@@ -128,7 +138,7 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(Buy)))
+export default withWeb3(withWallet(withCanTransact(withRouter(Buy))))
 
 require('react-styl')(`
   .make-offer-modal
@@ -157,6 +167,8 @@ require('react-styl')(`
         margin-top: 1rem
         li
           margin-bottom: 0.5rem
+    .metamask-video
+      margin-bottom: 1rem
 
   @media (max-width: 767.98px)
     .make-offer-modal

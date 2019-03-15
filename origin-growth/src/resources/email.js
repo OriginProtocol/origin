@@ -1,3 +1,4 @@
+const fs = require('fs')
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 const validator = require('validator')
@@ -5,10 +6,39 @@ const validator = require('validator')
 const _growthModels = require('../models')
 const _identityModels = require('origin-identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
+const enums = require('../enums')
 const logger = require('../logger')
 
 // Do not allow referrer to blast invites to more than maxNumInvites recipients.
 const maxNumInvites = 50
+
+const templateDir = `${__dirname}/../templates`
+const textTemplate = fs
+  .readFileSync(`${templateDir}/emailInvite.txt`)
+  .toString()
+const htmlTemplate = fs
+  .readFileSync(`${templateDir}/emailInvite.txt`)
+  .toString()
+
+/**
+ * Returns the content for invite email.
+ * TODO: localize the content.
+ *
+ * @param {string} friendName
+ * @param {string} targetUrl
+ * @returns {{subject: string, html: *, text: *}}
+ */
+function generateInviteEmail(referrerName, targetUrl) {
+  const subject = 'Join Origin and earn free cryptocurrency'
+  const text = textTemplate
+    .replace('${referrerName}', referrerName)
+    .replace('${targetUrl}', targetUrl)
+  const html = htmlTemplate
+    .replace('${referrerName}', referrerName)
+    .replace('${targetUrl}', targetUrl)
+
+  return { subject, text, html }
+}
 
 /**
  * Send invite codes by email.
@@ -21,7 +51,7 @@ async function sendInvites(referrer, recipients) {
   }
 
   // Load the invite code for the referrer.
-  const code = db.GrowthInviteCode.findOne({
+  const code = await db.GrowthInviteCode.findOne({
     where: { ethAddress: referrer.toLowerCase() }
   })
   if (!code) {
@@ -35,9 +65,14 @@ async function sendInvites(referrer, recipients) {
   if (!identity) {
     throw new Error(`Failed loading identity for ${referrer}`)
   }
-  const contactName =
+  const referrerName =
     (identity.firstName || '') + ' ' + (identity.lastName || '')
 
+  const dappUrl = process.env.DAPP_URL || 'http://localhost:3000'
+
+  logger.info(
+    `Sending ${recipients.length} invitation emails on behalf of ${referrer}`
+  )
   for (const recipient of recipients) {
     // Validate recipient is a proper email.
     if (!validator.isEmail(recipient)) {
@@ -46,13 +81,14 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    // TODO: should we have an html version of the email ?
+    const targetUrl = `${dappUrl}/#/welcome/${code}`
+    const { subject, text, html } = generateInviteEmail(referrerName, targetUrl)
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
-      subject: `${contactName} invited you to join Origin`,
-      text: `Check out the Origin DApp at https://dapp.originprotocol.com/invite/${code}`,
-      html: `Check out the <a href="https://dapp.originprotocol.com/invite/${code}">Origin Protocol DApp</a>`
+      subject,
+      text,
+      html
     }
     try {
       await sendgridMail.send(email)
@@ -60,7 +96,26 @@ async function sendInvites(referrer, recipients) {
       logger.error(`Failed sending invite: ${error}`)
       throw new Error(`Failed sending invite: ${error}`)
     }
+
+    // Make sure the entry is not a duplicate then
+    // record an entry in the growth_invite table.
+    const existing = await db.GrowthInvite.findOne({
+      where: {
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient
+      }
+    })
+    if (!existing) {
+      await db.GrowthInvite.create({
+        referrerEthAddress: referrer.toLowerCase(),
+        refereeContactType: enums.GrowthInviteContactTypes.Email,
+        refereeContact: recipient,
+        status: enums.GrowthInviteStatuses.Sent
+      })
+    }
+    logger.info('Invites sent and recorded in DB.')
   }
 }
 
-module.exports = { sendInvites }
+module.exports = { generateInviteEmail, sendInvites }

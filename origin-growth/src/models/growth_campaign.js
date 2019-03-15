@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   const GrowthCampaign = sequelize.define(
     'GrowthCampaign',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       nameKey: DataTypes.STRING,
       shortNameKey: DataTypes.STRING,
       rules: DataTypes.JSONB,

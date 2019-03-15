@@ -10,6 +10,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./origin-js ./origin-js
+COPY ./origin-bridge ./origin-bridge
 COPY ./origin-contracts ./origin-contracts
 COPY ./origin-discovery ./origin-discovery
 COPY ./origin-growth ./origin-growth
