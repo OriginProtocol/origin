@@ -146,7 +146,7 @@ class AvailabilityCalculatorHourly {
 
       while (start.isBefore(end)) {
         unavailable[start.format('YYYY-MM-DDTHH:00:00')] = true
-        start = start.add(1, 'day')
+        start = start.add(1, 'hour')
       }
     })
 
@@ -203,7 +203,8 @@ class AvailabilityCalculatorHourly {
 
       hours.push({
         hour,
-        unavailable: unavailable[hour] || booked[hour] || (!isWorkingHour && !customPricing[hour]) ? true : false,
+        nonWorkingHour: isWorkingHour ? false : true,
+        unavailable: unavailable[hour] || booked[hour] ? true : false,
         booked: booked[hour] ? true : false,
         price,
         customPrice: customPricing[hour] ? true : false

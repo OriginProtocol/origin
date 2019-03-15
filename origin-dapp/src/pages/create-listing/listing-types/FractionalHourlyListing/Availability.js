@@ -28,9 +28,6 @@ class Availability extends Component {
   }
 
   render() {
-    console.log('Hourly Availability')
-    console.log(this.state)
-    console.log(this.props.listing)
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
@@ -221,8 +218,13 @@ class Availability extends Component {
               )
               this.setState({ calculator, range: '' })
 
+              // Get updated ranges from calculator
               const { booked, customPricing, unavailable } = calculator.opts
 
+              console.log('customPricing')
+              console.log(customPricing)
+              console.log('unavailable')
+              console.log(unavailable)
               this.props.onChange({
                 ...this.props.listing,
                 booked,

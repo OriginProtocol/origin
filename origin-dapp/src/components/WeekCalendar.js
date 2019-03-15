@@ -134,6 +134,8 @@ class WeekCalendar extends Component {
       content = 'Unavailable'
     } else if (hour.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
+    } else if (hour.nonWorkingHour) {
+      content = ''
     }
 
     let interactions = {}
@@ -220,8 +222,10 @@ class WeekCalendar extends Component {
     if (!unselected && idx - 7 >= start && idx - 7 <= end) {
       cls += ' nbt'
     }
-    if (hour.unavailable || hour.booked) {
+    if (hour.unavailable || hour.booked ) {
       cls += ' unavailable'
+    } else if (hour.nonWorkingHour) {
+      cls += ' nonWorkingHour'
     }
 
     return cls
@@ -278,7 +282,9 @@ require('react-styl')(`
 
         &.in-past,&.unavailable
           background-color: var(--pale-grey)
-        &.unavailable
+        &.nonWorkingHour
+          background-color: var(--pale-grey)
+        &.unavailable,&nonWorkingHour
           div:nth-child(1)
             color: var(--light)
 
