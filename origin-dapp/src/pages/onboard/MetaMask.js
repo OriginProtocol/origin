@@ -162,8 +162,7 @@ const Connected = ({ networkName }) => (
 class OnboardMetaMask extends Component {
   state = {}
   render() {
-    const { listing } = this.props
-    const linkPrefix = listing ? `/listing/${listing.id}` : ''
+    const { listing, linkPrefix } = this.props
 
     return (
       <>

@@ -176,8 +176,7 @@ class OnboardMessaging extends Component {
   }
 }
 
-const Messaging = ({ listing }) => {
-  const linkPrefix = listing ? `/listing/${listing.id}` : ''
+const Messaging = ({ listing, linkPrefix }) => {
   return (
     <>
       <Header />
