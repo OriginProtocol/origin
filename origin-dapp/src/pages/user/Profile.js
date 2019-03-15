@@ -212,7 +212,9 @@ class UserProfile extends Component {
           </div>
           <div className="col-md-4">
             <Wallet />
-            {enableGrowth && <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />}
+            {enableGrowth && (
+              <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
+            )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
                 <b>Verifying your profile</b> allows other users to know that
