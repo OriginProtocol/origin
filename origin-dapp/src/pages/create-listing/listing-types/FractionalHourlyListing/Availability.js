@@ -28,6 +28,9 @@ class Availability extends Component {
   }
 
   render() {
+    console.log('Hourly Availability')
+    console.log(this.state)
+    console.log(this.props.listing)
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
@@ -136,16 +139,6 @@ class Availability extends Component {
             readOnly
           />
         </div>
-        {/* <div className="form-group">
-          <label>Availability</label>
-          <div className="btn-group w-100">
-            <button className="btn btn-outline-secondary active">
-              Available
-            </button>
-            <button className="btn btn-outline-secondary">Booked</button>
-            <button className="btn btn-outline-secondary">Unavailable</button>
-          </div>
-        </div> */}
         <div className="form-group inline-label">
           <label>Available</label>
           <div>

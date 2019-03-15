@@ -21,7 +21,7 @@ class EditListing extends Component {
         unavailable: get(props, 'listing.unavailable', []),
         // Hourly
         timeZone: get(props, 'listing.timeZone', ''),
-        workingHours: get(props, 'workingHours', []),
+        workingHours: get(props, 'listing.workingHours', []),
 
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),

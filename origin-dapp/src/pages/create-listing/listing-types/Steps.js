@@ -1,6 +1,8 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
+// This components creates a <switch> for rendering the creation steps for each listing type
+
 const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
   const props = {
     listing,
