@@ -172,29 +172,41 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       return (
         <div>
-          <div className="title title-light mt-2">Terms & Conditions</div>
-          <div className="mt-3 normal-line-height">
-            Something here about the rewards program that explains what it is
-            and why it’s so great.
+          <div className="title title-light mt-2">
+            <fbt desc="EnrollmentModal.termsTitle">
+              Sign Up for Origin
+            </fbt>
           </div>
-          <div className="terms">
-            These Origin Tokens are being issued in a transaction originally
-            exempt from registration under the U.S. securities act of 1933, as
-            amended (the securities act), and may not be transferred in the
-            united states orf to, or for the account or benefit of, any u.s.
-            person except pursuant to an available exemption from the
-            registration requirements of the securities act and all applicable
-            state securities laws. Terms used above have the meanings given to
-            them in regulation s under the securities act of 1933 and all
-            applicable laws and regulations. These Origin Tokens are being
-            issued in a transaction originally exempt from registration under
-            the U.S. securities act of 1933, as amended (the securities act),
-            and may not be transferred in the united states orf to, or for the
-            account or benefit of, any u.s. person except pursuant to an
-            available exemption from the registration requirements of the
-            securities act and all applicable state securities laws. Terms used
-            above have the meanings given to them in regulation s under the
-            securities act of 1933 and all applicable laws and regulations.
+          <div className="pl-5 pr-5 mt-3 normal-line-height pale-grey">
+            <fbt desc="EnrollmentModal.termsSubTitle">
+              Join Origin’s reward program to earn Origin tokens (OGN).
+              Terms and conditions apply.
+            </fbt>
+          </div>
+          <div className="mt-4 normal-line-height pale-grey explanation">
+            <fbt desc="EnrollmentModal.termsExplanationParagraph1">
+              Earned OGN will be distributed at the end of each campaign. OGN is currently
+              locked for usage on the Origin platform and cannot be transferred. It is expected
+              that OGN will be unlocked and transferrable in the future.
+            </fbt>
+          </div>
+          <div className="mt-3 normal-line-height pale-grey explanation">
+            <fbt desc="EnrollmentModal.termsExplanationParagraph2">
+              Scrollable box with more terms: By joining the Origin rewards program, you agree
+              that you will not transfer or sell future earned Origin tokens to other for at least
+              1 year from the date of earning your tokens.
+            </fbt>
+          </div>
+          <div className="terms pale-grey">
+            <fbt desc="EnrollmentModal.termsBody">
+              OGN are being issued in a transaction originally exempt from registration under
+              the U.S. Securities Act of 1933, as amended (the “Securities Act”), and may not
+              be transferred in the United States to, or for the account or benefit of, any U.S.
+              person except pursuant to an available exemption from the registration
+              requirements of the Securities Act and all applicable state securities laws.
+              Terms used above have the meanings given to them in Regulation S under the Securities
+              Act and all applicable laws and regulations.
+            </fbt>
           </div>
           <div className="mt-1 d-flex country-check-label justify-content-center">
             <label className="checkbox-holder">
@@ -207,7 +219,11 @@ function withEnrolmentModal(WrappedComponent) {
               <span className="checkmark" />
               &nbsp;
             </label>
-            <div>I accept terms and conditions</div>
+            <div>
+              <fbt desc="EnrollmentModal.termAccept">
+                I accept the terms and conditions
+              </fbt>
+            </div>
           </div>
           <div className="d-flex justify-content-center">
             <button
@@ -304,10 +320,6 @@ function withEnrolmentModal(WrappedComponent) {
               'growth_country_override'
             )
             let { countryName, eligibility } = data.isEligible
-            // const countryName = 'Canada'
-            // const eligibility = 'Restricted'
-            // const countryName = 'Saudi Arabia'
-            // const eligibility = 'Forbidden'
 
             if (countryOverride !== null) {
               countryOverride = JSON.parse(countryOverride)
@@ -501,14 +513,21 @@ require('react-styl')(`
         transform: rotate(45deg)
     .country-check-label
       font-weight: 300
+    .pale-grey
+      color: var(--pale-grey)
+    .explanation
+      font-size: 12px
+      text-align: left
+      padding-left: 25px
+      padding-right: 25px
     .terms
-      font-size: 14px
+      font-size: 12px
       overflow-y: scroll
-      height: 250px
+      height: 150px
       background-color: var(--dark-two)
       margin: 24px 0px
       text-align: left
-      padding: 22px 31px 15px 22px
+      padding: 18px 25px 18px 25px
       font-weight: 300
     .join-campaign
       .btn
