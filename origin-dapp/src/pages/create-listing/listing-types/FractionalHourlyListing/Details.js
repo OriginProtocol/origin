@@ -163,8 +163,8 @@ class Details extends Component {
                             this.state.workingHours.length > 0 &&
                             this.state.workingHours[dayIndex].indexOf('/') > -1
                           }
-                          onChange={e => {
-                            let newWorkingHours = [...this.state.workingHours]
+                          onChange={() => {
+                            const newWorkingHours = [...this.state.workingHours]
                             newWorkingHours[dayIndex] = newWorkingHours[
                               dayIndex
                             ]
@@ -187,7 +187,9 @@ class Details extends Component {
                               this.state.workingHours[dayIndex].split('/')[0]
                             }
                             onChange={e => {
-                              let newWorkingHours = [...this.state.workingHours]
+                              const newWorkingHours = [
+                                ...this.state.workingHours
+                              ]
                               newWorkingHours[dayIndex] =
                                 e.target.value +
                                 '/' +
@@ -221,7 +223,9 @@ class Details extends Component {
                               this.state.workingHours[dayIndex].split('/')[1]
                             }
                             onChange={e => {
-                              let newWorkingHours = [...this.state.workingHours]
+                              const newWorkingHours = [
+                                ...this.state.workingHours
+                              ]
                               newWorkingHours[dayIndex] =
                                 this.state.workingHours[dayIndex].split(
                                   '/'
