@@ -222,7 +222,7 @@ class WeekCalendar extends Component {
     if (!unselected && idx - 7 >= start && idx - 7 <= end) {
       cls += ' nbt'
     }
-    if (hour.unavailable || hour.booked ) {
+    if (hour.unavailable || hour.booked) {
       cls += ' unavailable'
     } else if (hour.nonWorkingHour) {
       cls += ' nonWorkingHour'
