@@ -2,7 +2,7 @@ FROM google/cloud-sdk
 
 RUN apt-get -y install curl
 
-COPY deployment/dockerfiles/common/scripts/snapshot-job.sh /usr/local/bin
+COPY devops/dockerfiles/common/scripts/snapshot-job.sh /usr/local/bin
 
 ENTRYPOINT ["/bin/bash"]
 

@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY ./origin-ipfs-proxy /app
+COPY ./infra/ipfs-proxy /app
 
 # Install dependencies
 RUN npm install --loglevel notice

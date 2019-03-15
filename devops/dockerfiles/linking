@@ -14,18 +14,18 @@ RUN mv envkey-source /usr/local/bin
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./origin-js ./origin-js
-COPY ./origin-linking ./origin-linking
-COPY ./origin-contracts ./origin-contracts
+COPY ./packages/origin-js ./packages/origin-js
+COPY ./linking ./linking
+COPY ./packages/contracts ./packages/contracts
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
+COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
 
-RUN npm run build --prefix origin-js
-RUN npm run build --prefix origin-linking
+RUN npm run build --prefix packages/origin-js
+RUN npm run build --prefix linking
 
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix origin-linking && \
-	npm run start --prefix origin-linking
+	npm run migrate --prefix linking && \
+	npm run start --prefix linking

@@ -1,0 +1,19 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./packages/contracts ./packages/contracts
+COPY ./infra/token ./infra/token
+COPY ./infra/token-transfer-server ./infra/token-transfer-server
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
+
+CMD npm run migrate --prefix token-transfer-server && \
+	npm run start --prefix token-transfer-server

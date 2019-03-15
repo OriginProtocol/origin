@@ -1,6 +1,6 @@
 ---
 steps:
-  - id: 'Configure deployment namespace'
+  - id: 'Configure devops namespace'
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
@@ -20,13 +20,13 @@ steps:
         esac
 
   # Add encrypted secrets and private code
-  - id: 'Decrypt secrets required for Kubernetes deployment'
+  - id: 'Decrypt secrets required for Kubernetes devops'
     name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
-        _VALUES_PATH=./deployment/kubernetes/values/origin
+        _VALUES_PATH=./devops/kubernetes/values/origin
         gcloud kms decrypt \
           --ciphertext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).enc \
           --plaintext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml \
@@ -47,7 +47,7 @@ steps:
     args:
       - kms
       - decrypt
-      - --ciphertext-file=./deployment/github.enc
+      - --ciphertext-file=./devops/github.enc
       - --plaintext-file=/root/.ssh/id_rsa
       - --location=global
       - --keyring=origin
@@ -81,7 +81,7 @@ steps:
     args:
       - '-c'
       - |
-        _VALUES_PATH=./deployment/kubernetes/values/origin
+        _VALUES_PATH=./devops/kubernetes/values/origin
         _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
 
         # Set the EnvKey for the Docker container if substitution set
@@ -93,7 +93,7 @@ steps:
 
         # Build container
         docker build \
-          -f deployment/dockerfiles/${_CONTAINER} \
+          -f devops/dockerfiles/${_CONTAINER} \
           -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
           --build-arg GIT_COMMIT_HASH=${SHORT_SHA} \
           --build-arg GIT_BRANCH=${BRANCH_NAME} \
@@ -123,7 +123,7 @@ steps:
           gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:latest \
           --quiet
 
-  # Commit deployment tags
+  # Commit devops tags
   - id: 'Push deploiyment tags to GitHub'
     name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
@@ -139,9 +139,9 @@ steps:
 
         sed -i \
           "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
-          deployment/kubernetes/values/origin/values-$(cat .namespace).yaml
+          devops/kubernetes/values/origin/values-$(cat .namespace).yaml
 
-        git add deployment/kubernetes/values/origin/values-$(cat .namespace).yaml
+        git add devops/kubernetes/values/origin/values-$(cat .namespace).yaml
         git commit -m 'Update deployed image tag for ${_CONTAINER} [ci skip]'
         git push upstream ${BRANCH_NAME}
     volumes:
@@ -166,9 +166,9 @@ steps:
           --project "$${PROJECT}" \
           --zone "$${ZONE}"
 
-        helm upgrade $(cat .namespace) deployment/kubernetes/charts/origin \
-          -f deployment/kubernetes/charts/origin/values.yaml \
-          -f deployment/kubernetes/values/origin/values-$(cat .namespace).yaml \
-          -f deployment/kubernetes/values/origin/secrets-$(cat .namespace).yaml
+        helm upgrade $(cat .namespace) devops/kubernetes/charts/origin \
+          -f devops/kubernetes/charts/origin/values.yaml \
+          -f devops/kubernetes/values/origin/values-$(cat .namespace).yaml \
+          -f devops/kubernetes/values/origin/secrets-$(cat .namespace).yaml
 
 timeout: "3600s"

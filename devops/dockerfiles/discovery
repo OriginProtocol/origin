@@ -1,16 +1,11 @@
-FROM node:10
+# NOTE/TODO: discovery doesn't need Origin.js but it shares a
+# package.json with the event listener which does
+
+FROM node:10 as build
 
 WORKDIR /app
 
-# Set NODE_ENV to production to avoid installing any dependencies that aren't
-# necessary for the build
 ENV NODE_ENV=production
-
-# Install envkey-source to make environment available for sequelize migration
-RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
-RUN tar -zxf envkey-source.tar.gz 2> /dev/null
-RUN rm envkey-source.tar.gz
-RUN mv envkey-source /usr/local/bin
 
 COPY package*.json ./
 COPY lerna.json ./
@@ -32,12 +27,10 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
+# Copy release contracts into build directory overwriting existing built
 COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
 
-# Build js so it is available for the event-listener to import
+# Build js so it is available for the discovery server to import.
 RUN npm run build --prefix packages/origin-js
 
-CMD eval $(envkey-source) && \
-	npm run migrate --prefix infra/discovery && \
-	npm run migrate --prefix infra/identity && \
-	npm run start:listener --prefix infra/discovery
+CMD npm run start:discovery --prefix infra/discovery

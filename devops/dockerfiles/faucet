@@ -12,16 +12,16 @@ RUN mv envkey-source /usr/local/bin
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./origin-js ./origin-js
-COPY ./origin-contracts ./origin-contracts
-COPY ./origin-faucet ./origin-faucet
-COPY ./origin-token ./origin-token
+COPY ./packages/origin-js ./packages/origin-js
+COPY ./packages/contracts ./packages/contracts
+COPY ./infra/faucet ./infra/faucet
+COPY ./infra/token ./infra/token
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./origin-contracts/releases/0.8.6/build/ ./origin-contracts/build/
+COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
 
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix origin-faucet && \
-	npm run start --prefix origin-faucet
+	npm run migrate --prefix infra/faucet && \
+	npm run start --prefix infra/faucet

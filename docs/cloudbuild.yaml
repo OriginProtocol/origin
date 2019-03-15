@@ -7,7 +7,7 @@ steps:
     args:
       - kms
       - decrypt
-      - --ciphertext-file=./deployment/github.enc
+      - --ciphertext-file=./devops/github.enc
       - --plaintext-file=/root/.ssh/id_rsa
       - --location=global
       - --keyring=origin

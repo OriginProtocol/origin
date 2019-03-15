@@ -16,39 +16,37 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-# Copy the necessary files for building origin-dapp
+# Copy the necessary files for building dapp
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./origin-contracts ./origin-contracts
-COPY ./origin-dapp/ ./origin-dapp/
-COPY ./origin-eventsource/ ./origin-eventsource/
-COPY ./origin-graphql/ ./origin-graphql/
-COPY ./origin-ipfs/ ./origin-ipfs/
-COPY ./origin-linker-client/ ./origin-linker-client/
-COPY ./origin-messaging-client/ ./origin-messaging-client/
-COPY ./origin-services/ ./origin-services/
-COPY ./origin-validator/ ./origin-validator/
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/eventsource/ ./packages/eventsource
+COPY ./packages/graphql/ ./packages/graphql
+COPY ./packages/ipfs/ ./packages/ipfs
+COPY ./packages/linker-client/ ./packages/linker-client
+COPY ./packages/messaging-client/ ./packages/messaging-client
+COPY ./packages/services/ ./packages/services
+COPY ./packages/validator ./packages/validator
+
+COPY ./dapps/marketplace ./dapps/marketplace
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-RUN eval $(envkey-source) && npm run build --prefix origin-dapp
+RUN eval $(envkey-source) && npm run build --prefix dapps/marketplace
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds
 FROM build as build-dev
-RUN mv /app/origin-dapp/public/origin.html /app/origin-dapp/public/index.html
-
+RUN mv /app/dapp/public/origin.html /app/dapp/public/index.html
 FROM build as build-staging
-RUN mv /app/origin-dapp/public/rinkeby.html /app/origin-dapp/public/index.html
-
+RUN mv /app/dapp/public/rinkeby.html /app/dapp/public/index.html
 FROM build as build-prod
-RUN mv /app/origin-dapp/public/mainnet.html /app/origin-dapp/public/index.html
-
+RUN mv /app/dapp/public/mainnet.html /app/dapp/public/index.html
 FROM build-${NAMESPACE} AS build-complete
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build-complete /app/origin-dapp/public /usr/share/nginx/html
+COPY --from=build-complete /app/dapp/public /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

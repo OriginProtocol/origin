@@ -6,9 +6,9 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./origin-dapp-creator-server ./origin-dapp-creator-server
+COPY ./infra/dapp-creator-server ./infra/dapp-creator-server
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-CMD npm run start --prefix origin-dapp-creator-server
+CMD npm run start --prefix dapps/marketplace-creator-server
