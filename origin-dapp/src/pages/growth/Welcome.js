@@ -2,6 +2,9 @@ import React, { Component, Fragment } from 'react'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
+import { Query } from 'react-apollo'
+import QueryError from 'components/QueryError'
+import inviteInfoQuery from 'queries/InviteInfo'
 
 import PageTitle from 'components/PageTitle'
 import Onboard from 'pages/onboard/Onboard'
@@ -98,11 +101,9 @@ class GrowthWelcome extends Component {
     )
   }
 
-  renderWelcomePage(arrivedFromOnboarding) {
-    const personalised = true
-    const urlForOnboarding =
-      '/welcome/onboard' +
-      (this.state.inviteCode ? `/${this.state.inviteCode}` : '')
+  renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
+    const { firstName, lastName } = identity || {}
+    const personalised = !!identity
 
     return (
       <div className="container growth-welcome">
@@ -111,18 +112,27 @@ class GrowthWelcome extends Component {
             <Link to="/" className="mr-auto">
               <img className="logo" src="/images/origin-logo-footer.svg" />
             </Link>
-            <div className="title-text">
-              Your friend Aure has invited you to earn <b>FREE Origin Tokens</b>
-            </div>
+            {personalised && (
+              <div className="title-text">
+                Your friend {firstName} has invited you to earn{' '}
+                <b>FREE Origin Tokens</b>
+              </div>
+            )}
+            {!personalised && (
+              <div className="title-text">
+                Singn up and earn <b>FREE Origin Tokens</b>
+              </div>
+            )}
             <div className="sub-title-text">
-              Create an account on Origin today and start completing tasks for
-              the chance to earn up to 2000 OGN currently valued at 2000 USD.
-              Don’t miss this amazing opportunity!
+              Sign up for Origin today. Aure and you will both earn Origin
+              cryptocurrency tokens (OGN). Earn additional tokens when you
+              verify your profile, invite your friends, and buy and sell on
+              Origin.
             </div>
             <this.EnrollButton
               className="btn btn-primary btn-rounded"
               type="submit"
-              children="Sign up for Origin"
+              children="Sign Up Now"
               urlforonboarding={urlForOnboarding}
               startopen={arrivedFromOnboarding.toString()}
             />
@@ -136,7 +146,7 @@ class GrowthWelcome extends Component {
                 <div className="d-flex justify-content-end">
                   <div className="d-flex flex-column align-items-end">
                     <div className="triangle" />
-                    <div className="referrer">Aure G.</div>
+                    <div className="referrer">{`${firstName} ${lastName}`}</div>
                   </div>
                   <div className="profile-holder d-flex justify-content-center">
                     <img src="images/growth/profile-person.svg" />
@@ -153,31 +163,75 @@ class GrowthWelcome extends Component {
         </div>
         <div className="row">
           <div className="col-12 d-flex flex-column mt-5">
-            <div className="info-title">What are Origin Tokens?</div>
+            <div className="info-title">What is Origin?</div>
             <div className="text-center">
-              Origin Tokens are a unique cryptocurrency that can be used in the
-              Origin Marketplace.
+              Origin is the first peer-to-peer marketplace built entirely on the
+              blockchain.
             </div>
           </div>
         </div>
         <div className="row mt-3">
           <InfographicsBox
             image="images/growth/wallet-graphic.svg"
-            title="Placeholder title"
-            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+            title="Boosting"
+            text="Sellers use OGN to boost their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly."
           />
           <InfographicsBox
             image="images/growth/messaging-graphic.svg"
-            title="Placeholder title"
-            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+            title="Rewards"
+            text="OGN is a rewards cryptocurrency earned by Origin users. Earn rewards when you verify your account or invite your friends to join Origin. Even get OGN as cash back when you buy and sell."
           />
           <InfographicsBox
             image="images/growth/alerts-graphic.svg"
-            title="Placeholder title"
-            text="Etiam et lacus ut nisi rutrum egestas in nec mi. Morbi auctor metus eu ante condimentum, in tempus enim hendrerit. Donec a molestie velit."
+            title="Payment"
+            text="In the future, OGN can be used to pay for goods and services on the marketplace. Use OGN just like ETH to transfer funds to other buyers and sellers."
           />
         </div>
       </div>
+    )
+  }
+
+  renderWelcomePage(arrivedFromOnboarding) {
+    const { inviteCode } = this.state
+
+    const urlForOnboarding =
+      '/welcome/onboard' +
+      (this.state.inviteCode ? `/${this.state.inviteCode}` : '')
+
+    return (
+      <Fragment>
+        {inviteCode !== null && (
+          <Query
+            query={inviteInfoQuery}
+            variables={{ code: inviteCode }}
+            notifyOnNetworkStatusChange={true}
+          >
+            {({ error, data, networkStatus, loading }) => {
+              if (networkStatus === 1 || loading) {
+                return this.renderWelcomePageContents(
+                  arrivedFromOnboarding,
+                  null,
+                  urlForOnboarding
+                )
+              } else if (error) {
+                return <QueryError error={error} query={inviteInfoQuery} />
+              }
+
+              return this.renderWelcomePageContents(
+                arrivedFromOnboarding,
+                data.inviteInfo,
+                urlForOnboarding
+              )
+            }}
+          </Query>
+        )}
+        {inviteCode === null &&
+          this.renderWelcomePageContents(
+            arrivedFromOnboarding,
+            null,
+            urlForOnboarding
+          )}
+      </Fragment>
     )
   }
 }
@@ -219,7 +273,7 @@ require('react-styl')(`
     .infographics
       background-color: #f1f6f9
       border-radius: 5px
-      height: 317px
+      height: 350px
       .title
         text-align: center
         font-weight: bold
