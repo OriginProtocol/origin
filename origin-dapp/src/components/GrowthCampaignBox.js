@@ -48,8 +48,7 @@ const GrowthCampaignBox = props => (
                 {notEnrolled && (
                   <div className="enroll-gray-box campaign-enroll d-flex flex-column align-items-center">
                     <fbt desc="profile.enrollExplanation">
-                      <b>Enroll in Origin Campaigns</b> for a chance to earn
-                      Origin Tokens (OGN)
+                      <b>Enroll</b> to earn Origin cryptocurrency tokens (OGN).
                     </fbt>
                     <EnrollButton
                       className="btn-enroll mt-3"
