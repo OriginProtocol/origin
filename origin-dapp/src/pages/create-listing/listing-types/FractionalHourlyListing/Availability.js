@@ -221,10 +221,6 @@ class Availability extends Component {
               // Get updated ranges from calculator
               const { booked, customPricing, unavailable } = calculator.opts
 
-              console.log('customPricing')
-              console.log(customPricing)
-              console.log('unavailable')
-              console.log(unavailable)
               this.props.onChange({
                 ...this.props.listing,
                 booked,

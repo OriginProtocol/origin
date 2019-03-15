@@ -33,7 +33,6 @@ class Details extends Component {
       props.listing.workingHours = this.defaultWorkingHours
     }
     this.state = omit(props.listing, 'valid')
-    console.log(this.state)
   }
 
   componentDidMount() {
