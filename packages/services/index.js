@@ -5,6 +5,7 @@ const ipfsAPI = require('ipfs-api')
 const fs = require('fs')
 const memdown = require('memdown')
 const net = require('net')
+const path = require('path')
 
 const portInUse = port =>
   new Promise(function(resolve) {
@@ -14,17 +15,6 @@ const portInUse = port =>
       .once('listening', () => srv.once('close', () => resolve(false)).close())
       .listen(port, '0.0.0.0')
   })
-
-// import Web3 from 'web3'
-
-// import simpleIssuer from './issuer-services/_simple'
-
-// try {
-//   var { simpleApp } = require('./issuer-services/config.json')
-//   simpleIssuer(app, { web3: new Web3(), simpleApp })
-// } catch(e) {
-//   /* Ignore */
-// }
 
 const startGanache = (opts = {}) =>
   new Promise((resolve, reject) => {
@@ -81,7 +71,7 @@ const populateIpfs = () =>
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populate IPFS:')
     ipfs.util.addFromFs(
-      '../origin-js/test/fixtures',
+      path.resolve(__dirname, '../origin-js/test/fixtures'),
       { recursive: true },
       (err, result) => {
         if (err) {
