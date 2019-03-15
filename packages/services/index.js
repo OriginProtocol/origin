@@ -85,7 +85,7 @@ const populateIpfs = () =>
 
 const deployContracts = () =>
   new Promise((resolve, reject) => {
-    const originContractsPath = '../origin-contracts/'
+    const originContractsPath = path.resolve(__dirname, '../contracts')
     const truffleMigrate = spawn(
       `./node_modules/.bin/truffle`,
       ['migrate', '--reset'],

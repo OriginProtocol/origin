@@ -7,7 +7,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
-COPY ./infra/token ./infra/token
+COPY ./packages/token ./packages/token
 COPY ./infra/token-transfer-server ./infra/token-transfer-server
 COPY ./scripts ./scripts
 

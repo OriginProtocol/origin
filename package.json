@@ -22,7 +22,7 @@
     "prettier": "^1.16.3"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\" --ignore origin-mobile",
+    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\" --ignore @origin/mobile",
     "bootstrap:mobile": "lerna bootstrap --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",

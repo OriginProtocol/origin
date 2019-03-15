@@ -14,10 +14,10 @@ COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/contracts ./packages/contracts
+COPY ./packages/token ./packages/token
 COPY ./infra/cron ./infra/cron
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
-COPY ./infra/token ./infra/token
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
