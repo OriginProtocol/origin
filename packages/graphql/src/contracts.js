@@ -4,7 +4,7 @@ import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
 
 import Web3 from 'web3'
-import EventSource from 'origin-eventsource'
+import EventSource from '@origin/eventsource'
 import get from 'lodash/get'
 
 import eventCache from './utils/eventCache'

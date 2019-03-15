@@ -22,7 +22,7 @@ or offer. It works something like this:
 ## Usage
 
 ```
-import EventSource from 'origin-eventsource'
+import EventSource from '@origin/eventsource'
 
 const eventSource = new EventSource({
   marketplaceContract: MarketplaceContractInstance,

@@ -9,33 +9,32 @@ COPY ./scripts/wait-for.sh /usr/local/bin/
 # Docker to cache the npm install steps if none of the dependencies have changed
 COPY ./lerna.json ./
 COPY ./package.json ./
-COPY ./origin-discovery/package.json ./origin-discovery/
-COPY ./origin-ipfs-proxy/package.json ./origin-ipfs-proxy/
-COPY ./origin-js/package.json ./origin-js/
-COPY ./origin-messaging/package.json ./origin-messaging/
-COPY ./origin-notifications/package.json ./origin-notifications/
-COPY ./origin-tests/package.json ./origin-tests/
-COPY ./origin-growth/package.json ./origin-growth/
-COPY ./origin-identity/package.json ./origin-identity/
-COPY ./origin-token/package.json ./origin-token/
-COPY ./origin-bridge/package.json ./origin-bridge/
-COPY ./origin-dapp/package.json ./origin-dapp/
-COPY ./origin-graphql/package.json ./origin-graphql/
-COPY ./origin-ipfs/package.json ./origin-ipfs/
-COPY ./origin-validator/package.json ./origin-validator/
-COPY ./origin-messaging-client/package.json ./origin-messaging-client/
-COPY ./origin-linker-client/package.json ./origin-linker-client/
-COPY ./origin-eventsource/package.json ./origin-eventsource/
-COPY ./origin-services/package.json ./origin-services/
+COPY ./packages/origin-js/package.json ./packages/origin-js/
+COPY ./packages/graphql/package.json ./packages/graphql/
+COPY ./packages/ipfs/package.json ./packages/ipfs/
+COPY ./packages/validator/package.json ./packages/validator/
+COPY ./packages/messaging-client/package.json ./packages/messaging-client/
+COPY ./packages/linker-client/package.json ./packages/linker-client/
+COPY ./packages/eventsource/package.json ./packages/eventsource/
+COPY ./packages/services/package.json ./packages/services/
+COPY ./infra/discovery/package.json ./infra/discovery/
+COPY ./infra/messaging/package.json ./infra/messaging/
+COPY ./infra/ipfs-proxy/package.json ./infra/ipfs-proxy/
+COPY ./infra/notifications/package.json ./infra/notifications/
+COPY ./infra/tests/package.json ./infra/tests/
+COPY ./infra/growth/package.json ./infra/growth/
+COPY ./infra/identity/package.json ./infra/identity/
+COPY ./infra/token/package.json ./infra/token/
+COPY ./infra/bridge/package.json ./infra/bridge/
 COPY ./scripts/ ./scripts/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
 # which is calleed by the prepare script can succeed
-COPY ./origin-contracts ./origin-contracts
-COPY ./origin-js ./origin-js
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/origin-js ./packages/origin-js
 
 # Running of postinstall script requires --unsafe-perm
 RUN npm install --unsafe-perm
 
-# Build origin-js for event-listener
-RUN npm run build --prefix origin-js
+# Build js for event-listener
+RUN npm run build --prefix packages/origin-js
