@@ -138,7 +138,6 @@ class Details extends Component {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
       this.props.onChange(this.state)
-      this.props.onNext() // Advance to next step
     }
     this.setState(newState)
     return newState.valid
