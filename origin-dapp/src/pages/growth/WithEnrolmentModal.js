@@ -48,7 +48,6 @@ function withEnrolmentModal(WrappedComponent) {
 
     handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
-      
 
       if (mobileDevice() !== null) {
         this.setState({
@@ -343,17 +342,18 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderNotSupportedOnMobile() {
-      return(<div>
-        <div className="title mt-4">Mobile not supported</div>
-        <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-          Use desktop device in order to earn Origin tokens.
+      return (
+        <div>
+          <div className="title mt-4">Mobile not supported</div>
+          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+            Use desktop device in order to earn Origin tokens.
+          </div>
+          <button
+            className="btn btn-primary btn-rounded btn-lg"
+            onClick={() => this.handleCloseModal()}
+            children="Ok"
+          />
         </div>
-        <button
-          className="btn btn-primary btn-rounded btn-lg"
-          onClick={() => this.handleCloseModal()}
-          children="Ok"
-        />
-      </div>
       )
     }
 
