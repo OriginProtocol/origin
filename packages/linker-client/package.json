@@ -1,5 +1,5 @@
 {
-  "name": "origin-linker-client",
+  "name": "@origin/linker-client",
   "version": "0.1.0",
   "description": "Origin Wallet Linker Client",
   "license": "MIT",

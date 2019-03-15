@@ -1,5 +1,5 @@
 {
-  "name": "origin-ipfs",
+  "name": "@origin/ipfs",
   "version": "0.1.0",
   "description": "Origin IPFS",
   "author": "Nick Poulden <nick@poulden.com>",
