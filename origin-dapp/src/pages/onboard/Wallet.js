@@ -60,8 +60,7 @@ const MetaMask = ({ linkPrefix }) => (
   </div>
 )
 
-const Step1 = ({ listing }) => {
-  const linkPrefix = listing ? `/listing/${listing.id}` : ''
+const Step1 = ({ listing, showoriginwallet, linkPrefix }) => {
   const showMetaMask = isChrome || isFirefox
 
   return (
@@ -87,7 +86,7 @@ const Step1 = ({ listing }) => {
 
               return (
                 <>
-                  <OriginWallet />
+                  {!showoriginwallet ? null : <OriginWallet />}
                   {!showMetaMask ? null : <MetaMask linkPrefix={linkPrefix} />}
                 </>
               )

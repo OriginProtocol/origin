@@ -10,7 +10,7 @@ describe('Invite', () => {
 
     const { subject, text, html } = generateInviteEmail(name, url)
 
-    expect(subject).to.include(name)
+    expect(subject).to.be.a('string')
     expect(text).to.include(name)
     expect(text).to.include(url)
     expect(html).to.include(name)
