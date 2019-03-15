@@ -105,16 +105,20 @@ class ProgressBar extends Component {
             <div
               className="foreground"
               style={{
-                width: `${!triggerAnimationThisFrame ? (progress/this.props.maxValue*100) : '0'}%`
+                width: `${
+                  !triggerAnimationThisFrame
+                    ? (progress / this.props.maxValue) * 100
+                    : '0'
+                }%`
               }}
             />
           )}
         </div>
         <div className="indicators d-flex justify-content-between mt-2">
           <div>0</div>
-          <div>{this.props.maxValue/4}</div>
-          <div>{this.props.maxValue/4*2}</div>
-          <div>{this.props.maxValue/4*3}</div>
+          <div>{this.props.maxValue / 4}</div>
+          <div>{(this.props.maxValue / 4) * 2}</div>
+          <div>{(this.props.maxValue / 4) * 3}</div>
           <div>{this.props.maxValue}</div>
         </div>
       </Fragment>
@@ -179,7 +183,10 @@ function Campaign(props) {
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
     .div(decimalDivision)
-  const tokenEarnProgress = Math.min(maxProgressBarTokens, tokensEarned.toString())
+  const tokenEarnProgress = Math.min(
+    maxProgressBarTokens,
+    tokensEarned.toString()
+  )
 
   const actionCompleted = action => {
     return ['Exhausted', 'Completed'].includes(action.status)

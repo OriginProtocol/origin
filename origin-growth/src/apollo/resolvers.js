@@ -111,11 +111,12 @@ const resolvers = {
     },
     async enroll(_, args, context) {
       try {
-        const { eligibility } = getLocationInfo(context.req.headers['x-real-ip'])
+        const { eligibility } = getLocationInfo(
+          context.req.headers['x-real-ip']
+        )
         if (eligibility === 'Forbidden') {
-          throw new Exception('User is from a forbidden country')
+          throw new Error('User is from a forbidden country')
         }
-
 
         const authToken = await authenticateEnrollment(
           args.accountId,
