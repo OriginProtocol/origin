@@ -14,6 +14,7 @@ import Action from 'pages/growth/Action'
 import GrowthInvite from 'pages/growth/Invite'
 
 const GrowthEnum = require('Growth$FbtEnum')
+const maxProgressBarTokens = 1000
 
 const GrowthTranslation = ({ stringKey }) => {
   return (
@@ -85,7 +86,6 @@ class ProgressBar extends Component {
 
   render() {
     const { progress } = this.props
-
     /* For triggering animation first render of react component needs to set
      * the width to 0. All subsequent renders set it to the actuall value.
      */
@@ -105,17 +105,21 @@ class ProgressBar extends Component {
             <div
               className="foreground"
               style={{
-                width: `${!triggerAnimationThisFrame ? progress : '0'}%`
+                width: `${
+                  !triggerAnimationThisFrame
+                    ? (progress / this.props.maxValue) * 100
+                    : '0'
+                }%`
               }}
             />
           )}
         </div>
         <div className="indicators d-flex justify-content-between mt-2">
           <div>0</div>
-          <div>25</div>
-          <div>50</div>
-          <div>75</div>
-          <div>100</div>
+          <div>{this.props.maxValue / 4}</div>
+          <div>{(this.props.maxValue / 4) * 2}</div>
+          <div>{(this.props.maxValue / 4) * 3}</div>
+          <div>{this.props.maxValue}</div>
         </div>
       </Fragment>
     )
@@ -179,7 +183,10 @@ function Campaign(props) {
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
     .div(decimalDivision)
-  const tokenEarnProgress = Math.min(100, tokensEarned.toString())
+  const tokenEarnProgress = Math.min(
+    maxProgressBarTokens,
+    tokensEarned.toString()
+  )
 
   const actionCompleted = action => {
     return ['Exhausted', 'Completed'].includes(action.status)
@@ -217,7 +224,10 @@ function Campaign(props) {
         </div>
         <div className="font-weight-bold">{timeLabel}</div>
       </div>
-      <ProgressBar progress={tokenEarnProgress} />
+      <ProgressBar
+        maxValue={maxProgressBarTokens}
+        progress={tokenEarnProgress}
+      />
       {status === 'Active' && nonCompletedActions.length > 0 && (
         <ActionList
           actions={nonCompletedActions}

@@ -4,13 +4,11 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 # Development
 
-In most cases developers who are new to Origin will want to work on our marketplace DApp. The DApp has some required an optional backend services that it needs to run, for example an Ethereum network, or an attestation server. The default development setup allows you to develop with the DApp backed by services in our development deployment. You can also alternatively run your own set of local services using `docker-compose`.
+To get started quickly, you can run a "light" version of the Origin DApp, which automatically sets up our DApp, a local IPFS server, and a local blockchain. 
 
-## About the Origin repository
+Or you can use a more full featured development environment with Docker Compose orchestrating several containers and providing access to the full suite of the Origin DApp features, include messaging, browser notifications, and attestation services.
 
-Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
-
-## Developing with the DApp
+## Quick start - Running a local DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the necessary dependencies:
 
@@ -65,6 +63,10 @@ You can view the state of the network at https://testnet.originprotocol.com/.
 
 The marketplace DApp includes a settings page at `http://localhost:3000/settings` which is useful if you want to switch individual services, e.g. use a different Web3 provider or atteestation server.
 
+### About the Origin repository
+
+Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `lerna` is used to pull common dependencies to the root of the monorepo on installation.
+
 ## Running Docker Compose
 
 There is a Docker Compose configuration available for running a variety of backend services the DApp integrates with. The `docker-compose` configuration runs the following packages:
@@ -96,7 +98,7 @@ There is a Docker Compose configuration available for running a variety of backe
 `git --version`
 - Unix-based system (OSX or Linux) needed to run the bash scripts
 
-### Getting Started
+### Getting Started with Docker Compose
 
 ⚠️  If you have previously used  `docker-compose` with Origin, please ensure you clear out old containers by stopping any running containers and executing `docker system prune --volumes --all` before completing these steps.
 
