@@ -7,7 +7,7 @@ category: "Overview"
 
 # Architecture
 
-If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build Origin, such as [JSONSchema](#jsonschema), [IPFS](#ipfs) and [Ethereum](#ethereum).
+If you're new to the space, it may be helpful to first familiarize yourself with some of the core technologies that we're using to build Origin, such as [IPFS](#ipfs) and [Ethereum](#ethereum).
 
 Origin listings can be created using a frontend DApp to publish a JSON data object to
 any publicly writeable IPFS gateway. This JSON data object must conform to a set of
@@ -58,10 +58,6 @@ reveal their true identity to the seller while using a throw-away wallet.
 Listing policies around escrow, refunds, required deposits, and cancellations are set
 by the seller and are strictly enforced by the booking smart contract. Any exceptions
 to the policies must be handled directly off-chain by the two parties.
-
-### JSONSchema
-
-[Learn more about JSONSchema](http://json-schema.org/)
 
 ### Ethereum
 
