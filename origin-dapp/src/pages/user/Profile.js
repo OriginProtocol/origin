@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import pick from 'lodash/pick'
 import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { Switch, Route } from 'react-router-dom'
 
 import Store from 'utils/store'
 import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
@@ -15,6 +16,7 @@ import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import PageTitle from 'components/PageTitle'
 import ImageCropper from 'components/ImageCropper'
+import GrowthCampaignBox from 'components/GrowthCampaignBox'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -22,6 +24,7 @@ import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 
@@ -74,6 +77,31 @@ class UserProfile extends Component {
   }
 
   render() {
+    return (
+      <Fragment>
+        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <Switch>
+          <Route
+            path="/profile/onboard"
+            render={() => (
+              <Onboard
+                showoriginwallet={false}
+                linkprefix="/profile"
+                redirectTo="/profile/continue"
+              />
+            )}
+          />
+          <Route
+            path="/profile/continue"
+            render={() => this.renderProfile(true)}
+          />
+          <Route render={() => this.renderProfile(false)} />
+        </Switch>
+      </Fragment>
+    )
+  }
+
+  renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
         m.push(this.state[`${key}Attestation`])
@@ -84,6 +112,7 @@ class UserProfile extends Component {
     const name = []
     if (this.state.firstName) name.push(this.state.firstName)
     if (this.state.lastName) name.push(this.state.lastName)
+    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
     return (
       <div className="container profile-edit">
@@ -183,6 +212,9 @@ class UserProfile extends Component {
           </div>
           <div className="col-md-4">
             <Wallet />
+            {enableGrowth && (
+              <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
+            )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
                 <b>Verifying your profile</b> allows other users to know that
@@ -316,7 +348,6 @@ require('react-styl')(`
       background: url(images/identity/identity.svg) no-repeat center 1.5rem;
       background-size: 5rem;
       padding-top: 8rem;
-
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem
