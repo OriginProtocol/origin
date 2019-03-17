@@ -7,6 +7,8 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
     tokenContract = contracts.tokens.find(
       t => t.symbol === token.split('token-')[1]
     )
+  } else if (token === 'ogn') {
+    tokenContract = { contractExec: contracts.ognExec }
   }
   if (!tokenContract) {
     throw new Error('Could not find contract to update allowance')

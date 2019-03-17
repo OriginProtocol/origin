@@ -196,6 +196,13 @@ class OriginEventSource {
         __typename = 'UnitListing'
       }
     }
+    if (
+      ['UnitListing', 'FractionalListing', 'AnnouncementListing'].indexOf(
+        __typename
+      ) < 0
+    ) {
+      __typename = 'UnitListing'
+    }
 
     let commissionPerUnit = '0',
       commission = '0'
