@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "ajv": "^6.10.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.2",
     "prettier": "^1.16.4"
   },
   "prettier": {
