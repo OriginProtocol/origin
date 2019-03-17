@@ -9,7 +9,7 @@ const {
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
-const { sendInvites } = require('../resources/email')
+const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -109,16 +109,15 @@ const resolvers = {
       await sendInvites(context.walletAddress, args.emails)
       return true
     },
-    async enroll(_, args) {
-      //TODO: check country eligibility here also
-      // const locationInfo = getLocationInfo(context.countryCode)
-      // if (locationInfo.isForbidden) {
-      //   return {
-      //     error: `Users from ${locationInfo.countryName} are not eligible for growth campaign`
-      //   }
-      // }
-
+    async enroll(_, args, context) {
       try {
+        const { eligibility } = getLocationInfo(
+          context.req.headers['x-real-ip']
+        )
+        if (eligibility === 'Forbidden') {
+          throw new Error('User is from a forbidden country')
+        }
+
         const authToken = await authenticateEnrollment(
           args.accountId,
           args.agreementMessage,
@@ -155,10 +154,8 @@ const resolvers = {
     },
     async inviteRemind(_, args, context) {
       requireEnrolledUser(context)
-      logger.info(
-        `invite remind mutation called with invitationId: ${args.invitationId}.`
-      )
-      // TODO: implement
+
+      sendInviteReminder(context.walletAddress, args.invitationId)
       return true
     },
     log() {

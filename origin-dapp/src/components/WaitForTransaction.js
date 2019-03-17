@@ -107,7 +107,7 @@ class WaitForTransaction extends Component {
 
           let content
           if (error) {
-            console.log(error)
+            console.error(error)
             content = <Error />
           } else if (!event) {
             content = <WaitForFirstBlock />

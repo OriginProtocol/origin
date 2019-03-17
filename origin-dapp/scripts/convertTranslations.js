@@ -41,11 +41,11 @@ convert.forEach(lang => {
       return
     }
     if (keys.length > 1) {
-      console.log('Too many keys')
+      console.error('Too many keys')
       return
     }
     if (!langMsgs[phrase.desc]) {
-      console.log('Phrase not found')
+      console.error('Phrase not found')
       return
     }
     const hash = keys[0]

@@ -31,14 +31,14 @@ class Enroll extends Component {
                   localStorage.setItem('growth_auth_token', enroll.authToken)
                   this.props.history.push('/campaigns')
                 } else {
-                  console.log('Error occurred: ', enroll)
+                  console.error('Error occurred: ', enroll)
                   this.setState({
                     error: 'Can not enroll into growth campaign.'
                   })
                 }
               }}
               onError={errorData => {
-                console.log('Error: ', errorData)
+                console.error('Error: ', errorData)
                 this.setState({
                   error: 'Problems enrolling into growth campaign.'
                 })
