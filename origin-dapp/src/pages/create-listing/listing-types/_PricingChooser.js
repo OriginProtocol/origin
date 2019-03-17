@@ -15,7 +15,15 @@ const HelpIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
-const PricingChooser = ({ currency, onChangeCurrency, value, onChange, input, isMulti, Feedback }) => {
+const PricingChooser = ({
+  currency,
+  onChangeCurrency,
+  value,
+  onChange,
+  input,
+  isMulti,
+  Feedback
+}) => {
   return (
     <div className="form-group">
       <label>Pricing</label>

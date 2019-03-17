@@ -26,7 +26,10 @@ export default function applyListingData(props, data) {
     variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
   } else if (listing.__typename === 'FractionalListing') {
     variables.fractionalData = {
-      weekendPrice: { currency: listing.currency, amount: listing.weekendPrice },
+      weekendPrice: {
+        currency: listing.currency,
+        amount: listing.weekendPrice
+      },
       booked: listing.booked,
       customPricing: listing.customPricing,
       unavailable: listing.unavailable
