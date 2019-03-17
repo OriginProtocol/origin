@@ -7,6 +7,7 @@ import Price from 'components/Price2'
 import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
 import Link from 'components/Link'
+import FormattedDescription from 'components/FormattedDescription'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -37,7 +38,9 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">Description</div>
-              <div className="col-9">{listing.description}</div>
+              <div className="col-9">
+                <FormattedDescription text={listing.description} />
+              </div>
             </div>
             <div className="row">
               <div className="col-3 label">Listing Price</div>
