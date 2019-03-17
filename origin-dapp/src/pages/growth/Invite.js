@@ -189,7 +189,7 @@ class GrowthInvite extends Component {
                   this.resetEmailFormMessages()
                 }}
                 onError={errorData => {
-                  console.log('Error: ', errorData)
+                  console.error('Error: ', errorData)
                   this.setState({
                     inviteEmailsMutationError:
                       'Error inviting friends. Please try again later.'
@@ -472,7 +472,7 @@ require('react-styl')(`
       font-weight: bold
       color: var(--clear-blue)
       cursor: pointer
-    .navigation-list 
+    .navigation-list
       .select-bar
         background-color: var(--clear-blue)
         height: 4px
