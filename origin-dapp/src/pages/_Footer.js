@@ -29,7 +29,7 @@ class Footer extends Component {
                   transact without rent-seeking middlemen using the Ethereum
                   blockchain and IPFS.
                 </fbt>
-                <div className="copyright">©{(new Date().getFullYear())} Origin Protocol, Inc.</div>
+                <div className="copyright">©{(new Date().getFullYear())} Origin Protocol, Inc. <span>&bull;</span> <a href="https://www.originprotocol.com/tos">Terms</a> <span>&bull;</span> <a href="https://www.originprotocol.com/privacy">Privacy</a> <span>&bull;</span> <a href="https://www.originprotocol.com/aup">Acceptable Use Policy</a></div>
               </>
             )}
           </div>
@@ -92,6 +92,9 @@ require('react-styl')(`
         margin-right: 1rem
     .copyright
       margin-top: 1rem
+      font-size: 10px
+      span
+        color: var(--pale-grey-two-darker)
 
 
   @media (max-width: 767.98px)
