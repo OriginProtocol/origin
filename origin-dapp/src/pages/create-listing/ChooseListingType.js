@@ -165,7 +165,7 @@ class ChooseListingType extends Component {
       // and un-comment `hourlyFractional` and `nightlyFractional` above.
     } else if (
       category === 'schema.forRent' &&
-      subcategory === 'schema.housing'
+      subCategory === 'schema.housing'
     ) {
       __typename = 'FractionalListing'
     }
