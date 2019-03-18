@@ -13,7 +13,7 @@ const pastEventBatcher = async (contract, fromBlock, uptoBlock) => {
   // const start = +new Date() // Uncomment for benchmarking
   if (fromBlock > uptoBlock) throw new Error('fromBlock > toBlock')
   const partitions = []
-  while (fromBlock < uptoBlock) {
+  while (fromBlock <= uptoBlock) {
     const toBlock = Math.min(fromBlock + 20000, uptoBlock)
     partitions.push(contract.getPastEvents('allEvents', { fromBlock, toBlock }))
     fromBlock += 20000
