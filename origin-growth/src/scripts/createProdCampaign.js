@@ -204,7 +204,7 @@ async function createProdMarchCampaign() {
     startDate: Date.parse('March 18, 2019, 00:00 UTC'),
     endDate: Date.parse('Apr 31, 2019, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2019, 00:00 UTC'),
-    cap: 1000000 * Math.pow(10, 18), // Cap is 1M tokens
+    cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
     rewardStatus: enums.GrowthCampaignRewardStatuses.Active
