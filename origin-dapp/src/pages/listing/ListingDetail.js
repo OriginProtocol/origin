@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculatorHourly from 'origin-graphql/src/utils/AvailabilityCalculatorHourly'
 import get from 'lodash/get'
 
 import Gallery from 'components/Gallery'
@@ -7,6 +8,7 @@ import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
+import WeekCalendar from 'components/WeekCalendar'
 import PageTitle from 'components/PageTitle'
 import Category from 'components/Category'
 
@@ -17,6 +19,7 @@ import OfferMade from './_ListingOfferMade'
 import SingleUnit from './_BuySingleUnit'
 import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
+import FractionalHourly from './_BuyFractionalHourly'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -30,6 +33,16 @@ class ListingDetail extends Component {
         booked: get(props, 'listing.booked'),
         unavailable: get(props, 'listing.unavailable'),
         customPricing: get(props, 'listing.customPricing')
+      })
+    }
+    if (props.listing.__typename === 'FractionalHourlyListing') {
+      this.state.availabilityHourly = new AvailabilityCalculatorHourly({
+        booked: get(props, 'listing.booked'),
+        unavailable: get(props, 'listing.unavailable'),
+        customPricing: get(props, 'listing.customPricing'),
+        timeZone: get(props, 'listing.timeZone'),
+        workingHours: get(props, 'listing.workingHours'),
+        price: get(props, 'listing.price.amount')
       })
     }
   }
@@ -94,7 +107,10 @@ class ListingDetail extends Component {
   renderListing() {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
-
+    const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
+    const isOwnerViewing = listing.seller.id === this.props.from
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
       <>
         <Gallery pics={listing.media} />
@@ -103,12 +119,38 @@ class ListingDetail extends Component {
           <>
             <hr />
             <Calendar
+              interactive={!isOwnerViewing}
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availability}
             />
             <div className="availability-help">
               * Click and drag to select a date range
+            </div>
+          </>
+        )}
+        {!isFractionalHourly ? null : (
+          <>
+            <hr />
+            <div className="timeZone">
+              <div>
+                Time Zone: {listing.timeZone}
+                {isDifferentTimeZone && (
+                  <div>
+                    NOTE: This is different from your time zone of{' '}
+                    {userTimeZone}
+                  </div>
+                )}
+              </div>
+            </div>
+            <WeekCalendar
+              interactive={!isOwnerViewing}
+              small={true}
+              onChange={state => this.setState(state)}
+              availability={this.state.availabilityHourly}
+            />
+            <div className="availability-help">
+              * Click and drag to select a time range
             </div>
           </>
         )}
@@ -119,6 +161,7 @@ class ListingDetail extends Component {
   renderAction() {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
+    const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.from
@@ -130,6 +173,7 @@ class ListingDetail extends Component {
           {...this.props}
           isAnnouncement={isAnnouncement}
           isFractional={isFractional}
+          isFractionalHourly={isFractionalHourly}
         />
       )
     } else if (isAnnouncement) {
@@ -146,6 +190,14 @@ class ListingDetail extends Component {
           {...this.props}
           range={this.state.range}
           availability={this.state.availability}
+        />
+      )
+    } else if (isFractionalHourly) {
+      return (
+        <FractionalHourly
+          {...this.props}
+          range={this.state.range}
+          availability={this.state.availabilityHourly}
         />
       )
     } else if (listing.multiUnit) {
@@ -197,6 +249,10 @@ require('react-styl')(`
 
     .description
       white-space: pre-wrap
+
+    .timeZone
+      font-size: 1rem
+      margin-bottom: 1rem
 
     .availability-help
       font-size: 14px

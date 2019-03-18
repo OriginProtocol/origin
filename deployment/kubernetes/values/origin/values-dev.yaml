@@ -6,7 +6,7 @@ bridgeImageTag: '7263add'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '3fc4eb5'
+dappImageTag: '49ce34b'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -60,3 +60,7 @@ linkingImageTag: '2328b60'
 # origin-cron
 cronImage: origin-cron
 cronImageTag: '6a6147d'
+
+# origin-admin
+adminImage: origin-admin
+adminImageTag: 'latest'

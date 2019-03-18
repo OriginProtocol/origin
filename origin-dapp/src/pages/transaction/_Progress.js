@@ -48,6 +48,8 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
     }
   } else if (offer.listing.__typename === 'FractionalListing') {
     return <WaitForSeller {...props} refetch={refetch} />
+  } else if (offer.listing.__typename === 'FractionalHourlyListing') {
+    return <WaitForSeller {...props} refetch={refetch} />
   } else {
     return <MessageSeller {...props} refetch={refetch} />
   }
