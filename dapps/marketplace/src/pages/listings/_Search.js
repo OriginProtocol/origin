@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { fbt } from 'fbt-runtime'

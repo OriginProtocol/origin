@@ -12,6 +12,7 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import AccountTokenBalance from 'queries/TokenBalance'
 import Action from 'pages/growth/Action'
 import GrowthInvite from 'pages/growth/Invite'
+import ProgressBar from 'components/ProgressBar'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -76,54 +77,6 @@ function CampaignNavList(props) {
       ))}
     </div>
   )
-}
-
-class ProgressBar extends Component {
-  constructor(props) {
-    super(props)
-    this.triggerAnimation = true
-  }
-
-  render() {
-    const { progress } = this.props
-    /* For triggering animation first render of react component needs to set
-     * the width to 0. All subsequent renders set it to the actuall value.
-     */
-    const triggerAnimationThisFrame = this.triggerAnimation
-    if (progress > 0 && this.triggerAnimation) {
-      setTimeout(() => {
-        this.triggerAnimation = false
-        this.forceUpdate()
-      }, 250)
-    }
-
-    return (
-      <Fragment>
-        <div className="campaign-progress mt-3">
-          <div className="background" />
-          {progress > 0 && (
-            <div
-              className="foreground"
-              style={{
-                width: `${
-                  !triggerAnimationThisFrame
-                    ? (progress / this.props.maxValue) * 100
-                    : '0'
-                }%`
-              }}
-            />
-          )}
-        </div>
-        <div className="indicators d-flex justify-content-between mt-2">
-          <div>0</div>
-          <div>{this.props.maxValue / 4}</div>
-          <div>{(this.props.maxValue / 4) * 2}</div>
-          <div>{(this.props.maxValue / 4) * 3}</div>
-          <div>{this.props.maxValue}</div>
-        </div>
-      </Fragment>
-    )
-  }
 }
 
 function ActionList(props) {
@@ -227,6 +180,7 @@ function Campaign(props) {
       <ProgressBar
         maxValue={maxProgressBarTokens}
         progress={tokenEarnProgress}
+        showIndicators={true}
       />
       {status === 'Active' && nonCompletedActions.length > 0 && (
         <ActionList
@@ -435,33 +389,6 @@ require('react-styl')(`
       padding-top: 30px
     .info-icon img
       width: 28px
-    .indicators
-      font-size: 10px
-      color: #455d75
-    .campaign-progress
-      .background
-        background-color: var(--pale-grey-two)
-        border-radius: 5px
-        border: 1px solid #c2cbd3
-        height: 10px
-        position: absolute
-        z-index: 1
-        top: 0
-        left: 0
-        bottom: 0
-        right: 0
-      .foreground
-        background-color: var(--clear-blue)
-        border: 1px solid var(--greenblue)
-        border-radius: 5px
-        height: 100%
-        z-index: 2
-        position: relative
-        -webkit-transition: width 0.5s
-        transition: width 0.5s
-      height: 10px
-      width: 100%
-      position: relative
     .ogn-amount
       color: var(--clear-blue)
     .ogn-icon

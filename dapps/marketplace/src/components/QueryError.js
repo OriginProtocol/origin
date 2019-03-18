@@ -1,7 +1,7 @@
 import React from 'react'
 
 const QueryError = props => {
-  console.log(props.error)
+  console.error(props.error)
 
   if (props.query) {
     console.log(props.query.loc.source.body)

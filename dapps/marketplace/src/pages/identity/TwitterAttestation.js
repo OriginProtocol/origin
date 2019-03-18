@@ -90,7 +90,7 @@ class TwitterAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.log('Error', errorData)
+          console.error('Error', errorData)
           this.setState({ error: 'Check console', loading: false })
         }}
       >
