@@ -104,6 +104,38 @@ class ChooseListingType extends Component {
   validate() {
     const newState = {}
 
+    const hourlyFractional = [
+      'schema.atvsUtvsSnowmobiles',
+      'schema.bicycles',
+      'schema.boats',
+      'schema.carsTrucks',
+      'schema.healthBeauty',
+      'schema.heavyEquipment',
+      'schema.householdItems',
+      'schema.motorcyclesScooters',
+      'schema.other',
+      'schema.parking',
+      'schema.tools'
+    ]
+    const nightlyFractional = [
+      'schema.babyKidStuff',
+      'schema.cellPhones',
+      'schema.clothingAccessories',
+      'schema.computers',
+      'schema.electronics',
+      'schema.farmGarden',
+      'schema.furniture',
+      'schema.housing',
+      'schema.jewelry',
+      'schema.musicalInstruments',
+      'schema.recreationalVehicles',
+      'schema.sportingGoods',
+      'schema.storage',
+      'schema.toysGames',
+      'schema.trailers',
+      'schema.videoGaming'
+    ]
+
     const { category, subCategory } = this.state
 
     if (!subCategory) {
@@ -118,12 +150,12 @@ class ChooseListingType extends Component {
       __typename = 'AnnouncementListing'
     } else if (
       category === 'schema.forRent' &&
-      subCategory === 'schema.housing'
+      nightlyFractional.includes(subCategory)
     ) {
       __typename = 'FractionalListing'
     } else if (
       category === 'schema.forRent' &&
-      subCategory === 'schema.carsTrucks'
+      hourlyFractional.includes(subCategory)
     ) {
       __typename = 'FractionalHourlyListing'
     }
