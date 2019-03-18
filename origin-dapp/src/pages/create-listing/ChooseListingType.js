@@ -104,37 +104,37 @@ class ChooseListingType extends Component {
   validate() {
     const newState = {}
 
-    const hourlyFractional = [
-      'schema.atvsUtvsSnowmobiles',
-      'schema.bicycles',
-      'schema.boats',
-      'schema.carsTrucks',
-      'schema.healthBeauty',
-      'schema.heavyEquipment',
-      'schema.householdItems',
-      'schema.motorcyclesScooters',
-      'schema.other',
-      'schema.parking',
-      'schema.tools'
-    ]
-    const nightlyFractional = [
-      'schema.babyKidStuff',
-      'schema.cellPhones',
-      'schema.clothingAccessories',
-      'schema.computers',
-      'schema.electronics',
-      'schema.farmGarden',
-      'schema.furniture',
-      'schema.housing',
-      'schema.jewelry',
-      'schema.musicalInstruments',
-      'schema.recreationalVehicles',
-      'schema.sportingGoods',
-      'schema.storage',
-      'schema.toysGames',
-      'schema.trailers',
-      'schema.videoGaming'
-    ]
+    // const hourlyFractional = [
+    //   'schema.atvsUtvsSnowmobiles',
+    //   'schema.bicycles',
+    //   'schema.boats',
+    //   'schema.carsTrucks',
+    //   'schema.healthBeauty',
+    //   'schema.heavyEquipment',
+    //   'schema.householdItems',
+    //   'schema.motorcyclesScooters',
+    //   'schema.other',
+    //   'schema.parking',
+    //   'schema.tools'
+    // ]
+    // const nightlyFractional = [
+    //   'schema.babyKidStuff',
+    //   'schema.cellPhones',
+    //   'schema.clothingAccessories',
+    //   'schema.computers',
+    //   'schema.electronics',
+    //   'schema.farmGarden',
+    //   'schema.furniture',
+    //   'schema.housing',
+    //   'schema.jewelry',
+    //   'schema.musicalInstruments',
+    //   'schema.recreationalVehicles',
+    //   'schema.sportingGoods',
+    //   'schema.storage',
+    //   'schema.toysGames',
+    //   'schema.trailers',
+    //   'schema.videoGaming'
+    // ]
 
     const { category, subCategory } = this.state
 
@@ -161,7 +161,8 @@ class ChooseListingType extends Component {
       // }
 
       // TODO(Stan) : Once Eventlister is updated to recognize Dapp2-style
-      // fractional listings, remove this `if()` below, and un-comment lines above.
+      // fractional listings, remove this `if()` below, and un-comment lines above,
+      // and un-comment `hourlyFractional` and `nightlyFractional` above.
     } else if (
       category === 'schema.forRent' &&
       subcategory === 'schema.housing'
