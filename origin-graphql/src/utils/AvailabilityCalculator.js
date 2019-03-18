@@ -23,15 +23,21 @@ class AvailabilityCalculator {
   }
 
   /**
-   * @param range         Date range (eg 2019-01-01/2019-02-01)
+   * @param range         Date range (eg `2019-01-01/2019-02-01`)
    * @param availability  'available', 'unavailable', 'booked'
    * @param price         '0.1', 'reset'
+   * Returns array of modified slots
    */
   update(range, availability, price) {
-    const slots = this.getAvailability(dayjs(), dayjs().add(1, 'year'))
+    const slotRangeMax = dayjs().add(1, 'year')
+    const slots = this.getAvailability(dayjs(), slotRangeMax)
     const [startStr, endStr] = range.split('/')
     const start = dayjs(startStr).subtract(1, 'day'),
       end = dayjs(endStr).add(1, 'day')
+
+    if (start.isBefore(dayjs().subtract(1, 'day')) || end.isAfter(slotRangeMax)) {
+      throw('Cannot update() range outside of one year limit.')
+    }
 
     const modifiedSlots = []
     let bookedRange, unavailableRange, customPriceRange

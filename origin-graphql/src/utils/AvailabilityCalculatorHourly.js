@@ -22,19 +22,25 @@ class AvailabilityCalculatorHourly {
 
   /**
    * Update availability for a given datetime range.
-   * @param range         Datetime range (eg `2019-03-01T01:00:00/2019-03-01T02:00:00``)
+   * @param range         Datetime range (eg `2019-03-01T01:00:00/2019-03-01T02:00:00`)
    * @param availability  'available', 'unavailable', 'booked'
    * @param price         '0.1', 'reset' (Reset=return to default price for this time)
+   * Returns array of modified slots
    */
   update(range, availability, price) {
     // Get availabitilty for one year into the future from now for each hour
-    const slots = this.getAvailability(dayjs(), dayjs().add(1, 'year'))
+    const slotRangeMax = dayjs().add(1, 'year')
+    const slots = this.getAvailability(dayjs(), slotRangeMax)
 
     const [startStr, endStr] = range.split('/')
     const start = dayjs(startStr),
       // We subtract 1 hour because the human-readable range
       // e.g. 6-7pm is actually just the 6pm slot -- so range is 6pm-6pm
       end = dayjs(endStr).add(-1, 'hour')
+
+    if (start.isBefore(dayjs()) || end.isAfter(slotRangeMax)) {
+      throw('Cannot update() range outside of one year limit.')
+    }
 
     const modifiedSlots = []
     let bookedRange, unavailableRange, customPriceRange
