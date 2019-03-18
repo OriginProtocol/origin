@@ -16,6 +16,9 @@ const introspectionQueryResultData = {
             name: 'FractionalListing'
           },
           {
+            name: 'FractionalHourlyListing'
+          },
+          {
             name: 'AnnouncementListing'
           }
         ]
@@ -29,6 +32,9 @@ const introspectionQueryResultData = {
           },
           {
             name: 'FractionalListing'
+          },
+          {
+            name: 'FractionalHourlyListing'
           },
           {
             name: 'AnnouncementListing'
