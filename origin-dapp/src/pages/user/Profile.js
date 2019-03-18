@@ -23,7 +23,7 @@ import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import ProfileWizzard from 'pages/user/ProfileWizzard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
@@ -188,29 +188,31 @@ class UserProfile extends Component {
             />
 
             <div className="actions">
-              <DeployIdentity
-                className={`btn btn-primary btn-rounded btn-lg`}
-                identity={get(this.props, 'identity.id')}
-                refetch={this.props.identityRefetch}
-                profile={pick(this.state, [
-                  'firstName',
-                  'lastName',
-                  'description',
-                  'avatar'
-                ])}
-                attestations={[
-                  ...(this.state.attestations || []),
-                  ...attestations
-                ]}
-                validate={() => this.validate()}
-                onComplete={() =>
-                  store.set(`attestations-${this.props.wallet}`, undefined)
-                }
-                children={fbt('Publish Now', 'Profile.publishNow')}
+              <ProfileWizzard
+                deployIdentityProps={{
+                  className: `btn btn-primary btn-rounded btn-lg`,
+                  identity: get(this.props, 'identity.id'),
+                  refetch: this.props.identityRefetch,
+                  profile: pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatar'
+                  ]),
+                  attestations: [
+                    ...(this.state.attestations || []),
+                    ...attestations
+                  ],
+                  validate: () => this.validate(),
+                  onComplete: () =>
+                    store.set(`attestations-${this.props.wallet}`, undefined)
+                  ,
+                  children: fbt('Publish Now', 'Profile.publishNow')
+                }}
               />
             </div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 profile-column-right">
             <Wallet />
             {enableGrowth && (
               <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
@@ -348,6 +350,12 @@ require('react-styl')(`
       background: url(images/identity/identity.svg) no-repeat center 1.5rem;
       background-size: 5rem;
       padding-top: 8rem;
+    .profile-column-right
+        padding-left: 6rem
+  @media (max-width: 991px)
+    .profile-edit
+      .profile-column-right
+          padding-left: 0.94rem
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem
@@ -363,5 +371,4 @@ require('react-styl')(`
         margin-bottom: 1rem
       .actions
         margin-bottom: 2rem
-
 `)
