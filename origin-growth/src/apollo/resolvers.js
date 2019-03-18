@@ -109,16 +109,15 @@ const resolvers = {
       await sendInvites(context.walletAddress, args.emails)
       return true
     },
-    async enroll(_, args) {
-      //TODO: check country eligibility here also
-      // const locationInfo = getLocationInfo(context.countryCode)
-      // if (locationInfo.isForbidden) {
-      //   return {
-      //     error: `Users from ${locationInfo.countryName} are not eligible for growth campaign`
-      //   }
-      // }
-
+    async enroll(_, args, context) {
       try {
+        const { eligibility } = getLocationInfo(
+          context.req.headers['x-real-ip']
+        )
+        if (eligibility === 'Forbidden') {
+          throw new Error('User is from a forbidden country')
+        }
+
         const authToken = await authenticateEnrollment(
           args.accountId,
           args.agreementMessage,
