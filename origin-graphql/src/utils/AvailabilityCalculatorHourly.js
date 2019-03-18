@@ -121,7 +121,7 @@ class AvailabilityCalculatorHourly {
 
   estimatePrice(range) {
     // Estimate price for range, including the hour of range end.
-    let [startStr, endStr] = range.split('/')
+    const [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
     const available = availability.every(slot => slot.unavailable === false)
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
