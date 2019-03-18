@@ -183,3 +183,16 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- define "cron.fullname" -}}
 {{- printf "%s-%s" .Release.Name "cron" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "admin.fullname" -}}
+{{- printf "%s-%s" .Release.Name "admin" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "admin.host" -}}
+{{- $prefix := "admin" -}}
+{{- if ne .Release.Namespace "prod" -}}
+{{- printf "%s.%s.originprotocol.com" $prefix .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s.originprotocol.com" $prefix -}}
+{{- end -}}
+{{- end -}}
