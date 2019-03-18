@@ -41,7 +41,7 @@ module.exports =
 
   enum GrowthInviteStatus {
     Pending
-    Successful
+    Completed
   }
 
   enum Eligibility {
@@ -145,7 +145,7 @@ module.exports =
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
     campaign(id: String): GrowthCampaign
-    inviteInfo(code: String): InviteInfo
+    inviteInfo(code: String!): InviteInfo
     inviteCode: String!
     isEligible: EligibilityInfo
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!

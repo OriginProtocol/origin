@@ -35,7 +35,7 @@ class CannotTransact extends Component {
             Error with transaction. Please see console for details.
           </div>
         )
-        console.log(this.props.data)
+        console.warn(this.props.data)
       }
     }
 

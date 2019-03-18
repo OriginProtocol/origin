@@ -10,7 +10,7 @@ function withWallet(WrappedComponent) {
       <Query query={WalletQuery} pollInterval={1000}>
         {/* TODO: see if there's a way to avoid polling */}
         {({ data, error, networkStatus }) => {
-          if (error) console.log(error)
+          if (error) console.error(error)
 
           const walletType = get(data, 'web3.walletType')
           if (walletType && walletType.startsWith('mobile-')) {

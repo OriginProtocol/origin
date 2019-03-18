@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 
 class Analytics extends Component {
   constructor(props) {
