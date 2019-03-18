@@ -35,8 +35,11 @@ class AvailabilityCalculator {
     const start = dayjs(startStr).subtract(1, 'day'),
       end = dayjs(endStr).add(1, 'day')
 
-    if (start.isBefore(dayjs().subtract(1, 'day')) || end.isAfter(slotRangeMax)) {
-      throw('Cannot update() range outside of one year limit.')
+    if (
+      start.isBefore(dayjs().subtract(1, 'day')) ||
+      end.isAfter(slotRangeMax)
+    ) {
+      throw 'Cannot update() range outside of one year limit.'
     }
 
     const modifiedSlots = []

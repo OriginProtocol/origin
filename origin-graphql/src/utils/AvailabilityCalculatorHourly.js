@@ -39,7 +39,7 @@ class AvailabilityCalculatorHourly {
       end = dayjs(endStr).add(-1, 'hour')
 
     if (start.isBefore(dayjs()) || end.isAfter(slotRangeMax)) {
-      throw('Cannot update() range outside of one year limit.')
+      throw 'Cannot update() range outside of one year limit.'
     }
 
     const modifiedSlots = []

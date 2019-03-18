@@ -1,5 +1,4 @@
 import assert from 'assert'
-import dayjs from 'dayjs'
 
 import AvailabilityCalculatorHourly from '../src/utils/AvailabilityCalculatorHourly'
 
