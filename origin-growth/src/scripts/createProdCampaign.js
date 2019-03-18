@@ -202,7 +202,7 @@ async function createAprilProdCampaign() {
     shortNameKey: 'growth.apr2019.short_name',
     rules: JSON.stringify(aprRules),
     startDate: Date.parse('March 18, 2019, 00:00 UTC'),
-    endDate: Date.parse('Apr 31, 2019, 00:00 UTC'),
+    endDate: Date.parse('May 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2019, 00:00 UTC'),
     cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
