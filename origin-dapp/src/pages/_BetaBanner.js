@@ -58,8 +58,8 @@ class BetaBanner extends Component {
                       )}
                     </div>
                     <div>
-                      {'Found a bug or have feedback? Send an email to '}
-                      <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
+                      {'Found a bug or have feedback? '}
+                      <a href={`mailto:${SupportEmail}`}>Email support</a>
                       {', open an issue on '}
                       <a href={GitHubLink}>GitHub</a>
                       {' or post in our #bug-reports channel on '}
