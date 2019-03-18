@@ -191,7 +191,7 @@ require('react-styl')(`
       .content
         font-weight: normal
         font-size: 16px
-        word-break: break-all
+        word-break: break-word
         .image-container
           overflow: auto
       &.tail::after
