@@ -29,7 +29,7 @@ class Footer extends Component {
                   transact without rent-seeking middlemen using the Ethereum
                   blockchain and IPFS.
                 </fbt>
-                <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+                <div className="copyright">©{(new Date().getFullYear())} Origin Protocol, Inc.</div>
               </>
             )}
           </div>
