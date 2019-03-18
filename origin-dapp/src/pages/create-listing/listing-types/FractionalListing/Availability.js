@@ -13,7 +13,7 @@ class Availability extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      price: '',
+      price: this.props.listing.price,
       customPrice: false,
       available: true,
       range: '',
@@ -199,7 +199,13 @@ class Availability extends Component {
                 this.state.available ? 'available' : 'unavailable',
                 this.state.customPrice ? this.state.price : 'reset'
               )
-              this.setState({ calculator, range: '' })
+              this.setState({
+                calculator,
+                range: '',
+                price: this.props.listing.price,
+                customPrice: false,
+                available: true
+              })
 
               const { booked, customPricing, unavailable } = calculator.opts
 
