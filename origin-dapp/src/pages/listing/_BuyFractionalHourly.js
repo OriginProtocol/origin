@@ -6,9 +6,9 @@ import Tooltip from 'components/Tooltip'
 
 import Buy from './mutations/Buy'
 
-const Fractional = ({ listing, from, range, availability, refetch }) => {
-  let startDateDisplay = 'Check in',
-    endDateDisplay = 'Check out',
+const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
+  let startDateDisplay = 'Start',
+    endDateDisplay = 'End',
     startDate = null,
     endDate = null,
     totalPrice,
@@ -19,9 +19,13 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('ddd, MMM D')
-    endDateDisplay = dayjs(endDate).format('ddd, MMM D')
-    const priceEstimate = availability.estimatePrice(range)
+    startDateDisplay = dayjs(startDate).format('MMM D h:00a')
+    endDateDisplay = dayjs(endDate).format('MMM D h:00a')
+    const priceEstimate = availability.estimatePrice(
+      `${startDate}/${dayjs(endDate)
+        .add(-1, 'hour')
+        .format('YYYY-MM-DDTHH:00:00')}`
+    )
     available = priceEstimate.available
     if (available) {
       totalPrice = String(priceEstimate.price)
@@ -33,7 +37,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   return (
     <div className="listing-buy fractional">
       <div className="price">
-        <div className="eth">{`${listing.price.amount} ETH / night`}</div>
+        <div className="eth">{`${listing.price.amount} ETH / hour`}</div>
         <div className="usd">
           <Price amount={listing.price.amount} />
         </div>
@@ -76,4 +80,4 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   )
 }
 
-export default Fractional
+export default FractionalHourly

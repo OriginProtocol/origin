@@ -1,9 +1,31 @@
 import { get } from '@origin/ipfs'
 // import { post } from '@origin/ipfs'
 import uniqBy from 'lodash/uniqBy'
+import chunk from 'lodash/chunk'
+import flattenDeep from 'lodash/flattenDeep'
 import createDebug from 'debug'
 
 const debug = createDebug('event-cache:')
+
+// Given a contract and block range, break the range up into requests of no
+// more than 20,000 blocks, then send those requests in batches of 7.
+const pastEventBatcher = async (contract, fromBlock, uptoBlock) => {
+  // const start = +new Date() // Uncomment for benchmarking
+  if (fromBlock > uptoBlock) throw new Error('fromBlock > toBlock')
+  const partitions = []
+  while (fromBlock <= uptoBlock) {
+    const toBlock = Math.min(fromBlock + 20000, uptoBlock)
+    partitions.push(contract.getPastEvents('allEvents', { fromBlock, toBlock }))
+    fromBlock += 20000
+  }
+  const results = []
+  const chunks = chunk(partitions, 7)
+  for (const chunklet of chunks) {
+    results.push(await Promise.all(chunklet))
+  }
+  // debug('Got events in ', +new Date() - start) // Uncomment for benchmarking
+  return flattenDeep(results)
+}
 
 export default function eventCache(contract, fromBlock = 0, web3, config) {
   function padNum(num) {
@@ -84,10 +106,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     )
     lastLookup = toBlock
 
-    const newEvents = await contract.getPastEvents('allEvents', {
-      fromBlock,
-      toBlock
-    })
+    const newEvents = await pastEventBatcher(contract, fromBlock, toBlock)
 
     events = uniqBy(
       [

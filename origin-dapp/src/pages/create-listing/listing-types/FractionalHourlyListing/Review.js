@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculatorHourly from 'origin-graphql/src/utils/AvailabilityCalculatorHourly'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
-import Calendar from 'components/Calendar'
+import WeekCalendar from 'components/WeekCalendar'
 import Category from 'components/Category'
 import Link from 'components/Link'
-import FormattedDescription from 'components/FormattedDescription'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
@@ -38,25 +37,18 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">Description</div>
-              <div className="col-9">
-                <FormattedDescription text={listing.description} />
-              </div>
+              <div className="col-9">{listing.description}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Weekdays</div>
+              <div className="col-3 label">Time Zone</div>
+              <div className="col-9">{listing.timeZone}</div>
+            </div>
+            <div className="row">
+              <div className="col-3 label">Price</div>
               <div className="col-9">
                 <CoinPrice price={listing.price} coin="eth" />
                 <div className="fiat">
                   ~ <Price amount={listing.price} />
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-3 label">Weekends</div>
-              <div className="col-9">
-                <CoinPrice price={listing.weekendPrice} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.weekendPrice} />
                 </div>
               </div>
             </div>
@@ -88,16 +80,17 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Availability</div>
               <div className="col-9">
-                <Calendar
+                <WeekCalendar
                   interactive={false}
                   small={true}
                   availability={
-                    new AvailabilityCalculator({
-                      weekdayPrice: listing.price,
-                      weekendPrice: listing.weekendPrice,
+                    new AvailabilityCalculatorHourly({
+                      workingHours: listing.workingHours,
+                      price: listing.price,
                       booked: listing.booked,
                       unavailable: listing.unavailable,
-                      customPricing: listing.customPricing
+                      customPricing: listing.customPricing,
+                      timeZone: listing.timeZone
                     })
                   }
                 />
@@ -142,3 +135,49 @@ class Review extends Component {
 }
 
 export default withTokenBalance(Review)
+
+require('react-styl')(`
+  .create-listing .create-listing-review
+    .fiat
+      display: inline-block
+      margin-left: 0.75rem
+      font-size: 14px
+    h2
+      font-size: 28px
+    .detail
+      border: 1px solid var(--light)
+      border-radius: 5px
+      padding: 1rem 2rem
+      font-size: 18px
+      font-weight: normal
+      .row
+        margin-bottom: 1rem
+        .label
+          color: var(--dusk)
+    .photos
+      margin-bottom: 1rem
+      display: grid
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
+      grid-template-columns: repeat(auto-fill,minmax(90px, 1fr));
+      .photo-row
+        font-size: 12px
+        box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
+        background: #fff
+        padding: 5px;
+        background-position: center
+        width: 100%
+        height: 80px
+        background-size: contain
+        background-repeat: no-repeat
+
+    .actions
+      margin-top: 2.5rem
+      display: flex
+      justify-content: space-between
+      .btn
+        min-width: 10rem
+        border-radius: 2rem
+        padding: 0.625rem
+        font-size: 18px
+`)

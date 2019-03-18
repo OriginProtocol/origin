@@ -106,6 +106,8 @@ const GetListing = gql`
             amount
             currency
           }
+          timeZone
+          workingHours
           booked
           customPricing
           unavailable

@@ -76,6 +76,13 @@ export default {
           customPricing
           unavailable
         }
+        ... on FractionalHourlyListing {
+          timeZone
+          workingHours
+          booked
+          customPricing
+          unavailable
+        }
       }
     `
   },
