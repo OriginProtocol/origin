@@ -103,6 +103,18 @@ const ProfileDropdown = ({ data, onClose }) => {
               children="Unlink Mobile"
             />
           )}
+          {!localStorage.loggedInAs ? null : (
+            <a
+              className="unlink-wallet"
+              onClick={e => {
+                e.preventDefault()
+                delete localStorage.loggedInAs
+                onClose()
+              }}
+              href="#"
+              children="Logout"
+            />
+          )}
           <Link onClick={() => onClose()} to="/profile">
             Edit Profile
           </Link>

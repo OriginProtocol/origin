@@ -17,12 +17,15 @@ function withCanTransact(WrappedComponent) {
           }
 
           const walletType = get(data, 'web3.walletType')
-          const metaMaskId = get(data, 'web3.metaMaskAccount.id')
           if (!walletType) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
+
+          const metaMaskId = get(data, 'web3.primaryAccount.id')
           // Use mobile wallet if it's available and MetaMask isn't enabled.
           if (walletType === 'mobile-linked' && !metaMaskId) {
+            return <WrappedComponent {...props} />
+          } else if (walletType === 'managed') {
             return <WrappedComponent {...props} />
           }
 

@@ -28,10 +28,14 @@ const web3Resolver = {
         .catch(() => resolve([]))
     }),
   nodeAccount: (_, args) => ({ id: args.id }),
-  accounts: async () => {
+  accounts: async (_, args, context = {}) => {
+    if (typeof localStorage !== 'undefined' && localStorage.loggedInAs) {
+      return [{ id: localStorage.loggedInAs }]
+    }
+    const web3 = context.web3 || contracts.web3
     const accounts = []
-    for (let i = 0; i < contracts.web3.eth.accounts.wallet.length; i++) {
-      accounts.push({ id: contracts.web3.eth.accounts.wallet[i].address })
+    for (let i = 0; i < web3.eth.accounts.wallet.length; i++) {
+      accounts.push({ id: web3.eth.accounts.wallet[i].address })
     }
     return accounts
   },
@@ -77,11 +81,17 @@ const web3Resolver = {
   },
   metaMaskAccount: async () => {
     if (!contracts.metaMask) return null
+    if (localStorage.loggedInAs) {
+      return { id: localStorage.loggedInAs }
+    }
     const accounts = await contracts.metaMask.eth.getAccounts()
     if (!accounts || !accounts.length) return null
     return { id: accounts[0] }
   },
   walletType: () => {
+    if (localStorage.loggedInAs) {
+      return 'managed'
+    }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
       if (provider.isOrigin) return 'Origin Wallet'
@@ -113,10 +123,11 @@ const web3Resolver = {
     }
   },
   primaryAccount: async () => {
-    if (contracts.metaMaskEnabled) {
+    if (localStorage.loggedInAs) {
+      return { id: localStorage.loggedInAs }
+    } else if (contracts.metaMaskEnabled) {
       return web3Resolver.metaMaskAccount()
-    }
-    if (contracts.linker) {
+    } else if (contracts.linker) {
       return web3Resolver.mobileWalletAccount()
     }
     return null

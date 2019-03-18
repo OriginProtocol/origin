@@ -4,7 +4,7 @@ import fragments from './Fragments'
 export default gql`
   query Listing($listingId: ID!) {
     web3 {
-      metaMaskAccount {
+      primaryAccount {
         id
       }
     }

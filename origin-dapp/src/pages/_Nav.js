@@ -181,4 +181,9 @@ require('react-styl')(`
         .dropdown-menu
           left: 1rem
           right: 1rem
+      .navbar-brand
+        position: absolute
+        left: 50%
+        transform: translateX(-50%)
+        top: 10px
 `)

@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 export default gql`
   mutation MakeOffer(
-    $listingID: String!
+    $listingID: ID!
     $value: String!
     $from: String
     $quantity: Int!

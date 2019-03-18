@@ -158,7 +158,10 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    linkerWS: `ws://${LINKER_HOST}:3008`,
+    V00_Marketplace: '0xd3C3C6530fE4073292D6EAfdEAdEeAbf1A3DC19B',
+    IdentityEvents: '0x6C235C50570e4993000DC7834c694bAa892cD0D4',
+    OriginToken: '0xaB3F882b6fA95519E9Ee50Ca9B9A571Db2b4b77C'
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -275,10 +278,10 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-  } else if (net === 'localhost') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
+  } else if (net === 'localhost' && typeof window !== 'undefined') {
+    // config.OriginToken = window.localStorage.OGNContract
+    // config.V00_Marketplace = window.localStorage.marketplaceContract
+    // config.IdentityEvents = window.localStorage.identityEventsContract
   }
   context.net = net
   context.config = config

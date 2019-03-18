@@ -13,6 +13,9 @@ export default gql`
           eth
         }
       }
+      primaryAccount {
+        id
+      }
       walletType
     }
   }

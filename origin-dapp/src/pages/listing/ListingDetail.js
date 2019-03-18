@@ -136,8 +136,8 @@ class ListingDetail extends Component {
       return null
     } else if (listing.status === 'sold') {
       return <Sold />
-    } else if (isPendingBuyer) {
-      return <OfferMade />
+    // } else if (isPendingBuyer) {
+    //   return <OfferMade />
     } else if (listing.status === 'pending') {
       return <Pending />
     } else if (isFractional) {

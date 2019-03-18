@@ -31,7 +31,7 @@ class TokenPrice extends Component {
     return (
       <Query query={CurrentTokenPrice} variables={{ id: currency }}>
         {({ loading, error, data }) => {
-          if (loading || error) return null
+          if (loading || error || !data.token) return null
 
           const { decimals, symbol } = data.token
 

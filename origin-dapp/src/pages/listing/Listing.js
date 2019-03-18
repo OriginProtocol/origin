@@ -44,7 +44,7 @@ class Listing extends Component {
               return <div>Listing invalid</div>
             }
 
-            const from = get(data, 'web3.metaMaskAccount.id')
+            const from = get(data, 'web3.primaryAccount.id')
 
             const wrappedRefetch = async redirect => {
               await refetch()

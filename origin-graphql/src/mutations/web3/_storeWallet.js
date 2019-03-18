@@ -1,6 +1,9 @@
 import contracts from '../../contracts'
 
 function storeWallet({ id, name, role, privateKey }) {
+  if (typeof window === 'undefined') {
+    return
+  }
   let privateKeys = [],
     roles = {},
     names = {}
