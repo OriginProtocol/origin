@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import TextareaAutosize from 'react-autosize-textarea'
 import { Mutation } from 'react-apollo'
 import trim from 'lodash/trim'
 
@@ -101,14 +102,13 @@ class SendMessage extends Component {
               </div>
             ) : null}
             {images.length ? null : (
-              <input
-                type="text"
+              <TextareaAutosize
                 className="form-control"
                 placeholder="Type something..."
                 ref={input => (this.input = input)}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
-              />
+              ></TextareaAutosize>
             )}
             <img
               src="images/add-photo-icon.svg"

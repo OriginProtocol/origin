@@ -2,7 +2,8 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "^3.5.1"
+    "lerna": "^3.5.1",
+    "react-autosize-textarea": "^6.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
