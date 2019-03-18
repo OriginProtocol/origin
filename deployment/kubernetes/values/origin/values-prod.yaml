@@ -61,8 +61,4 @@ linkingImageTag: 'latest'
 cronImage: origin-cron
 cronImageTag: 'latest'
 
-# origin-admin
-adminImage: origin-admin
-adminImageTag: 'latest'
-
 ipfsLoadBalancerIP: 35.233.189.126
