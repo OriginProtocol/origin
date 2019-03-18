@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "admin.fullname" . }}
+  labels:
+    app: {{ template "admin.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: origin-admin
+spec:
+  replicas: {{ default 1 .Values.adminReplicas }}
+  selector:
+    matchLabels:
+      app: {{ template "admin.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "admin.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-admin
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.adminImage }}:{{ .Values.adminImageTag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

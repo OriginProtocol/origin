@@ -60,3 +60,7 @@ linkingImageTag: '2328b60'
 # origin-cron
 cronImage: origin-cron
 cronImageTag: '6a6147d'
+
+# origin-admin
+adminImage: origin-admin
+adminImageTag: 'latest'
