@@ -70,10 +70,10 @@ class GrowthInvite extends Component {
       [
         'https://www.facebook.com/dialog/share?',
         `app_id=${process.env.FACEBOOK_CLIENT_ID}`,
-        `&href=${this.getInviteCode()}`,
-        `&quote=${text}`,
+        `&href=${encodeURIComponent(this.getInviteCode())}`,
+        `&quote=${encodeURIComponent(text)}`,
         '&display=popup',
-        `&redirect_uri=${window.location.href}`
+        `&redirect_uri=${encodeURIComponent(window.location.href)}`
       ].join('')
     )
   }
@@ -83,7 +83,9 @@ class GrowthInvite extends Component {
     let text =
       'Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.'
     text += ' ' + this.getInviteCode()
-    window.open(`https://twitter.com/intent/tweet?text=${text}`)
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+    )
   }
 
   resetEmailFormMessages(timeout = 5000) {
