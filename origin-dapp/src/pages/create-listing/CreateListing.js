@@ -10,6 +10,7 @@ import PageTitle from 'components/PageTitle'
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
+import FractionalHourlyListing from './listing-types/FractionalHourlyListing/FractionalHourlyListing'
 
 import ChooseListingType from './ChooseListingType'
 
@@ -19,6 +20,10 @@ const store = Store('sessionStorage')
 class CreateListing extends Component {
   constructor(props) {
     super(props)
+    // If a listing is passed in (as when editing) use that, otherwise
+    // fall back to anything in `store` (an unfinished listing creation)
+    const preexistingListingData =
+      props.listing || store.get('create-listing') || {}
     this.state = {
       listing: {
         __typename: 'UnitListing', // Default
@@ -36,6 +41,8 @@ class CreateListing extends Component {
         price: '',
 
         // Fractional fields:
+        timeZone: '',
+        workingHours: [],
         weekendPrice: '',
         booked: [],
         customPricing: [],
@@ -44,8 +51,7 @@ class CreateListing extends Component {
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
-        ...props.listing,
-        ...store.get('create-listing', {})
+        ...preexistingListingData
       }
     }
   }
@@ -59,7 +65,8 @@ class CreateListing extends Component {
     const listingTypeMapping = {
       UnitListing,
       AnnouncementListing,
-      FractionalListing
+      FractionalListing,
+      FractionalHourlyListing
     }
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing

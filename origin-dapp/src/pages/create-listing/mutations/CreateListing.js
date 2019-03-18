@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
 
+// Note that this is NOT the same as this file. This `CreateListing`
+// is under `origin-dapp/src/mutations`
 import CreateListingMutation from 'mutations/CreateListing'
 
 import TransactionError from 'components/TransactionError'
