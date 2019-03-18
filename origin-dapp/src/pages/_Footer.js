@@ -10,12 +10,14 @@ class Footer extends Component {
     return (
       <footer>
         <div className="container">
-          <div className="logo-box">
-            {creatorConfig.isCreatedMarketplace && (
-              <span className="font-weight-bold">Powered by</span>
-            )}
-            <div className="logo" />
-          </div>
+          <a href="https://www.originprotocol.com">
+            <div className="logo-box">
+              {creatorConfig.isCreatedMarketplace && (
+                <span className="font-weight-bold">Powered by</span>
+              )}
+              <div className="logo" />
+            </div>
+          </a>
           <div className="separator" />
           <div className="about">
             {creatorConfig.isCreatedMarketplace ? (
