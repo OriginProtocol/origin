@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import currency from 'utils/currency'
 import formatDate from 'utils/formatDate'
 import { Tag, Icon } from '@blueprintjs/core'
