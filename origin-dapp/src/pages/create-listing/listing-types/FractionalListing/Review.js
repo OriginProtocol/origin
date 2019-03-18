@@ -142,5 +142,3 @@ class Review extends Component {
 }
 
 export default withTokenBalance(Review)
-
-

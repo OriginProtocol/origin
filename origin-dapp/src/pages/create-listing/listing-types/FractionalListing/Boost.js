@@ -190,5 +190,3 @@ class Boost extends Component {
 }
 
 export default withTokenBalance(Boost)
-
-

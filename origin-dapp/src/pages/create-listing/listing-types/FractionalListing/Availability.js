@@ -217,3 +217,5 @@ class Availability extends Component {
     )
   }
 }
+
+export default Availability
