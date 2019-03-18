@@ -54,7 +54,6 @@ export default {
           currency {
             ... on Currency {
               id
-              code
             }
           }
         }
@@ -81,7 +80,6 @@ export default {
             currency {
               ... on Currency {
                 id
-                code
               }
             }
           }
@@ -146,7 +144,6 @@ export default {
           currency {
             ... on Currency {
               id
-              code
             }
           }
         }
