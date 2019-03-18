@@ -15,12 +15,9 @@ const forbiddenCountryCodes = [
   'LY',
   'NG',
   'KP',
-  'RU',
   'SD',
   'SO',
   'SY',
-  'UA',
-  'VE',
   'YE',
   'ZW'
 ]
