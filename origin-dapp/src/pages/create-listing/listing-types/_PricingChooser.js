@@ -2,7 +2,6 @@ import React from 'react'
 
 import CoinPrice from 'components/CoinPrice'
 import Tooltip from 'components/Tooltip'
-import CurrencySelect from 'components/CurrencySelect'
 
 const HelpIcon = ({ tooltip }) => (
   <Tooltip tooltip={tooltip} placement="top">
@@ -15,31 +14,12 @@ const HelpIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
-const PricingChooser = ({
-  currency,
-  onChangeCurrency,
-  value,
-  onChange,
-  input,
-  isMulti,
-  Feedback
-}) => {
+const PricingChooser = ({ value, onChange, children }) => {
   return (
     <div className="form-group">
       <label>Pricing</label>
       <div className="pricing-chooser">
-        <div className="form-group">
-          <label>{`Listing Price${isMulti ? ' (per unit)' : ''}`}</label>
-          <div className="with-symbol" style={{ maxWidth: 270 }}>
-            <input {...input('price')} />
-            <CurrencySelect value={currency} onChange={onChangeCurrency} />
-          </div>
-          {Feedback('price')}
-          <div className="help-text price">
-            Price is always an approximation of what you will receive. Learn
-            more.
-          </div>
-        </div>
+        {children}
         <div className="form-group accepted-currencies">
           <label className="mb-0">Accepted Cryptocurrencies</label>
           <div className="help-text price mt-0">

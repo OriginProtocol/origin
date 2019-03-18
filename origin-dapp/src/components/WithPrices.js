@@ -35,8 +35,8 @@ const WithPrices = ({
     hasBalance = true
     hasAllowance = true
   } else if (target) {
-    const targetBalance = get(results, `${target}.currency.balance`, '0')
-    const targetAllowance = get(results, `${target}.currency.allowance`, '0')
+    const targetBalance = get(results, `${target}.currency.balance`) || '0'
+    const targetAllowance = get(results, `${target}.currency.allowance`) || '0'
     const amountBN = web3.utils.toBN(web3.utils.toWei(amount, 'ether'))
 
     const availableBalance = web3.utils.toBN(targetBalance)

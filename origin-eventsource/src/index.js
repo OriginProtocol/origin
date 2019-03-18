@@ -170,6 +170,10 @@ class OriginEventSource {
       mutatePrice(data.price)
     }
 
+    if (data.weekendPrice) {
+      mutatePrice(data.weekendPrice)
+    }
+
     if (data.category) {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }

@@ -59,6 +59,7 @@ class Availability extends Component {
                   availability={this.state.calculator}
                   onChange={state => this.setState(state)}
                   showBooked={true}
+                  currency={this.props.listing.currency}
                 />
 
                 <div className="actions">

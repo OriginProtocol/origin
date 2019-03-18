@@ -4,7 +4,7 @@ import AvailabilityCalculator from 'origin-graphql/src/utils/AvailabilityCalcula
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import CoinPrice from 'components/CoinPrice'
 import Calendar from 'components/Calendar'
 import Category from 'components/Category'
@@ -45,19 +45,25 @@ class Review extends Component {
             <div className="row">
               <div className="col-3 label">Weekdays</div>
               <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.price,
+                    currency: listing.currency
+                  }}
+                />
               </div>
             </div>
             <div className="row">
               <div className="col-3 label">Weekends</div>
               <div className="col-9">
-                <CoinPrice price={listing.weekendPrice} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.weekendPrice} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.weekendPrice,
+                    currency: listing.currency
+                  }}
+                />
               </div>
             </div>
             <div className="row">
@@ -91,6 +97,7 @@ class Review extends Component {
                 <Calendar
                   interactive={false}
                   small={true}
+                  currency={listing.currency}
                   availability={
                     new AvailabilityCalculator({
                       weekdayPrice: listing.price,

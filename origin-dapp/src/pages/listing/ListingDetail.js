@@ -106,6 +106,7 @@ class ListingDetail extends Component {
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availability}
+              currency={listing.price.currency}
             />
             <div className="availability-help">
               * Click and drag to select a date range

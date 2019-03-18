@@ -6,6 +6,7 @@ import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -75,13 +76,22 @@ class Details extends Component {
                   {Feedback('quantity')}
                 </div>
 
-                <PricingChooser
-                  {...{ input, isMulti, Feedback }}
-                  value={this.state.acceptedTokens}
-                  onChange={acceptedTokens => this.setState({ acceptedTokens })}
-                  currency={this.state.currency}
-                  onChangeCurrency={currency => this.setState({ currency })}
-                />
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>{`Listing Price${
+                      isMulti ? ' (per unit)' : ''
+                    }`}</label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
+                    </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      Price is always an approximation of what you will receive.
+                      Learn more.
+                    </div>
+                  </div>
+                </PricingChooser>
 
                 {/* END Unit specific code */}
 

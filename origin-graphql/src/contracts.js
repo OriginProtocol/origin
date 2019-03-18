@@ -160,7 +160,16 @@ const Configs = {
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
     linkerWS: `ws://${LINKER_HOST}:3008`,
-    DaiExchange: '0x634c52030Bba48949f7463f129Da74eCe7234761'
+    DaiExchange: '0x634c52030Bba48949f7463f129Da74eCe7234761',
+    tokens: [
+      {
+        id: '0xE8c39eb64789c72A1fa3C2a9E75c84E4016c493f',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ]
   },
   truffle: {
     provider: `http://${HOST}:8545`,

@@ -8,6 +8,17 @@ const CurrencySelect = ({ value, onChange }) => {
   if (!CurrenciesByKey[value]) {
     value = Currencies[0][0]
   }
+  if (!onChange) {
+    return (
+      <div className="currency-select-dropdown usd">
+        <span
+          data-content={CurrenciesByKey[value][2]}
+        >
+          {CurrenciesByKey[value][1]}
+        </span>
+      </div>
+    )
+  }
   return (
     <Dropdown
       className="currency-select-dropdown usd"

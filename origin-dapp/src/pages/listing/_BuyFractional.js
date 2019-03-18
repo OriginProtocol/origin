@@ -51,7 +51,11 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
       {!totalPrice ? null : (
         <div className="total">
           <span>Total Price</span>
-          <span>{`${totalPrice} ETH`}</span>
+          <span>
+            <Price
+              price={{ amount: totalPrice, currency: listing.price.currency }}
+            />
+          </span>
         </div>
       )}
       <Buy

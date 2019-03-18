@@ -4,9 +4,10 @@ import omit from 'lodash/omit'
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-import Price from 'components/Price'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import PricingChooser from '../_PricingChooser'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -67,57 +68,31 @@ class Details extends Component {
 
                 {/* BEGIN Homeshare specific code */}
 
-                <div className="form-group">
-                  <label>
-                    Default Weekday Pricing (Sunday - Thursday nights)
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>
+                      Default Weekday Pricing (Sunday - Thursday nights)
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      Price is always in ETH, USD is an estimate.
                     </div>
                   </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    Price is always in ETH, USD is an estimate.
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>
-                    Default Weekend Pricing (Friday &amp; Saturday nights)
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('weekendPrice')} />
-                        <span className="eth">ETH</span>
-                      </div>
+                  <div className="form-group">
+                    <label>
+                      Default Weekend Pricing (Friday &amp; Saturday nights)
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('weekendPrice')} />
+                      <CurrencySelect value={this.state.currency} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.weekendPrice}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
-                    </div>
+                    {Feedback('weekendPrice')}
                   </div>
-                  {Feedback('weekendPrice')}
-                </div>
+                </PricingChooser>
 
                 {/* END Homeshare specific code */}
 
