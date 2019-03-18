@@ -120,8 +120,8 @@ class AvailabilityCalculatorHourly {
   }
 
   estimatePrice(range) {
-    // TODO
-    const [startStr, endStr] = range.split('/')
+    // Estimate price for range, including the hour of range end.
+    let [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
     const available = availability.every(slot => slot.unavailable === false)
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
@@ -129,7 +129,7 @@ class AvailabilityCalculatorHourly {
   }
 
   getAvailability(startStr, endStr) {
-    // Get hourly availabilty between startStr and endStr
+    // Get hourly availabilty between startStr and endStr, including the hour of endStr
     let start = typeof startStr === 'string' ? dayjs(startStr) : startStr
     // We add one hour so that `end` hour will also be included
     let end =

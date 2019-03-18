@@ -224,7 +224,7 @@ class WeekCalendar extends Component {
     }
     if (hour.unavailable || hour.booked) {
       cls += ' unavailable'
-    } else if (hour.nonWorkingHour) {
+    } else if (hour.nonWorkingHour && !hour.customPrice) {
       cls += ' nonWorkingHour'
     }
 

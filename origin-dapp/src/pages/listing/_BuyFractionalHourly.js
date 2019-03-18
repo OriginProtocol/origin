@@ -21,7 +21,7 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
     endDate = split[1]
     startDateDisplay = dayjs(startDate).format('MMM D h:00a')
     endDateDisplay = dayjs(endDate).format('MMM D h:00a')
-    const priceEstimate = availability.estimatePrice(range)
+    const priceEstimate = availability.estimatePrice(`${startDate}/${dayjs(endDate).add(-1,'hour').format('YYYY-MM-DDTHH:00:00')}`)
     available = priceEstimate.available
     if (available) {
       totalPrice = String(priceEstimate.price)
