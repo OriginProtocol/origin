@@ -1,3 +1,4 @@
+{{- if ne .Release.Namespace "prod" -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -30,3 +31,4 @@ spec:
           backend:
             serviceName: {{ template "admin.fullname" . }}
             servicePort: 80
+{{- end -}}
