@@ -6,7 +6,11 @@ import AccountTokenBalance from 'queries/TokenBalance'
 
 function withTokenBalance(WrappedComponent) {
   const WithTokenBalance = ({ wallet, token = 'OGN', ...props }) => (
-    <Query query={AccountTokenBalance} variables={{ account: wallet, token }}>
+    <Query
+      query={AccountTokenBalance}
+      variables={{ account: wallet, token }}
+      skip={!wallet}
+    >
       {({ data }) => (
         <WrappedComponent {...props} tokenBalance={tokenBalance(data)} />
       )}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -59,7 +60,7 @@ class EmailAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.log('Error', errorData)
+          console.eror('Error', errorData)
           this.setState({ error: 'Check console' })
         }}
       >
@@ -93,8 +94,10 @@ class EmailAttestation extends Component {
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
             <div className="help">
-              Other users will know that you have a verified email address. Your
-              actual email will not be published on the blockchain.
+              <fbt desc="Attestation.emailPublishClarification">
+                By verifying your email, you give Origin permission to send you
+                occasional emails such as notifications about your transactions.
+              </fbt>
             </div>
             <div className="actions">
               <button
@@ -132,7 +135,7 @@ class EmailAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.log('Error', errorData)
+          console.error('Error', errorData)
           this.setState({ error: 'Check console', loading: false })
         }}
       >

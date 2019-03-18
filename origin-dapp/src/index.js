@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
   try {
     require('../public/app.css')
   } catch (e) {
-    console.log('No built CSS found')
+    console.warn('No built CSS found')
   }
 }
 

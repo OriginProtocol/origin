@@ -69,7 +69,7 @@ class WaitForTransaction extends Component {
 
           let content
           if (error) {
-            console.log(error)
+            console.error(error)
             content = (
               <div className="make-offer-modal">
                 <div className="spinner light" />
