@@ -1,4 +1,4 @@
-// Script to create campaign in production.
+// Script to create campaigns in production.
 
 const BigNumber = require('bignumber.js')
 
@@ -11,7 +11,7 @@ function tokenNaturalUnits(x) {
     .toFixed()
 }
 
-const marchRules = {
+const aprRules = {
   numLevels: 3,
   levels: {
     0: {
@@ -191,8 +191,8 @@ const marchRules = {
   }
 }
 
-async function createProdMarchCampaign() {
-  console.log('Creating March campaign data in prod...')
+async function createAprilProdCampaign() {
+  console.log('Creating April campaign data in prod...')
 
   /* IMPORTANT when adding new translatable fields update the enums document:
    * origin-dapp/src/constants/Growth$FbtEnum.js
@@ -200,7 +200,7 @@ async function createProdMarchCampaign() {
   await db.GrowthCampaign.create({
     nameKey: 'growth.apr2019.name',
     shortNameKey: 'growth.apr2019.short_name',
-    rules: JSON.stringify(marchRules),
+    rules: JSON.stringify(aprRules),
     startDate: Date.parse('March 18, 2019, 00:00 UTC'),
     endDate: Date.parse('Apr 31, 2019, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2019, 00:00 UTC'),
@@ -211,7 +211,7 @@ async function createProdMarchCampaign() {
   })
 }
 
-createProdMarchCampaign().then(() => {
+createAprilProdCampaign().then(() => {
   console.log('Done')
   process.exit()
 })
