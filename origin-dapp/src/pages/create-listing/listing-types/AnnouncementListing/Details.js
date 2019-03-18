@@ -139,7 +139,6 @@ class Details extends Component {
     } else if (this.props.onChange) {
       this.props.onChange(this.state)
     }
-
     this.setState(newState)
     return newState.valid
   }

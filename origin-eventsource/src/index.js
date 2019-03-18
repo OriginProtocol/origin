@@ -97,7 +97,9 @@ class OriginEventSource {
         'weekendPrice',
         'booked',
         'unavailable',
-        'customPricing'
+        'customPricing',
+        'timeZone',
+        'workingHours'
       )
       data.valid = true
 
