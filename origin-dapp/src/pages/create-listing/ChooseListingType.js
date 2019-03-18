@@ -148,16 +148,25 @@ class ChooseListingType extends Component {
     let __typename = 'UnitListing'
     if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
+      // } else if (
+      //   category === 'schema.forRent' &&
+      //   nightlyFractional.includes(subCategory)
+      // ) {
+      //   __typename = 'FractionalListing'
+      // } else if (
+      //   category === 'schema.forRent' &&
+      //   hourlyFractional.includes(subCategory)
+      // ) {
+      //   __typename = 'FractionalHourlyListing'
+      // }
+
+      // TODO(Stan) : Once Eventlister is updated to recognize Dapp2-style
+      // fractional listings, remove this `if()` below, and un-comment lines above.
     } else if (
       category === 'schema.forRent' &&
-      nightlyFractional.includes(subCategory)
+      subcategory === 'schema.housing'
     ) {
       __typename = 'FractionalListing'
-    } else if (
-      category === 'schema.forRent' &&
-      hourlyFractional.includes(subCategory)
-    ) {
-      __typename = 'FractionalHourlyListing'
     }
 
     if (!newState.valid) {
