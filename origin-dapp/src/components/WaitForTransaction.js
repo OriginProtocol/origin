@@ -85,9 +85,9 @@ class WaitForTransaction extends Component {
                 <div>
                   <b>
                     Waiting on the blockchain.
-                    <br />
-                    This might take a minute.
                   </b>
+                  <br />
+                  This might take a minute.
                 </div>
               </div>
             )
@@ -98,9 +98,9 @@ class WaitForTransaction extends Component {
                 <div>
                   <b>
                     Waiting for confirmation.
-                    <br />
-                    This might take a minute.
                   </b>
+                  <br />
+                  This might take a minute.
                 </div>
               </div>
             )
