@@ -3,7 +3,7 @@ const logger = require('./logger')
 
 const { bytes32ToIpfsHash } = require('./utils')
 const _bridgeModels = require('@origin/bridge/src/models')
-const _identityModels = require('@origin/dentity/src/models')
+const _identityModels = require('@origin/identity/src/models')
 const _discoveryModels = require('../models')
 const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
 
