@@ -31,10 +31,11 @@ secrets.yaml
 secrets-dev.yaml
 secrets-staging.yaml
 secrets-prod.yaml
+github.key
 
 # Development #
 ###############
-/development/.ipfs
+/devops/.ipfs
 
 # origin-bridge #
 #################
@@ -61,12 +62,11 @@ secrets-prod.yaml
 
 # origin-js #
 #############
-
-/origin-js/dist
-/origin-js/connect.lock
-/origin-js/libpeerconnection.log
-/origin-js/testem.log
-/origin-js/typings
+/packages/origin-js/dist
+/packages/origin-js/connect.lock
+/packages/origin-js/libpeerconnection.log
+/packages/origin-js/testem.log
+/packages/origin-js/typings
 
 # infra/linking #
 ####################
@@ -127,5 +127,5 @@ Thumbs.db
 
 !packages/contracts/releases/**/*
 
-# Redis? #
+# Redis #
 *dump.rdb
