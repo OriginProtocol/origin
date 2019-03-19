@@ -8,10 +8,6 @@ bridgeImageTag: 'ed37ae1'
 dappImage: origin-dapp
 dappImageTag: 'd89bbcb'
 
-# ipfs
-ipfsImage: ipfs/go-ipfs
-ipfsImageTag: master
-
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'ed37ae1'
