@@ -26,7 +26,7 @@ const requireEnrolledUser = context => {
 const resolvers = {
   /* TODO:
    * Use this pagination helpers when implementing pagination:
-   * https://github.com/OriginProtocol/origin/blob/master/origin-graphql/src/resolvers/_pagination.js
+   * https://github.com/OriginProtocol/origin/blob/master/packages/graphql/src/resolvers/_pagination.js
    */
   //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,

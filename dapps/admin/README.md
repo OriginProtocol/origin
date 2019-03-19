@@ -1,6 +1,6 @@
 ![Origin Protocol](data/origin-header.png)
 
-A UI leveraging origin-graphql. View and manage listings and offers.
+A UI leveraging `@origin/graphql`. View and manage listings and offers.
 
 Demo at https://www.originadm.in
 
@@ -26,4 +26,4 @@ num run clean
 
 ### The UI is stuck on "loading..."
 
-Clear your browser's local storage for `origin-admin`. This seems to correlate with resetting your blockchain or re-populating your contracts.
+Clear your browser's local storage for `@origin/admin`. This seems to correlate with resetting your blockchain or re-populating your contracts.

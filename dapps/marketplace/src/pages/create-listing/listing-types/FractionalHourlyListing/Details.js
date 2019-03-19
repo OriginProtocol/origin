@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import omit from 'lodash/omit'
 
-import IannaTimeZones from 'origin-graphql/src/constants/IannaTimeZones'
+import IannaTimeZones from '@origin/graphql/src/constants/IannaTimeZones'
 
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'

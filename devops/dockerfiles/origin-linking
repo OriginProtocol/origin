@@ -21,11 +21,11 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
+COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
 
 RUN npm run build --prefix packages/origin-js
-RUN npm run build --prefix linking
+RUN npm run build --prefix infra/linking
 
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix linking && \
-	npm run start --prefix linking
+	npm run migrate --prefix infra/linking && \
+	npm run start --prefix infra/linking
