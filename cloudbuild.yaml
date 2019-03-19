@@ -172,4 +172,5 @@ steps:
           -f devops/kubernetes/values/origin/secrets-$(cat .namespace).yaml
 
 timeout: '3600s'
-machineType: 'N1_HIGHCPU_32'
+options:
+  machineType: 'N1_HIGHCPU_32'
