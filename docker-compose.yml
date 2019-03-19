@@ -96,6 +96,9 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
     ports:
       - "9012:9012"
       - "6647:6647"
