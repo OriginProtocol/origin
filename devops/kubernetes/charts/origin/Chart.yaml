@@ -4,4 +4,4 @@ version: 0.1.1
 home: https://github.com/OriginProtocol
 icon: https://www.originprotocol.com/static/img/favicon/apple-touch-icon.png
 sources:
-  - https://github.com/OriginProtocol/origin/deployment/kubernetes/charts/origin
+  - https://github.com/OriginProtocol/origin/devops/kubernetes/charts/origin
