@@ -25,6 +25,14 @@ services:
     logging:
       driver: none
 
+  redis:
+    container_name: redis
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
   services:
     container_name: services
     image: origin
@@ -34,18 +42,15 @@ services:
     volumes: &volumes
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
-      # contracts build directory, the DApp will run a contract deploy
-      # and the contract address here, and other services will then parse these
-      # build files to extract contract addresses
       - ./packages/contracts/build:/app/packages/contracts/build
-      # Packages that are dependencies
+      # Core packages
       - ./packages/services/:/app/packages/services/
-      - ./packages/graphql/:/app/pcakages/graphql/
+      - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
       - ./packages/linker-client/:/app/packages/linker-client/
-      - ./pacakges/validator:/app/packages/validator/
+      - ./packages/validator:/app/packages/validator/
       - ./packages/token/:/app/packages/token/
       # Infrastructure packages
       - ./infra/bridge/:/app/infra/bridge/
@@ -88,6 +93,8 @@ services:
     container_name: messaging
     image: origin
     volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
     ports:
       - "9012:9012"
       - "6647:6647"
@@ -166,7 +173,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      node ./discovery/devops/es-cli.js createIndex listings &&
+      node infra/discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix infra/discovery"
 
   notifications:
@@ -196,7 +203,7 @@ services:
       - postgres
     ports:
       - "4001:4001"
-    command: npm run start --prefix growth
+    command: npm run start --prefix infra/growth
 
   bridge:
     container_name: bridge
@@ -225,3 +232,19 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/bridge &&
       npm run start --prefix infra/bridge"
+
+  linking:
+    container_name: linking
+    image: origin
+    volumes: *volumes
+    environment:
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ENVKEY=
+    depends_on:
+      - postgres
+      - redis
+    command:
+      >
+      /bin/bash 0c "wait for.sh -t 0 -q postgres:5432 --
+      npm run migrate --prefix infra/linking &&
+      npm run start --prefix infra/linking"
