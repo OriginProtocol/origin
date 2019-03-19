@@ -38,15 +38,15 @@ RUN eval $(envkey-source) && npm run build --prefix dapps/marketplace
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds
 FROM build as build-dev
-RUN mv /app/dapp/public/origin.html /app/dapp/public/index.html
+RUN mv /app/dapps/marketplace/public/origin.html /app/dapps/marketplace/public/index.html
 FROM build as build-staging
-RUN mv /app/dapp/public/rinkeby.html /app/dapp/public/index.html
+RUN mv /app/dapps/marketplace/public/rinkeby.html /app/dapps/marketplace/public/index.html
 FROM build as build-prod
-RUN mv /app/dapp/public/mainnet.html /app/dapp/public/index.html
+RUN mv /app/dapps/marketplace/public/mainnet.html /app/dapps/marketplace/public/index.html
 FROM build-${NAMESPACE} AS build-complete
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build-complete /app/dapp/public /usr/share/nginx/html
+COPY --from=build-complete /app/dapps/marketplace/public /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

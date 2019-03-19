@@ -1,6 +1,6 @@
 ---
 steps:
-  - id: 'Configure devops namespace'
+  - id: 'Configure deployment namespace'
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
@@ -20,7 +20,7 @@ steps:
         esac
 
   # Add encrypted secrets and private code
-  - id: 'Decrypt secrets required for Kubernetes devops'
+  - id: 'Decrypt secrets required for Kubernetes deployment'
     name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'sh'
     args:
@@ -124,7 +124,7 @@ steps:
           --quiet
 
   # Commit devops tags
-  - id: 'Push deploiyment tags to GitHub'
+  - id: 'Push deployment tags to GitHub'
     name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
     args:
