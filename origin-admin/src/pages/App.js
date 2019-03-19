@@ -27,7 +27,7 @@ require('@blueprintjs/datetime/lib/css/blueprint-datetime.css')
 require('graphiql/graphiql.css')
 
 if (process.env.NODE_ENV === 'production') {
-  require('../../public/css/app.css')
+  require('../../public/app.css')
 }
 
 const Link = props => (
