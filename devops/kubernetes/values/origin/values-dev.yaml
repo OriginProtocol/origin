@@ -34,7 +34,7 @@ growthImageTag: 'ed37ae1'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '4681717'
+messagingImageTag: 'ed37ae1'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -46,7 +46,7 @@ creatorClientImageTag: '6e34804'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'd94b81c'
+creatorServerImageTag: 'ed37ae1'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -59,8 +59,8 @@ linkingImageTag: '2328b60'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '6a6147d'
+cronImageTag: 'ed37ae1'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '4999e14'
+adminImageTag: 'ed37ae1'
