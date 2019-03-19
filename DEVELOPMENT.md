@@ -17,10 +17,10 @@ git clone https://github.com/OriginProtocol/origin
 cd origin && npm install
 ```
 
-2. You can then start the DApp using:
+2. You can then start the marketplace DApp using:
 
 ```
-cd dapp && npm start
+npm start
 ```
 
 This will start a `webpack-dev-server` with hot reloading on `http://localhost:3000.`. When you open it you should see the message `No marketplace contract?`.
@@ -41,7 +41,7 @@ Then open your browser to `http://localhost:3001` and:
 
 ### Network selection
 
-You can also change the Ethereum network being used by the `marketplace` DApp by appending a network name to the URL.
+You can also change the Ethereum network being used by the marketplace DApp by appending a network name to the URL.
 
 - http://localhost:3000/docker - Local Ganache and services run by Docker Compose (see below for further instructions)
 
@@ -74,19 +74,19 @@ There is a Docker Compose configuration available for running a variety of backe
 ```
 - elasticsearch on http://localhost:9200
 - postgresql
-- services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
-- bridge on http://localhost:5000
-- discovery
-- marketplace on http://localhost:3000
-- event-listener
-- discovery (apollo server on http://localhost:4000)
-- growth (apollo server on http://localhost:4001)
-- ipfs-proxy on http://localhost:9999
-- messaging on http://localhost:9012
-- notifications on http://localhost:3456)
+- @origin/services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
+- @origin/bridge on http://localhost:5000
+- @origin/discovery
+- @origin/marketplace on http://localhost:3000
+- @origin/discovery (event-listener)
+- @origin/discovery (apollo server on http://localhost:4000)
+- @origin/growth (apollo server on http://localhost:4001)
+- @origin/ipfs-proxy on http://localhost:9999
+- @origin/messaging on http://localhost:9012
+- @origin/notifications on http://localhost:3456)
 ```
 
-⚠️  If you want to run the Docker Compose setup ensure that both `dapp` and `@origin/admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
+⚠️  If you want to run the Docker Compose setup ensure that both `@origin/marketplace` and `@origin/admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
 
 ### System Requirements
 
