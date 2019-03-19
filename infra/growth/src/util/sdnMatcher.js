@@ -53,6 +53,9 @@ class SdnMatcher {
       if (!cells || cells.length < 2) {
         continue
       }
+      if (cells[2] !== 'individual') {
+        continue
+      }
       const values = cells[1].split(',').map(s => s.toLowerCase().trim())
       const firstName = values[0]
       const lastName = values[1]
