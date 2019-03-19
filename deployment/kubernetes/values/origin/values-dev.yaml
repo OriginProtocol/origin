@@ -6,7 +6,7 @@ bridgeImageTag: '7263add'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '99cc08e'
+dappImageTag: '49ce34b'
 
 # ipfs
 ipfsImage: ipfs/go-ipfs
@@ -30,7 +30,7 @@ discoveryImageTag: '3e74bbf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'cc3a2eb'
+growthImageTag: '6806657'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -60,3 +60,7 @@ linkingImageTag: '2328b60'
 # origin-cron
 cronImage: origin-cron
 cronImageTag: '6a6147d'
+
+# origin-admin
+adminImage: origin-admin
+adminImageTag: 'latest'

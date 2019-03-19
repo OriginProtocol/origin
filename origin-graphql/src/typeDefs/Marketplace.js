@@ -261,7 +261,20 @@ module.exports = `
     ${ListingInterface}
 
     # IPFS
+    timeZone: String
+    workingHours: [String]
     weekendPrice: Price
+    unavailable: [String]
+    customPricing: [String]
+    booked: [String]
+  }
+
+  type FractionalHourlyListing implements Listing {
+    ${ListingInterface}
+
+    # IPFS
+    timeZone: String
+    workingHours: [String]
     unavailable: [String]
     customPricing: [String]
     booked: [String]
@@ -271,7 +284,7 @@ module.exports = `
     ${ListingInterface}
   }
 
-  union ListingResult = UnitListing | FractionalListing | AnnouncementListing
+  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing
 
   type Media {
     url: String
@@ -377,6 +390,8 @@ module.exports = `
 
   input FractionalListingInput {
     weekendPrice: PriceInput
+    workingHours: [String]
+    timeZone: String
     unavailable: [String]
     customPricing: [String]
     booked: [String]

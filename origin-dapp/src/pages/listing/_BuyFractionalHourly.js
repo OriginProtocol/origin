@@ -1,14 +1,14 @@
 import React from 'react'
 import dayjs from 'dayjs'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
 
 import Buy from './mutations/Buy'
 
-const Fractional = ({ listing, from, range, availability, refetch }) => {
-  let startDateDisplay = 'Check in',
-    endDateDisplay = 'Check out',
+const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
+  let startDateDisplay = 'Start',
+    endDateDisplay = 'End',
     startDate = null,
     endDate = null,
     totalPrice,
@@ -19,9 +19,13 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('ddd, MMM D')
-    endDateDisplay = dayjs(endDate).format('ddd, MMM D')
-    const priceEstimate = availability.estimatePrice(range)
+    startDateDisplay = dayjs(startDate).format('MMM D h:00a')
+    endDateDisplay = dayjs(endDate).format('MMM D h:00a')
+    const priceEstimate = availability.estimatePrice(
+      `${startDate}/${dayjs(endDate)
+        .add(-1, 'hour')
+        .format('YYYY-MM-DDTHH:00:00')}`
+    )
     available = priceEstimate.available
     if (available) {
       totalPrice = String(priceEstimate.price)
@@ -33,8 +37,10 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   return (
     <div className="listing-buy fractional">
       <div className="price">
-        <Price price={listing.price} />
-        <span className="desc">/ night</span>
+        <div className="eth">{`${listing.price.amount} ETH / hour`}</div>
+        <div className="usd">
+          <Price amount={listing.price.amount} />
+        </div>
       </div>
       <div className="choose-dates form-control">
         <Tooltip
@@ -55,11 +61,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
       {!totalPrice ? null : (
         <div className="total">
           <span>Total Price</span>
-          <span>
-            <Price
-              price={{ amount: totalPrice, currency: listing.price.currency }}
-            />
-          </span>
+          <span>{`${totalPrice} ETH`}</span>
         </div>
       )}
       <Buy
@@ -78,4 +80,4 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   )
 }
 
-export default Fractional
+export default FractionalHourly

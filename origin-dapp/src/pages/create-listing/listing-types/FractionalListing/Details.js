@@ -196,6 +196,7 @@ class Details extends Component {
 }
 
 export default Details
+<<<<<<< HEAD
 
 require('react-styl')(`
   .create-listing .create-listing-step-2
@@ -349,3 +350,5 @@ require('react-styl')(`
             color: var(--steel);
 
 `)
+=======
+>>>>>>> master

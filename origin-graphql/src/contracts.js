@@ -33,6 +33,8 @@ if (typeof window !== 'undefined') {
 
 const Configs = {
   mainnet: {
+    // provider:
+    //   'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
     provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
     // providerWS: 'wss://mainnet.infura.io/ws',
     ipfsGateway: 'https://ipfs.originprotocol.com',
@@ -84,7 +86,9 @@ const Configs = {
     linkerWS: `wss://linking.originprotocol.com`
   },
   rinkeby: {
-    provider: 'https://rinkeby.infura.io',
+    provider:
+      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+    // provider: 'https://rinkeby.infura.io',
     // providerWS: 'wss://rinkeby.infura.io/ws',
     ipfsGateway: 'https://ipfs.staging.originprotocol.com',
     ipfsRPC: `https://ipfs.staging.originprotocol.com`,

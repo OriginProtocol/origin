@@ -261,7 +261,10 @@ class Buy extends Component {
       quantity: Number(quantity)
     }
 
-    if (listing.__typename === 'FractionalListing') {
+    if (
+      listing.__typename === 'FractionalListing' ||
+      listing.__typename === 'FractionalHourlyListing'
+    ) {
       variables.fractionalData = { startDate, endDate }
     }
     makeOffer({ variables })

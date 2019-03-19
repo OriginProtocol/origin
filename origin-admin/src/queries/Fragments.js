@@ -78,6 +78,8 @@ export default {
               }
             }
           }
+          timeZone
+          workingHours
           booked
           customPricing
           unavailable

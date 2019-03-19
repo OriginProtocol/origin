@@ -114,6 +114,8 @@ const GetListing = gql`
               }
             }
           }
+          timeZone
+          workingHours
           booked
           customPricing
           unavailable
