@@ -55,6 +55,7 @@ steps:
         cd origin-docs
         bundle install
         bundle exec jekyll build
+        cp CNAME _site/CNAME
 
   - id: 'Push to GitHub'
     name: 'gcr.io/cloud-builders/git'
