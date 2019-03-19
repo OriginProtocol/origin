@@ -6,7 +6,7 @@ const deployContracts = () => {
       'truffle',
       ['migrate', '--reset'],
       {
-        cwd: '../origin-contracts',
+        cwd: '../contracts',
         stdio: 'inherit',
         env: process.env
       }
