@@ -120,7 +120,10 @@ class Calendar extends Component {
     }
 
     let content = (
-      <Price price={{ amount: day.price, currency: this.props.currency }} />
+      <Price
+        price={{ amount: day.price, currency: this.props.currency }}
+        target={this.props.originalCurrency ? this.props.currency : null}
+      />
     )
     if (day.booked && this.props.showBooked) {
       content = 'Booked'

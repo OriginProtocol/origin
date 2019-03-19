@@ -49,6 +49,10 @@ import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
 import linkMobileWallet from './walletLinker/linkMobileWallet'
 
 import swapToToken from './uniswap/swapToToken'
+import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
+import uniswapDeployExchangeTemplate from './uniswap/uniswapDeployExchangeTemplate'
+import uniswapInitializeFactory from './uniswap/uniswapInitializeFactory'
+import uniswapCreateExchange from './uniswap/uniswapCreateExchange'
 
 export default {
   acceptOffer,
@@ -83,6 +87,10 @@ export default {
   swapToToken,
   toggleMetaMask,
   transferToken,
+  uniswapCreateExchange,
+  uniswapDeployFactory,
+  uniswapDeployExchangeTemplate,
+  uniswapInitializeFactory,
   unlinkMobileWallet,
   updateListing,
   updateRefund,

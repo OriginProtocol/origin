@@ -430,12 +430,15 @@ require('react-styl')(`
 
   .with-symbol
     position: relative
+`)
+
+ /*
+  .with-symbol
     &.corner::before
       content: '';
       position: absolute;
       left: -8px;
       top: 50%;
-      transform: translateY(-50%);
       width: 0;
       height: 0;
       border-top: 9px solid transparent;
@@ -446,7 +449,6 @@ require('react-styl')(`
       position: absolute;
       left: -6px;
       top: 50%;
-      transform: translateY(-50%);
       width: 0;
       height: 0;
       border-top: 7px solid transparent;
@@ -457,7 +459,6 @@ require('react-styl')(`
       position: absolute;
       right: 10px;
       top: 50%;
-      transform: translateY(-50%)
       padding: 4px 12px 4px 12px;
       border-radius: 16px;
       background: var(--pale-grey);
@@ -495,4 +496,4 @@ require('react-styl')(`
         &::before
           content: "$"
           margin-right: 0.25rem
-`)
+*/

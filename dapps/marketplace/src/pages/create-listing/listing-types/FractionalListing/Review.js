@@ -98,6 +98,7 @@ class Review extends Component {
                   interactive={false}
                   small={true}
                   currency={listing.currency}
+                  originalCurrency
                   availability={
                     new AvailabilityCalculator({
                       weekdayPrice: listing.price,

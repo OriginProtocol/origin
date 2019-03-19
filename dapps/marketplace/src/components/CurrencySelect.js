@@ -44,6 +44,7 @@ const CurrencySelect = ({ value, onChange }) => {
       onClose={() => setOpen(false)}
     >
       <span
+        className="hover"
         data-content={CurrenciesByKey[value][2]}
         onClick={e => {
           e.preventDefault()
@@ -61,12 +62,9 @@ export default CurrencySelect
 
 require('react-styl')(`
   .currency-select-dropdown
-    z-index: 1
-    cursor: pointer
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%)
+    top: 12px;
     font-weight: bold;
     font-size: 14px;
     span
@@ -100,9 +98,9 @@ require('react-styl')(`
           top: -3px;
           // background color
           border-top-color: var(--pale-grey);
-      &:hover i:before
+      &.hover:hover i:before
         border-top-color: var(--pale-grey)
-      &:hover i:after
+      &.hover:hover i:after
         border-top-color: var(--steel)
 
       &::before
@@ -117,7 +115,8 @@ require('react-styl')(`
         text-align: center;
         font-weight: bold;
         font-size: 14px;
-      &:hover
+      &.hover:hover
+        cursor: pointer
         background-color: var(--steel);
         color: var(--white)
         &::before

@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import Modal from 'components/Modal'
 
 const UserDenied = /denied transaction signature/
+const IncorrectNonce = /tx doesn't have the correct nonce/
 
 class CannotTransact extends Component {
   state = {}
@@ -29,6 +30,8 @@ class CannotTransact extends Component {
     } else if (reason === 'mutation') {
       if (get(this.props, 'data.message', '').match(UserDenied)) {
         reason = 'You declined to sign the transaction'
+      } else if (get(this.props, 'data.message', '').match(IncorrectNonce)) {
+        reason = 'Incorrect nonce. Try resetting MetaMask.'
       } else {
         reason = (
           <div onClick={() => alert(this.props.data)}>

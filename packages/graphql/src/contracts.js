@@ -2,7 +2,7 @@ import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketpla
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
-import UniswapExchange from './contracts/UniswapExchange'
+import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
@@ -164,16 +164,7 @@ const Configs = {
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
     linkerWS: `ws://${LINKER_HOST}:3008`,
-    DaiExchange: '0x634c52030Bba48949f7463f129Da74eCe7234761',
-    tokens: [
-      {
-        id: '0xE8c39eb64789c72A1fa3C2a9E75c84E4016c493f',
-        type: 'Standard',
-        name: 'DAI Stablecoin',
-        symbol: 'DAI',
-        decimals: '18'
-      }
-    ]
+    DaiExchange: '0x6a2c6b4b58D15f099321457fFdd33c5c2Ba0D9cf'
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -440,13 +431,14 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
+  context.uniswapFactory = new web3.eth.Contract(factoryAbi)
   if (config.DaiExchange) {
-    const contract = new web3.eth.Contract(UniswapExchange, config.DaiExchange)
+    const contract = new web3.eth.Contract(exchangeAbi, config.DaiExchange)
     context.daiExchange = contract
     context.daiExchangeExec = contract
     if (metaMask) {
       context.daiExchangeMM = new metaMask.eth.Contract(
-        UniswapExchange,
+        exchangeAbi,
         config.DaiExchange
       )
       if (metaMaskEnabled) {
