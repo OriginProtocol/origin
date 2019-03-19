@@ -73,7 +73,7 @@
     "eslint": "^5.15.1",
     "eth-gas-reporter": "^0.1.12",
     "fetch-mock": "^7.2.5",
-    "ganache-core": "^2.5.3",
+    "ganache-core": "2.2.0",
     "html-webpack-plugin": "^3.2.0",
     "ipfs": "^0.34.4",
     "ipfs-api": "^26.1.2",
