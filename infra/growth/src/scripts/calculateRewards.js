@@ -168,7 +168,7 @@ class CalculateRewards {
         }
 
         // Check the user's name against the black list.
-        if (this._matchBlackList(ethAddress)) {
+        if (await this._matchBlackList(ethAddress)) {
           await this._banParticipant(ethAddress, 'Blacklist match')
           logger.info(`Banned participant ${ethAddress} - Skipping.`)
           continue
