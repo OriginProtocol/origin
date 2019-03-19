@@ -18,7 +18,7 @@
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "dependencies": {
-    "ganache-core": "2.4.0",
+    "ganache-core": "^2.5.3",
     "ipfs-api": "^26.1.2",
     "ipfs": "^0.34.4",
     "memdown": "^3.0.0"
