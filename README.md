@@ -16,7 +16,7 @@ Ready to get started? Have a look at our [developer quickstart](DEVELOPMENT.md) 
 
 ## This repository
 
-This repository is a monorepo containing many npm packages.
+This repository is a monorepo containing many [npm packages](https://www.npmjs.com/). It is managed using [Lerna.](https://github.com/lerna/lerna)
 
 ### Core packages
 
@@ -26,7 +26,7 @@ These packages are used to build DApps on Origin.
 |---------|-------------|
 | [`@origin/contracts`](/packages/contracts) | Smart contracts|
 | [`@origin/eventsource`](/packages/eventsource) | Derives current state of listings and offers from contract events |
-| [`@origin/graphql`](/packages/graphql) | |
+| [`@origin/graphql`](/packages/graphql) | GraphQL interface to Origin Protocol |
 | [`@origin/ipfs`](/packages/ipfs) | Convenience methods for getting and setting data in IPFS |
 | [`@origin/linker-client`](/packages/linker-client) | Client for mobile linking |
 | [`@origin/messaging-client`](/packages/messaging-client) | Client for Origin messaging|
