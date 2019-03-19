@@ -5,7 +5,8 @@ matrix:
   include:
     - name: "@origin/graphql unit tests"
       language: node_js
-      node_js: 10 install:
+      node_js: 10
+      install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/linker-client --scope @origin/graphql
       script:
