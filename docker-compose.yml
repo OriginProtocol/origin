@@ -60,6 +60,7 @@ services:
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
+      - ./infra/linking/:/app/infra/linking/
       # Exclude all node_modules from the host
       - /app/packages/services/node_modules/
       - /app/packages/graphql/node_modules/
@@ -76,6 +77,7 @@ services:
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
+      - /app/infra/linking/node_modules/
       # IPFS data
       - ipfs:/app/ipfs
     ports:

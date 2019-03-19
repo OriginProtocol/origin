@@ -26,6 +26,7 @@ COPY ./infra/tests/package.json ./infra/tests/
 COPY ./infra/growth/package.json ./infra/growth/
 COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
+COPY ./infra/linking/package.json ./infra/linking/
 COPY ./scripts/ ./scripts/
 
 # Complete contracts source needs to be available so that `truffle compile contracts`
