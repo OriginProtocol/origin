@@ -432,7 +432,7 @@ require('react-styl')(`
     position: relative
 `)
 
- /*
+/*
   .with-symbol
     &.corner::before
       content: '';

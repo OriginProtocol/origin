@@ -144,7 +144,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: ZeroAddress,
           value: '0.005',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 1
         },
@@ -171,7 +171,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: ZeroAddress,
           value: '0.01',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 1
         },
@@ -316,7 +316,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: Affiliate,
           value: '0.1',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 1
         },
@@ -365,7 +365,7 @@ describe('Marketplace', function() {
           title: 'Multi-unit listing',
           description: 'Test description',
           price: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.01'
           },
           category: 'Test category',
@@ -392,7 +392,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: Affiliate,
           value: '0.01',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 1
         },
@@ -414,7 +414,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: Affiliate,
           value: '0.01',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 1
         },
@@ -463,7 +463,7 @@ describe('Marketplace', function() {
           finalizes: 123,
           affiliate: Affiliate,
           value: '0.02',
-          currency: ZeroAddress,
+          currency: 'token-ETH',
           arbitrator: Arbitrator,
           quantity: 2
         },
@@ -648,7 +648,7 @@ describe('Marketplace', function() {
             finalizes: 123,
             affiliate: Affiliate,
             value: '0.05',
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             arbitrator: Arbitrator,
             quantity: 5
           },
@@ -682,7 +682,7 @@ describe('Marketplace', function() {
           title: 'Home share listing',
           description: 'Test description',
           price: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.01'
           },
           category: 'Test category',
@@ -692,7 +692,7 @@ describe('Marketplace', function() {
         },
         fractionalData: {
           weekendPrice: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.02'
           }
         }
@@ -720,7 +720,7 @@ describe('Marketplace', function() {
           title: 'Test Listing',
           description: 'Test description',
           price: {
-            currency: ZeroAddress,
+            currency: 'token-ETH',
             amount: '0.01'
           },
           category: 'Test category',
@@ -746,7 +746,7 @@ describe('Marketplace', function() {
         finalizes: 123,
         affiliate: ZeroAddress,
         value: '0.01',
-        currency: ZeroAddress,
+        currency: 'token-ETH',
         arbitrator: Arbitrator,
         quantity: 1
       }

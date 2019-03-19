@@ -480,7 +480,7 @@ class OriginEventSource {
       return
     }
 
-    if (listing.__typename === 'UnitListing') {
+    if (_get(listing, 'price.currency.id') !== 'token-ETH') {
       return
     }
 

@@ -17,7 +17,7 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
     from,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {
-      console.log('Deployed marketplace to', receipt.contractAddress)
+      // console.log('Deployed marketplace to', receipt.contractAddress)
       if (typeof window !== 'undefined') {
         window.localStorage.marketplaceContract = receipt.contractAddress
       }
