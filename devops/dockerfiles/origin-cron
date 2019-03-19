@@ -22,4 +22,4 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-CMD npm run start --prefix cron
+CMD npm run start --prefix infra/cron

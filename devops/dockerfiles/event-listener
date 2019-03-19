@@ -32,7 +32,8 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
+# Copy release contracts into build directory overwriting existing built
+COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
 
 # Build js so it is available for the event-listener to import
 RUN npm run build --prefix packages/origin-js

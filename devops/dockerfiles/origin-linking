@@ -15,8 +15,8 @@ RUN mv envkey-source /usr/local/bin
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/origin-js ./packages/origin-js
-COPY ./linking ./linking
 COPY ./packages/contracts ./packages/contracts
+COPY ./infra/linking ./infra/linking
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm

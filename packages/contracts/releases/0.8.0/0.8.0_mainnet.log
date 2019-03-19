@@ -1,0 +1,122 @@
+Configured truffle to use PrivateKey provider for Mainnet.
+Using network 'mainnet'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0x611b74e9a8b1a456988a302385b991fcaeda4e059839166f21188d090b9a5d54
+  Migrations: 0x4b37bc487a0e0bbb044378765c014fd51f1bf9c6
+Saving successful migration to network...
+  ... 0x37e8a54c2c5c47f998c35c1a8f15904fdca3eb26371edb3b508d37bf70024228
+Saving artifacts...
+Running migration: 2_deploy_marketplace_contracts.js
+  Running step...
+  Deploying OriginToken...
+  ... 0xef0ed82932246d9971678709f3d0c52a00e27ab08b31f8716c48e9ea8db060bc
+  OriginToken: 0x980cb2cbeb59ca1fcd52be5e51770133abf0dee4
+  Deploying V00_Marketplace...
+  ... 0x73729688df399af09cc9e728bda55e7fa88e7768588e0800427da11eaf930640
+  V00_Marketplace: 0xd8f3398cea0b1876ad50dcc92e3fbdb4eda67945
+  ... 0xaceaf483d63641203da2cdb9dff1137025e26d1195cc298597421544deee6ca3
+Saving successful migration to network...
+  ... 0xc4e61ab184509019b34ea29171a1504d8df116c18aad379b962cb1af86d6d5d5
+Saving artifacts...
+Running migration: 3_create_sample_listings.js
+  Running step...
+Skipping sample listings creation on mainnet
+Saving successful migration to network...
+  ... 0x7eef5f72a63937eb7c6662bcc25f290c69230ebed55c204d4d2ad5a3c770e378
+Saving artifacts...
+Running migration: 4_deploy_identity_contracts.js
+  Running step...
+  Deploying V00_UserRegistry...
+  ... 0xd84b90f4268fcf00ac01341a9b5435afc4f2092c53135832cc76d7458afac796
+  V00_UserRegistry: 0x8bf121c1cba7096d505e9726abae34414e0e0a36
+  Deploying KeyHolderLibrary...
+  ... 0x0ec79929308f7facdcba230cd860dd3e0ab1555b77327d8dff85c8ffb7fbcdd9
+  KeyHolderLibrary: 0x4a0cb29bed18a9fdcd296ef1bbf0a9e908452b94
+  Linking KeyHolderLibrary to KeyHolder
+  Linking KeyHolderLibrary to ClaimHolderLibrary
+  Deploying ClaimHolderLibrary...
+  ... 0x8611294fd1025004eb0663d421c22c5d67d229bdb122b52458aa6c7fd1962d00
+  ClaimHolderLibrary: 0x9d09d9353bd7d76d4bf116a83d54a3f81f74df1d
+  Linking ClaimHolderLibrary to ClaimHolder
+  Linking KeyHolderLibrary to ClaimHolder
+  Linking ClaimHolderLibrary to ClaimHolderRegistered
+  Linking KeyHolderLibrary to ClaimHolderRegistered
+  Linking ClaimHolderLibrary to ClaimHolderPresigned
+  Linking KeyHolderLibrary to ClaimHolderPresigned
+  Linking ClaimHolderLibrary to OriginIdentity
+  Linking KeyHolderLibrary to OriginIdentity
+  Deploying OriginIdentity...
+  ... 0xe50af899a715565d6b6b4e53ce21b1a74e6cbff858b8b9a2e0f3261418de8b3f
+  OriginIdentity: 0x2e648e88d13694c2b8f0de909f66342096282561
+Saving successful migration to network...
+  ... 0x6d92b1a8cf60c7e793b8795ad13b7addebb5b2d8697010ee7f502bd5ec0ef70e
+Saving artifacts...
+Running migration: 5_create_sample_issuers.js
+  Running step...
+  ... 0x00542ffdb5e3e1ad79d3fdbd05042608faa3cb2e930be03da2220799fd443e37
+Saving successful migration to network...
+  ... 0x560b2b0be8639abca6f89c92a94affe21c824c9e743f542b8cb714df55e059d9
+Saving artifacts...
+Running migration: 6_transfer_tokens_for_dev.js
+  Running step...
+Skipping
+Saving successful migration to network...
+  ... 0x8fc17707c13dd5cc876ccf82de24a615276161c41a06056181b6d0ecc45a1a6b
+Saving artifacts...
+Running migration: 7_create_token_whitelist.js
+Saving successful migration to network...
+  ... 0xef86249c391bc9ccdb17d222083ab8440d07a48d4e63cbe16ce1461d9bed0b91
+  ... 0x6db82c2e83033fed1c65efe4a2c9f9bb7a929fa790ba475309cdd94c698c9ada
+Saving artifacts...
+Running migration: 8_whitelist_affiliate.js
+  Running step...
+whitelisting affiliate 0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8
+  ... 0x0665defb59cb9c58679375009aebef6e6a96153a096cb39e7669827cfc1818b5
+Added token contract owner 0xaed9fdc9681d61edb5f8b8e421f5cee8d7f4b04f to whitelist
+  ... 0x4d6310e788bcb9cc870bbf546f35e87a40022312acc1b78401ed73e93839ca63
+Saving successful migration to network...
+  ... 0x820315ac3517c75d8f1ed01006f05904da2bab3cb93118cfa9f8ab346d146903
+Added marketplace 0xd8f3398cea0b1876ad50dcc92e3fbdb4eda67945 to whitelist
+  ... 0x5207e73acafe13a7d795b2b4d3bfd2aaef14d0e0d6cb4b87c8a2128816adad51
+Saving artifacts...
+Running migration: 9_transfer_ownership_and_tokens_for_mainnet.js
+  Running step...
+  ... 0xdc2c9e5b84bd4ad50fa3bab59b0adff3004835ee0317aead9c11d7150b761119
+Added address 0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8 to whitelist
+  ... 0x4719711099d2faa867195079a6c7368c3dbd10d355b0c24da3c3d40453f97658
+transferred 1000000000 OGN to 0xe011fa2a6df98c69383457d87a056ed0103aa352
+  ... 0xcb9506b946453f6f862bb1512871ba296df105b5715c9fb33508aa0fef8081ef
+Added address 0xe011fa2a6df98c69383457d87a056ed0103aa352 to whitelist
+  ... 0x6a9054a493ab30fa5c256bc666c01f95a917b621cb1e20ae05992dc0e05cc990
+Enabled token whitelist, expiring at UNIX timestamp 1551340800
+  ... 0x1cb71b3770a8bfb022e6f10d89102e9ca73bd4eead2d308cecf63bbcacfcf082
+token contract owner set to 0xe011fa2a6df98c69383457d87a056ed0103aa352
+  ... 0x376ff4826c46ac7a4369fb15003077b0f24ef411c1fa57aafb29b3c84934a617
+marketplace contract owner set to 0x8a1a4f77f9f0eb35fb9930696038be6220986c1b
+Saving successful migration to network...
+  ... 0x14cb01e16bdfd899f83ac668dcff446af3b5e96a66fee549960d2e7c4668a527
+Saving artifacts...
+Running migration: 10_verify_mainnet.js
+  Running step...
+Validating token contract
+  * name: pass
+  * decimals: pass
+  * symbol: pass
+  * owner: pass
+  * not paused: pass
+  * marketplace whitelisted for approveAndCallWithSender: pass
+  * old owner not allowed to transfer tokens: pass
+  * marketplace allowed to transfer tokens: pass
+  * multi-sig allowed to transfer tokens: pass
+  * other wallet allowed to transfer tokens: pass
+  * whitelist expires on 2/28/2019: pass
+Validating marketplace contract
+  * marketplace tokenAddr points to OriginToken: pass
+  * marketplace contract owned by multi-sig: pass
+  * marketplace affiliate whitelist enabled: pass
+  * marketplace affiliate address is whitelisted: pass
+Saving successful migration to network...
+  ... 0x64bb1d0494b9c153200ad2e1f38a082b9d83a0ba037d1ef9a5bb1a77001548a5
+Saving artifacts...

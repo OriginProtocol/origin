@@ -29,5 +29,5 @@ RUN npm install --unsafe-perm
 
 # Run migrations then start the growth server.
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix growth && \
-	npm run start --prefix growth
+	npm run migrate --prefix infra/growth && \
+	npm run start --prefix infra/growth

@@ -20,7 +20,7 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
+COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/faucet && \
