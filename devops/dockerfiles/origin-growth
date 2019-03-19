@@ -1,0 +1,33 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Install envkey-source to make environment available for sequelize migration
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/graphql ./packages/graphql
+COPY ./packages/ipfs ./packages/ipfs
+COPY ./packages/linker-client ./packages/linker-client
+COPY ./packages/messaging-client ./packages/messaging-client
+COPY ./packages/services ./packages/services
+COPY ./packages/validator ./packages/validator
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/token ./packages/token
+COPY ./infra/growth ./infra/growth
+COPY ./infra/identity ./infra/identity
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+# Run migrations then start the growth server.
+CMD eval $(envkey-source) && \
+	npm run migrate --prefix growth && \
+	npm run start --prefix growth
