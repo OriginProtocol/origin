@@ -25,8 +25,8 @@ services:
     logging:
       driver: none
 
-  redis:
-    container_name: redis
+  redis-master:
+    container_name: redis-master
     image: 'bitnami/redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
@@ -97,10 +97,10 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://redis-master:6379
     depends_on:
       - postgres
-      - redis
+      - redis-master
     ports:
       - "9012:9012"
       - "6647:6647"
@@ -244,12 +244,17 @@ services:
     image: origin
     volumes: *volumes
     environment:
+      - HOT_WALLET_PK=C87509A1C067BBDE78BEB793E6FA76530B6382A4C0241E5E4A9EC0A0F44DC0D3
+      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+      - DAPP_URL=http://localhost:3000
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - REDIS_URL=redis://redis:6379
+      - DISCOVERY_SERVER_URL=http://localhost:4000
+      - PROVIDER_URL=http://localhost:8545
+      - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
     depends_on:
       - postgres
-      - redis
+      - redis-master
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
