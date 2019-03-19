@@ -17,13 +17,15 @@ import apn from 'apn'
 import * as firebase from 'firebase-admin' // AKA "admin"
 
 const ATTESTATION_ACCOUNT = process.env.ATTESTATION_ACCOUNT
-const DAPP_URL = url.resolve(process.env.DAPP_URL, '/#/')
-const MESSAGING_URL = url.resolve(
-  DAPP_URL,
-  '/#/messages?no-nav=true&skip-onboarding=true&wallet-container='
-)
-const PROFILE_URL = url.resolve(DAPP_URL, '/#/profile')
-const SELLING_URL = url.resolve(DAPP_URL, '/#/create')
+const DAPP_URL = `${process.env.DAPP_URL}#`
+
+/*
+ * Deprecated but needed to support older versions of Origin Wallet
+ */
+const MESSAGING_URL = `${DAPP_URL}/messages`
+const PROFILE_URL = `${DAPP_URL}/profile`
+const SELLING_URL = `${DAPP_URL}/create`
+
 const CODE_EXPIRATION_TIME_MINUTES = 60
 const CODE_SIZE = 16
 
