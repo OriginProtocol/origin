@@ -1,0 +1,173 @@
+{
+  "author": "Nick Poulden <nick@originprotocol.com>",
+  "name": "@origin/admin",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Origin Admin page",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin"
+  },
+  "scripts": {
+    "test": "mocha -r @babel/register test -t 10000",
+    "test:watch": "mocha -r @babel/register -w --watch-extensions sol -t 5000 test",
+    "start": "node -r @babel/register index",
+    "build:js": "NODE_ENV=production webpack --loglevel notice",
+    "build:css": "node scripts/getCss > public/app.css",
+    "build": "npm run build:css && npm run build:js",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "clean": "rm -rf data/db && rm -rf data/ipfs && rm -rf data/geth",
+    "geth": "geth --nodiscover --datadir ./data/geth --maxpeers 0 --dev --rpc --ws --wsorigins=* --rpccorsdomain=* --rpcaddr=0.0.0.0 --wsaddr=0.0.0.0 --rpcvhosts=*"
+  },
+  "dependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@blueprintjs/core": "^3.14.1",
+    "@blueprintjs/datetime": "^3.7.2",
+    "@blueprintjs/select": "^3.7.0",
+    "@blueprintjs/table": "^3.4.1",
+    "@origin/contracts": "^0.8.6",
+    "@origin/graphql": "^0.1.0",
+    "@origin/services": "^0.1.0",
+    "apollo-link": "^1.2.11",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "body-parser": "^1.18.3",
+    "bs58": "^4.0.1",
+    "date-fns": "^1.30.1",
+    "express": "^4.16.4",
+    "graphiql": "^0.13.0",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "ipfs-api": "^26.1.2",
+    "node-fetch": "^2.3.0",
+    "prettier": "^1.16.4",
+    "qrcode.react": "^0.9.3",
+    "react": "^16.8.4",
+    "react-apollo": "^2.5.2",
+    "react-dom": "^16.8.4",
+    "react-styl": "^0.0.3",
+    "serve-static": "^1.13.2",
+    "web3": "1.0.0-beta.34"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "module-resolver",
+        {
+          "alias": {
+            "actions": "./src/actions",
+            "components": "./src/components",
+            "constants": "./src/constants",
+            "contracts": "./src/contracts",
+            "pages": "./src/pages",
+            "reducers": "./src/reducers",
+            "utils": "./src/utils",
+            "hoc": "./src/hoc",
+            "queries": "./src/queries"
+          }
+        }
+      ],
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
+    "@babel/plugin-transform-destructuring": "^7.3.2",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/runtime": "^7.3.4",
+    "apollo-client": "^2.5.1",
+    "apollo-server": "^2.4.8",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "bip39": "^2.5.0",
+    "clean-webpack-plugin": "^2.0.1",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.15.2",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-react": "^7.12.4",
+    "file-loader": "^3.0.1",
+    "hdkey": "^1.1.1",
+    "html-webpack-plugin": "^3.2.0",
+    "ignore-loader": "^0.1.2",
+    "ipfs": "^0.34.4",
+    "mini-css-extract-plugin": "^0.5.0",
+    "opener": "^1.5.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "react-router": "^4.4.0",
+    "react-router-dom": "^4.4.0",
+    "style-loader": "0.23.1",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-middleware": "^3.6.1",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "impliedStrict": true,
+        "legacyDecorators": true
+      }
+    },
+    "globals": {
+      "Web3": true,
+      "web3": true,
+      "openpgp": true
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "mocha": true
+    },
+    "plugins": [
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "react/prop-types": "off",
+      "react/no-children-prop": "off",
+      "no-console": "off"
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "public"
+  ]
+}

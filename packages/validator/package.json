@@ -1,0 +1,25 @@
+{
+  "name": "@origin/validator",
+  "version": "0.1.0",
+  "description": "Origin Schema Validator",
+  "author": "Nick Poulden <nick@poulden.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "ajv": "^6.10.0",
+    "eslint": "^5.15.2",
+    "prettier": "^1.16.4"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

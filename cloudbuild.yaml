@@ -1,0 +1,176 @@
+---
+steps:
+  - id: 'Configure deployment namespace'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        # Write namespace to file for future usage
+        case "$BRANCH_NAME" in
+          master)
+            echo "dev" > .namespace
+            ;;
+          staging)
+            echo "staging" > .namespace
+            ;;
+          stable)
+            echo "prod" > .namespace
+            ;;
+        esac
+
+  # Add encrypted secrets and private code
+  - id: 'Decrypt secrets required for Kubernetes deployment'
+    name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        _VALUES_PATH=./devops/kubernetes/values/origin
+        gcloud kms decrypt \
+          --ciphertext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).enc \
+          --plaintext-file=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml \
+          --location=global \
+          --keyring=origin \
+          --key=cloudbuild
+        # Checkout private fraud code if deploying origin-growth
+        if [ "${_CONTAINER}" = "origin-cron" ]; then
+          echo "Cloning origin-fraud"
+          gcloud source repos clone origin-fraud --project=origin-214503
+          mv ./origin-fraud/prod.js ./origin-growth/src/fraud/
+          rm -rf origin-fraud
+        fi
+
+  # Decrypt the file containing the SSH key for GitHub
+  - id: 'Decrypt secrets required for GitHub push'
+    name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=./devops/github.enc
+      - --plaintext-file=/root/.ssh/id_rsa
+      - --location=global
+      - --keyring=origin
+      - --key=cloudbuild
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  # Set up git with key and domain
+  - id: 'Configure for GitHub'
+    name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+        cat <<EOF >> /root/.ssh/config
+        Hostname github.com
+        IdentityFile /root/.ssh/id_rsa
+        EOF
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  # Build the container image
+  - id: 'Build the container image'
+    name: 'gcr.io/cloud-builders/docker'
+    # Must use bash here due to if statement/string cmp
+    entrypoint: '/bin/bash'
+    args:
+      - '-c'
+      - |
+        _VALUES_PATH=./devops/kubernetes/values/origin
+        _SECRETS_FILE=$${_VALUES_PATH}/secrets-$(cat .namespace).yaml
+
+        # Set the EnvKey for the Docker container if substitution set
+        if [[ "${_ENVKEY_FIELD}" != "" ]]; then
+          _ENVKEY=$(cat $${_SECRETS_FILE} | grep ${_ENVKEY_FIELD} | cut -d " " -f 2)
+        else
+          _ENVKEY=false
+        fi
+
+        # Build container
+        docker build \
+          -f devops/dockerfiles/${_CONTAINER} \
+          -t gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
+          --build-arg GIT_COMMIT_HASH=${SHORT_SHA} \
+          --build-arg GIT_BRANCH=${BRANCH_NAME} \
+          --build-arg ENVKEY=$${_ENVKEY} \
+          --build-arg NAMESPACE=$(cat .namespace) \
+          .
+
+  # Push the container image
+  - id: 'Push the container image to GCR'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        docker push \
+          gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA}
+
+  # Add latest tag to the container
+  - id: 'Add `latest` tag to pushed container image'
+    name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        gcloud container images add-tag \
+          gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:${SHORT_SHA} \
+          gcr.io/${PROJECT_ID}/$(cat .namespace)/${_CONTAINER}:latest \
+          --quiet
+
+  # Commit devops tags
+  - id: 'Push deployment tags to GitHub'
+    name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        git config --global user.name "OriginCI"
+        git config --global user.email "support@originprotocol.com"
+
+        git remote add upstream git@github.com:OriginProtocol/origin.git
+        git pull upstream ${BRANCH_NAME}
+        git checkout ${BRANCH_NAME}
+
+        sed -i \
+          "s|^${_IMAGE_TAG_FIELD}: .*|${_IMAGE_TAG_FIELD}: '${SHORT_SHA}'|g" \
+          devops/kubernetes/values/origin/values-$(cat .namespace).yaml
+
+        git add devops/kubernetes/values/origin/values-$(cat .namespace).yaml
+        git commit -m 'Update deployed image tag for ${_CONTAINER} [ci skip]'
+        git push upstream ${BRANCH_NAME}
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  # Generate a kubeconfig file for the given GKE cluster and upgrade with Helm
+  - id: 'Update Kubernetes using Helm'
+    name: 'gcr.io/$PROJECT_ID/helm'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=origin'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        CLUSTER=$$(gcloud config get-value container/cluster)
+        PROJECT=$$(gcloud config get-value core/project)
+        ZONE=$$(gcloud config get-value compute/zone)
+
+        gcloud container clusters get-credentials "$${CLUSTER}" \
+          --project "$${PROJECT}" \
+          --zone "$${ZONE}"
+
+        helm upgrade $(cat .namespace) devops/kubernetes/charts/origin \
+          -f devops/kubernetes/charts/origin/values.yaml \
+          -f devops/kubernetes/values/origin/values-$(cat .namespace).yaml \
+          -f devops/kubernetes/values/origin/secrets-$(cat .namespace).yaml
+
+timeout: '3600s'
+options:
+  machineType: 'N1_HIGHCPU_32'

@@ -25,85 +25,87 @@ services:
     logging:
       driver: none
 
-  origin-services:
-    container_name: origin-services
+  services:
+    container_name: services
     image: origin
     build:
       context: .
       dockerfile: Dockerfile
     volumes: &volumes
-      # origin-contracts build directory, the DApp will run a contract deploy
-      # and the contract address here, and other services will then parse these
-      # build files to extract contract addresses
-      - ./origin-contracts/build:/app/origin-contracts/build
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
-      - ./origin-services/:/app/origin-services/
-      - ./origin-graphql/:/app/origin-graphql/
-      - ./origin-eventsource/:/app/origin-eventsource/
-      - ./origin-ipfs/:/app/origin-ipfs/
-      - ./origin-messaging-client/:/app/origin-messaging-client/
-      - ./origin-linker-client/:/app/origin-linker-client/
-      - ./origin-validator:/app/origin-validator/
-      - ./origin-bridge/:/app/origin-bridge/
-      - ./origin-discovery/:/app/origin-discovery/
-      - ./origin-ipfs-proxy/:/app/origin-ipfs-proxy/
-      - ./origin-messaging/:/app/origin-messaging/
-      - ./origin-notifications/:/app/origin-notifications/
-      - ./origin-growth/:/app/origin-growth/
-      - ./origin-identity/:/app/origin-identity/
-      - ./origin-token/:/app/origin-token/
-      # Exclude all node_modules
-      - /app/origin-services/node_modules/
-      - /app/origin-graphql/node_modules/
-      - /app/origin-eventsource/node_modules/
-      - /app/origin-ipfs/node_modules/
-      - /app/origin-messaging-client/node_modules/
-      - /app/origin-linker-client/node_modules/
-      - /app/origin-validator/node_modules/
-      - /app/origin-bridge/node_modules/
-      - /app/origin-discovery/node_modules/
-      - /app/origin-ipfs-proxy/node_modules/
-      - /app/origin-messaging/node_modules/
-      - /app/origin-notifications/node_modules/
-      - /app/origin-growth/node_modules/
-      - /app/origin-token/node_modules/
-      - /app/origin-identity/node_modules/
+      # contracts build directory, the DApp will run a contract deploy
+      # and the contract address here, and other services will then parse these
+      # build files to extract contract addresses
+      - ./packages/contracts/build:/app/packages/contracts/build
+      # Packages that are dependencies
+      - ./packages/services/:/app/packages/services/
+      - ./packages/graphql/:/app/pcakages/graphql/
+      - ./packages/eventsource/:/app/packages/eventsource/
+      - ./packages/ipfs/:/app/packages/ipfs/
+      - ./packages/messaging-client/:/app/packages/messaging-client/
+      - ./packages/linker-client/:/app/packages/linker-client/
+      - ./pacakges/validator:/app/packages/validator/
+      - ./packages/token/:/app/packages/token/
+      # Infrastructure packages
+      - ./infra/bridge/:/app/infra/bridge/
+      - ./infra/discovery/:/app/infra/discovery/
+      - ./infra/ipfs-proxy/:/app/infra/ipfs-proxy/
+      - ./infra/messaging/:/app/infra/messaging/
+      - ./infra/notifications/:/app/infra/notifications/
+      - ./infra/growth/:/app/infra/growth/
+      - ./infra/identity/:/app/infra/identity/
+      # Exclude all node_modules from the host
+      - /app/packages/services/node_modules/
+      - /app/packages/graphql/node_modules/
+      - /app/packages/eventsource/node_modules/
+      - /app/packages/ipfs/node_modules/
+      - /app/packages/messaging-client/node_modules/
+      - /app/packages/linker-client/node_modules/
+      - /app/packages/validator/node_modules/
+      - /app/packages/token/node_modules/
+      - /app/infra/bridge/node_modules/
+      - /app/infra/discovery/node_modules/
+      - /app/infra/ipfs-proxy/node_modules/
+      - /app/infra/messaging/node_modules/
+      - /app/infra/notifications/node_modules/
+      - /app/infra/growth/node_modules/
+      - /app/infra/identity/node_modules/
       # IPFS data
       - ipfs:/app/ipfs
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
-      # interacted with via origin-ipfs-proxy
+      # interacted with via ipfs-proxy
       - "5002:5002"
       - "8080:8080"
       - "8545:8545"
     environment:
       - DOCKER=true
       - DEPLOY_CONTRACTS=true
-    command: npm run start --prefix origin-services
+    command: npm run start --prefix packages/services
 
-  origin-messaging:
-    container_name: origin-messaging
+  messaging:
+    container_name: messaging
     image: origin
     volumes: *volumes
     ports:
       - "9012:9012"
       - "6647:6647"
-    command: npm run start --prefix origin-messaging
+    command: npm run start --prefix infra/messaging
 
-  origin-ipfs-proxy:
-    container_name: origin-ipfs-proxy
+  ipfs-proxy:
+    container_name: ipfs-proxy
     image: origin
     volumes: *volumes
     ports:
       - "9999:9999"
     environment:
-      - IPFS_API_URL=http://origin-services:5002
-      - IPFS_GATEWAY_URL=http://origin-services:8080
-    command: npm run start --prefix origin-ipfs-proxy
+      - IPFS_API_URL=http://services:5002
+      - IPFS_GATEWAY_URL=http://services:8080
+    command: npm run start --prefix infra/ipfs-proxy
 
-  origin-event-listener:
-    container_name: origin-event-listener
+  event-listener:
+    container_name: event-listener
     image: origin
     volumes: *volumes
     environment:
@@ -122,25 +124,25 @@ services:
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
-      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - IPFS_URL=http://ipfs-proxy:9999
       - TRAIL_BEHIND_BLOCKS=
-      - WEB3_URL=http://origin-services:8545
+      - WEB3_URL=http://services:8545
       - WEBHOOK=
     depends_on:
       - postgres
       - elasticsearch
-      - origin-services
+      - services
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q origin-services:8080 --
-      npm run migrate --prefix origin-discovery &&
-      npm run migrate --prefix origin-growth &&
-      npm run migrate --prefix origin-identity &&
-      npm run start:listener --prefix origin-discovery"
+      wait-for.sh -t 0 -q services:8080 --
+      npm run migrate --prefix infra/discovery &&
+      npm run migrate --prefix infra/growth &&
+      npm run migrate --prefix infra/identity &&
+      npm run start:listener --prefix infra/discovery"
 
-  origin-discovery:
-    container_name: origin-discovery
+  discovery:
+    container_name: discovery
     image: origin
     volumes: *volumes
     environment:
@@ -152,9 +154,9 @@ services:
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
-      - IPFS_URL=http://origin-ipfs-proxy:9999
+      - IPFS_URL=http://ipfs-proxy:9999
       - NETWORK_ID=999
-      - WEB3_URL=http://origin-services:8545
+      - WEB3_URL=http://services:8545
       - ENVKEY=
     depends_on:
       - postgres
@@ -164,11 +166,11 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      node ./origin-discovery/devops/es-cli.js createIndex listings &&
-      npm run start:discovery --prefix origin-discovery"
+      node ./discovery/devops/es-cli.js createIndex listings &&
+      npm run start:discovery --prefix infra/discovery"
 
-  origin-notifications:
-    container_name: origin-notifications
+  notifications:
+    container_name: notifications
     image: origin
     volumes: *volumes
     depends_on:
@@ -180,11 +182,11 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix origin-notifications &&
-      npm run start --prefix origin-notifications"
+      npm run migrate --prefix infra/notifications &&
+      npm run start --prefix infra/notifications"
 
-  origin-growth:
-    container_name: origin-growth
+  growth:
+    container_name: growth
     image: origin
     volumes: *volumes
     environment:
@@ -194,10 +196,10 @@ services:
       - postgres
     ports:
       - "4001:4001"
-    command: npm run start --prefix origin-growth
+    command: npm run start --prefix growth
 
-  origin-bridge:
-    container_name: origin-bridge
+  bridge:
+    container_name: bridge
     image: origin
     volumes: *volumes
     environment:
@@ -221,5 +223,5 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix origin-bridge &&
-      npm run start --prefix origin-bridge"
+      npm run migrate --prefix infra/bridge &&
+      npm run start --prefix infra/bridge"

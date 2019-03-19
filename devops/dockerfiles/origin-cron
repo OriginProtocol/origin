@@ -1,0 +1,25 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/graphql ./packages/graphql
+COPY ./packages/ipfs ./packages/ipfs
+COPY ./packages/linker-client ./packages/linker-client
+COPY ./packages/messaging-client ./packages/messaging-client
+COPY ./packages/services ./packages/services
+COPY ./packages/validator ./packages/validator
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/token ./packages/token
+COPY ./infra/cron ./infra/cron
+COPY ./infra/growth ./infra/growth
+COPY ./infra/identity ./infra/identity
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+CMD npm run start --prefix infra/cron
