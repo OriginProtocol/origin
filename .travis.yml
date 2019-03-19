@@ -3,15 +3,6 @@ git:
   depth: 6
 matrix:
   include:
-    - name: "@origin/graphql unit tests"
-      language: node_js
-      node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/linker-client --scope @origin/graphql
-      script:
-        - npm run test --prefix packages/graphql
-
     # Run integration tests using docker compose
     # - name: "integration tests"
     #   language: minimal
@@ -36,6 +27,15 @@ matrix:
         - npm install --loglevel notice --dev-only --ignore-scripts
       script:
         - npm run lint
+
+    - name: "@origin/graphql unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/linker-client --scope @origin/graphql
+      script:
+        - npm run test --prefix packages/graphql
 
     - name: "@origin/bridge unit tests"
       language: node_js
@@ -124,7 +124,7 @@ matrix:
       script:
         - npm run test --prefix infra/notifications
 
-    # - name: "origin-token-transfer unit tests"
+    # - name: "@origin/token-transfer-* unit tests"
     #  language: node_js
     #  node_js: 10
     #  install:
