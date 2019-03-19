@@ -13,6 +13,7 @@ const Token = require('@origin/token/src/token')
 const enums = require('../enums')
 const db = require('../models')
 const { CampaignRules } = require('../resources/rules')
+const { SdnMatcher } = require('../util/sdnMatcher')
 const parseArgv = require('../util/args')
 
 // We allow a campaign to go a bit over budget since the capUsed field
@@ -30,6 +31,7 @@ class CalculateRewards {
       numCampaigns: 0,
       calcGrandTotal: BigNumber(0)
     }
+    this.sdnMatcher = new SdnMatcher()
   }
 
   async _getParticipants(campaign) {
@@ -44,13 +46,28 @@ class CalculateRewards {
     return participants
   }
 
-  _matchBlackList(ethAddress) {
-    // TODO(franck): IMPLEMENT ME
-    //  - load user's profile
-    //  - load SDN list
-    //  - check user's lastname/firstname against list
-    logger.debug(`Checked ${ethAddress} against blacklist.`)
-    return false
+  /**
+   * Returns true if the identity associated with the ethAddress tests positive
+   * against the SDN blacklist.
+   *
+   * @param ethAddress
+   * @returns {Promise<boolean>}
+   * @private
+   */
+  async _matchBlackList(ethAddress) {
+    const identity = db.Identity.findOne({ where: { ethAddress } })
+    if (!identity) {
+      return false
+    }
+    const match = this.sdnMatcher.match(identity.firstName, identity.lastName)
+    if (match) {
+      logger.info(
+        `${ethAddress} checked positive against SDN blacklist for name ${
+          identity.firstName
+        } ${identity.lastName}.`
+      )
+    }
+    return match
   }
 
   // TODO: Consider flagging the user in the identity table.
