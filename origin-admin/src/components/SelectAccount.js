@@ -43,7 +43,7 @@ class SelectAccount extends Component {
             </optgroup>
           ))
           let disabled = false
-          if (data.web3.useMetaMask && data.web3.metaMaskAccount) {
+          if (data.web3.metaMaskAccount) {
             const acct = data.web3.metaMaskAccount
             disabled = true
             options.unshift(

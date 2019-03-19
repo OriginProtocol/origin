@@ -14,7 +14,7 @@
     "test:watch": "mocha -r @babel/register -w --watch-extensions sol -t 5000 test",
     "start": "node -r @babel/register index",
     "build:js": "NODE_ENV=production webpack --progress",
-    "build:css": "node scripts/getCss > public/css/app.css",
+    "build:css": "node scripts/getCss > public/app.css",
     "build": "npm run build:css && npm run build:js",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
