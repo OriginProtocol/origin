@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.13.0",
+    "eslint": "^5.15.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7"
   },

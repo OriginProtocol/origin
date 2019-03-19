@@ -45,7 +45,7 @@
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
-    "prettier": "^1.16.3",
+    "prettier": "^1.16.4",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
     "sinon": "^7.1.1",
@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.13.0",
+    "eslint": "^5.15.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7",
     "supertest": "^3.3.0"
