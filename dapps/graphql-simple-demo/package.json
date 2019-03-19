@@ -27,7 +27,7 @@
     "@babel/plugin-external-helpers": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
     "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.3.1",
@@ -36,11 +36,11 @@
     "babel-loader": "^8.0.5",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "react": "^16.8.1",
+    "react": "^16.8.4",
     "react-apollo": "^2.4.1",
     "react-dom": "^16.8.1",
-    "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14"
   },
   "babel": {

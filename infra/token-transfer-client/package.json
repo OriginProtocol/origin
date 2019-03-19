@@ -5,7 +5,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.13.0",
     "moment": "^2.22.2",
-    "react": "^16.8.1",
+    "react": "^16.8.4",
     "react-dom": "^16.8.1",
     "react-google-login": "^4.0.0",
     "react-redux": "^5.0.7",

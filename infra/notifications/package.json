@@ -26,7 +26,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "cross-fetch": "^3.0.0",
+    "cross-fetch": "^3.0.1",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
