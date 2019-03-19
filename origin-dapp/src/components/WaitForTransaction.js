@@ -84,7 +84,7 @@ class WaitForTransaction extends Component {
                 <div className="spinner light" />
                 <div>
                   <b>
-                    Waiting on the blockchain.
+                    Writing to the blockchain.
                   </b>
                   <br />
                   This might take a minute.
