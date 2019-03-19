@@ -34,7 +34,7 @@ class Footer extends Component {
             )}
           </div>
           <div className="links">
-            <LocaleDropdown locale={locale} onLocale={onLocale} dropup={true} />
+            <LocaleDropdown locale={locale} onLocale={onLocale} dropup={true} className={"dropdown-toggle"} />
 
             <a href="https://www.originprotocol.com/">
               <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
