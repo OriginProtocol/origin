@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import get from 'lodash/get'
 
 import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price2'
@@ -58,7 +59,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               refetch={refetch}
               listing={listing}
               from={from}
-              value={prices[token].amount}
+              value={get(prices, `${token}.amount`)}
               quantity={quantity}
               currency={token}
               tokenStatus={tokenStatus}
