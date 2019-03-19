@@ -6,7 +6,12 @@ import ImageCropper from 'components/ImageCropperModal'
 import loadImage from 'blueimp-load-image'
 
 import { fileSize, postFile } from 'utils/fileUtils'
-const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
+const acceptedFileTypes = [
+  'image/jpeg',
+  'image/pjpeg',
+  'image/png',
+  'image/webp'
+]
 
 import withConfig from 'hoc/withConfig'
 
@@ -23,8 +28,8 @@ async function getImages(ipfsRPC, files) {
       })
     })
 
-    const hash = await postFile(ipfsRPC, newFile, file.type)
     if (acceptedFileTypes.indexOf(file.type) >= 0) {
+      const hash = await postFile(ipfsRPC, newFile, file.type)
       newImages.push({
         contentType: file.type,
         size: fileSize(file.size),
@@ -76,6 +81,7 @@ class ImagePicker extends Component {
             <input
               id="upload"
               type="file"
+              accept={acceptedFileTypes.join(',')}
               ref={ref => (this.uploadRef = ref)}
               multiple={true}
               onChange={async e => {
