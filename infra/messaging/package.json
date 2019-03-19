@@ -1,0 +1,66 @@
+{
+  "name": "@origin/messaging",
+  "version": "1.0.0",
+  "description": "Node server for IPFS pubsub persistent communications",
+  "main": "src/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "per-env",
+    "build:production": "babel src -d dist --presets @babel/env",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "prestart:production": "npm run build",
+    "start": "per-env",
+    "orbit-to-db": "babel-node src/orbit-to-db.js --presets @babel/env",
+    "start:development": "nodemon --exec 'babel-node' src/index.js --presets @babel/env",
+    "start:production": "node dist/index.js",
+    "test": "echo \"Warning: no tests specified\"",
+    "migrate": "sequelize db:migrate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/origin/origin-messaging"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.3.4",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.4",
+    "cross-fetch": "^3.0.1",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
+    "ipfs": "^0.33.1",
+    "ipfs-api": "^26.1.2",
+    "ipfs-log": "^4.2.0",
+    "ipfs-pubsub-1on1": "0.0.4",
+    "json-stable-stringify": "^1.0.1",
+    "logplease": "^1.2.15",
+    "orbit-db": "^0.19.9",
+    "per-env": "^1.0.2",
+    "pg": "^7.7.1",
+    "pg-hstore": "^2.3.2",
+    "rate-limiter-flexible": "^0.19.4",
+    "sequelize-cli": "^5.4.0",
+    "sequelize": "^5.0.0-beta.14",
+    "web3": "1.0.0-beta.34",
+    "redis": "^2.8.0",
+    "express-ws": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.2.0",
+    "eslint": "^5.15.1",
+    "nodemon": "^1.18.7"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

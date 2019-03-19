@@ -1,0 +1,12 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY ./infra/ipfs-proxy /app
+
+# Install dependencies
+RUN npm install --loglevel notice
+
+CMD npm start
