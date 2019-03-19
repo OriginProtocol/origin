@@ -95,6 +95,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis:6379
     ports:
       - "9012:9012"
       - "6647:6647"
@@ -239,12 +240,13 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis:6379
       - ENVKEY=
     depends_on:
       - postgres
       - redis
     command:
       >
-      /bin/bash 0c "wait for.sh -t 0 -q postgres:5432 --
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/linking &&
       npm run start --prefix infra/linking"
