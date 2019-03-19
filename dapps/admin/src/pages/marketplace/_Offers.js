@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 
 import { AnchorButton, Tooltip, Tag, Icon } from '@blueprintjs/core'
 
