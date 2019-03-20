@@ -130,15 +130,15 @@ class AirDrop {
     if (campaign.currency != 'OGN') {
       throw new Error(`Campaign currency is not OGN: ${campaign.currency}`)
     }
-    
+
     // Create a token object for handling the distribution.
     this.token = new Token({ providers: createProviders([this.networkId]) })
- 
+
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
     this.sender = await this.token.senderAddress(this.networkId)
 
-    this.stats = { numTxns: 0, totalAmount: BigNumber(0)}
+    this.stats = { numTxns: 0, totalAmount: BigNumber(0) }
 
     logger.info('AirDrop config:')
     logger.info('Dryrun:         ', this.dryRun)
