@@ -57,7 +57,7 @@ linkingImageTag: 'abe42a6'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'abe42a6'
+cronImageTag: '74b7b6c'
 
 # origin-admin
 adminImage: origin-admin
