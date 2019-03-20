@@ -3,7 +3,6 @@
 import db from './../models/'
 import uuidv4 from 'uuid/v4'
 import { Op } from 'sequelize'
-import url from 'url'
 import { MessageTypes, EthNotificationTypes } from '@origin/js/common/enums'
 import MessageQueue from './../utils/message-queue'
 import origin, {
