@@ -1,7 +1,6 @@
 {
   "name": "@origin/mobile",
   "version": "0.1.11",
-  "private": true,
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-new-target": "^7.0.0",

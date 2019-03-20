@@ -22,15 +22,13 @@
     "prettier": "^1.16.4"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\" --ignore @origin/mobile",
-    "bootstrap:mobile": "lerna bootstrap --progress",
+    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\"",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "npm run start --prefix dapps/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "postinstall": "npm run bootstrap && node scripts/symlink-packages.js",
-    "install:mobile": "npm install --ignore-scripts && npm run bootstrap:mobile",
     "test": "node scripts/test.js"
   },
   "husky": {
