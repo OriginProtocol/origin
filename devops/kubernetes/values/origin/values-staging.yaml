@@ -8,14 +8,6 @@ bridgeImageTag: '0a36fe4'
 dappImage: origin-dapp
 dappImageTag: '0a36fe4'
 
-# Rinkeby network configuration
-gethTxReplicas: 1
-gethTxMemoryRequest: 6Gi
-
-# ipfs
-ipfsImage: ipfs/go-ipfs
-ipfsImageTag: master
-
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'e0e12cd'

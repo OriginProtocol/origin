@@ -41,9 +41,9 @@ Example DApps that we have built.
 
 | Package | Description |
 |---------|-------------|
-| [`@origin/admin`](/dapps/contracts) | DApp similar to `@origin/marketplace` but exposes more functionality |
-| [`@origin/graphql-simple-demo`](/dapps/eventsource) | Example of building a DApp with `@origin/graphql` |
-| [`@origin/marketplace`](/dapps/graphql) | Our marketplace DApp |
+| [`@origin/admin`](/dapps/admin) | DApp similar to `@origin/marketplace` but exposes more functionality |
+| [`@origin/graphql-simple-demo`](/dapps/graphql-simple-demo) | Example of building a DApp with `@origin/graphql` |
+| [`@origin/marketplace`](/dapps/marketplace) | Our marketplace DApp |
 
 ### Infrastructure packages
 

@@ -222,7 +222,7 @@ You can do this from the developer menu, or by running this in your terminal: `a
 
 -----------
 
-> error: bundling failed: Error: Unable to resolve module origin/common/enums...
+> error: bundling failed: Error: Unable to resolve module @origin/js/common/enums...
 
 This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
 
