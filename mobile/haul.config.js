@@ -1,4 +1,5 @@
 import { createWebpackConfig } from "haul";
+import Dotenv from 'dotenv-webpack'
 import path from 'path'
 
 export default {
@@ -15,6 +16,8 @@ export default {
       services: path.resolve(__dirname, 'src/services'),
       utils: path.resolve(__dirname, 'src/utils'),
     }
+
+    config.plugins.push(new Dotenv())
 
     return config;
   }

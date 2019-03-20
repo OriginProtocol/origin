@@ -12,15 +12,12 @@ import { randomBytes } from 'react-native-randombytes'
 import { TypedDataUtils, concatSig } from 'eth-sig-util'
 import ethUtil from 'ethereumjs-util'
 
-import {
-  GCM_SENDER_ID,
-} from 'react-native-dotenv'
-
 import { setRemoteLocal, localfy, storeData, loadData } from './tools'
 import { EthNotificationTypes } from './enums'
 
 import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
+const GCM_SENDER_ID = process.env.GCM_SENDER_ID
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
 const ORIGIN_WALLET = "OriginWallet"
