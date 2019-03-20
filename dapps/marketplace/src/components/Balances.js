@@ -20,7 +20,7 @@ const Balances = ({ ethBalance, account }) => {
             <span>ETH</span>
           </div>
           <div className="usd">
-            <Price amount={ethBalance} />
+            <Price price={{ amount: ethBalance, currency: 'token-ETH' }} />
           </div>
         </div>
       </div>

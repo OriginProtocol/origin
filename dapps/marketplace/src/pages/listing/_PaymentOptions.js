@@ -1,7 +1,7 @@
 import React from 'react'
 
 import CoinPrice from 'components/CoinPrice'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 
 const PaymentOptions = ({
   acceptedTokens,

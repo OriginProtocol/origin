@@ -203,9 +203,12 @@ class OriginEventSource {
       }
     }
     if (
-      ['UnitListing', 'FractionalListing', 'AnnouncementListing'].indexOf(
-        __typename
-      ) < 0
+      [
+        'UnitListing',
+        'FractionalListing',
+        'FractionalHourlyListing',
+        'AnnouncementListing'
+      ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
     }

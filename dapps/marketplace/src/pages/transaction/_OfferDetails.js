@@ -1,5 +1,5 @@
 import React from 'react'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import dayjs from 'dayjs'
 
 function paymentStatus(status) {

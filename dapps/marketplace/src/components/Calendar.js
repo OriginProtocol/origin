@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 
 const resetDrag = {
   dragEnd: null,

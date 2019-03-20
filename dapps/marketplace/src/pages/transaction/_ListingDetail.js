@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Category from 'components/Category'
 
 const ListingDetail = ({ listing }) => (

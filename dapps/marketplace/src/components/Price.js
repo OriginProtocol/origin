@@ -1,53 +1,65 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, { useContext } from 'react'
 
+import withCurrencies from 'hoc/withCurrencies'
+import ceil from 'lodash/round'
+import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
+import CurrencyContext from 'constants/CurrencyContext'
+import { CurrenciesByKey } from 'constants/Currencies'
 
-import gql from 'graphql-tag'
+const Price = ({ className, target, currencies, descriptor, ...props }) => {
+  const listingType = get(props, 'listing.__typename')
+  const price = props.price || get(props, 'listing.price')
+  const currency = get(price, 'currency')
+  let amount = get(price, 'amount')
 
-const CurrentPrice = gql`
-  {
-    ethUsd
+  if (!currency) return null
+  if (!target) {
+    target = useContext(CurrencyContext)
   }
-`
+  const currencyId = typeof currency === 'string' ? currency : currency.id
+  const foundCurrency = currencies.find(c => c.id === currencyId)
+  const targetCurrency = currencies.find(c => c.id === target) || foundCurrency
 
-class Price extends Component {
-  render() {
-    const { amount, className, el, useCode } = this.props
-    if (!amount) {
-      this.renderEmpty()
+  if (!foundCurrency) return '???'
+
+  const isFiat = targetCurrency.id.indexOf('fiat-') === 0
+  const amountUSD = amount * foundCurrency.priceInUSD
+  amount = amountUSD / targetCurrency.priceInUSD
+  amount = ceil(amount, 5)
+
+  const showCode = !targetCurrency.code.match(/^(USD|EUR|GBP)$/)
+  const formatted = isFiat ? numberFormat(amount, 2).replace('.00', '') : amount
+  const symbol = get(CurrenciesByKey, `${targetCurrency.id}.2`, '')
+
+  const content = (
+    <span className={className}>{`${symbol}${formatted}${
+      showCode ? ` ${targetCurrency.code}` : ''
+    }`}</span>
+  )
+
+  if (descriptor) {
+    if (listingType === 'FractionalListing') {
+      descriptor = ' per night'
+    } else if (listingType === 'FractionalHourlyListing') {
+      descriptor = ' per hour'
+    } else if (get(props, 'listing.multiUnit')) {
+      descriptor = ' each'
+    } else {
+      descriptor = null
     }
+  }
+
+  if (descriptor) {
     return (
-      <Query query={CurrentPrice}>
-        {({ loading, error, data }) => {
-          if (loading || error) return this.renderEmpty()
-          const usdAmount = data.ethUsd * Number(amount || 0)
-          let rounded = Math.round(usdAmount * 100) / 100
-          if (usdAmount > 0 && rounded === 0) rounded = 0.01
-          rounded = numberFormat(rounded, 2)
-          if (el === 'input') {
-            return (
-              <input
-                className={className}
-                value={rounded}
-                readOnly
-                tabIndex="-1"
-              />
-            )
-          }
-          const content = useCode ? `${rounded} USD` : `$${rounded}`
-          return <span className={className}>{content}</span>
-        }}
-      </Query>
+      <>
+        {content}
+        <span className="desc">{descriptor}</span>
+      </>
     )
   }
 
-  renderEmpty() {
-    if (this.props.el === 'input') {
-      return <input value="" className={this.props.className} readOnly />
-    }
-    return <span>&nbsp;</span>
-  }
+  return content
 }
 
-export default Price
+export default withCurrencies(Price)

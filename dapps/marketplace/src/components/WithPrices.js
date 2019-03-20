@@ -35,19 +35,23 @@ const WithPrices = ({
     hasBalance = true
     hasAllowance = true
   } else if (target) {
-    const targetBalance = get(results, `${target}.currency.balance`) || '0'
-    const targetAllowance = get(results, `${target}.currency.allowance`) || '0'
-    const amountBN = web3.utils.toBN(web3.utils.toWei(amount, 'ether'))
+    const availableBalance = web3.utils.toBN(
+      get(results, `${target}.currency.balance`) || '0'
+    )
+    const availableAllowance = web3.utils.toBN(
+      get(results, `${target}.currency.allowance`) || '0'
+    )
+    const targetValue = web3.utils.toBN(
+      web3.utils.toWei(get(results, `${target}.amount`) || '0', 'ether')
+    )
 
-    const availableBalance = web3.utils.toBN(targetBalance)
-    hasBalance = availableBalance.gte(amountBN)
-    needsBalance = hasBalance ? 0 : amountBN.sub(availableBalance).toString()
+    hasBalance = availableBalance.gte(targetValue)
+    needsBalance = hasBalance ? 0 : targetValue.sub(availableBalance).toString()
 
-    const availableAllowance = web3.utils.toBN(targetAllowance)
-    hasAllowance = availableAllowance.gte(amountBN)
+    hasAllowance = availableAllowance.gte(targetValue)
     needsAllowance = hasAllowance
       ? 0
-      : amountBN.sub(availableAllowance).toString()
+      : targetValue.sub(availableAllowance).toString()
   }
 
   const tokenStatus = {

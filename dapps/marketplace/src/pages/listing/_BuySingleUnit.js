@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Buy from './mutations/Buy'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
@@ -15,7 +15,7 @@ const SingleUnit = ({ listing, from, refetch }) => {
         return (
           <div className="listing-buy">
             <div className="price">
-              <Price price={listing.price} />
+              <Price listing={listing} descriptor />
             </div>
             <PaymentOptions
               price={listing.price}

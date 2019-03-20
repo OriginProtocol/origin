@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 
 import QueryError from 'components/QueryError'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
@@ -75,6 +75,8 @@ class Sales extends Component {
                   totalCount
                 } = data.marketplace.user.sales
                 const { hasNextPage, endCursor: after } = pageInfo
+
+                console.log(nodes)
 
                 return (
                   <BottomScrollListener

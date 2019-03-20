@@ -6,9 +6,10 @@ import IannaTimeZones from '@origin/graphql/src/constants/IannaTimeZones'
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-import Price from 'components/Price'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import PricingChooser from '../_PricingChooser'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -114,31 +115,19 @@ class Details extends Component {
 
                 {/* BEGIN Hourly specific code */}
 
-                <div className="form-group">
-                  <label>Default Price per Hour</label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>Default Price per Hour</label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      Price is always in ETH, USD is an estimate.
                     </div>
                   </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    Price is always in ETH, USD is an estimate.
-                  </div>
-                </div>
+                </PricingChooser>
 
                 <div className="form-group">
                   <label>Standard Available Hours</label>

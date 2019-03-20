@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 
+import Price from 'components/Price'
+
 const resetDrag = {
   dragEnd: null,
   dragStart: null,
@@ -127,7 +129,12 @@ class WeekCalendar extends Component {
       )
     }
 
-    let content = `${hour.price} ETH`
+    let content = (
+      <Price
+        price={{ amount: hour.price, currency: this.props.currency }}
+        target={this.props.originalCurrency ? this.props.currency : null}
+      />
+    )
     if (hour.booked && this.props.showBooked) {
       content = 'Booked'
     } else if (hour.unavailable) {

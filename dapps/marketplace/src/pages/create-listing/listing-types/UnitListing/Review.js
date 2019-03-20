@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
 import Link from 'components/Link'

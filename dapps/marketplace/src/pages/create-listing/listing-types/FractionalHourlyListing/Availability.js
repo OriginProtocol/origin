@@ -3,7 +3,7 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 
 import Steps from 'components/Steps'
 import WeekCalendar from 'components/WeekCalendar'
-import Price from 'components/Price'
+import CurrencySelect from 'components/CurrencySelect'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 
@@ -60,6 +60,8 @@ class Availability extends Component {
                   workingHours={this.state.workingHours}
                   onChange={state => this.setState(state)}
                   showBooked={true}
+                  currency={this.props.listing.currency}
+                  originalCurrency
                 />
 
                 <div className="actions">
@@ -182,17 +184,7 @@ class Availability extends Component {
                   <div style={{ flex: 1, marginRight: '1rem' }}>
                     <div className="with-symbol">
                       <input {...input('price')} />
-                      <span className="eth">ETH</span>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div className="with-symbol corner">
-                      <Price
-                        el="input"
-                        amount={this.state.price}
-                        className="form-control form-control-lg"
-                      />
-                      <span className="usd">USD</span>
+                      <CurrencySelect value={this.props.listing.currency} />
                     </div>
                   </div>
                 </div>

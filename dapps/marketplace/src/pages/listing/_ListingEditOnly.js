@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Link from 'components/Link'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 
 const EditOnly = ({
   listing,
@@ -10,9 +10,9 @@ const EditOnly = ({
   isFractionalHourly
 }) => (
   <div className="listing-buy">
-    {isAnnouncement || isFractional ? null : (
+    {isAnnouncement ? null : (
       <div className="price">
-        <Price price={listing.price} />
+        <Price listing={listing} descriptor />
       </div>
     )}
     {isFractional || isFractionalHourly || isAnnouncement ? null : (

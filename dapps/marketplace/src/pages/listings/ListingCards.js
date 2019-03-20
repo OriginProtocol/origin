@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Redirect from 'components/Redirect'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
 
@@ -50,10 +50,7 @@ class ListingCards extends Component {
             </h5>
             {a.__typename === 'AnnouncementListing' ? null : (
               <div className="price">
-                <Price price={a.price} />
-                {a.__typename !== 'FractionalListing' ? null : (
-                  <span className="desc">per night</span>
-                )}
+                <Price listing={a} descriptor />
               </div>
             )}
           </div>

@@ -4,7 +4,7 @@ import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalcul
 import withTokenBalance from 'hoc/withTokenBalance'
 
 import Wallet from 'components/Wallet'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import CoinPrice from 'components/CoinPrice'
 import Calendar from 'components/Calendar'
 import Category from 'components/Category'

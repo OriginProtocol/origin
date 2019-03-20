@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import get from 'lodash/get'
 
 import CurrencyContext from 'constants/CurrencyContext'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
@@ -25,8 +25,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
         return (
           <div className="listing-buy multi">
             <div className="price">
-              <Price price={listing.price} />
-              <span className="desc">{' / each'}</span>
+              <Price listing={listing} descriptor />
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
                   <Price

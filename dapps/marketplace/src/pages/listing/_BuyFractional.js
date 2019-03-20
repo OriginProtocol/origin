@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import CurrencyContext from 'constants/CurrencyContext'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
@@ -52,8 +52,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         return (
           <div className="listing-buy fractional">
             <div className="price">
-              <Price price={listing.price} />
-              <span className="desc">/ night</span>
+              <Price listing={listing} descriptor />
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
                   <Price
