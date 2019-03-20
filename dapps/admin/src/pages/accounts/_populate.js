@@ -164,35 +164,36 @@ export default async function populate(NodeAccount, gqlClient) {
   console.log('Deployed Seller Identity')
 
   for (const listing of demoListings) {
-    const commissionPerUnit = listing.commissionPerUnit || '0'
-    const listingData = {
-      title: listing.title,
-      description: listing.description,
-      price: {
-        currency: '0x0000000000000000000000000000000000000000',
-        amount: listing.price.amount
-      },
-      category: listing.category,
-      subCategory: listing.subCategory,
-      media: listing.media,
-      commissionPerUnit,
-      commission: listing.commission ? listing.commission.amount : '0'
-    }
-    if (listing.marketplacePublisher) {
-      listingData.marketplacePublisher = listing.marketplacePublisher
-    }
+    // const commissionPerUnit = listing.commissionPerUnit || '0'
+    // const listingData = {
+    //   title: listing.title,
+    //   description: listing.description,
+    //   price: {
+    //     currency: '0x0000000000000000000000000000000000000000',
+    //     amount: listing.price.amount
+    //   },
+    //   category: listing.category,
+    //   subCategory: listing.subCategory,
+    //   media: listing.media,
+    //   commissionPerUnit,
+    //   commission: listing.commission ? listing.commission.amount : '0'
+    // }
+    // if (listing.marketplacePublisher) {
+    //   listingData.marketplacePublisher = listing.marketplacePublisher
+    // }
     hash = (await gqlClient.mutate({
       mutation: CreateListingMutation,
-      variables: {
-        deposit: '5',
-        depositManager: Arbitrator,
-        from: Seller,
-        autoApprove: true,
-        data: listingData,
-        unitData: {
-          unitsTotal: listing.unitsTotal
-        }
-      }
+      variables: listing
+      // variables: {
+      //   deposit: '5',
+      //   depositManager: Arbitrator,
+      //   from: Seller,
+      //   autoApprove: true,
+      //   data: listingData,
+      //   unitData: {
+      //     unitsTotal: listing.unitsTotal
+      //   }
+      // }
     })).data.createListing.id
     await transactionConfirmed(hash, gqlClient)
     console.log('Deployed Listing')
