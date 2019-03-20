@@ -234,10 +234,6 @@ class OriginWallet {
     return this.remote_localhost
   }
 
-  getMessagingUrl() {
-    return this.messagingUrl + ORIGIN_WALLET
-  }
-
   getWalletToken() {
     return this.state.walletToken
   }
@@ -305,6 +301,10 @@ class OriginWallet {
       device_token: device_token,
       device_type: notification_type
     })
+  }
+
+  getMarketplaceUrl() {
+    return localfy(this.dappUrl)
   }
 
   getMessagingKeys( ) {
@@ -889,36 +889,6 @@ class OriginWallet {
     return url + (url.includes('?') ? '&' : '?' ) + 'shash=' + shash
   }
 
-
-  async open(url) {
-    switch(url) {
-      case 'profile':
-        if (this.profileUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.profileUrl)
-          console.log("Opening profile url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      case 'root':
-        if (this.dappUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.dappUrl)
-          console.log("Opening root url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      case 'selling':
-        if (this.sellingUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
-          console.log("Opening selling url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      default:
-        console.log("Opening url:", url)
-        Linking.openURL(await this.toLinkedDappUrl(url))
-    }
-  }
-
   async onNotification(notification) {
     Object.assign( this.state, {
       notifyTime:new Date(),
@@ -1172,9 +1142,6 @@ class OriginWallet {
         ipfs_gateway,
         ipfs_api,
         dapp_url,
-        messaging_url,
-        profile_url,
-        selling_url,
         attestation_account,
         perf_mode_enabled,
         discovery_server_url
@@ -1182,7 +1149,7 @@ class OriginWallet {
 
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
-      console.log("Service urls:", dapp_url, messaging_url, profile_url, selling_url)
+      console.log("DAPP url:", dapp_url)
       console.log("Discovery:", perf_mode_enabled, discovery_server_url)
 
 
@@ -1195,9 +1162,6 @@ class OriginWallet {
       }
 
       this.dappUrl = dapp_url
-      this.messagingUrl = localfy(messaging_url)
-      this.profileUrl = profile_url
-      this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)

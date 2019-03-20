@@ -19,7 +19,7 @@ import Onboarding from 'components/onboarding'
 import DevicesScreen from 'screens/devices'
 import ForkScreen from 'screens/fork'
 import HomeScreen from 'screens/home'
-import MessagingScreen from 'screens/messaging'
+import MarketplaceScreen from 'screens/marketplace'
 import ProfileScreen from 'screens/profile'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
@@ -55,8 +55,8 @@ const HomeStack = createStackNavigator({
   navigationOptions,
 })
 
-const MessagingStack = createStackNavigator({
-  Messaging: MessagingScreen,
+const MarketplaceStack = createStackNavigator({
+  Marketplace: MarketplaceScreen,
 }, {
   navigationOptions,
 })
@@ -71,7 +71,6 @@ const SettingsStack = createStackNavigator({
   Account: AccountScreen,
   Accounts: AccountsScreen,
   Devices: DevicesScreen,
-  Profile: ProfileScreen,
   Settings: SettingsScreen,
 }, {
   initialRouteName: 'Settings',
@@ -99,12 +98,12 @@ const OnboardingStack = createStackNavigator({
 
 const OriginNavigator = createBottomTabNavigator({
   Home: HomeStack,
-  Messaging: MessagingStack,
+  Marketplace: MarketplaceStack,
   Scan: ScanStack,
   Settings: SettingsStack,
 }, {
   initialRouteName: 'Home',
-  order: ['Home', 'Messaging', 'Scan', 'Settings'],
+  order: ['Home', 'Marketplace', 'Scan', 'Settings'],
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
@@ -112,12 +111,12 @@ const OriginNavigator = createBottomTabNavigator({
       // require expects string literal :(
       if (routeName === 'Home') {
         return focused ?
-          <Image source={require(IMAGES_PATH + 'home-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
-      } else if (routeName === 'Messaging') {
+          <Image source={require(IMAGES_PATH + 'wallet-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'wallet-inactive.png')} />
+      } else if (routeName === 'Marketplace') {
         return focused ?
-          <Image source={require(IMAGES_PATH + 'messaging-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'messaging-inactive.png')} />
+          <Image source={require(IMAGES_PATH + 'market-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'market-inactive.png')} />
       } else if (routeName === 'Scan') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
@@ -131,21 +130,17 @@ const OriginNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     activeTintColor: '#007fff',
-    inactiveTintColor: '#c0cbd4',
-    style: {
-      backgroundColor: 'white',
-    },
     iconStyle: {
       marginTop: 10,
     },
-    labelStyle: {
-      fontFamily: 'Lato',
-      fontSize: 10,
-      fontWeight: 'normal',
+    inactiveTintColor: '#c0cbd4',
+    showLabel: false,
+    style: {
+      backgroundColor: 'white',
     },
     tabStyle: {
       justifyContent: 'space-around',
-    }
+    },
   },
 })
 
@@ -241,7 +236,7 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.events.on(Events.SHOW_MESSAGES, () => {
-      NavigationService.navigate('Messaging')
+      NavigationService.navigate('Marketplace')
     })
 
     originWallet.events.on(Events.NOTIFICATION, notification => {

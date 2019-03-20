@@ -84,15 +84,6 @@ class SettingsScreen extends Component {
               </View>
             </View>
           </TouchableHighlight>
-          <Separator padded={true} />
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
-            <View style={styles.item}>
-              <Text style={styles.text}>Profile</Text>
-              <View style={styles.iconContainer}>
-                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-              </View>
-            </View>
-          </TouchableHighlight>
           <View style={styles.header}>
             <Text style={styles.heading}>NETWORK</Text>
           </View>
