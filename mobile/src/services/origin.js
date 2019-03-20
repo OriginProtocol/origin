@@ -1,4 +1,4 @@
-import Origin from 'origin'
+import Origin from '@origin/js'
 import Web3 from 'web3'
 
 import {

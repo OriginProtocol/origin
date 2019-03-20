@@ -6,6 +6,7 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-new-target": "^7.0.0",
     "@babel/polyfill": "^7.2.5",
+    "haul": "^1.0.0-rc.13",
     "install-local": "^0.6.2",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
@@ -18,13 +19,13 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
-    "install-local": "rm node_modules/origin;npx install-local ../origin-contracts ../origin-js"
+    "haul": "haul",
+    "postinstall": "rm -rf node_modules/websocket && npx install-local -S ../packages/contracts ../packages/origin-js"
   },
   "jest": {
     "preset": "react-native"
   },
   "dependencies": {
-    "@origin/js": "^0.8.6",
     "cross-fetch": "^2.2.3",
     "eth-ecies": "^1.0.3",
     "moment": "^2.22.2",
@@ -54,5 +55,9 @@
     "assets": [
       "./assets/fonts/"
     ]
+  },
+  "localDependencies": {
+    "@origin/contracts": "../packages/contracts",
+    "@origin/js": "../packages/origin-js"
   }
 }
