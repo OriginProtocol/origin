@@ -2,12 +2,15 @@
   "packages": [
     "dapps/**",
     "infra/**",
-    "packages/**"
+    "packages/**",
+    "mobile"
   ],
   "command": {
     "bootstrap": {
+      "hoist": ["**"],
       "nohoist": [
-        "openzeppelin-solidity"
+        "openzeppelin-solidity",
+	"react-native"
       ]
     }
   },
