@@ -61,4 +61,4 @@ cronImageTag: '9fc33f1'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: 'latest'
+adminImageTag: 'abe42a6'
