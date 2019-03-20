@@ -1,0 +1,14 @@
+FROM node:10
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./infra/dapp-creator-server ./infra/dapp-creator-server
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+CMD npm run start --prefix infra/dapp-creator-server

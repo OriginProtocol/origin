@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Origin Protocol OGN - Testnet token faucet</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel = "stylesheet" type = "text/css" href = "static/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="offset-lg-2 col-lg-8 col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="card-title"><strong>Origin Protocol OGN</strong></h1>
+              <h1 class="card-title secondary"><strong>Token Faucet</strong></h1>
+              <fieldset>
+                <form action="/tokens">
+                  <div class="form-row">
+                    <div class="col-lg-12">
+                      Wallet address:
+                      <div class="form-group">
+                        <input type="text" class="form-control" name="wallet" size="42">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="col-lg-12">
+                      TestNet:
+                      <div class="form-group">
+                        <select class="form-control" name="network_id">
+                          <option value="4">Rinkeby</option>
+                          <option value="3">Ropsten</option>
+                          <option value="999">Localhost</option>
+                          <option value="2222">Origin</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary submit">Submit</button>
+                </form>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
