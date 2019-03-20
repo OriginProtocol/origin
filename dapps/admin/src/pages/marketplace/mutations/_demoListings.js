@@ -1,3 +1,5 @@
+// These are mutations (`CreateListingMutation`) for creating sample listings.
+
 const HawaiiHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '0',
