@@ -24,6 +24,11 @@ export default memoize(async function(id) {
     const messagingData = get(contracts, 'linker.session.privData.messaging')
     if (contracts.linker && messagingData) {
       await contracts.messaging.onPreGenKeys(messagingData)
+    } else if (window.__messagingAccount) {
+      contracts.messaging.onPreGenKeys(
+        window.__messagingAccount.messageKeys,
+        true
+      )
     }
     await contracts.messaging.init(id)
   })

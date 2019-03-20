@@ -41,6 +41,12 @@ class App extends Component {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
+    if (
+      get(this.props, 'location.search', '').indexOf('no-nav=true') >= 0 &&
+      !this.state.noNav
+    ) {
+      this.setState({ noNav: true })
+    }
   }
 
   static getDerivedStateFromError(err) {
@@ -64,13 +70,14 @@ class App extends Component {
       )
     }
 
-    const { creatorConfig } = this.props
+    const { creatorConfig, location } = this.props
     applyConfiguration(creatorConfig)
-    const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+    const shouldRenderNavbar =
+      location.pathname !== '/welcome' && !this.state.noNav
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <>
-        <BetaBanner />
+        {this.state.noNav ? null : <BetaBanner />}
         {shouldRenderNavbar && <Nav />}
         <main>
           <Switch>

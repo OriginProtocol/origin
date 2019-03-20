@@ -98,11 +98,15 @@ export default {
     if (id === 'defaultAccount') {
       // web3Exec is either MetaMask or a web3 instance using the linker
       // client provider
-      const accounts = await contracts.web3Exec.eth.getAccounts()
-      if (!accounts || !accounts.length) {
-        return null
+      if (window.__messagingAccount) {
+        id = window.__messagingAccount.messageAccount
+      } else {
+        const accounts = await contracts.web3Exec.eth.getAccounts()
+        if (!accounts || !accounts.length) {
+          return null
+        }
+        id = accounts[0]
       }
-      id = accounts[0]
     } else if (id === 'currentAccount') {
       if (contracts.messaging.account_key) {
         id = contracts.messaging.account_key

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
-import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
@@ -147,7 +146,7 @@ class Messages extends Component {
   }
 }
 
-export default withWallet(Messages)
+export default Messages
 
 require('react-styl')(`
   .messages-page

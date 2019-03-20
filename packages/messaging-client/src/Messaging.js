@@ -125,25 +125,40 @@ class Messaging {
     }
   }
 
-  async onPreGenKeys(data) {
+  //helper function for use by outside services
+  preGenKeysDapp2() {
+    return {
+      account: this.account_key,
+      sig_phrase: this.getMessagingPhrase(),
+      sig_key: this.getMessagingKey(),
+      pub_msg: this.pub_msg,
+      pub_sig: this.pub_sig
+    }
+  }
+
+  async onPreGenKeys(data, force) {
     debug('onPreGenKeys')
     const accountId = data.account
     const sigKey = data.sig_key
     const sigPhrase = data.sig_phrase
     const pubMsg = data.pub_msg
     const pubSig = data.pub_sig
-    const accounts = await this.web3.eth.getAccounts()
-    if (accountId === accounts[0]) {
-      this.currentStorage = sessionStorage
-      this.setKeyItem(`${MESSAGING_KEY}:${accountId}`, sigKey)
-      this.setKeyItem(`${MESSAGING_PHRASE}:${accountId}`, sigPhrase)
-      this.setKeyItem(`${PUB_MESSAGING}:${accountId}`, pubMsg)
-      this.setKeyItem(`${PUB_MESSAGING_SIG}:${accountId}`, pubSig)
-      this.pub_sig = pubSig
-      this.pub_msg = pubMsg
-      if (accountId == this.account_key) {
-        this.startConversing()
-      }
+    if (!force) {
+      const accounts = await this.web3.eth.getAccounts()
+      if (accountId !== accounts[0]) return
+    } else {
+      this.account_key = accountId
+    }
+
+    this.currentStorage = sessionStorage
+    this.setKeyItem(`${MESSAGING_KEY}:${accountId}`, sigKey)
+    this.setKeyItem(`${MESSAGING_PHRASE}:${accountId}`, sigPhrase)
+    this.setKeyItem(`${PUB_MESSAGING}:${accountId}`, pubMsg)
+    this.setKeyItem(`${PUB_MESSAGING_SIG}:${accountId}`, pubSig)
+    this.pub_sig = pubSig
+    this.pub_msg = pubMsg
+    if (accountId == this.account_key) {
+      this.startConversing()
     }
   }
 
