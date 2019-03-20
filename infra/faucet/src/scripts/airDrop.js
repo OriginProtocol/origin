@@ -1,12 +1,17 @@
 // Tool to distribute OGN tokens to a list of ETH addresses stored in a text file.
+// Command line example:
+//   node airDrop.js --recipientsFilename=addresses.txt --networkId=999 --campaignId=1
 
 'use strict'
 
+const BigNumber = require('bignumber.js')
 const fs = require('fs')
 const Logger = require('logplease')
 const Web3 = require('web3')
 
 const Token = require('@origin/token/src/token')
+const { createProviders } = require('@origin/token/src/config')
+
 const enums = require('../enums')
 const db = require('../models')
 
@@ -66,9 +71,7 @@ class AirDrop {
   async _send(networkId, toAddress, amount) {
     const receipt = await this.token.credit(networkId, toAddress, amount)
     const txnHash = receipt.transactionHash
-    logger.info(
-      `${this.config.dropAmount} OGN -> ${toAddress} TxHash=${txnHash}`
-    )
+    logger.info(`${amount} OGN -> ${toAddress} TxHash=${txnHash}`)
     return txnHash
   }
 
@@ -77,7 +80,7 @@ class AirDrop {
    *
    * @returns {Promise<void>}
    */
-  async process() {
+  async _process() {
     for (const toAddress of this.recipients) {
       logger.info('Processing airdrop to ', toAddress)
       const faucetTxn = await db.FaucetTxn.create({
@@ -85,13 +88,13 @@ class AirDrop {
         status: enums.FaucetTxnStatuses.Pending,
         fromAddress: this.sender.toLowerCase(),
         toAddress: toAddress.toLowerCase(),
-        amount: this.dropAmount, // Amount in natural units (Wei for ETH).
+        amount: this.amount, // Amount in natural units (Wei for ETH).
         currency: 'OGN'
       })
 
-      if (!this.config.dryRun) {
+      if (!this.dryRun) {
         try {
-          const txnHash = this._send(this.networkId, toAddress, this.dropAmount)
+          const txnHash = this._send(this.networkId, toAddress, this.amount)
           await faucetTxn.update({
             status: enums.FaucetTxnStatuses.Confirmed,
             txnHash
@@ -103,11 +106,11 @@ class AirDrop {
           throw error
         }
       } else {
-        logger.info(`Would send ${this.config.dropAmount} OGN to ${toAddress}`)
+        logger.info(`Would send ${this.amount} OGN to ${toAddress}`)
       }
 
       this.stats.numTxns++
-      this.stats.totalAmount += this.config.dropAmount
+      this.stats.totalAmount.plus(this.amount)
     }
   }
 
@@ -115,13 +118,7 @@ class AirDrop {
     this.networkId = config.networkId
     this.campaignId = config.campaignId
     this.recipients = config.recipients
-
-    // Create a token object for handling the distribution.
-    this.token = new Token(config)
-    logger.info(
-      'OGN contract address: ',
-      this.token.contractAddress(this.networkId)
-    )
+    this.dryRun = config.dryRun
 
     // Load the campaign.
     const campaign = await db.FaucetCampaign.findOne({
@@ -133,23 +130,30 @@ class AirDrop {
     if (campaign.currency != 'OGN') {
       throw new Error(`Campaign currency is not OGN: ${campaign.currency}`)
     }
-    this.dropAmount = campaign.amount
+    
+    // Create a token object for handling the distribution.
+    this.token = new Token({ providers: createProviders([this.networkId]) })
+ 
+    this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
+    this.sender = await this.token.senderAddress(this.networkId)
 
-    const fromAddress = await this.token.senderAddress(this.networkId)
-    if (fromAddress != campaign.fromAddress) {
-      throw new Error(
-        'Campaign from_address and hot wallet address do not match'
-      )
-    }
-    this.sender = fromAddress
+    this.stats = { numTxns: 0, totalAmount: BigNumber(0)}
 
     logger.info('AirDrop config:')
-    logger.info(this)
+    logger.info('Dryrun:         ', this.dryRun)
+    logger.info('Network Id:     ', this.networkId)
+    logger.info('Campaign Id:    ', this.campaignId)
+    logger.info('Num recipients: ', this.recipients.length)
+    logger.info('Dist. amount:   ', this.amount)
+    logger.info('Sender address: ', this.sender)
+    logger.info('Token address:  ', this.token.contractAddress(this.networkId))
   }
 
   async main(config) {
+    logger.info('Configuring job.')
     await this._init(config)
+    logger.info('Starting distribution.')
     await this._process()
   }
 }
@@ -158,8 +162,6 @@ class AirDrop {
  * MAIN
  */
 if (require.main === module) {
-  logger.info('Starting airDrop job.')
-
   const args = parseArgv()
 
   if (!args['--campaignId']) {
