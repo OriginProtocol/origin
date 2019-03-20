@@ -49,6 +49,15 @@ class Token extends ContractHelper {
     )
   }
 
+  /**
+   * Returns the address of the account used for distributing tokens.
+   * @param {integer} networkId
+   * @returns {Promise<string>}
+   */
+  async senderAddress(networkId) {
+    return await this.defaultAccount(networkId)
+  }
+
   /*
    * Returns token contract object for the specified network.
    * @params {string} networkId - Test network Id.
