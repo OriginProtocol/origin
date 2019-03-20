@@ -19,7 +19,7 @@ export default function applyListingData(props, data) {
     }
   }
 
-  switch(listing.__typename) {
+  switch (listing.__typename) {
     case 'AnnouncementListing':
       break
     case 'UnitListing':
