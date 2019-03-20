@@ -1,4 +1,4 @@
-import Origin from '@origin/js/src/index
+import Origin from '@origin/js/src/index'
 import Web3 from 'web3'
 
 const API_SERVER = process.env.API_SERVER_PORT ? process.env.API_SERVER_DOMAIN + ":" + process.env.API_SERVER_PORT : process.env.API_SERVER_DOMAIN
