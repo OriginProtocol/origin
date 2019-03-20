@@ -47,10 +47,10 @@ function readRecipients(filename) {
   const seen = {}
   for (const address of addresses) {
     if (!Web3.utils.isAddress(address)) {
-      throw new Error('Invalid address: ', address)
+      throw new Error(`Invalid address: ${address}`)
     }
     if (seen[address]) {
-      throw new Error('Duplicate address: ', address)
+      throw new Error(`Duplicate address: ${address}`)
     }
     seen[address] = true
   }
