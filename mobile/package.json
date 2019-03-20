@@ -12,11 +12,12 @@
     "react-test-renderer": "16.6.3"
   },
   "scripts": {
+    "clean": "git clean -fdX .",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
-    "postinstall": "postinstall.sh"
+    "postinstall": "./postinstall.sh"
   },
   "jest": {
     "preset": "react-native"

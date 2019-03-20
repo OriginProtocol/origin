@@ -74,6 +74,7 @@ Servers and packages that provide extra functionality to DApps (e.g. search or a
 |---------|-------------|
 | [`@origin/mobile`](/mobile) | Mobile application |
 
+The `@origin/mobile` package is not managed by `Lerna` due to issues with `react-native` and hoisting.
 
 ## Contributing
 
