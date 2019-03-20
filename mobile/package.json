@@ -15,12 +15,12 @@
     "react-test-renderer": "16.6.3"
   },
   "scripts": {
-    "start": "react-native start",
+    "start": "haul start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
     "haul": "haul",
-    "postinstall": "rm -rf node_modules/websocket && npx install-local -S ../packages/contracts ../packages/origin-js"
+    "postinstall": "node postinstall.js"
   },
   "jest": {
     "preset": "react-native"
@@ -32,6 +32,7 @@
     "node-libs-react-native": "^1.0.3",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
+    "react-hot-loader": "^4.8.0",
     "react-moment": "^0.7.5",
     "react-native": "0.59.0-rc.2",
     "react-native-camera": "^1.11.2",
