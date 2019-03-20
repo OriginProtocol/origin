@@ -10,6 +10,9 @@ export default gql`
       mobileWalletAccount {
         id
       }
+      primaryAccount {
+        id
+      }
     }
   }
 `
