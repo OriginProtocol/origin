@@ -1,0 +1,67 @@
+containerRegistry: gcr.io/origin-214503
+
+clusterIssuer: letsencrypt-prod
+
+# ipfs
+ipfsImage: ipfs/go-ipfs
+ipfsImageTag: "v0.4.19"
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: latest
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: latest
+
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: latest
+
+# origin-faucet
+faucetImage: origin-faucet
+faucetImageTag: latest
+
+# event-listener
+eventlistenerImage: event-listener
+eventlistenerImageTag: latest
+
+# origin-discovery
+discoveryImage: origin-discovery
+discoveryImageTag: latest
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: latest
+
+# origin-messaging
+messagingImage: origin-messaging
+messagingImageTag: latest
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: latest
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: latest
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: latest
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: latest
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: latest
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: latest
+
+# origin-admin
+adminImage: origin-admin
+adminImageTag: latest

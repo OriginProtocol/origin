@@ -1,0 +1,72 @@
+---
+# Builds and pushes documentation to the gh-pages branch
+
+steps:
+  - id: 'Decrypt GitHub credentials'
+    name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=./devops/github.enc
+      - --plaintext-file=/root/.ssh/id_rsa
+      - --location=global
+      - --keyring=origin
+      - --key=cloudbuild
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  - id: 'Configure git for GitHub'
+    name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        chmod 600 /root/.ssh/id_rsa
+
+        # Add github.com to known hosts to prevent failure
+        ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+
+        # Add key to github.com config
+        cat <<EOF >> /root/.ssh/config
+        Hostname github.com
+        IdentityFile /root/.ssh/id_rsa
+        EOF
+
+        git remote add upstream git@github.com:OriginProtocol/origin.git
+        git config --global user.name "OriginCI"
+        git config --global user.email "support@originprotocol.com"
+
+        # Configure git
+        git fetch origin gh-pages
+
+        # Create separate git worktree for the docs build folder
+        git worktree add -f origin-docs/_site gh-pages
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  - id: 'Install gems for Jekyll and build docs'
+    name: 'gcr.io/origin-214503/jekyll'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd origin-docs
+        bundle install
+        bundle exec jekyll build
+        cp CNAME _site/CNAME
+
+  - id: 'Push to GitHub'
+    name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd origin-docs/_site
+        git add .
+        git commit -m "Docs build from $BRANCH_NAME ($SHORT_SHA)"
+        git push upstream gh-pages
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
