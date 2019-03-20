@@ -45,12 +45,10 @@ function createProviders(networkIds) {
         if (!privateKey && !mnemonic) {
           throw 'Must have either MAINNET_PRIVATE_KEY or MAINNET_MNEMONIC env var'
         }
-        if (!process.env.INFURA_ACCESS_TOKEN) {
-          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        if (!process.env.MAINNET_PROVIDER_URL) {
+          throw 'Missing MAINNET_PROVIDER_URL env var'
         }
-        providerUrl = `https://mainnet.infura.io/${
-          process.env.INFURA_ACCESS_TOKEN
-        }`
+        providerUrl = process.env.MAINNET_PROVIDER_URL
         break
       case ROPSTEN_NETWORK_ID:
         privateKey = process.env.ROPSTEN_PRIVATE_KEY
@@ -58,12 +56,10 @@ function createProviders(networkIds) {
         if (!privateKey && !mnemonic) {
           throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
         }
-        if (!process.env.INFURA_ACCESS_TOKEN) {
-          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        if (!process.env.ROPSTEN_PROVIDER_URL) {
+          throw 'Missing RPOSTEN_PROVIDER_URL env var'
         }
-        providerUrl = `https://ropsten.infura.io/${
-          process.env.INFURA_ACCESS_TOKEN
-        }`
+        providerUrl = process.env.ROPSTEN_PROVIDER_URL
         break
       case RINKEBY_NETWORK_ID:
         privateKey = process.env.RINKEBY_PRIVATE_KEY
@@ -71,12 +67,10 @@ function createProviders(networkIds) {
         if (!privateKey && !mnemonic) {
           throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
         }
-        if (!process.env.INFURA_ACCESS_TOKEN) {
-          throw 'Missing INFURA_ACCESS_TOKEN env var'
+        if (!process.env.RINKEBY_PROVIDER_URL) {
+          throw 'Missing RINKEBY_PROVIDER_URL env var'
         }
-        providerUrl = `https://rinkeby.infura.io/${
-          process.env.INFURA_ACCESS_TOKEN
-        }`
+        providerUrl = process.env.RINKEBY_PROVIDER_URL
         break
       case LOCAL_NETWORK_ID:
         privateKey = process.env.LOCAL_PRIVATE_KEY
