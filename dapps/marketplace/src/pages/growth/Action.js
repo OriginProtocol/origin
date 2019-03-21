@@ -80,7 +80,6 @@ function Action(props) {
     infoText = 'Get your friends to join Origin with active accounts.'
     buttonOnClick = () => {
       window.scrollTo(0, 0)
-      props.setReferralAction(props.action)
       props.handleNavigationChange('Invite')
     }
     buttonLink = null

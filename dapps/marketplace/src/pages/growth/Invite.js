@@ -175,6 +175,7 @@ class GrowthInvite extends Component {
 
               <Mutation
                 mutation={InviteFriends}
+                refetchQueries={[`GrowthCampaigns`]}
                 onCompleted={({ invite }) => {
                   if (invite) {
                     this.setState({
