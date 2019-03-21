@@ -180,7 +180,8 @@ class GrowthInvite extends Component {
                     this.setState({
                       inviteEmailsConfirmation: `Total ${
                         this.state.emails.length
-                      } Email invitation(s) sent!`
+                      } Email invitation(s) sent!`,
+                      'inviteEmails': ''
                     })
                   } else {
                     this.setState({

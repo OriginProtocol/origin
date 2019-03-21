@@ -115,7 +115,6 @@ function Action(props) {
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
   if (type === 'Referral') {
-    console.log(rewardPending, rewardEarned)
     showPossibleRewardAmount =
       (rewardPending === null || rewardPending.amount === '0') &&
       (rewardEarned === null || rewardEarned.amount === '0')
