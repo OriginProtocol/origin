@@ -408,12 +408,13 @@ require('react-styl')(`
       font-size: 48px
       font-weight: 600
       line-height: 1.27
-      color: white;
-    .sub-title-text
+      color: white
+    .sub-title
       font-size: 24px
       font-weight: normal
       color: white
       line-height: 1.38
+      color: white
     .invited-by
       color: white
       font-weight: normal
@@ -559,7 +560,7 @@ require('react-styl')(`
       .number-point
         font-family: Lato
         font-weight: normal
-        border: solid 1px var(--white);
+        border: solid 1px var(--white)
         border-radius: 50px
         width: 46px
         height: 46px
