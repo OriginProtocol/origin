@@ -32,7 +32,7 @@ COPY ./scripts ./scripts
 RUN npm install --unsafe-perm
 
 # Use EnvKey so that environment variables are available to webpack at build time
-RUN eval $(envkey-source) && npm run build --prefix dapps/marketplace-creator-client
+RUN eval $(envkey-source) && npm run build --prefix infra/dapp-creator-client
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
