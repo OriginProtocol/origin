@@ -1,7 +1,7 @@
 // Tool to distribute OGN tokens to a list of ETH addresses stored in a text file.
 //
 // Command line example:
-//  #> export PROVIDER_URL=https://mainnet.infura.io/v2/<project_id>
+//  #> export MAINNET_PROVIDER_URL=https://mainnet.infura.io/v3/<project_id>
 //  #> export MAINNET_PRIVATE_KEY=<pk>
 //  #> node airDrop.js --recipientsFilename=addresses.txt --networkId=1 --campaignId=1
 
@@ -205,7 +205,7 @@ class AirDrop {
 
     // Check the sender account has enough ETH to pay for gas.
     const gasAmount = BigNumber(40000) // It takes about 40k gas to transfer ogn.
-    const gasPrice = await web3.eth.getGasPrice()
+    const gasPrice = await this._calcGasPrice()
     const gasFees = gasAmount.times(gasPrice)
     const requiredEthBalance = gasFees.times(this.recipients.length)
     if (BigNumber(ethBalance).lt(requiredEthBalance)) {
