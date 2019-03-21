@@ -74,7 +74,7 @@ const resolvers = {
     },
     async inviteCode(root, args, context) {
       requireEnrolledUser(context)
-      return GrowthInvite.getInviteCode(context.walletAddress)
+      return await GrowthInvite.getInviteCode(context.walletAddress)
     },
     async isEligible(obj, args, context) {
       let eligibility

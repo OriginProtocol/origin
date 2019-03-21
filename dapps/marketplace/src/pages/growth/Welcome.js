@@ -5,7 +5,6 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
-import QueryError from 'components/QueryError'
 import inviteInfoQuery from 'queries/InviteInfo'
 import PageTitle from 'components/PageTitle'
 import Onboard from 'pages/onboard/Onboard'
@@ -362,14 +361,19 @@ class GrowthWelcome extends Component {
             notifyOnNetworkStatusChange={true}
           >
             {({ error, data, networkStatus, loading }) => {
-              if (networkStatus === 1 || loading) {
+              if (networkStatus === 1 || loading || error) {
+                if (error) {
+                  // This is likely due to an invalid invite code.
+                  // Render the page as if no invite code was provided.
+                  console.error(
+                    `InviteInfo failure. Query: ${inviteInfoQuery} Error: ${error}`
+                  )
+                }
                 return this.renderWelcomePageContents(
                   arrivedFromOnboarding,
                   null,
                   urlForOnboarding
                 )
-              } else if (error) {
-                return <QueryError error={error} query={inviteInfoQuery} />
               }
 
               return this.renderWelcomePageContents(
