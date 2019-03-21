@@ -18,6 +18,9 @@ const db = require('../models')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('airdrop')
 
+// 20% over default gas price to make transaction go faster.
+const gasPriceMultiplier = 1.2
+
 /**
  * Parse command line arguments into a dict.
  * @returns {Object} - Parsed arguments.
@@ -60,6 +63,21 @@ function readRecipients(filename) {
 
 class AirDrop {
   /**
+   * Calculates gas price to use for sending transactions. We use a slightly
+   * higher gas price in order for transactions to get mined faster.
+   * @returns {Promise<{BigNumber}>}
+   */
+  async _calcGasPrice() {
+    // Get default gas price from web3 which is determined by the
+    // last few blocks median gas price.
+    const web3 = this.token.web3(this.networkId)
+    const medianGasPrice = await web3.eth.getGasPrice()
+
+    // Apply our ratio.
+    return BigNumber(medianGasPrice).times(gasPriceMultiplier)
+  }
+
+  /**
    * Sends OGN to an address.
    *
    * @param networkId
@@ -69,7 +87,10 @@ class AirDrop {
    * @private
    */
   async _send(networkId, toAddress, amount) {
-    const receipt = await this.token.credit(networkId, toAddress, amount)
+    const gasPrice = await this._calcGasPrice()
+    const receipt = await this.token.credit(networkId, toAddress, amount, {
+      gasPrice
+    })
     const txnHash = receipt.transactionHash
     logger.info(`${amount} OGN -> ${toAddress} TxHash=${txnHash}`)
     return txnHash
@@ -88,17 +109,22 @@ class AirDrop {
         status: enums.FaucetTxnStatuses.Pending,
         fromAddress: this.sender.toLowerCase(),
         toAddress: toAddress.toLowerCase(),
-        amount: this.amount, // Amount in natural units (Wei for ETH).
+        amount: this.amount, // Amount in natural units.
         currency: 'OGN'
       })
 
       if (!this.dryRun) {
         try {
-          const txnHash = this._send(this.networkId, toAddress, this.amount)
+          const txnHash = await this._send(
+            this.networkId,
+            toAddress,
+            this.amount
+          )
           await faucetTxn.update({
             status: enums.FaucetTxnStatuses.Confirmed,
             txnHash
           })
+          logger.info(`Sent ${this.amount} OGN to ${toAddress}`)
         } catch (error) {
           logger.error('Failed sending OGN to ', toAddress, error, error.stack)
           // Bail out - operator should manually review what went wrong
@@ -110,7 +136,10 @@ class AirDrop {
       }
 
       this.stats.numTxns++
-      this.stats.totalAmount.plus(this.amount)
+      this.stats.totalAmountWei = this.stats.totalAmountWei.plus(this.amount)
+      this.stats.totalAmountOgn = this.token.toTokenUnit(
+        this.stats.totalAmountWei
+      )
     }
   }
 
@@ -138,21 +167,59 @@ class AirDrop {
     this.campaignId = campaign.id
     this.sender = await this.token.senderAddress(this.networkId)
 
-    this.stats = { numTxns: 0, totalAmount: BigNumber(0) }
+    this.stats = {
+      numTxns: 0,
+      totalAmountWei: BigNumber(0),
+      totalAmountOgn: BigNumber(0)
+    }
 
     logger.info('AirDrop config:')
-    logger.info('Dryrun:         ', this.dryRun)
-    logger.info('Network Id:     ', this.networkId)
-    logger.info('Campaign Id:    ', this.campaignId)
-    logger.info('Num recipients: ', this.recipients.length)
-    logger.info('Dist. amount:   ', this.amount)
-    logger.info('Sender address: ', this.sender)
-    logger.info('Token address:  ', this.token.contractAddress(this.networkId))
+    logger.info('  Dryrun:         ', this.dryRun)
+    logger.info('  Network Id:     ', this.networkId)
+    logger.info('  Campaign Id:    ', this.campaignId)
+    logger.info('  Num recipients: ', this.recipients.length)
+    logger.info('  Amount (wei):   ', this.amount)
+    logger.info('  Amount (OGN):   ', this.token.toTokenUnit(this.amount))
+    logger.info('  Sender address: ', this.sender)
+    logger.info(
+      '  Token address:  ',
+      this.token.contractAddress(this.networkId)
+    )
+  }
+
+  async _checkSenderBalances() {
+    const web3 = this.token.web3(this.networkId)
+    const ognBalance = await this.token.balance(this.networkId, this.sender)
+    const ethBalance = await web3.eth.getBalance(this.sender)
+
+    // Check the sender account has enough OGN.
+    const requiredOgnBalance = this.amount.times(this.recipients.length)
+    if (BigNumber(ognBalance).lt(requiredOgnBalance)) {
+      throw new Error(
+        `Sender OGN balance is ${ognBalance}. Needs at least ${requiredOgnBalance}`
+      )
+    }
+
+    // Check the sender account has enough ETH to pay for gas.
+    const gasAmount = BigNumber(40000) // It takes about 40k gas to transfer ogn.
+    const gasPrice = await web3.eth.getGasPrice()
+    const gasFees = gasAmount.times(gasPrice)
+    const requiredEthBalance = gasFees.times(this.recipients.length)
+    if (BigNumber(ethBalance).lt(requiredEthBalance)) {
+      throw new Error(
+        `Sender ETH balance is ${ethBalance}. Needs at least ${requiredEthBalance}`
+      )
+    }
+
+    logger.info('Sender balances:')
+    logger.info('  OGN: ', ognBalance)
+    logger.info('  ETH: ', ethBalance)
   }
 
   async main(config) {
     logger.info('Configuring job.')
     await this._init(config)
+    await this._checkSenderBalances()
     logger.info('Starting distribution.')
     await this._process()
   }
@@ -198,12 +265,10 @@ if (require.main === module) {
   job
     .main(config)
     .then(() => {
-      logger.info('Airdrop stats:')
+      logger.info('AirDrop stats:')
       logger.info('  Number of txns:      ', job.stats.numTxns)
-      logger.info(
-        '  Total amount distributed (natural units): ',
-        job.stats.totalAmount
-      )
+      logger.info('  Total distributed (wei):', job.stats.totalAmountWei)
+      logger.info('  Total distributed (OGN):', job.stats.totalAmountOgn)
       logger.info('Finished')
       process.exit()
     })
