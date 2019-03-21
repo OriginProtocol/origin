@@ -219,6 +219,102 @@ class GrowthWelcome extends Component {
     )
   }
 
+  renderBoostingAndRewardsFold() {
+    return (
+      <div className="d-flex fourth-fold-holder">
+        <div className="col-6 pl-0 pr-0">
+          <div className="coin-section" />
+          <div className="boosting-section d-flex flex-column">
+            <div className="text-holder ml-auto">
+              <div className="title">
+                <fbt desc="GrowthWelcome.boosting">
+                  Boosting
+                </fbt>
+              </div>
+              <div className="text mt-3">
+                <fbt desc="GrowthWelcome.boostingExplanation">
+                  Sellers use OGN to boost their listings on the marketplace.
+                  This gives their listings higher visibility and placement.
+                  Listings with OGN have a higher chance of being sold quickly.
+                </fbt>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-6 pl-0 pr-0">
+          <div className="rewards-section d-flex flex-column">
+            <div className="text-holder mr-auto">
+              <div className="title">
+                <fbt desc="GrowthWelcome.rewards">
+                  Rewards
+                </fbt>
+              </div>
+              <div className="text mt-3">
+                <fbt desc="GrowthWelcome.rewardsExplanation">
+                  OGN is a rewards cryptocurrency earned by Origin users. Earn
+                  rewards when you verify your account or invite your friends to
+                  join Origin. Even get OGN as cash back when you buy and sell.
+                </fbt>
+              </div>
+            </div>
+          </div>
+          <div className="arrows-section" />
+        </div>
+      </div>
+    )
+  }
+
+  renderStartEarningFold() {
+    return (
+      <div className="start-earning-fold-holder">
+        <div className="container d-flex flex-column">
+          <div className="title mb-2">
+            <fbt desc="GrowthWelcome.startEarning">
+              Start earning Origin tokens within minutes
+            </fbt>
+          </div>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">1</div>
+          <div className="text">
+            <fbt desc="GrowthWelcome.connectCurrency">
+              Connect your cryptocurrency wallet to Origin
+            </fbt>
+          </div>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">2</div>
+          <div className="text">
+            <fbt desc="GrowthWelcome.signUpVerify">
+              Sign up and verify your account and eligibility
+            </fbt>
+          </div>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">3</div>
+          <div className="text">
+            <fbt desc="GrowthWelcome.beginEarning">
+              Begin earning today
+            </fbt>
+          </div>
+          <button 
+            className="btn btn-primary btn-rounded mr-auto ml-auto"
+            children={fbt('Get Started', 'GrowthWelcome.getStarted')}
+            onClick={() => open("https://www.originprotocol.com/tokens")}
+          />
+          <div className="text link-holder">
+            <fbt desc="GrowthWelcome.haveQuestions">
+              Have questions?
+            </fbt>
+            <a 
+              href="mailto:support@originprotocol.com"
+              className="ml-1"
+            >
+              <fbt desc="GrowthWelcome.GetInTouch">
+                Get in touch
+              </fbt>
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
     const { firstName, lastName } = identity || {}
     const personalised = !!identity
@@ -228,6 +324,8 @@ class GrowthWelcome extends Component {
         {this.renderFirstFold(personalised, firstName, urlForOnboarding, arrivedFromOnboarding)}
         {this.renderWhatIsOriginFold()}
         {this.renderWhatAreOriginTokensFold()}
+        {this.renderBoostingAndRewardsFold()}
+        {this.renderStartEarningFold()}
       </div>
     )
   }
@@ -373,6 +471,98 @@ require('react-styl')(`
         font-size: 18px
         width: 200px
         height: 50px
+    .fourth-fold-holder
+      .coin-section
+        background-color: var(--clear-blue)
+        height: 340px
+        width: 100%
+        background-image: url(images/growth/reward-ogn-coins.svg)
+        background-position: bottom right
+        background-repeat: no-repeat
+      .boosting-section
+        background-color: var(--pale-grey-eight)
+        height: 500px
+        padding-top: 150px
+        padding-right: 135px
+        .text-holder
+          max-width: 350px
+        .title
+          font-family: Poppins
+          font-size: 36px
+          font-weight: 600
+          font-style: normal
+          line-height: 1.14
+          color: var(--dark)
+        .text
+          font-family: Lato
+          font-weight: normal
+          line-height: 1.44
+          color: var(--dark)
+      .arrows-section
+        background-color: #5f41d2
+        height: 340px
+        width: 100%
+        background-image: url(images/growth/purple-up-arrow.svg)
+        background-position: bottom left
+        background-repeat: repeat
+      .rewards-section
+        background-color: var(--dark-grey-blue)
+        height: 500px
+        padding-top: 150px
+        padding-left: 135px
+        .text-holder
+          max-width: 350px
+        .title
+          font-family: Poppins
+          font-size: 36px
+          font-weight: 600
+          font-style: normal
+          line-height: 1.14
+          color: white
+        .text
+          font-family: Lato
+          font-weight: normal
+          line-height: 1.44
+          color: white
+    .start-earning-fold-holder
+      background-color: var(--clear-blue)
+      color: white
+      padding-top: 140px
+      padding-bottom: 135px
+      text-align: center
+      margin-bottom: -64px
+      .title
+        font-family: Poppins
+        font-size: 36px
+        font-weight: 600
+      .text
+        font-family: Lato
+        font-weight: normal
+        font-style: normal
+        margin-top: 10px
+      .number-point
+        font-family: Lato
+        font-weight: normal
+        border: solid 1px var(--white);
+        border-radius: 50px
+        width: 46px
+        height: 46px
+        margin-top: 42px
+      .btn
+        font-size: 18px
+        min-width: 200px
+        width: auto
+        height: 50px
+        border: solid 1px white
+        margin-top: 62px
+      .btn:hover
+        color: var(--clear-blue)
+        background-color: white
+      a
+        color: white
+        text-decoration: underline
+      .link-holder
+        margin-top: 60px
     .origin-showcase
       background-image: url(images/growth/marketplace-screenshots-graphic.png)
       background-position: bottom left
