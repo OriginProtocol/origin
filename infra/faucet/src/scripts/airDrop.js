@@ -1,6 +1,9 @@
 // Tool to distribute OGN tokens to a list of ETH addresses stored in a text file.
+//
 // Command line example:
-//   node airDrop.js --recipientsFilename=addresses.txt --networkId=999 --campaignId=1
+//  #> export PROVIDER_URL=https://mainnet.infura.io/v2/<project_id>
+//  #> export MAINNET_PRIVATE_KEY=<pk>
+//  #> node airDrop.js --recipientsFilename=addresses.txt --networkId=1 --campaignId=1
 
 'use strict'
 
