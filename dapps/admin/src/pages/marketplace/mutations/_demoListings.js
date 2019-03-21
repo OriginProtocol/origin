@@ -1,5 +1,6 @@
 // These are mutations (`CreateListingMutation`) for creating sample listings.
 
+// House, Fractional Nightly
 const HawaiiHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '0',
@@ -48,12 +49,87 @@ const HawaiiHouse = {
     },
     workingHours: [],
     timeZone: '',
-    unavailable: [],
-    customPricing: [],
+    unavailable: [
+      '2019-01-1/2019-01-3',
+      '2019-02-1/2019-02-3',
+      '2019-03-1/2019-03-3',
+      '2019-04-1/2019-04-3',
+      '2019-05-1/2019-05-3',
+      '2019-06-1/2019-06-3',
+      '2019-07-1/2019-07-3',
+      '2019-08-1/2019-08-3',
+      '2019-09-1/2019-09-3',
+      '2019-10-1/2019-10-3',
+      '2019-11-1/2019-11-3',
+      '2019-12-1/2019-12-3',
+      '2020-01-1/2020-01-3',
+      '2020-02-1/2020-02-3',
+      '2020-03-1/2020-03-3',
+      '2020-04-1/2020-04-3',
+      '2020-05-1/2020-05-3',
+      '2020-06-1/2020-06-3',
+      '2020-07-1/2020-07-3',
+      '2020-08-1/2020-08-3',
+      '2020-09-1/2020-09-3',
+      '2020-10-1/2020-10-3',
+      '2020-11-1/2020-11-3',
+      '2020-12-1/2020-12-3',
+      '2021-01-1/2021-01-3',
+      '2021-02-1/2021-02-3',
+      '2021-03-1/2021-03-3',
+      '2021-04-1/2021-04-3',
+      '2021-05-1/2021-05-3',
+      '2021-06-1/2021-06-3',
+      '2021-07-1/2021-07-3',
+      '2021-08-1/2021-08-3',
+      '2021-09-1/2021-09-3',
+      '2021-10-1/2021-10-3',
+      '2021-11-1/2021-11-3',
+      '2021-12-1/2021-12-3'
+    ],
+    customPricing: [
+      '2019-01-21/2019-01-24:4',
+      '2019-02-21/2019-02-24:4',
+      '2019-03-21/2019-03-24:4',
+      '2019-04-21/2019-04-24:4',
+      '2019-05-21/2019-05-24:4',
+      '2019-06-21/2019-06-24:4',
+      '2019-07-21/2019-07-24:4',
+      '2019-08-21/2019-08-24:4',
+      '2019-09-21/2019-09-24:4',
+      '2019-10-21/2019-10-24:4',
+      '2019-11-21/2019-11-24:4',
+      '2019-12-21/2019-12-24:4',
+      '2020-01-21/2020-01-24:4',
+      '2020-02-21/2020-02-24:4',
+      '2020-03-21/2020-03-24:4',
+      '2020-04-21/2020-04-24:4',
+      '2020-05-21/2020-05-24:4',
+      '2020-06-21/2020-06-24:4',
+      '2020-07-21/2020-07-24:4',
+      '2020-08-21/2020-08-24:4',
+      '2020-09-21/2020-09-24:4',
+      '2020-10-21/2020-10-24:4',
+      '2020-11-21/2020-11-24:4',
+      '2020-12-21/2020-12-24:4',
+      '2021-01-21/2021-01-24:4',
+      '2021-02-21/2021-02-24:4',
+      '2021-03-21/2021-03-24:4',
+      '2021-04-21/2021-04-24:4',
+      '2021-05-21/2021-05-24:4',
+      '2021-06-21/2021-06-24:4',
+      '2021-07-21/2021-07-24:4',
+      '2021-08-21/2021-08-24:4',
+      '2021-09-21/2021-09-24:4',
+      '2021-10-21/2021-10-24:4',
+      '2021-11-21/2021-11-24:4',
+      '2021-12-21/2021-12-24:4'
+    ],
     booked: []
   }
 }
 
+// Car, Fractional Hourly
 const Car = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '0',
@@ -61,7 +137,7 @@ const Car = {
   autoApprove: true,
   data: {
     typename: 'FractionalHourlyListing',
-    title: '1977 International Scout II - Stan waz here',
+    title: '1977 International Scout II',
     description:
       "Introduced in 1971, the International Scout II rode on a stretched-wheelbase version of the rugged Scout chassis as a competitor to trucks like the larger Chevrolet Blazer. The highly customizable Scout was popular for work and racing, taking home a class win in the 1977 Baja 1000. This restored beautifully restored 1977 Scout II's customizations run more than skin deep, with a 6.0-liter GM engine and transmission to go along with the wheels and suspension lift.",
     category: 'schema.forRent',
@@ -108,6 +184,7 @@ const Car = {
   }
 }
 
+// Tickets, Mutli-Unit
 const TaylorSwiftTickets = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '5',
@@ -153,6 +230,7 @@ const TaylorSwiftTickets = {
   }
 }
 
+// House, Fractional Nightly
 const LakeHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '0',
@@ -199,6 +277,7 @@ const LakeHouse = {
   }
 }
 
+// House, Fractional Nightly
 const ZincHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '0',
@@ -269,6 +348,7 @@ const ZincHouse = {
   }
 }
 
+// T-Shirt, Single Unit
 const Spaceman = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   deposit: '5',
@@ -299,4 +379,11 @@ const Spaceman = {
   }
 }
 
-export default [Spaceman, Car, LakeHouse, ZincHouse, HawaiiHouse, TaylorSwiftTickets]
+export default [
+  Spaceman,
+  Car,
+  LakeHouse,
+  ZincHouse,
+  HawaiiHouse,
+  TaylorSwiftTickets
+]
