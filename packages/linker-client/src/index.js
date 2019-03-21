@@ -35,6 +35,14 @@ class WalletLinkerClient {
 
     this.session = new Session()
     this.session.load()
+
+    if (window) {
+      window.__linkWallet = (account, notifyWallet) => {
+        this.notifyWallet = notifyWallet
+        // TODO perhaps not anything if it's already linked to that account
+        this.link()
+      }
+    }
   }
 
   // Initiates linking of web3 provider to mobile wallet.

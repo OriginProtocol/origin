@@ -30,7 +30,7 @@ This will start a `webpack-dev-server` with hot reloading on `http://localhost:3
 By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network you'll need to deploy some contracts and create some sample listings using the `admin` tool. This can be done by running:
 
 ```
-cd admin && npm start
+cd dapps/admin && npm start
 ```
 
 Then open your browser to `http://localhost:3001` and:
@@ -164,6 +164,17 @@ host-machine$ docker-compose restart <container_name>
 ⚠️ Don't run `docker-compose down` when stopping containers! Any changes made since the initial Docker build will be lost. Instead use `docker-compose stop`
 
 ### Troubleshooting
+
+- If you get errors about missing npm packages, clean install of all modules
+	- `cd` to root dir of repo
+	- `lerna clean` (if needed, install lerna with `npm install -f lerna`)
+	- `rm -rf node_modules`
+	- `rm package-lock.json` (if it exists)
+	- `bash scripts/clean-package-locks.sh`
+	- `npm install`
+
+- If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
+```rm -rf ~/.jsipfs/```
 
 #### Docker Desktop Mac
 
