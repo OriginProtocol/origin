@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import Avatar from 'components/avatar'
-import OriginButton from 'components/origin-button'
 
 import originWallet from '../OriginWallet'
 
@@ -96,16 +95,6 @@ class ProfileScreen extends Component {
             </View>
           </View>
         )}
-        {address === wallet.address &&
-          <OriginButton
-            size="large"
-            image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} />}
-            type="primary"
-            title="Edit Profile"
-            textStyle={styles.buttonText}
-            onPress={this.handlePress}
-          />
-        }
       </ScrollView>
     )
   }
@@ -149,11 +138,6 @@ const styles = StyleSheet.create({
     height: 30,
     marginRight: 10,
     width: 30,
-  },
-  buttonText: {
-    fontFamily: 'Lato',
-    fontSize: 18,
-    fontWeight: '900',
   },
   container: {
     backgroundColor: '#f7f8f8',

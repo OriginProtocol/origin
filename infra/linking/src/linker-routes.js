@@ -64,8 +64,11 @@ router.get('/server-info', (req, res) => {
     ipfsGateway,
     ipfsApi,
     dappUrl,
+    // deprecated
     messagingUrl,
+    // deprecated
     profileUrl,
+    // deprecated
     sellingUrl,
     attestationAccount,
     perfModeEnabled,
@@ -77,8 +80,11 @@ router.get('/server-info', (req, res) => {
     ipfs_gateway: ipfsGateway,
     ipfs_api: ipfsApi,
     dapp_url: dappUrl,
+    // deprecated
     messaging_url: messagingUrl,
+    // deprecated
     profile_url: profileUrl,
+    // deprecated
     selling_url: sellingUrl,
     attestation_account: attestationAccount,
     perf_mode_enabled: perfModeEnabled,
