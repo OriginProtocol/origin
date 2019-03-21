@@ -67,18 +67,18 @@ class SettingsScreen extends Component {
           <View style={styles.header}>
             <Text style={styles.heading}>GENERAL</Text>
           </View>
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Accounts')}>
             <View style={styles.item}>
-              <Text style={styles.text}>Devices</Text>
+              <Text style={styles.text}>Accounts</Text>
               <View style={styles.iconContainer}>
                 <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
               </View>
             </View>
           </TouchableHighlight>
           <Separator padded={true} />
-          <TouchableHighlight onPress={() => this.props.navigation.navigate('Profile', { user })}>
+          <TouchableHighlight onPress={() => this.props.navigation.navigate('Devices')}>
             <View style={styles.item}>
-              <Text style={styles.text}>Profile</Text>
+              <Text style={styles.text}>Devices</Text>
               <View style={styles.iconContainer}>
                 <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
               </View>
@@ -118,23 +118,6 @@ class SettingsScreen extends Component {
                 onChangeText={this.handleChange}
                 onSubmitEditing={e =>this.handleSubmit(e)}
                 value={this.state.apiHost}
-                style={styles.input}
-              />
-            </Fragment>
-          }
-          {isCustom &&
-            <Fragment>
-              <View style={styles.header}>
-                <Text style={styles.heading}>PRIVATE KEY</Text>
-              </View>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                onSubmitEditing={async (e) => { if (await originWallet.setPrivateKey(e.nativeEvent.text)) {
-                    Alert.alert('A new private key has been set!')
-                  }}}
-                onChangeText={(inputPrivateKey) => this.setState({inputPrivateKey})}
-                value={this.state.inputPrivateKey}
                 style={styles.input}
               />
             </Fragment>

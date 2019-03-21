@@ -13,6 +13,8 @@ services:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
       - POSTGRES_DB=origin
+    ports:
+      - "5432:5432"
 
   elasticsearch:
     container_name: elasticsearch

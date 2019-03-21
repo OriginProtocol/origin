@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 
 import { remove } from 'actions/Notification'
 
-import OriginButton from 'components/origin-button'
-
 import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -20,17 +18,6 @@ class NotificationItem extends Component {
           <View style={{ ...styles.thumbnail, ...styles.imageless }} />
           <Text style={styles.message}>{message}</Text>
         </View>
-        <OriginButton
-          type="primary"
-          title="Review In DApp"
-          image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} style={styles.external} />}
-          textStyle={styles.buttonText}
-          onPress={() => {
-            url && originWallet.open(url)
-
-            this.props.remove(id)
-          }}
-        />
       </View>
     )
   }
@@ -43,9 +30,6 @@ const mapDispatchToProps = dispatch => ({
 export default connect(undefined, mapDispatchToProps)(NotificationItem)
 
 const styles = StyleSheet.create({
-  buttonText: {
-    fontSize: 16,
-  },
   content: {
     flexDirection: 'row',
     marginBottom: 10,
