@@ -7,6 +7,8 @@ const NonceTrackerSubprovider = require("web3-provider-engine/subproviders/nonce
 // Note: This is not used for Mainnet - only for Testnet and local deployment.
 const numAddressesToUnlock = 4
 
+const providerUrl = process.env.PROVIDER_URL
+
 // Local setup
 truffleSetup = {
   migrations_directory: "./migrations",
@@ -46,7 +48,6 @@ function withNonceTracker(provider) {
 if (process.env.MAINNET_PRIVATE_KEY || process.env.MAINNET_MNEMONIC) {
   const privateKey = process.env.MAINNET_PRIVATE_KEY
   const mnemonic = process.env.MAINNET_MNEMONIC
-  const providerUrl = `https://mainnet.infura.io/${process.env.INFURA_ACCESS_TOKEN}`
 
   // Private key takes precedence over mnemonic.
   if (privateKey) {
@@ -72,7 +73,7 @@ if (process.env.RINKEBY_MNEMONIC) {
     provider: function() {
       return withNonceTracker(new HDWalletProvider(
         process.env.RINKEBY_MNEMONIC,
-        `https://rinkeby.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
+        providerUrl,
         0, numAddressesToUnlock
       ))
     },
@@ -84,7 +85,7 @@ if (process.env.ROPSTEN_MNEMONIC) {
     provider: function() {
       return withNonceTracker(new HDWalletProvider(
         process.env.ROPSTEN_MNEMONIC,
-        `https://ropsten.infura.io/${process.env.INFURA_ACCESS_TOKEN}`,
+        providerUrl,
         0, numAddressesToUnlock
       ))
     },
@@ -99,7 +100,7 @@ if (process.env.ORIGIN_MNEMONIC) {
     provider: function() {
       return withNonceTracker(new HDWalletProvider(
         process.env.ORIGIN_MNEMONIC,
-        'https://testnet.originprotocol.com/rpc',
+        providerUrl,
         0,
         numAddressesToUnlock
       ))

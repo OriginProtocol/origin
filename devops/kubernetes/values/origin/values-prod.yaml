@@ -8,13 +8,6 @@ bridgeImageTag: '916795e'
 dappImage: origin-dapp
 dappImageTag: 'cca4e4b'
 
-# Mainnet nodes
-gethTxReplicas: 1
-
-# IPFS server
-ipfsImageTag: ipfs/go-ipfs
-ipfsImageTag: master
-
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
 ipfsProxyImageTag: 'ff20be8'
@@ -32,7 +25,7 @@ discoveryImageTag: '6e22b35'
 growthImage: origin-growth
 growthImageTag: 'latest'
 
-# OrbitDB
+# origin-messaging
 messagingImage: origin-messaging
 messagingImageTag: '3104d23'
 
