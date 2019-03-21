@@ -47,7 +47,6 @@ const server = new ApolloServer({
   playground: true,
   context: async context => {
     const headers = context.req.headers
-    logger.error('APOLLO HEADERS:', headers)
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
     let authToken, walletAddress
