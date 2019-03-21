@@ -73,12 +73,12 @@ class CampaignRules {
    * Reads events related to a user from the DB.
    * @param {string} ethAddress - User's account.
    * @param {Object} Options:
-   *   - duringCampaign - Restricts query to events that occurred
-   *  during the campaign vs since user signed up.
-   *   - beforeCampaign - Restricts query to events that occurred
-   *   prior to the campaign start vs since user signed up.
-   *   - onlyVerified - Only returns events with status
-   *   Verified. Otherwise returns events with status Verified or Logged.
+   *   - duringCampaign - Restricts query to events that occurred during
+   *  the campaign. By default all events since user signed up are returned.
+   *   - beforeCampaign - Restricts query to events that occurred prior to the
+   *   campaign start. By default all events since user signed up are returned.
+   *   - onlyVerified - Only returns events with status Verified.
+   *   By default returns events with status Verified or Logged.
    * @returns {Promise<Array<models.GrowthEvent>>}
    */
   async getEvents(ethAddress, opts = {}) {
