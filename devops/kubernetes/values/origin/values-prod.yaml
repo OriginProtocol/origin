@@ -55,6 +55,6 @@ linkingImageTag: '98064bd'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'bed003d'
+cronImageTag: '9539143'
 
 ipfsLoadBalancerIP: 35.233.189.126
