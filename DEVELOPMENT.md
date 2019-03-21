@@ -30,7 +30,7 @@ This will start a `webpack-dev-server` with hot reloading on `http://localhost:3
 By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network you'll need to deploy some contracts and create some sample listings using the `admin` tool. This can be done by running:
 
 ```
-cd admin && npm start
+cd dapps/admin && npm start
 ```
 
 Then open your browser to `http://localhost:3001` and:
