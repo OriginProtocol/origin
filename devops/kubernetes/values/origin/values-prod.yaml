@@ -1,0 +1,60 @@
+databaseInstance: origin-214503:us-west1:prod
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: 'e91f196'
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: 'd2fca1c'
+
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: '5688898'
+
+# origin-faucet
+faucetImage: origin-faucet
+faucetImageTag: 'e28fea1'
+
+# event-listener
+eventlistenerImage: event-listener
+eventlistenerImageTag: 'e91f196'
+
+# origin-discovery
+discoveryImage: origin-discovery
+discoveryImageTag: 'd1ba847'
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: '449c82f'
+
+# origin-messaging
+messagingImage: origin-messaging
+messagingImageTag: '808f74e'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'e91f196'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: '98064bd'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: '58cad5c'
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.185.236.254'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: '98064bd'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'bed003d'
+
+ipfsLoadBalancerIP: 35.233.189.126

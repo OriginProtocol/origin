@@ -1,0 +1,41 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+ARG ENVKEY
+
+ENV NODE_ENV=production ENVKEY=$ENVKEY
+
+# Install envkey-source
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
+
+# Copy the necessary files for building dapp
+COPY package*.json ./
+COPY lerna.json ./
+
+# graphql and its dependencies
+COPY ./packages/graphql ./packages/graphql
+COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/ipfs ./packages/ipfs
+COPY ./packages/linker-client ./packages/linker-client
+COPY ./packages/messaging-client ./packages/messaging-client
+COPY ./packages/services ./packages/services
+COPY ./packages/validator ./packages/validator
+COPY ./packages/contracts ./packages/contracts
+
+COPY ./infra/dapp-creator-client ./infra/dapp-creator-client
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+
+# Use EnvKey so that environment variables are available to webpack at build time
+RUN eval $(envkey-source) && npm run build --prefix infra/dapp-creator-client
+
+# Copy built static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/infra/dapp-creator-client/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

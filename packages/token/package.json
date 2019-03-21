@@ -1,0 +1,41 @@
+{
+  "name": "@origin/token",
+  "description": "Origin Token library",
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OriginProtocol/origin/origin-token"
+  },
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "scripts": {
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "test": "mocha --timeout 10000 --exit test"
+  },
+  "dependencies": {
+    "@origin/contracts": "^0.8.6",
+    "bignumber.js": "8.0.2",
+    "truffle-hdwallet-provider": "0.0.6",
+    "truffle-privatekey-provider": "^0.1.0",
+    "web3": "1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "ganache-core": "2.4.0",
+    "mocha": "^5.2.0",
+    "openzeppelin-solidity": "^1.10.0",
+    "solc": "^0.4.25"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

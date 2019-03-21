@@ -1,0 +1,64 @@
+databaseInstance: origin-214503:us-west1:staging
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: 'abe42a6'
+bridgeReplicas: 2
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: '736b587'
+dappReplicas: 2
+
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: 'abe42a6'
+
+# origin-faucet
+faucetImage: origin-faucet
+faucetImageTag: 'abe42a6'
+
+# event-listener
+eventlistenerImage: event-listener
+eventlistenerImageTag: 'abe42a6'
+
+# origin-discovery
+discoveryImage: origin-discovery
+discoveryImageTag: 'abe42a6'
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: '736b587'
+
+# origin-messaging
+messagingImage: origin-messaging
+messagingImageTag: '736b587'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'abe42a6'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'e452b5c'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'abe42a6'
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.233.135.239'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'abe42a6'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: '61f78e8'
+
+# origin-admin
+adminImage: origin-admin
+adminImageTag: 'abe42a6'
