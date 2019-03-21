@@ -90,12 +90,12 @@ class MarketplaceEventHandler {
    */
   async _getListingDetails(log, blockInfo) {
     const listingId = generateListingId(log)
-    const listing = await this.graphqlClient.query({
+    const result = await this.graphqlClient.query({
       query: listingQuery,
       variables: { listingId: listingId }
     })
-    checkEventsFreshness(listing.events, blockInfo)
-    return listing
+    checkEventsFreshness(result.data.marketplace.listing.events, blockInfo)
+    return result.data.marketplace.listing
   }
 
   /**
@@ -127,8 +127,6 @@ class MarketplaceEventHandler {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
 
-    console.log(listing)
-
     const contractListingId = listing.id.split('-')[2]
     if (
       contractListingId !== log.decoded.listingID &&
@@ -140,13 +138,13 @@ class MarketplaceEventHandler {
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
+      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
     const listingData = {
       id: listing.id,
       blockNumber: log.blockNumber,
       logIndex: log.logIndex,
       status: listing.status,
-      sellerAddress: listing.seller.toLowerCase(),
+      sellerAddress: listing.seller.id.toLowerCase(),
       data: listing
     }
     if (log.eventName === 'ListingCreated') {
@@ -157,8 +155,8 @@ class MarketplaceEventHandler {
     await db.Listing.upsert(listingData)
 
     if (this.config.elasticsearch) {
-      logger.info(`Indexing listing in Elastic: id=${listingId}`)
-      search.Listing.index(listingId, userAddress, ipfsHash, listing)
+      logger.info(`Indexing listing in Elastic: id=${listing.id}`)
+      search.Listing.index(listing.id, userAddress, ipfsHash, listing)
     }
   }
 
@@ -198,14 +196,15 @@ class MarketplaceEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthEvent(log, details, blockInfo) {
+  async _recordGrowthEvent(log, data, blockInfo) {
+    console.log(data)
     switch (log.eventName) {
       case 'ListingCreated':
         await GrowthEvent.insert(
           logger,
-          details.listing.seller.toLowerCase(),
+          data.seller.id.toLowerCase(),
           GrowthEventTypes.ListingCreated,
-          details.listing.id,
+          data.id,
           { blockInfo },
           log.date
         )
@@ -215,17 +214,17 @@ class MarketplaceEventHandler {
         // a ListingSold event on the seller side.
         await GrowthEvent.insert(
           logger,
-          details.offer.buyer.toLowerCase(),
+          data.buyer.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
-          details.offer.id,
+          data.id,
           { blockInfo },
           log.date
         )
         await GrowthEvent.insert(
           logger,
-          details.listing.seller.toLowerCase(),
+          data.listing.seller.toLowerCase(),
           GrowthEventTypes.ListingSold,
-          details.offer.id,
+          data.id,
           { blockInfo },
           log.date
         )

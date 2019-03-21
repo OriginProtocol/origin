@@ -23,6 +23,9 @@ const Origin = require('@origin/js').default
 const Web3 = require('web3')
 const esmImport = require('esm')(module)
 const graphqlClient = esmImport('@origin/graphql').default
+const { setNetwork } = esmImport('@origin/graphql/src/contracts')
+
+setNetwork('docker')
 
 const {
   MarketplaceEventHandler,

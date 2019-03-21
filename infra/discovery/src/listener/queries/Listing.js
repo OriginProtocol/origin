@@ -11,6 +11,7 @@ const listingQuery = gql`
             id
             event
             blockNumber
+            logIndex
             block {
               id
               timestamp
