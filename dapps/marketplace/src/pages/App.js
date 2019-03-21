@@ -66,11 +66,12 @@ class App extends Component {
 
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
-    
-    // hide navigation bar on growth welcome screen and show it 
+
+    // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
-    const hideNavbar = !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g)
-      && this.props.location.pathname.match(/^\/welcome.*$/g)
+    const hideNavbar =
+      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
+      this.props.location.pathname.match(/^\/welcome.*$/g)
 
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (

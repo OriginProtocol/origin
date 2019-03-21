@@ -191,9 +191,9 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           <div className="mt-3 normal-line-height pale-grey explanation">
             <fbt desc="EnrollmentModal.termsExplanationParagraph2">
-              By joining the Origin rewards program, you agree that you will 
-              not transfer or sell future earned Origin tokens to other for 
-              at least 1 year from the date of earning your tokens.
+              By joining the Origin rewards program, you agree that you will not
+              transfer or sell future earned Origin tokens to other for at least
+              1 year from the date of earning your tokens.
             </fbt>
           </div>
           <div className="terms pale-grey">

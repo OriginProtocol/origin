@@ -50,9 +50,7 @@ class GrowthWelcome extends Component {
   render() {
     return (
       <Fragment>
-        <PageTitle>
-          Welcome to Origin Protocol
-        </PageTitle>
+        <PageTitle>Welcome to Origin Protocol</PageTitle>
         <Switch>
           <Route
             exact
@@ -90,7 +88,12 @@ class GrowthWelcome extends Component {
     )
   }
 
-  renderFirstFold(personalised, firstName, urlForOnboarding, arrivedFromOnboarding) {
+  renderFirstFold(
+    personalised,
+    firstName,
+    urlForOnboarding,
+    arrivedFromOnboarding
+  ) {
     return (
       <div className="container d-flex">
         <div className="col-6 d-flex flex-column">
@@ -105,9 +108,7 @@ class GrowthWelcome extends Component {
                 </div>
                 <div className="invited-by ml-3 d-flex align-items-center">
                   <div className="d-flex flex-column">
-                    <fbt desc="GrowthWelcome.invitedBy">
-                      Invited by
-                    </fbt>
+                    <fbt desc="GrowthWelcome.invitedBy">Invited by</fbt>
                     <div>{firstName}</div>
                   </div>
                 </div>
@@ -150,7 +151,7 @@ class GrowthWelcome extends Component {
   }
 
   renderFeatureRow(picture, text) {
-    return(
+    return (
       <div className="d-flex feature-row">
         <img src={picture} />
         <div className="feature-text">{text}</div>
@@ -164,21 +165,37 @@ class GrowthWelcome extends Component {
         <div className="container d-flex">
           <div className="col-6 d-flex flex-column left-column">
             <div className="title">
-              <fbt desc="GrowthWelcome.whatIsOrigin">
-                What is Origin?
-              </fbt>
+              <fbt desc="GrowthWelcome.whatIsOrigin">What is Origin?</fbt>
             </div>
             <div className="sub-title">
               <fbt desc="GrowthWelcome.whatIsOriginExplanation">
-                Origin is the first peer-to-peer marketplace built entirely
-                on the blockchain
+                Origin is the first peer-to-peer marketplace built entirely on
+                the blockchain
               </fbt>
             </div>
             <div>
-              {this.renderFeatureRow('images/growth/feature-1.svg', fbt('Free to use with 0% transaction fees', 'GrowthWelcome.freeFeature'))}
-              {this.renderFeatureRow('images/growth/feature-2.svg', fbt('Censorship-resistant browsing and searching', 'GrowthWelcome.censorshipFeature'))}
-              {this.renderFeatureRow('images/growth/feature-3.svg', fbt('Dozens of categories like gift cards, homesharing, ecommerce, and services', 'GrowthWelcome.categoriesFeature'))}
-          </div>
+              {this.renderFeatureRow(
+                'images/growth/feature-1.svg',
+                fbt(
+                  'Free to use with 0% transaction fees',
+                  'GrowthWelcome.freeFeature'
+                )
+              )}
+              {this.renderFeatureRow(
+                'images/growth/feature-2.svg',
+                fbt(
+                  'Censorship-resistant browsing and searching',
+                  'GrowthWelcome.censorshipFeature'
+                )
+              )}
+              {this.renderFeatureRow(
+                'images/growth/feature-3.svg',
+                fbt(
+                  'Dozens of categories like gift cards, homesharing, ecommerce, and services',
+                  'GrowthWelcome.categoriesFeature'
+                )
+              )}
+            </div>
           </div>
           <div className="origin-showcase col-10" />
         </div>
@@ -197,22 +214,22 @@ class GrowthWelcome extends Component {
           </div>
           <div className="sub-title mt-3">
             <fbt desc="GrowthWelcome.whatAreTokensExplanation">
-              Origin cryptocurrency tokens (OGN) are ERC-20 tokens that
-              can be used on the platform in many ways.
+              Origin cryptocurrency tokens (OGN) are ERC-20 tokens that can be
+              used on the platform in many ways.
             </fbt>
           </div>
           <div className="text mt-3">
             <fbt desc="GrowthWelcome.whatAreTokensText">
-              Earned Origin tokens (OGN) are currently locked for use on
-              the Origin app and platform. They cannot be transferred to
-              other users at this time. In the future, it is expected that
-              OGN will be unlocked and transferrable.
+              Earned Origin tokens (OGN) are currently locked for use on the
+              Origin app and platform. They cannot be transferred to other users
+              at this time. In the future, it is expected that OGN will be
+              unlocked and transferrable.
             </fbt>
           </div>
-          <button 
+          <button
             className="btn btn-primary btn-rounded"
             children={fbt('Learn more', 'GrowthWelcome.learnMore')}
-            onClick={() => open("https://www.originprotocol.com/tokens")}
+            onClick={() => open('https://www.originprotocol.com/tokens')}
           />
         </div>
       </div>
@@ -227,9 +244,7 @@ class GrowthWelcome extends Component {
           <div className="boosting-section d-flex flex-column">
             <div className="text-holder ml-auto">
               <div className="title">
-                <fbt desc="GrowthWelcome.boosting">
-                  Boosting
-                </fbt>
+                <fbt desc="GrowthWelcome.boosting">Boosting</fbt>
               </div>
               <div className="text mt-3">
                 <fbt desc="GrowthWelcome.boostingExplanation">
@@ -246,9 +261,7 @@ class GrowthWelcome extends Component {
           <div className="rewards-section d-flex flex-column">
             <div className="text-holder mr-auto">
               <div className="title">
-                <fbt desc="GrowthWelcome.rewards">
-                  Rewards
-                </fbt>
+                <fbt desc="GrowthWelcome.rewards">Rewards</fbt>
               </div>
               <div className="text mt-3">
                 <fbt desc="GrowthWelcome.rewardsExplanation">
@@ -265,7 +278,7 @@ class GrowthWelcome extends Component {
     )
   }
 
-  renderStartEarningFold() {
+  renderStartEarningFold(urlForOnboarding, arrivedFromOnboarding) {
     return (
       <div className="start-earning-fold-holder">
         <div className="container d-flex flex-column">
@@ -274,40 +287,38 @@ class GrowthWelcome extends Component {
               Start earning Origin tokens within minutes
             </fbt>
           </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">1</div>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
+            1
+          </div>
           <div className="text">
             <fbt desc="GrowthWelcome.connectCurrency">
               Connect your cryptocurrency wallet to Origin
             </fbt>
           </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">2</div>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
+            2
+          </div>
           <div className="text">
             <fbt desc="GrowthWelcome.signUpVerify">
               Sign up and verify your account and eligibility
             </fbt>
           </div>
-          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">3</div>
-          <div className="text">
-            <fbt desc="GrowthWelcome.beginEarning">
-              Begin earning today
-            </fbt>
+          <div className="number-point mr-auto ml-auto justify-content-center d-flex align-items-center">
+            3
           </div>
-          <button 
+          <div className="text">
+            <fbt desc="GrowthWelcome.beginEarning">Begin earning today</fbt>
+          </div>
+          <this.EnrollButton
             className="btn btn-primary btn-rounded mr-auto ml-auto"
             children={fbt('Get Started', 'GrowthWelcome.getStarted')}
-            onClick={() => open("https://www.originprotocol.com/tokens")}
+            urlforonboarding={urlForOnboarding}
+            startopen={arrivedFromOnboarding.toString()}
           />
           <div className="text link-holder">
-            <fbt desc="GrowthWelcome.haveQuestions">
-              Have questions?
-            </fbt>
-            <a 
-              href="mailto:support@originprotocol.com"
-              className="ml-1"
-            >
-              <fbt desc="GrowthWelcome.GetInTouch">
-                Get in touch
-              </fbt>
+            <fbt desc="GrowthWelcome.haveQuestions">Have questions?</fbt>
+            <a href="mailto:support@originprotocol.com" className="ml-1">
+              <fbt desc="GrowthWelcome.GetInTouch">Get in touch</fbt>
             </a>
           </div>
         </div>
@@ -321,11 +332,16 @@ class GrowthWelcome extends Component {
 
     return (
       <div className="growth-welcome">
-        {this.renderFirstFold(personalised, firstName, urlForOnboarding, arrivedFromOnboarding)}
+        {this.renderFirstFold(
+          personalised,
+          firstName,
+          urlForOnboarding,
+          arrivedFromOnboarding
+        )}
         {this.renderWhatIsOriginFold()}
         {this.renderWhatAreOriginTokensFold()}
         {this.renderBoostingAndRewardsFold()}
-        {this.renderStartEarningFold()}
+        {this.renderStartEarningFold(urlForOnboarding, arrivedFromOnboarding)}
       </div>
     )
   }
