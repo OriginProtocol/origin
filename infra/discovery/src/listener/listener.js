@@ -21,7 +21,13 @@ const promBundle = require('express-prom-bundle')
 const urllib = require('url')
 const Origin = require('@origin/js').default
 const Web3 = require('web3')
+const esmImport = require('esm')(module)
+const graphqlClient = esmImport('@origin/graphql').default
 
+const {
+  MarketplaceEventHandler,
+  NoGasMarketplaceEventHandler
+} = require('./handler_marketplace')
 const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
@@ -62,7 +68,12 @@ function buildSignatureToRules(config, origin, web3) {
         if (handlerClass === undefined) {
           return
         }
-        const handler = new handlerClass(config, origin)
+        let handler
+        if (handlerClass.name === 'MarketplaceEventHandler') {
+          handler = new handlerClass(config, graphqlClient)
+        } else {
+          handler = new handlerClass(config, origin)
+        }
         const signature = web3.eth.abi.encodeEventSignature(eventAbi)
         if (signatureLookup[signature] === undefined) {
           signatureLookup[signature] = {}
