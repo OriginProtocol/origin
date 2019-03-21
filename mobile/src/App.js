@@ -11,19 +11,22 @@ import { storeNotificationsPermissions, updateBackupWarningStatus, updateCarouse
 import { setDevices } from 'actions/Devices'
 import { add as addNotification } from 'actions/Notification'
 import { fetchUser } from 'actions/User'
-import { getBalance, init } from 'actions/Wallet'
+import { getBalance, init, updateAccounts } from 'actions/Wallet'
 import { newEvent, updateEvent, processedEvent, setActiveEvent } from 'actions/WalletEvents'
 
 import Onboarding from 'components/onboarding'
 
 import DevicesScreen from 'screens/devices'
+import ForkScreen from 'screens/fork'
 import HomeScreen from 'screens/home'
-import MessagingScreen from 'screens/messaging'
+import MarketplaceScreen from 'screens/marketplace'
 import ProfileScreen from 'screens/profile'
 import ScanScreen from 'screens/scan'
 import SettingsScreen from 'screens/settings'
 import TransactionScreen from 'screens/transaction'
 import WalletFundingScreen from 'screens/wallet-funding'
+import AccountScreen from 'screens/account'
+import AccountsScreen from 'screens/accounts'
 
 import { loadData } from './tools'
 
@@ -52,8 +55,8 @@ const HomeStack = createStackNavigator({
   navigationOptions,
 })
 
-const MessagingStack = createStackNavigator({
-  Messaging: MessagingScreen,
+const MarketplaceStack = createStackNavigator({
+  Marketplace: MarketplaceScreen,
 }, {
   navigationOptions,
 })
@@ -65,22 +68,42 @@ const ScanStack = createStackNavigator({
 })
 
 const SettingsStack = createStackNavigator({
+  Account: AccountScreen,
+  Accounts: AccountsScreen,
   Devices: DevicesScreen,
-  Profile: ProfileScreen,
   Settings: SettingsScreen,
 }, {
   initialRouteName: 'Settings',
   navigationOptions,
 })
 
+const OnboardingStack = createStackNavigator({
+  Fork: ForkScreen,
+}, {
+  initialRouteName: 'Fork',
+  navigationOptions: ({ navigation }) => ({
+    headerBackTitle: ' ',
+    headerStyle: {
+      backgroundColor: '#293f55',
+      borderBottomWidth: 0,
+    },
+    headerTitleStyle: {
+      color: 'white',
+      fontFamily: 'Poppins',
+      fontSize: 17,
+      fontWeight: 'normal',
+    },
+  }),
+})
+
 const OriginNavigator = createBottomTabNavigator({
   Home: HomeStack,
-  Messaging: MessagingStack,
+  Marketplace: MarketplaceStack,
   Scan: ScanStack,
   Settings: SettingsStack,
 }, {
   initialRouteName: 'Home',
-  order: ['Home', 'Messaging', 'Scan', 'Settings'],
+  order: ['Home', 'Marketplace', 'Scan', 'Settings'],
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state
@@ -88,12 +111,12 @@ const OriginNavigator = createBottomTabNavigator({
       // require expects string literal :(
       if (routeName === 'Home') {
         return focused ?
-          <Image source={require(IMAGES_PATH + 'home-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'home-inactive.png')} />
-      } else if (routeName === 'Messaging') {
+          <Image source={require(IMAGES_PATH + 'wallet-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'wallet-inactive.png')} />
+      } else if (routeName === 'Marketplace') {
         return focused ?
-          <Image source={require(IMAGES_PATH + 'messaging-active.png')} /> :
-          <Image source={require(IMAGES_PATH + 'messaging-inactive.png')} />
+          <Image source={require(IMAGES_PATH + 'market-active.png')} /> :
+          <Image source={require(IMAGES_PATH + 'market-inactive.png')} />
       } else if (routeName === 'Scan') {
         return focused ?
           <Image source={require(IMAGES_PATH + 'scan-active.png')} /> :
@@ -107,26 +130,32 @@ const OriginNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     activeTintColor: '#007fff',
-    inactiveTintColor: '#c0cbd4',
-    style: {
-      backgroundColor: 'white',
-    },
     iconStyle: {
       marginTop: 10,
     },
-    labelStyle: {
-      fontFamily: 'Lato',
-      fontSize: 10,
-      fontWeight: 'normal',
+    inactiveTintColor: '#c0cbd4',
+    showLabel: false,
+    style: {
+      backgroundColor: 'white',
     },
     tabStyle: {
       justifyContent: 'space-around',
-    }
+    },
   },
 })
 
 // Origin Nav wrapper
 class OriginNavWrapper extends Component {
+  constructor(props) {
+    super(props)
+
+    this.balancePoll = null
+
+    this.state = {
+      loading: true,
+    }
+  }
+
   componentDidMount() {
     if (Platform.OS === 'ios') {
       PushNotificationIOS.checkPermissions(permissions => {
@@ -142,6 +171,10 @@ class OriginNavWrapper extends Component {
       // NavigationService.navigate('Home')
     // })
 
+    originWallet.events.on(Events.LOADED, () => {
+      this.setState({ loading: false })
+    })
+
     originWallet.events.on(Events.PROMPT_TRANSACTION, (data, matcher) => {
       this.props.newEvent(matcher, data)
       // this.props.setActiveEvent(data)
@@ -154,10 +187,19 @@ class OriginNavWrapper extends Component {
       NavigationService.navigate('Home')
     })
 
-    originWallet.events.on(Events.NEW_ACCOUNT, ({ address }, matcher) => {
+    originWallet.events.on(Events.CURRENT_ACCOUNT, ({ address }, matcher) => {
       this.props.initWallet(address)
       this.props.fetchUser(address)
       this.props.getBalance()
+
+      if (!this.balancePoll) {
+        // get the balance every five seconds
+        this.balancePoll = setInterval(() => this.props.getBalance(), 5000)
+      }
+    })
+
+    originWallet.events.on(Events.AVAILABLE_ACCOUNTS, ({ accounts }, matcher) => {
+      this.props.updateAccounts(accounts)
     })
 
     originWallet.events.on(Events.LINKED, (data, matcher) => {
@@ -194,7 +236,7 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.events.on(Events.SHOW_MESSAGES, () => {
-      NavigationService.navigate('Messaging')
+      NavigationService.navigate('Marketplace')
     })
 
     originWallet.events.on(Events.NOTIFICATION, notification => {
@@ -206,8 +248,6 @@ class OriginNavWrapper extends Component {
     })
 
     originWallet.openWallet()
-    // get the balance every five seconds
-    setInterval(() => this.props.getBalance(), 5000)
   }
 
   componentDidUpdate() {
@@ -224,12 +264,24 @@ class OriginNavWrapper extends Component {
 
   componentWillUnmount() {
     originWallet.closeWallet()
+
+    clearInterval(this.balancePoll)
   }
 
   render() {
-    return <OriginNavigator ref={navigatorRef =>
-      NavigationService.setTopLevelNavigator(navigatorRef)
-    } />
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )
+    }
+
+    return this.props.wallet.address ?
+      <OriginNavigator ref={navigatorRef =>
+        NavigationService.setTopLevelNavigator(navigatorRef)
+      } /> :
+      <OnboardingStack screenProps={{ smallScreen: this.props.smallScreen }} />
   }
 }
 
@@ -321,7 +373,7 @@ class OriginWrapper extends Component {
           />
         }
         {carouselCompleted &&
-          <OriginNavWrapper {...this.props} />
+          <OriginNavWrapper {...this.props} smallScreen={smallScreen} />
         }
       </Fragment>
   }
@@ -344,6 +396,7 @@ const mapDispatchToProps = dispatch => ({
   setActiveEvent: event => dispatch(setActiveEvent(event)),
   setDevices: devices => dispatch(setDevices(devices)),
   storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateBackupWarningStatus: bool => dispatch(updateBackupWarningStatus(bool)),
   updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
   updateEvent: (matcher, update) => dispatch(updateEvent(matcher, update)),
