@@ -114,7 +114,9 @@ if (isProduction) {
   ]
 
   config.plugins.push(
-    new CleanWebpackPlugin(['public/app.*', 'public/styles.*']),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['public/app.*']
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].[hash:8].css'
     })
