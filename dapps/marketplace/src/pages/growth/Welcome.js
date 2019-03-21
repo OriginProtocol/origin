@@ -327,7 +327,7 @@ class GrowthWelcome extends Component {
   }
 
   renderWelcomePageContents(arrivedFromOnboarding, identity, urlForOnboarding) {
-    const { firstName, lastName } = identity || {}
+    const { firstName } = identity || {}
     const personalised = !!identity
 
     return (
