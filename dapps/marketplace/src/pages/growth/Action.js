@@ -110,6 +110,17 @@ function Action(props) {
     )
   }
 
+  let showPossibleRewardAmount = !actionCompleted && reward !== null
+
+  // with Invite Friends reward show how much of a reward a
+  // user can earn only if pending and earned are both 0
+  if (type === 'Referral') {
+    console.log(rewardPending, rewardEarned)
+    showPossibleRewardAmount =
+      (rewardPending === null || rewardPending.amount === '0') &&
+      (rewardEarned === null || rewardEarned.amount === '0')
+  }
+
   return (
     <div className="d-flex action">
       <div className="col-2 d-flex justify-content-center">
@@ -136,12 +147,20 @@ function Action(props) {
         <div className="d-flex">
           {type === 'Referral' &&
             rewardPending !== null &&
-            rewardPending.amount > 0 && (
+            rewardPending.amount !== '0' && (
               <Fragment>
                 <div className="d-flex align-items-center sub-text">
                   Pending
                 </div>
                 {renderReward(rewardPending.amount, true)}
+              </Fragment>
+            )}
+          {type === 'Referral' &&
+            rewardEarned !== null &&
+            rewardEarned.amount !== '0' && (
+              <Fragment>
+                <div className="d-flex align-items-center sub-text">Earned</div>
+                {renderReward(rewardEarned.amount, true)}
               </Fragment>
             )}
           {actionCompleted && rewardEarned !== null && (
@@ -150,9 +169,7 @@ function Action(props) {
               {renderReward(rewardEarned.amount, false)}
             </Fragment>
           )}
-          {!actionCompleted &&
-            reward !== null &&
-            renderReward(reward.amount, true)}
+          {showPossibleRewardAmount && renderReward(reward.amount, true)}
           {actionLocked && unlockConditions.length > 0 && (
             <Fragment>
               <div className="emphasis pr-2 pt-1 d-flex align-items-center ">
