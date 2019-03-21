@@ -22,7 +22,7 @@ function watch(queue) {
   queue
     .on('error', function(error) {
       // An error occured.
-      logger.error('Queue error:', error)
+      logger.error(`Queue ${queue.name} error:`, error, ' Stack:', error.stack)
     })
     .on('waiting', function(jobId) {
       // A Job is waiting to be processed as soon as a worker is idling.
@@ -51,21 +51,21 @@ function watch(queue) {
     })
     .on('paused', function() {
       // The queue has been paused.
-      logger.info(`Queue posed.`)
+      logger.info(`Queue ${queue.name} paused.`)
     })
     .on('resumed', function(job) {
       // The queue has been resumed.
-      logger.info('Queue resumed. id:', job.id)
+      logger.info(`Queue ${queue.name} resumed. id:`, job.id)
     })
     .on('cleaned', function(jobs, types) {
       // Old jobs have been cleaned from the queue. `jobs` is an array of cleaned
       // jobs, and `type` is the type of jobs cleaned.
-      logger.info('Queue cleaned. jobs:', jobs, ' types:', types)
+      logger.info(`Queue ${queue.name} cleaned. jobs:`, jobs, ' types:', types)
     })
     .on('drained', function() {
       // Emitted every time the queue has processed all the waiting jobs
       // (even if there can be some delayed jobs not yet processed)
-      logger.info('Queue drained.')
+      logger.info(`Queue ${queue.name} drained.`)
     })
     .on('removed', function(job) {
       // A job successfully removed.

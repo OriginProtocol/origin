@@ -66,12 +66,18 @@ class App extends Component {
 
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
-    const shouldRenderNavbar = this.props.location.pathname !== '/welcome'
+
+    // hide navigation bar on growth welcome screen and show it
+    // in onboarding variation of that screen
+    const hideNavbar =
+      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
+      this.props.location.pathname.match(/^\/welcome.*$/g)
+
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <>
         <BetaBanner />
-        {shouldRenderNavbar && <Nav />}
+        {!hideNavbar && <Nav />}
         <main>
           <Switch>
             <Route path="/onboard" component={Onboard} />

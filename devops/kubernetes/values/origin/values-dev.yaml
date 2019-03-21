@@ -6,11 +6,7 @@ bridgeImageTag: 'ed37ae1'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '6f06703'
-
-# ipfs
-ipfsImage: ipfs/go-ipfs
-ipfsImageTag: master
+dappImageTag: 'bd723fe'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -30,11 +26,11 @@ discoveryImageTag: 'a66d908'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '486d369'
+growthImageTag: 'bd723fe'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'ed37ae1'
+messagingImageTag: 'bd723fe'
 
 # origin-notifications
 notificationsImage: origin-notifications
@@ -59,7 +55,7 @@ linkingImageTag: 'f885e29'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '89a142d'
+cronImageTag: 'a3e5d66'
 
 # origin-admin
 adminImage: origin-admin
