@@ -19,7 +19,8 @@
   },
   "files": [
     "dist",
-    "common"
+    "common",
+    "src"
   ],
   "repository": {
     "type": "git",

@@ -12,7 +12,9 @@ export const WalletConstants = keyMirror(
     BALANCE_SUCCESS: null,
     BALANCE_ERROR: null,
 
-    OGN_SUCCESS:null
+    OGN_SUCCESS: null,
+
+    UPDATE_ACCOUNTS: null,
   },
   'WALLET'
 )
@@ -55,5 +57,12 @@ export function getBalance() {
         console.log("error getting ogn for balance. ", error)
       }
     }
+  }
+}
+
+export function updateAccounts(accounts) {
+  return {
+    type: WalletConstants.UPDATE_ACCOUNTS,
+    accounts,
   }
 }
