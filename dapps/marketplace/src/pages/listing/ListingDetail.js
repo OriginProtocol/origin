@@ -183,10 +183,12 @@ class ListingDetail extends Component {
     } else if (isPendingBuyer && !listing.multiUnit) {
       return <OfferMade />
     } else if (isPendingBuyer && listing.multiUnit) {
-      return <>
-        <MultiUnit {...this.props} />
-        <OfferMade />
-      </>
+      return (
+        <>
+          <MultiUnit {...this.props} />
+          <OfferMade />
+        </>
+      )
     } else if (listing.status === 'pending') {
       return <Pending />
     } else if (isFractional) {
