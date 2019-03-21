@@ -8,8 +8,14 @@ import originWallet from '../OriginWallet'
 const IMAGES_PATH = '../../assets/images/'
 
 export default class Selling extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handlePress = this.handlePress.bind(this)
+  }
+
   handlePress() {
-    originWallet.open('selling')
+    this.props.navigation.navigate('Marketplace')
   }
 
   render() {
@@ -28,7 +34,6 @@ export default class Selling extends Component {
         <Text style={styles.paragraph}>Create your first listing in minutes by opening the Origin decentralized marketplace application from right here in your wallet.</Text>
         <OriginButton
           size="large"
-          image={<Image source={require(`${IMAGES_PATH}external-icon-light.png`)} />}
           type="primary"
           title="Open Marketplace"
           textStyle={styles.buttonText}
