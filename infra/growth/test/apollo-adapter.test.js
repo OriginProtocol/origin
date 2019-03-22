@@ -253,6 +253,8 @@ describe('Apollo adapter', () => {
         this.ethAddress
       )
 
+      expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+
       const actionByType = {}
       for(const action of out.actions) {
         actionByType[action.type] = action
@@ -325,6 +327,8 @@ describe('Apollo adapter', () => {
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.ethAddress
       )
+
+      expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -399,6 +403,8 @@ describe('Apollo adapter', () => {
         this.ethAddress
       )
 
+      expect(out.rewardEarned).to.deep.equal({ amount: '50000000000000000000', currency: 'OGN' })
+
       const actionByType = {}
       for(const action of out.actions) {
         actionByType[action.type] = action
@@ -436,7 +442,7 @@ describe('Apollo adapter', () => {
         ListingSold: {
           status: 'Active',
           rewardEarned: { amount: '0', currency: 'OGN' }
-        },
+        }
       }
 
       for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
@@ -479,6 +485,8 @@ describe('Apollo adapter', () => {
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.ethAddress
       )
+
+      expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
 
       const actionByType = {}
       for(const action of out.actions) {
