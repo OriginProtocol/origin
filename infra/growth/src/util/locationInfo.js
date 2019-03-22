@@ -3,12 +3,7 @@ const { ip2geo } = require('./ip2geo')
 const restrictedCountryCodes = ['US']
 // All OFAC countries are forbidden.
 // https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx
-const forbiddenCountryCodes = [
-  'CU',
-  'IR',
-  'KP',
-  'SY'
-]
+const forbiddenCountryCodes = ['CU', 'IR', 'KP', 'SY']
 
 /**
  * Returns country code, country name and
