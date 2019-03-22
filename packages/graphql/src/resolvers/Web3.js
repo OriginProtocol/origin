@@ -82,6 +82,9 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   walletType: () => {
+    if (localStorage.useWeb3Wallet) {
+      return 'Web3 Wallet'
+    }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
       if (provider.isOrigin) return 'Origin Wallet'
@@ -113,6 +116,9 @@ const web3Resolver = {
     }
   },
   primaryAccount: async () => {
+    if (localStorage.useWeb3Wallet) {
+      return { id: localStorage.useWeb3Wallet }
+    }
     if (contracts.metaMaskEnabled) {
       return web3Resolver.metaMaskAccount()
     }
