@@ -14,6 +14,9 @@ export default gql`
         }
       }
       walletType
+      primaryAccount {
+        id
+      }
     }
   }
 `
