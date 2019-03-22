@@ -165,6 +165,17 @@ host-machine$ docker-compose restart <container_name>
 
 ### Troubleshooting
 
+- If you get errors about missing npm packages, clean install of all modules
+	- `cd` to root dir of repo
+	- `lerna clean` (if needed, install lerna with `npm install -f lerna`)
+	- `rm -rf node_modules`
+	- `rm package-lock.json` (if it exists)
+	- `bash scripts/clean-package-locks.sh`
+	- `npm install`
+
+- If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error: Lock file is already being hold", clean up the IPFS local data:
+```rm -rf ~/.jsipfs/```
+
 #### Docker Desktop Mac
 
 Running `docker down/up` and rebuilding image `docker-compose build` will consume disk space that docker might have problems releasing. One indication of this is that containers are unable to start. Check available disk space in `Disk` tab under Docker Desktop preferences. To free disk space:
