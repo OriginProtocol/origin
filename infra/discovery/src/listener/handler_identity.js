@@ -124,8 +124,6 @@ class IdentityEventHandler {
 
     logger.info(`Indexing identity ${decoratedIdentity.id} in DB.`)
 
-    // Check input.
-    const ethAddress = decoratedIdentity.id
     if (!Web3.utils.isAddress(decoratedIdentity.id)) {
       throw new Error(`Invalid eth address ${decoratedIdentity.id}`)
     }

@@ -1,8 +1,6 @@
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
-const base58 = require('bs58')
-const web3 = require('web3')
 const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
@@ -31,25 +29,6 @@ function isListingEvent(eventName) {
 
 function isOfferEvent(eventName) {
   return OFFER_EVENTS.includes(eventName)
-}
-
-function generateListingId(log) {
-  return [log.networkId, log.contractVersionKey, log.decoded.listingID].join(
-    '-'
-  )
-}
-
-function generateOfferId(log) {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    log.decoded.listingID,
-    log.decoded.offerID
-  ].join('-')
-}
-
-const generateListingIdFromUnique = ({ network, version, uniqueId }) => {
-  return [network, version, uniqueId].join('-')
 }
 
 class MarketplaceEventHandler {

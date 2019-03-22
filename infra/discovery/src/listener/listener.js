@@ -18,7 +18,6 @@ try {
 
 const express = require('express')
 const promBundle = require('express-prom-bundle')
-const urllib = require('url')
 const Web3 = require('web3')
 
 const esmImport = require('esm')(module)
@@ -53,7 +52,7 @@ const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
  *             handler: [...] } }
  *  }
  */
-function buildSignatureToRules(config, web3) {
+function buildSignatureToRules(config) {
   const signatureLookup = {}
 
   for (const contractName in EVENT_TO_HANDLER_MAP) {
