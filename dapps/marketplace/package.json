@@ -10,8 +10,8 @@
     "url": "https://github.com/OriginProtocol/origin"
   },
   "scripts": {
-    "test": "mocha -r @babel/register test -t 10000",
-    "test:watch": "mocha -r @babel/register -w --watch-extensions sol -t 5000 test",
+    "test": "NODE_ENV=test mocha -r @babel/register test -t 30000",
+    "test:browser": "NODE_ENV=test HEADLESS=false mocha -r @babel/register -t 30000 test",
     "start": "node -r @babel/register index",
     "start:development": "DEPLOY_CONTRACTS=1 node -r @babel/register index",
     "build:js": "NODE_ENV=production webpack --loglevel notice",
@@ -55,7 +55,6 @@
     "node-fetch": "^2.3.0",
     "prettier": "^1.16.4",
     "puppeteer": "^1.13.0",
-    "puppeteer-core": "^1.13.0",
     "qrcode.react": "^0.9.3",
     "query-string": "^6.3.0",
     "react": "^16.8.4",
@@ -134,6 +133,7 @@
     "ipfs": "^0.34.4",
     "lato-font": "^3.0.0",
     "mini-css-extract-plugin": "^0.5.0",
+    "mocha": "^5.2.0",
     "opener": "^1.5.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "query-string": "^6.3.0",

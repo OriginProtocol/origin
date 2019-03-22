@@ -12,24 +12,11 @@ function withWallet(WrappedComponent) {
         {({ data, error, networkStatus }) => {
           if (error) console.error(error)
 
-          const walletType = get(data, 'web3.walletType')
-          // if (walletType && walletType.startsWith('mobile-')) {
-          //   const wallet = get(data, 'web3.mobileWalletAccount.id')
-          //   return (
-          //     <WrappedComponent
-          //       {...props}
-          //       wallet={wallet}
-          //       walletType={walletType}
-          //       walletLoading={networkStatus === 1}
-          //     />
-          //   )
-          // }
-          const wallet = get(data, 'web3.primaryAccount.id')
           return (
             <WrappedComponent
               {...props}
-              wallet={wallet}
-              walletType={walletType}
+              wallet={get(data, 'web3.primaryAccount.id')}
+              walletType={get(data, 'web3.walletType')}
               walletLoading={networkStatus === 1}
             />
           )
