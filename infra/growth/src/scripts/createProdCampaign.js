@@ -23,7 +23,8 @@ const aprRules = {
             eventType: 'ProfilePublished',
             reward: null,
             nextLevelCondition: false,
-            visible: true
+            visible: true,
+            repeatable: false
           }
         },
         {
@@ -34,7 +35,8 @@ const aprRules = {
             reward: null,
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: false
           }
         },
         {
@@ -46,6 +48,7 @@ const aprRules = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
+            repeatable: false,
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.profile.requirement',
@@ -73,7 +76,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: false
           }
         },
         {
@@ -87,7 +91,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: false
           }
         },
         {
@@ -101,7 +106,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: false
           }
         },
         {
@@ -115,7 +121,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: false
           }
         },
         {
@@ -132,6 +139,7 @@ const aprRules = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
+            repeatable: false,
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.two.attestations.requirement',
@@ -155,7 +163,8 @@ const aprRules = {
             },
             limit: 25,
             visible: true,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: true
           }
         },
         {
@@ -169,7 +178,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: true
           }
         },
         {
@@ -183,7 +193,8 @@ const aprRules = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            repeatable: true
           }
         }
       ]

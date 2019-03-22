@@ -32,7 +32,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 2,
                   nextLevelCondition: false,
-                  visible: false
+                  visible: false,
+                  repeatable: false
                 }
               }
             ],
@@ -180,7 +181,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: false
+                  visible: false,
+                  repeatable: false
                 }
               }
             ],
@@ -345,7 +347,8 @@ describe('Growth Engine rules', () => {
                   eventType: 'ProfilePublished',
                   reward: null,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: false
                 }
               },
               {
@@ -356,7 +359,8 @@ describe('Growth Engine rules', () => {
                   reward: null,
                   visible: true,
                   limit: 1,
-                  nextLevelCondition: false
+                  nextLevelCondition: false,
+                  repeatable: false
                 }
               },
               {
@@ -365,6 +369,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
                   visible: false,
+                  repeatable: false,
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
@@ -391,7 +396,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: false
                 }
               },
               {
@@ -405,7 +411,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: false
                 }
               },
               {
@@ -419,7 +426,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: false
                 }
               },
               {
@@ -433,7 +441,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: false
                 }
               },
               {
@@ -455,7 +464,8 @@ describe('Growth Engine rules', () => {
                       conditionIcon: 'images/growth/email-icon-small.svg',
                     }
                   ],
-                  visible: false
+                  visible: false,
+                  repeatable: false
                 }
               }
             ],
@@ -473,7 +483,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 25,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: true
                 }
               },
               {
@@ -487,7 +498,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: true
                 }
               },
               {
@@ -501,7 +513,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 1,
                   nextLevelCondition: false,
-                  visible: true
+                  visible: true,
+                  repeatable: true
                 }
               }
             ],
@@ -796,7 +809,8 @@ describe('Growth Engine rules', () => {
                       conditionIcon: 'images/growth/email-icon-small.svg',
                     }
                   ],
-                  visible: false
+                  visible: false,
+                  repeatable: false
                 }
               }
             ],
@@ -814,7 +828,8 @@ describe('Growth Engine rules', () => {
                   },
                   limit: 10,
                   nextLevelCondition: false,
-                  visible: false
+                  visible: false,
+                  repeatable: true
                 }
               }
             ],

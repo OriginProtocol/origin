@@ -279,6 +279,9 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
+    if (this.config.repeatable === undefined) {
+      throw new Error(`Missing 'repeatable' property`)
+    }
     if (
       this.config.nextLevelCondition === true &&
       (!this.config.unlockConditionMsg ||
@@ -380,19 +383,41 @@ class BaseRule {
   }
 
   /**
-   * Return status of this rule. One of: inactive, active, exhausted, completed
+   * Return the rule's status. One of: Inactive, Active, Completed.
+   *  - Inactive: rule is locked
+   *  - Active: user can actively earn rewards with the rule
+   *  - Completed: user earned all the possible rewards (if any) for the rule.
    *
-   * @returns {Enum<GrowthActionStatus>}
+   * @param {string} ethAddress - User's eth address
+   * @param {Array<models.GrowthEvent>} allEvents - All events for user since sign up.
+   * @param {number} currentUserLevel - Current level the user is at in the campaign.
+   * @returns {Promise<enums.GrowthActionStatus>}
    */
-  async getStatus(ethAddress, events, currentUserLevel) {
+  async getStatus(ethAddress, allEvents, currentUserLevel) {
+    // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
-    } else {
-      if (await this.evaluate(ethAddress, events)) {
-        return GrowthActionStatus.Completed
-      }
-      return GrowthActionStatus.Active
     }
+    // If there is no reward associated with the rule, status is Completed.
+    if (!this.reward) {
+      return GrowthActionStatus.Completed
+    }
+
+    // Determine if the rule is Completed by calculating if all rewards
+    // have been earned.
+    // - For a repeatable rule, we only consider events during the campaign.
+    // As an example, ListingPurchase is repeatable: user gets rewarded
+    // for repeating purchase actions every campaign.
+    // - For a non-repeatable rule, we consider all events since user signed up
+    // since the rule can be completed only once. For example attestations is
+    // non-repeatable: user completes it and gets rewarded only once.
+    let events = allEvents
+    if (this.config.repeatable) {
+      events = allEvents.filter(e => (e.createdAt >= this.campaign.startDate && e.createdAt <= this.campaign.endDate))
+    }
+    const numRewards = await this.getRewards(ethAddress, events)
+    logger.error("RULE ", this.id, " numRewards=", numRewards.length)
+    return (numRewards.length < this.limit) ? GrowthActionStatus.Active : GrowthActionStatus.Completed
   }
 }
 
