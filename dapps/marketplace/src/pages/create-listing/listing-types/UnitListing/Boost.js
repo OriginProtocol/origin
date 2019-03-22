@@ -10,6 +10,7 @@ import Wallet from 'components/Wallet'
 import CoinPrice from 'components/CoinPrice'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+import withWallet from 'hoc/withWallet'
 
 const NoOgn = () => (
   <div className="no-ogn">
@@ -213,4 +214,4 @@ class Boost extends Component {
   }
 }
 
-export default withTokenBalance(Boost)
+export default withWallet(withTokenBalance(Boost))
