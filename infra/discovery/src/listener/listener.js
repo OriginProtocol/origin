@@ -23,7 +23,7 @@ const Web3 = require('web3')
 
 const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
-const graphqlClient = esmImport('@origin/graphql')
+const graphqlClient = esmImport('@origin/graphql').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 setNetwork('docker')
@@ -90,7 +90,6 @@ function buildSignatureToRules(config, web3) {
     })
   }
 
-
   return signatureLookup
 }
 
@@ -144,7 +143,6 @@ async function runBatch(opts, context) {
   for (const log of logs) {
     const rule = context.signatureToRules[log.topics[0]][log.address]
     if (rule === undefined) {
-      console.warn(`No handler defined for ${log.topics[0]}`)
       continue
     }
     lastLogBlock = log.blockNumber

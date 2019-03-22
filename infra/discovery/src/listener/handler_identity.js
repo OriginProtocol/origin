@@ -19,7 +19,6 @@ const identityQuery = gql`
   query Identity($id: ID!) {
     web3 {
       account(id: $id) {
-        id
         identity {
           id
           firstName
@@ -222,11 +221,13 @@ class IdentityEventHandler {
       return null
     }
 
+    const account = log.decoded.account
+
     logger.info(`Processing Identity event for account ${account}`)
 
-    let identity
+    let queryResult
     try {
-      identity = await this.graphqlClient.query({
+      queryResult = await this.graphqlClient.query({
         query: identityQuery,
         variables: { id: log.decoded.account }
       })
@@ -234,8 +235,10 @@ class IdentityEventHandler {
       logger.error(
         `Failed loading identity data for account ${account} - skipping indexing`
       )
+      logger.error(error)
       return
     }
+    const identity = queryResult.data.web3.account.identity
 
     // Avatar can be large binary data. Clip it for logging purposes.
     if (identity.avatar) {
