@@ -65,8 +65,10 @@ class GrowthInvite extends Component {
   }
 
   handleFbShareClick() {
-    const text =
-      fbt('Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.', 'RewardInvite.fbInvite')
+    const text = fbt(
+      'Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.',
+      'RewardInvite.fbInvite'
+    )
     window.open(
       [
         'https://www.facebook.com/dialog/share?',
@@ -80,8 +82,10 @@ class GrowthInvite extends Component {
   }
 
   handleTwitterShareClick() {
-    let text =
-      fbt('Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.', 'RewardInvite.twitterInvite')
+    let text = fbt(
+      'Join me on Origin and earn Origin cryptocurrency tokens (OGN). Origin is a new marketplace to buy and sell with other users. Earn Origin tokens when you create your profile, invite your friends, and buy and sell on the marketplace.',
+      'RewardInvite.twitterInvite'
+    )
     text += ' ' + this.getInviteCode()
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
@@ -140,9 +144,7 @@ class GrowthInvite extends Component {
               <div className="d-flex pt-3">
                 <div className="col-8 pl-0 pr-0">
                   <div className="normal">
-                    <fbt desc="RewardInvite.copyCode">
-                      Copy code
-                    </fbt>
+                    <fbt desc="RewardInvite.copyCode">Copy code</fbt>
                   </div>
                   <div className="d-flex mt-2">
                     <input
@@ -160,25 +162,21 @@ class GrowthInvite extends Component {
                         <Fragment>
                           <img src="/images/growth/checkmark.svg" />
                           <div className="ml-2">
-                            <fbt desc="RewardInvite.copied">
-                              Copied
-                            </fbt>
+                            <fbt desc="RewardInvite.copied">Copied</fbt>
                           </div>
                         </Fragment>
                       )}
-                      {!showCopyConfirmation && <div>
-                        <fbt desc="RewardInvite.copyText">
-                          Copy
-                        </fbt>
-                      </div>}
+                      {!showCopyConfirmation && (
+                        <div>
+                          <fbt desc="RewardInvite.copyText">Copy</fbt>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className="col-4 pl-4 pr-0">
                   <div className="normal">
-                    <fbt desc="RewardInvite.shareOrTweet">
-                      Share or Tweet
-                    </fbt>
+                    <fbt desc="RewardInvite.shareOrTweet">Share or Tweet</fbt>
                   </div>
                   <div className="d-flex mt-2">
                     <button
@@ -203,13 +201,20 @@ class GrowthInvite extends Component {
                 onCompleted={({ invite }) => {
                   if (invite) {
                     this.setState({
-                      inviteEmailsConfirmation: fbt('Total ' + fbt.param('emailsLength', this.state.emails.length) + ' Email invitation(s) sent!', 'RewardInvite.successEmailConfirmation'),
+                      inviteEmailsConfirmation: fbt(
+                        'Total ' +
+                          fbt.param('emailsLength', this.state.emails.length) +
+                          ' Email invitation(s) sent!',
+                        'RewardInvite.successEmailConfirmation'
+                      ),
                       inviteEmails: ''
                     })
                   } else {
                     this.setState({
-                      inviteEmailsMutationError:
-                        fbt('Can not invite friends. Please try again later.', 'RewardInvite.canNotSendEmails')
+                      inviteEmailsMutationError: fbt(
+                        'Can not invite friends. Please try again later.',
+                        'RewardInvite.canNotSendEmails'
+                      )
                     })
                   }
                   this.resetEmailFormMessages()
@@ -217,8 +222,10 @@ class GrowthInvite extends Component {
                 onError={errorData => {
                   console.error('Error: ', errorData)
                   this.setState({
-                    inviteEmailsMutationError:
-                      fbt('Error inviting friends. Please try again later.', 'RewardInvite.errorInviting')
+                    inviteEmailsMutationError: fbt(
+                      'Error inviting friends. Please try again later.',
+                      'RewardInvite.errorInviting'
+                    )
                   })
                   this.resetEmailFormMessages()
                 }}
@@ -245,7 +252,10 @@ class GrowthInvite extends Component {
                       className="email-text p-3"
                       cols="50"
                       rows="5"
-                      placeholder={fbt('Separate email addresses with commas.', 'RewardInvite.separateEmailsWithCommas')}
+                      placeholder={fbt(
+                        'Separate email addresses with commas.',
+                        'RewardInvite.separateEmailsWithCommas'
+                      )}
                     />
                     {Feedback('inviteEmails')}
                     {inviteEmailsConfirmation && (
@@ -261,7 +271,10 @@ class GrowthInvite extends Component {
                     <button
                       className="btn btn-primary btn-rounded mt-2"
                       type="submit"
-                      children={fbt('Invite Friends', 'RewardInvite.inviteFriends')}
+                      children={fbt(
+                        'Invite Friends',
+                        'RewardInvite.inviteFriends'
+                      )}
                     />
                   </form>
                 )}
@@ -291,12 +304,17 @@ class GrowthInvite extends Component {
     const errorneousEmails = emails.filter(email => !emailRegex.test(email))
 
     if (errorneousEmails.length > 0) {
-      newState.inviteEmailsError = fbt('Incorrect email format: ' + fbt.param('errorEmails', errorneousEmails.join(
-        ','
-      )), 'RewardInvite.incorrectEmailsError')
+      newState.inviteEmailsError = fbt(
+        'Incorrect email format: ' +
+          fbt.param('errorEmails', errorneousEmails.join(',')),
+        'RewardInvite.incorrectEmailsError'
+      )
       newState.valid = false
     } else if (emails.length === 0) {
-      newState.inviteEmailsError = fbt('Insert at least 1 valid email address', 'RewardInvite.enterOneValidEmail')
+      newState.inviteEmailsError = fbt(
+        'Insert at least 1 valid email address',
+        'RewardInvite.enterOneValidEmail'
+      )
       newState.valid = false
     }
 
@@ -333,7 +351,11 @@ class GrowthInvite extends Component {
       button.innerHTML = fbt('Error', 'RewardInvite.reminderSentError')
     }
 
-    this.setButtonTextWithDelay(button, fbt('Remind', 'RewardInvite.remindText'), 2500)
+    this.setButtonTextWithDelay(
+      button,
+      fbt('Remind', 'RewardInvite.remindText'),
+      2500
+    )
   }
 
   renderTrackInvites(referralAction) {
@@ -384,16 +406,14 @@ class GrowthInvite extends Component {
           <div className="mt-3">
             <div className="emphasis d-flex pb-2">
               <div className="col-4 p-0">
-                <fbt desc="RewardInvite.contact">
-                  Contact
-                </fbt>
+                <fbt desc="RewardInvite.contact">Contact</fbt>
               </div>
               <div className="col-2 p-0">
-                <fbt desc="RewardInvite.invite">
-                  Reward
-                </fbt>
+                <fbt desc="RewardInvite.invite">Reward</fbt>
               </div>
-              <div className="col-6 p-0">{showStatus ? fbt('Status', 'RewardInvite.status') : ''}</div>
+              <div className="col-6 p-0">
+                {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
+              </div>
             </div>
             {invites.map(invite => {
               const name = invite.contact
@@ -409,7 +429,12 @@ class GrowthInvite extends Component {
                   </div>
                   <div className="col-6 p-0 d-flex justify-content-between align-items-center">
                     <div>
-                      {showStatus ? fbt('Hasn’t completed user activation', 'RewardInvite.hasntCompletedActivation') : ''}
+                      {showStatus
+                        ? fbt(
+                            'Hasn’t completed user activation',
+                            'RewardInvite.hasntCompletedActivation'
+                          )
+                        : ''}
                     </div>
                     <div className="pr-3">
                       {showRemindButton && (
@@ -435,7 +460,10 @@ class GrowthInvite extends Component {
       <Fragment>
         {renderInvitesTable(
           fbt('Pending Invites', 'RewardInvite.pendingInvites'),
-          fbt('Track progress of friends who sign up with your invite code.', 'RewardInvite.trackProgress'),
+          fbt(
+            'Track progress of friends who sign up with your invite code.',
+            'RewardInvite.trackProgress'
+          ),
           referralAction.invites.nodes.filter(
             invite => invite.status !== 'Completed'
           ),
@@ -447,7 +475,10 @@ class GrowthInvite extends Component {
         <div className="mt-5" />
         {renderInvitesTable(
           fbt('Successful Invites', 'RewardInvite.successfulInvites'),
-          fbt('Help your friends earn OGN just like you.', 'RewardInvite.helpFriendsEarnOgn'),
+          fbt(
+            'Help your friends earn OGN just like you.',
+            'RewardInvite.helpFriendsEarnOgn'
+          ),
           referralAction.invites.nodes.filter(
             invite => invite.status === 'Completed'
           ),
@@ -473,9 +504,7 @@ class GrowthInvite extends Component {
           >
             <img src="/images/caret-blue.svg" />
             <div>
-              <fbt desc="RewardInvite.backToCampaign">
-                Back to Campaign
-              </fbt>
+              <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
             </div>
           </div>
           <h1 className="mb-2 pt-3 mt-3">
