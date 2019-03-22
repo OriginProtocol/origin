@@ -219,12 +219,10 @@ function withEnrolmentModal(WrappedComponent) {
               />
               <span className="checkmark" />
               &nbsp;
-            </label>
-            <div>
               <fbt desc="EnrollmentModal.termAccept">
                 I accept the terms and conditions
               </fbt>
-            </div>
+            </label>
           </div>
           <div className="d-flex justify-content-center">
             <button
@@ -280,9 +278,8 @@ function withEnrolmentModal(WrappedComponent) {
                     value="cofirm-citizenship"
                   />
                   <span className="checkmark" />
-                  &nbsp;
+                  &nbsp;I certify I am not a citizen or resident of {country}
                 </label>
-                <div>I certify I am not a citizen or resident of {country}</div>
               </div>
             </Fragment>
           )}
@@ -474,12 +471,15 @@ require('react-styl')(`
       margin-top: 30px
       min-width: 9rem
     .checkbox-holder
+      color: var(--pale-grey)
+      font-family: Lato
+      font-weight: normal
       display: block
       position: relative
       padding-left: 28px
       margin-bottom: 0px
       cursor: pointer
-      font-size: 22px
+      font-size: 18px
       -webkit-user-select: none
       -moz-user-select: none
       -ms-user-select: none

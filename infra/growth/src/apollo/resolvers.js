@@ -1,4 +1,8 @@
-//const GraphQLJSON = require('graphql-type-json')
+const {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} = require('apollo-server')
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
@@ -28,7 +32,6 @@ const resolvers = {
    * Use this pagination helpers when implementing pagination:
    * https://github.com/OriginProtocol/origin/blob/master/packages/graphql/src/resolvers/_pagination.js
    */
-  //JSON: GraphQLJSON,
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(obj) {
@@ -70,11 +73,15 @@ const resolvers = {
       )
     },
     async inviteInfo(root, args) {
-      return await GrowthInvite.getReferrerInfo(args.code)
+      try {
+        return await GrowthInvite.getReferrerInfo(args.code)
+      } catch (e) {
+        throw new UserInputError('Invalid code', { code: args.code })
+      }
     },
     async inviteCode(root, args, context) {
       requireEnrolledUser(context)
-      return GrowthInvite.getInviteCode(context.walletAddress)
+      return await GrowthInvite.getInviteCode(context.walletAddress)
     },
     async isEligible(obj, args, context) {
       let eligibility
@@ -110,14 +117,15 @@ const resolvers = {
       return true
     },
     async enroll(_, args, context) {
-      try {
-        const { eligibility } = getLocationInfo(
-          context.req.headers['x-real-ip']
-        )
-        if (eligibility === 'Forbidden') {
-          throw new Error('User is from a forbidden country')
-        }
+      const { eligibility, countryCode } = getLocationInfo(
+        context.req.headers['x-real-ip']
+      )
+      if (eligibility === 'Forbidden') {
+        logger.warn('Enrollment declined for user in country ', countryCode)
+        throw new ForbiddenError('Forbidden country')
+      }
 
+      try {
         const authToken = await authenticateEnrollment(
           args.accountId,
           args.agreementMessage,
@@ -146,10 +154,8 @@ const resolvers = {
 
         return { authToken }
       } catch (e) {
-        logger.warn('Authenticating user failed: ', e.message, e.stack)
-        return {
-          error: 'Can not authenticate user'
-        }
+        logger.warn('User authentication failed: ', e.message, e.stack)
+        throw new AuthenticationError('Growth authentication failure')
       }
     },
     async inviteRemind(_, args, context) {
