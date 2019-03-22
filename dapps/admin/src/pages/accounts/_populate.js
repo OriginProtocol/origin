@@ -13,7 +13,11 @@ import {
   AddAffiliateMutation,
   DeployIdentityEventsContractMutation,
   DeployIdentityMutation,
-  CreateListingMutation
+  CreateListingMutation,
+  UniswapDeployFactory,
+  UniswapDeployExchangeTemplate,
+  UniswapInitFactory,
+  UniswapCreateExchange
 } from 'queries/Mutations'
 
 const TransactionSubscription = gql`
@@ -46,149 +50,126 @@ function transactionConfirmed(hash, gqlClient) {
   })
 }
 
-const walletAddress = ({ privateKey }) =>
-  web3.eth.accounts.privateKeyToAccount(privateKey).address
-
 export default async function populate(NodeAccount, gqlClient) {
-  let hash
-  const accounts = mnemonicToAccounts()
-  await gqlClient.mutate({
-    mutation: ImportWalletsMutation,
-    variables: { accounts }
-  })
-  const Admin = walletAddress(accounts[0])
-  const Seller = walletAddress(accounts[1])
-  const Buyer = walletAddress(accounts[2])
-  const Arbitrator = walletAddress(accounts[3])
-  const Affiliate = walletAddress(accounts[4])
+  async function mutate(mutation, from, variables = {}) {
+    variables.from = from
+    const result = await gqlClient.mutate({ mutation, variables })
+    const key = Object.keys(result.data)[0]
+    const hash = result.data[key].id
+    if (hash) {
+      const transaction = await transactionConfirmed(hash, gqlClient)
+      return transaction.contractAddress || transaction
+    }
+    return result.data[key]
+  }
 
-  hash = (await gqlClient.mutate({
-    mutation: SendFromNodeMutation,
-    variables: { to: Admin, from: NodeAccount, value: '0.5' }
-  })).data.sendFromNode.id
-  await transactionConfirmed(hash, gqlClient)
+  const accounts = mnemonicToAccounts()
+  await mutate(ImportWalletsMutation, Admin, { accounts })
+  const [Admin, Seller, Buyer, Arbitrator, Affiliate] = accounts.map(
+    account => web3.eth.accounts.privateKeyToAccount(account.privateKey).address
+  )
+
+  await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
   console.log('Sent eth to Admin')
 
-  hash = (await gqlClient.mutate({
-    mutation: DeployTokenMutation,
-    variables: {
-      type: 'OriginToken',
-      name: 'Origin Token',
-      symbol: 'OGN',
-      decimals: '18',
-      supply: '1000000000',
-      from: Admin
-    }
-  })).data.deployToken.id
-  const OGN = (await transactionConfirmed(hash, gqlClient)).contractAddress
-  console.log('Deployed token')
+  const OGN = await mutate(DeployTokenMutation, Admin, {
+    type: 'OriginToken',
+    name: 'Origin Token',
+    symbol: 'OGN',
+    decimals: '18',
+    supply: '1000000000'
+  })
+  console.log('Deployed Origin token to', OGN)
 
-  hash = (await gqlClient.mutate({
-    mutation: DeployTokenMutation,
-    variables: {
-      type: 'Standard',
-      name: 'Dai Stablecoin',
-      symbol: 'DAI',
-      decimals: '18',
-      supply: '1000000000',
-      from: Admin
-    }
-  })).data.deployToken.id
-  const DAI = (await transactionConfirmed(hash, gqlClient)).contractAddress
-  console.log('Deployed DAI stablecoin')
+  const DAI = await mutate(DeployTokenMutation, Admin, {
+    type: 'Standard',
+    name: 'Dai Stablecoin',
+    symbol: 'DAI',
+    decimals: '18',
+    supply: '1000000000'
+  })
+  console.log('Deployed DAI stablecoin to', DAI)
 
-  hash = (await gqlClient.mutate({
-    mutation: DeployMarketplaceMutation,
-    variables: { token: OGN, version: '001', autoWhitelist: true, from: Admin }
-  })).data.deployMarketplace.id
-  const Marketplace = (await transactionConfirmed(hash, gqlClient))
-    .contractAddress
-  console.log('Deployed marketplace')
+  const UniswapFactory = await mutate(UniswapDeployFactory, Admin)
+  console.log('Deployed Uniswap Factory to', UniswapFactory)
 
-  hash = (await gqlClient.mutate({
-    mutation: SendFromNodeMutation,
-    variables: { to: Seller, from: NodeAccount, value: '0.5' }
-  })).data.sendFromNode.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(UniswapDeployExchangeTemplate, Admin)
+  console.log('Deployed Uniswap Exhange Template')
+
+  await mutate(UniswapInitFactory, Admin)
+  console.log('Initialized Uniswap Factory')
+
+  const tx = await mutate(UniswapCreateExchange, Admin, { tokenAddress: DAI })
+  console.log('Created Uniswap Dai Exchange', tx.logs[0].topics[1])
+
+  const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
+    token: OGN,
+    version: '001',
+    autoWhitelist: true
+  })
+  console.log('Deployed marketplace to', Marketplace)
+
+  await mutate(SendFromNodeMutation, NodeAccount, { to: Seller, value: '0.5' })
   console.log('Sent eth to seller')
 
-  hash = (await gqlClient.mutate({
-    mutation: TransferTokenMutation,
-    variables: { token: OGN, to: Seller, from: Admin, value: '500' }
-  })).data.transferToken.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(TransferTokenMutation, Admin, {
+    to: Seller,
+    token: OGN,
+    value: '500'
+  })
   console.log('Sent ogn to seller')
 
-  hash = (await gqlClient.mutate({
-    mutation: UpdateTokenAllowanceMutation,
-    variables: { token: 'ogn', to: Marketplace, from: Seller, value: '500' }
-  })).data.updateTokenAllowance.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(UpdateTokenAllowanceMutation, Seller, {
+    token: 'ogn',
+    to: Marketplace,
+    value: '500'
+  })
   console.log('Set seller token allowance')
 
-  hash = (await gqlClient.mutate({
-    mutation: SendFromNodeMutation,
-    variables: { to: Buyer, from: NodeAccount, value: '0.5' }
-  })).data.sendFromNode.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(SendFromNodeMutation, NodeAccount, { to: Buyer, value: '0.5' })
   console.log('Sent eth to buyer')
 
-  hash = (await gqlClient.mutate({
-    mutation: TransferTokenMutation,
-    variables: { token: DAI, to: Buyer, from: Admin, value: '500' }
-  })).data.transferToken.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(TransferTokenMutation, Admin, {
+    to: Buyer,
+    token: DAI,
+    value: '500'
+  })
   console.log('Sent DAI to buyer')
 
-  hash = (await gqlClient.mutate({
-    mutation: UpdateTokenAllowanceMutation,
-    variables: { token: DAI, to: Marketplace, from: Buyer, value: '500' }
-  })).data.updateTokenAllowance.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(UpdateTokenAllowanceMutation, Buyer, {
+    to: Marketplace,
+    token: DAI,
+    value: '500'
+  })
   console.log('Set buyer dai token allowance')
 
-  hash = (await gqlClient.mutate({
-    mutation: SendFromNodeMutation,
-    variables: { to: Arbitrator, from: NodeAccount, value: '0.5' }
-  })).data.sendFromNode.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(SendFromNodeMutation, NodeAccount, {
+    to: Arbitrator,
+    value: '0.5'
+  })
   console.log('Sent eth to arbitrator')
 
-  hash = (await gqlClient.mutate({
-    mutation: SendFromNodeMutation,
-    variables: { to: Affiliate, from: NodeAccount, value: '0.1' }
-  })).data.sendFromNode.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(SendFromNodeMutation, NodeAccount, {
+    to: Affiliate,
+    value: '0.1'
+  })
   console.log('Sent eth to affiliate')
 
-  hash = (await gqlClient.mutate({
-    mutation: AddAffiliateMutation,
-    variables: { affiliate: Affiliate, from: Admin }
-  })).data.addAffiliate.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(AddAffiliateMutation, Admin, { affiliate: Affiliate })
   console.log('Added affiliate to marketplace')
 
-  hash = (await gqlClient.mutate({
-    mutation: DeployIdentityEventsContractMutation,
-    variables: { from: Admin }
-  })).data.deployIdentityEvents.id
-  await transactionConfirmed(hash, gqlClient)
-  console.log('Deployed Identity Events contract')
+  const IE = await mutate(DeployIdentityEventsContractMutation, Admin)
+  console.log('Deployed Identity Events contract to', IE)
 
-  hash = (await gqlClient.mutate({
-    mutation: DeployIdentityMutation,
-    variables: {
-      from: Seller,
-      attestations: [],
-      profile: {
-        firstName: 'Stan',
-        lastName: 'James',
-        description: 'Hi from Stan',
-        avatar: ''
-      }
-    }
-  })).data.deployIdentity.id
-  await transactionConfirmed(hash, gqlClient)
+  await mutate(DeployIdentityMutation, Seller, {
+    profile: {
+      firstName: 'Stan',
+      lastName: 'James',
+      description: 'Hi from Stan',
+      avatar: ''
+    },
+    attestations: []
+  })
   console.log('Deployed Seller Identity')
 
   for (const listing of demoListings) {
@@ -207,20 +188,16 @@ export default async function populate(NodeAccount, gqlClient) {
     if (listing.marketplacePublisher) {
       listingData.marketplacePublisher = listing.marketplacePublisher
     }
-    hash = (await gqlClient.mutate({
-      mutation: CreateListingMutation,
-      variables: {
-        deposit: '5',
-        depositManager: Arbitrator,
-        from: Seller,
-        autoApprove: true,
-        data: listingData,
-        unitData: {
-          unitsTotal: listing.unitsTotal
-        }
+    await mutate(CreateListingMutation, Seller, {
+      deposit: '5',
+      depositManager: Arbitrator,
+      from: Seller,
+      autoApprove: true,
+      data: listingData,
+      unitData: {
+        unitsTotal: listing.unitsTotal
       }
-    })).data.createListing.id
-    await transactionConfirmed(hash, gqlClient)
-    console.log('Deployed Listing')
+    })
+    console.log('Deployed listing', listingData.title)
   }
 }
