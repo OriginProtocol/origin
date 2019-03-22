@@ -177,7 +177,7 @@ const Car = {
       '09:00:00/12:00:00',
       ''
     ],
-    timeZone: '',
+    timeZone: 'Europe/Berlin',
     unavailable: [],
     customPricing: [],
     booked: []
