@@ -52,27 +52,6 @@ const generateListingIdFromUnique = ({ network, version, uniqueId }) => {
   return [network, version, uniqueId].join('-')
 }
 
-const toNoGasListingID = listingID => {
-  return base58.encode(web3.utils.toBN(listingID).toBuffer())
-}
-
-const generateNoGasListingId = log => {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    toNoGasListingID(log.decoded.listingID)
-  ].join('-')
-}
-
-function generateNoGasOfferId(log) {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    toNoGasListingID(log.decoded.listingID),
-    log.decoded.offerID
-  ].join('-')
-}
-
 class MarketplaceEventHandler {
   constructor(config, contractContext) {
     this.config = config
@@ -80,9 +59,8 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Gets details about a listing by calling Origin-js.
+   * Gets details about a listing from @origin/eventsource
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<{listing: Listing, seller: User}>}
    * @private
@@ -102,9 +80,8 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Gets details about an offer by calling Origin-js.
+   * Gets details about an offer by calling @origin/eventsource
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
    * @private
@@ -126,9 +103,8 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Gets details about a listing or an offer by calling Origin-js.
+   * Gets details about a listing or an offer by calling @origin/eventsource
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<
    *    {listing: Listing, seller: User}|
@@ -159,13 +135,8 @@ class MarketplaceEventHandler {
     // Data consistency: check listingId from the JSON stored in IPFS
     // matches with listingID emitted in the event.
     // TODO: use method utils/id.js:parseListingId
-    // DVF: this should really be handled in origin js - origin.js should throw
-    // an error if this happens.
     const contractListingId = listing.id.split('-')[2]
-    if (
-      contractListingId !== log.decoded.listingID &&
-      contractListingId != toNoGasListingID(log.decoded.listingID)
-    ) {
+    if (contractListingId !== log.decoded.listingID) {
       throw new Error(
         `ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`
       )
@@ -320,91 +291,4 @@ class MarketplaceEventHandler {
   }
 }
 
-class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
-  /**
-   * Gets details about an offer by calling Origin-js.
-   * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
-   * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
-   * @private
-   */
-  async _getOfferDetails(log, origin, blockInfo) {
-    const listingId = generateNoGasListingId(log)
-    const offerId = generateNoGasOfferId(log)
-
-    const offer = await origin.marketplace.getOffer(offerId)
-
-    checkEventsFreshness(offer.events, blockInfo)
-
-    // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!
-    //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
-    const network = await origin.contractService.web3.eth.net.getId()
-
-    const listing = await origin.marketplace._listingFromData(listingId, {
-      status: 'active',
-      seller: offer.seller,
-      ipfsHash: offer.listingIpfsHash
-    })
-
-    if (
-      generateListingIdFromUnique({
-        version: 'A',
-        network,
-        uniqueId: listing.uniqueId
-      }) != listingId
-    ) {
-      throw new Error(
-        `ListingIpfs and Id mismatch: ${listingId} !== ${
-          listing.creator.listing.createDate
-        }`
-      )
-    }
-
-    if (listing.creator != offer.buyer) {
-      if (listing.creator != offer.seller) {
-        throw new Error(
-          `listing creator ${listing.creator} does not match buyer(${
-            offer.buyer
-          }) or seller(${offer.seller})`
-        )
-      }
-
-      if (
-        !(await origin.marketplace.verifyListingSignature(
-          listing,
-          listing.seller
-        ))
-      ) {
-        throw new Error(
-          `listing signature does not match seller ${listing.seller}.`
-        )
-      }
-    }
-
-    let seller
-    let buyer
-    if (web3.utils.toBN(offer.seller) != 0) {
-      try {
-        seller = await origin.users.get(offer.seller)
-      } catch (e) {
-        // If fetching the seller fails, we still want to index the listing/offer
-        console.log('Failed to fetch seller', e)
-      }
-    }
-    try {
-      buyer = await origin.users.get(offer.buyer)
-    } catch (e) {
-      // If fetching the buyer fails, we still want to index the listing/offer
-      console.log('Failed to fetch buyer', e)
-    }
-    return {
-      listing,
-      offer: offer,
-      seller: seller,
-      buyer: buyer
-    }
-  }
-}
-
-module.exports = { MarketplaceEventHandler, NoGasMarketplaceEventHandler }
+module.exports = MarketplaceEventHandler

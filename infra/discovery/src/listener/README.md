@@ -86,9 +86,6 @@ rm origin-contracts/build/contracts/*
 cp origin-contracts/releases/0.8.6/build/contracts/* origin-contracts/build/contracts
 ```
 
-### Build origin-js
-`lerna run build --scope origin --stream`
-
 ### Configure and start the listener
 ```
 export WEB3_URL=https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2

@@ -1,10 +1,7 @@
 const logger = require('./logger')
 const db = require('../models')
 const { withRetrys } = require('./utils')
-const {
-  MarketplaceEventHandler,
-  NoGasMarketplaceEventHandler
-} = require('./handler_marketplace')
+const MarketplaceEventHandler = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 
 const {
@@ -17,7 +14,7 @@ const {
 // Adding a mapping here makes the listener listen for the event
 // and call the associated handler when the event is received.
 const EVENT_TO_HANDLER_MAP = {
-  V00_Marketplace: {
+  marketplace: {
     ListingCreated: MarketplaceEventHandler,
     ListingUpdated: MarketplaceEventHandler,
     ListingWithdrawn: MarketplaceEventHandler,
@@ -31,21 +28,7 @@ const EVENT_TO_HANDLER_MAP = {
     OfferFinalized: MarketplaceEventHandler,
     OfferData: MarketplaceEventHandler
   },
-  VA_Marketplace: {
-    ListingCreated: NoGasMarketplaceEventHandler,
-    ListingUpdated: NoGasMarketplaceEventHandler,
-    ListingWithdrawn: NoGasMarketplaceEventHandler,
-    ListingData: NoGasMarketplaceEventHandler,
-    ListingArbitrated: NoGasMarketplaceEventHandler,
-    OfferCreated: NoGasMarketplaceEventHandler,
-    OfferWithdrawn: NoGasMarketplaceEventHandler,
-    OfferAccepted: NoGasMarketplaceEventHandler,
-    OfferDisputed: NoGasMarketplaceEventHandler,
-    OfferRuling: NoGasMarketplaceEventHandler,
-    OfferFinalized: NoGasMarketplaceEventHandler,
-    OfferData: NoGasMarketplaceEventHandler
-  },
-  IdentityEvents: {
+  identityEvents: {
     IdentityUpdated: IdentityEventHandler
     // TODO(franck): handle IdentityDeleted
   }
@@ -57,15 +40,13 @@ const EVENT_TO_HANDLER_MAP = {
  *   - Calls the event's handler.
  *   - Optionally calls webhooks.
  */
-async function handleLog(log, rule, contractVersion, context) {
+async function handleLog(log, rule, context) {
   log.decoded = context.web3.eth.abi.decodeLog(
     rule.eventAbi.inputs,
     log.data,
     log.topics.slice(1)
   )
-  log.contractName = contractVersion.contractName
   log.eventName = rule.eventName
-  log.contractVersionKey = contractVersion.versionKey
   log.networkId = context.networkId
 
   // Fetch block to retrieve timestamp.
@@ -78,8 +59,7 @@ async function handleLog(log, rule, contractVersion, context) {
 
   const logDetails = `blockNumber=${log.blockNumber} \
     transactionIndex=${log.transactionIndex} \
-    eventName=${log.eventName} \
-    contractName=${log.contractName}`
+    eventName=${log.eventName}`
   logger.info(`Processing log: ${logDetails}`)
 
   // Record the event in the DB.

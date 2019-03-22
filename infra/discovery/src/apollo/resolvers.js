@@ -8,7 +8,6 @@ const {
   getOffer,
   getOffers
 } = require('./db')
-const { injectListing, updateListing } = require('./injector')
 
 /**
  * Gets information on a user based on her wallet address.
@@ -85,17 +84,6 @@ const resolvers = {
           : 'undefined',
         nodeEnv: process.env.NODE_ENV ? process.env.NODE_ENV : 'undefined'
       }
-    }
-  },
-
-  Mutation: {
-    async injectListing(node, args) {
-      // verify args.signature checks against args.listingInput
-      return await injectListing(args.listingInput, args.signature)
-    },
-    async updateListing(node, args) {
-      // verify args.signature checks against args.listingInput
-      return await updateListing(args.id, args.listingInput, args.signature)
     }
   },
 
