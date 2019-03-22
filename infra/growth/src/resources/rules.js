@@ -279,8 +279,8 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
-    if (this.config.repeatable === undefined) {
-      throw new Error(`Missing 'repeatable' property`)
+    if (!['user', 'campaign'].includes(this.config.scope)) {
+      throw new Error(`Missing or invalid 'scope' for rule: ${this.id}`)
     }
     if (
       this.config.nextLevelCondition === true &&
@@ -405,14 +405,14 @@ class BaseRule {
 
     // Determine if the rule is Completed by calculating if all rewards
     // have been earned.
-    // - For a repeatable rule, we only consider events during the campaign.
-    // As an example, ListingPurchase is repeatable: user gets rewarded
-    // for repeating purchase actions every campaign.
-    // - For a non-repeatable rule, we consider all events since user signed up
-    // since the rule can be completed only once. For example attestations is
-    // non-repeatable: user completes it and gets rewarded only once.
+    // - For a rule scoped by campaign, we only consider events during the campaign.
+    // As an example, a listing purchase is likely an action that should be scoped by
+    // to reward the user every time they make a purchase during a campaign.
+    // - For a rule scoped by user, we consider all events since user signed up
+    // As an example, an Attestation is a likely an action that would be scoped
+    // by user since user completes it once and for all.
     let events = allEvents
-    if (this.config.repeatable) {
+    if (this.config.scope === 'campaign') {
       events = allEvents.filter(
         e =>
           e.createdAt >= this.campaign.startDate &&

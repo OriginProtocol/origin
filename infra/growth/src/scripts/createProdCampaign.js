@@ -24,7 +24,7 @@ const aprRules = {
             reward: null,
             nextLevelCondition: false,
             visible: true,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -36,7 +36,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -48,7 +48,7 @@ const aprRules = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
-            repeatable: false,
+            scope: 'user',
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.profile.requirement',
@@ -77,7 +77,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -92,7 +92,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -107,7 +107,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -122,7 +122,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: false
+            scope: 'user'
           }
         },
         {
@@ -139,7 +139,7 @@ const aprRules = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
-            repeatable: false,
+            scope: 'user',
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.two.attestations.requirement',
@@ -164,7 +164,7 @@ const aprRules = {
             limit: 25,
             visible: true,
             nextLevelCondition: false,
-            repeatable: true
+            scope: 'campaign'
           }
         },
         {
@@ -179,7 +179,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: true
+            scope: 'campaign'
           }
         },
         {
@@ -194,7 +194,7 @@ const aprRules = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            repeatable: true
+            scope: 'campaign'
           }
         }
       ]

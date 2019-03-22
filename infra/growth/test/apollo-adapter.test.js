@@ -34,7 +34,7 @@ describe('Apollo adapter', () => {
                   reward: null,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -46,7 +46,7 @@ describe('Apollo adapter', () => {
                   visible: true,
                   limit: 1,
                   nextLevelCondition: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -59,6 +59,7 @@ describe('Apollo adapter', () => {
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
+                  scope: 'user',
                   unlockConditionMsg: [
                     {
                       conditionTranslateKey: 'growth.profile.and.email.requirement',
@@ -83,7 +84,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -98,7 +99,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -113,7 +114,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -128,7 +129,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -151,7 +152,7 @@ describe('Apollo adapter', () => {
                     }
                   ],
                   visible: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               }
             ],
@@ -174,7 +175,7 @@ describe('Apollo adapter', () => {
                   limit: 25,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               },
                */
@@ -190,7 +191,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               },
               {
@@ -205,7 +206,7 @@ describe('Apollo adapter', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               }
             ],

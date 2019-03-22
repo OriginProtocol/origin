@@ -33,7 +33,7 @@ describe('Growth Engine rules', () => {
                   limit: 2,
                   nextLevelCondition: false,
                   visible: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               }
             ],
@@ -182,7 +182,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               }
             ],
@@ -348,7 +348,7 @@ describe('Growth Engine rules', () => {
                   reward: null,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -360,7 +360,7 @@ describe('Growth Engine rules', () => {
                   visible: true,
                   limit: 1,
                   nextLevelCondition: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -369,7 +369,7 @@ describe('Growth Engine rules', () => {
                 config: {
                   eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
                   visible: false,
-                  repeatable: false,
+                  scope: 'user',
                   numEventsRequired: 2,
                   reward: null,
                   nextLevelCondition: true,
@@ -397,7 +397,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -412,7 +412,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -427,7 +427,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -442,7 +442,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: false
+                  scope: 'user'
                 }
               },
               {
@@ -465,7 +465,7 @@ describe('Growth Engine rules', () => {
                     }
                   ],
                   visible: false,
-                  repeatable: false
+                  scope: 'user'
                 }
               }
             ],
@@ -484,7 +484,7 @@ describe('Growth Engine rules', () => {
                   limit: 25,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               },
               {
@@ -499,7 +499,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               },
               {
@@ -514,7 +514,7 @@ describe('Growth Engine rules', () => {
                   limit: 1,
                   nextLevelCondition: false,
                   visible: true,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               }
             ],
@@ -810,7 +810,7 @@ describe('Growth Engine rules', () => {
                     }
                   ],
                   visible: false,
-                  repeatable: false
+                  scope: 'campaign'
                 }
               }
             ],
@@ -829,7 +829,7 @@ describe('Growth Engine rules', () => {
                   limit: 10,
                   nextLevelCondition: false,
                   visible: false,
-                  repeatable: true
+                  scope: 'campaign'
                 }
               }
             ],
