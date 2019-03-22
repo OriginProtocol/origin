@@ -36,6 +36,10 @@ class ContractHelper {
       this.vlog('estimated gas:', opts.gas)
     }
 
+    if (opts.gasPrice) {
+      this.vlog('gas price:', opts.gasPrice)
+    }
+
     // Send the transaction and grab the transaction hash when it's available.
     this.vlog('sending transaction')
     let transactionHash
