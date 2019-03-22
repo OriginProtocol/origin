@@ -39,7 +39,10 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
   }
 
   if (offer.status === 2) {
-    return <ReviewAndFinalize {...props} refetch={refetch} />
+    if (offer.listing.seller.id === wallet || offer.buyer.id === wallet) {
+      return <ReviewAndFinalize {...props} refetch={refetch} />
+    }
+    return <TransactionStages {...props} />
   } else if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
       return <OfferRejected party="buyer" {...props} />
@@ -221,6 +224,12 @@ const Finalized = ({ offer, loading }) => (
   </div>
 )
 
+const TransactionStages = ({ offer, loading }) => (
+  <div className={`transaction-progress view-only${loading ? ' loading' : ''}`}>
+    <Stages offer={offer} />
+  </div>
+)
+
 export default TransactionProgress
 
 require('react-styl')(`
@@ -233,6 +242,10 @@ require('react-styl')(`
     align-items: center
     margin-bottom: 2.5rem
     position: relative
+    &.view-only
+      padding-top: 0
+      .stages
+        margin-top: 0
     &.loading
       &::before
         content: ""
