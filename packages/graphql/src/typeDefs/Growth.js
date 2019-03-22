@@ -137,7 +137,6 @@ module.exports = `
 
   type EnrollResponse {
     authToken: String
-    error: String
   }
 
   type Query {
