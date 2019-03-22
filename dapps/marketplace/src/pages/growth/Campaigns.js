@@ -93,7 +93,6 @@ function ActionList(props) {
               decimalDivision={props.decimalDivision}
               key={`${action.type}:${action.status}`}
               handleNavigationChange={props.handleNavigationChange}
-              setReferralAction={props.setReferralAction}
             />
           )
         })}
@@ -103,12 +102,7 @@ function ActionList(props) {
 }
 
 function Campaign(props) {
-  const {
-    campaign,
-    handleNavigationChange,
-    setReferralAction,
-    decimalDivision
-  } = props
+  const { campaign, handleNavigationChange, decimalDivision } = props
 
   const {
     startDate,
@@ -187,7 +181,6 @@ function Campaign(props) {
           actions={nonCompletedActions}
           decimalDivision={decimalDivision}
           handleNavigationChange={handleNavigationChange}
-          setReferralAction={setReferralAction}
         />
       )}
       {status !== 'Pending' && completedActions.length > 0 && (
@@ -205,21 +198,16 @@ class GrowthCampaigns extends Component {
   state = {
     first: 5,
     selectedCampaignId: null,
-    navigation: 'Campaigns',
-    referralAction: null
+    navigation: 'Campaigns'
   }
 
   handleNavigationChange(navigation) {
     this.setState({ navigation })
   }
 
-  setReferralAction(referralAction) {
-    this.setState({ referralAction })
-  }
-
   render() {
     let selectedCampaignId = this.state.selectedCampaignId
-    const { navigation, referralAction } = this.state
+    const { navigation } = this.state
 
     return (
       <div className="container growth-campaigns">
@@ -280,6 +268,7 @@ class GrowthCampaigns extends Component {
                         }
 
                         const campaigns = data.campaigns.nodes
+
                         if (campaigns.length == 0) {
                           return <h5 className="p-2">No campaigns detected</h5>
                         }
@@ -300,6 +289,10 @@ class GrowthCampaigns extends Component {
                           campaigns,
                           campaign => campaign.id === selectedCampaignId
                         )
+
+                        const referralAction = selectedCampaign.actions.filter(
+                          action => action.type === 'Referral'
+                        )[0]
 
                         return (
                           <Query
@@ -344,9 +337,6 @@ class GrowthCampaigns extends Component {
                                           this.handleNavigationChange(
                                             navigation
                                           )
-                                        }
-                                        setReferralAction={action =>
-                                          this.setReferralAction(action)
                                         }
                                         decimalDivision={decimalDivision}
                                       />

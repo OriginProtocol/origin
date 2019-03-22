@@ -49,6 +49,15 @@ class Token extends ContractHelper {
     )
   }
 
+  /**
+   * Returns the address of the account used for distributing tokens.
+   * @param {integer} networkId
+   * @returns {Promise<string>}
+   */
+  async senderAddress(networkId) {
+    return await this.defaultAccount(networkId)
+  }
+
   /*
    * Returns token contract object for the specified network.
    * @params {string} networkId - Test network Id.
@@ -73,10 +82,11 @@ class Token extends ContractHelper {
    * @params {string} networkId - Test network Id.
    * @params {string} address - Address for the recipient.
    * @params {int} value - Value to credit, in natural unit.
+   * @params {Object} opts - Options. For example gasPrice.
    * @throws Throws an error if the operation failed.
    * @returns {Object} - Transaction receipt
    */
-  async credit(networkId, address, value) {
+  async credit(networkId, address, value, opts = {}) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
@@ -96,7 +106,8 @@ class Token extends ContractHelper {
     }
     const transaction = contract.methods.transfer(address, value)
     return await this.sendTransaction(networkId, transaction, {
-      from: tokenSupplier
+      from: tokenSupplier,
+      ...opts
     })
   }
 

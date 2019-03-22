@@ -27,15 +27,8 @@ class Enroll extends Component {
             <Mutation
               mutation={GrowthEnroll}
               onCompleted={({ enroll }) => {
-                if (enroll.error === null && enroll.authToken) {
-                  localStorage.setItem('growth_auth_token', enroll.authToken)
-                  this.props.history.push('/campaigns')
-                } else {
-                  console.error('Error occurred: ', enroll)
-                  this.setState({
-                    error: 'Can not enroll into growth campaign.'
-                  })
-                }
+                localStorage.setItem('growth_auth_token', enroll.authToken)
+                this.props.history.push('/campaigns')
               }}
               onError={errorData => {
                 console.error('Error: ', errorData)
