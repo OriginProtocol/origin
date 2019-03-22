@@ -413,11 +413,16 @@ class BaseRule {
     // non-repeatable: user completes it and gets rewarded only once.
     let events = allEvents
     if (this.config.repeatable) {
-      events = allEvents.filter(e => (e.createdAt >= this.campaign.startDate && e.createdAt <= this.campaign.endDate))
+      events = allEvents.filter(
+        e =>
+          e.createdAt >= this.campaign.startDate &&
+          e.createdAt <= this.campaign.endDate
+      )
     }
     const numRewards = await this.getRewards(ethAddress, events)
-    logger.error("RULE ", this.id, " numRewards=", numRewards.length)
-    return (numRewards.length < this.limit) ? GrowthActionStatus.Active : GrowthActionStatus.Completed
+    return numRewards.length < this.limit
+      ? GrowthActionStatus.Active
+      : GrowthActionStatus.Completed
   }
 }
 
