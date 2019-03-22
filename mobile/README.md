@@ -24,10 +24,6 @@ Install the following:
 
 - [React Native CLI](https://facebook.github.io/react-native/docs/understanding-cli): `npm install -g react-native-cli`
 
-- [Redis](https://redis.io/): `brew install redis`
-
-- [PostgreSQL](https://www.postgresql.org/)
-
 #### iOS Development
 
 - [Xcode](https://developer.apple.com/xcode/)
@@ -42,15 +38,7 @@ Install the following:
 
 ### Backend Services
 
-Either follow the guide for Origin Box **OR** Manual Setup to get your backend services running.
-
-#### Origin Box
-
-You can use [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md) for development, however, there are a couple of additional steps you must perform for it to work for origin-mobile.
-
-- Manually run [origin-linking](#Startup) following the instructions under "Manual Setup" below since it is not included in the Box
-
-- Expose PostgreSQL's port 5432 in `docker-compose.yml`
+You can run the backend services required by Origin Wallet using Docker Compose. Please refer to the instructions in our [development documentation](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md). You can also run each service manually using the instructions below.
 
 #### Manual Setup
 
@@ -166,15 +154,14 @@ If you want to test with mobile Safari on the same device as the application, fi
 - Start PostgreSQL
 - Start Redis: `redis-server`
 - `createdb origin`
-- origin $ `npm run install:mobile` 👈 instead of `npm install` at the Origin monorepo root
-- origin/origin-linking $ `npm run migrate`
+- origin/mobile $ `npm install`
+- origin/infra/linking $ `npm run migrate`
 
 #### Startup
-- origin/origin-js $ `npm run build:watch` (compiles `dist` directory with build)
-- origin/origin-linking $ `npm run start`
-- origin/origin-dapp $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
-- origin/origin-mobile $ `npm run install-local`
+- origin/infra/linking $ `npm run start`
+- origin/dapps/marketplace $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
 - origin/origin-mobile $ `npm run start -- --reset-cache`
+
 - Open Xcode and build for your desired device
 
 ### Android Device Configuration
