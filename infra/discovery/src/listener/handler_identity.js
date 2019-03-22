@@ -1,5 +1,6 @@
 const Web3 = require('web3')
 const logger = require('./logger')
+const gql = require('graphql-tag')
 
 const { bytes32ToIpfsHash } = require('./utils')
 const _bridgeModels = require('@origin/bridge/src/models')
@@ -13,10 +14,36 @@ const {
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
 
+// TODO find a better way to handle this duplication from DApp
+const identityQuery = gql`
+  query Identity($id: ID!) {
+    web3 {
+      account(id: $id) {
+        id
+        identity {
+          id
+          firstName
+          lastName
+          fullName
+          description
+          avatar
+          strength
+          attestations
+          facebookVerified
+          twitterVerified
+          airbnbVerified
+          phoneVerified
+          emailVerified
+        }
+      }
+    }
+  }
+`
+
 class IdentityEventHandler {
-  constructor(config, origin) {
+  constructor(config, graphqlClient) {
     this.config = config
-    this.origin = origin
+    this.graphqlClient = graphqlClient
   }
 
   /**
@@ -40,81 +67,88 @@ class IdentityEventHandler {
   }
 
   /**
-   * Decorates a user object with attestation data.
-   * @param {models.User} user - Origin js user model object.
+   * Decorates an identity object with attestation data.
+   * @param {{}} identity - result of identityQuery
    * @returns {Promise<void>}
    * @private
    */
-  async _decorateUser(user) {
+  async _decorateIdentity(identity) {
+    const decoratedIdentity = Object.assign({}, identity)
     await Promise.all(
-      user.attestations.map(async attestation => {
+      decoratedIdentity.attestations.map(async attestation => {
         switch (attestation.service) {
           case 'email':
-            user.email = await this._loadValueFromAttestation(
-              user.address,
+            decoratedIdentity.email = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
               'EMAIL'
             )
             break
           case 'phone':
-            user.phone = await this._loadValueFromAttestation(
-              user.address,
+            decoratedIdentity.phone = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
               'PHONE'
             )
             break
           case 'twitter':
-            user.twitter = await this._loadValueFromAttestation(
-              user.address,
+            decoratedIdentity.twitter = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
               'TWITTER'
             )
             break
           case 'airbnb':
-            user.airbnb = await this._loadValueFromAttestation(
-              user.address,
+            decoratedIdentity.airbnb = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
               'AIRBNB'
             )
             break
           case 'facebook':
-            // Note: we don't have access to the user's fbook id,
+            // Note: we don't have access to the decoratedIdentity's fbook id,
             // only whether the account was verified or not.
-            user.facebookVerified = true
+            decoratedIdentity.facebookVerified = true
             break
         }
       })
     )
+    return decoratedIdentity
   }
 
   /**
-   * Indexes a user in the DB.
-   * @param {models.User} user - Origin js user model object.
+   * Indexes an identity in the DB.
+   * @param {{}} result of identityQuery
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<void>}
    * @private
    */
-  async _indexIdentity(user, blockInfo) {
-    logger.info(`Indexing identity ${user.address} in DB.`)
+  async _indexIdentity(identity, blockInfo) {
+    // Decorate the user object with extra attestation related info.
+    const decoratedIdentity = await this._decorateIdentity(identity)
+
+    logger.info(`Indexing identity ${decoratedIdentity.id} in DB.`)
 
     // Check input.
-    const ethAddress = user.address
-    if (!Web3.utils.isAddress(ethAddress)) {
-      throw new Error(`Invalid eth address ${ethAddress}`)
+    const ethAddress = decoratedIdentity.id
+    if (!Web3.utils.isAddress(decoratedIdentity.id)) {
+      throw new Error(`Invalid eth address ${decoratedIdentity.id}`)
     }
 
-    // Construct an identity object based on the user's profile
+    // Construct an decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
-    const identity = {
-      ethAddress: ethAddress.toLowerCase(),
-      firstName: user.profile.firstName,
-      lastName: user.profile.lastName,
-      email: user.email,
-      phone: user.phone,
-      airbnb: user.airbnb,
-      twitter: user.twitter,
-      facebookVerified: user.facebookVerified || false,
+    const identityRow = {
+      ethAddress: decoratedIdentity.id.toLowerCase(),
+      firstName: decoratedIdentity.firstName,
+      lastName: decoratedIdentity.lastName,
+      email: decoratedIdentity.email,
+      phone: decoratedIdentity.phone,
+      airbnb: decoratedIdentity.airbnb,
+      twitter: decoratedIdentity.twitter,
+      facebookVerified: decoratedIdentity.facebookVerified || false,
       data: { blockInfo }
     }
 
-    logger.debug('Identity=', identity)
-    await db.Identity.upsert(identity)
+    logger.debug('Identity=', identityRow)
+    await db.Identity.upsert(identityRow)
+
+    return decoratedIdentity
   }
 
   /**
@@ -125,12 +159,11 @@ class IdentityEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthProfileEvent(user, blockInfo, date) {
+  async _recordGrowthProfileEvent(identity, blockInfo, date) {
     // Check profile is populated.
-    const profile = user.profile
     const validProfile =
-      (profile.firstName.length > 0 || profile.lastName.length > 0) &&
-      profile.avatar.length > 0
+      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
+      identity.avatar.length > 0
     if (!validProfile) {
       return
     }
@@ -138,7 +171,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
-      user.address,
+      identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
       { blockInfo },
@@ -154,9 +187,9 @@ class IdentityEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthAttestationEvents(user, blockInfo, date) {
+  async _recordGrowthAttestationEvents(identity, blockInfo, date) {
     await Promise.all(
-      user.attestations.map(attestation => {
+      identity.attestations.map(attestation => {
         const eventType = AttestationServiceToEventType[attestation.service]
         if (!eventType) {
           logger.error(
@@ -169,7 +202,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
-          user.address,
+          identity.id,
           eventType,
           null,
           { blockInfo },
@@ -189,42 +222,43 @@ class IdentityEventHandler {
       return null
     }
 
-    const account = log.decoded.account
-
     logger.info(`Processing Identity event for account ${account}`)
 
-    const user = await this.origin.users.get(account)
-    if (!user) {
+    let identity
+    try {
+      identity = await this.graphqlClient.query({
+        query: identityQuery,
+        variables: { id: log.decoded.account }
+      })
+    } catch (error) {
       logger.error(
         `Failed loading identity data for account ${account} - skipping indexing`
       )
       return
     }
+
     // Avatar can be large binary data. Clip it for logging purposes.
-    if (user.profile.avatar) {
-      user.profile.avatar = user.profile.avatar.slice(0, 32) + '...'
+    if (identity.avatar) {
+      identity.avatar = identity.avatar.slice(0, 32) + '...'
     }
 
     if (log.decoded.ipfsHash) {
-      user.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+      identity.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
     }
-
-    // Decorate the user object with extra attestation related info.
-    await this._decorateUser(user)
 
     const blockInfo = {
       blockNumber: log.blockNumber,
       logIndex: log.logIndex
     }
 
-    await this._indexIdentity(user, blockInfo)
+    const decoratedIdentity = await this._indexIdentity(identity, blockInfo)
 
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(user, blockInfo, log.date)
-      await this._recordGrowthAttestationEvents(user, blockInfo, log.date)
+      await this._recordGrowthProfileEvent(identity, blockInfo, log.date)
+      await this._recordGrowthAttestationEvents(identity, blockInfo, log.date)
     }
 
-    return { user }
+    return { identity: decoratedIdentity }
   }
 
   // Do not call the notification webhook for identity events.

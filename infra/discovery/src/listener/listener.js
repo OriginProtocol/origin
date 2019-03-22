@@ -21,8 +21,10 @@ const promBundle = require('express-prom-bundle')
 const urllib = require('url')
 const Origin = require('@origin/js').default
 const Web3 = require('web3')
+
 const esmImport = require('esm')(module)
-const graphqlClient = esmImport('@origin/graphql').default
+const contractsContext = esmImport('@origin/graphql/src/contracts').default
+const graphqlClient = esmImport('@origin/graphql')
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 setNetwork('docker')
@@ -73,6 +75,8 @@ function buildSignatureToRules(config, origin, web3) {
         }
         let handler
         if (handlerClass.name === 'MarketplaceEventHandler') {
+          handler = new handlerClass(config, contractsContext)
+        } else if (handlerClass.name === 'IdentityHandler') {
           handler = new handlerClass(config, graphqlClient)
         } else {
           handler = new handlerClass(config, origin)
@@ -219,11 +223,13 @@ async function runBatch(opts, context) {
   for (const log of logs) {
     const contractVersion = context.addressToVersion[log.address]
     if (contractVersion === undefined) {
+      console.warn('Invalid contract version')
       continue // Skip - Not a trusted contract
     }
     const contractName = contractVersion.contractName
     const rule = context.signatureToRules[log.topics[0]][contractName]
     if (rule === undefined) {
+      console.warn(`No handler defined for ${log.topics[0]}`)
       continue // Skip - No handler defined
     }
     lastLogBlock = log.blockNumber

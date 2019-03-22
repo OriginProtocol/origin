@@ -36,8 +36,8 @@ const index = {
       properties: {
         'price.amount': { type: 'double' },
         'price.currency': { type: 'text' },
-        'commission': { type: 'double' },
-        'commissionPerUnit': { type: 'double' },
+        commission: { type: 'double' },
+        commissionPerUnit: { type: 'double' },
         unitsTotal: { type: 'integer' },
         language: { type: 'keyword' },
         listingType: { type: 'keyword' },

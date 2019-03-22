@@ -7,8 +7,6 @@ const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
 
-const { listingQuery } = require('./queries/Listing')
-
 const LISTING_EVENTS = [
   'ListingCreated',
   'ListingUpdated',
@@ -76,44 +74,75 @@ function generateNoGasOfferId(log) {
 }
 
 class MarketplaceEventHandler {
-  constructor(config, graphqlClient) {
+  constructor(config, contractContext) {
     this.config = config
-    this.graphqlClient = graphqlClient
+    this.contractContext = contractContext
   }
 
   /**
    * Gets details about a listing by calling Origin-js.
    * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<{listing: Listing, seller: User}>}
    * @private
    */
   async _getListingDetails(log, blockInfo) {
-    const listingId = generateListingId(log)
-    const result = await this.graphqlClient.query({
-      query: listingQuery,
-      variables: { listingId: listingId }
-    })
-    checkEventsFreshness(result.data.marketplace.listing.events, blockInfo)
-    return result.data.marketplace.listing
+    // Note: Passing blockInfo.blockNumber as an arg to the getListing call
+    // ensures that we preserve listings version history if the listener is
+    // re-indexing data. Otherwise all the listing version rows in the DB would
+    // end up with the same data.
+    const listing = await this.contractContext.eventSource.getListing(
+      log.decoded.listingID,
+      blockInfo.blockNumber
+    )
+    checkEventsFreshness(listing.events, blockInfo)
+
+    return { listing }
   }
 
   /**
-   * Gets details about an offer.
+   * Gets details about an offer by calling Origin-js.
    * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
    * @private
    */
   async _getOfferDetails(log, blockInfo) {
-    const listingId = generateListingId(log)
-    const offerId = generateOfferId(log)
-    const offer = await this.graphqlClient.query({
-      query: offerQuery,
-      variables: { id: offerId }
-    })
+    const listing = this._getListingDetails(log, blockInfo)
     checkEventsFreshness(listing.events, blockInfo)
-    return offer
+    const offer = await this.contractContext.eventSource.getOffer(
+      log.decoded.listingID,
+      log.decoded.offerID,
+      blockInfo.blocknumber
+    )
+    checkEventsFreshness(offer.events, blockInfo)
+
+    return {
+      listing,
+      offer: offer
+    }
+  }
+
+  /**
+   * Gets details about a listing or an offer by calling Origin-js.
+   * @param {Object} log
+   * @param {Object} origin - Instance of origin-js.
+   * @param {{blockNumber: number, logIndex: number}} blockInfo
+   * @returns {Promise<
+   *    {listing: Listing, seller: User}|
+   *    {listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   * @private
+   */
+  async _getDetails(log, blockInfo) {
+    if (isListingEvent(log.eventName)) {
+      return this._getListingDetails(log, blockInfo)
+    }
+    if (isOfferEvent(log.eventName)) {
+      return this._getOfferDetails(log, blockInfo)
+    }
+    throw new Error(`Unexpected event ${log.eventName}`)
   }
 
   /**
@@ -123,10 +152,15 @@ class MarketplaceEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _indexListing(log, listing) {
+  async _indexListing(log, { listing }) {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
 
+    // Data consistency: check listingId from the JSON stored in IPFS
+    // matches with listingID emitted in the event.
+    // TODO: use method utils/id.js:parseListingId
+    // DVF: this should really be handled in origin js - origin.js should throw
+    // an error if this happens.
     const contractListingId = listing.id.split('-')[2]
     if (
       contractListingId !== log.decoded.listingID &&
@@ -175,7 +209,7 @@ class MarketplaceEventHandler {
       id: offer.id,
       listingId: listing.id,
       status: offer.status,
-      sellerAddress: listing.seller.toLowerCase(),
+      sellerAddress: listing.seller.id.toLowerCase(),
       buyerAddress: offer.buyer.toLowerCase(),
       data: offer
     }
@@ -196,15 +230,14 @@ class MarketplaceEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _recordGrowthEvent(log, data, blockInfo) {
-    console.log(data)
+  async _recordGrowthEvent(log, details, blockInfo) {
     switch (log.eventName) {
       case 'ListingCreated':
         await GrowthEvent.insert(
           logger,
-          data.seller.id.toLowerCase(),
+          details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingCreated,
-          data.id,
+          details.listing.id,
           { blockInfo },
           log.date
         )
@@ -214,17 +247,17 @@ class MarketplaceEventHandler {
         // a ListingSold event on the seller side.
         await GrowthEvent.insert(
           logger,
-          data.buyer.toLowerCase(),
+          details.offer.buyer.id.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
-          data.id,
+          details.offer.id,
           { blockInfo },
           log.date
         )
         await GrowthEvent.insert(
           logger,
-          data.listing.seller.toLowerCase(),
+          details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingSold,
-          data.id,
+          details.offer.id,
           { blockInfo },
           log.date
         )
@@ -248,15 +281,7 @@ class MarketplaceEventHandler {
       blockNumber: log.blockNumber,
       logIndex: log.logIndex
     }
-
-    let details
-    if (isListingEvent(log.eventName)) {
-      details = await this._getListingDetails(log, blockInfo)
-    } else if (isOfferEvent(log.eventName)) {
-      details = await this._getOfferDetails(log, blockInfo)
-    } else {
-      throw new Error(`Unexpected event ${log.eventName}`)
-    }
+    const details = await this._getDetails(log, blockInfo)
 
     // On both listing and offer event, index the listing.
     // Notes:
