@@ -345,7 +345,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this._qualifyForNextLevel(ethAddress, this._inScope(events))
+    return await this.evaluate(ethAddress, this._inScope(events))
   }
 
   /**
@@ -398,45 +398,42 @@ class BaseRule {
 
   /**
    * Return the rule's status. One of: Inactive, Active, Completed.
+   * This is for use by the front-end to display the status of the rule to the user.
    *  - Inactive: rule is locked
-   *  - Active: user can actively earn rewards with the rule
-   *  - Completed: user earned all the possible rewards (if any) for the rule.
+   *  - Active:
+   *     - Rule returning rewards: user can actively earn rewards from the rule
+   *     - Rule that is a condition: user has not met condition yet.
+   *  - Completed:
+   *     - Rule returning rewards: user reached the limit of rewards that can be earned from the rule
+   *     - Rule that is a condition: user has met condition.
    *
    * @param {string} ethAddress - User's eth address
-   * @param {Array<models.GrowthEvent>} allEvents - All events for user since sign up.
+   * @param {Array<models.GrowthEvent>} events - All events for user since sign up.
    * @param {number} currentUserLevel - Current level the user is at in the campaign.
    * @returns {Promise<enums.GrowthActionStatus>}
    */
-  async getStatus(ethAddress, allEvents, currentUserLevel) {
+  async getStatus(ethAddress, events, currentUserLevel) {
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
     }
-    // If there is no reward associated with the rule, status is Completed.
-    if (!this.reward) {
-      return GrowthActionStatus.Completed
-    }
 
-    // Determine if the rule is Completed by calculating if all rewards
-    // have been earned.
-    // - For a rule scoped by campaign, we only consider events during the campaign.
-    // As an example, a listing purchase is likely an action that should be scoped by
-    // to reward the user every time they make a purchase during a campaign.
-    // - For a rule scoped by user, we consider all events since user signed up
-    // As an example, an Attestation is a likely an action that would be scoped
-    // by user since user completes it once and for all.
-    let events = allEvents
-    if (this.config.scope === 'campaign') {
-      events = allEvents.filter(
-        e =>
-          e.createdAt >= this.campaign.startDate &&
-          e.createdAt <= this.campaign.endDate
+    if (this.reward) {
+      // Reward rule. Determine if the rule is Completed by calculating
+      // if all rewards have been earned.
+      const numRewards = await this.getRewards(
+        ethAddress,
+        this._inScope(events)
       )
+      return numRewards.length < this.limit
+        ? GrowthActionStatus.Active
+        : GrowthActionStatus.Completed
+    } else {
+      // Evaluate the rule to determine if it is Completed.
+      return (await this.evaluate(ethAddress, events))
+        ? GrowthActionStatus.Completed
+        : GrowthActionStatus.Active
     }
-    const numRewards = await this.getRewards(ethAddress, this._inScope(events))
-    return numRewards.length < this.limit
-      ? GrowthActionStatus.Active
-      : GrowthActionStatus.Completed
   }
 }
 
@@ -477,7 +474,7 @@ class SingleEventRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async _qualifyForNextLevel(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
@@ -487,13 +484,6 @@ class SingleEventRule extends BaseRule {
 /**
  * A rule that requires N events out of a list of event types.
  *
- * Important: Rule evaluation considers events since user joined the platform
- * but reward calculation only considers events that occurred during the campaign period.
- * As a result, a rule may pass but no reward be granted. As an example:
- *   - assume numEventsRequired = 3
- *   - events E1, E2 occur during campaign C1
- *   - event E3 occurs during campaign C2
- *   => rule passes in campaign C2 but NO reward is granted.
  */
 class MultiEventsRule extends BaseRule {
   constructor(crules, levelId, config) {
@@ -557,7 +547,7 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async _qualifyForNextLevel(ethAddress, events) {
+  async evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
@@ -588,7 +578,7 @@ class ReferralRule extends BaseRule {
    * @param {string} ethAddress - Referrer's account.
    * @returns {boolean}
    */
-  async _qualifyForNextLevel(ethAddress) {
+  async evaluate(ethAddress) {
     return (await this.getRewards(ethAddress).length) > 0
   }
 

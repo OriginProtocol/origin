@@ -34,7 +34,6 @@ const aprRules = {
             eventType: 'EmailAttestationPublished',
             reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'user'
           }
