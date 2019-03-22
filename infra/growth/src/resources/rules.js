@@ -144,7 +144,6 @@ class CampaignRules {
 
   /**
    * Returns the user level.
-   * Considers events that occurred until the campaign ended.
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - If true, only uses events with
@@ -170,7 +169,6 @@ class CampaignRules {
 
   /**
    * Calculates rewards earned by the user.
-   * Only considers events that occurred during the campaign.
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
@@ -179,10 +177,7 @@ class CampaignRules {
    */
   async getRewards(ethAddress, onlyVerifiedEvents = false) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, {
-      duringCampaign: true,
-      onlyVerifiedEvents
-    })
+    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
     const currentLevel = await this.getCurrentLevel(
       ethAddress,
       onlyVerifiedEvents
@@ -331,7 +326,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this.evaluate(ethAddress, events)
+    return await this._qualifyForNextLevel(ethAddress, events)
   }
 
   /**
@@ -463,7 +458,7 @@ class SingleEventRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _qualifyForNextLevel(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
@@ -543,7 +538,7 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _qualifyForNextLevel(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
@@ -574,7 +569,7 @@ class ReferralRule extends BaseRule {
    * @param {string} ethAddress - Referrer's account.
    * @returns {boolean}
    */
-  async evaluate(ethAddress) {
+  async _qualifyForNextLevel(ethAddress) {
     return (await this.getRewards(ethAddress).length) > 0
   }
 
