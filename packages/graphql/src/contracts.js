@@ -215,7 +215,7 @@ const Configs = {
     affiliate: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
-    automine: 500,
+    automine: 500
   }
 }
 
