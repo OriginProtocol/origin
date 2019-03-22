@@ -18,7 +18,6 @@ function withCanTransact(WrappedComponent) {
 
           const walletType = get(data, 'web3.walletType')
           const metaMaskId = get(data, 'web3.metaMaskAccount.id')
-          const primaryAccount = get(data, 'web3.primaryAccount.id')
           if (!walletType) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
@@ -30,7 +29,7 @@ function withCanTransact(WrappedComponent) {
             return <WrappedComponent {...props} />
           }
 
-          if (!primaryAccount) {
+          if (!metaMaskId) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
           if (get(data, 'web3.metaMaskAccount.balance.eth') === '0') {
