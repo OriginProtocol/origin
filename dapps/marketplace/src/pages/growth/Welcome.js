@@ -95,7 +95,7 @@ class GrowthWelcome extends Component {
   ) {
     return (
       <div className="container d-flex">
-        <div className="col-6 d-flex flex-column">
+        <div className="col-6 d-flex flex-column top-padding">
           <Link to="/" className="mr-auto">
             <img className="logo" src="/images/origin-logo.svg" />
           </Link>
@@ -122,9 +122,9 @@ class GrowthWelcome extends Component {
             </Fragment>
           )}
           {!personalised && (
-            <div className="title">
+            <div className="title-text">
               <fbt desc="GrowthWelcome.titleText">
-                Singn up and earn FREE Origin Tokens
+                Sign up and earn FREE Origin Tokens
               </fbt>
             </div>
           )}
@@ -144,7 +144,11 @@ class GrowthWelcome extends Component {
             startopen={arrivedFromOnboarding.toString()}
           />
         </div>
-        <div className="spaceman col-10" />
+        <div
+          className={`spaceman col-10 top-padding ${
+            !personalised ? 'center' : ''
+          }`}
+        />
       </div>
     )
   }
@@ -399,8 +403,9 @@ export default GrowthWelcome
 
 require('react-styl')(`
   .growth-welcome
-    padding-top: 60px
     background-color: #131d27
+    .top-padding
+      padding-top: 60px
     .logo
       width: 118px
     .enroll-button
@@ -422,6 +427,8 @@ require('react-styl')(`
     .invited-by
       color: white
       font-weight: normal
+    .spaceman.center
+      background-position: center left
     .spaceman
       background-image: url(images/growth/spaceman.svg)
       background-position: bottom left
