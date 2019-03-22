@@ -102,11 +102,7 @@ function ActionList(props) {
 }
 
 function Campaign(props) {
-  const {
-    campaign,
-    handleNavigationChange,
-    decimalDivision
-  } = props
+  const { campaign, handleNavigationChange, decimalDivision } = props
 
   const {
     startDate,
@@ -294,9 +290,9 @@ class GrowthCampaigns extends Component {
                           campaign => campaign.id === selectedCampaignId
                         )
 
-                        const referralAction = selectedCampaign
-                          .actions
-                          .filter(action => action.type === 'Referral')[0]
+                        const referralAction = selectedCampaign.actions.filter(
+                          action => action.type === 'Referral'
+                        )[0]
 
                         return (
                           <Query

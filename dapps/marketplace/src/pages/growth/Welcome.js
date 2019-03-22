@@ -145,7 +145,11 @@ class GrowthWelcome extends Component {
             startopen={arrivedFromOnboarding.toString()}
           />
         </div>
-        <div className={`spaceman col-10 top-padding ${!personalised ? 'center' : ''}`} />
+        <div
+          className={`spaceman col-10 top-padding ${
+            !personalised ? 'center' : ''
+          }`}
+        />
       </div>
     )
   }
