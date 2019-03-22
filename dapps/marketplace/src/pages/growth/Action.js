@@ -161,7 +161,7 @@ function Action(props) {
                 {renderReward(rewardEarned.amount, true)}
               </Fragment>
             )}
-          {actionCompleted && rewardEarned !== null && (
+          {actionCompleted && rewardEarned !== null && rewardEarned.amount !== '0' && (
             <Fragment>
               <div className="d-flex align-items-center sub-text">Earned</div>
               {renderReward(rewardEarned.amount, false)}
