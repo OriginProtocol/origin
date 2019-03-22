@@ -52,20 +52,12 @@ class Listing {
      * we call all the getters and store them before indexing.
      */
     const listingToIndex = JSON.parse(JSON.stringify(listing))
-    const gettersToIndex = [
-      'unitsPending',
-      'unitsSold',
-      'unitsRemaining',
-      'commissionRemaining',
-      'boostCommission'
-    ]
-    gettersToIndex.forEach(getter => (listingToIndex[getter] = listing[getter]))
 
-    // boostCommission is critical for calculating scoring.
+    // commissionPerUnit is critical for calculating scoring.
     // Log a warning if that field is not populated - it is likely a bug.
-    if (!listingToIndex.boostCommission) {
+    if (!listingToIndex.commissionPerUnit) {
       console.log(
-        `WARNING: missing field boostCommission on listing ${listingId}`
+        `WARNING: missing field commissionPerUnit on listing ${listingId}`
       )
     }
 
@@ -224,7 +216,7 @@ class Listing {
       function_score: {
         query: esQuery,
         field_value_factor: {
-          field: 'boostCommission.amount',
+          field: 'commissionPerUnit',
           factor: 0.05, // the same as delimited by 20
           missing: 0
         },

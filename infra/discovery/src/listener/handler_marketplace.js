@@ -55,6 +55,9 @@ class MarketplaceEventHandler {
     )
     checkEventsFreshness(listing.events, blockInfo)
 
+    // Remove unneeded contract data
+    delete listing.contract
+
     return { listing }
   }
 
