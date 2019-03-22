@@ -297,7 +297,7 @@ describe('Apollo adapter', () => {
         this.ethAddress
       )
 
-      console.log(JSON.stringify(out))
+      //console.log(JSON.stringify(out))
 
 
       const actionByType = {}
@@ -307,43 +307,43 @@ describe('Apollo adapter', () => {
 
       const profile = actionByType['Profile']
       expect(profile.status).to.equal(enums.GrowthActionStatus.Completed)
-      expect(profile.rewardEarned).to.deep.equal({ amount: '0', currency:'OGN' })
+      expect(profile.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
       expect(profile.reward).to.be.null
 
       const email = actionByType['Email']
       expect(email.status).to.equal(enums.GrowthActionStatus.Completed)
-      expect(email.rewardEarned).to.deep.equal({ amount: '0', currency:'OGN' })
+      expect(email.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
       expect(email.reward).to.be.null
 
       const phone = actionByType['Phone']
       expect(phone.status).to.equal(enums.GrowthActionStatus.Active)
-      expect(phone.rewardEarned).to.deep.equal({ amount: '0', currency:'OGN' })
-      expect(phone.reward).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
+      expect(phone.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+      expect(phone.reward).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
 
       const fbook = actionByType['Facebook']
       expect(fbook.status).to.equal(enums.GrowthActionStatus.Completed)
-      expect(fbook.rewardEarned).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
-      expect(fbook.reward).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
+      expect(fbook.rewardEarned).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
+      expect(fbook.reward).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
 
       const air = actionByType['Airbnb']
       expect(air.status).to.equal(enums.GrowthActionStatus.Active)
-      expect(air.rewardEarned).to.deep.equal({ amount: '0', currency:'OGN' })
-      expect(air.reward).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
+      expect(air.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+      expect(air.reward).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
 
       const twitter = actionByType['Twitter']
       expect(twitter.status).to.equal(enums.GrowthActionStatus.Completed)
-      expect(twitter.rewardEarned).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
-      expect(twitter.reward).to.deep.equal({ amount: '25000000000000000000', currency:'OGN' })
+      expect(twitter.rewardEarned).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
+      expect(twitter.reward).to.deep.equal({ amount: '25000000000000000000', currency: 'OGN' })
 
       const purchased = actionByType['ListingPurchased']
       expect(purchased.status).to.equal(enums.GrowthActionStatus.Completed)
-      expect(purchased.rewardEarned).to.deep.equal({ amount: '100000000000000000000', currency:'OGN' })
-      expect(purchased.reward).to.deep.equal({ amount: '100000000000000000000', currency:'OGN' })
+      expect(purchased.rewardEarned).to.deep.equal({ amount: '100000000000000000000', currency: 'OGN' })
+      expect(purchased.reward).to.deep.equal({ amount: '100000000000000000000', currency: 'OGN' })
 
       const sold = actionByType['ListingSold']
       expect(sold.status).to.equal(enums.GrowthActionStatus.Active)
-      expect(sold.rewardEarned).to.deep.equal({ amount: '0', currency:'OGN' })
-      expect(sold.reward).to.deep.equal({ amount: '100000000000000000000', currency:'OGN' })
+      expect(sold.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+      expect(sold.reward).to.deep.equal({ amount: '100000000000000000000', currency: 'OGN' })
 
     })
   })

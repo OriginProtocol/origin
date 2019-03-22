@@ -313,6 +313,25 @@ class BaseRule {
   }
 
   /**
+   * Returns the set of events to consider when evaluating the rule.
+   *
+   * @param {Array<models.GrowthEvent>} events - All events related to the user.
+   * @returns {Array<models.GrowthEvent>}} Events in scope.
+   * @private
+   */
+  _inScope(events) {
+    if (this.config.scope === 'user') {
+      return events
+    }
+    // Scope is 'campaign' - only consider events that occurred during the campaign window.
+    return events.filter(
+      e =>
+        e.createdAt >= this.campaign.startDate &&
+        e.createdAt <= this.campaign.endDate
+    )
+  }
+
+  /**
    * Calculates if the user qualifies for the next level.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
@@ -326,7 +345,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this._qualifyForNextLevel(ethAddress, events)
+    return await this._qualifyForNextLevel(ethAddress, this._inScope(events))
   }
 
   /**
@@ -361,7 +380,7 @@ class BaseRule {
       return []
     }
 
-    const numRewards = this._numRewards(ethAddress, events)
+    const numRewards = this._numRewards(ethAddress, this._inScope(events))
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -414,7 +433,7 @@ class BaseRule {
           e.createdAt <= this.campaign.endDate
       )
     }
-    const numRewards = await this.getRewards(ethAddress, events)
+    const numRewards = await this.getRewards(ethAddress, this._inScope(events))
     return numRewards.length < this.limit
       ? GrowthActionStatus.Active
       : GrowthActionStatus.Completed
@@ -618,14 +637,16 @@ class ReferralRule extends BaseRule {
         continue
       }
 
-      // Check the referee reached the level during this campaign as opposed
-      // to prior to the campaign.
-      const refereePriorLevel = await this.crules.getPriorLevel(referee)
-      if (refereePriorLevel >= this.levelRequired) {
-        logger.debug(
-          `Referee ${referee} reached level prior to campaign start. skipping`
-        )
-        continue
+      if (this.config.scope === 'campaign') {
+        // Check the referee reached the level during this campaign as opposed
+        // to prior to the campaign.
+        const refereePriorLevel = await this.crules.getPriorLevel(referee)
+        if (refereePriorLevel >= this.levelRequired) {
+          logger.debug(
+            `Referee ${referee} reached level prior to campaign start. skipping`
+          )
+          continue
+        }
       }
 
       // Referral is valid. Referrer should get a reward for it.
