@@ -152,8 +152,8 @@ require('react-styl')(`
             text-shadow: none
 
   .navbar-brand
-    background: url(images/origin-logo.svg) no-repeat center
-    width: 90px
+    background: url(images/origin-beta-logo-white.svg) no-repeat center
+    width: 108px
     text-indent: -9999px
 
   .custom-brand
