@@ -1,10 +1,9 @@
-import {Alert, AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
+import {AppState, Platform, PushNotificationIOS, Linking, Clipboard} from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import keyMirror from 'utils/keyMirror'
 import EventEmitter from 'events'
-import {EthNotificationTypes} from '@origin/js/common/enums'
 import secp256k1 from 'secp256k1'
 import ecies from 'eth-ecies'
 import CryptoJS from 'crypto-js'
@@ -13,12 +12,9 @@ import { randomBytes } from 'react-native-randombytes'
 import { TypedDataUtils, concatSig } from 'eth-sig-util'
 import ethUtil from 'ethereumjs-util'
 
-
-import {
-  GCM_SENDER_ID,
-} from 'react-native-dotenv'
-
-import {setRemoteLocal, localfy, storeData, loadData} from './tools'
+import { setRemoteLocal, localfy, storeData, loadData } from './tools'
+import { EthNotificationTypes } from './enums'
+import { GCM_SENDER_ID } from 'react-native-dotenv'
 
 import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
@@ -29,6 +25,7 @@ const ORIGIN_PROTOCOL_PREFIX = "http://www.originprotocol.com/mobile/"
 const SECURE_ORIGIN_PROTOCOL_PREFIX = "https://www.originprotocol.com/mobile/"
 const LAST_MESSAGE_IDS = "last_message_ids"
 const TEST_PRIVATE_KEY = "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
+const ACCOUNT_MAPPING = "ACCOUNT_MAPPING"
 const WALLET_PASSWORD = "TEST_PASS"
 const WALLET_STORE = "WALLET_STORE"
 const WALLET_INFO = "WALLET_INFO"
@@ -44,7 +41,9 @@ const Events = keyMirror({
   PROMPT_LINK:null,
   PROMPT_TRANSACTION:null,
   PROMPT_SIGN:null,
-  NEW_ACCOUNT:null,
+  CURRENT_ACCOUNT:null,
+  AVAILABLE_ACCOUNTS:null,
+  LOADED:null,
   LINKED:null,
   TRANSACTED:null,
   UNLINKED:null,
@@ -231,10 +230,6 @@ class OriginWallet {
     return this.remote_localhost
   }
 
-  getMessagingUrl() {
-    return this.messagingUrl + ORIGIN_WALLET
-  }
-
   getWalletToken() {
     return this.state.walletToken
   }
@@ -263,10 +258,6 @@ class OriginWallet {
       }
     }
     this.events.emit(event_type, event, matcher)
-  }
-
-  getAccount() {
-    return this.state.ethAddress;
   }
 
   syncLastMessages() {
@@ -306,6 +297,10 @@ class OriginWallet {
       device_token: device_token,
       device_type: notification_type
     })
+  }
+
+  getMarketplaceUrl() {
+    return localfy(this.dappUrl)
   }
 
   getMessagingKeys( ) {
@@ -682,7 +677,7 @@ class OriginWallet {
   }
 
   getCurrentWeb3Account() {
-    return web3.eth.accounts.wallet[0]
+    return web3.eth.accounts.wallet[this.state.ethAddress]
   }
 
   _handleSign(event_id, {call, call_id, return_url, session_token, link_id}){
@@ -890,36 +885,6 @@ class OriginWallet {
     return url + (url.includes('?') ? '&' : '?' ) + 'shash=' + shash
   }
 
-
-  async open(url) {
-    switch(url) {
-      case 'profile':
-        if (this.profileUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.profileUrl)
-          console.log("Opening profile url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      case 'root':
-        if (this.dappUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.dappUrl)
-          console.log("Opening root url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      case 'selling':
-        if (this.sellingUrl) {
-          const linkingUrl = await this.toLinkedDappUrl(this.sellingUrl)
-          console.log("Opening selling url:", linkingUrl)
-          Linking.openURL(linkingUrl)
-        }
-        break
-      default:
-        console.log("Opening url:", url)
-        Linking.openURL(await this.toLinkedDappUrl(url))
-    }
-  }
-
   async onNotification(notification) {
     Object.assign( this.state, {
       notifyTime:new Date(),
@@ -1083,14 +1048,27 @@ class OriginWallet {
     Linking.removeEventListener('url', this.handleOpenFromOut)
   }
 
+  async saveActiveAccount(address) {
+    try {
+      let accounts = (await this.getAccountMapping()) || []
+      //move flag to selected account
+      accounts = accounts.map(account => Object.assign({}, account, { active: account.address === address }))
+      await storeData(ACCOUNT_MAPPING, accounts)
+      return accounts.find(account => account.address === address)
+    } catch (error) {
+      console.log("Cannot store active wallet account:", address)
+    }
+  }
+
   async saveWallet() {
     //save the freaking wallet
     const encrypted_accounts = []
-    for (let i=0; i< web3.eth.accounts.wallet.length; i++) {
-      const account = web3.eth.accounts.wallet[i]
+    const addresses = this.getAddresses()
+    addresses.forEach(address => {
+      const account = web3.eth.accounts.wallet[address]
       encrypted_accounts.push({crypt:"aes",
         enc:CryptoJS.AES.encrypt(account.privateKey, WALLET_PASSWORD).toString()})
-    }
+    })
     try {
       await storeData(WALLET_STORE, encrypted_accounts)
     } catch (error) {
@@ -1160,9 +1138,6 @@ class OriginWallet {
         ipfs_gateway,
         ipfs_api,
         dapp_url,
-        messaging_url,
-        profile_url,
-        selling_url,
         attestation_account,
         perf_mode_enabled,
         discovery_server_url
@@ -1170,7 +1145,7 @@ class OriginWallet {
 
       const newProviderUrl = localfy(provider_url)
       console.log("Set network to:", newProviderUrl, contract_addresses)
-      console.log("Service urls:", dapp_url, messaging_url, profile_url, selling_url)
+      console.log("DAPP url:", dapp_url)
       console.log("Discovery:", perf_mode_enabled, discovery_server_url)
 
 
@@ -1183,9 +1158,6 @@ class OriginWallet {
       }
 
       this.dappUrl = dapp_url
-      this.messagingUrl = localfy(messaging_url)
-      this.profileUrl = profile_url
-      this.sellingUrl = selling_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
@@ -1199,7 +1171,7 @@ class OriginWallet {
       if (this.state.ethAddress)
       {
         this.checkRegisterNotification()
-        this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
+        this.fireEvent(Events.CURRENT_ACCOUNT, {address:this.state.ethAddress})
         this.checkSyncMessages(true)
       }
       this.providerUrl = provider_url
@@ -1227,42 +1199,109 @@ class OriginWallet {
     }
   }
 
-  async setPrivateKey(privateKey) {
+  async addAccount(privateKey) {
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey))
     {
       privateKey = '0x' + privateKey
     }
     if (privateKey)
     {
-      // try private key first and then clear and add again
-      web3.eth.accounts.wallet.add(privateKey)
-      web3.eth.accounts.wallet.clear()
-      web3.eth.accounts.wallet.add(privateKey)
-      this.setWeb3Address()
-
-      await this.updateLinks()
+      const { address } = web3.eth.accounts.wallet.add(privateKey)
+      this.saveWallet()
+      this.syncAccountMapping()
+      //use only if necessary
+      !this.state.ethAddress && this.setWeb3Address(address)
       return true
     }
   }
 
-  showPrivateKey() {
-    Alert.alert('Private Key', this.getCurrentWeb3Account().privateKey)
+  async removeAccount(address) {
+    const accounts = await web3.eth.getAccounts()
+    const result = web3.eth.accounts.wallet.remove(address)
+    if (result)
+    {
+      this.saveWallet()
+      this.syncAccountMapping()
+    }
+    return result
   }
 
-  setWeb3Address() {
-    const ethAddress = web3.eth.accounts.wallet[0].address
-    if (ethAddress != this.state.ethAddress)
+  async nameAccount(address, name) {
+    try {
+      let accounts = await this.getAccountMapping()
+      accounts = accounts.map(account => {
+        if (address !== account.address) {
+          return account
+        }
+
+        return Object.assign({}, account, { name })
+      })
+      await storeData(ACCOUNT_MAPPING, accounts)
+      this.fireEvent(Events.AVAILABLE_ACCOUNTS, { accounts })
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  //reconcile, store, and emit account objects
+  async syncAccountMapping() {
+    let accounts = (await this.getAccountMapping()) || []
+    //exclude any that were removed from the wallet
+    accounts = accounts.filter(({ address }) => web3.eth.accounts.wallet[address])
+    //include any that were added to the wallet
+    this.getAddresses().filter(address => !accounts.find(account => account.address === address)).forEach(address => {
+      accounts.push({ address })
+    })
+    //update listeners
+    this.fireEvent(Events.AVAILABLE_ACCOUNTS, { accounts })
+    await storeData(ACCOUNT_MAPPING, accounts)
+    return accounts
+  }
+
+  getPrivateKey(address) {
+    const account = (address ? web3.eth.accounts.wallet[address] : this.getCurrentWeb3Account()) || {}
+    return account.privateKey 
+  }
+
+  //retrieve account addresses from wallet keys since indexes can get deleted
+  getAddresses() {
+    return Object.keys(web3.eth.accounts.wallet).filter(k => {
+      return web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k)
+    })
+  }
+
+  async getAccountMapping() {
+    return await loadData(ACCOUNT_MAPPING)
+  }
+
+  async setWeb3Address(ethAddress) {
+    if (ethAddress !== this.state.ethAddress)
     {
       web3.eth.defaultAccount = ethAddress
       Object.assign(this.state, {ethAddress})
+      this.saveActiveAccount(ethAddress)
       if (this.state.netId)
       {
-        this.fireEvent(Events.NEW_ACCOUNT, {address:this.state.ethAddress})
+        this.fireEvent(Events.CURRENT_ACCOUNT, {address:this.state.ethAddress})
       }
       this.checkRegisterNotification()
       this.checkDoLink()
       this.saveWallet()
+      await this.updateLinks()
     }
+  }
+
+  createAccount() {
+    //record prior state
+    const prevAddresses = this.getAddresses()
+    const wallet = web3.eth.accounts.wallet.create(1)
+    this.syncAccountMapping()
+    //identify change in state
+    const address = this.getAddresses().find(address => !prevAddresses.find(addr => addr === address))
+    //use only if solitary
+    !this.state.ethAddress && this.setWeb3Address(address)
+    return address
   }
 
   openWallet() {
@@ -1306,15 +1345,16 @@ class OriginWallet {
             }
           }
         }
+        const { length } = web3.eth.accounts.wallet
+        if (length)
+        {
+          const accounts = await this.syncAccountMapping()
+          const active = accounts.find(({ active }) => active) || {}
+          this.setWeb3Address(active.address || accounts[0].address)
+        }
       }
 
-      if(!web3.eth.accounts.wallet.length)
-      {
-        //generate our wallet
-        //web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
-        web3.eth.accounts.wallet.create(1)
-      }
-      this.setWeb3Address()
+      this.fireEvent(Events.LOADED)
     })
 
     Linking.getInitialURL().then((url) => {

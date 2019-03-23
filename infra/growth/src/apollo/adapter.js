@@ -116,48 +116,6 @@ const referralRuleApolloObject = async (
     rule.campaignId
   )
 
-  // // TODO: remove once referral functionality is implemented
-  // const reward = {
-  //   amount: '200000000000000000000',
-  //   currency: 'OGN'
-  // }
-  // referralsInfo = {
-  //   invites: {
-  //     nodes: [
-  //       {
-  //         id: '1',
-  //         status: 'Pending',
-  //         walletAddress: '0xYoMamaHasANiceCarMan',
-  //         contact: 'Mr johnson',
-  //         reward: reward
-  //       },
-  //       {
-  //         id: '2',
-  //         status: 'Pending',
-  //         walletAddress: '0xYoMamaHasANiceCarMan',
-  //         contact: 'Mrs Jane',
-  //         reward: reward
-  //       },
-  //       {
-  //         id: '3',
-  //         status: 'Successful',
-  //         walletAddress: '0xYoMamaHasANiceCarMan',
-  //         contact: 'Someone I used to know',
-  //         reward: reward
-  //       },
-  //       {
-  //         id: '4',
-  //         status: 'Successful',
-  //         walletAddress: '0xYoMamaHasANiceCarMan',
-  //         contact: 'Jenny from the block',
-  //         reward: reward
-  //       }
-  //     ]
-  //   },
-  //   rewardEarned: reward,
-  //   rewardPending: reward
-  // }
-
   return {
     type: 'Referral',
     unlockConditions: conditionToUnlockRule(rule, allRules),

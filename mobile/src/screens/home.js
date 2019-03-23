@@ -37,16 +37,6 @@ class HomeScreen extends Component {
 
   static navigationOptions = {
     title: 'Home',
-    headerRight: (
-      <TouchableOpacity onPress={() => {
-        originWallet.open('root')
-      }}>
-        <Image
-          source={require(`${IMAGES_PATH}external-icon-dark.png`)}
-          style={{ marginRight: 15 }}
-        />
-      </TouchableOpacity>
-    ),
     headerTitle: () => (
       <Image source={require(`${IMAGES_PATH}origin-logo-dark.png`)} />
     ),
@@ -130,7 +120,7 @@ class HomeScreen extends Component {
           <WalletModal address={address} backupWarning={params.backupWarning} visible={params.walletExpanded} onPress={this.toggleWallet} onRequestClose={this.toggleWallet} />
         </View>
         {!eventsCount &&
-          <Selling />
+          <Selling navigation={navigation} />
         }
         {!!eventsCount &&
           <SectionList
