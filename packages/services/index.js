@@ -66,10 +66,10 @@ const startIpfs = () =>
     })
   })
 
-const populateIpfs = () =>
+const populateIpfs = ({ logFiles } = {}) =>
   new Promise((resolve, reject) => {
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
-    console.log('Populate IPFS:')
+    console.log('Populating IPFS...')
     ipfs.util.addFromFs(
       path.resolve(__dirname, '../origin-js/test/fixtures'),
       { recursive: true },
@@ -77,7 +77,10 @@ const populateIpfs = () =>
         if (err) {
           return reject(err)
         }
-        result.forEach(r => console.log(`  ${r.hash} ${r.path}`))
+        if (logFiles) {
+          result.forEach(r => console.log(`  ${r.hash} ${r.path}`))
+        }
+        console.log(`Populated IPFS with ${result.length} files.`)
         resolve(result)
       }
     )
