@@ -25,12 +25,12 @@ const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const graphqlClient = esmImport('@origin/graphql').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
-setNetwork('docker')
-
 const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
 const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
+
+setNetwork(process.env.NETWORK || 'docker')
 
 /**
  * Builds a lookup object that allows you to start from an ETH event signature,
