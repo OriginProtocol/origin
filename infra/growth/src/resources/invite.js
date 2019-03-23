@@ -159,7 +159,7 @@ class GrowthInvite {
       where: { id: campaignId }
     })
     if (!campaign) {
-      throw new Error('Failed loading campaign with id ${campaignId}')
+      throw new Error(`Failed loading campaign with id ${campaignId}`)
     }
 
     // Get list of referrals completed during the campaign by evaluating its rules.
