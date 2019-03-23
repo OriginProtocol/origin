@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./RestrictableContract.sol";
 
 /**
  * @title A Marketplace contract for managing listings, offers, payments, escrow and arbitration
@@ -16,7 +17,7 @@ contract ERC20 {
 }
 
 
-contract V00_Marketplace is Ownable {
+contract V00_Marketplace is RestrictableContract {
 
     /**
     * @notice All events have the same indexed signature offsets for easy filtering
@@ -62,8 +63,7 @@ contract V00_Marketplace is Ownable {
 
     ERC20 public tokenAddr; // Origin Token address
 
-    constructor(address _tokenAddr) public {
-        owner = msg.sender;
+    constructor(address _tokenAddr) RestrictableContract() public {
         setTokenAddr(_tokenAddr); // Origin Token contract
         allowedAffiliates[0x0] = true; // Allow null affiliate by default
     }
@@ -235,6 +235,7 @@ contract V00_Marketplace is Ownable {
     )
         public
         payable
+        onlyWhitelistedContracts(_currency)
     {
         withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
         makeOffer(listingID, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator);
@@ -441,6 +442,8 @@ contract V00_Marketplace is Ownable {
 
     // @dev Set the address of the Origin token contract
     function setTokenAddr(address _tokenAddr) public onlyOwner {
+        blacklistContract(tokenAddr); // Blacklist old contract
+        whitelistContract(_tokenAddr); // Whitelist new contract
         tokenAddr = ERC20(_tokenAddr);
     }
 
