@@ -113,7 +113,11 @@ class GrowthWelcome extends Component {
 
     return (
       <div className="container d-flex">
-        <div className={`${isMobile ? 'col-12' :'col-6' } d-flex flex-column top-padding`}>
+        <div
+          className={`${
+            isMobile ? 'col-12' : 'col-6'
+          } d-flex flex-column top-padding`}
+        >
           <Link to="/" className="mr-auto">
             <img className="logo" src="/images/origin-logo.svg" />
           </Link>
@@ -151,7 +155,7 @@ class GrowthWelcome extends Component {
               Sign up for Origin today.
             </fbt>
             &nbsp;
-            {personalised &&
+            {personalised && (
               <Fragment>
                 <fbt desc="GrowthWelcome.subTitleTextYouAndFriend">
                   <fbt:param name="firstName">{firstName}</fbt:param>
@@ -159,11 +163,10 @@ class GrowthWelcome extends Component {
                 </fbt>
                 &nbsp;
               </Fragment>
-            }
+            )}
             <fbt desc="GrowthWelcome.subTitleTextEarnAdditional">
-              Earn additional tokens when you
-              verify your profile, invite your friends, and buy and sell on
-              Origin.
+              Earn additional tokens when you verify your profile, invite your
+              friends, and buy and sell on Origin.
             </fbt>
           </div>
           <this.EnrollButton
@@ -200,7 +203,11 @@ class GrowthWelcome extends Component {
     return (
       <div className="second-fold-holder">
         <div className="container d-flex">
-          <div className={`${isMobile ? 'col-12' : 'col-6'} d-flex flex-column left-column`}>
+          <div
+            className={`${
+              isMobile ? 'col-12' : 'col-6'
+            } d-flex flex-column left-column`}
+          >
             <div className="title">
               <fbt desc="GrowthWelcome.whatIsOrigin">What is Origin?</fbt>
             </div>
@@ -234,7 +241,9 @@ class GrowthWelcome extends Component {
               )}
             </div>
           </div>
-          <div className={`${isMobile ? 'd-none' : '' } origin-showcase col-10`} />
+          <div
+            className={`${isMobile ? 'd-none' : ''} origin-showcase col-10`}
+          />
         </div>
       </div>
     )
@@ -280,7 +289,11 @@ class GrowthWelcome extends Component {
       <div className="d-flex fourth-fold-holder">
         <div className="col-6 pl-0 pr-0">
           <div className="coin-section" />
-          <div className={`boosting-section d-flex flex-column ${isMobile ? 'mobile' : ''}`}>
+          <div
+            className={`boosting-section d-flex flex-column ${
+              isMobile ? 'mobile' : ''
+            }`}
+          >
             <div className="text-holder ml-auto">
               <div className="title">
                 <fbt desc="GrowthWelcome.boosting">Boosting</fbt>
@@ -297,7 +310,11 @@ class GrowthWelcome extends Component {
         </div>
 
         <div className="col-6 pl-0 pr-0">
-          <div className={`rewards-section d-flex flex-column ${isMobile ? 'mobile' : ''}`}>
+          <div
+            className={`rewards-section d-flex flex-column ${
+              isMobile ? 'mobile' : ''
+            }`}
+          >
             <div className="text-holder mr-auto">
               <div className="title">
                 <fbt desc="GrowthWelcome.rewards">Rewards</fbt>
