@@ -309,6 +309,17 @@ describe('Marketplace.sol', async function() {
         assert(result2.events.OfferWithdrawn)
         assert(result2.events.OfferCreated)
       })
+
+      it('should NOT allow an offer to be updated with untrusted tokens', async function() {
+        try {
+          await helpers.makeERC20Offer({
+            Token: UntrustedToken
+          })
+        } catch (e) {
+          return
+        }
+        assert(false)
+      })
     })
 
     describe('withdrawing a listing', function() {
@@ -361,7 +372,7 @@ describe('Marketplace.sol', async function() {
         assert(result)
       })
 
-      it('should allow an offer to be made', async function() {
+      it('should allow an offer to be made with whitelisted token', async function() {
         const result = await helpers.makeERC20Offer({
           Buyer,
           Token: DaiStableCoin,
@@ -371,6 +382,19 @@ describe('Marketplace.sol', async function() {
 
         const offer = await Marketplace.methods.offers(listingID, 0).call()
         assert.equal(offer.buyer, Buyer)
+      })
+      
+      it('should NOT allow an offer to be made with untrusted tokens', async function() {
+        try {
+          await helpers.makeERC20Offer({
+            Buyer,
+            Token: UntrustedToken,
+            listingID
+          })
+        } catch (e) {
+          return
+        }
+        assert(false)
       })
 
       it('should allow an offer to be accepted', async function() {
