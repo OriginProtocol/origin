@@ -3,12 +3,10 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 
-import Store from 'utils/store'
 import NetworkQuery from 'queries/Network'
 import LocaleDropdown from 'components/LocaleDropdown'
 import BetaModal from './_BetaModal'
 
-const store = Store('sessionStorage')
 const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
 const SupportEmail = 'support@originprotocol.com'
 
