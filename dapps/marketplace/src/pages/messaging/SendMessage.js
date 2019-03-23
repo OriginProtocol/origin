@@ -108,7 +108,7 @@ class SendMessage extends Component {
                 ref={input => (this.input = input)}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
-              ></TextareaAutosize>
+              />
             )}
             <img
               src="images/add-photo-icon.svg"

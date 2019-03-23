@@ -94,7 +94,9 @@ class Listings extends Component {
                                 {listing.categoryStr}
                               </div>
 
-                              <div className={`status ${listing.status}`}>{listing.status}</div>
+                              <div className={`status ${listing.status}`}>
+                                {listing.status}
+                              </div>
                             </div>
                             <div className="title">
                               <Link to={`/listing/${listing.id}`}>
