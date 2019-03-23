@@ -84,14 +84,14 @@ class ListingDetail extends Component {
             {this.renderAction()}
             <h5>About the Seller</h5>
             <AboutParty id={listing.seller.id} />
-            <Reviews id={listing.seller.id} />
+            <Reviews id={listing.seller.id} seller />
           </>
         ) : (
           <div className="row">
             <div className="col-md-8 pb-3">
               {this.renderListing()}
               <hr />
-              <Reviews id={listing.seller.id} />
+              <Reviews id={listing.seller.id} seller />
             </div>
             <div className="col-md-4">
               {this.renderAction()}
