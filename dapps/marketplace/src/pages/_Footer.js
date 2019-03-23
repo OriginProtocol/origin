@@ -36,9 +36,11 @@ class Footer extends Component {
                   ) : (
                     <>
                       <fbt desc="footer.description">
-                        Origin allows buyers and sellers to transact without rent-seeking
-                        middlemen using the Ethereum blockchain and IPFS.
-                      </fbt><br />
+                        Origin allows buyers and sellers to transact without
+                        rent-seeking middlemen using the Ethereum blockchain and
+                        IPFS.
+                      </fbt>
+                      <br />
                       <br />
                       <div>
                         {`You're currently using the Origin Beta on ${networkName}. `}
@@ -61,24 +63,53 @@ class Footer extends Component {
                         {'Found a bug or have feedback? Send an email to '}
                         <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
                         {', open an issue on '}
-                        <a href={GitHubLink} target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a
+                          href={GitHubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          GitHub
+                        </a>
                         {' or post in our #bug-reports channel on '}
-                        <a href="https://discord.gg/jyxpUSe" target="_blank" rel="noopener noreferrer">Discord</a>.
+                        <a
+                          href="https://discord.gg/jyxpUSe"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Discord
+                        </a>
+                        .
                       </div>
                       <br />
-                      <div className="copyright">© 2019 Origin Protocol, Inc.</div>
+                      <div className="copyright">
+                        © 2019 Origin Protocol, Inc.
+                      </div>
                     </>
                   )}
                 </div>
                 <div className="links">
-                  <LocaleDropdown locale={locale} onLocale={onLocale} dropup={true} />
+                  <LocaleDropdown
+                    locale={locale}
+                    onLocale={onLocale}
+                    dropup={true}
+                  />
 
-                  <a href="https://www.originprotocol.com/" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://www.originprotocol.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
                   </a>
 
-                  <a href="https://www.originprotocol.com/creator" target="_blank" rel="noopener noreferrer">
-                    <fbt desc="footer.creatorLink">Create Your Own Marketplace</fbt>
+                  <a
+                    href="https://www.originprotocol.com/creator"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <fbt desc="footer.creatorLink">
+                      Create Your Own Marketplace
+                    </fbt>
                   </a>
                 </div>
               </div>
