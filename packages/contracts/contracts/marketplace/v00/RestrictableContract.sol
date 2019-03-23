@@ -18,8 +18,7 @@ contract RestrictableContract is Ownable {
         // Set owner to contract creator
         owner = msg.sender;
 
-        // Whitelist self and ETH
-        allowedContracts[address(0)] = true;
+        // Whitelist self
         allowedContracts[address(this)] = true;
     }
 

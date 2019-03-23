@@ -63,6 +63,7 @@ contract V00_Marketplace is RestrictableContract {
     ERC20 public tokenAddr; // Origin Token address
 
     constructor(address _tokenAddr) RestrictableContract() public {
+        whitelistContract(address(0)); // Whitelist ETH
         setTokenAddr(_tokenAddr); // Origin Token contract
         allowedAffiliates[0x0] = true; // Allow null affiliate by default
     }
