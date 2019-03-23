@@ -13,12 +13,19 @@ class RewardsBanner extends Component {
                 </div>
                 <div className="text float-left">
                   <strong>Earn Free Origin Tokens Today</strong>
-                  <br/>
-                  <span className="d-none lg d-lg-block">Participate in our campaigns and complete tasks 
-                  on our DApp to earn Origin Tokens.</span>
+                  <br />
+                  <span className="d-none lg d-lg-block">
+                    Participate in our campaigns and complete tasks on our DApp
+                    to earn Origin Tokens.
+                  </span>
                 </div>
                 <div className="float-right">
-                  <a className="btn btn-primary" href="https://dapp.originprotocol.com/#/welcome">Go</a>
+                  <a
+                    className="btn btn-primary"
+                    href="https://dapp.originprotocol.com/#/welcome"
+                  >
+                    Go
+                  </a>
                 </div>
               </div>
             </div>
