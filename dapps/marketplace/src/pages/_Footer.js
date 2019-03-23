@@ -23,12 +23,18 @@ class Footer extends Component {
           return (
             <footer>
               <div className="container">
-                <div className="logo-box">
-                  {creatorConfig.isCreatedMarketplace && (
-                    <span className="font-weight-bold">Powered by</span>
-                  )}
-                  <div className="logo" />
-                </div>
+                <a
+                  href="https://www.originprotocol.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="logo-box">
+                    {creatorConfig.isCreatedMarketplace && (
+                      <span className="font-weight-bold">Powered by</span>
+                    )}
+                    <div className="logo" />
+                  </div>
+                </a>
                 <div className="separator" />
                 <div className="about">
                   {creatorConfig.isCreatedMarketplace ? (
@@ -82,7 +88,31 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div className="copyright">
-                        © 2019 Origin Protocol, Inc.
+                        © {new Date().getFullYear()} Origin Protocol, Inc.{' '}
+                        <span>&bull;</span>{' '}
+                        <a
+                          href="https://www.originprotocol.com/tos"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms
+                        </a>{' '}
+                        <span>&bull;</span>{' '}
+                        <a
+                          href="https://www.originprotocol.com/privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Privacy
+                        </a>{' '}
+                        <span>&bull;</span>{' '}
+                        <a
+                          href="https://www.originprotocol.com/aup"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Acceptable Use Policy
+                        </a>
                       </div>
                     </>
                   )}
@@ -92,6 +122,7 @@ class Footer extends Component {
                     locale={locale}
                     onLocale={onLocale}
                     dropup={true}
+                    className={'dropdown-toggle'}
                   />
 
                   <a
@@ -167,6 +198,9 @@ require('react-styl')(`
         color: var(--clear-blue)
     .copyright
       margin-top: 1rem
+      font-size: 10px
+      span
+        color: var(--pale-grey-two-darker)
 
 
   @media (max-width: 767.98px)

@@ -59,6 +59,7 @@
     "query-string": "^6.3.0",
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
+    "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.8.4",
     "react-image-crop": "^6.0.17",
     "react-popper-tooltip": "^2.8.1",
