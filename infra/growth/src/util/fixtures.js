@@ -30,7 +30,8 @@ const rule = {
             eventType: 'ProfilePublished',
             reward: null,
             nextLevelCondition: false,
-            visible: true
+            visible: true,
+            scope: 'user'
           }
         },
         {
@@ -40,8 +41,8 @@ const rule = {
             eventType: 'EmailAttestationPublished',
             reward: null,
             visible: true,
-            limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'user'
           }
         },
         {
@@ -53,6 +54,7 @@ const rule = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
+            scope: 'user',
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.profile.requirement',
@@ -80,7 +82,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'user'
           }
         },
         {
@@ -94,7 +97,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'user'
           }
         },
         {
@@ -108,7 +112,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'user'
           }
         },
         {
@@ -122,7 +127,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'user'
           }
         },
         {
@@ -139,6 +145,7 @@ const rule = {
             numEventsRequired: 2,
             reward: null,
             nextLevelCondition: true,
+            scope: 'user',
             unlockConditionMsg: [
               {
                 conditionTranslateKey: 'growth.two.attestations.requirement',
@@ -162,7 +169,8 @@ const rule = {
             },
             limit: 25,
             visible: true,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'campaign'
           }
         },
         {
@@ -176,7 +184,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'campaign'
           }
         },
         {
@@ -190,7 +199,8 @@ const rule = {
             },
             visible: true,
             limit: 1,
-            nextLevelCondition: false
+            nextLevelCondition: false,
+            scope: 'campaign'
           }
         }
       ]
