@@ -9,7 +9,7 @@ import LocaleDropdown from 'components/LocaleDropdown'
 import BetaModal from './_BetaModal'
 
 const store = Store('sessionStorage')
-const GitHubLink = 'https://github.com/OriginProtocol/origin-dapp/issues/new'
+const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
 const SupportEmail = 'support@originprotocol.com'
 
 class Footer extends Component {
@@ -63,9 +63,9 @@ class Footer extends Component {
                         {'Found a bug or have feedback? Send an email to '}
                         <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
                         {', open an issue on '}
-                        <a href={GitHubLink}>GitHub</a>
+                        <a href={GitHubLink} target="_blank" rel="noopener noreferrer">GitHub</a>
                         {' or post in our #bug-reports channel on '}
-                        <a href="https://discord.gg/jyxpUSe">Discord</a>.
+                        <a href="https://discord.gg/jyxpUSe" target="_blank" rel="noopener noreferrer">Discord</a>.
                       </div>
                       <br />
                       <div className="copyright">© 2019 Origin Protocol, Inc.</div>
@@ -75,11 +75,11 @@ class Footer extends Component {
                 <div className="links">
                   <LocaleDropdown locale={locale} onLocale={onLocale} dropup={true} />
 
-                  <a href="https://www.originprotocol.com/">
+                  <a href="https://www.originprotocol.com/" target="_blank" rel="noopener noreferrer">
                     <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
                   </a>
 
-                  <a href="https://www.originprotocol.com/creator">
+                  <a href="https://www.originprotocol.com/creator" target="_blank" rel="noopener noreferrer">
                     <fbt desc="footer.creatorLink">Create Your Own Marketplace</fbt>
                   </a>
                 </div>
