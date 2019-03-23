@@ -4,21 +4,21 @@ class RewardsBanner extends Component {
   render() {
     return (
       <>
-        <div className='rewards-banner'>
-          <div className='container'>
-            <div className='row'>
-              <div className='col-12'>
-                <div className='float-left d-none d-sm-block'>
-                  <img src='images/blue-coins.svg' />
+        <div className="rewards-banner">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="float-left d-none d-sm-block">
+                  <img src="images/blue-coins.svg" />
                 </div>
-                <div className='text float-left'>
+                <div className="text float-left">
                   <strong>Earn Free Origin Tokens Today</strong>
                   <br/>
-                  <span className='d-none lg d-lg-block'>Participate in our campaigns and complete tasks 
+                  <span className="d-none lg d-lg-block">Participate in our campaigns and complete tasks 
                   on our DApp to earn Origin Tokens.</span>
                 </div>
-                <div className='float-right'>
-                  <a className='btn btn-primary' href="https://dapp.originprotocol.com/#/welcome">Go</a>
+                <div className="float-right">
+                  <a className="btn btn-primary" href="https://dapp.originprotocol.com/#/welcome">Go</a>
                 </div>
               </div>
             </div>
