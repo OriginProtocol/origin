@@ -63,7 +63,12 @@ function withEnrolmentModal(WrappedComponent) {
           open: true
         })
       } else if (enrollmentStatus === 'Banned') {
-        alert('You have been banned from earning tokens')
+        alert(
+          fbt(
+            'You have been banned from earning tokens',
+            'GrowthEnrollment.bannedFromEarning'
+          )
+        )
       }
     }
 
@@ -141,13 +146,21 @@ function withEnrolmentModal(WrappedComponent) {
                   />
                 </div>
                 <div className="title title-light mt-4 ml-5 mr-5">
-                  Join our {campaignName} to earn tokens
+                  <fbt desc="GrowthEnrollment.joinOurCampaignTitle">
+                    Join our
+                    <fbt:param name="campaignName">{campaignName}</fbt:param>
+                    to earn tokens
+                  </fbt>
                 </div>
                 <div className="mt-3 normal-line-height ml-4 mr-4">
-                  Earn OGN by completing tasks like verifying your identity and
-                  sharing Origin with your friends. OGN can be used in a variety
-                  of ways. Earned OGN will be transferred after the end of the{' '}
-                  {campaignName}.
+                  <fbt desc="GrowthEnrollment.joinOurCampaignExplanation">
+                    Earn OGN by completing tasks like verifying your identity
+                    and sharing Origin with your friends. OGN can be used in a
+                    variety of ways. Earned OGN will be transferred after the
+                    end of the
+                    <fbt:param name="campaignName">{campaignName}</fbt:param>
+                    to earn tokens
+                  </fbt>
                 </div>
                 <div className="d-flex align-items-center flex-column">
                   <button
@@ -176,38 +189,38 @@ function withEnrolmentModal(WrappedComponent) {
             <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
           </div>
           <div className="pl-5 pr-5 mt-3 normal-line-height pale-grey">
-            <fbt desc="EnrollmentModal.termsSubTitle">
-              Join Origin’s reward program to earn Origin tokens (OGN). Terms
-              and conditions apply.
-            </fbt>
+            {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
+            Join Origin’s reward program to earn Origin tokens (OGN). Terms and
+            conditions apply.
+            {/*</fbt>*/}
           </div>
           <div className="pt-1 mt-4 normal-line-height pale-grey explanation">
-            <fbt desc="EnrollmentModal.termsExplanationParagraph1">
-              Earned OGN will be distributed at the end of each campaign. OGN is
-              currently locked for usage on the Origin platform and cannot be
-              transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-            </fbt>
+            {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
+            Earned OGN will be distributed at the end of each campaign. OGN is
+            currently locked for usage on the Origin platform and cannot be
+            transferred. It is expected that OGN will be unlocked and
+            transferrable in the future.
+            {/*</fbt>*/}
           </div>
           <div className="mt-3 normal-line-height pale-grey explanation">
-            <fbt desc="EnrollmentModal.termsExplanationParagraph2">
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
-            </fbt>
+            {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
+            By joining the Origin rewards program, you agree that you will not
+            transfer or sell future earned Origin tokens to other for at least 1
+            year from the date of earning your tokens.
+            {/*</fbt>*/}
           </div>
           <div className="terms pale-grey">
-            <fbt desc="EnrollmentModal.termsBody">
-              OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended
-              (the “Securities Act”), and may not be transferred in the United
-              States to, or for the account or benefit of, any U.S. person
-              except pursuant to an available exemption from the registration
-              requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them
-              in Regulation S under the Securities Act and all applicable laws
-              and regulations.
-            </fbt>
+            {/*<fbt desc="EnrollmentModal.termsBody">*/}
+            OGN are being issued in a transaction originally exempt from
+            registration under the U.S. Securities Act of 1933, as amended (the
+            “Securities Act”), and may not be transferred in the United States
+            to, or for the account or benefit of, any U.S. person except
+            pursuant to an available exemption from the registration
+            requirements of the Securities Act and all applicable state
+            securities laws. Terms used above have the meanings given to them in
+            Regulation S under the Securities Act and all applicable laws and
+            regulations.
+            {/*</fbt>*/}
           </div>
           <div className="mt-1 d-flex country-check-label justify-content-center">
             <label className="checkbox-holder">
@@ -258,16 +271,26 @@ function withEnrolmentModal(WrappedComponent) {
               />
             </div>
           </div>
-          <div className="title mt-4">Oops, {country} is not eligible</div>
+          <div className="title mt-4">
+            <fbt desc="GrowthEnrollment.notEligibleTitle">
+              Oops,
+              <fbt:param name="country">{country}</fbt:param>
+              is not eligible
+            </fbt>
+          </div>
           <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-            Unfortunately, it looks like you’re currently in a country where
-            government regulations do not allow you to participate in Origin
-            Campaigns.
+            <fbt desc="GrowthEnrollment.notEligibleExplanation">
+              Unfortunately, it looks like you’re currently in a country where
+              government regulations do not allow you to participate in Origin
+              Campaigns.
+            </fbt>
           </div>
           {isRestricted && (
             <Fragment>
               <div className="mt-4 pt-2">
-                Did we detect your your country incorrectly?
+                <fbt desc="GrowthEnrollment.restrictedQuestion">
+                  Did we detect your your country incorrectly?
+                </fbt>
               </div>
               <div className="mt-1 d-flex country-check-label justify-content-center">
                 <label className="checkbox-holder">
@@ -278,7 +301,11 @@ function withEnrolmentModal(WrappedComponent) {
                     value="cofirm-citizenship"
                   />
                   <span className="checkmark" />
-                  &nbsp;I certify I am not a citizen or resident of {country}
+                  &nbsp;
+                  <fbt desc="GrowthEnrollment.certifyNotACitizen">
+                    I certify I am not a citizen or resident of
+                    <fbt:param name="country">{country}</fbt:param>
+                  </fbt>
                 </label>
               </div>
             </Fragment>
@@ -340,7 +367,10 @@ function withEnrolmentModal(WrappedComponent) {
                 notCitizenChecked
               )
             } else {
-              return 'Error: can not detect country'
+              return fbt(
+                'Error: can not detect country',
+                'GrowthEnrollment.canNotDetectCountryError'
+              )
             }
           }}
         </Query>

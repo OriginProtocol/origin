@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'bce3090'
+dappImageTag: '99c92d0'
 dappReplicas: 2
 
 # origin-ipfs-proxy
@@ -28,7 +28,7 @@ discoveryImageTag: 'abe42a6'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'bce3090'
+growthImageTag: '3fb7dcc'
 
 # origin-messaging
 messagingImage: origin-messaging

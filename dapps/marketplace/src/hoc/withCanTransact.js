@@ -25,6 +25,9 @@ function withCanTransact(WrappedComponent) {
           if (walletType === 'mobile-linked' && !metaMaskId) {
             return <WrappedComponent {...props} />
           }
+          if (walletType === 'Web3 Wallet') {
+            return <WrappedComponent {...props} />
+          }
 
           if (!metaMaskId) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
