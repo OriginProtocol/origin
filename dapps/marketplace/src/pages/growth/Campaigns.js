@@ -67,14 +67,17 @@ function CampaignNavList(props) {
   const { campaigns, onCampaignClick, selectedCampaignId } = props
   return (
     <div className="campaign-list d-flex justify-content-center mt-4">
-      {campaigns.map(campaign => (
-        <CampaignNavItem
-          key={campaign.id}
-          campaign={campaign}
-          selected={campaign.id === selectedCampaignId}
-          onClick={onCampaignClick}
-        />
-      ))}
+      {campaigns
+        // do not show campaigns that have not started yet
+        .filter(campaign => campaign.status !== 'Pending')
+        .map(campaign => (
+          <CampaignNavItem
+            key={campaign.id}
+            campaign={campaign}
+            selected={campaign.id === selectedCampaignId}
+            onClick={onCampaignClick}
+          />
+        ))}
     </div>
   )
 }
@@ -117,13 +120,28 @@ function Campaign(props) {
   let subTitleText = ''
 
   if (status === 'Active') {
-    timeLabel = `Time left:${formatTimeDifference(Date.now(), endDate)}`
-    subTitleText = 'Get Origin Tokens by completing tasks below'
+    timeLabel = `${fbt(
+      'Time left',
+      'RewardCampaigns.timeLeft'
+    )}:${formatTimeDifference(Date.now(), endDate)}`
+    subTitleText = fbt(
+      'Get Origin Tokens by completing tasks below',
+      'RewardCampaigns.getOriginTokens'
+    )
   } else if (status === 'Pending') {
-    timeLabel = `Starts in:${formatTimeDifference(Date.now(), startDate)}`
-    subTitleText = `This campaign hasn't started yet`
+    timeLabel = `${fbt(
+      'Starts in',
+      'RewardCampaigns.startsIn'
+    )}:${formatTimeDifference(Date.now(), startDate)}`
+    subTitleText = fbt(
+      `This campaign hasn't started yet`,
+      'RewardCampaigns.hasntStartedYet'
+    )
   } else if (status === 'Completed' || status === 'CapReached') {
-    subTitleText = 'This campaign has finished'
+    subTitleText = fbt(
+      'This campaign has finished',
+      'RewardCampaigns.campaignHasFinished'
+    )
   }
 
   // campaign rewards converted normalized to token value according to number of decimals

@@ -51,7 +51,7 @@ class ListingDetail extends Component {
     window.addEventListener('resize', this.onResize)
   }
 
-  componentWillUnount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.onResize)
   }
 
