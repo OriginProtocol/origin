@@ -38,46 +38,76 @@ function Action(props) {
 
   if (type === 'Email') {
     foregroundImgSrc = '/images/identity/email-icon-light.svg'
-    title = 'Verify your Email'
-    infoText = 'Confirm your email address in Attestations.'
+    title = fbt('Verify your Email', 'RewardActions.emailTitle')
+    infoText = fbt(
+      'Confirm your email address in Attestations.',
+      'RewardActions.emailExplanation'
+    )
   } else if (type === 'Profile') {
     foregroundImgSrc = '/images/growth/profile-icon.svg'
-    title = 'Verify your Origin Profile'
-    infoText = 'Connect your Origin Profile in Attestations.'
+    title = fbt('Verify your Origin Profile', 'RewardActions.profileTitle')
+    infoText = fbt(
+      'Connect your Origin Profile in Attestations.',
+      'RewardActions.profileExplanation'
+    )
   } else if (type === 'Phone') {
     foregroundImgSrc = '/images/identity/phone-icon-light.svg'
-    title = 'Verify your Phone Number'
-    infoText = 'Confirm your phone number in Attestations.'
+    title = fbt('Verify your Phone Number', 'RewardActions.phoneTitle')
+    infoText = fbt(
+      'Confirm your phone number in Attestations.',
+      'RewardActions.phoneExplanation'
+    )
   } else if (type === 'Twitter') {
     foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
-    title = 'Connect your Twitter Profile'
-    infoText = 'Connect your Twitter Profile in Attestationts.'
+    title = fbt('Connect your Twitter Profile', 'RewardActions.twitterTitle')
+    infoText = fbt(
+      'Connect your Twitter Profile in Attestationts.',
+      'RewardActions.twitterExplanation'
+    )
   } else if (type === 'Airbnb') {
     foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
-    title = 'Connect your Airbnb Profile'
-    infoText = 'Connect your Airbnb Profile in Attestations.'
+    title = fbt('Connect your Airbnb Profile', 'RewardActions.airbnbTitle')
+    infoText = fbt(
+      'Connect your Airbnb Profile in Attestations.',
+      'RewardActions.airbnbExplanation'
+    )
   } else if (type === 'Facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
-    title = 'Connect your Facebook Profile'
-    infoText = 'Connect your Facebook Profile in Attestations.'
+    title = fbt('Connect your Facebook Profile', 'RewardActions.facebookTitle')
+    infoText = fbt(
+      'Connect your Facebook Profile in Attestations.',
+      'RewardActions.facebookExplanation'
+    )
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
-    title = 'Create a Listing'
-    infoText = 'Successfully complete the purchase of any one listing.'
+    title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
+    infoText = fbt(
+      'Successfully complete the purchase of any one listing.',
+      'RewardActions.listingCreatedExplanation'
+    )
     buttonLink = '/create'
   } else if (type === 'ListingPurchased') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
-    title = 'Purchase a Listing'
-    infoText = 'Successfully complete the sale of any one listing.'
+    title = fbt('Purchase a Listing', 'RewardActions.listingPurchasedTitle')
+    infoText = fbt(
+      'Successfully complete the sale of any one listing.',
+      'RewardActions.listingPurchasedExplanation'
+    )
     buttonLink = '/'
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
-    title = 'Sell a Listing'
-    infoText = 'Sell a listing on marketplace'
+    title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
+    infoText = fbt(
+      'Sell a listing on marketplace',
+      'RewardActions.listingSoldExplanation'
+    )
     buttonLink = '/create'
   } else if (type === 'Referral') {
-    title = 'Invite Friends'
-    infoText = 'Get your friends to join Origin with active accounts.'
+    title = fbt('Invite Friends', 'RewardActions.referralTitle')
+    infoText = fbt(
+      'Get your friends to join Origin with active accounts.',
+      'RewardActions.referralExplanation'
+    )
     buttonOnClick = () => {
       window.scrollTo(0, 0)
       props.handleNavigationChange('Invite')
@@ -148,7 +178,7 @@ function Action(props) {
             rewardPending.amount !== '0' && (
               <Fragment>
                 <div className="d-flex align-items-center sub-text">
-                  Pending
+                  <fbt desc="RewardActions.pending">Pending</fbt>
                 </div>
                 {renderReward(rewardPending.amount, true)}
               </Fragment>
@@ -157,7 +187,9 @@ function Action(props) {
             rewardEarned !== null &&
             rewardEarned.amount !== '0' && (
               <Fragment>
-                <div className="d-flex align-items-center sub-text">Earned</div>
+                <div className="d-flex align-items-center sub-text">
+                  <fbt desc="RewardActions.earned">Earned</fbt>
+                </div>
                 {renderReward(rewardEarned.amount, true)}
               </Fragment>
             )}
@@ -165,7 +197,9 @@ function Action(props) {
             rewardEarned !== null &&
             rewardEarned.amount !== '0' && (
               <Fragment>
-                <div className="d-flex align-items-center sub-text">Earned</div>
+                <div className="d-flex align-items-center sub-text">
+                  <fbt desc="RewardActions.earned">Earned</fbt>
+                </div>
                 {renderReward(rewardEarned.amount, false)}
               </Fragment>
             )}

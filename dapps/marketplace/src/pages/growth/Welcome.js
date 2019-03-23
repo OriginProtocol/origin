@@ -14,13 +14,17 @@ class GrowthWelcome extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inviteCode: null
+      inviteCode: null,
+      isMobile: false
     }
 
     this.EnrollButton = withEnrolmentModal('button')
+    this.onResize = this.onResize.bind(this)
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+    this.onResize()
     let inviteCode = get(this.props, 'match.params.inviteCode')
     // onboarding url is also going to match the path. Not a valid invite
     // code so ignore it.
@@ -35,6 +39,18 @@ class GrowthWelcome extends Component {
     })
     if (storedInviteCode === null && inviteCode !== undefined) {
       localStorage.setItem(localStorageKey, inviteCode)
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.isMobile) {
+      this.setState({ isMobile: true })
+    } else if (window.innerWidth >= 767 && this.state.isMobile) {
+      this.setState({ isMobile: false })
     }
   }
 
@@ -93,9 +109,15 @@ class GrowthWelcome extends Component {
     urlForOnboarding,
     arrivedFromOnboarding
   ) {
+    const isMobile = this.state.isMobile
+
     return (
       <div className="container d-flex">
-        <div className="col-6 d-flex flex-column top-padding">
+        <div
+          className={`${
+            isMobile ? 'col-12' : 'col-6'
+          } d-flex flex-column top-padding`}
+        >
           <Link to="/" className="mr-auto">
             <img className="logo" src="/images/origin-logo.svg" />
           </Link>
@@ -129,11 +151,22 @@ class GrowthWelcome extends Component {
             </div>
           )}
           <div className="sub-title">
-            <fbt desc="GrowthWelcome.subTitleText">
-              Sign up for Origin today. Aure and you will both earn Origin
-              cryptocurrency tokens (OGN). Earn additional tokens when you
-              verify your profile, invite your friends, and buy and sell on
-              Origin.
+            <fbt desc="GrowthWelcome.subTitleTextSignUp">
+              Sign up for Origin today.
+            </fbt>
+            &nbsp;
+            {personalised && (
+              <Fragment>
+                <fbt desc="GrowthWelcome.subTitleTextYouAndFriend">
+                  <fbt:param name="firstName">{firstName}</fbt:param>
+                  and you will both earn Origin cryptocurrency tokens (OGN).
+                </fbt>
+                &nbsp;
+              </Fragment>
+            )}
+            <fbt desc="GrowthWelcome.subTitleTextEarnAdditional">
+              Earn additional tokens when you verify your profile, invite your
+              friends, and buy and sell on Origin.
             </fbt>
           </div>
           <this.EnrollButton
@@ -147,7 +180,9 @@ class GrowthWelcome extends Component {
         <div
           className={`spaceman col-10 top-padding ${
             !personalised ? 'center' : ''
-          }`}
+          }
+          ${isMobile ? 'd-none' : ''}
+          `}
         />
       </div>
     )
@@ -163,14 +198,20 @@ class GrowthWelcome extends Component {
   }
 
   renderWhatIsOriginFold() {
+    const isMobile = this.state.isMobile
+
     return (
       <div className="second-fold-holder">
         <div className="container d-flex">
-          <div className="col-6 d-flex flex-column left-column">
+          <div
+            className={`${
+              isMobile ? 'col-12' : 'col-6'
+            } d-flex flex-column left-column`}
+          >
             <div className="title">
               <fbt desc="GrowthWelcome.whatIsOrigin">What is Origin?</fbt>
             </div>
-            <div className="sub-title">
+            <div className={`sub-title ${isMobile ? 'mobile' : ''}`}>
               <fbt desc="GrowthWelcome.whatIsOriginExplanation">
                 Origin is the first peer-to-peer marketplace built entirely on
                 the blockchain
@@ -200,7 +241,9 @@ class GrowthWelcome extends Component {
               )}
             </div>
           </div>
-          <div className="origin-showcase col-10" />
+          <div
+            className={`${isMobile ? 'd-none' : ''} origin-showcase col-10`}
+          />
         </div>
       </div>
     )
@@ -240,11 +283,17 @@ class GrowthWelcome extends Component {
   }
 
   renderBoostingAndRewardsFold() {
+    const isMobile = this.state.isMobile
+
     return (
       <div className="d-flex fourth-fold-holder">
         <div className="col-6 pl-0 pr-0">
           <div className="coin-section" />
-          <div className="boosting-section d-flex flex-column">
+          <div
+            className={`boosting-section d-flex flex-column ${
+              isMobile ? 'mobile' : ''
+            }`}
+          >
             <div className="text-holder ml-auto">
               <div className="title">
                 <fbt desc="GrowthWelcome.boosting">Boosting</fbt>
@@ -261,7 +310,11 @@ class GrowthWelcome extends Component {
         </div>
 
         <div className="col-6 pl-0 pr-0">
-          <div className="rewards-section d-flex flex-column">
+          <div
+            className={`rewards-section d-flex flex-column ${
+              isMobile ? 'mobile' : ''
+            }`}
+          >
             <div className="text-holder mr-auto">
               <div className="title">
                 <fbt desc="GrowthWelcome.rewards">Rewards</fbt>
@@ -467,6 +520,8 @@ require('react-styl')(`
         font-weight: normal
         color: var(--dusk)
         padding-right: 100px
+      .sub-title.mobile
+        padding-right: 0px
       .feature-row
         margin-top: 50px
         padding-left: 6px
@@ -526,6 +581,9 @@ require('react-styl')(`
           font-weight: normal
           line-height: 1.44
           color: var(--dark)
+      .boosting-section.mobile
+        padding-top: 50px
+        padding-right: 35px
       .arrows-section
         background-color: #5f41d2
         height: 340px
@@ -552,6 +610,9 @@ require('react-styl')(`
           font-weight: normal
           line-height: 1.44
           color: white
+      .rewards-section.mobile
+        padding-top: 50px
+        padding-left: 35px
     .start-earning-fold-holder
       background-color: var(--clear-blue)
       color: white
