@@ -442,7 +442,9 @@ contract V00_Marketplace is RestrictableContract {
 
     // @dev Set the address of the Origin token contract
     function setTokenAddr(address _tokenAddr) public onlyOwner {
-        blacklistContract(tokenAddr); // Blacklist old contract
+        if (tokenAddr != address(0)) {
+            blacklistContract(tokenAddr); // Blacklist old contract
+        }
         whitelistContract(_tokenAddr); // Whitelist new contract
         tokenAddr = ERC20(_tokenAddr);
     }

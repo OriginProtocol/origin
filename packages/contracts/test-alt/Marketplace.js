@@ -36,6 +36,7 @@ describe('Marketplace.sol', async function() {
   let Marketplace,
     OriginToken,
     DaiStableCoin,
+    UntrustedToken,
     Buyer,
     // BuyerIdentity,
     Owner,
@@ -86,6 +87,13 @@ describe('Marketplace.sol', async function() {
       // args: [12000]
     })
 
+    UntrustedToken = await deploy('UntrustedToken', {
+      from: Owner,
+      path: `${__dirname}/contracts/`,
+      args: ['Untrusted token', 'UNTRUSTED', 2, 12000]
+      // args: [12000]
+    })
+
     Arbitrator = await deploy('CentralizedArbitrator', {
       from: ArbitratorAddr,
       path: `${__dirname}/contracts/arbitration/`,
@@ -116,6 +124,9 @@ describe('Marketplace.sol', async function() {
     //   path: `${contractPath}/identity`
     // })
 
+    await Marketplace.methods.whitelistContract(DaiStableCoin._address).send({
+      from: Owner
+    })
     await Marketplace.methods.addAffiliate(Affiliate, IpfsHash).send()
     await OriginToken.methods.transfer(Seller, 400).send()
     await OriginToken.methods.transfer(Seller2, 400).send()
@@ -188,6 +199,23 @@ describe('Marketplace.sol', async function() {
       gasTable.push([...u, gasPriceInDollars(u[1]), gasPriceInDollars(u[2])])
     })
     console.log(gasTable.toString())
+  })
+
+  describe('RestrictableContract', function() {
+    it('should have whitelisted address 0x0', async function() {
+      const whitelisted = await Marketplace.methods.isContractWhitelisted('0x0000000000000000000000000000000000000000').call();
+      assert.equal(whitelisted, true);  
+    })
+    it('should have whitelisted OGN and DAI contracts', async function() {
+      const ognWhitelisted = await Marketplace.methods.isContractWhitelisted(OriginToken._address).call();
+      assert.equal(ognWhitelisted, true);  
+      const daiWhitelisted = await Marketplace.methods.isContractWhitelisted(DaiStableCoin._address).call();
+      assert.equal(daiWhitelisted, true);  
+    })
+    it('should not have whitelisted untrusted token contract', async function() {
+      const whitelisted = await Marketplace.methods.isContractWhitelisted(UntrustedToken._address).call();
+      assert.equal(whitelisted, false);
+    })
   })
 
   describe('A listing in ETH', function() {

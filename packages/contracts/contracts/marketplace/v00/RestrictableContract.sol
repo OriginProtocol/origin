@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "../../../node_modules/openzeppelin-solidity/contracts/AddressUtils.sol";
+// import "../../../node_modules/openzeppelin-solidity/contracts/AddressUtils.sol";
 
 /**
  * @title RestrictableContract
@@ -44,25 +44,25 @@ contract RestrictableContract is Ownable {
 
     // Add contract address to whitelist
     function whitelistContract(address contractAddress) public onlyOwner {
-        require(AddressUtils.isContract(contractAddress), "Must be a contract address");
+        // require(AddressUtils.isContract(contractAddress), "Must be a contract address AAA");
         allowedContracts[contractAddress] = true;
     }
 
     // Remove contract address from whitelist
     function blacklistContract(address contractAddress) public onlyOwner {
-        require(AddressUtils.isContract(contractAddress), "Must be a contract address");
+        // require(AddressUtils.isContract(contractAddress), "Must be a contract address");
         allowedContracts[contractAddress] = false;
     }
 
     // Adds user address to whitelist
     function whitelistUser(address userAddress) public onlyOwner {
-        require(!AddressUtils.isContract(userAddress), "Must be an user address");
+        // require(!AddressUtils.isContract(userAddress), "Must be an user address");
         allowedUsers[userAddress] = true;
     }
 
     // Removes user from whitelist
     function blacklistUser(address userAddress) public onlyOwner {
-        require(!AddressUtils.isContract(userAddress), "Must be an user address");
+        // require(!AddressUtils.isContract(userAddress), "Must be an user address");
         allowedUsers[userAddress] = false;
     }
 

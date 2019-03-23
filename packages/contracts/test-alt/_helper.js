@@ -4,6 +4,7 @@ import solc from 'solc'
 import linker from 'solc/linker'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
+import path from 'path'
 
 const solcOpts = {
   language: 'Solidity',
@@ -34,17 +35,17 @@ export async function web3Helper(provider = defaultProvider) {
 }
 
 function findImportsPath(prefix) {
-  return function findImports(path) {
+  return function findImports(importPath) {
     try {
-      if (path.indexOf('node_modules') < 0) {
-        path = prefix + path
+      if (importPath.indexOf('node_modules') < 0) {
+        importPath = path.join(prefix, importPath)
       }
-      const contents = fs.readFileSync(path).toString()
+      const contents = fs.readFileSync(importPath).toString()
       return {
         contents
       }
     } catch (e) {
-      console.log(`File not found: ${path}`)
+      console.log(`File not found: ${importPath}`)
       return { error: 'File not found' }
     }
   }
