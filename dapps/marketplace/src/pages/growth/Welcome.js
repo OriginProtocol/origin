@@ -42,7 +42,7 @@ class GrowthWelcome extends Component {
     }
   }
 
-  componentWillUnount() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.onResize)
   }
 
