@@ -161,12 +161,14 @@ function Action(props) {
                 {renderReward(rewardEarned.amount, true)}
               </Fragment>
             )}
-          {actionCompleted && rewardEarned !== null && (
-            <Fragment>
-              <div className="d-flex align-items-center sub-text">Earned</div>
-              {renderReward(rewardEarned.amount, false)}
-            </Fragment>
-          )}
+          {actionCompleted &&
+            rewardEarned !== null &&
+            rewardEarned.amount !== '0' && (
+              <Fragment>
+                <div className="d-flex align-items-center sub-text">Earned</div>
+                {renderReward(rewardEarned.amount, false)}
+              </Fragment>
+            )}
           {showPossibleRewardAmount && renderReward(reward.amount, true)}
           {actionLocked && unlockConditions.length > 0 && (
             <Fragment>
