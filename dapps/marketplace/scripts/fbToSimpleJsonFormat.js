@@ -5,10 +5,10 @@ const phrases = JSON.parse(facebookTranslations).phrases
 const allMessages = {}
 
 phrases.forEach(phrase => {
-	Object.keys(phrase.hashToText)
-		.forEach(key => {
-			allMessages[key] = phrase.hashToText[key]
-		})
+  Object.keys(phrase.hashToText)
+    .forEach(key => {
+      allMessages[key] = phrase.hashToText[key]
+    })
 
 })
 
