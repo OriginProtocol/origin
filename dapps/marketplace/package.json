@@ -26,7 +26,7 @@
     "fbt:collect": "node -r @babel/register ../../node_modules/babel-plugin-fbt/bin/collectFBT --json-input --pretty < .src_manifest.json > .source_strings.json",
     "fbt:translate": "node  -r @babel/register ../../node_modules/babel-plugin-fbt/bin/translate.js --translations translations/*.json --jenkins --pretty > .translated_fbts.json",
     "fbt:clean": "rm .enum_manifest.json .src_manifest.json source_strings.json src/translatedFbts.json 2&> /dev/null || exit 0",
-    "translate": "npm run fbt:manifest && npm run fbt:collect && node scripts/convertTranslations && npm run fbt:translate && node scripts/splitTranslations && cp .enum_manifest.json translations/.enum_manifest.json"
+    "translate": "npm run fbt:manifest && npm run fbt:collect && npm run fbt:translate && node scripts/splitTranslations && cp .enum_manifest.json translations/.enum_manifest.json"
   },
   "dependencies": {
     "@babel/core": "^7.3.4",
