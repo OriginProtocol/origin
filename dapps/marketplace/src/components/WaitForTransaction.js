@@ -83,11 +83,9 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>
-                    Waiting on the blockchain.
-                    <br />
-                    This might take a minute.
-                  </b>
+                  <b>Writing to the blockchain.</b>
+                  <br />
+                  This might take a minute.
                 </div>
               </div>
             )
@@ -96,11 +94,9 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>
-                    Waiting for confirmation.
-                    <br />
-                    This might take a minute.
-                  </b>
+                  <b>Waiting for confirmation.</b>
+                  <br />
+                  This might take a minute.
                 </div>
               </div>
             )

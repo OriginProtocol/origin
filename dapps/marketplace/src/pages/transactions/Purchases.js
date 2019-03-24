@@ -202,6 +202,8 @@ require('react-styl')(`
           font-size: 11px
           &.pending
             color: var(--gold)
+          &.withdrawn
+            color: var(--orange-red)
       .title
         font-size: 24px
         font-weight: normal

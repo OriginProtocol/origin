@@ -159,25 +159,29 @@ if (isProduction) {
       template: 'public/template.html',
       inject: false,
       filename: 'mainnet.html',
-      network: 'mainnet'
+      network: 'mainnet',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'kovan.html',
-      network: 'kovanTst'
+      network: 'kovanTst',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'rinkeby.html',
-      network: 'rinkeby'
+      network: 'rinkeby',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'origin.html',
-      network: 'origin'
+      network: 'origin',
+      metaMask: true
     })
   )
   config.resolve.alias = {
