@@ -184,8 +184,9 @@ contract V00_Marketplace is RestrictableContract {
     )
         public
         payable
-        onlyWhitelistedContracts(_currency)
+        // onlyWhitelistedContracts(_currency)
     {
+        require(isContractWhitelisted(_currency), "Contract not whitelisted");
         bool affiliateWhitelistDisabled = allowedAffiliates[address(this)];
         require(
             affiliateWhitelistDisabled || allowedAffiliates[_affiliate],
@@ -236,8 +237,9 @@ contract V00_Marketplace is RestrictableContract {
     )
         public
         payable
-        onlyWhitelistedContracts(_currency)
+        // onlyWhitelistedContracts(_currency)
     {
+        require(isContractWhitelisted(_currency), "Contract not whitelisted");
         withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
         makeOffer(listingID, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator);
     }
