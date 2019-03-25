@@ -27,7 +27,7 @@ Current process:
 1. `node scripts/fbtToCrowdin.js` : Converts `.source_strings.json` to simple key-value json stored at `translation/crowdin/all-messages.json`
 1. Crowdin reads `translation/crowdin/all-messages.json` 
 1. Translators do their magic
-1. Crowdin pushes locale-specifc files to `./translations/<locale>.js`
+1. Crowdin pushes locale-specifc files to `./translation/crowding/all-messages_<locale>.js`
 1. `node scripts/crowdinToFbt.js` : Converts simple key-value back into fbt json format, stored in `./translations/<locale>.js`
 1. **`npm run fbt:translate`** : Using the translations in `./translations/<locale>.js`, outputs combined file to `.translated_fbts.json`
 1. **`node scripts/splitTranslations`** : Using `.translated_fbts.json`, outputs locale-specific translations to `./public/translations`
