@@ -1,26 +1,27 @@
 import React from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import EventTick from 'components/EventTick'
 
 const SaleStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
-  { title: 'Offer Accepted', event: 'acceptedEvent' },
-  { title: 'Sale Completed', event: 'finalizedEvent' }
+  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
+  { title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'), event: 'acceptedEvent' },
+  { title: fbt('Sale Completed', 'TransactionStages.saleCompleted'), event: 'finalizedEvent' }
 ]
 
 const DisputeStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
-  { title: 'Offer Accepted', event: 'acceptedEvent' },
-  { title: 'Dispute Started', event: 'disputedEvent', className: 'danger' },
-  { title: 'Ruling Made', event: 'rulingEvent' }
+  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
+  { title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'), event: 'acceptedEvent' },
+  { title: fbt('Dispute Started', 'TransactionStages.disputeStarted'), event: 'disputedEvent', className: 'danger' },
+  { title: fbt('Ruling Made', 'TransactionStages.rulingMade'), event: 'rulingEvent' }
 ]
 
 const CanceledStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
+  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
   {
-    title: 'Offer Withdrawn',
-    ifSeller: 'Offer Rejected',
+    title: fbt('Offer Withdrawn', 'TransactionStages.offerWithdrawn'),
+    ifSeller: fbt('Offer Rejected', 'TransactionStages.offerRejected'),
     event: 'withdrawnEvent'
   }
 ]
