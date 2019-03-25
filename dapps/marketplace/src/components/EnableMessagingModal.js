@@ -32,7 +32,7 @@ const MessagingInitializing = () => (
   <div className="enable-messaging">
     <div className="messaging-logo" />
     <div className="status">
-      <fbt desc="EnableMessaging.status">Origin Messaging</fbt>
+      <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
     </div>
     <div className="spinner" />
   </div>
@@ -42,7 +42,7 @@ const Onboard = withRouter(({ location }) => (
   <div className="message-modal">
     <div>
       <fbt desc="EnableMessaging.modal">
-        You&apos;ll need Get Started using Origin before you can send this user
+        Get Started using Origin before you can send this user
         a message
       </fbt>
     </div>
@@ -78,7 +78,7 @@ const EnableMessaging = ({ next }) => (
       <div className="qm" />
     </div>
     <div className="status">
-      <fbt desc="EnableMessaging.status">Origin Messaging</fbt>
+      <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
     </div>
     <div className="help">
       <fbt desc="EnableMessaging.help">
