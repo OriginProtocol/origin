@@ -124,16 +124,17 @@ services:
     image: origin
     volumes: *volumes
     environment:
+      # MetaMask account 4 (default local blockchain) aka accounts[3]
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
+      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-      - BLOCK_EPOCH=
+      - BLOCK_EPOCH=0
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - DISCORD_WEBHOOK=
       - ELASTICSEARCH=true
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - EMAIL_WEBHOOK=
-      - ENVKEY=
       - GCLOUD_PUBSUB_TOPIC=
       - GCLOUD_PROJECT_ID=
       - INDEX_MARKETPLACE=true
@@ -141,8 +142,10 @@ services:
       - INDEX_GROWTH=true
       - IPFS_URL=http://ipfs-proxy:9999
       - TRAIL_BEHIND_BLOCKS=
-      - WEB3_URL=http://services:8545
+      - PROVIDER_URL=http://services:8545
+      - PROVIDER_WS_URL=ws://services:8545
       - WEBHOOK=
+      - ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
@@ -165,13 +168,11 @@ services:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
       # MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - IPFS_URL=http://ipfs-proxy:9999
       - NETWORK_ID=999
-      - WEB3_URL=http://services:8545
       - ENVKEY=
     depends_on:
       - postgres
@@ -251,12 +252,13 @@ services:
       - DAPP_URL=http://localhost:3000
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - DISCOVERY_SERVER_URL=http://localhost:4000
-      - PROVIDER_URL=http://localhost:8545
+      - PROVIDER_URL=http://services:8545
       - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
     depends_on:
       - postgres
       - redis-master
+      - services
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --

@@ -186,8 +186,8 @@ const Configs = {
     }
   },
   docker: {
-    provider: `http://localhost:8545`,
-    providerWS: `ws://localhost:8545`,
+    provider: get(process.env, 'PROVIDER_URL', `http://localhost:8545`),
+    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://localhost:8545`),
     ipfsGateway: `http://localhost:9999`,
     ipfsRPC: `http://localhost:9999`,
     bridge: 'http://localhost:5000',

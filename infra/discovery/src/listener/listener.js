@@ -107,7 +107,9 @@ class Context {
     this.config = config
     this.errorCounter = errorCounter
 
-    const web3Provider = new Web3.providers.HttpProvider(config.web3Url)
+    const web3Provider = new Web3.providers.HttpProvider(
+      contractsContext.config.provider
+    )
     this.web3 = new Web3(web3Provider)
     this.networkId = await this.web3.eth.net.getId()
 
@@ -238,12 +240,6 @@ const config = {
   trailBlocks: parseInt(
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
-  // web3 provider url
-  web3Url:
-    args['--web3-url'] || process.env.WEB3_URL || 'http://localhost:8545',
-  // ipfs url
-  ipfsUrl:
-    args['--ipfs-url'] || process.env.IPFS_URL || 'http://localhost:8080',
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
