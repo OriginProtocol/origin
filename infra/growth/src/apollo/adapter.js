@@ -2,8 +2,17 @@ const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
 
-
-class ActionAdapter {
+/**
+ * Adapts data representing the state of a campaign rule into
+ * an Apollo compatible view of that data.
+ */
+class ApolloAdapter {
+  /**
+   * Helper function to convert a growth event type into an Apollo action type.
+   * @param eventType
+   * @returns {*}
+   * @private
+   */
   _eventTypeToActionType(eventType) {
     const eventToActionType = {
       ProfilePublished: 'Profile',
@@ -17,13 +26,33 @@ class ActionAdapter {
       ListingSold: 'ListingSold',
       ListingPurchased: 'ListingPurchased'
     }
-
     return eventToActionType[eventType]
   }
 
-  async process(data) {
-    //console.log("PROCESS DATA=", data)
+  /**
+   * Fetches referral data.
+   * Exists as a separate helper method for ease of mocking in unit tests.
+   *
+   * @param data
+   * @returns {Promise<{Object}>}
+   * @private
+   */
+  async _getReferralsActionData(data) {
+    return await GrowthInvite.getReferralsInfo(
+      data.ethAddress,
+      data.campaignId,
+      data.reward,
+      data.rewards
+    )
+  }
 
+  /**
+   * Formats data representing the state of a rule into an Apollo compatible view.
+   *
+   * @param {Object} data - Rule data
+   * @returns {Promise<*>}
+   */
+  async process(data) {
     // Exclude rule from the Apollo view if it is not visible.
     if (!data.visible) {
       return null
@@ -39,18 +68,12 @@ class ActionAdapter {
 
     // Add extra information in case of a Referral.
     if (data.type === 'Referral') {
-      const referralsInfo = await GrowthInvite.getReferralsInfo(
-        data.ethAddress,
-        data.campaignId,
-        data.reward,
-        data.rewards
-      )
+      const referralsInfo = this._getReferralsActionData(data)
       action = { ...action, ...referralsInfo }
     }
     return action
   }
 }
-
 
 /**
  * Formats the campaign object according to the Growth GraphQL schema. If user is not authenticated only basic campaign data is
@@ -59,10 +82,15 @@ class ActionAdapter {
  * @param {CampaignRules} crules
  * @param {GrowthParticipantAuthenticationStatus} authentication - user's authentication status
  * @param {string} ethAddress - User's Eth address. This is undefined when user is not authenticated
- * @param {ActionAdapter} adapter
+ * @param {ApolloAdapter} adapter
  * @returns {Promise<{id: *, name: string, startDate: *, endDate: *, distributionDate: (where.distributionDate|{}), status: (Enum<GrowthCampaignStatuses>|Enum<GrowthActionStatus>), actions: any[], rewardEarned: {amount, currency}}>}
  */
-const campaignToApolloObject = async (crules, authentication, ethAddress, adapter = new ActionAdapter()) => {
+const campaignToApolloObject = async (
+  crules,
+  authentication,
+  ethAddress,
+  adapter = new ApolloAdapter()
+) => {
   const out = {
     id: crules.campaign.id,
     nameKey: crules.campaign.nameKey,

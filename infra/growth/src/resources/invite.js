@@ -153,7 +153,12 @@ class GrowthInvite {
   }
 
   // Returns information about pending and completed referrals for a campaign
-  static async getReferralsInfo(ethAddress, campaignId, rewardValue, completedRewards) {
+  static async getReferralsInfo(
+    ethAddress,
+    campaignId,
+    rewardValue,
+    completedRewards
+  ) {
     // Load the campaign.
     const campaign = await db.GrowthCampaign.findOne({
       where: { id: campaignId }
@@ -162,8 +167,9 @@ class GrowthInvite {
       throw new Error(`Failed loading campaign with id ${campaignId}`)
     }
 
-    const completedInvites = completedRewards
-      .map(r => GrowthInvite._decorate(r, 'Completed'))
+    const completedInvites = completedRewards.map(r =>
+      GrowthInvite._decorate(r, 'Completed')
+    )
 
     // We need to compute pending invites only if the campaign is active.
     let pendingInvites = []

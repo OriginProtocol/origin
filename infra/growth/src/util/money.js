@@ -1,6 +1,5 @@
 const BigNumber = require('bignumber.js')
 
-
 class Money {
   static sum(values, currency) {
     if (values === null || values.length === 0) {
@@ -13,7 +12,7 @@ class Money {
         throw new Error(
           `At least two values have different currencies. ${first.currency} ${
             second.currency
-            }`
+          }`
         )
       return {
         amount: BigNumber(first.amount).plus(BigNumber(second.amount)),

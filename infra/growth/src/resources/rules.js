@@ -190,7 +190,7 @@ class CampaignRules {
   }
 
   /**
-   * Returns campaign status
+   * Returns campaign status.
    *
    * @returns {Enum<GrowthCampaignStatuses>} - campaign status
    */
@@ -207,12 +207,23 @@ class CampaignRules {
     throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
   }
 
+  /**
+   * Exports the state of the rules for a given user.
+   * Walks thru all the rules and calls the adapter with data for each rule.
+   * Collects output of the adapter calls into a list.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {string} ethAddress
+   * @returns {Promise<Array<Object>>}
+   */
   async export(adapter, ethAddress) {
     const events = await this.getEvents(ethAddress)
     const level = await this._calculateLevel(ethAddress, events)
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
-      data.push(...await this.levels[i].export(adapter, ethAddress, events, level))
+      data.push(
+        ...(await this.levels[i].export(adapter, ethAddress, events, level))
+      )
     }
     return data
   }
@@ -250,6 +261,16 @@ class Level {
     return rewards
   }
 
+  /**
+   * Walks thru all the rules and calls the adapter with data for each rule.
+   * Collects output of the adapter calls into a list.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>}
+   * @param {number} level
+   * @returns {Promise<Array<Object>>}
+   */
   async export(adapter, ethAddress, events, level) {
     const allData = []
     for (const rule of this.rules) {
@@ -434,7 +455,6 @@ class BaseRule {
    * @returns {Promise<enums.GrowthActionStatus>}
    */
   async getStatus(ethAddress, events, currentUserLevel) {
-    console.log("GET STATUS FOR ", this.id, " CURRENT LEVEL=", currentUserLevel)
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
@@ -459,39 +479,45 @@ class BaseRule {
   }
 
   conditionsToUnlock() {
-    const prevLevel = this.levelId -1
+    const prevLevel = this.levelId - 1
     if (prevLevel < 0) {
       return []
     }
     const conditions = []
     for (const rule of this.crules.levels[prevLevel].rules) {
       if (rule.config.unlockConditionMsg) {
-        const ruleConditions = rule.config.unlockConditionMsg
-          .map(c => {
-              return {
-                messageKey: c.conditionTranslateKey,
-                iconSource: c.conditionIcon
-              }
-            }
-          )
+        const ruleConditions = rule.config.unlockConditionMsg.map(c => {
+          return {
+            messageKey: c.conditionTranslateKey,
+            iconSource: c.conditionIcon
+          }
+        })
         conditions.push(...ruleConditions)
       }
     }
     return conditions
   }
 
+  /**
+   * Gathers the state of the rule. Calls the provided adapter to format the data.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>}
+   * @param {number} level
+   * @returns {Promise<Array<Object>>}
+   */
   async export(adapter, ethAddress, events, level) {
     return adapter.process({
-        ethAddress,
-        visible: this.config.visible,
-        campaign: this.campaign,
-        eventTypes: this.eventTypes,
-        status: await this.getStatus(ethAddress, events, level),
-        reward: this.reward,
-        rewards: await this.getRewards(ethAddress, events),
-        unlockConditions: this.conditionsToUnlock()
-      }
-    )
+      ethAddress,
+      visible: this.config.visible,
+      campaign: this.campaign,
+      eventTypes: this.eventTypes,
+      status: await this.getStatus(ethAddress, events, level),
+      reward: this.reward,
+      rewards: await this.getRewards(ethAddress, events),
+      unlockConditions: this.conditionsToUnlock()
+    })
   }
 }
 
@@ -626,6 +652,9 @@ class ReferralRule extends BaseRule {
       throw new Error(`${this.str()}: missing levelRequired field`)
     }
     this.levelRequired = this.config.levelRequired
+
+    // Note: 'Referral' is not an actual GrowthEventType.
+    // This is used by the export method.
     this.eventTypes = ['Referral']
   }
 
