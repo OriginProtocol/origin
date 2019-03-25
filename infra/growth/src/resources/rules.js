@@ -206,6 +206,16 @@ class CampaignRules {
     }
     throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
   }
+
+  async toAppollo(adapter, ethAddress) {
+    const events = await this.getEvents(ethAddress)
+    const level = this._calculateLevel(ethAddress, events)
+    const actions = []
+    for (let i = 0; i < this.numLevels; i++) {
+      actions.push(await this.levels[i].toAppollo(adapter, ethAddress, events, level))
+    }
+    return actions
+  }
 }
 
 class Level {
@@ -238,6 +248,14 @@ class Level {
     }
 
     return rewards
+  }
+
+  async toAppollo(adapter, ethAddress, events, level) {
+    const actions = []
+    for (const rule of this.rules) {
+      actions.push(await rule.toAppollo(adapter, ethAddress, events, level))
+    }
+    return actions
   }
 }
 
@@ -435,6 +453,23 @@ class BaseRule {
         : GrowthActionStatus.Active
     }
   }
+
+  conditionsToUnlock() {
+    const prevLevel = this.levelId -1
+    if (prevLevel < 0) {
+      return []
+    }
+    return this.crules.level[prevLevel].rules
+      .flatMap(rule => rule.config.unlockConditionMsg
+        .map(conditionMessage => {
+          return {
+            messageKey: conditionMessage.conditionTranslateKey,
+            iconSource: conditionMessage.conditionIcon
+          }
+        }
+      )
+    )
+  }
 }
 
 /**
@@ -478,6 +513,19 @@ class SingleEventRule extends BaseRule {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+  }
+
+  async toAppollo(adapter, ethAddress, events, level) {
+    return adapter.toAction({
+        ethAddress,
+        campaignId: this.campaignId,
+        eventTypes: this.config.eventTypes,
+        status: await this.getStatus(ethAddress, events, level),
+        reward: this.reward,
+        rewards: this.getRewards(ethAddress, events),
+        unlockConditions: this.conditionsToUnlock()
+      }
+    )
   }
 }
 
@@ -568,6 +616,7 @@ class ReferralRule extends BaseRule {
       throw new Error(`${this.str()}: missing levelRequired field`)
     }
     this.levelRequired = this.config.levelRequired
+    this.eventTypes = ['Referral']
   }
 
   /**
