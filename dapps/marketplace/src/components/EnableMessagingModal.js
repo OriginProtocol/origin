@@ -42,8 +42,7 @@ const Onboard = withRouter(({ location }) => (
   <div className="message-modal">
     <div>
       <fbt desc="EnableMessaging.modal">
-        Get Started using Origin before you can send this user
-        a message
+        Get Started using Origin before you can send this user a message
       </fbt>
     </div>
     <div className="actions">
