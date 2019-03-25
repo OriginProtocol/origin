@@ -42,7 +42,9 @@ const Balances = ({ ethBalance, account }) => {
             skipjoincampaign="false"
           >
             <img className="mr-1" src="images/growth/blue-add-icon.svg" />
-            <div className="mr-2 value"><fbt desc="Balances.getOgn">Get OGN</fbt></div>
+            <div className="mr-2 value">
+              <fbt desc="Balances.getOgn">Get OGN</fbt>
+            </div>
           </EnrollButton>
         )}
       </div>

@@ -55,7 +55,8 @@ class WaitForTransaction extends Component {
               )}
               <div>
                 <fbt desc="WaitForTransaction.confirmInProvider">
-                  Please confirm this transaction in <fbt:param name="provider">{provider}</fbt:param>
+                  Please confirm this transaction in{' '}
+                  <fbt:param name="provider">{provider}</fbt:param>
                 </fbt>
               </div>
             </div>
@@ -97,9 +98,9 @@ class WaitForTransaction extends Component {
                 <div className="spinner light" />
                 <div>
                   <b>
-                  <fbt desc="WaitForTransaction.writingToBlockchain">
-                    Writing to the blockchain.
-                  </fbt>
+                    <fbt desc="WaitForTransaction.writingToBlockchain">
+                      Writing to the blockchain.
+                    </fbt>
                   </b>
                   <br />
                   <fbt desc="WaitForTransaction.mayTakeSomeTime">
@@ -114,9 +115,9 @@ class WaitForTransaction extends Component {
                 <div className="spinner light" />
                 <div>
                   <b>
-                  <fbt desc="WaitForTransaction.waitingForConfirmation">
-                    Waiting for confirmation.
-                  </fbt>
+                    <fbt desc="WaitForTransaction.waitingForConfirmation">
+                      Waiting for confirmation.
+                    </fbt>
                   </b>
                   <br />
                   <fbt desc="WaitForTransaction.mayTakeSomeTime">

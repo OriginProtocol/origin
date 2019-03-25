@@ -22,9 +22,7 @@ const Wallet = () => (
           <div className="wallet-info">
             <div>
               <h5>
-                <fbt desc="Wallet.ethAddress">
-                  ETH Address
-                </fbt>
+                <fbt desc="Wallet.ethAddress">ETH Address</fbt>
               </h5>
               <EthAddress address={checksumAddress} />
             </div>

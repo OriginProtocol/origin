@@ -4,7 +4,6 @@ import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 
-
 import store from 'utils/store'
 import Link from 'components/Link'
 import EnableMessagingMutation from 'mutations/EnableMessaging'
@@ -33,9 +32,7 @@ const MessagingInitializing = () => (
   <div className="enable-messaging">
     <div className="messaging-logo" />
     <div className="status">
-      <fbt desc="EnableMessaging.status">
-        Origin Messaging
-      </fbt>
+      <fbt desc="EnableMessaging.status">Origin Messaging</fbt>
     </div>
     <div className="spinner" />
   </div>
@@ -45,7 +42,8 @@ const Onboard = withRouter(({ location }) => (
   <div className="message-modal">
     <div>
       <fbt desc="EnableMessaging.modal">
-        You&apos;ll need Get Started using Origin before you can send this user a message
+        You&apos;ll need Get Started using Origin before you can send this user
+        a message
       </fbt>
     </div>
     <div className="actions">
@@ -80,9 +78,7 @@ const EnableMessaging = ({ next }) => (
       <div className="qm" />
     </div>
     <div className="status">
-      <fbt desc="EnableMessaging.status">
-        Origin Messaging
-      </fbt>
+      <fbt desc="EnableMessaging.status">Origin Messaging</fbt>
     </div>
     <div className="help">
       <fbt desc="EnableMessaging.help">
@@ -136,8 +132,8 @@ const MessagingEnabled = () => (
     <div className="status">Messaging Enabled</div>
     <div className="help">
       <fbt desc="EnableMessaging.congrats">
-        Congratulations! You can now message other users on Origin and stay up to
-        date with all your purchases and sales.
+        Congratulations! You can now message other users on Origin and stay up
+        to date with all your purchases and sales.
       </fbt>
     </div>
     <em>

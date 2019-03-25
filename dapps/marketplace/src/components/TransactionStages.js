@@ -5,20 +5,45 @@ import { fbt } from 'fbt-runtime'
 import EventTick from 'components/EventTick'
 
 const SaleStages = [
-  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
-  { title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'), event: 'acceptedEvent' },
-  { title: fbt('Sale Completed', 'TransactionStages.saleCompleted'), event: 'finalizedEvent' }
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Sale Completed', 'TransactionStages.saleCompleted'),
+    event: 'finalizedEvent'
+  }
 ]
 
 const DisputeStages = [
-  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
-  { title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'), event: 'acceptedEvent' },
-  { title: fbt('Dispute Started', 'TransactionStages.disputeStarted'), event: 'disputedEvent', className: 'danger' },
-  { title: fbt('Ruling Made', 'TransactionStages.rulingMade'), event: 'rulingEvent' }
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Dispute Started', 'TransactionStages.disputeStarted'),
+    event: 'disputedEvent',
+    className: 'danger'
+  },
+  {
+    title: fbt('Ruling Made', 'TransactionStages.rulingMade'),
+    event: 'rulingEvent'
+  }
 ]
 
 const CanceledStages = [
-  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
   {
     title: fbt('Offer Withdrawn', 'TransactionStages.offerWithdrawn'),
     ifSeller: fbt('Offer Rejected', 'TransactionStages.offerRejected'),

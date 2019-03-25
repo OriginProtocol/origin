@@ -26,10 +26,16 @@ class CannotTransact extends Component {
     } else if (reason === 'no-balance') {
       reason = fbt('Your wallet has no funds', 'TransactionError.noBalance')
     } else if (reason === 'wrong-network') {
-      reason = fbt('Please switch MetaMask to ' + fbt.param('network', this.props.data), 'TransactionError.wrongNetwork')
+      reason = fbt(
+        'Please switch MetaMask to ' + fbt.param('network', this.props.data),
+        'TransactionError.wrongNetwork'
+      )
     } else if (reason === 'mutation') {
       if (get(this.props, 'data.message', '').match(UserDenied)) {
-        reason = fbt('You declined to sign the transaction', 'TransactionError.declinedSigning')
+        reason = fbt(
+          'You declined to sign the transaction',
+          'TransactionError.declinedSigning'
+        )
       } else {
         reason = (
           <div onClick={() => alert(this.props.data)}>

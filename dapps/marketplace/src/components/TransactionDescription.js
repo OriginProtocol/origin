@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
-
 const Events = [
   'ListingCreated',
   'ListingUpdated',
@@ -35,21 +34,45 @@ class TransactionDescription extends Component {
 
     const name = event.event
     if (name === 'OfferCreated') {
-      description = fbt('You purchased a listing', 'TransactionDescription.offerCreated')
+      description = fbt(
+        'You purchased a listing',
+        'TransactionDescription.offerCreated'
+      )
     } else if (name === 'OfferAccepted') {
-      description = fbt('You accepted an offer', 'TransactionDescription.offerAccepted')
+      description = fbt(
+        'You accepted an offer',
+        'TransactionDescription.offerAccepted'
+      )
     } else if (name === 'OfferFinalized') {
-      description = fbt('You finalized a transaction', 'TransactionDescription.offerFinalized')
+      description = fbt(
+        'You finalized a transaction',
+        'TransactionDescription.offerFinalized'
+      )
     } else if (name === 'OfferWithdrawn') {
-      description = fbt('You withdrew an offer', 'TransactionDescription.offerWithdrawn')
+      description = fbt(
+        'You withdrew an offer',
+        'TransactionDescription.offerWithdrawn'
+      )
     } else if (name === 'OfferDisputed') {
-      description = fbt('You disputed an offer', 'TransactionDescription.offerDisputed')
+      description = fbt(
+        'You disputed an offer',
+        'TransactionDescription.offerDisputed'
+      )
     } else if (name === 'ListingCreated') {
-      description = fbt('You created a listing', 'TransactionDescription.listingCreated')
+      description = fbt(
+        'You created a listing',
+        'TransactionDescription.listingCreated'
+      )
     } else if (name === 'ListingUpdated') {
-      description = fbt('You updated a listing', 'TransactionDescription.listingUpdated')
+      description = fbt(
+        'You updated a listing',
+        'TransactionDescription.listingUpdated'
+      )
     } else if (name === 'IdentityUpdated') {
-      description = fbt('You updated your profile', 'TransactionDescription.identityUpdated')
+      description = fbt(
+        'You updated your profile',
+        'TransactionDescription.identityUpdated'
+      )
     }
 
     return <div>{description}</div>

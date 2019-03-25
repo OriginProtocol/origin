@@ -11,11 +11,11 @@ const QueryError = props => {
     console.log(JSON.stringify(props.vars, null, 4))
   }
 
-  return <div>
-    <fbt desc="QueryError.seeConsole">
-      Error: See console for details
-    </fbt>
-  </div>
+  return (
+    <div>
+      <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
+    </div>
+  )
 }
 
 export default QueryError
