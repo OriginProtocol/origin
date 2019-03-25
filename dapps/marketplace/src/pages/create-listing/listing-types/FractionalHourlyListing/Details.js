@@ -125,7 +125,13 @@ class Details extends Component {
                     {Feedback('price')}
                     <div className="help-text price">
                       Price is an approximation of what you will receive.
-                      <a href="/#/about/payments" target="_blank" rel="noopener noreferrer">&nbsp;Learn More</a>
+                      <a
+                        href="/#/about/payments"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        &nbsp;Learn More
+                      </a>
                     </div>
                   </div>
                 </PricingChooser>
