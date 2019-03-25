@@ -5,7 +5,7 @@ import PageTitle from 'components/PageTitle'
 const AboutPayments = () => (
   <div className="container about-info">
     <PageTitle>
-      <fbt desc="aboutPayments.title">Pricing &amp; Payments On Origin</fbt>
+      Pricing &amp; Payments On Origin
     </PageTitle>
     <h1>
       <fbt desc="aboutPayments.heading">Pricing &amp; Payments On Origin</fbt>
