@@ -22,7 +22,7 @@ const WaitForFirstBlock = () => (
     <div className="spinner light" />
     <div>
       <b>
-        Waiting on the blockchain.
+        Writing to the blockchain.
         <br />
         This might take a minute.
       </b>
