@@ -164,7 +164,7 @@ const campaignToApolloObject = async (campaign, authentication, ethAddress) => {
     return apolloCampaign
   }
 
-  const events = await campaign.getEvents(ethAddress, { duringCampaign: true })
+  const events = await campaign.getEvents(ethAddress)
   const levels = Object.values(campaign.levels)
   const rules = levels.flatMap(level => level.rules)
   const currentLevel = await campaign.getCurrentLevel(ethAddress, false)

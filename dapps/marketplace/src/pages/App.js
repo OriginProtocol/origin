@@ -5,7 +5,7 @@ import Store from 'utils/store'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
-import BetaBanner from './_BetaBanner'
+import RewardsBanner from './_RewardsBanner'
 import TranslationModal from './_TranslationModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
@@ -81,7 +81,7 @@ class App extends Component {
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <CurrencyContext.Provider value={this.state.currency}>
-        <BetaBanner />
+        <RewardsBanner />
         {!hideNavbar && <Nav />}
         <main>
           <Switch>
