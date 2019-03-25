@@ -24,18 +24,18 @@ locales.forEach(locale => {
   console.log(`Processing file: ${srcFile}`)
 
   Object.keys(stringKeyValue).forEach(key => {
-    var val = stringKeyValue[key]
+    const val = stringKeyValue[key]
     translations[key] = {
-      "translations": [
-        {"translation": val}
+      'translations': [
+        { 'translation': val }
       ]
     }
   })
 
 
   const file = {
-    "fb-locale": locale,
-    "translations" : translations
+    'fb-locale': locale,
+    'translations': translations
   }
 
   const output = JSON.stringify(file, null, 2)
