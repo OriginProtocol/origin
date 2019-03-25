@@ -159,10 +159,6 @@ describe('Apollo adapter', () => {
           },
           2: {
             rules: [
-              /**
-               TODO: test Referral. It is failing due to trying to
-               call non-mocked method GrowthInvite.getReferralsInfo
-               from within the adapter code...
               {
                 id: 'Referral',
                 class: 'Referral',
@@ -178,7 +174,6 @@ describe('Apollo adapter', () => {
                   scope: 'campaign'
                 }
               },
-               */
               {
                 id: 'ListingPurchase',
                 class: 'SingleEvent',
@@ -232,7 +227,7 @@ describe('Apollo adapter', () => {
       expect(this.crules.levels[1]).to.be.an('object')
       expect(this.crules.levels[1].rules.length).to.equal(5)
       expect(this.crules.levels[2]).to.be.an('object')
-      expect(this.crules.levels[2].rules.length).to.equal(2)
+      expect(this.crules.levels[2].rules.length).to.equal(3)
 
       // Mock the getEvents method.
       this.crules.getEvents = (ethAddress, opts = {}) => {
@@ -242,6 +237,7 @@ describe('Apollo adapter', () => {
       }
 
       this.ethAddress = '0x123'
+      this.refereeEthAddress = '0xABC'
       this.events = []
     })
 
@@ -252,8 +248,6 @@ describe('Apollo adapter', () => {
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.ethAddress
       )
-
-      console.log("OUT=", JSON.stringify(out))
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
 
@@ -292,6 +286,10 @@ describe('Apollo adapter', () => {
           rewardEarned: { amount: '0', currency: 'OGN' }
         },
         ListingSold: {
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+        Referral: {
           status: 'Inactive',
           rewardEarned: { amount: '0', currency: 'OGN' }
         },
@@ -370,6 +368,10 @@ describe('Apollo adapter', () => {
           status: 'Inactive',
           rewardEarned: { amount: '0', currency: 'OGN' }
         },
+        Referral: {
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
       }
 
       for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
@@ -444,7 +446,11 @@ describe('Apollo adapter', () => {
         ListingSold: {
           status: 'Active',
           rewardEarned: { amount: '0', currency: 'OGN' }
-        }
+        },
+        Referral: {
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
       }
 
       for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
@@ -480,6 +486,92 @@ describe('Apollo adapter', () => {
           ethAddress: this.ethAddress,
           createdAt: this.duringCampaign
         }
+      ])
+
+      const out = await campaignToApolloObject(
+        this.crules,
+        enums.GrowthParticipantAuthenticationStatus.Enrolled,
+        this.ethAddress
+      )
+
+      expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
+
+      const actionByType = {}
+      for(const action of out.actions) {
+        actionByType[action.type] = action
+      }
+
+      const expectedActionStates = {
+        Profile: {
+          status: 'Completed',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+        Email: {
+          status: 'Completed',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+        Phone: {
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+        Airbnb: {
+          status: 'Completed',
+          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
+        },
+        Facebook: {
+          status: 'Completed',
+          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
+        },
+        Twitter: {
+          status: 'Completed',
+          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
+        },
+        ListingPurchased: {
+          status: 'Completed',
+          rewardEarned: { amount: '100000000000000000000', currency: 'OGN' }
+        },
+        ListingSold: {
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+      }
+      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
+        const action = actionByType[actionType]
+        expect(action.status).to.be.equal(expectedState.status)
+        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
+      }
+    })
+
+    it(`Adapter at level 2 with a referral`, async () => {
+      this.events.push(...[
+        {
+          id: 8,
+          type: GrowthEventTypes.ProfilePublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.refereeEthAddress,
+          createdAt: this.beforeCampaign
+        },
+        {
+          id: 9,
+          type: GrowthEventTypes.EmailAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.refereeEthAddress,
+          createdAt: this.duringCampaign
+        },
+        {
+          id: 10,
+          type: GrowthEventTypes.PhoneAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.refereeEthAddress,
+          createdAt: this.beforeCampaign
+        },
+        {
+          id: 11,
+          type: GrowthEventTypes.AirbnbAttestationPublished,
+          status: GrowthEventStatuses.Logged,
+          ethAddress: this.refereeEthAddress,
+          createdAt: this.duringCampaign
+        },
       ])
 
       const out = await campaignToApolloObject(
