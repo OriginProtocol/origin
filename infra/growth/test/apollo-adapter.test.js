@@ -147,8 +147,8 @@ describe('Apollo adapter', () => {
                   nextLevelCondition: true,
                   unlockConditionMsg: [
                     {
-                      conditionTranslateKey: 'growth.profile.and.email.requirement',
-                      conditionIcon: 'images/growth/email-icon-small.svg',
+                      conditionTranslateKey: 'growth.two.attestations.requirement',
+                      conditionIcon: 'images/growth/attestation-icon.svg'
                     }
                   ],
                   visible: false,
@@ -252,6 +252,8 @@ describe('Apollo adapter', () => {
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.ethAddress
       )
+
+      console.log("OUT=", JSON.stringify(out))
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
 

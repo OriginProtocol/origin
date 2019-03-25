@@ -207,14 +207,14 @@ class CampaignRules {
     throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
   }
 
-  async toAppollo(adapter, ethAddress) {
+  async export(adapter, ethAddress) {
     const events = await this.getEvents(ethAddress)
-    const level = this._calculateLevel(ethAddress, events)
-    const actions = []
+    const level = await this._calculateLevel(ethAddress, events)
+    const data = []
     for (let i = 0; i < this.numLevels; i++) {
-      actions.push(await this.levels[i].toAppollo(adapter, ethAddress, events, level))
+      data.push(...await this.levels[i].export(adapter, ethAddress, events, level))
     }
-    return actions
+    return data
   }
 }
 
@@ -250,12 +250,15 @@ class Level {
     return rewards
   }
 
-  async toAppollo(adapter, ethAddress, events, level) {
-    const actions = []
+  async export(adapter, ethAddress, events, level) {
+    const allData = []
     for (const rule of this.rules) {
-      actions.push(await rule.toAppollo(adapter, ethAddress, events, level))
+      const data = await rule.export(adapter, ethAddress, events, level)
+      if (data) {
+        allData.push(data)
+      }
     }
-    return actions
+    return allData
   }
 }
 
@@ -363,7 +366,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this.evaluate(ethAddress, this._inScope(events))
+    return await this._evaluate(ethAddress, this._inScope(events))
   }
 
   /**
@@ -431,6 +434,7 @@ class BaseRule {
    * @returns {Promise<enums.GrowthActionStatus>}
    */
   async getStatus(ethAddress, events, currentUserLevel) {
+    console.log("GET STATUS FOR ", this.id, " CURRENT LEVEL=", currentUserLevel)
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
@@ -448,7 +452,7 @@ class BaseRule {
         : GrowthActionStatus.Completed
     } else {
       // Evaluate the rule to determine if it is Completed.
-      return (await this.evaluate(ethAddress, events))
+      return (await this._evaluate(ethAddress, events))
         ? GrowthActionStatus.Completed
         : GrowthActionStatus.Active
     }
@@ -459,15 +463,34 @@ class BaseRule {
     if (prevLevel < 0) {
       return []
     }
-    return this.crules.level[prevLevel].rules
-      .flatMap(rule => rule.config.unlockConditionMsg
-        .map(conditionMessage => {
-          return {
-            messageKey: conditionMessage.conditionTranslateKey,
-            iconSource: conditionMessage.conditionIcon
-          }
-        }
-      )
+    const conditions = []
+    for (const rule of this.crules.levels[prevLevel].rules) {
+      if (rule.config.unlockConditionMsg) {
+        const ruleConditions = rule.config.unlockConditionMsg
+          .map(c => {
+              return {
+                messageKey: c.conditionTranslateKey,
+                iconSource: c.conditionIcon
+              }
+            }
+          )
+        conditions.push(...ruleConditions)
+      }
+    }
+    return conditions
+  }
+
+  async export(adapter, ethAddress, events, level) {
+    return adapter.process({
+        ethAddress,
+        visible: this.config.visible,
+        campaign: this.campaign,
+        eventTypes: this.eventTypes,
+        status: await this.getStatus(ethAddress, events, level),
+        reward: this.reward,
+        rewards: await this.getRewards(ethAddress, events),
+        unlockConditions: this.conditionsToUnlock()
+      }
     )
   }
 }
@@ -509,23 +532,10 @@ class SingleEventRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
-  }
-
-  async toAppollo(adapter, ethAddress, events, level) {
-    return adapter.toAction({
-        ethAddress,
-        campaignId: this.campaignId,
-        eventTypes: this.config.eventTypes,
-        status: await this.getStatus(ethAddress, events, level),
-        reward: this.reward,
-        rewards: this.getRewards(ethAddress, events),
-        unlockConditions: this.conditionsToUnlock()
-      }
-    )
   }
 }
 
@@ -595,7 +605,7 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
@@ -627,7 +637,7 @@ class ReferralRule extends BaseRule {
    * @param {string} ethAddress - Referrer's account.
    * @returns {boolean}
    */
-  async evaluate(ethAddress) {
+  async _evaluate(ethAddress) {
     return (await this.getRewards(ethAddress).length) > 0
   }
 

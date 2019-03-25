@@ -3,7 +3,7 @@ const enums = require('../enums')
 const { Money } = require('../util/money')
 
 
-class Adapter {
+class ActionAdapter {
   _eventTypeToActionType(eventType) {
     const eventToActionType = {
       ProfilePublished: 'Profile',
@@ -21,12 +21,18 @@ class Adapter {
     return eventToActionType[eventType]
   }
 
-  async toAction(data) {
+  async process(data) {
+    //console.log("PROCESS DATA=", data)
+
+    // Exclude rule from the Apollo view if it is not visible.
+    if (!data.visible) {
+      return null
+    }
     let action = {
       // TODO: handle multi-events type
       type: this._eventTypeToActionType(data.eventTypes[0]),
       status: data.status,
-      rewardEarned: Money.sum(data.rewards, data.reward.currency),
+      rewardEarned: Money.sum(data.rewards, data.campaign.currency),
       reward: data.reward,
       unlockConditions: data.unlockConditions
     }
@@ -53,10 +59,10 @@ class Adapter {
  * @param {CampaignRules} crules
  * @param {GrowthParticipantAuthenticationStatus} authentication - user's authentication status
  * @param {string} ethAddress - User's Eth address. This is undefined when user is not authenticated
- * @param {Adapter} adapter
+ * @param {ActionAdapter} adapter
  * @returns {Promise<{id: *, name: string, startDate: *, endDate: *, distributionDate: (where.distributionDate|{}), status: (Enum<GrowthCampaignStatuses>|Enum<GrowthActionStatus>), actions: any[], rewardEarned: {amount, currency}}>}
  */
-const campaignToApolloObject = async (crules, authentication, ethAddress, adapter = new Adapter()) => {
+const campaignToApolloObject = async (crules, authentication, ethAddress, adapter = new ActionAdapter()) => {
   const out = {
     id: crules.campaign.id,
     nameKey: crules.campaign.nameKey,
@@ -75,7 +81,7 @@ const campaignToApolloObject = async (crules, authentication, ethAddress, adapte
 
   // Deserialize the current state of the rules for the user into
   // a list of actions.
-  out.actions = await crules.toAppollo(adapter, ethAddress)
+  out.actions = await crules.export(adapter, ethAddress)
 
   // Calculate total rewards earned so far.
   const rewards = await crules.getRewards(ethAddress)

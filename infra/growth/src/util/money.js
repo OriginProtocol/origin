@@ -2,7 +2,7 @@ const BigNumber = require('bignumber.js')
 
 
 class Money {
-  function sum(values, currency) {
+  static sum(values, currency) {
     if (values === null || values.length === 0) {
       return { amount: '0', currency }
     }
@@ -22,11 +22,10 @@ class Money {
     })
 
     return {
-      amount: total.amount.toFixed(),
+      amount: total.amount.toString(),
       currency: total.currency
     }
   }
 }
 
 module.exports = { Money }
-  
