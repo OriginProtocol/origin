@@ -124,7 +124,8 @@ class Details extends Component {
                     </div>
                     {Feedback('price')}
                     <div className="help-text price">
-                      Price is always in ETH, USD is an estimate.
+                      Price is an approximation of what you will receive.
+                      <a href="/#/about/payments" target="_blank" rel="noopener noreferrer">&nbsp;Learn More</a>
                     </div>
                   </div>
                 </PricingChooser>

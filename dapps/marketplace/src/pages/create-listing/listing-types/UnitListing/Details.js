@@ -87,8 +87,8 @@ class Details extends Component {
                     </div>
                     {Feedback('price')}
                     <div className="help-text price">
-                      Price is always an approximation of what you will receive.
-                      Learn more.
+                      Price is an approximation of what you will receive.
+                      <a href="/#/about/payments" target="_blank" rel="noopener noreferrer">&nbsp;Learn More</a>
                     </div>
                   </div>
                 </PricingChooser>
@@ -187,3 +187,10 @@ class Details extends Component {
 }
 
 export default Details
+
+require('react-styl')(`
+  .create-listing .create-listing-step-2 .pricing-chooser
+    .help-text
+      .help-icon
+        margin-left: auto
+`)
