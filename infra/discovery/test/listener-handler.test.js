@@ -11,10 +11,12 @@ const _identityModels = require('@origin/identity/src/models')
 const db = { ..._discoveryModels, ..._identityModels }
 
 const { handleLog } = require('../src/listener/handler')
-const {
-  MarketplaceEventHandler
-} = require('../src/listener/handler_marketplace')
+const MarketplaceEventHandler = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')
+
+const esmImport = require('esm')(module)
+const contractsContext = esmImport('@origin/graphql/src/contracts').default
+const graphqlClient = esmImport('@origin/graphql').default
 
 describe('Listener Handlers', () => {
   class MockWeb3Eth {
@@ -29,28 +31,45 @@ describe('Listener Handlers', () => {
     }
   }
 
-  class MockOrigin {
+  class MockEventSourcer {
     constructor(seller, buyer, listingId, offerId) {
-      this.marketplace = {}
-      this.marketplace.getListing = sinon.fake.returns({
+      this.getListing = sinon.fake.returns({
         id: listingId,
         status: 'active',
-        seller: seller,
+        seller: {
+          id: seller
+        },
         events: [{ blockNumber: 1, logIndex: 1 }]
       })
-      this.marketplace.getOffer = sinon.fake.returns({
+
+      this.getOffer = sinon.fake.returns({
         id: offerId,
         status: 'finalized',
-        buyer: buyer,
+        buyer: {
+          id: buyer
+        },
         events: [{ blockNumber: 2, logIndex: 2 }]
       })
-      const fakeUser = {
+    }
+  }
+
+  class MockGraphqlClientUserQuery {
+    constructor(seller) {
+      const identity = {
         address: seller,
         profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-        attestations: [{ service: 'email' }, { service: 'phone' }]
+        attestations: [{ service: 'email' }, { service: 'phone' }],
+        avatar: '0x1234'
       }
-      this.users = {}
-      this.users.get = sinon.fake.returns(fakeUser)
+      return sinon.fake.returns({
+        data: {
+          web3: {
+            account: {
+              identity: identity
+            }
+          }
+        }
+      })
     }
   }
 
@@ -76,17 +95,25 @@ describe('Listener Handlers', () => {
       growth: true
     }
 
+    contractsContext.eventSource = new MockEventSourcer(
+      this.seller,
+      this.buyer,
+      this.listingId,
+      this.offerId
+    )
+    // TODO: replace with something better for mocking response to GraphQL
+    // query, this only works because the identity handler only has a single
+    // query
+    graphqlClient.query = new MockGraphqlClientUserQuery(this.seller)
+
     this.context = {
       web3: {},
       networkId: 999,
       config: this.config,
-      origin: new MockOrigin(
-        this.seller,
-        this.buyer,
-        this.listingId,
-        this.offerId
-      )
+      graphqlClient: graphqlClient,
+      contracts: contractsContext
     }
+
     this.context.web3.eth = new MockWeb3Eth({
       listingID: this.listingId.split('-')[2]
     })
@@ -94,21 +121,16 @@ describe('Listener Handlers', () => {
     // Marketplace test fixtures.
     this.marketplaceRule = {
       eventName: 'OfferFinalized',
-      eventAbi: {},
+      eventAbi: {
+        inputs: null
+      },
       handler: new MockHandler()
-    }
-    this.marketplaceRule.eventAbi.inputs = null
-
-    this.marketplaceContractVersion = {
-      contractName: 'Marketplace',
-      versionKey: '000'
     }
 
     this.marketplaceLog = {
       address: '0x123',
-      contractName: this.marketplaceContractVersion.contractName,
+      contractName: 'MarketplaceContract',
       eventName: this.marketplaceRule.eventName,
-      contractVersionKey: this.marketplaceContractVersion.versionKey,
       networkId: context.networkId,
       blockNumber: 1,
       logIndex: 1,
@@ -121,14 +143,10 @@ describe('Listener Handlers', () => {
     // Identity test fixtures.
     this.identityRule = {
       eventName: 'IdentityUpdated',
-      eventAbi: {},
+      eventAbi: {
+        inputs: null
+      },
       handler: new MockHandler()
-    }
-    this.identityRule.eventAbi.inputs = null
-
-    this.identityContractVersion = {
-      contractName: 'Identity',
-      versionKey: '000'
     }
 
     this.identityLog = {
@@ -138,9 +156,8 @@ describe('Listener Handlers', () => {
         ipfsHash:
           '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
       },
-      contractName: this.identityContractVersion.contractName,
+      contractName: 'IdentityEventsContract',
       eventName: this.identityRule.eventName,
-      contractVersionKey: this.identityContractVersion.versionKey,
       networkId: context.networkId,
       blockNumber: 1,
       logIndex: 1,
@@ -152,12 +169,7 @@ describe('Listener Handlers', () => {
   })
 
   it(`Main`, async () => {
-    await handleLog(
-      this.marketplaceLog,
-      this.marketplaceRule,
-      this.marketplaceContractVersion,
-      this.context
-    )
+    await handleLog(this.marketplaceLog, this.marketplaceRule, this.context)
     expect(this.marketplaceRule.handler.process.calledOnce).to.equal(true)
     expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(
       true
@@ -173,7 +185,7 @@ describe('Listener Handlers', () => {
   it(`Marketplace`, async () => {
     const handler = new MarketplaceEventHandler(
       this.config,
-      this.context.origin
+      this.context.contracts
     )
     const result = await handler.process(this.marketplaceLog)
 
@@ -213,7 +225,10 @@ describe('Listener Handlers', () => {
   })
 
   it(`Identity`, async () => {
-    const handler = new IdentityEventHandler(this.config, this.context.origin)
+    const handler = new IdentityEventHandler(
+      this.config,
+      this.context.graphqlClient
+    )
     handler._loadValueFromAttestation = (ethAddress, method) => {
       if (method === 'EMAIL') {
         return 'toto@spirou.com'
@@ -227,14 +242,14 @@ describe('Listener Handlers', () => {
     const result = await handler.process(this.identityLog)
 
     // Check output.
-    expect(result.user).to.be.an('object')
-    expect(result.user.address).to.equal(this.seller)
-    expect(result.user.ipfsHash).to.equal(
+    expect(result.identity).to.be.an('object')
+    expect(result.identity.address).to.equal(this.seller)
+    expect(result.identity.ipfsHash).to.equal(
       'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
     )
 
     // Check expected entry was added into user DB table.
-    const user = await db.Identity.findAll({
+    const identityRow = await db.Identity.findAll({
       where: {
         ethAddress: this.seller,
         firstName: 'foo',
@@ -243,7 +258,7 @@ describe('Listener Handlers', () => {
         phone: '+33 0555875838'
       }
     })
-    expect(user.length).to.equal(1)
+    expect(identityRow.length).to.equal(1)
 
     // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(

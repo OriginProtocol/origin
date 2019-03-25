@@ -124,16 +124,16 @@ class IdentityEventHandler {
 
     logger.info(`Indexing identity ${decoratedIdentity.id} in DB.`)
 
-    if (!Web3.utils.isAddress(decoratedIdentity.id)) {
-      throw new Error(`Invalid eth address ${decoratedIdentity.id}`)
+    if (!Web3.utils.isAddress(decoratedIdentity.address)) {
+      throw new Error(`Invalid eth address ${decoratedIdentity.address}`)
     }
 
     // Construct an decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
     const identityRow = {
-      ethAddress: decoratedIdentity.id.toLowerCase(),
-      firstName: decoratedIdentity.firstName,
-      lastName: decoratedIdentity.lastName,
+      ethAddress: decoratedIdentity.address.toLowerCase(),
+      firstName: decoratedIdentity.profile.firstName,
+      lastName: decoratedIdentity.profile.lastName,
       email: decoratedIdentity.email,
       phone: decoratedIdentity.phone,
       airbnb: decoratedIdentity.airbnb,
@@ -159,7 +159,8 @@ class IdentityEventHandler {
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
     // Check profile is populated.
     const validProfile =
-      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
+      (identity.profile.firstName.length > 0 ||
+        identity.profile.lastName.length > 0) &&
       identity.avatar.length > 0
     if (!validProfile) {
       return
@@ -168,7 +169,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
-      identity.id,
+      identity.address,
       GrowthEventTypes.ProfilePublished,
       null,
       { blockInfo },
@@ -199,7 +200,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
-          identity.id,
+          identity.address,
           eventType,
           null,
           { blockInfo },

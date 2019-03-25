@@ -69,7 +69,7 @@ class MarketplaceEventHandler {
    * @private
    */
   async _getOfferDetails(log, blockInfo) {
-    const listing = this._getListingDetails(log, blockInfo)
+    const { listing } = await this._getListingDetails(log, blockInfo)
     checkEventsFreshness(listing.events, blockInfo)
     const offer = await this.contractContext.eventSource.getOffer(
       log.decoded.listingID,
@@ -163,7 +163,7 @@ class MarketplaceEventHandler {
       listingId: listing.id,
       status: offer.status,
       sellerAddress: listing.seller.id.toLowerCase(),
-      buyerAddress: offer.buyer.toLowerCase(),
+      buyerAddress: offer.buyer.id.toLowerCase(),
       data: offer
     }
     if (log.eventName === 'OfferCreated') {
