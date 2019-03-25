@@ -17,13 +17,13 @@ const HelpIcon = ({ tooltip }) => (
 const PricingChooser = ({ value, onChange, children }) => {
   return (
     <div className="form-group">
-      <label>Pricing</label>
+      <label>Payment</label>
       <div className="pricing-chooser">
         {children}
         <div className="form-group accepted-currencies">
           <label className="mb-0">Accepted Cryptocurrencies</label>
           <div className="help-text price mt-0">
-            You will be paid in these currencies.
+            Buyers will be able to purchase your listing using either of these currencies if you select both.
           </div>
           <div className="custom-control custom-checkbox">
             <input
