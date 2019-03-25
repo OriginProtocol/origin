@@ -144,7 +144,6 @@ class CampaignRules {
 
   /**
    * Returns the user level.
-   * Considers events that occurred until the campaign ended.
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - If true, only uses events with
@@ -170,7 +169,6 @@ class CampaignRules {
 
   /**
    * Calculates rewards earned by the user.
-   * Only considers events that occurred during the campaign.
    *
    * @param {string} ethAddress - User's account.
    * @param {boolean} onlyVerifiedEvents - Only use events with status Verified
@@ -179,10 +177,7 @@ class CampaignRules {
    */
   async getRewards(ethAddress, onlyVerifiedEvents = false) {
     const rewards = []
-    const events = await this.getEvents(ethAddress, {
-      duringCampaign: true,
-      onlyVerifiedEvents
-    })
+    const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
     const currentLevel = await this.getCurrentLevel(
       ethAddress,
       onlyVerifiedEvents
@@ -279,6 +274,9 @@ class BaseRule {
     if (this.config.visible === undefined) {
       throw new Error(`Missing 'visible' property`)
     }
+    if (!['user', 'campaign'].includes(this.config.scope)) {
+      throw new Error(`Missing or invalid 'scope' for rule: ${this.id}`)
+    }
     if (
       this.config.nextLevelCondition === true &&
       (!this.config.unlockConditionMsg ||
@@ -315,6 +313,25 @@ class BaseRule {
   }
 
   /**
+   * Returns the set of events to consider when evaluating the rule.
+   *
+   * @param {Array<models.GrowthEvent>} events - All events related to the user.
+   * @returns {Array<models.GrowthEvent>}} Events in scope.
+   * @private
+   */
+  _inScope(events) {
+    if (this.config.scope === 'user') {
+      return events
+    }
+    // Scope is 'campaign' - only consider events that occurred during the campaign window.
+    return events.filter(
+      e =>
+        e.createdAt >= this.campaign.startDate &&
+        e.createdAt <= this.campaign.endDate
+    )
+  }
+
+  /**
    * Calculates if the user qualifies for the next level.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
@@ -328,7 +345,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this.evaluate(ethAddress, events)
+    return await this.evaluate(ethAddress, this._inScope(events))
   }
 
   /**
@@ -363,7 +380,7 @@ class BaseRule {
       return []
     }
 
-    const numRewards = this._numRewards(ethAddress, events)
+    const numRewards = this._numRewards(ethAddress, this._inScope(events))
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -380,18 +397,42 @@ class BaseRule {
   }
 
   /**
-   * Return status of this rule. One of: inactive, active, exhausted, completed
+   * Return the rule's status. One of: Inactive, Active, Completed.
+   * This is for use by the front-end to display the status of the rule to the user.
+   *  - Inactive: rule is locked
+   *  - Active:
+   *     - Rule returning rewards: user can actively earn rewards from the rule
+   *     - Rule that is a condition: user has not met condition yet.
+   *  - Completed:
+   *     - Rule returning rewards: user reached the limit of rewards that can be earned from the rule
+   *     - Rule that is a condition: user has met condition.
    *
-   * @returns {Enum<GrowthActionStatus>}
+   * @param {string} ethAddress - User's eth address
+   * @param {Array<models.GrowthEvent>} events - All events for user since sign up.
+   * @param {number} currentUserLevel - Current level the user is at in the campaign.
+   * @returns {Promise<enums.GrowthActionStatus>}
    */
   async getStatus(ethAddress, events, currentUserLevel) {
+    // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
+    }
+
+    if (this.reward) {
+      // Reward rule. Determine if the rule is Completed by calculating
+      // if all rewards have been earned.
+      const numRewards = await this.getRewards(
+        ethAddress,
+        this._inScope(events)
+      )
+      return numRewards.length < this.limit
+        ? GrowthActionStatus.Active
+        : GrowthActionStatus.Completed
     } else {
-      if (await this.evaluate(ethAddress, events)) {
-        return GrowthActionStatus.Completed
-      }
-      return GrowthActionStatus.Active
+      // Evaluate the rule to determine if it is Completed.
+      return (await this.evaluate(ethAddress, events))
+        ? GrowthActionStatus.Completed
+        : GrowthActionStatus.Active
     }
   }
 }
@@ -443,13 +484,6 @@ class SingleEventRule extends BaseRule {
 /**
  * A rule that requires N events out of a list of event types.
  *
- * Important: Rule evaluation considers events since user joined the platform
- * but reward calculation only considers events that occurred during the campaign period.
- * As a result, a rule may pass but no reward be granted. As an example:
- *   - assume numEventsRequired = 3
- *   - events E1, E2 occur during campaign C1
- *   - event E3 occurs during campaign C2
- *   => rule passes in campaign C2 but NO reward is granted.
  */
 class MultiEventsRule extends BaseRule {
   constructor(crules, levelId, config) {
@@ -593,14 +627,16 @@ class ReferralRule extends BaseRule {
         continue
       }
 
-      // Check the referee reached the level during this campaign as opposed
-      // to prior to the campaign.
-      const refereePriorLevel = await this.crules.getPriorLevel(referee)
-      if (refereePriorLevel >= this.levelRequired) {
-        logger.debug(
-          `Referee ${referee} reached level prior to campaign start. skipping`
-        )
-        continue
+      if (this.config.scope === 'campaign') {
+        // Check the referee reached the level during this campaign as opposed
+        // to prior to the campaign.
+        const refereePriorLevel = await this.crules.getPriorLevel(referee)
+        if (refereePriorLevel >= this.levelRequired) {
+          logger.debug(
+            `Referee ${referee} reached level prior to campaign start. skipping`
+          )
+          continue
+        }
       }
 
       // Referral is valid. Referrer should get a reward for it.

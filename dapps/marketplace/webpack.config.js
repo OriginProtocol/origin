@@ -96,7 +96,8 @@ const config = {
     port: 8081,
     headers: {
       'Access-Control-Allow-Origin': '*'
-    }
+    },
+    contentBase: path.join(__dirname, 'public')
   },
   watchOptions: {
     poll: 2000,
@@ -111,7 +112,8 @@ const config = {
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
-      network: 'rinkeby'
+      network: process.env.NODE_ENV === 'test' ? 'test' : 'rinkeby',
+      metaMask: process.env.NODE_ENV === 'test' ? 'false' : 'true'
     }),
     new webpack.EnvironmentPlugin({
       BUILD_TIMESTAMP: +new Date(),
@@ -157,25 +159,29 @@ if (isProduction) {
       template: 'public/template.html',
       inject: false,
       filename: 'mainnet.html',
-      network: 'mainnet'
+      network: 'mainnet',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'kovan.html',
-      network: 'kovanTst'
+      network: 'kovanTst',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'rinkeby.html',
-      network: 'rinkeby'
+      network: 'rinkeby',
+      metaMask: true
     }),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
       filename: 'origin.html',
-      network: 'origin'
+      network: 'origin',
+      metaMask: true
     })
   )
   config.resolve.alias = {
