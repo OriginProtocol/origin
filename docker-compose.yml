@@ -135,7 +135,8 @@ services:
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
-      - IPFS_URL=http://ipfs-proxy:9999
+      - IPFS_API_URL=http://services:5002
+      - IPFS_GATEWAY_URL=http://services:8080
       - TRAIL_BEHIND_BLOCKS=
       - PROVIDER_URL=http://services:8545
       - PROVIDER_WS_URL=ws://services:8545
@@ -167,7 +168,6 @@ services:
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
-      - IPFS_URL=http://ipfs-proxy:9999
       - NETWORK_ID=999
       - ENVKEY=
     depends_on:
