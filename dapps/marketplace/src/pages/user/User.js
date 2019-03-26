@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import IdentityQuery from 'queries/Identity'
 import Reviews from 'components/Reviews'
 import Avatar from 'components/Avatar'
+import DocumentTitle from 'components/DocumentTitle'
 
 import UserListings from './_UserListings'
 
@@ -24,6 +25,11 @@ class User extends Component {
 
             return (
               <>
+                <DocumentTitle
+                  pageTitle={
+                    profile.fullName || fbt('Unnamed User', 'User.title')
+                  }
+                />
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
                     <div className="avatar-wrap">

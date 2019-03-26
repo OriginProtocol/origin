@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import QueryError from 'components/QueryError'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Redirect from 'components/Redirect'
 
@@ -26,7 +27,13 @@ class Listing extends Component {
 
     return (
       <>
-        <PageTitle>Listing {listingId}</PageTitle>
+        <DocumentTitle
+          pageTitle={
+            <fbt desc="listing.title">
+              Listing <fbt:param name="id">{listingId}</fbt:param>
+            </fbt>
+          }
+        />
         <Query query={query} variables={vars}>
           {({ networkStatus, error, data, refetch }) => {
             if (networkStatus <= 2) {

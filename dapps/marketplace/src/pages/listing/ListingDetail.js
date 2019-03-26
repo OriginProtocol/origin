@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
+import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 
 import Gallery from 'components/Gallery'
@@ -9,7 +10,7 @@ import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import WeekCalendar from 'components/WeekCalendar'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
 
 import Sold from './_ListingSold'
@@ -69,7 +70,7 @@ class ListingDetail extends Component {
 
     return (
       <div className="container listing-detail">
-        <PageTitle>{listing.title}</PageTitle>
+        <DocumentTitle pageTitle={listing.title} />
         <div className="header">
           <div className="category">
             <Category listing={listing} />

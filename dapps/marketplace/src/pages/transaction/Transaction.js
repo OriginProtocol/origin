@@ -10,7 +10,7 @@ import useIsMobile from 'utils/useMobile'
 
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import TxHistory from './_History'
@@ -25,9 +25,13 @@ const Transaction = props => {
 
   return (
     <div className="container transaction-detail">
-      <PageTitle>
-        <fbt desc="Transaction.offer">Offer</fbt> {offerId}
-      </PageTitle>
+      <DocumentTitle
+        pageTitle={
+          <fbt desc="Transaction.offer">
+            Offer <fbt:param name="id">{offerId}</fbt:param>
+          </fbt>
+        }
+      />
       <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ networkStatus, error, data, refetch }) => {
           if (error) {
@@ -107,7 +111,7 @@ const Transaction = props => {
 
           return (
             <>
-              <PageTitle>{offer.listing.title}</PageTitle>
+              <DocumentTitle>{offer.listing.title}</DocumentTitle>
               {isSeller ? (
                 <Link to="/my-sales">
                   &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>

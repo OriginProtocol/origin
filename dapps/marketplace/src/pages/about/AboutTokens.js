@@ -1,9 +1,12 @@
 import React from 'react'
-import PageTitle from 'components/PageTitle'
+import { fbt } from 'fbt-runtime'
+import DocumentTitle from 'components/DocumentTitle'
 
 const AboutTokens = () => (
   <div className="container about-info">
-    <PageTitle>About Origin Tokens</PageTitle>
+    <DocumentTitle
+      pageTitle={<fbt desc="aboutTokens.title">About Origin Tokens</fbt>}
+    />
     <h1>About Origin Tokens</h1>
 
     <div className="row">

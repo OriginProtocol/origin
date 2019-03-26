@@ -11,7 +11,7 @@ import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Stages from 'components/TransactionStages'
 import Pic from './_Pic'
@@ -32,9 +32,9 @@ class Purchases extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle>
-          <fbt desc="Purchases.myPurchases">My Purchases</fbt>
-        </PageTitle>
+        <DocumentTitle
+          pageTitle={<fbt desc="Purchases.title">My Purchases</fbt>}
+        />
         <h1>
           <fbt desc="Purchases.myPurchases">My Purchases</fbt>
         </h1>

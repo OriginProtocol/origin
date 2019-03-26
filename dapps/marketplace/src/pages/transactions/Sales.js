@@ -11,7 +11,7 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Stages from 'components/TransactionStages'
 import Pic from './_Pic'
@@ -32,9 +32,7 @@ class Sales extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle>
-          <fbt desc="Sales.mySales">My Sales</fbt>
-        </PageTitle>
+        <DocumentTitle pageTitle={<fbt desc="Sales.title">My Sales</fbt>} />
         <h1>
           <fbt desc="Sales.mySales">My Sales</fbt>
         </h1>

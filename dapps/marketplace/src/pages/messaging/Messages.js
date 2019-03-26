@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
@@ -13,7 +14,7 @@ import RoomStatus from './RoomStatus'
 import Room from './Room'
 import QueryError from 'components/QueryError'
 import Avatar from 'components/Avatar'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
 
@@ -79,7 +80,7 @@ class Messages extends Component {
   render() {
     return (
       <div className="container messages-page">
-        <PageTitle>Messaging</PageTitle>
+        <DocumentTitle pageTitle={<fbt desc="messages.title">Messages</fbt>} />
         <Mutation mutation={MarkConversationRead}>
           {markConversationRead => (
             <Query query={query} pollInterval={500}>
