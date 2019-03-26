@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 const ProfileStrength = ({ published = 0, unpublished = 0, large }) => (
   <div className={`profile-strength${large ? ' large' : ''}`}>
