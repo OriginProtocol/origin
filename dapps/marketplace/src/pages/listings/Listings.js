@@ -190,7 +190,9 @@ class Listings extends Component {
                               }
                             }}
                           >
-                            {loading ? fbt('Loading...', 'Loading...') : fbt('Load more', 'Load more')}
+                            {loading
+                              ? fbt('Loading...', 'Loading...')
+                              : fbt('Load more', 'Load more')}
                           </button>
                         )}
                       </>

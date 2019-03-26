@@ -64,7 +64,11 @@ class Search extends Component {
             <input
               type="text"
               className="form-control"
-              placeholder={enabled ? fbt('Search', 'Search') : fbt('Note: Search unavailable', 'search.search-unavailable')}
+              placeholder={
+                enabled
+                  ? fbt('Search', 'Search')
+                  : fbt('Note: Search unavailable', 'search.search-unavailable')
+              }
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
               onKeyUp={e => {
