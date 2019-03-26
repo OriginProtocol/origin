@@ -34,7 +34,9 @@ class EditProfileModal extends Component {
             this.validate()
           }}
         >
-          <h2><fbt desc="EditModal.editProfile">Edit Profile</fbt></h2>
+          <h2>
+            <fbt desc="EditModal.editProfile">Edit Profile</fbt>
+          </h2>
           <div className="row">
             <div className="col-12">
               <div className="form-group">
@@ -60,7 +62,9 @@ class EditProfileModal extends Component {
           </div>
 
           <div className="form-group mt-3">
-            <label><fbt desc="EditModal.Description">Description</fbt></label>
+            <label>
+              <fbt desc="EditModal.Description">Description</fbt>
+            </label>
             <textarea
               placeholder="Tell us a bit about yourself"
               {...input('description')}

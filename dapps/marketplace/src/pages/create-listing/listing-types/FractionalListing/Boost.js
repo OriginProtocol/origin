@@ -207,9 +207,15 @@ class Boost extends Component {
     if (!this.state.boost) {
       newState.boostError = fbt('Boost is required', 'Boost is required')
     } else if (!this.state.boost.match(/^-?[0-9.]+$/)) {
-      newState.boostError = fbt('Boost must be a number', 'Boost must be a number')
+      newState.boostError = fbt(
+        'Boost must be a number',
+        'Boost must be a number'
+      )
     } else if (Number(this.state.boost) < 0) {
-      newState.boostError = fbt('Boost must be zero or greater', 'Boost must be zero or greater')
+      newState.boostError = fbt(
+        'Boost must be zero or greater',
+        'Boost must be zero or greater'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

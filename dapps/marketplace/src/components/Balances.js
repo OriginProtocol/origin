@@ -12,7 +12,9 @@ const Balances = ({ ethBalance, account }) => {
 
   return (
     <div className="balances">
-      <h5><fbt desc="Balances.account-balance">Account Balance</fbt></h5>
+      <h5>
+        <fbt desc="Balances.account-balance">Account Balance</fbt>
+      </h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">

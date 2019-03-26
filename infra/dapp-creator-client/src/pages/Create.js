@@ -4,6 +4,7 @@ import React from 'react'
 import pick from 'lodash/pick'
 import superagent from 'superagent'
 import debounce from 'lodash/debounce'
+import { fbt } from 'fbt-runtime'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import Redirect from 'components/Redirect'
