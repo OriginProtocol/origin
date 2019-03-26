@@ -1,5 +1,6 @@
 import React from 'react'
 import dayjs from 'dayjs'
+import { fbt } from 'fbt-runtime'
 
 import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
@@ -7,8 +8,8 @@ import Tooltip from 'components/Tooltip'
 import Buy from './mutations/Buy'
 
 const Fractional = ({ listing, from, range, availability, refetch }) => {
-  let startDateDisplay = 'Check in',
-    endDateDisplay = 'Check out',
+  let startDateDisplay = fbt('Check in', 'Check in'),
+    endDateDisplay = fbt('Check out', 'Check out'),
     startDate = null,
     endDate = null,
     totalPrice,
@@ -19,8 +20,8 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('ddd, MMM D')
-    endDateDisplay = dayjs(endDate).format('ddd, MMM D')
+    startDateDisplay = dayjs(startDate).format('ddd, MMM D') // Needs l10n
+    endDateDisplay = dayjs(endDate).format('ddd, MMM D') // Needs l10n
     const priceEstimate = availability.estimatePrice(range)
     available = priceEstimate.available
     if (available) {
@@ -33,7 +34,10 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
   return (
     <div className="listing-buy fractional">
       <div className="price">
-        <div className="eth">{`${listing.price.amount} ETH / night`}</div>
+        <div className="eth">
+          {listing.price.amount}
+          <fbt desc="ethPerNight">ETH / night</fbt>
+        </div>
         <div className="usd">
           <Price amount={listing.price.amount} />
         </div>
@@ -53,10 +57,16 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
           <div>{endDateDisplay}</div>
         </Tooltip>
       </div>
-      {!showUnavailable ? null : <div className="total">Unavailable</div>}
+      {!showUnavailable ? null : (
+        <div className="total">
+          <fbt desc="Unavailable">Unavailable</fbt>
+        </div>
+      )}
       {!totalPrice ? null : (
         <div className="total">
-          <span>Total Price</span>
+          <span>
+            <fbt desc="totalPrice">Total Price</fbt>
+          </span>
           <span>{`${totalPrice} ETH`}</span>
         </div>
       )}

@@ -46,9 +46,17 @@ class Listing extends Component {
 
             const listing = data.marketplace.listing
             if (!listing) {
-              return <div>Listing not found</div>
+              return (
+                <div>
+                  <fbt desc="listing.listing-not-found">Listing not found</fbt>
+                </div>
+              )
             } else if (!listing.valid) {
-              return <div>Listing invalid</div>
+              return (
+                <div>
+                  <fbt desc="listing.listing-invalid">Listing invalid</fbt>
+                </div>
+              )
             }
 
             const from = get(data, 'web3.primaryAccount.id')

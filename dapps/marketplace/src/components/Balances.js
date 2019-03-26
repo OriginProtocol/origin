@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
@@ -41,7 +42,9 @@ const Balances = ({ ethBalance, account }) => {
             skipjoincampaign="false"
           >
             <img className="mr-1" src="images/growth/blue-add-icon.svg" />
-            <div className="mr-2 value">Get OGN</div>
+            <div className="mr-2 value">
+              <fbt desc="Balances.getOgn">Get OGN</fbt>
+            </div>
           </EnrollButton>
         )}
       </div>
