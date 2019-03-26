@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Categories from '@origin/graphql/src/constants/Categories'
 import pick from 'lodash/pick'
+import { fbt } from 'fbt-runtime'
 
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
