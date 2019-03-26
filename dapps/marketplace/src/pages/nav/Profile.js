@@ -151,7 +151,7 @@ const Identity = ({ id }) => (
                 style={{ width: `${profile.strength || '0'}%` }}
               />
             </div>
-            {`Profile Strength - ${profile.strength || '0'}%`}
+            {`${fbt('Profile Strength', 'ProfileStrength.ProfileStrength')} - ${profile.strength || '0'}%`}
           </div>
         </div>
       )

@@ -43,4 +43,6 @@ locales.forEach(locale => {
   // This should be writign to the fbt translations in ./translations
   fs.writeFileSync(dstFile, output)
 
+  console.log(`✅ ${locale}`)
+
 })
