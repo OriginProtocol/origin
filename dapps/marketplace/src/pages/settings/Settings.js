@@ -61,9 +61,12 @@ class Settings extends Component {
   }
 
   showNotification() {
-    new Notification('Sweet! Desktop notifications are on :)', {
-      icon: 'images/app-icon.png'
-    })
+    new Notification(
+      fbt('Desktop notifications enabled ✅', 'settings.notificationsEnabled'),
+      {
+        icon: 'images/app-icon.png'
+      }
+    )
   }
 
   render() {
