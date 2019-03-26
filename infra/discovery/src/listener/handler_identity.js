@@ -1,43 +1,18 @@
 const Web3 = require('web3')
 const logger = require('./logger')
-const gql = require('graphql-tag')
 
 const { bytes32ToIpfsHash } = require('./utils')
 const _bridgeModels = require('@origin/bridge/src/models')
 const _identityModels = require('@origin/identity/src/models')
 const _discoveryModels = require('../models')
 const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
+const identityQuery = require('./queries/Identity')
 
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
-
-// TODO find a better way to handle this duplication from DApp
-const identityQuery = gql`
-  query Identity($id: ID!) {
-    web3 {
-      account(id: $id) {
-        identity {
-          id
-          firstName
-          lastName
-          fullName
-          description
-          avatar
-          strength
-          attestations
-          facebookVerified
-          twitterVerified
-          airbnbVerified
-          phoneVerified
-          emailVerified
-        }
-      }
-    }
-  }
-`
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {

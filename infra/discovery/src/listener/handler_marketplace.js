@@ -4,6 +4,8 @@ const db = require('../models')
 const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
+const listingQuery = require('./queries/Listing')
+const offerQuery = require('./queries/Offer')
 
 const LISTING_EVENTS = [
   'ListingCreated',
@@ -31,9 +33,13 @@ function isOfferEvent(eventName) {
   return OFFER_EVENTS.includes(eventName)
 }
 
+function listingIdFromLog(log) {
+  return `${log.networkId}-000-${log.decoded.listingID}-${log.blockNumber}`
+}
+
 /* Removes the block number that is appended to listing IDs when they are
- * returned from the eventsourcer.
- * @param {String} listingId - listing id as returned from @origin/eventsource
+ * returned from @origin/graphql.
+ * @param {String} listingId - listing id as returned from @origin/graphql.
  *    format is {networkId}-000-{listingId}-{blockNumber}
  */
 function removeListingIdBlockNumber(listingId) {
@@ -41,16 +47,16 @@ function removeListingIdBlockNumber(listingId) {
 }
 
 class MarketplaceEventHandler {
-  constructor(config, contractContext) {
+  constructor(config, graphqlClient) {
     this.config = config
-    this.contractContext = contractContext
+    this.graphqlClient = graphqlClient
   }
 
   /**
-   * Gets details about a listing from @origin/eventsource
+   * Gets details about a listing from @origin/graphql
    * @param {Object} log
    * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, seller: User}>}
+   * @returns {Object} result of GraphQL query
    * @private
    */
   async _getListingDetails(log, blockInfo) {
@@ -58,43 +64,41 @@ class MarketplaceEventHandler {
     // ensures that we preserve listings version history if the listener is
     // re-indexing data. Otherwise all the listing version rows in the DB would
     // end up with the same data.
-    const listing = await this.contractContext.eventSource.getListing(
-      log.decoded.listingID,
-      blockInfo.blockNumber
-    )
-    checkEventsFreshness(listing.events, blockInfo)
+    const result = await this.graphqlClient.query({
+      query: listingQuery,
+      variables: {
+        listingId: listingIdFromLog(log)
+      }
+    })
 
-    // Remove unneeded contract data
-    delete listing.contract
+    checkEventsFreshness(result.data.marketplace.listing.events, blockInfo)
 
-    return { listing }
+    return result.data.marketplace
   }
 
   /**
-   * Gets details about an offer by calling @origin/eventsource
+   * Gets details about an offer by calling @origin/graphql
    * @param {Object} log
    * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   * @returns {Object} result of GraphQL query
    * @private
    */
   async _getOfferDetails(log, blockInfo) {
-    const { listing } = await this._getListingDetails(log, blockInfo)
-    checkEventsFreshness(listing.events, blockInfo)
-    const offer = await this.contractContext.eventSource.getOffer(
-      log.decoded.listingID,
-      log.decoded.offerID,
-      blockInfo.blocknumber
-    )
-    checkEventsFreshness(offer.events, blockInfo)
+    const result = await this.graphqlClient.query({
+      query: offerQuery,
+      variables: {
+        offerId: log.decoded.offerID,
+        listingId: listingIdFromLog(log)
+      }
+    })
 
-    return {
-      listing,
-      offer: offer
-    }
+    checkEventsFreshness(result.data.marketplace.offer.listing.events, blockInfo)
+
+    return result.data.marketplace
   }
 
   /**
-   * Gets details about a listing or an offer by calling @origin/eventsource
+   * Gets details about a listing or an offer by calling @origin/graphql
    * @param {Object} log
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<

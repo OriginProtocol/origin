@@ -188,8 +188,8 @@ const Configs = {
   docker: {
     provider: get(process.env, 'PROVIDER_URL', `http://localhost:8545`),
     providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://localhost:8545`),
-    ipfsGateway: `http://localhost:9999`,
-    ipfsRPC: `http://localhost:9999`,
+    ipfsGateway: get(process.env, 'IPFS_URL', `http://localhost:9999`),
+    ipfsRPC: get(process.env, 'IPFS_URL', `http://localhost:9999`),
     bridge: 'http://localhost:5000',
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,

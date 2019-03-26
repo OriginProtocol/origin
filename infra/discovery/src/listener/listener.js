@@ -21,8 +21,8 @@ const promBundle = require('express-prom-bundle')
 const Web3 = require('web3')
 
 const esmImport = require('esm')(module)
-const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const graphqlClient = esmImport('@origin/graphql').default
+const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
@@ -39,14 +39,14 @@ setNetwork(process.env.NETWORK || 'docker')
  * @example
  * buildSignatureToRules()
  *  { '0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c':
- *      { V00_Marketplace:
- *           { contractName: 'V00_Marketplace',
+ *      { Marketplace:
+ *           { contractName: 'Marketplace',
  *             eventName: 'ListingCreated',
  *             eventAbi: [Object],
  *             handler: [...] } },
  *    '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
- *       { V00_Marketplace:
- *           { contractName: 'V00_Marketplace',
+ *       { Marketplace:
+ *           { contractName: 'Marketplace',
  *             eventName: 'ListingUpdated',
  *             eventAbi: [Object],
  *             handler: [...] } }
@@ -69,12 +69,7 @@ function buildSignatureToRules(config) {
         return
       }
       // Instantiate a handler for this event type
-      let handler
-      if (handlerClass.name === 'MarketplaceEventHandler') {
-        handler = new handlerClass(config, contractsContext)
-      } else if (handlerClass.name === 'IdentityEventHandler') {
-        handler = new handlerClass(config, graphqlClient)
-      }
+      const handler = new handlerClass(config, graphqlClient)
 
       const signature = eventAbi.signature
       if (signatureLookup[signature] === undefined) {

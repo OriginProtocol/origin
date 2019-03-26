@@ -1,9 +1,6 @@
 ---
 version: "3"
 
-volumes:
-  ipfs:
-
 services:
   postgres:
     container_name: postgres
@@ -80,8 +77,6 @@ services:
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
       - /app/infra/linking/node_modules/
-      # IPFS data
-      - ipfs:/app/ipfs
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
       # interacted with via ipfs-proxy
@@ -149,6 +144,7 @@ services:
     depends_on:
       - postgres
       - elasticsearch
+      - ipfs-proxy
       - services
     command:
       >
@@ -177,6 +173,8 @@ services:
     depends_on:
       - postgres
       - elasticsearch
+      - ipfs-proxy
+      - services
     ports:
       - "4000:4000"
     command:
