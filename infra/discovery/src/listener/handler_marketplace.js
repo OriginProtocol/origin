@@ -43,7 +43,10 @@ function listingIdFromLog(log) {
  *    format is {networkId}-000-{listingId}-{blockNumber}
  */
 function removeListingIdBlockNumber(listingId) {
-  return listingId.split('-').splice(0, 3).join('-')
+  return listingId
+    .split('-')
+    .splice(0, 3)
+    .join('-')
 }
 
 class MarketplaceEventHandler {
@@ -92,7 +95,10 @@ class MarketplaceEventHandler {
       }
     })
 
-    checkEventsFreshness(result.data.marketplace.offer.listing.events, blockInfo)
+    checkEventsFreshness(
+      result.data.marketplace.offer.listing.events,
+      blockInfo
+    )
 
     return result.data.marketplace
   }
@@ -138,9 +144,7 @@ class MarketplaceEventHandler {
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${
-      log.logIndex
-    }`)
+      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
     const listingData = {
       id: removeListingIdBlockNumber(listing.id),
       blockNumber: log.blockNumber,
