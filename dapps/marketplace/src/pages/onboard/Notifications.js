@@ -102,7 +102,7 @@ const Denied = () => (
       Notifications are turned off
     </div>
     <div className="help mb">
-      You’ve rejected our request to turn on desktop notifications which we{' '}
+      You’ve rejected our request to turn on desktop notifications which we
       <b>highly recommend</b>.
     </div>
     <div className="help mb">
@@ -171,7 +171,7 @@ class OnboardNotifications extends Component {
                       href="#"
                       onClick={e => e.preventDefault()}
                       className="btn btn-outline-primary disabled"
-                      children="Continue"
+                      children={fbt("Continue", "Continue")}
                     />
                   )
                 }

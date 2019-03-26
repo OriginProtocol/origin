@@ -113,7 +113,7 @@ class EmailAttestation extends Component {
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children=fbt("Cancel", "Cancel")
+                children={fbt("Cancel", "Cancel")}
               />
             </div>
           </form>
@@ -208,7 +208,7 @@ class EmailAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children=fbt("Continue", "Continue")
+            children={fbt("Continue", "Continue")}
           />
         </div>
       </>
