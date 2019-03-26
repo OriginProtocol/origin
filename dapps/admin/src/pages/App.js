@@ -50,13 +50,13 @@ const App = () => (
         <Navbar.Heading className="logo">
           <img src="images/origin-logo-dark.png" /> ADMIN
         </Navbar.Heading>
-        <Link to="/marketplace" icon="shop" tooltip={fbt("Listings", "Listings")} />
-        <Link to="/activity" icon="pulse" tooltip={fbt("Activity", "Activity")} />
-        <Link to="/users" icon="people" tooltip={fbt("Users", "Users")} />
-        <Link to="/identities" icon="mugshot" tooltip={fbt("Identities", "Identities")} />
-        <Link to="/messaging" icon="chat" tooltip={fbt("Messaging", "Messaging")} />
-        <Link to="/explorer" icon="console" tooltip={fbt("GraphQL Console", "GraphQL Console")} />
-        <Link to="/accounts" icon="settings" tooltip={fbt("Settings", "Settings")} />
+        <Link to="/marketplace" icon="shop" tooltip="Listings" />
+        <Link to="/activity" icon="pulse" tooltip="Activity" />
+        <Link to="/users" icon="people" tooltip="Users" />
+        <Link to="/identities" icon="mugshot" tooltip="Identities" />
+        <Link to="/messaging" icon="chat" tooltip="Messaging" />
+        <Link to="/explorer" icon="console" tooltip="GraphQL Console" />
+        <Link to="/accounts" icon="settings" tooltip="Settings" />
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <MetaMaskSwitcher />
