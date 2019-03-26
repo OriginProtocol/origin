@@ -54,8 +54,7 @@ class Footer extends Component {
                           <fbt:param name="networkName">
                             {networkName}
                           </fbt:param>.
-                        </fbt>
-                        {' '}
+                        </fbt>{' '}
                         <a
                           href="#"
                           onClick={e => {
@@ -74,8 +73,7 @@ class Footer extends Component {
                       <div>
                         <fbt desc="footer.foundABug">
                           Found a bug or have feedback? Send an email to
-                        </fbt>
-                        {' '}
+                        </fbt>{' '}
                         <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>{' '}
                         <fbt desc="footer.openIssue">, open an issue on</fbt>{' '}
                         <a
@@ -84,8 +82,7 @@ class Footer extends Component {
                           rel="noopener noreferrer"
                         >
                           GitHub
-                        </a>
-                        {' '}
+                        </a>{' '}
                         <fbt desc="footer.foundABug">
                           or post in our #bug-reports channel on
                         </fbt>{' '}
@@ -108,8 +105,7 @@ class Footer extends Component {
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
-                        </a>
-                        {' '}
+                        </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
                           href="https://www.originprotocol.com/privacy"
@@ -117,8 +113,7 @@ class Footer extends Component {
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.privacy">Privacy</fbt>
-                        </a>
-                        {' '}
+                        </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
                           href="https://www.originprotocol.com/aup"

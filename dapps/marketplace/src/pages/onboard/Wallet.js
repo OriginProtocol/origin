@@ -23,7 +23,9 @@ const OriginWallet = () => (
     <div className="top">
       <div className="image" />
       <div>
-        <h4><fbt desc="Wallet.originMobile">Origin Mobile Wallet</fbt></h4>
+        <h4>
+          <fbt desc="Wallet.originMobile">Origin Mobile Wallet</fbt>
+        </h4>
         <div className="description">
           Origin’s Mobile Wallet will allow you to store crypto currency so you
           can buy and sell on our DApp.

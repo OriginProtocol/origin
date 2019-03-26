@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { Switch, Route } from 'react-router-dom'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import QueryError from 'components/QueryError'
 import DocumentTitle from 'components/DocumentTitle'

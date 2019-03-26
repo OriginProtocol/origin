@@ -48,9 +48,7 @@ class WaitForFinalize extends Component {
           <EventTick className="active bgl" event={offer.acceptedEvent}>
             Offer Accepted
           </EventTick>
-          <EventTick>
-            SaleCompleted
-          </EventTick>
+          <EventTick>SaleCompleted</EventTick>
         </div>
         {!this.state.open ? null : (
           <Modal
