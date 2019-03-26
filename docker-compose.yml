@@ -42,6 +42,8 @@ services:
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
       - ./packages/contracts/build:/app/packages/contracts/build
+      # Contract migrations that get run when @origin/services starts
+      - ./packages/contracts/migrations:/app/packages/contracts/migrations
       # Core packages
       - ./packages/services/:/app/packages/services/
       - ./packages/graphql/:/app/packages/graphql/
