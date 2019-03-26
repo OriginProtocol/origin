@@ -89,7 +89,7 @@ class Details extends Component {
                     <div className="help-text price">
                       Price is an approximation of what you will receive.
                       <a
-                        href="/#/about/payments"
+                        href="#/about/payments"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
