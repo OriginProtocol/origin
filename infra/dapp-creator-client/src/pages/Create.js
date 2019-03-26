@@ -47,20 +47,20 @@ class Create extends React.Component {
     const newState = {}
 
     if (!this.state.title) {
-      newState.titleError = 'Title is required'
+      newState.titleError = fbt('Title is required', 'Title is required')
     } else if (this.state.title.length < 3) {
-      newState.titleError = 'Title is too short'
+      newState.titleError = fbt('Title is too short', 'Title is too short')
     }
 
     // eslint-disable-next-line no-useless-escape
     const subdomainRe = /[^a-zA-Z0-9\-]/
 
     if (!this.state.subdomain) {
-      newState.subdomainError = 'Subdomain is required'
+      newState.subdomainError = fbt('Subdomain is required', 'Subdomain is required')
     } else if (this.state.subdomain.length < 2) {
-      newState.subdomainError = 'Subdomain is too short'
+      newState.subdomainError = fbt('Subdomain is too short', 'Subdomain is too short')
     } else if (subdomainRe.test(this.state.subdomain)) {
-      newState.subdomainError = 'Subdomain contains invalid characters'
+      newState.subdomainError = fbt('Subdomain contains invalid characters', 'Subdomain contains invalid characters')
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

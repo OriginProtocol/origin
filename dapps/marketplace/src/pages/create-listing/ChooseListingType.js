@@ -165,7 +165,7 @@ class ChooseListingType extends Component {
     const { category, subCategory } = this.state
 
     if (!subCategory) {
-      newState.subCategoryError = 'Category is required'
+      newState.subCategoryError = fbt('Category is required', 'Category is required')
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

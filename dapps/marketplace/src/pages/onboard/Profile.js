@@ -237,7 +237,7 @@ class OnboardProfile extends Component {
     const newState = {}
 
     if (!this.state.firstName) {
-      newState.firstNameError = 'First Name is required'
+      newState.firstNameError = fbt('First Name is required', 'First Name is required')
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
