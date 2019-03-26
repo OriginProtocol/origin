@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
@@ -9,6 +10,7 @@ import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
+import PageTitle from 'components/PageTitle'
 import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
@@ -59,9 +61,12 @@ class Settings extends Component {
   }
 
   showNotification() {
-    new Notification('Sweet! Desktop notifications are on :)', {
-      icon: 'images/app-icon.png'
-    })
+    new Notification(
+      fbt('Desktop notifications enabled ✅', 'settings.notificationsEnabled'),
+      {
+        icon: 'images/app-icon.png'
+      }
+    )
   }
 
   render() {
@@ -81,7 +86,10 @@ class Settings extends Component {
       >
         {setNetwork => (
           <div className="container settings">
-            <h1>Settings</h1>
+            <PageTitle>Settings</PageTitle>
+            <h1>
+              <fbt desc="settings.heading">Settings</fbt>
+            </h1>
             <div className="row">
               <div className="col-lg-6 col-md-12">
                 <div className="settings-box">
@@ -89,7 +97,9 @@ class Settings extends Component {
                     <label htmlFor="language">Language</label>
                     <div className="form-text form-text-muted">
                       <small>
-                        Please make a selection from the list below.
+                        <fbt desc="settings.language">
+                          Please make a selection from the list below.
+                        </fbt>
                       </small>
                     </div>
                     <LocaleDropdown
@@ -101,32 +111,44 @@ class Settings extends Component {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="notifications">Notifications</label>
+                    <label htmlFor="notifications">
+                      <fbt desc="settings.notificationsLabel">
+                        Notifications
+                      </fbt>
+                    </label>
                     {Notification.permission !== 'granted' ? (
                       <>
                         <div className="form-text form-text-muted">
-                          <small>Enable browser notifications below.</small>
+                          <small>
+                            <fbt desc="settings.notificationsHint">
+                              Enable browser notifications below.
+                            </fbt>
+                          </small>
                         </div>
                         <button
                           className="btn btn-success"
                           onClick={() => this.requestNotificationPermission()}
                         >
-                          Enable
+                          <fbt desc="settings.notificationsButton">Enable</fbt>
                         </button>
                       </>
                     ) : (
-                      <div>Browser notifications are enabled.</div>
+                      <div>
+                        <fbt desc="settings.notificationsSuccess">
+                          Browser notifications are enabled.
+                        </fbt>
+                      </div>
                     )}
                   </div>
 
                   {/*
                   <div className="form-group">
-                    <label htmlFor="Messaging">Messaging</label>
+                    <label htmlFor="Messaging"><fbt desc="settings.messagingLabel">Messaging</fbt></label>
                     <div className="form-text form-text-muted">
-                      <small>Enable/disable messaging by clicking the button below.</small>
+                      <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking the button below.</fbt></small>
                     </div>
                     <button className="btn btn-outline-danger">
-                      Disable
+                      <fbt desc="settings.messagingButton">Disable</fbt>
                     </button>
                   </div>
                   */}
@@ -138,18 +160,24 @@ class Settings extends Component {
                         walletType && walletType.startsWith('mobile-')
                       return (
                         <div className="form-group">
-                          <label htmlFor="language">Mobile Wallet</label>
+                          <label htmlFor="language">
+                            <fbt desc="settings.mobileLabel">Mobile Wallet</fbt>
+                          </label>
                           {mobileWalletConnected ? (
                             <>
                               <div className="form-text form-text-muted">
                                 <small>
-                                  Disconnect from your mobile wallet by clicking
-                                  the button below.
+                                  <fbt desc="settings.mobileHint">
+                                    Disconnect from your mobile wallet by
+                                    clicking the button below.
+                                  </fbt>
                                 </small>
                               </div>
                               <Mutation mutation={UnlinkMobileWallet}>
                                 <button className="btn btn-outline-danger">
-                                  Disconnect
+                                  <fbt desc="settings.mobileButton">
+                                    Disconnect
+                                  </fbt>
                                 </button>
                               </Mutation>
                             </>
@@ -159,7 +187,11 @@ class Settings extends Component {
                                 className="btn btn-outline-secondary"
                                 disabled
                               >
-                                <span>Not connected</span>
+                                <span>
+                                  <fbt desc="settings.mobileDisabled">
+                                    Not connected
+                                  </fbt>
+                                </span>
                               </button>
                             </div>
                           )}
@@ -173,12 +205,16 @@ class Settings extends Component {
               <div className="col-lg-6 col-md-12">
                 <div className="settings-box">
                   <div className="form-group">
-                    <label htmlFor="indexing">Discovery Server</label>
+                    <label htmlFor="indexing">
+                      <fbt desc="settings.discoveryLabel">Discovery Server</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
                       <small>
-                        Please enter the URL below. Leave blank to directly
-                        query the blockchain. Search functionality will disabled
-                        if no discovery server is used.
+                        <fbt desc="settings.discoveryHint">
+                          Please enter the URL below. Leave blank to directly
+                          query the blockchain. Search functionality will
+                          disabled if no discovery server is used.
+                        </fbt>
                       </small>
                     </div>
                     <input
@@ -190,9 +226,15 @@ class Settings extends Component {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="indexing">IPFS Gateway</label>
+                    <label htmlFor="indexing">
+                      <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
-                      <small>Please enter the URL below.</small>
+                      <small>
+                        <fbt desc="settings.ipfsHint">
+                          Please enter the URL below.
+                        </fbt>
+                      </small>
                     </div>
                     <input
                       className="form-control form-control-lg"
@@ -203,9 +245,15 @@ class Settings extends Component {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="indexing">Web3 Provider</label>
+                    <label htmlFor="indexing">
+                      <fbt desc="settings.providerLabel">Web3 Provider</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
-                      <small>Please enter the URL below.</small>
+                      <small>
+                        <fbt desc="settings.providerHint">
+                          Please enter the URL below.
+                        </fbt>
+                      </small>
                     </div>
                     <input
                       className="form-control form-control-lg"
@@ -216,9 +264,15 @@ class Settings extends Component {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="indexing">Bridge Server</label>
+                    <label htmlFor="indexing">
+                      <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
-                      <small>Please enter the URL below.</small>
+                      <small>
+                        <fbt desc="settings.bridgeHint">
+                          Please enter the URL below.
+                        </fbt>
+                      </small>
                     </div>
                     <input
                       className="form-control form-control-lg"
