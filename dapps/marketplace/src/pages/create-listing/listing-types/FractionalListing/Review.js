@@ -24,7 +24,9 @@ class Review extends Component {
     return (
       <div className="row create-listing-review">
         <div className="col-md-8">
-          <h2>Review your listing</h2>
+          <h2>
+            <fbt desc="creation.review.main-title">Review your listing</fbt>
+          </h2>
 
           <div className="detail">
             <div className="row">

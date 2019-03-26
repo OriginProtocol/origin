@@ -183,7 +183,7 @@ class Boost extends Component {
 
         <div className="info">
           <fbt desc="create.boost.info">
-            'Boosts are always calculated and charged in OGN.
+            Boosts are always calculated and charged in OGN.
             <Link to="/about-tokens">Learn more</Link>
           </fbt>
         </div>
