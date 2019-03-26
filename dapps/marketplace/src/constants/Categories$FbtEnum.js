@@ -1,3 +1,4 @@
+// Note that this has both categorys *and* subcategories
 const Categories$FbtEnum = {
   'schema.forSale': 'For Sale',
   'schema.forRent': 'For Rent',

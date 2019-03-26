@@ -2,6 +2,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Offer'
@@ -9,7 +10,7 @@ import useIsMobile from 'utils/useMobile'
 
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import TxHistory from './_History'
@@ -24,7 +25,13 @@ const Transaction = props => {
 
   return (
     <div className="container transaction-detail">
-      <PageTitle>Offer {offerId}</PageTitle>
+      <DocumentTitle
+        pageTitle={
+          <fbt desc="Transaction.offer">
+            Offer <fbt:param name="id">{offerId}</fbt:param>
+          </fbt>
+        }
+      />
       <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ networkStatus, error, data, refetch }) => {
           if (error) {
@@ -32,7 +39,13 @@ const Transaction = props => {
           } else if (networkStatus === 1) {
             return <LoadingSpinner />
           } else if (!data || !data.marketplace) {
-            return <div>No marketplace contract?</div>
+            return (
+              <div>
+                <fbt desc="Transaction.noContract">
+                  No marketplace contract?
+                </fbt>
+              </div>
+            )
           }
 
           const offer = data.marketplace.offer
@@ -45,7 +58,9 @@ const Transaction = props => {
 
           const Progress = (
             <>
-              <h3>Transaction Progress</h3>
+              <h3>
+                <fbt desc="Transaction.progress">Transaction Progress</fbt>
+              </h3>
               <TxProgress
                 offer={offer}
                 wallet={props.wallet}
@@ -56,26 +71,39 @@ const Transaction = props => {
           )
           const History = (
             <>
-              <h3>Transaction History</h3>
+              <h3>
+                <fbt desc="Transaction.history">Transaction History</fbt>
+              </h3>
               <TxHistory offer={offer} />
             </>
           )
           const Listing = (
             <>
-              <h3>Listing Details</h3>
+              <h3>
+                <fbt desc="Transaction.listingDetails">Listing Details</fbt>
+              </h3>
               <ListingDetail listing={offer.listing} />
             </>
           )
           const Offer = (
             <>
-              <h3>Offer Details</h3>
+              <h3>
+                <fbt desc="Transaction.offerDetails">Offer Details</fbt>
+              </h3>
               <OfferDetails offer={offer} />
             </>
           )
           const About = (
             <>
               <h3 className="mt-4">
-                {`About the ${isSeller ? 'Buyer' : 'Seller'}`}
+                <fbt desc="Transaction.about">
+                  About the{' '}
+                  <fbt:param name="sellerOrBuyer">
+                    {isSeller
+                      ? fbt('Buyer', 'Transaction.seller')
+                      : fbt('Seller', 'Transaction.seller')}
+                  </fbt:param>.
+                </fbt>
               </h3>
               <AboutParty id={party} />
             </>
@@ -83,11 +111,16 @@ const Transaction = props => {
 
           return (
             <>
-              <PageTitle>{offer.listing.title}</PageTitle>
+              <DocumentTitle>{offer.listing.title}</DocumentTitle>
               {isSeller ? (
-                <Link to="/my-sales">&lsaquo; My Sales</Link>
+                <Link to="/my-sales">
+                  &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
+                </Link>
               ) : (
-                <Link to="/my-purchases">&lsaquo; My Purchases</Link>
+                <Link to="/my-purchases">
+                  &lsaquo;{' '}
+                  <fbt desc="Transaction.myPurchases">My Purchases</fbt>
+                </Link>
               )}
               <h2>{offer.listing.title}</h2>
               {isMobile ? (

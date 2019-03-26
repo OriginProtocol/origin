@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import DeployIdentityMutation from 'mutations/DeployIdentity'
 
@@ -100,7 +101,7 @@ class DeployIdentity extends Component {
                 onClick={async () => {
                   this.setState({ shouldClose: true })
                 }}
-                children="OK"
+                children={fbt('OK', 'OK')}
               />
             </div>
           )

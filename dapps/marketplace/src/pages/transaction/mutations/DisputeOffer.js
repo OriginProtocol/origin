@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import DisputeOfferMutation from 'mutations/DisputeOffer'
 import SendMessage from 'mutations/SendMessage'
@@ -72,20 +73,24 @@ class DisputeOffer extends Component {
   renderIsProblem() {
     return (
       <>
-        <h2>Is there a problem?</h2>
-        Are you sure you want to report a problem? This will start the conflict
-        resolution process. Someone from Origin will be notified, and your chat
-        history will be made public to an arbitrator.
+        <h2>
+          <fbt desc="DisputeOffer.isThereProblem">Is there a problem?</fbt>
+        </h2>
+        <fbt desc="DisputeOffer.areYouSure">
+          Are you sure you want to report a problem? This will start the
+          conflict resolution process. Someone from Origin will be notified, and
+          your chat history will be made public to an arbitrator.
+        </fbt>
         <div className="actions">
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ sureShouldClose: true })}
-            children="Oops, no wait..."
+            children={fbt('Oops, no wait...', 'Oops, no wait...')}
           />
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ describe: true })}
-            children="Yes, please"
+            children={fbt('Yes, please', 'Yes, please')}
           />
         </div>
       </>
@@ -107,12 +112,12 @@ class DisputeOffer extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ sureShouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
           <button
             className="btn btn-outline-light"
             onClick={() => this.onClick(disputeOffer)}
-            children="Submit"
+            children={fbt('Submit', 'Submit')}
           />
         </div>
       </>
@@ -152,15 +157,17 @@ class DisputeOffer extends Component {
         {() => (
           <>
             <h5>
-              You’ve escalated this issue to an Origin team member. You will be
-              contacted once a desicion is made.
+              <fbt desc="DisputeOffer.youveEscalated">
+                You’ve escalated this issue to an Origin team member. You will
+                be contacted once a desicion is made.
+              </fbt>
             </h5>
             <div className="actions">
               <button
                 href="#"
                 className="btn btn-outline-light"
                 onClick={() => this.setState({ waitForShouldClose: true })}
-                children="OK"
+                children={fbt('OK', 'OK')}
               />
             </div>
           </>
