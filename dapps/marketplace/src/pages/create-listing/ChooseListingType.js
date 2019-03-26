@@ -7,6 +7,8 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
 
+const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
+
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 class ChooseListingType extends Component {
@@ -30,28 +32,39 @@ class ChooseListingType extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const Category = (id, title) => {
-      const active = this.state.category === id
-      const cls = id.split('.')[1]
+    const Category = (categoryId, title) => {
+      const active = this.state.category === categoryId
+      const cls = categoryId.split('.')[1]
       return (
         <div
-          key={id}
+          key={categoryId}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
           onClick={() => {
             if (active) return
-            this.setState({ category: id, subCategory: '' })
+            this.setState({ category: categoryId, subCategory: '' })
           }}
         >
-          <div className="title">{title}</div>
+          <div className="title">
+            <fbt desc="category">
+              {/* Localized category name */}
+              <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
+            </fbt>
+          </div>
           {!active ? null : (
             <div className="sub-cat">
               <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">
                   <fbt desc="chooselistingtype.select">Select</fbt>
                 </option>
-                {Categories[id].map(([id, title]) => (
-                  <option key={id} value={id}>
-                    {title}
+                {Categories[categoryId].map(([subcategoryId, title]) => (
+                  <option key={subcategoryId} value={subcategoryId}>
+                    <fbt desc="category">
+                      {/* Localized category name */}
+                      <fbt:enum
+                        enum-range={CategoriesEnum}
+                        value={subcategoryId}
+                      />
+                    </fbt>
                   </option>
                 ))}
               </select>
