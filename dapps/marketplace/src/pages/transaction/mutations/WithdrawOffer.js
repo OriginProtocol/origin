@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -39,9 +40,11 @@ class WithdrawOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2>Withdraw Offer</h2>
-                Are you sure you want to withdraw your offer? Your escrowed
-                payment wil be returned to your wallet.
+                <h2><fbt desc="WithdrawOffer.withdraw">Withdraw Offer</fbt></h2>
+                <fbt desc="WithdrawOffer.areYouSure">
+                  Are you sure you want to withdraw your offer? Your escrowed
+                  payment wil be returned to your wallet.
+                </fbt>
                 <div className="actions">
                   <button
                     className="btn btn-outline-light"
@@ -108,7 +111,7 @@ class WithdrawOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div><fbt desc="WithdrawOffers.success">Success!</fbt></div>
             <button
               href="#"
               className="btn btn-outline-light"

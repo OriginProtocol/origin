@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import Redirect from 'components/Redirect'
+import { fbt } from 'fbt-runtime'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -43,9 +44,11 @@ class RejectOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2>Reject Offer</h2>
-                Are you sure you want to reject this offer? The buyers funds
-                will be returned to them.
+                <h2><fbt desc="RejectOffer.reject">Reject Offer</fbt></h2>
+                <fbt desc="RejectOffer.areYouSure">
+                  Are you sure you want to reject this offer? The buyers funds
+                  will be returned to them.
+                </fbt>
                 <div className="actions">
                   <button
                     className="btn btn-outline-light"
@@ -110,8 +113,8 @@ class RejectOffer extends Component {
       >
         {() => (
           <div className="reject-offer-modal">
-            <h2>This offer has been rejected</h2>
-            <div>You&#39;ve rejected this buyer&#39;s offer.</div>
+            <h2><fbt desc="RejectOffer.thisOfferRejected">This offer has been rejected</fbt></h2>
+            <div><fbt desc="RejectOffer.youveRejected">You&#39;ve rejected this buyer&#39;s offer.</fbt></div>
             <div className="actions">
               <button
                 className="btn btn-outline-light"

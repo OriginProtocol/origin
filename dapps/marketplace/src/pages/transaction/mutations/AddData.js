@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import AddDataMutation from 'mutations/AddData'
 
@@ -73,7 +74,7 @@ class AddData extends Component {
         {({ client }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div><fbt desc="AddData.success">Success!</fbt></div>
             <button
               href="#"
               className="btn btn-outline-light"

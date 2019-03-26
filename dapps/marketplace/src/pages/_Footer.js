@@ -49,7 +49,9 @@ class Footer extends Component {
                       <br />
                       <br />
                       <div>
-                        {`You're currently using the Origin Beta on ${networkName}. `}
+                        <fbt desc="footer.usingOriginBetaOn">
+                          You're currently using the Origin Beta on <fbt:param name="networkName">{networkName}</fbt:param>.
+                        </fbt>
                         <a
                           href="#"
                           onClick={e => {
@@ -66,9 +68,9 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                        {'Found a bug or have feedback? Send an email to '}
+                        <fbt desc="footer.foundABug">Found a bug or have feedback? Send an email to</fbt>{' '}
                         <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
-                        {', open an issue on '}
+                          {' '}<fbt desc="footer.openIssue">, open an issue on</fbt>{' '}
                         <a
                           href={GitHubLink}
                           target="_blank"
@@ -76,7 +78,7 @@ class Footer extends Component {
                         >
                           GitHub
                         </a>
-                        {' or post in our #bug-reports channel on '}
+                          {' '}<fbt desc="footer.foundABug">or post in our #bug-reports channel on</fbt>{' '}
                         <a
                           href="https://discord.gg/jyxpUSe"
                           target="_blank"
@@ -95,7 +97,9 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Terms
+                          <fbt desc="footer.acceptableUsePolicy">
+                            Terms
+                          </fbt>
                         </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
@@ -103,7 +107,9 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Privacy
+                          <fbt desc="footer.privacy">
+                            Privacy
+                          </fbt>
                         </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
@@ -111,7 +117,9 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Acceptable Use Policy
+                          <fbt desc="footer.acceptableUsePolicy">
+                            Acceptable Use Policy
+                          </fbt>
                         </a>
                       </div>
                     </>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import FinalizeOfferMutation from 'mutations/FinalizeOffer'
 
@@ -81,7 +82,7 @@ class FinalizeOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div><fbt desc="FinalizeOffer.success">Success!</fbt></div>
             <button
               href="#"
               className="btn btn-outline-light"

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import AcceptOfferMutation from 'mutations/AcceptOffer'
 
@@ -77,7 +78,7 @@ class AcceptOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div><fbt desc="AcceptOffer.success">Success!</fbt></div>
             <button
               href="#"
               className="btn btn-outline-light"

@@ -79,7 +79,9 @@ class UserProfile extends Component {
   render() {
     return (
       <Fragment>
-        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <PageTitle>
+          <fbt desc="Profile.welcome">Welcome to Origin Protocol</fbt>
+        </PageTitle>
         <Switch>
           <Route
             path="/profile/onboard"
@@ -116,7 +118,9 @@ class UserProfile extends Component {
 
     return (
       <div className="container profile-edit">
-        <PageTitle>Edit your profile</PageTitle>
+        <PageTitle>
+          <fbt desc="Profile.edit">Edit your profile</fbt>
+        </PageTitle>
         <div className="row">
           <div className="col-md-8">
             <div className="profile d-flex">
