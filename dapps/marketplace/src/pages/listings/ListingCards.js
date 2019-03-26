@@ -52,7 +52,8 @@ class ListingCards extends Component {
               <div className="price">
                 <div className="eth">
                   {`${a.price.amount} ETH`}
-                  {a.__typename !== 'FractionalListing' ? '' : ' / night'}
+                  {a.__typename !== 'FractionalListing' ? '' : fbt(' / night', ' / night')}
+                  {a.__typename !== 'FractionalHourlyListing' ? '' : fbt(' / hour', ' / hour')}
                 </div>
                 <div className="usd">
                   <Price amount={a.price.amount} />
