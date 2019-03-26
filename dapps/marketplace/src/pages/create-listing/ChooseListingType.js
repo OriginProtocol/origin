@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import Categories from '@origin/graphql/src/constants/Categories'
 import pick from 'lodash/pick'
+import { fbt } from 'fbt-runtime'
 
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
+
+const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -29,26 +32,39 @@ class ChooseListingType extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const Category = (id, title) => {
-      const active = this.state.category === id
-      const cls = id.split('.')[1]
+    const Category = categoryId => {
+      const active = this.state.category === categoryId
+      const cls = categoryId.split('.')[1]
       return (
         <div
-          key={id}
+          key={categoryId}
           className={`category ${cls} ${active ? 'active' : 'inactive'}`}
           onClick={() => {
             if (active) return
-            this.setState({ category: id, subCategory: '' })
+            this.setState({ category: categoryId, subCategory: '' })
           }}
         >
-          <div className="title">{title}</div>
+          <div className="title">
+            <fbt desc="category">
+              {/* Localized category name */}
+              <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
+            </fbt>
+          </div>
           {!active ? null : (
             <div className="sub-cat">
               <select {...input('subCategory')} ref={r => (this.catRef = r)}>
-                <option value="">Select</option>
-                {Categories[id].map(([id, title]) => (
-                  <option key={id} value={id}>
-                    {title}
+                <option value="">
+                  <fbt desc="chooselistingtype.select">Select</fbt>
+                </option>
+                {Categories[categoryId].map(([subcategoryId]) => (
+                  <option key={subcategoryId} value={subcategoryId}>
+                    <fbt desc="category">
+                      {/* Localized category name */}
+                      <fbt:enum
+                        enum-range={CategoriesEnum}
+                        value={subcategoryId}
+                      />
+                    </fbt>
                   </option>
                 ))}
               </select>
@@ -63,13 +79,25 @@ class ChooseListingType extends Component {
       <div className="row">
         <div className="col-md-8">
           <div className="create-listing-choose-listingtype">
-            {!isEdit ? null : <h2>Let’s update your listing</h2>}
+            {!isEdit ? null : (
+              <h2>
+                <fbt desc="chooselistingtype.letsupdate">
+                  Let’s update your listing
+                </fbt>
+              </h2>
+            )}
             <div className="wrap">
               <div className="step" />
               <div className="step-description">
                 {isEdit
-                  ? `Update listing type`
-                  : `What type of listing do you want to create?`}
+                  ? fbt(
+                      `Update listing type`,
+                      `chooselistingtype.update-listing-type`
+                    )
+                  : fbt(
+                      `What type of listing do you want to create?`,
+                      `chooselistingtype.create-listing-type`
+                    )}
               </div>
               <Steps steps={1} step={0} />
               <form
@@ -78,16 +106,14 @@ class ChooseListingType extends Component {
                   this.validate()
                 }}
               >
-                {Categories.root.map(([schema, title]) =>
-                  Category(schema, title)
-                )}
+                {Categories.root.map(([schema]) => Category(schema))}
                 <div className="actions">
                   <button
                     type="submit"
                     className={`btn btn-primary${
                       this.state.subCategory ? '' : ' disabled'
                     }`}
-                    children="Continue"
+                    children={fbt('Continue', 'Continue')}
                   />
                 </div>
               </form>
@@ -139,7 +165,10 @@ class ChooseListingType extends Component {
     const { category, subCategory } = this.state
 
     if (!subCategory) {
-      newState.subCategoryError = 'Category is required'
+      newState.subCategoryError = fbt(
+        'Category is required',
+        'Category is required'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

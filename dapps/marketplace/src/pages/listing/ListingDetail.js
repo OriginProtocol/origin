@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
@@ -9,7 +10,7 @@ import AboutParty from 'components/AboutParty'
 import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import WeekCalendar from 'components/WeekCalendar'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
 
 import Sold from './_ListingSold'
@@ -69,7 +70,7 @@ class ListingDetail extends Component {
 
     return (
       <div className="container listing-detail">
-        <PageTitle>{listing.title}</PageTitle>
+        <DocumentTitle pageTitle={listing.title} />
         <div className="header">
           <div className="category">
             <Category listing={listing} />
@@ -82,7 +83,9 @@ class ListingDetail extends Component {
           <>
             {this.renderListing()}
             {this.renderAction()}
-            <h5>About the Seller</h5>
+            <h5>
+              <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
+            </h5>
             <AboutParty id={listing.seller.id} />
             <Reviews id={listing.seller.id} seller />
           </>
@@ -95,7 +98,11 @@ class ListingDetail extends Component {
             </div>
             <div className="col-md-4">
               {this.renderAction()}
-              <h5>About the Seller</h5>
+              <h5>
+                <fbt desc="listingDetail.about-the-seller">
+                  About the Seller
+                </fbt>
+              </h5>
               <AboutParty id={listing.seller.id} />
             </div>
           </div>
@@ -125,7 +132,9 @@ class ListingDetail extends Component {
               availability={this.state.availability}
             />
             <div className="availability-help">
-              * Click and drag to select a date range
+              <fbt desc="listingDetail.clickAndDrag">
+                * Click and drag to select a date range
+              </fbt>
             </div>
           </>
         )}
@@ -134,11 +143,14 @@ class ListingDetail extends Component {
             <hr />
             <div className="timeZone">
               <div>
-                Time Zone: {listing.timeZone}
+                <fbt desc="listingDetail.timeZone">Time Zone:</fbt>{' '}
+                {listing.timeZone}
                 {isDifferentTimeZone && (
                   <div>
-                    NOTE: This is different from your time zone of{' '}
-                    {userTimeZone}
+                    <fbt desc="listingDetail.timeZoneWarning">
+                      NOTE: This is different from your time zone of
+                      <fbt:param name="userTimeZone">{userTimeZone}</fbt:param>
+                    </fbt>
                   </div>
                 )}
               </div>
@@ -150,7 +162,9 @@ class ListingDetail extends Component {
               availability={this.state.availabilityHourly}
             />
             <div className="availability-help">
-              * Click and drag to select a time range
+              <fbt desc="listingDetail.weekCalendarHelp">
+                * Click and drag to select a time range
+              </fbt>
             </div>
           </>
         )}

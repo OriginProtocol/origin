@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
-import store from 'utils/store'
+import { fbt } from 'fbt-runtime'
 
+import store from 'utils/store'
 import Link from 'components/Link'
 import EnableMessagingMutation from 'mutations/EnableMessaging'
 
@@ -30,7 +31,9 @@ const query = gql`
 const MessagingInitializing = () => (
   <div className="enable-messaging">
     <div className="messaging-logo" />
-    <div className="status">Origin Messaging</div>
+    <div className="status">
+      <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
+    </div>
     <div className="spinner" />
   </div>
 )
@@ -38,8 +41,9 @@ const MessagingInitializing = () => (
 const Onboard = withRouter(({ location }) => (
   <div className="message-modal">
     <div>
-      You&apos;ll need Get Started using Origin before you can send this user a
-      message
+      <fbt desc="EnableMessaging.modal">
+        Get Started using Origin before you can send this user a message
+      </fbt>
     </div>
     <div className="actions">
       <Link
@@ -72,10 +76,14 @@ const EnableMessaging = ({ next }) => (
       <div className="qm" />
       <div className="qm" />
     </div>
-    <div className="status">Origin Messaging</div>
+    <div className="status">
+      <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
+    </div>
     <div className="help">
-      Origin messaging will allow you to chat with other buyers and sellers on
-      our DApp.
+      <fbt desc="EnableMessaging.help">
+        Origin messaging will allow you to chat with other buyers and sellers on
+        our DApp.
+      </fbt>
     </div>
     <em>Metamask will ask you to sign 2 messages</em>
     <Mutation mutation={EnableMessagingMutation}>
@@ -86,7 +94,7 @@ const EnableMessaging = ({ next }) => (
             next()
             enableMessaging()
           }}
-          children="Enable Origin Messaging"
+          children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
         />
       )}
     </Mutation>
@@ -99,9 +107,16 @@ const SignMessage = ({ num }) => (
       <div className="qm" />
       <div className={`qm${num === 2 ? ' active' : ''}`} />
     </div>
-    <div className="status">{`Waiting for you to sign message #${num}`}</div>
+    <div className="status">
+      <fbt desc="EnabelMessaging.waitingForYouToSign">
+        Waiting for you to sign message #
+        <fbt:param name="num">{num}</fbt:param>
+      </fbt>
+    </div>
     <div className="help">
-      The Metamask icon is located on the top right of your browser tool bar.
+      <fbt desc="EnableMessaging.metamaskIcon">
+        The Metamask icon is located on the top right of your browser tool bar.
+      </fbt>
     </div>
     <div className="click-metamask-extension" />
   </div>
@@ -115,10 +130,16 @@ const MessagingEnabled = () => (
     </div>
     <div className="status">Messaging Enabled</div>
     <div className="help">
-      Congratulations! You can now message other users on Origin and stay up to
-      date with all your purchases and sales.
+      <fbt desc="EnableMessaging.congrats">
+        Congratulations! You can now message other users on Origin and stay up
+        to date with all your purchases and sales.
+      </fbt>
     </div>
-    <em>You’re done and can continue by pressing the button below.</em>
+    <em>
+      <fbt desc="EnableMessaging.done">
+        You’re done and can continue by pressing the button below.
+      </fbt>
+    </em>
   </div>
 )
 

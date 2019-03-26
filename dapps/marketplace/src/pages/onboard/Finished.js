@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 
@@ -7,30 +8,42 @@ const Finished = ({ linkPrefix, redirectto }) => {
 
   return (
     <div className="finished">
-      <h1>Congratulations</h1>
+      <h1>
+        <fbt desc="onboard.Finished.congrats">Congratulations</fbt>
+      </h1>
       <div className="help">
-        You’ve successfully activated your account. You’re now ready to continue
-        your journey in the Origin Marketplace.
+        <fbt desc="onboard.Finished.success">
+          You’ve successfully activated your account. You’re now ready to
+          continue your journey in the Origin Marketplace.
+        </fbt>
       </div>
       <div className="lists">
         <div className="list-box completed">
-          <b>You have now completed the following:</b>
-          <ul className="list-unstyled">
-            <li>Wallet Creation</li>
-            <li>Messaging Enabled</li>
-            <li>Desktop Notifications Enabled</li>
-          </ul>
+          <fbt desc="onboard.Finished.stepsCompleted">
+            <b>You have now completed the following:</b>
+            <ul className="list-unstyled">
+              <li>Wallet Creation</li>
+              <li>Messaging Enabled</li>
+              <li>Desktop Notifications Enabled</li>
+            </ul>
+          </fbt>
         </div>
         <div className="list-box remaining">
-          <b>Remaining steps:</b>
-          <ul className="list-unstyled">
-            <li>Fund your wallet</li>
-            <li>Complete your Profile</li>
-          </ul>
+          <fbt desc="onboard.Finished.remainingSepts">
+            <b>Remaining steps:</b>
+            <ul className="list-unstyled">
+              <li>Fund your wallet</li>
+              <li>Complete your Profile</li>
+            </ul>
+          </fbt>
         </div>
       </div>
 
-      <Link to={continueTo} className={`btn btn-primary`} children={'OK'} />
+      <Link
+        to={continueTo}
+        className={`btn btn-primary`}
+        children={fbt('OK', 'OK')}
+      />
     </div>
   )
 }

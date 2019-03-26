@@ -11,7 +11,7 @@ import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import Link from 'components/Link'
 
 import store from 'utils/store'
@@ -67,7 +67,7 @@ class Listings extends Component {
 
     return (
       <>
-        <PageTitle>Listings</PageTitle>
+        <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <Search
           value={this.state.search}
           onSearch={search => {
@@ -190,7 +190,9 @@ class Listings extends Component {
                               }
                             }}
                           >
-                            {loading ? 'Loading...' : 'Load more'}
+                            {loading
+                              ? fbt('Loading...', 'Loading...')
+                              : fbt('Load more', 'Load more')}
                           </button>
                         )}
                       </>
