@@ -95,11 +95,8 @@ class Availability extends Component {
             <div className="gray-box">
               <fbt desc="listing.create.fractional.calendar.help">
                 Click the calendar to enter pricing and availability
-                information.
-                <br />
-                <br />
-                To select multiple time slots, click the starting time slot and
-                drag to the ending one.
+                information. To select multiple time slots, click the starting
+                time slot and drag to the ending one.
               </fbt>
             </div>
           )}
@@ -176,9 +173,7 @@ class Availability extends Component {
                   onChange={() => this.setState({ customPrice: false })}
                 />
                 <div>
-                  <fbt desc="no">
-                    <fbt desc="no">No</fbt>
-                  </fbt>
+                  <fbt desc="no">No</fbt>
                 </div>
               </div>
               <div>
@@ -188,9 +183,7 @@ class Availability extends Component {
                   onChange={() => this.setState({ customPrice: true })}
                 />
                 <div>
-                  <fbt desc="yes">
-                    <fbt desc="yes">Yes</fbt>
-                  </fbt>
+                  <fbt desc="yes">Yes</fbt>
                 </div>
               </div>
             </div>
