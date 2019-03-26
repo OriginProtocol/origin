@@ -57,7 +57,7 @@ const AboutPayments = () => (
       </div>
       <div className="col-md-6 d-none d-md-block">
         <div className="video-placeholder text-center">
-          <img src="/images/jetsons.gif" />
+          <img src="images/jetsons.gif" />
         </div>
       </div>
     </div>

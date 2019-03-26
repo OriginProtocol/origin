@@ -40,7 +40,7 @@ const AboutTokens = () => (
       </div>
       <div className="col-md-6 d-none d-md-block">
         <div className="video-placeholder text-center">
-          <img src="/images/token-powered.jpg" style={{ width: '100%' }} />
+          <img src="images/token-powered.jpg" style={{ width: '100%' }} />
         </div>
       </div>
     </div>
