@@ -8,11 +8,13 @@ const Finished = ({ linkPrefix, redirectto }) => {
 
   return (
     <div className="finished">
-      <h1><fbt desc="onboard.Finished.congrats">Congratulations</fbt></h1>
+      <h1>
+        <fbt desc="onboard.Finished.congrats">Congratulations</fbt>
+      </h1>
       <div className="help">
         <fbt desc="onboard.Finished.success">
-          You’ve successfully activated your account. You’re now ready to continue
-          your journey in the Origin Marketplace.
+          You’ve successfully activated your account. You’re now ready to
+          continue your journey in the Origin Marketplace.
         </fbt>
       </div>
       <div className="lists">
@@ -37,7 +39,11 @@ const Finished = ({ linkPrefix, redirectto }) => {
         </div>
       </div>
 
-      <Link to={continueTo} className={`btn btn-primary`} children={fbt('OK', 'OK')} />
+      <Link
+        to={continueTo}
+        className={`btn btn-primary`}
+        children={fbt('OK', 'OK')}
+      />
     </div>
   )
 }

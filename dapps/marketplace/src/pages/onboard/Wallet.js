@@ -28,8 +28,8 @@ const OriginWallet = () => (
         </h4>
         <div className="description">
           <fbt desc="onboard.Wallet.description">
-            Origin’s Mobile Wallet will allow you to store crypto currency so you
-            can buy and sell on our DApp.
+            Origin’s Mobile Wallet will allow you to store crypto currency so
+            you can buy and sell on our DApp.
           </fbt>
         </div>
         <div className="note">
@@ -40,9 +40,7 @@ const OriginWallet = () => (
       </div>
     </div>
     <LinkMobileWallet className="btn btn-outline-primary">
-      <fbt desc="onboard.Wallet.connect">
-        Connect Origin Wallet
-      </fbt>
+      <fbt desc="onboard.Wallet.connect">Connect Origin Wallet</fbt>
     </LinkMobileWallet>
   </div>
 )
@@ -62,7 +60,9 @@ const MetaMask = ({ linkPrefix }) => (
         <div className="note">
           <fbt desc="onboard.Wallet.metamaskAvailable">
             Available for
-            <fbt:param name="browser">{isFirefox ? ' Firefox' : ' Google Chrome'}</fbt:param>
+            <fbt:param name="browser">
+              {isFirefox ? ' Firefox' : ' Google Chrome'}
+            </fbt:param>
           </fbt>
         </div>
       </div>
@@ -71,9 +71,7 @@ const MetaMask = ({ linkPrefix }) => (
       to={`${linkPrefix}/onboard/metamask`}
       className="btn btn-outline-primary"
     >
-      <fbt desc="onboard.Wallet.connectMetaMask">
-        Connect MetaMask
-      </fbt>
+      <fbt desc="onboard.Wallet.connectMetaMask">Connect MetaMask</fbt>
     </Link>
   </div>
 )
@@ -84,14 +82,22 @@ const Step1 = ({ listing, showoriginwallet, linkPrefix }) => {
   return (
     <>
       <div className="step">Step 1</div>
-      <h3><fbt desc="onboard.Wallet.connectCryptoWallet">Connect a Crypto Wallet</fbt></h3>
+      <h3>
+        <fbt desc="onboard.Wallet.connectCryptoWallet">
+          Connect a Crypto Wallet
+        </fbt>
+      </h3>
       <div className="row">
         <div className="col-md-8">
           <Steps steps={4} step={1} />
           <Query query={query} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return <div><fbt desc="onboard.Wallet.loading">Loading...</fbt></div>
+                return (
+                  <div>
+                    <fbt desc="onboard.Wallet.loading">Loading...</fbt>
+                  </div>
+                )
               } else if (error) {
                 return <QueryError query={query} />
               }

@@ -38,7 +38,9 @@ const EnableMessagingMutation = gql`
 const MessagingInitializing = () => (
   <div className="onboard-box">
     <div className="messaging-logo" />
-    <div className="status"><fbt desc="onboard.Messaging.originMessaging">Origin Messaging</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Messaging.originMessaging">Origin Messaging</fbt>
+    </div>
     <div className="spinner" />
   </div>
 )
@@ -46,7 +48,9 @@ const MessagingInitializing = () => (
 const MessagingSyncing = ({ pct }) => (
   <div className="onboard-box messaging-sync">
     <div className="messaging-logo" />
-    <div className="status"><fbt desc="onboard.Messaging.syncing">Origin Messaging Syncing</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Messaging.syncing">Origin Messaging Syncing</fbt>
+    </div>
     <div className="progress">
       <div className="progress-bar" style={{ width: pct }} />
     </div>
@@ -60,7 +64,10 @@ const EnableMessaging = ({ next }) => (
     <div className="connected">
       <span className="oval warn" />
       <span className="oval warn" />
-      <fbt desc="onboard.Messaging.zeroOfTwoSigned"> 0 of 2 MetaMask messages signed</fbt>
+      <fbt desc="onboard.Messaging.zeroOfTwoSigned">
+        {' '}
+        0 of 2 MetaMask messages signed
+      </fbt>
     </div>
 
     <div className="help mb">
@@ -92,15 +99,17 @@ const SignMessage = ({ num }) => (
     <MetaMaskAnimation light />
     <div className="status">
       <fbt desc="onboard.Messaging.waitingOnSigning">
-        Waiting for you to sign message number <fbt:param name="messageNumber">{num}</fbt:param>
+        Waiting for you to sign message number{' '}
+        <fbt:param name="messageNumber">{num}</fbt:param>
       </fbt>
     </div>
     <div className="connected">
       <span className={`oval ${num === 2 ? '' : 'warn'}`} />
       <span className={`oval warn`} />
-        <fbt desc="onboard.Messaging.signedNumMessages">
-          <fbt:param name="messageNumber">{num === 2 ? '1' : '0'}</fbt:param> of 2 MetaMask messages signed
-        </fbt>
+      <fbt desc="onboard.Messaging.signedNumMessages">
+        <fbt:param name="messageNumber">{num === 2 ? '1' : '0'}</fbt:param> of 2
+        MetaMask messages signed
+      </fbt>
     </div>
 
     <div className="help">
@@ -117,15 +126,21 @@ const MessagingEnabled = () => (
     <div className="messaging-logo">
       <div className="qm active" />
     </div>
-    <div className="status"><fbt desc="onboard.Messaging.enabled">Messaging Enabled</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Messaging.enabled">Messaging Enabled</fbt>
+    </div>
     <div className="connected">
       <span className="oval" />
-      <span className="oval" /><fbt desc="onboard.Messaging.TwoOfTwoSigned"> 2 of 2 MetaMask messages signed</fbt>
+      <span className="oval" />
+      <fbt desc="onboard.Messaging.TwoOfTwoSigned">
+        {' '}
+        2 of 2 MetaMask messages signed
+      </fbt>
     </div>
     <div className="help">
       <fbt desc="onboard.Messaging.congrats">
-          Congratulations! You can now message other users on Origin and stay up to
-          date with all your purchases and sales.
+        Congratulations! You can now message other users on Origin and stay up
+        to date with all your purchases and sales.
       </fbt>
     </div>
     <em>
@@ -146,9 +161,17 @@ class OnboardMessaging extends Component {
           if (networkStatus === 1) {
             return <MessagingInitializing />
           } else if (error) {
-            return <p className="p-3">fbt('Error', 'Error') :(</p>
+            return (
+              <p className="p-3">
+                <fbt desc="Error">Error</fbt>
+              </p>
+            )
           } else if (!data || !data.messaging) {
-            return <p className="p-3">fbt('No Web3', 'No Web3')</p>
+            return (
+              <p className="p-3">
+                <fbt desc="No Web3">No Web3</fbt>
+              </p>
+            )
           }
 
           let nextEnabled = false
@@ -199,7 +222,9 @@ const Messaging = ({ listing, linkPrefix }) => {
     <>
       <Header />
       <div className="step">Step 2</div>
-      <h3><fbt desc="onboard.Messaging.enableMessaging">Enable Messaging</fbt></h3>
+      <h3>
+        <fbt desc="onboard.Messaging.enableMessaging">Enable Messaging</fbt>
+      </h3>
       <div className="row">
         <div className="col-md-8">
           <Steps steps={4} step={2} />

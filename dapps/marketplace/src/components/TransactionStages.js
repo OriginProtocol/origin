@@ -40,9 +40,18 @@ const DisputeStages = [
 ]
 
 const CanceledStages = [
-  { title: fbt('Offer Placed', 'TransactionStages.offerPlaced'), event: 'createdEvent' },
-  { title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'), event: 'acceptedEvent' },
-  { title: fbt('Sale Completed', 'TransactionStages.saleCompleted'), event: 'finalizedEvent' }
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Sale Completed', 'TransactionStages.saleCompleted'),
+    event: 'finalizedEvent'
+  }
 ]
 
 const TransactionStages = ({ offer }) => {

@@ -44,14 +44,10 @@ const EnableNotifications = ({ next, skip }) => (
       </fbt>
     </em>
     <button className="btn btn-primary" onClick={() => next()}>
-      <fbt desc="onboard.Notifications.turnOn">
-        Turn on Notifications
-      </fbt>
+      <fbt desc="onboard.Notifications.turnOn">Turn on Notifications</fbt>
     </button>
     <button className="btn btn-link" onClick={() => skip()}>
-      <fbt desc="skip">
-        Skip for now
-      </fbt>
+      <fbt desc="skip">Skip for now</fbt>
     </button>
   </div>
 )
@@ -67,9 +63,7 @@ const Skipped = ({ next }) => (
       </fbt>
     </div>
     <button className="btn btn-primary mt-4" onClick={() => next()}>
-      <fbt desc="onboard.Notifications.turnOn">
-        Turn on Notifications
-      </fbt>
+      <fbt desc="onboard.Notifications.turnOn">Turn on Notifications</fbt>
     </button>
   </div>
 )
@@ -95,7 +89,11 @@ const Enabled = () => (
     <div className="notifications-logo">
       <div className="qm active" />
     </div>
-    <div className="status"><fbt desc="onboard.Notifications.notificationsEnabled">>Desktop Notifications Enabled</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Notifications.notificationsEnabled">
+        Desktop Notifications Enabled
+      </fbt>
+    </div>
     <div className="connected">
       <span className="oval" />
       <fbt desc="onboard.Notifications.areTurnedOn">
@@ -104,11 +102,15 @@ const Enabled = () => (
     </div>
     <div className="help">
       <fbt desc="onboard.Notifications.turnedOnHelp">
-        Great! It will be much easier for you to respond quickly to requests from
-        buyers and sellers.
+        Great! It will be much easier for you to respond quickly to requests
+        from buyers and sellers.
       </fbt>
     </div>
-    <em><fbt desc="onboard.Notifications.proceed">Click the continue button below to proceed.</fbt></em>
+    <em>
+      <fbt desc="onboard.Notifications.proceed">
+        Click the continue button below to proceed.
+      </fbt>
+    </em>
   </div>
 )
 
@@ -117,7 +119,11 @@ const Denied = () => (
     <div className="notifications-logo">
       <div className="qm error" />
     </div>
-    <div className="status"><fbt desc="onboard.Notifications.problem">Uh oh, there’s a problem...</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Notifications.problem">
+        Uh oh, there’s a problem...
+      </fbt>
+    </div>
     <div className="connected">
       <span className="oval danger" />
       <fbt desc="onboard.Notifications.areTurnedOff">
@@ -126,7 +132,8 @@ const Denied = () => (
     </div>
     <div className="help mb">
       <fbt desc="onboard.Notifications.youRejected">
-      You’ve rejected our request to turn on desktop notifications which we <b>highly recommend</b>.
+        You’ve rejected our request to turn on desktop notifications which we{' '}
+        <b>highly recommend</b>.
       </fbt>
     </div>
     <div className="help mb">
@@ -135,7 +142,11 @@ const Denied = () => (
         notifications for our DApp.
       </fbt>
     </div>
-    <button className="btn btn-link cancel big"><fbt desc="onboard.Notifications.visitBrowserSettings">Visit Browser Settings</fbt></button>
+    <button className="btn btn-link cancel big">
+      <fbt desc="onboard.Notifications.visitBrowserSettings">
+        Visit Browser Settings
+      </fbt>
+    </button>
   </div>
 )
 
@@ -164,18 +175,28 @@ class OnboardNotifications extends Component {
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
-                  return <div><fbt desc="onboard.Notifications.loading">Loading...</fbt></div>
+                  return (
+                    <div>
+                      <fbt desc="onboard.Notifications.loading">Loading...</fbt>
+                    </div>
+                  )
                 } else if (error) {
-                  return <p className="p-3"><fbt desc="error">Error</fbt> :(</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="error">Error</fbt> :(
+                    </p>
+                  )
                 } else if (!data || !data.web3) {
-                  return <p className="p-3"><fbt desc="onboard.Notifications.noWeb3">No Web3</fbt></p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="onboard.Notifications.noWeb3">No Web3</fbt>
+                    </p>
+                  )
                 }
 
                 let continueBtn = (
                   <Link className="btn btn-outline-primary " to={nextLink}>
-                    <fbt desc="continue">
-                      Continue
-                    </fbt>
+                    <fbt desc="continue">Continue</fbt>
                   </Link>
                 )
                 let cmp
@@ -239,9 +260,15 @@ class OnboardNotifications extends Component {
   }
 
   showNotification() {
-    new Notification(fbt('Sweet! Desktop notifications are on :)', 'onboard.Notifications.areOn'), {
-      icon: 'images/app-icon.png'
-    })
+    new Notification(
+      fbt(
+        'Sweet! Desktop notifications are on :)',
+        'onboard.Notifications.areOn'
+      ),
+      {
+        icon: 'images/app-icon.png'
+      }
+    )
   }
 }
 

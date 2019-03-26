@@ -82,7 +82,11 @@ class OnboardProfile extends Component {
       <>
         <Header />
         <div className="step">Step 4</div>
-        <h3><fbt desc="onboard.Profile.enterProfileInfo">Enter Your Profile Information</fbt></h3>
+        <h3>
+          <fbt desc="onboard.Profile.enterProfileInfo">
+            Enter Your Profile Information
+          </fbt>
+        </h3>
         <div className="row">
           <div className="col-md-8">
             <Steps steps={4} step={4} />
@@ -107,7 +111,11 @@ class OnboardProfile extends Component {
                     <div className="col-md-8">
                       <div className="row">
                         <div className="form-group col-md-6">
-                          <label><fbt desc="onboard.Profile.firstName">First Name</fbt></label>
+                          <label>
+                            <fbt desc="onboard.Profile.firstName">
+                              First Name
+                            </fbt>
+                          </label>
                           <input
                             type="text"
                             className="form-control"
@@ -116,7 +124,9 @@ class OnboardProfile extends Component {
                           {Feedback('firstName')}
                         </div>
                         <div className="form-group col-md-6">
-                          <label><fbt desc="onboard.Profile.lastName">Last Name</fbt></label>
+                          <label>
+                            <fbt desc="onboard.Profile.lastName">Last Name</fbt>
+                          </label>
                           <input
                             type="text"
                             className="form-control"
@@ -152,9 +162,9 @@ class OnboardProfile extends Component {
                   <div className="no-funds">
                     <fbt desc="onboard.Profile.noFunds">
                       <h5>You don&apos;t have funds</h5>
-                      You need to have funds in your wallet to create an identity.
-                      You can always do this later after you fund your wallet by
-                      going to your settings.
+                      You need to have funds in your wallet to create an
+                      identity. You can always do this later after you fund your
+                      wallet by going to your settings.
                     </fbt>
                   </div>
                 )}
@@ -179,7 +189,9 @@ class OnboardProfile extends Component {
               <Link
                 to={`${linkPrefix}/onboard/finished`}
                 className={`btn btn-outline-primary`}
-                children={hasBalance ? fbt('Done', 'Done') : fbt('Skip for now', 'Skip')}
+                children={
+                  hasBalance ? fbt('Done', 'Done') : fbt('Skip for now', 'Skip')
+                }
               />
             </div>
           </div>
@@ -239,7 +251,10 @@ class OnboardProfile extends Component {
     const newState = {}
 
     if (!this.state.firstName) {
-      newState.firstNameError = fbt('First Name is required', 'onboard.Profile.firstNameRequired')
+      newState.firstNameError = fbt(
+        'First Name is required',
+        'onboard.Profile.firstNameRequired'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

@@ -52,8 +52,14 @@ const NotInstalled = ({ onInstall, back }) => (
 const ConfirmInstalled = () => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status"><fbt desc="onboard.Metamask.installing">Installing MetaMask...</fbt></div>
-    <div className="help mb"><fbt desc="onboard.Metamask.click">Please click below once MetaMask is installed</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Metamask.installing">Installing MetaMask...</fbt>
+    </div>
+    <div className="help mb">
+      <fbt desc="onboard.Metamask.click">
+        Please click below once MetaMask is installed
+      </fbt>
+    </div>
     <button
       className="btn btn-outline-primary"
       onClick={() => window.location.reload()}
@@ -66,7 +72,11 @@ const ConfirmInstalled = () => (
 const AwaitingLogin = ({ back }) => (
   <div className="onboard-box">
     <MetaMaskAnimation light />
-    <div className="status"><fbt desc="onboard.Metamask.waitingForYou">Waiting for you to login to MetaMask</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Metamask.waitingForYou">
+        Waiting for you to login to MetaMask
+      </fbt>
+    </div>
     <div className="help">
       <fbt desc="onboard.Metamask.help">
         The MetaMask icon is located on the top right of your browser tool bar.
@@ -95,11 +105,13 @@ class AwaitingApproval extends Component {
       return (
         <div className="onboard-box">
           <div className="metamask-logo" />
-          <div className="status"><fbt desc="onboard.Metamask.oops">Oops, you denied permission</fbt></div>
+          <div className="status">
+            <fbt desc="onboard.Metamask.oops">Oops, you denied permission</fbt>
+          </div>
           <div className="help">
             <fbt desc="onboard.Metamask.oopsHelp">
-              You must grant Origin permission to access your MetaMask account so
-              you can buy and sell on our DApp.
+              You must grant Origin permission to access your MetaMask account
+              so you can buy and sell on our DApp.
             </fbt>
           </div>
           <button
@@ -122,11 +134,15 @@ class AwaitingApproval extends Component {
     return (
       <div className="onboard-box">
         <MetaMaskAnimation light />
-        <div className="status"><fbt desc="onboard.Metamask.waitingForYou">Waiting for you to grant permission</fbt></div>
+        <div className="status">
+          <fbt desc="onboard.Metamask.waitingForYou">
+            Waiting for you to grant permission
+          </fbt>
+        </div>
         <div className="help">
           <fbt desc="onboard.Metamask.waitingForYouHelp">
-            Please grant Origin permission to access your MetaMask account so you
-            can buy and sell on our DApp.
+            Please grant Origin permission to access your MetaMask account so
+            you can buy and sell on our DApp.
           </fbt>
         </div>
         <Link to={back} className="cancel">
@@ -140,14 +156,18 @@ class AwaitingApproval extends Component {
 const IncorrectNetwork = ({ networkName, connectTo }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status"><fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt>
+    </div>
     <div className="connected">
       <span className="oval warn" />
       {networkName}
     </div>
     <div className="help mb">
       <fbt desc="onboard.Metamask.switchNetwork">
-        Metamask is connected, please switch to <fbt:param name="connectTo">${connectTo}</fbt:param> in order to transact on Origin.
+        Metamask is connected, please switch to{' '}
+        <fbt:param name="connectTo">${connectTo}</fbt:param> in order to
+        transact on Origin.
       </fbt>
     </div>
   </div>
@@ -156,7 +176,9 @@ const IncorrectNetwork = ({ networkName, connectTo }) => (
 const Connected = ({ networkName }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status"><fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt></div>
+    <div className="status">
+      <fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt>
+    </div>
     <div className="connected">
       <span className="oval" />
       {networkName}
