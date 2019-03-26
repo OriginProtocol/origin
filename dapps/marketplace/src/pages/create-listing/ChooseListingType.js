@@ -46,7 +46,9 @@ class ChooseListingType extends Component {
           {!active ? null : (
             <div className="sub-cat">
               <select {...input('subCategory')} ref={r => (this.catRef = r)}>
-                <option value="">Select</option>
+                <option value="">
+                  <fbt desc="chooselistingtype.select">Select</fbt>
+                </option>
                 {Categories[id].map(([id, title]) => (
                   <option key={id} value={id}>
                     {title}
@@ -64,13 +66,25 @@ class ChooseListingType extends Component {
       <div className="row">
         <div className="col-md-8">
           <div className="create-listing-choose-listingtype">
-            {!isEdit ? null : <h2>Let’s update your listing</h2>}
+            {!isEdit ? null : (
+              <h2>
+                <fbt desc="chooselistingtype.letsupdate">
+                  Let’s update your listing
+                </fbt>
+              </h2>
+            )}
             <div className="wrap">
               <div className="step" />
               <div className="step-description">
                 {isEdit
-                  ? `Update listing type`
-                  : `What type of listing do you want to create?`}
+                  ? fbt(
+                      `Update listing type`,
+                      `chooselistingtype.update-listing-type`
+                    )
+                  : fbt(
+                      `What type of listing do you want to create?`,
+                      `chooselistingtype.create-listing-type`
+                    )}
               </div>
               <Steps steps={1} step={0} />
               <form
@@ -88,7 +102,7 @@ class ChooseListingType extends Component {
                     className={`btn btn-primary${
                       this.state.subCategory ? '' : ' disabled'
                     }`}
-                    children="Continue"
+                    children={fbt('Continue', 'Continue')}
                   />
                 </div>
               </form>
