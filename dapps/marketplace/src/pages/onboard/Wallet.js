@@ -1,6 +1,7 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
@@ -22,7 +23,7 @@ const OriginWallet = () => (
     <div className="top">
       <div className="image" />
       <div>
-        <h4>Origin Mobile Wallet</h4>
+        <h4><fbt desc="Wallet.originMobile">Origin Mobile Wallet</fbt></h4>
         <div className="description">
           Origin’s Mobile Wallet will allow you to store crypto currency so you
           can buy and sell on our DApp.
