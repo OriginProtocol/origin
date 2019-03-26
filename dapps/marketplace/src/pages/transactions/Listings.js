@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -31,25 +32,25 @@ class Listings extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle>My Listings</PageTitle>
+        <PageTitle><fbt desc="Listings.myListings">My Listings</fbt></PageTitle>
 
-        <h1>My Listings</h1>
+        <h1><fbt desc="Listings.myListings">My Listings</fbt></h1>
         <div className="row">
           <div className="col-md-3">
             <ul className="nav nav-pills">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-listings" exact>
-                  All
+                  <fbt desc="Listings.all">All</fbt>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-listings/active">
-                  Active
+                  <fbt desc="Listings.active">Active</fbt>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-listings/inactive">
-                  Inactive
+                  <fbt desc="Listings.inactive">Inactive</fbt>
                 </NavLink>
               </li>
             </ul>
@@ -67,7 +68,7 @@ class Listings extends Component {
                 } else if (error) {
                   return <QueryError error={error} query={query} vars={vars} />
                 } else if (!data || !data.marketplace) {
-                  return <p className="p-3">No marketplace contract?</p>
+                  return <p className="p-3"><fbt desc="Listings.noContract">No marketplace contract?</fbt></p>
                 }
 
                 const {
@@ -105,7 +106,7 @@ class Listings extends Component {
                             </div>
                             <div className="date">
                               {listing.createdEvent &&
-                                `Listed on ${dayjs
+                                  fbt('Listed on', 'Listings.listedOn') + ` ${dayjs
                                   .unix(listing.createdEvent.timestamp)
                                   .format('MMMM D, YYYY')}`}
                             </div>
@@ -130,7 +131,7 @@ class Listings extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? 'Loading...' : 'Load more'
+                            networkStatus === 3 ? fbt('Loading...', 'Listings.loading') : fbt('Load more', 'Listings.loadMore')
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>

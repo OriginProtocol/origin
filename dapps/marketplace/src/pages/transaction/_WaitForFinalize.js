@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Modal from 'components/Modal'
+import { fbt } from 'fbt-runtime'
 
 import DisputeOffer from './mutations/DisputeOffer'
 import EventTick from 'components/EventTick'
@@ -15,15 +16,19 @@ class WaitForFinalize extends Component {
           <h4>Next Step:</h4>
           <div className="next-step">Wait for buyer to confirm receipt</div>
           <div className="help">
-            Make sure you fulfill the order and wait for the buyer’s
-            confirmation
+            <fbt desc="WaitForFinalize.makeSureYouFullfill">
+              Make sure you fulfill the order and wait for the buyer’s
+              confirmation
+            </fbt>
           </div>
           <button
             className="btn btn-link"
             onClick={() => this.setState({ open: true })}
             children=""
           >
-            View Fulfillment Checklist &rsaquo;
+            <fbt desc="WaitForFinalize.viewFullfillment">
+              View Fulfillment Checklist
+            </fbt> &rsaquo;
           </button>
 
           <DisputeOffer
@@ -31,16 +36,22 @@ class WaitForFinalize extends Component {
             party="seller"
             className="btn btn-link withdraw mt-3"
           >
-            Report a Problem
+            <fbt desc="WaitForFinalize.reportProblme">
+              Report a Problem
+            </fbt>
           </DisputeOffer>
         </div>
 
         <div className="stages">
           <EventTick className="active bg" event={offer.createdEvent}>
-            Offer Placed
+            <fbt desc="WaitForFinalize.offerPlace">
+              Offer Placed
+            </fbt>
           </EventTick>
           <EventTick className="active bgl" event={offer.acceptedEvent}>
-            Offer Accepted
+            <fbt desc="WaitForFinalize.offerAccepted">
+              Offer Accepted
+            </fbt>
           </EventTick>
           <EventTick>Sale Completed</EventTick>
         </div>
@@ -52,13 +63,15 @@ class WaitForFinalize extends Component {
           >
             <div className="d-flex flex-column content">
               <div className="checklist">
-                <h2>Fulfillment Checklist</h2>
+                <h2><fbt desc="WaitForFinalize.fuulfillmentChecklist">Fulfillment Checklist</fbt></h2>
                 <div>
                   <span className="table-cell">
                     <span className="step">1</span>
                   </span>
                   <span className="text">
-                    Verify the variants with the seller
+                    <fbt desc="WaitForFinalize.verifyVariants">
+                      Verify the variants with the seller
+                    </fbt>
                   </span>
                 </div>
                 <div>
@@ -66,7 +79,9 @@ class WaitForFinalize extends Component {
                     <span className="step">2</span>
                   </span>
                   <span className="text">
-                    Package the product and send it out
+                   <fbt desc="WaitForFinalize.packageProduct">
+                      Package the product and send it out
+                    </fbt>
                   </span>
                 </div>
                 <div>
@@ -74,7 +89,9 @@ class WaitForFinalize extends Component {
                     <span className="step">3</span>
                   </span>
                   <span className="text">
-                    Notify buyer and provide tracking number
+                    <fbt desc="WaitForFinalize.notifyBuyer">
+                      Notify buyer and provide tracking number
+                    </fbt>
                   </span>
                 </div>
                 <div>
@@ -82,14 +99,20 @@ class WaitForFinalize extends Component {
                     <span className="step">4</span>
                   </span>
                   <span className="text">
-                    Wait for buyer to receive product
+                    <fbt desc="WaitForFinalize.waitForBuyer">
+                      Wait for buyer to receive product
+                    </fbt>
                   </span>
                 </div>
                 <div>
                   <span className="table-cell">
                     <span className="step">5</span>
                   </span>
-                  <span className="text">Withdraw your funds</span>
+                  <span className="text">
+                    <fbt desc="WaitForFinalize.withdrawYourFuns">
+                     Withdraw your funds
+                    </fbt>
+                  </span>
                 </div>
               </div>
               <button

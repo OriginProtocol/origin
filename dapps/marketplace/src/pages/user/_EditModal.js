@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -37,7 +38,7 @@ class EditProfileModal extends Component {
           <div className="row">
             <div className="col-12">
               <div className="form-group">
-                <label>First Name</label>
+                <label><fbt desc="EditModal.firstName">First Name</fbt></label>
                 <input
                   type="text"
                   maxLength="40"
@@ -47,7 +48,7 @@ class EditProfileModal extends Component {
                 {Feedback('firstName')}
               </div>
               <div className="form-group">
-                <label>Last Name</label>
+                <label><fbt desc="EditModal.lastName">Last Name</fbt></label>
                 <input type="text" maxLength="40" {...input('lastName')} />
                 {Feedback('lastName')}
               </div>
@@ -63,8 +64,10 @@ class EditProfileModal extends Component {
             {Feedback('description')}
           </div>
           <div className="help">
-            This information will be published on the blockchain and will be
-            visible to everyone.
+            <fbt desc="EditModal.infoWillBePublished">
+              This information will be published on the blockchain and will be
+              visible to everyone.
+            </fbt>
           </div>
 
           <div className="actions d-flex">
@@ -95,7 +98,7 @@ class EditProfileModal extends Component {
     const newState = {}
 
     if (!this.state.firstName) {
-      newState.firstNameError = 'First Name is required'
+      newState.firstNameError = fbt('First Name is required', 'EditModel.firstNameRequired')
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

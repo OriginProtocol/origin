@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import IdentityQuery from 'queries/Identity'
 import Reviews from 'components/Reviews'
@@ -30,17 +31,19 @@ class User extends Component {
                     </div>
                     {noVerifications ? null : (
                       <div className="verified-info">
-                        <h5>Verified Info</h5>
+                        <h5>
+                          <fbt desc="User.verifiedInfo">Verified Info</fbt>
+                        </h5>
                         {profile.phoneVerified && (
                           <div>
                             <div className="attestation phone" />
-                            Phone
+                            <fbt desc="User.phone">Phone></fbt>
                           </div>
                         )}
                         {profile.emailVerified && (
                           <div>
                             <div className="attestation email" />
-                            Email
+                            <fbt desc="User.email">Email</fbt>
                           </div>
                         )}
                         {profile.facebookVerified && (
@@ -72,10 +75,10 @@ class User extends Component {
                   </div>
                   <div className="col-lg-10 col-md-9">
                     <h1 className="mb-0">
-                      {profile.fullName || 'Unnamed User'}
+                      {profile.fullName || fbt('Unnamed User', 'User.unamedUser')}
                     </h1>
                     <div className="description">
-                      {profile.description || <i>No description</i>}
+                      {profile.description || fbt('No description', 'User.noDescription')}
                     </div>
 
                     <Reviews id={id} hideWhenZero />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import AcceptOffer from './mutations/AcceptOffer'
 import RejectOffer from './mutations/RejectOffer'
@@ -70,14 +71,14 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
           className="btn btn-outline-danger"
           refetch={refetch}
         >
-          Reject Offer
+          <fbt desc="Progress.rejectOffer">Reject Offer</fbt>
         </RejectOffer>
         <AcceptOffer
           offer={offer}
           className="btn btn-primary"
           refetch={refetch}
         >
-          Accept Offer
+            <fbt desc="Progress.acceptOffer">Accept Offer</fbt>
         </AcceptOffer>
       </div>
     </div>
@@ -94,16 +95,18 @@ class ReviewAndFinalize extends Component {
         <div className="top">
           <h4>Next Step:</h4>
           <div className="next-step">
-            Leave a review and finalize the transaction
+            <fbt desc="Progress.leaveREview">
+              Leave a review and finalize the transaction
+            </fbt>
           </div>
           <div className="help">Click the appropriate button</div>
           <div className="review">
-            <div>How would you rate your experience?</div>
+            <div><fbt desc="Progress.rateYourExperience">How would you rate your experience?</fbt></div>
             <StarRating
               active={this.state.rating}
               onChange={rating => this.setState({ rating })}
             />
-            <div>Anything you&apos;d like to comment on?</div>
+            <div><fbt desc="Progress.anythingComment">Anything you&apos;d like to comment on?</fbt></div>
             <textarea
               className="form-control"
               value={this.state.review}
@@ -118,13 +121,13 @@ class ReviewAndFinalize extends Component {
               refetch={this.props.refetch}
               className="btn btn-primary"
             >
-              Finalize
+              <fbt desc="Progress.finalize">Finalize</fbt>
             </FinalizeOffer>
             <DisputeOffer
               offer={this.props.offer}
               className="btn btn-link withdraw mt-3"
             >
-              Report a Problem
+              <fbt desc="Progress.reportProblem">Report a Problem</fbt>
             </DisputeOffer>
           </div>
         </div>
@@ -137,11 +140,11 @@ class ReviewAndFinalize extends Component {
 const MessageSeller = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Next Step</h4>
-      <div className="next-step">Give your shipping address to seller</div>
-      <div className="help">Click the button to open messaging</div>
+      <h4><fbt desc="Progress.nextSteo">Next Step</fbt></h4>
+      <div className="next-step"><fbt desc="Progress.giveShipping">Give your shipping address to seller</fbt></div>
+      <div className="help"><fbt desc="Progress.clickButton">Click the button to open messaging</fbt></div>
       <SendMessage to={offer.listing.seller.id} className="btn btn-link">
-        Message Seller &rsaquo;
+        <fbt desc="Progress.messageSeller">Message Seller</fbt> &rsaquo;
       </SendMessage>
       <WithdrawOffer offer={offer} refetch={refetch} />
     </div>
@@ -152,9 +155,9 @@ const MessageSeller = ({ offer, refetch, loading }) => (
 const WaitForSeller = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Next Step</h4>
+      <h4><fbt desc="Progress.nextStep">Next Step</fbt></h4>
       <div className="next-step">Wait for seller</div>
-      <div className="help">The seller will review your booking</div>
+      <div className="help"><fbt desc="Progress.sellerWillReview">The seller will review your booking</fbt></div>
       <WithdrawOffer offer={offer} refetch={refetch} />
     </div>
     <Stages offer={offer} />
@@ -164,11 +167,11 @@ const WaitForSeller = ({ offer, refetch, loading }) => (
 const OfferWithdrawn = ({ offer, party, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Offer Withdrawn</h4>
+      <h4><fbt desc="Progress.offerWithdrawn">Offer Withdrawn</fbt></h4>
       <div className="help mb-0">
         {party === 'seller'
-          ? 'The buyer withdrew their offer'
-          : 'You withdrew your offer'}
+          ? fbt('The buyer withdrew their offer', 'Progress.buyerWithdrew')
+          : fbt('You withdrew your offer', 'Progress.youWithdrew')}
       </div>
     </div>
     <Stages offer={offer} />
@@ -178,11 +181,11 @@ const OfferWithdrawn = ({ offer, party, loading }) => (
 const OfferRejected = ({ offer, party, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Offer Rejected</h4>
+      <h4><fbt desc="Progress.offerRejected">Offer Rejected</fbt></h4>
       <div className="help mb-0">
         {party === 'seller'
-          ? 'You rejected this offer'
-          : 'Your offer was rejected by the seller'}
+          ? fbt('You rejected this offer', 'Progress.youReject')
+          : fbt('Your offer was rejected by the seller', 'Progress.offerWasRejected')}
       </div>
     </div>
     <Stages offer={offer} />
@@ -192,9 +195,9 @@ const OfferRejected = ({ offer, party, loading }) => (
 const Disputed = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Offer Disputed</h4>
+      <h4><fbt desc="Progress.offerDisputed">Offer Disputed</fbt></h4>
       <div className="help mb-0">
-        Wait to be contacted by an Origin team member
+        <fbt desc="Progress.waitToBeContacted">Wait to be contacted by an Origin team member</fbt>
       </div>
     </div>
     <Stages offer={offer} />
@@ -204,8 +207,8 @@ const Disputed = ({ offer, loading }) => (
 const DisputeResolved = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Dispute Resolved</h4>
-      <div className="help mb-0">Origin have resolved this dispute</div>
+      <h4><fbt desc="Progress.disputeResolved">Dispute Resolved</fbt></h4>
+      <div className="help mb-0"><fbt desc="Progress.originResolved">Origin has resolved this dispute</fbt></div>
     </div>
     <Stages offer={offer} />
   </div>
@@ -214,10 +217,12 @@ const DisputeResolved = ({ offer, loading }) => (
 const Finalized = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Transaction Finalized</h4>
+      <h4><fbt desc="Progress.transactionFinalized">Transaction Finalized</fbt></h4>
       <div className="help mb-0">
-        This transaction has been successfully finalized and funds have been
-        released to the seller.
+        <fbt desc="Progress.transactionSuccess">
+          This transaction has been successfully finalized and funds have been
+          released to the seller.
+        </fbt>
       </div>
     </div>
     <Stages offer={offer} />
