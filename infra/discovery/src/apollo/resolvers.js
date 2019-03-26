@@ -2,16 +2,6 @@ const GraphQLJSON = require('graphql-type-json')
 const listingMetadata = require('./listing-metadata')
 const search = require('../lib/search')
 
-/**
- * Gets information on a user based on her wallet address.
- * @param {string} walletAddress
- */
-function userResolver(walletAddress) {
-  // TODO: re-enable returning full user info once user indexing
-  // is fully functional (see notes in rules.js).
-  return { walletAddress: walletAddress }
-}
-
 // Resolvers define the technique for fetching the types in the schema.
 const resolvers = {
   JSON: GraphQLJSON,
