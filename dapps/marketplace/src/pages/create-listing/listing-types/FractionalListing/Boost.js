@@ -52,10 +52,7 @@ const BoostLevels = [
     26,
     'med',
     fbt('Medium (recommended)', 'create.boost.Medium'),
-    fbt(
-      'Your listing will get average visibility.',
-      'create.boost.average.'
-    )
+    fbt('Your listing will get average visibility.', 'create.boost.average.')
   ],
   [
     1,
@@ -70,10 +67,7 @@ const BoostLevels = [
     0,
     'none',
     fbt('None', 'create.boost.None'),
-    fbt(
-      'Your listing will get very low visibility.',
-      'create.boost.very-low'
-    )
+    fbt('Your listing will get very low visibility.', 'create.boost.very-low')
   ]
 ]
 

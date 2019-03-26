@@ -49,9 +49,9 @@ class Review extends Component {
               <div className="col-9">{listing.description}</div>
             </div>
             <div className="row">
-              <div className="col-3 label"><fbt desc="lisitng.review.time-zone">
-                Time Zone
-              </fbt></div>
+              <div className="col-3 label">
+                <fbt desc="lisitng.review.time-zone">Time Zone</fbt>
+              </div>
               <div className="col-9">{listing.timeZone}</div>
             </div>
             <div className="row">
@@ -98,9 +98,9 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label"><fbt desc="create.hourly.availability">
-                Availability
-              </fbt></div>
+              <div className="col-3 label">
+                <fbt desc="create.hourly.availability">Availability</fbt>
+              </div>
               <div className="col-9">
                 <WeekCalendar
                   interactive={false}
@@ -122,9 +122,7 @@ class Review extends Component {
 
           <div className="actions">
             <Link className="btn btn-outline-primary" to={this.props.prev}>
-              <fbt desc="back">
-                Back
-              </fbt>
+              <fbt desc="back">Back</fbt>
             </Link>
             {this.props.listing.id ? (
               <UpdateListing

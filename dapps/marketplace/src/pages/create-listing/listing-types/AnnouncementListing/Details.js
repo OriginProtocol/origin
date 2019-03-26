@@ -40,9 +40,9 @@ class Details extends Component {
                   <fbt:param name="step">{this.props.step}</fbt:param>
                 </fbt>
               </div>
-              <div className="step-description"><fbt desc="create.details.title">
-                Provide listing details
-              </fbt></div>
+              <div className="step-description">
+                <fbt desc="create.details.title">Provide listing details</fbt>
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -135,21 +135,39 @@ class Details extends Component {
     const newState = {}
 
     if (!this.state.title) {
-      newState.titleError = fbt('Title is required', 'create.error.Title is required')
+      newState.titleError = fbt(
+        'Title is required',
+        'create.error.Title is required'
+      )
     } else if (this.state.title.length < 3) {
-      newState.titleError = fbt('Title is too short', 'create.error.Title is too short')
+      newState.titleError = fbt(
+        'Title is too short',
+        'create.error.Title is too short'
+      )
     } else if (this.state.title.length > 100) {
       // Limit from origin-validator/src/schemas/listing.json
-      newState.titleError = fbt('Title is too long', 'create.error.Title is too long')
+      newState.titleError = fbt(
+        'Title is too long',
+        'create.error.Title is too long'
+      )
     }
 
     if (!this.state.description) {
-      newState.descriptionError = fbt('Description is required', 'create.error.Description is required')
+      newState.descriptionError = fbt(
+        'Description is required',
+        'create.error.Description is required'
+      )
     } else if (this.state.description.length < 10) {
-      newState.descriptionError = fbt('Description is too short', 'create.error.Description is too short')
+      newState.descriptionError = fbt(
+        'Description is too short',
+        'create.error.Description is too short'
+      )
     } else if (this.state.description.length > 1024) {
       // Limit from origin-validator/src/schemas/listing.json
-      newState.descriptionError = fbt('Description is too long', 'create.error.Description is too long')
+      newState.descriptionError = fbt(
+        'Description is too long',
+        'create.error.Description is too long'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

@@ -40,7 +40,9 @@ class Availability extends Component {
               <div className="step">
                 <fbt desc="create.details.step">
                   Step
-                  <fbt:param name="create.details.fractional.step">{this.props.step}</fbt:param>
+                  <fbt:param name="create.details.fractional.step">
+                    {this.props.step}
+                  </fbt:param>
                 </fbt>
               </div>
               <div className="step-description">
@@ -164,9 +166,9 @@ class Availability extends Component {
         {!this.state.available ? null : (
           <div className="form-group">
             <div className="inline-label mb-2">
-              <label><fbt desc="listing.create.customPricing">
-                Custom Pricing
-              </fbt></label>
+              <label>
+                <fbt desc="listing.create.customPricing">Custom Pricing</fbt>
+              </label>
               <div>
                 <input
                   type="radio"
@@ -174,9 +176,9 @@ class Availability extends Component {
                   onChange={() => this.setState({ customPrice: false })}
                 />
                 <div>
-                  <fbt desc="no"><fbt desc="no">
-                    No
-                  </fbt></fbt>
+                  <fbt desc="no">
+                    <fbt desc="no">No</fbt>
+                  </fbt>
                 </div>
               </div>
               <div>
@@ -186,9 +188,9 @@ class Availability extends Component {
                   onChange={() => this.setState({ customPrice: true })}
                 />
                 <div>
-                  <fbt desc="yes"><fbt desc="yes">
-                    Yes
-                  </fbt></fbt>
+                  <fbt desc="yes">
+                    <fbt desc="yes">Yes</fbt>
+                  </fbt>
                 </div>
               </div>
             </div>

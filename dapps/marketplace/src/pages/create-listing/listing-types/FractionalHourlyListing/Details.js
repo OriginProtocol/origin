@@ -295,9 +295,9 @@ class Details extends Component {
                 {/* END Hourly specific code */}
 
                 <div className="form-group">
-                  <label><fbt desc="create.select-photos">
-                    Select photos
-                  </fbt></label>
+                  <label>
+                    <fbt desc="create.select-photos">Select photos</fbt>
+                  </label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
