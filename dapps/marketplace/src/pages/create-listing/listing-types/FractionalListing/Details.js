@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 import omit from 'lodash/omit'
 
 import Steps from 'components/Steps'
@@ -35,8 +36,13 @@ class Details extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-2">
             <div className="wrap">
-              <div className="step">{`Step ${this.props.step}`}</div>
-              <div className="step-description">Provide listing details</div>
+              <div className="step">
+                <fbt desc="create.step">
+                  Step
+                  <fbt:param name="step">{this.props.step}</fbt:param>
+                </fbt>
+              </div>
+                <fbt desc="create.details.title">Provide listing details</fbt>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -47,20 +53,20 @@ class Details extends Component {
               >
                 {this.state.valid !== false ? null : (
                   <div className="alert alert-danger">
-                    Please fix the errors below...
+                    <fbt desc="fix errors">Please fix the errors below...</fbt>
                   </div>
                 )}
                 <div className="form-group">
-                  <label>Title</label>
+                    <fbt desc="create.Title">Title</fbt>
                   <input {...input('title')} ref={r => (this.titleInput = r)} />
                   {Feedback('title')}
                 </div>
                 <div className="form-group">
                   <label className="mb-0">Description</label>
-                  <div className="help-text">
-                    Make sure to include any product variant details here. Learn
-                    more
-                  </div>
+                    <fbt desc="create.description.hourly">
+                      Make sure to include special conditions of your rental
+                      here.
+                    </fbt>
                   <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
@@ -69,7 +75,9 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>
-                    Default Weekday Pricing (Sunday - Thursday nights)
+                    <fbt desc="create.fractional.weekday-price">
+                      Default Weekday Pricing (Sunday - Thursday nights)
+                    </fbt>
                   </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -91,12 +99,16 @@ class Details extends Component {
                   </div>
                   {Feedback('price')}
                   <div className="help-text price">
-                    Price is always in ETH, USD is an estimate.
+                    <fbt desc="create.price.help">
+                      Price is always in ETH, USD is an estimate.
+                    </fbt>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>
-                    Default Weekend Pricing (Friday &amp; Saturday nights)
+                    <fbt desc="create.fractional.weekend-price">
+                      Default Weekend Pricing (Friday &amp; Saturday nights)
+                    </fbt>
                   </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -122,24 +134,30 @@ class Details extends Component {
                 {/* END Homeshare specific code */}
 
                 <div className="form-group">
-                  <label>Select photos</label>
+                  <label>
+                    <fbt desc="create.Select photos">Select photos</fbt>
+                  </label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
                   >
-                    <div className="add-photos">Select photos</div>
+                    <div className="add-photos">
+                      <fbt desc="create Select photos help">Select photos</fbt>
+                    </div>
                   </ImagePicker>
                   <ul className="help-text photo-help list-unstyled">
-                    <li>
-                      Hold down &apos;command&apos; (⌘) to select multiple
-                      images.
-                    </li>
-                    <li>Maximum 10 images per listing.</li>
-                    <li>
-                      First image will be featured - drag and drop images to
-                      reorder.
-                    </li>
-                    <li>Recommended aspect ratio is 4:3</li>
+                    <fbt desc="create.listing.photos.help">
+                      <li>
+                        Hold down &apos;command&apos; (⌘) to select multiple
+                        images.
+                      </li>
+                      <li>Maximum 10 images per listing.</li>
+                      <li>
+                        First image will be featured - drag and drop images to
+                        reorder.
+                      </li>
+                      <li>Recommended aspect ratio is 4:3</li>
+                    </fbt>
                   </ul>
                 </div>
 
@@ -148,10 +166,10 @@ class Details extends Component {
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
-                    Back
+                    <fbt desc="back">Back</fbt>
                   </Link>
                   <button type="submit" className="btn btn-primary">
-                    Continue
+                    <fbt desc="continue">Continue</fbt>
                   </button>
                 </div>
               </form>

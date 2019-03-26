@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import withTokenBalance from 'hoc/withTokenBalance'
 

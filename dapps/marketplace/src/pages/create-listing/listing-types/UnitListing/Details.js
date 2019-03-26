@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 import omit from 'lodash/omit'
 
 import Steps from 'components/Steps'
@@ -36,7 +37,12 @@ class Details extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-2">
             <div className="wrap">
-              <div className="step">{`Step ${this.props.step}`}</div>
+              <div className="step">
+                <fbt desc="create.step">
+                  Step
+                  <fbt:param name="step">{this.props.step}</fbt:param>
+                </fbt>
+              </div>
               <div className="step-description">Provide listing details</div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
