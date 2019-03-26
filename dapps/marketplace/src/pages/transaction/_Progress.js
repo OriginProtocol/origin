@@ -78,7 +78,7 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
           className="btn btn-primary"
           refetch={refetch}
         >
-            <fbt desc="Progress.acceptOffer">Accept Offer</fbt>
+          <fbt desc="Progress.acceptOffer">Accept Offer</fbt>
         </AcceptOffer>
       </div>
     </div>
@@ -101,12 +101,20 @@ class ReviewAndFinalize extends Component {
           </div>
           <div className="help">Click the appropriate button</div>
           <div className="review">
-            <div><fbt desc="Progress.rateYourExperience">How would you rate your experience?</fbt></div>
+            <div>
+              <fbt desc="Progress.rateYourExperience">
+                How would you rate your experience?
+              </fbt>
+            </div>
             <StarRating
               active={this.state.rating}
               onChange={rating => this.setState({ rating })}
             />
-            <div><fbt desc="Progress.anythingComment">Anything you&apos;d like to comment on?</fbt></div>
+            <div>
+              <fbt desc="Progress.anythingComment">
+                Anything you&apos;d like to comment on?
+              </fbt>
+            </div>
             <textarea
               className="form-control"
               value={this.state.review}
@@ -140,9 +148,19 @@ class ReviewAndFinalize extends Component {
 const MessageSeller = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.nextSteo">Next Step</fbt></h4>
-      <div className="next-step"><fbt desc="Progress.giveShipping">Give your shipping address to seller</fbt></div>
-      <div className="help"><fbt desc="Progress.clickButton">Click the button to open messaging</fbt></div>
+      <h4>
+        <fbt desc="Progress.nextSteo">Next Step</fbt>
+      </h4>
+      <div className="next-step">
+        <fbt desc="Progress.giveShipping">
+          Give your shipping address to seller
+        </fbt>
+      </div>
+      <div className="help">
+        <fbt desc="Progress.clickButton">
+          Click the button to open messaging
+        </fbt>
+      </div>
       <SendMessage to={offer.listing.seller.id} className="btn btn-link">
         <fbt desc="Progress.messageSeller">Message Seller</fbt> &rsaquo;
       </SendMessage>
@@ -155,9 +173,15 @@ const MessageSeller = ({ offer, refetch, loading }) => (
 const WaitForSeller = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.nextStep">Next Step</fbt></h4>
+      <h4>
+        <fbt desc="Progress.nextStep">Next Step</fbt>
+      </h4>
       <div className="next-step">Wait for seller</div>
-      <div className="help"><fbt desc="Progress.sellerWillReview">The seller will review your booking</fbt></div>
+      <div className="help">
+        <fbt desc="Progress.sellerWillReview">
+          The seller will review your booking
+        </fbt>
+      </div>
       <WithdrawOffer offer={offer} refetch={refetch} />
     </div>
     <Stages offer={offer} />
@@ -167,7 +191,9 @@ const WaitForSeller = ({ offer, refetch, loading }) => (
 const OfferWithdrawn = ({ offer, party, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.offerWithdrawn">Offer Withdrawn</fbt></h4>
+      <h4>
+        <fbt desc="Progress.offerWithdrawn">Offer Withdrawn</fbt>
+      </h4>
       <div className="help mb-0">
         {party === 'seller'
           ? fbt('The buyer withdrew their offer', 'Progress.buyerWithdrew')
@@ -181,11 +207,16 @@ const OfferWithdrawn = ({ offer, party, loading }) => (
 const OfferRejected = ({ offer, party, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.offerRejected">Offer Rejected</fbt></h4>
+      <h4>
+        <fbt desc="Progress.offerRejected">Offer Rejected</fbt>
+      </h4>
       <div className="help mb-0">
         {party === 'seller'
           ? fbt('You rejected this offer', 'Progress.youReject')
-          : fbt('Your offer was rejected by the seller', 'Progress.offerWasRejected')}
+          : fbt(
+              'Your offer was rejected by the seller',
+              'Progress.offerWasRejected'
+            )}
       </div>
     </div>
     <Stages offer={offer} />
@@ -195,9 +226,13 @@ const OfferRejected = ({ offer, party, loading }) => (
 const Disputed = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.offerDisputed">Offer Disputed</fbt></h4>
+      <h4>
+        <fbt desc="Progress.offerDisputed">Offer Disputed</fbt>
+      </h4>
       <div className="help mb-0">
-        <fbt desc="Progress.waitToBeContacted">Wait to be contacted by an Origin team member</fbt>
+        <fbt desc="Progress.waitToBeContacted">
+          Wait to be contacted by an Origin team member
+        </fbt>
       </div>
     </div>
     <Stages offer={offer} />
@@ -207,8 +242,14 @@ const Disputed = ({ offer, loading }) => (
 const DisputeResolved = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.disputeResolved">Dispute Resolved</fbt></h4>
-      <div className="help mb-0"><fbt desc="Progress.originResolved">Origin has resolved this dispute</fbt></div>
+      <h4>
+        <fbt desc="Progress.disputeResolved">Dispute Resolved</fbt>
+      </h4>
+      <div className="help mb-0">
+        <fbt desc="Progress.originResolved">
+          Origin has resolved this dispute
+        </fbt>
+      </div>
     </div>
     <Stages offer={offer} />
   </div>
@@ -217,7 +258,9 @@ const DisputeResolved = ({ offer, loading }) => (
 const Finalized = ({ offer, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4><fbt desc="Progress.transactionFinalized">Transaction Finalized</fbt></h4>
+      <h4>
+        <fbt desc="Progress.transactionFinalized">Transaction Finalized</fbt>
+      </h4>
       <div className="help mb-0">
         <fbt desc="Progress.transactionSuccess">
           This transaction has been successfully finalized and funds have been

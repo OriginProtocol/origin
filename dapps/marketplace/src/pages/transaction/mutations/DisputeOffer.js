@@ -73,11 +73,13 @@ class DisputeOffer extends Component {
   renderIsProblem() {
     return (
       <>
-        <h2><fbt desc="DisputeOffer.isThereProblem">Is there a problem?</fbt></h2>
+        <h2>
+          <fbt desc="DisputeOffer.isThereProblem">Is there a problem?</fbt>
+        </h2>
         <fbt desc="DisputeOffer.areYouSure">
-          Are you sure you want to report a problem? This will start the conflict
-          resolution process. Someone from Origin will be notified, and your chat
-          history will be made public to an arbitrator.
+          Are you sure you want to report a problem? This will start the
+          conflict resolution process. Someone from Origin will be notified, and
+          your chat history will be made public to an arbitrator.
         </fbt>
         <div className="actions">
           <button
@@ -156,8 +158,8 @@ class DisputeOffer extends Component {
           <>
             <h5>
               <fbt desc="DisputeOffer.youveEscalated">
-                You’ve escalated this issue to an Origin team member. You will be
-                contacted once a desicion is made.
+                You’ve escalated this issue to an Origin team member. You will
+                be contacted once a desicion is made.
               </fbt>
             </h5>
             <div className="actions">

@@ -75,10 +75,12 @@ class User extends Component {
                   </div>
                   <div className="col-lg-10 col-md-9">
                     <h1 className="mb-0">
-                      {profile.fullName || fbt('Unnamed User', 'User.unamedUser')}
+                      {profile.fullName ||
+                        fbt('Unnamed User', 'User.unamedUser')}
                     </h1>
                     <div className="description">
-                      {profile.description || fbt('No description', 'User.noDescription')}
+                      {profile.description ||
+                        fbt('No description', 'User.noDescription')}
                     </div>
 
                     <Reviews id={id} hideWhenZero />

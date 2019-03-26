@@ -38,7 +38,9 @@ class EditProfileModal extends Component {
           <div className="row">
             <div className="col-12">
               <div className="form-group">
-                <label><fbt desc="EditModal.firstName">First Name</fbt></label>
+                <label>
+                  <fbt desc="EditModal.firstName">First Name</fbt>
+                </label>
                 <input
                   type="text"
                   maxLength="40"
@@ -48,7 +50,9 @@ class EditProfileModal extends Component {
                 {Feedback('firstName')}
               </div>
               <div className="form-group">
-                <label><fbt desc="EditModal.lastName">Last Name</fbt></label>
+                <label>
+                  <fbt desc="EditModal.lastName">Last Name</fbt>
+                </label>
                 <input type="text" maxLength="40" {...input('lastName')} />
                 {Feedback('lastName')}
               </div>
@@ -98,7 +102,10 @@ class EditProfileModal extends Component {
     const newState = {}
 
     if (!this.state.firstName) {
-      newState.firstNameError = fbt('First Name is required', 'EditModel.firstNameRequired')
+      newState.firstNameError = fbt(
+        'First Name is required',
+        'EditModel.firstNameRequired'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

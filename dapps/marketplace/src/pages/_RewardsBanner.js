@@ -20,10 +20,10 @@ class RewardsBanner extends Component {
                   </strong>
                   <br />
                   <span className="d-none lg d-lg-block">
-                  <fbt desc="RewardBanner.earnFreeTokens">
-                    Participate in our campaigns and complete tasks on our DApp
-                    to earn Origin Tokens.
-                  </fbt>
+                    <fbt desc="RewardBanner.earnFreeTokens">
+                      Participate in our campaigns and complete tasks on our
+                      DApp to earn Origin Tokens.
+                    </fbt>
                   </span>
                 </div>
                 <div className="float-right">

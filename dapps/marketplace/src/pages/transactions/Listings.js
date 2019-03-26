@@ -32,9 +32,13 @@ class Listings extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle><fbt desc="Listings.myListings">My Listings</fbt></PageTitle>
+        <PageTitle>
+          <fbt desc="Listings.myListings">My Listings</fbt>
+        </PageTitle>
 
-        <h1><fbt desc="Listings.myListings">My Listings</fbt></h1>
+        <h1>
+          <fbt desc="Listings.myListings">My Listings</fbt>
+        </h1>
         <div className="row">
           <div className="col-md-3">
             <ul className="nav nav-pills">
@@ -68,7 +72,13 @@ class Listings extends Component {
                 } else if (error) {
                   return <QueryError error={error} query={query} vars={vars} />
                 } else if (!data || !data.marketplace) {
-                  return <p className="p-3"><fbt desc="Listings.noContract">No marketplace contract?</fbt></p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="Listings.noContract">
+                        No marketplace contract?
+                      </fbt>
+                    </p>
+                  )
                 }
 
                 const {
@@ -106,9 +116,10 @@ class Listings extends Component {
                             </div>
                             <div className="date">
                               {listing.createdEvent &&
-                                  fbt('Listed on', 'Listings.listedOn') + ` ${dayjs
-                                  .unix(listing.createdEvent.timestamp)
-                                  .format('MMMM D, YYYY')}`}
+                                fbt('Listed on', 'Listings.listedOn') +
+                                  ` ${dayjs
+                                    .unix(listing.createdEvent.timestamp)
+                                    .format('MMMM D, YYYY')}`}
                             </div>
                             <div className="price">
                               <TokenPrice {...listing.price} />
@@ -131,7 +142,9 @@ class Listings extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? fbt('Loading...', 'Listings.loading') : fbt('Load more', 'Listings.loadMore')
+                            networkStatus === 3
+                              ? fbt('Loading...', 'Listings.loading')
+                              : fbt('Load more', 'Listings.loadMore')
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>

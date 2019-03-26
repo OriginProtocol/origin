@@ -78,7 +78,9 @@ class AcceptOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div><fbt desc="AcceptOffer.success">Success!</fbt></div>
+            <div>
+              <fbt desc="AcceptOffer.success">Success!</fbt>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"

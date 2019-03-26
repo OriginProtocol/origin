@@ -35,8 +35,12 @@ class TxHistory extends Component {
       <table className="tx-history table table-sm">
         <thead>
           <tr>
-            <th><fbt desc="History.txName">TxName</fbt></th>
-            <th><fbt desc="History.date">Date</fbt></th>
+            <th>
+              <fbt desc="History.txName">TxName</fbt>
+            </th>
+            <th>
+              <fbt desc="History.date">Date</fbt>
+            </th>
             <th className="expand" />
           </tr>
         </thead>
@@ -79,7 +83,8 @@ class TxHistory extends Component {
                             />
                           </div>
                           <div>
-                            <fbt desc="History.txHash">Tx Hash</fbt>: <TxHash hash={item.id} />
+                            <fbt desc="History.txHash">Tx Hash</fbt>:{' '}
+                            <TxHash hash={item.id} />
                           </div>
                         </td>
                       </tr>

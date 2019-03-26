@@ -26,16 +26,26 @@ const Transaction = props => {
   return (
     <div className="container transaction-detail">
       <PageTitle>Offer {offerId}</PageTitle>
-      <Query query={query} variables={vars}
-  var notifyOnNetworkStatusChange
-  notifyOnNetworkStatusChange={true}>
+      <Query
+        query={query}
+        variables={vars}
+        var
+        notifyOnNetworkStatusChange
+        notifyOnNetworkStatusChange={true}
+      >
         {({ networkStatus, error, data, refetch }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (networkStatus === 1) {
             return <LoadingSpinner />
           } else if (!data || !data.marketplace) {
-            return <div><fbt desc="Transaction.noContract">No marketplace contract?</fbt></div>
+            return (
+              <div>
+                <fbt desc="Transaction.noContract">
+                  No marketplace contract?
+                </fbt>
+              </div>
+            )
           }
 
           const offer = data.marketplace.offer
@@ -59,19 +69,25 @@ const Transaction = props => {
           )
           const History = (
             <>
-              <h3><fbt desc="Transaction.history">Transaction History</fbt></h3>
+              <h3>
+                <fbt desc="Transaction.history">Transaction History</fbt>
+              </h3>
               <TxHistory offer={offer} />
             </>
           )
           const Listing = (
             <>
-              <h3><fbt desc="Transaction.listingDetails">Listing Details</fbt></h3>
+              <h3>
+                <fbt desc="Transaction.listingDetails">Listing Details</fbt>
+              </h3>
               <ListingDetail listing={offer.listing} />
             </>
           )
           const Offer = (
             <>
-              <h3><fbt desc="Transaction.offerDetails">Offer Details</fbt></h3>
+              <h3>
+                <fbt desc="Transaction.offerDetails">Offer Details</fbt>
+              </h3>
               <OfferDetails offer={offer} />
             </>
           )
@@ -79,7 +95,12 @@ const Transaction = props => {
             <>
               <h3 className="mt-4">
                 <fbt desc="Transaction.about">
-                  About the <fbt:param name="sellerOrBuyer">{isSeller ? fbt('Buyer', 'Transaction.seller') : fbt('Seller', 'Transaction.seller')}</fbt:param>.
+                  About the{' '}
+                  <fbt:param name="sellerOrBuyer">
+                    {isSeller
+                      ? fbt('Buyer', 'Transaction.seller')
+                      : fbt('Seller', 'Transaction.seller')}
+                  </fbt:param>.
                 </fbt>
               </h3>
               <AboutParty id={party} />
@@ -90,9 +111,14 @@ const Transaction = props => {
             <>
               <PageTitle>{offer.listing.title}</PageTitle>
               {isSeller ? (
-                <Link to="/my-sales">&lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt></Link>
+                <Link to="/my-sales">
+                  &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
+                </Link>
               ) : (
-                <Link to="/my-purchases">&lsaquo; <fbt desc="Transaction.myPurchases">My Purchases</fbt></Link>
+                <Link to="/my-purchases">
+                  &lsaquo;{' '}
+                  <fbt desc="Transaction.myPurchases">My Purchases</fbt>
+                </Link>
               )}
               <h2>{offer.listing.title}</h2>
               {isMobile ? (

@@ -74,7 +74,9 @@ class AddData extends Component {
         {({ client }) => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div><fbt desc="AddData.success">Success!</fbt></div>
+            <div>
+              <fbt desc="AddData.success">Success!</fbt>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"
