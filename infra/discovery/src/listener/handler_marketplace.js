@@ -37,7 +37,7 @@ function isOfferEvent(eventName) {
  *    format is {networkId}-000-{listingId}-{blockNumber}
  */
 function removeListingIdBlockNumber(listingId) {
-  return listingId.split('-').splice(0, 3).join('-')
+  return listingId.split('-').splice(0, 2).join('-')
 }
 
 class MarketplaceEventHandler {
