@@ -241,7 +241,7 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className="btn btn-outline-light mr-2"
               onClick={() => this.handleCloseModal()}
-              children="Cancel"
+              children={fbt("Cancel", "Cancel")}
             />
             <button
               className={`btn btn-lg ml-2 ${
@@ -321,7 +321,7 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className="btn btn-primary btn-rounded btn-lg"
               onClick={() => this.handleEligibilityContinue()}
-              children="Continue"
+              children={fbt("Continue", "Continue")}
             />
           )}
         </div>

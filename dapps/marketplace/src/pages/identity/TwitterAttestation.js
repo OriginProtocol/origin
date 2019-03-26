@@ -66,7 +66,7 @@ class TwitterAttestation extends Component {
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt("Cancel", "Cancel")}
           />
         </div>
       </>
@@ -133,7 +133,7 @@ class TwitterAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt("Continue", "Continue")}
           />
         </div>
       </>

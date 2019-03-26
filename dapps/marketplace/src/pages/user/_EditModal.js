@@ -89,7 +89,7 @@ class EditProfileModal extends Component {
             />
             <button
               className="btn btn-link"
-              children="Cancel"
+              children={fbt("Cancel", "Cancel")}
               onClick={() => this.setState({ shouldClose: true })}
             />
           </div>

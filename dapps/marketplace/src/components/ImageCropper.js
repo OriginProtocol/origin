@@ -103,7 +103,7 @@ class ImageCropper extends Component {
                 <button
                   className="btn btn-outline-light"
                   onClick={() => this.setState({ shouldClose: true })}
-                  children="Cancel"
+                  children={fbt("Cancel", "Cancel")}
                 />
                 <button
                   className="btn btn-outline-light"

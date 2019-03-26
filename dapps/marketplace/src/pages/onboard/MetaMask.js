@@ -44,7 +44,7 @@ const NotInstalled = ({ onInstall, back }) => (
       onClick={() => onInstall()}
       children="Install MetaMask"
     />
-    <Link to={back} className="cancel" children="Cancel" />
+    <Link to={back} className="cancel" children={fbt("Cancel", "Cancel")} />
   </div>
 )
 
