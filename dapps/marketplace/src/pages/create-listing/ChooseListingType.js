@@ -32,7 +32,7 @@ class ChooseListingType extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const Category = (categoryId, ignore) => {
+    const Category = categoryId => {
       const active = this.state.category === categoryId
       const cls = categoryId.split('.')[1]
       return (
@@ -56,7 +56,7 @@ class ChooseListingType extends Component {
                 <option value="">
                   <fbt desc="chooselistingtype.select">Select</fbt>
                 </option>
-                {Categories[categoryId].map(([subcategoryId, ignore]) => (
+                {Categories[categoryId].map(([subcategoryId]) => (
                   <option key={subcategoryId} value={subcategoryId}>
                     <fbt desc="category">
                       {/* Localized category name */}
@@ -106,9 +106,7 @@ class ChooseListingType extends Component {
                   this.validate()
                 }}
               >
-                {Categories.root.map(([schema, title]) =>
-                  Category(schema, title)
-                )}
+                {Categories.root.map(([schema]) => Category(schema))}
                 <div className="actions">
                   <button
                     type="submit"
