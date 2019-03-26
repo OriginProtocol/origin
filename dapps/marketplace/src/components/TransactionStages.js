@@ -78,7 +78,10 @@ const TransactionStages = ({ offer }) => {
 
     // HACK (franck): EventTick fails if title is of type FbtResult.
     // As a workaround we evaluate the FbtResult function here.
-    const title = stage.ifSeller && isSeller ? stage.ifSeller.toString() : stage.title.toString()
+    const title =
+      stage.ifSeller && isSeller
+        ? stage.ifSeller.toString()
+        : stage.title.toString()
 
     return (
       <EventTick key={idx} className={className.join(' ')} event={event}>
