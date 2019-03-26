@@ -48,14 +48,20 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
       </div>
       <div className="choose-dates form-control">
         <Tooltip
-          tooltip="Scroll down for availability calendar"
+          tooltip={fbt(
+            'Scroll down for availability calendar',
+            'Scroll down for availability calendar'
+          )}
           placement="top"
         >
           <div>{startDateDisplay}</div>
         </Tooltip>
         <div className="arr" />
         <Tooltip
-          tooltip="Scroll down for availability calendar"
+          tooltip={fbt(
+            'Scroll down for availability calendar',
+            'Scroll down for availability calendar'
+          )}
           placement="top"
         >
           <div>{endDateDisplay}</div>
@@ -84,7 +90,7 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
         startDate={startDate}
         endDate={endDate}
         className={`btn btn-primary${available ? '' : ' disabled'}`}
-        children="Book"
+        children={fbt('Book', 'Book')}
       />
     </div>
   )

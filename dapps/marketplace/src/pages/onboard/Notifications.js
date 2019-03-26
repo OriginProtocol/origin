@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
@@ -171,7 +172,7 @@ class OnboardNotifications extends Component {
                       href="#"
                       onClick={e => e.preventDefault()}
                       className="btn btn-outline-primary disabled"
-                      children={fbt("Continue", "Continue")}
+                      children={fbt('Continue', 'Continue')}
                     />
                   )
                 }

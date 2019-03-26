@@ -85,12 +85,12 @@ class DisputeOffer extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ sureShouldClose: true })}
-            children="Oops, no wait..."
+            children={fbt('Oops, no wait...', 'Oops, no wait...')}
           />
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ describe: true })}
-            children="Yes, please"
+            children={fbt('Yes, please', 'Yes, please')}
           />
         </div>
       </>
@@ -112,12 +112,12 @@ class DisputeOffer extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ sureShouldClose: true })}
-            children={fbt("Cancel", "Cancel")}
+            children={fbt('Cancel', 'Cancel')}
           />
           <button
             className="btn btn-outline-light"
             onClick={() => this.onClick(disputeOffer)}
-            children="Submit"
+            children={fbt('Submit', 'Submit')}
           />
         </div>
       </>
@@ -167,7 +167,7 @@ class DisputeOffer extends Component {
                 href="#"
                 className="btn btn-outline-light"
                 onClick={() => this.setState({ waitForShouldClose: true })}
-                children="OK"
+                children={fbt('OK', 'OK')}
               />
             </div>
           </>

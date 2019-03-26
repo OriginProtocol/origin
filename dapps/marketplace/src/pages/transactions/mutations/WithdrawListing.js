@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import WithdrawListingMutation from 'mutations/WithdrawListing'
 
@@ -30,7 +31,7 @@ class WithdrawListing extends Component {
             <a
               href="#"
               className="text-danger"
-              children="Close Listing"
+              children={fbt('Close Listing', 'Close Listing')}
               onClick={e => {
                 e.preventDefault()
                 this.setState({ sure: true })
@@ -49,12 +50,12 @@ class WithdrawListing extends Component {
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.setState({ sureShouldClose: true })}
-                    children={fbt("Cancel", "Cancel")}
+                    children={fbt('Cancel', 'Cancel')}
                   />
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.onClick(withdrawListing)}
-                    children="Withdraw"
+                    children={fbt('Withdraw', 'Withdraw')}
                   />
                 </div>
               </Modal>
@@ -117,7 +118,7 @@ class WithdrawListing extends Component {
               href="#"
               className="btn btn-outline-light"
               onClick={() => this.setState({ waitForShouldClose: true })}
-              children="OK"
+              children={fbt('OK', 'OK')}
             />
           </div>
         )}

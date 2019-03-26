@@ -77,7 +77,7 @@ class EditProfileModal extends Component {
           <div className="actions d-flex">
             <button
               className="btn btn-outline-light"
-              children="OK"
+              children={fbt('OK', 'OK')}
               onClick={() => {
                 if (this.validate()) {
                   this.props.onChange(
@@ -89,7 +89,7 @@ class EditProfileModal extends Component {
             />
             <button
               className="btn btn-link"
-              children={fbt("Cancel", "Cancel")}
+              children={fbt('Cancel', 'Cancel')}
               onClick={() => this.setState({ shouldClose: true })}
             />
           </div>

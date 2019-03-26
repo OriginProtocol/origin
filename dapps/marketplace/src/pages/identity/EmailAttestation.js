@@ -108,12 +108,16 @@ class EmailAttestation extends Component {
               <button
                 className="btn btn-outline-light"
                 type="submit"
-                children={this.state.loading ? fbt('Loading...', 'Loading...') : fbt('Continue', 'Continue')}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children={fbt("Cancel", "Cancel")}
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -176,12 +180,16 @@ class EmailAttestation extends Component {
               <button
                 type="submit"
                 className="btn btn-outline-light"
-                children={this.state.loading ? fbt('Loading...', 'Loading...') : fbt('Continue', 'Continue')}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children={fbt("Cancel", "Cancel")}
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -208,7 +216,7 @@ class EmailAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children={fbt("Continue", "Continue")}
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

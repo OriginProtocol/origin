@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -66,7 +67,7 @@ class TwitterAttestation extends Component {
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children={fbt("Cancel", "Cancel")}
+            children={fbt('Cancel', 'Cancel')}
           />
         </div>
       </>
@@ -133,7 +134,7 @@ class TwitterAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children={fbt("Continue", "Continue")}
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

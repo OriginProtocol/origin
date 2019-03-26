@@ -103,7 +103,7 @@ export default class MobileLinkerCode extends Component {
                 <button
                   className="btn btn-outline-light"
                   onClick={() => this.setState({ shouldClose: true })}
-                  children={fbt("Cancel", "Cancel")}
+                  children={fbt('Cancel', 'Cancel')}
                 />
               </div>
             </Modal>

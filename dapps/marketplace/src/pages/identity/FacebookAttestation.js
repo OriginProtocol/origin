@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -70,7 +71,7 @@ class FacebookAttestation extends Component {
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children={fbt("Cancel", "Cancel")}
+            children={fbt('Cancel', 'Cancel')}
           />
         </div>
       </>
@@ -136,7 +137,7 @@ class FacebookAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children={fbt("Continue", "Continue")}
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

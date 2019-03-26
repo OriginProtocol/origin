@@ -123,14 +123,14 @@ class Review extends Component {
                 tokenBalance={this.props.tokenBalance}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
-                children="Done"
+                children={fbt('Done', 'Done')}
               />
             ) : (
               <CreateListing
                 listing={listing}
                 tokenBalance={this.props.tokenBalance}
                 className="btn btn-primary"
-                children="Done"
+                children={fbt('Done', 'Done')}
               />
             )}
           </div>

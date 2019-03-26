@@ -31,7 +31,7 @@ class BetaModal extends Component {
               <Link
                 to="/profile"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="identity"
+                children={fbt('identity', 'identity')}
               />
               <fbt desc="BetaModal.knowWhouYouAre">
                 so other buyers and sellers know who you are.
@@ -42,7 +42,7 @@ class BetaModal extends Component {
               <Link
                 to="/messages"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="Origin Messaging"
+                children={fbt('Origin Messaging', 'Origin Messaging')}
               />
               <fbt desc="BetaModal.soYouCanCommunicate">
                 so you can communicate with other users. It&apos;s free.
@@ -64,7 +64,7 @@ class BetaModal extends Component {
               onClick={() => {
                 this.setState({ shouldClose: true })
               }}
-              children="I got it."
+              children={fbt('I got it.', 'I got it.')}
             />
           </div>
         </div>

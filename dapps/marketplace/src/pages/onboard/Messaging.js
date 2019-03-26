@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Steps from 'components/Steps'
@@ -72,7 +73,7 @@ const EnableMessaging = ({ next }) => (
             next()
             enableMessaging()
           }}
-          children="Enable Origin Messaging"
+          children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
         />
       )}
     </Mutation>

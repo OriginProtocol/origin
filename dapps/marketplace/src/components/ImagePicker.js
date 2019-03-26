@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Tooltip from 'components/Tooltip'
 import ImageCropper from 'components/ImageCropperModal'
@@ -159,7 +160,11 @@ class ImagePicker extends Component {
         <div className="img" style={{ backgroundImage: `url(${image.src})` }} />
         <div className="info">
           {/*image.size*/}
-          <Tooltip tooltip="Crop" placement="top" delayShow={500}>
+          <Tooltip
+            tooltip={fbt('Crop', 'Crop')}
+            placement="top"
+            delayShow={500}
+          >
             <a
               href="#"
               className="crop"
@@ -169,7 +174,11 @@ class ImagePicker extends Component {
               }}
             />
           </Tooltip>
-          <Tooltip tooltip="Remove" placement="top" delayShow={500}>
+          <Tooltip
+            tooltip={fbt('Remove', 'Remove')}
+            placement="top"
+            delayShow={500}
+          >
             <a
               href="#"
               onClick={e => {

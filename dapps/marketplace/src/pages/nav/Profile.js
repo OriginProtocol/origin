@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Mutation, Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
 import ProfileQuery from 'queries/Profile'
@@ -100,7 +101,7 @@ const ProfileDropdown = ({ data, onClose }) => {
                 unlinkMutation()
               }}
               href="#"
-              children="Unlink Mobile"
+              children={fbt('Unlink Mobile', 'Unlink Mobile')}
             />
           )}
           <Link onClick={() => onClose()} to="/profile">

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import ImageCropper from 'components/ImageCropper'
 import Steps from 'components/Steps'
@@ -168,7 +169,7 @@ class OnboardProfile extends Component {
                   ])}
                   attestations={attestations}
                   validate={() => this.validate()}
-                  children="Publish"
+                  children={fbt('Publish', 'Publish')}
                 />
               )}
             </div>

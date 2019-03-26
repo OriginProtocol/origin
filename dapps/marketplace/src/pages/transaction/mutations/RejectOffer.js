@@ -55,12 +55,12 @@ class RejectOffer extends Component {
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.setState({ sureShouldClose: true })}
-                    children={fbt("Cancel", "Cancel")}
+                    children={fbt('Cancel', 'Cancel')}
                   />
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.onClick(withdrawOffer)}
-                    children="Reject"
+                    children={fbt('Reject', 'Reject')}
                   />
                 </div>
               </Modal>
@@ -129,7 +129,7 @@ class RejectOffer extends Component {
               <button
                 className="btn btn-outline-light"
                 onClick={() => this.setState({ waitForShouldClose: true })}
-                children="OK"
+                children={fbt('OK', 'OK')}
               />
             </div>
           </div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { fbt } from 'fbt-runtime'
 
 import Steps from 'components/Steps'
 import Link from 'components/Link'
@@ -42,9 +43,9 @@ const NotInstalled = ({ onInstall, back }) => (
       target="blank"
       className="btn btn-outline-primary"
       onClick={() => onInstall()}
-      children="Install MetaMask"
+      children={fbt('Install MetaMask', 'Install MetaMask')}
     />
-    <Link to={back} className="cancel" children={fbt("Cancel", "Cancel")} />
+    <Link to={back} className="cancel" children={fbt('Cancel', 'Cancel')} />
   </div>
 )
 

@@ -89,7 +89,7 @@ class FinalizeOffer extends Component {
               href="#"
               className="btn btn-outline-light"
               onClick={() => this.setState({ waitForShouldClose: true })}
-              children="OK"
+              children={fbt('OK', 'OK')}
             />
           </div>
         )}

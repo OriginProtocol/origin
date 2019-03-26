@@ -31,7 +31,7 @@ class WithdrawOffer extends Component {
             <button
               className="btn btn-link withdraw"
               onClick={() => this.setState({ sure: true })}
-              children="Withdraw Offer"
+              children={fbt('Withdraw Offer', 'Withdraw Offer')}
             />
             {!this.state.sure ? null : (
               <Modal
@@ -51,12 +51,12 @@ class WithdrawOffer extends Component {
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.setState({ sureShouldClose: true })}
-                    children={fbt("Cancel", "Cancel")}
+                    children={fbt('Cancel', 'Cancel')}
                   />
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.onClick(withdrawOffer)}
-                    children="Withdraw"
+                    children={fbt('Withdraw', 'Withdraw')}
                   />
                 </div>
               </Modal>
@@ -120,7 +120,7 @@ class WithdrawOffer extends Component {
               href="#"
               className="btn btn-outline-light"
               onClick={() => this.setState({ waitForShouldClose: true })}
-              children="OK"
+              children={fbt('OK', 'OK')}
             />
           </div>
         )}
