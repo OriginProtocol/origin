@@ -20,7 +20,6 @@ class IdentityEventHandler {
     this.graphqlClient = graphqlClient
   }
 
-
   /* Get deteails about an account from @origin/graphql
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query

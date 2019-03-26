@@ -54,7 +54,7 @@ describe('Listener Handlers', () => {
     }
   }
 
- class MockHandler {
+  class MockHandler {
     constructor() {
       this.process = sinon.fake.returns({})
       this.webhookEnabled = sinon.fake.returns(false)
@@ -65,12 +65,24 @@ describe('Listener Handlers', () => {
   }
 
   before(() => {
-    sinon.stub(IdentityEventHandler.prototype, '_getIdentityDetails').returns(mockIdentity)
-    sinon.stub(MarketplaceEventHandler.prototype, 'discordWebhookEnabled').returns(false)
-    sinon.stub(MarketplaceEventHandler.prototype, 'emailWebhookEnabled').returns(false)
-    sinon.stub(MarketplaceEventHandler.prototype, 'gcloudPubsubEnabled').returns(false)
-    sinon.stub(MarketplaceEventHandler.prototype, 'webhookEnabled').returns(false)
-    sinon.stub(MarketplaceEventHandler.prototype, '_getListingDetails').returns({ listing: mockListing })
+    sinon
+      .stub(IdentityEventHandler.prototype, '_getIdentityDetails')
+      .returns(mockIdentity)
+    sinon
+      .stub(MarketplaceEventHandler.prototype, 'discordWebhookEnabled')
+      .returns(false)
+    sinon
+      .stub(MarketplaceEventHandler.prototype, 'emailWebhookEnabled')
+      .returns(false)
+    sinon
+      .stub(MarketplaceEventHandler.prototype, 'gcloudPubsubEnabled')
+      .returns(false)
+    sinon
+      .stub(MarketplaceEventHandler.prototype, 'webhookEnabled')
+      .returns(false)
+    sinon
+      .stub(MarketplaceEventHandler.prototype, '_getListingDetails')
+      .returns({ listing: mockListing })
     sinon.stub(MarketplaceEventHandler.prototype, '_getOfferDetails').returns({
       offer: mockOffer,
       listing: mockListing
