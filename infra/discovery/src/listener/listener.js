@@ -18,7 +18,6 @@ try {
 
 const express = require('express')
 const promBundle = require('express-prom-bundle')
-const Web3 = require('web3')
 
 const esmImport = require('esm')(module)
 const graphqlClient = esmImport('@origin/graphql').default
@@ -27,8 +26,6 @@ const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
-
-const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
 
 setNetwork(process.env.NETWORK || 'docker')
 
@@ -93,104 +90,25 @@ function buildSignatureToRules(config) {
 class Context {
   constructor() {
     this.config = undefined
-    this.web3 = undefined
     this.signatureToRules = undefined
-    this.networkId = undefined
   }
 
   async init(config, errorCounter) {
     this.config = config
     this.errorCounter = errorCounter
-
-    const web3Provider = new Web3.providers.HttpProvider(
-      contractsContext.config.provider
-    )
-    this.web3 = new Web3(web3Provider)
-    this.networkId = await this.web3.eth.net.getId()
-
     this.signatureToRules = buildSignatureToRules(config, this.web3)
     return this
   }
 }
 
-/**
- * runBatch - gets and processes logs for a range of blocks
- */
-async function runBatch(opts, context) {
-  const fromBlock = opts.fromBlock
-  const toBlock = opts.toBlock
-  let lastLogBlock
-
-  logger.info(
-    `Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`
-  )
-
-  const eventTopics = Object.keys(context.signatureToRules)
-  const logs = await context.web3.eth.getPastLogs({
-    fromBlock: context.web3.utils.toHex(fromBlock), // Hex required for infura
-    toBlock: toBlock ? context.web3.utils.toHex(toBlock) : 'latest', // Hex required for infura
-    topics: [eventTopics]
-  })
-
-  if (logs.length > 0) {
-    logger.info(`${logs.length} logs found`)
-  }
-
-  for (const log of logs) {
-    const rule = context.signatureToRules[log.topics[0]][log.address]
-    if (rule === undefined) {
-      continue
-    }
-    lastLogBlock = log.blockNumber
-    // Process it
-    await handleLog(log, rule, context)
-  }
-  return lastLogBlock
-}
-
-/**
- *  liveTracking
- *  - checks for a new block every checkIntervalSeconds
- *  - if new block appeared, look for all events after the last found event
- */
-async function liveTracking(context) {
+async function pollForEvents(context) {
   let lastLogBlock = await getLastBlock(context.config)
   let lastCheckedBlock = 0
-  const checkIntervalSeconds = 5
-  let start
 
-  const check = async () => {
-    await withRetrys(async () => {
-      start = new Date()
-      const currentBlockNumber = await context.web3.eth.getBlockNumber()
-      if (currentBlockNumber === lastCheckedBlock) {
-        logger.debug('No new block.')
-        return scheduleNextCheck()
-      }
-      logger.info(`New block: ${currentBlockNumber}`)
-      blockGauge.set(currentBlockNumber)
-      const toBlock = Math.min(
-        // Pick the smallest of either
-        // the last log we processed, plus the max batch size
-        lastLogBlock + MAX_BATCH_BLOCKS,
-        // or the current block number, minus any trailing blocks we waiting on
-        Math.max(currentBlockNumber - context.config.trailBlocks, 0)
-      )
-      const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
-      await runBatch(opts, context)
-      lastLogBlock = toBlock
-      await setLastBlock(context.config, toBlock)
-      lastCheckedBlock = currentBlockNumber
-      return scheduleNextCheck()
-    })
-  }
-  const scheduleNextCheck = async () => {
-    const elapsed = new Date() - start
-    const delay = Math.max(checkIntervalSeconds * 1000 - elapsed, 1)
-    setTimeout(check, delay)
-  }
+  // Make sure eventCache is synced
+  // Do something on new events for events in EVENT_TO_HANDLER_MAP
 
-  check()
+  // Save the last checked block
 }
 
 // ---------------------------
@@ -271,7 +189,7 @@ const errorCounter = new bundle.promClient.Counter({
  */
 async function main() {
   const context = await new Context().init(config, errorCounter)
-  liveTracking(context)
+  pollForEvents(context)
 }
 
 app.listen({ port: port }, () => {
