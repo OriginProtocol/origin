@@ -25,14 +25,10 @@ const Transaction = props => {
 
   return (
     <div className="container transaction-detail">
-      <PageTitle>Offer {offerId}</PageTitle>
-      <Query
-        query={query}
-        variables={vars}
-        var
-        notifyOnNetworkStatusChange
-        notifyOnNetworkStatusChange={true}
-      >
+      <PageTitle>
+        <fbt desc="Transaction.offer">Offer</fbt> {offerId}
+      </PageTitle>
+      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ networkStatus, error, data, refetch }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
@@ -58,7 +54,9 @@ const Transaction = props => {
 
           const Progress = (
             <>
-              <h3>Transaction Progress</h3>
+              <h3>
+                <fbt desc="Transaction.progress">Transaction Progress</fbt>
+              </h3>
               <TxProgress
                 offer={offer}
                 wallet={props.wallet}
@@ -123,22 +121,22 @@ const Transaction = props => {
               <h2>{offer.listing.title}</h2>
               {isMobile ? (
                 <>
-                  {fbt('Progress', 'Transaction.progress')}
-                  {fbt('Offer', 'Transaction.offer')}
-                  {fbt('Listing', 'Transaction.listing')}
-                  {fbt('About', 'Transaction.about')}
-                  {fbt('History', 'Transaction.history')}
+                  {Progress}
+                  {Offer}
+                  {Listing}
+                  {About}
+                  {History}
                 </>
               ) : (
                 <div className="row">
                   <div className="col-md-7 col-lg-8">
-                    {fbt('Progress', 'Transaction.progress')}
-                    {fbt('History', 'Transaction.history')}
-                    {fbt('Listing', 'Transaction.listing')}
+                    {Progress}
+                    {History}
+                    {Listing}
                   </div>
                   <div className="col-md-5 col-lg-4 side-bar">
-                    {fbt('Offer', 'Transaction.offer')}
-                    {fbt('About', 'Transaction.about')}
+                    {Offer}
+                    {About}
                   </div>
                 </div>
               )}

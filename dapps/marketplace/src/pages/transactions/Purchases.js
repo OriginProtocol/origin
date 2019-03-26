@@ -117,7 +117,6 @@ class Purchases extends Component {
                               <fbt desc="Purchases.offerMadeOn">
                                 Offer made on
                               </fbt>
-                              >
                               {` ${dayjs
                                 .unix(offer.createdEvent.timestamp)
                                 .format('MMMM D, YYYY')}`}

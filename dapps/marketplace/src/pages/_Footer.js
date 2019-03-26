@@ -50,7 +50,7 @@ class Footer extends Component {
                       <br />
                       <div>
                         <fbt desc="footer.usingOriginBetaOn">
-                          You're currently using the Origin Beta on{' '}
+                          You are currently using the Origin Beta on:
                           <fbt:param name="networkName">
                             {networkName}
                           </fbt:param>.

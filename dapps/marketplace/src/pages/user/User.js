@@ -37,7 +37,7 @@ class User extends Component {
                         {profile.phoneVerified && (
                           <div>
                             <div className="attestation phone" />
-                            <fbt desc="User.phone">Phone></fbt>
+                            <fbt desc="User.phone">Phone</fbt>
                           </div>
                         )}
                         {profile.emailVerified && (
