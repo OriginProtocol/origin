@@ -1,5 +1,6 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
+
 import PageTitle from 'components/PageTitle'
 
 const AboutTokens = () => (

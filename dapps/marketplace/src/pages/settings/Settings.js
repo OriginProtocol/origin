@@ -10,7 +10,7 @@ import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
@@ -86,7 +86,9 @@ class Settings extends Component {
       >
         {setNetwork => (
           <div className="container settings">
-            <PageTitle>Settings</PageTitle>
+            <DocumentTitle
+              pageTitle={<fbt desc="settings.title">Settings</fbt>}
+            />
             <h1>
               <fbt desc="settings.heading">Settings</fbt>
             </h1>
