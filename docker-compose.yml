@@ -62,6 +62,8 @@ services:
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
       - ./infra/linking/:/app/infra/linking/
+      # Exclude IPFS and blockchain data from @origin/services
+      - /app/packages/services/data
       # Exclude all node_modules from the host
       - /app/packages/services/node_modules/
       - /app/packages/graphql/node_modules/
@@ -103,7 +105,11 @@ services:
     ports:
       - "9012:9012"
       - "6647:6647"
-    command: npm run start --prefix infra/messaging
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
+      npm run migrate --prefix infra/messaging &&
+      npm run start --prefix infra/messaging"
 
   ipfs-proxy:
     container_name: ipfs-proxy
