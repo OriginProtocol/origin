@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
-import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
