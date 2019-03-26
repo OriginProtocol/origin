@@ -127,7 +127,11 @@ class UpdateListing extends Component {
                   redirect: `/listing/${netId}-000-${listingID}`
                 })
               }}
-              children={this.state.loading ? fbt('Loading', 'Loading') : fbt('View Listing', 'View Listing')}
+              children={
+                this.state.loading
+                  ? fbt('Loading', 'Loading')
+                  : fbt('View Listing', 'View Listing')
+              }
             />
           </div>
         )}
