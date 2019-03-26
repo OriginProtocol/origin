@@ -32,8 +32,12 @@ class Sales extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle><fbt desc="Sales.mySales">My Sales</fbt></PageTitle>
-        <h1><fbt desc="Sales.mySales">My Sales</fbt></h1>
+        <PageTitle>
+          <fbt desc="Sales.mySales">My Sales</fbt>
+        </PageTitle>
+        <h1>
+          <fbt desc="Sales.mySales">My Sales</fbt>
+        </h1>
         <div className="row">
           <div className="col-md-3">
             <ul className="nav nav-pills">
@@ -67,7 +71,13 @@ class Sales extends Component {
                 } else if (error) {
                   return <QueryError error={error} query={query} vars={vars} />
                 } else if (!data || !data.marketplace) {
-                  return <p className="p-3"><fbt desc="Sales.noContract">No marketplace contract?</fbt></p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="Sales.noContract">
+                        No marketplace contract?
+                      </fbt>
+                    </p>
+                  )
                 }
 
                 const {
@@ -107,7 +117,8 @@ class Sales extends Component {
                               <fbt desc="Sales.offerMadeOn">Offer made on</fbt>
                               {` ${dayjs
                                 .unix(offer.createdEvent.timestamp)
-                                .format('MMMM D, YYYY')}`}</div>
+                                .format('MMMM D, YYYY')}`}
+                            </div>
                             <div className="price">
                               <TokenPrice {...offer} />
                             </div>
@@ -118,7 +129,9 @@ class Sales extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? fbt('Loading...', 'Sale.loading') : fbt('Load more', 'Sales.loadMode')
+                            networkStatus === 3
+                              ? fbt('Loading...', 'Sale.loading')
+                              : fbt('Load more', 'Sales.loadMode')
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>

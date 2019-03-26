@@ -40,7 +40,9 @@ class WithdrawOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2><fbt desc="WithdrawOffer.withdraw">Withdraw Offer</fbt></h2>
+                <h2>
+                  <fbt desc="WithdrawOffer.withdraw">Withdraw Offer</fbt>
+                </h2>
                 <fbt desc="WithdrawOffer.areYouSure">
                   Are you sure you want to withdraw your offer? Your escrowed
                   payment wil be returned to your wallet.
@@ -111,7 +113,9 @@ class WithdrawOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div><fbt desc="WithdrawOffers.success">Success!</fbt></div>
+            <div>
+              <fbt desc="WithdrawOffers.success">Success!</fbt>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"

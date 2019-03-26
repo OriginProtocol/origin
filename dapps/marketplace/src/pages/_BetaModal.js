@@ -22,13 +22,12 @@ class BetaModal extends Component {
           <ul className="list-unstyled">
             <li>
               <fbt desc="BetaModal.txnAreReal">
-                We&apos;re in Beta mode, but all transactions are real and use ETH.
+                We&apos;re in Beta mode, but all transactions are real and use
+                ETH.
               </fbt>
             </li>
             <li>
-              <fbt desc="BetaModal.pleaseVerify">
-                Please verify your
-              </fbt>
+              <fbt desc="BetaModal.pleaseVerify">Please verify your</fbt>
               <Link
                 to="/profile"
                 onClick={() => this.setState({ shouldClose: true })}
@@ -39,16 +38,14 @@ class BetaModal extends Component {
               </fbt>
             </li>
             <li>
-              <fbt desc="BetaModal.dontForget">
-                Don&apos;t forget to enable
-              </fbt>
+              <fbt desc="BetaModal.dontForget">Don&apos;t forget to enable</fbt>
               <Link
                 to="/messages"
                 onClick={() => this.setState({ shouldClose: true })}
                 children="Origin Messaging"
               />
               <fbt desc="BetaModal.soYouCanCommunicate">
-              so you can communicate with other users. It&apos;s free.
+                so you can communicate with other users. It&apos;s free.
               </fbt>
             </li>
             <li>
@@ -56,10 +53,9 @@ class BetaModal extends Component {
                 If you have any questions or need to dispute a transaction,
               </fbt>
               <a href="mailto:support@originprotocol.com">
-                <fbt desc="BetaModal.letUsKnow">
-                  let us know
-                </fbt>
-              </a>.
+                <fbt desc="BetaModal.letUsKnow">let us know</fbt>
+              </a>
+              .
             </li>
           </ul>
           <div className="actions">

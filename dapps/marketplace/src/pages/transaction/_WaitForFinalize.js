@@ -28,7 +28,8 @@ class WaitForFinalize extends Component {
           >
             <fbt desc="WaitForFinalize.viewFullfillment">
               View Fulfillment Checklist
-            </fbt> &rsaquo;
+            </fbt>{' '}
+            &rsaquo;
           </button>
 
           <DisputeOffer
@@ -36,22 +37,16 @@ class WaitForFinalize extends Component {
             party="seller"
             className="btn btn-link withdraw mt-3"
           >
-            <fbt desc="WaitForFinalize.reportProblme">
-              Report a Problem
-            </fbt>
+            <fbt desc="WaitForFinalize.reportProblme">Report a Problem</fbt>
           </DisputeOffer>
         </div>
 
         <div className="stages">
           <EventTick className="active bg" event={offer.createdEvent}>
-            <fbt desc="WaitForFinalize.offerPlace">
-              Offer Placed
-            </fbt>
+            <fbt desc="WaitForFinalize.offerPlace">Offer Placed</fbt>
           </EventTick>
           <EventTick className="active bgl" event={offer.acceptedEvent}>
-            <fbt desc="WaitForFinalize.offerAccepted">
-              Offer Accepted
-            </fbt>
+            <fbt desc="WaitForFinalize.offerAccepted">Offer Accepted</fbt>
           </EventTick>
           <EventTick>Sale Completed</EventTick>
         </div>
@@ -63,7 +58,11 @@ class WaitForFinalize extends Component {
           >
             <div className="d-flex flex-column content">
               <div className="checklist">
-                <h2><fbt desc="WaitForFinalize.fuulfillmentChecklist">Fulfillment Checklist</fbt></h2>
+                <h2>
+                  <fbt desc="WaitForFinalize.fuulfillmentChecklist">
+                    Fulfillment Checklist
+                  </fbt>
+                </h2>
                 <div>
                   <span className="table-cell">
                     <span className="step">1</span>
@@ -79,7 +78,7 @@ class WaitForFinalize extends Component {
                     <span className="step">2</span>
                   </span>
                   <span className="text">
-                   <fbt desc="WaitForFinalize.packageProduct">
+                    <fbt desc="WaitForFinalize.packageProduct">
                       Package the product and send it out
                     </fbt>
                   </span>
@@ -110,7 +109,7 @@ class WaitForFinalize extends Component {
                   </span>
                   <span className="text">
                     <fbt desc="WaitForFinalize.withdrawYourFuns">
-                     Withdraw your funds
+                      Withdraw your funds
                     </fbt>
                   </span>
                 </div>

@@ -54,9 +54,7 @@ class App extends Component {
         <div className="app-spinner">
           <h5 onClick={() => alert(this.state.err)}>Error!</h5>
           <div>
-            <fbt desc="App.refreshPage">
-              Please refresh the page
-            </fbt>
+            <fbt desc="App.refreshPage">Please refresh the page</fbt>
           </div>
         </div>
       )
