@@ -55,3 +55,6 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+android/signing/google-service-account.json
+android/signing/keystore.properties
