@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import ImageCropper from 'components/ImageCropper'
 import Steps from 'components/Steps'
@@ -81,7 +82,7 @@ class OnboardProfile extends Component {
       <>
         <Header />
         <div className="step">Step 4</div>
-        <h3>Enter Your Profile Information</h3>
+        <h3><fbt desc="onboard.Profile.enterProfileInfo">Enter Your Profile Information</fbt></h3>
         <div className="row">
           <div className="col-md-8">
             <Steps steps={4} step={4} />
@@ -106,7 +107,7 @@ class OnboardProfile extends Component {
                     <div className="col-md-8">
                       <div className="row">
                         <div className="form-group col-md-6">
-                          <label>First Name</label>
+                          <label><fbt desc="onboard.Profile.firstName">First Name</fbt></label>
                           <input
                             type="text"
                             className="form-control"
@@ -115,7 +116,7 @@ class OnboardProfile extends Component {
                           {Feedback('firstName')}
                         </div>
                         <div className="form-group col-md-6">
-                          <label>Last Name</label>
+                          <label><fbt desc="onboard.Profile.lastName">Last Name</fbt></label>
                           <input
                             type="text"
                             className="form-control"
@@ -128,7 +129,7 @@ class OnboardProfile extends Component {
                         <label>Description</label>
                         <textarea
                           className="form-control"
-                          placeholder="Tell us a bit about yourself"
+                          placeholder="{fbt('Tell us a bit about yourself', 'onboard.Profile.tellAboutYourself')}"
                           {...input('description')}
                         />
                         {Feedback('description')}
@@ -149,10 +150,12 @@ class OnboardProfile extends Component {
 
                 {hasBalance ? null : (
                   <div className="no-funds">
-                    <h5>You don&apos;t have funds</h5>
-                    You need to have funds in your wallet to create an identity.
-                    You can always do this later after you fund your wallet by
-                    going to your settings.
+                    <fbt desc="onboard.Profile.noFunds">
+                      <h5>You don&apos;t have funds</h5>
+                      You need to have funds in your wallet to create an identity.
+                      You can always do this later after you fund your wallet by
+                      going to your settings.
+                    </fbt>
                   </div>
                 )}
               </form>
@@ -168,7 +171,7 @@ class OnboardProfile extends Component {
                   ])}
                   attestations={attestations}
                   validate={() => this.validate()}
-                  children="Publish"
+                  children="{fbt('Publish', 'publish)}"
                 />
               )}
             </div>
@@ -176,7 +179,7 @@ class OnboardProfile extends Component {
               <Link
                 to={`${linkPrefix}/onboard/finished`}
                 className={`btn btn-outline-primary`}
-                children={hasBalance ? 'Done' : 'Skip for now'}
+                children={hasBalance ? fbt('Done', 'Done') : fbt('Skip for now', 'Skip')}
               />
             </div>
           </div>
@@ -195,14 +198,14 @@ class OnboardProfile extends Component {
 
     let status = ''
     if (profile[`${type}Verified`]) {
-      status = ' published'
+      status = ' ' + fbt('published', 'statusPublished')
     } else if (this.state[`${type}Attestation`]) {
-      status = ' provisional'
+      status = ' ' + fbt('provisional', 'statusProvisional')
     }
     if (soon) {
-      status = ' soon'
+      status = ' ' + fbt('soon', 'statusSoon')
     } else {
-      status += ' interactive'
+      status += ' ' + fbt('interactive', 'statusInteractive')
     }
     let AttestationComponent = AttestationComponents[type]
     if (AttestationComponent) {
@@ -236,7 +239,7 @@ class OnboardProfile extends Component {
     const newState = {}
 
     if (!this.state.firstName) {
-      newState.firstNameError = 'First Name is required'
+      newState.firstNameError = fbt('First Name is required', 'onboard.Profile.firstNameRequired')
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

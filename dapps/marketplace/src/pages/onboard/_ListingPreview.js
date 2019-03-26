@@ -1,11 +1,13 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
+
 import Price from 'components/Price'
 
 const ListingPreview = ({ listing }) => {
   if (!listing) return null
   return (
     <div className="listing-preview">
-      <h4>Your listing is waiting...</h4>
+      <h4><fbt desc="onboard.ListingPreview.listingWaiting">Your listing is waiting...</fbt></h4>
       <div className="listing-card">
         {listing.media && listing.media.length ? (
           <div

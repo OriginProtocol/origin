@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { fbt } from 'fbt-runtime'
 
 import Steps from 'components/Steps'
 import Link from 'components/Link'
@@ -42,22 +43,22 @@ const NotInstalled = ({ onInstall, back }) => (
       target="blank"
       className="btn btn-outline-primary"
       onClick={() => onInstall()}
-      children="Install MetaMask"
+      children="{fbt('Install MetaMask', 'InstallMetaMask')}"
     />
-    <Link to={back} className="cancel" children="Cancel" />
+    <Link to={back} className="cancel" children="{fbt('Cancel', 'Cancel')}" />
   </div>
 )
 
 const ConfirmInstalled = () => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status">Installing MetaMask...</div>
-    <div className="help mb">Please click below once MetaMask is installed</div>
+    <div className="status"><fbt desc="onboard.Metamask.installing">Installing MetaMask...</fbt></div>
+    <div className="help mb"><fbt desc="onboard.Metamask.click">Please click below once MetaMask is installed</fbt></div>
     <button
       className="btn btn-outline-primary"
       onClick={() => window.location.reload()}
     >
-      Continue
+      <fbt desc="Continue">Continue</fbt>
     </button>
   </div>
 )
@@ -65,12 +66,14 @@ const ConfirmInstalled = () => (
 const AwaitingLogin = ({ back }) => (
   <div className="onboard-box">
     <MetaMaskAnimation light />
-    <div className="status">Waiting for you to login to MetaMask</div>
+    <div className="status"><fbt desc="onboard.Metamask.waitingForYou">Waiting for you to login to MetaMask</fbt></div>
     <div className="help">
-      The MetaMask icon is located on the top right of your browser tool bar.
+      <fbt desc="onboard.Metamask.help">
+        The MetaMask icon is located on the top right of your browser tool bar.
+      </fbt>
     </div>
     <Link to={back} className="cancel">
-      Cancel
+      <fbt desc="Cancel">Cancel</fbt>
     </Link>
   </div>
 )
@@ -92,10 +95,12 @@ class AwaitingApproval extends Component {
       return (
         <div className="onboard-box">
           <div className="metamask-logo" />
-          <div className="status">Oops, you denied permission</div>
+          <div className="status"><fbt desc="onboard.Metamask.oops">Oops, you denied permission</fbt></div>
           <div className="help">
-            You must grant Origin permission to access your MetaMask account so
-            you can buy and sell on our DApp.
+            <fbt desc="onboard.Metamask.oopsHelp">
+              You must grant Origin permission to access your MetaMask account so
+              you can buy and sell on our DApp.
+            </fbt>
           </div>
           <button
             className="btn btn-outline-primary mt-4"
@@ -106,10 +111,10 @@ class AwaitingApproval extends Component {
               this.setState({ declined: false })
             }}
           >
-            Grant Permission
+            <fbt desc="onboard.Metamask.grantPermission">Grant Permission</fbt>
           </button>
           <Link to={back} className="cancel">
-            Cancel
+            <fbt desc="Cancel">Cancel</fbt>
           </Link>
         </div>
       )
@@ -117,13 +122,15 @@ class AwaitingApproval extends Component {
     return (
       <div className="onboard-box">
         <MetaMaskAnimation light />
-        <div className="status">Waiting for you to grant permission</div>
+        <div className="status"><fbt desc="onboard.Metamask.waitingForYou">Waiting for you to grant permission</fbt></div>
         <div className="help">
-          Please grant Origin permission to access your MetaMask account so you
-          can buy and sell on our DApp.
+          <fbt desc="onboard.Metamask.waitingForYouHelp">
+            Please grant Origin permission to access your MetaMask account so you
+            can buy and sell on our DApp.
+          </fbt>
         </div>
         <Link to={back} className="cancel">
-          Cancel
+          <fbt desc="Cancel">Cancel</fbt>
         </Link>
       </div>
     )
@@ -133,13 +140,15 @@ class AwaitingApproval extends Component {
 const IncorrectNetwork = ({ networkName, connectTo }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status">MetaMask Connected</div>
+    <div className="status"><fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt></div>
     <div className="connected">
       <span className="oval warn" />
       {networkName}
     </div>
     <div className="help mb">
-      {`Metamask is connected, please switch to ${connectTo} in order to transact on Origin.`}
+      <fbt desc="onboard.Metamask.switchNetwork">
+        Metamask is connected, please switch to <fbt:param name="connectTo">${connectTo}</fbt:param> in order to transact on Origin.
+      </fbt>
     </div>
   </div>
 )
@@ -147,14 +156,16 @@ const IncorrectNetwork = ({ networkName, connectTo }) => (
 const Connected = ({ networkName }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
-    <div className="status">MetaMask Connected</div>
+    <div className="status"><fbt desc="onboard.Metamask.connected">MetaMask Connected</fbt></div>
     <div className="connected">
       <span className="oval" />
       {networkName}
     </div>
     <div className="help mb">
-      MetaMask is connected and you’re ready to transact on Origin. Click
-      Continue below.
+      <fbt desc="onboard.Metamask.connectedAndReady">
+        MetaMask is connected and you’re ready to transact on Origin. Click
+        Continue below.
+      </fbt>
     </div>
   </div>
 )
@@ -223,7 +234,7 @@ class OnboardMetaMask extends Component {
                           nextEnabled ? '' : ' disabled'
                         }`}
                       >
-                        Continue
+                        <fbt desc="Continue">Continue</fbt>
                       </Link>
                     </div>
                   </>

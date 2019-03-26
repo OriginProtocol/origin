@@ -24,17 +24,25 @@ const OriginWallet = () => (
       <div className="image" />
       <div>
         <h4>
-          <fbt desc="Wallet.originMobile">Origin Mobile Wallet</fbt>
+          <fbt desc="onboard.Wallet.originMobile">Origin Mobile Wallet</fbt>
         </h4>
         <div className="description">
-          Origin’s Mobile Wallet will allow you to store crypto currency so you
-          can buy and sell on our DApp.
+          <fbt desc="onboard.Wallet.description">
+            Origin’s Mobile Wallet will allow you to store crypto currency so you
+            can buy and sell on our DApp.
+          </fbt>
         </div>
-        <div className="note">Available for iOS and Android</div>
+        <div className="note">
+          <fbt desc="onboard.Wallet.availability">
+            Available for iOS and Android
+          </fbt>
+        </div>
       </div>
     </div>
     <LinkMobileWallet className="btn btn-outline-primary">
-      Connect Origin Wallet
+      <fbt desc="onboard.Wallet.connect">
+        Connect Origin Wallet
+      </fbt>
     </LinkMobileWallet>
   </div>
 )
@@ -46,19 +54,26 @@ const MetaMask = ({ linkPrefix }) => (
       <div>
         <h4>MetaMask</h4>
         <div className="description">
-          MetaMask is a browser extension that will allow you to access the
-          decentralized web.
+          <fbt desc="onboard.Wallet.metamaskDescription">
+            MetaMask is a browser extension that will allow you to access the
+            decentralized web.
+          </fbt>
         </div>
-        <div className="note">{`Available for ${
-          isFirefox ? 'Firefox' : 'Google Chrome'
-        }`}</div>
+        <div className="note">
+          <fbt desc="onboard.Wallet.metamaskAvailable">
+            Available for
+            <fbt:param name="browser">{isFirefox ? ' Firefox' : ' Google Chrome'}</fbt:param>
+          </fbt>
+        </div>
       </div>
     </div>
     <Link
       to={`${linkPrefix}/onboard/metamask`}
       className="btn btn-outline-primary"
     >
-      Connect MetaMask
+      <fbt desc="onboard.Wallet.connectMetaMask">
+        Connect MetaMask
+      </fbt>
     </Link>
   </div>
 )
@@ -69,14 +84,14 @@ const Step1 = ({ listing, showoriginwallet, linkPrefix }) => {
   return (
     <>
       <div className="step">Step 1</div>
-      <h3>Connect a Crypto Wallet</h3>
+      <h3><fbt desc="onboard.Wallet.connectCryptoWallet">Connect a Crypto Wallet</fbt></h3>
       <div className="row">
         <div className="col-md-8">
           <Steps steps={4} step={1} />
           <Query query={query} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return <div>Loading...</div>
+                return <div><fbt desc="onboard.Wallet.loading">Loading...</fbt></div>
               } else if (error) {
                 return <QueryError query={query} />
               }
