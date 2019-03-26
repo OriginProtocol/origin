@@ -20,6 +20,30 @@ class IdentityEventHandler {
     this.graphqlClient = graphqlClient
   }
 
+
+  /* Get deteails about an account from @origin/graphql
+   * @param {String} account: eth address of account
+   * @returns {Object} result of GraphQL query
+   * @private
+   */
+  async _getIdentityDetails(account) {
+    let result
+    try {
+      result = await this.graphqlClient.query({
+        query: identityQuery,
+        variables: { id: account }
+      })
+    } catch (error) {
+      logger.error(
+        `Failed loading identity data for account ${account} - skipping indexing`
+      )
+      logger.error(error)
+      return null
+    }
+
+    return result.data.web3.account.identity
+  }
+
   /**
    * Loads attestation data such as email, phone, etc... from the attestation table.
    * @param {string} ethAddress
@@ -97,7 +121,7 @@ class IdentityEventHandler {
     // Decorate the user object with extra attestation related info.
     const decoratedIdentity = await this._decorateIdentity(identity)
 
-    logger.info(`Indexing identity ${decoratedIdentity.id} in DB.`)
+    logger.info(`Indexing identity ${decoratedIdentity.address} in DB`)
 
     if (!Web3.utils.isAddress(decoratedIdentity.address)) {
       throw new Error(`Invalid eth address ${decoratedIdentity.address}`)
@@ -199,20 +223,7 @@ class IdentityEventHandler {
 
     logger.info(`Processing Identity event for account ${account}`)
 
-    let queryResult
-    try {
-      queryResult = await this.graphqlClient.query({
-        query: identityQuery,
-        variables: { id: log.decoded.account }
-      })
-    } catch (error) {
-      logger.error(
-        `Failed loading identity data for account ${account} - skipping indexing`
-      )
-      logger.error(error)
-      return
-    }
-    const identity = queryResult.data.web3.account.identity
+    const identity = await this._getIdentityDetails(account)
 
     // Avatar can be large binary data. Clip it for logging purposes.
     if (identity.avatar) {
