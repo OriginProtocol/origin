@@ -80,7 +80,7 @@ class Messages extends Component {
   render() {
     return (
       <div className="container messages-page">
-        <DocumentTitle pageTitle={<fbt desc="messages.title">Messages</fbt>} />
+        <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
         <Mutation mutation={MarkConversationRead}>
           {markConversationRead => (
             <Query query={query} pollInterval={500}>
@@ -88,9 +88,21 @@ class Messages extends Component {
                 if (error) {
                   return <QueryError query={query} error={error} />
                 } else if (loading) {
-                  return <div>Loading conversations...</div>
+                  return (
+                    <div>
+                      <fbt desc="Messages.loading">
+                        Loading conversations...
+                      </fbt>
+                    </div>
+                  )
                 } else if (!data || !data.messaging) {
-                  return <p className="p-3">Cannot query messages</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="Messages.cannotQuery">
+                        Cannot query messages
+                      </fbt>
+                    </p>
+                  )
                 }
 
                 const conversations = get(data, 'messaging.conversations', [])
@@ -113,7 +125,9 @@ class Messages extends Component {
                       className={`col-md-3 ${displayConversations} d-md-block`}
                     >
                       {conversations.length ? null : (
-                        <div>No conversations!</div>
+                        <div>
+                          <fbt desc="Messages.none">No conversations!</fbt>
+                        </div>
                       )}
                       {conversations.map((conv, idx) => (
                         <RoomStatus
