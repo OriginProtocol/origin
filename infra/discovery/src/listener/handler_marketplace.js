@@ -31,6 +31,15 @@ function isOfferEvent(eventName) {
   return OFFER_EVENTS.includes(eventName)
 }
 
+/* Removes the block number that is appended to listing IDs when they are
+ * returned from the eventsourcer.
+ * @param {String} listingId - listing id as returned from @origin/eventsource
+ *    format is {networkId}-000-{listingId}-{blockNumber}
+ */
+function removeListingIdBlockNumber(listingId) {
+  return listingId.split('-').splice(0, 3).join('-')
+}
+
 class MarketplaceEventHandler {
   constructor(config, contractContext) {
     this.config = config
@@ -125,9 +134,11 @@ class MarketplaceEventHandler {
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
+      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${
+      log.logIndex
+    }`)
     const listingData = {
-      id: listing.id,
+      id: removeListingIdBlockNumber(listing.id),
       blockNumber: log.blockNumber,
       logIndex: log.logIndex,
       status: listing.status,
@@ -157,10 +168,11 @@ class MarketplaceEventHandler {
   async _indexOffer(log, details) {
     const listing = details.listing
     const offer = details.offer
+
     logger.info(`Indexing offer in DB: id=${offer.id}`)
     const offerData = {
       id: offer.id,
-      listingId: listing.id,
+      listingId: removeListingIdBlockNumber(listing.id),
       status: offer.status,
       sellerAddress: listing.seller.id.toLowerCase(),
       buyerAddress: offer.buyer.id.toLowerCase(),
@@ -190,7 +202,7 @@ class MarketplaceEventHandler {
           logger,
           details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingCreated,
-          details.listing.id,
+          removeListingIdBlockNumber(details.listing.id),
           { blockInfo },
           log.date
         )
