@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
+
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
 import Steps from 'components/Steps'
@@ -36,9 +38,18 @@ class Availability extends Component {
         <div className="col-md-8">
           <div className="create-listing-calendar">
             <div className="wrap">
-              <div className="step">{`Step ${this.props.step}`}</div>
+              <div className="step">
+                <fbt desc="create.details.step">
+                  Step
+                  <fbt:param name="create.details.hourly.step">
+                    {this.props.step}
+                  </fbt:param>
+                </fbt>
+              </div>
               <div className="step-description">
-                Edit availability &amp; Pricing
+                <fbt desc="create.edit-availability.description">
+                  Edit availability &amp; Pricing
+                </fbt>
               </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
@@ -50,7 +61,9 @@ class Availability extends Component {
               >
                 {this.state.valid !== false ? null : (
                   <div className="alert alert-danger">
-                    Please fix the errors below...
+                    <fbt desc="listing.create.errors">
+                      Please fix the errors below...
+                    </fbt>
                   </div>
                 )}
 
@@ -67,10 +80,10 @@ class Availability extends Component {
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
-                    Back
+                    <fbt desc="listing.create.back">Back</fbt>
                   </Link>
                   <button className="btn btn-primary" type="submit">
-                    Review
+                    <fbt desc="listing.create.review">Review</fbt>
                   </button>
                 </div>
               </form>
@@ -82,11 +95,11 @@ class Availability extends Component {
             this.renderAvailabilty()
           ) : (
             <div className="gray-box">
-              Click the calendar to enter pricing and availability information.
-              <br />
-              <br />
-              To select multiple time slots, click the starting time slot and
-              drag to the ending one.
+              <fbt desc="listing.create.fractional.calendar.help">
+                Click the calendar to enter pricing and availability
+                information. To select multiple time slots, click the starting
+                time slot and drag to the ending one.
+              </fbt>
             </div>
           )}
         </div>
@@ -107,7 +120,9 @@ class Availability extends Component {
     return (
       <div className="availability-editor">
         <div className="form-group">
-          <label>Start</label>
+          <label>
+            <fbt desc="create.hourly.start-time">Start</fbt>
+          </label>
           <input
             className="form-control"
             type="date"
@@ -122,7 +137,9 @@ class Availability extends Component {
           />
         </div>
         <div className="form-group">
-          <label>End</label>
+          <label>
+            <fbt desc="create.hourly.end-time">End</fbt>
+          </label>
           <input
             className="form-control"
             type="date"
@@ -137,14 +154,18 @@ class Availability extends Component {
           />
         </div>
         <div className="form-group inline-label">
-          <label>Available</label>
+          <label>
+            <fbt desc="create.fractional.available">Available</fbt>
+          </label>
           <div>
             <input
               type="radio"
               checked={this.state.available}
               onChange={() => this.setState({ available: true })}
             />
-            <div>Yes</div>
+            <div>
+              <fbt desc="yes">Yes</fbt>
+            </div>
           </div>
           <div>
             <input
@@ -152,20 +173,26 @@ class Availability extends Component {
               checked={!this.state.available}
               onChange={() => this.setState({ available: false })}
             />
-            <div>No</div>
+            <div>
+              <fbt desc="no">No</fbt>
+            </div>
           </div>
         </div>
         {!this.state.available ? null : (
           <div className="form-group">
             <div className="inline-label mb-2">
-              <label>Custom Pricing</label>
+              <label>
+                <fbt desc="listing.create.customPricing">Custom Pricing</fbt>
+              </label>
               <div>
                 <input
                   type="radio"
                   checked={!this.state.customPrice}
                   onChange={() => this.setState({ customPrice: false })}
                 />
-                <div>No</div>
+                <div>
+                  <fbt desc="no">No</fbt>
+                </div>
               </div>
               <div>
                 <input
@@ -173,7 +200,9 @@ class Availability extends Component {
                   checked={this.state.customPrice}
                   onChange={() => this.setState({ customPrice: true })}
                 />
-                <div>Yes</div>
+                <div>
+                  <fbt desc="yes">Yes</fbt>
+                </div>
               </div>
             </div>
             {!this.state.customPrice ? null : (

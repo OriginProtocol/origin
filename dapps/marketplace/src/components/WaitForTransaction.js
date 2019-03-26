@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 import MobileLinkerCode from 'components/MobileLinkerCode'
@@ -44,11 +45,20 @@ class WaitForTransaction extends Component {
                 <>
                   <div className="spinner light" />
                   <div>
-                    <b>Confirm Transaction</b>
+                    <b>
+                      <fbt desc="WaitForTransaction.confirm">
+                        Confirm Transaction
+                      </fbt>
+                    </b>
                   </div>
                 </>
               )}
-              <div>Please confirm this transaction in {provider}</div>
+              <div>
+                <fbt desc="WaitForTransaction.confirmInProvider">
+                  Please confirm this transaction in{' '}
+                  <fbt:param name="provider">{provider}</fbt:param>
+                </fbt>
+              </div>
             </div>
           </Modal>
         </>
@@ -74,7 +84,11 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Error - see console</b>
+                  <b>
+                    <fbt desc="WaitForTransaction.errorSeeConsole">
+                      Error - see console
+                    </fbt>
+                  </b>
                 </div>
               </div>
             )
@@ -83,9 +97,15 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Writing to the blockchain.</b>
+                  <b>
+                    <fbt desc="WaitForTransaction.writingToBlockchain">
+                      Writing to the blockchain.
+                    </fbt>
+                  </b>
                   <br />
-                  This might take a minute.
+                  <fbt desc="WaitForTransaction.mayTakeSomeTime">
+                    This might take a minute.
+                  </fbt>
                 </div>
               </div>
             )
@@ -94,9 +114,15 @@ class WaitForTransaction extends Component {
               <div className="make-offer-modal">
                 <div className="spinner light" />
                 <div>
-                  <b>Waiting for confirmation.</b>
+                  <b>
+                    <fbt desc="WaitForTransaction.waitingForConfirmation">
+                      Waiting for confirmation.
+                    </fbt>
+                  </b>
                   <br />
-                  This might take a minute.
+                  <fbt desc="WaitForTransaction.mayTakeSomeTime">
+                    This might take a minute.
+                  </fbt>
                 </div>
               </div>
             )

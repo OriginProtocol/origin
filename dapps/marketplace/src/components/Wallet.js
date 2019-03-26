@@ -1,5 +1,6 @@
 import React from 'react'
 import { Query } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import ProfileQuery from 'queries/Profile'
 
@@ -20,7 +21,9 @@ const Wallet = () => (
         <div className="wallet">
           <div className="wallet-info">
             <div>
-              <h5>ETH Address</h5>
+              <h5>
+                <fbt desc="Wallet.ethAddress">ETH Address</fbt>
+              </h5>
               <EthAddress address={checksumAddress} />
             </div>
             <div className="identicon">

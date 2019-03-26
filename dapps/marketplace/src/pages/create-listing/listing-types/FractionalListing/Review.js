@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 
 import withTokenBalance from 'hoc/withTokenBalance'
@@ -23,27 +24,37 @@ class Review extends Component {
     return (
       <div className="row create-listing-review">
         <div className="col-md-8">
-          <h2>Review your listing</h2>
+          <h2>
+            <fbt desc="creation.review.main-title">Review your listing</fbt>
+          </h2>
 
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">Title</div>
+              <div className="col-3 label">
+                <fbt desc="create.review.title">Title</fbt>
+              </div>
               <div className="col-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">Cagegory</div>
+              <div className="col-3 label">
+                <fbt desc="create.review.category">Category</fbt>
+              </div>
               <div className="col-9">
                 <Category listing={listing} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Description</div>
+              <div className="col-3 label">
+                <fbt desc="create.review.description">Description</fbt>
+              </div>
               <div className="col-9">
                 <FormattedDescription text={listing.description} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Weekdays</div>
+              <div className="col-3 label">
+                <fbt desc="listing.review.weekdays">Weekdays</fbt>
+              </div>
               <div className="col-9">
                 <CoinPrice price={listing.price} coin="eth" />
                 <div className="fiat">
@@ -52,7 +63,9 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Weekends</div>
+              <div className="col-3 label">
+                <fbt desc="listing.review.weekends">Weekends</fbt>
+              </div>
               <div className="col-9">
                 <CoinPrice price={listing.weekendPrice} coin="eth" />
                 <div className="fiat">
@@ -61,14 +74,18 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Boost Level</div>
+              <div className="col-3 label">
+                <fbt desc="listing.review.boost-level">Boost Level</fbt>
+              </div>
               <div className="col-9">
                 <CoinPrice price={boost} coin="ogn" />
-                {' / night'}
+                <fbt desc="create.review.price-per-hour">/ night</fbt>
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Photos</div>
+              <div className="col-3 label">
+                <fbt desc="create.review.photos">Photos</fbt>
+              </div>
               <div className="col-9">
                 {listing.media.length ? (
                   <div className="photos">
@@ -81,12 +98,16 @@ class Review extends Component {
                     ))}
                   </div>
                 ) : (
-                  <i>No Photos</i>
+                  <i>
+                    <fbt desc="create.review.no photos">No Photos</fbt>
+                  </i>
                 )}
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">Availability</div>
+              <div className="col-3 label">
+                <fbt desc="create.hourly.availability">Availability</fbt>
+              </div>
               <div className="col-9">
                 <Calendar
                   interactive={false}
@@ -107,7 +128,7 @@ class Review extends Component {
 
           <div className="actions">
             <Link className="btn btn-outline-primary" to={this.props.prev}>
-              Back
+              <fbt desc="back">Back</fbt>
             </Link>
             {this.props.listing.id ? (
               <UpdateListing
@@ -130,10 +151,12 @@ class Review extends Component {
         <div className="col-md-4">
           <Wallet />
           <div className="gray-box">
-            <h5>What happens next?</h5>
-            When you submit this listing, you will be asked to confirm your
-            transaction in MetaMask. Buyers will then be able to see your
-            listing and make offers on it.
+            <fbt desc="create.review.What happens next">
+              <h5>What happens next?</h5>
+              When you submit this listing, you will be asked to confirm your
+              transaction in MetaMask. Buyers will then be able to see your
+              listing and make offers on it.
+            </fbt>
           </div>
         </div>
       </div>
