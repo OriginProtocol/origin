@@ -48,9 +48,7 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async index(listingId, buyerAddress, ipfsHash, listing) {
-    /* When serialising to JSON, getters of an object do not get serialized and indexed. For that reason
-     * we call all the getters and store them before indexing.
-     */
+    // Create a copy of the listing object
     const listingToIndex = JSON.parse(JSON.stringify(listing))
 
     // commissionPerUnit is critical for calculating scoring.
