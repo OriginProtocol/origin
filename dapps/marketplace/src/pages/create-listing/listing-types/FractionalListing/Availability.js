@@ -216,7 +216,7 @@ class Availability extends Component {
           <button
             className="btn btn-outline-primary btn-rounded"
             onClick={() => this.setState({ range: '' })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
           <button
             className="btn btn-outline-primary btn-rounded"
@@ -244,7 +244,7 @@ class Availability extends Component {
                 unavailable
               })
             }}
-            children="Save"
+            children={fbt('Save', 'Save')}
           />
         </div>
       </div>

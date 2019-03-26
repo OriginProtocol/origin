@@ -45,9 +45,12 @@ const CanceledStages = [
     event: 'createdEvent'
   },
   {
-    title: fbt('Offer Withdrawn', 'TransactionStages.offerWithdrawn'),
-    ifSeller: fbt('Offer Rejected', 'TransactionStages.offerRejected'),
-    event: 'withdrawnEvent'
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Sale Completed', 'TransactionStages.saleCompleted'),
+    event: 'finalizedEvent'
   }
 ]
 
@@ -82,7 +85,12 @@ const TransactionStages = ({ offer }) => {
     const seller = get(offer, 'listing.seller.id')
     const isSeller = party === seller
 
-    const title = stage.ifSeller && isSeller ? stage.ifSeller : stage.title
+    // HACK (franck): EventTick fails if title is of type FbtResult.
+    // As a workaround we evaluate the FbtResult function here.
+    const title =
+      stage.ifSeller && isSeller
+        ? stage.ifSeller.toString()
+        : stage.title.toString()
 
     return (
       <EventTick key={idx} className={className.join(' ')} event={event}>

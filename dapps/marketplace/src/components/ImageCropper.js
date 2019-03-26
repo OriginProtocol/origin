@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactCrop from 'react-image-crop'
 import loadImage from 'blueimp-load-image'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -103,7 +104,7 @@ class ImageCropper extends Component {
                 <button
                   className="btn btn-outline-light"
                   onClick={() => this.setState({ shouldClose: true })}
-                  children="Cancel"
+                  children={fbt('Cancel', 'Cancel')}
                 />
                 <button
                   className="btn btn-outline-light"
@@ -112,7 +113,7 @@ class ImageCropper extends Component {
                     this.props.onChange(croppedImageUrl)
                     this.setState({ shouldClose: true })
                   }}
-                  children="OK"
+                  children={fbt('OK', 'OK')}
                 />
               </div>
             </div>

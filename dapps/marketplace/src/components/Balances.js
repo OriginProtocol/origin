@@ -12,7 +12,9 @@ const Balances = ({ ethBalance, account }) => {
 
   return (
     <div className="balances">
-      <h5>Account Balance</h5>
+      <h5>
+        <fbt desc="Balances.account-balance">Account Balance</fbt>
+      </h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">
@@ -38,7 +40,7 @@ const Balances = ({ ethBalance, account }) => {
         {!enableGrowth ? null : (
           <EnrollButton
             className="btn get-ogn d-flex"
-            children="Get Started"
+            children={fbt('Get Started', 'Get Started')}
             skipjoincampaign="false"
           >
             <img className="mr-1" src="images/growth/blue-add-icon.svg" />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 class RewardsBanner extends Component {
   render() {
@@ -12,11 +13,17 @@ class RewardsBanner extends Component {
                   <img src="images/blue-coins.svg" />
                 </div>
                 <div className="text float-left">
-                  <strong>Earn Free Origin Tokens Today</strong>
+                  <strong>
+                    <fbt desc="RewardBanner.earnFreeTokens">
+                      Earn Free Origin Tokens Today
+                    </fbt>
+                  </strong>
                   <br />
                   <span className="d-none lg d-lg-block">
-                    Participate in our campaigns and complete tasks on our DApp
-                    to earn Origin Tokens.
+                    <fbt desc="RewardBanner.earnFreeTokens">
+                      Participate in our campaigns and complete tasks on our
+                      DApp to earn Origin Tokens.
+                    </fbt>
                   </span>
                 </div>
                 <div className="float-right">
@@ -24,7 +31,7 @@ class RewardsBanner extends Component {
                     className="btn btn-primary"
                     href="https://dapp.originprotocol.com/#/welcome"
                   >
-                    Go
+                    <fbt desc="RewardsBanner.go">Go</fbt>
                   </a>
                 </div>
               </div>
@@ -47,7 +54,7 @@ require('react-styl')(`
     color: #fff
     font-size: 18px
     border-bottom: 1px solid var(--dark-two)
-    img 
+    img
       margin: 0 20px 10px 0
     strong
       top: 5px

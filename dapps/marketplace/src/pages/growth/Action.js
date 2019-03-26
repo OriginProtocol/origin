@@ -133,7 +133,7 @@ function Action(props) {
     return (
       <button
         className="btn btn-primary btn-rounded mr-2"
-        children="Go"
+        children={fbt('Go', 'Go')}
         onClick={handleOnClick}
       />
     )

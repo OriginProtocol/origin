@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import mutation from 'mutations/SendMessage'
 import withIdentity from 'hoc/withIdentity'
@@ -77,7 +78,7 @@ class SendMessage extends Component {
         <div className="actions">
           <button
             className="btn btn-outline-light btn-rounded"
-            children="OK"
+            children={fbt('OK', 'OK')}
             onClick={() => this.setState({ shouldClose: true })}
           />
         </div>
@@ -121,7 +122,7 @@ class SendMessage extends Component {
             <button
               className="btn btn-primary btn-rounded"
               type="submit"
-              children="Send"
+              children={fbt('Send', 'Send')}
             />
           </form>
         )}
@@ -136,7 +137,7 @@ class SendMessage extends Component {
         <div className="actions">
           <button
             className="btn btn-outline-light btn-rounded"
-            children="OK"
+            children={fbt('OK', 'OK')}
             onClick={() => this.setState({ shouldClose: true })}
           />
         </div>

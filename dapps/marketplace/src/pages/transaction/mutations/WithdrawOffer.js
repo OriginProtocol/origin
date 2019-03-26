@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
@@ -30,7 +31,7 @@ class WithdrawOffer extends Component {
             <button
               className="btn btn-link withdraw"
               onClick={() => this.setState({ sure: true })}
-              children="Withdraw Offer"
+              children={fbt('Withdraw Offer', 'Withdraw Offer')}
             />
             {!this.state.sure ? null : (
               <Modal
@@ -39,19 +40,23 @@ class WithdrawOffer extends Component {
                 }
                 shouldClose={this.state.sureShouldClose}
               >
-                <h2>Withdraw Offer</h2>
-                Are you sure you want to withdraw your offer? Your escrowed
-                payment wil be returned to your wallet.
+                <h2>
+                  <fbt desc="WithdrawOffer.withdraw">Withdraw Offer</fbt>
+                </h2>
+                <fbt desc="WithdrawOffer.areYouSure">
+                  Are you sure you want to withdraw your offer? Your escrowed
+                  payment wil be returned to your wallet.
+                </fbt>
                 <div className="actions">
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.setState({ sureShouldClose: true })}
-                    children="Cancel"
+                    children={fbt('Cancel', 'Cancel')}
                   />
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.onClick(withdrawOffer)}
-                    children="Withdraw"
+                    children={fbt('Withdraw', 'Withdraw')}
                   />
                 </div>
               </Modal>
@@ -108,12 +113,14 @@ class WithdrawOffer extends Component {
         {() => (
           <div className="make-offer-modal">
             <div className="success-icon" />
-            <div>Success!</div>
+            <div>
+              <fbt desc="WithdrawOffers.success">Success!</fbt>
+            </div>
             <button
               href="#"
               className="btn btn-outline-light"
               onClick={() => this.setState({ waitForShouldClose: true })}
-              children="OK"
+              children={fbt('OK', 'OK')}
             />
           </div>
         )}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Price from 'components/Price'
@@ -21,15 +22,23 @@ const EditOnly = ({
     {isFractional || isFractionalHourly || isAnnouncement ? null : (
       <div className="listing-buy-editonly">
         <div className="row">
-          <div>Sold</div>
+          <div>
+            <fbt desc="number of units that have been sold">Sold</fbt>
+          </div>
           <div>{listing.unitsSold}</div>
         </div>
         <div className="row">
-          <div>Pending</div>
+          <div>
+            <fbt desc="number of units whose transaction are pending">
+              Pending
+            </fbt>
+          </div>
           <div>{listing.unitsPending}</div>
         </div>
         <div className="row">
-          <div>Available</div>
+          <div>
+            <fbt desc="number of units available">Available</fbt>
+          </div>
           <div>{listing.unitsAvailable}</div>
         </div>
       </div>

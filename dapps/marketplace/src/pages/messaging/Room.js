@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -68,7 +69,11 @@ class Room extends Component {
             } else if (error) {
               return <QueryError query={query} error={error} />
             } else if (!data || !data.messaging) {
-              return <p className="p-3">Cannot query messages</p>
+              return (
+                <p className="p-3">
+                  <fbt desc="Room.cannotQuery">Cannot query messages</fbt>
+                </p>
+              )
             }
 
             const messages = get(data, 'messaging.conversation.messages', [])

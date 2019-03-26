@@ -94,7 +94,7 @@ const EnableMessaging = ({ next }) => (
             next()
             enableMessaging()
           }}
-          children="Enable Origin Messaging"
+          children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
         />
       )}
     </Mutation>
