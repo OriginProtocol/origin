@@ -83,7 +83,7 @@ const EnableMessaging = ({ next }) => (
             next()
             enableMessaging()
           }}
-          children="{fbt('Enable Origin Messaging', 'onbard.Messaging.enable')}"
+          children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
         />
       )}
     </Mutation>

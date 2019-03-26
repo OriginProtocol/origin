@@ -84,7 +84,7 @@ class AddData extends Component {
                 await client.resetStore()
                 this.setState({ waitFor: false })
               }}
-              children="OK"
+              children={fbt('OK', 'OK')}
             />
           </div>
         )}

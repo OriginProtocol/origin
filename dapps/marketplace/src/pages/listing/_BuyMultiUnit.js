@@ -36,7 +36,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
         value={amount}
         quantity={quantity}
         className="btn btn-primary"
-        children="Purchase"
+        children={fbt('Purchase', 'Purchase')}
       />
     </div>
   )

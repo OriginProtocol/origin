@@ -61,7 +61,10 @@ class Footer extends Component {
                             e.preventDefault()
                             this.setState({ reminders: true })
                           }}
-                          children="Important Reminders"
+                          children={fbt(
+                            'Important Reminders',
+                            'Important Reminders'
+                          )}
                         />
                         {!this.state.reminders ? null : (
                           <BetaModal

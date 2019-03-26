@@ -138,14 +138,14 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>
-                    <fbt desc="create.Select photos">Select photos</fbt>
+                    <fbt desc="create.select-photos">Select photos</fbt>
                   </label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
                   >
                     <div className="add-photos">
-                      <fbt desc="create Select photos help">Select photos</fbt>
+                      <fbt desc="create.select-photos">Select photos</fbt>
                     </div>
                   </ImagePicker>
                   <ul className="help-text photo-help list-unstyled">

@@ -43,9 +43,9 @@ const NotInstalled = ({ onInstall, back }) => (
       target="blank"
       className="btn btn-outline-primary"
       onClick={() => onInstall()}
-      children="{fbt('Install MetaMask', 'InstallMetaMask')}"
+      children={fbt('Install MetaMask', 'Install MetaMask')}
     />
-    <Link to={back} className="cancel" children="{fbt('Cancel', 'Cancel')}" />
+    <Link to={back} className="cancel" children={fbt('Cancel', 'Cancel')} />
   </div>
 )
 

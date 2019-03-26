@@ -57,7 +57,7 @@ class CannotTransact extends Component {
             href="#"
             className="btn btn-outline-light"
             onClick={() => this.setState({ shouldClose: true })}
-            children="OK"
+            children={fbt('OK', 'OK')}
           />
         </div>
       </Modal>

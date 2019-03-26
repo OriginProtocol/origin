@@ -176,7 +176,7 @@ class GrowthWelcome extends Component {
           <this.EnrollButton
             className="btn btn-primary btn-rounded enroll-button"
             type="submit"
-            children="Sign Up Now"
+            children={fbt('Sign Up Now', 'Sign Up Now')}
             urlforonboarding={urlForOnboarding}
             startopen={arrivedFromOnboarding.toString()}
           />

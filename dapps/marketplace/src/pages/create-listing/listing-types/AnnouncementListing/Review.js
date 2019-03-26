@@ -76,13 +76,13 @@ class Review extends Component {
                 listing={this.props.listing}
                 refetch={this.props.refetch}
                 className="btn btn-primary"
-                children="Done"
+                children={fbt('Done', 'Done')}
               />
             ) : (
               <CreateListing
                 listing={this.props.listing}
                 className="btn btn-primary"
-                children="Done"
+                children={fbt('Done', 'Done')}
               />
             )}
           </div>

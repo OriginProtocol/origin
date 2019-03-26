@@ -6,7 +6,7 @@ import DocumentTitle from 'components/DocumentTitle'
 const AboutTokens = () => (
   <div className="container about-info">
     <DocumentTitle
-      pageTitle={<fbt desc="bouttokens.title">About Origin Tokens</fbt>}
+      pageTitle={<fbt desc="abouttokens.title">About Origin Tokens</fbt>}
     />
     <h1>
       <fbt desc="abouttokens.title">About Origin Tokens</fbt>

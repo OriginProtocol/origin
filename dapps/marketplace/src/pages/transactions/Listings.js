@@ -127,7 +127,7 @@ class Listings extends Component {
                               <div className="actions">
                                 <Link
                                   to={`/listing/${listing.id}/edit`}
-                                  children="Edit Listing"
+                                  children={fbt('Edit Listing', 'Edit Listing')}
                                 />
                                 <WithdrawListing
                                   listing={listing}

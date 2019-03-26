@@ -181,7 +181,7 @@ class OnboardProfile extends Component {
                   ])}
                   attestations={attestations}
                   validate={() => this.validate()}
-                  children="{fbt('Publish', 'publish)}"
+                  children={fbt('Publish', 'Publish')}
                 />
               )}
             </div>

@@ -34,7 +34,9 @@ class EditProfileModal extends Component {
             this.validate()
           }}
         >
-          <h2>Edit Profile</h2>
+          <h2>
+            <fbt desc="EditModal.editProfile">Edit Profile</fbt>
+          </h2>
           <div className="row">
             <div className="col-12">
               <div className="form-group">
@@ -60,7 +62,9 @@ class EditProfileModal extends Component {
           </div>
 
           <div className="form-group mt-3">
-            <label>Description</label>
+            <label>
+              <fbt desc="EditModal.Description">Description</fbt>
+            </label>
             <textarea
               placeholder="Tell us a bit about yourself"
               {...input('description')}
@@ -77,7 +81,7 @@ class EditProfileModal extends Component {
           <div className="actions d-flex">
             <button
               className="btn btn-outline-light"
-              children="OK"
+              children={fbt('OK', 'OK')}
               onClick={() => {
                 if (this.validate()) {
                   this.props.onChange(
@@ -89,7 +93,7 @@ class EditProfileModal extends Component {
             />
             <button
               className="btn btn-link"
-              children="Cancel"
+              children={fbt('Cancel', 'Cancel')}
               onClick={() => this.setState({ shouldClose: true })}
             />
           </div>

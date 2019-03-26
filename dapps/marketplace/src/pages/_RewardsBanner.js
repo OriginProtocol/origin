@@ -31,7 +31,7 @@ class RewardsBanner extends Component {
                     className="btn btn-primary"
                     href="https://dapp.originprotocol.com/#/welcome"
                   >
-                    Go
+                    <fbt desc="RewardsBanner.go">Go</fbt>
                   </a>
                 </div>
               </div>
@@ -54,7 +54,7 @@ require('react-styl')(`
     color: #fff
     font-size: 18px
     border-bottom: 1px solid var(--dark-two)
-    img 
+    img
       margin: 0 20px 10px 0
     strong
       top: 5px

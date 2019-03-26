@@ -220,7 +220,7 @@ class OnboardNotifications extends Component {
                       href="#"
                       onClick={e => e.preventDefault()}
                       className="btn btn-outline-primary disabled"
-                      children="{fbt('Continue', 'continue')}"
+                      children={fbt('Continue', 'Continue')}
                     />
                   )
                 }
