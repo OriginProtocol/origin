@@ -12,7 +12,7 @@ import Link from 'components/Link'
 import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import Pic from './_Pic'
 
 import WithdrawListing from './mutations/WithdrawListing'
@@ -32,10 +32,9 @@ class Listings extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle>
-          <fbt desc="Listings.myListings">My Listings</fbt>
-        </PageTitle>
-
+        <DocumentTitle
+          pageTitle={<fbt desc="Listings.title">My Listings</fbt>}
+        />
         <h1>
           <fbt desc="Listings.myListings">My Listings</fbt>
         </h1>

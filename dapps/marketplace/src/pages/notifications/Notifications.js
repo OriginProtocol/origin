@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -9,7 +10,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 import NotificationRow from './NotificationRow'
 
@@ -48,7 +49,9 @@ class Notifications extends Component {
 
     return (
       <div className="container purchases">
-        <PageTitle>Notifications</PageTitle>
+        <DocumentTitle
+          pageTitle={<fbt desc="notifications.title">Notifications</fbt>}
+        />
         <Query
           query={query}
           variables={vars}
