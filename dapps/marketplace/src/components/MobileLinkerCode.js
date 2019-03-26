@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import QRCode from 'qrcode.react'
 import * as clipboard from 'clipboard-polyfill'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 import WalletLinkerQuery from 'queries/WalletLinker'
@@ -75,7 +76,9 @@ export default class MobileLinkerCode extends Component {
                     style={{ width: 'auto' }}
                     onClick={() => this.openLinkerApp(role, linkCode)}
                   >
-                    Copy &amp; Open App
+                    <fbt desc="MobileLinkerCode.copyAndOpenApp">
+                      Copy &amp; Open App
+                    </fbt>
                   </button>
                 </>
               )}
