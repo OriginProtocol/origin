@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import UpdateListingMutation from 'mutations/UpdateListing'
 
@@ -90,26 +91,28 @@ class UpdateListing extends Component {
         {({ event }) => (
           <div className="make-offer-modal success">
             <div className="success-icon" />
-            <div>Your listing has been updated!</div>
-            <div>
-              Your listing will be visible within a few seconds. Here&apos;s
-              what happens next:
-              <ul>
-                <li>Buyers will now see your listing on the marketplace.</li>
-                <li>
-                  When a buyer makes an offer on your listing, you can choose to
-                  accept or reject it.
-                </li>
-                <li>
-                  Once the offer is accepted, you will be expected to fulfill
-                  the order.
-                </li>
-                <li>
-                  You will receive payment once the buyer confirms that the
-                  order has been fulfilled.
-                </li>
-              </ul>
-            </div>
+            <fbt desc="updateListing.success">
+              <div>Your listing has been updated!</div>
+              <div>
+                Your listing will be visible within a few seconds. Here&apos;s
+                what happens next:
+                <ul>
+                  <li>Buyers will now see your listing on the marketplace.</li>
+                  <li>
+                    When a buyer makes an offer on your listing, you can choose
+                    to accept or reject it.
+                  </li>
+                  <li>
+                    Once the offer is accepted, you will be expected to fulfill
+                    the order.
+                  </li>
+                  <li>
+                    You will receive payment once the buyer confirms that the
+                    order has been fulfilled.
+                  </li>
+                </ul>
+              </div>
+            </fbt>
             <button
               href="#"
               className="btn btn-outline-light"
@@ -124,7 +127,7 @@ class UpdateListing extends Component {
                   redirect: `/listing/${netId}-000-${listingID}`
                 })
               }}
-              children={this.state.loading ? 'Loading' : 'View Listing'}
+              children={this.state.loading ? fbt('Loading', 'Loading') : fbt('View Listing', 'View Listing')}
             />
           </div>
         )}

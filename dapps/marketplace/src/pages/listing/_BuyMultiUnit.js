@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Price from 'components/Price'
 import Buy from './mutations/Buy'
@@ -11,7 +12,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
       <div className="price">
         <div className="eth">
           {`${listing.price.amount} ETH`}
-          {listing.multiUnit ? <span>{` / each`}</span> : null}
+          {listing.multiUnit ? <span>{fbt(' / each', '/ each')}</span> : null}
         </div>
         <div className="usd">
           <Price amount={listing.price.amount} />
@@ -23,7 +24,9 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
         available={listing.unitsAvailable}
       />
       <div className="total">
-        <span>Total Price</span>
+        <span>
+          <fbt desc="totalPrice">Total Price</fbt>
+        </span>
         <span>{`${amount} ETH`}</span>
       </div>
       <Buy

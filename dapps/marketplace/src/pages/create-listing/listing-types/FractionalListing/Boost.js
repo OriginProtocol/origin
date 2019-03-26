@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 import pick from 'lodash/pick'
 
 import withTokenBalance from 'hoc/withTokenBalance'
@@ -14,27 +15,60 @@ import withWallet from 'hoc/withWallet'
 
 const NoOgn = () => (
   <div className="no-ogn">
-    <div>
-      You have 0 <span>OGN</span> in your wallet.
-    </div>
-    <div>Once you acquire some OGN you will be able to boost your listing.</div>
-    <div>
-      <Link to="/about/tokens">Learn More</Link>
-    </div>
+    <fbt desc="create.boost.no-ogn">
+      <div>
+        You have 0 <span>OGN</span> in your wallet.
+      </div>
+      <div>
+        Once you acquire some OGN you will be able to boost your listing.
+      </div>
+      <div>
+        <Link to="/about/tokens">Learn More</Link>
+      </div>
+    </fbt>
   </div>
 )
 
 const BoostLevels = [
-  [76, 'premium', 'Premium', 'Your listing will get the best visibility.'],
-  [51, 'high', 'High', 'Your listing will get above-average visibility.'],
+  [
+    76,
+    'premium',
+    fbt('Premium', 'create.boost.Premium'),
+    fbt(
+      'Your listing will get the best visibility.',
+      'create.boost.best visibility.'
+    )
+  ],
+  [
+    51,
+    'high',
+    fbt('High', 'create.boost.High'),
+    fbt(
+      'Your listing will get above-average visibility.',
+      'create.boost.above-average.'
+    )
+  ],
   [
     26,
     'med',
-    'Medium (recommended)',
-    'Your listing will get average visibility.'
+    fbt('Medium (recommended)', 'create.boost.Medium'),
+    fbt('Your listing will get average visibility.', 'create.boost.average.')
   ],
-  [1, 'low', 'Low', 'Your listing will get below-average visibility.'],
-  [0, 'none', 'None', 'Your listing will get very low visibility.']
+  [
+    1,
+    'low',
+    fbt('Low', 'create.boost.Low'),
+    fbt(
+      'Your listing will get below-average visibility.',
+      'create.boost.below-average'
+    )
+  ],
+  [
+    0,
+    'none',
+    fbt('None', 'create.boost.None'),
+    fbt('Your listing will get very low visibility.', 'create.boost.very-low')
+  ]
 ]
 
 class Boost extends Component {
