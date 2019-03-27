@@ -40,7 +40,7 @@ class ApolloAdapter {
   async _getReferralsActionData(data) {
     return await GrowthInvite.getReferralsInfo(
       data.ethAddress,
-      data.campaignId,
+      data.campaign.id,
       data.reward,
       data.rewards
     )
@@ -67,8 +67,9 @@ class ApolloAdapter {
     }
 
     // Add extra information in case of a Referral.
-    if (data.type === 'Referral') {
-      const referralsInfo = this._getReferralsActionData(data)
+    console.log('DATA TYPE=', action.type)
+    if (action.type === 'Referral') {
+      const referralsInfo = await this._getReferralsActionData(data)
       action = { ...action, ...referralsInfo }
     }
     return action
@@ -118,4 +119,4 @@ const campaignToApolloObject = async (
   return out
 }
 
-module.exports = { campaignToApolloObject }
+module.exports = { ApolloAdapter, campaignToApolloObject }

@@ -4,7 +4,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
-const { campaignToApolloObject } = require('../src/apollo/adapter')
+const { ApolloAdapter, campaignToApolloObject } = require('../src/apollo/adapter')
 const enums = require('../src/enums')
 const db = require('../src/models')
 
@@ -256,6 +256,12 @@ describe('Apollo adapter', () => {
         })
       }
 
+      // Mock the adapter's _getReferralActionData to avoid
+      // setting up all the DB entries required for method
+      // GrowthInvite.getReferralsInfo that is depends on to work in test.
+      this.mockAdapter = new ApolloAdapter()
+      this.mockAdapter._getReferralsActionData = async () => { return {} }
+
       this.events = []
     })
 
@@ -264,7 +270,8 @@ describe('Apollo adapter', () => {
       const out = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.ethAddress
+        this.ethAddress,
+        this.mockAdapter
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
@@ -343,7 +350,8 @@ describe('Apollo adapter', () => {
       const out = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.ethAddress
+        this.ethAddress,
+        this.mockAdapter
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
@@ -422,7 +430,8 @@ describe('Apollo adapter', () => {
       const out = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.ethAddress
+        this.ethAddress,
+        this.mockAdapter
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '50000000000000000000', currency: 'OGN' })
@@ -509,7 +518,8 @@ describe('Apollo adapter', () => {
       const out = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.ethAddress
+        this.ethAddress,
+        this.mockAdapter
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
@@ -600,10 +610,9 @@ describe('Apollo adapter', () => {
       const out = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.ethAddress
+        this.ethAddress,
+        this.mockAdapter
       )
-
-      console.log(" OUT=", JSON.stringify(out))
 
       expect(out.rewardEarned).to.deep.equal({ amount: '225000000000000000000', currency: 'OGN' })
 
