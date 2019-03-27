@@ -4,7 +4,7 @@ const { Money } = require('../util/money')
 
 /**
  * Adapts data representing the state of a campaign rule into
- * an Apollo compatible view of that data.
+ * an Apollo compatible view.
  */
 class ApolloAdapter {
   /**

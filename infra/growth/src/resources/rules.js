@@ -210,11 +210,10 @@ class CampaignRules {
   /**
    * Exports the state of the rules for a given user.
    * Walks thru all the rules and calls the adapter with data for each rule.
-   * Collects output of the adapter calls into a list.
    *
-   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {Adapter} adapter - Class to use for formatting the rule data.
    * @param {string} ethAddress
-   * @returns {Promise<Array<Object>>}
+   * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
   async export(adapter, ethAddress) {
     const events = await this.getEvents(ethAddress)
@@ -263,13 +262,12 @@ class Level {
 
   /**
    * Walks thru all the rules and calls the adapter with data for each rule.
-   * Collects output of the adapter calls into a list.
    *
-   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {Adapter} adapter - Class to use for formatting the rule data.
    * @param {string} ethAddress
    * @param {Array<models.GrowthEvent>}
    * @param {number} level
-   * @returns {Promise<Array<Object>>}
+   * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
   async export(adapter, ethAddress, events, level) {
     const allData = []

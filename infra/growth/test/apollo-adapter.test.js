@@ -6,7 +6,7 @@ const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
 const { campaignToApolloObject } = require('../src/apollo/adapter')
 const enums = require('../src/enums')
-
+const db = require('../src/models')
 
 
 function tokenNaturalUnits(x) {
@@ -20,7 +20,7 @@ describe('Apollo adapter', () => {
 
   describe('March campaign rules', () => {
 
-    before(() => {
+    before(async () => {
       const config = {
         numLevels: 3,
         levels: {
@@ -234,10 +234,28 @@ describe('Apollo adapter', () => {
         return this.events
           .filter(e => e.ethAddress === ethAddress)
           .filter(e => opts.duringCampaign ? (e.createdAt >= this.campaignStart && e.createdAt <= this.campaignEnd) : true)
+          .filter(e => opts.beforeCampaign ? (e.createdAt < this.campaignStart) : true)
       }
 
       this.ethAddress = '0x123'
       this.refereeEthAddress = '0xABC'
+
+      // Create the referral if it does not already exist.
+      // TODO: ideally we should use a mocked DB.
+      const existing = await db.GrowthReferral.findOne({
+          where: {
+            referrerEthAddress: this.ethAddress,
+            refereeEthAddress: this.refereeEthAddress
+          }
+        }
+      )
+      if (!existing) {
+        await db.GrowthReferral.create({
+          referrerEthAddress: this.ethAddress,
+          refereeEthAddress: this.refereeEthAddress
+        })
+      }
+
       this.events = []
     })
 
@@ -534,6 +552,10 @@ describe('Apollo adapter', () => {
           status: 'Active',
           rewardEarned: { amount: '0', currency: 'OGN' }
         },
+        Referral: {
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' }
+        },
       }
       for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
         const action = actionByType[actionType]
@@ -543,6 +565,7 @@ describe('Apollo adapter', () => {
     })
 
     it(`Adapter at level 2 with a referral`, async () => {
+      // Add events from the referee to make it qualify for level 2.
       this.events.push(...[
         {
           id: 8,
@@ -580,7 +603,7 @@ describe('Apollo adapter', () => {
         this.ethAddress
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
+      expect(out.rewardEarned).to.deep.equal({ amount: '225000000000000000000', currency: 'OGN' })
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -619,6 +642,10 @@ describe('Apollo adapter', () => {
         ListingSold: {
           status: 'Active',
           rewardEarned: { amount: '0', currency: 'OGN' }
+        },
+        Referral: {
+          status: 'Active',
+          rewardEarned: { amount: '50000000000000000000', currency: 'OGN' }
         },
       }
       for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
