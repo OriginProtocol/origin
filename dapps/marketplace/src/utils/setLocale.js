@@ -6,11 +6,16 @@ export default async function setLocale(newLocale) {
   if (newLocale) {
     localStorage.locale = newLocale
   } else if (!userLocale) {
-    // Default to English until our translations are improved.
-    userLocale = 'en_US'
+    // Only switch to languages that we know have good translations.
+    const autoSwitchLocales = ['zh_CN']
+    if (autoSwitchLocales.includes(navigator.language.replace('-', '_'))) {
+      userLocale = navigator.language.replace('-', '_')
+    } else {
+      userLocale = 'en_US'
+    }
+    // Un-comment to always switch to an available translation
     //userLocale = (navigator.language || 'en_US').replace('-', '_')
   }
-
   const hasLanguage = Languages.find(l => l[0].indexOf(userLocale) === 0)
   let locale = 'en_US'
   if (hasLanguage) {
