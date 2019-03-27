@@ -603,6 +603,8 @@ describe('Apollo adapter', () => {
         this.ethAddress
       )
 
+      console.log(" OUT=", JSON.stringify(out))
+
       expect(out.rewardEarned).to.deep.equal({ amount: '225000000000000000000', currency: 'OGN' })
 
       const actionByType = {}
