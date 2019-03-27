@@ -21,10 +21,9 @@ class RewardsBanner extends Component {
                   </span>
                 </div>
                 <div className="float-right">
-                  <Link
-                    to="/welcome"
-                    className="btn btn-primary"
-                  >Go</Link>
+                  <Link to="/welcome" className="btn btn-primary">
+                    Go
+                  </Link>
                 </div>
               </div>
             </div>

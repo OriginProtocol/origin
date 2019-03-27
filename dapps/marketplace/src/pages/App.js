@@ -68,7 +68,8 @@ class App extends Component {
     applyConfiguration(creatorConfig)
 
     // hide the rewards bar if you're on any of the rewards pages
-    const hideRewardsBar = this.props.location.pathname.match(/^\/welcome$/g) || 
+    const hideRewardsBar =
+      this.props.location.pathname.match(/^\/welcome$/g) ||
       this.props.location.pathname.match(/^\/campaigns$/g)
 
     // hide navigation bar on growth welcome screen and show it
