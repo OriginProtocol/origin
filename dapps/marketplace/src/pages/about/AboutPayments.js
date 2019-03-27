@@ -1,10 +1,14 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 const AboutPayments = () => (
   <div className="container about-info">
-    <PageTitle>Pricing &amp; Payments On Origin</PageTitle>
+    <DocumentTitle
+      pageTitle={
+        <fbt desc="aboutPayments.title">Pricing &amp; Payments On Origin</fbt>
+      }
+    />
     <h1>
       <fbt desc="aboutPayments.heading">Pricing &amp; Payments On Origin</fbt>
     </h1>
