@@ -77,7 +77,9 @@ class Footer extends Component {
                         <fbt desc="footer.foundABug">
                           Found a bug or have feedback? Send an email to
                           <a href={`mailto:${SupportEmail}`}>
-                            <fbt:param name="SupportEmail">{SupportEmail}</fbt:param>
+                            <fbt:param name="SupportEmail">
+                              {SupportEmail}
+                            </fbt:param>
                           </a>{' '}
                           , open an issue on
                           <a
