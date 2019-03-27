@@ -275,6 +275,7 @@ describe('Apollo adapter', () => {
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+      expect(out.actions.length).to.equal(9)
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -355,6 +356,7 @@ describe('Apollo adapter', () => {
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
+      expect(out.actions.length).to.equal(9)
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -435,6 +437,7 @@ describe('Apollo adapter', () => {
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '50000000000000000000', currency: 'OGN' })
+      expect(out.actions.length).to.equal(9)
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -523,6 +526,7 @@ describe('Apollo adapter', () => {
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
+      expect(out.actions.length).to.equal(9)
 
       const actionByType = {}
       for(const action of out.actions) {
@@ -615,6 +619,7 @@ describe('Apollo adapter', () => {
       )
 
       expect(out.rewardEarned).to.deep.equal({ amount: '225000000000000000000', currency: 'OGN' })
+      expect(out.actions.length).to.equal(9)
 
       const actionByType = {}
       for(const action of out.actions) {
