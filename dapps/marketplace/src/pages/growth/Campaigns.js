@@ -167,7 +167,7 @@ function Campaign(props) {
           {GrowthEnum[nameKey] ? (
             <GrowthTranslation stringKey={nameKey} />
           ) : (
-            'Campaign'
+            fbt('Campaign', 'Campaign')
           )}
         </h1>
         <a className="info-icon">
@@ -179,7 +179,7 @@ function Campaign(props) {
         <div>
           {status !== 'Pending' && (
             <Fragment>
-              <span className="font-weight-bold">Tokens earned</span>
+              <span className="font-weight-bold"><fbt desc="Campaign.tokensEarned">Tokens earned</fbt></span>
               <img className="ogn-icon pl-2 pr-1" src="images/ogn-icon.svg" />
               <span className="ogn-amount font-weight-bold">
                 {tokensEarned.toString()}
@@ -232,7 +232,7 @@ class GrowthCampaigns extends Component {
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return <h5 className="p-2">Loading...</h5>
+              return <h5 className="p-2"><fbt desc="Loading...">Loading...</fbt></h5>
             } else if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
@@ -254,7 +254,7 @@ class GrowthCampaigns extends Component {
               >
                 {({ error, networkStatus, loading }) => {
                   if (networkStatus === 1 || loading) {
-                    return <h5 className="p-2">Loading...</h5>
+                    return <h5 className="p-2"><fbt desc="Loading...">Loading...</fbt></h5>
                   } else if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />
@@ -274,7 +274,7 @@ class GrowthCampaigns extends Component {
                     >
                       {({ error, data, networkStatus, loading }) => {
                         if (networkStatus === 1 || loading) {
-                          return <h5 className="p-2">Loading...</h5>
+                          return <h5 className="p-2"><fbt desc="Loading...">Loading...</fbt></h5>
                         } else if (error) {
                           return (
                             <QueryError
