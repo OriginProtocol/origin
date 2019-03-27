@@ -23,9 +23,13 @@ const WaitForFirstBlock = () => (
     <div className="spinner light" />
     <div>
       <b>
-        <fbt desc="WaitForTransaction.writingToBlockchain">Writing to the blockchain.</fbt>
+        <fbt desc="WaitForTransaction.writingToBlockchain">
+          Writing to the blockchain.
+        </fbt>
         <br />
-        <fbt desc="WaitForTransaction.mayTakeSomeTime">This might take a minute.</fbt>
+        <fbt desc="WaitForTransaction.mayTakeSomeTime">
+          This might take a minute.
+        </fbt>
       </b>
     </div>
   </div>
@@ -36,9 +40,13 @@ const WaitForConfirmation = () => (
     <div className="spinner light" />
     <div>
       <b>
-        <fbt desc="WaitForTransaction.waitingForConfirmation">Waiting for confirmation.</fbt>
+        <fbt desc="WaitForTransaction.waitingForConfirmation">
+          Waiting for confirmation.
+        </fbt>
         <br />
-        <fbt desc="WaitForTransaction.mayTakeSomeTime">This might take a minute.</fbt>
+        <fbt desc="WaitForTransaction.mayTakeSomeTime">
+          This might take a minute.
+        </fbt>
       </b>
     </div>
   </div>
@@ -48,7 +56,9 @@ const Error = () => (
   <div className="make-offer-modal">
     <div className="spinner light" />
     <div>
-      <b><fbt desc="WaitForTransaction.errorSeeConsole">Error - see console</fbt></b>
+      <b>
+        <fbt desc="WaitForTransaction.errorSeeConsole">Error - see console</fbt>
+      </b>
     </div>
   </div>
 )
@@ -57,7 +67,9 @@ const Confirm = () => (
   <>
     <div className="spinner light" />
     <div>
-      <b><fbt desc="WaitForTransaction.confirm">Confirm Transaction</fbt></b>
+      <b>
+        <fbt desc="WaitForTransaction.confirm">Confirm Transaction</fbt>
+      </b>
     </div>
   </>
 )
@@ -76,7 +88,12 @@ class WaitForTransaction extends Component {
       const content = (
         <div className="make-offer-modal">
           {provider === 'MetaMask' ? <MetaMaskAnimation /> : <Confirm />}
-          <div><fbt desc="WaitForTransaction.confirmInProvider">Please confirm this transaction in{' '}<fbt:param name="provider">{provider}</fbt:param></fbt></div>
+          <div>
+            <fbt desc="WaitForTransaction.confirmInProvider">
+              Please confirm this transaction in{' '}
+              <fbt:param name="provider">{provider}</fbt:param>
+            </fbt>
+          </div>
         </div>
       )
       if (this.props.contentOnly) {

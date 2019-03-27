@@ -84,7 +84,11 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
                 <div>{endDateDisplay}</div>
               </Tooltip>
             </div>
-            {!showUnavailable ? null : <div className="total"><fbt desc="Unavailable">Unavailable</fbt></div>}
+            {!showUnavailable ? null : (
+              <div className="total">
+                <fbt desc="Unavailable">Unavailable</fbt>
+              </div>
+            )}
             {!totalPrice ? null : (
               <>
                 <div className="total">

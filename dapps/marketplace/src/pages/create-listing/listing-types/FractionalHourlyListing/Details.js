@@ -130,14 +130,20 @@ class Details extends Component {
 
                 <PricingChooser {...input('acceptedTokens', true)}>
                   <div className="form-group">
-                    <label><fbt desc="create.hourly.price">Default Price per Hour</fbt></label>
+                    <label>
+                      <fbt desc="create.hourly.price">
+                        Default Price per Hour
+                      </fbt>
+                    </label>
                     <div className="with-symbol" style={{ maxWidth: 270 }}>
                       <input {...input('price')} />
                       <CurrencySelect {...input('currency', true)} />
                     </div>
                     {Feedback('price')}
                     <div className="help-text price">
-                      <fbt desc="create.price.help">Price is an approximation of what you will receive.</fbt>
+                      <fbt desc="create.price.help">
+                        Price is an approximation of what you will receive.
+                      </fbt>
                       <a
                         href="#/about/payments"
                         target="_blank"

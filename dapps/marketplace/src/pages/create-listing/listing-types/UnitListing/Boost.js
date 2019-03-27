@@ -128,14 +128,14 @@ class Boost extends Component {
           <div className="gray-box">
             <fbt desc="create.boost.learn-more">
               <h5>About Visibility</h5>
-              Origin sorts and displays listings based on relevance, recency, and
-              boost level. Higher-visibility listings are shown to buyers more
-              often.
+              Origin sorts and displays listings based on relevance, recency,
+              and boost level. Higher-visibility listings are shown to buyers
+              more often.
               <h5 className="mt-3">Origin Tokens</h5>
               OGN is an ERC-20 token used for incentives and governance on the
-              Origin platform. Future intended uses of OGN might include referral
-              rewards, reputation incentives, spam prevention, developer rewards,
-              and platform governance.
+              Origin platform. Future intended uses of OGN might include
+              referral rewards, reputation incentives, spam prevention,
+              developer rewards, and platform governance.
               <div className="mt-3">
                 <a
                   href="#/about/tokens"

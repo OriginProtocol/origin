@@ -98,7 +98,8 @@ class Details extends Component {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        &nbsp;<fbt desc="create.price.help.more">Learn More</fbt>
+                        &nbsp;
+                        <fbt desc="create.price.help.more">Learn More</fbt>
                       </a>
                     </div>
                   </div>

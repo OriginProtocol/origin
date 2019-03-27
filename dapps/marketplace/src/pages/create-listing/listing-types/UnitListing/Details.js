@@ -93,7 +93,9 @@ class Details extends Component {
                   <div className="form-group">
                     <label>
                       {!isMulti && <fbt desc="price-per-unit">Price</fbt>}
-                      {isMulti && <fbt desc="price-per-unit">Price (per unit)</fbt>}
+                      {isMulti && (
+                        <fbt desc="price-per-unit">Price (per unit)</fbt>
+                      )}
                     </label>
                     <div className="with-symbol" style={{ maxWidth: 270 }}>
                       <input {...input('price')} />
@@ -109,7 +111,10 @@ class Details extends Component {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        &nbsp;<fbt desc="create.details.help-text.price.more">Learn More</fbt>
+                        &nbsp;
+                        <fbt desc="create.details.help-text.price.more">
+                          Learn More
+                        </fbt>
                       </a>
                     </div>
                   </div>

@@ -19,7 +19,9 @@ const NoOgn = () => (
       <div>
         You have 0 <span>OGN</span> in your wallet.
       </div>
-      <div>Once you acquire some OGN you will be able to boost your listing.</div>
+      <div>
+        Once you acquire some OGN you will be able to boost your listing.
+      </div>
       <div>
         <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
           Learn More
