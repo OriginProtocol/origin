@@ -27,35 +27,35 @@ class BetaModal extends Component {
               </fbt>
             </li>
             <li>
-              <fbt desc="BetaModal.pleaseVerify">Please verify your</fbt>
-              <Link
-                to="/profile"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('identity', 'identity')}
-              />
-              <fbt desc="BetaModal.knowWhouYouAre">
+              <fbt desc="BetaModal.pleaseVerify">
+                Please verify your
+                <Link
+                  to="/profile"
+                  onClick={() => this.setState({ shouldClose: true })}
+                >
+                  identity
+                </Link>
                 so other buyers and sellers know who you are.
               </fbt>
             </li>
             <li>
-              <fbt desc="BetaModal.dontForget">Don&apos;t forget to enable</fbt>
-              <Link
-                to="/messages"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Origin Messaging', 'Origin Messaging')}
-              />
-              <fbt desc="BetaModal.soYouCanCommunicate">
+              <fbt desc="BetaModal.dontForget">
+                Don&apos;t forget to enable
+                <Link
+                  to="/messages"
+                  onClick={() => this.setState({ shouldClose: true })}
+                >
+                  Origin Messaging
+                </Link>
                 so you can communicate with other users. It&apos;s free.
               </fbt>
             </li>
             <li>
               <fbt desc="BetaModal.ifYouHaveQuestions">
                 If you have any questions or need to dispute a transaction,
+                <a href="mailto:support@originprotocol.com">let us know</a>
+                .
               </fbt>
-              <a href="mailto:support@originprotocol.com">
-                <fbt desc="BetaModal.letUsKnow">let us know</fbt>
-              </a>
-              .
             </li>
           </ul>
           <div className="actions">
