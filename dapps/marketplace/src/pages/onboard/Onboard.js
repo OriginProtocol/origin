@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 
+import DocumentTitle from 'components/DocumentTitle'
 import store from 'utils/store'
 
 import Wallet from './Wallet'
@@ -20,6 +22,9 @@ class Onboard extends Component {
 
     return (
       <div className="container onboard">
+        <DocumentTitle
+          pageTitle={<fbt desc="Onboard.title">Getting Started</fbt>}
+        />
         <Switch>
           <Route
             path={`${linkPathPrefix}/onboard/metamask`}

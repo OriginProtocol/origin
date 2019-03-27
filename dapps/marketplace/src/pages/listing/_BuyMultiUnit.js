@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price'
@@ -41,7 +42,9 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               available={listing.unitsAvailable}
             />
             <div className="total">
-              <span>Total Price</span>
+              <span>
+                <fbt desc="totalPrice">Total Price</fbt>
+              </span>
               <span>
                 <Price price={totalPrice} />
               </span>
@@ -63,7 +66,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               currency={token}
               tokenStatus={tokenStatus}
               className="btn btn-primary"
-              children="Purchase"
+              children={fbt('Purchase', 'Purchase')}
             />
           </div>
         )

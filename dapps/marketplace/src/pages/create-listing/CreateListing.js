@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
@@ -82,7 +83,9 @@ class CreateListing extends Component {
 
     return (
       <div className="container create-listing">
-        <PageTitle>Add a Listing</PageTitle>
+        <DocumentTitle
+          pageTitle={<fbt desc="createListing.title">Add A Listing</fbt>}
+        />
         <Switch>
           <Route
             path="/create/details"

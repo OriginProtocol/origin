@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-// import { Query } from 'react-apollo'
-// import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 const Events = [
   'ListingCreated',
@@ -35,23 +34,50 @@ class TransactionDescription extends Component {
 
     const name = event.event
     if (name === 'OfferCreated') {
-      description = 'You purchased a listing'
+      description = fbt(
+        'You purchased a listing',
+        'TransactionDescription.offerCreated'
+      )
     } else if (name === 'OfferAccepted') {
-      description = 'You accepted an offer'
+      description = fbt(
+        'You accepted an offer',
+        'TransactionDescription.offerAccepted'
+      )
     } else if (name === 'OfferFinalized') {
-      description = 'You finalized a transaction'
+      description = fbt(
+        'You finalized a transaction',
+        'TransactionDescription.offerFinalized'
+      )
     } else if (name === 'OfferWithdrawn') {
-      description = 'You withdrew an offer'
+      description = fbt(
+        'You withdrew an offer',
+        'TransactionDescription.offerWithdrawn'
+      )
     } else if (name === 'OfferDisputed') {
-      description = 'You disputed an offer'
+      description = fbt(
+        'You disputed an offer',
+        'TransactionDescription.offerDisputed'
+      )
     } else if (name === 'ListingCreated') {
-      description = 'You created a listing'
+      description = fbt(
+        'You created a listing',
+        'TransactionDescription.listingCreated'
+      )
     } else if (name === 'ListingUpdated') {
-      description = 'You updated a listing'
+      description = fbt(
+        'You updated a listing',
+        'TransactionDescription.listingUpdated'
+      )
     } else if (name === 'IdentityUpdated') {
-      description = 'You updated your profile'
+      description = fbt(
+        'You updated your profile',
+        'TransactionDescription.identityUpdated'
+      )
     } else if (name === 'Transfer') {
-      description = 'You converted some ETH'
+      description = fbt(
+        'You converted some ETH',
+        'TransactionDescription.ethConverted'
+      )
     }
 
     return <div>{description}</div>

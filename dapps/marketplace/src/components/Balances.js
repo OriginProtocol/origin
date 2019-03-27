@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
@@ -11,7 +12,9 @@ const Balances = ({ ethBalance, account }) => {
 
   return (
     <div className="balances">
-      <h5>Account Balance</h5>
+      <h5>
+        <fbt desc="Balances.account-balance">Account Balance</fbt>
+      </h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">
@@ -52,11 +55,13 @@ const Balances = ({ ethBalance, account }) => {
         {!enableGrowth ? null : (
           <EnrollButton
             className="btn get-ogn d-flex"
-            children="Get Started"
+            children={fbt('Get Started', 'Get Started')}
             skipjoincampaign="false"
           >
             <img className="mr-1" src="images/growth/blue-add-icon.svg" />
-            <div className="mr-2 value">Get OGN</div>
+            <div className="mr-2 value">
+              <fbt desc="Balances.getOgn">Get OGN</fbt>
+            </div>
           </EnrollButton>
         )}
       </div>

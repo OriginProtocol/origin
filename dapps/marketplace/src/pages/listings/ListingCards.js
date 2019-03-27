@@ -3,6 +3,7 @@ import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
+import { fbt } from 'fbt-runtime'
 
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey

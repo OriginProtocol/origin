@@ -233,7 +233,7 @@ class AirbnbAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

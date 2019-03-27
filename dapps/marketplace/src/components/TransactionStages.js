@@ -1,27 +1,56 @@
 import React from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import EventTick from 'components/EventTick'
 
 const SaleStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
-  { title: 'Offer Accepted', event: 'acceptedEvent' },
-  { title: 'Sale Completed', event: 'finalizedEvent' }
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Sale Completed', 'TransactionStages.saleCompleted'),
+    event: 'finalizedEvent'
+  }
 ]
 
 const DisputeStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
-  { title: 'Offer Accepted', event: 'acceptedEvent' },
-  { title: 'Dispute Started', event: 'disputedEvent', className: 'danger' },
-  { title: 'Ruling Made', event: 'rulingEvent' }
+  {
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Dispute Started', 'TransactionStages.disputeStarted'),
+    event: 'disputedEvent',
+    className: 'danger'
+  },
+  {
+    title: fbt('Ruling Made', 'TransactionStages.rulingMade'),
+    event: 'rulingEvent'
+  }
 ]
 
 const CanceledStages = [
-  { title: 'Offer Placed', event: 'createdEvent' },
   {
-    title: 'Offer Withdrawn',
-    ifSeller: 'Offer Rejected',
-    event: 'withdrawnEvent'
+    title: fbt('Offer Placed', 'TransactionStages.offerPlaced'),
+    event: 'createdEvent'
+  },
+  {
+    title: fbt('Offer Accepted', 'TransactionStages.offerAccepted'),
+    event: 'acceptedEvent'
+  },
+  {
+    title: fbt('Sale Completed', 'TransactionStages.saleCompleted'),
+    event: 'finalizedEvent'
   }
 ]
 
@@ -56,7 +85,12 @@ const TransactionStages = ({ offer }) => {
     const seller = get(offer, 'listing.seller.id')
     const isSeller = party === seller
 
-    const title = stage.ifSeller && isSeller ? stage.ifSeller : stage.title
+    // HACK (franck): EventTick fails if title is of type FbtResult.
+    // As a workaround we evaluate the FbtResult function here.
+    const title =
+      stage.ifSeller && isSeller
+        ? stage.ifSeller.toString()
+        : stage.title.toString()
 
     return (
       <EventTick key={idx} className={className.join(' ')} event={event}>

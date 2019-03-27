@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import queryString from 'query-string'
 
@@ -13,7 +14,7 @@ import RoomStatus from './RoomStatus'
 import Room from './Room'
 import QueryError from 'components/QueryError'
 import Avatar from 'components/Avatar'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
 
@@ -79,7 +80,7 @@ class Messages extends Component {
   render() {
     return (
       <div className="container messages-page">
-        <PageTitle>Messaging</PageTitle>
+        <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
         <Mutation mutation={MarkConversationRead}>
           {markConversationRead => (
             <Query query={query} pollInterval={500}>
@@ -87,9 +88,21 @@ class Messages extends Component {
                 if (error) {
                   return <QueryError query={query} error={error} />
                 } else if (loading) {
-                  return <div>Loading conversations...</div>
+                  return (
+                    <div>
+                      <fbt desc="Messages.loading">
+                        Loading conversations...
+                      </fbt>
+                    </div>
+                  )
                 } else if (!data || !data.messaging) {
-                  return <p className="p-3">Cannot query messages</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="Messages.cannotQuery">
+                        Cannot query messages
+                      </fbt>
+                    </p>
+                  )
                 }
 
                 const conversations = get(data, 'messaging.conversations', [])
@@ -112,7 +125,9 @@ class Messages extends Component {
                       className={`col-md-3 ${displayConversations} d-md-block`}
                     >
                       {conversations.length ? null : (
-                        <div>No conversations!</div>
+                        <div>
+                          <fbt desc="Messages.none">No conversations!</fbt>
+                        </div>
                       )}
                       {conversations.map((conv, idx) => (
                         <RoomStatus

@@ -1,9 +1,10 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 const ProfileStrength = ({ published = 0, unpublished = 0, large }) => (
   <div className={`profile-strength${large ? ' large' : ''}`}>
     <div className="title">
-      Profile Strength
+      <fbt desc="ProfileStrength.ProfileStrength">Profile Strength</fbt>
       <div className="pct">{`${published + unpublished}%`}</div>
     </div>
     <div className="progress">

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 
@@ -16,8 +17,8 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
 
-  let startDateDisplay = 'Start',
-    endDateDisplay = 'End',
+  let startDateDisplay = fbt('Start', 'Start'),
+    endDateDisplay = fbt('End', 'End'),
     startDate = null,
     endDate = null,
     totalPrice,
@@ -28,8 +29,8 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('MMM D h:00a')
-    endDateDisplay = dayjs(endDate).format('MMM D h:00a')
+    startDateDisplay = dayjs(startDate).format('MMM D h:00a') // Needs l10n
+    endDateDisplay = dayjs(endDate).format('MMM D h:00a') // Needs l10n
     const priceEstimate = availability.estimatePrice(
       `${startDate}/${dayjs(endDate)
         .add(-1, 'hour')
@@ -69,24 +70,32 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
             </div>
             <div className="choose-dates form-control">
               <Tooltip
-                tooltip="Scroll down for availability calendar"
+                tooltip={fbt(
+                  'Scroll down for availability calendar',
+                  'Scroll down for availability calendar'
+                )}
                 placement="top"
               >
                 <div>{startDateDisplay}</div>
               </Tooltip>
               <div className="arr" />
               <Tooltip
-                tooltip="Scroll down for availability calendar"
+                tooltip={fbt(
+                  'Scroll down for availability calendar',
+                  'Scroll down for availability calendar'
+                )}
                 placement="top"
               >
                 <div>{endDateDisplay}</div>
               </Tooltip>
             </div>
-            {!showUnavailable ? null : <div className="total">Unavailable</div>}
+            {!showUnavailable ? null : <div className="total"><fbt desc="Unavailable">Unavailable</fbt></div>}
             {!totalPrice ? null : (
               <>
                 <div className="total">
-                  <span>Total Price</span>
+                  <span>
+                    <fbt desc="totalPrice">Total Price</fbt>
+                  </span>
                   <span>
                     <Price price={totalPrice} />
                   </span>
@@ -113,7 +122,7 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
               currency={token}
               tokenStatus={tokenStatus}
               className={`btn btn-primary${available ? '' : ' disabled'}`}
-              children="Book"
+              children={fbt('Book', 'Book')}
             />
           </div>
         )
