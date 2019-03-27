@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Link from 'components/Link'
 
 class RewardsBanner extends Component {
   render() {
@@ -20,12 +21,10 @@ class RewardsBanner extends Component {
                   </span>
                 </div>
                 <div className="float-right">
-                  <a
+                  <Link
+                    to="/welcome"
                     className="btn btn-primary"
-                    href="https://dapp.originprotocol.com/#/welcome"
-                  >
-                    Go
-                  </a>
+                  >Go</Link>
                 </div>
               </div>
             </div>
