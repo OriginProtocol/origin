@@ -20,7 +20,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `${fbt.param('nameLink', nameLink)} declined your offer on ${fbt.param('title', title)}`,
+          `${fbt.param(
+            'nameLink',
+            nameLink
+          )} declined your offer on ${fbt.param('title', title)}`,
           'NotificationRow.declineOfferOn'
         )}
       </>
@@ -29,7 +32,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `${fbt.param('nameLink', nameLink)} accepted your offer on ${fbt.param('title', title)}`,
+          `${fbt.param(
+            'nameLink',
+            nameLink
+          )} accepted your offer on ${fbt.param('title', title)}`,
           'NotificationRow.acceptOfferOn'
         )}
       </>
@@ -38,7 +44,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `Transaction with ${fbt.param('nameLink', nameLink)} finalized for ${fbt.param('title', title)}`,
+          `Transaction with ${fbt.param(
+            'nameLink',
+            nameLink
+          )} finalized for ${fbt.param('title', title)}`,
           'NotificationRow.acceptOfferOn'
         )}
       </>
@@ -47,7 +56,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `${fbt.param('nameLink', nameLink)} made an offer on ${fbt.param('title', title)}`,
+          `${fbt.param('nameLink', nameLink)} made an offer on ${fbt.param(
+            'title',
+            title
+          )}`,
           'NotificationRow.acceptOfferOn'
         )}
       </>
@@ -56,7 +68,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `${fbt.param('nameLink', nameLink)} disputed an offer on ${fbt.param('title', title)}`,
+          `${fbt.param('nameLink', nameLink)} disputed an offer on ${fbt.param(
+            'title',
+            title
+          )}`,
           'NotificationRow.acceptOfferOn'
         )}
       </>
@@ -65,7 +80,10 @@ const Row = ({ node, identity, onClick }) => {
     description = (
       <>
         {fbt(
-          `${fbt.param('nameLink', nameLink)} resolved a dispute on ${fbt.param('title', title)}`,
+          `${fbt.param('nameLink', nameLink)} resolved a dispute on ${fbt.param(
+            'title',
+            title
+          )}`,
           'NotificationRow.acceptOfferOn'
         )}
       </>

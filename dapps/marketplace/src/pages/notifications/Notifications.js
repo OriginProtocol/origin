@@ -74,7 +74,9 @@ class Notifications extends Component {
             } else if (!data || !data.marketplace) {
               return (
                 <p className="p-3">
-                  <fbt desc="notifications.noMarketplace">No marketplace contract?</fbt>
+                  <fbt desc="notifications.noMarketplace">
+                    No marketplace contract?
+                  </fbt>
                 </p>
               )
             }
@@ -114,9 +116,12 @@ class Notifications extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? 
-                            fbt('notifications.item.loading', 'Loading') :
-                            fbt('notifications.item.loadmore', 'Load more...')
+                            networkStatus === 3
+                              ? fbt('notifications.item.loading', 'Loading')
+                              : fbt(
+                                  'notifications.item.loadmore',
+                                  'Load more...'
+                                )
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
