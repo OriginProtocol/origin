@@ -67,7 +67,6 @@ class ApolloAdapter {
     }
 
     // Add extra information in case of a Referral.
-    console.log('DATA TYPE=', action.type)
     if (action.type === 'Referral') {
       const referralsInfo = await this._getReferralsActionData(data)
       action = { ...action, ...referralsInfo }
