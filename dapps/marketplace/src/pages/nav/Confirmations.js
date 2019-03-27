@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import query from 'queries/UserTransactions'
 import distanceToNow from 'utils/distanceToNow'
@@ -68,7 +69,10 @@ class TransactionsNav extends Component {
 }
 
 const TransactionsContent = ({ pending, nodes, blockNumber }) => {
-  const title = `Pending Blockchain Confirmation${pending === 1 ? '' : 's'}`
+  const title = fbt(
+    'Pending Blockchain ' + fbt.plural('Confirmation', pending),
+    'Navigation.confirmations.pendingTransactions'
+  )
 
   return (
     <div className="dropdown-menu dropdown-menu-right show confirmations">
@@ -91,8 +95,20 @@ const TransactionsContent = ({ pending, nodes, blockNumber }) => {
                 <div className="parties">{`Tx: ${node.id}`}</div>
                 <div className="confirmations">
                   {confirmations <= 6
-                    ? `${confirmations} of 6 confirmations`
-                    : `Complete (${confirmations} confirmations)`}
+                    ? fbt(
+                        `${fbt.param(
+                          'confirmations.noOfConfirmations',
+                          confirmations
+                        )} of 6 confirmations`,
+                        'confirmations.underLimit'
+                      )
+                    : fbt(
+                        `Complete (${fbt.param(
+                          'confirmations.noOfConfirmations',
+                          confirmations
+                        )} confirmations)`,
+                        'confirmations.atLimit'
+                      )}
                 </div>
               </div>
             </div>

@@ -64,11 +64,21 @@ class Notifications extends Component {
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1) {
-              return <h1>Loading...</h1>
+              return (
+                <h1>
+                  <fbt desc="notifications.loading">Loading...</fbt>
+                </h1>
+              )
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
-              return <p className="p-3">No marketplace contract?</p>
+              return (
+                <p className="p-3">
+                  <fbt desc="notifications.noMarketplace">
+                    No marketplace contract?
+                  </fbt>
+                </p>
+              )
             }
 
             const { nodes, pageInfo, totalCount } = get(
@@ -106,7 +116,12 @@ class Notifications extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                            networkStatus === 3
+                              ? fbt('notifications.item.loading', 'Loading')
+                              : fbt(
+                                  'notifications.item.loadmore',
+                                  'Load more...'
+                                )
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
