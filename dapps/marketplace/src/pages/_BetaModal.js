@@ -66,7 +66,6 @@ class BetaModal extends Component {
               }}
               children={fbt('I got it.', 'I got it.')}
             />
-            </button>
           </div>
         </div>
       </Modal>
