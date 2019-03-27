@@ -1,22 +1,16 @@
 import React, { Component } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import Avatar from 'components/avatar'
-
+import IdentityQuery from '../queries/Identity'
 import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class ProfileScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { profile = {} } = navigation.getParam('user')
-    const { firstName = '', lastName = '' } = profile
-    const title = `${firstName} ${lastName}`.trim() || 'Unnamed User'
-
     return ({
-      title,
       headerTitleStyle : {
         fontFamily: 'Poppins',
         fontSize: 17,
@@ -30,85 +24,82 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
-    const { address, attestations = [], profile = {} } = navigation.getParam('user')
+    <Query query={IdentityQuery}>
+      {({ data, loading, error }) => {
+        if (loading || error) return null
+        const profile = get(data, 'web3.account.identity') || {}
 
-    return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.svContainer}>
-        <Avatar image={profile.avatar} size={150} style={[
-          styles.avatar,
-          profile.avatar ? { paddingTop : 0 } : {},
-        ]} />
-        <Address address={address} label="User Address" style={styles.address} />
-        <Text style={styles.description}>
-          {profile.description || 'An Origin user without a description'}
-        </Text>
-        {!!attestations.length && (
-          <View style={styles.attestations}>
-            <Text style={styles.heading}>Verified</Text>
-            <View style={styles.services}>
-              {attestations.find(({ service }) => service === 'phone') &&
-                <View style={styles.attestation}>
-                  <Image
-                    source={require(`${IMAGES_PATH}phone-badge.png`)}
-                    style={styles.badge}
-                  />
-                  <Text style={styles.label}>Phone</Text>
+        return (
+          <ScrollView style={styles.container} contentContainerStyle={styles.svContainer}>
+            <Avatar image={profile.avatar} size={150} style={[
+              styles.avatar,
+              profile.avatar ? { paddingTop : 0 } : {},
+            ]} />
+            <Address address={address} label="User Address" style={styles.address} />
+            <Text style={styles.description}>
+              {profile.description || 'An Origin user without a description'}
+            </Text>
+            {!!attestations.length && (
+              <View style={styles.attestations}>
+                <Text style={styles.heading}>Verified</Text>
+                <View style={styles.services}>
+                  {profile.phoneVerified &&
+                    <View style={styles.attestation}>
+                      <Image
+                        source={require(`${IMAGES_PATH}phone-badge.png`)}
+                        style={styles.badge}
+                      />
+                      <Text style={styles.label}>Phone</Text>
+                    </View>
+                  }
+                  {profile.emailVerified &&
+                    <View style={styles.attestation}>
+                      <Image
+                        source={require(`${IMAGES_PATH}email-badge.png`)}
+                        style={styles.badge}
+                      />
+                      <Text style={styles.label}>Email</Text>
+                    </View>
+                  }
+                  {profile.facebookVerified &&
+                    <View style={styles.attestation}>
+                      <Image
+                        source={require(`${IMAGES_PATH}facebook-badge.png`)}
+                        style={styles.badge}
+                      />
+                      <Text style={styles.label}>Facebook</Text>
+                    </View>
+                  }
+                  {profile.twitterVerified &&
+                    <View style={styles.attestation}>
+                      <Image
+                        source={require(`${IMAGES_PATH}twitter-badge.png`)}
+                        style={styles.badge}
+                      />
+                      <Text style={styles.label}>Twitter</Text>
+                    </View>
+                  }
+                  {profile.airbnbVerified &&
+                    <View style={styles.attestation}>
+                      <Image
+                        source={require(`${IMAGES_PATH}airbnb-badge.png`)}
+                        style={styles.badge}
+                      />
+                      <Text style={styles.label}>Airbnb</Text>
+                    </View>
+                  }
                 </View>
-              }
-              {attestations.find(({ service }) => service === 'email') &&
-                <View style={styles.attestation}>
-                  <Image
-                    source={require(`${IMAGES_PATH}email-badge.png`)}
-                    style={styles.badge}
-                  />
-                  <Text style={styles.label}>Email</Text>
-                </View>
-              }
-              {attestations.find(({ service }) => service === 'facebook') &&
-                <View style={styles.attestation}>
-                  <Image
-                    source={require(`${IMAGES_PATH}facebook-badge.png`)}
-                    style={styles.badge}
-                  />
-                  <Text style={styles.label}>Facebook</Text>
-                </View>
-              }
-              {attestations.find(({ service }) => service === 'twitter') &&
-                <View style={styles.attestation}>
-                  <Image
-                    source={require(`${IMAGES_PATH}twitter-badge.png`)}
-                    style={styles.badge}
-                  />
-                  <Text style={styles.label}>Twitter</Text>
-                </View>
-              }
-              {attestations.find(({ service }) => service === 'airbnb') &&
-                <View style={styles.attestation}>
-                  <Image
-                    source={require(`${IMAGES_PATH}airbnb-badge.png`)}
-                    style={styles.badge}
-                  />
-                  <Text style={styles.label}>Airbnb</Text>
-                </View>
-              }
-            </View>
-          </View>
-        )}
-      </ScrollView>
-    )
+              </View>
+            )}
+          </ScrollView>
+        )
+
+      }}
+    </Query>
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-const mapDispatchToProps = dispatch => ({
-  fetchUser: address => dispatch(fetchUser(address)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen)
+export default ProfileScreen
 
 const styles = StyleSheet.create({
   address: {

@@ -248,7 +248,7 @@ services:
     environment:
       - HOT_WALLET_PK=C87509A1C067BBDE78BEB793E6FA76530B6382A4C0241E5E4A9EC0A0F44DC0D3
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-      - DAPP_URL=http://localhost:3000
+      - DAPP_URL=http://localhost:3000/docker#/
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - DISCOVERY_SERVER_URL=http://localhost:4000
       - PROVIDER_URL=http://localhost:8545

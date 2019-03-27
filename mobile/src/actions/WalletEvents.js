@@ -1,5 +1,3 @@
-import origin from 'services/origin'
-
 import keyMirror from 'utils/keyMirror'
 
 export const WalletEventsConstants = keyMirror(

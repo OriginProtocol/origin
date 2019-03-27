@@ -1,7 +1,8 @@
-import origin from '../services/origin'
+'use strict'
 
-const { web3 } = origin.contractService
+import Web3 from 'web3'
 
+const web3 = new Web3()
 const MAX_ADDRESS_LENGTH = 10
 
 export function abbreviateName(party, defaultName = '') {

@@ -1,5 +1,3 @@
-import origin from 'services/origin'
-
 import keyMirror from 'utils/keyMirror'
 
 export const DevicesConstants = keyMirror(
@@ -8,7 +6,7 @@ export const DevicesConstants = keyMirror(
   },
   'Devices'
 )
- 
+
 export function setDevices(devices) {
   return {
     type: DevicesConstants.SET_DEVICES,
