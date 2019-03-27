@@ -105,7 +105,11 @@ class Messages extends Component {
                   )
                 }
 
-                const conversations = get(data, 'messaging.conversations', []).sort((a, b) => {
+                const conversations = get(
+                  data,
+                  'messaging.conversations',
+                  []
+                ).sort((a, b) => {
                   const alm = a.lastMessage || { timestamp: Date.now() }
                   const blm = b.lastMessage || { timestamp: Date.now() }
 
