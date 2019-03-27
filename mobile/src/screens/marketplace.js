@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { WebView } from 'react-native-webview'
-import { connect } from 'react-redux'
 
-import originWallet from '../OriginWallet'
+import {
+  MARKETPLACE_DAPP_URL
+} from 'react-native-dotenv'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = {
@@ -14,22 +15,38 @@ class MarketplaceScreen extends Component {
     },
   }
 
-  render() {
-    const { address } = this.props
 
+
+	onWebViewMessage(event) {
+		let msgData;
+		try {
+			msgData = JSON.parse(event.nativeEvent.data)
+		} catch (err) {
+			console.warn(err)
+			return
+    }
+
+    let response
+    if (this[msgData.targetFunc]) {
+      response = this[msgData.targetFunc].apply(this, [msgData.data]);
+    }
+  }
+
+  handleMakeOffer({ listingID, value, from, quantity }) {
+    alert('Please confirm purchase of: ' + listingID)
+  }
+
+  render() {
     return (
       <WebView
-        source={{ uri: originWallet.getMarketplaceUrl() }}
-        injectedJavaScript = {`window.__linkWallet && window.__linkWallet('${address}', '${originWallet.getWalletToken()}');`}
+        ref={webview => {
+          this.dappWebView = webview
+        }}
+        source={{ uri: MARKETPLACE_DAPP_URL }}
+        onMessage={this.onWebViewMessage.bind(this)}
       />
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    address: state.wallet.address,
-  }
-}
-
-export default connect(mapStateToProps)(MarketplaceScreen)
+export default MarketplaceScreen

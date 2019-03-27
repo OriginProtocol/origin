@@ -16,6 +16,7 @@ import withWeb3 from 'hoc/withWeb3'
 
 class Buy extends Component {
   state = {}
+
   render() {
     if (this.state.onboard) {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
@@ -86,7 +87,12 @@ class Buy extends Component {
     ) {
       variables.fractionalData = { startDate, endDate }
     }
-    makeOffer({ variables })
+
+    if (!window.webViewBridge) {
+      makeOffer({ variables })
+    } else {
+      window.webViewBridge.send('handleMakeOffer', variables)
+    }
   }
 
   renderWaitModal() {

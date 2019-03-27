@@ -8,6 +8,7 @@ import Styl from 'react-styl'
 import client from '@origin/graphql'
 
 import setLocale from 'utils/setLocale'
+import webViewBridge from 'utils/webViewBridge'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -34,6 +35,8 @@ class AppWrapper extends Component {
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
     }
+
+    webViewBridge();
   }
 
   render() {

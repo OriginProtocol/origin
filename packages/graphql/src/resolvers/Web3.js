@@ -85,6 +85,9 @@ const web3Resolver = {
     if (localStorage.useWeb3Wallet) {
       return 'Web3 Wallet'
     }
+    if (window && window.webViewBridge) {
+      return 'mobile'
+    }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
       if (provider.isOrigin) return 'Origin Wallet'

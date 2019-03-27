@@ -60,7 +60,13 @@ class MobileNav extends Component {
               className="dropdown-item notifications"
               children={fbt('Notifications', 'Notifications')}
             />
-            {/* <a href="#" className="dropdown-item transactions">
+            <Link
+              onClick={() => onClose()}
+              to="/about/dapp-info"
+              className="dropdown-item dapp-info"
+              children={fbt('DApp Info', 'DApp Info')}
+            />
+             {/* <a href="#" className="dropdown-item transactions">
               Transactions
             </a> */}
           </div>

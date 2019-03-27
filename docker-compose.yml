@@ -257,6 +257,8 @@ services:
     depends_on:
       - postgres
       - redis-master
+    ports:
+      - "3008:3008"
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
