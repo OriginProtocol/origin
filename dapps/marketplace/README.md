@@ -6,7 +6,7 @@ Test builds at https://originprotocol.github.io/test-builds/
 
 # Usage
 
-    Refer to [DEVELOPMENT.md](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md)
+Refer to [DEVELOPMENT.md](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md)
 
 # Tests
 
