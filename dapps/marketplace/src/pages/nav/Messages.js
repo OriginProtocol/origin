@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 
 import MessagingQuery from 'queries/Messaging'
 import ConversationsQuery from 'queries/Conversations'
@@ -66,11 +67,13 @@ class MessagesNav extends Component {
 
 const Error = () => (
   <div className="dropdown-menu dropdown-menu-right show p-3">
-    Error loading messages
+    <fbt desc="messages.errorLoading">Error loading messages</fbt>
   </div>
 )
 const Loading = () => (
-  <div className="dropdown-menu dropdown-menu-right show p-3">Loading...</div>
+  <div className="dropdown-menu dropdown-menu-right show p-3">
+    <fbt desc="messages.loading">Loading...</fbt>
+  </div>
 )
 
 class MessagesDropdown extends Component {
@@ -101,7 +104,14 @@ class MessagesDropdown extends Component {
             <div className="dropdown-menu dropdown-menu-right show">
               <div className="count">
                 <div className="total">{totalUnread}</div>
-                <div className="title">Unread Messages</div>
+                <div className="title">
+                  <fbt desc="messages.unreadMessages">
+                    Unread
+                    <fbt:plural count={totalUnread} showCount="no">
+                      Message
+                    </fbt:plural>
+                  </fbt>
+                </div>
                 {enabled ? null : (
                   <EnableMessaging
                     className="btn-sm"
@@ -126,7 +136,7 @@ class MessagesDropdown extends Component {
                 ))}
               </div>
               <Link to="/messages" onClick={() => onClick()}>
-                View Messages
+                <fbt desc="messages.viewMessages">View Messages</fbt>
               </Link>
             </div>
           )

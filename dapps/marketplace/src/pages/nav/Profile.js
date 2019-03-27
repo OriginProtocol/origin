@@ -69,8 +69,12 @@ class ProfileNav extends Component {
 
 const Network = withNetwork(({ networkName }) => (
   <div className="connected">
-    {`Connected to `}
-    <span className="net">{networkName}</span>
+    <fbt desc="nav.profile.connectedToNetwork">
+      {`Connected to `}
+      <span className="net">
+        <fbt:param name="networkName">{networkName}</fbt:param>
+      </span>
+    </fbt>
   </div>
 ))
 
@@ -84,7 +88,9 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Network />
           <div className="wallet-info">
             <div>
-              <h5>ETH Address</h5>
+              <h5>
+                <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
+              </h5>
               <div className="wallet-address">{checksumAddress}</div>
             </div>
             <div className="identicon">
@@ -101,11 +107,11 @@ const ProfileDropdown = ({ data, onClose }) => {
                 unlinkMutation()
               }}
               href="#"
-              children={fbt('Unlink Mobile', 'Unlink Mobile')}
+              children={fbt('Unlink Mobile', 'nav.profile.unlinkMobile')}
             />
           )}
           <Link onClick={() => onClose()} to="/profile">
-            Edit Profile
+            <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
           </Link>
         </div>
       )}
@@ -121,11 +127,16 @@ const Identity = ({ id }) => (
 
       return (
         <div className="identity">
-          <h5>My Identity</h5>
+          <h5>
+            <fbt desc="nav.profile.myIdentity">My Identity</fbt>
+          </h5>
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{profile.fullName || 'Unnamed User'}</div>
+              <div className="name">
+                {profile.fullName ||
+                  fbt('Unnamed User', 'nav.profile.unnamedUser')}
+              </div>
               <div className="attestations">
                 {profile.twitterVerified && (
                   <div className="attestation twitter" />
@@ -153,7 +164,7 @@ const Identity = ({ id }) => (
             </div>
             {`${fbt(
               'Profile Strength',
-              'ProfileStrength.ProfileStrength'
+              'nav.profile.ProfileStrength'
             )} - ${profile.strength || '0'}%`}
           </div>
         </div>

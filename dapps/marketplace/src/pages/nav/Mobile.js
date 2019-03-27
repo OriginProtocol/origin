@@ -19,13 +19,13 @@ class MobileNav extends Component {
               onClick={() => onClose()}
               to="/"
               className="dropdown-item browse"
-              children={fbt('Browse Categories', 'Browse Categories')}
+              children={fbt('Browse Categories', 'navigation.BrowseCategories')}
             />
             <Link
               onClick={() => onClose()}
               to="/create"
               className="dropdown-item add"
-              children={fbt('Add a Listing', 'Add a Listing')}
+              children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
             <div className="dropdown-divider" />
             <h6 className="dropdown-header">My Items</h6>
@@ -33,32 +33,32 @@ class MobileNav extends Component {
               onClick={() => onClose()}
               to="/my-purchases"
               className="dropdown-item purchases"
-              children={fbt('Purchases', 'Purchases')}
+              children={fbt('Purchases', 'navigation.purchases')}
             />
             <Link
               onClick={() => onClose()}
               to="/my-listings"
               className="dropdown-item listings"
-              children={fbt('Listings', 'Listings')}
+              children={fbt('Listings', 'navigation.listings')}
             />
             <Link
               onClick={() => onClose()}
               to="/my-sales"
               className="dropdown-item sales"
-              children={fbt('Sales', 'Sales')}
+              children={fbt('Sales', 'navigation.sales')}
             />
             <div className="dropdown-divider" />
             <Link
               onClick={() => onClose()}
               to="/messages"
               className="dropdown-item messages"
-              children={fbt('Messages', 'Messages')}
+              children={fbt('Messages', 'navigation.messages')}
             />
             <Link
               onClick={() => onClose()}
               to="/notifications"
               className="dropdown-item notifications"
-              children={fbt('Notifications', 'Notifications')}
+              children={fbt('Notifications', 'navigation.notifications')}
             />
             {/* <a href="#" className="dropdown-item transactions">
               Transactions

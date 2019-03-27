@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 import store from 'utils/store'
 const sessionStore = store('sessionStorage')
 
@@ -19,7 +20,7 @@ class GetStarted extends Component {
               sessionStore.set('getStartedRedirect', { pathname, search })
             }}
           >
-            Get Started
+            <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
           </Link>
         </li>
         <li className="nav-item d-none d-md-block">
@@ -30,7 +31,7 @@ class GetStarted extends Component {
               sessionStore.set('getStartedRedirect', { pathname: '/create' })
             }
           >
-            Sell on Origin
+            <fbt desc="navigation.getStarted.sellOnOrigin">Sell on Origin</fbt>
           </Link>
         </li>
       </ul>
