@@ -1,5 +1,6 @@
 import React from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withIdentity from 'hoc/withIdentity'
 
@@ -18,50 +19,73 @@ const Row = ({ node, identity, onClick }) => {
   if (event === 'OfferWithdrawn') {
     description = (
       <>
-        {nameLink}
-        {` declined your offer on `}
-        {title}
+        {fbt(
+          `${fbt.param(
+            'nameLink',
+            nameLink
+          )} declined your offer on ${fbt.param('title', title)}`,
+          'NotificationRow.declineOfferOn'
+        )}
       </>
     )
   } else if (event === 'OfferAccepted') {
     description = (
       <>
-        {nameLink}
-        {` accepted your offer on `}
-        {title}
+        {fbt(
+          `${fbt.param(
+            'nameLink',
+            nameLink
+          )} accepted your offer on ${fbt.param('title', title)}`,
+          'NotificationRow.acceptOfferOn'
+        )}
       </>
     )
   } else if (event === 'OfferFinalized') {
     description = (
       <>
-        {`Transaction with `}
-        {nameLink}
-        {` finalized for `}
-        {title}
+        {fbt(
+          `Transaction with ${fbt.param(
+            'nameLink',
+            nameLink
+          )} finalized for ${fbt.param('title', title)}`,
+          'NotificationRow.acceptOfferOn'
+        )}
       </>
     )
   } else if (event === 'OfferCreated') {
     description = (
       <>
-        {nameLink}
-        {` made an offer on `}
-        {title}
+        {fbt(
+          `${fbt.param('nameLink', nameLink)} made an offer on ${fbt.param(
+            'title',
+            title
+          )}`,
+          'NotificationRow.acceptOfferOn'
+        )}
       </>
     )
   } else if (event === 'OfferDisputed') {
     description = (
       <>
-        {nameLink}
-        {` disputed an offer on `}
-        {title}
+        {fbt(
+          `${fbt.param('nameLink', nameLink)} disputed an offer on ${fbt.param(
+            'title',
+            title
+          )}`,
+          'NotificationRow.acceptOfferOn'
+        )}
       </>
     )
   } else if (event === 'OfferRuling') {
     description = (
       <>
-        {nameLink}
-        {` resolved a dispute on `}
-        {title}
+        {fbt(
+          `${fbt.param('nameLink', nameLink)} resolved a dispute on ${fbt.param(
+            'title',
+            title
+          )}`,
+          'NotificationRow.acceptOfferOn'
+        )}
       </>
     )
   }
