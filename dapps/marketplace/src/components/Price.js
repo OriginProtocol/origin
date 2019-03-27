@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import withCurrencies from 'hoc/withCurrencies'
 import ceil from 'lodash/round'
@@ -40,23 +41,24 @@ const Price = ({ className, target, currencies, descriptor, ...props }) => {
 
   if (descriptor) {
     if (listingType === 'FractionalListing') {
-      descriptor = ' per night'
+      return (
+        <fbt desc="Price.fractionalNightly">
+          <fbt:param name="content">{content}</fbt:param> per night
+        </fbt>
+      )
     } else if (listingType === 'FractionalHourlyListing') {
-      descriptor = ' per hour'
+      return (
+        <fbt desc="Price.fractionalHourly">
+          <fbt:param name="content">{content}</fbt:param> per hour
+        </fbt>
+      )
     } else if (get(props, 'listing.multiUnit')) {
-      descriptor = ' each'
-    } else {
-      descriptor = null
+      return (
+        <fbt desc="Price.multiUnit">
+          <fbt:param name="content">{content}</fbt:param> each
+        </fbt>
+      )
     }
-  }
-
-  if (descriptor) {
-    return (
-      <>
-        {content}
-        <span className="desc">{descriptor}</span>
-      </>
-    )
   }
 
   return content
