@@ -98,6 +98,12 @@ class MessagesDropdown extends Component {
 
           const conversations = get(data, 'messaging.conversations', [])
             .filter(c => c.totalUnread > 0)
+            .sort((a, b) => {
+              const alm = a.lastMessage || { timestamp: Date.now() }
+              const blm = b.lastMessage || { timestamp: Date.now() }
+
+              return alm.timestamp > blm.timestamp ? -1 : 1
+            })
             .slice(0, 5)
 
           return (
