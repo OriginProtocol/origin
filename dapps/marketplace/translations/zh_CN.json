@@ -3,22 +3,30 @@
   "translations": {
     "lnRohWpsGR7uMhMbL9Uc4A==": {
       "translations": [
-        {}
+        {
+          "translation": "待售的"
+        }
       ]
     },
     "IXnxuAx0PfImJ3UuUrtKNA==": {
       "translations": [
-        {}
+        {
+          "translation": "出租"
+        }
       ]
     },
     "ghfbnF7r/INujbWiriguzg==": {
       "translations": [
-        {}
+        {
+          "translation": "服务"
+        }
       ]
     },
     "66fBzTgLcxkHZ8hhNa6kkQ==": {
       "translations": [
-        {}
+        {
+          "translation": "公告"
+        }
       ]
     },
     "KFFRQn6ksmQTRyTzCz65sg==": {
@@ -31,7 +39,7 @@
     "rR5EdGNccI6VljakAkQidA==": {
       "translations": [
         {
-          "translation": "电器"
+          "translation": "家用电器"
         }
       ]
     },
@@ -45,7 +53,7 @@
     "y1wrUJKn06syj0F/jkjGrg==": {
       "translations": [
         {
-          "translation": "Atvs, UTVs, 雪橇"
+          "translation": "全地形车、休闲越野车、雪地车"
         }
       ]
     },
@@ -59,14 +67,14 @@
     "snA5cNuJlgyAdvZDbZpJrA==": {
       "translations": [
         {
-          "translation": "汽车车轮和轮胎"
+          "translation": "汽车轮胎"
         }
       ]
     },
     "7DafxQ244zr3EY7cS62NYQ==": {
       "translations": [
         {
-          "translation": "婴儿和孩子的东西"
+          "translation": "母婴"
         }
       ]
     },
@@ -87,7 +95,7 @@
     "RNUT6gy5oiwEr7Ahqp8ztg==": {
       "translations": [
         {
-          "translation": "船配件及配件"
+          "translation": "船配件"
         }
       ]
     },
@@ -107,13 +115,15 @@
     },
     "1Q0Vv4XgRSWOzYW+aVBrxA==": {
       "translations": [
-        {}
+        {
+          "translation": "业务"
+        }
       ]
     },
     "VEqNKcV23dj1AEzdWpB5HQ==": {
       "translations": [
         {
-          "translation": "汽车和卡车"
+          "translation": "汽车、卡车"
         }
       ]
     },
@@ -134,7 +144,7 @@
     "EAyfEU0bAiMEsoBJOoJVsQ==": {
       "translations": [
         {
-          "translation": "服装及配饰"
+          "translation": "服装、饰品"
         }
       ]
     },
@@ -155,7 +165,7 @@
     "72T8Xo79stHw0jkH5TsSwg==": {
       "translations": [
         {
-          "translation": "计算机"
+          "translation": "电脑"
         }
       ]
     },
@@ -183,7 +193,7 @@
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
-          "translation": "健康美容"
+          "translation": "美妆、个护"
         }
       ]
     },
@@ -218,14 +228,14 @@
     "UfzMzPnHFKRY+YA2YYCiMw==": {
       "translations": [
         {
-          "translation": "摩托车配件及配件"
+          "translation": "摩托车零件配件"
         }
       ]
     },
     "SRXzG3SHl2IsrVr0swey+Q==": {
       "translations": [
         {
-          "translation": "摩托车和滑板车"
+          "translation": "摩托车、滑板车"
         }
       ]
     },
@@ -246,7 +256,7 @@
     "zy7YOcOXbkmeJ1amxDx1Yw==": {
       "translations": [
         {
-          "translation": "照片和视频"
+          "translation": "照片、视频"
         }
       ]
     },
@@ -267,7 +277,7 @@
     "SQ49zf6Z8+FO0cu0rM8FMg==": {
       "translations": [
         {
-          "translation": "体育用品"
+          "translation": "运动"
         }
       ]
     },
@@ -288,7 +298,7 @@
     "PNDB5G/uGJRtnFstTnLRFw==": {
       "translations": [
         {
-          "translation": "玩具和游戏"
+          "translation": "玩具、游戏"
         }
       ]
     },
@@ -308,17 +318,23 @@
     },
     "c4W8KxvjoNvkLaPQiXcBeQ==": {
       "translations": [
-        {}
+        {
+          "translation": "房屋"
+        }
       ]
     },
     "IGExQ86vwIZJBBngF5KxCg==": {
       "translations": [
-        {}
+        {
+          "translation": "停车位"
+        }
       ]
     },
     "zBI2vhzGm3YUFkzAgxhrOw==": {
       "translations": [
-        {}
+        {
+          "translation": "存储服务"
+        }
       ]
     },
     "dbmMy1BMoOPmEjBIgZNQkw==": {
@@ -330,7 +346,9 @@
     },
     "KBslCOpxNyf2/f02u4AC9A==": {
       "translations": [
-        {}
+        {
+          "translation": "设计"
+        }
       ]
     },
     "9ok6+SExmxGnwGSndfBihw==": {
@@ -343,7 +361,7 @@
     "fLJGWS5/2zZm6lrVMgFdjw==": {
       "translations": [
         {
-          "translation": "Music Lessons"
+          "translation": "音乐课"
         }
       ]
     },
@@ -356,17 +374,23 @@
     },
     "kO8sPOni/jolamEZLA8Xrw==": {
       "translations": [
-        {}
+        {
+          "translation": "沙龙"
+        }
       ]
     },
     "10HkhoJ+l5kgv0Xp9a5caw==": {
       "translations": [
-        {}
+        {
+          "translation": "健康休闲中心"
+        }
       ]
     },
     "KEVzlIlEiThvVr4DsUDjFA==": {
       "translations": [
-        {}
+        {
+          "translation": "运输"
+        }
       ]
     },
     "6d3Zf+bS0fophdS2BVpZ1A==": {
@@ -414,7 +438,7 @@
     "S1+qQlACydCmaq1HSnUw4g==": {
       "translations": [
         {
-          "translation": "车库和移动销售"
+          "translation": "车库/搬家销售"
         }
       ]
     },
@@ -448,7 +472,9 @@
     },
     "8MgZoixrwmWP6Jsfak1UyA==": {
       "translations": [
-        {}
+        {
+          "translation": "营销"
+        }
       ]
     },
     "3WqpHbrwOloRd96TRFYEbA==": {
@@ -493,24 +519,108 @@
         }
       ]
     },
-    "HIYV/KBfsIx14LvOIIcHwg==": {
+    "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "Origin分散式应用程序允许买家和卖家使用以太坊区块链和IPFS进行交易而无需寻租中间商。"
+          "translation": "{=Enroll} 并开始赚取 Origin 代币 (OGN)。"
+        }
+      ]
+    },
+    "1nS1em98gKmMqpesguJylw==": {
+      "translations": [
+        {
+          "translation": "注册"
+        }
+      ]
+    },
+    "SG+OPZyCrM3ZJpIQSUSkyQ==": {
+      "translations": [
+        {
+          "translation": "{=Enroll Now}"
+        }
+      ]
+    },
+    "EnHY9kgzl7/D9IQIpfzW5A==": {
+      "translations": [
+        {
+          "translation": "立即注册"
+        }
+      ]
+    },
+    "jpSUKepY+jT83nZZ/dSNow==": {
+      "translations": [
+        {
+          "translation": "获得的奖励"
+        }
+      ]
+    },
+    "6MBFCcAVLGs1DIGR8/ZPIQ==": {
+      "translations": [
+        {
+          "translation": "活动结束后分发"
+        }
+      ]
+    },
+    "8M4U4PrythJps9u8JfIWRQ==": {
+      "translations": [
+        {
+          "translation": "看不到您积累的代币？记得在进行任何修改后点击发布。"
+        }
+      ]
+    },
+    "LeqAwNGdlXUL8rokk73C8g==": {
+      "translations": [
+        {
+          "translation": "卖家的评论"
+        }
+      ]
+    },
+    "jwOObFz9eurn166XgvA7KQ==": {
+      "translations": [
+        {
+          "translation": "此用户的评论"
+        }
+      ]
+    },
+    "5bnjo+PrKtH3RDx1gvQEIQ==": {
+      "translations": [
+        {
+          "translation": "未命名用户"
+        }
+      ]
+    },
+    "YvRLXVAElsp/GcvlIdQxeQ==": {
+      "translations": [
+        {
+          "translation": "了解更多"
+        }
+      ]
+    },
+    "Kiq4v7lxOraNMcGSuV03fQ==": {
+      "translations": [
+        {
+          "translation": "Origin 分散式应用程序使用以太坊区块链和 IPFS 技术允许买家和卖家进行无中间商交易。"
         }
       ]
     },
     "k2EiJaPGLnYsYgSeb0efig==": {
       "translations": [
         {
-          "translation": "访问我们的网站"
+          "translation": "了解更多关于 Origin 的信息"
+        }
+      ]
+    },
+    "So52/pjUZQ+SOU0tAAvKTw==": {
+      "translations": [
+        {
+          "translation": "创建您自己的市场"
         }
       ]
     },
     "KuNLu1gPpB8/96R5zz8B9Q==": {
       "translations": [
         {
-          "translation": "购买中"
+          "translation": "购买"
         }
       ]
     },
@@ -518,6 +628,797 @@
       "translations": [
         {
           "translation": "添加列表"
+        }
+      ]
+    },
+    "N0aJrKPoNKxjFd5sIupLCQ==": {
+      "translations": [
+        {
+          "translation": "此页面是机器翻译的, 有看到任何错误吗？"
+        }
+      ]
+    },
+    "LrotBDVInKIAGul78ZIkwQ==": {
+      "translations": [
+        {
+          "translation": "帮助翻译"
+        }
+      ]
+    },
+    "T8gKne+us4nDpTQGNQ8bJA==": {
+      "translations": [
+        {
+          "translation": "验证电子邮件"
+        }
+      ]
+    },
+    "c0QHBkLjVu9yvtD4iDg1nQ==": {
+      "translations": [
+        {
+          "translation": "在“身份认证”中确认您的电子邮件。"
+        }
+      ]
+    },
+    "4BXZfpHLvTxuvOZU6ZB1SA==": {
+      "translations": [
+        {
+          "translation": "验证您的 Origin 个人资料"
+        }
+      ]
+    },
+    "efh3HEBtewcly2hpwr/vGw==": {
+      "translations": [
+        {
+          "translation": "在\"身份认证“中连接您的 Origin 账号。"
+        }
+      ]
+    },
+    "lgPT2mVlQJFyCjK2pqg6+A==": {
+      "translations": [
+        {
+          "translation": "验证您的手机号码"
+        }
+      ]
+    },
+    "wJcUHuxk0E95IsWvyIsEkA==": {
+      "translations": [
+        {
+          "translation": "在“身份认证”中确认您的手机号。"
+        }
+      ]
+    },
+    "FrB+Nm9CDZb0iwO0LjrmVw==": {
+      "translations": [
+        {
+          "translation": "连接您的推特账号"
+        }
+      ]
+    },
+    "safqwXZbnd9jMAbIp0ZJkQ==": {
+      "translations": [
+        {
+          "translation": "在\"身份认证“中连接您的推特账号。"
+        }
+      ]
+    },
+    "vUisCHQyajUJt8rYR/1Lyg==": {
+      "translations": [
+        {
+          "translation": "连接您的爱彼迎账号"
+        }
+      ]
+    },
+    "S4hltAKgMaNWmg0utGTD5w==": {
+      "translations": [
+        {
+          "translation": "在\"身份认证“中连接您的爱彼迎账号。"
+        }
+      ]
+    },
+    "ZC5PsdFmUya8ASfu6HPrqA==": {
+      "translations": [
+        {
+          "translation": "连接您的 Facebook 账号"
+        }
+      ]
+    },
+    "6EBmG1n3RISN5Lg2yDuF/g==": {
+      "translations": [
+        {
+          "translation": "在\"身份认证“中连接您的 Facebook 账号。"
+        }
+      ]
+    },
+    "ykecxKYjdZbltCVsKbHPng==": {
+      "translations": [
+        {
+          "translation": "创建列表"
+        }
+      ]
+    },
+    "dd/MYLQ0xC5UehafmvRhWw==": {
+      "translations": [
+        {
+          "translation": "成功完成购买任何一个商品或服务。"
+        }
+      ]
+    },
+    "Jhk6fFImPZIKPw+CjCqmYQ==": {
+      "translations": [
+        {
+          "translation": "购买一件商品"
+        }
+      ]
+    },
+    "BJRWuiGhr2E2UXX+1mW1zQ==": {
+      "translations": [
+        {
+          "translation": "成功完成售卖任何一个商品或服务。"
+        }
+      ]
+    },
+    "wJvCxFGt/9gion68sV/lYg==": {
+      "translations": [
+        {
+          "translation": "售卖一件商品"
+        }
+      ]
+    },
+    "izPJMarYcneaRP9qt6VHYQ==": {
+      "translations": [
+        {
+          "translation": "在平台上售卖一件商品"
+        }
+      ]
+    },
+    "MdJY4cf78iP+T/KfBri2YQ==": {
+      "translations": [
+        {
+          "translation": "邀请好友"
+        }
+      ]
+    },
+    "oX8s+/5fmxu8zUTtSk30ww==": {
+      "translations": [
+        {
+          "translation": "邀请好友注册 Origin 并使用活跃账号。"
+        }
+      ]
+    },
+    "xrpUGZhxxRqqIthtfE/BAA==": {
+      "translations": [
+        {
+          "translation": "等待"
+        }
+      ]
+    },
+    "qciHWfxjkHcdGFOsAql8BQ==": {
+      "translations": [
+        {
+          "translation": "已获得"
+        }
+      ]
+    },
+    "5dUXwaQm/5UXra8ThxFHfQ==": {
+      "translations": [
+        {
+          "translation": "2019年1月活动"
+        }
+      ]
+    },
+    "VLgoMfdf1OOIusJVHVZpZw==": {
+      "translations": [
+        {
+          "translation": "2019年1月"
+        }
+      ]
+    },
+    "+mYnEmUrhANzuCQc9B98HA==": {
+      "translations": [
+        {
+          "translation": "2019年2月活动"
+        }
+      ]
+    },
+    "3eZ8IKMmtB76Dag06jgWIw==": {
+      "translations": [
+        {
+          "translation": "2019年2月"
+        }
+      ]
+    },
+    "XToCRxQ5XKSz2q61DvIBJQ==": {
+      "translations": [
+        {
+          "translation": "2019年3月活动"
+        }
+      ]
+    },
+    "SxKtrOTZLfzQixD/wMfwcQ==": {
+      "translations": [
+        {
+          "translation": "2019年3月"
+        }
+      ]
+    },
+    "ooZThzMGZhUBriS4fp/Rig==": {
+      "translations": [
+        {
+          "translation": "2019年4月活动"
+        }
+      ]
+    },
+    "dGbIiE9INRHA+HMtxXovjw==": {
+      "translations": [
+        {
+          "translation": "2019年4月"
+        }
+      ]
+    },
+    "PGr5EIQul8sc7/OQt/TyAw==": {
+      "translations": [
+        {
+          "translation": "已验证电子邮件和 Origin 个人资料"
+        }
+      ]
+    },
+    "52K5Lj4iHypLOwCGtkKH5g==": {
+      "translations": [
+        {
+          "translation": "四项认证中的两项"
+        }
+      ]
+    },
+    "WtowmMXunhmZxZunExTFxw==": {
+      "translations": [
+        {
+          "translation": "个人资料已验证"
+        }
+      ]
+    },
+    "cnpLd+jN4OwsPzxruTplCA==": {
+      "translations": [
+        {
+          "translation": "电子邮件已验证"
+        }
+      ]
+    },
+    "QBq4/BFCdLrq0DNDl4rwSQ==": {
+      "translations": [
+        {
+          "translation": "剩下时间"
+        }
+      ]
+    },
+    "2Gs8p0O9zMC1EB3GH13g6A==": {
+      "translations": [
+        {
+          "translation": "完成以下步骤来赚取 OGN"
+        }
+      ]
+    },
+    "wmQb40obgjwfSR3PJ3S3gQ==": {
+      "translations": [
+        {
+          "translation": "活动开始倒计时"
+        }
+      ]
+    },
+    "Knou4ElxBFWPWsJIbZVMgw==": {
+      "translations": [
+        {
+          "translation": "此活动还没开始"
+        }
+      ]
+    },
+    "JO1VHseitmEDOUDtxCa9wg==": {
+      "translations": [
+        {
+          "translation": "此活动已结束"
+        }
+      ]
+    },
+    "hVGpV7ERzy5YIu1ZVMKSEQ==": {
+      "translations": [
+        {
+          "translation": "我想邀请您注册使用 Origin 并开始赚取 Origin 代币 (OGN)。Origin 是一个新的电商平台。当您创建个人资料，邀请好友或在平台上进行买卖，都可以赚取 Origin 代币。"
+        }
+      ]
+    },
+    "M9Vqnn6x7SZ8oK++pJY2pQ==": {
+      "translations": [
+        {
+          "translation": "我想邀请您注册使用 Origin 并开始赚取 Origin 代币 (OGN)。Origin 是一个新的电商平台。当您创建个人资料，邀请好友或在平台上进行买卖，都可以赚取 Origin 代币。"
+        }
+      ]
+    },
+    "Lh4pGaUC7h8zXIinWwFfCQ==": {
+      "translations": [
+        {
+          "translation": "通过分享您唯一的邀请码来邀请他人"
+        }
+      ]
+    },
+    "aqT/hPAg2m2SKM5VeMp4Gw==": {
+      "translations": [
+        {
+          "translation": "将您唯一的邀请码分享给好友。"
+        }
+      ]
+    },
+    "GFQlYI4GSu8CrTFxpAZqTg==": {
+      "translations": [
+        {
+          "translation": "复制邀请码"
+        }
+      ]
+    },
+    "GKEbT4KEKXxpbVnpjfAKJA==": {
+      "translations": [
+        {
+          "translation": "已复制"
+        }
+      ]
+    },
+    "E74Qrf+98uryCrNWNzNWjw==": {
+      "translations": [
+        {
+          "translation": "复制"
+        }
+      ]
+    },
+    "49GWG62Wgbc5Db/cdlOTkA==": {
+      "translations": [
+        {
+          "translation": "分享"
+        }
+      ]
+    },
+    "RHS3QNznWakBVqh3LxpLsg==": {
+      "translations": [
+        {
+          "translation": "一共 {emailsLength} 个电邮邀请已发送！"
+        }
+      ]
+    },
+    "+BhaVoboQDWnCyFHsoEPTA==": {
+      "translations": [
+        {
+          "translation": "无法邀请好友。请稍后再试。"
+        }
+      ]
+    },
+    "PjQI6hx3eXSs3uFE1Y5Q4A==": {
+      "translations": [
+        {
+          "translation": "邀请好友时出现了问题。请稍后再试。"
+        }
+      ]
+    },
+    "y8ZfSw9m4c64sMJW1HmnEA==": {
+      "translations": [
+        {
+          "translation": "通过电子邮件发送邀请"
+        }
+      ]
+    },
+    "HaPE2eDcY04uUukZPTLUQw==": {
+      "translations": [
+        {
+          "translation": "输入朋友的电子邮件地址，并点击发送邀请函"
+        }
+      ]
+    },
+    "6B15EXjM35Y0iE//tR2UwQ==": {
+      "translations": [
+        {
+          "translation": "使用逗号分隔每个收件人的电子邮件地址"
+        }
+      ]
+    },
+    "sGU19GHNLvclsLe2y0TIfg==": {
+      "translations": [
+        {
+          "translation": "邀请好友"
+        }
+      ]
+    },
+    "o8lruKi5bNlhzFdPPkolUQ==": {
+      "translations": [
+        {
+          "translation": "电子邮件格式不正确： {errorEmails}"
+        }
+      ]
+    },
+    "awKHO99GBswNSwKToXmf1g==": {
+      "translations": [
+        {
+          "translation": "输入至少1个有效的电子邮件"
+        }
+      ]
+    },
+    "qbja3xI+ynbpMcTuFy+VGA==": {
+      "translations": [
+        {
+          "translation": "提醒已发送！"
+        }
+      ]
+    },
+    "Ak5KYZjlkZWnJf/t1gAqZw==": {
+      "translations": [
+        {
+          "translation": "错误"
+        }
+      ]
+    },
+    "Hwpah78HyVTFCglJ0pIUfA==": {
+      "translations": [
+        {
+          "translation": "提醒"
+        }
+      ]
+    },
+    "nBDaGpsKQrlRbAqtA1zH5g==": {
+      "translations": [
+        {
+          "translation": "联系"
+        }
+      ]
+    },
+    "NXb3ICr3h1AnNXcUj6aTCg==": {
+      "translations": [
+        {
+          "translation": "奖励"
+        }
+      ]
+    },
+    "5l7gzwYtQf+Vq+tUml4DyQ==": {
+      "translations": [
+        {
+          "translation": "状态"
+        }
+      ]
+    },
+    "QTQw/Z0GCwwzejDEKhLiQQ==": {
+      "translations": [
+        {
+          "translation": "用户未完成激活动作"
+        }
+      ]
+    },
+    "jhvYbvMES/Ulab6k+ZEVcg==": {
+      "translations": [
+        {
+          "translation": "提醒"
+        }
+      ]
+    },
+    "5hCA8hXoU2Eqhes9Dx9BMA==": {
+      "translations": [
+        {
+          "translation": "未接受邀请"
+        }
+      ]
+    },
+    "uWsUjDplwEMjhhlqo1t50Q==": {
+      "translations": [
+        {
+          "translation": "查看哪些好友使用了您的邀请码注册账号"
+        }
+      ]
+    },
+    "l88VUqiyI7tOCygCjTchsw==": {
+      "translations": [
+        {
+          "translation": "等待"
+        }
+      ]
+    },
+    "jNZTtswQamPR5fqLpuU38Q==": {
+      "translations": [
+        {
+          "translation": "成功的邀请"
+        }
+      ]
+    },
+    "J3Czs3Rp2eWVTn9lcDxSQQ==": {
+      "translations": [
+        {
+          "translation": "帮助好友与您一起赚取 OGN。"
+        }
+      ]
+    },
+    "k7bhJpKhGKToRTeBeXr0aQ==": {
+      "translations": [
+        {
+          "translation": "已获得"
+        }
+      ]
+    },
+    "78XdBNtdiw/IfKVviDlg9A==": {
+      "translations": [
+        {
+          "translation": "返回奖励活动"
+        }
+      ]
+    },
+    "mxHZKBbgLYHiU3xCEEwMtQ==": {
+      "translations": [
+        {
+          "translation": "邀请朋友加入 Origin"
+        }
+      ]
+    },
+    "J5wgD0JPj/65X0jioq1CwA==": {
+      "translations": [
+        {
+          "translation": "您可以通过以下方式赚取 OGN。"
+        }
+      ]
+    },
+    "qOAPDvqXmJHUU1aJ5vsucw==": {
+      "translations": [
+        {
+          "translation": "发送邀请"
+        }
+      ]
+    },
+    "VBU0HgQlL4CtXWPBtwuzAA==": {
+      "translations": [
+        {
+          "translation": "跟踪邀请情况"
+        }
+      ]
+    },
+    "JIAeR5l0zsySvXjhN/LjXg==": {
+      "translations": [
+        {
+          "translation": "邀请人:"
+        }
+      ]
+    },
+    "2jPZ2DnxwxQpSK3roVvLSA==": {
+      "translations": [
+        {
+          "translation": "您的朋友 {name} 邀请您加入 Origin"
+        }
+      ]
+    },
+    "8dUMUvTO9y/E2pDMSrgtWw==": {
+      "translations": [
+        {
+          "translation": "立即注册以获得免费的 Origin 代币"
+        }
+      ]
+    },
+    "fDuELeOXBQ7+DJbX7oyE6Q==": {
+      "translations": [
+        {
+          "translation": "立即注册 Origin。"
+        }
+      ]
+    },
+    "o8qQ/PN7IXGbYwY+4G8VBw==": {
+      "translations": [
+        {
+          "translation": "您和 {firstName} 都会获得 Origin 代币 (OGN)。"
+        }
+      ]
+    },
+    "KXy/meBwGaf5yVfEd9HDHQ==": {
+      "translations": [
+        {
+          "translation": "创建个人资料，邀请好友或在平台上进行买卖以赚取更多 Origin 代币。"
+        }
+      ]
+    },
+    "tzDkMYn3LmF1aKkySIvtAQ==": {
+      "translations": [
+        {
+          "translation": "Origin 是什么公司？"
+        }
+      ]
+    },
+    "6YhgbdYLnjKT4XB+UPkgkA==": {
+      "translations": [
+        {
+          "translation": "Origin 是第一个完全基于区块链构建的点对点低昂上平台"
+        }
+      ]
+    },
+    "CyiodoDeIQn/ar6XbKqt4Q==": {
+      "translations": [
+        {
+          "translation": "免费使用平台并享受 0％ 交易费"
+        }
+      ]
+    },
+    "s13YMOt7j7kdlx3jc+qggw==": {
+      "translations": [
+        {
+          "translation": "抗审查的平台浏览和搜索"
+        }
+      ]
+    },
+    "5CBWzDNJNVigCeBUwiJOLw==": {
+      "translations": [
+        {
+          "translation": "礼品卡，房屋共享，电子商务和服务等数十个类别"
+        }
+      ]
+    },
+    "oegZB/dZhQav6NEGEfpaIw==": {
+      "translations": [
+        {
+          "translation": "Origin 代币是什么？"
+        }
+      ]
+    },
+    "qXGCW6AVWNckr8ZZXh0sRA==": {
+      "translations": [
+        {
+          "translation": "Origin 代币（OGN）是 ERC-20令牌，可以通过多种方式在平台上使用。"
+        }
+      ]
+    },
+    "PlCEphvzEyQp/7SnvJWUHg==": {
+      "translations": [
+        {
+          "translation": "通过奖励活动赚取的 OGN 目前被锁定，因此只能在 Origin 平台 上使用，无法转给其他人。以后 OGN 将会被解锁并可以被转给其他人。"
+        }
+      ]
+    },
+    "zQ+amcZcEbrkMHT1gTyR8A==": {
+      "translations": [
+        {
+          "translation": "了解更多"
+        }
+      ]
+    },
+    "SgbXw8gUCvCMRANRfNbZdw==": {
+      "translations": [
+        {
+          "translation": "提升"
+        }
+      ]
+    },
+    "YFtqoYhKvImJqf0XglUXTw==": {
+      "translations": [
+        {
+          "translation": "卖家使用 OGN 来提升他们列表项目的搜索排名。用 OGN 提升的商品列表更容易被卖出去。"
+        }
+      ]
+    },
+    "HWTdiJhpW9S+qWAG/3D96g==": {
+      "translations": [
+        {
+          "translation": "奖励"
+        }
+      ]
+    },
+    "5vp0hYaYGt8rhy0Z4hKf9w==": {
+      "translations": [
+        {
+          "translation": "OGN 是一个用来奖励 Origin 用户的加密货币。您可以通过在平台上验证身份或将 Origin 推荐给朋友使用而获得奖励，甚至在买卖时获得现金返还。"
+        }
+      ]
+    },
+    "NK8yEk6S/zuO701X4M+TMQ==": {
+      "translations": [
+        {
+          "translation": "立即开始赚取 Origin 代币"
+        }
+      ]
+    },
+    "OxT7PzUj7b+bcTIHNpm2Ug==": {
+      "translations": [
+        {
+          "translation": "将您的加密货币钱包连接到 Origin 平台"
+        }
+      ]
+    },
+    "QTWkl7l3Zq6SNON+xjM6fg==": {
+      "translations": [
+        {
+          "translation": "注册并验证您的帐户和参与资格"
+        }
+      ]
+    },
+    "EPa2KOi7VdqeXU4rahzx/g==": {
+      "translations": [
+        {
+          "translation": "今天就开始赚取"
+        }
+      ]
+    },
+    "ZYfPOEnoaFfIjmdBj/wQDA==": {
+      "translations": [
+        {
+          "translation": "立即开始"
+        }
+      ]
+    },
+    "1jz0lXMtdwPie5XvZGCd4w==": {
+      "translations": [
+        {
+          "translation": "有问题吗？"
+        }
+      ]
+    },
+    "uIUyjEjCWzwJBVxnypih1Q==": {
+      "translations": [
+        {
+          "translation": "联系我们"
+        }
+      ]
+    },
+    "2a9E/BUZqanf5LzL99VMwQ==": {
+      "translations": [
+        {
+          "translation": "您已被禁止赚取 Origin 代币"
+        }
+      ]
+    },
+    "NaM6Vmz6iiRm1WDKnAmoPw==": {
+      "translations": [
+        {
+          "translation": "参与我们的 {campaignName} 奖励活动以赚取 Origin 代币"
+        }
+      ]
+    },
+    "sbO8XiYlqyNx+ZffAKr2Xw==": {
+      "translations": [
+        {
+          "translation": "您只需在我们的 DApp 上完成一些动作就可以获得 OGN，比如进行身份验证或者把 Origin 推荐给新的用户。OGN 有很多用途。{campaignName} 活动中获得的 OGN 只会在活动结束后分发。"
+        }
+      ]
+    },
+    "Z+VvwUtcmCiHHZ/y4kYNLQ==": {
+      "translations": [
+        {
+          "translation": "注册 Origin 账号"
+        }
+      ]
+    },
+    "NiVro9WP7TRRxKWh3pVKVQ==": {
+      "translations": [
+        {
+          "translation": "我接受以上的条款和条件"
+        }
+      ]
+    },
+    "WMYdJljtuuVbpA+VRa7M3w==": {
+      "translations": [
+        {
+          "translation": "抱歉，{country} 不能参与这项活动"
+        }
+      ]
+    },
+    "Z7Sx4nV0a/dHqPx5QNIXdg==": {
+      "translations": [
+        {
+          "translation": "抱歉，看起来您目前所在的国家政府法规不允许您参与 Origin 奖励活动。"
+        }
+      ]
+    },
+    "kUrilejuCqE9Cmu7uYvtcw==": {
+      "translations": [
+        {
+          "translation": "我们是否错误识别您的国家涞源？"
+        }
+      ]
+    },
+    "yjSH//GTRsIZgQGrshYGyQ==": {
+      "translations": [
+        {
+          "translation": "我声明并确认我不是 {country} 的公民或纳税居民"
+        }
+      ]
+    },
+    "ToBlXADjzL3C1yE3SulP9g==": {
+      "translations": [
+        {
+          "translation": "错误：无法确认您的国家/地区"
         }
       ]
     },
@@ -531,14 +1432,14 @@
     "33EPBwLfS9o3lGs62U+89w==": {
       "translations": [
         {
-          "translation": "在下方输入爱彼迎个人资料网址"
+          "translation": "请输入爱彼迎个人资料网页链接"
         }
       ]
     },
     "QfLmm1Y/WUbCRLJtHN4WAg==": {
       "translations": [
         {
-          "translation": "其他用户将会知道你已验证了爱彼迎资料"
+          "translation": "其他用户将知道您有一个已验证的爱必应账号。您的爱彼迎用户名将会被存储并发布在区块链上。"
         }
       ]
     },
@@ -552,7 +1453,7 @@
     "3SSVIaE/i8UtPArlfLYLow==": {
       "translations": [
         {
-          "translation": "进入爱彼迎网站，编辑你的个人资料并粘贴下述文本到个人描述"
+          "translation": "访问爱彼迎网站，编辑您的个人资料并将以下粘贴下到自我介绍的框里："
         }
       ]
     },
@@ -563,10 +1464,80 @@
         }
       ]
     },
+    "YuuSM/LwS49O8d4HGztcGg==": {
+      "translations": [
+        {
+          "translation": "您如果验证电子邮件，将允许 Origin 偶尔向您发送有关您在平台上的交易信息和其他信息。"
+        }
+      ]
+    },
+    "Le4Tec5F+U/jkYxINqFxCg==": {
+      "translations": [
+        {
+          "translation": "您如果验证手机号，将允许 Origin 偶尔向您发送有关您在平台上的交易信息和其他通知。"
+        }
+      ]
+    },
+    "o6Z2JUXPEzsq4mjxtgxysg==": {
+      "translations": [
+        {
+          "translation": "所有"
+        }
+      ]
+    },
+    "gpeQTbRe56v7+THmtTo1dw==": {
+      "translations": [
+        {
+          "translation": "未找到搜索结果"
+        }
+      ]
+    },
+    "kxDQ9H0JkRh27rfshZkoVA==": {
+      "translations": [
+        {
+          "translation": "您的电商平台目前没有任何列表项目"
+        }
+      ]
+    },
+    "Q776FeWv/0+8JXPq6YHQ6Q==": {
+      "translations": [
+        {
+          "translation": "您可以创建自己的商品列表，或邀请其他卖家加入您的平台！"
+        }
+      ]
+    },
+    "0kTHM7ddLclB+FcU8ttrcQ==": {
+      "translations": [
+        {
+          "translation": "创建列表"
+        }
+      ]
+    },
+    "vYS+dQLoVNtqFLJqO8A42g==": {
+      "translations": [
+        {
+          "translation": "找不到任何列表"
+        }
+      ]
+    },
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "translations": [
+        {
+          "translation": "{number} 列表"
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "translations": [
+        {
+          "translation": "一个列表项目"
+        }
+      ]
+    },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
-          "translation": "我的列表，列单"
+          "translation": "我的列表"
         }
       ]
     },
@@ -587,7 +1558,7 @@
     "l2Ry3AjK+2P1DfwR4X+PAA==": {
       "translations": [
         {
-          "translation": "出售中"
+          "translation": "卖"
         }
       ]
     },
@@ -636,14 +1607,14 @@
     "ODnFYmb8u9sMKJ4AFiZs9g==": {
       "translations": [
         {
-          "translation": "脸书"
+          "translation": "Facebook"
         }
       ]
     },
     "lZG5rsJQfdkgo3Q+WVNgug==": {
       "translations": [
         {
-          "translation": "推特"
+          "translation": "Twitter"
         }
       ]
     },
@@ -657,7 +1628,14 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "验证您的个人资料允许其他用户知道您是真人并且增加了在Origin上成功交易的机会。"
+          "translation": "{=Verifying your profile} 让其他用户知道您是一个真实的用户，提高在 Origin 上成功完成交易的机会。"
+        }
+      ]
+    },
+    "nKccGV4lhmxhDoHN+UDtgg==": {
+      "translations": [
+        {
+          "translation": "正在认证您的个人资料"
         }
       ]
     }

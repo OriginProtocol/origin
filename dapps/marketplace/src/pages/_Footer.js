@@ -49,14 +49,22 @@ class Footer extends Component {
                       <br />
                       <br />
                       <div>
-                        {`You're currently using the Origin Beta on ${networkName}. `}
+                        <fbt desc="footer.usingOriginBetaOn">
+                          You are currently using the Origin Beta on:
+                          <fbt:param name="networkName">
+                            {networkName}
+                          </fbt:param>.
+                        </fbt>{' '}
                         <a
                           href="#"
                           onClick={e => {
                             e.preventDefault()
                             this.setState({ reminders: true })
                           }}
-                          children="Important Reminders"
+                          children={fbt(
+                            'Important Reminders',
+                            'Important Reminders'
+                          )}
                         />
                         {!this.state.reminders ? null : (
                           <BetaModal
@@ -66,25 +74,31 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                        {'Found a bug or have feedback? Send an email to '}
-                        <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
-                        {', open an issue on '}
-                        <a
-                          href={GitHubLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          GitHub
-                        </a>
-                        {' or post in our #bug-reports channel on '}
-                        <a
-                          href="https://discord.gg/jyxpUSe"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Discord
-                        </a>
-                        .
+                        <fbt desc="footer.foundABug">
+                          Found a bug or have feedback? Send an email to
+                          <a href={`mailto:${SupportEmail}`}>
+                            <fbt:param name="SupportEmail">
+                              {SupportEmail}
+                            </fbt:param>
+                          </a>{' '}
+                          , open an issue on
+                          <a
+                            href={GitHubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            GitHub
+                          </a>
+                          or post in our #bug-reports channel on
+                          <a
+                            href="https://discord.gg/jyxpUSe"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Discord
+                          </a>
+                          .
+                        </fbt>
                       </div>
                       <br />
                       <div className="copyright">
@@ -95,7 +109,7 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Terms
+                          <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
                         </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
@@ -103,7 +117,7 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Privacy
+                          <fbt desc="footer.privacy">Privacy</fbt>
                         </a>{' '}
                         <span>&bull;</span>{' '}
                         <a
@@ -111,7 +125,9 @@ class Footer extends Component {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Acceptable Use Policy
+                          <fbt desc="footer.acceptableUsePolicy">
+                            Acceptable Use Policy
+                          </fbt>
                         </a>
                       </div>
                     </>

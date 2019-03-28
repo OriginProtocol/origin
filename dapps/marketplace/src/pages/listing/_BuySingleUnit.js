@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Price from 'components/Price'
 import Buy from './mutations/Buy'
@@ -18,7 +19,7 @@ const SingleUnit = ({ listing, from, refetch }) => (
       value={listing.price.amount}
       quantity={1}
       className="btn btn-primary"
-      children="Purchase"
+      children={fbt('Purchase', 'Purchase')}
     />
   </div>
 )

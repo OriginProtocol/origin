@@ -167,7 +167,11 @@ class AirbnbAttestation extends Component {
                 }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
+            children={
+              this.state.loading
+                ? fbt('Loading...', 'Loading...')
+                : fbt('Continue', 'Continue')
+            }
           />
         )}
       </Mutation>
@@ -208,7 +212,11 @@ class AirbnbAttestation extends Component {
                 }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
+            children={
+              this.state.loading
+                ? fbt('Loading...', 'Loading...')
+                : fbt('Continue', 'Continue')
+            }
           />
         )}
       </Mutation>
@@ -218,13 +226,19 @@ class AirbnbAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Airbnb account verified!</h2>
+        <h2>
+          <fbt desc="AirbnbAttestation.verified">Airbnb account verified!</fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button
@@ -233,7 +247,7 @@ class AirbnbAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

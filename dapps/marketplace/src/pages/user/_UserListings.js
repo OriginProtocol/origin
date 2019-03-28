@@ -35,11 +35,21 @@ class UserListings extends Component {
       >
         {({ error, data, fetchMore, networkStatus, loading }) => {
           if (networkStatus === 1) {
-            return <h5 className="listings-count">Loading...</h5>
+            return (
+              <h5 className="listings-count">
+                <fbt desc="UserListing.loading">Loading...</fbt>
+              </h5>
+            )
           } else if (error) {
             return <QueryError error={error} query={query} vars={vars} />
           } else if (!data || !data.marketplace) {
-            return <p className="p-3">No marketplace contract?</p>
+            return (
+              <p className="p-3">
+                <fbt desc="UserListing.noContract">
+                  No marketplace contract?
+                </fbt>
+              </p>
+            )
           }
 
           const { nodes, pageInfo, totalCount } = data.marketplace.user.listings
@@ -74,7 +84,9 @@ class UserListings extends Component {
                       }
                     }}
                   >
-                    {loading ? 'Loading...' : 'Load more'}
+                    {loading
+                      ? fbt('Loading...', 'UserListing.loading')
+                      : fbt('Load more', 'userListing.loadMore')}
                   </button>
                 )}
               </>

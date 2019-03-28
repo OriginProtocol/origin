@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -9,7 +10,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 
 import NotificationRow from './NotificationRow'
 
@@ -21,17 +22,22 @@ const nextPage = nextPageFactory('marketplace.user.notifications')
 const NavPills = () => (
   <ul className="nav nav-pills flex-column">
     <li className="nav-item">
-      <NavLink className="nav-link" to="/notifications" exact children="All" />
+      <NavLink
+        className="nav-link"
+        to="/notifications"
+        exact
+        children={fbt('All', 'All')}
+      />
     </li>
     {/* TODO: Re-enable filters
     <li clas sName="nav-item">
-      <NavLink className="nav-link" to="/notifications/all" children="All" />
+      <NavLink className="nav-link" to="/notifications/all" children={fbt("All", "All")} />
     </li>
     <li className="nav-item">
-      <NavLink className="nav-link" to="/notifications/buy" children="Buy" />
+      <NavLink className="nav-link" to="/notifications/buy" children={fbt("Buy", "Buy")} />
     </li>
     <li className="nav-item">
-      <NavLink className="nav-link" to="/notifications/sell" children="Sell" />
+      <NavLink className="nav-link" to="/notifications/sell" children={fbt("Sell", "Sell")} />
     </li>
     */}
   </ul>
@@ -48,7 +54,9 @@ class Notifications extends Component {
 
     return (
       <div className="container purchases">
-        <PageTitle>Notifications</PageTitle>
+        <DocumentTitle
+          pageTitle={<fbt desc="notifications.title">Notifications</fbt>}
+        />
         <Query
           query={query}
           variables={vars}
@@ -56,11 +64,21 @@ class Notifications extends Component {
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1) {
-              return <h1>Loading...</h1>
+              return (
+                <h1>
+                  <fbt desc="notifications.loading">Loading...</fbt>
+                </h1>
+              )
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
-              return <p className="p-3">No marketplace contract?</p>
+              return (
+                <p className="p-3">
+                  <fbt desc="notifications.noMarketplace">
+                    No marketplace contract?
+                  </fbt>
+                </p>
+              )
             }
 
             const { nodes, pageInfo, totalCount } = get(
@@ -98,7 +116,12 @@ class Notifications extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? 'Loading' : 'Load more...'
+                            networkStatus === 3
+                              ? fbt('notifications.item.loading', 'Loading')
+                              : fbt(
+                                  'notifications.item.loadmore',
+                                  'Load more...'
+                                )
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>
