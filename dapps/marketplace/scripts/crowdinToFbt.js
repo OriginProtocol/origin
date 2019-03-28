@@ -21,7 +21,7 @@ function unhideVars(str) {
   let out=''
   let inBracket = false
   str.replace('DO_NOT_TRANSLATE_','')
-  for (var i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
     if (cur==='{') {
       inBracket=true
@@ -29,7 +29,7 @@ function unhideVars(str) {
       inBracket=false
     }
     if (inBracket) {
-      out += cur=='_' ? ' ' : cur
+      out += bubbleAlphabet.indexOf(cur) < 0 ? cur : alphabet.charAt(bubbleAlphabet.indexOf(cur))
     } else {
       out += cur
     }

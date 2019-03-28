@@ -17,7 +17,7 @@ function hideVars(str) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   let out=''
   let inBracket = false
-  for (var i = 0; i < str.length; i++) {
+  for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
     if (cur==='{') {
       inBracket=true
@@ -27,7 +27,7 @@ function hideVars(str) {
       inBracket=false
     }
     if (inBracket) {
-      out += alphabet.indexOf(cur) < 0 ? cur : bubbleAlphabet.charAt(alphabet.indexOf(cur)) //cur==' ' ? '_' : cur
+      out += alphabet.indexOf(cur) < 0 ? cur : bubbleAlphabet.charAt(alphabet.indexOf(cur))
     } else {
       out += cur
     }
