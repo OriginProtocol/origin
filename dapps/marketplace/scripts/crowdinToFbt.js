@@ -11,25 +11,58 @@ const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl
   ' '
 )
 
-const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
-const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+
+// Decodes variable names from crowdin into their original name.
+// See encoding format in fbtToCrowdin.js
+const EqualPrefix = 'E_'
+const DoNotTranslatePrefix = 'DO_NOT_TRANSLATE_'
+const b64Prefix = '_B64_'
+
+function decodeVarName(encodedVarName) {
+  let data = encodedVarName
+
+  if (data.startsWith(EqualPrefix)) {
+    data = data.slice(EqualPrefix.length)
+  }
+
+  if (!data.startsWith(DoNotTranslatePrefix)) {
+    throw new Error(`Unexpected variable format. Missing prefix DO_NOT_TRANSLATE'. Var=${encodedVarName}`)
+  }
+  data = data.slice(DoNotTranslatePrefix.length)
+
+  // Extract the parts from the encoded variable name.
+  const parts = data.split(b64Prefix)
+  if (parts.length !== 2) {
+    throw new Error(`Unexpected variable format. Expected 2 parts. Var=${encodedVarName}`)
+  }
+
+  // Base64 decode the variable name.
+  const b64 = parts[1]
+  const originalVarName = new Buffer(b64, 'base64').toString()
+
+  return originalVarName
+}
 
 // To prevent machine translation from translating variables, we converted
 // alphabet characters into 'bubble' characters equivalent when in brackets.
 // This functions turns it back into what fbt wants.
 function unhideVars(str) {
   let out=''
+  let encodedVarName = ''
   let inBracket = false
-  str.replace('DO_NOT_TRANSLATE_','')
   for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
     if (cur==='{') {
       inBracket=true
     } else if (cur==='}') {
       inBracket=false
+      const decodedVarName = decodeVarName(encodedVarName)
+      out += '{' + decodedVarName  + '}'
+      encodedVarName = ''
     }
     if (inBracket) {
-      out += bubbleAlphabet.indexOf(cur) < 0 ? cur : alphabet.charAt(bubbleAlphabet.indexOf(cur))
+      encodedVarName += cur
     } else {
       out += cur
     }
