@@ -537,6 +537,13 @@ const listingSchemaMetadata = {
         }
       },
       {
+        schema: 'forSale-giftGards_1.0.0.json',
+        translationName: {
+          id: 'schema.giftCards',
+          defaultMessage: 'Gift Cards'
+        }
+      },
+      {
         schema: 'forSale-healthBeauty_1.0.0.json',
         translationName: {
           id: 'schema.healthBeauty',

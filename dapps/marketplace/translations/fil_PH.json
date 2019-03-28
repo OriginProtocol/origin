@@ -1,24 +1,102 @@
 {
   "fb-locale": "fil_PH",
   "translations": {
+    "3K2HLz2eDfqTUU1+MYbpSA==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang Twitter Account"
+        }
+      ]
+    },
+    "xOpYvzzoMezVMoNOSayQmw==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang Google Account"
+        }
+      ]
+    },
+    "wZLSv7ewRaMW79jVk8dClw==": {
+      "translations": [
+        {
+          "translation": "Na-verify na Telepono"
+        }
+      ]
+    },
+    "y1hHLacJcJtPJqQT+ARvMQ==": {
+      "translations": [
+        {
+          "translation": "Email Na-verify"
+        }
+      ]
+    },
+    "9IK97p7cEFz5+KW7ysa14w==": {
+      "translations": [
+        {
+          "translation": "Na-verify na Facebook"
+        }
+      ]
+    },
+    "ajuRGjrScUXkHUc6TO96oQ==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang Airbnb Account"
+        }
+      ]
+    },
+    "lpM1WjIFkeXrRw0jHALchw==": {
+      "translations": [
+        {
+          "translation": "Magpadala ng Mensahe"
+        }
+      ]
+    },
+    "BNiTz6TMpmADBvpVMcU3Ow==": {
+      "translations": [
+        {
+          "translation": "Balanse sa Account"
+        }
+      ]
+    },
+    "qW+FPWRA0PFau0MxBCNW+g==": {
+      "translations": [
+        {
+          "translation": "Magsimula"
+        }
+      ]
+    },
+    "W6NnV1uOLvElD9nJ8UncTg==": {
+      "translations": [
+        {
+          "translation": "Kumuha ng OGN"
+        }
+      ]
+    },
     "lnRohWpsGR7uMhMbL9Uc4A==": {
       "translations": [
-        {}
+        {
+          "translation": "Ibinebenta"
+        }
       ]
     },
     "IXnxuAx0PfImJ3UuUrtKNA==": {
       "translations": [
-        {}
+        {
+          "translation": "Paupahan"
+        }
       ]
     },
     "ghfbnF7r/INujbWiriguzg==": {
       "translations": [
-        {}
+        {
+          "translation": "Mga serbisyo"
+        }
       ]
     },
     "66fBzTgLcxkHZ8hhNa6kkQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Mga Anunsyo"
+        }
       ]
     },
     "KFFRQn6ksmQTRyTzCz65sg==": {
@@ -38,14 +116,14 @@
     "YIvbQUezwdnmysfM43g0Vw==": {
       "translations": [
         {
-          "translation": "Arts & Crafts"
+          "translation": "Mga Sining at Mga Likha"
         }
       ]
     },
     "y1wrUJKn06syj0F/jkjGrg==": {
       "translations": [
         {
-          "translation": "Atvs, UTVs, Snowmobiles"
+          "translation": "Atvs, Utvs, Snowmobiles"
         }
       ]
     },
@@ -59,14 +137,14 @@
     "snA5cNuJlgyAdvZDbZpJrA==": {
       "translations": [
         {
-          "translation": "Mga Gulong ng Auto"
+          "translation": "Auto Wheels at Gulong"
         }
       ]
     },
     "7DafxQ244zr3EY7cS62NYQ==": {
       "translations": [
         {
-          "translation": "Mga Gamit ng Baby at Bata"
+          "translation": "Baby and Kid Stuff"
         }
       ]
     },
@@ -87,7 +165,7 @@
     "RNUT6gy5oiwEr7Ahqp8ztg==": {
       "translations": [
         {
-          "translation": "Mga parte at accessories ng Bangka"
+          "translation": "Bahagi ng Bahagi at Kagamitan"
         }
       ]
     },
@@ -101,26 +179,28 @@
     "x6cb21nXupvVRhnwo/9FYg==": {
       "translations": [
         {
-          "translation": "Mga Libro at Magasin"
+          "translation": "Mga Aklat at Mga Magasin"
         }
       ]
     },
     "1Q0Vv4XgRSWOzYW+aVBrxA==": {
       "translations": [
-        {}
+        {
+          "translation": "Mga negosyo"
+        }
       ]
     },
     "VEqNKcV23dj1AEzdWpB5HQ==": {
       "translations": [
         {
-          "translation": "Mga Kotse at Trak"
+          "translation": "Mga Kotse at Mga Trak"
         }
       ]
     },
     "o3QtDvLaCsB7dvSR0fLs9g==": {
       "translations": [
         {
-          "translation": "CDs / DVDs / VHS"
+          "translation": "CD, DVD, VHS"
         }
       ]
     },
@@ -134,7 +214,7 @@
     "EAyfEU0bAiMEsoBJOoJVsQ==": {
       "translations": [
         {
-          "translation": "Mga Damit at Accessories"
+          "translation": "Damit at Mga Aksesorya"
         }
       ]
     },
@@ -169,7 +249,7 @@
     "s6gPsxVYO315sO2pzS9gzg==": {
       "translations": [
         {
-          "translation": "Bukid at Hardin"
+          "translation": "Farm at Hardin"
         }
       ]
     },
@@ -183,7 +263,7 @@
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
-          "translation": "Kalusugan at Pampaganda"
+          "translation": "Kalusugan at Kagandahan"
         }
       ]
     },
@@ -218,14 +298,14 @@
     "UfzMzPnHFKRY+YA2YYCiMw==": {
       "translations": [
         {
-          "translation": "Mga Parte at Accessories ng Motorsiklo"
+          "translation": "Mga Bahagi ng Motorsiklo at Kagamitan"
         }
       ]
     },
     "SRXzG3SHl2IsrVr0swey+Q==": {
       "translations": [
         {
-          "translation": "Mga Motorsiklo at Scooters"
+          "translation": "Mga Motorsiklo at Mga Scooter"
         }
       ]
     },
@@ -288,7 +368,7 @@
     "PNDB5G/uGJRtnFstTnLRFw==": {
       "translations": [
         {
-          "translation": "Mga Laruan at Laro"
+          "translation": "Laruan"
         }
       ]
     },
@@ -308,17 +388,23 @@
     },
     "c4W8KxvjoNvkLaPQiXcBeQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Pabahay"
+        }
       ]
     },
     "IGExQ86vwIZJBBngF5KxCg==": {
       "translations": [
-        {}
+        {
+          "translation": "Paradahan"
+        }
       ]
     },
     "zBI2vhzGm3YUFkzAgxhrOw==": {
       "translations": [
-        {}
+        {
+          "translation": "Imbakan"
+        }
       ]
     },
     "dbmMy1BMoOPmEjBIgZNQkw==": {
@@ -330,7 +416,9 @@
     },
     "KBslCOpxNyf2/f02u4AC9A==": {
       "translations": [
-        {}
+        {
+          "translation": "Disenyo"
+        }
       ]
     },
     "9ok6+SExmxGnwGSndfBihw==": {
@@ -343,7 +431,7 @@
     "fLJGWS5/2zZm6lrVMgFdjw==": {
       "translations": [
         {
-          "translation": "Music Lessons"
+          "translation": "Mga Aralin sa Musika"
         }
       ]
     },
@@ -356,17 +444,23 @@
     },
     "kO8sPOni/jolamEZLA8Xrw==": {
       "translations": [
-        {}
+        {
+          "translation": "Salon"
+        }
       ]
     },
     "10HkhoJ+l5kgv0Xp9a5caw==": {
       "translations": [
-        {}
+        {
+          "translation": "Spa"
+        }
       ]
     },
     "KEVzlIlEiThvVr4DsUDjFA==": {
       "translations": [
-        {}
+        {
+          "translation": "Transportasyon"
+        }
       ]
     },
     "6d3Zf+bS0fophdS2BVpZ1A==": {
@@ -414,7 +508,7 @@
     "S1+qQlACydCmaq1HSnUw4g==": {
       "translations": [
         {
-          "translation": "Garage at Moving Sales"
+          "translation": "Garage and Moving Sales"
         }
       ]
     },
@@ -442,13 +536,15 @@
     "j0yAi4eGyUt2LSsXQr92ew==": {
       "translations": [
         {
-          "translation": "Mga Nawala at Nakita"
+          "translation": "Nawala at Natagpuan"
         }
       ]
     },
     "8MgZoixrwmWP6Jsfak1UyA==": {
       "translations": [
-        {}
+        {
+          "translation": "Marketing"
+        }
       ]
     },
     "3WqpHbrwOloRd96TRFYEbA==": {
@@ -493,31 +589,2656 @@
         }
       ]
     },
-    "HIYV/KBfsIx14LvOIIcHwg==": {
+    "CZ1++NjtjMZAo/LiBqRk3A==": {
       "translations": [
         {
-          "translation": "Ang Pinagmulan ng desentralisadong app ay nagbibigay-daan sa mga mamimili at nagbebenta na mag-transact nang walang renta-naghahanap ng mga middleman gamit ang Ethereum blockchain at IPFS."
+          "translation": "Paganahin ang Pagmemensahe"
+        }
+      ]
+    },
+    "xqiYZ70sVyhuOX2uyy5oBQ==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan Messaging"
+        }
+      ]
+    },
+    "HMZO3MPK1igp+L3DnCYh4A==": {
+      "translations": [
+        {
+          "translation": "Magsimula gamit ang Pinagmulan bago mo maipadala ang user na ito ng isang mensahe"
+        }
+      ]
+    },
+    "FHdqFaXVkGt1bTg5qEKySQ==": {
+      "translations": [
+        {
+          "translation": "Pinapayagan ka ng pinagmulang pagmemensahe na makipag-chat sa iba pang mga mamimili at nagbebenta sa aming DApp."
+        }
+      ]
+    },
+    "YF7bGM9defXtVmKlk2BveQ==": {
+      "translations": [
+        {
+          "translation": "Paganahin ang Pinagmulan Messaging"
+        }
+      ]
+    },
+    "QgqHU+1OtRn9vYSCzxsbEQ==": {
+      "translations": [
+        {
+          "translation": "Naghihintay para sa iyo na mag-sign ng mensahe # {num}"
+        }
+      ]
+    },
+    "lcY3PG8oxX/nshLGkSkqQg==": {
+      "translations": [
+        {
+          "translation": "Ang Metamask icon ay matatagpuan sa kanang tuktok ng tool bar ng iyong browser."
+        }
+      ]
+    },
+    "Tx81Wy+s9248PR6ud1U10Q==": {
+      "translations": [
+        {
+          "translation": "Binabati kita! Maaari mo na ngayong mensahe ng iba pang mga gumagamit sa Pinagmulan at manatiling napapanahon sa lahat ng iyong mga pagbili at mga benta."
+        }
+      ]
+    },
+    "iAVHXTjGQY4bG85GZ3rgbQ==": {
+      "translations": [
+        {
+          "translation": "Tapos ka na at maaaring magpatuloy sa pamamagitan ng pagpindot sa pindutan sa ibaba."
+        }
+      ]
+    },
+    "inikq8x/L1Z14PL9LSzFzg==": {
+      "translations": [
+        {
+          "translation": "{= Mag-enroll} upang kumita ng mga token ng Cryptocurrency ng Origin (OGN)."
+        }
+      ]
+    },
+    "1nS1em98gKmMqpesguJylw==": {
+      "translations": [
+        {
+          "translation": "Magpatala"
+        }
+      ]
+    },
+    "SG+OPZyCrM3ZJpIQSUSkyQ==": {
+      "translations": [
+        {
+          "translation": "{= Mag-enroll Ngayon}"
+        }
+      ]
+    },
+    "EnHY9kgzl7/D9IQIpfzW5A==": {
+      "translations": [
+        {
+          "translation": "Mag-enroll Ngayon"
+        }
+      ]
+    },
+    "jpSUKepY+jT83nZZ/dSNow==": {
+      "translations": [
+        {
+          "translation": "Mga Kinita sa Kampanya"
+        }
+      ]
+    },
+    "6MBFCcAVLGs1DIGR8/ZPIQ==": {
+      "translations": [
+        {
+          "translation": "Ang bayad pagkatapos matapos ang kampanya"
+        }
+      ]
+    },
+    "8M4U4PrythJps9u8JfIWRQ==": {
+      "translations": [
+        {
+          "translation": "Hindi nakikita ang iyong kita? Tiyaking i-publish mo ang iyong mga pagbabago."
+        }
+      ]
+    },
+    "fP45W6xW5ewpvWlx+grWwA==": {
+      "translations": [
+        {
+          "translation": "Kanselahin"
+        }
+      ]
+    },
+    "UJ8EZSteGy0rnmvBIah+UA==": {
+      "translations": [
+        {
+          "translation": "OK"
+        }
+      ]
+    },
+    "vK6uEfoyzMBla2soqGDt/Q==": {
+      "translations": [
+        {
+          "translation": "I-crop"
+        }
+      ]
+    },
+    "eLB7QeERmKNpSpshEiv1mw==": {
+      "translations": [
+        {
+          "translation": "Alisin"
+        }
+      ]
+    },
+    "cacya5OYjiwSsUsuTN7hYQ==": {
+      "translations": [
+        {
+          "translation": "Hindi sinusuportahan ng iyong browser ang tag ng video."
+        }
+      ]
+    },
+    "/ADcoKIBKOrEQaYJdXWIFQ==": {
+      "translations": [
+        {
+          "translation": "Kopyahin at Buksan ang App"
+        }
+      ]
+    },
+    "ad/hbXUYWStNfCtS8DbQUQ==": {
+      "translations": [
+        {
+          "translation": "Lakas ng Profile"
+        }
+      ]
+    },
+    "4XGwGx5rPn9fmcBQUx4o8w==": {
+      "translations": [
+        {
+          "translation": "Error: Tingnan ang console para sa mga detalye"
+        }
+      ]
+    },
+    "LeqAwNGdlXUL8rokk73C8g==": {
+      "translations": [
+        {
+          "translation": "Mga review ng nagbebenta na ito"
+        }
+      ]
+    },
+    "jwOObFz9eurn166XgvA7KQ==": {
+      "translations": [
+        {
+          "translation": "Mga review ng user na ito"
+        }
+      ]
+    },
+    "5bnjo+PrKtH3RDx1gvQEIQ==": {
+      "translations": [
+        {
+          "translation": "Walang pangalang user"
+        }
+      ]
+    },
+    "YvRLXVAElsp/GcvlIdQxeQ==": {
+      "translations": [
+        {
+          "translation": "Magbasa pa"
+        }
+      ]
+    },
+    "4b2jW7VoOq0mSpln/V61BA==": {
+      "translations": [
+        {
+          "translation": "Ipadala"
+        }
+      ]
+    },
+    "7X7jI5Dg72byWiXktbTpDA==": {
+      "translations": [
+        {
+          "translation": "Nagbili ka ng isang listahan"
+        }
+      ]
+    },
+    "3PNfoS0WxC5afEsXNhg0ZQ==": {
+      "translations": [
+        {
+          "translation": "Tinanggap mo ang isang alok"
+        }
+      ]
+    },
+    "bgvxo1HEzv4TqWOpIZcjKw==": {
+      "translations": [
+        {
+          "translation": "Natapos mo ang isang transaksyon"
+        }
+      ]
+    },
+    "+rMtD607G7UPpuC/Gh+VRA==": {
+      "translations": [
+        {
+          "translation": "Inalis mo ang isang alok"
+        }
+      ]
+    },
+    "R4DxxKbi2zzfK5Rc0R2DUg==": {
+      "translations": [
+        {
+          "translation": "Pinagtatalunan mo ang isang alok"
+        }
+      ]
+    },
+    "CVbGw4JkzmasQrRV05U4gA==": {
+      "translations": [
+        {
+          "translation": "Gumawa ka ng isang listahan"
+        }
+      ]
+    },
+    "U3gSxf+/41xWyGGG3WD6Sw==": {
+      "translations": [
+        {
+          "translation": "Na-update mo ang isang listahan"
+        }
+      ]
+    },
+    "nT5QRZqhy9IyO2A1Lc1+fw==": {
+      "translations": [
+        {
+          "translation": "Na-update mo ang iyong profile"
+        }
+      ]
+    },
+    "UDE8w4e6AOVqtrnFg59OwQ==": {
+      "translations": [
+        {
+          "translation": "Error sa paglo-load ng kalagayan ng wallet"
+        }
+      ]
+    },
+    "jKdT19A7+5WJW++AhjaFfA==": {
+      "translations": [
+        {
+          "translation": "Walang nakitang wallet"
+        }
+      ]
+    },
+    "64gtsUvYRuiC8+Bn/HeEDw==": {
+      "translations": [
+        {
+          "translation": "Ang iyong pitaka ay walang mga pondo"
+        }
+      ]
+    },
+    "ffjzURZO6ML0U2uAKJpLGw==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ilipat ang MetaMask sa {network}"
+        }
+      ]
+    },
+    "WczyPY+IQGu/be2ckvY0IA==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan mong lagdaan ang transaksyon"
+        }
+      ]
+    },
+    "z6E8AIdzn6jDySQTVZ5+aA==": {
+      "translations": [
+        {
+          "translation": "Error sa transaksyon. Mangyaring tingnan ang console para sa mga detalye."
+        }
+      ]
+    },
+    "l/Mt3Ii9rDA4/tziUA7X1A==": {
+      "translations": [
+        {
+          "translation": "Nag-aalok ng Alok"
+        }
+      ]
+    },
+    "2B3r4pIiatO5FYIP9E3T0Q==": {
+      "translations": [
+        {
+          "translation": "Tinanggap ang Alok"
+        }
+      ]
+    },
+    "4fM9eZbUqZ66bd6SkzCNUA==": {
+      "translations": [
+        {
+          "translation": "Natapos ang Pagbebenta"
+        }
+      ]
+    },
+    "HZDpiKkHU/e1JkAR8jEbkw==": {
+      "translations": [
+        {
+          "translation": "Sinimulan ang Pagtatalo"
+        }
+      ]
+    },
+    "j2iAa98O0Kq9r9ET5w6Puw==": {
+      "translations": [
+        {
+          "translation": "Ginagawa ang Ginagawa"
+        }
+      ]
+    },
+    "Sz9bMhbOlfg3eAr2j7K7ew==": {
+      "translations": [
+        {
+          "translation": "Kumpirmahin ang Transaksyon"
+        }
+      ]
+    },
+    "iKfdvkoOrjcLeiBJ9a4vQg==": {
+      "translations": [
+        {
+          "translation": "Mangyaring kumpirmahin ang transaksyong ito sa {provider}"
+        }
+      ]
+    },
+    "ODAoTKgsu2qyv4M2OMJP+g==": {
+      "translations": [
+        {
+          "translation": "Error - tingnan ang console"
+        }
+      ]
+    },
+    "hlx2chxb1wXEwp0V+48VsA==": {
+      "translations": [
+        {
+          "translation": "Sumulat sa blockchain."
+        }
+      ]
+    },
+    "VaQrM/SpyUJoSj46yEzKXQ==": {
+      "translations": [
+        {
+          "translation": "Maaaring tumagal ng isang minuto."
+        }
+      ]
+    },
+    "k+DOmsxpC6olp+f7YTifpg==": {
+      "translations": [
+        {
+          "translation": "Naghihintay ng kumpirmasyon."
+        }
+      ]
+    },
+    "NTDlcv5byJHU2e2ibIBDag==": {
+      "translations": [
+        {
+          "translation": "ETH Address"
+        }
+      ]
+    },
+    "aYT951Z+6RBjTZE3Jg5tmw==": {
+      "translations": [
+        {
+          "translation": "Na-book"
+        }
+      ]
+    },
+    "uQ4CZ5r/l04HK4ww9kJe9g==": {
+      "translations": [
+        {
+          "translation": "Hindi magagamit"
+        }
+      ]
+    },
+    "4l5fTgfrjh0H1k93n0Z2Yg==": {
+      "translations": [
+        {
+          "translation": "Maligayang pagdating sa Origin Beta! Pinagmulan ay isang desentralisadong pamilihan na gumagana ng kaunti naiiba kaysa sa karamihan ng apps."
+        }
+      ]
+    },
+    "KUTOlStBC3mnQChZ/HbOfg==": {
+      "translations": [
+        {
+          "translation": "Nasa Beta mode kami, ngunit lahat ng mga transaksyon ay totoo at gamitin ang ETH."
+        }
+      ]
+    },
+    "afFV4fdQM5Cn1ojptvnUwQ==": {
+      "translations": [
+        {
+          "translation": "Paki-verify ang iyong {= identity} kaya alam ng iba pang mga mamimili at nagbebenta kung sino ka."
+        }
+      ]
+    },
+    "KDRf8/y09hl8uNtTcYT4bg==": {
+      "translations": [
+        {
+          "translation": "pagkakakilanlan"
+        }
+      ]
+    },
+    "OJOJCYDwaeNFYLRD9LpYjw==": {
+      "translations": [
+        {
+          "translation": "Huwag kalimutan na paganahin ang {= Origin Messaging} upang maaari kang makipag-usap sa ibang mga user. Ito'y LIBRE."
+        }
+      ]
+    },
+    "TkYhUNXqK8qjP6JBVTzWDg==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan Messaging"
+        }
+      ]
+    },
+    "DM97lxszR6kNQg6jXs0vjg==": {
+      "translations": [
+        {
+          "translation": "Kung mayroon kang anumang mga katanungan o kailangang makipagtalo sa isang transaksyon, {= ipaalam sa amin}."
+        }
+      ]
+    },
+    "aOrOr85BD9OMqCaqeGLoVQ==": {
+      "translations": [
+        {
+          "translation": "ipaalam sa amin"
+        }
+      ]
+    },
+    "EbCUtytNEBvHpMUozUtwmQ==": {
+      "translations": [
+        {
+          "translation": "Nakuha ko na."
+        }
+      ]
+    },
+    "Kiq4v7lxOraNMcGSuV03fQ==": {
+      "translations": [
+        {
+          "translation": "Ang Pinagmulan ay nagpapahintulot sa mga mamimili at nagbebenta na mag-transact nang walang mga renta na naghahangad ng renta gamit ang Ethereum blockchain at IPFS."
+        }
+      ]
+    },
+    "B9JVfJwAydDAD9972+O7GA==": {
+      "translations": [
+        {
+          "translation": "Kasalukuyan kang gumagamit ng Origin Beta sa: {networkName}."
+        }
+      ]
+    },
+    "gwPeffiBc/c3/tgXpfwdJQ==": {
+      "translations": [
+        {
+          "translation": "Mahalagang Paalala"
+        }
+      ]
+    },
+    "axOOkZLBs4P1DATohXZpyg==": {
+      "translations": [
+        {
+          "translation": "Nakakita ng bug o may feedback? Magpadala ng email sa {=[SupportEmail]}, buksan ang isang isyu sa {= GitHub} o mag-post sa aming # channel ng mga ulat-bug sa {= Discord}."
+        }
+      ]
+    },
+    "WXEUY0b8xIYw6ctSshzrUA==": {
+      "translations": [
+        {
+          "translation": "{SupportEmail}"
+        }
+      ]
+    },
+    "d/zjx0QiqsSKcmp3VNkGbQ==": {
+      "translations": [
+        {
+          "translation": "GitHub"
+        }
+      ]
+    },
+    "lX/Lgd6k+hZxqbW544UIbw==": {
+      "translations": [
+        {
+          "translation": "Discord"
+        }
+      ]
+    },
+    "B8tUH76/HTCaTj1p9i2Qqg==": {
+      "translations": [
+        {
+          "translation": "Mga Tuntunin"
+        }
+      ]
+    },
+    "dFXfY28mWQJKgKM6uIHqsQ==": {
+      "translations": [
+        {
+          "translation": "Privacy"
+        }
+      ]
+    },
+    "gRyXn/kmXsDGzbnnfoe09A==": {
+      "translations": [
+        {
+          "translation": "Patakaran sa Katanggap-tanggap na Paggamit"
         }
       ]
     },
     "k2EiJaPGLnYsYgSeb0efig==": {
       "translations": [
         {
-          "translation": "Bisitahin ang aming Website"
+          "translation": "Matuto Nang Higit Pa Tungkol sa Pinagmulan"
+        }
+      ]
+    },
+    "So52/pjUZQ+SOU0tAAvKTw==": {
+      "translations": [
+        {
+          "translation": "Lumikha ng Iyong Sariling Marketplace"
         }
       ]
     },
     "KuNLu1gPpB8/96R5zz8B9Q==": {
       "translations": [
         {
-          "translation": "Bumibili"
+          "translation": "Bumili"
         }
       ]
     },
     "w/hcQFMC5CWGdGFhaYJXpw==": {
       "translations": [
         {
-          "translation": "Magdagdag ng listahan"
+          "translation": "Magdagdag ng Listahan"
+        }
+      ]
+    },
+    "zUWKqrHlOSVXNTx3ro3MzQ==": {
+      "translations": [
+        {
+          "translation": "Kumita ng Libreng Token Pinagmulan Ngayon"
+        }
+      ]
+    },
+    "QrtbSmt3JHYzJb4uZ++dDw==": {
+      "translations": [
+        {
+          "translation": "Makilahok sa aming mga kampanya at kumpletong mga gawain sa aming DApp upang kumita ng Mga Token ng Pinagmulan."
+        }
+      ]
+    },
+    "ASi+rLNm1e3O0p/vAQDCWg==": {
+      "translations": [
+        {
+          "translation": "Pumunta"
+        }
+      ]
+    },
+    "N0aJrKPoNKxjFd5sIupLCQ==": {
+      "translations": [
+        {
+          "translation": "Ang pahinang ito ay na-translate na machine, tingnan ang anumang mga error?"
+        }
+      ]
+    },
+    "LrotBDVInKIAGul78ZIkwQ==": {
+      "translations": [
+        {
+          "translation": "Tulungan ang Isalin"
+        }
+      ]
+    },
+    "xIrCn6YhZw1NfC2ar0MD4Q==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa Mga Token ng Pinagmulan"
+        }
+      ]
+    },
+    "GwcDe9CcWWasPietMqdHww==": {
+      "translations": [
+        {
+          "translation": "{= Pangkalahatang-ideya} {= Mga Token ng Pinagmulan ay mga token ng ERC-20 na ginagamit sa Pinagmulan DApp at plataporma. Maaaring gamitin ang mga pinagmulang Token upang gantimpalaan ang mga operator ng merkado, mga tagalikha ng DApp, mga gumagamit, mga developer, at / o iba pa na bumili, nagbebenta, at nag-ambag sa Pinagmulan.}"
+        }
+      ]
+    },
+    "nJke93V/TKDxmDaxzZGitw==": {
+      "translations": [
+        {
+          "translation": "Pangkalahatang-ideya"
+        }
+      ]
+    },
+    "i0F86KYzT4Niw4JKLm/qkw==": {
+      "translations": [
+        {
+          "translation": "Mga Orihinal na Token ang ERC-20 na mga token na ginagamit sa Pinagmulan DApp at platform. Ang mga pinagmulang Token ay maaaring gamitin upang gantimpalaan ang mga operator sa pamilihan, mga tagalikha ng DApp, mga gumagamit, mga developer, at / o iba pa na bumili, nagbebenta, at nag-ambag sa Pinagmulan."
+        }
+      ]
+    },
+    "YStilTZWkt3L9DlXs8HFYQ==": {
+      "translations": [
+        {
+          "translation": "{= Ano ang mga pinagmulang Token na ginagamit para sa?} {= Boosting} {= Ang mga nagbebenta ay maaaring gumamit ng Mga Token ng Pinagmulan upang mapalakas ang kanilang mga listahan at makakuha ng mas mataas na visibility sa Origin DApp o sa hinaharap na mga third-party na DApps. Ang mga listahan na may mas mataas na kakayahang makita ay ipinapakita nang mas madalas sa mga mamimili at may mas mataas na mga pagkakataon na mabibili nang matagumpay. Ang mga DApps ay kumita ng Mga Token ng Pinagmulan mula sa mga nagbebenta kapag matagumpay nilang kumpletuhin ang mga benta sa Boost.}"
+        }
+      ]
+    },
+    "RHhTbNgtz6ZMiFn8b4AEiA==": {
+      "translations": [
+        {
+          "translation": "Ano ang ginagamit ng Mga Token sa Pinagmulan?"
+        }
+      ]
+    },
+    "2bGXNtBOZfDBlzQhNYVE2A==": {
+      "translations": [
+        {
+          "translation": "Pagpapalakas"
+        }
+      ]
+    },
+    "L8E7ZEtxTffC6yooVS4Ucw==": {
+      "translations": [
+        {
+          "translation": "Maaaring gamitin ng mga nagbebenta ang Mga Pinagmulan na Token upang mapalakas ang kanilang mga listahan at makakuha ng mas mataas na kakayahang makita sa Pinagmulan DApp o sa hinaharap na third-party na DApps. Ang mga listahan na may mas mataas na visibility ay ipinapakita nang mas madalas sa mga mamimili at may mas mataas na mga pagkakataon na matagumpay na naibenta. Ang mga DApps ay nakakuha ng Mga Token ng Pinagmulan mula sa mga nagbebenta kapag matagumpay nilang nakumpleto ang mga benta sa Boost."
+        }
+      ]
+    },
+    "WMwhtycSMMCEW+BSsx/KAg==": {
+      "translations": [
+        {
+          "translation": "{= Referral Rewards} {= Paparating na}"
+        }
+      ]
+    },
+    "Ecsu8evsCa6+mCp5FFJP5Q==": {
+      "translations": [
+        {
+          "translation": "Referral Rewards"
+        }
+      ]
+    },
+    "MAZJoR5QhDcB5qn6u1661A==": {
+      "translations": [
+        {
+          "translation": "Malapit na"
+        }
+      ]
+    },
+    "gtMBWfRfKMIhVz+1ALiI4Q==": {
+      "translations": [
+        {
+          "translation": "{= Platform Pamamahala} {= Paparating na}"
+        }
+      ]
+    },
+    "Sdh1iGlXwAq8qpv2Jw9eiQ==": {
+      "translations": [
+        {
+          "translation": "Pamamahala ng Platform"
+        }
+      ]
+    },
+    "IRc9jeCD4UzlZo+esRqrRw==": {
+      "translations": [
+        {
+          "translation": "Malapit na"
+        }
+      ]
+    },
+    "7o+KdiD481Rnhy9jrb6mOQ==": {
+      "translations": [
+        {
+          "translation": "{= Saan ako makakabili ng Mga Token ng Pinagmulan?} {= Mga Palitan} {= Sa panahon ng Mainnet Beta, ang mga Token ng Pinagmulan ay hindi magagamit sa anumang palitan. Matapos ang pagsara ng Mainnet Beta, i-publish namin ang isang listahan ng mga aprubadong palitan kung saan maaari kang bumili ng Mga Pinagmulan na Token na gagamitin sa platform.}"
+        }
+      ]
+    },
+    "1uA8qKqQWczafpiu60Vsaw==": {
+      "translations": [
+        {
+          "translation": "Saan ako maaaring bumili ng Mga Token ng Pinagmulan?"
+        }
+      ]
+    },
+    "Xxu13cwEVB4lUJQ1ddpUUw==": {
+      "translations": [
+        {
+          "translation": "Palitan"
+        }
+      ]
+    },
+    "YdD4SWxlipe6jvGHdl9Q4w==": {
+      "translations": [
+        {
+          "translation": "Sa panahon ng Mainnet Beta, ang mga Token ng Pinagmulan ay hindi magagamit sa anumang palitan. Matapos ang pagsara ng Mainnet Beta, i-publish namin ang isang listahan ng mga aprubadong palitan kung saan maaari kang bumili ng Mga Pinagmulan na Token na gagamitin sa platform."
+        }
+      ]
+    },
+    "6S2bnqF5VoGd1HyPLrOJ9Q==": {
+      "translations": [
+        {
+          "translation": "Paki-refresh ang pahina"
+        }
+      ]
+    },
+    "xI4Hor+GVoaMYqnflEKBCQ==": {
+      "translations": [
+        {
+          "translation": "{= Loading} {= Mangyaring maghintay}"
+        }
+      ]
+    },
+    "J2mgIwRLF/KI7IomZlReeA==": {
+      "translations": [
+        {
+          "translation": "Naglo-load"
+        }
+      ]
+    },
+    "kDg1DNY4vTf/RpzQGpTqWw==": {
+      "translations": [
+        {
+          "translation": "Mangyaring maghintay"
+        }
+      ]
+    },
+    "3qxbOl/o9sGDgVAyMFT7cQ==": {
+      "translations": [
+        {
+          "translation": "Piliin ang"
+        }
+      ]
+    },
+    "TeGDsV+ClksE6cndLEwsYw==": {
+      "translations": [
+        {
+          "translation": "I-update natin ang iyong listahan"
+        }
+      ]
+    },
+    "nbRMtgeidlTvoFVOSmGxDw==": {
+      "translations": [
+        {
+          "translation": "I-update ang uri ng listahan"
+        }
+      ]
+    },
+    "TJEBcSvM6okOHKIkCn895g==": {
+      "translations": [
+        {
+          "translation": "Anong uri ng listahan ang gusto mong gawin?"
+        }
+      ]
+    },
+    "BFFySSGl3keiaQSJJ9mLVg==": {
+      "translations": [
+        {
+          "translation": "Magpatuloy"
+        }
+      ]
+    },
+    "AE1bc3na36ja+05GQjJpcA==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang kategorya"
+        }
+      ]
+    },
+    "hO2MefBe3pTJSJ6EhgGMRg==": {
+      "translations": [
+        {
+          "translation": "Magdagdag ng Listahan"
+        }
+      ]
+    },
+    "BOEIRlbRXuQ3sec1umLfsw==": {
+      "translations": [
+        {
+          "translation": "Hakbang {step}"
+        }
+      ]
+    },
+    "T4hP+Pz9YaypalU2fcY6fQ==": {
+      "translations": [
+        {
+          "translation": "Magbigay ng mga detalye ng listahan"
+        }
+      ]
+    },
+    "y65E1632h+J2j0bzz9JlvA==": {
+      "translations": [
+        {
+          "translation": "Pakiayos ang mga Mali sa ilalim..."
+        }
+      ]
+    },
+    "N4zHAa9d+D9/d5DR/VX8fw==": {
+      "translations": [
+        {
+          "translation": "Titulo"
+        }
+      ]
+    },
+    "o1sCYyiIyp91GJ4c+D+IGw==": {
+      "translations": [
+        {
+          "translation": "Deskripsyon"
+        }
+      ]
+    },
+    "RNXQtJNfSTKosZ8tt7Uhkg==": {
+      "translations": [
+        {
+          "translation": "Pumili ng mga larawan"
+        }
+      ]
+    },
+    "6FcU7DSqJ6OEWN3FQ7I8+g==": {
+      "translations": [
+        {
+          "translation": "{= Pindutin nang matagal ang 'utos' (⌘) upang pumili ng maraming mga larawan.} {= Maximum na 10 mga larawan sa bawat listahan.} {= Unang larawan ay itampok - i-drag and drop ang mga larawan. }"
+        }
+      ]
+    },
+    "jyiI/1KtAEeT6GUNTqUwQQ==": {
+      "translations": [
+        {
+          "translation": "Pindutin nang matagal ang 'utos' (⌘) upang pumili ng maraming mga larawan."
+        }
+      ]
+    },
+    "C57QcRF+iWBp2ulYlEf3cQ==": {
+      "translations": [
+        {
+          "translation": "Maximum na 10 mga larawan sa bawat listahan."
+        }
+      ]
+    },
+    "S65qVcS0LFiS3FZBkFRFIw==": {
+      "translations": [
+        {
+          "translation": "Itampok ang unang imahe - i-drag at i-drop ang mga larawan upang muling ayusin."
+        }
+      ]
+    },
+    "NBkmGjaTiM8vyyHeArlyVQ==": {
+      "translations": [
+        {
+          "translation": "Ang inirekumendang ratio ng aspeto ay 4: 3"
+        }
+      ]
+    },
+    "rtCdERSNcNXuc+AAqIqNDQ==": {
+      "translations": [
+        {
+          "translation": "Bumalik"
+        }
+      ]
+    },
+    "6aBoGQUr/5UWzMwm8U2nZQ==": {
+      "translations": [
+        {
+          "translation": "Magpatuloy"
+        }
+      ]
+    },
+    "+y0oq3lzR/a/W5VOUiqhSw==": {
+      "translations": [
+        {
+          "translation": "{= Magdagdag ng Mga Detalye ng Listahan} Tiyaking ibigay ang iyong listahan ng isang naaangkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+        }
+      ]
+    },
+    "F+QNKwb7kASCs7SAgAmYXQ==": {
+      "translations": [
+        {
+          "translation": "Magdagdag ng Mga Detalye ng Listahan"
+        }
+      ]
+    },
+    "0ctXwv+dP6jEEWKOPv3BEA==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang pamagat"
+        }
+      ]
+    },
+    "JwgjElhIfEX7/b25EL1IzA==": {
+      "translations": [
+        {
+          "translation": "Ang pamagat ay masyadong maikli"
+        }
+      ]
+    },
+    "zufGz2cZkzguKJKY9V2Khg==": {
+      "translations": [
+        {
+          "translation": "Ang pamagat ay masyadong mahaba"
+        }
+      ]
+    },
+    "yiygv8uC78unCYSHbax9eA==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang paglalarawan"
+        }
+      ]
+    },
+    "tKwTKrHrCx3N6r44IGkiuA==": {
+      "translations": [
+        {
+          "translation": "Masyadong maikli ang paglalarawan"
+        }
+      ]
+    },
+    "3W9eRi41Z7uPMb8mRXYPwA==": {
+      "translations": [
+        {
+          "translation": "Masyadong mahaba ang paglalarawan"
+        }
+      ]
+    },
+    "aMGcdKcKpRdEpQbp3Ba1oA==": {
+      "translations": [
+        {
+          "translation": "Suriin ang iyong listahan"
+        }
+      ]
+    },
+    "7n8lvqv++QH2CB5KvxdLZg==": {
+      "translations": [
+        {
+          "translation": "Titulo"
+        }
+      ]
+    },
+    "hNSNWzh7R4Uerr0O/rJ9Cw==": {
+      "translations": [
+        {
+          "translation": "Kategorya"
+        }
+      ]
+    },
+    "F4BKFWWRbyV/cfzRZn+GKg==": {
+      "translations": [
+        {
+          "translation": "Deskripsyon"
+        }
+      ]
+    },
+    "1SWB7U53C4UgGwRXcrKTEw==": {
+      "translations": [
+        {
+          "translation": "Mga larawan"
+        }
+      ]
+    },
+    "p47Cw8eNUmws809ltOX5wQ==": {
+      "translations": [
+        {
+          "translation": "Walang mga litrato"
+        }
+      ]
+    },
+    "YiV0mg8J2EqbWfBune3OHA==": {
+      "translations": [
+        {
+          "translation": "Tapos"
+        }
+      ]
+    },
+    "LOFIZ11Y8GW1Zlc1RtQIgw==": {
+      "translations": [
+        {
+          "translation": "{= Ano ang susunod na nangyayari?} Kapag isinumite mo ang listahang ito, hihilingin sa iyo na kumpirmahin ang iyong transaksyon sa MetaMask. Pagkatapos ay maaaring makita ng mga mamimili ang iyong listahan at gumawa ng mga alok dito."
+        }
+      ]
+    },
+    "n7wNRm92mE1K2r34Kwk0HQ==": {
+      "translations": [
+        {
+          "translation": "Ano susunod na mangyayari?"
+        }
+      ]
+    },
+    "O1X6MM+wCK4hfwlb0R1FQg==": {
+      "translations": [
+        {
+          "translation": "Hakbang {create.details.hourly.step}"
+        }
+      ]
+    },
+    "mPHsV3ZeCl9i47gEQD6UoA==": {
+      "translations": [
+        {
+          "translation": "I-edit ang availability at Pagpepresyo"
+        }
+      ]
+    },
+    "QxBrlISY6Qt5QK4v9Dycag==": {
+      "translations": [
+        {
+          "translation": "Pakiayos ang mga Mali sa ilalim..."
+        }
+      ]
+    },
+    "USE0uC/WTidlp9nO06mAKQ==": {
+      "translations": [
+        {
+          "translation": "Bumalik"
+        }
+      ]
+    },
+    "h7IT99DnDlrG3h3IYZRUlw==": {
+      "translations": [
+        {
+          "translation": "Pagsusuri"
+        }
+      ]
+    },
+    "riDmAhG5FDBLDCbTomrAYA==": {
+      "translations": [
+        {
+          "translation": "I-click ang kalendaryo upang magpasok ng impormasyon sa pagpepresyo at availability. Upang pumili ng maramihang mga puwang ng oras, i-click ang puwang ng pagsisimula ng oras at i-drag sa pagtatapos ng isa."
+        }
+      ]
+    },
+    "bhJvCq3wWgIxEba/0Vz6Eg==": {
+      "translations": [
+        {
+          "translation": "Magsimula"
+        }
+      ]
+    },
+    "SZYKrG3AnoNvLdBXDvORWQ==": {
+      "translations": [
+        {
+          "translation": "Dulo"
+        }
+      ]
+    },
+    "Vy7sK/HUnzuHwBwQR7IcwQ==": {
+      "translations": [
+        {
+          "translation": "Magagamit"
+        }
+      ]
+    },
+    "i1wODftyG2G5m4WrAqm6bQ==": {
+      "translations": [
+        {
+          "translation": "Oo"
+        }
+      ]
+    },
+    "zG5BYwnQJS+D6wM97UlKKA==": {
+      "translations": [
+        {
+          "translation": "Hindi"
+        }
+      ]
+    },
+    "ZIZrAMI/4IMftVSxFaUmjA==": {
+      "translations": [
+        {
+          "translation": "Pasadyang Pagpepresyo"
+        }
+      ]
+    },
+    "fOOrfyqIzHoDPzYveIfm2w==": {
+      "translations": [
+        {
+          "translation": "I-save"
+        }
+      ]
+    },
+    "f0wHNxTzIoEcxc0zQvqerg==": {
+      "translations": [
+        {
+          "translation": "{= Mayroon kang 0 OGN sa iyong wallet.} {= Kapag nakuha mo ang ilang mga OGN, maaari mong mapalakas ang iyong listahan.} {= Matuto Nang Higit Pa}"
+        }
+      ]
+    },
+    "s63cGVY8c2v9cd9DFKWTNw==": {
+      "translations": [
+        {
+          "translation": "Mayroon kang 0 {= OGN} sa iyong wallet."
+        }
+      ]
+    },
+    "ObL7sfTdiNVgNDUh3L473g==": {
+      "translations": [
+        {
+          "translation": "OGN"
+        }
+      ]
+    },
+    "Rq5qj1KA6NC9wA9dYlQhuA==": {
+      "translations": [
+        {
+          "translation": "Sa sandaling makukuha mo ang ilang OGN, maaari mong mapalakas ang iyong listahan."
+        }
+      ]
+    },
+    "1bLRt3UQm/BD/KE8lGl6Tg==": {
+      "translations": [
+        {
+          "translation": "{= Matuto nang higit pa}"
+        }
+      ]
+    },
+    "UCqpPb9HUCdDPK8PVNoing==": {
+      "translations": [
+        {
+          "translation": "Matuto Nang Higit Pa"
+        }
+      ]
+    },
+    "MKtD2IUm6q0tNgzVNc1Dmg==": {
+      "translations": [
+        {
+          "translation": "Premium"
+        }
+      ]
+    },
+    "VYOEDKnwV8gTpWz1oC49nw==": {
+      "translations": [
+        {
+          "translation": "Ang iyong listahan ay makakakuha ng pinakamahusay na kakayahang makita."
+        }
+      ]
+    },
+    "DVk5nEtiS53RISqwMyik4w==": {
+      "translations": [
+        {
+          "translation": "Mataas"
+        }
+      ]
+    },
+    "bfw9ucLZfQAABtwix4GiTA==": {
+      "translations": [
+        {
+          "translation": "Ang iyong listahan ay makakakuha ng higit sa average na kakayahang makita."
+        }
+      ]
+    },
+    "BIJdlxSDO8YXBFa1bdjM0Q==": {
+      "translations": [
+        {
+          "translation": "Katamtaman"
+        }
+      ]
+    },
+    "ikpZAn8CWIjfpQuegSxzlg==": {
+      "translations": [
+        {
+          "translation": "Ang iyong listahan ay makakakuha ng average visibility."
+        }
+      ]
+    },
+    "Z/fYz1c3EvphoMJjKwN7OQ==": {
+      "translations": [
+        {
+          "translation": "Mababang"
+        }
+      ]
+    },
+    "f9TtFygZLuPgBdPqVZjnsw==": {
+      "translations": [
+        {
+          "translation": "Makakakuha ang iyong listahan ng visibility sa ibaba-average."
+        }
+      ]
+    },
+    "ZQzbdcmmWm0a7hbHALXxKg==": {
+      "translations": [
+        {
+          "translation": "Wala"
+        }
+      ]
+    },
+    "vPWwkfUC6Qd/085WZq2ubg==": {
+      "translations": [
+        {
+          "translation": "Ang iyong listahan ay makakakuha ng napakababang visibility."
+        }
+      ]
+    },
+    "XooRcxaiD87mvelZppTDhQ==": {
+      "translations": [
+        {
+          "translation": "Palakasin ang iyong listahan"
+        }
+      ]
+    },
+    "xG2ima+L2iJfrUt1xqdVgQ==": {
+      "translations": [
+        {
+          "translation": "Maaari mong palakasin ang iyong listahan upang makakuha ng mas mataas na visibility sa Origin DApp. Maraming mamimili ang makakakita sa iyong listahan, na nagdaragdag ng mga pagkakataon ng isang mabilis at matagumpay na pagbebenta."
+        }
+      ]
+    },
+    "kscNc0rAVSIEomcgmPq7bA==": {
+      "translations": [
+        {
+          "translation": "{= Tungkol sa Pagtingin) Pinagmulan ng mga pinagmumulan at nagpapakita ng mga listahan batay sa kaugnayan, pagkakatuguhan, at antas ng pagpapalakas. Ang mas mataas na mga listahan ng pagpapakita ay ipinapakita sa mga mamimili nang mas madalas. {= Origin Tokens} OGN ay isang ERC-20 token na ginamit para sa mga insentibo at pamamahala sa Pinagmulan ng platform. Ang hinaharap na hinahangad na paggamit ng OGN ay maaaring magsama ng mga gantimpala sa referral, insentibo sa reputasyon, pag-iwas sa spam, mga premyo ng developer, at pamamahala ng platform. {= Matuto nang higit pa}"
+        }
+      ]
+    },
+    "5tXXwsHR3cFyTUxebdo/TA==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa Visibility"
+        }
+      ]
+    },
+    "9gnWoajmSNKs8bXQsuaIeA==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan Token"
+        }
+      ]
+    },
+    "7FwwGMlpFP9xRfTitbG58w==": {
+      "translations": [
+        {
+          "translation": "{= Matuto nang higit pa}"
+        }
+      ]
+    },
+    "UBWmrwwWC7xV44OHJj2pTg==": {
+      "translations": [
+        {
+          "translation": "Matuto Nang Higit Pa"
+        }
+      ]
+    },
+    "0GEIzMCv8QRDTl4rftCvKQ==": {
+      "translations": [
+        {
+          "translation": "Boost Level (kada oras)"
+        }
+      ]
+    },
+    "ajMq77c6lEYIxaipqASkOw==": {
+      "translations": [
+        {
+          "translation": "Ang mga pagpapalakas ay palaging kinakalkula at sisingilin sa OGN. {= Matuto nang higit pa}"
+        }
+      ]
+    },
+    "tqNFJ6tnyub41HNB9CGxBw==": {
+      "translations": [
+        {
+          "translation": "Matuto pa"
+        }
+      ]
+    },
+    "kyWPelt19yuvWoFxQKtDZQ==": {
+      "translations": [
+        {
+          "translation": "Maximum na halaga na gagastusin upang mapalakas ang listahan na ito. Ang mga Boost ay palaging nasa OGN, {= USD ay isang pagtatantya.}"
+        }
+      ]
+    },
+    "k6LcXYqvMDOmVbR18GgyFg==": {
+      "translations": [
+        {
+          "translation": "Ang isang USD ay isang pagtatantya."
+        }
+      ]
+    },
+    "MHDMB6RUmTj515XS+kI1gg==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang Boost"
+        }
+      ]
+    },
+    "cyMPk4rzJSLjJxydh9dVZw==": {
+      "translations": [
+        {
+          "translation": "Ang Boost ay dapat na isang numero"
+        }
+      ]
+    },
+    "XEkbF9NnI1TDCslHsTiPOg==": {
+      "translations": [
+        {
+          "translation": "Ang Boost ay dapat na zero o mas malaki"
+        }
+      ]
+    },
+    "27Ow2UUqDzN80/qFwKuagA==": {
+      "translations": [
+        {
+          "translation": "Tiyaking isama ang mga espesyal na kondisyon ng iyong rental dito."
+        }
+      ]
+    },
+    "xasl1V2DrlXF0w5I0r7s2Q==": {
+      "translations": [
+        {
+          "translation": "Default na Presyo bawat Oras"
+        }
+      ]
+    },
+    "R0NSwOq5WRJL4Uit0/kcog==": {
+      "translations": [
+        {
+          "translation": "Ang presyo ay palaging nasa ETH, ang isang tantiya ng USD."
+        }
+      ]
+    },
+    "hZUhDQEf+9hn/KDNJqY9kA==": {
+      "translations": [
+        {
+          "translation": "Mga Karaniwang Magagamit na Oras"
+        }
+      ]
+    },
+    "Gqt08lyE4VtShAgKdMZokA==": {
+      "translations": [
+        {
+          "translation": "Linggo"
+        }
+      ]
+    },
+    "oS2bcoizgT1EyTcNcwlNCw==": {
+      "translations": [
+        {
+          "translation": "Lunes"
+        }
+      ]
+    },
+    "i7g7MLC48FvLYQP0Ir0bIg==": {
+      "translations": [
+        {
+          "translation": "Martes"
+        }
+      ]
+    },
+    "MKm/5MDN1FQjJE7AxFfNTg==": {
+      "translations": [
+        {
+          "translation": "Miyerkules"
+        }
+      ]
+    },
+    "JQn1L0abnE4cy8rIon0tPQ==": {
+      "translations": [
+        {
+          "translation": "Huwebes"
+        }
+      ]
+    },
+    "PA5kXM1YLSHma7cgMbtljQ==": {
+      "translations": [
+        {
+          "translation": "Biyernes"
+        }
+      ]
+    },
+    "qi27QvmA7NtNptih1ZgG7w==": {
+      "translations": [
+        {
+          "translation": "Sabado"
+        }
+      ]
+    },
+    "ApWdVpzCY+Eid9Cvcrb/KA==": {
+      "translations": [
+        {
+          "translation": "Time Zone"
+        }
+      ]
+    },
+    "ISfX2Tir6jQS9xizqOSuIA==": {
+      "translations": [
+        {
+          "translation": "Pumili ng mga larawan"
+        }
+      ]
+    },
+    "HKxVFSE2OX1CYvKImRfZrw==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang Time Zone"
+        }
+      ]
+    },
+    "orj/pqyrSwNcSJ5rzpPkzg==": {
+      "translations": [
+        {
+          "translation": "Masyadong mahaba ang Time Zone"
+        }
+      ]
+    },
+    "kh91WvP5MrKsaTjaUWzHcQ==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang presyo"
+        }
+      ]
+    },
+    "U9nCBXU2eOe8CVPQTCTtEw==": {
+      "translations": [
+        {
+          "translation": "Ang presyo ay dapat na isang numero"
+        }
+      ]
+    },
+    "t7vjpACSIJ3fETyxhx15DA==": {
+      "translations": [
+        {
+          "translation": "Dapat mas malaki kaysa sa zero ang presyo"
+        }
+      ]
+    },
+    "B1hVTCqGsBeFXs0fUYnNwg==": {
+      "translations": [
+        {
+          "translation": "Time Zone"
+        }
+      ]
+    },
+    "ttxJ16uXKvVyO+pi/N4INw==": {
+      "translations": [
+        {
+          "translation": "Presyo"
+        }
+      ]
+    },
+    "ufNv3S+wktbn9siw6Ytw8g==": {
+      "translations": [
+        {
+          "translation": "Boost Level"
+        }
+      ]
+    },
+    "0CtzPjp/uPSPGXYtTtJi8g==": {
+      "translations": [
+        {
+          "translation": "/ oras"
+        }
+      ]
+    },
+    "r/ZH9kdLh49Y545LVS/Nkw==": {
+      "translations": [
+        {
+          "translation": "Availability"
+        }
+      ]
+    },
+    "si3GOZhOfQ+CSWieJRAPPg==": {
+      "translations": [
+        {
+          "translation": "Hakbang {create.details.fractional.step}"
+        }
+      ]
+    },
+    "8bPBAiupzsZ1ZV+u0c0YAQ==": {
+      "translations": [
+        {
+          "translation": "Simulan ang Petsa"
+        }
+      ]
+    },
+    "LEATVaBXpWNSOks5HDLq2g==": {
+      "translations": [
+        {
+          "translation": "Petsa ng Pagtatapos"
+        }
+      ]
+    },
+    "zYkJcHqnxHF3sUo4vJwCvw==": {
+      "translations": [
+        {
+          "translation": "Oo"
+        }
+      ]
+    },
+    "QXctQVwGqxmWrLeNL+UR3A==": {
+      "translations": [
+        {
+          "translation": "Hindi"
+        }
+      ]
+    },
+    "J0el3EDr/vsUHJtTGnxMzg==": {
+      "translations": [
+        {
+          "translation": "Hakbang {step}"
+        }
+      ]
+    },
+    "a4KERVeW4yfsDcjfY1hciA==": {
+      "translations": [
+        {
+          "translation": "Deskripsyon"
+        }
+      ]
+    },
+    "VLeBXLo9YjCZvjBUoXecHw==": {
+      "translations": [
+        {
+          "translation": "Default na Pagpepresyo ng Araw ng Linggo (Linggo - Huwebes gabi)"
+        }
+      ]
+    },
+    "dux6OsEbP2DZz66V92D8sQ==": {
+      "translations": [
+        {
+          "translation": "Default Weekend Pricing (Biyernes at Sabado ng gabi)"
+        }
+      ]
+    },
+    "jlefWFM0G2q6WXliPPUUrA==": {
+      "translations": [
+        {
+          "translation": "{= Magdagdag ng Mga Detalye ng Listahan} Tiyaking ibigay ang iyong listahan ng isang naaangkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+        }
+      ]
+    },
+    "uic6XiogIbPWsEBJCl9oQQ==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang katapusan ng linggo"
+        }
+      ]
+    },
+    "0Jjsr49OFGENCFnKQHde6A==": {
+      "translations": [
+        {
+          "translation": "Ang presyo ng katapusan ng linggo ay dapat na isang numero"
+        }
+      ]
+    },
+    "5mkmOQsVrenk575XecSDMA==": {
+      "translations": [
+        {
+          "translation": "Ang presyo ng katapusan ng linggo ay dapat na mas mataas kaysa sa zero"
+        }
+      ]
+    },
+    "nT0M9qAbFnd379S0Kmxyvg==": {
+      "translations": [
+        {
+          "translation": "Suriin ang iyong listahan"
+        }
+      ]
+    },
+    "Q3jRFjK2+LP8T5zcxXCN2A==": {
+      "translations": [
+        {
+          "translation": "Mga araw ng linggo"
+        }
+      ]
+    },
+    "EUD9J8oz2ZPTZeIebJ0nag==": {
+      "translations": [
+        {
+          "translation": "Mga Linggo"
+        }
+      ]
+    },
+    "ARNhSBqI2w2JdkHRDoU/Ew==": {
+      "translations": [
+        {
+          "translation": "Boost Level"
+        }
+      ]
+    },
+    "45VwRk/aiVWEQ2+yAHXeIA==": {
+      "translations": [
+        {
+          "translation": "/ gabi"
+        }
+      ]
+    },
+    "H8XhJIXAMIBERHkbp9ERUA==": {
+      "translations": [
+        {
+          "translation": "Boost Level (bawat gabi)"
+        }
+      ]
+    },
+    "jB0ZDhUT3nHg+Pe0I8Ydgg==": {
+      "translations": [
+        {
+          "translation": "Kabuuang bilang ng mga yunit:"
+        }
+      ]
+    },
+    "J/Gu2gnwZe5c9tNKQaU0Qg==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang kabuuang tulong:"
+        }
+      ]
+    },
+    "UBhlfRnsBL2QeLZ9NI9MaQ==": {
+      "translations": [
+        {
+          "translation": "Ang iyong mas mabilis na takip ay mas mababa kaysa sa kabuuang halaga na kailangan upang mapalakas ang lahat ng iyong mga yunit. Matapos maabot ang takip, ang mga natitirang yunit ay hindi mapalakas."
+        }
+      ]
+    },
+    "WmFLjnV6U9WkxJDB7zXJBA==": {
+      "translations": [
+        {
+          "translation": "Tiyaking isama ang anumang mga detalye ng variant ng produkto dito."
+        }
+      ]
+    },
+    "Vj/aid3BtAiwTrXFhX0Fcg==": {
+      "translations": [
+        {
+          "translation": "Dami"
+        }
+      ]
+    },
+    "P7p5Bv4g5fmJ1iRlZdnSJA==": {
+      "translations": [
+        {
+          "translation": "Presyo"
+        }
+      ]
+    },
+    "o/4Cqceg8T/otuBikiMApQ==": {
+      "translations": [
+        {
+          "translation": "(bawat yunit)"
+        }
+      ]
+    },
+    "/KPsAHDllbZyEU3ZL0Wgsg==": {
+      "translations": [
+        {
+          "translation": "Ang gastos upang bilhin ang listahan na ito. Ang presyo ay palaging nasa ETH, ang isang tantiya ng USD."
+        }
+      ]
+    },
+    "dTU/jHOAIiBZe5c4n+B9KA==": {
+      "translations": [
+        {
+          "translation": "Listahan ng Presyo"
+        }
+      ]
+    },
+    "Mavu64vvB2L0NTd4aP7jZQ==": {
+      "translations": [
+        {
+          "translation": "Dami"
+        }
+      ]
+    },
+    "CzUp1ZNtFuIc2N/oRS/cnA==": {
+      "translations": [
+        {
+          "translation": "/ unit"
+        }
+      ]
+    },
+    "tvzc9JxH7jF12bGWxgBqnQ==": {
+      "translations": [
+        {
+          "translation": "Boost Cap"
+        }
+      ]
+    },
+    "otra7itIzW9AZHLupEzr2Q==": {
+      "translations": [
+        {
+          "translation": "{= Ang iyong listahan ay nalikha!} {= Ang iyong listahan ay makikita sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: Ang mga mamimili ay makikita na ang iyong listahan sa marketplace.When ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad mo ang order.You ay makakatanggap ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na.}"
+        }
+      ]
+    },
+    "zv04vMjoc+u3r4q1bt7R1A==": {
+      "translations": [
+        {
+          "translation": "Nilikha ang iyong listahan!"
+        }
+      ]
+    },
+    "aGb4Sr/gKkxCvDv52ZvOcQ==": {
+      "translations": [
+        {
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: {= Ang mga mamimili ay makikita na ngayon ang inyong listahan sa marketplace. Kapag ang isang mamimili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad ang pagkakasunud-sunod. . Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+        }
+      ]
+    },
+    "4pV8TLLz6hO8WICuh3ObXQ==": {
+      "translations": [
+        {
+          "translation": "{= Kapag nakita ng mamimili ang iyong listahan sa marketplace.} {= Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito.} {= Kapag tinanggap ang alok, inaasahang matupad ang order.} {= Makakatanggap ka ng pagbabayad kapag napatunayan ng mamimili na ang order ay natupad na.}"
+        }
+      ]
+    },
+    "Rl661Fcr+bgpn50Oln54jQ==": {
+      "translations": [
+        {
+          "translation": "Makikita ngayon ng mga mamimili ang iyong listahan sa marketplace."
+        }
+      ]
+    },
+    "AfFNJdK9NabTywtkMxIDvw==": {
+      "translations": [
+        {
+          "translation": "Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito."
+        }
+      ]
+    },
+    "SC+yA14d8QpJ7tc3wzY8KA==": {
+      "translations": [
+        {
+          "translation": "Kapag tinanggap ang alok, inaasahang matupad mo ang order."
+        }
+      ]
+    },
+    "jJ1u/NM5hhK1lJp2CUgbgA==": {
+      "translations": [
+        {
+          "translation": "Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+        }
+      ]
+    },
+    "8hl1Ul3OvNJe/xaog0d3PQ==": {
+      "translations": [
+        {
+          "translation": "Tingnan ang Listing"
+        }
+      ]
+    },
+    "WF5wiQpoQDKFGmsPdhYcTg==": {
+      "translations": [
+        {
+          "translation": "{= Ang iyong listahan ay na-update na!} {= Ang iyong listahan ay makikita sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: Ang mga mamimili ay makikita na ang iyong listahan sa marketplace.When ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad mo ang order.You ay makakatanggap ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na.}"
+        }
+      ]
+    },
+    "jjWWeb9WNsLCNZe4iyCB8g==": {
+      "translations": [
+        {
+          "translation": "Na-update ang iyong listahan!"
+        }
+      ]
+    },
+    "0CcI3GADi/MTzFdMlETnhw==": {
+      "translations": [
+        {
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: {= Ang mga mamimili ay makikita na ngayon ang inyong listahan sa marketplace. Kapag ang isang mamimili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad ang pagkakasunud-sunod. . Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+        }
+      ]
+    },
+    "Ml76SvqVrEtzaHQ2SoM4JQ==": {
+      "translations": [
+        {
+          "translation": "{= Kapag nakita ng mamimili ang iyong listahan sa marketplace.} {= Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito.} {= Kapag tinanggap ang alok, inaasahang matupad ang order.} {= Makakatanggap ka ng pagbabayad kapag napatunayan ng mamimili na ang order ay natupad na.}"
+        }
+      ]
+    },
+    "53fXPUK5/q2EDCIdZfIbyA==": {
+      "translations": [
+        {
+          "translation": "Makikita ngayon ng mga mamimili ang iyong listahan sa marketplace."
+        }
+      ]
+    },
+    "2G67LZH9s+eKHG1Sj2y8ow==": {
+      "translations": [
+        {
+          "translation": "Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito."
+        }
+      ]
+    },
+    "SaVgdy0PSIP6B5lc+Ge0VA==": {
+      "translations": [
+        {
+          "translation": "Kapag tinanggap ang alok, inaasahang matupad mo ang order."
+        }
+      ]
+    },
+    "V6niUZBFQlOalwott29Wrw==": {
+      "translations": [
+        {
+          "translation": "Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+        }
+      ]
+    },
+    "+h7sHC/I17QA1UrqZTAz/Q==": {
+      "translations": [
+        {
+          "translation": "Naglo-load"
+        }
+      ]
+    },
+    "T8gKne+us4nDpTQGNQ8bJA==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong Email"
+        }
+      ]
+    },
+    "c0QHBkLjVu9yvtD4iDg1nQ==": {
+      "translations": [
+        {
+          "translation": "Kumpirmahin ang iyong email address sa Attestations."
+        }
+      ]
+    },
+    "4BXZfpHLvTxuvOZU6ZB1SA==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong Pinagmulang Profile"
+        }
+      ]
+    },
+    "efh3HEBtewcly2hpwr/vGw==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Pinagmulang Profile sa Mga Pagsusuri."
+        }
+      ]
+    },
+    "lgPT2mVlQJFyCjK2pqg6+A==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong numero ng telepono"
+        }
+      ]
+    },
+    "wJcUHuxk0E95IsWvyIsEkA==": {
+      "translations": [
+        {
+          "translation": "Kumpirmahin ang numero ng iyong telepono sa Mga Pagsubok."
+        }
+      ]
+    },
+    "FrB+Nm9CDZb0iwO0LjrmVw==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Profile sa Twitter"
+        }
+      ]
+    },
+    "safqwXZbnd9jMAbIp0ZJkQ==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Profile sa Twitter sa Mga Pagpapatotoo."
+        }
+      ]
+    },
+    "vUisCHQyajUJt8rYR/1Lyg==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Airbnb Profile"
+        }
+      ]
+    },
+    "S4hltAKgMaNWmg0utGTD5w==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Airbnb Profile sa Mga Pagsusuri."
+        }
+      ]
+    },
+    "ZC5PsdFmUya8ASfu6HPrqA==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Facebook Profile"
+        }
+      ]
+    },
+    "6EBmG1n3RISN5Lg2yDuF/g==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong Facebook Profile sa Mga Pagsubok."
+        }
+      ]
+    },
+    "ykecxKYjdZbltCVsKbHPng==": {
+      "translations": [
+        {
+          "translation": "Lumikha ng Listahan"
+        }
+      ]
+    },
+    "dd/MYLQ0xC5UehafmvRhWw==": {
+      "translations": [
+        {
+          "translation": "Matagumpay na kumpletuhin ang pagbili ng anumang isang listahan."
+        }
+      ]
+    },
+    "Jhk6fFImPZIKPw+CjCqmYQ==": {
+      "translations": [
+        {
+          "translation": "Bumili ng Listahan"
+        }
+      ]
+    },
+    "BJRWuiGhr2E2UXX+1mW1zQ==": {
+      "translations": [
+        {
+          "translation": "Matagumpay na kumpletuhin ang pagbebenta ng anumang isang listahan."
+        }
+      ]
+    },
+    "wJvCxFGt/9gion68sV/lYg==": {
+      "translations": [
+        {
+          "translation": "Ibenta ang Listahan"
+        }
+      ]
+    },
+    "izPJMarYcneaRP9qt6VHYQ==": {
+      "translations": [
+        {
+          "translation": "Ibenta ang isang listahan sa marketplace"
+        }
+      ]
+    },
+    "MdJY4cf78iP+T/KfBri2YQ==": {
+      "translations": [
+        {
+          "translation": "Mag-imbita ng mga kaibigan"
+        }
+      ]
+    },
+    "oX8s+/5fmxu8zUTtSk30ww==": {
+      "translations": [
+        {
+          "translation": "Kunin ang iyong mga kaibigan na sumali sa Pinagmulan ng mga aktibong account."
+        }
+      ]
+    },
+    "pItIdILg9g+OtKVLiwQvOg==": {
+      "translations": [
+        {
+          "translation": "Pumunta"
+        }
+      ]
+    },
+    "xrpUGZhxxRqqIthtfE/BAA==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "qciHWfxjkHcdGFOsAql8BQ==": {
+      "translations": [
+        {
+          "translation": "Nagkamit"
+        }
+      ]
+    },
+    "5dUXwaQm/5UXra8ThxFHfQ==": {
+      "translations": [
+        {
+          "translation": "Enero 2019 Kampanya"
+        }
+      ]
+    },
+    "VLgoMfdf1OOIusJVHVZpZw==": {
+      "translations": [
+        {
+          "translation": "Jan 2019"
+        }
+      ]
+    },
+    "+mYnEmUrhANzuCQc9B98HA==": {
+      "translations": [
+        {
+          "translation": "Pebrero 2019 Kampanya"
+        }
+      ]
+    },
+    "3eZ8IKMmtB76Dag06jgWIw==": {
+      "translations": [
+        {
+          "translation": "Pebrero 2019"
+        }
+      ]
+    },
+    "XToCRxQ5XKSz2q61DvIBJQ==": {
+      "translations": [
+        {
+          "translation": "Marso 2019 Kampanya"
+        }
+      ]
+    },
+    "SxKtrOTZLfzQixD/wMfwcQ==": {
+      "translations": [
+        {
+          "translation": "Mar 2019"
+        }
+      ]
+    },
+    "ooZThzMGZhUBriS4fp/Rig==": {
+      "translations": [
+        {
+          "translation": "Abril 2019 Kampanya"
+        }
+      ]
+    },
+    "dGbIiE9INRHA+HMtxXovjw==": {
+      "translations": [
+        {
+          "translation": "Abril 2019"
+        }
+      ]
+    },
+    "PGr5EIQul8sc7/OQt/TyAw==": {
+      "translations": [
+        {
+          "translation": "Na-verify na email at Pinagmulan ng profile"
+        }
+      ]
+    },
+    "52K5Lj4iHypLOwCGtkKH5g==": {
+      "translations": [
+        {
+          "translation": "2 sa 4 na attestations"
+        }
+      ]
+    },
+    "WtowmMXunhmZxZunExTFxw==": {
+      "translations": [
+        {
+          "translation": "Na-verify na profile"
+        }
+      ]
+    },
+    "cnpLd+jN4OwsPzxruTplCA==": {
+      "translations": [
+        {
+          "translation": "Na-verify na email"
+        }
+      ]
+    },
+    "QBq4/BFCdLrq0DNDl4rwSQ==": {
+      "translations": [
+        {
+          "translation": "Natitirang oras"
+        }
+      ]
+    },
+    "2Gs8p0O9zMC1EB3GH13g6A==": {
+      "translations": [
+        {
+          "translation": "Kumuha ng Mga Tanda ng Pinagmulan sa pamamagitan ng pagkumpleto ng mga gawain sa ibaba"
+        }
+      ]
+    },
+    "wmQb40obgjwfSR3PJ3S3gQ==": {
+      "translations": [
+        {
+          "translation": "Nagsisimula sa"
+        }
+      ]
+    },
+    "Knou4ElxBFWPWsJIbZVMgw==": {
+      "translations": [
+        {
+          "translation": "Hindi pa nagsimula ang kampanyang ito"
+        }
+      ]
+    },
+    "JO1VHseitmEDOUDtxCa9wg==": {
+      "translations": [
+        {
+          "translation": "Natapos na ang kampanyang ito"
+        }
+      ]
+    },
+    "ecv4IbTCLocRwfQW+45MbA==": {
+      "translations": [
+        {
+          "translation": "Kampanya"
+        }
+      ]
+    },
+    "p2725zoulIdk3+lavbjmtw==": {
+      "translations": [
+        {
+          "translation": "Nakuha ang mga token"
+        }
+      ]
+    },
+    "bgW02lGxcvAKpC6dRqoEXA==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "hVGpV7ERzy5YIu1ZVMKSEQ==": {
+      "translations": [
+        {
+          "translation": "Sumali sa akin sa Pinagmulan at kumita ng mga pinagmulan ng cryptocurrency na mga token (OGN). Pinagmulan ay isang bagong marketplace upang bumili at magbenta sa iba pang mga gumagamit. Kumita ng mga token ng Pinagmumulan kapag nilikha mo ang iyong profile, anyayahan ang iyong mga kaibigan, at bumili at magbenta sa marketplace."
+        }
+      ]
+    },
+    "M9Vqnn6x7SZ8oK++pJY2pQ==": {
+      "translations": [
+        {
+          "translation": "Sumali sa akin sa Pinagmulan at kumita ng mga pinagmulan ng cryptocurrency na mga token (OGN). Pinagmulan ay isang bagong marketplace upang bumili at magbenta sa iba pang mga gumagamit. Kumita ng mga token ng Pinagmumulan kapag nilikha mo ang iyong profile, anyayahan ang iyong mga kaibigan, at bumili at magbenta sa marketplace."
+        }
+      ]
+    },
+    "Lh4pGaUC7h8zXIinWwFfCQ==": {
+      "translations": [
+        {
+          "translation": "Mag-imbita gamit ang iyong code"
+        }
+      ]
+    },
+    "aqT/hPAg2m2SKM5VeMp4Gw==": {
+      "translations": [
+        {
+          "translation": "Ipadala ang iyong kaibigan sa iyong natatanging code ng imbitasyon."
+        }
+      ]
+    },
+    "GFQlYI4GSu8CrTFxpAZqTg==": {
+      "translations": [
+        {
+          "translation": "Kopyahin ang code"
+        }
+      ]
+    },
+    "GKEbT4KEKXxpbVnpjfAKJA==": {
+      "translations": [
+        {
+          "translation": "Kinopya"
+        }
+      ]
+    },
+    "E74Qrf+98uryCrNWNzNWjw==": {
+      "translations": [
+        {
+          "translation": "Kopya"
+        }
+      ]
+    },
+    "49GWG62Wgbc5Db/cdlOTkA==": {
+      "translations": [
+        {
+          "translation": "Ibahagi o Tweet"
+        }
+      ]
+    },
+    "RHS3QNznWakBVqh3LxpLsg==": {
+      "translations": [
+        {
+          "translation": "Kabuuang {emailsLength} email na imbitasyon sa email!"
+        }
+      ]
+    },
+    "+BhaVoboQDWnCyFHsoEPTA==": {
+      "translations": [
+        {
+          "translation": "Hindi makapag-imbita ng mga kaibigan. Subukang muli mamaya."
+        }
+      ]
+    },
+    "PjQI6hx3eXSs3uFE1Y5Q4A==": {
+      "translations": [
+        {
+          "translation": "Error sa pag-imbita ng mga kaibigan. Subukang muli mamaya."
+        }
+      ]
+    },
+    "y8ZfSw9m4c64sMJW1HmnEA==": {
+      "translations": [
+        {
+          "translation": "Mag-imbita sa pamamagitan ng Email"
+        }
+      ]
+    },
+    "HaPE2eDcY04uUukZPTLUQw==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang mga email address ng mga kaibigan na nais mong anyayahan"
+        }
+      ]
+    },
+    "6B15EXjM35Y0iE//tR2UwQ==": {
+      "translations": [
+        {
+          "translation": "Paghiwalayin ang mga email address na may mga kuwit."
+        }
+      ]
+    },
+    "sGU19GHNLvclsLe2y0TIfg==": {
+      "translations": [
+        {
+          "translation": "Mag-imbita ng mga kaibigan"
+        }
+      ]
+    },
+    "o8lruKi5bNlhzFdPPkolUQ==": {
+      "translations": [
+        {
+          "translation": "Maling format ng email: {errorEmails}"
+        }
+      ]
+    },
+    "awKHO99GBswNSwKToXmf1g==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang hindi bababa sa 1 wastong email address"
+        }
+      ]
+    },
+    "qbja3xI+ynbpMcTuFy+VGA==": {
+      "translations": [
+        {
+          "translation": "Nagpadala ng paalala!"
+        }
+      ]
+    },
+    "Ak5KYZjlkZWnJf/t1gAqZw==": {
+      "translations": [
+        {
+          "translation": "Mali"
+        }
+      ]
+    },
+    "Hwpah78HyVTFCglJ0pIUfA==": {
+      "translations": [
+        {
+          "translation": "Paalalahanan"
+        }
+      ]
+    },
+    "nBDaGpsKQrlRbAqtA1zH5g==": {
+      "translations": [
+        {
+          "translation": "Makipag-ugnay sa"
+        }
+      ]
+    },
+    "NXb3ICr3h1AnNXcUj6aTCg==": {
+      "translations": [
+        {
+          "translation": "Gantimpala"
+        }
+      ]
+    },
+    "5l7gzwYtQf+Vq+tUml4DyQ==": {
+      "translations": [
+        {
+          "translation": "Katayuan"
+        }
+      ]
+    },
+    "QTQw/Z0GCwwzejDEKhLiQQ==": {
+      "translations": [
+        {
+          "translation": "Hindi nakumpleto ang pag-activate ng user"
+        }
+      ]
+    },
+    "jhvYbvMES/Ulab6k+ZEVcg==": {
+      "translations": [
+        {
+          "translation": "Paalalahanan"
+        }
+      ]
+    },
+    "5hCA8hXoU2Eqhes9Dx9BMA==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin ang mga Paanyaya"
+        }
+      ]
+    },
+    "uWsUjDplwEMjhhlqo1t50Q==": {
+      "translations": [
+        {
+          "translation": "Subaybayan ang progreso ng mga kaibigan na nag-sign up sa iyong code ng pag-anyaya."
+        }
+      ]
+    },
+    "l88VUqiyI7tOCygCjTchsw==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "jNZTtswQamPR5fqLpuU38Q==": {
+      "translations": [
+        {
+          "translation": "Ang matagumpay na Mga Paanyaya"
+        }
+      ]
+    },
+    "J3Czs3Rp2eWVTn9lcDxSQQ==": {
+      "translations": [
+        {
+          "translation": "Tulungan ang iyong mga kaibigan na kumita ng OGN tulad mo."
+        }
+      ]
+    },
+    "k7bhJpKhGKToRTeBeXr0aQ==": {
+      "translations": [
+        {
+          "translation": "Nagkamit"
+        }
+      ]
+    },
+    "78XdBNtdiw/IfKVviDlg9A==": {
+      "translations": [
+        {
+          "translation": "Bumalik sa Kampanya"
+        }
+      ]
+    },
+    "mxHZKBbgLYHiU3xCEEwMtQ==": {
+      "translations": [
+        {
+          "translation": "Anyayahan ang iyong mga kaibigan sa Pinagmulan"
+        }
+      ]
+    },
+    "J5wgD0JPj/65X0jioq1CwA==": {
+      "translations": [
+        {
+          "translation": "Kumuha ng Mga Token ng Pinagmulan sa pamamagitan ng pagkumpleto ng mga gawain sa ibaba."
+        }
+      ]
+    },
+    "qOAPDvqXmJHUU1aJ5vsucw==": {
+      "translations": [
+        {
+          "translation": "IPADALA ANG INVITES"
+        }
+      ]
+    },
+    "VBU0HgQlL4CtXWPBtwuzAA==": {
+      "translations": [
+        {
+          "translation": "TRACK INVITES"
+        }
+      ]
+    },
+    "mFCtuJZK+KcGUkKQym20yg==": {
+      "translations": [
+        {
+          "translation": "Maligayang pagdating sa Pinagmulang Protocol"
+        }
+      ]
+    },
+    "JIAeR5l0zsySvXjhN/LjXg==": {
+      "translations": [
+        {
+          "translation": "Inimbitahan ng"
+        }
+      ]
+    },
+    "2jPZ2DnxwxQpSK3roVvLSA==": {
+      "translations": [
+        {
+          "translation": "Inanyayahan ka ng iyong kaibigan {name} na sumali sa Pinagmulan"
+        }
+      ]
+    },
+    "8dUMUvTO9y/E2pDMSrgtWw==": {
+      "translations": [
+        {
+          "translation": "Mag-sign up at kumita ng FREE Origin Tokens"
+        }
+      ]
+    },
+    "fDuELeOXBQ7+DJbX7oyE6Q==": {
+      "translations": [
+        {
+          "translation": "Mag-sign up para sa Pinagmulan ngayon."
+        }
+      ]
+    },
+    "o8qQ/PN7IXGbYwY+4G8VBw==": {
+      "translations": [
+        {
+          "translation": "{firstName} at magkakaroon ka ng parehong Katangian ng cryptocurrency token (OGN)."
+        }
+      ]
+    },
+    "KXy/meBwGaf5yVfEd9HDHQ==": {
+      "translations": [
+        {
+          "translation": "Kumita ng karagdagang mga token kapag na-verify mo ang iyong profile, anyayahan ang iyong mga kaibigan, at bumili at magbenta sa Pinagmulan."
+        }
+      ]
+    },
+    "aq5/1FnXv6c/TPNJh+tpEg==": {
+      "translations": [
+        {
+          "translation": "Mag-sign Up Ngayon"
+        }
+      ]
+    },
+    "tzDkMYn3LmF1aKkySIvtAQ==": {
+      "translations": [
+        {
+          "translation": "Ano ang Pinagmulan?"
+        }
+      ]
+    },
+    "6YhgbdYLnjKT4XB+UPkgkA==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan ay ang unang merkado ng peer-to-peer na ganap na binuo sa blockchain"
+        }
+      ]
+    },
+    "CyiodoDeIQn/ar6XbKqt4Q==": {
+      "translations": [
+        {
+          "translation": "Libre upang magamit sa 0% na bayarin sa transaksyon"
+        }
+      ]
+    },
+    "s13YMOt7j7kdlx3jc+qggw==": {
+      "translations": [
+        {
+          "translation": "Censorship-resistant browsing at searching"
+        }
+      ]
+    },
+    "5CBWzDNJNVigCeBUwiJOLw==": {
+      "translations": [
+        {
+          "translation": "Dose-dosenang mga kategorya tulad ng mga gift card, homesharing, ecommerce, at serbisyo"
+        }
+      ]
+    },
+    "oegZB/dZhQav6NEGEfpaIw==": {
+      "translations": [
+        {
+          "translation": "Ano ang Mga Token ng Pinagmulan?"
+        }
+      ]
+    },
+    "qXGCW6AVWNckr8ZZXh0sRA==": {
+      "translations": [
+        {
+          "translation": "Ang mga pinagmulang cryptocurrency token (OGN) ay ERC-20 na mga token na magagamit sa platform sa maraming paraan."
+        }
+      ]
+    },
+    "PlCEphvzEyQp/7SnvJWUHg==": {
+      "translations": [
+        {
+          "translation": "Ang Mga Kinitang Token sa Pinagmulan (OGN) ay kasalukuyang naka-lock para sa paggamit sa Pinagmulan ng app at platform. Hindi sila maililipat sa iba pang mga gumagamit sa oras na ito. Sa hinaharap, inaasahan na ang OGN ay mai-unlock at maililipat."
+        }
+      ]
+    },
+    "zQ+amcZcEbrkMHT1gTyR8A==": {
+      "translations": [
+        {
+          "translation": "Matuto pa"
+        }
+      ]
+    },
+    "SgbXw8gUCvCMRANRfNbZdw==": {
+      "translations": [
+        {
+          "translation": "Pagpapalakas"
+        }
+      ]
+    },
+    "YFtqoYhKvImJqf0XglUXTw==": {
+      "translations": [
+        {
+          "translation": "Gumagamit ang Sellers ng OGN upang mapalakas ang kanilang mga listahan sa marketplace. Nagbibigay ito ng mas mataas na visibility at placement sa kanilang mga listahan. Ang mga listahan na may OGN ay may mas mataas na pagkakataon na maibenta nang mabilis."
+        }
+      ]
+    },
+    "HWTdiJhpW9S+qWAG/3D96g==": {
+      "translations": [
+        {
+          "translation": "Gantimpala"
+        }
+      ]
+    },
+    "5vp0hYaYGt8rhy0Z4hKf9w==": {
+      "translations": [
+        {
+          "translation": "Ang OGN ay isang reward cryptocurrency na kinita ng mga gumagamit ng Pinagmulan. Kumita ng mga gantimpala kapag na-verify mo ang iyong account o anyayahan ang iyong mga kaibigan na sumali sa Pinagmulan. Kahit na makakuha ng OGN bilang cash back kapag bumili ka at nagbebenta."
+        }
+      ]
+    },
+    "NK8yEk6S/zuO701X4M+TMQ==": {
+      "translations": [
+        {
+          "translation": "Simulan ang pagkamit ng mga token ng Pinagmulan sa loob ng ilang minuto"
+        }
+      ]
+    },
+    "OxT7PzUj7b+bcTIHNpm2Ug==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang iyong cryptocurrency wallet sa Pinanggalingan"
+        }
+      ]
+    },
+    "QTWkl7l3Zq6SNON+xjM6fg==": {
+      "translations": [
+        {
+          "translation": "Mag-sign up at i-verify ang iyong account at pagiging karapat-dapat"
+        }
+      ]
+    },
+    "EPa2KOi7VdqeXU4rahzx/g==": {
+      "translations": [
+        {
+          "translation": "Magsimulang kumita ngayon"
+        }
+      ]
+    },
+    "ZYfPOEnoaFfIjmdBj/wQDA==": {
+      "translations": [
+        {
+          "translation": "Magsimula"
+        }
+      ]
+    },
+    "1jz0lXMtdwPie5XvZGCd4w==": {
+      "translations": [
+        {
+          "translation": "May mga tanong?"
+        }
+      ]
+    },
+    "uIUyjEjCWzwJBVxnypih1Q==": {
+      "translations": [
+        {
+          "translation": "Makipag-ugnayan"
+        }
+      ]
+    },
+    "2a9E/BUZqanf5LzL99VMwQ==": {
+      "translations": [
+        {
+          "translation": "Ikaw ay pinagbawalan mula sa mga token ng kita"
+        }
+      ]
+    },
+    "NaM6Vmz6iiRm1WDKnAmoPw==": {
+      "translations": [
+        {
+          "translation": "Sumali sa aming {campaignName} upang kumita ng mga token"
+        }
+      ]
+    },
+    "sbO8XiYlqyNx+ZffAKr2Xw==": {
+      "translations": [
+        {
+          "translation": "Kumita ng OGN sa pamamagitan ng pagkumpleto ng mga gawain tulad ng pag-verify ng iyong pagkakakilanlan at pagbabahagi ng Pinanggalingan sa iyong mga kaibigan. Maaaring gamitin ang OGN sa iba't ibang paraan. Ang nakuha na OGN ay ililipat pagkatapos ng katapusan ng {campaignName} upang kumita ng mga token"
+        }
+      ]
+    },
+    "8xBa1ZrG+j1EPiS9IifRaQ==": {
+      "translations": [
+        {
+          "translation": "I-dismiss"
+        }
+      ]
+    },
+    "Z+VvwUtcmCiHHZ/y4kYNLQ==": {
+      "translations": [
+        {
+          "translation": "Mag-sign Up para sa Pinagmulan"
+        }
+      ]
+    },
+    "NiVro9WP7TRRxKWh3pVKVQ==": {
+      "translations": [
+        {
+          "translation": "Tinatanggap ko ang mga tuntunin at kundisyon"
+        }
+      ]
+    },
+    "SitBBxJx3gAiNXHZYDLTYA==": {
+      "translations": [
+        {
+          "translation": "Tanggapin ang Mga Tuntunin"
+        }
+      ]
+    },
+    "WMYdJljtuuVbpA+VRa7M3w==": {
+      "translations": [
+        {
+          "translation": "Oops, {country} ay hindi karapat-dapat"
+        }
+      ]
+    },
+    "Z7Sx4nV0a/dHqPx5QNIXdg==": {
+      "translations": [
+        {
+          "translation": "Sa kasamaang palad, mukhang ikaw ay kasalukuyang nasa isang bansa kung saan ang mga regulasyon ng pamahalaan ay hindi pinapayagan ka na lumahok sa Mga Kampanya ng Pinagmulan."
+        }
+      ]
+    },
+    "kUrilejuCqE9Cmu7uYvtcw==": {
+      "translations": [
+        {
+          "translation": "Natuklasan ba namin mali ang iyong bansa?"
+        }
+      ]
+    },
+    "yjSH//GTRsIZgQGrshYGyQ==": {
+      "translations": [
+        {
+          "translation": "Pinapatunayan ko na hindi ako isang mamamayan o residente ng {country}"
+        }
+      ]
+    },
+    "ToBlXADjzL3C1yE3SulP9g==": {
+      "translations": [
+        {
+          "translation": "Error: hindi makita ang bansa"
         }
       ]
     },
@@ -531,14 +3252,14 @@
     "33EPBwLfS9o3lGs62U+89w==": {
       "translations": [
         {
-          "translation": "Ilagay ang Airbnb profile Url sa ibaba"
+          "translation": "Ipasok ang URL ng profile ng Airbnb sa ibaba"
         }
       ]
     },
     "QfLmm1Y/WUbCRLJtHN4WAg==": {
       "translations": [
         {
-          "translation": "Malalaman ng iba pang mga user na mayroon kang isang na-verify na profile ng Airbnb."
+          "translation": "Malalaman ng iba pang mga gumagamit na mayroon kang isang na-verify na profile ng Airbnb at ang iyong user id ay mai-publish sa blockchain."
         }
       ]
     },
@@ -552,7 +3273,7 @@
     "3SSVIaE/i8UtPArlfLYLow==": {
       "translations": [
         {
-          "translation": "Magpunta sa website ng Airbnb, i-edit ang iyong profile at ilagay ang sumusunod na teksto sa profile description."
+          "translation": "Pumunta sa website ng Airbnb, i-edit ang iyong profile at idikit ang sumusunod na teksto sa paglalarawan ng profile:"
         }
       ]
     },
@@ -560,6 +3281,797 @@
       "translations": [
         {
           "translation": "Magpatuloy kapag nailagay na ang confirmation code sa iyong profile ng Airbnb."
+        }
+      ]
+    },
+    "26B3Ynk36rNu1TVoU/Uq7Q==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang account ng Airbnb!"
+        }
+      ]
+    },
+    "BlVAmm03lnkWBtZsV9i8zQ==": {
+      "translations": [
+        {
+          "translation": "Huwag kalimutang i-publish ang iyong mga pagbabago."
+        }
+      ]
+    },
+    "EpMTM+gxR0t1+atQlJNz6g==": {
+      "translations": [
+        {
+          "translation": "Ang pag-publish sa blockchain ay nagbibigay-daan sa iba pang mga gumagamit na alam na mayroon kang isang na-verify na profile."
+        }
+      ]
+    },
+    "lRp7RLflwxDci7fil4BTOw==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang iyong email address sa ibaba at ang OriginID ay magpapadala sa iyo ng verification code"
+        }
+      ]
+    },
+    "FCQzb9sToGt24ikV3xF2LQ==": {
+      "translations": [
+        {
+          "translation": "Beripikahin ang email address"
+        }
+      ]
+    },
+    "YuuSM/LwS49O8d4HGztcGg==": {
+      "translations": [
+        {
+          "translation": "Sa pamamagitan ng pagpapatunay ng iyong email, binibigyan mo ang pahintulot ng Pinagmulan upang padalhan ka ng mga paminsan-minsang mga email tulad ng mga notification tungkol sa iyong mga transaksyon"
+        }
+      ]
+    },
+    "hk0K2k9QnD+15KLvRe4Ppg==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong email address"
+        }
+      ]
+    },
+    "Sp/o1Mpuyl9WKgDIXITGaQ==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang code na ipinadala namin sa iyo sa ibaba"
+        }
+      ]
+    },
+    "eRcQebtSS5jWwVqKU84vPg==": {
+      "translations": [
+        {
+          "translation": "Nakumpirma ang email address!"
+        }
+      ]
+    },
+    "WwpLz8qYef22cn4ptqMTew==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong Facebook Account"
+        }
+      ]
+    },
+    "UPltnTXrAbG5MMRJX+SAzw==": {
+      "translations": [
+        {
+          "translation": "{= Babala:} Kasalukuyang hindi magagamit sa mga mobile device"
+        }
+      ]
+    },
+    "gfO6jcHq55dE1IQ3KWk2DQ==": {
+      "translations": [
+        {
+          "translation": "Babala:"
+        }
+      ]
+    },
+    "1ilvlskGFH6As45MFKd2cw==": {
+      "translations": [
+        {
+          "translation": "Alam ng iba pang mga gumagamit na mayroon kang isang na-verify na Facebook account, ngunit hindi mai-publish ang mga detalye ng iyong account sa blockchain. Hindi kami magpapaskil para sa iyo."
+        }
+      ]
+    },
+    "N/dwdqt311iPHZqTOvL1Jg==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang Facebook account!"
+        }
+      ]
+    },
+    "Jgc8914dz9BLi79OA6YdZA==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong numero ng telepono"
+        }
+      ]
+    },
+    "gLtSMYd36HCni1L2vVTK5g==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang numero ng iyong telepono sa ibaba at ang OriginID ay magpapadala sa iyo ng isang verification code sa pamamagitan ng SMS."
+        }
+      ]
+    },
+    "Le4Tec5F+U/jkYxINqFxCg==": {
+      "translations": [
+        {
+          "translation": "Sa pamamagitan ng pag-verify ng iyong numero ng telepono, nagbigay ka ng pahintulot ng Pinagmulan upang padalhan ka ng mga paminsan-minsang mga email tulad ng mga notification tungkol sa iyong mga transaksyon"
+        }
+      ]
+    },
+    "9/lqPBNSYSjdOmXnncrbqQ==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang code na ipinadala namin sa iyo sa ibaba"
+        }
+      ]
+    },
+    "80BXAlOVXtYhmFJD2dDKqw==": {
+      "translations": [
+        {
+          "translation": "Na-verify ang numero ng telepono!"
+        }
+      ]
+    },
+    "9PlJCHXfwYjV6OULfLe2Nw==": {
+      "translations": [
+        {
+          "translation": "I-verify ang iyong Twitter Account"
+        }
+      ]
+    },
+    "fO7UjRhak4WxWI/FYFEZgA==": {
+      "translations": [
+        {
+          "translation": "Malalaman ng iba pang mga gumagamit na mayroon kang isang na-verify na Twitter account, ngunit hindi mai-publish ang mga detalye ng iyong account sa blockchain. Hindi kami magpapaskil para sa iyo."
+        }
+      ]
+    },
+    "YaiXsuELKE5yLW1VaJdYrQ==": {
+      "translations": [
+        {
+          "translation": "Napatunayan ang Twitter account!"
+        }
+      ]
+    },
+    "idjV2bzcgcdWRmYb+Kh/MA==": {
+      "translations": [
+        {
+          "translation": "Mag-check in"
+        }
+      ]
+    },
+    "6i3NbGdxeHqAAMe1CjZIVA==": {
+      "translations": [
+        {
+          "translation": "Tignan mo"
+        }
+      ]
+    },
+    "egC3pFdbL8DkfMRT/t8PXg==": {
+      "translations": [
+        {
+          "translation": "ETH / night"
+        }
+      ]
+    },
+    "M/PVI8j/6NkKUpHWnIlvlw==": {
+      "translations": [
+        {
+          "translation": "Mag-scroll pababa para sa availability kalendaryo"
+        }
+      ]
+    },
+    "Zz1WPYjxJ3Su4UzYSlNmAQ==": {
+      "translations": [
+        {
+          "translation": "Hindi magagamit"
+        }
+      ]
+    },
+    "iZBl/o1TZqV6vfcowwKpzA==": {
+      "translations": [
+        {
+          "translation": "Kabuuang Presyo"
+        }
+      ]
+    },
+    "sxoQF5jfF+ty/WN68uC1AQ==": {
+      "translations": [
+        {
+          "translation": "Book"
+        }
+      ]
+    },
+    "7c71+w6U7Nbkd+h9e7WxOg==": {
+      "translations": [
+        {
+          "translation": "Magsimula"
+        }
+      ]
+    },
+    "OYSTbu83qKwLoc0ATVRqTQ==": {
+      "translations": [
+        {
+          "translation": "Dulo"
+        }
+      ]
+    },
+    "HlsHoXg/7lA8sMnqxARtbg==": {
+      "translations": [
+        {
+          "translation": "ETH / oras"
+        }
+      ]
+    },
+    "LY/VClxRIOhqnmCufIorow==": {
+      "translations": [
+        {
+          "translation": "/ bawat isa"
+        }
+      ]
+    },
+    "H7Yn7wWj8QjgxhH6d6TYpg==": {
+      "translations": [
+        {
+          "translation": "Bumili"
+        }
+      ]
+    },
+    "MVfYNYO7/LWVBJvfCQD2Eg==": {
+      "translations": [
+        {
+          "translation": "Nabenta"
+        }
+      ]
+    },
+    "UdSqyocYhlJiUuENZNivKg==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "k1wQW8bBvTN67vomiMi6zQ==": {
+      "translations": [
+        {
+          "translation": "Magagamit"
+        }
+      ]
+    },
+    "JA586NEcuAeEOGwkiG9v0g==": {
+      "translations": [
+        {
+          "translation": "{= Ang listahan na ito ay} {= Nakabinbin} {= Gumawa ka na ng isang alok sa listahang ito.}"
+        }
+      ]
+    },
+    "hWTLMPncBrn7NuTNe3adUw==": {
+      "translations": [
+        {
+          "translation": "Ang listahan ay"
+        }
+      ]
+    },
+    "AXOZAIfpi3fyfbSZZZUWVw==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "Oo0lPpXsGXLI4stFbvxvOQ==": {
+      "translations": [
+        {
+          "translation": "Nagawa mo na ang isang alok sa listahan na ito."
+        }
+      ]
+    },
+    "hBV0SlHyDCq8N+AD5/jzqw==": {
+      "translations": [
+        {
+          "translation": "Tingnan ang Aking Mga Pagbili"
+        }
+      ]
+    },
+    "5xZsR6GEptb2JxRgPaQXNw==": {
+      "translations": [
+        {
+          "translation": "{= Ang listahan na ito ay} {= Nakabinbin} {= Isa pang mamimili ay gumawa ng isang alok sa listahan na ito. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay.}"
+        }
+      ]
+    },
+    "oM8UOkBxpejWiBYkIzweQA==": {
+      "translations": [
+        {
+          "translation": "Ang listahan ay"
+        }
+      ]
+    },
+    "OxViihxm7s5G99NRoHq2ig==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "IRK4mGldV6ZsN6QNm7yfBQ==": {
+      "translations": [
+        {
+          "translation": "Ang isa pang mamimili ay gumawa ng isang alok sa listahan na ito. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay."
+        }
+      ]
+    },
+    "pIN1eB9fKjTSZ/lxQM/HUA==": {
+      "translations": [
+        {
+          "translation": "Tingnan ang Listahan"
+        }
+      ]
+    },
+    "i4gBpnp1ab7o+e8in/u62Q==": {
+      "translations": [
+        {
+          "translation": "{= Ang listahan na ito ay} {= Sold} {= Ang listahan na ito ay naibenta. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay.}"
+        }
+      ]
+    },
+    "fQXJIdRS1RqeF021uYRFqg==": {
+      "translations": [
+        {
+          "translation": "Ang listahan ay"
+        }
+      ]
+    },
+    "NeYO+Ltj4nYFHkW6uPsL2Q==": {
+      "translations": [
+        {
+          "translation": "Nabenta"
+        }
+      ]
+    },
+    "GV+cUkvlSJKnnakvO/EACA==": {
+      "translations": [
+        {
+          "translation": "Ang listahan na ito ay nabili na. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay."
+        }
+      ]
+    },
+    "SadssMjUlVtgKoOKVWzHUw==": {
+      "translations": [
+        {
+          "translation": "Dami"
+        }
+      ]
+    },
+    "0gg54KefGUb3y/W0neIZDQ==": {
+      "translations": [
+        {
+          "translation": "Listahan ng {id}"
+        }
+      ]
+    },
+    "l4YUMk7fsVyKL2TTsldMdw==": {
+      "translations": [
+        {
+          "translation": "Hindi nakita ang listahan"
+        }
+      ]
+    },
+    "QkpyTw8uCT69QcDHqAKt7Q==": {
+      "translations": [
+        {
+          "translation": "Ang listahan ay hindi wasto"
+        }
+      ]
+    },
+    "0hZyMC0etK9bwztn8hnbhg==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa Nagbebenta"
+        }
+      ]
+    },
+    "L2oPKF5xsKmJCOtmT+Uwfg==": {
+      "translations": [
+        {
+          "translation": "* I-click at i-drag upang pumili ng hanay ng petsa"
+        }
+      ]
+    },
+    "9hd32nz5BtBUmOmM269/AA==": {
+      "translations": [
+        {
+          "translation": "Time Zone:"
+        }
+      ]
+    },
+    "IOWXtJhXlVb9On/GWu5Ufg==": {
+      "translations": [
+        {
+          "translation": "TANDAAN: Ito ay naiiba mula sa iyong time zone ng {userTimeZone}"
+        }
+      ]
+    },
+    "5hZ6uYzeyyP9j8VnTvQ0Gg==": {
+      "translations": [
+        {
+          "translation": "* I-click at i-drag upang pumili ng isang hanay ng oras"
+        }
+      ]
+    },
+    "o6Z2JUXPEzsq4mjxtgxysg==": {
+      "translations": [
+        {
+          "translation": "Lahat"
+        }
+      ]
+    },
+    "FRFO6tLpPFCURVOimytNpQ==": {
+      "translations": [
+        {
+          "translation": "Paghahanap"
+        }
+      ]
+    },
+    "6WXI9iYt6WPtHpJwbK2i4g==": {
+      "translations": [
+        {
+          "translation": "Tandaan: Hindi magagamit ang paghahanap"
+        }
+      ]
+    },
+    "IL0sLDeP9dTTFxmOm7nEbA==": {
+      "translations": [
+        {
+          "translation": "/ gabi"
+        }
+      ]
+    },
+    "kOyzntM8/j1UQbONQh4jRA==": {
+      "translations": [
+        {
+          "translation": "/ oras"
+        }
+      ]
+    },
+    "fKJBt8Xs1iL0KZrQdPpT0Q==": {
+      "translations": [
+        {
+          "translation": "Mga listahan"
+        }
+      ]
+    },
+    "gpeQTbRe56v7+THmtTo1dw==": {
+      "translations": [
+        {
+          "translation": "Walang nahanap na mga resulta sa paghahanap"
+        }
+      ]
+    },
+    "kxDQ9H0JkRh27rfshZkoVA==": {
+      "translations": [
+        {
+          "translation": "Wala pang mga listahan ang iyong marketplace"
+        }
+      ]
+    },
+    "Q776FeWv/0+8JXPq6YHQ6Q==": {
+      "translations": [
+        {
+          "translation": "Maaari kang lumikha ng mga listahan ng iyong sarili o mag-imbita ng mga nagbebenta na sumali sa iyong platform!"
+        }
+      ]
+    },
+    "0kTHM7ddLclB+FcU8ttrcQ==": {
+      "translations": [
+        {
+          "translation": "Lumikha ng Listahan"
+        }
+      ]
+    },
+    "vYS+dQLoVNtqFLJqO8A42g==": {
+      "translations": [
+        {
+          "translation": "Walang natagpuang listahan"
+        }
+      ]
+    },
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "translations": [
+        {
+          "translation": "mga listahan {number}"
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "translations": [
+        {
+          "translation": "1 Listing"
+        }
+      ]
+    },
+    "H7it/Nh1dTkCwZ8prH+mcw==": {
+      "translations": [
+        {
+          "translation": "Mag-load nang higit pa"
+        }
+      ]
+    },
+    "FA3Sz+Yvj0lD8zBDmiEOeQ==": {
+      "translations": [
+        {
+          "translation": "Mga mensahe"
+        }
+      ]
+    },
+    "NVG2B52dMnz2pPid0hWHrw==": {
+      "translations": [
+        {
+          "translation": "Naglo-load ng pag-uusap ..."
+        }
+      ]
+    },
+    "iITnf069bvCAf0wFFTjdmA==": {
+      "translations": [
+        {
+          "translation": "Hindi maaaring mag-query ng mga mensahe"
+        }
+      ]
+    },
+    "sOGxRcYUJAsnpsE2TfRY7w==": {
+      "translations": [
+        {
+          "translation": "Walang mga pag-uusap!"
+        }
+      ]
+    },
+    "zUBDRYBvIHyFIYSdMxKpmA==": {
+      "translations": [
+        {
+          "translation": "Hindi maaaring mag-query ng mga mensahe"
+        }
+      ]
+    },
+    "g3jsZCPyzDhp0H3lcRPbrg==": {
+      "translations": [
+        {
+          "translation": "Isara"
+        }
+      ]
+    },
+    "lde4nZGa2Q9Owr5E9dQ18w==": {
+      "translations": [
+        {
+          "translation": "Mag-type ng isang bagay..."
+        }
+      ]
+    },
+    "ahuqzU84qE8WZujfPDjRow==": {
+      "translations": [
+        {
+          "translation": "Ipadala"
+        }
+      ]
+    },
+    "CTNRjx/teJ3kDf+M5Aq+xg==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin ang Mga Kumpirmasyon ng Blockchain"
+        }
+      ]
+    },
+    "OvbafFNA9qaLyFyagq7xUQ==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin ang Blockchain Confirmation"
+        }
+      ]
+    },
+    "rsGnOhUcaEN+hW+x0hHJ3A==": {
+      "translations": [
+        {
+          "translation": "{confirmations.noOfConfirmations} ng 6 pagkumpirma"
+        }
+      ]
+    },
+    "hRPbTuJxxb+xLO8G16c7Gg==": {
+      "translations": [
+        {
+          "translation": "Kumpletuhin ({confirmations.noOfConfirmations} pagkumpirma)"
+        }
+      ]
+    },
+    "vZz4IJwzaRaGGLkANtyZRQ==": {
+      "translations": [
+        {
+          "translation": "Magsimula"
+        }
+      ]
+    },
+    "3paaeWPERztrC5zCpsUs8A==": {
+      "translations": [
+        {
+          "translation": "Ibenta sa Pinagmulan"
+        }
+      ]
+    },
+    "lC0Zq16Tnu762WQln8kZVQ==": {
+      "translations": [
+        {
+          "translation": "Error sa paglo-load ng mga mensahe"
+        }
+      ]
+    },
+    "Flym48gbcjw+7qWMcE8J2w==": {
+      "translations": [
+        {
+          "translation": "Naglo-load ..."
+        }
+      ]
+    },
+    "8+XZq96344YbYNHFy4Mv/w==": {
+      "translations": [
+        {
+          "translation": "Mga Hindi nabasa na Mensahe"
+        }
+      ]
+    },
+    "1skYvPMWEogMRMf/xYKpEQ==": {
+      "translations": [
+        {
+          "translation": "Hindi pa nababasang Mensahe"
+        }
+      ]
+    },
+    "I3Ubit0eF6p2kxPsdWNPqA==": {
+      "translations": [
+        {
+          "translation": "Tingnan ang Mga Mensahe"
+        }
+      ]
+    },
+    "OSw+Z5uyNlHroNxtGMiX+Q==": {
+      "translations": [
+        {
+          "translation": "Mag-browse ng Mga Kategorya"
+        }
+      ]
+    },
+    "FT41b3HlbYvNCfadzieRZA==": {
+      "translations": [
+        {
+          "translation": "Magdagdag ng Listahan"
+        }
+      ]
+    },
+    "QCZW33pDrKY20rFahZ1vkg==": {
+      "translations": [
+        {
+          "translation": "Mga Pagbili"
+        }
+      ]
+    },
+    "1M/tpTltyUByYgb7M0guaQ==": {
+      "translations": [
+        {
+          "translation": "Mga Listahan"
+        }
+      ]
+    },
+    "uX4FVwy9nLJdzqyxfWcTWA==": {
+      "translations": [
+        {
+          "translation": "Pagbebenta"
+        }
+      ]
+    },
+    "6m3zRzqbtA1iEoFy2tjugw==": {
+      "translations": [
+        {
+          "translation": "Mga mensahe"
+        }
+      ]
+    },
+    "eOnQjifzRCehDAuj+e74tQ==": {
+      "translations": [
+        {
+          "translation": "Mga Abiso"
+        }
+      ]
+    },
+    "U10zgJUwkYaALaRUApbsog==": {
+      "translations": [
+        {
+          "translation": "Error sa pag-load ng mga notification"
+        }
+      ]
+    },
+    "bs+KlyM/NbMHzktR8342YA==": {
+      "translations": [
+        {
+          "translation": "Naglo-load ..."
+        }
+      ]
+    },
+    "Mv6cuSCfewB7BjjKYyGBqw==": {
+      "translations": [
+        {
+          "translation": "Mga Abiso"
+        }
+      ]
+    },
+    "PURpU3OPAdsnJUVhDUpH5g==": {
+      "translations": [
+        {
+          "translation": "Abiso"
+        }
+      ]
+    },
+    "gzT3SioJ7I7iiS5z4VOm8g==": {
+      "translations": [
+        {
+          "translation": "Tingnan lahat"
+        }
+      ]
+    },
+    "qpkPtxBNFifg/7q8gJgljQ==": {
+      "translations": [
+        {
+          "translation": "Nakakonekta sa {=[networkName]}"
+        }
+      ]
+    },
+    "NeogRKjWuqqoJ4qjuZjNtg==": {
+      "translations": [
+        {
+          "translation": "{networkName}"
+        }
+      ]
+    },
+    "fCssoMJ7OY8O7CGYo8j0CA==": {
+      "translations": [
+        {
+          "translation": "ETH Address"
+        }
+      ]
+    },
+    "HKFnR0gnVwEyd0YWbVaFOQ==": {
+      "translations": [
+        {
+          "translation": "I-unlink ang Mobile"
+        }
+      ]
+    },
+    "Oq+ZNFsqTuq3uYQzNAQbYA==": {
+      "translations": [
+        {
+          "translation": "Ibahin ang profile"
+        }
+      ]
+    },
+    "HInnBpa08p5k4Yj/INtqAw==": {
+      "translations": [
+        {
+          "translation": "Aking Pagkakakilanlan"
+        }
+      ]
+    },
+    "oea0f4wCvEuKEpgRZVUAOQ==": {
+      "translations": [
+        {
+          "translation": "Walang Pangalan"
+        }
+      ]
+    },
+    "nDkJLm47Ba0gcbYvGk8vkQ==": {
+      "translations": [
+        {
+          "translation": "Lakas ng Profile"
         }
       ]
     },
@@ -587,7 +4099,1715 @@
     "l2Ry3AjK+2P1DfwR4X+PAA==": {
       "translations": [
         {
+          "translation": "Ibenta"
+        }
+      ]
+    },
+    "c2B3e+aG9e/X9QwOH9c3yw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} tinanggihan ang iyong alok sa {title}"
+        }
+      ]
+    },
+    "YOm+ynQ73tcGI0ilqp6igQ==": {
+      "translations": [
+        {
+          "translation": "{nameLink} tinanggap iyong alok sa {title}"
+        }
+      ]
+    },
+    "OJHXhyaxeI6wJgPmAN+79w==": {
+      "translations": [
+        {
+          "translation": "Transaksyon na may {nameLink} tinatapos para sa {title}"
+        }
+      ]
+    },
+    "YzuRRanf3CVBwwdoxuvnig==": {
+      "translations": [
+        {
+          "translation": "{nameLink} na ginawa ng isang alok sa {title}"
+        }
+      ]
+    },
+    "oGg+bvcoHD7419PPWtSy0Q==": {
+      "translations": [
+        {
+          "translation": "{nameLink} pinagtatalunan ang isang alok sa {title}"
+        }
+      ]
+    },
+    "8iWiBR18Lwogh0ILdAmDcw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} nalutas ng hindi pagkakaunawaan sa {title}"
+        }
+      ]
+    },
+    "kRpJt5Z+8QmF0zGEEwO3Xw==": {
+      "translations": [
+        {
+          "translation": "Lahat"
+        }
+      ]
+    },
+    "I7wdzOzb8p0bzZV0L/fOzQ==": {
+      "translations": [
+        {
+          "translation": "Notipikasyon"
+        }
+      ]
+    },
+    "wS1dIWkUM4WzsK+i96qErg==": {
+      "translations": [
+        {
+          "translation": "Naglo-load ..."
+        }
+      ]
+    },
+    "goa8ra1IITxtTLlPqygsJg==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "pJ72jHPAVDJZr/f1TpS/Nw==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loading"
+        }
+      ]
+    },
+    "7qJMk00JA03KqhCdzCM1AQ==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loadmore"
+        }
+      ]
+    },
+    "FCvW5DiJds9kF4OmcP9UFQ==": {
+      "translations": [
+        {
+          "translation": "Pagsisimula sa Pinagmulan"
+        }
+      ]
+    },
+    "JZfl/92+OYfoP7WPV/3hAg==": {
+      "translations": [
+        {
+          "translation": "Upang matagumpay na makipag-ugnay sa iba sa aming DApp, kakailanganin mo ng ilang mga bagay bago ka magsimula. {= Bakit kailangan kong gawin ito?}"
+        }
+      ]
+    },
+    "soYLfqRkHiY0hIsn6V7KOg==": {
+      "translations": [
+        {
+          "translation": "Bakit kailangan kong gawin ito?"
+        }
+      ]
+    },
+    "IrLYNrWwH6ZtQ1ImEOOicQ==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa Pinagmulan ng Messaging"
+        }
+      ]
+    },
+    "hHtAQnGmut84lwdcWI2L6w==": {
+      "translations": [
+        {
+          "translation": "Ang isang cryptocurrency wallet ay isang software program na nag-iimbak ng pribado at pampublikong mga susi at nakikipag-ugnayan sa iba't ibang blockchain upang paganahin ang mga user na magpadala at tumanggap ng digital na pera at subaybayan ang kanilang balanse. Kung nais mong gamitin ang Bitcoin o anumang iba pang cryptocurrency, kakailanganin mong magkaroon ng isang digital wallet."
+        }
+      ]
+    },
+    "UJNr54cskDebn4LOy1474w==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa Pagkakakilanlan sa Blockchain"
+        }
+      ]
+    },
+    "RZmj6tEEQAQTby9GXxZXVw==": {
+      "translations": [
+        {
+          "translation": "Ang isang cryptocurrency wallet ay isang software program na nag-iimbak ng pribado at pampublikong mga susi at nakikipag-ugnayan sa iba't ibang blockchain upang paganahin ang mga user na magpadala at tumanggap ng digital na pera at subaybayan ang kanilang balanse. Kung nais mong gamitin ang Bitcoin o anumang iba pang cryptocurrency, kakailanganin mong magkaroon ng isang digital wallet."
+        }
+      ]
+    },
+    "2d71PZ8vaKwFxFDFRhk1Hw==": {
+      "translations": [
+        {
+          "translation": "Matuto pa"
+        }
+      ]
+    },
+    "FFVqxLHTicckrmBk8Z/MCA==": {
+      "translations": [
+        {
+          "translation": "Ano ang isang Crypto Wallet?"
+        }
+      ]
+    },
+    "aknWsMgG2wow2xkgZ28DXg==": {
+      "translations": [
+        {
+          "translation": "Ang isang cryptocurrency wallet ay isang software program na nag-iimbak ng pribado at pampublikong mga susi at nakikipag-ugnayan sa iba't ibang blockchain upang paganahin ang mga user na magpadala at tumanggap ng digital na pera at subaybayan ang kanilang balanse. Kung nais mong gamitin ang Bitcoin o anumang iba pang cryptocurrency, kakailanganin mong magkaroon ng isang digital wallet."
+        }
+      ]
+    },
+    "WsA95s6VU3x2vfhejrhzOg==": {
+      "translations": [
+        {
+          "translation": "Naghihintay ang iyong listahan ..."
+        }
+      ]
+    },
+    "ds0d/qu6sIALqXUA0iJKuw==": {
+      "translations": [
+        {
+          "translation": "Binabati kita"
+        }
+      ]
+    },
+    "aR7VNiOtKH8VvsNUSilJjA==": {
+      "translations": [
+        {
+          "translation": "Matagumpay mong naisaaktibo ang iyong account. Handa ka na ngayong ipagpatuloy ang iyong paglalakbay sa Origin Marketplace."
+        }
+      ]
+    },
+    "mU3MxuZLQg7n732AsKxtEA==": {
+      "translations": [
+        {
+          "translation": "{= Nakumpleto na ninyo ang mga sumusunod:} {= Paglikha ng WalletMag-enable ang Mga Pagpapasadya sa Pag-enable ngDesktopDesktop}"
+        }
+      ]
+    },
+    "QHp9k2YF0PJ8EuAxOFGtNA==": {
+      "translations": [
+        {
+          "translation": "Nakumpleto mo na ngayon ang mga sumusunod:"
+        }
+      ]
+    },
+    "CxWrPmbgR884ESLoDC1BHw==": {
+      "translations": [
+        {
+          "translation": "{= Paglikha ng Dyuter} {= Pinagana ng Pag-edit} {= Mga Notification sa Desktop Pinagana}"
+        }
+      ]
+    },
+    "oGs0egKgAj8bmQbSYjfHww==": {
+      "translations": [
+        {
+          "translation": "Paglikha ng Wallet"
+        }
+      ]
+    },
+    "CnTLIXLPrAMCoAtnaShyJw==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang Pag-e-mail"
+        }
+      ]
+    },
+    "jLoV7qiALo1aH/xnP6KE9Q==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang Mga Notification sa Desktop"
+        }
+      ]
+    },
+    "lUrfL6249kxTxaw/dRoqbg==": {
+      "translations": [
+        {
+          "translation": "{= Natitirang hakbang:} {= Pondo ang iyong walletI-complete ang iyong Profile}"
+        }
+      ]
+    },
+    "O1IrLRtj0WrvXnVnLCINvQ==": {
+      "translations": [
+        {
+          "translation": "Mga natitirang hakbang:"
+        }
+      ]
+    },
+    "osEnvv1/nsQxkpQkh23NZw==": {
+      "translations": [
+        {
+          "translation": "{= Pondo ang iyong wallet} {= Kumpletuhin ang iyong Profile}"
+        }
+      ]
+    },
+    "psVzq7xfDPiHYtKsXUP6gw==": {
+      "translations": [
+        {
+          "translation": "Pondo ang iyong wallet"
+        }
+      ]
+    },
+    "ysPjg6QGMquwWUCtL+/yEQ==": {
+      "translations": [
+        {
+          "translation": "Kumpletuhin ang iyong Profile"
+        }
+      ]
+    },
+    "Y+1LvSEix1POQBBLBGMaUw==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan Messaging"
+        }
+      ]
+    },
+    "CjNGZw8yFs7T6CxrNdzN4g==": {
+      "translations": [
+        {
+          "translation": "Pag-sync ng Orihinal na Messaging"
+        }
+      ]
+    },
+    "FKUFlQGWeADq33thpZWNhg==": {
+      "translations": [
+        {
+          "translation": "0 ng 2 MetaMask mga mensahe naka-sign"
+        }
+      ]
+    },
+    "MJeJbFx0ouUGjsL7FgLFpQ==": {
+      "translations": [
+        {
+          "translation": "Papayagan ka ng Pagmemensahe na makipag-chat sa iba pang mga mamimili at nagbebenta."
+        }
+      ]
+    },
+    "AX2t/0FaLX6Ri2veomcTcg==": {
+      "translations": [
+        {
+          "translation": "Naghihintay sa iyo na mag-sign ng numero ng mensahe {messageNumber}"
+        }
+      ]
+    },
+    "ErikvoQGieBd00aYG1DQmg==": {
+      "translations": [
+        {
+          "translation": "{messageNumber} ng 2 MetaMask mga mensahe naka-sign"
+        }
+      ]
+    },
+    "ILCAHzQL84S0gcx3t28Kgg==": {
+      "translations": [
+        {
+          "translation": "Ang Metamask icon ay matatagpuan sa kanang tuktok ng tool bar ng iyong browser."
+        }
+      ]
+    },
+    "N4YddPeOjF23lOAgjWNWHg==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang Pag-e-mail"
+        }
+      ]
+    },
+    "NxbN7hpr4yVr2xgq6CAbDQ==": {
+      "translations": [
+        {
+          "translation": "2 ng 2 MetaMask mga mensahe naka-sign"
+        }
+      ]
+    },
+    "+5lOJ8UwNH5y7Tkwmt5sug==": {
+      "translations": [
+        {
+          "translation": "Binabati kita! Maaari mo na ngayong mensahe ng iba pang mga gumagamit sa Pinagmulan at manatiling napapanahon sa lahat ng iyong mga pagbili at mga benta."
+        }
+      ]
+    },
+    "Sj0uCwqO2Lif0EXF2OFjFg==": {
+      "translations": [
+        {
+          "translation": "Tapos ka na at maaaring magpatuloy sa pamamagitan ng pagpindot sa pindutan sa ibaba."
+        }
+      ]
+    },
+    "LD5LtA82smKlIU4torypxQ==": {
+      "translations": [
+        {
+          "translation": "Mali"
+        }
+      ]
+    },
+    "qjIAIRzdKNP+o+HVoh/KHg==": {
+      "translations": [
+        {
+          "translation": "Walang Web3"
+        }
+      ]
+    },
+    "Ef8RYDVmPd+o1LstAaP1wA==": {
+      "translations": [
+        {
+          "translation": "Paganahin ang Pagmemensahe"
+        }
+      ]
+    },
+    "iRz4g7tQBcOyW/qYOj/DNQ==": {
+      "translations": [
+        {
+          "translation": "I-install ang MetaMask"
+        }
+      ]
+    },
+    "3A7KlQ1Kjaumhmr49lVUPg==": {
+      "translations": [
+        {
+          "translation": "Pag-install ng MetaMask ..."
+        }
+      ]
+    },
+    "LEvdn8FJN1P4JhDRVVvjmA==": {
+      "translations": [
+        {
+          "translation": "Paki-click sa ibaba sa sandaling naka-install ang MetaMask"
+        }
+      ]
+    },
+    "rTJQT6yFtV7JrE9+Kwrw0g==": {
+      "translations": [
+        {
+          "translation": "Naghihintay sa iyo na mag-login sa MetaMask"
+        }
+      ]
+    },
+    "aHqNeqpWF5FvjYcfAx/UtQ==": {
+      "translations": [
+        {
+          "translation": "Ang MetaMask icon ay matatagpuan sa kanang tuktok ng tool bar ng iyong browser."
+        }
+      ]
+    },
+    "STOPW2Q2WZLH2Jgu6WdqIw==": {
+      "translations": [
+        {
+          "translation": "Oops, tinanggihan mo ang pahintulot"
+        }
+      ]
+    },
+    "ZkgVALubZKbCD225z3Vv3g==": {
+      "translations": [
+        {
+          "translation": "Dapat mong bigyan ang pahintulot ng Pinagmulan upang ma-access ang iyong MetaMask account upang maaari kang bumili at magbenta sa aming DApp."
+        }
+      ]
+    },
+    "YRIz6mlKHIlcOC6yC56Kog==": {
+      "translations": [
+        {
+          "translation": "Pinayagang pahintulot"
+        }
+      ]
+    },
+    "j0xNIbmtip7rDoBRMt9m9g==": {
+      "translations": [
+        {
+          "translation": "Naghihintay para sa iyo na magbigay ng pahintulot"
+        }
+      ]
+    },
+    "iwgHFwUYIq/ST9H61v2LXw==": {
+      "translations": [
+        {
+          "translation": "Mangyaring bigyan ang Pinagmulang pahintulot upang ma-access ang iyong MetaMask account upang maaari kang bumili at magbenta sa aming DApp."
+        }
+      ]
+    },
+    "GAsJi53lUv/zEVhQAgWdeA==": {
+      "translations": [
+        {
+          "translation": "Konektado ang MetaMask"
+        }
+      ]
+    },
+    "qXJ7EX08bD1D/KpNQST64Q==": {
+      "translations": [
+        {
+          "translation": "Nakakonekta ang Metamask, mangyaring lumipat sa {connectTo} upang mag-transact sa Pinagmulan."
+        }
+      ]
+    },
+    "k7q6a+1CnpyNNwB+lNLsYQ==": {
+      "translations": [
+        {
+          "translation": "Nakakonekta ang MetaMask at handa ka nang mag-transact sa Pinagmulan. I-click ang Magpatuloy sa ibaba."
+        }
+      ]
+    },
+    "jISZ0wfBaodmnuNXoU+VAg==": {
+      "translations": [
+        {
+          "translation": "Ang mga notification ay naka-off"
+        }
+      ]
+    },
+    "KpzI7bx79mkkaT2io1SR8Q==": {
+      "translations": [
+        {
+          "translation": "Ang mga abiso ng mga native na desktop ay magbibigay-daan sa iyo upang manatili sa ibabaw ng kung ano ang kailangan mong gawin sa Pinagmulan DApp"
+        }
+      ]
+    },
+    "HWxdOPUAucyHDSoOK40JHw==": {
+      "translations": [
+        {
+          "translation": "I-click ang button sa ibaba at pagkatapos ay i-click ang kumpirmahin ang kahilingan sa katutubong dialog ng browser na lilitaw sa itaas."
+        }
+      ]
+    },
+    "uSRyxeZTNsqh1FcGEC4RKg==": {
+      "translations": [
+        {
+          "translation": "I-on ang Mga Abiso"
+        }
+      ]
+    },
+    "P5qx0I4YTWHZEWnH9lxXpw==": {
+      "translations": [
+        {
+          "translation": "Laktawan sa ngayon"
+        }
+      ]
+    },
+    "133qQN4R4hk3FaW/zXPQlg==": {
+      "translations": [
+        {
+          "translation": "Hindi nagkakaroon ng mga abiso sa desktop ang mga pagkakataon ng mga nawawalang mahahalagang update tungkol sa iyong mga transaksyon."
+        }
+      ]
+    },
+    "F52UFt/yddG6Tw1hUts2Xg==": {
+      "translations": [
+        {
+          "translation": "Ang dialog ng mga pahintulot ng katutubong browser ay bubukas sa tuktok ng window ng browser. Mangyaring kumpirmahin ang kahilingan"
+        }
+      ]
+    },
+    "Lp1AaLvV/Z/7FgpA3o44Hw==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang Mga Notification sa Desktop"
+        }
+      ]
+    },
+    "wJsjMb/rTBUgD+U6mn3BKA==": {
+      "translations": [
+        {
+          "translation": "Ang mga notification ay naka-on"
+        }
+      ]
+    },
+    "nftxxpaPkYMeJjKOUnZdjw==": {
+      "translations": [
+        {
+          "translation": "Malaki! Mas madali para sa iyo na tumugon nang mabilis sa mga kahilingan mula sa mga mamimili at nagbebenta."
+        }
+      ]
+    },
+    "DcwfUYW0NxpH1s5+ul7jyw==": {
+      "translations": [
+        {
+          "translation": "I-click ang button na magpatuloy sa ibaba upang magpatuloy."
+        }
+      ]
+    },
+    "tqYkpJk1jBSLneJPAW6Fpg==": {
+      "translations": [
+        {
+          "translation": "Uh oh, may problema ..."
+        }
+      ]
+    },
+    "hkOHDepzP/85esMg1eheJQ==": {
+      "translations": [
+        {
+          "translation": "Ang mga notification ay naka-off"
+        }
+      ]
+    },
+    "86E4W/Du3+E7eCB85BqZJg==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan mo ang aming kahilingan upang i-on ang mga abiso sa desktop na aming {= highly recommend}."
+        }
+      ]
+    },
+    "NLI/YsAIRTpzmJdjyUKu+A==": {
+      "translations": [
+        {
+          "translation": "mataas na pinapayo"
+        }
+      ]
+    },
+    "rdom9ZzkPwJZNuxLz9YaCA==": {
+      "translations": [
+        {
+          "translation": "Upang ayusin ito, mangyaring pumunta sa mga setting ng iyong browser at i-on ang mga notification para sa aming DApp."
+        }
+      ]
+    },
+    "Ao6PTzPmrwVygpJF55jqmA==": {
+      "translations": [
+        {
+          "translation": "Bisitahin ang Mga Setting ng Browser"
+        }
+      ]
+    },
+    "ht9M7LjR23q3m93Op5qY7A==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "twXKaZYDmP8sMVB91202fw==": {
+      "translations": [
+        {
+          "translation": "Mali"
+        }
+      ]
+    },
+    "O+bJPW4vKHXMKS4A1cTr1w==": {
+      "translations": [
+        {
+          "translation": "Walang Web3"
+        }
+      ]
+    },
+    "MPn0Q/LgQuNyOzpKKL9KiA==": {
+      "translations": [
+        {
+          "translation": "Sweet! Ang mga notification sa desktop ay nasa :)"
+        }
+      ]
+    },
+    "DW6fLMU0mrvLTV6dHCR3SA==": {
+      "translations": [
+        {
+          "translation": "Nagsisimula"
+        }
+      ]
+    },
+    "4pkBkxm3fiSdgckUqJNFrQ==": {
+      "translations": [
+        {
+          "translation": "Ipasok ang iyong Impormasyon sa Profile"
+        }
+      ]
+    },
+    "sgSRRlAr8fmr3HnB1Ykk7g==": {
+      "translations": [
+        {
+          "translation": "Pangalan"
+        }
+      ]
+    },
+    "Cr7l7mRGMBhn5E/iepkWUw==": {
+      "translations": [
+        {
+          "translation": "Apelyido"
+        }
+      ]
+    },
+    "ssnnSYlfF2XPDgbJQI5dLQ==": {
+      "translations": [
+        {
+          "translation": "{= Wala kang mga pondo} Kailangan mong magkaroon ng mga pondo sa iyong wallet upang lumikha ng isang pagkakakilanlan. Maaari mong palaging gawin ito sa ibang pagkakataon pagkatapos mong pondohan ang iyong wallet sa pamamagitan ng pagpunta sa iyong mga setting."
+        }
+      ]
+    },
+    "IGtHEy5CJDngN+7Ucg9x4Q==": {
+      "translations": [
+        {
+          "translation": "Wala kang mga pondo"
+        }
+      ]
+    },
+    "s6ga+WNyin+jyBuLqR8uVQ==": {
+      "translations": [
+        {
+          "translation": "I-publish"
+        }
+      ]
+    },
+    "gwNdF1XlGWk8ONo6VUrHdw==": {
+      "translations": [
+        {
+          "translation": "Laktawan sa ngayon"
+        }
+      ]
+    },
+    "oNaKnWUDLbhfedJyB7P+Ww==": {
+      "translations": [
+        {
+          "translation": "nai-publish"
+        }
+      ]
+    },
+    "XIbxUfdlCiQKg4oKOjmCCw==": {
+      "translations": [
+        {
+          "translation": "pansamantala"
+        }
+      ]
+    },
+    "B4LOIQ966Tas1608OZMlHg==": {
+      "translations": [
+        {
+          "translation": "sa lalong madaling panahon"
+        }
+      ]
+    },
+    "3Qm3xrEt+bnOdbmWNr7JjQ==": {
+      "translations": [
+        {
+          "translation": "interactive"
+        }
+      ]
+    },
+    "xIhXyhzildOeU091piinJg==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang Unang Pangalan"
+        }
+      ]
+    },
+    "7xSk0LvXs9aQjN98cCiljA==": {
+      "translations": [
+        {
+          "translation": "Pinagmulan Mobile Wallet"
+        }
+      ]
+    },
+    "WVk1tgmlGe99GNIa7Uk/bA==": {
+      "translations": [
+        {
+          "translation": "Pinapayagan ka ng Mobile Wallet ng Pinagmulan na mag-imbak ng crypto currency upang maaari kang bumili at magbenta sa aming DApp."
+        }
+      ]
+    },
+    "aOhcZ2U2Bsp9EGJA3zU7Ww==": {
+      "translations": [
+        {
+          "translation": "Magagamit para sa iOS at Android"
+        }
+      ]
+    },
+    "TxG/OdPaBPOz5hx9hge2rg==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang Origin Wallet"
+        }
+      ]
+    },
+    "QmqTcxlyWuTRoggpY7Y5nw==": {
+      "translations": [
+        {
+          "translation": "Ang MetaMask ay isang extension ng browser na magbibigay-daan sa iyo upang ma-access ang desentralisadong web."
+        }
+      ]
+    },
+    "vHiqW6XmWF/OLmE9lKWO1w==": {
+      "translations": [
+        {
+          "translation": "Magagamit para sa {browser}"
+        }
+      ]
+    },
+    "VvpwJO3gtIN0GV/UBRWAGA==": {
+      "translations": [
+        {
+          "translation": "Ikonekta ang MetaMask"
+        }
+      ]
+    },
+    "M/7sS5l7W/gdH3mNboamAA==": {
+      "translations": [
+        {
+          "translation": "Kumonekta sa isang Crypto Wallet"
+        }
+      ]
+    },
+    "dIIhiBsOJOemSYWXTm48zQ==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "XdIbTb9DUwkD1P7yTtwRnA==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang mga notification sa desktop ✅"
+        }
+      ]
+    },
+    "QEfT0AsqEUDRYXAeo6jiMw==": {
+      "translations": [
+        {
+          "translation": "Mga Setting"
+        }
+      ]
+    },
+    "lYXh6Dq4CP6r6aJfWNhySg==": {
+      "translations": [
+        {
+          "translation": "Mga Setting"
+        }
+      ]
+    },
+    "qFBczb1fLENKRx8/G4ieGA==": {
+      "translations": [
+        {
+          "translation": "Mangyaring pumili mula sa listahan sa ibaba."
+        }
+      ]
+    },
+    "gteQ4pqo/4VeBffMWpQfvA==": {
+      "translations": [
+        {
+          "translation": "Notipikasyon"
+        }
+      ]
+    },
+    "24R0XkoqNkj+Q80wcCZRlg==": {
+      "translations": [
+        {
+          "translation": "Paganahin ang mga notification ng browser sa ibaba."
+        }
+      ]
+    },
+    "slAgUo4opu8tso8RLT/dLg==": {
+      "translations": [
+        {
+          "translation": "Paganahin"
+        }
+      ]
+    },
+    "XE4dDp2PIHkNuhGg8Y/b8w==": {
+      "translations": [
+        {
+          "translation": "Pinagana ang mga notification sa browser."
+        }
+      ]
+    },
+    "ACzYauxPE/+QDd4rdULhOA==": {
+      "translations": [
+        {
+          "translation": "Mobile Wallet"
+        }
+      ]
+    },
+    "QfPi8+EJJHsPYgLmR16O7w==": {
+      "translations": [
+        {
+          "translation": "Idiskonekta mula sa iyong mobile wallet sa pamamagitan ng pag-click sa pindutan sa ibaba."
+        }
+      ]
+    },
+    "k6UQCIfTpu+GOQC9zUHVVA==": {
+      "translations": [
+        {
+          "translation": "Idiskonekta"
+        }
+      ]
+    },
+    "qfhGAG2u3+abnoq3mJZtdw==": {
+      "translations": [
+        {
+          "translation": "Hindi konektado"
+        }
+      ]
+    },
+    "yFYpDVeEQ8oXcHYjijWBTg==": {
+      "translations": [
+        {
+          "translation": "Discovery Server"
+        }
+      ]
+    },
+    "Xo2IEzVBpUBSim+cGxiV2A==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ipasok ang URL sa ibaba. Mag-iwan ng blangko upang direktang i-query ang blockchain. Maaaring hindi paganahin ang pag-andar ng paghahanap kung walang server ng pagtuklas."
+        }
+      ]
+    },
+    "9ZMwBvD+hP2nfahk+3LenA==": {
+      "translations": [
+        {
+          "translation": "IPFS Gateway"
+        }
+      ]
+    },
+    "pRCuz6nfvsfhdZOLMdd1Ug==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ipasok ang URL sa ibaba."
+        }
+      ]
+    },
+    "aFN2K1TwxnCt3pJ0P93ldg==": {
+      "translations": [
+        {
+          "translation": "Web3 Provider"
+        }
+      ]
+    },
+    "0hqW8GbEWVfnfkHUgaKwdA==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ipasok ang URL sa ibaba."
+        }
+      ]
+    },
+    "fqtlt5+7VR5iw3K3FjAD/g==": {
+      "translations": [
+        {
+          "translation": "Bridge Server"
+        }
+      ]
+    },
+    "ffkqXBQ0xgCWwCZhHuAp/Q==": {
+      "translations": [
+        {
+          "translation": "Mangyaring ipasok ang URL sa ibaba."
+        }
+      ]
+    },
+    "KRXhxUx2Hra4LLq49+q/Tw==": {
+      "translations": [
+        {
+          "translation": "TxName"
+        }
+      ]
+    },
+    "qztpAjXBddBNYsM0s/z17Q==": {
+      "translations": [
+        {
+          "translation": "Petsa"
+        }
+      ]
+    },
+    "sMnltv0vMS+f5SLtoTECcQ==": {
+      "translations": [
+        {
+          "translation": "IPFS Hash"
+        }
+      ]
+    },
+    "qQdpwzfRMHhJUa4w/7FWjA==": {
+      "translations": [
+        {
+          "translation": "Tx Hash"
+        }
+      ]
+    },
+    "6dPov/3WWLjmiAtm66UKtQ==": {
+      "translations": [
+        {
+          "translation": "Presyo"
+        }
+      ]
+    },
+    "7OybV1tFQvw3y2hKaxWUmA==": {
+      "translations": [
+        {
+          "translation": "Dami"
+        }
+      ]
+    },
+    "ZUn3u79h4cRD2YzH3fXr2A==": {
+      "translations": [
+        {
+          "translation": "Mag-check in"
+        }
+      ]
+    },
+    "jl093qUjWarZ1XmhSSbXcA==": {
+      "translations": [
+        {
+          "translation": "Tignan mo"
+        }
+      ]
+    },
+    "oqwNF+A0lExDpskbNclwTg==": {
+      "translations": [
+        {
+          "translation": "Magsisimula ang pagrenta"
+        }
+      ]
+    },
+    "9OMSjLyMkyRiIaJ8SBnqyw==": {
+      "translations": [
+        {
+          "translation": "Ang katapusan ng pag-upa"
+        }
+      ]
+    },
+    "FBs6gOAFyap0krOkDiquyg==": {
+      "translations": [
+        {
+          "translation": "Kabuuang Presyo"
+        }
+      ]
+    },
+    "pCnW9dCjDjhv0NTuQqUe2A==": {
+      "translations": [
+        {
+          "translation": "Katayuan ng Pagbabayad"
+        }
+      ]
+    },
+    "3pOzT705Ai9uGcvm95Na3w==": {
+      "translations": [
+        {
+          "translation": "Petsa ng Alok"
+        }
+      ]
+    },
+    "M2BrdF9SwT1krQZ/WEjFpQ==": {
+      "translations": [
+        {
+          "translation": "Numero ng Alok"
+        }
+      ]
+    },
+    "nYPLuTHlpmcjxDT1vlyYMg==": {
+      "translations": [
+        {
+          "translation": "Tanggihan ang Alok"
+        }
+      ]
+    },
+    "GN1E8lzMKvP50rMTh92DSA==": {
+      "translations": [
+        {
+          "translation": "Tanggapin ang alok"
+        }
+      ]
+    },
+    "w9bk0qXot+z5KWdGOoM6XA==": {
+      "translations": [
+        {
+          "translation": "Mag-iwan ng isang pagsusuri at tapusin ang transaksyon"
+        }
+      ]
+    },
+    "VHFifMxtMBpl7wQxqL87Qg==": {
+      "translations": [
+        {
+          "translation": "Paano mo i-rate ang iyong karanasan?"
+        }
+      ]
+    },
+    "+4fB7ygpazVhmoB3zG8cLA==": {
+      "translations": [
+        {
+          "translation": "Anumang bagay na nais mong magkomento?"
+        }
+      ]
+    },
+    "zAz0qzQAMIZWd6M7n6uZOg==": {
+      "translations": [
+        {
+          "translation": "Tapusin"
+        }
+      ]
+    },
+    "VQCq6PSOS1vzK290BsnQNw==": {
+      "translations": [
+        {
+          "translation": "Mag-ulat ng Problema"
+        }
+      ]
+    },
+    "NspPzWi6EC+0+hV1ZHJdCQ==": {
+      "translations": [
+        {
+          "translation": "Sunod na Hakbang"
+        }
+      ]
+    },
+    "LZrUP+ZIeXqJRqyLiRhYaA==": {
+      "translations": [
+        {
+          "translation": "Ibigay ang iyong address sa pagpapadala sa nagbebenta"
+        }
+      ]
+    },
+    "sMsaeCID3irEn5xdZJJ+bQ==": {
+      "translations": [
+        {
+          "translation": "I-click ang pindutan upang buksan ang pagmemensahe"
+        }
+      ]
+    },
+    "ujJ8g0EYiCIH2kwyJyMfVQ==": {
+      "translations": [
+        {
+          "translation": "Nagbebenta ng Mensahe"
+        }
+      ]
+    },
+    "V1GgdZO6KZeduKxo/ipthQ==": {
+      "translations": [
+        {
+          "translation": "Sunod na Hakbang"
+        }
+      ]
+    },
+    "XLHaYbAmaXCqclP5HM83YA==": {
+      "translations": [
+        {
+          "translation": "Susuriin ng nagbebenta ang iyong booking"
+        }
+      ]
+    },
+    "mwdxkNowIHDrWwpG03IC2w==": {
+      "translations": [
+        {
+          "translation": "Mag-alok ng Withdrawn"
+        }
+      ]
+    },
+    "Rr6mOSd9OGeBmenzhAxBAA==": {
+      "translations": [
+        {
+          "translation": "Ang mamimili ay inalis ang kanilang alok"
+        }
+      ]
+    },
+    "pavSaTOWIGUadJJz+LT+dA==": {
+      "translations": [
+        {
+          "translation": "Inalis mo ang iyong alok"
+        }
+      ]
+    },
+    "z8w3vsKBV7fTh9OAeb+5Ag==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan ang Alok"
+        }
+      ]
+    },
+    "I11Qx+yjIro8ClQNygfWyA==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan mo ang alok na ito"
+        }
+      ]
+    },
+    "78ZwhZYCfj46DlFuXTC8BQ==": {
+      "translations": [
+        {
+          "translation": "Ang iyong alok ay tinanggihan ng nagbebenta"
+        }
+      ]
+    },
+    "zXe0CpHR3Ollxxf5AoX7UA==": {
+      "translations": [
+        {
+          "translation": "Nag-aalay ng Alok"
+        }
+      ]
+    },
+    "2ssaM9V9RN/jWiOAzPJSBQ==": {
+      "translations": [
+        {
+          "translation": "Maghintay na makipag-ugnay sa isang miyembro ng Pinagmulan ng koponan"
+        }
+      ]
+    },
+    "GzywuT3H7qeJlmK6UgbS5w==": {
+      "translations": [
+        {
+          "translation": "Nakipagkasundo ang Dispute"
+        }
+      ]
+    },
+    "VNosphgosByxNu7E0v6k8w==": {
+      "translations": [
+        {
+          "translation": "Pinagpasiyahan ng pinanggalingan ang pagtatalo na ito"
+        }
+      ]
+    },
+    "DayNJyKzoBH/IaNeKPXkSg==": {
+      "translations": [
+        {
+          "translation": "Natapos ang Transaksyon"
+        }
+      ]
+    },
+    "Y3sp8Tv0rCOhBhNoqfiotA==": {
+      "translations": [
+        {
+          "translation": "Ang transaksyong ito ay matagumpay na tinatapos at ang mga pondo ay inilabas sa nagbebenta."
+        }
+      ]
+    },
+    "N5pM2WbYjZGzn+35rDpssA==": {
+      "translations": [
+        {
+          "translation": "Tiyaking natutupad mo ang order at maghintay para sa kumpirmasyon ng mamimili"
+        }
+      ]
+    },
+    "iUsZ9XU931fYMNKBTeqx9g==": {
+      "translations": [
+        {
+          "translation": "Tingnan ang Checklist ng Katuparan"
+        }
+      ]
+    },
+    "YkkjLoelBh8tfKxaGGO6HA==": {
+      "translations": [
+        {
+          "translation": "Mag-ulat ng Problema"
+        }
+      ]
+    },
+    "SxmvkqrwlKQKpnbugoF2nQ==": {
+      "translations": [
+        {
+          "translation": "Checklist ng Katuparan"
+        }
+      ]
+    },
+    "kzoeHvMMOD0KnB9Jl7KnIA==": {
+      "translations": [
+        {
+          "translation": "I-verify ang mga variant sa nagbebenta"
+        }
+      ]
+    },
+    "FkRITz2i1lnwVgJ+TnWPcQ==": {
+      "translations": [
+        {
+          "translation": "Pakete ang produkto at ipadala ito"
+        }
+      ]
+    },
+    "cugqsOArck9WsncrI/yzHQ==": {
+      "translations": [
+        {
+          "translation": "I-notify ang bumibili at magbigay ng tracking number"
+        }
+      ]
+    },
+    "7JqkqcKaQqp/ulOyrCedkw==": {
+      "translations": [
+        {
+          "translation": "Maghintay para sa mamimili upang makatanggap ng produkto"
+        }
+      ]
+    },
+    "OGSHiC9s4FiQeRCd3wxw+A==": {
+      "translations": [
+        {
+          "translation": "Alisin ang iyong mga pondo"
+        }
+      ]
+    },
+    "zSUtImIcpEjCOnXDwhRuBA==": {
+      "translations": [
+        {
+          "translation": "Tagumpay!"
+        }
+      ]
+    },
+    "8jjVVnJhBLiHo5x/+9nueA==": {
+      "translations": [
+        {
+          "translation": "Tagumpay!"
+        }
+      ]
+    },
+    "Q7RQiJmdkwPTctx2s5dcoQ==": {
+      "translations": [
+        {
+          "translation": "May problema ba?"
+        }
+      ]
+    },
+    "pWoAumXQ9fYRG4/WKCO1zw==": {
+      "translations": [
+        {
+          "translation": "Sigurado ka bang nais mong mag-ulat ng problema? Magsisimula ito sa proseso ng resolusyon ng pag-aaway. Aabisuhan ng isang tao mula sa Pinagmulan, at ang iyong kasaysayan ng chat ay gagawing publiko sa isang arbitrator."
+        }
+      ]
+    },
+    "X23G7YI9cvqkEJ8GhVueqQ==": {
+      "translations": [
+        {
+          "translation": "Oops, teka lang..."
+        }
+      ]
+    },
+    "yaqFWwu3EkEQh7GBY1CtRg==": {
+      "translations": [
+        {
+          "translation": "Oo, pakiusap"
+        }
+      ]
+    },
+    "ciQOKZFTUJuVTIiKxHQDlA==": {
+      "translations": [
+        {
+          "translation": "Isumite"
+        }
+      ]
+    },
+    "MsPV+MCh0HtvCFVCptYr/w==": {
+      "translations": [
+        {
+          "translation": "Naitaguyod mo ang isyung ito sa isang miyembro ng Pinagmulan ng koponan. Makikipag-ugnay ka kapag isang desicion ang ginawa."
+        }
+      ]
+    },
+    "kfS7RSi+eTq2o4LR/sPR7Q==": {
+      "translations": [
+        {
+          "translation": "Tagumpay!"
+        }
+      ]
+    },
+    "pk3KYayGmBREn0PI4iFlVg==": {
+      "translations": [
+        {
+          "translation": "Tanggihan ang Alok"
+        }
+      ]
+    },
+    "Wu+qdvW6dZoUQ2a8YcuJ5w==": {
+      "translations": [
+        {
+          "translation": "Sigurado ka bang gusto mong tanggihan ang alok na ito? Ang mga pondo ng mamimili ay ibabalik sa kanila."
+        }
+      ]
+    },
+    "iIQRnV5hXaAtOzwlMaKG1g==": {
+      "translations": [
+        {
+          "translation": "Tanggihan"
+        }
+      ]
+    },
+    "nYgXfvklP8K6I287NGYvBA==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan ang alok na ito"
+        }
+      ]
+    },
+    "j40DCoib9csmgk7p1qB0eA==": {
+      "translations": [
+        {
+          "translation": "Tinanggihan mo ang alok ng bumibili na ito."
+        }
+      ]
+    },
+    "m0BMtaQu9jw3yFO7nBl3Vg==": {
+      "translations": [
+        {
+          "translation": "Ihulog ang Alok"
+        }
+      ]
+    },
+    "pLCZDndYDvgrvDQTSi27OA==": {
+      "translations": [
+        {
+          "translation": "Ihulog ang Alok"
+        }
+      ]
+    },
+    "r6xzKSXU04+FE5VHRpUYVg==": {
+      "translations": [
+        {
+          "translation": "Sigurado ka bang gusto mong bawiin ang iyong alok? Ang iyong escrowed payment ay ibabalik sa iyong wallet."
+        }
+      ]
+    },
+    "2goCMoy69ARZSLk1PjdVqQ==": {
+      "translations": [
+        {
+          "translation": "Mag-withdraw"
+        }
+      ]
+    },
+    "HJowvY/6xmgkY3lXCgNQrQ==": {
+      "translations": [
+        {
+          "translation": "Tagumpay!"
+        }
+      ]
+    },
+    "VGM31/n7NCk61OuI0Wz2fA==": {
+      "translations": [
+        {
+          "translation": "Alok {id}"
+        }
+      ]
+    },
+    "sijwJsqaANPV7KUAvSIubw==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "hccda74CwmCatYfhm387eQ==": {
+      "translations": [
+        {
+          "translation": "Isinasagawa ang Transaksyon"
+        }
+      ]
+    },
+    "r49/Dx4NYLPBCkNVtxCCfw==": {
+      "translations": [
+        {
+          "translation": "Kasaysayan ng Transaksyon"
+        }
+      ]
+    },
+    "Ey4Sd7cIJJPB3nj9OStOVQ==": {
+      "translations": [
+        {
+          "translation": "Mga Detalye ng listahan"
+        }
+      ]
+    },
+    "Da38AMJbLvBFbijuOHF6Xg==": {
+      "translations": [
+        {
+          "translation": "Mga Detalye ng Alok"
+        }
+      ]
+    },
+    "ErUqOhnKC3V7GzECNCCHMQ==": {
+      "translations": [
+        {
+          "translation": "Tungkol sa {sellerOrBuyer}."
+        }
+      ]
+    },
+    "MSS8kemsC1gNq34uoD4fKg==": {
+      "translations": [
+        {
+          "translation": "Mamimili"
+        }
+      ]
+    },
+    "jKHS7SWemBx920wc9baQDQ==": {
+      "translations": [
+        {
           "translation": "Nagbebenta"
+        }
+      ]
+    },
+    "Vy9+qH9dhX/MjDBFbbau/A==": {
+      "translations": [
+        {
+          "translation": "Mga Nabenta ko"
+        }
+      ]
+    },
+    "ryJsozU2awI4nvYi5MwSqg==": {
+      "translations": [
+        {
+          "translation": "Mga Nabili ko"
+        }
+      ]
+    },
+    "g8yomS7zK+dg5WQmAPDMsQ==": {
+      "translations": [
+        {
+          "translation": "Aking listahan"
+        }
+      ]
+    },
+    "vHm8g0uk8a8fdg3zaYmJMg==": {
+      "translations": [
+        {
+          "translation": "Aking listahan"
+        }
+      ]
+    },
+    "R4FcWDcOIqO7Tlc5qDj4yw==": {
+      "translations": [
+        {
+          "translation": "Lahat"
+        }
+      ]
+    },
+    "FllrY75ccaaHIC0TfV3wtg==": {
+      "translations": [
+        {
+          "translation": "Aktibo"
+        }
+      ]
+    },
+    "AceTpRre2gN9HdDBQaKrbw==": {
+      "translations": [
+        {
+          "translation": "Hindi aktibo"
+        }
+      ]
+    },
+    "cenWOoZ8JHLcfWm2tZJnOw==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "jFQ7644SCdcZTdP770XQuQ==": {
+      "translations": [
+        {
+          "translation": "Nakalista sa"
+        }
+      ]
+    },
+    "y+3l9CFy8fwAqeSdux+IUQ==": {
+      "translations": [
+        {
+          "translation": "I-edit ang Listahan"
+        }
+      ]
+    },
+    "c6JpaJWP06U7c47JBBcLNA==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "2ZiI1i1R1/hHvBDHcRLEZQ==": {
+      "translations": [
+        {
+          "translation": "Mag-load nang higit pa"
+        }
+      ]
+    },
+    "b8rO1MkJzb3hMKSpcZsfcA==": {
+      "translations": [
+        {
+          "translation": "Isara ang mga listahan"
+        }
+      ]
+    },
+    "CR/0eNb4uyRVMRig1DV79w==": {
+      "translations": [
+        {
+          "translation": "Mga Nabili ko"
+        }
+      ]
+    },
+    "M1mxwCvjbP9eAG3t51F0wQ==": {
+      "translations": [
+        {
+          "translation": "Mga Nabili ko"
+        }
+      ]
+    },
+    "tl9fsk5aKtXOfDHbWvZIAg==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "iiDxVPoljj15ediYDd3zsA==": {
+      "translations": [
+        {
+          "translation": "Kumpleto"
+        }
+      ]
+    },
+    "1NuhArdh+XwQVOO7TCl6hA==": {
+      "translations": [
+        {
+          "translation": "Lahat"
+        }
+      ]
+    },
+    "jSbLCuknDhZSIirFxB46Eg==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "4gsleVszXBRGkXpyI4Yztw==": {
+      "translations": [
+        {
+          "translation": "Nagawa ang ginawa"
+        }
+      ]
+    },
+    "xGeosYr5EVfdyy6fUr9R7A==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "JbM6gj53IguD10JFC64o6A==": {
+      "translations": [
+        {
+          "translation": "Mag-load nang higit pa"
+        }
+      ]
+    },
+    "b0FRfo4QDI6zzl6oVIVIPQ==": {
+      "translations": [
+        {
+          "translation": "Mga Nabenta ko"
+        }
+      ]
+    },
+    "S+acB/JxUqQ6+IpstXgzzA==": {
+      "translations": [
+        {
+          "translation": "Mga Nabenta ko"
+        }
+      ]
+    },
+    "3tRlfdG4nQfSuWZIb+XoAw==": {
+      "translations": [
+        {
+          "translation": "Nakabinbin"
+        }
+      ]
+    },
+    "buuucNhreFnajK3t1O3bzA==": {
+      "translations": [
+        {
+          "translation": "Kumpleto"
+        }
+      ]
+    },
+    "jQ9i8K9tI2hHt2ODqZQ2UQ==": {
+      "translations": [
+        {
+          "translation": "Lahat"
+        }
+      ]
+    },
+    "ro2583PslzKZhuolvesI/g==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "8jvi4qLLVB5A3DmDQiFdMw==": {
+      "translations": [
+        {
+          "translation": "Nagawa ang ginawa"
+        }
+      ]
+    },
+    "/H1/OJnfBBC4bzKiZp2X+g==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "fUPthq4dBACknykVl2yIHw==": {
+      "translations": [
+        {
+          "translation": "Mag-load nang higit pa"
+        }
+      ]
+    },
+    "p1aHgndckng0cIWC5sNAjw==": {
+      "translations": [
+        {
+          "translation": "I-edit ang profile"
+        }
+      ]
+    },
+    "VTbmHdaWRvm1fESc/VerTw==": {
+      "translations": [
+        {
+          "translation": "Pangalan"
+        }
+      ]
+    },
+    "IjGi8QXZRD9rcM2mQJr24w==": {
+      "translations": [
+        {
+          "translation": "Apelyido"
+        }
+      ]
+    },
+    "VlV9VZz3J84sVOLSd3qpzQ==": {
+      "translations": [
+        {
+          "translation": "Deskripsyon"
+        }
+      ]
+    },
+    "NI5vw9QeYHXy81wZxU+ARg==": {
+      "translations": [
+        {
+          "translation": "Ang impormasyong ito ay mai-publish sa blockchain at makikita ng lahat."
+        }
+      ]
+    },
+    "vhjDWeZuJa2szAmOG5kLLA==": {
+      "translations": [
+        {
+          "translation": "Kinakailangan ang Unang Pangalan"
+        }
+      ]
+    },
+    "Sy/m4fI1v+lIL0apzMVyOw==": {
+      "translations": [
+        {
+          "translation": "Naglo-load..."
+        }
+      ]
+    },
+    "EO3o5BXWLICGLwcnHAYbmA==": {
+      "translations": [
+        {
+          "translation": "Walang kontrata sa pamilihan?"
+        }
+      ]
+    },
+    "I1sgwHyAcG8bg7ojs5hMsA==": {
+      "translations": [
+        {
+          "translation": "Mag-load nang higit pa"
+        }
+      ]
+    },
+    "YAWDILzZ3E5NO0VUMCfOhg==": {
+      "translations": [
+        {
+          "translation": "Maligayang pagdating sa Pinagmulang Protocol"
+        }
+      ]
+    },
+    "8necMjpWXqiRsgeWRyKzeQ==": {
+      "translations": [
+        {
+          "translation": "I-edit ang iyong profile"
         }
       ]
     },
@@ -657,7 +5877,56 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "Ang pag-verify ng iyong profile ay nagbibigay-daan sa ibang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan."
+          "translation": "{= Pag-verify ng iyong profile} ay nagpapahintulot sa iba pang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan."
+        }
+      ]
+    },
+    "nKccGV4lhmxhDoHN+UDtgg==": {
+      "translations": [
+        {
+          "translation": "Pagtiyak kung tama ang iyong profile"
+        }
+      ]
+    },
+    "VXkw3rZOG6nmHYODyFTqOg==": {
+      "translations": [
+        {
+          "translation": "Walang pangalang user"
+        }
+      ]
+    },
+    "tKwSeiu9lfDPt5+SHwfkgA==": {
+      "translations": [
+        {
+          "translation": "Berepikadong impormasyon"
+        }
+      ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Telepono"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "5C6dlhx/VKCxxrro4D0otA==": {
+      "translations": [
+        {
+          "translation": "Walang pangalang user"
+        }
+      ]
+    },
+    "W8DLWmRqV9o0OFVHEAa6DA==": {
+      "translations": [
+        {
+          "translation": "walang paglalarawan"
         }
       ]
     }

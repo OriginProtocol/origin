@@ -1,24 +1,102 @@
 {
   "fb-locale": "it_IT",
   "translations": {
+    "3K2HLz2eDfqTUU1+MYbpSA==": {
+      "translations": [
+        {
+          "translation": "Account Twitter verificato"
+        }
+      ]
+    },
+    "xOpYvzzoMezVMoNOSayQmw==": {
+      "translations": [
+        {
+          "translation": "Account Google verificato"
+        }
+      ]
+    },
+    "wZLSv7ewRaMW79jVk8dClw==": {
+      "translations": [
+        {
+          "translation": "Telefono verificato"
+        }
+      ]
+    },
+    "y1hHLacJcJtPJqQT+ARvMQ==": {
+      "translations": [
+        {
+          "translation": "Email verificata"
+        }
+      ]
+    },
+    "9IK97p7cEFz5+KW7ysa14w==": {
+      "translations": [
+        {
+          "translation": "Facebook verificato"
+        }
+      ]
+    },
+    "ajuRGjrScUXkHUc6TO96oQ==": {
+      "translations": [
+        {
+          "translation": "Airbnb account verificato"
+        }
+      ]
+    },
+    "lpM1WjIFkeXrRw0jHALchw==": {
+      "translations": [
+        {
+          "translation": "Invia messaggio"
+        }
+      ]
+    },
+    "BNiTz6TMpmADBvpVMcU3Ow==": {
+      "translations": [
+        {
+          "translation": "Saldo del conto"
+        }
+      ]
+    },
+    "qW+FPWRA0PFau0MxBCNW+g==": {
+      "translations": [
+        {
+          "translation": "Per iniziare"
+        }
+      ]
+    },
+    "W6NnV1uOLvElD9nJ8UncTg==": {
+      "translations": [
+        {
+          "translation": "Ottieni OGN"
+        }
+      ]
+    },
     "lnRohWpsGR7uMhMbL9Uc4A==": {
       "translations": [
-        {}
+        {
+          "translation": "In vendita"
+        }
       ]
     },
     "IXnxuAx0PfImJ3UuUrtKNA==": {
       "translations": [
-        {}
+        {
+          "translation": "In Affitto"
+        }
       ]
     },
     "ghfbnF7r/INujbWiriguzg==": {
       "translations": [
-        {}
+        {
+          "translation": "Servizi"
+        }
       ]
     },
     "66fBzTgLcxkHZ8hhNa6kkQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Annunci"
+        }
       ]
     },
     "KFFRQn6ksmQTRyTzCz65sg==": {
@@ -38,14 +116,14 @@
     "YIvbQUezwdnmysfM43g0Vw==": {
       "translations": [
         {
-          "translation": "Arti & mestieri"
+          "translation": "Arti e Mestieri"
         }
       ]
     },
     "y1wrUJKn06syj0F/jkjGrg==": {
       "translations": [
         {
-          "translation": "ATV, UTVs, moto slitte"
+          "translation": "Atv, Utv, Motoslitte"
         }
       ]
     },
@@ -59,14 +137,14 @@
     "snA5cNuJlgyAdvZDbZpJrA==": {
       "translations": [
         {
-          "translation": "Auto Ruote & Pneumatici"
+          "translation": "Pneumatici e ruote auto"
         }
       ]
     },
     "7DafxQ244zr3EY7cS62NYQ==": {
       "translations": [
         {
-          "translation": "Cose per Bimbi e Piccoli"
+          "translation": "Cose per neonati e bambini"
         }
       ]
     },
@@ -87,7 +165,7 @@
     "RNUT6gy5oiwEr7Ahqp8ztg==": {
       "translations": [
         {
-          "translation": "Componenti da Barca & Accessori"
+          "translation": "Ricambi Barche e Accessori"
         }
       ]
     },
@@ -101,26 +179,28 @@
     "x6cb21nXupvVRhnwo/9FYg==": {
       "translations": [
         {
-          "translation": "Libri & Riviste"
+          "translation": "Libri e Riviste"
         }
       ]
     },
     "1Q0Vv4XgRSWOzYW+aVBrxA==": {
       "translations": [
-        {}
+        {
+          "translation": "Attività commerciali"
+        }
       ]
     },
     "VEqNKcV23dj1AEzdWpB5HQ==": {
       "translations": [
         {
-          "translation": "Automobili & Camion"
+          "translation": "Auto e Camion"
         }
       ]
     },
     "o3QtDvLaCsB7dvSR0fLs9g==": {
       "translations": [
         {
-          "translation": "CD / DVD / VHS"
+          "translation": "CD, DVD, VHS"
         }
       ]
     },
@@ -134,14 +214,14 @@
     "EAyfEU0bAiMEsoBJOoJVsQ==": {
       "translations": [
         {
-          "translation": "Abbigliamento & Accessori"
+          "translation": "Abbigliamento e accessori"
         }
       ]
     },
     "2wlJsir3YFOvopTR9TaAhQ==": {
       "translations": [
         {
-          "translation": "Collezionabili"
+          "translation": "Collezionismo"
         }
       ]
     },
@@ -169,7 +249,7 @@
     "s6gPsxVYO315sO2pzS9gzg==": {
       "translations": [
         {
-          "translation": "Campagna & Giardino"
+          "translation": "Campagna e giardino"
         }
       ]
     },
@@ -218,14 +298,14 @@
     "UfzMzPnHFKRY+YA2YYCiMw==": {
       "translations": [
         {
-          "translation": "Ricambi Moto & Accessori"
+          "translation": "Ricambi Moto e Accessori"
         }
       ]
     },
     "SRXzG3SHl2IsrVr0swey+Q==": {
       "translations": [
         {
-          "translation": "Moto & Scooter"
+          "translation": "Moto e Scooter"
         }
       ]
     },
@@ -246,7 +326,7 @@
     "zy7YOcOXbkmeJ1amxDx1Yw==": {
       "translations": [
         {
-          "translation": "Foto & Video"
+          "translation": "Foto e Video"
         }
       ]
     },
@@ -288,7 +368,7 @@
     "PNDB5G/uGJRtnFstTnLRFw==": {
       "translations": [
         {
-          "translation": "Giocattoli & Giochi"
+          "translation": "Giocattoli e Giochi"
         }
       ]
     },
@@ -302,23 +382,29 @@
     "ySVwNQTsweQ/3lIONL7Vdw==": {
       "translations": [
         {
-          "translation": "Video gioco"
+          "translation": "Video giochi"
         }
       ]
     },
     "c4W8KxvjoNvkLaPQiXcBeQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Alloggio"
+        }
       ]
     },
     "IGExQ86vwIZJBBngF5KxCg==": {
       "translations": [
-        {}
+        {
+          "translation": "Parcheggio"
+        }
       ]
     },
     "zBI2vhzGm3YUFkzAgxhrOw==": {
       "translations": [
-        {}
+        {
+          "translation": "Deposito"
+        }
       ]
     },
     "dbmMy1BMoOPmEjBIgZNQkw==": {
@@ -330,7 +416,9 @@
     },
     "KBslCOpxNyf2/f02u4AC9A==": {
       "translations": [
-        {}
+        {
+          "translation": "Design"
+        }
       ]
     },
     "9ok6+SExmxGnwGSndfBihw==": {
@@ -356,17 +444,23 @@
     },
     "kO8sPOni/jolamEZLA8Xrw==": {
       "translations": [
-        {}
+        {
+          "translation": "Salone"
+        }
       ]
     },
     "10HkhoJ+l5kgv0Xp9a5caw==": {
       "translations": [
-        {}
+        {
+          "translation": "SPA"
+        }
       ]
     },
     "KEVzlIlEiThvVr4DsUDjFA==": {
       "translations": [
-        {}
+        {
+          "translation": "Trasporti"
+        }
       ]
     },
     "6d3Zf+bS0fophdS2BVpZ1A==": {
@@ -407,14 +501,14 @@
     "E0GYkehaIT3z+NsHoTWeqg==": {
       "translations": [
         {
-          "translation": "Roba Gratis"
+          "translation": "Cose Gratis"
         }
       ]
     },
     "S1+qQlACydCmaq1HSnUw4g==": {
       "translations": [
         {
-          "translation": "Garage & Traslochi Vendite"
+          "translation": "Mercatino dell'usato"
         }
       ]
     },
@@ -442,13 +536,15 @@
     "j0yAi4eGyUt2LSsXQr92ew==": {
       "translations": [
         {
-          "translation": "Lost & Found"
+          "translation": "Oggetti smarriti"
         }
       ]
     },
     "8MgZoixrwmWP6Jsfak1UyA==": {
       "translations": [
-        {}
+        {
+          "translation": "Marketing"
+        }
       ]
     },
     "3WqpHbrwOloRd96TRFYEbA==": {
@@ -482,7 +578,7 @@
     "Vh5GN0dq3+dx7j/+e2dlOg==": {
       "translations": [
         {
-          "translation": "Resumes"
+          "translation": "CV"
         }
       ]
     },
@@ -493,31 +589,2656 @@
         }
       ]
     },
-    "HIYV/KBfsIx14LvOIIcHwg==": {
+    "CZ1++NjtjMZAo/LiBqRk3A==": {
       "translations": [
         {
-          "translation": "L'app decentralizzata di Origin consente agli acquirenti e ai venditori di effettuare transazioni senza intermediari utilizzando la blockchain di Ethereum e IPFS."
+          "translation": "Abilita la messaggistica"
+        }
+      ]
+    },
+    "xqiYZ70sVyhuOX2uyy5oBQ==": {
+      "translations": [
+        {
+          "translation": "Messaggistica Origin"
+        }
+      ]
+    },
+    "HMZO3MPK1igp+L3DnCYh4A==": {
+      "translations": [
+        {
+          "translation": "Informazioni introduttive sull'utilizzo di Origin prima di poter inviare un messaggio a questo utente"
+        }
+      ]
+    },
+    "FHdqFaXVkGt1bTg5qEKySQ==": {
+      "translations": [
+        {
+          "translation": "La messaggistica Origin ti consentirà di \"chattare\" con altri acquirenti e venditori sulla nostra DApp."
+        }
+      ]
+    },
+    "YF7bGM9defXtVmKlk2BveQ==": {
+      "translations": [
+        {
+          "translation": "Abilita la messaggistica Origin"
+        }
+      ]
+    },
+    "QgqHU+1OtRn9vYSCzxsbEQ==": {
+      "translations": [
+        {
+          "translation": "In attesa che tu firmi il messaggio # {num}"
+        }
+      ]
+    },
+    "lcY3PG8oxX/nshLGkSkqQg==": {
+      "translations": [
+        {
+          "translation": "L'icona Metamask si trova in alto a destra nella barra degli strumenti del browser."
+        }
+      ]
+    },
+    "Tx81Wy+s9248PR6ud1U10Q==": {
+      "translations": [
+        {
+          "translation": "Congratulazioni! Ora puoi inviare messaggi ad altri utenti su Origin e rimanere aggiornato su tutti i tuoi acquisti e vendite."
+        }
+      ]
+    },
+    "iAVHXTjGQY4bG85GZ3rgbQ==": {
+      "translations": [
+        {
+          "translation": "Hai finito e puoi continuare premendo il pulsante qui sotto."
+        }
+      ]
+    },
+    "inikq8x/L1Z14PL9LSzFzg==": {
+      "translations": [
+        {
+          "translation": "{= Iscriviti} per guadagnare token Cryptocurrency Origin (OGN)."
+        }
+      ]
+    },
+    "1nS1em98gKmMqpesguJylw==": {
+      "translations": [
+        {
+          "translation": "Iscriversi"
+        }
+      ]
+    },
+    "SG+OPZyCrM3ZJpIQSUSkyQ==": {
+      "translations": [
+        {
+          "translation": "{= Iscriviti ora}"
+        }
+      ]
+    },
+    "EnHY9kgzl7/D9IQIpfzW5A==": {
+      "translations": [
+        {
+          "translation": "Iscriviti ora"
+        }
+      ]
+    },
+    "jpSUKepY+jT83nZZ/dSNow==": {
+      "translations": [
+        {
+          "translation": "Guadagni della campagna"
+        }
+      ]
+    },
+    "6MBFCcAVLGs1DIGR8/ZPIQ==": {
+      "translations": [
+        {
+          "translation": "Pagate al termine della campagna"
+        }
+      ]
+    },
+    "8M4U4PrythJps9u8JfIWRQ==": {
+      "translations": [
+        {
+          "translation": "Non vedi i tuoi guadagni? Assicurati di pubblicare le tue modifiche."
+        }
+      ]
+    },
+    "fP45W6xW5ewpvWlx+grWwA==": {
+      "translations": [
+        {
+          "translation": "Annulla"
+        }
+      ]
+    },
+    "UJ8EZSteGy0rnmvBIah+UA==": {
+      "translations": [
+        {
+          "translation": "Ok"
+        }
+      ]
+    },
+    "vK6uEfoyzMBla2soqGDt/Q==": {
+      "translations": [
+        {
+          "translation": "Crop"
+        }
+      ]
+    },
+    "eLB7QeERmKNpSpshEiv1mw==": {
+      "translations": [
+        {
+          "translation": "Rimuovere"
+        }
+      ]
+    },
+    "cacya5OYjiwSsUsuTN7hYQ==": {
+      "translations": [
+        {
+          "translation": "Il tuo browser non supporta il tag video."
+        }
+      ]
+    },
+    "/ADcoKIBKOrEQaYJdXWIFQ==": {
+      "translations": [
+        {
+          "translation": "Copia e apri l'app"
+        }
+      ]
+    },
+    "ad/hbXUYWStNfCtS8DbQUQ==": {
+      "translations": [
+        {
+          "translation": "Forza del Profilo"
+        }
+      ]
+    },
+    "4XGwGx5rPn9fmcBQUx4o8w==": {
+      "translations": [
+        {
+          "translation": "Errore: vedi la console per i dettagli"
+        }
+      ]
+    },
+    "LeqAwNGdlXUL8rokk73C8g==": {
+      "translations": [
+        {
+          "translation": "Recensioni di questo venditore"
+        }
+      ]
+    },
+    "jwOObFz9eurn166XgvA7KQ==": {
+      "translations": [
+        {
+          "translation": "Recensioni di questo utente"
+        }
+      ]
+    },
+    "5bnjo+PrKtH3RDx1gvQEIQ==": {
+      "translations": [
+        {
+          "translation": "Utente senza nome"
+        }
+      ]
+    },
+    "YvRLXVAElsp/GcvlIdQxeQ==": {
+      "translations": [
+        {
+          "translation": "Leggi di più"
+        }
+      ]
+    },
+    "4b2jW7VoOq0mSpln/V61BA==": {
+      "translations": [
+        {
+          "translation": "Invia"
+        }
+      ]
+    },
+    "7X7jI5Dg72byWiXktbTpDA==": {
+      "translations": [
+        {
+          "translation": "Hai acquistato un annuncio"
+        }
+      ]
+    },
+    "3PNfoS0WxC5afEsXNhg0ZQ==": {
+      "translations": [
+        {
+          "translation": "Hai accettato un'offerta"
+        }
+      ]
+    },
+    "bgvxo1HEzv4TqWOpIZcjKw==": {
+      "translations": [
+        {
+          "translation": "Hai completato una transazione"
+        }
+      ]
+    },
+    "+rMtD607G7UPpuC/Gh+VRA==": {
+      "translations": [
+        {
+          "translation": "Hai ritirato un'offerta"
+        }
+      ]
+    },
+    "R4DxxKbi2zzfK5Rc0R2DUg==": {
+      "translations": [
+        {
+          "translation": "Hai contestato un'offerta"
+        }
+      ]
+    },
+    "CVbGw4JkzmasQrRV05U4gA==": {
+      "translations": [
+        {
+          "translation": "Hai creato un annuncio"
+        }
+      ]
+    },
+    "U3gSxf+/41xWyGGG3WD6Sw==": {
+      "translations": [
+        {
+          "translation": "Hai aggiornato un annuncio"
+        }
+      ]
+    },
+    "nT5QRZqhy9IyO2A1Lc1+fw==": {
+      "translations": [
+        {
+          "translation": "Hai aggiornato il tuo profilo"
+        }
+      ]
+    },
+    "UDE8w4e6AOVqtrnFg59OwQ==": {
+      "translations": [
+        {
+          "translation": "Errore durante il caricamento dello stato del wallet"
+        }
+      ]
+    },
+    "jKdT19A7+5WJW++AhjaFfA==": {
+      "translations": [
+        {
+          "translation": "Nessun portafoglio rilevato"
+        }
+      ]
+    },
+    "64gtsUvYRuiC8+Bn/HeEDw==": {
+      "translations": [
+        {
+          "translation": "Il tuo portafoglio non ha fondi"
+        }
+      ]
+    },
+    "ffjzURZO6ML0U2uAKJpLGw==": {
+      "translations": [
+        {
+          "translation": "Si prega di passare MetaMask a {network}"
+        }
+      ]
+    },
+    "WczyPY+IQGu/be2ckvY0IA==": {
+      "translations": [
+        {
+          "translation": "Hai rifiutato di firmare la transazione"
+        }
+      ]
+    },
+    "z6E8AIdzn6jDySQTVZ5+aA==": {
+      "translations": [
+        {
+          "translation": "Errore di transazione. Vedere la console per i dettagli."
+        }
+      ]
+    },
+    "l/Mt3Ii9rDA4/tziUA7X1A==": {
+      "translations": [
+        {
+          "translation": "Offerta collocata"
+        }
+      ]
+    },
+    "2B3r4pIiatO5FYIP9E3T0Q==": {
+      "translations": [
+        {
+          "translation": "Offerta accettata"
+        }
+      ]
+    },
+    "4fM9eZbUqZ66bd6SkzCNUA==": {
+      "translations": [
+        {
+          "translation": "Vendita completata"
+        }
+      ]
+    },
+    "HZDpiKkHU/e1JkAR8jEbkw==": {
+      "translations": [
+        {
+          "translation": "Disputa iniziata"
+        }
+      ]
+    },
+    "j2iAa98O0Kq9r9ET5w6Puw==": {
+      "translations": [
+        {
+          "translation": "Sentenza Emessa"
+        }
+      ]
+    },
+    "Sz9bMhbOlfg3eAr2j7K7ew==": {
+      "translations": [
+        {
+          "translation": "Conferma la transazione"
+        }
+      ]
+    },
+    "iKfdvkoOrjcLeiBJ9a4vQg==": {
+      "translations": [
+        {
+          "translation": "Si prega di confermare questa transazione in {provider}"
+        }
+      ]
+    },
+    "ODAoTKgsu2qyv4M2OMJP+g==": {
+      "translations": [
+        {
+          "translation": "Errore - vedi console"
+        }
+      ]
+    },
+    "hlx2chxb1wXEwp0V+48VsA==": {
+      "translations": [
+        {
+          "translation": "Scrivendo nella blockchain."
+        }
+      ]
+    },
+    "VaQrM/SpyUJoSj46yEzKXQ==": {
+      "translations": [
+        {
+          "translation": "Questa operazione potrebbe richiedere un minuto."
+        }
+      ]
+    },
+    "k+DOmsxpC6olp+f7YTifpg==": {
+      "translations": [
+        {
+          "translation": "In attesa di conferma."
+        }
+      ]
+    },
+    "NTDlcv5byJHU2e2ibIBDag==": {
+      "translations": [
+        {
+          "translation": "Indirizzo ETH"
+        }
+      ]
+    },
+    "aYT951Z+6RBjTZE3Jg5tmw==": {
+      "translations": [
+        {
+          "translation": "Prenotato"
+        }
+      ]
+    },
+    "uQ4CZ5r/l04HK4ww9kJe9g==": {
+      "translations": [
+        {
+          "translation": "Non disponibile"
+        }
+      ]
+    },
+    "4l5fTgfrjh0H1k93n0Z2Yg==": {
+      "translations": [
+        {
+          "translation": "Benvenuto su Origin Beta! Origin è un marketplace decentralizzato che funziona in modo leggermente diverso rispetto alla maggior parte delle app."
+        }
+      ]
+    },
+    "KUTOlStBC3mnQChZ/HbOfg==": {
+      "translations": [
+        {
+          "translation": "La piattaforma è in modalità Beta, ma tutte le transazioni sono reali e utilizziamo ETH."
+        }
+      ]
+    },
+    "afFV4fdQM5Cn1ojptvnUwQ==": {
+      "translations": [
+        {
+          "translation": "Please verify your {=identity} so other buyers and sellers know who you are."
+        }
+      ]
+    },
+    "KDRf8/y09hl8uNtTcYT4bg==": {
+      "translations": [
+        {
+          "translation": "identity"
+        }
+      ]
+    },
+    "OJOJCYDwaeNFYLRD9LpYjw==": {
+      "translations": [
+        {
+          "translation": "Don't forget to enable {=Origin Messaging} so you can communicate with other users. It's free."
+        }
+      ]
+    },
+    "TkYhUNXqK8qjP6JBVTzWDg==": {
+      "translations": [
+        {
+          "translation": "Origin Messaging"
+        }
+      ]
+    },
+    "DM97lxszR6kNQg6jXs0vjg==": {
+      "translations": [
+        {
+          "translation": "If you have any questions or need to dispute a transaction, {=let us know} ."
+        }
+      ]
+    },
+    "aOrOr85BD9OMqCaqeGLoVQ==": {
+      "translations": [
+        {
+          "translation": "let us know"
+        }
+      ]
+    },
+    "EbCUtytNEBvHpMUozUtwmQ==": {
+      "translations": [
+        {
+          "translation": "Ho capito."
+        }
+      ]
+    },
+    "Kiq4v7lxOraNMcGSuV03fQ==": {
+      "translations": [
+        {
+          "translation": "Origin consente agli acquirenti e ai venditori di effettuare transazioni senza intermediari utilizzando la blockchain di Ethereum e IPFS."
+        }
+      ]
+    },
+    "B9JVfJwAydDAD9972+O7GA==": {
+      "translations": [
+        {
+          "translation": "Stai attualmente utilizzando Origin Beta su: {networkName}."
+        }
+      ]
+    },
+    "gwPeffiBc/c3/tgXpfwdJQ==": {
+      "translations": [
+        {
+          "translation": "Avvisi importanti"
+        }
+      ]
+    },
+    "axOOkZLBs4P1DATohXZpyg==": {
+      "translations": [
+        {
+          "translation": "Found a bug or have feedback? Send an email to {=[SupportEmail]} , open an issue on {=GitHub} or post in our #bug-reports channel on {=Discord} ."
+        }
+      ]
+    },
+    "WXEUY0b8xIYw6ctSshzrUA==": {
+      "translations": [
+        {
+          "translation": "{SupportEmail}"
+        }
+      ]
+    },
+    "d/zjx0QiqsSKcmp3VNkGbQ==": {
+      "translations": [
+        {
+          "translation": "GitHub"
+        }
+      ]
+    },
+    "lX/Lgd6k+hZxqbW544UIbw==": {
+      "translations": [
+        {
+          "translation": "Discord"
+        }
+      ]
+    },
+    "B8tUH76/HTCaTj1p9i2Qqg==": {
+      "translations": [
+        {
+          "translation": "Termini"
+        }
+      ]
+    },
+    "dFXfY28mWQJKgKM6uIHqsQ==": {
+      "translations": [
+        {
+          "translation": "Privacy"
+        }
+      ]
+    },
+    "gRyXn/kmXsDGzbnnfoe09A==": {
+      "translations": [
+        {
+          "translation": "Politica di Utilizzo Accettabile"
         }
       ]
     },
     "k2EiJaPGLnYsYgSeb0efig==": {
       "translations": [
         {
-          "translation": "Visita il nostro sito web"
+          "translation": "Ulteriori informazioni su Origin"
+        }
+      ]
+    },
+    "So52/pjUZQ+SOU0tAAvKTw==": {
+      "translations": [
+        {
+          "translation": "Crea il tuo Marketplace"
         }
       ]
     },
     "KuNLu1gPpB8/96R5zz8B9Q==": {
       "translations": [
         {
-          "translation": "Acquisto"
+          "translation": "Acquista"
         }
       ]
     },
     "w/hcQFMC5CWGdGFhaYJXpw==": {
       "translations": [
         {
+          "translation": "Aggiungi Elenco"
+        }
+      ]
+    },
+    "zUWKqrHlOSVXNTx3ro3MzQ==": {
+      "translations": [
+        {
+          "translation": "Guadagna Token Origin Free oggi"
+        }
+      ]
+    },
+    "QrtbSmt3JHYzJb4uZ++dDw==": {
+      "translations": [
+        {
+          "translation": "Partecipa alle nostre campagne e completa le attività sulla nostra DApp per ottenere i Token Origin."
+        }
+      ]
+    },
+    "ASi+rLNm1e3O0p/vAQDCWg==": {
+      "translations": [
+        {
+          "translation": "Vai"
+        }
+      ]
+    },
+    "N0aJrKPoNKxjFd5sIupLCQ==": {
+      "translations": [
+        {
+          "translation": "Questa pagina è stata tradotta automaticamente, vedi alcuni errori?"
+        }
+      ]
+    },
+    "LrotBDVInKIAGul78ZIkwQ==": {
+      "translations": [
+        {
+          "translation": "Aiuta a tradurre"
+        }
+      ]
+    },
+    "xIrCn6YhZw1NfC2ar0MD4Q==": {
+      "translations": [
+        {
+          "translation": "Informazioni sui Token Origin"
+        }
+      ]
+    },
+    "GwcDe9CcWWasPietMqdHww==": {
+      "translations": [
+        {
+          "translation": "{= Panoramica} {= I token di origine sono token ERC-20 che vengono utilizzati su DApp e piattaforma Origin. I token di origine possono essere utilizzati per premiare gli operatori di marketplace, i creatori di DApp, gli utenti, gli sviluppatori e / o altri che acquistano, vendono e contribuiscono a Origin.}"
+        }
+      ]
+    },
+    "nJke93V/TKDxmDaxzZGitw==": {
+      "translations": [
+        {
+          "translation": "Panoramica"
+        }
+      ]
+    },
+    "i0F86KYzT4Niw4JKLm/qkw==": {
+      "translations": [
+        {
+          "translation": "I Token di Origin sono token ERC-20 che vengono utilizzati su DApp e piattaforma Origin. I token di Origin possono essere utilizzati per premiare gli operatori del mercato, i creatori di DApp, gli utenti, gli sviluppatori e / o altri che acquistano, vendono e contribuiscono a Origin."
+        }
+      ]
+    },
+    "YStilTZWkt3L9DlXs8HFYQ==": {
+      "translations": [
+        {
+          "translation": "{= Per cosa vengono utilizzati i token di origine?} {= Boosting} {= I venditori possono utilizzare i token di origine per aumentare le proprie inserzioni e ottenere una maggiore visibilità su DApp Origin o su future DApp di terze parti. Gli annunci con maggiore visibilità vengono mostrati più spesso agli acquirenti e hanno maggiori probabilità di essere venduti con successo. DApps guadagna i token di origine dai venditori quando completano con successo le vendite con Boost.}"
+        }
+      ]
+    },
+    "RHhTbNgtz6ZMiFn8b4AEiA==": {
+      "translations": [
+        {
+          "translation": "A cosa servono i Token di Origin?"
+        }
+      ]
+    },
+    "2bGXNtBOZfDBlzQhNYVE2A==": {
+      "translations": [
+        {
+          "translation": "Boost"
+        }
+      ]
+    },
+    "L8E7ZEtxTffC6yooVS4Ucw==": {
+      "translations": [
+        {
+          "translation": "I venditori possono utilizzare i Token di Origin per potenziare le proprie inserzioni e ottenere una maggiore visibilità su DApp Origin o su future DApp di terze parti. Gli annunci con maggiore visibilità vengono mostrati più spesso agli acquirenti e hanno maggiori probabilità di essere venduti con successo. Le DApp guadagnano i token di Origin dai venditori quando completano con successo le vendite con Boost."
+        }
+      ]
+    },
+    "WMwhtycSMMCEW+BSsx/KAg==": {
+      "translations": [
+        {
+          "translation": "{= Referral Rewards} {= Prossimamente}"
+        }
+      ]
+    },
+    "Ecsu8evsCa6+mCp5FFJP5Q==": {
+      "translations": [
+        {
+          "translation": "Retribuzioni di affiliazione"
+        }
+      ]
+    },
+    "MAZJoR5QhDcB5qn6u1661A==": {
+      "translations": [
+        {
+          "translation": "Prossimamente"
+        }
+      ]
+    },
+    "gtMBWfRfKMIhVz+1ALiI4Q==": {
+      "translations": [
+        {
+          "translation": "{= Governance della piattaforma} {= Prossimamente}"
+        }
+      ]
+    },
+    "Sdh1iGlXwAq8qpv2Jw9eiQ==": {
+      "translations": [
+        {
+          "translation": "Governance della Piattaforma"
+        }
+      ]
+    },
+    "IRc9jeCD4UzlZo+esRqrRw==": {
+      "translations": [
+        {
+          "translation": "Prossimamente"
+        }
+      ]
+    },
+    "7o+KdiD481Rnhy9jrb6mOQ==": {
+      "translations": [
+        {
+          "translation": "{= Dove posso acquistare i token di origine?} {= Scambi} {= Durante la beta di Mainnet, i token di origine non saranno disponibili su nessuna piattaforma. Dopo la chiusura di Mainnet Beta, pubblicheremo un elenco di scambi approvati in cui è possibile acquistare i token di origine da utilizzare sulla piattaforma.}"
+        }
+      ]
+    },
+    "1uA8qKqQWczafpiu60Vsaw==": {
+      "translations": [
+        {
+          "translation": "Dove posso acquistare i Token di Origin?"
+        }
+      ]
+    },
+    "Xxu13cwEVB4lUJQ1ddpUUw==": {
+      "translations": [
+        {
+          "translation": "Exchange"
+        }
+      ]
+    },
+    "YdD4SWxlipe6jvGHdl9Q4w==": {
+      "translations": [
+        {
+          "translation": "Durante la versione beta sulla Mainnet, i token di Origin non saranno listati in nessun exchange. Dopo la chiusura della versione Beta sulla Mainnet, pubblicheremo un elenco di exchange approvati in cui sarà possibile acquistare e vendere i token di Origin che potrete utilizzare sulla piattaforma."
+        }
+      ]
+    },
+    "6S2bnqF5VoGd1HyPLrOJ9Q==": {
+      "translations": [
+        {
+          "translation": "Si prega di aggiornare la pagina"
+        }
+      ]
+    },
+    "xI4Hor+GVoaMYqnflEKBCQ==": {
+      "translations": [
+        {
+          "translation": "{= Caricamento} {= Attendere per favore}"
+        }
+      ]
+    },
+    "J2mgIwRLF/KI7IomZlReeA==": {
+      "translations": [
+        {
+          "translation": "Caricamento"
+        }
+      ]
+    },
+    "kDg1DNY4vTf/RpzQGpTqWw==": {
+      "translations": [
+        {
+          "translation": "Attendere prego"
+        }
+      ]
+    },
+    "3qxbOl/o9sGDgVAyMFT7cQ==": {
+      "translations": [
+        {
+          "translation": "Seleziona"
+        }
+      ]
+    },
+    "TeGDsV+ClksE6cndLEwsYw==": {
+      "translations": [
+        {
+          "translation": "Aggiorniamo la tua inserzione"
+        }
+      ]
+    },
+    "nbRMtgeidlTvoFVOSmGxDw==": {
+      "translations": [
+        {
+          "translation": "Aggiorna il tipo di annuncio"
+        }
+      ]
+    },
+    "TJEBcSvM6okOHKIkCn895g==": {
+      "translations": [
+        {
+          "translation": "Che tipo di annuncio desideri creare?"
+        }
+      ]
+    },
+    "BFFySSGl3keiaQSJJ9mLVg==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "AE1bc3na36ja+05GQjJpcA==": {
+      "translations": [
+        {
+          "translation": "La categoria è richiesta"
+        }
+      ]
+    },
+    "hO2MefBe3pTJSJ6EhgGMRg==": {
+      "translations": [
+        {
           "translation": "Aggiungi un annuncio"
+        }
+      ]
+    },
+    "BOEIRlbRXuQ3sec1umLfsw==": {
+      "translations": [
+        {
+          "translation": "Passaggio {step}"
+        }
+      ]
+    },
+    "T4hP+Pz9YaypalU2fcY6fQ==": {
+      "translations": [
+        {
+          "translation": "Fornisci i dettagli dell'inserzione"
+        }
+      ]
+    },
+    "y65E1632h+J2j0bzz9JlvA==": {
+      "translations": [
+        {
+          "translation": "Si prega di correggere gli errori qui sotto..."
+        }
+      ]
+    },
+    "N4zHAa9d+D9/d5DR/VX8fw==": {
+      "translations": [
+        {
+          "translation": "Titolo"
+        }
+      ]
+    },
+    "o1sCYyiIyp91GJ4c+D+IGw==": {
+      "translations": [
+        {
+          "translation": "Descrizione"
+        }
+      ]
+    },
+    "RNXQtJNfSTKosZ8tt7Uhkg==": {
+      "translations": [
+        {
+          "translation": "Seleziona le foto"
+        }
+      ]
+    },
+    "6FcU7DSqJ6OEWN3FQ7I8+g==": {
+      "translations": [
+        {
+          "translation": "{= Tenere premuto 'comando' (⌘) per selezionare più immagini.} {= Massimo 10 immagini per elenco.} {= La prima immagine sarà principale - trascina le immagini per riordinarle.} {= Proporzioni consigliate è 4: 3 }"
+        }
+      ]
+    },
+    "jyiI/1KtAEeT6GUNTqUwQQ==": {
+      "translations": [
+        {
+          "translation": "Tenere premuto \"command\" (⌘) per selezionare più immagini."
+        }
+      ]
+    },
+    "C57QcRF+iWBp2ulYlEf3cQ==": {
+      "translations": [
+        {
+          "translation": "Massimo di 10 immagini per annuncio."
+        }
+      ]
+    },
+    "S65qVcS0LFiS3FZBkFRFIw==": {
+      "translations": [
+        {
+          "translation": "La prima immagine sarà quella principale - trascinare e rilasciare immagini per riordinarle."
+        }
+      ]
+    },
+    "NBkmGjaTiM8vyyHeArlyVQ==": {
+      "translations": [
+        {
+          "translation": "Le proporzioni consigliate sono 4: 3"
+        }
+      ]
+    },
+    "rtCdERSNcNXuc+AAqIqNDQ==": {
+      "translations": [
+        {
+          "translation": "Indietro"
+        }
+      ]
+    },
+    "6aBoGQUr/5UWzMwm8U2nZQ==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "+y0oq3lzR/a/W5VOUiqhSw==": {
+      "translations": [
+        {
+          "translation": "{=Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
+        }
+      ]
+    },
+    "F+QNKwb7kASCs7SAgAmYXQ==": {
+      "translations": [
+        {
+          "translation": "Aggiungi dettagli all'inserzione"
+        }
+      ]
+    },
+    "0ctXwv+dP6jEEWKOPv3BEA==": {
+      "translations": [
+        {
+          "translation": "Il titolo è richiesto"
+        }
+      ]
+    },
+    "JwgjElhIfEX7/b25EL1IzA==": {
+      "translations": [
+        {
+          "translation": "Titolo è troppo breve"
+        }
+      ]
+    },
+    "zufGz2cZkzguKJKY9V2Khg==": {
+      "translations": [
+        {
+          "translation": "Il titolo è troppo lungo"
+        }
+      ]
+    },
+    "yiygv8uC78unCYSHbax9eA==": {
+      "translations": [
+        {
+          "translation": "La descrizione è obbligatoria"
+        }
+      ]
+    },
+    "tKwTKrHrCx3N6r44IGkiuA==": {
+      "translations": [
+        {
+          "translation": "La descrizione è troppo corta"
+        }
+      ]
+    },
+    "3W9eRi41Z7uPMb8mRXYPwA==": {
+      "translations": [
+        {
+          "translation": "La descrizione è troppo lunga"
+        }
+      ]
+    },
+    "aMGcdKcKpRdEpQbp3Ba1oA==": {
+      "translations": [
+        {
+          "translation": "Rivedi il tuo annuncio"
+        }
+      ]
+    },
+    "7n8lvqv++QH2CB5KvxdLZg==": {
+      "translations": [
+        {
+          "translation": "Titolo"
+        }
+      ]
+    },
+    "hNSNWzh7R4Uerr0O/rJ9Cw==": {
+      "translations": [
+        {
+          "translation": "Categoria"
+        }
+      ]
+    },
+    "F4BKFWWRbyV/cfzRZn+GKg==": {
+      "translations": [
+        {
+          "translation": "Descrizione"
+        }
+      ]
+    },
+    "1SWB7U53C4UgGwRXcrKTEw==": {
+      "translations": [
+        {
+          "translation": "Fotografie"
+        }
+      ]
+    },
+    "p47Cw8eNUmws809ltOX5wQ==": {
+      "translations": [
+        {
+          "translation": "Nessuna foto"
+        }
+      ]
+    },
+    "YiV0mg8J2EqbWfBune3OHA==": {
+      "translations": [
+        {
+          "translation": "Fatto"
+        }
+      ]
+    },
+    "LOFIZ11Y8GW1Zlc1RtQIgw==": {
+      "translations": [
+        {
+          "translation": "{=Cosa succede poi?} Quando invii questo annuncio, ti verrà chiesto di confermare la transazione in MetaMask. Gli acquirenti saranno quindi in grado di vedere l'inserzione e fare offerte."
+        }
+      ]
+    },
+    "n7wNRm92mE1K2r34Kwk0HQ==": {
+      "translations": [
+        {
+          "translation": "Cosa succede dopo?"
+        }
+      ]
+    },
+    "O1X6MM+wCK4hfwlb0R1FQg==": {
+      "translations": [
+        {
+          "translation": "Passaggio {create.details.hourly.step}"
+        }
+      ]
+    },
+    "mPHsV3ZeCl9i47gEQD6UoA==": {
+      "translations": [
+        {
+          "translation": "Modifica disponibilità e prezzi"
+        }
+      ]
+    },
+    "QxBrlISY6Qt5QK4v9Dycag==": {
+      "translations": [
+        {
+          "translation": "Si prega di correggere gli errori qui sotto..."
+        }
+      ]
+    },
+    "USE0uC/WTidlp9nO06mAKQ==": {
+      "translations": [
+        {
+          "translation": "Indietro"
+        }
+      ]
+    },
+    "h7IT99DnDlrG3h3IYZRUlw==": {
+      "translations": [
+        {
+          "translation": "Anteprima"
+        }
+      ]
+    },
+    "riDmAhG5FDBLDCbTomrAYA==": {
+      "translations": [
+        {
+          "translation": "Fare clic sul calendario per inserire i prezzi e le informazioni sulla disponibilità. Per selezionare più intervalli di tempo, fai clic sullo slot temporale iniziale e trascina fino a quello finale."
+        }
+      ]
+    },
+    "bhJvCq3wWgIxEba/0Vz6Eg==": {
+      "translations": [
+        {
+          "translation": "Inizio"
+        }
+      ]
+    },
+    "SZYKrG3AnoNvLdBXDvORWQ==": {
+      "translations": [
+        {
+          "translation": "Fine"
+        }
+      ]
+    },
+    "Vy7sK/HUnzuHwBwQR7IcwQ==": {
+      "translations": [
+        {
+          "translation": "Disponibile"
+        }
+      ]
+    },
+    "i1wODftyG2G5m4WrAqm6bQ==": {
+      "translations": [
+        {
+          "translation": "Si"
+        }
+      ]
+    },
+    "zG5BYwnQJS+D6wM97UlKKA==": {
+      "translations": [
+        {
+          "translation": "No"
+        }
+      ]
+    },
+    "ZIZrAMI/4IMftVSxFaUmjA==": {
+      "translations": [
+        {
+          "translation": "Prezzi personalizzati"
+        }
+      ]
+    },
+    "fOOrfyqIzHoDPzYveIfm2w==": {
+      "translations": [
+        {
+          "translation": "Salva"
+        }
+      ]
+    },
+    "f0wHNxTzIoEcxc0zQvqerg==": {
+      "translations": [
+        {
+          "translation": "{= Hai 0 OGN nel tuo portafoglio.} {= Una volta acquisito un OGN, potrai potenziare il tuo elenco.} {= Ulteriori informazioni}"
+        }
+      ]
+    },
+    "s63cGVY8c2v9cd9DFKWTNw==": {
+      "translations": [
+        {
+          "translation": "Hai 0 {=OGN} nel tuo portafoglio."
+        }
+      ]
+    },
+    "ObL7sfTdiNVgNDUh3L473g==": {
+      "translations": [
+        {
+          "translation": "OGN"
+        }
+      ]
+    },
+    "Rq5qj1KA6NC9wA9dYlQhuA==": {
+      "translations": [
+        {
+          "translation": "Una volta acquisito qualche OGN, potrai dare boost alla tua inserzione."
+        }
+      ]
+    },
+    "1bLRt3UQm/BD/KE8lGl6Tg==": {
+      "translations": [
+        {
+          "translation": "{=Ulteriori informazioni}"
+        }
+      ]
+    },
+    "UCqpPb9HUCdDPK8PVNoing==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "MKtD2IUm6q0tNgzVNc1Dmg==": {
+      "translations": [
+        {
+          "translation": "Premium"
+        }
+      ]
+    },
+    "VYOEDKnwV8gTpWz1oC49nw==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione otterrà la migliore visibilità."
+        }
+      ]
+    },
+    "DVk5nEtiS53RISqwMyik4w==": {
+      "translations": [
+        {
+          "translation": "Alto"
+        }
+      ]
+    },
+    "bfw9ucLZfQAABtwix4GiTA==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione otterrà visibilità sopra la media."
+        }
+      ]
+    },
+    "BIJdlxSDO8YXBFa1bdjM0Q==": {
+      "translations": [
+        {
+          "translation": "Medium (consigliato)"
+        }
+      ]
+    },
+    "ikpZAn8CWIjfpQuegSxzlg==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione otterrà visibilità media."
+        }
+      ]
+    },
+    "Z/fYz1c3EvphoMJjKwN7OQ==": {
+      "translations": [
+        {
+          "translation": "Basso"
+        }
+      ]
+    },
+    "f9TtFygZLuPgBdPqVZjnsw==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione otterrà visibilità sotto la media."
+        }
+      ]
+    },
+    "ZQzbdcmmWm0a7hbHALXxKg==": {
+      "translations": [
+        {
+          "translation": "Nessuno"
+        }
+      ]
+    },
+    "vPWwkfUC6Qd/085WZq2ubg==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione otterrà visibilità molto bassa."
+        }
+      ]
+    },
+    "XooRcxaiD87mvelZppTDhQ==": {
+      "translations": [
+        {
+          "translation": "Potenzia la tua inserzione"
+        }
+      ]
+    },
+    "xG2ima+L2iJfrUt1xqdVgQ==": {
+      "translations": [
+        {
+          "translation": "Puoi potenziare e dare un boost alla tua inserzione per ottenere una maggiore visibilità nella DApp di Origin. Più acquirenti vedranno il tuo annuncio, il che aumenta le possibilità di una vendita rapida e di successo."
+        }
+      ]
+    },
+    "kscNc0rAVSIEomcgmPq7bA==": {
+      "translations": [
+        {
+          "translation": "{= Informazioni sulla visibilità} L'origine ordina e visualizza gli elenchi in base a pertinenza, recency e livello di incremento. Gli annunci con visibilità più elevata vengono mostrati agli acquirenti più spesso. {= Token di origine} OGN è un token ERC-20 utilizzato per incentivi e governance sulla piattaforma Origin. Gli usi futuri di OGN potrebbero includere premi di referenza, incentivi alla reputazione, prevenzione dello spam, premi per sviluppatori e governance della piattaforma. {= Ulteriori informazioni}"
+        }
+      ]
+    },
+    "5tXXwsHR3cFyTUxebdo/TA==": {
+      "translations": [
+        {
+          "translation": "A proposito di Visibilità"
+        }
+      ]
+    },
+    "9gnWoajmSNKs8bXQsuaIeA==": {
+      "translations": [
+        {
+          "translation": "Token di Origin"
+        }
+      ]
+    },
+    "7FwwGMlpFP9xRfTitbG58w==": {
+      "translations": [
+        {
+          "translation": "{=Ulteriori informazioni}"
+        }
+      ]
+    },
+    "UBWmrwwWC7xV44OHJj2pTg==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "0GEIzMCv8QRDTl4rftCvKQ==": {
+      "translations": [
+        {
+          "translation": "Livello di aumento (all'ora)"
+        }
+      ]
+    },
+    "ajMq77c6lEYIxaipqASkOw==": {
+      "translations": [
+        {
+          "translation": "Gli incrementi sono sempre calcolati e addebitati in OGN. {= Ulteriori informazioni}"
+        }
+      ]
+    },
+    "tqNFJ6tnyub41HNB9CGxBw==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "kyWPelt19yuvWoFxQKtDZQ==": {
+      "translations": [
+        {
+          "translation": "Importo massimo che sarà speso per aumentare questo elenco. I boost sono sempre in OGN, {= USD è una stima.}"
+        }
+      ]
+    },
+    "k6LcXYqvMDOmVbR18GgyFg==": {
+      "translations": [
+        {
+          "translation": "USD è una stima."
+        }
+      ]
+    },
+    "MHDMB6RUmTj515XS+kI1gg==": {
+      "translations": [
+        {
+          "translation": "Boost è richiesto"
+        }
+      ]
+    },
+    "cyMPk4rzJSLjJxydh9dVZw==": {
+      "translations": [
+        {
+          "translation": "Boost deve essere un numero"
+        }
+      ]
+    },
+    "XEkbF9NnI1TDCslHsTiPOg==": {
+      "translations": [
+        {
+          "translation": "Boost deve essere zero o maggiore"
+        }
+      ]
+    },
+    "27Ow2UUqDzN80/qFwKuagA==": {
+      "translations": [
+        {
+          "translation": "Assicurati di includere le condizioni particolari del tuo affitto qui."
+        }
+      ]
+    },
+    "xasl1V2DrlXF0w5I0r7s2Q==": {
+      "translations": [
+        {
+          "translation": "Prezzo predefinito per Ora"
+        }
+      ]
+    },
+    "R0NSwOq5WRJL4Uit0/kcog==": {
+      "translations": [
+        {
+          "translation": "Il prezzo è sempre in ETH, USD è una stima."
+        }
+      ]
+    },
+    "hZUhDQEf+9hn/KDNJqY9kA==": {
+      "translations": [
+        {
+          "translation": "Orari disponibili standard"
+        }
+      ]
+    },
+    "Gqt08lyE4VtShAgKdMZokA==": {
+      "translations": [
+        {
+          "translation": "Domenica"
+        }
+      ]
+    },
+    "oS2bcoizgT1EyTcNcwlNCw==": {
+      "translations": [
+        {
+          "translation": "Lunedì"
+        }
+      ]
+    },
+    "i7g7MLC48FvLYQP0Ir0bIg==": {
+      "translations": [
+        {
+          "translation": "Martedì"
+        }
+      ]
+    },
+    "MKm/5MDN1FQjJE7AxFfNTg==": {
+      "translations": [
+        {
+          "translation": "Mercoledì"
+        }
+      ]
+    },
+    "JQn1L0abnE4cy8rIon0tPQ==": {
+      "translations": [
+        {
+          "translation": "Giovedì"
+        }
+      ]
+    },
+    "PA5kXM1YLSHma7cgMbtljQ==": {
+      "translations": [
+        {
+          "translation": "Venerdì"
+        }
+      ]
+    },
+    "qi27QvmA7NtNptih1ZgG7w==": {
+      "translations": [
+        {
+          "translation": "Sabato"
+        }
+      ]
+    },
+    "ApWdVpzCY+Eid9Cvcrb/KA==": {
+      "translations": [
+        {
+          "translation": "Fuso orario"
+        }
+      ]
+    },
+    "ISfX2Tir6jQS9xizqOSuIA==": {
+      "translations": [
+        {
+          "translation": "Seleziona le foto"
+        }
+      ]
+    },
+    "HKxVFSE2OX1CYvKImRfZrw==": {
+      "translations": [
+        {
+          "translation": "Il fuso orario è richiesto"
+        }
+      ]
+    },
+    "orj/pqyrSwNcSJ5rzpPkzg==": {
+      "translations": [
+        {
+          "translation": "Il fuso orario è troppo lungo"
+        }
+      ]
+    },
+    "kh91WvP5MrKsaTjaUWzHcQ==": {
+      "translations": [
+        {
+          "translation": "Il prezzo è richiesto"
+        }
+      ]
+    },
+    "U9nCBXU2eOe8CVPQTCTtEw==": {
+      "translations": [
+        {
+          "translation": "Il prezzo deve essere un numero"
+        }
+      ]
+    },
+    "t7vjpACSIJ3fETyxhx15DA==": {
+      "translations": [
+        {
+          "translation": "Il prezzo deve essere maggiore di zero"
+        }
+      ]
+    },
+    "B1hVTCqGsBeFXs0fUYnNwg==": {
+      "translations": [
+        {
+          "translation": "Fuso orario"
+        }
+      ]
+    },
+    "ttxJ16uXKvVyO+pi/N4INw==": {
+      "translations": [
+        {
+          "translation": "Prezzo"
+        }
+      ]
+    },
+    "ufNv3S+wktbn9siw6Ytw8g==": {
+      "translations": [
+        {
+          "translation": "Livello di Boost"
+        }
+      ]
+    },
+    "0CtzPjp/uPSPGXYtTtJi8g==": {
+      "translations": [
+        {
+          "translation": "/ ora"
+        }
+      ]
+    },
+    "r/ZH9kdLh49Y545LVS/Nkw==": {
+      "translations": [
+        {
+          "translation": "Disponibilità"
+        }
+      ]
+    },
+    "si3GOZhOfQ+CSWieJRAPPg==": {
+      "translations": [
+        {
+          "translation": "Step {create.details.fractional.step}"
+        }
+      ]
+    },
+    "8bPBAiupzsZ1ZV+u0c0YAQ==": {
+      "translations": [
+        {
+          "translation": "Data d'inizio"
+        }
+      ]
+    },
+    "LEATVaBXpWNSOks5HDLq2g==": {
+      "translations": [
+        {
+          "translation": "Data di fine"
+        }
+      ]
+    },
+    "zYkJcHqnxHF3sUo4vJwCvw==": {
+      "translations": [
+        {
+          "translation": "Si"
+        }
+      ]
+    },
+    "QXctQVwGqxmWrLeNL+UR3A==": {
+      "translations": [
+        {
+          "translation": "No"
+        }
+      ]
+    },
+    "J0el3EDr/vsUHJtTGnxMzg==": {
+      "translations": [
+        {
+          "translation": "Passaggio {step}"
+        }
+      ]
+    },
+    "a4KERVeW4yfsDcjfY1hciA==": {
+      "translations": [
+        {
+          "translation": "Descrizione"
+        }
+      ]
+    },
+    "VLeBXLo9YjCZvjBUoXecHw==": {
+      "translations": [
+        {
+          "translation": "Prezzo Settimanale Predefinito (da Domenica a Giovedì sera)"
+        }
+      ]
+    },
+    "dux6OsEbP2DZz66V92D8sQ==": {
+      "translations": [
+        {
+          "translation": "Prezzo Week-end Predefinito (Venerdì e Sabato sera)"
+        }
+      ]
+    },
+    "jlefWFM0G2q6WXliPPUUrA==": {
+      "translations": [
+        {
+          "translation": "{=Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
+        }
+      ]
+    },
+    "uic6XiogIbPWsEBJCl9oQQ==": {
+      "translations": [
+        {
+          "translation": "Il prezzo del week-end è richiesto"
+        }
+      ]
+    },
+    "0Jjsr49OFGENCFnKQHde6A==": {
+      "translations": [
+        {
+          "translation": "Il prezzo del week-end deve essere un numero"
+        }
+      ]
+    },
+    "5mkmOQsVrenk575XecSDMA==": {
+      "translations": [
+        {
+          "translation": "Il prezzo del week-end deve essere maggiore di zero"
+        }
+      ]
+    },
+    "nT0M9qAbFnd379S0Kmxyvg==": {
+      "translations": [
+        {
+          "translation": "Rivedi il tuo annuncio"
+        }
+      ]
+    },
+    "Q3jRFjK2+LP8T5zcxXCN2A==": {
+      "translations": [
+        {
+          "translation": "Giorni feriali"
+        }
+      ]
+    },
+    "EUD9J8oz2ZPTZeIebJ0nag==": {
+      "translations": [
+        {
+          "translation": "Week-end"
+        }
+      ]
+    },
+    "ARNhSBqI2w2JdkHRDoU/Ew==": {
+      "translations": [
+        {
+          "translation": "Livello di Boost"
+        }
+      ]
+    },
+    "45VwRk/aiVWEQ2+yAHXeIA==": {
+      "translations": [
+        {
+          "translation": "/ notte"
+        }
+      ]
+    },
+    "H8XhJIXAMIBERHkbp9ERUA==": {
+      "translations": [
+        {
+          "translation": "Livello di aumento (a notte)"
+        }
+      ]
+    },
+    "jB0ZDhUT3nHg+Pe0I8Ydgg==": {
+      "translations": [
+        {
+          "translation": "Numero totale di unità:"
+        }
+      ]
+    },
+    "J/Gu2gnwZe5c9tNKQaU0Qg==": {
+      "translations": [
+        {
+          "translation": "Potenziamento totale richiesto:"
+        }
+      ]
+    },
+    "UBhlfRnsBL2QeLZ9NI9MaQ==": {
+      "translations": [
+        {
+          "translation": "Il tuo boost cap è inferiore all'importo totale necessario per potenziare tutte le tue unità. Una volta raggiunto il limite, le unità rimanenti non verranno potenziate."
+        }
+      ]
+    },
+    "WmFLjnV6U9WkxJDB7zXJBA==": {
+      "translations": [
+        {
+          "translation": "Assicurati di includere qui i dettagli delle varianti di prodotto."
+        }
+      ]
+    },
+    "Vj/aid3BtAiwTrXFhX0Fcg==": {
+      "translations": [
+        {
+          "translation": "Quantità"
+        }
+      ]
+    },
+    "P7p5Bv4g5fmJ1iRlZdnSJA==": {
+      "translations": [
+        {
+          "translation": "Prezzo"
+        }
+      ]
+    },
+    "o/4Cqceg8T/otuBikiMApQ==": {
+      "translations": [
+        {
+          "translation": "(per unità)"
+        }
+      ]
+    },
+    "/KPsAHDllbZyEU3ZL0Wgsg==": {
+      "translations": [
+        {
+          "translation": "Il costo per comprare questo articolo. Il prezzo è sempre in ETH, USD è una stima."
+        }
+      ]
+    },
+    "dTU/jHOAIiBZe5c4n+B9KA==": {
+      "translations": [
+        {
+          "translation": "Prezzo di Vendita"
+        }
+      ]
+    },
+    "Mavu64vvB2L0NTd4aP7jZQ==": {
+      "translations": [
+        {
+          "translation": "Quantità"
+        }
+      ]
+    },
+    "CzUp1ZNtFuIc2N/oRS/cnA==": {
+      "translations": [
+        {
+          "translation": "/ unità"
+        }
+      ]
+    },
+    "tvzc9JxH7jF12bGWxgBqnQ==": {
+      "translations": [
+        {
+          "translation": "Boost Cap"
+        }
+      ]
+    },
+    "otra7itIzW9AZHLupEzr2Q==": {
+      "translations": [
+        {
+          "translation": "{= La tua scheda è stata creata!} {= La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succederà dopo: gli acquirenti ora vedranno il tuo annuncio sul marketplace. Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo. Una volta accettata l'offerta, dovrai soddisfare l'ordine. riceverà il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "zv04vMjoc+u3r4q1bt7R1A==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione è stata creata!"
+        }
+      ]
+    },
+    "aGb4Sr/gKkxCvDv52ZvOcQ==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa accadrà dopo: {= Gli acquirenti ora vedranno il tuo annuncio sul marketplace. Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo. Una volta accettata l'offerta, dovrai eseguire l'ordine . Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "4pV8TLLz6hO8WICuh3ObXQ==": {
+      "translations": [
+        {
+          "translation": "{= Gli acquirenti ora vedranno il tuo annuncio sul marketplace.} {= Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo.} {= Una volta accettata l'offerta, dovrai soddisfare il ordine.} {= Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "Rl661Fcr+bgpn50Oln54jQ==": {
+      "translations": [
+        {
+          "translation": "Gli acquirenti ora vedranno il tuo annuncio sul mercato."
+        }
+      ]
+    },
+    "AfFNJdK9NabTywtkMxIDvw==": {
+      "translations": [
+        {
+          "translation": "Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo."
+        }
+      ]
+    },
+    "SC+yA14d8QpJ7tc3wzY8KA==": {
+      "translations": [
+        {
+          "translation": "Una volta accettata l'offerta, ti sarà richiesto di evadere l'ordine."
+        }
+      ]
+    },
+    "jJ1u/NM5hhK1lJp2CUgbgA==": {
+      "translations": [
+        {
+          "translation": "Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito."
+        }
+      ]
+    },
+    "8hl1Ul3OvNJe/xaog0d3PQ==": {
+      "translations": [
+        {
+          "translation": "Visualizza l'annuncio"
+        }
+      ]
+    },
+    "WF5wiQpoQDKFGmsPdhYcTg==": {
+      "translations": [
+        {
+          "translation": "{= La tua scheda è stata aggiornata!} {= La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succederà dopo: gli acquirenti ora vedranno il tuo annuncio sul marketplace. Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo. Una volta accettata l'offerta, dovrai soddisfare l'ordine. riceverà il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "jjWWeb9WNsLCNZe4iyCB8g==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione è stata aggiornata!"
+        }
+      ]
+    },
+    "0CcI3GADi/MTzFdMlETnhw==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa accadrà dopo: {= Gli acquirenti ora vedranno il tuo annuncio sul marketplace. Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo. Una volta accettata l'offerta, dovrai eseguire l'ordine . Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "Ml76SvqVrEtzaHQ2SoM4JQ==": {
+      "translations": [
+        {
+          "translation": "{= Gli acquirenti ora vedranno il tuo annuncio sul marketplace.} {= Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo.} {= Una volta accettata l'offerta, dovrai soddisfare il ordine.} {= Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito.}"
+        }
+      ]
+    },
+    "53fXPUK5/q2EDCIdZfIbyA==": {
+      "translations": [
+        {
+          "translation": "Gli acquirenti ora vedranno il tuo annuncio sul mercato."
+        }
+      ]
+    },
+    "2G67LZH9s+eKHG1Sj2y8ow==": {
+      "translations": [
+        {
+          "translation": "Quando un acquirente fa un'offerta sul tuo annuncio, puoi scegliere di accettarlo o rifiutarlo."
+        }
+      ]
+    },
+    "SaVgdy0PSIP6B5lc+Ge0VA==": {
+      "translations": [
+        {
+          "translation": "Una volta accettata l'offerta, ti sarà richiesto di evadere l'ordine."
+        }
+      ]
+    },
+    "V6niUZBFQlOalwott29Wrw==": {
+      "translations": [
+        {
+          "translation": "Riceverai il pagamento una volta che l'acquirente confermerà che l'ordine è stato eseguito."
+        }
+      ]
+    },
+    "+h7sHC/I17QA1UrqZTAz/Q==": {
+      "translations": [
+        {
+          "translation": "Caricamento"
+        }
+      ]
+    },
+    "T8gKne+us4nDpTQGNQ8bJA==": {
+      "translations": [
+        {
+          "translation": "Verifica il tuo indirizzo Email"
+        }
+      ]
+    },
+    "c0QHBkLjVu9yvtD4iDg1nQ==": {
+      "translations": [
+        {
+          "translation": "Conferma il tuo indirizzo email nelle Attestazioni."
+        }
+      ]
+    },
+    "4BXZfpHLvTxuvOZU6ZB1SA==": {
+      "translations": [
+        {
+          "translation": "Verifica il tuo profilo Origin"
+        }
+      ]
+    },
+    "efh3HEBtewcly2hpwr/vGw==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo profilo Orign nelle Attestazioni."
+        }
+      ]
+    },
+    "lgPT2mVlQJFyCjK2pqg6+A==": {
+      "translations": [
+        {
+          "translation": "Verifica il tuo Numero di Telefono"
+        }
+      ]
+    },
+    "wJcUHuxk0E95IsWvyIsEkA==": {
+      "translations": [
+        {
+          "translation": "Conferma il tuo numero di telefono nelle Attestazioni."
+        }
+      ]
+    },
+    "FrB+Nm9CDZb0iwO0LjrmVw==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Twitter"
+        }
+      ]
+    },
+    "safqwXZbnd9jMAbIp0ZJkQ==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Twitter nelle Attestazioni."
+        }
+      ]
+    },
+    "vUisCHQyajUJt8rYR/1Lyg==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Airbnb"
+        }
+      ]
+    },
+    "S4hltAKgMaNWmg0utGTD5w==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Airbnb nelle Attestazioni."
+        }
+      ]
+    },
+    "ZC5PsdFmUya8ASfu6HPrqA==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Facebook"
+        }
+      ]
+    },
+    "6EBmG1n3RISN5Lg2yDuF/g==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo Profilo Facebook nelle Attestazioni."
+        }
+      ]
+    },
+    "ykecxKYjdZbltCVsKbHPng==": {
+      "translations": [
+        {
+          "translation": "Crea un annuncio"
+        }
+      ]
+    },
+    "dd/MYLQ0xC5UehafmvRhWw==": {
+      "translations": [
+        {
+          "translation": "Completa con successo l'acquisto di qualsiasi annuncio."
+        }
+      ]
+    },
+    "Jhk6fFImPZIKPw+CjCqmYQ==": {
+      "translations": [
+        {
+          "translation": "Acquista un annuncio"
+        }
+      ]
+    },
+    "BJRWuiGhr2E2UXX+1mW1zQ==": {
+      "translations": [
+        {
+          "translation": "Completa con successo la vendita di qualsiasi annuncio."
+        }
+      ]
+    },
+    "wJvCxFGt/9gion68sV/lYg==": {
+      "translations": [
+        {
+          "translation": "Vendi un Articolo"
+        }
+      ]
+    },
+    "izPJMarYcneaRP9qt6VHYQ==": {
+      "translations": [
+        {
+          "translation": "Vendi un ariticolo nel marketplace"
+        }
+      ]
+    },
+    "MdJY4cf78iP+T/KfBri2YQ==": {
+      "translations": [
+        {
+          "translation": "Invita gli amici"
+        }
+      ]
+    },
+    "oX8s+/5fmxu8zUTtSk30ww==": {
+      "translations": [
+        {
+          "translation": "Chiedi ai tuoi amici di unirsi a Origin con account attivi."
+        }
+      ]
+    },
+    "pItIdILg9g+OtKVLiwQvOg==": {
+      "translations": [
+        {
+          "translation": "Vai"
+        }
+      ]
+    },
+    "xrpUGZhxxRqqIthtfE/BAA==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "qciHWfxjkHcdGFOsAql8BQ==": {
+      "translations": [
+        {
+          "translation": "Guadagnato"
+        }
+      ]
+    },
+    "5dUXwaQm/5UXra8ThxFHfQ==": {
+      "translations": [
+        {
+          "translation": "Campagna di Gennaio 2019"
+        }
+      ]
+    },
+    "VLgoMfdf1OOIusJVHVZpZw==": {
+      "translations": [
+        {
+          "translation": "Gen 2019"
+        }
+      ]
+    },
+    "+mYnEmUrhANzuCQc9B98HA==": {
+      "translations": [
+        {
+          "translation": "Campagna di Febbraio 2019"
+        }
+      ]
+    },
+    "3eZ8IKMmtB76Dag06jgWIw==": {
+      "translations": [
+        {
+          "translation": "Feb 2019"
+        }
+      ]
+    },
+    "XToCRxQ5XKSz2q61DvIBJQ==": {
+      "translations": [
+        {
+          "translation": "Campagna di Marzo 2019"
+        }
+      ]
+    },
+    "SxKtrOTZLfzQixD/wMfwcQ==": {
+      "translations": [
+        {
+          "translation": "Mar 2019"
+        }
+      ]
+    },
+    "ooZThzMGZhUBriS4fp/Rig==": {
+      "translations": [
+        {
+          "translation": "Campagna di Aprile 2019"
+        }
+      ]
+    },
+    "dGbIiE9INRHA+HMtxXovjw==": {
+      "translations": [
+        {
+          "translation": "Apr 2019"
+        }
+      ]
+    },
+    "PGr5EIQul8sc7/OQt/TyAw==": {
+      "translations": [
+        {
+          "translation": "Email e profilo Origin verificati"
+        }
+      ]
+    },
+    "52K5Lj4iHypLOwCGtkKH5g==": {
+      "translations": [
+        {
+          "translation": "2 su 4 attestazioni"
+        }
+      ]
+    },
+    "WtowmMXunhmZxZunExTFxw==": {
+      "translations": [
+        {
+          "translation": "Profilo verificato"
+        }
+      ]
+    },
+    "cnpLd+jN4OwsPzxruTplCA==": {
+      "translations": [
+        {
+          "translation": "Email verificata"
+        }
+      ]
+    },
+    "QBq4/BFCdLrq0DNDl4rwSQ==": {
+      "translations": [
+        {
+          "translation": "Tempo rimasto"
+        }
+      ]
+    },
+    "2Gs8p0O9zMC1EB3GH13g6A==": {
+      "translations": [
+        {
+          "translation": "Ottieni i Token Origin completando le attività riportate di seguito"
+        }
+      ]
+    },
+    "wmQb40obgjwfSR3PJ3S3gQ==": {
+      "translations": [
+        {
+          "translation": "Inizia tra"
+        }
+      ]
+    },
+    "Knou4ElxBFWPWsJIbZVMgw==": {
+      "translations": [
+        {
+          "translation": "Questa campagna non è ancora iniziata"
+        }
+      ]
+    },
+    "JO1VHseitmEDOUDtxCa9wg==": {
+      "translations": [
+        {
+          "translation": "Questa campagna è finita"
+        }
+      ]
+    },
+    "ecv4IbTCLocRwfQW+45MbA==": {
+      "translations": [
+        {
+          "translation": "Campaign"
+        }
+      ]
+    },
+    "p2725zoulIdk3+lavbjmtw==": {
+      "translations": [
+        {
+          "translation": "Tokens earned"
+        }
+      ]
+    },
+    "bgW02lGxcvAKpC6dRqoEXA==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "hVGpV7ERzy5YIu1ZVMKSEQ==": {
+      "translations": [
+        {
+          "translation": "Unisciti a me su Origin e guadagna i token Cryptocurrency Origin (OGN). Origin è un nuovo mercato per comprare e vendere con altri utenti. Guadagna Origin Token quando crei il tuo profilo, invita i tuoi amici e compra e vendi sul mercato."
+        }
+      ]
+    },
+    "M9Vqnn6x7SZ8oK++pJY2pQ==": {
+      "translations": [
+        {
+          "translation": "Unisciti a me su Origin e guadagna i token Cryptocurrency Origin (OGN). Origin è un nuovo mercato per comprare e vendere con altri utenti. Guadagna Origin Token quando crei il tuo profilo, invita i tuoi amici e compra e vendi sul mercato."
+        }
+      ]
+    },
+    "Lh4pGaUC7h8zXIinWwFfCQ==": {
+      "translations": [
+        {
+          "translation": "Invita con il tuo codice"
+        }
+      ]
+    },
+    "aqT/hPAg2m2SKM5VeMp4Gw==": {
+      "translations": [
+        {
+          "translation": "Invia al tuo amico il tuo codice di invito unico."
+        }
+      ]
+    },
+    "GFQlYI4GSu8CrTFxpAZqTg==": {
+      "translations": [
+        {
+          "translation": "Copia codice"
+        }
+      ]
+    },
+    "GKEbT4KEKXxpbVnpjfAKJA==": {
+      "translations": [
+        {
+          "translation": "Copiato"
+        }
+      ]
+    },
+    "E74Qrf+98uryCrNWNzNWjw==": {
+      "translations": [
+        {
+          "translation": "Copia"
+        }
+      ]
+    },
+    "49GWG62Wgbc5Db/cdlOTkA==": {
+      "translations": [
+        {
+          "translation": "Condividi o Tweet"
+        }
+      ]
+    },
+    "RHS3QNznWakBVqh3LxpLsg==": {
+      "translations": [
+        {
+          "translation": "Totale {emailsLength} invio / i dell'invito / i inviato!"
+        }
+      ]
+    },
+    "+BhaVoboQDWnCyFHsoEPTA==": {
+      "translations": [
+        {
+          "translation": "Non posso invitare amici. Per favore riprova più tardi."
+        }
+      ]
+    },
+    "PjQI6hx3eXSs3uFE1Y5Q4A==": {
+      "translations": [
+        {
+          "translation": "Errore durante l'invito di amici. Per favore riprova più tardi."
+        }
+      ]
+    },
+    "y8ZfSw9m4c64sMJW1HmnEA==": {
+      "translations": [
+        {
+          "translation": "Invita via Email"
+        }
+      ]
+    },
+    "HaPE2eDcY04uUukZPTLUQw==": {
+      "translations": [
+        {
+          "translation": "Inserisci gli indirizzi email degli amici che desideri invitare"
+        }
+      ]
+    },
+    "6B15EXjM35Y0iE//tR2UwQ==": {
+      "translations": [
+        {
+          "translation": "Separa gli indirizzi email con una virgola."
+        }
+      ]
+    },
+    "sGU19GHNLvclsLe2y0TIfg==": {
+      "translations": [
+        {
+          "translation": "Invita gli amici"
+        }
+      ]
+    },
+    "o8lruKi5bNlhzFdPPkolUQ==": {
+      "translations": [
+        {
+          "translation": "Formato email errato: {errorEmails}"
+        }
+      ]
+    },
+    "awKHO99GBswNSwKToXmf1g==": {
+      "translations": [
+        {
+          "translation": "Inserisci almeno 1 indirizzo email valido"
+        }
+      ]
+    },
+    "qbja3xI+ynbpMcTuFy+VGA==": {
+      "translations": [
+        {
+          "translation": "Promemoria inviato!"
+        }
+      ]
+    },
+    "Ak5KYZjlkZWnJf/t1gAqZw==": {
+      "translations": [
+        {
+          "translation": "Errore"
+        }
+      ]
+    },
+    "Hwpah78HyVTFCglJ0pIUfA==": {
+      "translations": [
+        {
+          "translation": "Ricorda"
+        }
+      ]
+    },
+    "nBDaGpsKQrlRbAqtA1zH5g==": {
+      "translations": [
+        {
+          "translation": "Contatto"
+        }
+      ]
+    },
+    "NXb3ICr3h1AnNXcUj6aTCg==": {
+      "translations": [
+        {
+          "translation": "Ricompensa"
+        }
+      ]
+    },
+    "5l7gzwYtQf+Vq+tUml4DyQ==": {
+      "translations": [
+        {
+          "translation": "Stato"
+        }
+      ]
+    },
+    "QTQw/Z0GCwwzejDEKhLiQQ==": {
+      "translations": [
+        {
+          "translation": "Non è stata completata l'attivazione dell'utente"
+        }
+      ]
+    },
+    "jhvYbvMES/Ulab6k+ZEVcg==": {
+      "translations": [
+        {
+          "translation": "Ricorda"
+        }
+      ]
+    },
+    "5hCA8hXoU2Eqhes9Dx9BMA==": {
+      "translations": [
+        {
+          "translation": "Inviti in sospeso"
+        }
+      ]
+    },
+    "uWsUjDplwEMjhhlqo1t50Q==": {
+      "translations": [
+        {
+          "translation": "Tieni traccia dei progressi degli amici che si registrano con il tuo codice di invito."
+        }
+      ]
+    },
+    "l88VUqiyI7tOCygCjTchsw==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "jNZTtswQamPR5fqLpuU38Q==": {
+      "translations": [
+        {
+          "translation": "Inviti di successo"
+        }
+      ]
+    },
+    "J3Czs3Rp2eWVTn9lcDxSQQ==": {
+      "translations": [
+        {
+          "translation": "Aiuta i tuoi amici a guadagnare OGN proprio come te."
+        }
+      ]
+    },
+    "k7bhJpKhGKToRTeBeXr0aQ==": {
+      "translations": [
+        {
+          "translation": "Guadagnato"
+        }
+      ]
+    },
+    "78XdBNtdiw/IfKVviDlg9A==": {
+      "translations": [
+        {
+          "translation": "Torna alla Campagna"
+        }
+      ]
+    },
+    "mxHZKBbgLYHiU3xCEEwMtQ==": {
+      "translations": [
+        {
+          "translation": "Invita i tuoi amici su Origin"
+        }
+      ]
+    },
+    "J5wgD0JPj/65X0jioq1CwA==": {
+      "translations": [
+        {
+          "translation": "Ottieni i Token Origin completando le attività riportate di seguito."
+        }
+      ]
+    },
+    "qOAPDvqXmJHUU1aJ5vsucw==": {
+      "translations": [
+        {
+          "translation": "INVIA GLI INVITI"
+        }
+      ]
+    },
+    "VBU0HgQlL4CtXWPBtwuzAA==": {
+      "translations": [
+        {
+          "translation": "TRACCIA GLI INVITI"
+        }
+      ]
+    },
+    "mFCtuJZK+KcGUkKQym20yg==": {
+      "translations": [
+        {
+          "translation": "Benvenuto in Origin Protocol"
+        }
+      ]
+    },
+    "JIAeR5l0zsySvXjhN/LjXg==": {
+      "translations": [
+        {
+          "translation": "Invitato da"
+        }
+      ]
+    },
+    "2jPZ2DnxwxQpSK3roVvLSA==": {
+      "translations": [
+        {
+          "translation": "Il tuo amico {name} ti ha invitato a unirti a Origin"
+        }
+      ]
+    },
+    "8dUMUvTO9y/E2pDMSrgtWw==": {
+      "translations": [
+        {
+          "translation": "Iscriviti e guadagna GRATIS token di Origin"
+        }
+      ]
+    },
+    "fDuELeOXBQ7+DJbX7oyE6Q==": {
+      "translations": [
+        {
+          "translation": "Iscriviti a Origin oggi."
+        }
+      ]
+    },
+    "o8qQ/PN7IXGbYwY+4G8VBw==": {
+      "translations": [
+        {
+          "translation": "sia {firstName} che tu guadagnerete i token Cryptocurrency Origin (OGN)."
+        }
+      ]
+    },
+    "KXy/meBwGaf5yVfEd9HDHQ==": {
+      "translations": [
+        {
+          "translation": "Guadagna token aggiuntivi quando verifichi il tuo profilo, inviti i tuoi amici e compri e vendi su Origin."
+        }
+      ]
+    },
+    "aq5/1FnXv6c/TPNJh+tpEg==": {
+      "translations": [
+        {
+          "translation": "Iscriviti ora"
+        }
+      ]
+    },
+    "tzDkMYn3LmF1aKkySIvtAQ==": {
+      "translations": [
+        {
+          "translation": "Cos'è Origin?"
+        }
+      ]
+    },
+    "6YhgbdYLnjKT4XB+UPkgkA==": {
+      "translations": [
+        {
+          "translation": "Origin è il primo mercato peer-to-peer costruito interamente sulla blockchain"
+        }
+      ]
+    },
+    "CyiodoDeIQn/ar6XbKqt4Q==": {
+      "translations": [
+        {
+          "translation": "Gratuito da utilizzare con commissioni di transazione pari allo 0%"
+        }
+      ]
+    },
+    "s13YMOt7j7kdlx3jc+qggw==": {
+      "translations": [
+        {
+          "translation": "Navigazione e ricerca resistenti alla censura"
+        }
+      ]
+    },
+    "5CBWzDNJNVigCeBUwiJOLw==": {
+      "translations": [
+        {
+          "translation": "Decine di categorie come carte regalo, homesharing, e-commerce e servizi"
+        }
+      ]
+    },
+    "oegZB/dZhQav6NEGEfpaIw==": {
+      "translations": [
+        {
+          "translation": "Cosa sono i Token Origin?"
+        }
+      ]
+    },
+    "qXGCW6AVWNckr8ZZXh0sRA==": {
+      "translations": [
+        {
+          "translation": "I token di criptovaluta Orign (OGN) sono token ERC-20 che possono essere utilizzati sulla piattaforma in molti modi."
+        }
+      ]
+    },
+    "PlCEphvzEyQp/7SnvJWUHg==": {
+      "translations": [
+        {
+          "translation": "I token Origin (OGN) guadagnati sono attualmente bloccati per essere utilizzati nell'app e nella piattaforma Origin. In questo momento non possono essere trasferiti ad altri utenti. In futuro, si prevede che gli OGN saranno sbloccati e trasferibili."
+        }
+      ]
+    },
+    "zQ+amcZcEbrkMHT1gTyR8A==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "SgbXw8gUCvCMRANRfNbZdw==": {
+      "translations": [
+        {
+          "translation": "Boost"
+        }
+      ]
+    },
+    "YFtqoYhKvImJqf0XglUXTw==": {
+      "translations": [
+        {
+          "translation": "I venditori usano gli OGN per promuovere le proprie inserzioni sul marketplace. Questo dà ai loro annunci maggiore visibilità e posizionamento. Gli annunci con OGN hanno maggiori probabilità di essere venduti rapidamente."
+        }
+      ]
+    },
+    "HWTdiJhpW9S+qWAG/3D96g==": {
+      "translations": [
+        {
+          "translation": "Ricompense"
+        }
+      ]
+    },
+    "5vp0hYaYGt8rhy0Z4hKf9w==": {
+      "translations": [
+        {
+          "translation": "L'OGN è una criptovaluta dei premi guadagnata dagli utenti Origin. Guadagna dei premi quando verifichi il tuo account o inviti i tuoi amici a unirsi a Origin. Anche ottenere OGN come rimborso quando acquisti e vendi."
+        }
+      ]
+    },
+    "NK8yEk6S/zuO701X4M+TMQ==": {
+      "translations": [
+        {
+          "translation": "Inizia a guadagnare token Origin in pochi minuti"
+        }
+      ]
+    },
+    "OxT7PzUj7b+bcTIHNpm2Ug==": {
+      "translations": [
+        {
+          "translation": "Collega il tuo portafoglio di criptovalute a Origin"
+        }
+      ]
+    },
+    "QTWkl7l3Zq6SNON+xjM6fg==": {
+      "translations": [
+        {
+          "translation": "Iscriviti e verifica il tuo account e l'idoneità"
+        }
+      ]
+    },
+    "EPa2KOi7VdqeXU4rahzx/g==": {
+      "translations": [
+        {
+          "translation": "Inizia a guadagnare oggi"
+        }
+      ]
+    },
+    "ZYfPOEnoaFfIjmdBj/wQDA==": {
+      "translations": [
+        {
+          "translation": "Per iniziare"
+        }
+      ]
+    },
+    "1jz0lXMtdwPie5XvZGCd4w==": {
+      "translations": [
+        {
+          "translation": "Hai domande?"
+        }
+      ]
+    },
+    "uIUyjEjCWzwJBVxnypih1Q==": {
+      "translations": [
+        {
+          "translation": "Mettiti in contatto"
+        }
+      ]
+    },
+    "2a9E/BUZqanf5LzL99VMwQ==": {
+      "translations": [
+        {
+          "translation": "Sei stato bandito da guadagnare token"
+        }
+      ]
+    },
+    "NaM6Vmz6iiRm1WDKnAmoPw==": {
+      "translations": [
+        {
+          "translation": "Unisciti al nostro {campaignName} per guadagnare gettoni"
+        }
+      ]
+    },
+    "sbO8XiYlqyNx+ZffAKr2Xw==": {
+      "translations": [
+        {
+          "translation": "Guadagna OGN completando attività come verificare la tua identità e condividere Origin con i tuoi amici. Gli OGN possono essere utilizzati in vari modi. Gli OGN guadagnati verranno trasferiti dopo la fine del {campaignName} per guadagnare gettoni"
+        }
+      ]
+    },
+    "8xBa1ZrG+j1EPiS9IifRaQ==": {
+      "translations": [
+        {
+          "translation": "Chiudi"
+        }
+      ]
+    },
+    "Z+VvwUtcmCiHHZ/y4kYNLQ==": {
+      "translations": [
+        {
+          "translation": "Iscriviti a Origin"
+        }
+      ]
+    },
+    "NiVro9WP7TRRxKWh3pVKVQ==": {
+      "translations": [
+        {
+          "translation": "Accetto i termini e le condizioni"
+        }
+      ]
+    },
+    "SitBBxJx3gAiNXHZYDLTYA==": {
+      "translations": [
+        {
+          "translation": "Accetta i termini"
+        }
+      ]
+    },
+    "WMYdJljtuuVbpA+VRa7M3w==": {
+      "translations": [
+        {
+          "translation": "Oops, {country} non è ammesso"
+        }
+      ]
+    },
+    "Z7Sx4nV0a/dHqPx5QNIXdg==": {
+      "translations": [
+        {
+          "translation": "Sfortunatamente, sembra che tu sia attualmente in un paese in cui i regolamenti governativi non ti consentono di partecipare alle campagne di Origin."
+        }
+      ]
+    },
+    "kUrilejuCqE9Cmu7uYvtcw==": {
+      "translations": [
+        {
+          "translation": "Abbiamo rilevato il tuo paese in modo errato?"
+        }
+      ]
+    },
+    "yjSH//GTRsIZgQGrshYGyQ==": {
+      "translations": [
+        {
+          "translation": "Dichiaro di non essere un cittadino o residente di {country}"
+        }
+      ]
+    },
+    "ToBlXADjzL3C1yE3SulP9g==": {
+      "translations": [
+        {
+          "translation": "Errore: impossibile rilevare il paese"
         }
       ]
     },
@@ -531,14 +3252,14 @@
     "33EPBwLfS9o3lGs62U+89w==": {
       "translations": [
         {
-          "translation": "Inserisci Url del profilo di Airbnb qui sotto"
+          "translation": "Inserisci URL del profilo di Airbnb qui sotto"
         }
       ]
     },
     "QfLmm1Y/WUbCRLJtHN4WAg==": {
       "translations": [
         {
-          "translation": "Altri utenti sapranno che hai un profilo di Airbnb verificato."
+          "translation": "Gli altri utenti sapranno che hai un profilo Airbnb verificato e il tuo Id utente sarà pubblicato sulla blockchain."
         }
       ]
     },
@@ -552,7 +3273,7 @@
     "3SSVIaE/i8UtPArlfLYLow==": {
       "translations": [
         {
-          "translation": "Vai al sito Web di Airbnb, modifica il tuo profilo e incolla il seguente testo nella descrizione del profilo."
+          "translation": "Vai al sito web di Airbnb, modifica il tuo profilo ed incolla il seguente testo nella descrizione del profilo:"
         }
       ]
     },
@@ -560,6 +3281,797 @@
       "translations": [
         {
           "translation": "Continua dopo che il codice di conferma è inserito nel tuo profilo di Airbnb."
+        }
+      ]
+    },
+    "26B3Ynk36rNu1TVoU/Uq7Q==": {
+      "translations": [
+        {
+          "translation": "Airbnb account verified!"
+        }
+      ]
+    },
+    "BlVAmm03lnkWBtZsV9i8zQ==": {
+      "translations": [
+        {
+          "translation": "Don't forget to publish your changes."
+        }
+      ]
+    },
+    "EpMTM+gxR0t1+atQlJNz6g==": {
+      "translations": [
+        {
+          "translation": "Publishing to the blockchain lets other users know that you have a verified profile."
+        }
+      ]
+    },
+    "lRp7RLflwxDci7fil4BTOw==": {
+      "translations": [
+        {
+          "translation": "Inserisci il tuo indirizzo email qui sotto e OriginID ti invierà un codice di verifica"
+        }
+      ]
+    },
+    "FCQzb9sToGt24ikV3xF2LQ==": {
+      "translations": [
+        {
+          "translation": "Verifica indirizzo email"
+        }
+      ]
+    },
+    "YuuSM/LwS49O8d4HGztcGg==": {
+      "translations": [
+        {
+          "translation": "Verificando la tua e-mail, autorizzi Origin ad inviarti e-mail occasionali come le notifiche sulle tue transazioni."
+        }
+      ]
+    },
+    "hk0K2k9QnD+15KLvRe4Ppg==": {
+      "translations": [
+        {
+          "translation": "Verify your Email Address"
+        }
+      ]
+    },
+    "Sp/o1Mpuyl9WKgDIXITGaQ==": {
+      "translations": [
+        {
+          "translation": "Enter the code we sent you below"
+        }
+      ]
+    },
+    "eRcQebtSS5jWwVqKU84vPg==": {
+      "translations": [
+        {
+          "translation": "Email address verified!"
+        }
+      ]
+    },
+    "WwpLz8qYef22cn4ptqMTew==": {
+      "translations": [
+        {
+          "translation": "Verify your Facebook Account"
+        }
+      ]
+    },
+    "UPltnTXrAbG5MMRJX+SAzw==": {
+      "translations": [
+        {
+          "translation": "{=Warning:} Currently unavailable on mobile devices"
+        }
+      ]
+    },
+    "gfO6jcHq55dE1IQ3KWk2DQ==": {
+      "translations": [
+        {
+          "translation": "Warning:"
+        }
+      ]
+    },
+    "1ilvlskGFH6As45MFKd2cw==": {
+      "translations": [
+        {
+          "translation": "Other users will know that you have a verified Facebook account, but your account details will not be published on the blockchain. We will never post on your behalf."
+        }
+      ]
+    },
+    "N/dwdqt311iPHZqTOvL1Jg==": {
+      "translations": [
+        {
+          "translation": "Facebook account verified!"
+        }
+      ]
+    },
+    "Jgc8914dz9BLi79OA6YdZA==": {
+      "translations": [
+        {
+          "translation": "Verify your Phone Number"
+        }
+      ]
+    },
+    "gLtSMYd36HCni1L2vVTK5g==": {
+      "translations": [
+        {
+          "translation": "Enter your phone number below and OriginID will send you a verification code via SMS."
+        }
+      ]
+    },
+    "Le4Tec5F+U/jkYxINqFxCg==": {
+      "translations": [
+        {
+          "translation": "Verificando il tuo numero di telefono, autorizzi Origin ad inviarti e-mail occasionali come notifiche sulle tue transazioni."
+        }
+      ]
+    },
+    "9/lqPBNSYSjdOmXnncrbqQ==": {
+      "translations": [
+        {
+          "translation": "Enter the code we sent you below"
+        }
+      ]
+    },
+    "80BXAlOVXtYhmFJD2dDKqw==": {
+      "translations": [
+        {
+          "translation": "Phone number verified!"
+        }
+      ]
+    },
+    "9PlJCHXfwYjV6OULfLe2Nw==": {
+      "translations": [
+        {
+          "translation": "Verify your Twitter Account"
+        }
+      ]
+    },
+    "fO7UjRhak4WxWI/FYFEZgA==": {
+      "translations": [
+        {
+          "translation": "Other users will know that you have a verified Twitter account, but your account details will not be published on the blockchain. We will never post on your behalf."
+        }
+      ]
+    },
+    "YaiXsuELKE5yLW1VaJdYrQ==": {
+      "translations": [
+        {
+          "translation": "Twitter account verified!"
+        }
+      ]
+    },
+    "idjV2bzcgcdWRmYb+Kh/MA==": {
+      "translations": [
+        {
+          "translation": "Registrare"
+        }
+      ]
+    },
+    "6i3NbGdxeHqAAMe1CjZIVA==": {
+      "translations": [
+        {
+          "translation": "Check-out"
+        }
+      ]
+    },
+    "egC3pFdbL8DkfMRT/t8PXg==": {
+      "translations": [
+        {
+          "translation": "ETH / notte"
+        }
+      ]
+    },
+    "M/PVI8j/6NkKUpHWnIlvlw==": {
+      "translations": [
+        {
+          "translation": "Scorri verso il basso per il calendario di disponibilità"
+        }
+      ]
+    },
+    "Zz1WPYjxJ3Su4UzYSlNmAQ==": {
+      "translations": [
+        {
+          "translation": "Non disponibile"
+        }
+      ]
+    },
+    "iZBl/o1TZqV6vfcowwKpzA==": {
+      "translations": [
+        {
+          "translation": "Prezzo totale"
+        }
+      ]
+    },
+    "sxoQF5jfF+ty/WN68uC1AQ==": {
+      "translations": [
+        {
+          "translation": "Libro"
+        }
+      ]
+    },
+    "7c71+w6U7Nbkd+h9e7WxOg==": {
+      "translations": [
+        {
+          "translation": "Inizio"
+        }
+      ]
+    },
+    "OYSTbu83qKwLoc0ATVRqTQ==": {
+      "translations": [
+        {
+          "translation": "Fine"
+        }
+      ]
+    },
+    "HlsHoXg/7lA8sMnqxARtbg==": {
+      "translations": [
+        {
+          "translation": "ETH / ora"
+        }
+      ]
+    },
+    "LY/VClxRIOhqnmCufIorow==": {
+      "translations": [
+        {
+          "translation": "/ ogni"
+        }
+      ]
+    },
+    "H7Yn7wWj8QjgxhH6d6TYpg==": {
+      "translations": [
+        {
+          "translation": "Acquisto"
+        }
+      ]
+    },
+    "MVfYNYO7/LWVBJvfCQD2Eg==": {
+      "translations": [
+        {
+          "translation": "Venduto"
+        }
+      ]
+    },
+    "UdSqyocYhlJiUuENZNivKg==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "k1wQW8bBvTN67vomiMi6zQ==": {
+      "translations": [
+        {
+          "translation": "Disponibile"
+        }
+      ]
+    },
+    "JA586NEcuAeEOGwkiG9v0g==": {
+      "translations": [
+        {
+          "translation": "{= Questo annuncio è} {= In sospeso} {= Hai già fatto un'offerta in questo elenco.}"
+        }
+      ]
+    },
+    "hWTLMPncBrn7NuTNe3adUw==": {
+      "translations": [
+        {
+          "translation": "Questo annuncio è"
+        }
+      ]
+    },
+    "AXOZAIfpi3fyfbSZZZUWVw==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "Oo0lPpXsGXLI4stFbvxvOQ==": {
+      "translations": [
+        {
+          "translation": "Hai già fatto un'offerta su questo annuncio."
+        }
+      ]
+    },
+    "hBV0SlHyDCq8N+AD5/jzqw==": {
+      "translations": [
+        {
+          "translation": "Visualizza i miei acquisti"
+        }
+      ]
+    },
+    "5xZsR6GEptb2JxRgPaQXNw==": {
+      "translations": [
+        {
+          "translation": "{= Questo annuncio è} {= In attesa} {= Un altro acquirente ha già fatto un'offerta su questo annuncio. Prova a visitare la pagina degli elenchi e cerca qualcosa di simile.}"
+        }
+      ]
+    },
+    "oM8UOkBxpejWiBYkIzweQA==": {
+      "translations": [
+        {
+          "translation": "Questo annuncio è"
+        }
+      ]
+    },
+    "OxViihxm7s5G99NRoHq2ig==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "IRK4mGldV6ZsN6QNm7yfBQ==": {
+      "translations": [
+        {
+          "translation": "Un altro acquirente ha già fatto un'offerta su questo annuncio. Prova a visitare la pagina delle inserzioni e cercare qualcosa di simile."
+        }
+      ]
+    },
+    "pIN1eB9fKjTSZ/lxQM/HUA==": {
+      "translations": [
+        {
+          "translation": "Vedi gli annunci"
+        }
+      ]
+    },
+    "i4gBpnp1ab7o+e8in/u62Q==": {
+      "translations": [
+        {
+          "translation": "{= Questo annuncio è} {= Venduto} {= Questo elenco è esaurito. Prova a visitare la pagina degli elenchi e cerca qualcosa di simile.}"
+        }
+      ]
+    },
+    "fQXJIdRS1RqeF021uYRFqg==": {
+      "translations": [
+        {
+          "translation": "Questo annuncio è"
+        }
+      ]
+    },
+    "NeYO+Ltj4nYFHkW6uPsL2Q==": {
+      "translations": [
+        {
+          "translation": "Venduto"
+        }
+      ]
+    },
+    "GV+cUkvlSJKnnakvO/EACA==": {
+      "translations": [
+        {
+          "translation": "Questo annuncio non è più disponibile. Prova a visitare la pagina degli annunci e cercare qualcosa di simile."
+        }
+      ]
+    },
+    "SadssMjUlVtgKoOKVWzHUw==": {
+      "translations": [
+        {
+          "translation": "Quantità"
+        }
+      ]
+    },
+    "0gg54KefGUb3y/W0neIZDQ==": {
+      "translations": [
+        {
+          "translation": "Elenco {id}"
+        }
+      ]
+    },
+    "l4YUMk7fsVyKL2TTsldMdw==": {
+      "translations": [
+        {
+          "translation": "Elenco non trovato"
+        }
+      ]
+    },
+    "QkpyTw8uCT69QcDHqAKt7Q==": {
+      "translations": [
+        {
+          "translation": "Elenco non valido"
+        }
+      ]
+    },
+    "0hZyMC0etK9bwztn8hnbhg==": {
+      "translations": [
+        {
+          "translation": "Informazioni sul venditore"
+        }
+      ]
+    },
+    "L2oPKF5xsKmJCOtmT+Uwfg==": {
+      "translations": [
+        {
+          "translation": "* Clicca e trascina per selezionare un intervallo di date"
+        }
+      ]
+    },
+    "9hd32nz5BtBUmOmM269/AA==": {
+      "translations": [
+        {
+          "translation": "Fuso orario:"
+        }
+      ]
+    },
+    "IOWXtJhXlVb9On/GWu5Ufg==": {
+      "translations": [
+        {
+          "translation": "NOTA: questo è diverso dal tuo fuso orario di {userTimeZone}"
+        }
+      ]
+    },
+    "5hZ6uYzeyyP9j8VnTvQ0Gg==": {
+      "translations": [
+        {
+          "translation": "* Clicca e trascina per selezionare un intervallo di tempo"
+        }
+      ]
+    },
+    "o6Z2JUXPEzsq4mjxtgxysg==": {
+      "translations": [
+        {
+          "translation": "Tutti"
+        }
+      ]
+    },
+    "FRFO6tLpPFCURVOimytNpQ==": {
+      "translations": [
+        {
+          "translation": "Ricerca"
+        }
+      ]
+    },
+    "6WXI9iYt6WPtHpJwbK2i4g==": {
+      "translations": [
+        {
+          "translation": "Nota: ricerca non disponibile"
+        }
+      ]
+    },
+    "IL0sLDeP9dTTFxmOm7nEbA==": {
+      "translations": [
+        {
+          "translation": "/ notte"
+        }
+      ]
+    },
+    "kOyzntM8/j1UQbONQh4jRA==": {
+      "translations": [
+        {
+          "translation": "/ ora"
+        }
+      ]
+    },
+    "fKJBt8Xs1iL0KZrQdPpT0Q==": {
+      "translations": [
+        {
+          "translation": "Annunci"
+        }
+      ]
+    },
+    "gpeQTbRe56v7+THmtTo1dw==": {
+      "translations": [
+        {
+          "translation": "Nessun risultato di ricerca trovato"
+        }
+      ]
+    },
+    "kxDQ9H0JkRh27rfshZkoVA==": {
+      "translations": [
+        {
+          "translation": "Il tuo mercato non ha ancora nessun annuncio"
+        }
+      ]
+    },
+    "Q776FeWv/0+8JXPq6YHQ6Q==": {
+      "translations": [
+        {
+          "translation": "Puoi creare elenchi tu stesso o invitare venditori ad aderire alla tua piattaforma!"
+        }
+      ]
+    },
+    "0kTHM7ddLclB+FcU8ttrcQ==": {
+      "translations": [
+        {
+          "translation": "Crea un annuncio"
+        }
+      ]
+    },
+    "vYS+dQLoVNtqFLJqO8A42g==": {
+      "translations": [
+        {
+          "translation": "Nessun annuncio trovato"
+        }
+      ]
+    },
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "translations": [
+        {
+          "translation": "{number} Annunci"
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "translations": [
+        {
+          "translation": "1 Annuncio"
+        }
+      ]
+    },
+    "H7it/Nh1dTkCwZ8prH+mcw==": {
+      "translations": [
+        {
+          "translation": "Carica di più"
+        }
+      ]
+    },
+    "FA3Sz+Yvj0lD8zBDmiEOeQ==": {
+      "translations": [
+        {
+          "translation": "Messaggi"
+        }
+      ]
+    },
+    "NVG2B52dMnz2pPid0hWHrw==": {
+      "translations": [
+        {
+          "translation": "Caricamento conversazioni ..."
+        }
+      ]
+    },
+    "iITnf069bvCAf0wFFTjdmA==": {
+      "translations": [
+        {
+          "translation": "Non è possibile interrogare i messaggi"
+        }
+      ]
+    },
+    "sOGxRcYUJAsnpsE2TfRY7w==": {
+      "translations": [
+        {
+          "translation": "Nessuna conversazione!"
+        }
+      ]
+    },
+    "zUBDRYBvIHyFIYSdMxKpmA==": {
+      "translations": [
+        {
+          "translation": "Non è possibile interrogare i messaggi"
+        }
+      ]
+    },
+    "g3jsZCPyzDhp0H3lcRPbrg==": {
+      "translations": [
+        {
+          "translation": "Vicino"
+        }
+      ]
+    },
+    "lde4nZGa2Q9Owr5E9dQ18w==": {
+      "translations": [
+        {
+          "translation": "Scrivi qui..."
+        }
+      ]
+    },
+    "ahuqzU84qE8WZujfPDjRow==": {
+      "translations": [
+        {
+          "translation": "Invia"
+        }
+      ]
+    },
+    "CTNRjx/teJ3kDf+M5Aq+xg==": {
+      "translations": [
+        {
+          "translation": "Conferme Blockchain in sospeso"
+        }
+      ]
+    },
+    "OvbafFNA9qaLyFyagq7xUQ==": {
+      "translations": [
+        {
+          "translation": "Conferme Blockchain in sospeso"
+        }
+      ]
+    },
+    "rsGnOhUcaEN+hW+x0hHJ3A==": {
+      "translations": [
+        {
+          "translation": "{confirmations.noOfConfirmations} di 6 conferme"
+        }
+      ]
+    },
+    "hRPbTuJxxb+xLO8G16c7Gg==": {
+      "translations": [
+        {
+          "translation": "Completate ({confirmations.noOfConfirmations} conferme)"
+        }
+      ]
+    },
+    "vZz4IJwzaRaGGLkANtyZRQ==": {
+      "translations": [
+        {
+          "translation": "Per iniziare"
+        }
+      ]
+    },
+    "3paaeWPERztrC5zCpsUs8A==": {
+      "translations": [
+        {
+          "translation": "Vendi su Origin"
+        }
+      ]
+    },
+    "lC0Zq16Tnu762WQln8kZVQ==": {
+      "translations": [
+        {
+          "translation": "Errore durante il caricamento dei messaggi"
+        }
+      ]
+    },
+    "Flym48gbcjw+7qWMcE8J2w==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "8+XZq96344YbYNHFy4Mv/w==": {
+      "translations": [
+        {
+          "translation": "Messaggi non letti"
+        }
+      ]
+    },
+    "1skYvPMWEogMRMf/xYKpEQ==": {
+      "translations": [
+        {
+          "translation": "Messaggio non letto"
+        }
+      ]
+    },
+    "I3Ubit0eF6p2kxPsdWNPqA==": {
+      "translations": [
+        {
+          "translation": "Visualizza messaggi"
+        }
+      ]
+    },
+    "OSw+Z5uyNlHroNxtGMiX+Q==": {
+      "translations": [
+        {
+          "translation": "Sfoglia le Categorie"
+        }
+      ]
+    },
+    "FT41b3HlbYvNCfadzieRZA==": {
+      "translations": [
+        {
+          "translation": "Aggiungi un Annuncio"
+        }
+      ]
+    },
+    "QCZW33pDrKY20rFahZ1vkg==": {
+      "translations": [
+        {
+          "translation": "Acquisti"
+        }
+      ]
+    },
+    "1M/tpTltyUByYgb7M0guaQ==": {
+      "translations": [
+        {
+          "translation": "Annunci"
+        }
+      ]
+    },
+    "uX4FVwy9nLJdzqyxfWcTWA==": {
+      "translations": [
+        {
+          "translation": "Saldi"
+        }
+      ]
+    },
+    "6m3zRzqbtA1iEoFy2tjugw==": {
+      "translations": [
+        {
+          "translation": "Messaggi"
+        }
+      ]
+    },
+    "eOnQjifzRCehDAuj+e74tQ==": {
+      "translations": [
+        {
+          "translation": "Notifiche"
+        }
+      ]
+    },
+    "U10zgJUwkYaALaRUApbsog==": {
+      "translations": [
+        {
+          "translation": "Errore durante il caricamento delle notifiche"
+        }
+      ]
+    },
+    "bs+KlyM/NbMHzktR8342YA==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "Mv6cuSCfewB7BjjKYyGBqw==": {
+      "translations": [
+        {
+          "translation": "Notifiche"
+        }
+      ]
+    },
+    "PURpU3OPAdsnJUVhDUpH5g==": {
+      "translations": [
+        {
+          "translation": "Notifica"
+        }
+      ]
+    },
+    "gzT3SioJ7I7iiS5z4VOm8g==": {
+      "translations": [
+        {
+          "translation": "Vedi tutto"
+        }
+      ]
+    },
+    "qpkPtxBNFifg/7q8gJgljQ==": {
+      "translations": [
+        {
+          "translation": "Connesso a {=[networkName]}"
+        }
+      ]
+    },
+    "NeogRKjWuqqoJ4qjuZjNtg==": {
+      "translations": [
+        {
+          "translation": "{networkName}"
+        }
+      ]
+    },
+    "fCssoMJ7OY8O7CGYo8j0CA==": {
+      "translations": [
+        {
+          "translation": "Indirizzo ETH"
+        }
+      ]
+    },
+    "HKFnR0gnVwEyd0YWbVaFOQ==": {
+      "translations": [
+        {
+          "translation": "Scollega il cellulare"
+        }
+      ]
+    },
+    "Oq+ZNFsqTuq3uYQzNAQbYA==": {
+      "translations": [
+        {
+          "translation": "Modifica il Profilo"
+        }
+      ]
+    },
+    "HInnBpa08p5k4Yj/INtqAw==": {
+      "translations": [
+        {
+          "translation": "La mia Identità"
+        }
+      ]
+    },
+    "oea0f4wCvEuKEpgRZVUAOQ==": {
+      "translations": [
+        {
+          "translation": "Utente senza nome"
+        }
+      ]
+    },
+    "nDkJLm47Ba0gcbYvGk8vkQ==": {
+      "translations": [
+        {
+          "translation": "Forza del Profilo"
         }
       ]
     },
@@ -587,7 +4099,1715 @@
     "l2Ry3AjK+2P1DfwR4X+PAA==": {
       "translations": [
         {
-          "translation": "Vendita"
+          "translation": "Vendere"
+        }
+      ]
+    },
+    "c2B3e+aG9e/X9QwOH9c3yw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ha rifiutato la tua offerta per {title}"
+        }
+      ]
+    },
+    "YOm+ynQ73tcGI0ilqp6igQ==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ha accettato la tua offerta per {title}"
+        }
+      ]
+    },
+    "OJHXhyaxeI6wJgPmAN+79w==": {
+      "translations": [
+        {
+          "translation": "Transazione con {nameLink} finalizzata per {title}"
+        }
+      ]
+    },
+    "YzuRRanf3CVBwwdoxuvnig==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ha fatto un'offerta per {title}"
+        }
+      ]
+    },
+    "oGg+bvcoHD7419PPWtSy0Q==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ha contestato un'offerta per {title}"
+        }
+      ]
+    },
+    "8iWiBR18Lwogh0ILdAmDcw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ha risolto una controversia su {title}"
+        }
+      ]
+    },
+    "kRpJt5Z+8QmF0zGEEwO3Xw==": {
+      "translations": [
+        {
+          "translation": "Tutti"
+        }
+      ]
+    },
+    "I7wdzOzb8p0bzZV0L/fOzQ==": {
+      "translations": [
+        {
+          "translation": "Notifiche"
+        }
+      ]
+    },
+    "wS1dIWkUM4WzsK+i96qErg==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "goa8ra1IITxtTLlPqygsJg==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "pJ72jHPAVDJZr/f1TpS/Nw==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loading"
+        }
+      ]
+    },
+    "7qJMk00JA03KqhCdzCM1AQ==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loadmore"
+        }
+      ]
+    },
+    "FCvW5DiJds9kF4OmcP9UFQ==": {
+      "translations": [
+        {
+          "translation": "Iniziare su Origin"
+        }
+      ]
+    },
+    "JZfl/92+OYfoP7WPV/3hAg==": {
+      "translations": [
+        {
+          "translation": "Per poter eseguire con successo transazioni con altri sul nostro DApp, avrai bisogno di alcune cose prima di iniziare. {= Perché devo fare questo?}"
+        }
+      ]
+    },
+    "soYLfqRkHiY0hIsn6V7KOg==": {
+      "translations": [
+        {
+          "translation": "Perché devo fare questo?"
+        }
+      ]
+    },
+    "IrLYNrWwH6ZtQ1ImEOOicQ==": {
+      "translations": [
+        {
+          "translation": "Informazioni su Origin Messaging"
+        }
+      ]
+    },
+    "hHtAQnGmut84lwdcWI2L6w==": {
+      "translations": [
+        {
+          "translation": "Un portafoglio di criptovaluta è un programma software che memorizza le chiavi private e pubbliche e interagisce con vari blockchain per consentire agli utenti di inviare e ricevere valuta digitale e monitorare il loro equilibrio. Se si desidera utilizzare Bitcoin o qualsiasi altra criptovaluta, è necessario disporre di un portafoglio digitale."
+        }
+      ]
+    },
+    "UJNr54cskDebn4LOy1474w==": {
+      "translations": [
+        {
+          "translation": "Informazioni su Identity on the Blockchain"
+        }
+      ]
+    },
+    "RZmj6tEEQAQTby9GXxZXVw==": {
+      "translations": [
+        {
+          "translation": "Un portafoglio di criptovaluta è un programma software che memorizza le chiavi private e pubbliche e interagisce con vari blockchain per consentire agli utenti di inviare e ricevere valuta digitale e monitorare il loro equilibrio. Se si desidera utilizzare Bitcoin o qualsiasi altra criptovaluta, è necessario disporre di un portafoglio digitale."
+        }
+      ]
+    },
+    "2d71PZ8vaKwFxFDFRhk1Hw==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "FFVqxLHTicckrmBk8Z/MCA==": {
+      "translations": [
+        {
+          "translation": "Cos'è un portafoglio Crypto?"
+        }
+      ]
+    },
+    "aknWsMgG2wow2xkgZ28DXg==": {
+      "translations": [
+        {
+          "translation": "Un portafoglio di criptovaluta è un programma software che memorizza le chiavi private e pubbliche e interagisce con vari blockchain per consentire agli utenti di inviare e ricevere valuta digitale e monitorare il loro equilibrio. Se si desidera utilizzare Bitcoin o qualsiasi altra criptovaluta, è necessario disporre di un portafoglio digitale."
+        }
+      ]
+    },
+    "WsA95s6VU3x2vfhejrhzOg==": {
+      "translations": [
+        {
+          "translation": "La tua inserzione sta aspettando ..."
+        }
+      ]
+    },
+    "ds0d/qu6sIALqXUA0iJKuw==": {
+      "translations": [
+        {
+          "translation": "Congratulazioni"
+        }
+      ]
+    },
+    "aR7VNiOtKH8VvsNUSilJjA==": {
+      "translations": [
+        {
+          "translation": "Hai attivato correttamente il tuo account. Ora sei pronto per continuare il tuo viaggio nel Marketplace di origine."
+        }
+      ]
+    },
+    "mU3MxuZLQg7n732AsKxtEA==": {
+      "translations": [
+        {
+          "translation": "{= Ora hai completato quanto segue:} {= Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
+        }
+      ]
+    },
+    "QHp9k2YF0PJ8EuAxOFGtNA==": {
+      "translations": [
+        {
+          "translation": "Ora hai completato quanto segue:"
+        }
+      ]
+    },
+    "CxWrPmbgR884ESLoDC1BHw==": {
+      "translations": [
+        {
+          "translation": "{= Creazione di wallet} {= Messaging abilitato} {= Desktop Notifications Enabled}"
+        }
+      ]
+    },
+    "oGs0egKgAj8bmQbSYjfHww==": {
+      "translations": [
+        {
+          "translation": "Creazione del portafoglio"
+        }
+      ]
+    },
+    "CnTLIXLPrAMCoAtnaShyJw==": {
+      "translations": [
+        {
+          "translation": "Messaggistica abilitata"
+        }
+      ]
+    },
+    "jLoV7qiALo1aH/xnP6KE9Q==": {
+      "translations": [
+        {
+          "translation": "Notifiche desktop abilitate"
+        }
+      ]
+    },
+    "lUrfL6249kxTxaw/dRoqbg==": {
+      "translations": [
+        {
+          "translation": "{= Passaggi rimanenti:} {= Fondo il tuo portafoglio Completa il tuo profilo}"
+        }
+      ]
+    },
+    "O1IrLRtj0WrvXnVnLCINvQ==": {
+      "translations": [
+        {
+          "translation": "Passaggi rimanenti:"
+        }
+      ]
+    },
+    "osEnvv1/nsQxkpQkh23NZw==": {
+      "translations": [
+        {
+          "translation": "{= Finanzia il tuo portafoglio} {= Completa il tuo profilo}"
+        }
+      ]
+    },
+    "psVzq7xfDPiHYtKsXUP6gw==": {
+      "translations": [
+        {
+          "translation": "Finanzia il tuo portafoglio"
+        }
+      ]
+    },
+    "ysPjg6QGMquwWUCtL+/yEQ==": {
+      "translations": [
+        {
+          "translation": "Completa il tuo profilo"
+        }
+      ]
+    },
+    "Y+1LvSEix1POQBBLBGMaUw==": {
+      "translations": [
+        {
+          "translation": "Messaggistica Origin"
+        }
+      ]
+    },
+    "CjNGZw8yFs7T6CxrNdzN4g==": {
+      "translations": [
+        {
+          "translation": "Origin Synaging Syncing"
+        }
+      ]
+    },
+    "FKUFlQGWeADq33thpZWNhg==": {
+      "translations": [
+        {
+          "translation": "0 di 2 messaggi MetaMask firmati"
+        }
+      ]
+    },
+    "MJeJbFx0ouUGjsL7FgLFpQ==": {
+      "translations": [
+        {
+          "translation": "La messaggistica ti consentirà di chattare con altri acquirenti e venditori."
+        }
+      ]
+    },
+    "AX2t/0FaLX6Ri2veomcTcg==": {
+      "translations": [
+        {
+          "translation": "In attesa che tu firmi il messaggio numero {messageNumber}"
+        }
+      ]
+    },
+    "ErikvoQGieBd00aYG1DQmg==": {
+      "translations": [
+        {
+          "translation": "{messageNumber} di 2 messaggi MetaMask firmati"
+        }
+      ]
+    },
+    "ILCAHzQL84S0gcx3t28Kgg==": {
+      "translations": [
+        {
+          "translation": "L'icona Metamask si trova in alto a destra nella barra degli strumenti del browser."
+        }
+      ]
+    },
+    "N4YddPeOjF23lOAgjWNWHg==": {
+      "translations": [
+        {
+          "translation": "Messaggistica abilitata"
+        }
+      ]
+    },
+    "NxbN7hpr4yVr2xgq6CAbDQ==": {
+      "translations": [
+        {
+          "translation": "2 di 2 messaggi MetaMask firmati"
+        }
+      ]
+    },
+    "+5lOJ8UwNH5y7Tkwmt5sug==": {
+      "translations": [
+        {
+          "translation": "Congratulazioni! Ora puoi inviare messaggi ad altri utenti su Origin e rimanere aggiornato su tutti i tuoi acquisti e vendite."
+        }
+      ]
+    },
+    "Sj0uCwqO2Lif0EXF2OFjFg==": {
+      "translations": [
+        {
+          "translation": "Hai finito e puoi continuare premendo il pulsante qui sotto."
+        }
+      ]
+    },
+    "LD5LtA82smKlIU4torypxQ==": {
+      "translations": [
+        {
+          "translation": "Errore"
+        }
+      ]
+    },
+    "qjIAIRzdKNP+o+HVoh/KHg==": {
+      "translations": [
+        {
+          "translation": "No Web3"
+        }
+      ]
+    },
+    "Ef8RYDVmPd+o1LstAaP1wA==": {
+      "translations": [
+        {
+          "translation": "Abilita la messaggistica"
+        }
+      ]
+    },
+    "iRz4g7tQBcOyW/qYOj/DNQ==": {
+      "translations": [
+        {
+          "translation": "Installa MetaMask"
+        }
+      ]
+    },
+    "3A7KlQ1Kjaumhmr49lVUPg==": {
+      "translations": [
+        {
+          "translation": "Installare MetaMask ..."
+        }
+      ]
+    },
+    "LEvdn8FJN1P4JhDRVVvjmA==": {
+      "translations": [
+        {
+          "translation": "Fare clic sotto una volta installato MetaMask"
+        }
+      ]
+    },
+    "rTJQT6yFtV7JrE9+Kwrw0g==": {
+      "translations": [
+        {
+          "translation": "In attesa di accedere a MetaMask"
+        }
+      ]
+    },
+    "aHqNeqpWF5FvjYcfAx/UtQ==": {
+      "translations": [
+        {
+          "translation": "L'icona MetaMask si trova in alto a destra nella barra degli strumenti del browser."
+        }
+      ]
+    },
+    "STOPW2Q2WZLH2Jgu6WdqIw==": {
+      "translations": [
+        {
+          "translation": "Oops, hai negato il permesso"
+        }
+      ]
+    },
+    "ZkgVALubZKbCD225z3Vv3g==": {
+      "translations": [
+        {
+          "translation": "È necessario concedere l'autorizzazione di origine per accedere al proprio account MetaMask in modo da poter acquistare e vendere sul nostro DApp."
+        }
+      ]
+    },
+    "YRIz6mlKHIlcOC6yC56Kog==": {
+      "translations": [
+        {
+          "translation": "Concedere l'autorizzazione"
+        }
+      ]
+    },
+    "j0xNIbmtip7rDoBRMt9m9g==": {
+      "translations": [
+        {
+          "translation": "In attesa che tu conceda il permesso"
+        }
+      ]
+    },
+    "iwgHFwUYIq/ST9H61v2LXw==": {
+      "translations": [
+        {
+          "translation": "Si prega di concedere l'autorizzazione di origine per accedere al tuo account MetaMask in modo da poter acquistare e vendere sul nostro DApp."
+        }
+      ]
+    },
+    "GAsJi53lUv/zEVhQAgWdeA==": {
+      "translations": [
+        {
+          "translation": "MetaMask Connesso"
+        }
+      ]
+    },
+    "qXJ7EX08bD1D/KpNQST64Q==": {
+      "translations": [
+        {
+          "translation": "Metamask è connesso, passare a {connectTo} per effettuare transazioni su Origin."
+        }
+      ]
+    },
+    "k7q6a+1CnpyNNwB+lNLsYQ==": {
+      "translations": [
+        {
+          "translation": "MetaMask è connesso e sei pronto per effettuare transazioni su Origin. Fai clic su Continua sotto."
+        }
+      ]
+    },
+    "jISZ0wfBaodmnuNXoU+VAg==": {
+      "translations": [
+        {
+          "translation": "Le notifiche sono disattivate"
+        }
+      ]
+    },
+    "KpzI7bx79mkkaT2io1SR8Q==": {
+      "translations": [
+        {
+          "translation": "Le notifiche native del desktop ti permetteranno di rimanere aggiornato su ciò che devi fare su Origin DApp"
+        }
+      ]
+    },
+    "HWxdOPUAucyHDSoOK40JHw==": {
+      "translations": [
+        {
+          "translation": "Fai clic sul pulsante in basso quindi fai clic su conferma la richiesta nella finestra di dialogo del browser nativo che verrà visualizzata sopra."
+        }
+      ]
+    },
+    "uSRyxeZTNsqh1FcGEC4RKg==": {
+      "translations": [
+        {
+          "translation": "Attiva le notifiche"
+        }
+      ]
+    },
+    "P5qx0I4YTWHZEWnH9lxXpw==": {
+      "translations": [
+        {
+          "translation": "Salta per ora"
+        }
+      ]
+    },
+    "133qQN4R4hk3FaW/zXPQlg==": {
+      "translations": [
+        {
+          "translation": "Non avere notifiche sul desktop aumenta le possibilità di perdere aggiornamenti importanti sulle tue transazioni."
+        }
+      ]
+    },
+    "F52UFt/yddG6Tw1hUts2Xg==": {
+      "translations": [
+        {
+          "translation": "La finestra di dialogo delle autorizzazioni del browser nativo si apre nella parte superiore della finestra del browser. Si prega di confermare la richiesta"
+        }
+      ]
+    },
+    "Lp1AaLvV/Z/7FgpA3o44Hw==": {
+      "translations": [
+        {
+          "translation": "Notifiche desktop abilitate"
+        }
+      ]
+    },
+    "wJsjMb/rTBUgD+U6mn3BKA==": {
+      "translations": [
+        {
+          "translation": "Le notifiche sono attivate"
+        }
+      ]
+    },
+    "nftxxpaPkYMeJjKOUnZdjw==": {
+      "translations": [
+        {
+          "translation": "Grande! Sarà molto più facile per te rispondere rapidamente alle richieste di acquirenti e venditori."
+        }
+      ]
+    },
+    "DcwfUYW0NxpH1s5+ul7jyw==": {
+      "translations": [
+        {
+          "translation": "Fai clic sul pulsante continua qui sotto per procedere."
+        }
+      ]
+    },
+    "tqYkpJk1jBSLneJPAW6Fpg==": {
+      "translations": [
+        {
+          "translation": "Uh oh, c'è un problema ..."
+        }
+      ]
+    },
+    "hkOHDepzP/85esMg1eheJQ==": {
+      "translations": [
+        {
+          "translation": "Le notifiche sono disattivate"
+        }
+      ]
+    },
+    "86E4W/Du3+E7eCB85BqZJg==": {
+      "translations": [
+        {
+          "translation": "Hai respinto la nostra richiesta di attivazione delle notifiche desktop che ci {= consiglio vivamente}."
+        }
+      ]
+    },
+    "NLI/YsAIRTpzmJdjyUKu+A==": {
+      "translations": [
+        {
+          "translation": "altamente raccomandato"
+        }
+      ]
+    },
+    "rdom9ZzkPwJZNuxLz9YaCA==": {
+      "translations": [
+        {
+          "translation": "Per risolvere questo problema, vai nelle impostazioni del browser e attiva le notifiche per il nostro DApp."
+        }
+      ]
+    },
+    "Ao6PTzPmrwVygpJF55jqmA==": {
+      "translations": [
+        {
+          "translation": "Visita le impostazioni del browser"
+        }
+      ]
+    },
+    "ht9M7LjR23q3m93Op5qY7A==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "twXKaZYDmP8sMVB91202fw==": {
+      "translations": [
+        {
+          "translation": "Errore"
+        }
+      ]
+    },
+    "O+bJPW4vKHXMKS4A1cTr1w==": {
+      "translations": [
+        {
+          "translation": "No Web3"
+        }
+      ]
+    },
+    "MPn0Q/LgQuNyOzpKKL9KiA==": {
+      "translations": [
+        {
+          "translation": "Dolce! Le notifiche del desktop sono attive :)"
+        }
+      ]
+    },
+    "DW6fLMU0mrvLTV6dHCR3SA==": {
+      "translations": [
+        {
+          "translation": "Iniziare"
+        }
+      ]
+    },
+    "4pkBkxm3fiSdgckUqJNFrQ==": {
+      "translations": [
+        {
+          "translation": "Inserisci le informazioni del tuo profilo"
+        }
+      ]
+    },
+    "sgSRRlAr8fmr3HnB1Ykk7g==": {
+      "translations": [
+        {
+          "translation": "Nome"
+        }
+      ]
+    },
+    "Cr7l7mRGMBhn5E/iepkWUw==": {
+      "translations": [
+        {
+          "translation": "Cognome"
+        }
+      ]
+    },
+    "ssnnSYlfF2XPDgbJQI5dLQ==": {
+      "translations": [
+        {
+          "translation": "{= Non hai fondi} Devi avere fondi nel tuo portafoglio per creare un'identità. Puoi sempre farlo più tardi dopo aver finanziato il tuo portafoglio andando alle tue impostazioni."
+        }
+      ]
+    },
+    "IGtHEy5CJDngN+7Ucg9x4Q==": {
+      "translations": [
+        {
+          "translation": "Non hai fondi"
+        }
+      ]
+    },
+    "s6ga+WNyin+jyBuLqR8uVQ==": {
+      "translations": [
+        {
+          "translation": "Pubblicare"
+        }
+      ]
+    },
+    "gwNdF1XlGWk8ONo6VUrHdw==": {
+      "translations": [
+        {
+          "translation": "Salta per ora"
+        }
+      ]
+    },
+    "oNaKnWUDLbhfedJyB7P+Ww==": {
+      "translations": [
+        {
+          "translation": "pubblicato"
+        }
+      ]
+    },
+    "XIbxUfdlCiQKg4oKOjmCCw==": {
+      "translations": [
+        {
+          "translation": "provvisorio"
+        }
+      ]
+    },
+    "B4LOIQ966Tas1608OZMlHg==": {
+      "translations": [
+        {
+          "translation": "presto"
+        }
+      ]
+    },
+    "3Qm3xrEt+bnOdbmWNr7JjQ==": {
+      "translations": [
+        {
+          "translation": "interattivo"
+        }
+      ]
+    },
+    "xIhXyhzildOeU091piinJg==": {
+      "translations": [
+        {
+          "translation": "Il nome è obbligatorio"
+        }
+      ]
+    },
+    "7xSk0LvXs9aQjN98cCiljA==": {
+      "translations": [
+        {
+          "translation": "Origin Mobile Wallet"
+        }
+      ]
+    },
+    "WVk1tgmlGe99GNIa7Uk/bA==": {
+      "translations": [
+        {
+          "translation": "Il portafoglio mobile di Origin ti consentirà di memorizzare la valuta cripto per poter acquistare e vendere sul nostro DApp."
+        }
+      ]
+    },
+    "aOhcZ2U2Bsp9EGJA3zU7Ww==": {
+      "translations": [
+        {
+          "translation": "Disponibile per iOS e Android"
+        }
+      ]
+    },
+    "TxG/OdPaBPOz5hx9hge2rg==": {
+      "translations": [
+        {
+          "translation": "Connect Origin Wallet"
+        }
+      ]
+    },
+    "QmqTcxlyWuTRoggpY7Y5nw==": {
+      "translations": [
+        {
+          "translation": "MetaMask è un'estensione del browser che ti permetterà di accedere al web decentralizzato."
+        }
+      ]
+    },
+    "vHiqW6XmWF/OLmE9lKWO1w==": {
+      "translations": [
+        {
+          "translation": "Disponibile per {browser}"
+        }
+      ]
+    },
+    "VvpwJO3gtIN0GV/UBRWAGA==": {
+      "translations": [
+        {
+          "translation": "Connetti MetaMask"
+        }
+      ]
+    },
+    "M/7sS5l7W/gdH3mNboamAA==": {
+      "translations": [
+        {
+          "translation": "Collega un portafoglio Crypto"
+        }
+      ]
+    },
+    "dIIhiBsOJOemSYWXTm48zQ==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "XdIbTb9DUwkD1P7yTtwRnA==": {
+      "translations": [
+        {
+          "translation": "Notifiche del desktop abilitate ✅"
+        }
+      ]
+    },
+    "QEfT0AsqEUDRYXAeo6jiMw==": {
+      "translations": [
+        {
+          "translation": "impostazioni"
+        }
+      ]
+    },
+    "lYXh6Dq4CP6r6aJfWNhySg==": {
+      "translations": [
+        {
+          "translation": "impostazioni"
+        }
+      ]
+    },
+    "qFBczb1fLENKRx8/G4ieGA==": {
+      "translations": [
+        {
+          "translation": "Si prega di fare una selezione dalla lista qui sotto."
+        }
+      ]
+    },
+    "gteQ4pqo/4VeBffMWpQfvA==": {
+      "translations": [
+        {
+          "translation": "Notifiche"
+        }
+      ]
+    },
+    "24R0XkoqNkj+Q80wcCZRlg==": {
+      "translations": [
+        {
+          "translation": "Abilita le notifiche del browser di seguito."
+        }
+      ]
+    },
+    "slAgUo4opu8tso8RLT/dLg==": {
+      "translations": [
+        {
+          "translation": "Abilitare"
+        }
+      ]
+    },
+    "XE4dDp2PIHkNuhGg8Y/b8w==": {
+      "translations": [
+        {
+          "translation": "Le notifiche del browser sono abilitate."
+        }
+      ]
+    },
+    "ACzYauxPE/+QDd4rdULhOA==": {
+      "translations": [
+        {
+          "translation": "Portafoglio mobile"
+        }
+      ]
+    },
+    "QfPi8+EJJHsPYgLmR16O7w==": {
+      "translations": [
+        {
+          "translation": "Disconnettiti dal tuo portafoglio mobile facendo clic sul pulsante qui sotto."
+        }
+      ]
+    },
+    "k6UQCIfTpu+GOQC9zUHVVA==": {
+      "translations": [
+        {
+          "translation": "Disconnect"
+        }
+      ]
+    },
+    "qfhGAG2u3+abnoq3mJZtdw==": {
+      "translations": [
+        {
+          "translation": "Non collegato"
+        }
+      ]
+    },
+    "yFYpDVeEQ8oXcHYjijWBTg==": {
+      "translations": [
+        {
+          "translation": "Discovery Server"
+        }
+      ]
+    },
+    "Xo2IEzVBpUBSim+cGxiV2A==": {
+      "translations": [
+        {
+          "translation": "Si prega di inserire l'URL qui sotto. Lascia vuoto per interrogare direttamente la blockchain. La funzionalità di ricerca verrà disabilitata se non viene utilizzato alcun server di rilevamento."
+        }
+      ]
+    },
+    "9ZMwBvD+hP2nfahk+3LenA==": {
+      "translations": [
+        {
+          "translation": "Gateway IPFS"
+        }
+      ]
+    },
+    "pRCuz6nfvsfhdZOLMdd1Ug==": {
+      "translations": [
+        {
+          "translation": "Si prega di inserire l'URL qui sotto."
+        }
+      ]
+    },
+    "aFN2K1TwxnCt3pJ0P93ldg==": {
+      "translations": [
+        {
+          "translation": "Provider Web3"
+        }
+      ]
+    },
+    "0hqW8GbEWVfnfkHUgaKwdA==": {
+      "translations": [
+        {
+          "translation": "Si prega di inserire l'URL qui sotto."
+        }
+      ]
+    },
+    "fqtlt5+7VR5iw3K3FjAD/g==": {
+      "translations": [
+        {
+          "translation": "Bridge Server"
+        }
+      ]
+    },
+    "ffkqXBQ0xgCWwCZhHuAp/Q==": {
+      "translations": [
+        {
+          "translation": "Si prega di inserire l'URL qui sotto."
+        }
+      ]
+    },
+    "KRXhxUx2Hra4LLq49+q/Tw==": {
+      "translations": [
+        {
+          "translation": "TxName"
+        }
+      ]
+    },
+    "qztpAjXBddBNYsM0s/z17Q==": {
+      "translations": [
+        {
+          "translation": "Data"
+        }
+      ]
+    },
+    "sMnltv0vMS+f5SLtoTECcQ==": {
+      "translations": [
+        {
+          "translation": "Hash IPFS"
+        }
+      ]
+    },
+    "qQdpwzfRMHhJUa4w/7FWjA==": {
+      "translations": [
+        {
+          "translation": "Tx Hash"
+        }
+      ]
+    },
+    "6dPov/3WWLjmiAtm66UKtQ==": {
+      "translations": [
+        {
+          "translation": "Prezzo / unità"
+        }
+      ]
+    },
+    "7OybV1tFQvw3y2hKaxWUmA==": {
+      "translations": [
+        {
+          "translation": "Quantità"
+        }
+      ]
+    },
+    "ZUn3u79h4cRD2YzH3fXr2A==": {
+      "translations": [
+        {
+          "translation": "Registrare"
+        }
+      ]
+    },
+    "jl093qUjWarZ1XmhSSbXcA==": {
+      "translations": [
+        {
+          "translation": "Check-out"
+        }
+      ]
+    },
+    "oqwNF+A0lExDpskbNclwTg==": {
+      "translations": [
+        {
+          "translation": "Inizio noleggio"
+        }
+      ]
+    },
+    "9OMSjLyMkyRiIaJ8SBnqyw==": {
+      "translations": [
+        {
+          "translation": "Fine noleggio"
+        }
+      ]
+    },
+    "FBs6gOAFyap0krOkDiquyg==": {
+      "translations": [
+        {
+          "translation": "Prezzo totale"
+        }
+      ]
+    },
+    "pCnW9dCjDjhv0NTuQqUe2A==": {
+      "translations": [
+        {
+          "translation": "Stato del pagamento"
+        }
+      ]
+    },
+    "3pOzT705Ai9uGcvm95Na3w==": {
+      "translations": [
+        {
+          "translation": "Data offerta"
+        }
+      ]
+    },
+    "M2BrdF9SwT1krQZ/WEjFpQ==": {
+      "translations": [
+        {
+          "translation": "Numero offerta"
+        }
+      ]
+    },
+    "nYPLuTHlpmcjxDT1vlyYMg==": {
+      "translations": [
+        {
+          "translation": "Respingere l'offerta"
+        }
+      ]
+    },
+    "GN1E8lzMKvP50rMTh92DSA==": {
+      "translations": [
+        {
+          "translation": "Accettare un'offerta"
+        }
+      ]
+    },
+    "w9bk0qXot+z5KWdGOoM6XA==": {
+      "translations": [
+        {
+          "translation": "Lascia una recensione e finalizza la transazione"
+        }
+      ]
+    },
+    "VHFifMxtMBpl7wQxqL87Qg==": {
+      "translations": [
+        {
+          "translation": "Come giudichi la tua esperienza?"
+        }
+      ]
+    },
+    "+4fB7ygpazVhmoB3zG8cLA==": {
+      "translations": [
+        {
+          "translation": "Qualcosa su cui vorresti commentare?"
+        }
+      ]
+    },
+    "zAz0qzQAMIZWd6M7n6uZOg==": {
+      "translations": [
+        {
+          "translation": "ultimare"
+        }
+      ]
+    },
+    "VQCq6PSOS1vzK290BsnQNw==": {
+      "translations": [
+        {
+          "translation": "Segnala un problema"
+        }
+      ]
+    },
+    "NspPzWi6EC+0+hV1ZHJdCQ==": {
+      "translations": [
+        {
+          "translation": "Passo successivo"
+        }
+      ]
+    },
+    "LZrUP+ZIeXqJRqyLiRhYaA==": {
+      "translations": [
+        {
+          "translation": "Lascia il tuo indirizzo di spedizione al venditore"
+        }
+      ]
+    },
+    "sMsaeCID3irEn5xdZJJ+bQ==": {
+      "translations": [
+        {
+          "translation": "Fare clic sul pulsante per aprire la messaggistica"
+        }
+      ]
+    },
+    "ujJ8g0EYiCIH2kwyJyMfVQ==": {
+      "translations": [
+        {
+          "translation": "Venditore del messaggio"
+        }
+      ]
+    },
+    "V1GgdZO6KZeduKxo/ipthQ==": {
+      "translations": [
+        {
+          "translation": "Passo successivo"
+        }
+      ]
+    },
+    "XLHaYbAmaXCqclP5HM83YA==": {
+      "translations": [
+        {
+          "translation": "Il venditore esaminerà la tua prenotazione"
+        }
+      ]
+    },
+    "mwdxkNowIHDrWwpG03IC2w==": {
+      "translations": [
+        {
+          "translation": "Offerta Ritirata"
+        }
+      ]
+    },
+    "Rr6mOSd9OGeBmenzhAxBAA==": {
+      "translations": [
+        {
+          "translation": "L'acquirente ha ritirato la sua offerta"
+        }
+      ]
+    },
+    "pavSaTOWIGUadJJz+LT+dA==": {
+      "translations": [
+        {
+          "translation": "Hai ritirato la tua offerta"
+        }
+      ]
+    },
+    "z8w3vsKBV7fTh9OAeb+5Ag==": {
+      "translations": [
+        {
+          "translation": "Offerta Rifiutata"
+        }
+      ]
+    },
+    "I11Qx+yjIro8ClQNygfWyA==": {
+      "translations": [
+        {
+          "translation": "Hai rifiutato questa offerta"
+        }
+      ]
+    },
+    "78ZwhZYCfj46DlFuXTC8BQ==": {
+      "translations": [
+        {
+          "translation": "La tua offerta è stata rifiutata dal venditore"
+        }
+      ]
+    },
+    "zXe0CpHR3Ollxxf5AoX7UA==": {
+      "translations": [
+        {
+          "translation": "Offerta contestata"
+        }
+      ]
+    },
+    "2ssaM9V9RN/jWiOAzPJSBQ==": {
+      "translations": [
+        {
+          "translation": "Aspetta di essere contattato da un membro del team Origin"
+        }
+      ]
+    },
+    "GzywuT3H7qeJlmK6UgbS5w==": {
+      "translations": [
+        {
+          "translation": "Disputa risolta"
+        }
+      ]
+    },
+    "VNosphgosByxNu7E0v6k8w==": {
+      "translations": [
+        {
+          "translation": "L'origine ha risolto questa disputa"
+        }
+      ]
+    },
+    "DayNJyKzoBH/IaNeKPXkSg==": {
+      "translations": [
+        {
+          "translation": "Transazione completata"
+        }
+      ]
+    },
+    "Y3sp8Tv0rCOhBhNoqfiotA==": {
+      "translations": [
+        {
+          "translation": "Questa transazione è stata finalizzata con successo e i fondi sono stati rilasciati al venditore."
+        }
+      ]
+    },
+    "N5pM2WbYjZGzn+35rDpssA==": {
+      "translations": [
+        {
+          "translation": "Assicurati di soddisfare l'ordine e attendere la conferma dell'acquirente"
+        }
+      ]
+    },
+    "iUsZ9XU931fYMNKBTeqx9g==": {
+      "translations": [
+        {
+          "translation": "Visualizza la lista di controllo degli adempimenti"
+        }
+      ]
+    },
+    "YkkjLoelBh8tfKxaGGO6HA==": {
+      "translations": [
+        {
+          "translation": "Segnala un problema"
+        }
+      ]
+    },
+    "SxmvkqrwlKQKpnbugoF2nQ==": {
+      "translations": [
+        {
+          "translation": "Lista di controllo degli adempimenti"
+        }
+      ]
+    },
+    "kzoeHvMMOD0KnB9Jl7KnIA==": {
+      "translations": [
+        {
+          "translation": "Verifica le varianti con il venditore"
+        }
+      ]
+    },
+    "FkRITz2i1lnwVgJ+TnWPcQ==": {
+      "translations": [
+        {
+          "translation": "Imballa il prodotto e spediscilo"
+        }
+      ]
+    },
+    "cugqsOArck9WsncrI/yzHQ==": {
+      "translations": [
+        {
+          "translation": "Informare l'acquirente e fornire il numero di tracciamento"
+        }
+      ]
+    },
+    "7JqkqcKaQqp/ulOyrCedkw==": {
+      "translations": [
+        {
+          "translation": "Attendi che l'acquirente riceva il prodotto"
+        }
+      ]
+    },
+    "OGSHiC9s4FiQeRCd3wxw+A==": {
+      "translations": [
+        {
+          "translation": "Prelevare i fondi"
+        }
+      ]
+    },
+    "zSUtImIcpEjCOnXDwhRuBA==": {
+      "translations": [
+        {
+          "translation": "Successo!"
+        }
+      ]
+    },
+    "8jjVVnJhBLiHo5x/+9nueA==": {
+      "translations": [
+        {
+          "translation": "Successo!"
+        }
+      ]
+    },
+    "Q7RQiJmdkwPTctx2s5dcoQ==": {
+      "translations": [
+        {
+          "translation": "C'è qualche problema?"
+        }
+      ]
+    },
+    "pWoAumXQ9fYRG4/WKCO1zw==": {
+      "translations": [
+        {
+          "translation": "Sei sicuro di voler segnalare un problema? Questo avvierà la procedura di risoluzione dei conflitti. Verranno avvisati tutti gli utenti di Origin e la cronologia della chat verrà resa pubblica a un arbitro."
+        }
+      ]
+    },
+    "X23G7YI9cvqkEJ8GhVueqQ==": {
+      "translations": [
+        {
+          "translation": "Oops, no aspetta..."
+        }
+      ]
+    },
+    "yaqFWwu3EkEQh7GBY1CtRg==": {
+      "translations": [
+        {
+          "translation": "Sì grazie"
+        }
+      ]
+    },
+    "ciQOKZFTUJuVTIiKxHQDlA==": {
+      "translations": [
+        {
+          "translation": "Invia"
+        }
+      ]
+    },
+    "MsPV+MCh0HtvCFVCptYr/w==": {
+      "translations": [
+        {
+          "translation": "Hai inoltrato questo problema a un membro del team Origin. Sarai contattato una volta che sarà stata formulata una richiesta."
+        }
+      ]
+    },
+    "kfS7RSi+eTq2o4LR/sPR7Q==": {
+      "translations": [
+        {
+          "translation": "Successo!"
+        }
+      ]
+    },
+    "pk3KYayGmBREn0PI4iFlVg==": {
+      "translations": [
+        {
+          "translation": "Respingere l'offerta"
+        }
+      ]
+    },
+    "Wu+qdvW6dZoUQ2a8YcuJ5w==": {
+      "translations": [
+        {
+          "translation": "Sei sicuro di voler rifiutare questa offerta? I fondi dei compratori saranno restituiti a loro."
+        }
+      ]
+    },
+    "iIQRnV5hXaAtOzwlMaKG1g==": {
+      "translations": [
+        {
+          "translation": "Rifiuta"
+        }
+      ]
+    },
+    "nYgXfvklP8K6I287NGYvBA==": {
+      "translations": [
+        {
+          "translation": "Questa offerta è stata rifiutata"
+        }
+      ]
+    },
+    "j40DCoib9csmgk7p1qB0eA==": {
+      "translations": [
+        {
+          "translation": "Hai rifiutato l'offerta di questo acquirente."
+        }
+      ]
+    },
+    "m0BMtaQu9jw3yFO7nBl3Vg==": {
+      "translations": [
+        {
+          "translation": "Ritira l'offerta"
+        }
+      ]
+    },
+    "pLCZDndYDvgrvDQTSi27OA==": {
+      "translations": [
+        {
+          "translation": "Ritira l'offerta"
+        }
+      ]
+    },
+    "r6xzKSXU04+FE5VHRpUYVg==": {
+      "translations": [
+        {
+          "translation": "Sei sicuro di voler ritirare la tua offerta? Il tuo pagamento in garanzia verrà restituito al tuo portafoglio."
+        }
+      ]
+    },
+    "2goCMoy69ARZSLk1PjdVqQ==": {
+      "translations": [
+        {
+          "translation": "Ritirarsi"
+        }
+      ]
+    },
+    "HJowvY/6xmgkY3lXCgNQrQ==": {
+      "translations": [
+        {
+          "translation": "Successo!"
+        }
+      ]
+    },
+    "VGM31/n7NCk61OuI0Wz2fA==": {
+      "translations": [
+        {
+          "translation": "Offerta {id}"
+        }
+      ]
+    },
+    "sijwJsqaANPV7KUAvSIubw==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "hccda74CwmCatYfhm387eQ==": {
+      "translations": [
+        {
+          "translation": "Avanzamento della transazione"
+        }
+      ]
+    },
+    "r49/Dx4NYLPBCkNVtxCCfw==": {
+      "translations": [
+        {
+          "translation": "Cronologia delle transazioni"
+        }
+      ]
+    },
+    "Ey4Sd7cIJJPB3nj9OStOVQ==": {
+      "translations": [
+        {
+          "translation": "Dettagli dell'inserzione"
+        }
+      ]
+    },
+    "Da38AMJbLvBFbijuOHF6Xg==": {
+      "translations": [
+        {
+          "translation": "Dettagli dell'offerta"
+        }
+      ]
+    },
+    "ErUqOhnKC3V7GzECNCCHMQ==": {
+      "translations": [
+        {
+          "translation": "Circa {sellerOrBuyer}."
+        }
+      ]
+    },
+    "MSS8kemsC1gNq34uoD4fKg==": {
+      "translations": [
+        {
+          "translation": "Compratore"
+        }
+      ]
+    },
+    "jKHS7SWemBx920wc9baQDQ==": {
+      "translations": [
+        {
+          "translation": "Venditore"
+        }
+      ]
+    },
+    "Vy9+qH9dhX/MjDBFbbau/A==": {
+      "translations": [
+        {
+          "translation": "Le mie vendite"
+        }
+      ]
+    },
+    "ryJsozU2awI4nvYi5MwSqg==": {
+      "translations": [
+        {
+          "translation": "I miei acquisti"
+        }
+      ]
+    },
+    "g8yomS7zK+dg5WQmAPDMsQ==": {
+      "translations": [
+        {
+          "translation": "I miei annunci"
+        }
+      ]
+    },
+    "vHm8g0uk8a8fdg3zaYmJMg==": {
+      "translations": [
+        {
+          "translation": "I miei annunci"
+        }
+      ]
+    },
+    "R4FcWDcOIqO7Tlc5qDj4yw==": {
+      "translations": [
+        {
+          "translation": "Tutti"
+        }
+      ]
+    },
+    "FllrY75ccaaHIC0TfV3wtg==": {
+      "translations": [
+        {
+          "translation": "Attivo"
+        }
+      ]
+    },
+    "AceTpRre2gN9HdDBQaKrbw==": {
+      "translations": [
+        {
+          "translation": "Inattivo"
+        }
+      ]
+    },
+    "cenWOoZ8JHLcfWm2tZJnOw==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "jFQ7644SCdcZTdP770XQuQ==": {
+      "translations": [
+        {
+          "translation": "Elencato su"
+        }
+      ]
+    },
+    "y+3l9CFy8fwAqeSdux+IUQ==": {
+      "translations": [
+        {
+          "translation": "Modifica inserzione"
+        }
+      ]
+    },
+    "c6JpaJWP06U7c47JBBcLNA==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "2ZiI1i1R1/hHvBDHcRLEZQ==": {
+      "translations": [
+        {
+          "translation": "Carica di più"
+        }
+      ]
+    },
+    "b8rO1MkJzb3hMKSpcZsfcA==": {
+      "translations": [
+        {
+          "translation": "Chiudi l'annuncio"
+        }
+      ]
+    },
+    "CR/0eNb4uyRVMRig1DV79w==": {
+      "translations": [
+        {
+          "translation": "I miei acquisti"
+        }
+      ]
+    },
+    "M1mxwCvjbP9eAG3t51F0wQ==": {
+      "translations": [
+        {
+          "translation": "I miei acquisti"
+        }
+      ]
+    },
+    "tl9fsk5aKtXOfDHbWvZIAg==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "iiDxVPoljj15ediYDd3zsA==": {
+      "translations": [
+        {
+          "translation": "Completato"
+        }
+      ]
+    },
+    "1NuhArdh+XwQVOO7TCl6hA==": {
+      "translations": [
+        {
+          "translation": "Tutti"
+        }
+      ]
+    },
+    "jSbLCuknDhZSIirFxB46Eg==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "4gsleVszXBRGkXpyI4Yztw==": {
+      "translations": [
+        {
+          "translation": "Offerta fatta il"
+        }
+      ]
+    },
+    "xGeosYr5EVfdyy6fUr9R7A==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "JbM6gj53IguD10JFC64o6A==": {
+      "translations": [
+        {
+          "translation": "Carica di più"
+        }
+      ]
+    },
+    "b0FRfo4QDI6zzl6oVIVIPQ==": {
+      "translations": [
+        {
+          "translation": "Le mie vendite"
+        }
+      ]
+    },
+    "S+acB/JxUqQ6+IpstXgzzA==": {
+      "translations": [
+        {
+          "translation": "Le mie vendite"
+        }
+      ]
+    },
+    "3tRlfdG4nQfSuWZIb+XoAw==": {
+      "translations": [
+        {
+          "translation": "In sospeso"
+        }
+      ]
+    },
+    "buuucNhreFnajK3t1O3bzA==": {
+      "translations": [
+        {
+          "translation": "Completato"
+        }
+      ]
+    },
+    "jQ9i8K9tI2hHt2ODqZQ2UQ==": {
+      "translations": [
+        {
+          "translation": "Tutti"
+        }
+      ]
+    },
+    "ro2583PslzKZhuolvesI/g==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "8jvi4qLLVB5A3DmDQiFdMw==": {
+      "translations": [
+        {
+          "translation": "Offerta fatta il"
+        }
+      ]
+    },
+    "/H1/OJnfBBC4bzKiZp2X+g==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "fUPthq4dBACknykVl2yIHw==": {
+      "translations": [
+        {
+          "translation": "Carica di più"
+        }
+      ]
+    },
+    "p1aHgndckng0cIWC5sNAjw==": {
+      "translations": [
+        {
+          "translation": "Modifica il Profilo"
+        }
+      ]
+    },
+    "VTbmHdaWRvm1fESc/VerTw==": {
+      "translations": [
+        {
+          "translation": "Nome"
+        }
+      ]
+    },
+    "IjGi8QXZRD9rcM2mQJr24w==": {
+      "translations": [
+        {
+          "translation": "Cognome"
+        }
+      ]
+    },
+    "VlV9VZz3J84sVOLSd3qpzQ==": {
+      "translations": [
+        {
+          "translation": "Descrizione"
+        }
+      ]
+    },
+    "NI5vw9QeYHXy81wZxU+ARg==": {
+      "translations": [
+        {
+          "translation": "Queste informazioni saranno pubblicate sulla blockchain e saranno visibili a tutti."
+        }
+      ]
+    },
+    "vhjDWeZuJa2szAmOG5kLLA==": {
+      "translations": [
+        {
+          "translation": "Il nome è obbligatorio"
+        }
+      ]
+    },
+    "Sy/m4fI1v+lIL0apzMVyOw==": {
+      "translations": [
+        {
+          "translation": "Caricamento..."
+        }
+      ]
+    },
+    "EO3o5BXWLICGLwcnHAYbmA==": {
+      "translations": [
+        {
+          "translation": "Nessun contratto di mercato?"
+        }
+      ]
+    },
+    "I1sgwHyAcG8bg7ojs5hMsA==": {
+      "translations": [
+        {
+          "translation": "Carica di più"
+        }
+      ]
+    },
+    "YAWDILzZ3E5NO0VUMCfOhg==": {
+      "translations": [
+        {
+          "translation": "Benvenuto in Origin Protocol"
+        }
+      ]
+    },
+    "8necMjpWXqiRsgeWRyKzeQ==": {
+      "translations": [
+        {
+          "translation": "modifica il tuo profilo"
         }
       ]
     },
@@ -657,7 +5877,56 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "La verifica del tuo profilo consente ad altri utenti di sapere che sei una persona reale e aumenta le possibilità di transazioni di successo su Origin."
+          "translation": "{verifyingYourProfile} consente agli altri utenti di sapere che sei una persona reale e aumenta le possibilità di successo delle transazioni su Origin."
+        }
+      ]
+    },
+    "nKccGV4lhmxhDoHN+UDtgg==": {
+      "translations": [
+        {
+          "translation": "Verificando il tuo profilo"
+        }
+      ]
+    },
+    "VXkw3rZOG6nmHYODyFTqOg==": {
+      "translations": [
+        {
+          "translation": "Utente senza nome"
+        }
+      ]
+    },
+    "tKwSeiu9lfDPt5+SHwfkgA==": {
+      "translations": [
+        {
+          "translation": "Informazioni verificate"
+        }
+      ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Telefono"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Posta elettronica"
+        }
+      ]
+    },
+    "5C6dlhx/VKCxxrro4D0otA==": {
+      "translations": [
+        {
+          "translation": "Utente senza nome"
+        }
+      ]
+    },
+    "W8DLWmRqV9o0OFVHEAa6DA==": {
+      "translations": [
+        {
+          "translation": "Nessuna descrizione"
         }
       ]
     }
