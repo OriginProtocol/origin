@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/UserNotifications'
@@ -62,13 +63,15 @@ class NotificationsDropdown extends Component {
     if (error) {
       content = (
         <div className="dropdown-menu dropdown-menu-right show p-3">
-          Error loading notifications
+          <fbt desc="nav.notifications.errorLoading">
+            Error loading notifications
+          </fbt>
         </div>
       )
     } else if (loading) {
       content = (
         <div className="dropdown-menu dropdown-menu-right show p-3">
-          Loading...
+          <fbt desc="nav.notifications.loading">Loading...</fbt>
         </div>
       )
     } else if (open) {
@@ -112,7 +115,10 @@ class NotificationsDropdown extends Component {
 }
 
 const NotificationsContent = ({ totalCount, nodes, onClose, onClick }) => {
-  const title = `Notification${totalCount === 1 ? '' : 's'}`
+  const title = fbt(
+    fbt.plural('Notification', totalCount),
+    'nav.notifications.title'
+  )
   return (
     <div className="dropdown-menu dropdown-menu-right show">
       <div className="count">
@@ -127,7 +133,7 @@ const NotificationsContent = ({ totalCount, nodes, onClose, onClick }) => {
         />
       ))}
       <Link to="/notifications" onClick={() => onClose()}>
-        View All
+        <fbt desc="nav.notification.viewAll">View All</fbt>
       </Link>
     </div>
   )
