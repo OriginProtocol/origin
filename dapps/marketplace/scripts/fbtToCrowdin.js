@@ -13,7 +13,7 @@ const allMessages = {}
 // To prevent machine translation from translating variables,
 // we encode them into an untranslatable string composed of several parts:
 //  - Optional "E_" if the argument has a "=" prefix.
-//  - DO_NOT_TRANSLATE__ prefix
+//  - VAR_ prefix
 //  - Variable name, with all letters in upper case and spaces replaced with "_".
 //    The variable name is to help giving extra context to the translators.
 //  - Base64 encoded version of the original variable name, with no "=" padding at the end.
@@ -21,13 +21,20 @@ const allMessages = {}
 //    files exported by crowdin back to fbt format. Prefixed by "_B64_".
 //
 // For example, the variable {=Apple and banana} gets converted into
-// {E_DO_NOT_TRANSLATE_APPLE_AND_BANANA_B64_QXBwbGUgYW5kIGJhbmFuYQ}
+// {E_VAR_APPLE_AND_BANANA_B64_QXBwbGUgYW5kIGJhbmFuYQ}
 //
 // For the decoding counterpart of this method, see crowdinToFbt.js
 //
 const EqualPrefix = 'E_'
-const DoNotTranslatePrefix = 'DO_NOT_TRANSLATE_'
+const VarPrefix = 'VAR_'
 const b64Prefix = '_B64_'
+
+function b64Encode(str) {
+  return new Buffer.from(str).toString('base64')
+    .replace(/\=/g, '')       // Strip base64 padding. It is not essential.
+    .replace(/\//g, 'SLASH')  // Replace '/' since otherwise MT alters the string.
+    .replace(/\+/g, 'PLUS')   // Replace '+' since otherwise MT alters the string.
+}
 
 function encodeVarName(varName) {
   let name = varName
@@ -38,16 +45,33 @@ function encodeVarName(varName) {
     name = name.slice(1)
   }
 
-  // Convert variable name into all upper case with spaces replaced by underscores.
-  const upper = name.toUpperCase().replace(/\ /g, '_')
+  const sanitizedName = name
+    .replace(/\ /g, '_') // Replace spaces with underscores
+    .replace(/[^a-zA-Z0-9_]/g, '') // Strip any non alphabet character
+    .toUpperCase() // Convert to upper case.
 
-  // Base 64 encode the variable name. Remove any extra = paddings.
-  const b64 = new Buffer.from(name).toString('base64').replace(/\=/g, '')
+  // Base 64 encode the original variable name and sanitize it
+  // so that MT does not try to alter it.
+  const b64Name = b64Encode(name)
 
-  return prefix + DoNotTranslatePrefix + upper + b64Prefix + b64
+  return prefix + VarPrefix + sanitizedName + b64Prefix + b64Name
 }
 
 function encode(str) {
+  // Special case for strings that are just a concatenation of variables.
+  // For ex.: "{=var1}{=var2}...{=var3}"
+  // This happens when a blob of html is wrapped into a fbt tag, such as:
+  // </fbt desc="blob">
+  //   This is
+  //   <b> a huge</b>
+  //   blob
+  // </fbt>
+  // In that case we base64 encode the whole string.
+  if (str.startsWith('{=') && str.endsWith('}')) {
+    const b64 = b64Encode(str.slice(1, str.length-1))
+    return '{' + VarPrefix + b64 + '}'
+  }
+
   let out = ''
   let varName = ''
   let inBracket = false
@@ -69,7 +93,6 @@ function encode(str) {
       out += cur
     }
   }
-  console.log("Encoded ", str, " into ", out)
   return out
 }
 

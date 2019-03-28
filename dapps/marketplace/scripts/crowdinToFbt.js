@@ -11,13 +11,20 @@ const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl
   ' '
 )
 
-
-
 // Decodes variable names from crowdin into their original name.
 // See encoding format in fbtToCrowdin.js
 const EqualPrefix = 'E_'
-const DoNotTranslatePrefix = 'DO_NOT_TRANSLATE_'
+const VarPrefix = 'VAR_'
 const b64Prefix = '_B64_'
+
+function b64Decode(data) {
+  // The "/" and "+" characters cause MT to alter
+  // the data so they were replace during encoding.
+  const b64Encoded = data
+    .replace(/SLASH/g, '/')
+    .replace(/PLUS/g, '+')
+  return new Buffer(b64Encoded, 'base64').toString()
+}
 
 function decodeVarName(encodedVarName) {
   let data = encodedVarName
@@ -26,10 +33,10 @@ function decodeVarName(encodedVarName) {
     data = data.slice(EqualPrefix.length)
   }
 
-  if (!data.startsWith(DoNotTranslatePrefix)) {
-    throw new Error(`Unexpected variable format. Missing prefix DO_NOT_TRANSLATE'. Var=${encodedVarName}`)
+  if (!data.startsWith(VarPrefix)) {
+    throw new Error(`Unexpected variable format. Missing prefix ${VarPrefix}. Var=${encodedVarName}`)
   }
-  data = data.slice(DoNotTranslatePrefix.length)
+  data = data.slice(VarPrefix.length)
 
   // Extract the parts from the encoded variable name.
   const parts = data.split(b64Prefix)
@@ -39,15 +46,19 @@ function decodeVarName(encodedVarName) {
 
   // Base64 decode the variable name.
   const b64 = parts[1]
-  const originalVarName = new Buffer(b64, 'base64').toString()
+  const originalVarName = b64Decode(b64)
 
   return originalVarName
 }
 
-// To prevent machine translation from translating variables, we converted
-// alphabet characters into 'bubble' characters equivalent when in brackets.
-// This functions turns it back into what fbt wants.
-function unhideVars(str) {
+
+function decode(str) {
+  // Special case where the entire string was just concatenated variables.
+  if (str.startsWith('{' + VarPrefix) && str.endsWith('}')) {
+    const decodedStr = b64Decode(str)
+    return '{' + decodedStr + '}'
+  }
+
   let out=''
   let encodedVarName = ''
   let inBracket = false
@@ -95,7 +106,7 @@ locales.forEach(locale => {
     const val = doTestMark ? '◀'+stringKeyValue[key]+'▶' : stringKeyValue[key]
     translations[key] = {
       'translations': [
-        { 'translation': unhideVars(val) }
+        { 'translation': decode(val) }
       ]
     }
   })
