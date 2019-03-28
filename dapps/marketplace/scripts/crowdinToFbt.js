@@ -14,8 +14,8 @@ const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl
 const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
 const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-// To prevent machine translation from translating variables,
-// we converted spaces to underscores when in brackets.
+// To prevent machine translation from translating variables, we converted
+// alphabet characters into 'bubble' characters equivalent when in brackets.
 // This functions turns it back into what fbt wants.
 function unhideVars(str) {
   let out=''

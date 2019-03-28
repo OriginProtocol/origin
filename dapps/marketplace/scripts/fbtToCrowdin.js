@@ -11,7 +11,7 @@ const phrases = JSON.parse(facebookTranslations).phrases
 const allMessages = {}
 
 // To prevent machine translation from translating variables,
-// convert spaces to underscores when in brackets.
+// convert alphabet characters into their 'bubble' equivalent when in brackets.
 function hideVars(str) {
   const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
   const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
