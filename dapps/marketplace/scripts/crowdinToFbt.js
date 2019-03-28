@@ -11,6 +11,33 @@ const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl
   ' '
 )
 
+const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
+const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+// To prevent machine translation from translating variables,
+// we converted spaces to underscores when in brackets.
+// This functions turns it back into what fbt wants.
+function unhideVars(str) {
+  let out=''
+  let inBracket = false
+  str.replace('DO_NOT_TRANSLATE_','')
+  for (var i = 0; i < str.length; i++) {
+    const cur = str.charAt(i)
+    if (cur==='{') {
+      inBracket=true
+    } else if (cur==='}') {
+      inBracket=false
+    }
+    if (inBracket) {
+      out += cur=='_' ? ' ' : cur
+    } else {
+      out += cur
+    }
+  }
+  return out
+}
+
+
 locales.forEach(locale => {
   // If testing, we use English for all
   const srcFile = doTestMark ?
@@ -35,7 +62,7 @@ locales.forEach(locale => {
     const val = doTestMark ? '◀'+stringKeyValue[key]+'▶' : stringKeyValue[key]
     translations[key] = {
       'translations': [
-        { 'translation': val }
+        { 'translation': unhideVars(val) }
       ]
     }
   })
