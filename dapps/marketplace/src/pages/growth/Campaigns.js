@@ -25,38 +25,19 @@ const GrowthTranslation = ({ stringKey }) => {
   )
 }
 
-function CampaignNavItem(props) {
-  const { campaign, selected, onClick } = props
-  const completedIndicator =
-    campaign.status === 'Completed' || campaign.status === 'CapReached'
-
-  let statusClass = ''
-  if (campaign.status === 'Active') {
-    statusClass = 'active'
-  } else if (campaign.status === 'Pending') {
-    statusClass = 'inactive'
-  }
-
+function NavigationItem(props) {
+  const { selected, onClick, title } = props
   return (
     <a
       href="#"
       onClick={e => {
         e.preventDefault()
-        onClick(campaign.id)
+        onClick()
       }}
-      className="pt-4 pb-4 pl-3 pr-3"
+      className="pt-4 pr-4"
     >
-      <div className="campaign d-flex flex-column align-items-center">
-        <div className={`status ${statusClass}`}>
-          {completedIndicator && <img src="images/circular-check-button.svg" />}
-        </div>
-        <div className={`name ${selected ? 'active' : ''}`}>
-          {GrowthEnum[campaign.shortNameKey] ? (
-            <GrowthTranslation stringKey={campaign.shortNameKey} />
-          ) : (
-            'Campaign'
-          )}
-        </div>
+      <div className="d-flex flex-column align-items-center">
+        <div className={`title ${selected ? 'active' : ''}`}>{title}</div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -64,20 +45,19 @@ function CampaignNavItem(props) {
 }
 
 function CampaignNavList(props) {
-  const { campaigns, onCampaignClick, selectedCampaignId } = props
+  const { campaigns, onNavigationClick, navigation } = props
   return (
-    <div className="campaign-list d-flex justify-content-center mt-4">
-      {campaigns
-        // do not show campaigns that have not started yet
-        .filter(campaign => campaign.status !== 'Pending')
-        .map(campaign => (
-          <CampaignNavItem
-            key={campaign.id}
-            campaign={campaign}
-            selected={campaign.id === selectedCampaignId}
-            onClick={onCampaignClick}
-          />
-        ))}
+    <div className="campaign-list d-flex justify-content-left mt-4">
+      <NavigationItem
+        selected={navigation === 'currentCampaign'}
+        onClick={() => onNavigationClick('currentCampaign')}
+        title={fbt('Current Campaign', 'growth.campaigns.currentCampaign')}
+      />
+      <NavigationItem
+        selected={navigation === 'pastCampaigns'}
+        onClick={() => onNavigationClick('pastCampaigns')}
+        title={fbt('Past Campaigns', 'growth.campaigns.pastCampaigns')}
+      />
     </div>
   )
 }
@@ -212,10 +192,134 @@ function Campaign(props) {
   )
 }
 
+class PastCampaigns extends Component {
+  render() {
+    const {
+      campaigns,
+      decimalDivision
+    } = this.props
+
+    const pastCampaigns = campaigns.filter(campaign => 
+      campaign.status === 'Completed' || campaign.status === 'CapReached')
+
+    const totalEarnings = pastCampaigns
+      .map(campaign => web3.utils
+        .toBN(
+          campaign.rewardEarned ? campaign.rewardEarned.amount : 0
+        )
+      )
+      .reduce(
+        (accumulator, currentValue) => accumulator.add(currentValue),
+        web3.utils.toBN(0))
+      .div(decimalDivision)
+
+    return (
+      <div className="past-campaigns d-flex flex-column">
+        <div className="title">
+          <fbt desc="growth.campaigns.totalEarnings">
+            Total Earnings
+          </fbt>
+        </div>
+        <div className="total-earned d-flex mt-2 align-items-center">
+          <img className="mr-1" src="images/ogn-icon.svg"/>
+          <div>{totalEarnings.toString()}</div>
+        </div>
+        <div>
+          {pastCampaigns.map(campaign => {
+            const nameKey = campaign.nameKey
+            const tokensEarned = web3.utils
+              .toBN(
+                campaign.rewardEarned ? campaign.rewardEarned.amount : 0
+              )
+              .div(decimalDivision)
+
+            return (
+              <div className="past-campaign">
+                <div key={nameKey} className="campaign-title">
+                  {GrowthEnum[nameKey] ? (
+                    <GrowthTranslation stringKey={nameKey} />
+                  ) : (
+                    'Campaign'
+                  )}
+                </div>
+                <div className="d-flex align-items-center tokens-earned-holder">
+                  <div className="tokens-earned mr-2">
+                    <fbt desc="growth.campaigns.tokensEarned">
+                      Tokens earned
+                    </fbt>
+                  </div>
+                  <div className="total-earned d-flex align-items-center">
+                    <img className="mr-1" src="images/ogn-icon.svg"/>
+                    <div>{tokensEarned.toString()}</div>
+                  </div>
+                </div>
+                <ProgressBar
+                  maxValue={maxProgressBarTokens}
+                  progress={Math.min(tokensEarned.toString(), maxProgressBarTokens)}
+                  showIndicators={false}
+                  style="compact"
+                />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+}
+
+class GrowthCampaign extends Component {
+  state = {
+    navigation: 'currentCampaign'
+  }
+
+  render() {
+    const {
+      navigation
+    } = this.state
+
+    const {
+      handleNavigationChange,
+      campaigns,
+      accountId,
+      decimalDivision
+    } = this.props
+
+    const activeCampaign = campaigns.find(
+      campaign => campaign.status === 'Active'
+    )
+
+    return (
+      <Fragment>
+        <CampaignNavList
+          campaigns={campaigns}
+          navigation={navigation}
+          onNavigationClick={navigation => {
+            this.setState({ navigation })
+          }}
+        />
+        {navigation === 'currentCampaign' && <Campaign
+          campaign={activeCampaign}
+          accountId={accountId}
+          handleNavigationChange={navigation =>
+            handleNavigationChange(
+              navigation
+            )
+          }
+          decimalDivision={decimalDivision}
+        />}
+        {navigation === 'pastCampaigns' && <PastCampaigns
+          campaigns={campaigns}
+          decimalDivision={decimalDivision}
+        />}
+      </Fragment>
+    )
+  }
+}
+
 class GrowthCampaigns extends Component {
   state = {
     first: 5,
-    selectedCampaignId: null,
     navigation: 'Campaigns'
   }
 
@@ -224,7 +328,6 @@ class GrowthCampaigns extends Component {
   }
 
   render() {
-    let selectedCampaignId = this.state.selectedCampaignId
     const { navigation } = this.state
 
     return (
@@ -288,29 +391,16 @@ class GrowthCampaigns extends Component {
                         const campaigns = data.campaigns.nodes
 
                         if (campaigns.length == 0) {
-                          return <h5 className="p-2">No campaigns detected</h5>
+                          return <h5 className="p-2">
+                            <fbt desc="growth.campaigns.noCampaignsDetected">
+                              No campaigns detected
+                            </fbt>
+                          </h5>
                         }
 
-                        if (selectedCampaignId === null) {
-                          const activeCampaign = campaigns.find(
-                            campaign => campaign.status === 'Active'
-                          )
-
-                          if (activeCampaign !== undefined) {
-                            selectedCampaignId = activeCampaign.id
-                          } else {
-                            selectedCampaignId = campaigns[0].id
-                          }
-                        }
-
-                        const selectedCampaign = find(
-                          campaigns,
-                          campaign => campaign.id === selectedCampaignId
+                        const activeCampaign = campaigns.find(
+                          campaign => campaign.status === 'Active'
                         )
-
-                        const referralAction = selectedCampaign.actions.filter(
-                          action => action.type === 'Referral'
-                        )[0]
 
                         return (
                           <Query
@@ -338,34 +428,21 @@ class GrowthCampaigns extends Component {
                               return (
                                 <Fragment>
                                   {navigation === 'Campaigns' && (
-                                    <Fragment>
-                                      <CampaignNavList
-                                        campaigns={campaigns}
-                                        onCampaignClick={campaignId => {
-                                          this.setState({
-                                            selectedCampaignId: campaignId
-                                          })
-                                        }}
-                                        selectedCampaignId={selectedCampaignId}
-                                      />
-                                      <Campaign
-                                        campaign={selectedCampaign}
-                                        accountId={accountId}
-                                        handleNavigationChange={navigation =>
-                                          this.handleNavigationChange(
-                                            navigation
-                                          )
-                                        }
-                                        decimalDivision={decimalDivision}
-                                      />
-                                    </Fragment>
+                                    <GrowthCampaign
+                                      campaigns={campaigns}
+                                      accountId={accountId}
+                                      decimalDivision={decimalDivision}
+                                      handleNavigationChange={navigation =>
+                                        this.handleNavigationChange(navigation)
+                                      }
+                                    />
                                   )}
                                   {navigation === 'Invite' && (
                                     <GrowthInvite
                                       handleNavigationChange={navigation =>
                                         this.handleNavigationChange(navigation)
                                       }
-                                      referralAction={referralAction}
+                                      activeCampaign={activeCampaign}
                                       decimalDivision={decimalDivision}
                                     />
                                   )}
@@ -413,28 +490,51 @@ require('react-styl')(`
       margin-left: 5px
       margin-bottom: -5px
     .campaign-list
-      .status
-        width: 20px
-        height: 20px
-        border-radius: 50%
-      .status.inactive
-          background-color: var(--light)
-      .status.active
-          background-color: var(--greenblue)
-      .campaign
-        .name
-          font-size: 0.88rem
-          line-height: 1.93
-          color: var(--bluey-grey)
-          font-weight: normal
-        .name.active
+      .select-bar
+        background-color: var(--clear-blue)
+        height: 4px
+        width: 100%
+      .title
+        font-size: 0.88rem
+        line-height: 1.93
+        color: var(--bluey-grey)
+        font-weight: normal
+      .title.active
+        color: var(--dark)
+    .past-campaigns
+      .title
+        font-size: 21px
+        font-weight: bold
+        font-style: normal
+        padding-top: 30px
+      .total-earned
+        font-size: 38px
+        font-weight: bold
+        color: var(--clear-blue)
+        line-height: 0.71
+      .total-earned img
+        width: 34px
+        height: 34px
+      .past-campaign
+        margin-top: 45px
+        .campaign-title
+          font-family: Poppins
+          font-size: 24px
+          font-weight: 300
           color: var(--dark)
-        .select-bar
-          background-color: var(--clear-blue)
-          height: 4px
-          width: 100%
-      img
-        width: 20px
-        height: 20px
-        vertical-align: inherit
+        .tokens-earned-holder
+          margin-top: 12px
+          .tokens-earned
+            font-family: Lato
+            color: var(--dark)
+            font-weight: normal
+        .total-earned
+          font-size: 18px
+          font-weight: bold
+          color: var(--clear-blue)
+          line-height: 1.5
+        .total-earned img
+          width: 20px
+          height: 20px
+
 `)
