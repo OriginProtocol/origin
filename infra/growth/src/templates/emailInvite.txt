@@ -1,7 +1,5 @@
 ${referrerName} has invited you to join Origin.
 
-
-You’ve been invited to buy and sell on Origin. You and ${referrerName} will both earn Origin cryptocurrency tokens (OGN) when you sign up. Origin tokens are a new cryptocurrency used on Origin. Earn tokens for verifying your profile, inviting your other friends, and buying and selling on the marketplace.
-
+You’ve been invited to buy and sell on Origin. You and ${referrerName} will both earn Origin Tokens (OGN) when you sign up. Origin Tokens are a new cryptocurrency used on Origin. Earn tokens for verifying your profile, inviting your other friends, and buying and selling on Origin's peer-to-peer marketplace.
 
 Sign up and earn OGN at ${targetUrl}
