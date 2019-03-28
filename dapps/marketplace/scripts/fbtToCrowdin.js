@@ -10,10 +10,35 @@ const facebookTranslations = fs.readFileSync(srcFile)
 const phrases = JSON.parse(facebookTranslations).phrases
 const allMessages = {}
 
+// To prevent machine translation from translating variables,
+// convert alphabet characters into their 'bubble' equivalent when in brackets.
+function hideVars(str) {
+  const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
+  const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let out=''
+  let inBracket = false
+  for (let i = 0; i < str.length; i++) {
+    const cur = str.charAt(i)
+    if (cur==='{') {
+      inBracket=true
+      out+='{DO_NOT_TRANSLATE:'
+      continue
+    } else if (cur==='}') {
+      inBracket=false
+    }
+    if (inBracket) {
+      out += alphabet.indexOf(cur) < 0 ? cur : bubbleAlphabet.charAt(alphabet.indexOf(cur))
+    } else {
+      out += cur
+    }
+  }
+  return out
+}
+
 phrases.forEach(phrase => {
   Object.keys(phrase.hashToText)
     .forEach(key => {
-      allMessages[key] = phrase.hashToText[key]
+      allMessages[key] = hideVars(phrase.hashToText[key])
     })
 
 })
