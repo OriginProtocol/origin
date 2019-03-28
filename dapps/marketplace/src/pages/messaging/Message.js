@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import isNil from 'lodash/isNil'
 import dayjs from 'dayjs'
+import Linkify from 'react-linkify'
 
 import withIdentity from 'hoc/withIdentity'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
@@ -35,7 +36,7 @@ function renderContent(message) {
       <>
         {content.split('\n').map((c, idx) => (
           <Fragment key={idx}>
-            {c}
+            <Linkify>{c}</Linkify>
             <br />
           </Fragment>
         ))}
@@ -221,5 +222,9 @@ require('react-styl')(`
           left: auto
           box-shadow: -10px 11px 0px -3px var(--clear-blue)
           transform: rotate(42deg)
+        a
+          color: white
+          &:hover
+            text-decoration: underline
 
 `)
