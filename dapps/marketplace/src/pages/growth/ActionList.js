@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import Action from 'pages/growth/Action'
 import { fbt } from 'fbt-runtime'
 
@@ -77,7 +77,6 @@ class ActionList extends Component {
 
   render() {
     const {
-      actions,
       title,
       decimalDivision,
       handleNavigationChange

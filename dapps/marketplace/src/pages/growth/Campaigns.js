@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import pick from 'lodash/pick'
-import find from 'lodash/find'
 import { fbt } from 'fbt-runtime'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
@@ -45,7 +44,7 @@ function NavigationItem(props) {
 }
 
 function CampaignNavList(props) {
-  const { campaigns, onNavigationClick, navigation } = props
+  const { onNavigationClick, navigation } = props
   return (
     <div className="campaign-list d-flex justify-content-left mt-4">
       <NavigationItem

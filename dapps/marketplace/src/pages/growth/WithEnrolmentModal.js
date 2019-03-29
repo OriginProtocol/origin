@@ -402,7 +402,7 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data, networkStatus, loading }) => {
+          {({ error, data }) => {
             if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
@@ -422,7 +422,7 @@ function withEnrolmentModal(WrappedComponent) {
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
-                {({ networkStatus, error, loading, data }) => {
+                {({ error, data }) => {
                   if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />

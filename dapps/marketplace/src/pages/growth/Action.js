@@ -34,7 +34,6 @@ function Action(props) {
 
   let foregroundImgSrc
   let title
-  let infoText
   let buttonLink = '/profile'
   let buttonOnClick = () => {
     window.scrollTo(0, 0)
