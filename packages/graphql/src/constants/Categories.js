@@ -29,6 +29,7 @@ const forSale = [
   ['schema.electronics', 'Electronics'],
   ['schema.farmGarden', 'Farm and Garden'],
   ['schema.furniture', 'Furniture'],
+  ['schema.giftCards', 'Gift Cards'],
   ['schema.healthBeauty', 'Health and Beauty'],
   ['schema.heavyEquipment', 'Heavy Equipment'],
   ['schema.householdItems', 'Household Items'],
