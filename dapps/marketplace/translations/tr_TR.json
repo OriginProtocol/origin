@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "Origin cryptocurrency belirteçleri (OGN) kazanmak için {Enroll}."
+          "translation": "Origin cryptocurrency belirteçleri (OGN) kazanmak için {=Enroll}."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Sizin kontrol edin {identity} böylece diğer alıcılar ve satıcılar kim olduğunu biliyorum."
+          "translation": "Sizin kontrol edin {=identity} böylece diğer alıcılar ve satıcılar kim olduğunu biliyorum."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "{Origin Messaging} etkinleştirmeyi unutmayın, böylece diğer kullanıcılarla iletişim kurabilirsiniz. Bedava."
+          "translation": "{=Origin Messaging} etkinleştirmeyi unutmayın, böylece diğer kullanıcılarla iletişim kurabilirsiniz. Bedava."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Herhangi bir sorunuz varsa veya bir anlaşmaya itiraz etmeniz gerekiyorsa, {let us know}."
+          "translation": "Herhangi bir sorunuz varsa veya bir anlaşmaya itiraz etmeniz gerekiyorsa, {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Bir hata mı buldunuz ya da geri bildiriminiz mi var? {[SupportEmail]} bir e-posta gönderin, {GitHub} bir sayı açın veya {Discord} # hata raporları kanalımızda yayınlayın."
+          "translation": "Bir hata mı buldunuz ya da geri bildiriminiz mi var? {=[SupportEmail]} bir e-posta gönderin, {=GitHub} bir sayı açın veya {=Discord} # hata raporları kanalımızda yayınlayın."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Girişinize, başkalarına ne sunduğunuzu bildirmek için uygun bir başlık ve açıklama vermeyi unutmayın. Bazı fotoğraflar eklemek, girişinizi satma şansınızı artıracaktır."
+          "translation": "{=Add Listing Details} Girişinize, başkalarına ne sunduğunuzu bildirmek için uygun bir başlık ve açıklama vermeyi unutmayın. Bazı fotoğraflar eklemek, girişinizi satma şansınızı artıracaktır."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Bu girişi gönderdiğinizde, işleminizi MetaMask'ta onaylamanız istenecektir. Alıcılar daha sonra listenizi görebilir ve teklif verebilir."
+          "translation": "{=What happens next?} Bu girişi gönderdiğinizde, işleminizi MetaMask'ta onaylamanız istenecektir. Alıcılar daha sonra listenizi görebilir ve teklif verebilir."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Cüzdanında 0 {OGN} var."
+          "translation": "Cüzdanında 0 {=OGN} var."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Artışlar her zaman OGN cinsinden hesaplanır ve yüklenir. {Learn more}"
+          "translation": "Artışlar her zaman OGN cinsinden hesaplanır ve yüklenir. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Bu listeyi artırmak için harcanacak maksimum tutar. Artışlar her zaman OGN'de, {USD is an estimate.}"
+          "translation": "Bu listeyi artırmak için harcanacak maksimum tutar. Artışlar her zaman OGN'de, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Girişinize, başkalarına ne sunduğunuzu bildirmek için uygun bir başlık ve açıklama vermeyi unutmayın. Bazı fotoğraflar eklemek, girişinizi satma şansınızı artıracaktır."
+          "translation": "{=Add Listing Details} Girişinize, başkalarına ne sunduğunuzu bildirmek için uygun bir başlık ve açıklama vermeyi unutmayın. Bazı fotoğraflar eklemek, girişinizi satma şansınızı artıracaktır."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Girişiniz birkaç saniye içinde görünecek. İşte bundan sonra ne olacak: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Girişiniz birkaç saniye içinde görünecek. İşte bundan sonra ne olacak: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Girişiniz birkaç saniye içinde görünecek. İşte bundan sonra ne olacak: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Girişiniz birkaç saniye içinde görünecek. İşte bundan sonra ne olacak: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Şu anda mobil cihazlarda kullanılamıyor"
+          "translation": "{=Warning:} Şu anda mobil cihazlarda kullanılamıyor"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "{[networkName]}"
+          "translation": "{=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "DApp'ımızdaki diğer kişilerle başarılı bir şekilde işlem yapabilmek için başlamadan önce birkaç şeye ihtiyacınız olacak. {Why do I need to do this?}"
+          "translation": "DApp'ımızdaki diğer kişilerle başarılı bir şekilde işlem yapabilmek için başlamadan önce birkaç şeye ihtiyacınız olacak. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "{highly recommend}olan masaüstü bildirimlerini açma isteğimizi reddettiniz."
+          "translation": "{=highly recommend}olan masaüstü bildirimlerini açma isteğimizi reddettiniz."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} Kimlik oluşturmak için cüzdanınızda para olması gerekir. Cüzdanınıza para yatırdıktan sonra ayarlarınıza giderek her zaman bunu yapabilirsiniz."
+          "translation": "{=You don't have funds} Kimlik oluşturmak için cüzdanınızda para olması gerekir. Cüzdanınıza para yatırdıktan sonra ayarlarınıza giderek her zaman bunu yapabilirsiniz."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} , diğer kullanıcıların sizin gerçek bir insan olduğunuzu bilmelerini sağlar ve Origin'de başarılı işlem yapma şansını artırır."
+          "translation": "{=Verifying your profile} , diğer kullanıcıların sizin gerçek bir insan olduğunuzu bilmelerini sağlar ve Origin'de başarılı işlem yapma şansını artırır."
         }
       ]
     },

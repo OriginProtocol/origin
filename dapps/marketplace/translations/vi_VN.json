@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} để kiếm mã thông báo tiền điện tử gốc (OGN)."
+          "translation": "{=Enroll} để kiếm mã thông báo tiền điện tử gốc (OGN)."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Vui lòng xác minh {identity} của bạn để người mua và người bán khác biết bạn là ai."
+          "translation": "Vui lòng xác minh {=identity} của bạn để người mua và người bán khác biết bạn là ai."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Đừng quên bật {Origin Messaging} để bạn có thể giao tiếp với những người dùng khác. Nó miễn phí."
+          "translation": "Đừng quên bật {=Origin Messaging} để bạn có thể giao tiếp với những người dùng khác. Nó miễn phí."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Nếu bạn có bất kỳ câu hỏi hoặc cần tranh chấp một giao dịch, {let us know}."
+          "translation": "Nếu bạn có bất kỳ câu hỏi hoặc cần tranh chấp một giao dịch, {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Tìm thấy một lỗi hoặc có thông tin phản hồi? Gửi email đến {[SupportEmail]} , mở một vấn đề trên {GitHub} hoặc đăng trong kênh # báo cáo lỗi của chúng tôi trên {Discord}."
+          "translation": "Tìm thấy một lỗi hoặc có thông tin phản hồi? Gửi email đến {=[SupportEmail]} , mở một vấn đề trên {=GitHub} hoặc đăng trong kênh # báo cáo lỗi của chúng tôi trên {=Discord}."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+          "translation": "{=Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Khi bạn gửi danh sách này, bạn sẽ được yêu cầu xác nhận giao dịch của mình trong MetaMask. Người mua sau đó sẽ có thể xem danh sách của bạn và đưa ra đề nghị trên đó."
+          "translation": "{=What happens next?} Khi bạn gửi danh sách này, bạn sẽ được yêu cầu xác nhận giao dịch của mình trong MetaMask. Người mua sau đó sẽ có thể xem danh sách của bạn và đưa ra đề nghị trên đó."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Bạn có 0 {OGN} trong ví của mình."
+          "translation": "Bạn có 0 {=OGN} trong ví của mình."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Tăng luôn được tính toán và tính phí trong OGN. {Learn more}"
+          "translation": "Tăng luôn được tính toán và tính phí trong OGN. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Số tiền tối đa sẽ được chi để tăng danh sách này. Tăng luôn ở OGN, {USD is an estimate.}"
+          "translation": "Số tiền tối đa sẽ được chi để tăng danh sách này. Tăng luôn ở OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+          "translation": "{=Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Hiện không khả dụng trên thiết bị di động"
+          "translation": "{=Warning:} Hiện không khả dụng trên thiết bị di động"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Đã kết nối với {[networkName]}"
+          "translation": "Đã kết nối với {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Để giao dịch thành công với những người khác trên DApp của chúng tôi, bạn sẽ cần một vài điều trước khi bắt đầu. {Why do I need to do this?}"
+          "translation": "Để giao dịch thành công với những người khác trên DApp của chúng tôi, bạn sẽ cần một vài điều trước khi bắt đầu. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Bạn đã từ chối yêu cầu của chúng tôi để bật thông báo trên máy tính để bàn mà chúng tôi {highly recommend}."
+          "translation": "Bạn đã từ chối yêu cầu của chúng tôi để bật thông báo trên máy tính để bàn mà chúng tôi {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} Bạn cần phải có tiền trong ví của mình để tạo danh tính. Bạn luôn có thể thực hiện việc này sau khi bạn nạp tiền vào ví của mình bằng cách vào cài đặt của bạn."
+          "translation": "{=You don't have funds} Bạn cần phải có tiền trong ví của mình để tạo danh tính. Bạn luôn có thể thực hiện việc này sau khi bạn nạp tiền vào ví của mình bằng cách vào cài đặt của bạn."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} cho phép người dùng khác biết rằng bạn là người thực và tăng cơ hội giao dịch thành công trên Origin."
+          "translation": "{=Verifying your profile} cho phép người dùng khác biết rằng bạn là người thực và tăng cơ hội giao dịch thành công trên Origin."
         }
       ]
     },

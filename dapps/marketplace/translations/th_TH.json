@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} เพื่อรับโทเค็น Origin cryptocurrency (OGN)"
+          "translation": "{=Enroll} เพื่อรับโทเค็น Origin cryptocurrency (OGN)"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "โปรดยืนยัน {identity} ของคุณเพื่อให้ผู้ซื้อและผู้ขายรายอื่นรู้ว่าคุณคือใคร"
+          "translation": "โปรดยืนยัน {=identity} ของคุณเพื่อให้ผู้ซื้อและผู้ขายรายอื่นรู้ว่าคุณคือใคร"
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "อย่าลืมเปิดใช้งาน {Origin Messaging} เพื่อให้คุณสามารถสื่อสารกับผู้ใช้รายอื่น นั่นฟรี."
+          "translation": "อย่าลืมเปิดใช้งาน {=Origin Messaging} เพื่อให้คุณสามารถสื่อสารกับผู้ใช้รายอื่น นั่นฟรี."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "หากคุณมีคำถามหรือต้องการโต้แย้งการทำธุรกรรม {let us know}"
+          "translation": "หากคุณมีคำถามหรือต้องการโต้แย้งการทำธุรกรรม {=let us know}"
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "พบข้อบกพร่องหรือมีข้อเสนอแนะ? ส่งอีเมลไปที่ {[SupportEmail]} เปิดปัญหาในวันที่ {GitHub} หรือโพสต์ในช่อง # bug-reports ของเราในวันที่ {Discord}"
+          "translation": "พบข้อบกพร่องหรือมีข้อเสนอแนะ? ส่งอีเมลไปที่ {=[SupportEmail]} เปิดปัญหาในวันที่ {=GitHub} หรือโพสต์ในช่อง # bug-reports ของเราในวันที่ {=Discord}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
+          "translation": "{=Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} เมื่อคุณส่งรายชื่อนี้คุณจะถูกขอให้ยืนยันการทำธุรกรรมของคุณใน MetaMask ผู้ซื้อจะสามารถเห็นรายชื่อของคุณและทำข้อเสนอได้"
+          "translation": "{=What happens next?} เมื่อคุณส่งรายชื่อนี้คุณจะถูกขอให้ยืนยันการทำธุรกรรมของคุณใน MetaMask ผู้ซื้อจะสามารถเห็นรายชื่อของคุณและทำข้อเสนอได้"
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "คุณมี 0 {OGN} ในกระเป๋าเงินของคุณ"
+          "translation": "คุณมี 0 {=OGN} ในกระเป๋าเงินของคุณ"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "บูสต์จะคำนวณและคิดค่าใช้จ่ายเป็น OGN {Learn more}"
+          "translation": "บูสต์จะคำนวณและคิดค่าใช้จ่ายเป็น OGN {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "จำนวนเงินสูงสุดที่จะใช้เพื่อเพิ่มรายชื่อนี้ บูสต์อยู่ใน OGN เสมอ {USD is an estimate.}"
+          "translation": "จำนวนเงินสูงสุดที่จะใช้เพื่อเพิ่มรายชื่อนี้ บูสต์อยู่ใน OGN เสมอ {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
+          "translation": "{=Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} ไม่สามารถใช้งานบนอุปกรณ์มือถือได้ในขณะนี้"
+          "translation": "{=Warning:} ไม่สามารถใช้งานบนอุปกรณ์มือถือได้ในขณะนี้"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "เชื่อมต่อกับ {[networkName]}"
+          "translation": "เชื่อมต่อกับ {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "เพื่อที่จะทำธุรกรรมกับผู้อื่นได้สำเร็จบน DApp ของเราคุณจะต้องมีบางสิ่งก่อนที่จะเริ่มต้น {Why do I need to do this?}"
+          "translation": "เพื่อที่จะทำธุรกรรมกับผู้อื่นได้สำเร็จบน DApp ของเราคุณจะต้องมีบางสิ่งก่อนที่จะเริ่มต้น {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "คุณได้ปฏิเสธคำขอของเราที่จะเปิดการแจ้งเตือนบนเดสก์ท็อปที่เรา {highly recommend}"
+          "translation": "คุณได้ปฏิเสธคำขอของเราที่จะเปิดการแจ้งเตือนบนเดสก์ท็อปที่เรา {=highly recommend}"
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} คุณต้องมีเงินในกระเป๋าเงินของคุณเพื่อสร้างข้อมูลประจำตัว คุณสามารถทำสิ่งนี้ได้ในภายหลังหลังจากที่คุณใส่เงินในกระเป๋าเงินของคุณโดยไปที่การตั้งค่าของคุณ"
+          "translation": "{=You don't have funds} คุณต้องมีเงินในกระเป๋าเงินของคุณเพื่อสร้างข้อมูลประจำตัว คุณสามารถทำสิ่งนี้ได้ในภายหลังหลังจากที่คุณใส่เงินในกระเป๋าเงินของคุณโดยไปที่การตั้งค่าของคุณ"
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} ทำให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin"
+          "translation": "{=Verifying your profile} ทำให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin"
         }
       ]
     },
