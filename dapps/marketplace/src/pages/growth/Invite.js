@@ -120,7 +120,11 @@ class GrowthInvite extends Component {
       >
         {({ loading, error, networkStatus }) => {
           if (networkStatus === 1 || loading) {
-            return <h5 className="p-2">Loading...</h5>
+            return (
+              <h5 className="p-2">
+                <fbt desc="Loading...">Loading...</fbt>
+              </h5>
+            )
           } else if (error) {
             return <QueryError error={error} query={inviteCodeQuery} />
           }
