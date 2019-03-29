@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} upang kumita ng mga Orihinal na cryptocurrency na mga token (OGN)."
+          "translation": "{=Enroll} upang kumita ng mga Orihinal na cryptocurrency na mga token (OGN)."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Paki-verify ang iyong {identity} kaya alam ng iba pang mga mamimili at nagbebenta kung sino ka."
+          "translation": "Paki-verify ang iyong {=identity} kaya alam ng iba pang mga mamimili at nagbebenta kung sino ka."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Huwag kalimutan na paganahin ang {Origin Messaging} upang maaari kang makipag-usap sa iba pang mga gumagamit. Ito'y LIBRE."
+          "translation": "Huwag kalimutan na paganahin ang {=Origin Messaging} upang maaari kang makipag-usap sa iba pang mga gumagamit. Ito'y LIBRE."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Kung mayroon kang anumang mga katanungan o kailangang makipagtalo sa isang transaksyon, {let us know}."
+          "translation": "Kung mayroon kang anumang mga katanungan o kailangang makipagtalo sa isang transaksyon, {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Nakakita ng bug o may feedback? Magpadala ng email sa {[SupportEmail]} , buksan ang isang isyu sa {GitHub} o mag-post sa aming # bug-ulat na channel sa {Discord}."
+          "translation": "Nakakita ng bug o may feedback? Magpadala ng email sa {=[SupportEmail]} , buksan ang isang isyu sa {=GitHub} o mag-post sa aming # bug-ulat na channel sa {=Discord}."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+          "translation": "{=Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Kapag isinumite mo ang listahang ito, tatanungin ka upang kumpirmahin ang iyong transaksyon sa MetaMask. Pagkatapos ay maaaring makita ng mga mamimili ang iyong listahan at gumawa ng mga alok dito."
+          "translation": "{=What happens next?} Kapag isinumite mo ang listahang ito, tatanungin ka upang kumpirmahin ang iyong transaksyon sa MetaMask. Pagkatapos ay maaaring makita ng mga mamimili ang iyong listahan at gumawa ng mga alok dito."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Mayroon kang 0 {OGN} sa iyong wallet."
+          "translation": "Mayroon kang 0 {=OGN} sa iyong wallet."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Ang mga pagpapalakas ay palaging kinakalkula at sisingilin sa OGN. {Learn more}"
+          "translation": "Ang mga pagpapalakas ay palaging kinakalkula at sisingilin sa OGN. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Maximum na halaga na gagastusin upang mapalakas ang listahan na ito. Ang mga pagpapalakas ay palaging nasa OGN, {USD is an estimate.}"
+          "translation": "Maximum na halaga na gagastusin upang mapalakas ang listahan na ito. Ang mga pagpapalakas ay palaging nasa OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+          "translation": "{=Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Kasalukuyang hindi magagamit sa mga mobile device"
+          "translation": "{=Warning:} Kasalukuyang hindi magagamit sa mga mobile device"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Nakakonekta sa {[networkName]}"
+          "translation": "Nakakonekta sa {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Upang matagumpay na makipag-ugnay sa iba sa aming DApp, kakailanganin mo ng ilang mga bagay bago ka magsimula. {Why do I need to do this?}"
+          "translation": "Upang matagumpay na makipag-ugnay sa iba sa aming DApp, kakailanganin mo ng ilang mga bagay bago ka magsimula. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Tinanggihan mo ang aming kahilingan upang i-on ang mga abiso sa desktop kung saan namin {highly recommend}."
+          "translation": "Tinanggihan mo ang aming kahilingan upang i-on ang mga abiso sa desktop kung saan namin {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} Kailangan mong magkaroon ng mga pondo sa iyong wallet upang lumikha ng isang identity. Maaari mong palaging gawin ito sa ibang pagkakataon pagkatapos mong pondohan ang iyong wallet sa pamamagitan ng pagpunta sa iyong mga setting."
+          "translation": "{=You don't have funds} Kailangan mong magkaroon ng mga pondo sa iyong wallet upang lumikha ng isang identity. Maaari mong palaging gawin ito sa ibang pagkakataon pagkatapos mong pondohan ang iyong wallet sa pamamagitan ng pagpunta sa iyong mga setting."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} nagbibigay-daan sa iba pang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng matagumpay na mga transaksyon sa Pinagmulan."
+          "translation": "{=Verifying your profile} nagbibigay-daan sa iba pang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng matagumpay na mga transaksyon sa Pinagmulan."
         }
       ]
     },

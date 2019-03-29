@@ -402,16 +402,15 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data, networkStatus, loading }) => {
-            if (networkStatus === 1 || loading) {
-              return 'Loading...'
-            } else if (error) {
+          {({ error, data }) => {
+            if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount
-              ? data.web3.primaryAccount.id
-              : null
+            const walletAddress =
+              data.web3 && data.web3.primaryAccount
+                ? data.web3.primaryAccount.id
+                : null
             return (
               <Query
                 query={enrollmentStatusQuery}
@@ -423,10 +422,8 @@ function withEnrolmentModal(WrappedComponent) {
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
-                {({ networkStatus, error, loading, data }) => {
-                  if (networkStatus === 1 || loading) {
-                    return 'Loading...'
-                  } else if (error) {
+                {({ error, data }) => {
+                  if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />
                     )

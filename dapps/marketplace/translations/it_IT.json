@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} per guadagnare i token di criptovaluta Origin (OGN)."
+          "translation": "{=Enroll} per guadagnare i token di criptovaluta Origin (OGN)."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Verifica il tuo {identity} modo che altri acquirenti e venditori sappiano chi sei."
+          "translation": "Verifica il tuo {=identity} modo che altri acquirenti e venditori sappiano chi sei."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Non dimenticare di abilitare {Origin Messaging} modo da poter comunicare con altri utenti. È gratis."
+          "translation": "Non dimenticare di abilitare {=Origin Messaging} modo da poter comunicare con altri utenti. È gratis."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Se avete domande o bisogno di contestare una transazione, {let us know} ."
+          "translation": "Se avete domande o bisogno di contestare una transazione, {=let us know} ."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Trovato un bug o hai un feedback? Invia un'email a {[SupportEmail]} , apri un numero su {GitHub} o pubblica nel nostro canale # segnalazioni di bug su {Discord}."
+          "translation": "Trovato un bug o hai un feedback? Invia un'email a {=[SupportEmail]} , apri un numero su {=GitHub} o pubblica nel nostro canale # segnalazioni di bug su {=Discord}."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
+          "translation": "{=Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Quando invii questo annuncio, ti verrà chiesto di confermare la tua transazione in MetaMask. Gli acquirenti saranno quindi in grado di vedere il tuo elenco e fare offerte su di esso."
+          "translation": "{=What happens next?} Quando invii questo annuncio, ti verrà chiesto di confermare la tua transazione in MetaMask. Gli acquirenti saranno quindi in grado di vedere il tuo elenco e fare offerte su di esso."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Hai 0 {OGN} nel tuo portafoglio."
+          "translation": "Hai 0 {=OGN} nel tuo portafoglio."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Gli incrementi sono sempre calcolati e addebitati in OGN. {Learn more}"
+          "translation": "Gli incrementi sono sempre calcolati e addebitati in OGN. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Importo massimo che sarà speso per aumentare questo elenco. Gli boost sono sempre in OGN, {USD is an estimate.}"
+          "translation": "Importo massimo che sarà speso per aumentare questo elenco. Gli boost sono sempre in OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
+          "translation": "{=Add Listing Details} Assicurati di fornire al tuo annuncio un titolo e una descrizione appropriati per far sapere agli altri cosa stai offrendo. L'aggiunta di alcune foto aumenterà le possibilità di vendere la tua inserzione."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succede dopo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succede dopo: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succede dopo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "La tua inserzione sarà visibile entro pochi secondi. Ecco cosa succede dopo: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Attualmente non disponibile su dispositivi mobili"
+          "translation": "{=Warning:} Attualmente non disponibile su dispositivi mobili"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Connesso a {[networkName]}"
+          "translation": "Connesso a {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Per poter eseguire con successo transazioni con altri sul nostro DApp, avrai bisogno di alcune cose prima di iniziare. {Why do I need to do this?}"
+          "translation": "Per poter eseguire con successo transazioni con altri sul nostro DApp, avrai bisogno di alcune cose prima di iniziare. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Hai rifiutato la nostra richiesta di attivare le notifiche desktop che abbiamo {highly recommend}."
+          "translation": "Hai rifiutato la nostra richiesta di attivare le notifiche desktop che abbiamo {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} È necessario disporre di fondi nel portafoglio per creare un'identità. Puoi sempre farlo più tardi dopo aver finanziato il tuo portafoglio andando alle tue impostazioni."
+          "translation": "{=You don't have funds} È necessario disporre di fondi nel portafoglio per creare un'identità. Puoi sempre farlo più tardi dopo aver finanziato il tuo portafoglio andando alle tue impostazioni."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} consente ad altri utenti di sapere che sei una persona reale e aumenta le possibilità di transazioni di successo su Origin."
+          "translation": "{=Verifying your profile} consente ad altri utenti di sapere che sei una persona reale e aumenta le possibilità di transazioni di successo su Origin."
         }
       ]
     },

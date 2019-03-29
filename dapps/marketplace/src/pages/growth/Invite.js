@@ -497,7 +497,11 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { referralAction, handleNavigationChange } = this.props
+    const { activeCampaign, handleNavigationChange } = this.props
+
+    const referralAction = activeCampaign.actions.filter(
+      action => action.type === 'Referral'
+    )[0]
 
     return (
       <div className="container growth-invite">
