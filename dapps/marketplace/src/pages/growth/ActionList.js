@@ -9,6 +9,7 @@ class ActionList extends Component {
       filter: 'all',
       actionsToDisplay: props.actions
     }
+    this.animationLock = false
   }
 
   renderFilter(filterText, filterName) {
@@ -28,6 +29,17 @@ class ActionList extends Component {
   }
 
   async handleFilterClick(filterName) {
+    let renderImmediately = false
+    // wait for previous animation to finish
+    while (this.animationLock) {
+      /* When user rapidlu clicks on filter buttons we want prevent multiple animations
+       * rendering one after another. Just render immediately every subsequent animation.
+       */
+      renderImmediately = true
+      await this.sleep(30)
+    }
+
+    this.animationLock = true
     this.setState({
       filter: filterName,
       actionsToDisplay: []
@@ -51,11 +63,14 @@ class ActionList extends Component {
     }
 
     for (let i = 0; i < filteredActions.length; i++) {
-      await this.sleep(70)
+      if (!renderImmediately) {
+        await this.sleep(70)
+      }
       this.setState({
         actionsToDisplay: [...this.state.actionsToDisplay, filteredActions[i]]
       })
     }
+    this.animationLock = false
   }
 
   render() {
