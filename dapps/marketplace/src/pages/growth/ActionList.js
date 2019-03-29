@@ -76,11 +76,7 @@ class ActionList extends Component {
   }
 
   render() {
-    const {
-      title,
-      decimalDivision,
-      handleNavigationChange
-    } = this.props
+    const { title, decimalDivision, handleNavigationChange } = this.props
 
     const { actionsToDisplay } = this.state
 
