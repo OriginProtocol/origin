@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import configQuery from 'queries/Config'
 import contractsQuery from 'queries/AllContracts'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import dayjs from 'dayjs'
 import distanceToNow from 'utils/distanceToNow'
@@ -64,8 +64,8 @@ const DappInfo = () => {
 
   return (
     <div className="container about-info">
-      <PageTitle>About DApp</PageTitle>
-      <h1>About DApp</h1>
+      <DocumentTitle>About This DApp</DocumentTitle>
+      <h1>About This DApp</h1>
       <p>
         Developer information about this DApp&#39;s current build and
         configuration.

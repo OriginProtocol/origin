@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
@@ -52,14 +53,18 @@ class App extends Component {
       return (
         <div className="app-spinner">
           <h5 onClick={() => alert(this.state.err)}>Error!</h5>
-          <div>Please refresh the page</div>
+          <div>
+            <fbt desc="App.refreshPage">Please refresh the page</fbt>
+          </div>
         </div>
       )
     } else if (this.props.creatorConfigLoading) {
       return (
         <div className="app-spinner">
-          <h5>Loading</h5>
-          <div>Please wait</div>
+          <fbt desc="App.loadingPleaseWait">
+            <h5>Loading</h5>
+            <div>Please wait</div>
+          </fbt>
         </div>
       )
     }

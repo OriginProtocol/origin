@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
+import { fbt } from 'fbt-runtime'
 
 const resetDrag = {
   dragEnd: null,
@@ -129,9 +130,9 @@ class WeekCalendar extends Component {
 
     let content = `${hour.price} ETH`
     if (hour.booked && this.props.showBooked) {
-      content = 'Booked'
+      content = fbt('Booked', 'WeekCalendar.booked')
     } else if (hour.unavailable) {
-      content = 'Unavailable'
+      content = fbt('Unavailable', 'WeekCalendar.unavailable')
     } else if (hour.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
     } else if (hour.nonWorkingHour) {

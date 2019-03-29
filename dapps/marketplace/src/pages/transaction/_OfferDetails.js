@@ -1,6 +1,7 @@
 import React from 'react'
 import TokenPrice from 'components/TokenPrice'
 import dayjs from 'dayjs'
+import { fbt } from 'fbt-runtime'
 
 function paymentStatus(status) {
   if (status === 'Pending') {
@@ -16,53 +17,71 @@ const OfferDetails = ({ offer }) => (
     offer.quantity === 1 ? null : (
       <>
         <li className="price-unit">
-          <span>Price / unit</span>
+          <span>
+            <fbt desc="OfferDetails.pricePerUnit">Price / unit</fbt>
+          </span>
           <span>
             <TokenPrice {...offer.listing.price} />
           </span>
         </li>
         <li className="quantity">
-          <span>Quantity</span>
+          <span>
+            <fbt desc="OfferDetails.quantity">Quantity</fbt>
+          </span>
           <span>{offer.quantity}</span>
         </li>
       </>
     )}
     {offer.startDate && offer.listing.__typename === 'FractionalListing' && (
       <li className="start-date">
-        <span>Check in</span>
+        <span>
+          <fbt desc="OfferDetails.checkIn">Check in</fbt>
+        </span>
         <span>{dayjs(offer.startDate).format('MMM. D, YYYY ')}</span>
       </li>
     )}
     {offer.endDate && offer.listing.__typename === 'FractionalListing' && (
       <li className="end-date">
-        <span>Check out</span>
+        <span>
+          <fbt desc="OfferDetails.checkOut">Check out</fbt>
+        </span>
         <span>{dayjs(offer.endDate).format('MMM. D, YYYY')}</span>
       </li>
     )}
     {offer.startDate && offer.listing.__typename === 'FractionalHourlyListing' && (
       <li className="start-date">
-        <span>Rental begin</span>
+        <span>
+          <fbt desc="OfferDetails.rentalBegin">Rental begin</fbt>
+        </span>
         <span>{dayjs(offer.startDate).format('MMM. D, YYYY h:00a')}</span>
       </li>
     )}
     {offer.endDate && offer.listing.__typename === 'FractionalHourlyListing' && (
       <li className="end-date">
-        <span>Rental end</span>
+        <span>
+          <fbt desc="OfferDetails.rentalEnd">Rental end</fbt>
+        </span>
         <span>{dayjs(offer.endDate).format('MMM. D, YYYY h:00a')}</span>
       </li>
     )}
     <li className="total-price">
-      <span>Total Price</span>
+      <span>
+        <fbt desc="OfferDetails.totalPrice">Total Price</fbt>
+      </span>
       <span>
         <TokenPrice {...offer} />
       </span>
     </li>
     <li className="payment-status">
-      <span>Payment Status</span>
+      <span>
+        <fbt desc="OfferDetails.paymentStatus">Payment Status</fbt>
+      </span>
       <span>{paymentStatus(offer.statusStr)}</span>
     </li>
     <li className="offer-date">
-      <span>Offer Date</span>
+      <span>
+        <fbt desc="OfferDetails.offerDate">Offer Date</fbt>
+      </span>
       <span>
         {offer.createdEvent
           ? dayjs.unix(offer.createdEvent.timestamp).format('MMM. D, YYYY')
@@ -70,7 +89,9 @@ const OfferDetails = ({ offer }) => (
       </span>
     </li>
     <li className="offer-number">
-      <span>Offer Number</span>
+      <span>
+        <fbt desc="OfferDetails.offerNumber">Offer Number</fbt>
+      </span>
       <span>{offer.id}</span>
     </li>
     {/*

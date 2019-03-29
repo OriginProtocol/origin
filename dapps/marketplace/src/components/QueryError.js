@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 const QueryError = props => {
   console.error(props.error)
@@ -10,7 +11,11 @@ const QueryError = props => {
     console.log(JSON.stringify(props.vars, null, 4))
   }
 
-  return <div>Error: See console for details</div>
+  return (
+    <div>
+      <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
+    </div>
+  )
 }
 
 export default QueryError

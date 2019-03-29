@@ -6,7 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import inviteInfoQuery from 'queries/InviteInfo'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import Onboard from 'pages/onboard/Onboard'
 import Link from 'components/Link'
 
@@ -65,7 +65,11 @@ class GrowthWelcome extends Component {
   render() {
     return (
       <Fragment>
-        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <DocumentTitle
+          pageTitle={
+            <fbt desc="GrowthWelcome.title">Welcome to Origin Protocol</fbt>
+          }
+        />
         <Switch>
           <Route
             exact
@@ -172,7 +176,7 @@ class GrowthWelcome extends Component {
           <this.EnrollButton
             className="btn btn-primary btn-rounded enroll-button"
             type="submit"
-            children="Sign Up Now"
+            children={fbt('Sign Up Now', 'Sign Up Now')}
             urlforonboarding={urlForOnboarding}
             startopen={arrivedFromOnboarding.toString()}
           />

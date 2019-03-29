@@ -14,7 +14,7 @@ import withIdentity from 'hoc/withIdentity'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import ImageCropper from 'components/ImageCropper'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 
@@ -79,7 +79,9 @@ class UserProfile extends Component {
   render() {
     return (
       <Fragment>
-        <PageTitle>Welcome to Origin Protocol</PageTitle>
+        <DocumentTitle
+          pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
+        />
         <Switch>
           <Route
             path="/profile/onboard"
@@ -116,7 +118,9 @@ class UserProfile extends Component {
 
     return (
       <div className="container profile-edit">
-        <PageTitle>Edit your profile</PageTitle>
+        <DocumentTitle>
+          <fbt desc="Profile.edit">Edit your profile</fbt>
+        </DocumentTitle>
         <div className="row">
           <div className="col-md-8">
             <div className="profile d-flex">

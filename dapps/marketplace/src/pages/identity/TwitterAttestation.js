@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -49,24 +50,32 @@ class TwitterAttestation extends Component {
   renderGenerateCode() {
     return (
       <>
-        <h2>Verify your Twitter Account</h2>
+        <h2>
+          <fbt desc="TwitterAttestation.verify">
+            Verify your Twitter Account
+          </fbt>
+        </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <b>Warning:</b> Currently unavailable on mobile devices
+          <fbt desc="Attestation.verfify.warning">
+            <b>Warning:</b> Currently unavailable on mobile devices
+          </fbt>
         </div>
         <div className="help">
-          Other users will know that you have a verified Twitter account, but
-          your account details will not be published on the blockchain. We will
-          never post on your behalf.
+          <fbt desc="TwitterAttestation.description">
+            Other users will know that you have a verified Twitter account, but
+            your account details will not be published on the blockchain. We
+            will never post on your behalf.
+          </fbt>
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
         </div>
       </>
@@ -118,13 +127,21 @@ class TwitterAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Twitter account verified!</h2>
+        <h2>
+          <fbt desc="TwitterAttestation.verified">
+            Twitter account verified!
+          </fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button
@@ -133,7 +150,7 @@ class TwitterAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

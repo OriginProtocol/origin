@@ -2,7 +2,9 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 import startCase from 'lodash/startCase'
 
-const CategoriesEnum = require('Categories$FbtEnum')
+// Given a listing object, returns Category name, localized.
+
+const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 const Category = ({ listing, separator = '|', showPrimary }) => {
   const { category, subCategory } = listing
   if (!category && !subCategory) return null
