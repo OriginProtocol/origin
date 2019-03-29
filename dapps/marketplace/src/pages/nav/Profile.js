@@ -69,12 +69,8 @@ class ProfileNav extends Component {
 
 const Network = withNetwork(({ networkName }) => (
   <div className="connected">
-    <fbt desc="nav.profile.connectedToNetwork">
-      Connected to
-    </fbt>
-    <span className="net">
-      {networkName}
-    </span>
+    <fbt desc="nav.profile.connectedToNetwork">Connected to</fbt>
+    <span className="net">{networkName}</span>
   </div>
 ))
 

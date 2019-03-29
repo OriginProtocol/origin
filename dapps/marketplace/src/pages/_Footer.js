@@ -74,27 +74,25 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                          Found a bug or have feedback? Send an email to
-                          <a href={`mailto:${SupportEmail}`}>
-                              {SupportEmail}
-                          </a>{' '}
-                          , open an issue on
-                          <a
-                            href={GitHubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            GitHub
-                          </a>
-                          or post in our #bug-reports channel on
-                          <a
-                            href="https://discord.gg/jyxpUSe"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Discord
-                          </a>
-                          .
+                        Found a bug or have feedback? Send an email to
+                        <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a> ,
+                        open an issue on
+                        <a
+                          href={GitHubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          GitHub
+                        </a>
+                        or post in our #bug-reports channel on
+                        <a
+                          href="https://discord.gg/jyxpUSe"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Discord
+                        </a>
+                        .
                       </div>
                       <br />
                       <div className="copyright">
