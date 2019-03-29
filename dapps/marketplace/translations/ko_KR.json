@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} 을 사용하여 Origin cryptocurrency token (OGN)을 얻습니다."
+          "translation": "{=Enroll} 을 사용하여 Origin cryptocurrency token (OGN)을 얻습니다."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "다른 구매자와 판매자가 누구인지 알 수 있도록 {identity} 확인하십시오."
+          "translation": "다른 구매자와 판매자가 누구인지 알 수 있도록 {=identity} 확인하십시오."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "다른 사용자와 통신 할 수 있도록 {Origin Messaging} 을 사용하는 것을 잊지 마십시오. 그것은 무료입니다."
+          "translation": "다른 사용자와 통신 할 수 있도록 {=Origin Messaging} 을 사용하는 것을 잊지 마십시오. 그것은 무료입니다."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "질문이 있거나 거래에 이의를 제기해야하는 경우 {let us know}."
+          "translation": "질문이 있거나 거래에 이의를 제기해야하는 경우 {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "버그를 발견했거나 의견이 있습니까? {[SupportEmail]} 으로 이메일을 보내거나 {GitHub} 의 문제를 열거 나 {Discord} 의 # 버그보고 채널에 게시하십시오."
+          "translation": "버그를 발견했거나 의견이 있습니까? {=[SupportEmail]} 으로 이메일을 보내거나 {=GitHub} 의 문제를 열거 나 {=Discord} 의 # 버그보고 채널에 게시하십시오."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
+          "translation": "{=Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} 이 리스팅을 제출하면 MetaMask에서 거래를 확인하라는 메시지가 나타납니다. 그러면 구매자는 업체 정보를보고 제안을 할 수 있습니다."
+          "translation": "{=What happens next?} 이 리스팅을 제출하면 MetaMask에서 거래를 확인하라는 메시지가 나타납니다. 그러면 구매자는 업체 정보를보고 제안을 할 수 있습니다."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "당신은 지금 0 {OGN} OGN이 지갑에 있습니다."
+          "translation": "당신은 지금 0 {=OGN} OGN이 지갑에 있습니다."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "부스트는 항상 OGN에서 계산되고 부과됩니다. {Learn more}"
+          "translation": "부스트는 항상 OGN에서 계산되고 부과됩니다. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "이 리스팅을 향상시키는 데 소요되는 최대 금액. 부스트는 항상 OGN, {USD is an estimate.}"
+          "translation": "이 리스팅을 향상시키는 데 소요되는 최대 금액. 부스트는 항상 OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
+          "translation": "{=Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} 현재 휴대 기기에서 사용할 수 없음"
+          "translation": "{=Warning:} 현재 휴대 기기에서 사용할 수 없음"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "{[networkName]}연결됨"
+          "translation": "{=[networkName]}연결됨"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "DApp에서 다른 사람들과 성공적으로 거래하려면 시작하기 전에 몇 가지 사항이 필요합니다. {Why do I need to do this?}"
+          "translation": "DApp에서 다른 사람들과 성공적으로 거래하려면 시작하기 전에 몇 가지 사항이 필요합니다. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "당신은 바탕 화면 알림 우리 켭 우리의 요청을 거부했습니다 {highly recommend}."
+          "translation": "당신은 바탕 화면 알림 우리 켭 우리의 요청을 거부했습니다 {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} 신분을 만들기 위해서는 지갑에 돈이 있어야합니다. 당신은 당신의 설정으로 가서 당신의 지갑에 돈을 지불 한 후에 언제든지 이것을 할 수 있습니다."
+          "translation": "{=You don't have funds} 신분을 만들기 위해서는 지갑에 돈이 있어야합니다. 당신은 당신의 설정으로 가서 당신의 지갑에 돈을 지불 한 후에 언제든지 이것을 할 수 있습니다."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} 사용하면 다른 사용자가 자신이 실제 사람이라는 것을 알 수 있고 Origin에서 성공적인 거래 기회를 높일 수 있습니다."
+          "translation": "{=Verifying your profile} 사용하면 다른 사용자가 자신이 실제 사람이라는 것을 알 수 있고 Origin에서 성공적인 거래 기회를 높일 수 있습니다."
         }
       ]
     },

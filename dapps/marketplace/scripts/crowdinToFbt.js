@@ -28,9 +28,11 @@ function b64Decode(data) {
 
 function decodeVarName(encodedVarName) {
   let data = encodedVarName
+  let originalVarName = ''
 
   if (data.startsWith(EqualPrefix)) {
     data = data.slice(EqualPrefix.length)
+    originalVarName += '='
   }
 
   if (!data.startsWith(VarPrefix)) {
@@ -46,7 +48,7 @@ function decodeVarName(encodedVarName) {
 
   // Base64 decode the variable name.
   const b64 = parts[1]
-  const originalVarName = b64Decode(b64)
+  originalVarName += b64Decode(b64)
 
   return originalVarName
 }
