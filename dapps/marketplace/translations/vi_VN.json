@@ -1,24 +1,102 @@
 {
   "fb-locale": "vi_VN",
   "translations": {
+    "3K2HLz2eDfqTUU1+MYbpSA==": {
+      "translations": [
+        {
+          "translation": "Tài khoản Twitter đã được xác minh"
+        }
+      ]
+    },
+    "xOpYvzzoMezVMoNOSayQmw==": {
+      "translations": [
+        {
+          "translation": "Tài khoản Google đã được xác minh"
+        }
+      ]
+    },
+    "wZLSv7ewRaMW79jVk8dClw==": {
+      "translations": [
+        {
+          "translation": "Điện thoại đã được xác minh"
+        }
+      ]
+    },
+    "y1hHLacJcJtPJqQT+ARvMQ==": {
+      "translations": [
+        {
+          "translation": "email đã kích hoạt"
+        }
+      ]
+    },
+    "9IK97p7cEFz5+KW7ysa14w==": {
+      "translations": [
+        {
+          "translation": "Đã xác minh Facebook"
+        }
+      ]
+    },
+    "ajuRGjrScUXkHUc6TO96oQ==": {
+      "translations": [
+        {
+          "translation": "Đã xác minh tài khoản Airbnb"
+        }
+      ]
+    },
+    "lpM1WjIFkeXrRw0jHALchw==": {
+      "translations": [
+        {
+          "translation": "Gửi tin nhắn"
+        }
+      ]
+    },
+    "BNiTz6TMpmADBvpVMcU3Ow==": {
+      "translations": [
+        {
+          "translation": "Số dư tài khoản"
+        }
+      ]
+    },
+    "qW+FPWRA0PFau0MxBCNW+g==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu"
+        }
+      ]
+    },
+    "W6NnV1uOLvElD9nJ8UncTg==": {
+      "translations": [
+        {
+          "translation": "Nhận OGN"
+        }
+      ]
+    },
     "lnRohWpsGR7uMhMbL9Uc4A==": {
       "translations": [
-        {}
+        {
+          "translation": "Để bán"
+        }
       ]
     },
     "IXnxuAx0PfImJ3UuUrtKNA==": {
       "translations": [
-        {}
+        {
+          "translation": "Cho thuê"
+        }
       ]
     },
     "ghfbnF7r/INujbWiriguzg==": {
       "translations": [
-        {}
+        {
+          "translation": "Dịch vụ"
+        }
       ]
     },
     "66fBzTgLcxkHZ8hhNa6kkQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Thông báo"
+        }
       ]
     },
     "KFFRQn6ksmQTRyTzCz65sg==": {
@@ -31,21 +109,21 @@
     "rR5EdGNccI6VljakAkQidA==": {
       "translations": [
         {
-          "translation": "Thiết bị Gia dụng"
+          "translation": "Thiết bị gia dụng"
         }
       ]
     },
     "YIvbQUezwdnmysfM43g0Vw==": {
       "translations": [
         {
-          "translation": "Thủ công & Mỹ nghệ"
+          "translation": "Nghệ thuật và thủ công"
         }
       ]
     },
     "y1wrUJKn06syj0F/jkjGrg==": {
       "translations": [
         {
-          "translation": "Xe địa hình ATV, UTV, Xe đi trên tuyết"
+          "translation": "Atvs, Utvs, Xe trượt tuyết"
         }
       ]
     },
@@ -59,14 +137,14 @@
     "snA5cNuJlgyAdvZDbZpJrA==": {
       "translations": [
         {
-          "translation": "Bánh & Lốp ô tô"
+          "translation": "Bánh xe và lốp xe tự động"
         }
       ]
     },
     "7DafxQ244zr3EY7cS62NYQ==": {
       "translations": [
         {
-          "translation": "Đồ sơ  sinh & Trẻ em"
+          "translation": "Đồ trẻ em"
         }
       ]
     },
@@ -87,7 +165,7 @@
     "RNUT6gy5oiwEr7Ahqp8ztg==": {
       "translations": [
         {
-          "translation": "Phụ tùng & Phụ kiện thuyền"
+          "translation": "Phụ tùng và phụ kiện thuyền"
         }
       ]
     },
@@ -101,26 +179,28 @@
     "x6cb21nXupvVRhnwo/9FYg==": {
       "translations": [
         {
-          "translation": "Sách & tạp chí"
+          "translation": "Những cuốn sách và những cuốn tạp chí"
         }
       ]
     },
     "1Q0Vv4XgRSWOzYW+aVBrxA==": {
       "translations": [
-        {}
+        {
+          "translation": "Các doanh nghiệp"
+        }
       ]
     },
     "VEqNKcV23dj1AEzdWpB5HQ==": {
       "translations": [
         {
-          "translation": "Ô tô & Xe tải"
+          "translation": "Ô tô và xe tải"
         }
       ]
     },
     "o3QtDvLaCsB7dvSR0fLs9g==": {
       "translations": [
         {
-          "translation": "Đĩa CD / DVD / VHS"
+          "translation": "CD, DVD, VHS"
         }
       ]
     },
@@ -134,7 +214,7 @@
     "EAyfEU0bAiMEsoBJOoJVsQ==": {
       "translations": [
         {
-          "translation": "Quần áo & Phụ kiện"
+          "translation": "Quần áo và phụ kiện"
         }
       ]
     },
@@ -169,7 +249,7 @@
     "s6gPsxVYO315sO2pzS9gzg==": {
       "translations": [
         {
-          "translation": "Trang trại & Vườn"
+          "translation": "Trang trại và vườn"
         }
       ]
     },
@@ -183,7 +263,7 @@
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
-          "translation": "Sức khỏe & Làm đẹp"
+          "translation": "Sức khỏe và sắc đẹp"
         }
       ]
     },
@@ -218,14 +298,14 @@
     "UfzMzPnHFKRY+YA2YYCiMw==": {
       "translations": [
         {
-          "translation": "Phụ tùng & Phụ kiện xe máy"
+          "translation": "Phụ tùng và phụ kiện xe máy"
         }
       ]
     },
     "SRXzG3SHl2IsrVr0swey+Q==": {
       "translations": [
         {
-          "translation": "Xe máy & Xe tay ga"
+          "translation": "Xe máy và xe tay ga"
         }
       ]
     },
@@ -246,7 +326,7 @@
     "zy7YOcOXbkmeJ1amxDx1Yw==": {
       "translations": [
         {
-          "translation": "Ảnh & Video"
+          "translation": "Ảnh và video"
         }
       ]
     },
@@ -288,7 +368,7 @@
     "PNDB5G/uGJRtnFstTnLRFw==": {
       "translations": [
         {
-          "translation": "Đồ chơi & Game"
+          "translation": "Đồ chơi và trò chơi"
         }
       ]
     },
@@ -308,17 +388,23 @@
     },
     "c4W8KxvjoNvkLaPQiXcBeQ==": {
       "translations": [
-        {}
+        {
+          "translation": "Nhà ở"
+        }
       ]
     },
     "IGExQ86vwIZJBBngF5KxCg==": {
       "translations": [
-        {}
+        {
+          "translation": "Bãi đỗ xe"
+        }
       ]
     },
     "zBI2vhzGm3YUFkzAgxhrOw==": {
       "translations": [
-        {}
+        {
+          "translation": "Lưu trữ"
+        }
       ]
     },
     "dbmMy1BMoOPmEjBIgZNQkw==": {
@@ -330,13 +416,15 @@
     },
     "KBslCOpxNyf2/f02u4AC9A==": {
       "translations": [
-        {}
+        {
+          "translation": "Thiết kế"
+        }
       ]
     },
     "9ok6+SExmxGnwGSndfBihw==": {
       "translations": [
         {
-          "translation": "Đi bộ với chó"
+          "translation": "Chó đi bộ"
         }
       ]
     },
@@ -356,17 +444,23 @@
     },
     "kO8sPOni/jolamEZLA8Xrw==": {
       "translations": [
-        {}
+        {
+          "translation": "Salon"
+        }
       ]
     },
     "10HkhoJ+l5kgv0Xp9a5caw==": {
       "translations": [
-        {}
+        {
+          "translation": "Spa"
+        }
       ]
     },
     "KEVzlIlEiThvVr4DsUDjFA==": {
       "translations": [
-        {}
+        {
+          "translation": "Sự vận tải"
+        }
       ]
     },
     "6d3Zf+bS0fophdS2BVpZ1A==": {
@@ -414,7 +508,7 @@
     "S1+qQlACydCmaq1HSnUw4g==": {
       "translations": [
         {
-          "translation": "Gara & Bán hàng di động"
+          "translation": "Bán nhà để xe và di chuyển"
         }
       ]
     },
@@ -442,13 +536,15 @@
     "j0yAi4eGyUt2LSsXQr92ew==": {
       "translations": [
         {
-          "translation": "Mất & đã tìm thấy"
+          "translation": "Mất và tìm thấy"
         }
       ]
     },
     "8MgZoixrwmWP6Jsfak1UyA==": {
       "translations": [
-        {}
+        {
+          "translation": "Tiếp thị"
+        }
       ]
     },
     "3WqpHbrwOloRd96TRFYEbA==": {
@@ -493,24 +589,556 @@
         }
       ]
     },
-    "HIYV/KBfsIx14LvOIIcHwg==": {
+    "CZ1++NjtjMZAo/LiBqRk3A==": {
       "translations": [
         {
-          "translation": "Ứng dụng phi tập trung nguồn gốc cho phép người mua và người bán giao dịch mà không cần thuê trung gian sử dụng blockchain Ethereum và IPFS."
+          "translation": "Bật nhắn tin"
+        }
+      ]
+    },
+    "xqiYZ70sVyhuOX2uyy5oBQ==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn gốc"
+        }
+      ]
+    },
+    "HMZO3MPK1igp+L3DnCYh4A==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu sử dụng Origin trước khi bạn có thể gửi tin nhắn cho người dùng này"
+        }
+      ]
+    },
+    "FHdqFaXVkGt1bTg5qEKySQ==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn gốc sẽ cho phép bạn trò chuyện với những người mua và người bán khác trên DApp của chúng tôi."
+        }
+      ]
+    },
+    "YF7bGM9defXtVmKlk2BveQ==": {
+      "translations": [
+        {
+          "translation": "Bật tin nhắn gốc"
+        }
+      ]
+    },
+    "QgqHU+1OtRn9vYSCzxsbEQ==": {
+      "translations": [
+        {
+          "translation": "Chờ bạn ký tin nhắn # {num}"
+        }
+      ]
+    },
+    "lcY3PG8oxX/nshLGkSkqQg==": {
+      "translations": [
+        {
+          "translation": "Biểu tượng Metamask nằm ở phía trên bên phải của thanh công cụ trình duyệt của bạn."
+        }
+      ]
+    },
+    "Tx81Wy+s9248PR6ud1U10Q==": {
+      "translations": [
+        {
+          "translation": "Xin chúc mừng! Bây giờ bạn có thể nhắn tin cho những người dùng khác trên Origin và cập nhật tất cả các giao dịch mua và bán của bạn."
+        }
+      ]
+    },
+    "iAVHXTjGQY4bG85GZ3rgbQ==": {
+      "translations": [
+        {
+          "translation": "Bạn đã hoàn thành và có thể tiếp tục bằng cách nhấn nút bên dưới."
+        }
+      ]
+    },
+    "inikq8x/L1Z14PL9LSzFzg==": {
+      "translations": [
+        {
+          "translation": "{Enroll} để kiếm mã thông báo tiền điện tử gốc (OGN)."
+        }
+      ]
+    },
+    "1nS1em98gKmMqpesguJylw==": {
+      "translations": [
+        {
+          "translation": "Ghi danh"
+        }
+      ]
+    },
+    "SG+OPZyCrM3ZJpIQSUSkyQ==": {
+      "translations": [
+        {
+          "translation": "{=Enroll Now}"
+        }
+      ]
+    },
+    "EnHY9kgzl7/D9IQIpfzW5A==": {
+      "translations": [
+        {
+          "translation": "Ghi danh ngay"
+        }
+      ]
+    },
+    "jpSUKepY+jT83nZZ/dSNow==": {
+      "translations": [
+        {
+          "translation": "Thu nhập của chiến dịch"
+        }
+      ]
+    },
+    "6MBFCcAVLGs1DIGR8/ZPIQ==": {
+      "translations": [
+        {
+          "translation": "Được thanh toán sau khi chiến dịch kết thúc"
+        }
+      ]
+    },
+    "8M4U4PrythJps9u8JfIWRQ==": {
+      "translations": [
+        {
+          "translation": "Không thấy thu nhập của bạn? Hãy chắc chắn rằng bạn công bố những thay đổi của bạn."
+        }
+      ]
+    },
+    "fP45W6xW5ewpvWlx+grWwA==": {
+      "translations": [
+        {
+          "translation": "Hủy bỏ"
+        }
+      ]
+    },
+    "UJ8EZSteGy0rnmvBIah+UA==": {
+      "translations": [
+        {
+          "translation": "OK"
+        }
+      ]
+    },
+    "vK6uEfoyzMBla2soqGDt/Q==": {
+      "translations": [
+        {
+          "translation": "Mùa vụ"
+        }
+      ]
+    },
+    "eLB7QeERmKNpSpshEiv1mw==": {
+      "translations": [
+        {
+          "translation": "Tẩy"
+        }
+      ]
+    },
+    "cacya5OYjiwSsUsuTN7hYQ==": {
+      "translations": [
+        {
+          "translation": "Trình duyệt của bạn không hỗ trợ thẻ video."
+        }
+      ]
+    },
+    "/ADcoKIBKOrEQaYJdXWIFQ==": {
+      "translations": [
+        {
+          "translation": "Sao chép và mở ứng dụng"
+        }
+      ]
+    },
+    "ad/hbXUYWStNfCtS8DbQUQ==": {
+      "translations": [
+        {
+          "translation": "Sức mạnh của hồ sơ"
+        }
+      ]
+    },
+    "4XGwGx5rPn9fmcBQUx4o8w==": {
+      "translations": [
+        {
+          "translation": "Lỗi: Xem bảng điều khiển để biết chi tiết"
+        }
+      ]
+    },
+    "LeqAwNGdlXUL8rokk73C8g==": {
+      "translations": [
+        {
+          "translation": "Nhận xét của người bán này"
+        }
+      ]
+    },
+    "jwOObFz9eurn166XgvA7KQ==": {
+      "translations": [
+        {
+          "translation": "Nhận xét của người dùng này"
+        }
+      ]
+    },
+    "5bnjo+PrKtH3RDx1gvQEIQ==": {
+      "translations": [
+        {
+          "translation": "Người dùng vô danh"
+        }
+      ]
+    },
+    "YvRLXVAElsp/GcvlIdQxeQ==": {
+      "translations": [
+        {
+          "translation": "Đọc thêm"
+        }
+      ]
+    },
+    "4b2jW7VoOq0mSpln/V61BA==": {
+      "translations": [
+        {
+          "translation": "Gửi"
+        }
+      ]
+    },
+    "7X7jI5Dg72byWiXktbTpDA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã mua một danh sách"
+        }
+      ]
+    },
+    "3PNfoS0WxC5afEsXNhg0ZQ==": {
+      "translations": [
+        {
+          "translation": "Bạn đã chấp nhận một đề nghị"
+        }
+      ]
+    },
+    "bgvxo1HEzv4TqWOpIZcjKw==": {
+      "translations": [
+        {
+          "translation": "Bạn đã hoàn thành một giao dịch"
+        }
+      ]
+    },
+    "+rMtD607G7UPpuC/Gh+VRA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã rút lại một đề nghị"
+        }
+      ]
+    },
+    "R4DxxKbi2zzfK5Rc0R2DUg==": {
+      "translations": [
+        {
+          "translation": "Bạn đang tranh chấp một đề nghị"
+        }
+      ]
+    },
+    "CVbGw4JkzmasQrRV05U4gA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã tạo một danh sách"
+        }
+      ]
+    },
+    "U3gSxf+/41xWyGGG3WD6Sw==": {
+      "translations": [
+        {
+          "translation": "Bạn đã cập nhật một danh sách"
+        }
+      ]
+    },
+    "nT5QRZqhy9IyO2A1Lc1+fw==": {
+      "translations": [
+        {
+          "translation": "Bạn đã cập nhật tiểu sử của mình"
+        }
+      ]
+    },
+    "UDE8w4e6AOVqtrnFg59OwQ==": {
+      "translations": [
+        {
+          "translation": "Lỗi khi tải trạng thái ví"
+        }
+      ]
+    },
+    "jKdT19A7+5WJW++AhjaFfA==": {
+      "translations": [
+        {
+          "translation": "Không phát hiện ví"
+        }
+      ]
+    },
+    "64gtsUvYRuiC8+Bn/HeEDw==": {
+      "translations": [
+        {
+          "translation": "Ví của bạn không có tiền"
+        }
+      ]
+    },
+    "ffjzURZO6ML0U2uAKJpLGw==": {
+      "translations": [
+        {
+          "translation": "Vui lòng chuyển MetaMask thành {network}"
+        }
+      ]
+    },
+    "WczyPY+IQGu/be2ckvY0IA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã từ chối ký giao dịch"
+        }
+      ]
+    },
+    "z6E8AIdzn6jDySQTVZ5+aA==": {
+      "translations": [
+        {
+          "translation": "Lỗi với giao dịch. Xin vui lòng xem giao diện điều khiển để biết chi tiết."
+        }
+      ]
+    },
+    "l/Mt3Ii9rDA4/tziUA7X1A==": {
+      "translations": [
+        {
+          "translation": "Ưu đãi được đặt"
+        }
+      ]
+    },
+    "2B3r4pIiatO5FYIP9E3T0Q==": {
+      "translations": [
+        {
+          "translation": "Đề nghị được chấp nhận"
+        }
+      ]
+    },
+    "4fM9eZbUqZ66bd6SkzCNUA==": {
+      "translations": [
+        {
+          "translation": "Đã hoàn thành giao dịch"
+        }
+      ]
+    },
+    "HZDpiKkHU/e1JkAR8jEbkw==": {
+      "translations": [
+        {
+          "translation": "Đã bắt đầu tranh chấp"
+        }
+      ]
+    },
+    "j2iAa98O0Kq9r9ET5w6Puw==": {
+      "translations": [
+        {
+          "translation": "Phán quyết đã được thực hiện"
+        }
+      ]
+    },
+    "Sz9bMhbOlfg3eAr2j7K7ew==": {
+      "translations": [
+        {
+          "translation": "Xác nhận giao dịch"
+        }
+      ]
+    },
+    "iKfdvkoOrjcLeiBJ9a4vQg==": {
+      "translations": [
+        {
+          "translation": "Vui lòng xác nhận giao dịch này bằng {provider}"
+        }
+      ]
+    },
+    "ODAoTKgsu2qyv4M2OMJP+g==": {
+      "translations": [
+        {
+          "translation": "Lỗi - xem bảng điều khiển"
+        }
+      ]
+    },
+    "hlx2chxb1wXEwp0V+48VsA==": {
+      "translations": [
+        {
+          "translation": "Viết lên blockchain."
+        }
+      ]
+    },
+    "VaQrM/SpyUJoSj46yEzKXQ==": {
+      "translations": [
+        {
+          "translation": "Điều này có thể mất một phút."
+        }
+      ]
+    },
+    "k+DOmsxpC6olp+f7YTifpg==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xác nhận."
+        }
+      ]
+    },
+    "NTDlcv5byJHU2e2ibIBDag==": {
+      "translations": [
+        {
+          "translation": "Địa chỉ ETH"
+        }
+      ]
+    },
+    "aYT951Z+6RBjTZE3Jg5tmw==": {
+      "translations": [
+        {
+          "translation": "Đã đặt"
+        }
+      ]
+    },
+    "uQ4CZ5r/l04HK4ww9kJe9g==": {
+      "translations": [
+        {
+          "translation": "Không có sẵn"
+        }
+      ]
+    },
+    "4l5fTgfrjh0H1k93n0Z2Yg==": {
+      "translations": [
+        {
+          "translation": "Chào mừng bạn đến với Origin Beta! Origin là một thị trường phi tập trung hoạt động hơi khác so với hầu hết các ứng dụng."
+        }
+      ]
+    },
+    "KUTOlStBC3mnQChZ/HbOfg==": {
+      "translations": [
+        {
+          "translation": "Chúng tôi đang ở chế độ Beta, nhưng tất cả các giao dịch là có thật và sử dụng ETH."
+        }
+      ]
+    },
+    "afFV4fdQM5Cn1ojptvnUwQ==": {
+      "translations": [
+        {
+          "translation": "Vui lòng xác minh {identity} của bạn để người mua và người bán khác biết bạn là ai."
+        }
+      ]
+    },
+    "KDRf8/y09hl8uNtTcYT4bg==": {
+      "translations": [
+        {
+          "translation": "danh tính"
+        }
+      ]
+    },
+    "OJOJCYDwaeNFYLRD9LpYjw==": {
+      "translations": [
+        {
+          "translation": "Đừng quên bật {Origin Messaging} để bạn có thể giao tiếp với những người dùng khác. Nó miễn phí."
+        }
+      ]
+    },
+    "TkYhUNXqK8qjP6JBVTzWDg==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn gốc"
+        }
+      ]
+    },
+    "DM97lxszR6kNQg6jXs0vjg==": {
+      "translations": [
+        {
+          "translation": "Nếu bạn có bất kỳ câu hỏi hoặc cần tranh chấp một giao dịch, {let us know}."
+        }
+      ]
+    },
+    "aOrOr85BD9OMqCaqeGLoVQ==": {
+      "translations": [
+        {
+          "translation": "hãy cho chúng tôi biết"
+        }
+      ]
+    },
+    "EbCUtytNEBvHpMUozUtwmQ==": {
+      "translations": [
+        {
+          "translation": "Tôi đạt được rồi."
+        }
+      ]
+    },
+    "Kiq4v7lxOraNMcGSuV03fQ==": {
+      "translations": [
+        {
+          "translation": "Origin cho phép người mua và người bán giao dịch mà không cần người trung gian tìm kiếm tiền thuê bằng cách sử dụng chuỗi khối Ethereum và IPFS."
+        }
+      ]
+    },
+    "B9JVfJwAydDAD9972+O7GA==": {
+      "translations": [
+        {
+          "translation": "Bạn hiện đang sử dụng Origin Beta trên: {networkName}."
+        }
+      ]
+    },
+    "gwPeffiBc/c3/tgXpfwdJQ==": {
+      "translations": [
+        {
+          "translation": "Nhắc nhở quan trọng"
+        }
+      ]
+    },
+    "axOOkZLBs4P1DATohXZpyg==": {
+      "translations": [
+        {
+          "translation": "Tìm thấy một lỗi hoặc có thông tin phản hồi? Gửi email đến {[SupportEmail]} , mở một vấn đề trên {GitHub} hoặc đăng trong kênh # báo cáo lỗi của chúng tôi trên {Discord}."
+        }
+      ]
+    },
+    "WXEUY0b8xIYw6ctSshzrUA==": {
+      "translations": [
+        {
+          "translation": "{SupportEmail}"
+        }
+      ]
+    },
+    "d/zjx0QiqsSKcmp3VNkGbQ==": {
+      "translations": [
+        {
+          "translation": "GitHub"
+        }
+      ]
+    },
+    "lX/Lgd6k+hZxqbW544UIbw==": {
+      "translations": [
+        {
+          "translation": "Bất hòa"
+        }
+      ]
+    },
+    "B8tUH76/HTCaTj1p9i2Qqg==": {
+      "translations": [
+        {
+          "translation": "Điều kiện"
+        }
+      ]
+    },
+    "dFXfY28mWQJKgKM6uIHqsQ==": {
+      "translations": [
+        {
+          "translation": "Riêng tư"
+        }
+      ]
+    },
+    "gRyXn/kmXsDGzbnnfoe09A==": {
+      "translations": [
+        {
+          "translation": "Sự cho phép của chính trị"
         }
       ]
     },
     "k2EiJaPGLnYsYgSeb0efig==": {
       "translations": [
         {
-          "translation": "Truy cập trang web của chúng tôi"
+          "translation": "Tìm hiểu thêm về nguồn gốc"
+        }
+      ]
+    },
+    "So52/pjUZQ+SOU0tAAvKTw==": {
+      "translations": [
+        {
+          "translation": "Tạo thị trường của riêng bạn"
         }
       ]
     },
     "KuNLu1gPpB8/96R5zz8B9Q==": {
       "translations": [
         {
-          "translation": "Đang mua"
+          "translation": "Mua"
         }
       ]
     },
@@ -518,6 +1146,2099 @@
       "translations": [
         {
           "translation": "Thêm danh sách"
+        }
+      ]
+    },
+    "zUWKqrHlOSVXNTx3ro3MzQ==": {
+      "translations": [
+        {
+          "translation": "Kiếm mã thông báo nguồn gốc miễn phí ngay hôm nay"
+        }
+      ]
+    },
+    "QrtbSmt3JHYzJb4uZ++dDw==": {
+      "translations": [
+        {
+          "translation": "Tham gia vào các chiến dịch của chúng tôi và hoàn thành các nhiệm vụ trên DApp của chúng tôi để kiếm Token gốc."
+        }
+      ]
+    },
+    "ASi+rLNm1e3O0p/vAQDCWg==": {
+      "translations": [
+        {
+          "translation": "Đi"
+        }
+      ]
+    },
+    "N0aJrKPoNKxjFd5sIupLCQ==": {
+      "translations": [
+        {
+          "translation": "Trang này đã được dịch máy, xem có lỗi gì không?"
+        }
+      ]
+    },
+    "LrotBDVInKIAGul78ZIkwQ==": {
+      "translations": [
+        {
+          "translation": "Trợ giúp Dịch"
+        }
+      ]
+    },
+    "xIrCn6YhZw1NfC2ar0MD4Q==": {
+      "translations": [
+        {
+          "translation": "Giới thiệu về đồng Origin"
+        }
+      ]
+    },
+    "GwcDe9CcWWasPietMqdHww==": {
+      "translations": [
+        {
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
+        }
+      ]
+    },
+    "nJke93V/TKDxmDaxzZGitw==": {
+      "translations": [
+        {
+          "translation": "Tổng quan"
+        }
+      ]
+    },
+    "i0F86KYzT4Niw4JKLm/qkw==": {
+      "translations": [
+        {
+          "translation": "Token của Origin thuộc ERC-20 được sử dụng trên nền tảng và các ứng dụng ở trên đó. Tokens có thể được sử dụng để thưởng cho các nhà khai thác thị trường, người tạo ứng dụng, người dùng, người lập trình và những người khác mua, bán và đóng góp cho Origin."
+        }
+      ]
+    },
+    "YStilTZWkt3L9DlXs8HFYQ==": {
+      "translations": [
+        {
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
+        }
+      ]
+    },
+    "RHhTbNgtz6ZMiFn8b4AEiA==": {
+      "translations": [
+        {
+          "translation": "Token của Origin được sử dụng cho việc gì?"
+        }
+      ]
+    },
+    "2bGXNtBOZfDBlzQhNYVE2A==": {
+      "translations": [
+        {
+          "translation": "Tăng cường"
+        }
+      ]
+    },
+    "L8E7ZEtxTffC6yooVS4Ucw==": {
+      "translations": [
+        {
+          "translation": "Người bán có thể sử dụng Tokens gốc để tăng thứ tự xếp hạng của họ trên Origin DApp hoặc DApp của bên thứ ba trong tương lai. Các danh sách xếp hạng cao hơn được hiển thị thường xuyên hơn cho người mua và có cơ hội được bán thành công cao hơn. DApps kiếm được Token của Origin từ người bán khi họ hoàn thành bán hàng với Boost."
+        }
+      ]
+    },
+    "WMwhtycSMMCEW+BSsx/KAg==": {
+      "translations": [
+        {
+          "translation": "{=Referral Rewards}{=Coming soon}"
+        }
+      ]
+    },
+    "Ecsu8evsCa6+mCp5FFJP5Q==": {
+      "translations": [
+        {
+          "translation": "Phần thưởng giới thiệu"
+        }
+      ]
+    },
+    "MAZJoR5QhDcB5qn6u1661A==": {
+      "translations": [
+        {
+          "translation": "Sắp có"
+        }
+      ]
+    },
+    "gtMBWfRfKMIhVz+1ALiI4Q==": {
+      "translations": [
+        {
+          "translation": "{=Platform Governance}{=Coming soon}"
+        }
+      ]
+    },
+    "Sdh1iGlXwAq8qpv2Jw9eiQ==": {
+      "translations": [
+        {
+          "translation": "Quản trị của nền tảng"
+        }
+      ]
+    },
+    "IRc9jeCD4UzlZo+esRqrRw==": {
+      "translations": [
+        {
+          "translation": "Sắp có"
+        }
+      ]
+    },
+    "7o+KdiD481Rnhy9jrb6mOQ==": {
+      "translations": [
+        {
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
+        }
+      ]
+    },
+    "1uA8qKqQWczafpiu60Vsaw==": {
+      "translations": [
+        {
+          "translation": "Tôi có thể mua Origin Token ở đâu?"
+        }
+      ]
+    },
+    "Xxu13cwEVB4lUJQ1ddpUUw==": {
+      "translations": [
+        {
+          "translation": "Các sàn giao dịch"
+        }
+      ]
+    },
+    "YdD4SWxlipe6jvGHdl9Q4w==": {
+      "translations": [
+        {
+          "translation": "Trong bản Beta, Origin Tokens sẽ không khả dụng trên bất kỳ sàn giao dịch nào. Sau khi kết thúc bản Beta, chúng tôi sẽ xuất bản danh sách các sàn giao dịch, nơi bạn có thể mua Origin Tokens để sử dụng trên nền tảng."
+        }
+      ]
+    },
+    "6S2bnqF5VoGd1HyPLrOJ9Q==": {
+      "translations": [
+        {
+          "translation": "Vui lòng làm mới trang"
+        }
+      ]
+    },
+    "xI4Hor+GVoaMYqnflEKBCQ==": {
+      "translations": [
+        {
+          "translation": "{=Loading}{=Please wait}"
+        }
+      ]
+    },
+    "J2mgIwRLF/KI7IomZlReeA==": {
+      "translations": [
+        {
+          "translation": "Đang tải"
+        }
+      ]
+    },
+    "kDg1DNY4vTf/RpzQGpTqWw==": {
+      "translations": [
+        {
+          "translation": "Xin vui lòng chờ"
+        }
+      ]
+    },
+    "3qxbOl/o9sGDgVAyMFT7cQ==": {
+      "translations": [
+        {
+          "translation": "Lựa chọn"
+        }
+      ]
+    },
+    "TeGDsV+ClksE6cndLEwsYw==": {
+      "translations": [
+        {
+          "translation": "Hãy cập nhật danh sách của bạn"
+        }
+      ]
+    },
+    "nbRMtgeidlTvoFVOSmGxDw==": {
+      "translations": [
+        {
+          "translation": "Cập nhật loại danh sách"
+        }
+      ]
+    },
+    "TJEBcSvM6okOHKIkCn895g==": {
+      "translations": [
+        {
+          "translation": "Bạn muốn tạo loại danh sách nào?"
+        }
+      ]
+    },
+    "BFFySSGl3keiaQSJJ9mLVg==": {
+      "translations": [
+        {
+          "translation": "Tiếp tục"
+        }
+      ]
+    },
+    "AE1bc3na36ja+05GQjJpcA==": {
+      "translations": [
+        {
+          "translation": "Danh mục là bắt buộc"
+        }
+      ]
+    },
+    "hO2MefBe3pTJSJ6EhgGMRg==": {
+      "translations": [
+        {
+          "translation": "Thêm một danh sách"
+        }
+      ]
+    },
+    "BOEIRlbRXuQ3sec1umLfsw==": {
+      "translations": [
+        {
+          "translation": "Bước {step}"
+        }
+      ]
+    },
+    "T4hP+Pz9YaypalU2fcY6fQ==": {
+      "translations": [
+        {
+          "translation": "Cung cấp chi tiết danh sách"
+        }
+      ]
+    },
+    "y65E1632h+J2j0bzz9JlvA==": {
+      "translations": [
+        {
+          "translation": "Xin hãy sửa các lỗi bên dưới..."
+        }
+      ]
+    },
+    "N4zHAa9d+D9/d5DR/VX8fw==": {
+      "translations": [
+        {
+          "translation": "Tiêu đề"
+        }
+      ]
+    },
+    "o1sCYyiIyp91GJ4c+D+IGw==": {
+      "translations": [
+        {
+          "translation": "Mô tả"
+        }
+      ]
+    },
+    "RNXQtJNfSTKosZ8tt7Uhkg==": {
+      "translations": [
+        {
+          "translation": "Chọn ảnh"
+        }
+      ]
+    },
+    "6FcU7DSqJ6OEWN3FQ7I8+g==": {
+      "translations": [
+        {
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
+        }
+      ]
+    },
+    "jyiI/1KtAEeT6GUNTqUwQQ==": {
+      "translations": [
+        {
+          "translation": "Nhấn và giữ 'lệnh' (⌘) để chọn nhiều hình ảnh."
+        }
+      ]
+    },
+    "C57QcRF+iWBp2ulYlEf3cQ==": {
+      "translations": [
+        {
+          "translation": "Tối đa 10 hình ảnh cho mỗi danh sách."
+        }
+      ]
+    },
+    "S65qVcS0LFiS3FZBkFRFIw==": {
+      "translations": [
+        {
+          "translation": "Hình ảnh đầu tiên sẽ đặt làm đại diện - kéo và thả hình ảnh để sắp xếp lại."
+        }
+      ]
+    },
+    "NBkmGjaTiM8vyyHeArlyVQ==": {
+      "translations": [
+        {
+          "translation": "Tỷ lệ cỡ ảnh được đề xuất là 4: 3"
+        }
+      ]
+    },
+    "rtCdERSNcNXuc+AAqIqNDQ==": {
+      "translations": [
+        {
+          "translation": "Trở lại"
+        }
+      ]
+    },
+    "6aBoGQUr/5UWzMwm8U2nZQ==": {
+      "translations": [
+        {
+          "translation": "Tiếp tục"
+        }
+      ]
+    },
+    "+y0oq3lzR/a/W5VOUiqhSw==": {
+      "translations": [
+        {
+          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+        }
+      ]
+    },
+    "F+QNKwb7kASCs7SAgAmYXQ==": {
+      "translations": [
+        {
+          "translation": "Thêm chi tiết về danh sách"
+        }
+      ]
+    },
+    "0ctXwv+dP6jEEWKOPv3BEA==": {
+      "translations": [
+        {
+          "translation": "Tiêu đề là bắt buộc"
+        }
+      ]
+    },
+    "JwgjElhIfEX7/b25EL1IzA==": {
+      "translations": [
+        {
+          "translation": "Tiêu đề quá ngắn"
+        }
+      ]
+    },
+    "zufGz2cZkzguKJKY9V2Khg==": {
+      "translations": [
+        {
+          "translation": "Tiêu đề quá dài"
+        }
+      ]
+    },
+    "yiygv8uC78unCYSHbax9eA==": {
+      "translations": [
+        {
+          "translation": "Mô tả là bắt buộc"
+        }
+      ]
+    },
+    "tKwTKrHrCx3N6r44IGkiuA==": {
+      "translations": [
+        {
+          "translation": "Mô tả quá ngắn"
+        }
+      ]
+    },
+    "3W9eRi41Z7uPMb8mRXYPwA==": {
+      "translations": [
+        {
+          "translation": "Mô tả quá dài"
+        }
+      ]
+    },
+    "aMGcdKcKpRdEpQbp3Ba1oA==": {
+      "translations": [
+        {
+          "translation": "Xem trước danh sách của bạn"
+        }
+      ]
+    },
+    "7n8lvqv++QH2CB5KvxdLZg==": {
+      "translations": [
+        {
+          "translation": "Tiêu đề"
+        }
+      ]
+    },
+    "hNSNWzh7R4Uerr0O/rJ9Cw==": {
+      "translations": [
+        {
+          "translation": "Danh mục"
+        }
+      ]
+    },
+    "F4BKFWWRbyV/cfzRZn+GKg==": {
+      "translations": [
+        {
+          "translation": "Mô tả"
+        }
+      ]
+    },
+    "1SWB7U53C4UgGwRXcrKTEw==": {
+      "translations": [
+        {
+          "translation": "Hình ảnh"
+        }
+      ]
+    },
+    "p47Cw8eNUmws809ltOX5wQ==": {
+      "translations": [
+        {
+          "translation": "Không có hình ảnh"
+        }
+      ]
+    },
+    "YiV0mg8J2EqbWfBune3OHA==": {
+      "translations": [
+        {
+          "translation": "Đã xong"
+        }
+      ]
+    },
+    "LOFIZ11Y8GW1Zlc1RtQIgw==": {
+      "translations": [
+        {
+          "translation": "{What happens next?} Khi bạn gửi danh sách này, bạn sẽ được yêu cầu xác nhận giao dịch của mình trong MetaMask. Người mua sau đó sẽ có thể xem danh sách của bạn và đưa ra đề nghị trên đó."
+        }
+      ]
+    },
+    "n7wNRm92mE1K2r34Kwk0HQ==": {
+      "translations": [
+        {
+          "translation": "Điều gì xảy ra tiếp theo?"
+        }
+      ]
+    },
+    "O1X6MM+wCK4hfwlb0R1FQg==": {
+      "translations": [
+        {
+          "translation": "Bước {create.details.hourly.step}"
+        }
+      ]
+    },
+    "mPHsV3ZeCl9i47gEQD6UoA==": {
+      "translations": [
+        {
+          "translation": "Chỉnh sửa phòng trống và giá cả"
+        }
+      ]
+    },
+    "QxBrlISY6Qt5QK4v9Dycag==": {
+      "translations": [
+        {
+          "translation": "Xin hãy sửa các lỗi bên dưới..."
+        }
+      ]
+    },
+    "USE0uC/WTidlp9nO06mAKQ==": {
+      "translations": [
+        {
+          "translation": "Trở lại"
+        }
+      ]
+    },
+    "h7IT99DnDlrG3h3IYZRUlw==": {
+      "translations": [
+        {
+          "translation": "Đánh giá"
+        }
+      ]
+    },
+    "riDmAhG5FDBLDCbTomrAYA==": {
+      "translations": [
+        {
+          "translation": "Nhấp vào lịch để nhập giá và thông tin sẵn có. Để chọn nhiều khe thời gian, nhấp vào khe thời gian bắt đầu và kéo đến khe thời gian kết thúc."
+        }
+      ]
+    },
+    "bhJvCq3wWgIxEba/0Vz6Eg==": {
+      "translations": [
+        {
+          "translation": "Khởi đầu"
+        }
+      ]
+    },
+    "SZYKrG3AnoNvLdBXDvORWQ==": {
+      "translations": [
+        {
+          "translation": "Kết thúc"
+        }
+      ]
+    },
+    "Vy7sK/HUnzuHwBwQR7IcwQ==": {
+      "translations": [
+        {
+          "translation": "Có sẵn"
+        }
+      ]
+    },
+    "i1wODftyG2G5m4WrAqm6bQ==": {
+      "translations": [
+        {
+          "translation": "Có"
+        }
+      ]
+    },
+    "zG5BYwnQJS+D6wM97UlKKA==": {
+      "translations": [
+        {
+          "translation": "Không"
+        }
+      ]
+    },
+    "ZIZrAMI/4IMftVSxFaUmjA==": {
+      "translations": [
+        {
+          "translation": "Giá tùy chỉnh"
+        }
+      ]
+    },
+    "fOOrfyqIzHoDPzYveIfm2w==": {
+      "translations": [
+        {
+          "translation": "Tiết kiệm"
+        }
+      ]
+    },
+    "f0wHNxTzIoEcxc0zQvqerg==": {
+      "translations": [
+        {
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
+        }
+      ]
+    },
+    "s63cGVY8c2v9cd9DFKWTNw==": {
+      "translations": [
+        {
+          "translation": "Bạn có 0 {OGN} trong ví của mình."
+        }
+      ]
+    },
+    "ObL7sfTdiNVgNDUh3L473g==": {
+      "translations": [
+        {
+          "translation": "OGN"
+        }
+      ]
+    },
+    "Rq5qj1KA6NC9wA9dYlQhuA==": {
+      "translations": [
+        {
+          "translation": "Một khi bạn có được một số OGN bạn sẽ có thể tăng cấp danh sách của bạn."
+        }
+      ]
+    },
+    "1bLRt3UQm/BD/KE8lGl6Tg==": {
+      "translations": [
+        {
+          "translation": "{=Learn More}"
+        }
+      ]
+    },
+    "UCqpPb9HUCdDPK8PVNoing==": {
+      "translations": [
+        {
+          "translation": "Tìm hiểu thêm"
+        }
+      ]
+    },
+    "MKtD2IUm6q0tNgzVNc1Dmg==": {
+      "translations": [
+        {
+          "translation": "Cao cấp"
+        }
+      ]
+    },
+    "VYOEDKnwV8gTpWz1oC49nw==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ có được tầm nhìn tốt nhất."
+        }
+      ]
+    },
+    "DVk5nEtiS53RISqwMyik4w==": {
+      "translations": [
+        {
+          "translation": "Cao"
+        }
+      ]
+    },
+    "bfw9ucLZfQAABtwix4GiTA==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ có được tầm nhìn trên trung bình."
+        }
+      ]
+    },
+    "BIJdlxSDO8YXBFa1bdjM0Q==": {
+      "translations": [
+        {
+          "translation": "Trung bình (khuyên dùng)"
+        }
+      ]
+    },
+    "ikpZAn8CWIjfpQuegSxzlg==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ có được tầm nhìn trung bình."
+        }
+      ]
+    },
+    "Z/fYz1c3EvphoMJjKwN7OQ==": {
+      "translations": [
+        {
+          "translation": "Thấp"
+        }
+      ]
+    },
+    "f9TtFygZLuPgBdPqVZjnsw==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ có được tầm nhìn dưới mức trung bình."
+        }
+      ]
+    },
+    "ZQzbdcmmWm0a7hbHALXxKg==": {
+      "translations": [
+        {
+          "translation": "không ai"
+        }
+      ]
+    },
+    "vPWwkfUC6Qd/085WZq2ubg==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ có được tầm nhìn rất thấp."
+        }
+      ]
+    },
+    "XooRcxaiD87mvelZppTDhQ==": {
+      "translations": [
+        {
+          "translation": "Tăng danh sách của bạn"
+        }
+      ]
+    },
+    "xG2ima+L2iJfrUt1xqdVgQ==": {
+      "translations": [
+        {
+          "translation": "Bạn có thể tăng cấp danh sách của mình để có mức độ hiển thị cao hơn trong Origin DApp. Nhiều người mua hơn sẽ thấy danh sách của bạn, điều này làm tăng khả năng bán hàng thành công và nhanh chóng."
+        }
+      ]
+    },
+    "kscNc0rAVSIEomcgmPq7bA==": {
+      "translations": [
+        {
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
+        }
+      ]
+    },
+    "5tXXwsHR3cFyTUxebdo/TA==": {
+      "translations": [
+        {
+          "translation": "Giới thiệu về khả năng hiển thị"
+        }
+      ]
+    },
+    "9gnWoajmSNKs8bXQsuaIeA==": {
+      "translations": [
+        {
+          "translation": "Origin Tokens"
+        }
+      ]
+    },
+    "7FwwGMlpFP9xRfTitbG58w==": {
+      "translations": [
+        {
+          "translation": "{=Learn More}"
+        }
+      ]
+    },
+    "UBWmrwwWC7xV44OHJj2pTg==": {
+      "translations": [
+        {
+          "translation": "Tìm hiểu thêm"
+        }
+      ]
+    },
+    "0GEIzMCv8QRDTl4rftCvKQ==": {
+      "translations": [
+        {
+          "translation": "Tăng cấp độ (mỗi giờ)"
+        }
+      ]
+    },
+    "ajMq77c6lEYIxaipqASkOw==": {
+      "translations": [
+        {
+          "translation": "Tăng luôn được tính toán và tính phí trong OGN. {Learn more}"
+        }
+      ]
+    },
+    "tqNFJ6tnyub41HNB9CGxBw==": {
+      "translations": [
+        {
+          "translation": "Tìm hiểu thêm"
+        }
+      ]
+    },
+    "kyWPelt19yuvWoFxQKtDZQ==": {
+      "translations": [
+        {
+          "translation": "Số tiền tối đa sẽ được chi để tăng danh sách này. Tăng luôn ở OGN, {USD is an estimate.}"
+        }
+      ]
+    },
+    "k6LcXYqvMDOmVbR18GgyFg==": {
+      "translations": [
+        {
+          "translation": "USD là ước tính."
+        }
+      ]
+    },
+    "MHDMB6RUmTj515XS+kI1gg==": {
+      "translations": [
+        {
+          "translation": "Cần tăng cường"
+        }
+      ]
+    },
+    "cyMPk4rzJSLjJxydh9dVZw==": {
+      "translations": [
+        {
+          "translation": "Tăng phải là một số"
+        }
+      ]
+    },
+    "XEkbF9NnI1TDCslHsTiPOg==": {
+      "translations": [
+        {
+          "translation": "Tăng phải bằng không hoặc lớn hơn"
+        }
+      ]
+    },
+    "27Ow2UUqDzN80/qFwKuagA==": {
+      "translations": [
+        {
+          "translation": "Hãy chắc chắn bao gồm các điều kiện đặc biệt của việc thuê của bạn ở đây."
+        }
+      ]
+    },
+    "xasl1V2DrlXF0w5I0r7s2Q==": {
+      "translations": [
+        {
+          "translation": "Giá mặc định mỗi giờ"
+        }
+      ]
+    },
+    "R0NSwOq5WRJL4Uit0/kcog==": {
+      "translations": [
+        {
+          "translation": "Giá luôn ở ETH, USD là một ước tính."
+        }
+      ]
+    },
+    "hZUhDQEf+9hn/KDNJqY9kA==": {
+      "translations": [
+        {
+          "translation": "Giờ khả dụng tiêu chuẩn"
+        }
+      ]
+    },
+    "Gqt08lyE4VtShAgKdMZokA==": {
+      "translations": [
+        {
+          "translation": "chủ nhật"
+        }
+      ]
+    },
+    "oS2bcoizgT1EyTcNcwlNCw==": {
+      "translations": [
+        {
+          "translation": "Thứ hai"
+        }
+      ]
+    },
+    "i7g7MLC48FvLYQP0Ir0bIg==": {
+      "translations": [
+        {
+          "translation": "Thứ ba"
+        }
+      ]
+    },
+    "MKm/5MDN1FQjJE7AxFfNTg==": {
+      "translations": [
+        {
+          "translation": "Thứ tư"
+        }
+      ]
+    },
+    "JQn1L0abnE4cy8rIon0tPQ==": {
+      "translations": [
+        {
+          "translation": "Thứ năm"
+        }
+      ]
+    },
+    "PA5kXM1YLSHma7cgMbtljQ==": {
+      "translations": [
+        {
+          "translation": "Thứ sáu"
+        }
+      ]
+    },
+    "qi27QvmA7NtNptih1ZgG7w==": {
+      "translations": [
+        {
+          "translation": "ngày thứ bảy"
+        }
+      ]
+    },
+    "ApWdVpzCY+Eid9Cvcrb/KA==": {
+      "translations": [
+        {
+          "translation": "Múi giờ"
+        }
+      ]
+    },
+    "ISfX2Tir6jQS9xizqOSuIA==": {
+      "translations": [
+        {
+          "translation": "Chọn ảnh"
+        }
+      ]
+    },
+    "HKxVFSE2OX1CYvKImRfZrw==": {
+      "translations": [
+        {
+          "translation": "Múi giờ là bắt buộc"
+        }
+      ]
+    },
+    "orj/pqyrSwNcSJ5rzpPkzg==": {
+      "translations": [
+        {
+          "translation": "Múi giờ quá dài"
+        }
+      ]
+    },
+    "kh91WvP5MrKsaTjaUWzHcQ==": {
+      "translations": [
+        {
+          "translation": "Giá là bắt buộc"
+        }
+      ]
+    },
+    "U9nCBXU2eOe8CVPQTCTtEw==": {
+      "translations": [
+        {
+          "translation": "Giá phải là một con số"
+        }
+      ]
+    },
+    "t7vjpACSIJ3fETyxhx15DA==": {
+      "translations": [
+        {
+          "translation": "Giá phải lớn hơn 0"
+        }
+      ]
+    },
+    "B1hVTCqGsBeFXs0fUYnNwg==": {
+      "translations": [
+        {
+          "translation": "Múi giờ"
+        }
+      ]
+    },
+    "ttxJ16uXKvVyO+pi/N4INw==": {
+      "translations": [
+        {
+          "translation": "Giá"
+        }
+      ]
+    },
+    "ufNv3S+wktbn9siw6Ytw8g==": {
+      "translations": [
+        {
+          "translation": "Tăng cấp độ"
+        }
+      ]
+    },
+    "0CtzPjp/uPSPGXYtTtJi8g==": {
+      "translations": [
+        {
+          "translation": "/ giờ"
+        }
+      ]
+    },
+    "r/ZH9kdLh49Y545LVS/Nkw==": {
+      "translations": [
+        {
+          "translation": "khả dụng"
+        }
+      ]
+    },
+    "si3GOZhOfQ+CSWieJRAPPg==": {
+      "translations": [
+        {
+          "translation": "Bước {create.details.fractional.step}"
+        }
+      ]
+    },
+    "8bPBAiupzsZ1ZV+u0c0YAQ==": {
+      "translations": [
+        {
+          "translation": "Ngày bắt đầu"
+        }
+      ]
+    },
+    "LEATVaBXpWNSOks5HDLq2g==": {
+      "translations": [
+        {
+          "translation": "Ngày cuối"
+        }
+      ]
+    },
+    "zYkJcHqnxHF3sUo4vJwCvw==": {
+      "translations": [
+        {
+          "translation": "Có"
+        }
+      ]
+    },
+    "QXctQVwGqxmWrLeNL+UR3A==": {
+      "translations": [
+        {
+          "translation": "Không"
+        }
+      ]
+    },
+    "J0el3EDr/vsUHJtTGnxMzg==": {
+      "translations": [
+        {
+          "translation": "Bước {step}"
+        }
+      ]
+    },
+    "a4KERVeW4yfsDcjfY1hciA==": {
+      "translations": [
+        {
+          "translation": "Mô tả"
+        }
+      ]
+    },
+    "VLeBXLo9YjCZvjBUoXecHw==": {
+      "translations": [
+        {
+          "translation": "Giá ngày mặc định (Chủ nhật - tối thứ năm)"
+        }
+      ]
+    },
+    "dux6OsEbP2DZz66V92D8sQ==": {
+      "translations": [
+        {
+          "translation": "Giá cuối tuần mặc định (tối thứ sáu & thứ bảy)"
+        }
+      ]
+    },
+    "jlefWFM0G2q6WXliPPUUrA==": {
+      "translations": [
+        {
+          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+        }
+      ]
+    },
+    "uic6XiogIbPWsEBJCl9oQQ==": {
+      "translations": [
+        {
+          "translation": "Giá cuối tuần là bắt buộc"
+        }
+      ]
+    },
+    "0Jjsr49OFGENCFnKQHde6A==": {
+      "translations": [
+        {
+          "translation": "Giá cuối tuần phải là một con số"
+        }
+      ]
+    },
+    "5mkmOQsVrenk575XecSDMA==": {
+      "translations": [
+        {
+          "translation": "Giá cuối tuần phải lớn hơn 0"
+        }
+      ]
+    },
+    "nT0M9qAbFnd379S0Kmxyvg==": {
+      "translations": [
+        {
+          "translation": "Xem trước danh sách của bạn"
+        }
+      ]
+    },
+    "Q3jRFjK2+LP8T5zcxXCN2A==": {
+      "translations": [
+        {
+          "translation": "Các ngày trong tuần"
+        }
+      ]
+    },
+    "EUD9J8oz2ZPTZeIebJ0nag==": {
+      "translations": [
+        {
+          "translation": "Cuối tuần"
+        }
+      ]
+    },
+    "ARNhSBqI2w2JdkHRDoU/Ew==": {
+      "translations": [
+        {
+          "translation": "Tăng cấp độ"
+        }
+      ]
+    },
+    "45VwRk/aiVWEQ2+yAHXeIA==": {
+      "translations": [
+        {
+          "translation": "/ đêm"
+        }
+      ]
+    },
+    "H8XhJIXAMIBERHkbp9ERUA==": {
+      "translations": [
+        {
+          "translation": "Tăng cấp (mỗi đêm)"
+        }
+      ]
+    },
+    "jB0ZDhUT3nHg+Pe0I8Ydgg==": {
+      "translations": [
+        {
+          "translation": "Tổng số đơn vị:"
+        }
+      ]
+    },
+    "J/Gu2gnwZe5c9tNKQaU0Qg==": {
+      "translations": [
+        {
+          "translation": "Tổng mức tăng cần thiết:"
+        }
+      ]
+    },
+    "UBhlfRnsBL2QeLZ9NI9MaQ==": {
+      "translations": [
+        {
+          "translation": "Giới hạn tăng của bạn thấp hơn tổng số tiền cần thiết để tăng tất cả các đơn vị của bạn. Sau khi đạt đến giới hạn, các đơn vị còn lại sẽ không được tăng cường."
+        }
+      ]
+    },
+    "WmFLjnV6U9WkxJDB7zXJBA==": {
+      "translations": [
+        {
+          "translation": "Hãy chắc chắn bao gồm bất kỳ chi tiết biến thể sản phẩm ở đây."
+        }
+      ]
+    },
+    "Vj/aid3BtAiwTrXFhX0Fcg==": {
+      "translations": [
+        {
+          "translation": "Số lượng"
+        }
+      ]
+    },
+    "P7p5Bv4g5fmJ1iRlZdnSJA==": {
+      "translations": [
+        {
+          "translation": "Giá"
+        }
+      ]
+    },
+    "o/4Cqceg8T/otuBikiMApQ==": {
+      "translations": [
+        {
+          "translation": "(trên mỗi đơn vị)"
+        }
+      ]
+    },
+    "/KPsAHDllbZyEU3ZL0Wgsg==": {
+      "translations": [
+        {
+          "translation": "Chi phí để mua danh sách này. Giá luôn ở ETH, USD là một ước tính."
+        }
+      ]
+    },
+    "dTU/jHOAIiBZe5c4n+B9KA==": {
+      "translations": [
+        {
+          "translation": "Giá niêm yết"
+        }
+      ]
+    },
+    "Mavu64vvB2L0NTd4aP7jZQ==": {
+      "translations": [
+        {
+          "translation": "Số lượng"
+        }
+      ]
+    },
+    "CzUp1ZNtFuIc2N/oRS/cnA==": {
+      "translations": [
+        {
+          "translation": "/ đơn vị"
+        }
+      ]
+    },
+    "tvzc9JxH7jF12bGWxgBqnQ==": {
+      "translations": [
+        {
+          "translation": "Tăng nắp"
+        }
+      ]
+    },
+    "otra7itIzW9AZHLupEzr2Q==": {
+      "translations": [
+        {
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "zv04vMjoc+u3r4q1bt7R1A==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn đã được tạo!"
+        }
+      ]
+    },
+    "aGb4Sr/gKkxCvDv52ZvOcQ==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "4pV8TLLz6hO8WICuh3ObXQ==": {
+      "translations": [
+        {
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "Rl661Fcr+bgpn50Oln54jQ==": {
+      "translations": [
+        {
+          "translation": "Người mua sẽ thấy danh sách của bạn trên thị trường."
+        }
+      ]
+    },
+    "AfFNJdK9NabTywtkMxIDvw==": {
+      "translations": [
+        {
+          "translation": "Khi người mua đưa ra đề nghị về danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó."
+        }
+      ]
+    },
+    "SC+yA14d8QpJ7tc3wzY8KA==": {
+      "translations": [
+        {
+          "translation": "Khi phiếu mua hàng được chấp nhận, bạn sẽ được yêu cầu thực hiện đơn đặt hàng."
+        }
+      ]
+    },
+    "jJ1u/NM5hhK1lJp2CUgbgA==": {
+      "translations": [
+        {
+          "translation": "Bạn sẽ nhận được thanh toán khi người mua xác nhận rằng đơn đặt hàng đã được hoàn thành."
+        }
+      ]
+    },
+    "8hl1Ul3OvNJe/xaog0d3PQ==": {
+      "translations": [
+        {
+          "translation": "Xem danh sách"
+        }
+      ]
+    },
+    "WF5wiQpoQDKFGmsPdhYcTg==": {
+      "translations": [
+        {
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "jjWWeb9WNsLCNZe4iyCB8g==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn đã được tạo!"
+        }
+      ]
+    },
+    "0CcI3GADi/MTzFdMlETnhw==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "Ml76SvqVrEtzaHQ2SoM4JQ==": {
+      "translations": [
+        {
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "53fXPUK5/q2EDCIdZfIbyA==": {
+      "translations": [
+        {
+          "translation": "Người mua sẽ thấy danh sách của bạn trên thị trường."
+        }
+      ]
+    },
+    "2G67LZH9s+eKHG1Sj2y8ow==": {
+      "translations": [
+        {
+          "translation": "Khi người mua đưa ra đề nghị về danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó."
+        }
+      ]
+    },
+    "SaVgdy0PSIP6B5lc+Ge0VA==": {
+      "translations": [
+        {
+          "translation": "Khi phiếu mua hàng được chấp nhận, bạn sẽ được yêu cầu thực hiện đơn đặt hàng."
+        }
+      ]
+    },
+    "V6niUZBFQlOalwott29Wrw==": {
+      "translations": [
+        {
+          "translation": "Bạn sẽ nhận được thanh toán khi người mua xác nhận rằng đơn đặt hàng đã được hoàn thành."
+        }
+      ]
+    },
+    "+h7sHC/I17QA1UrqZTAz/Q==": {
+      "translations": [
+        {
+          "translation": "Đang tải"
+        }
+      ]
+    },
+    "T8gKne+us4nDpTQGNQ8bJA==": {
+      "translations": [
+        {
+          "translation": "Xác nhận email của bạn"
+        }
+      ]
+    },
+    "c0QHBkLjVu9yvtD4iDg1nQ==": {
+      "translations": [
+        {
+          "translation": "Xác nhận địa chỉ email của bạn trong Attestations."
+        }
+      ]
+    },
+    "4BXZfpHLvTxuvOZU6ZB1SA==": {
+      "translations": [
+        {
+          "translation": "Xác nhận hồ sơ gốc của bạn"
+        }
+      ]
+    },
+    "efh3HEBtewcly2hpwr/vGw==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ gốc của bạn trong chứng thực."
+        }
+      ]
+    },
+    "lgPT2mVlQJFyCjK2pqg6+A==": {
+      "translations": [
+        {
+          "translation": "Xác minh số điện thoại của bạn"
+        }
+      ]
+    },
+    "wJcUHuxk0E95IsWvyIsEkA==": {
+      "translations": [
+        {
+          "translation": "Xác nhận số điện thoại của bạn trong Attestations."
+        }
+      ]
+    },
+    "FrB+Nm9CDZb0iwO0LjrmVw==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ Twitter của bạn"
+        }
+      ]
+    },
+    "safqwXZbnd9jMAbIp0ZJkQ==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ Twitter của bạn trong Attestationts."
+        }
+      ]
+    },
+    "vUisCHQyajUJt8rYR/1Lyg==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ Airbnb của bạn"
+        }
+      ]
+    },
+    "S4hltAKgMaNWmg0utGTD5w==": {
+      "translations": [
+        {
+          "translation": "Kết nối Hồ sơ Airbnb của bạn trong Chứng nhận."
+        }
+      ]
+    },
+    "ZC5PsdFmUya8ASfu6HPrqA==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ Facebook của bạn"
+        }
+      ]
+    },
+    "6EBmG1n3RISN5Lg2yDuF/g==": {
+      "translations": [
+        {
+          "translation": "Kết nối hồ sơ Facebook của bạn trong chứng thực."
+        }
+      ]
+    },
+    "ykecxKYjdZbltCVsKbHPng==": {
+      "translations": [
+        {
+          "translation": "Tạo một danh sách"
+        }
+      ]
+    },
+    "dd/MYLQ0xC5UehafmvRhWw==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành thành công việc mua bất kỳ một danh sách."
+        }
+      ]
+    },
+    "Jhk6fFImPZIKPw+CjCqmYQ==": {
+      "translations": [
+        {
+          "translation": "Mua một danh sách"
+        }
+      ]
+    },
+    "BJRWuiGhr2E2UXX+1mW1zQ==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành thành công việc bán bất kỳ một danh sách."
+        }
+      ]
+    },
+    "wJvCxFGt/9gion68sV/lYg==": {
+      "translations": [
+        {
+          "translation": "Bán một danh sách"
+        }
+      ]
+    },
+    "izPJMarYcneaRP9qt6VHYQ==": {
+      "translations": [
+        {
+          "translation": "Bán một danh sách trên thị trường"
+        }
+      ]
+    },
+    "MdJY4cf78iP+T/KfBri2YQ==": {
+      "translations": [
+        {
+          "translation": "Mời bạn bè"
+        }
+      ]
+    },
+    "oX8s+/5fmxu8zUTtSk30ww==": {
+      "translations": [
+        {
+          "translation": "Nhận bạn bè của bạn tham gia Origin với các tài khoản đang hoạt động."
+        }
+      ]
+    },
+    "pItIdILg9g+OtKVLiwQvOg==": {
+      "translations": [
+        {
+          "translation": "Đi"
+        }
+      ]
+    },
+    "xrpUGZhxxRqqIthtfE/BAA==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "qciHWfxjkHcdGFOsAql8BQ==": {
+      "translations": [
+        {
+          "translation": "Kiếm được"
+        }
+      ]
+    },
+    "5dUXwaQm/5UXra8ThxFHfQ==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch tháng 1 năm 2019"
+        }
+      ]
+    },
+    "VLgoMfdf1OOIusJVHVZpZw==": {
+      "translations": [
+        {
+          "translation": "Tháng 1 năm 2019"
+        }
+      ]
+    },
+    "+mYnEmUrhANzuCQc9B98HA==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch tháng 2 năm 2019"
+        }
+      ]
+    },
+    "3eZ8IKMmtB76Dag06jgWIw==": {
+      "translations": [
+        {
+          "translation": "Tháng 2 năm 2019"
+        }
+      ]
+    },
+    "XToCRxQ5XKSz2q61DvIBJQ==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch tháng 3 năm 2019"
+        }
+      ]
+    },
+    "SxKtrOTZLfzQixD/wMfwcQ==": {
+      "translations": [
+        {
+          "translation": "Tháng 3 năm 2019"
+        }
+      ]
+    },
+    "ooZThzMGZhUBriS4fp/Rig==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch tháng 4 năm 2019"
+        }
+      ]
+    },
+    "dGbIiE9INRHA+HMtxXovjw==": {
+      "translations": [
+        {
+          "translation": "Tháng 4 năm 2019"
+        }
+      ]
+    },
+    "PGr5EIQul8sc7/OQt/TyAw==": {
+      "translations": [
+        {
+          "translation": "Email được xác minh và hồ sơ gốc"
+        }
+      ]
+    },
+    "52K5Lj4iHypLOwCGtkKH5g==": {
+      "translations": [
+        {
+          "translation": "2 trong 4 chứng thực"
+        }
+      ]
+    },
+    "WtowmMXunhmZxZunExTFxw==": {
+      "translations": [
+        {
+          "translation": "Tiểu sử được xác minh"
+        }
+      ]
+    },
+    "cnpLd+jN4OwsPzxruTplCA==": {
+      "translations": [
+        {
+          "translation": "Email đã xác minh"
+        }
+      ]
+    },
+    "QBq4/BFCdLrq0DNDl4rwSQ==": {
+      "translations": [
+        {
+          "translation": "Thời gian còn lại"
+        }
+      ]
+    },
+    "2Gs8p0O9zMC1EB3GH13g6A==": {
+      "translations": [
+        {
+          "translation": "Nhận mã thông báo gốc bằng cách hoàn thành các nhiệm vụ bên dưới"
+        }
+      ]
+    },
+    "wmQb40obgjwfSR3PJ3S3gQ==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu trong"
+        }
+      ]
+    },
+    "Knou4ElxBFWPWsJIbZVMgw==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch này chưa bắt đầu"
+        }
+      ]
+    },
+    "JO1VHseitmEDOUDtxCa9wg==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch này đã kết thúc"
+        }
+      ]
+    },
+    "ecv4IbTCLocRwfQW+45MbA==": {
+      "translations": [
+        {
+          "translation": "Chiến dịch"
+        }
+      ]
+    },
+    "p2725zoulIdk3+lavbjmtw==": {
+      "translations": [
+        {
+          "translation": "Mã thông báo kiếm được"
+        }
+      ]
+    },
+    "bgW02lGxcvAKpC6dRqoEXA==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "hVGpV7ERzy5YIu1ZVMKSEQ==": {
+      "translations": [
+        {
+          "translation": "Tham gia cùng tôi trên Origin và kiếm mã thông báo tiền điện tử Origin (OGN). Origin là một thị trường mới để mua và bán với những người dùng khác. Kiếm mã thông báo Origin khi bạn tạo hồ sơ, mời bạn bè và mua và bán trên thị trường."
+        }
+      ]
+    },
+    "M9Vqnn6x7SZ8oK++pJY2pQ==": {
+      "translations": [
+        {
+          "translation": "Tham gia cùng tôi trên Origin và kiếm mã thông báo tiền điện tử Origin (OGN). Origin là một thị trường mới để mua và bán với những người dùng khác. Kiếm mã thông báo Origin khi bạn tạo hồ sơ, mời bạn bè và mua và bán trên thị trường."
+        }
+      ]
+    },
+    "Lh4pGaUC7h8zXIinWwFfCQ==": {
+      "translations": [
+        {
+          "translation": "Mời với mã của bạn"
+        }
+      ]
+    },
+    "aqT/hPAg2m2SKM5VeMp4Gw==": {
+      "translations": [
+        {
+          "translation": "Gửi cho bạn bè của bạn mã mời độc đáo của bạn."
+        }
+      ]
+    },
+    "GFQlYI4GSu8CrTFxpAZqTg==": {
+      "translations": [
+        {
+          "translation": "Sao chép mã"
+        }
+      ]
+    },
+    "GKEbT4KEKXxpbVnpjfAKJA==": {
+      "translations": [
+        {
+          "translation": "Sao chép"
+        }
+      ]
+    },
+    "E74Qrf+98uryCrNWNzNWjw==": {
+      "translations": [
+        {
+          "translation": "Sao chép"
+        }
+      ]
+    },
+    "49GWG62Wgbc5Db/cdlOTkA==": {
+      "translations": [
+        {
+          "translation": "Chia sẻ hoặc Tweet"
+        }
+      ]
+    },
+    "RHS3QNznWakBVqh3LxpLsg==": {
+      "translations": [
+        {
+          "translation": "Tổng số {emailsLength} thư mời đã được gửi!"
+        }
+      ]
+    },
+    "+BhaVoboQDWnCyFHsoEPTA==": {
+      "translations": [
+        {
+          "translation": "Không thể mời bạn bè. Vui lòng thử lại sau."
+        }
+      ]
+    },
+    "PjQI6hx3eXSs3uFE1Y5Q4A==": {
+      "translations": [
+        {
+          "translation": "Lỗi mời bạn bè. Vui lòng thử lại sau."
+        }
+      ]
+    },
+    "y8ZfSw9m4c64sMJW1HmnEA==": {
+      "translations": [
+        {
+          "translation": "Mời qua email"
+        }
+      ]
+    },
+    "HaPE2eDcY04uUukZPTLUQw==": {
+      "translations": [
+        {
+          "translation": "Nhập địa chỉ email của bạn bè bạn muốn mời"
+        }
+      ]
+    },
+    "6B15EXjM35Y0iE//tR2UwQ==": {
+      "translations": [
+        {
+          "translation": "Địa chỉ email riêng biệt bằng dấu phẩy."
+        }
+      ]
+    },
+    "sGU19GHNLvclsLe2y0TIfg==": {
+      "translations": [
+        {
+          "translation": "Mời bạn bè"
+        }
+      ]
+    },
+    "o8lruKi5bNlhzFdPPkolUQ==": {
+      "translations": [
+        {
+          "translation": "Định dạng email không chính xác: {errorEmails}"
+        }
+      ]
+    },
+    "awKHO99GBswNSwKToXmf1g==": {
+      "translations": [
+        {
+          "translation": "Chèn ít nhất 1 địa chỉ email hợp lệ"
+        }
+      ]
+    },
+    "qbja3xI+ynbpMcTuFy+VGA==": {
+      "translations": [
+        {
+          "translation": "Lời nhắc đã gửi!"
+        }
+      ]
+    },
+    "Ak5KYZjlkZWnJf/t1gAqZw==": {
+      "translations": [
+        {
+          "translation": "Lỗi"
+        }
+      ]
+    },
+    "Hwpah78HyVTFCglJ0pIUfA==": {
+      "translations": [
+        {
+          "translation": "Nhắc lại"
+        }
+      ]
+    },
+    "nBDaGpsKQrlRbAqtA1zH5g==": {
+      "translations": [
+        {
+          "translation": "Liên hệ"
+        }
+      ]
+    },
+    "NXb3ICr3h1AnNXcUj6aTCg==": {
+      "translations": [
+        {
+          "translation": "Phần thưởng"
+        }
+      ]
+    },
+    "5l7gzwYtQf+Vq+tUml4DyQ==": {
+      "translations": [
+        {
+          "translation": "Trạng thái"
+        }
+      ]
+    },
+    "QTQw/Z0GCwwzejDEKhLiQQ==": {
+      "translations": [
+        {
+          "translation": "Chưa hoàn thành kích hoạt người dùng"
+        }
+      ]
+    },
+    "jhvYbvMES/Ulab6k+ZEVcg==": {
+      "translations": [
+        {
+          "translation": "Nhắc lại"
+        }
+      ]
+    },
+    "5hCA8hXoU2Eqhes9Dx9BMA==": {
+      "translations": [
+        {
+          "translation": "Lời mời đang chờ xử lý"
+        }
+      ]
+    },
+    "uWsUjDplwEMjhhlqo1t50Q==": {
+      "translations": [
+        {
+          "translation": "Theo dõi tiến trình của những người bạn đăng ký bằng mã mời của bạn."
+        }
+      ]
+    },
+    "l88VUqiyI7tOCygCjTchsw==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "jNZTtswQamPR5fqLpuU38Q==": {
+      "translations": [
+        {
+          "translation": "Lời mời thành công"
+        }
+      ]
+    },
+    "J3Czs3Rp2eWVTn9lcDxSQQ==": {
+      "translations": [
+        {
+          "translation": "Giúp bạn bè của bạn kiếm OGN giống như bạn."
+        }
+      ]
+    },
+    "k7bhJpKhGKToRTeBeXr0aQ==": {
+      "translations": [
+        {
+          "translation": "Kiếm được"
+        }
+      ]
+    },
+    "78XdBNtdiw/IfKVviDlg9A==": {
+      "translations": [
+        {
+          "translation": "Quay lại Chiến dịch"
+        }
+      ]
+    },
+    "mxHZKBbgLYHiU3xCEEwMtQ==": {
+      "translations": [
+        {
+          "translation": "Mời bạn bè của bạn đến Origin"
+        }
+      ]
+    },
+    "J5wgD0JPj/65X0jioq1CwA==": {
+      "translations": [
+        {
+          "translation": "Nhận mã thông báo gốc bằng cách hoàn thành các nhiệm vụ dưới đây."
+        }
+      ]
+    },
+    "qOAPDvqXmJHUU1aJ5vsucw==": {
+      "translations": [
+        {
+          "translation": "GỬI NHỮNG LỜI MỜI"
+        }
+      ]
+    },
+    "VBU0HgQlL4CtXWPBtwuzAA==": {
+      "translations": [
+        {
+          "translation": "TRACK ĐẦU TƯ"
+        }
+      ]
+    },
+    "mFCtuJZK+KcGUkKQym20yg==": {
+      "translations": [
+        {
+          "translation": "Chào mừng bạn đến với Giao thức gốc"
+        }
+      ]
+    },
+    "JIAeR5l0zsySvXjhN/LjXg==": {
+      "translations": [
+        {
+          "translation": "Được mời bởi"
+        }
+      ]
+    },
+    "2jPZ2DnxwxQpSK3roVvLSA==": {
+      "translations": [
+        {
+          "translation": "Bạn của bạn {name} đã mời bạn tham gia Origin"
+        }
+      ]
+    },
+    "8dUMUvTO9y/E2pDMSrgtWw==": {
+      "translations": [
+        {
+          "translation": "Đăng ký và kiếm Token gốc MIỄN PHÍ"
+        }
+      ]
+    },
+    "fDuELeOXBQ7+DJbX7oyE6Q==": {
+      "translations": [
+        {
+          "translation": "Đăng ký Xuất xứ ngay hôm nay."
+        }
+      ]
+    },
+    "o8qQ/PN7IXGbYwY+4G8VBw==": {
+      "translations": [
+        {
+          "translation": "{firstName} và cả hai bạn sẽ kiếm được mã thông báo tiền điện tử gốc (OGN)."
+        }
+      ]
+    },
+    "KXy/meBwGaf5yVfEd9HDHQ==": {
+      "translations": [
+        {
+          "translation": "Kiếm thêm mã thông báo khi bạn xác minh hồ sơ của mình, mời bạn bè và mua và bán trên Origin."
+        }
+      ]
+    },
+    "aq5/1FnXv6c/TPNJh+tpEg==": {
+      "translations": [
+        {
+          "translation": "Đăng ký ngay"
+        }
+      ]
+    },
+    "tzDkMYn3LmF1aKkySIvtAQ==": {
+      "translations": [
+        {
+          "translation": "Nguồn gốc là gì?"
+        }
+      ]
+    },
+    "6YhgbdYLnjKT4XB+UPkgkA==": {
+      "translations": [
+        {
+          "translation": "Origin là thị trường ngang hàng đầu tiên được xây dựng hoàn toàn trên blockchain"
+        }
+      ]
+    },
+    "CyiodoDeIQn/ar6XbKqt4Q==": {
+      "translations": [
+        {
+          "translation": "Sử dụng miễn phí với phí giao dịch 0%"
+        }
+      ]
+    },
+    "s13YMOt7j7kdlx3jc+qggw==": {
+      "translations": [
+        {
+          "translation": "Duyệt và tìm kiếm chống kiểm duyệt"
+        }
+      ]
+    },
+    "5CBWzDNJNVigCeBUwiJOLw==": {
+      "translations": [
+        {
+          "translation": "Hàng chục danh mục như thẻ quà tặng, nội trợ, thương mại điện tử và dịch vụ"
+        }
+      ]
+    },
+    "oegZB/dZhQav6NEGEfpaIw==": {
+      "translations": [
+        {
+          "translation": "Mã thông báo nguồn gốc là gì?"
+        }
+      ]
+    },
+    "qXGCW6AVWNckr8ZZXh0sRA==": {
+      "translations": [
+        {
+          "translation": "Mã thông báo tiền điện tử gốc (OGN) là mã thông báo ERC-20 có thể được sử dụng trên nền tảng theo nhiều cách."
+        }
+      ]
+    },
+    "PlCEphvzEyQp/7SnvJWUHg==": {
+      "translations": [
+        {
+          "translation": "Mã thông báo gốc kiếm được (OGN) hiện đang bị khóa để sử dụng trên ứng dụng và nền tảng Origin. Họ không thể được chuyển cho người dùng khác tại thời điểm này. Trong tương lai, dự kiến OGN sẽ được mở khóa và chuyển nhượng."
+        }
+      ]
+    },
+    "zQ+amcZcEbrkMHT1gTyR8A==": {
+      "translations": [
+        {
+          "translation": "Tìm hiểu thêm"
+        }
+      ]
+    },
+    "SgbXw8gUCvCMRANRfNbZdw==": {
+      "translations": [
+        {
+          "translation": "Tăng cường"
+        }
+      ]
+    },
+    "YFtqoYhKvImJqf0XglUXTw==": {
+      "translations": [
+        {
+          "translation": "Người bán sử dụng OGN để tăng danh sách của họ trên thị trường. Điều này cho phép danh sách của họ khả năng hiển thị và vị trí cao hơn. Danh sách với OGN có cơ hội cao hơn được bán nhanh chóng."
+        }
+      ]
+    },
+    "HWTdiJhpW9S+qWAG/3D96g==": {
+      "translations": [
+        {
+          "translation": "Phần thưởng"
+        }
+      ]
+    },
+    "5vp0hYaYGt8rhy0Z4hKf9w==": {
+      "translations": [
+        {
+          "translation": "OGN là một loại tiền điện tử có thưởng do người dùng Origin kiếm được. Kiếm phần thưởng khi bạn xác minh tài khoản của mình hoặc mời bạn bè tham gia Origin. Thậm chí lấy OGN làm tiền mặt khi bạn mua và bán."
+        }
+      ]
+    },
+    "NK8yEk6S/zuO701X4M+TMQ==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu kiếm mã thông báo gốc trong vòng vài phút"
+        }
+      ]
+    },
+    "OxT7PzUj7b+bcTIHNpm2Ug==": {
+      "translations": [
+        {
+          "translation": "Kết nối ví tiền điện tử của bạn với Origin"
+        }
+      ]
+    },
+    "QTWkl7l3Zq6SNON+xjM6fg==": {
+      "translations": [
+        {
+          "translation": "Đăng ký và xác minh tài khoản của bạn và đủ điều kiện"
+        }
+      ]
+    },
+    "EPa2KOi7VdqeXU4rahzx/g==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu kiếm tiền ngay hôm nay"
+        }
+      ]
+    },
+    "ZYfPOEnoaFfIjmdBj/wQDA==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu"
+        }
+      ]
+    },
+    "1jz0lXMtdwPie5XvZGCd4w==": {
+      "translations": [
+        {
+          "translation": "Có một vài câu hỏi?"
+        }
+      ]
+    },
+    "uIUyjEjCWzwJBVxnypih1Q==": {
+      "translations": [
+        {
+          "translation": "Liên lạc"
+        }
+      ]
+    },
+    "2a9E/BUZqanf5LzL99VMwQ==": {
+      "translations": [
+        {
+          "translation": "Bạn đã bị cấm kiếm token"
+        }
+      ]
+    },
+    "NaM6Vmz6iiRm1WDKnAmoPw==": {
+      "translations": [
+        {
+          "translation": "Tham gia {campaignName} của chúng tôi để kiếm mã thông báo"
+        }
+      ]
+    },
+    "sbO8XiYlqyNx+ZffAKr2Xw==": {
+      "translations": [
+        {
+          "translation": "Kiếm OGN bằng cách hoàn thành các nhiệm vụ như xác minh danh tính của bạn và chia sẻ Origin với bạn bè của bạn. OGN có thể được sử dụng theo nhiều cách khác nhau. OGN kiếm được sẽ được chuyển sau khi kết thúc {campaignName} để kiếm token"
+        }
+      ]
+    },
+    "8xBa1ZrG+j1EPiS9IifRaQ==": {
+      "translations": [
+        {
+          "translation": "Bỏ qua"
+        }
+      ]
+    },
+    "Z+VvwUtcmCiHHZ/y4kYNLQ==": {
+      "translations": [
+        {
+          "translation": "Đăng ký xuất xứ"
+        }
+      ]
+    },
+    "NiVro9WP7TRRxKWh3pVKVQ==": {
+      "translations": [
+        {
+          "translation": "Tôi chấp nhận các điều khoản và điều kiện"
+        }
+      ]
+    },
+    "SitBBxJx3gAiNXHZYDLTYA==": {
+      "translations": [
+        {
+          "translation": "Chấp nhận các điều khoản"
+        }
+      ]
+    },
+    "WMYdJljtuuVbpA+VRa7M3w==": {
+      "translations": [
+        {
+          "translation": "Rất tiếc, {country} không đủ điều kiện"
+        }
+      ]
+    },
+    "Z7Sx4nV0a/dHqPx5QNIXdg==": {
+      "translations": [
+        {
+          "translation": "Thật không may, có vẻ như bạn hiện đang ở một quốc gia nơi các quy định của chính phủ không cho phép bạn tham gia Chiến dịch Xuất xứ."
+        }
+      ]
+    },
+    "kUrilejuCqE9Cmu7uYvtcw==": {
+      "translations": [
+        {
+          "translation": "Chúng tôi đã phát hiện quốc gia của bạn không chính xác?"
+        }
+      ]
+    },
+    "yjSH//GTRsIZgQGrshYGyQ==": {
+      "translations": [
+        {
+          "translation": "Tôi xác nhận tôi không phải là công dân hoặc cư dân của {country}"
+        }
+      ]
+    },
+    "ToBlXADjzL3C1yE3SulP9g==": {
+      "translations": [
+        {
+          "translation": "Lỗi: không thể phát hiện quốc gia"
         }
       ]
     },
@@ -531,14 +3252,14 @@
     "33EPBwLfS9o3lGs62U+89w==": {
       "translations": [
         {
-          "translation": "Nhập Url hồ sơ Airbnb bên dưới"
+          "translation": "Nhập URL hồ sơ Airbnb bên dưới"
         }
       ]
     },
     "QfLmm1Y/WUbCRLJtHN4WAg==": {
       "translations": [
         {
-          "translation": "Những người dùng khác sẽ biết rằng bạn có một hồ sơ Airbnb đã được xác minh."
+          "translation": "Những người dùng khác sẽ biết rằng bạn có hồ sơ Airbnb đã được xác minh và id người dùng của bạn sẽ được xuất bản trên blockchain."
         }
       ]
     },
@@ -552,7 +3273,7 @@
     "3SSVIaE/i8UtPArlfLYLow==": {
       "translations": [
         {
-          "translation": "Truy cập trang web Airbnb, chỉnh sửa tiểu sử của bạn và dán văn bản sau vào mô tả hồ sơ của mình."
+          "translation": "Truy cập trang web Airbnb, chỉnh sửa hồ sơ của bạn và dán văn bản sau vào mô tả hồ sơ:"
         }
       ]
     },
@@ -560,6 +3281,797 @@
       "translations": [
         {
           "translation": "Tiếp tục một khi mã xác nhận được đưa vào hồ sơ Airbnb của bạn."
+        }
+      ]
+    },
+    "26B3Ynk36rNu1TVoU/Uq7Q==": {
+      "translations": [
+        {
+          "translation": "Xác minh tài khoản Airbnb!"
+        }
+      ]
+    },
+    "BlVAmm03lnkWBtZsV9i8zQ==": {
+      "translations": [
+        {
+          "translation": "Đừng quên công bố những thay đổi của bạn."
+        }
+      ]
+    },
+    "EpMTM+gxR0t1+atQlJNz6g==": {
+      "translations": [
+        {
+          "translation": "Xuất bản lên blockchain cho phép người dùng khác biết rằng bạn có hồ sơ được xác minh."
+        }
+      ]
+    },
+    "lRp7RLflwxDci7fil4BTOw==": {
+      "translations": [
+        {
+          "translation": "Nhập địa chỉ email của bạn dưới đây và OriginID sẽ gửi cho bạn mã xác minh"
+        }
+      ]
+    },
+    "FCQzb9sToGt24ikV3xF2LQ==": {
+      "translations": [
+        {
+          "translation": "Xác minh địa chỉ email"
+        }
+      ]
+    },
+    "YuuSM/LwS49O8d4HGztcGg==": {
+      "translations": [
+        {
+          "translation": "Bằng cách xác minh email của bạn, bạn cấp quyền Origin để gửi cho bạn các email không thường xuyên như thông báo về các giao dịch của bạn."
+        }
+      ]
+    },
+    "hk0K2k9QnD+15KLvRe4Ppg==": {
+      "translations": [
+        {
+          "translation": "Xác nhận địa chỉ email của bạn"
+        }
+      ]
+    },
+    "Sp/o1Mpuyl9WKgDIXITGaQ==": {
+      "translations": [
+        {
+          "translation": "Nhập mã chúng tôi đã gửi cho bạn dưới đây"
+        }
+      ]
+    },
+    "eRcQebtSS5jWwVqKU84vPg==": {
+      "translations": [
+        {
+          "translation": "Địa chỉ email đã được xác minh!"
+        }
+      ]
+    },
+    "WwpLz8qYef22cn4ptqMTew==": {
+      "translations": [
+        {
+          "translation": "Xác minh tài khoản Facebook của bạn"
+        }
+      ]
+    },
+    "UPltnTXrAbG5MMRJX+SAzw==": {
+      "translations": [
+        {
+          "translation": "{Warning:} Hiện không khả dụng trên thiết bị di động"
+        }
+      ]
+    },
+    "gfO6jcHq55dE1IQ3KWk2DQ==": {
+      "translations": [
+        {
+          "translation": "Cảnh báo:"
+        }
+      ]
+    },
+    "1ilvlskGFH6As45MFKd2cw==": {
+      "translations": [
+        {
+          "translation": "Những người dùng khác sẽ biết rằng bạn có tài khoản Facebook đã được xác minh, nhưng chi tiết tài khoản của bạn sẽ không được công bố trên blockchain. Chúng tôi sẽ không bao giờ gửi thay mặt bạn."
+        }
+      ]
+    },
+    "N/dwdqt311iPHZqTOvL1Jg==": {
+      "translations": [
+        {
+          "translation": "Đã xác minh tài khoản Facebook!"
+        }
+      ]
+    },
+    "Jgc8914dz9BLi79OA6YdZA==": {
+      "translations": [
+        {
+          "translation": "Xác minh số điện thoại của bạn"
+        }
+      ]
+    },
+    "gLtSMYd36HCni1L2vVTK5g==": {
+      "translations": [
+        {
+          "translation": "Nhập số điện thoại của bạn dưới đây và OriginID sẽ gửi cho bạn mã xác minh qua SMS."
+        }
+      ]
+    },
+    "Le4Tec5F+U/jkYxINqFxCg==": {
+      "translations": [
+        {
+          "translation": "Bằng cách xác minh số điện thoại của bạn, bạn cấp quyền Origin để gửi cho bạn các email không thường xuyên như thông báo về các giao dịch của bạn."
+        }
+      ]
+    },
+    "9/lqPBNSYSjdOmXnncrbqQ==": {
+      "translations": [
+        {
+          "translation": "Nhập mã chúng tôi đã gửi cho bạn dưới đây"
+        }
+      ]
+    },
+    "80BXAlOVXtYhmFJD2dDKqw==": {
+      "translations": [
+        {
+          "translation": "Số điện thoại đã được xác minh!"
+        }
+      ]
+    },
+    "9PlJCHXfwYjV6OULfLe2Nw==": {
+      "translations": [
+        {
+          "translation": "Xác minh tài khoản Twitter của bạn"
+        }
+      ]
+    },
+    "fO7UjRhak4WxWI/FYFEZgA==": {
+      "translations": [
+        {
+          "translation": "Những người dùng khác sẽ biết rằng bạn có tài khoản Twitter đã được xác minh, nhưng chi tiết tài khoản của bạn sẽ không được công bố trên blockchain. Chúng tôi sẽ không bao giờ gửi thay mặt bạn."
+        }
+      ]
+    },
+    "YaiXsuELKE5yLW1VaJdYrQ==": {
+      "translations": [
+        {
+          "translation": "Đã xác minh tài khoản Twitter!"
+        }
+      ]
+    },
+    "idjV2bzcgcdWRmYb+Kh/MA==": {
+      "translations": [
+        {
+          "translation": "Đăng ký vào"
+        }
+      ]
+    },
+    "6i3NbGdxeHqAAMe1CjZIVA==": {
+      "translations": [
+        {
+          "translation": "Kiểm tra"
+        }
+      ]
+    },
+    "egC3pFdbL8DkfMRT/t8PXg==": {
+      "translations": [
+        {
+          "translation": "ETH / đêm"
+        }
+      ]
+    },
+    "M/PVI8j/6NkKUpHWnIlvlw==": {
+      "translations": [
+        {
+          "translation": "Cuộn xuống để xem lịch khả dụng"
+        }
+      ]
+    },
+    "Zz1WPYjxJ3Su4UzYSlNmAQ==": {
+      "translations": [
+        {
+          "translation": "Không có sẵn"
+        }
+      ]
+    },
+    "iZBl/o1TZqV6vfcowwKpzA==": {
+      "translations": [
+        {
+          "translation": "Tổng giá"
+        }
+      ]
+    },
+    "sxoQF5jfF+ty/WN68uC1AQ==": {
+      "translations": [
+        {
+          "translation": "Sách"
+        }
+      ]
+    },
+    "7c71+w6U7Nbkd+h9e7WxOg==": {
+      "translations": [
+        {
+          "translation": "Khởi đầu"
+        }
+      ]
+    },
+    "OYSTbu83qKwLoc0ATVRqTQ==": {
+      "translations": [
+        {
+          "translation": "Kết thúc"
+        }
+      ]
+    },
+    "HlsHoXg/7lA8sMnqxARtbg==": {
+      "translations": [
+        {
+          "translation": "ETH / giờ"
+        }
+      ]
+    },
+    "LY/VClxRIOhqnmCufIorow==": {
+      "translations": [
+        {
+          "translation": "/ mỗi"
+        }
+      ]
+    },
+    "H7Yn7wWj8QjgxhH6d6TYpg==": {
+      "translations": [
+        {
+          "translation": "Mua hàng"
+        }
+      ]
+    },
+    "MVfYNYO7/LWVBJvfCQD2Eg==": {
+      "translations": [
+        {
+          "translation": "Đã bán"
+        }
+      ]
+    },
+    "UdSqyocYhlJiUuENZNivKg==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "k1wQW8bBvTN67vomiMi6zQ==": {
+      "translations": [
+        {
+          "translation": "Có sẵn"
+        }
+      ]
+    },
+    "JA586NEcuAeEOGwkiG9v0g==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
+        }
+      ]
+    },
+    "hWTLMPncBrn7NuTNe3adUw==": {
+      "translations": [
+        {
+          "translation": "Danh sách này đang"
+        }
+      ]
+    },
+    "AXOZAIfpi3fyfbSZZZUWVw==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "Oo0lPpXsGXLI4stFbvxvOQ==": {
+      "translations": [
+        {
+          "translation": "Bạn đã thực hiện một đề nghị trong danh sách này."
+        }
+      ]
+    },
+    "hBV0SlHyDCq8N+AD5/jzqw==": {
+      "translations": [
+        {
+          "translation": "Xem mua hàng của tôi"
+        }
+      ]
+    },
+    "5xZsR6GEptb2JxRgPaQXNw==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
+        }
+      ]
+    },
+    "oM8UOkBxpejWiBYkIzweQA==": {
+      "translations": [
+        {
+          "translation": "Danh sách này đang"
+        }
+      ]
+    },
+    "OxViihxm7s5G99NRoHq2ig==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "IRK4mGldV6ZsN6QNm7yfBQ==": {
+      "translations": [
+        {
+          "translation": "Một người mua khác đã thực hiện mua hàng trên danh sách này. Hãy thử truy cập trang danh sách và tìm kiếm nội dung tương tự."
+        }
+      ]
+    },
+    "pIN1eB9fKjTSZ/lxQM/HUA==": {
+      "translations": [
+        {
+          "translation": "Xem danh sách"
+        }
+      ]
+    },
+    "i4gBpnp1ab7o+e8in/u62Q==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
+        }
+      ]
+    },
+    "fQXJIdRS1RqeF021uYRFqg==": {
+      "translations": [
+        {
+          "translation": "Danh sách này đang"
+        }
+      ]
+    },
+    "NeYO+Ltj4nYFHkW6uPsL2Q==": {
+      "translations": [
+        {
+          "translation": "Đã bán"
+        }
+      ]
+    },
+    "GV+cUkvlSJKnnakvO/EACA==": {
+      "translations": [
+        {
+          "translation": "Danh sách này được bán hết. Hãy thử truy cập trang danh sách và tìm kiếm một cái gì đó tương tự."
+        }
+      ]
+    },
+    "SadssMjUlVtgKoOKVWzHUw==": {
+      "translations": [
+        {
+          "translation": "Số lượng"
+        }
+      ]
+    },
+    "0gg54KefGUb3y/W0neIZDQ==": {
+      "translations": [
+        {
+          "translation": "Liệt kê {id}"
+        }
+      ]
+    },
+    "l4YUMk7fsVyKL2TTsldMdw==": {
+      "translations": [
+        {
+          "translation": "Danh sách không tìm thấy"
+        }
+      ]
+    },
+    "QkpyTw8uCT69QcDHqAKt7Q==": {
+      "translations": [
+        {
+          "translation": "Danh sách không hợp lệ"
+        }
+      ]
+    },
+    "0hZyMC0etK9bwztn8hnbhg==": {
+      "translations": [
+        {
+          "translation": "Về người mua"
+        }
+      ]
+    },
+    "L2oPKF5xsKmJCOtmT+Uwfg==": {
+      "translations": [
+        {
+          "translation": "* Nhấp và kéo để chọn phạm vi ngày"
+        }
+      ]
+    },
+    "9hd32nz5BtBUmOmM269/AA==": {
+      "translations": [
+        {
+          "translation": "Múi giờ:"
+        }
+      ]
+    },
+    "IOWXtJhXlVb9On/GWu5Ufg==": {
+      "translations": [
+        {
+          "translation": "LƯU Ý: Điều này khác với múi giờ của bạn là {userTimeZone}"
+        }
+      ]
+    },
+    "5hZ6uYzeyyP9j8VnTvQ0Gg==": {
+      "translations": [
+        {
+          "translation": "* Nhấp và kéo để chọn phạm vi thời gian"
+        }
+      ]
+    },
+    "o6Z2JUXPEzsq4mjxtgxysg==": {
+      "translations": [
+        {
+          "translation": "Tất cả"
+        }
+      ]
+    },
+    "FRFO6tLpPFCURVOimytNpQ==": {
+      "translations": [
+        {
+          "translation": "Tìm kiếm"
+        }
+      ]
+    },
+    "6WXI9iYt6WPtHpJwbK2i4g==": {
+      "translations": [
+        {
+          "translation": "Lưu ý: Tìm kiếm không có sẵn"
+        }
+      ]
+    },
+    "IL0sLDeP9dTTFxmOm7nEbA==": {
+      "translations": [
+        {
+          "translation": "/ đêm"
+        }
+      ]
+    },
+    "kOyzntM8/j1UQbONQh4jRA==": {
+      "translations": [
+        {
+          "translation": "/ giờ"
+        }
+      ]
+    },
+    "fKJBt8Xs1iL0KZrQdPpT0Q==": {
+      "translations": [
+        {
+          "translation": "Danh sách"
+        }
+      ]
+    },
+    "gpeQTbRe56v7+THmtTo1dw==": {
+      "translations": [
+        {
+          "translation": "Không tìm thấy kết quả tìm kiếm"
+        }
+      ]
+    },
+    "kxDQ9H0JkRh27rfshZkoVA==": {
+      "translations": [
+        {
+          "translation": "Thị trường của bạn chưa có bất kỳ danh sách nào"
+        }
+      ]
+    },
+    "Q776FeWv/0+8JXPq6YHQ6Q==": {
+      "translations": [
+        {
+          "translation": "Bạn có thể tự tạo danh sách hoặc mời người bán tham gia nền tảng của bạn!"
+        }
+      ]
+    },
+    "0kTHM7ddLclB+FcU8ttrcQ==": {
+      "translations": [
+        {
+          "translation": "Tạo một danh sách"
+        }
+      ]
+    },
+    "vYS+dQLoVNtqFLJqO8A42g==": {
+      "translations": [
+        {
+          "translation": "Không tìm thấy danh sách"
+        }
+      ]
+    },
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "translations": [
+        {
+          "translation": "{number} Danh sách"
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "translations": [
+        {
+          "translation": "1 danh sách"
+        }
+      ]
+    },
+    "H7it/Nh1dTkCwZ8prH+mcw==": {
+      "translations": [
+        {
+          "translation": "Tải thêm"
+        }
+      ]
+    },
+    "FA3Sz+Yvj0lD8zBDmiEOeQ==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn"
+        }
+      ]
+    },
+    "NVG2B52dMnz2pPid0hWHrw==": {
+      "translations": [
+        {
+          "translation": "Đang tải cuộc hội thoại ..."
+        }
+      ]
+    },
+    "iITnf069bvCAf0wFFTjdmA==": {
+      "translations": [
+        {
+          "translation": "Không thể truy vấn tin nhắn"
+        }
+      ]
+    },
+    "sOGxRcYUJAsnpsE2TfRY7w==": {
+      "translations": [
+        {
+          "translation": "Không có cuộc trò chuyện!"
+        }
+      ]
+    },
+    "zUBDRYBvIHyFIYSdMxKpmA==": {
+      "translations": [
+        {
+          "translation": "Không thể truy vấn tin nhắn"
+        }
+      ]
+    },
+    "g3jsZCPyzDhp0H3lcRPbrg==": {
+      "translations": [
+        {
+          "translation": "Gần"
+        }
+      ]
+    },
+    "lde4nZGa2Q9Owr5E9dQ18w==": {
+      "translations": [
+        {
+          "translation": "Viết điều gì đó..."
+        }
+      ]
+    },
+    "ahuqzU84qE8WZujfPDjRow==": {
+      "translations": [
+        {
+          "translation": "Gửi"
+        }
+      ]
+    },
+    "CTNRjx/teJ3kDf+M5Aq+xg==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xác nhận Blockchain"
+        }
+      ]
+    },
+    "OvbafFNA9qaLyFyagq7xUQ==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xác nhận Blockchain"
+        }
+      ]
+    },
+    "rsGnOhUcaEN+hW+x0hHJ3A==": {
+      "translations": [
+        {
+          "translation": "{confirmations.noOfConfirmations} trên 6 xác nhận"
+        }
+      ]
+    },
+    "hRPbTuJxxb+xLO8G16c7Gg==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành ({confirmations.noOfConfirmations} xác nhận)"
+        }
+      ]
+    },
+    "vZz4IJwzaRaGGLkANtyZRQ==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu"
+        }
+      ]
+    },
+    "3paaeWPERztrC5zCpsUs8A==": {
+      "translations": [
+        {
+          "translation": "Bán trên xuất xứ"
+        }
+      ]
+    },
+    "lC0Zq16Tnu762WQln8kZVQ==": {
+      "translations": [
+        {
+          "translation": "Lỗi tải tin nhắn"
+        }
+      ]
+    },
+    "Flym48gbcjw+7qWMcE8J2w==": {
+      "translations": [
+        {
+          "translation": "Tải..."
+        }
+      ]
+    },
+    "8+XZq96344YbYNHFy4Mv/w==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn chưa đọc"
+        }
+      ]
+    },
+    "1skYvPMWEogMRMf/xYKpEQ==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn chưa đọc"
+        }
+      ]
+    },
+    "I3Ubit0eF6p2kxPsdWNPqA==": {
+      "translations": [
+        {
+          "translation": "Xem tin nhắn"
+        }
+      ]
+    },
+    "OSw+Z5uyNlHroNxtGMiX+Q==": {
+      "translations": [
+        {
+          "translation": "Duyệt qua danh mục"
+        }
+      ]
+    },
+    "FT41b3HlbYvNCfadzieRZA==": {
+      "translations": [
+        {
+          "translation": "Thêm một danh sách"
+        }
+      ]
+    },
+    "QCZW33pDrKY20rFahZ1vkg==": {
+      "translations": [
+        {
+          "translation": "Mua hàng"
+        }
+      ]
+    },
+    "1M/tpTltyUByYgb7M0guaQ==": {
+      "translations": [
+        {
+          "translation": "Danh sách"
+        }
+      ]
+    },
+    "uX4FVwy9nLJdzqyxfWcTWA==": {
+      "translations": [
+        {
+          "translation": "Bán hàng"
+        }
+      ]
+    },
+    "6m3zRzqbtA1iEoFy2tjugw==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn"
+        }
+      ]
+    },
+    "eOnQjifzRCehDAuj+e74tQ==": {
+      "translations": [
+        {
+          "translation": "Thông báo"
+        }
+      ]
+    },
+    "U10zgJUwkYaALaRUApbsog==": {
+      "translations": [
+        {
+          "translation": "Lỗi khi tải thông báo"
+        }
+      ]
+    },
+    "bs+KlyM/NbMHzktR8342YA==": {
+      "translations": [
+        {
+          "translation": "Tải..."
+        }
+      ]
+    },
+    "Mv6cuSCfewB7BjjKYyGBqw==": {
+      "translations": [
+        {
+          "translation": "Thông báo"
+        }
+      ]
+    },
+    "PURpU3OPAdsnJUVhDUpH5g==": {
+      "translations": [
+        {
+          "translation": "Thông báo"
+        }
+      ]
+    },
+    "gzT3SioJ7I7iiS5z4VOm8g==": {
+      "translations": [
+        {
+          "translation": "Xem tất cả"
+        }
+      ]
+    },
+    "qpkPtxBNFifg/7q8gJgljQ==": {
+      "translations": [
+        {
+          "translation": "Đã kết nối với {[networkName]}"
+        }
+      ]
+    },
+    "NeogRKjWuqqoJ4qjuZjNtg==": {
+      "translations": [
+        {
+          "translation": "{networkName}"
+        }
+      ]
+    },
+    "fCssoMJ7OY8O7CGYo8j0CA==": {
+      "translations": [
+        {
+          "translation": "Địa chỉ ETH"
+        }
+      ]
+    },
+    "HKFnR0gnVwEyd0YWbVaFOQ==": {
+      "translations": [
+        {
+          "translation": "Hủy liên kết di động"
+        }
+      ]
+    },
+    "Oq+ZNFsqTuq3uYQzNAQbYA==": {
+      "translations": [
+        {
+          "translation": "Chỉnh sửa hồ sơ"
+        }
+      ]
+    },
+    "HInnBpa08p5k4Yj/INtqAw==": {
+      "translations": [
+        {
+          "translation": "Danh tính của tôi"
+        }
+      ]
+    },
+    "oea0f4wCvEuKEpgRZVUAOQ==": {
+      "translations": [
+        {
+          "translation": "Người dùng giấu tên"
+        }
+      ]
+    },
+    "nDkJLm47Ba0gcbYvGk8vkQ==": {
+      "translations": [
+        {
+          "translation": "Sức mạnh hồ sơ"
         }
       ]
     },
@@ -573,7 +4085,7 @@
     "0Oc4f1gpOBz24xArpRgELA==": {
       "translations": [
         {
-          "translation": "Các lệnh bán của tôi"
+          "translation": "Doanh số bán hàng của tôi"
         }
       ]
     },
@@ -587,7 +4099,1715 @@
     "l2Ry3AjK+2P1DfwR4X+PAA==": {
       "translations": [
         {
-          "translation": "Đang bán"
+          "translation": "Bán"
+        }
+      ]
+    },
+    "c2B3e+aG9e/X9QwOH9c3yw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} từ chối lời đề nghị của bạn vào ngày {title}"
+        }
+      ]
+    },
+    "YOm+ynQ73tcGI0ilqp6igQ==": {
+      "translations": [
+        {
+          "translation": "{nameLink} chấp nhận đề nghị của bạn trên {title}"
+        }
+      ]
+    },
+    "OJHXhyaxeI6wJgPmAN+79w==": {
+      "translations": [
+        {
+          "translation": "Giao dịch với {nameLink} hoàn thành cho {title}"
+        }
+      ]
+    },
+    "YzuRRanf3CVBwwdoxuvnig==": {
+      "translations": [
+        {
+          "translation": "{nameLink} đưa ra lời đề nghị trên {title}"
+        }
+      ]
+    },
+    "oGg+bvcoHD7419PPWtSy0Q==": {
+      "translations": [
+        {
+          "translation": "{nameLink} tranh chấp một đề nghị trên {title}"
+        }
+      ]
+    },
+    "8iWiBR18Lwogh0ILdAmDcw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} giải quyết tranh chấp trên {title}"
+        }
+      ]
+    },
+    "kRpJt5Z+8QmF0zGEEwO3Xw==": {
+      "translations": [
+        {
+          "translation": "Tất cả"
+        }
+      ]
+    },
+    "I7wdzOzb8p0bzZV0L/fOzQ==": {
+      "translations": [
+        {
+          "translation": "Thông báo"
+        }
+      ]
+    },
+    "wS1dIWkUM4WzsK+i96qErg==": {
+      "translations": [
+        {
+          "translation": "Tải..."
+        }
+      ]
+    },
+    "goa8ra1IITxtTLlPqygsJg==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "pJ72jHPAVDJZr/f1TpS/Nw==": {
+      "translations": [
+        {
+          "translation": "thông báo.item.loading"
+        }
+      ]
+    },
+    "7qJMk00JA03KqhCdzCM1AQ==": {
+      "translations": [
+        {
+          "translation": "thông báo.item.loadmore"
+        }
+      ]
+    },
+    "FCvW5DiJds9kF4OmcP9UFQ==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu với Origin"
+        }
+      ]
+    },
+    "JZfl/92+OYfoP7WPV/3hAg==": {
+      "translations": [
+        {
+          "translation": "Để giao dịch thành công với những người khác trên DApp của chúng tôi, bạn sẽ cần một vài điều trước khi bắt đầu. {Why do I need to do this?}"
+        }
+      ]
+    },
+    "soYLfqRkHiY0hIsn6V7KOg==": {
+      "translations": [
+        {
+          "translation": "Tại sao tôi cần phải làm điều này?"
+        }
+      ]
+    },
+    "IrLYNrWwH6ZtQ1ImEOOicQ==": {
+      "translations": [
+        {
+          "translation": "Giới thiệu về tin nhắn gốc"
+        }
+      ]
+    },
+    "hHtAQnGmut84lwdcWI2L6w==": {
+      "translations": [
+        {
+          "translation": "Ví tiền điện tử là một chương trình phần mềm lưu trữ khóa riêng và công khai và tương tác với nhiều blockchain khác nhau để cho phép người dùng gửi và nhận tiền kỹ thuật số và theo dõi số dư của họ. Nếu bạn muốn sử dụng Bitcoin hoặc bất kỳ loại tiền điện tử nào khác, bạn sẽ cần phải có ví kỹ thuật số."
+        }
+      ]
+    },
+    "UJNr54cskDebn4LOy1474w==": {
+      "translations": [
+        {
+          "translation": "Về danh tính trên Blockchain"
+        }
+      ]
+    },
+    "RZmj6tEEQAQTby9GXxZXVw==": {
+      "translations": [
+        {
+          "translation": "Ví tiền điện tử là một chương trình phần mềm lưu trữ khóa riêng và công khai và tương tác với nhiều blockchain khác nhau để cho phép người dùng gửi và nhận tiền kỹ thuật số và theo dõi số dư của họ. Nếu bạn muốn sử dụng Bitcoin hoặc bất kỳ loại tiền điện tử nào khác, bạn sẽ cần phải có ví kỹ thuật số."
+        }
+      ]
+    },
+    "2d71PZ8vaKwFxFDFRhk1Hw==": {
+      "translations": [
+        {
+          "translation": "Tìm hiểu thêm"
+        }
+      ]
+    },
+    "FFVqxLHTicckrmBk8Z/MCA==": {
+      "translations": [
+        {
+          "translation": "Ví tiền điện tử là gì?"
+        }
+      ]
+    },
+    "aknWsMgG2wow2xkgZ28DXg==": {
+      "translations": [
+        {
+          "translation": "Ví tiền điện tử là một chương trình phần mềm lưu trữ khóa riêng và công khai và tương tác với nhiều blockchain khác nhau để cho phép người dùng gửi và nhận tiền kỹ thuật số và theo dõi số dư của họ. Nếu bạn muốn sử dụng Bitcoin hoặc bất kỳ loại tiền điện tử nào khác, bạn sẽ cần phải có ví kỹ thuật số."
+        }
+      ]
+    },
+    "WsA95s6VU3x2vfhejrhzOg==": {
+      "translations": [
+        {
+          "translation": "Danh sách của bạn đang chờ ..."
+        }
+      ]
+    },
+    "ds0d/qu6sIALqXUA0iJKuw==": {
+      "translations": [
+        {
+          "translation": "Xin chúc mừng"
+        }
+      ]
+    },
+    "aR7VNiOtKH8VvsNUSilJjA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã kích hoạt thành công tài khoản của mình. Bây giờ bạn đã sẵn sàng để tiếp tục hành trình của mình trong Thị trường Xuất xứ."
+        }
+      ]
+    },
+    "mU3MxuZLQg7n732AsKxtEA==": {
+      "translations": [
+        {
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
+        }
+      ]
+    },
+    "QHp9k2YF0PJ8EuAxOFGtNA==": {
+      "translations": [
+        {
+          "translation": "Bây giờ bạn đã hoàn thành như sau:"
+        }
+      ]
+    },
+    "CxWrPmbgR884ESLoDC1BHw==": {
+      "translations": [
+        {
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
+        }
+      ]
+    },
+    "oGs0egKgAj8bmQbSYjfHww==": {
+      "translations": [
+        {
+          "translation": "Tạo ví"
+        }
+      ]
+    },
+    "CnTLIXLPrAMCoAtnaShyJw==": {
+      "translations": [
+        {
+          "translation": "Đã bật tin nhắn"
+        }
+      ]
+    },
+    "jLoV7qiALo1aH/xnP6KE9Q==": {
+      "translations": [
+        {
+          "translation": "Thông báo trên màn hình đã bật"
+        }
+      ]
+    },
+    "lUrfL6249kxTxaw/dRoqbg==": {
+      "translations": [
+        {
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
+        }
+      ]
+    },
+    "O1IrLRtj0WrvXnVnLCINvQ==": {
+      "translations": [
+        {
+          "translation": "Các bước còn lại:"
+        }
+      ]
+    },
+    "osEnvv1/nsQxkpQkh23NZw==": {
+      "translations": [
+        {
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
+        }
+      ]
+    },
+    "psVzq7xfDPiHYtKsXUP6gw==": {
+      "translations": [
+        {
+          "translation": "Tài trợ ví của bạn"
+        }
+      ]
+    },
+    "ysPjg6QGMquwWUCtL+/yEQ==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành hồ sơ của bạn"
+        }
+      ]
+    },
+    "Y+1LvSEix1POQBBLBGMaUw==": {
+      "translations": [
+        {
+          "translation": "Tin nhắn gốc"
+        }
+      ]
+    },
+    "CjNGZw8yFs7T6CxrNdzN4g==": {
+      "translations": [
+        {
+          "translation": "Đồng bộ hóa tin nhắn gốc"
+        }
+      ]
+    },
+    "FKUFlQGWeADq33thpZWNhg==": {
+      "translations": [
+        {
+          "translation": "0 trong số 2 tin nhắn MetaMask đã ký"
+        }
+      ]
+    },
+    "MJeJbFx0ouUGjsL7FgLFpQ==": {
+      "translations": [
+        {
+          "translation": "Nhắn tin sẽ cho phép bạn trò chuyện với người mua và người bán khác."
+        }
+      ]
+    },
+    "AX2t/0FaLX6Ri2veomcTcg==": {
+      "translations": [
+        {
+          "translation": "Chờ bạn ký tin nhắn số {messageNumber}"
+        }
+      ]
+    },
+    "ErikvoQGieBd00aYG1DQmg==": {
+      "translations": [
+        {
+          "translation": "{messageNumber} trong số 2 tin nhắn MetaMask đã ký"
+        }
+      ]
+    },
+    "ILCAHzQL84S0gcx3t28Kgg==": {
+      "translations": [
+        {
+          "translation": "Biểu tượng Metamask nằm ở phía trên bên phải của thanh công cụ trình duyệt của bạn."
+        }
+      ]
+    },
+    "N4YddPeOjF23lOAgjWNWHg==": {
+      "translations": [
+        {
+          "translation": "Đã bật tin nhắn"
+        }
+      ]
+    },
+    "NxbN7hpr4yVr2xgq6CAbDQ==": {
+      "translations": [
+        {
+          "translation": "2 trong số 2 tin nhắn MetaMask đã ký"
+        }
+      ]
+    },
+    "+5lOJ8UwNH5y7Tkwmt5sug==": {
+      "translations": [
+        {
+          "translation": "Xin chúc mừng! Bây giờ bạn có thể nhắn tin cho những người dùng khác trên Origin và cập nhật tất cả các giao dịch mua và bán của bạn."
+        }
+      ]
+    },
+    "Sj0uCwqO2Lif0EXF2OFjFg==": {
+      "translations": [
+        {
+          "translation": "Bạn đã hoàn thành và có thể tiếp tục bằng cách nhấn nút bên dưới."
+        }
+      ]
+    },
+    "LD5LtA82smKlIU4torypxQ==": {
+      "translations": [
+        {
+          "translation": "Lỗi"
+        }
+      ]
+    },
+    "qjIAIRzdKNP+o+HVoh/KHg==": {
+      "translations": [
+        {
+          "translation": "Không có web3"
+        }
+      ]
+    },
+    "Ef8RYDVmPd+o1LstAaP1wA==": {
+      "translations": [
+        {
+          "translation": "Bật nhắn tin"
+        }
+      ]
+    },
+    "iRz4g7tQBcOyW/qYOj/DNQ==": {
+      "translations": [
+        {
+          "translation": "Cài đặt MetaMask"
+        }
+      ]
+    },
+    "3A7KlQ1Kjaumhmr49lVUPg==": {
+      "translations": [
+        {
+          "translation": "Cài đặt MetaMask ..."
+        }
+      ]
+    },
+    "LEvdn8FJN1P4JhDRVVvjmA==": {
+      "translations": [
+        {
+          "translation": "Vui lòng nhấp vào bên dưới sau khi MetaMask được cài đặt"
+        }
+      ]
+    },
+    "rTJQT6yFtV7JrE9+Kwrw0g==": {
+      "translations": [
+        {
+          "translation": "Đang chờ bạn đăng nhập vào MetaMask"
+        }
+      ]
+    },
+    "aHqNeqpWF5FvjYcfAx/UtQ==": {
+      "translations": [
+        {
+          "translation": "Biểu tượng MetaMask nằm ở phía trên bên phải của thanh công cụ trình duyệt của bạn."
+        }
+      ]
+    },
+    "STOPW2Q2WZLH2Jgu6WdqIw==": {
+      "translations": [
+        {
+          "translation": "Rất tiếc, bạn đã từ chối cấp phép"
+        }
+      ]
+    },
+    "ZkgVALubZKbCD225z3Vv3g==": {
+      "translations": [
+        {
+          "translation": "Bạn phải cấp quyền Origin để truy cập vào tài khoản MetaMask của bạn để bạn có thể mua và bán trên DApp của chúng tôi."
+        }
+      ]
+    },
+    "YRIz6mlKHIlcOC6yC56Kog==": {
+      "translations": [
+        {
+          "translation": "Cấp phép"
+        }
+      ]
+    },
+    "j0xNIbmtip7rDoBRMt9m9g==": {
+      "translations": [
+        {
+          "translation": "Chờ đợi bạn cấp phép"
+        }
+      ]
+    },
+    "iwgHFwUYIq/ST9H61v2LXw==": {
+      "translations": [
+        {
+          "translation": "Vui lòng cấp quyền Origin để truy cập tài khoản MetaMask của bạn để bạn có thể mua và bán trên DApp của chúng tôi."
+        }
+      ]
+    },
+    "GAsJi53lUv/zEVhQAgWdeA==": {
+      "translations": [
+        {
+          "translation": "MetaMask được kết nối"
+        }
+      ]
+    },
+    "qXJ7EX08bD1D/KpNQST64Q==": {
+      "translations": [
+        {
+          "translation": "Metamask được kết nối, vui lòng chuyển sang {connectTo} để giao dịch trên Origin."
+        }
+      ]
+    },
+    "k7q6a+1CnpyNNwB+lNLsYQ==": {
+      "translations": [
+        {
+          "translation": "MetaMask được kết nối và bạn đã sẵn sàng giao dịch trên Origin. Nhấp vào Tiếp tục bên dưới."
+        }
+      ]
+    },
+    "jISZ0wfBaodmnuNXoU+VAg==": {
+      "translations": [
+        {
+          "translation": "Thông báo bị tắt"
+        }
+      ]
+    },
+    "KpzI7bx79mkkaT2io1SR8Q==": {
+      "translations": [
+        {
+          "translation": "Thông báo trên màn hình gốc sẽ cho phép bạn theo kịp những gì bạn cần làm trên Origin DApp"
+        }
+      ]
+    },
+    "HWxdOPUAucyHDSoOK40JHw==": {
+      "translations": [
+        {
+          "translation": "Nhấp vào nút bên dưới, sau đó nhấp vào xác nhận yêu cầu trên hộp thoại trình duyệt gốc sẽ xuất hiện ở trên."
+        }
+      ]
+    },
+    "uSRyxeZTNsqh1FcGEC4RKg==": {
+      "translations": [
+        {
+          "translation": "Bật thông báo"
+        }
+      ]
+    },
+    "P5qx0I4YTWHZEWnH9lxXpw==": {
+      "translations": [
+        {
+          "translation": "Bỏ qua ngay bây giờ"
+        }
+      ]
+    },
+    "133qQN4R4hk3FaW/zXPQlg==": {
+      "translations": [
+        {
+          "translation": "Không có thông báo trên máy tính để bàn làm tăng cơ hội bỏ lỡ các cập nhật quan trọng về giao dịch của bạn."
+        }
+      ]
+    },
+    "F52UFt/yddG6Tw1hUts2Xg==": {
+      "translations": [
+        {
+          "translation": "Hộp thoại quyền của trình duyệt gốc mở ở đầu cửa sổ trình duyệt. Vui lòng xác nhận yêu cầu"
+        }
+      ]
+    },
+    "Lp1AaLvV/Z/7FgpA3o44Hw==": {
+      "translations": [
+        {
+          "translation": "Thông báo trên màn hình đã bật"
+        }
+      ]
+    },
+    "wJsjMb/rTBUgD+U6mn3BKA==": {
+      "translations": [
+        {
+          "translation": "Thông báo được bật"
+        }
+      ]
+    },
+    "nftxxpaPkYMeJjKOUnZdjw==": {
+      "translations": [
+        {
+          "translation": "Tuyệt quá! Sẽ dễ dàng hơn nhiều cho bạn để đáp ứng nhanh chóng các yêu cầu từ người mua và người bán."
+        }
+      ]
+    },
+    "DcwfUYW0NxpH1s5+ul7jyw==": {
+      "translations": [
+        {
+          "translation": "Nhấp vào nút tiếp tục bên dưới để tiến hành."
+        }
+      ]
+    },
+    "tqYkpJk1jBSLneJPAW6Fpg==": {
+      "translations": [
+        {
+          "translation": "Uh oh, có một vấn đề ..."
+        }
+      ]
+    },
+    "hkOHDepzP/85esMg1eheJQ==": {
+      "translations": [
+        {
+          "translation": "Thông báo bị tắt"
+        }
+      ]
+    },
+    "86E4W/Du3+E7eCB85BqZJg==": {
+      "translations": [
+        {
+          "translation": "Bạn đã từ chối yêu cầu của chúng tôi để bật thông báo trên máy tính để bàn mà chúng tôi {highly recommend}."
+        }
+      ]
+    },
+    "NLI/YsAIRTpzmJdjyUKu+A==": {
+      "translations": [
+        {
+          "translation": "rất khuyến khích"
+        }
+      ]
+    },
+    "rdom9ZzkPwJZNuxLz9YaCA==": {
+      "translations": [
+        {
+          "translation": "Để khắc phục điều này, vui lòng vào cài đặt trình duyệt của bạn và bật thông báo cho DApp của chúng tôi."
+        }
+      ]
+    },
+    "Ao6PTzPmrwVygpJF55jqmA==": {
+      "translations": [
+        {
+          "translation": "Truy cập Cài đặt trình duyệt"
+        }
+      ]
+    },
+    "ht9M7LjR23q3m93Op5qY7A==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "twXKaZYDmP8sMVB91202fw==": {
+      "translations": [
+        {
+          "translation": "Lỗi"
+        }
+      ]
+    },
+    "O+bJPW4vKHXMKS4A1cTr1w==": {
+      "translations": [
+        {
+          "translation": "Không có web3"
+        }
+      ]
+    },
+    "MPn0Q/LgQuNyOzpKKL9KiA==": {
+      "translations": [
+        {
+          "translation": "Ngọt! Thông báo trên màn hình đang bật :)"
+        }
+      ]
+    },
+    "DW6fLMU0mrvLTV6dHCR3SA==": {
+      "translations": [
+        {
+          "translation": "Bắt đầu"
+        }
+      ]
+    },
+    "4pkBkxm3fiSdgckUqJNFrQ==": {
+      "translations": [
+        {
+          "translation": "Nhập thông tin hồ sơ của bạn"
+        }
+      ]
+    },
+    "sgSRRlAr8fmr3HnB1Ykk7g==": {
+      "translations": [
+        {
+          "translation": "Ho"
+        }
+      ]
+    },
+    "Cr7l7mRGMBhn5E/iepkWUw==": {
+      "translations": [
+        {
+          "translation": "Ten"
+        }
+      ]
+    },
+    "ssnnSYlfF2XPDgbJQI5dLQ==": {
+      "translations": [
+        {
+          "translation": "{You don't have funds} Bạn cần phải có tiền trong ví của mình để tạo danh tính. Bạn luôn có thể thực hiện việc này sau khi bạn nạp tiền vào ví của mình bằng cách vào cài đặt của bạn."
+        }
+      ]
+    },
+    "IGtHEy5CJDngN+7Ucg9x4Q==": {
+      "translations": [
+        {
+          "translation": "Bạn không có tiền"
+        }
+      ]
+    },
+    "s6ga+WNyin+jyBuLqR8uVQ==": {
+      "translations": [
+        {
+          "translation": "Công bố"
+        }
+      ]
+    },
+    "gwNdF1XlGWk8ONo6VUrHdw==": {
+      "translations": [
+        {
+          "translation": "Bỏ qua ngay bây giờ"
+        }
+      ]
+    },
+    "oNaKnWUDLbhfedJyB7P+Ww==": {
+      "translations": [
+        {
+          "translation": "được phát hành"
+        }
+      ]
+    },
+    "XIbxUfdlCiQKg4oKOjmCCw==": {
+      "translations": [
+        {
+          "translation": "tạm"
+        }
+      ]
+    },
+    "B4LOIQ966Tas1608OZMlHg==": {
+      "translations": [
+        {
+          "translation": "Sớm"
+        }
+      ]
+    },
+    "3Qm3xrEt+bnOdbmWNr7JjQ==": {
+      "translations": [
+        {
+          "translation": "tương tác"
+        }
+      ]
+    },
+    "xIhXyhzildOeU091piinJg==": {
+      "translations": [
+        {
+          "translation": "Tên là bắt buộc"
+        }
+      ]
+    },
+    "7xSk0LvXs9aQjN98cCiljA==": {
+      "translations": [
+        {
+          "translation": "Ví di động gốc"
+        }
+      ]
+    },
+    "WVk1tgmlGe99GNIa7Uk/bA==": {
+      "translations": [
+        {
+          "translation": "Ví di động của Origin sẽ cho phép bạn lưu trữ tiền điện tử để bạn có thể mua và bán trên DApp của chúng tôi."
+        }
+      ]
+    },
+    "aOhcZ2U2Bsp9EGJA3zU7Ww==": {
+      "translations": [
+        {
+          "translation": "Có sẵn cho iOS và Android"
+        }
+      ]
+    },
+    "TxG/OdPaBPOz5hx9hge2rg==": {
+      "translations": [
+        {
+          "translation": "Kết nối ví gốc"
+        }
+      ]
+    },
+    "QmqTcxlyWuTRoggpY7Y5nw==": {
+      "translations": [
+        {
+          "translation": "MetaMask là một phần mở rộng trình duyệt cho phép bạn truy cập web phi tập trung."
+        }
+      ]
+    },
+    "vHiqW6XmWF/OLmE9lKWO1w==": {
+      "translations": [
+        {
+          "translation": "Có sẵn cho {browser}"
+        }
+      ]
+    },
+    "VvpwJO3gtIN0GV/UBRWAGA==": {
+      "translations": [
+        {
+          "translation": "Kết nối MetaMask"
+        }
+      ]
+    },
+    "M/7sS5l7W/gdH3mNboamAA==": {
+      "translations": [
+        {
+          "translation": "Kết nối ví tiền điện tử"
+        }
+      ]
+    },
+    "dIIhiBsOJOemSYWXTm48zQ==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "XdIbTb9DUwkD1P7yTtwRnA==": {
+      "translations": [
+        {
+          "translation": "Đã bật thông báo trên màn hình"
+        }
+      ]
+    },
+    "QEfT0AsqEUDRYXAeo6jiMw==": {
+      "translations": [
+        {
+          "translation": "Cài đặt"
+        }
+      ]
+    },
+    "lYXh6Dq4CP6r6aJfWNhySg==": {
+      "translations": [
+        {
+          "translation": "Cài đặt"
+        }
+      ]
+    },
+    "qFBczb1fLENKRx8/G4ieGA==": {
+      "translations": [
+        {
+          "translation": "Vui lòng lựa chọn từ danh sách dưới đây."
+        }
+      ]
+    },
+    "gteQ4pqo/4VeBffMWpQfvA==": {
+      "translations": [
+        {
+          "translation": "Thông báo"
+        }
+      ]
+    },
+    "24R0XkoqNkj+Q80wcCZRlg==": {
+      "translations": [
+        {
+          "translation": "Kích hoạt thông báo trình duyệt bên dưới."
+        }
+      ]
+    },
+    "slAgUo4opu8tso8RLT/dLg==": {
+      "translations": [
+        {
+          "translation": "Kích hoạt"
+        }
+      ]
+    },
+    "XE4dDp2PIHkNuhGg8Y/b8w==": {
+      "translations": [
+        {
+          "translation": "Thông báo trình duyệt được bật."
+        }
+      ]
+    },
+    "ACzYauxPE/+QDd4rdULhOA==": {
+      "translations": [
+        {
+          "translation": "Ví di động"
+        }
+      ]
+    },
+    "QfPi8+EJJHsPYgLmR16O7w==": {
+      "translations": [
+        {
+          "translation": "Ngắt kết nối với ví di động của bạn bằng cách nhấp vào nút bên dưới."
+        }
+      ]
+    },
+    "k6UQCIfTpu+GOQC9zUHVVA==": {
+      "translations": [
+        {
+          "translation": "Ngắt kết nối"
+        }
+      ]
+    },
+    "qfhGAG2u3+abnoq3mJZtdw==": {
+      "translations": [
+        {
+          "translation": "Không kết nối"
+        }
+      ]
+    },
+    "yFYpDVeEQ8oXcHYjijWBTg==": {
+      "translations": [
+        {
+          "translation": "Máy chủ Discovery"
+        }
+      ]
+    },
+    "Xo2IEzVBpUBSim+cGxiV2A==": {
+      "translations": [
+        {
+          "translation": "Vui lòng nhập URL dưới đây. Để trống để truy vấn trực tiếp blockchain. Chức năng tìm kiếm sẽ bị vô hiệu hóa nếu không có máy chủ khám phá nào được sử dụng."
+        }
+      ]
+    },
+    "9ZMwBvD+hP2nfahk+3LenA==": {
+      "translations": [
+        {
+          "translation": "Cổng IPFS"
+        }
+      ]
+    },
+    "pRCuz6nfvsfhdZOLMdd1Ug==": {
+      "translations": [
+        {
+          "translation": "Vui lòng nhập URL dưới đây."
+        }
+      ]
+    },
+    "aFN2K1TwxnCt3pJ0P93ldg==": {
+      "translations": [
+        {
+          "translation": "Nhà cung cấp Web3"
+        }
+      ]
+    },
+    "0hqW8GbEWVfnfkHUgaKwdA==": {
+      "translations": [
+        {
+          "translation": "Vui lòng nhập URL dưới đây."
+        }
+      ]
+    },
+    "fqtlt5+7VR5iw3K3FjAD/g==": {
+      "translations": [
+        {
+          "translation": "Máy chủ cầu nối"
+        }
+      ]
+    },
+    "ffkqXBQ0xgCWwCZhHuAp/Q==": {
+      "translations": [
+        {
+          "translation": "Vui lòng nhập URL dưới đây."
+        }
+      ]
+    },
+    "KRXhxUx2Hra4LLq49+q/Tw==": {
+      "translations": [
+        {
+          "translation": "Tên giao dịch"
+        }
+      ]
+    },
+    "qztpAjXBddBNYsM0s/z17Q==": {
+      "translations": [
+        {
+          "translation": "Ngày"
+        }
+      ]
+    },
+    "sMnltv0vMS+f5SLtoTECcQ==": {
+      "translations": [
+        {
+          "translation": "Băm IPFS"
+        }
+      ]
+    },
+    "qQdpwzfRMHhJUa4w/7FWjA==": {
+      "translations": [
+        {
+          "translation": "Tx Hash"
+        }
+      ]
+    },
+    "6dPov/3WWLjmiAtm66UKtQ==": {
+      "translations": [
+        {
+          "translation": "Giá / đơn vị"
+        }
+      ]
+    },
+    "7OybV1tFQvw3y2hKaxWUmA==": {
+      "translations": [
+        {
+          "translation": "Số lượng"
+        }
+      ]
+    },
+    "ZUn3u79h4cRD2YzH3fXr2A==": {
+      "translations": [
+        {
+          "translation": "Đăng ký vào"
+        }
+      ]
+    },
+    "jl093qUjWarZ1XmhSSbXcA==": {
+      "translations": [
+        {
+          "translation": "Kiểm tra"
+        }
+      ]
+    },
+    "oqwNF+A0lExDpskbNclwTg==": {
+      "translations": [
+        {
+          "translation": "Cho thuê bắt đầu"
+        }
+      ]
+    },
+    "9OMSjLyMkyRiIaJ8SBnqyw==": {
+      "translations": [
+        {
+          "translation": "Kết thúc cho thuê"
+        }
+      ]
+    },
+    "FBs6gOAFyap0krOkDiquyg==": {
+      "translations": [
+        {
+          "translation": "Tổng giá"
+        }
+      ]
+    },
+    "pCnW9dCjDjhv0NTuQqUe2A==": {
+      "translations": [
+        {
+          "translation": "Tình trạng thanh toán"
+        }
+      ]
+    },
+    "3pOzT705Ai9uGcvm95Na3w==": {
+      "translations": [
+        {
+          "translation": "Ngày cung cấp"
+        }
+      ]
+    },
+    "M2BrdF9SwT1krQZ/WEjFpQ==": {
+      "translations": [
+        {
+          "translation": "Số ưu đãi"
+        }
+      ]
+    },
+    "nYPLuTHlpmcjxDT1vlyYMg==": {
+      "translations": [
+        {
+          "translation": "Từ chối đề nghị"
+        }
+      ]
+    },
+    "GN1E8lzMKvP50rMTh92DSA==": {
+      "translations": [
+        {
+          "translation": "Chấp nhận đề nghị"
+        }
+      ]
+    },
+    "w9bk0qXot+z5KWdGOoM6XA==": {
+      "translations": [
+        {
+          "translation": "Để lại một đánh giá và hoàn thành giao dịch"
+        }
+      ]
+    },
+    "VHFifMxtMBpl7wQxqL87Qg==": {
+      "translations": [
+        {
+          "translation": "Làm thế nào bạn đánh giá kinh nghiệm của bạn?"
+        }
+      ]
+    },
+    "+4fB7ygpazVhmoB3zG8cLA==": {
+      "translations": [
+        {
+          "translation": "Bất cứ điều gì bạn muốn bình luận về?"
+        }
+      ]
+    },
+    "zAz0qzQAMIZWd6M7n6uZOg==": {
+      "translations": [
+        {
+          "translation": "Hoàn thiện"
+        }
+      ]
+    },
+    "VQCq6PSOS1vzK290BsnQNw==": {
+      "translations": [
+        {
+          "translation": "Báo cáo sự cố"
+        }
+      ]
+    },
+    "NspPzWi6EC+0+hV1ZHJdCQ==": {
+      "translations": [
+        {
+          "translation": "Bước tiếp theo"
+        }
+      ]
+    },
+    "LZrUP+ZIeXqJRqyLiRhYaA==": {
+      "translations": [
+        {
+          "translation": "Cung cấp địa chỉ giao hàng của bạn cho người bán"
+        }
+      ]
+    },
+    "sMsaeCID3irEn5xdZJJ+bQ==": {
+      "translations": [
+        {
+          "translation": "Nhấn vào nút để mở tin nhắn"
+        }
+      ]
+    },
+    "ujJ8g0EYiCIH2kwyJyMfVQ==": {
+      "translations": [
+        {
+          "translation": "Người bán tin nhắn"
+        }
+      ]
+    },
+    "V1GgdZO6KZeduKxo/ipthQ==": {
+      "translations": [
+        {
+          "translation": "Bước tiếp theo"
+        }
+      ]
+    },
+    "XLHaYbAmaXCqclP5HM83YA==": {
+      "translations": [
+        {
+          "translation": "Người bán sẽ xem xét đặt phòng của bạn"
+        }
+      ]
+    },
+    "mwdxkNowIHDrWwpG03IC2w==": {
+      "translations": [
+        {
+          "translation": "Đề nghị thu hồi"
+        }
+      ]
+    },
+    "Rr6mOSd9OGeBmenzhAxBAA==": {
+      "translations": [
+        {
+          "translation": "Người mua đã rút lại lời đề nghị"
+        }
+      ]
+    },
+    "pavSaTOWIGUadJJz+LT+dA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã rút lại lời đề nghị"
+        }
+      ]
+    },
+    "z8w3vsKBV7fTh9OAeb+5Ag==": {
+      "translations": [
+        {
+          "translation": "Đề nghị từ chối"
+        }
+      ]
+    },
+    "I11Qx+yjIro8ClQNygfWyA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã từ chối lời đề nghị này"
+        }
+      ]
+    },
+    "78ZwhZYCfj46DlFuXTC8BQ==": {
+      "translations": [
+        {
+          "translation": "Đề nghị của bạn đã bị từ chối bởi người bán"
+        }
+      ]
+    },
+    "zXe0CpHR3Ollxxf5AoX7UA==": {
+      "translations": [
+        {
+          "translation": "Đề nghị tranh chấp"
+        }
+      ]
+    },
+    "2ssaM9V9RN/jWiOAzPJSBQ==": {
+      "translations": [
+        {
+          "translation": "Chờ để được liên lạc bởi đội ngũ của Origin"
+        }
+      ]
+    },
+    "GzywuT3H7qeJlmK6UgbS5w==": {
+      "translations": [
+        {
+          "translation": "Giải quyết tranh chấp"
+        }
+      ]
+    },
+    "VNosphgosByxNu7E0v6k8w==": {
+      "translations": [
+        {
+          "translation": "Nguồn gốc đã giải quyết tranh chấp này"
+        }
+      ]
+    },
+    "DayNJyKzoBH/IaNeKPXkSg==": {
+      "translations": [
+        {
+          "translation": "Hoàn tất giao dịch"
+        }
+      ]
+    },
+    "Y3sp8Tv0rCOhBhNoqfiotA==": {
+      "translations": [
+        {
+          "translation": "Giao dịch này đã được hoàn thành thành công và tiền đã được phát hành cho người bán."
+        }
+      ]
+    },
+    "N5pM2WbYjZGzn+35rDpssA==": {
+      "translations": [
+        {
+          "translation": "Hãy chắc chắn rằng bạn hoàn thành đơn đặt hàng và chờ xác nhận của người mua"
+        }
+      ]
+    },
+    "iUsZ9XU931fYMNKBTeqx9g==": {
+      "translations": [
+        {
+          "translation": "Xem danh sách kiểm tra thực hiện"
+        }
+      ]
+    },
+    "YkkjLoelBh8tfKxaGGO6HA==": {
+      "translations": [
+        {
+          "translation": "Báo cáo sự cố"
+        }
+      ]
+    },
+    "SxmvkqrwlKQKpnbugoF2nQ==": {
+      "translations": [
+        {
+          "translation": "Danh sách thực hiện"
+        }
+      ]
+    },
+    "kzoeHvMMOD0KnB9Jl7KnIA==": {
+      "translations": [
+        {
+          "translation": "Xác nhận các biến thể với người bán"
+        }
+      ]
+    },
+    "FkRITz2i1lnwVgJ+TnWPcQ==": {
+      "translations": [
+        {
+          "translation": "Đóng gói sản phẩm và gửi nó ra"
+        }
+      ]
+    },
+    "cugqsOArck9WsncrI/yzHQ==": {
+      "translations": [
+        {
+          "translation": "Thông báo cho người mua và cung cấp số theo dõi"
+        }
+      ]
+    },
+    "7JqkqcKaQqp/ulOyrCedkw==": {
+      "translations": [
+        {
+          "translation": "Chờ người mua nhận sản phẩm."
+        }
+      ]
+    },
+    "OGSHiC9s4FiQeRCd3wxw+A==": {
+      "translations": [
+        {
+          "translation": "Rút tiền của bạn"
+        }
+      ]
+    },
+    "zSUtImIcpEjCOnXDwhRuBA==": {
+      "translations": [
+        {
+          "translation": "Thành công!"
+        }
+      ]
+    },
+    "8jjVVnJhBLiHo5x/+9nueA==": {
+      "translations": [
+        {
+          "translation": "Thành công!"
+        }
+      ]
+    },
+    "Q7RQiJmdkwPTctx2s5dcoQ==": {
+      "translations": [
+        {
+          "translation": "Có vấn đề gì không?"
+        }
+      ]
+    },
+    "pWoAumXQ9fYRG4/WKCO1zw==": {
+      "translations": [
+        {
+          "translation": "Bạn có chắc chắn muốn báo cáo một vấn đề? Điều này sẽ bắt đầu quá trình giải quyết xung đột. Ai đó từ Origin sẽ được thông báo và lịch sử trò chuyện của bạn sẽ được công khai cho trọng tài."
+        }
+      ]
+    },
+    "X23G7YI9cvqkEJ8GhVueqQ==": {
+      "translations": [
+        {
+          "translation": "Rất tiếc, không có chờ đợi..."
+        }
+      ]
+    },
+    "yaqFWwu3EkEQh7GBY1CtRg==": {
+      "translations": [
+        {
+          "translation": "Vâng, làm ơn"
+        }
+      ]
+    },
+    "ciQOKZFTUJuVTIiKxHQDlA==": {
+      "translations": [
+        {
+          "translation": "Gửi"
+        }
+      ]
+    },
+    "MsPV+MCh0HtvCFVCptYr/w==": {
+      "translations": [
+        {
+          "translation": "Bạn đã leo thang vấn đề này đến một thành viên nhóm Origin. Bạn sẽ được liên lạc sau khi một mong muốn được thực hiện."
+        }
+      ]
+    },
+    "kfS7RSi+eTq2o4LR/sPR7Q==": {
+      "translations": [
+        {
+          "translation": "Thành công!"
+        }
+      ]
+    },
+    "pk3KYayGmBREn0PI4iFlVg==": {
+      "translations": [
+        {
+          "translation": "Từ chối đề nghị"
+        }
+      ]
+    },
+    "Wu+qdvW6dZoUQ2a8YcuJ5w==": {
+      "translations": [
+        {
+          "translation": "Bạn có chắc chắn muốn từ chối lời đề nghị này? Các quỹ người mua sẽ được trả lại cho họ."
+        }
+      ]
+    },
+    "iIQRnV5hXaAtOzwlMaKG1g==": {
+      "translations": [
+        {
+          "translation": "Từ chối"
+        }
+      ]
+    },
+    "nYgXfvklP8K6I287NGYvBA==": {
+      "translations": [
+        {
+          "translation": "Đề nghị này đã bị từ chối"
+        }
+      ]
+    },
+    "j40DCoib9csmgk7p1qB0eA==": {
+      "translations": [
+        {
+          "translation": "Bạn đã từ chối đề nghị của người mua này."
+        }
+      ]
+    },
+    "m0BMtaQu9jw3yFO7nBl3Vg==": {
+      "translations": [
+        {
+          "translation": "Rút lại đề nghị"
+        }
+      ]
+    },
+    "pLCZDndYDvgrvDQTSi27OA==": {
+      "translations": [
+        {
+          "translation": "Rút lại đề nghị"
+        }
+      ]
+    },
+    "r6xzKSXU04+FE5VHRpUYVg==": {
+      "translations": [
+        {
+          "translation": "Bạn có chắc chắn muốn rút lại giao dịch của mình không? Khoản thanh toán ký quỹ sẽ được trả lại cho ví của bạn."
+        }
+      ]
+    },
+    "2goCMoy69ARZSLk1PjdVqQ==": {
+      "translations": [
+        {
+          "translation": "Rút tiền"
+        }
+      ]
+    },
+    "HJowvY/6xmgkY3lXCgNQrQ==": {
+      "translations": [
+        {
+          "translation": "Thành công!"
+        }
+      ]
+    },
+    "VGM31/n7NCk61OuI0Wz2fA==": {
+      "translations": [
+        {
+          "translation": "Ưu đãi {id}"
+        }
+      ]
+    },
+    "sijwJsqaANPV7KUAvSIubw==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "hccda74CwmCatYfhm387eQ==": {
+      "translations": [
+        {
+          "translation": "Tiến độ giao dịch"
+        }
+      ]
+    },
+    "r49/Dx4NYLPBCkNVtxCCfw==": {
+      "translations": [
+        {
+          "translation": "Lịch sử giao dịch"
+        }
+      ]
+    },
+    "Ey4Sd7cIJJPB3nj9OStOVQ==": {
+      "translations": [
+        {
+          "translation": "Danh mục chi tiết"
+        }
+      ]
+    },
+    "Da38AMJbLvBFbijuOHF6Xg==": {
+      "translations": [
+        {
+          "translation": "Chi tiết ưu đãi"
+        }
+      ]
+    },
+    "ErUqOhnKC3V7GzECNCCHMQ==": {
+      "translations": [
+        {
+          "translation": "Về {sellerOrBuyer}."
+        }
+      ]
+    },
+    "MSS8kemsC1gNq34uoD4fKg==": {
+      "translations": [
+        {
+          "translation": "Người mua"
+        }
+      ]
+    },
+    "jKHS7SWemBx920wc9baQDQ==": {
+      "translations": [
+        {
+          "translation": "Người bán"
+        }
+      ]
+    },
+    "Vy9+qH9dhX/MjDBFbbau/A==": {
+      "translations": [
+        {
+          "translation": "Doanh số bán hàng của tôi"
+        }
+      ]
+    },
+    "ryJsozU2awI4nvYi5MwSqg==": {
+      "translations": [
+        {
+          "translation": "Những giao dịch của tôi"
+        }
+      ]
+    },
+    "g8yomS7zK+dg5WQmAPDMsQ==": {
+      "translations": [
+        {
+          "translation": "Danh sách của tôi"
+        }
+      ]
+    },
+    "vHm8g0uk8a8fdg3zaYmJMg==": {
+      "translations": [
+        {
+          "translation": "Danh sách của tôi"
+        }
+      ]
+    },
+    "R4FcWDcOIqO7Tlc5qDj4yw==": {
+      "translations": [
+        {
+          "translation": "Tất cả"
+        }
+      ]
+    },
+    "FllrY75ccaaHIC0TfV3wtg==": {
+      "translations": [
+        {
+          "translation": "Hoạt động"
+        }
+      ]
+    },
+    "AceTpRre2gN9HdDBQaKrbw==": {
+      "translations": [
+        {
+          "translation": "Không hoạt động"
+        }
+      ]
+    },
+    "cenWOoZ8JHLcfWm2tZJnOw==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "jFQ7644SCdcZTdP770XQuQ==": {
+      "translations": [
+        {
+          "translation": "Được liệt kê trên"
+        }
+      ]
+    },
+    "y+3l9CFy8fwAqeSdux+IUQ==": {
+      "translations": [
+        {
+          "translation": "Chỉnh sửa danh sách"
+        }
+      ]
+    },
+    "c6JpaJWP06U7c47JBBcLNA==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "2ZiI1i1R1/hHvBDHcRLEZQ==": {
+      "translations": [
+        {
+          "translation": "Tải thêm"
+        }
+      ]
+    },
+    "b8rO1MkJzb3hMKSpcZsfcA==": {
+      "translations": [
+        {
+          "translation": "Đóng danh sách"
+        }
+      ]
+    },
+    "CR/0eNb4uyRVMRig1DV79w==": {
+      "translations": [
+        {
+          "translation": "Những giao dịch của tôi"
+        }
+      ]
+    },
+    "M1mxwCvjbP9eAG3t51F0wQ==": {
+      "translations": [
+        {
+          "translation": "Những giao dịch của tôi"
+        }
+      ]
+    },
+    "tl9fsk5aKtXOfDHbWvZIAg==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "iiDxVPoljj15ediYDd3zsA==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành"
+        }
+      ]
+    },
+    "1NuhArdh+XwQVOO7TCl6hA==": {
+      "translations": [
+        {
+          "translation": "Tất cả"
+        }
+      ]
+    },
+    "jSbLCuknDhZSIirFxB46Eg==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "4gsleVszXBRGkXpyI4Yztw==": {
+      "translations": [
+        {
+          "translation": "Lệnh được thực hiện vào ngày"
+        }
+      ]
+    },
+    "xGeosYr5EVfdyy6fUr9R7A==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "JbM6gj53IguD10JFC64o6A==": {
+      "translations": [
+        {
+          "translation": "Tải thêm"
+        }
+      ]
+    },
+    "b0FRfo4QDI6zzl6oVIVIPQ==": {
+      "translations": [
+        {
+          "translation": "Doanh số bán hàng của tôi"
+        }
+      ]
+    },
+    "S+acB/JxUqQ6+IpstXgzzA==": {
+      "translations": [
+        {
+          "translation": "Doanh số bán hàng của tôi"
+        }
+      ]
+    },
+    "3tRlfdG4nQfSuWZIb+XoAw==": {
+      "translations": [
+        {
+          "translation": "Đang chờ xử lý"
+        }
+      ]
+    },
+    "buuucNhreFnajK3t1O3bzA==": {
+      "translations": [
+        {
+          "translation": "Hoàn thành"
+        }
+      ]
+    },
+    "jQ9i8K9tI2hHt2ODqZQ2UQ==": {
+      "translations": [
+        {
+          "translation": "Tất cả"
+        }
+      ]
+    },
+    "ro2583PslzKZhuolvesI/g==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "8jvi4qLLVB5A3DmDQiFdMw==": {
+      "translations": [
+        {
+          "translation": "Lệnh được thực hiện vào ngày"
+        }
+      ]
+    },
+    "/H1/OJnfBBC4bzKiZp2X+g==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "fUPthq4dBACknykVl2yIHw==": {
+      "translations": [
+        {
+          "translation": "Tải thêm"
+        }
+      ]
+    },
+    "p1aHgndckng0cIWC5sNAjw==": {
+      "translations": [
+        {
+          "translation": "Chỉnh sửa hồ sơ"
+        }
+      ]
+    },
+    "VTbmHdaWRvm1fESc/VerTw==": {
+      "translations": [
+        {
+          "translation": "Ho"
+        }
+      ]
+    },
+    "IjGi8QXZRD9rcM2mQJr24w==": {
+      "translations": [
+        {
+          "translation": "Ten"
+        }
+      ]
+    },
+    "VlV9VZz3J84sVOLSd3qpzQ==": {
+      "translations": [
+        {
+          "translation": "Mô tả"
+        }
+      ]
+    },
+    "NI5vw9QeYHXy81wZxU+ARg==": {
+      "translations": [
+        {
+          "translation": "Thông tin này sẽ được công bố trên mạng lưới blockchain và sẽ hiển thị cho tất cả mọi người."
+        }
+      ]
+    },
+    "vhjDWeZuJa2szAmOG5kLLA==": {
+      "translations": [
+        {
+          "translation": "Tên là bắt buộc"
+        }
+      ]
+    },
+    "Sy/m4fI1v+lIL0apzMVyOw==": {
+      "translations": [
+        {
+          "translation": "Đang tải..."
+        }
+      ]
+    },
+    "EO3o5BXWLICGLwcnHAYbmA==": {
+      "translations": [
+        {
+          "translation": "Không có hợp đồng thị trường?"
+        }
+      ]
+    },
+    "I1sgwHyAcG8bg7ojs5hMsA==": {
+      "translations": [
+        {
+          "translation": "Tải thêm"
+        }
+      ]
+    },
+    "YAWDILzZ3E5NO0VUMCfOhg==": {
+      "translations": [
+        {
+          "translation": "Chào mừng bạn đến với Giao thức gốc"
+        }
+      ]
+    },
+    "8necMjpWXqiRsgeWRyKzeQ==": {
+      "translations": [
+        {
+          "translation": "Chỉnh sửa hồ sơ của bạn"
         }
       ]
     },
@@ -608,7 +5828,7 @@
     "HEVHfHEPEpTtceUGDpiIuQ==": {
       "translations": [
         {
-          "translation": "Hãy kết nối các tài khoản của bạn bên dưới để tăng cường nhận dạng của bạn trên Origin."
+          "translation": "Hãy kết nối các tài khoản của bạn bên dưới để tăng cường danh tính của bạn trên Origin."
         }
       ]
     },
@@ -657,7 +5877,56 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "Việc xác minh tiểu sử của bạn cho phép người dùng khác biết rằng bạn là người thực và làm tăng cơ hội giao dịch thành công trên Nguồn gốc."
+          "translation": "{Verifying your profile} cho phép người dùng khác biết rằng bạn là người thực và tăng cơ hội giao dịch thành công trên Origin."
+        }
+      ]
+    },
+    "nKccGV4lhmxhDoHN+UDtgg==": {
+      "translations": [
+        {
+          "translation": "Đang xác minh hồ sơ của bạn"
+        }
+      ]
+    },
+    "VXkw3rZOG6nmHYODyFTqOg==": {
+      "translations": [
+        {
+          "translation": "Người dùng vô danh"
+        }
+      ]
+    },
+    "tKwSeiu9lfDPt5+SHwfkgA==": {
+      "translations": [
+        {
+          "translation": "Thông tin đã xác minh"
+        }
+      ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "Điện thoại"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "Email"
+        }
+      ]
+    },
+    "5C6dlhx/VKCxxrro4D0otA==": {
+      "translations": [
+        {
+          "translation": "Người dùng vô danh"
+        }
+      ]
+    },
+    "W8DLWmRqV9o0OFVHEAa6DA==": {
+      "translations": [
+        {
+          "translation": "Không có mô tả"
         }
       ]
     }
