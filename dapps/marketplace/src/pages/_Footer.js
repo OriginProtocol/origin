@@ -74,12 +74,9 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                        <fbt desc="footer.foundABug">
                           Found a bug or have feedback? Send an email to
                           <a href={`mailto:${SupportEmail}`}>
-                            <fbt:param name="SupportEmail">
                               {SupportEmail}
-                            </fbt:param>
                           </a>{' '}
                           , open an issue on
                           <a
@@ -98,7 +95,6 @@ class Footer extends Component {
                             Discord
                           </a>
                           .
-                        </fbt>
                       </div>
                       <br />
                       <div className="copyright">
