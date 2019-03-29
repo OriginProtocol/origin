@@ -2,8 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "^3.13.1",
-    "react-linkify": "^0.2.2"
+    "lerna": "^3.13.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
