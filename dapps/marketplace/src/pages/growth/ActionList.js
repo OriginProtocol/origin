@@ -16,7 +16,9 @@ class ActionList extends Component {
     const currentFilter = this.state.filter
     return (
       <button
-        className={`ml-3 filter ${currentFilter === filterName ? 'selected' : ''}`}
+        className={`ml-3 filter ${
+          currentFilter === filterName ? 'selected' : ''
+        }`}
         onClick={async () => await this.handleFilterClick(filterName)}
       >
         {filterText}
@@ -25,7 +27,7 @@ class ActionList extends Component {
   }
 
   sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   async handleFilterClick(filterName) {
@@ -54,11 +56,11 @@ class ActionList extends Component {
     const activeActions = actions.filter(action => action.status === 'Active')
 
     let filteredActions = actions
-    if (filterName === 'unlocked'){
+    if (filterName === 'unlocked') {
       filteredActions = activeActions
-    } else if (filterName === 'locked'){
+    } else if (filterName === 'locked') {
       filteredActions = lockedActions
-    } else if (filterName === 'completed'){
+    } else if (filterName === 'completed') {
       filteredActions = completedActions
     }
 
@@ -81,22 +83,15 @@ class ActionList extends Component {
       handleNavigationChange
     } = this.props
 
-    const {
-      actionsToDisplay
-    } = this.state
+    const { actionsToDisplay } = this.state
 
     return (
       <div className="action-list">
         <div className="filters d-flex">
           <div className="show">
-            <fbt desc="growth.action-list.show">
-              Show
-            </fbt>
+            <fbt desc="growth.action-list.show">Show</fbt>
           </div>
-          {this.renderFilter(
-            fbt('All', 'growth.action-list.all'),
-            'all'
-          )}
+          {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all')}
           {this.renderFilter(
             fbt('Unlocked', 'growth.action-list.unlocked'),
             'unlocked'
@@ -111,9 +106,7 @@ class ActionList extends Component {
           )}
         </div>
         <div className="d-flex flex-column">
-          {title !== undefined && (
-            <div className="action-title">{title}</div>
-          )}
+          {title !== undefined && <div className="action-title">{title}</div>}
           {actionsToDisplay.map(action => {
             return (
               <Action

@@ -407,9 +407,10 @@ function withEnrolmentModal(WrappedComponent) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3 && data.web3.primaryAccount
-              ? data.web3.primaryAccount.id
-              : null
+            const walletAddress =
+              data.web3 && data.web3.primaryAccount
+                ? data.web3.primaryAccount.id
+                : null
             return (
               <Query
                 query={enrollmentStatusQuery}

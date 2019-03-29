@@ -21,10 +21,9 @@ function Action(props) {
   let backgroundImgSrc = 'images/identity/verification-shape-blue.svg'
   if (actionCompleted) {
     backgroundImgSrc = 'images/identity/verification-shape-green.svg'
-  } else if(actionLocked) {
+  } else if (actionLocked) {
     backgroundImgSrc = 'images/identity/verification-shape-grey.svg'
   }
-
 
   const formatTokens = tokenAmount => {
     return web3.utils
@@ -83,13 +82,11 @@ function Action(props) {
 
   //TODO: hover button
   // hover color of the button: #111d28
-  const renderReward = (amount) => {
+  const renderReward = amount => {
     return (
       <div className="reward d-flex ml-4 align-items-center pl-2">
         <img src="images/ogn-icon.svg" />
-        <div className="value">
-          {formatTokens(amount)}
-        </div>
+        <div className="value">{formatTokens(amount)}</div>
       </div>
     )
   }
@@ -100,7 +97,7 @@ function Action(props) {
         className="btn btn-primary ml-2 mt-2 mb-2"
         onClick={handleOnClick}
       >
-      <img className="button-caret" src="images/caret-white.svg" />
+        <img className="button-caret" src="images/caret-white.svg" />
       </button>
     )
   }
@@ -127,17 +124,15 @@ function Action(props) {
           }
         </div>
       </div>
-      <div
-        className={`d-flex flex-column justify-content-center col-6`}
-      >
+      <div className={`d-flex flex-column justify-content-center col-6`}>
         <div className="title">{title}</div>
         {actionLocked && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
               <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
-              {unlockConditions.map(unlockCondition => {
-                return (
-                  GrowthEnum[unlockCondition.messageKey] ? (
+              {unlockConditions
+                .map(unlockCondition => {
+                  return GrowthEnum[unlockCondition.messageKey] ? (
                     <fbt desc="growth">
                       <fbt:enum
                         enum-range={GrowthEnum}
@@ -147,10 +142,8 @@ function Action(props) {
                   ) : (
                     'Missing translation'
                   )
-                )
-              })
-              .join(', ')
-            }
+                })
+                .join(', ')}
             </div>
           </Fragment>
         )}
@@ -209,7 +202,7 @@ function Action(props) {
         {/* Just a padding placeholder*/}
         {actionCompleted && (
           <div className="ml-3">
-            <div className="placeholder ml-2"/>
+            <div className="placeholder ml-2" />
           </div>
         )}
       </div>

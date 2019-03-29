@@ -156,43 +156,39 @@ function Campaign(props) {
 
 class PastCampaigns extends Component {
   render() {
-    const {
-      campaigns,
-      decimalDivision
-    } = this.props
+    const { campaigns, decimalDivision } = this.props
 
-    const pastCampaigns = campaigns.filter(campaign => 
-      campaign.status === 'Completed' || campaign.status === 'CapReached')
+    const pastCampaigns = campaigns.filter(
+      campaign =>
+        campaign.status === 'Completed' || campaign.status === 'CapReached'
+    )
 
     const totalEarnings = pastCampaigns
-      .map(campaign => web3.utils
-        .toBN(
+      .map(campaign =>
+        web3.utils.toBN(
           campaign.rewardEarned ? campaign.rewardEarned.amount : 0
         )
       )
       .reduce(
         (accumulator, currentValue) => accumulator.add(currentValue),
-        web3.utils.toBN(0))
+        web3.utils.toBN(0)
+      )
       .div(decimalDivision)
 
     return (
       <div className="past-campaigns d-flex flex-column">
         <div className="title">
-          <fbt desc="growth.campaigns.totalEarnings">
-            Total Earnings
-          </fbt>
+          <fbt desc="growth.campaigns.totalEarnings">Total Earnings</fbt>
         </div>
         <div className="total-earned d-flex mt-2 align-items-center">
-          <img className="mr-1" src="images/ogn-icon.svg"/>
+          <img className="mr-1" src="images/ogn-icon.svg" />
           <div>{totalEarnings.toString()}</div>
         </div>
         <div>
           {pastCampaigns.map(campaign => {
             const nameKey = campaign.nameKey
             const tokensEarned = web3.utils
-              .toBN(
-                campaign.rewardEarned ? campaign.rewardEarned.amount : 0
-              )
+              .toBN(campaign.rewardEarned ? campaign.rewardEarned.amount : 0)
               .div(decimalDivision)
 
             return (
@@ -211,13 +207,16 @@ class PastCampaigns extends Component {
                     </fbt>
                   </div>
                   <div className="total-earned d-flex align-items-center">
-                    <img className="mr-1" src="images/ogn-icon.svg"/>
+                    <img className="mr-1" src="images/ogn-icon.svg" />
                     <div>{tokensEarned.toString()}</div>
                   </div>
                 </div>
                 <ProgressBar
                   maxValue={maxProgressBarTokens}
-                  progress={Math.min(tokensEarned.toString(), maxProgressBarTokens)}
+                  progress={Math.min(
+                    tokensEarned.toString(),
+                    maxProgressBarTokens
+                  )}
                   showIndicators={false}
                   style="compact"
                 />
@@ -236,9 +235,7 @@ class GrowthCampaign extends Component {
   }
 
   render() {
-    const {
-      navigation
-    } = this.state
+    const { navigation } = this.state
 
     const {
       handleNavigationChange,
@@ -260,20 +257,22 @@ class GrowthCampaign extends Component {
             this.setState({ navigation })
           }}
         />
-        {navigation === 'currentCampaign' && <Campaign
-          campaign={activeCampaign}
-          accountId={accountId}
-          handleNavigationChange={navigation =>
-            handleNavigationChange(
-              navigation
-            )
-          }
-          decimalDivision={decimalDivision}
-        />}
-        {navigation === 'pastCampaigns' && <PastCampaigns
-          campaigns={campaigns}
-          decimalDivision={decimalDivision}
-        />}
+        {navigation === 'currentCampaign' && (
+          <Campaign
+            campaign={activeCampaign}
+            accountId={accountId}
+            handleNavigationChange={navigation =>
+              handleNavigationChange(navigation)
+            }
+            decimalDivision={decimalDivision}
+          />
+        )}
+        {navigation === 'pastCampaigns' && (
+          <PastCampaigns
+            campaigns={campaigns}
+            decimalDivision={decimalDivision}
+          />
+        )}
       </Fragment>
     )
   }
@@ -353,11 +352,13 @@ class GrowthCampaigns extends Component {
                         const campaigns = data.campaigns.nodes
 
                         if (campaigns.length == 0) {
-                          return <h5 className="p-2">
-                            <fbt desc="growth.campaigns.noCampaignsDetected">
-                              No campaigns detected
-                            </fbt>
-                          </h5>
+                          return (
+                            <h5 className="p-2">
+                              <fbt desc="growth.campaigns.noCampaignsDetected">
+                                No campaigns detected
+                              </fbt>
+                            </h5>
+                          )
                         }
 
                         const activeCampaign = campaigns.find(

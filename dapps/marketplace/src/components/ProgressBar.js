@@ -20,7 +20,11 @@ class ProgressBar extends Component {
     }
 
     return (
-      <div className={`blue-progress-bar-holder ${style === 'compact' ? 'compact' : ''}`}>
+      <div
+        className={`blue-progress-bar-holder ${
+          style === 'compact' ? 'compact' : ''
+        }`}
+      >
         <div className="blue-progress-bar mt-3">
           <div className="background" />
           {progress > 0 && (
