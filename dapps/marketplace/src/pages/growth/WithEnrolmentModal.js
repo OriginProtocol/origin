@@ -403,9 +403,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
-            if (networkStatus === 1 || loading) {
-              return 'Loading...'
-            } else if (error) {
+            if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
 
@@ -424,9 +422,7 @@ function withEnrolmentModal(WrappedComponent) {
                 fetchPolicy="network-only"
               >
                 {({ networkStatus, error, loading, data }) => {
-                  if (networkStatus === 1 || loading) {
-                    return 'Loading...'
-                  } else if (error) {
+                  if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />
                     )

@@ -196,8 +196,8 @@ class PastCampaigns extends Component {
               .div(decimalDivision)
 
             return (
-              <div className="past-campaign">
-                <div key={nameKey} className="campaign-title">
+              <div key={nameKey} className="past-campaign">
+                <div className="campaign-title">
                   {GrowthEnum[nameKey] ? (
                     <GrowthTranslation stringKey={nameKey} />
                   ) : (
