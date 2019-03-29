@@ -54,8 +54,9 @@ function decodeVarName(encodedVarName) {
 
 function decode(str) {
   // Special case where the entire string was just concatenated variables.
-  if (str.startsWith('{' + VarPrefix) && str.endsWith('}')) {
-    const decodedStr = b64Decode(str)
+  if (str.startsWith('{' + VarPrefix) && str.endsWith('}') && !str.includes('_B64_')) {
+    const b64 = str.slice(1 + VarPrefix.length, str.length -1)
+    const decodedStr = b64Decode(b64)
     return '{' + decodedStr + '}'
   }
 
@@ -66,11 +67,13 @@ function decode(str) {
     const cur = str.charAt(i)
     if (cur==='{') {
       inBracket=true
+      continue
     } else if (cur==='}') {
       inBracket=false
       const decodedVarName = decodeVarName(encodedVarName)
       out += '{' + decodedVarName  + '}'
       encodedVarName = ''
+      continue
     }
     if (inBracket) {
       encodedVarName += cur
