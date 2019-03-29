@@ -35,10 +35,10 @@ It does the following steps:
 1. Translators do their magic
 1. Crowdin pushes locale-specifc files to `./translations/<locale>.js`
 1. `node scripts/crowdinToFbt.js` : Converts simple key-value back into fbt json format, stored in `./translations/<locale>.js`
-1. **`npm run fbt:translate`** : Using the translations in `./translations/<locale>.js`, outputs combined file to `.translated_fbts.json`
+1. **`npm run fbt:translate`** : Using the translations in `./translations/<locale>.json`, outputs combined file to `.translated_fbts.json`
 1. **`node scripts/splitTranslations.js`** : Using `.translated_fbts.json`, outputs locale-specific translations to `./public/translations`
 1. **`cp .enum_manifest.json translations/.enum_manifest.json`** : Copy [enums](https://facebookincubator.github.io/fbt/docs/enums#shared-enums) into same dir, as they are required at runtime.
-1. DApp uses the translations in `./public/translations`
+1. DApp uses the translations in `./public/translations` at runtime.
 
 Run all in terminal as:
 ```
@@ -49,4 +49,5 @@ node scripts/fbtToCrowdin.js
 node scripts/crowdinToFbt.js
 npm run fbt:translate
 node scripts/splitTranslations
+cp .enum_manifest.json translations/.enum_manifest.json
 ```
