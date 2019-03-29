@@ -20,8 +20,9 @@ To observe the tests running in the browser:
 
 # Translation
 
+Translations are updated via `npm run translate`
 
-Current process:
+It does the following steps: 
 
 1. **`npm run fbt:manifest`** : Generate fbt enum manifests and source manifests that indicate which files need to be translated (`.src_manifest.json` and `.enum_manifest.json`)
 1. **`npm run fbt:collect`** : Collects translatable strings from throughout the app. Outputs to `.source_strings.json`
@@ -32,6 +33,7 @@ Current process:
 1. `node scripts/crowdinToFbt.js` : Converts simple key-value back into fbt json format, stored in `./translations/<locale>.js`
 1. **`npm run fbt:translate`** : Using the translations in `./translations/<locale>.js`, outputs combined file to `.translated_fbts.json`
 1. **`node scripts/splitTranslations.js`** : Using `.translated_fbts.json`, outputs locale-specific translations to `./public/translations`
+1. **`cp .enum_manifest.json translations/.enum_manifest.json`** : Copy [enums](https://facebookincubator.github.io/fbt/docs/enums#shared-enums) into same dir, as they are required at runtime.
 1. DApp uses the translations in `./public/translations`
 
 Run all in terminal as:
