@@ -9,7 +9,7 @@
   "2gtpRD": "Saldo",
   "4fuMIp": "Begin",
   "9hzrv": "Krijg OGN",
-  "zVPgG": {
+  "3ZvG6A": {
     "schema.forSale": "Te koop",
     "schema.forRent": "Te huur",
     "schema.services": "Services",
@@ -37,6 +37,7 @@
     "schema.electronics": "Elektronica",
     "schema.farmGarden": "Boerderij en tuin",
     "schema.furniture": "Meubilair",
+    "schema.giftCards": "Gift Cards",
     "schema.healthBeauty": "Gezondheid en schoonheid",
     "schema.heavyEquipment": "Zwaar gereedschap",
     "schema.householdItems": "Huishoudelijke artikelen",

@@ -9,7 +9,7 @@
   "2gtpRD": "Kontostand",
   "4fuMIp": "Loslegen",
   "9hzrv": "Holen Sie sich OGN",
-  "zVPgG": {
+  "3ZvG6A": {
     "schema.forSale": "Zum Verkauf",
     "schema.forRent": "Zu vermieten",
     "schema.services": "Dienstleistungen",
@@ -37,6 +37,7 @@
     "schema.electronics": "Elektrogeräte",
     "schema.farmGarden": "Bauernhof und Garten",
     "schema.furniture": "Möbel",
+    "schema.giftCards": "Gift Cards",
     "schema.healthBeauty": "Gesundheit und Schönheit",
     "schema.heavyEquipment": "Schwere Ausrüstung",
     "schema.householdItems": "Haushaltsartikel",

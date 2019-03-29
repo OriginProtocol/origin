@@ -9,7 +9,7 @@
   "2gtpRD": "Stanje na računu",
   "4fuMIp": "Započnite",
   "9hzrv": "Nabavite OGN",
-  "zVPgG": {
+  "3ZvG6A": {
     "schema.forSale": "Za prodaju",
     "schema.forRent": "Za najam",
     "schema.services": "usluge",
@@ -37,6 +37,7 @@
     "schema.electronics": "Elektronika",
     "schema.farmGarden": "Farma i vrt",
     "schema.furniture": "Namještaj",
+    "schema.giftCards": "Gift Cards",
     "schema.healthBeauty": "Zdravlje i ljepota",
     "schema.heavyEquipment": "Teška oprema",
     "schema.householdItems": "Kućanski predmeti",

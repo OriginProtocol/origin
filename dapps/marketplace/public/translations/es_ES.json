@@ -9,7 +9,7 @@
   "2gtpRD": "Saldo de la Cuenta",
   "4fuMIp": "Empezar",
   "9hzrv": "Obtener OGN",
-  "zVPgG": {
+  "3ZvG6A": {
     "schema.forSale": "En Venta",
     "schema.forRent": "En renta",
     "schema.services": "Servicios",
@@ -37,6 +37,7 @@
     "schema.electronics": "Electrónicos",
     "schema.farmGarden": "Granja y jardin",
     "schema.furniture": "Muebles",
+    "schema.giftCards": "Gift Cards",
     "schema.healthBeauty": "Salud y Belleza",
     "schema.heavyEquipment": "Equipo Pesado",
     "schema.householdItems": "Artículos para el Hogar",
