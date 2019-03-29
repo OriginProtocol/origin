@@ -10,7 +10,7 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import AccountTokenBalance from 'queries/TokenBalance'
-import Action from 'pages/growth/Action'
+import ActionList from 'pages/growth/ActionList'
 import GrowthInvite from 'pages/growth/Invite'
 import ProgressBar from 'components/ProgressBar'
 
@@ -62,28 +62,6 @@ function CampaignNavList(props) {
   )
 }
 
-function ActionList(props) {
-  return (
-    <Fragment>
-      <div className="d-flex flex-column">
-        {props.title !== undefined && (
-          <div className="action-title">{props.title}</div>
-        )}
-        {props.actions.map(action => {
-          return (
-            <Action
-              action={action}
-              decimalDivision={props.decimalDivision}
-              key={`${action.type}:${action.status}`}
-              handleNavigationChange={props.handleNavigationChange}
-            />
-          )
-        })}
-      </div>
-    </Fragment>
-  )
-}
-
 function Campaign(props) {
   const { campaign, handleNavigationChange, decimalDivision } = props
 
@@ -105,8 +83,8 @@ function Campaign(props) {
       'RewardCampaigns.timeLeft'
     )}:${formatTimeDifference(Date.now(), endDate)}`
     subTitleText = fbt(
-      'Get Origin Tokens by completing tasks below',
-      'RewardCampaigns.getOriginTokens'
+      'Get Origin Tokens by completing the steps below',
+      'RewardCampaigns.getOriginTokensSteps'
     )
   } else if (status === 'Pending') {
     timeLabel = `${fbt(
@@ -132,13 +110,6 @@ function Campaign(props) {
     maxProgressBarTokens,
     tokensEarned.toString()
   )
-
-  const actionCompleted = action => {
-    return ['Exhausted', 'Completed'].includes(action.status)
-  }
-
-  const completedActions = actions.filter(action => actionCompleted(action))
-  const nonCompletedActions = actions.filter(action => !actionCompleted(action))
 
   return (
     <Fragment>
@@ -174,20 +145,11 @@ function Campaign(props) {
         progress={tokenEarnProgress}
         showIndicators={true}
       />
-      {status === 'Active' && nonCompletedActions.length > 0 && (
-        <ActionList
-          actions={nonCompletedActions}
-          decimalDivision={decimalDivision}
-          handleNavigationChange={handleNavigationChange}
-        />
-      )}
-      {status !== 'Pending' && completedActions.length > 0 && (
-        <ActionList
-          title="Completed"
-          actions={completedActions}
-          decimalDivision={decimalDivision}
-        />
-      )}
+      <ActionList
+        actions={actions}
+        decimalDivision={decimalDivision}
+        handleNavigationChange={handleNavigationChange}
+      />
     </Fragment>
   )
 }
