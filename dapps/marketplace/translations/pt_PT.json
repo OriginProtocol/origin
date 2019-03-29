@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Inscreva-se} para ganhar tokens de criptomoeda do Origin (OGN)."
+          "translation": "{Enroll} para ganhar tokens de criptomoeda da Origem (OGN)."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Inscrever-se agora}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Confirme sua {= identidade} para que outros compradores e vendedores saibam quem você é."
+          "translation": "Por favor, verifique o seu {identity} para que outros compradores e vendedores saibam quem você é."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Não se esqueça de ativar {= Origin Messaging} para que você possa se comunicar com outros usuários. É grátis."
+          "translation": "Não se esqueça de ativar {Origin Messaging} para poder se comunicar com outros usuários. É grátis."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Se você tiver alguma dúvida ou precisar contestar uma transação, {= informe-nos}."
+          "translation": "Se você tiver alguma dúvida ou precisar contestar uma transação, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Encontrou um bug ou tem feedback? Envie um e-mail para {=[SupportEmail]}, abra um problema em {= GitHub} ou poste em nosso canal # bug-reports em {= Discord}."
+          "translation": "Encontrou um bug ou tem feedback? Envie um e-mail para {[SupportEmail]} , abra um problema em {GitHub} ou poste em nosso canal # bug-reports em {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Visão geral} {= Os tokens de origem são tokens ERC-20 usados no DApp e na plataforma Origin. Os tokens de origem podem ser usados para premiar operadores de mercado, criadores de DApp, usuários, desenvolvedores e / ou outros que compram, vendem e contribuem para a Origin.}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Para que são usados os tokens de origem?} {= Boosting} {= Os vendedores podem usar os tokens de origem para aumentar suas listagens e obter maior visibilidade no DA DA de origem ou em futuros DApps de terceiros. As listagens com maior visibilidade são mostradas com maior frequência aos compradores e têm maiores chances de serem vendidas com sucesso. Os DApps recebem tokens de origem dos vendedores quando concluem com sucesso as vendas com o Boost.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Recompensa de referência} {= em breve}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Governança da plataforma} {= Em breve}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Onde posso comprar tokens de origem?} {= Trocas} {= Durante a Beta da Mainnet, os tokens de origem não estarão disponíveis em nenhuma das trocas. Após o encerramento do Mainnet Beta, publicaremos uma lista de trocas aprovadas onde você poderá comprar Tokens de Origem para serem usados na plataforma.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Carregando} {= Por favor, aguarde}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Mantenha pressionado 'comando' (⌘) para selecionar várias imagens.} {= Máximo de 10 imagens por lista.} {= A primeira imagem será destacada - arraste e solte as imagens para reordenar.} {= A proporção recomendada é 4: 3 }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Adicionar detalhes da listagem} Certifique-se de fornecer à sua listagem um título e uma descrição apropriados para que os outros saibam o que você está oferecendo. Adicionar algumas fotos aumentará as chances de vender sua listagem."
+          "translation": "{Add Listing Details} Certifique-se de dar à sua listagem um título e uma descrição apropriados para que os outros saibam o que você está oferecendo. Adicionar algumas fotos aumentará as chances de vender sua listagem."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= O que acontece depois?} Ao enviar esta listagem, você será solicitado a confirmar sua transação no MetaMask. Os compradores poderão ver sua listagem e fazer ofertas."
+          "translation": "{What happens next?} Quando você enviar esta listagem, você será solicitado a confirmar sua transação no MetaMask. Os compradores poderão ver sua listagem e fazer ofertas."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= Você tem 0 OGN na sua carteira.} {= Depois de adquirir um OGN, você poderá aumentar sua listagem.} {= Learn More}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Você tem 0 {= OGN} em sua carteira."
+          "translation": "Você tem 0 {OGN} na sua carteira."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{= Saiba mais}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= Sobre a visibilidade} A Origin classifica e exibe listagens com base na relevância, no nível de recência e no nível de reforço. As listagens de maior visibilidade são mostradas aos compradores com mais frequência. {= Tokens de Origem} OGN é um token ERC-20 usado para incentivos e controle na plataforma Origin. Os futuros usos pretendidos do OGN podem incluir recompensas por indicação, incentivos por reputação, prevenção contra spam, recompensas para desenvolvedores e governança de plataformas. {= Saiba mais}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{= Saiba mais}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Os aumentos são sempre calculados e cobrados em OGN. {= Saiba mais}"
+          "translation": "Os aumentos são sempre calculados e cobrados em OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Valor máximo que será gasto para impulsionar essa listagem. Os impulsos estão sempre em OGN, {= USD é uma estimativa.}"
+          "translation": "Valor máximo que será gasto para impulsionar essa listagem. Os impulsos estão sempre em OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Adicionar detalhes da listagem} Certifique-se de fornecer à sua listagem um título e uma descrição apropriados para que os outros saibam o que você está oferecendo. Adicionar algumas fotos aumentará as chances de vender sua listagem."
+          "translation": "{Add Listing Details} Certifique-se de dar à sua listagem um título e uma descrição apropriados para que os outros saibam o que você está oferecendo. Adicionar algumas fotos aumentará as chances de vender sua listagem."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Sua listagem foi criada!} {= Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: os compradores verão agora a sua ficha no mercado.Quando um comprador faz uma oferta na sua ficha de empresa, pode optar por aceitá-lo ou rejeitá-lo.Depois de a oferta ser aceite, espera-se que cumpra a encomenda.You receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: {= Os compradores agora verão sua listagem no mercado.Quando um comprador faz uma oferta em sua listagem, você pode optar por aceitá-lo ou rejeitá-lo.Uma vez que a oferta for aceita, você deverá cumprir o pedido Você receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Os compradores agora verão sua listagem no mercado.} {= Quando um comprador faz uma oferta em sua listagem, você pode optar por aceitá-lo ou rejeitá-lo.} {= Assim que a oferta for aceita, você deverá cumprir o order.} {= Você receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Sua listagem foi atualizada!} {= Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: os compradores verão agora a sua ficha no mercado.Quando um comprador faz uma oferta na sua ficha de empresa, pode optar por aceitá-lo ou rejeitá-lo.Depois de a oferta ser aceite, espera-se que cumpra a encomenda.You receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: {= Os compradores agora verão sua listagem no mercado.Quando um comprador faz uma oferta em sua listagem, você pode optar por aceitá-lo ou rejeitá-lo.Uma vez que a oferta for aceita, você deverá cumprir o pedido Você receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "Sua listagem ficará visível em alguns segundos. Veja o que acontece a seguir: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Os compradores agora verão sua listagem no mercado.} {= Quando um comprador faz uma oferta em sua listagem, você pode optar por aceitá-lo ou rejeitá-lo.} {= Assim que a oferta for aceita, você deverá cumprir o order.} {= Você receberá o pagamento assim que o comprador confirmar que o pedido foi atendido.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Aviso:} Atualmente indisponível em dispositivos móveis"
+          "translation": "{Warning:} Atualmente indisponível em dispositivos móveis"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Esta listagem é} {= Pendente} {= Você já fez uma oferta nesta listagem.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Esta listagem é} {= Pendente} {= Outro comprador já fez uma oferta nesta listagem. Tente visitar a página de listagens e pesquisar algo semelhante.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Esta listagem é} {= vendida} {= esta listagem está esgotada. Tente visitar a página de listagens e pesquisar algo semelhante.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Conectado a {=[networkName]}"
+          "translation": "Conectado a {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Para transacionar com os outros usuários no nosso DApp, você precisará de algumas coisas antes de começar. {= Por que preciso fazer isso?}"
+          "translation": "Para transacionar com os outros usuários no nosso DApp, você precisará de algumas coisas antes de começar. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= Você concluiu o seguinte:} {= Criação de carteiraMensagem ativadaNotificações de desktop ativadas}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Criação de carteira {} Mensagens ativadas} {= notificações de ambiente de trabalho ativadas}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Restantes etapas:} {= Financiar sua carteiraCompletar seu perfil}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Financie sua carteira} {= Complete seu perfil}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Você rejeitou nossa solicitação para ativar as notificações na área de trabalho que {= recomendamos}."
+          "translation": "Você rejeitou nosso pedido para ativar as notificações na área de trabalho, que nós {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= Você não tem fundos} Você precisa ter fundos em sua carteira para criar uma identidade. Você sempre pode fazer isso mais tarde, depois de financiar sua carteira, indo para as configurações."
+          "translation": "{You don't have funds} Você precisa ter fundos em sua carteira para criar uma identidade. Você sempre pode fazer isso mais tarde, depois de financiar sua carteira, indo para as configurações."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Verificar seu perfil} permite que outros usuários saibam que você é uma pessoa real e aumenta as chances de transações bem-sucedidas no Origin."
+          "translation": "{Verifying your profile} permite que outros usuários saibam que você é uma pessoa real e aumenta as chances de transações bem-sucedidas no Origin."
         }
       ]
     },

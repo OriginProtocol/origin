@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{=Enroll} 并开始赚取 Origin 代币 (OGN)。"
+          "translation": "{Enroll} 来获得Origin加密货币令牌（OGN）。"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "请验证您的{=身份}，以便其他买家和卖家知道您的身份。"
+          "translation": "请验证您的 {identity} 以便其他买家和卖家知道您的身份。"
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "不要忘记启用{= Origin Messaging}，以便与其他用户通信。免费。"
+          "translation": "不要忘记启用 {Origin Messaging} 以便您可以与其他用户通信。免费。"
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "如果您有任何疑问或需要对交易提出异议，请{=让我们知道}。"
+          "translation": "如果您有任何疑问或需要对交易提出异议， {let us know}。"
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "发现了错误或者有反馈？发送电子邮件至{=[SupportEmail]}，在{= GitHub}上发布问题或在{= Discord}上的#nob-reports频道发布。"
+          "translation": "发现了错误或者有反馈？发送电子邮件至 {[SupportEmail]} ，上打开一个问题 {GitHub} 或张贴在我们的＃的bug报告，在通道 {Discord}。"
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Overview} {= Origin Tokens是在Origin DApp和平台上使用的ERC-20令牌。 Origin Tokens可用于奖励市场运营商，DApp创建者，用户，开发者和/或购买，销售和贡献Origin的其他人。}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{=什么是Origin Tokens用于？} {= Boosting} {=卖家可以使用Origin Tokens来提升他们的列表并在Origin DApp或未来的第三方DApp上获得更高的可见性。具有较高可见度的列表更频繁地向买方显示，并且具有更高的成功销售机会。当他们用Boost成功完成销售时，DApps从卖家那里获得Origin Tokens。}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{=推荐奖励} {=即将推出}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{=平台治理} {=即将推出}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{=我在哪里可以购买Origin Tokens？} {= Exchanges} {=在Mainnet Beta期间，Origin Tokens将不会在任何交易所上市。在Mainnet Beta关闭后，我们将发布已批准的交易所列表，您可以在该平台上购买要在平台上使用的Origin Tokens。}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{=加载中} {=请稍等}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{=按住'命令'（⌘）选择多个图像。} {=每个列表最多10个图像。} {=将显示第一个图像 - 拖放图像以重新排序。} {=建议的宽高比为4：3 }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{=添加列表详细信息}请务必为您的商家信息提供适当的标题和说明，以便其他人知道您提供的内容。添加一些照片会增加销售商品的机会。"
+          "translation": "{Add Listing Details} 请务必为您的商家信息提供合适的标题和说明，以便其他人知道您提供的商品。添加一些照片会增加销售商品的机会。"
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{=接下来会发生什么？}当您提交此商家信息时，系统会要求您在MetaMask中确认您的交易。然后，买家可以查看您的商家信息并在其上提供优惠。"
+          "translation": "{What happens next?} 当您提交此商家信息时，系统会要求您在MetaMask中确认您的交易。然后，买家可以查看您的商家信息并在其上提供优惠。"
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{=你的钱包里有0个OGN。} {=一旦你获得了一些OGN，你就可以提高你的名单。} {=了解更多}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "你的钱包里有 0 {=OGN}。"
+          "translation": "您的钱包里有 0 {OGN}。"
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=了解更多}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{=关于可见性} Origin根据相关性，新近度和提升级别对列表进行排序和显示。更频繁地向买家展示更高知名度的列表。 {= Origin Tokens} OGN是一个ERC-20令牌，用于Origin平台上的激励和治理。 OGN的未来预期用途可能包括推荐奖励，声誉激励，垃圾邮件预防，开发者奖励和平台治理。 {=了解更多}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=了解更多}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "总是在OGN中计算和收取提升。 {=了解更多}"
+          "translation": "总是在OGN中计算和收取提升。 {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "推广此商家信息所需的最高金额。提升始终在OGN中，{= USD是估计值。}"
+          "translation": "推广此商家信息所需的最高金额。提升总是在OGN， {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{=添加列表详细信息}请务必为您的商家信息提供适当的标题和说明，以便其他人知道您提供的内容。添加一些照片会增加销售商品的机会。"
+          "translation": "{Add Listing Details} 请务必为您的商家信息提供合适的标题和说明，以便其他人知道您提供的商品。添加一些照片会增加销售商品的机会。"
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{=您的商家信息已创建！} {=您的商家信息将在几秒钟内显示。接下来会发生什么：买家现在会在市场上看到您的商品。当买家在您的商家信息上做出要约时，您可以选择接受或拒绝商品。一旦接受优惠，您就可以完成订单。一旦买方确认订单已经履行，我们将收到付款。}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "您的商家信息将在几秒钟内显示。接下来会发生以下情况：{=买家现在会在市场上看到您的商家信息。当买家在您的商家信息中提出要约时，您可以选择接受或拒绝商品。一旦商品被接受，您将需要履行订单。一旦买方确认订单已经履行，您将收到付款。}"
+          "translation": "您的商家信息将在几秒钟内显示。接下来会发生什么： {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{=买家现在会在市场上看到您的商家信息。} {=当买家在您的商家信息中提出要约时，您可以选择接受或拒绝商品。} {=一旦商品被接受，您将被要求满足订单。} {=一旦买方确认订单已经完成，您将收到付款。}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{=您的商家信息已更新！} {=您的商家信息将在几秒钟内显示。接下来会发生什么：买家现在会在市场上看到您的商品。当买家在您的商家信息上做出要约时，您可以选择接受或拒绝商品。一旦接受优惠，您就可以完成订单。一旦买方确认订单已经履行，我们将收到付款。}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "您的商家信息将在几秒钟内显示。接下来会发生以下情况：{=买家现在会在市场上看到您的商家信息。当买家在您的商家信息中提出要约时，您可以选择接受或拒绝商品。一旦商品被接受，您将需要履行订单。一旦买方确认订单已经履行，您将收到付款。}"
+          "translation": "您的商家信息将在几秒钟内显示。接下来会发生什么： {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{=买家现在会在市场上看到您的商家信息。} {=当买家在您的商家信息中提出要约时，您可以选择接受或拒绝商品。} {=一旦商品被接受，您将被要求满足订单。} {=一旦买方确认订单已经完成，您将收到付款。}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3175,7 +3175,7 @@
     "sbO8XiYlqyNx+ZffAKr2Xw==": {
       "translations": [
         {
-          "translation": "您只需在我们的 DApp 上完成一些动作就可以获得 OGN，比如进行身份验证或者把 Origin 推荐给新的用户。OGN 有很多用途。{campaignName} 活动中获得的 OGN 只会在活动结束后分发。"
+          "translation": "通过完成诸如验证您的身份和与朋友分享Origin等任务来赚取OGN。 OGN可以以多种方式使用。获得的OGN将在 {campaignName} 结束后转移以获得代币"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{=警告：}目前在移动设备上无法使用"
+          "translation": "{Warning:} 目前在移动设备上不可用"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{=此商家信息} {=待定} {=您已在此商家信息中提出要约。}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{=此商家信息} {=待定} {=其他买家已在此商家信息中提出要约。尝试访问列表页面并搜索类似的内容。}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{=此商家信息} {=已售出} {=此商家信息已售罄。尝试访问列表页面并搜索类似的内容。}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "已连接到{=[networkName]}"
+          "translation": "连接到 {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "为了在我们的DApp上成功地与他人交易，在开始之前你需要做一些事情。 {=我为什么需要这样做？}"
+          "translation": "为了在我们的DApp上成功地与他人交易，在开始之前你需要做一些事情。 {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{=您现在已完成以下操作：} {= Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{=电子钱包创建} {=已启用消息传递} {=已启用桌面通知}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{=剩余步骤：} {=为您的钱包充值完成您的个人资料}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{=为您的钱包充值} {=完成您的个人资料}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "您已拒绝我们打开我们{=强烈推荐}的桌面通知的请求。"
+          "translation": "您已拒绝我们打开我们 {highly recommend}桌面通知的请求。"
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{=您没有资金}您需要在钱包中有资金来创建身份。通过转到您的设置，您可以在资金完成后立即执行此操作。"
+          "translation": "{You don't have funds} 您需要在钱包中有资金来创建身份。通过转到您的设置，您可以在资金完成后立即执行此操作。"
         }
       ]
     },
@@ -5499,7 +5499,7 @@
     "ErUqOhnKC3V7GzECNCCHMQ==": {
       "translations": [
         {
-          "translation": "关于 {sellerOrBuyer}."
+          "translation": "关于 {sellerOrBuyer}。"
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{=Verifying your profile} 让其他用户知道您是一个真实的用户，提高在 Origin 上成功完成交易的机会。"
+          "translation": "{Verifying your profile} 允许其他用户知道您是真人并且增加了在Origin上成功交易的机会。"
         }
       ]
     },

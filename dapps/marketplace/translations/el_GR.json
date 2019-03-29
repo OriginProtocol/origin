@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Εγγραφή} για να κερδίσετε μάρκες κρυπτογράφησης Origin (OGN)."
+          "translation": "{Enroll} για να κερδίσετε μάρκες κρυπτογράφησης Origin (OGN)."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Εγγραφή τώρα}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Επαληθεύστε την {= ταυτότητα}, ώστε άλλοι αγοραστές και πωλητές να γνωρίζουν ποιοι είστε."
+          "translation": "Επαληθεύστε το {identity} ώστε άλλοι αγοραστές και πωλητές να γνωρίζουν ποιοι είστε."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Μην ξεχάσετε να ενεργοποιήσετε το {= Origin Messaging} για να επικοινωνήσετε με άλλους χρήστες. Είναι δωρεάν."
+          "translation": "Μην ξεχάσετε να ενεργοποιήσετε το {Origin Messaging} ώστε να μπορείτε να επικοινωνείτε με άλλους χρήστες. Είναι δωρεάν."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Εάν έχετε οποιεσδήποτε ερωτήσεις ή πρέπει να αμφισβητήσετε μια συναλλαγή, {= ενημερώστε μας}."
+          "translation": "Εάν έχετε οποιεσδήποτε ερωτήσεις ή πρέπει να αμφισβητήσετε μια συναλλαγή, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Βρήκατε ένα σφάλμα ή έχετε ανατροφοδότηση; Στείλτε ένα μήνυμα ηλεκτρονικού ταχυδρομείου στο {=[SupportEmail]}, ανοίξτε ένα πρόβλημα στο {= GitHub} ή δημοσιεύστε το στο κανάλι # bug-reports στο {= Discord}."
+          "translation": "Βρήκατε ένα σφάλμα ή έχετε ανατροφοδότηση; Στείλτε ένα μήνυμα ηλεκτρονικού ταχυδρομείου στο {[SupportEmail]} , ανοίξτε ένα πρόβλημα σε {GitHub} ή δημοσιεύστε το στο κανάλι # bug-reports στο {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Επισκόπηση} {= Ονόματα προέλευσης είναι μάρκες ERC-20 που χρησιμοποιούνται στο DApp προέλευσης και στην πλατφόρμα. Τα Origin Tokens μπορούν να χρησιμοποιηθούν για να ανταμείψουν τους φορείς της αγοράς, τους δημιουργούς του DApp, τους χρήστες, τους προγραμματιστές ή / και άλλους που αγοράζουν, πωλούν και συμβάλλουν στην προέλευση.}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Τι χρησιμοποιούνται τα Origin Tokens;} {= Ενίσχυση} {= Οι πωλητές μπορούν να χρησιμοποιήσουν τα Origin Tokens για να αυξήσουν τις καταχωρίσεις τους και να αποκτήσουν μεγαλύτερη προβολή στο DApp Προέλευσης ή σε μελλοντικά DApps τρίτων. Οι καταχωρήσεις με μεγαλύτερη ορατότητα εμφανίζονται πιο συχνά στους αγοραστές και έχουν μεγαλύτερες πιθανότητες να πωληθούν με επιτυχία. Τα DApps αποκομίζουν κέρδη Origin από τους πωλητές όταν ολοκληρώνουν με επιτυχία τις πωλήσεις με το Boost.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Ανταμοιβές παραπομπών} {= Ερχόμενοι σύντομα}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Διακυβέρνηση πλατφόρμας} {= Προσεχώς}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Πού μπορώ να αγοράσω τα Tokens Origin;} {= Ανταλλαγές} {= Κατά τη διάρκεια του Mainnet Beta, τα Tokens Origin δεν θα είναι διαθέσιμα σε οποιαδήποτε ανταλλαγή. Μετά το κλείσιμο του Mainnet Beta, θα δημοσιεύσουμε μια λίστα εγκεκριμένων ανταλλαγών όπου μπορείτε να αγοράσετε τα Tokens Origin που θα χρησιμοποιηθούν στην πλατφόρμα.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Φόρτωση} {= Περιμένετε}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Πατήστε παρατεταμένα την εντολή '' (⌘) για να επιλέξετε πολλαπλές εικόνες.} {= Μέγιστες 10 εικόνες ανά λίστα.} {= Πρώτη εικόνα θα εμφανιστεί - Σύρετε και αφήστε τις εικόνες για αναδιάταξη. }}"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Προσθήκη στοιχείων καταχώρισης} Φροντίστε να δώσετε στην καταχώρισή σας έναν κατάλληλο τίτλο και περιγραφή για να ενημερώσετε τους άλλους για το τι προσφέρετε. Η προσθήκη ορισμένων φωτογραφιών θα αυξήσει τις πιθανότητες πώλησης της καταχώρισής σας."
+          "translation": "{Add Listing Details} Να είστε βέβαιος να δώσει την καταχώρισή σας έναν κατάλληλο τίτλο και περιγραφή για να αφήσει τους άλλους να γνωρίζουν τι προσφέρετε. Η προσθήκη ορισμένων φωτογραφιών θα αυξήσει τις πιθανότητες πώλησης της καταχώρισής σας."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= Τι θα συμβεί στη συνέχεια;} Όταν υποβάλλετε αυτήν την καταχώρηση, θα σας ζητηθεί να επιβεβαιώσετε τη συναλλαγή σας στο MetaMask. Οι αγοραστές θα μπορούν στη συνέχεια να δουν την καταχώρισή σας και να κάνουν προσφορές σε αυτήν."
+          "translation": "{What happens next?} Όταν υποβάλλετε αυτήν την καταχώρηση, θα σας ζητηθεί να επιβεβαιώσετε τη συναλλαγή σας στο MetaMask. Οι αγοραστές θα μπορούν στη συνέχεια να δουν την καταχώρισή σας και να κάνουν προσφορές σε αυτήν."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= Έχετε 0 OGN στο πορτοφόλι σας.} {= Μόλις αποκτήσετε κάποια OGN, θα μπορείτε να αυξήσετε την καταχώρισή σας.} {= Μάθετε περισσότερα}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Έχετε 0 {= OGN} στο πορτοφόλι σας."
+          "translation": "Έχετε 0 {OGN} στο πορτοφόλι σας."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=Μάθετε περισσότερα}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= Σχετικά με την προβολή} Η προέλευση ταξινομεί και προβάλλει καταχωρίσεις βάσει της συνάφειας, της πρόσφατης εμφάνισης και του επιπέδου ώθησης. Οι λίστες υψηλότερης προβολής εμφανίζονται στους αγοραστές πιο συχνά. {= Origin Tokens} Το OGN είναι ένα διακριτικό ERC-20 που χρησιμοποιείται για κίνητρα και διακυβέρνηση στην πλατφόρμα Origin. Οι μελλοντικές σκοπούμενες χρήσεις του OGN ενδέχεται να περιλαμβάνουν ανταμοιβές παραπομπής, κίνητρα φήμης, πρόληψη ανεπιθύμητων μηνυμάτων, ανταμοιβές προγραμματιστών και διακυβέρνηση πλατφόρμας. {= Μάθετε περισσότερα}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=Μάθετε περισσότερα}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Οι αυξήσεις υπολογίζονται και χρεώνονται πάντα στο OGN. {= Μάθετε περισσότερα}"
+          "translation": "Οι αυξήσεις υπολογίζονται και χρεώνονται πάντα στο OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Μέγιστο ποσό που θα δαπανηθεί για την ενίσχυση αυτής της καταχώρισης. Οι αυξήσεις είναι πάντα στο OGN, {= USD είναι μια εκτίμηση.}"
+          "translation": "Μέγιστο ποσό που θα δαπανηθεί για την ενίσχυση αυτής της καταχώρισης. Οι αυξήσεις είναι πάντα στο OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Προσθήκη στοιχείων καταχώρισης} Φροντίστε να δώσετε στην καταχώρισή σας έναν κατάλληλο τίτλο και περιγραφή για να ενημερώσετε τους άλλους για το τι προσφέρετε. Η προσθήκη ορισμένων φωτογραφιών θα αυξήσει τις πιθανότητες πώλησης της καταχώρισής σας."
+          "translation": "{Add Listing Details} Να είστε βέβαιος να δώσει την καταχώρισή σας έναν κατάλληλο τίτλο και περιγραφή για να αφήσει τους άλλους να γνωρίζουν τι προσφέρετε. Η προσθήκη ορισμένων φωτογραφιών θα αυξήσει τις πιθανότητες πώλησης της καταχώρισής σας."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Η εγγραφή σας έχει δημιουργηθεί!} {= Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι συμβαίνει παρακάτω: Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά. Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε. Μόλις γίνει δεκτή η προσφορά, θα πρέπει να εκπληρώσετε την παραγγελία. θα λάβει πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι θα συμβεί στη συνέχεια: {= Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά. Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε. Μόλις γίνει δεκτή η προσφορά, . Θα λάβετε πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι συμβαίνει στη συνέχεια: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά.} {= Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε.} {= Μόλις γίνει δεκτή η προσφορά, order.} {= Θα λάβετε πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Η καταχώρισή σας έχει ενημερωθεί!} {= Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι συμβαίνει παρακάτω: Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά. Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε. Μόλις γίνει δεκτή η προσφορά, θα πρέπει να εκπληρώσετε την παραγγελία. θα λάβει πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι θα συμβεί στη συνέχεια: {= Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά. Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε. Μόλις γίνει δεκτή η προσφορά, . Θα λάβετε πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "Η καταχώρισή σας θα είναι ορατή μέσα σε λίγα δευτερόλεπτα. Εδώ είναι τι συμβαίνει στη συνέχεια: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Οι αγοραστές θα δουν τώρα την καταχώρισή σας στην αγορά.} {= Όταν ένας αγοραστής κάνει μια προσφορά στην καταχώρισή σας, μπορείτε να επιλέξετε να την αποδεχθείτε ή να την απορρίψετε.} {= Μόλις γίνει δεκτή η προσφορά, order.} {= Θα λάβετε πληρωμή μόλις ο αγοραστής επιβεβαιώσει ότι η παραγγελία έχει εκπληρωθεί.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Προειδοποίηση:} Αυτήν τη στιγμή δεν είναι διαθέσιμη σε κινητές συσκευές"
+          "translation": "{Warning:} Αυτήν τη στιγμή δεν είναι διαθέσιμη σε κινητές συσκευές"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Αυτή η καταχώρηση είναι} {= Σε εκκρεμότητα} {= Έχετε ήδη υποβάλει προσφορά σε αυτή τη λίστα.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Αυτή η καταχώρηση είναι} {= Σε εκκρεμότητα} {= Ένας άλλος αγοραστής έχει ήδη κάνει μια προσφορά σε αυτή την καταχώριση. Δοκιμάστε να επισκεφθείτε τη σελίδα των καταχωρίσεων και να αναζητήσετε κάτι παρόμοιο.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Αυτή η καταχώρηση είναι} {= Πωλήθηκε} {= Αυτή η καταχώρηση έχει εξαντληθεί. Δοκιμάστε να επισκεφθείτε τη σελίδα των καταχωρίσεων και να αναζητήσετε κάτι παρόμοιο.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Συνδεδεμένο με {=[networkName]}"
+          "translation": "Συνδεδεμένο με το {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Για να ολοκληρώσετε επιτυχώς τις συναλλαγές σας με άλλους στο DApp, θα χρειαστείτε μερικά πράγματα πριν ξεκινήσετε. {= Γιατί πρέπει να το κάνω αυτό;}"
+          "translation": "Για να ολοκληρώσετε επιτυχώς τις συναλλαγές σας με άλλους στο DApp, θα χρειαστείτε μερικά πράγματα πριν ξεκινήσετε. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= Τώρα έχετε ολοκληρώσει τα εξής:} {= Ενεργοποίηση Ενεργοποιημένων ΕνημερωμένωνΕφαρμογώνDesktop Δημιουργίας ΠορτοφολιούΜηνύματα}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Δημιουργία Πορτοφολιού} {= Ενεργοποιημένα μηνύματα} {= Ενεργοποιημένες ειδοποιήσεις επιφάνειας εργασίας}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Εναλλακτικά βήματα:} {= Χρηματοδοτήστε το πορτοφόλι σαςΚλείστε το προφίλ σας}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Χρηματοδοτήστε το πορτοφόλι σας} {= Ολοκληρώστε το προφίλ σας}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Έχετε απορρίψει το αίτημά μας να ενεργοποιήσετε τις ειδοποιήσεις επιφάνειας εργασίας τις οποίες {= strongly recommend}."
+          "translation": "Έχετε απορρίψει το αίτημά μας να ενεργοποιήσετε τις ειδοποιήσεις επιφάνειας εργασίας που είμαστε {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= Δεν έχετε χρήματα} Πρέπει να έχετε χρήματα στο πορτοφόλι σας για να δημιουργήσετε μια ταυτότητα. Μπορείτε να το κάνετε αυτό αργότερα, αφού χρηματοδοτήσετε το πορτοφόλι σας μεταβαίνοντας στις ρυθμίσεις σας."
+          "translation": "{You don't have funds} Πρέπει να έχετε χρήματα στο πορτοφόλι σας για να δημιουργήσετε μια ταυτότητα. Μπορείτε να το κάνετε αυτό αργότερα, αφού χρηματοδοτήσετε το πορτοφόλι σας μεταβαίνοντας στις ρυθμίσεις σας."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Επαλήθευση του προφίλ σας} επιτρέπει σε άλλους χρήστες να γνωρίζουν ότι είστε πραγματικό πρόσωπο και αυξάνει τις πιθανότητες επιτυχημένων συναλλαγών στο Origin."
+          "translation": "{Verifying your profile} επιτρέπει σε άλλους χρήστες να γνωρίζουν ότι είστε πραγματικό πρόσωπο και αυξάνει τις πιθανότητες επιτυχημένων συναλλαγών στο Origin."
         }
       ]
     },

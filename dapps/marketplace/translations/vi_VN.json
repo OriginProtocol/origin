@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Đăng ký} để kiếm mã thông báo tiền điện tử gốc (OGN)."
+          "translation": "{Enroll} để kiếm mã thông báo tiền điện tử gốc (OGN)."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Đăng ký ngay}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Vui lòng xác minh {= danh tính} của bạn để người mua và người bán khác biết bạn là ai."
+          "translation": "Vui lòng xác minh {identity} của bạn để người mua và người bán khác biết bạn là ai."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Đừng quên bật {= Origin Messaging} để bạn có thể giao tiếp với những người dùng khác. Nó miễn phí."
+          "translation": "Đừng quên bật {Origin Messaging} để bạn có thể giao tiếp với những người dùng khác. Nó miễn phí."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Nếu bạn có bất kỳ câu hỏi hoặc cần tranh chấp giao dịch, {= hãy cho chúng tôi biết}."
+          "translation": "Nếu bạn có bất kỳ câu hỏi hoặc cần tranh chấp một giao dịch, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Tìm thấy một lỗi hoặc có thông tin phản hồi? Gửi email đến {=[SupportEmail]}, mở một vấn đề trên {= GitHub} hoặc đăng trong kênh # bug-báo cáo của chúng tôi trên {= Discord}."
+          "translation": "Tìm thấy một lỗi hoặc có thông tin phản hồi? Gửi email đến {[SupportEmail]} , mở một vấn đề trên {GitHub} hoặc đăng trong kênh # báo cáo lỗi của chúng tôi trên {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Tổng quan} {= Mã thông báo gốc là mã thông báo ERC-20 được sử dụng trên Origin DApp và nền tảng. Mã thông báo gốc có thể được sử dụng để thưởng cho các nhà khai thác thị trường, người tạo DApp, người dùng, nhà phát triển và / hoặc những người khác mua, bán và đóng góp cho Origin.}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Mã thông báo gốc được sử dụng để làm gì? Danh sách có khả năng hiển thị cao hơn được hiển thị thường xuyên hơn cho người mua và có cơ hội bán thành công cao hơn. DApps kiếm Token gốc từ người bán khi họ hoàn thành bán hàng thành công với Boost.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Phần thưởng giới thiệu} {= Sắp có}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Quản trị nền tảng} {= Sắp có}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Tôi có thể mua Token gốc ở đâu?} {= Trao đổi} {= Trong bản Mainnet Beta, Token gốc sẽ không có sẵn trên bất kỳ trao đổi nào. Sau khi đóng Mainnet Beta, chúng tôi sẽ công bố danh sách các sàn giao dịch được phê duyệt nơi bạn có thể mua Token gốc được sử dụng trên nền tảng.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Đang tải} {= Vui lòng đợi}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Nhấn và giữ 'lệnh' (⌘) để chọn nhiều hình ảnh. }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Thêm chi tiết danh sách} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= Điều gì xảy ra tiếp theo?} Khi bạn gửi danh sách này, bạn sẽ được yêu cầu xác nhận giao dịch của mình trong MetaMask. Người mua sau đó sẽ có thể xem danh sách của bạn và đưa ra đề nghị trên đó."
+          "translation": "{What happens next?} Khi bạn gửi danh sách này, bạn sẽ được yêu cầu xác nhận giao dịch của mình trong MetaMask. Người mua sau đó sẽ có thể xem danh sách của bạn và đưa ra đề nghị trên đó."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= Bạn có 0 OGN trong ví của mình"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Bạn có 0 {= OGN} trong ví của mình."
+          "translation": "Bạn có 0 {OGN} trong ví của mình."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=Tìm hiểu thêm}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= Giới thiệu về khả năng hiển thị} Xuất xứ sắp xếp và hiển thị danh sách dựa trên mức độ liên quan, lần truy cập và mức tăng. Danh sách khả năng hiển thị cao hơn được hiển thị cho người mua thường xuyên hơn. {= Mã thông báo gốc} OGN là mã thông báo ERC-20 được sử dụng cho các ưu đãi và quản trị trên nền tảng Origin. Việc sử dụng OGN trong tương lai có thể bao gồm phần thưởng giới thiệu, khuyến khích danh tiếng, ngăn chặn thư rác, phần thưởng dành cho nhà phát triển và quản trị nền tảng. {= Tìm hiểu thêm}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=Tìm hiểu thêm}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Tăng luôn được tính toán và tính phí trong OGN. {= Tìm hiểu thêm}"
+          "translation": "Tăng luôn được tính toán và tính phí trong OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Số tiền tối đa sẽ được chi để tăng danh sách này. Mức tăng luôn ở OGN, {= USD là ước tính.}"
+          "translation": "Số tiền tối đa sẽ được chi để tăng danh sách này. Tăng luôn ở OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Thêm chi tiết danh sách} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
+          "translation": "{Add Listing Details} Hãy chắc chắn cung cấp cho danh sách của bạn một tiêu đề và mô tả phù hợp để cho người khác biết những gì bạn đang cung cấp. Thêm một số hình ảnh sẽ tăng cơ hội bán danh sách của bạn."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Danh sách của bạn đã được tạo!} {= Danh sách của bạn sẽ hiển thị trong vòng vài giây. Đây là những gì xảy ra tiếp theo: Người mua bây giờ sẽ thấy danh sách của bạn trên thị trường. Khi người mua đưa ra lời đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó. sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {= Người mua sẽ thấy danh sách của bạn trên thị trường. Khi người mua đưa ra đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối. .Bạn sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Người mua bây giờ sẽ thấy danh sách của bạn trên thị trường.} {= Khi người mua đưa ra đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó.} {= Khi ưu đãi được chấp nhận, bạn sẽ phải hoàn thành order.} {= Bạn sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Danh sách của bạn đã được cập nhật!} {= Danh sách của bạn sẽ hiển thị trong vòng vài giây. Đây là những gì xảy ra tiếp theo: Người mua bây giờ sẽ thấy danh sách của bạn trên thị trường. Khi người mua đưa ra lời đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó. sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {= Người mua sẽ thấy danh sách của bạn trên thị trường. Khi người mua đưa ra đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối. .Bạn sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "Danh sách của bạn sẽ được hiển thị trong vòng một vài giây. Đây là những gì xảy ra tiếp theo: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Người mua bây giờ sẽ thấy danh sách của bạn trên thị trường.} {= Khi người mua đưa ra đề nghị trong danh sách của bạn, bạn có thể chọn chấp nhận hoặc từ chối nó.} {= Khi ưu đãi được chấp nhận, bạn sẽ phải hoàn thành order.} {= Bạn sẽ nhận được khoản thanh toán sau khi người mua xác nhận rằng đơn hàng đã được thực hiện.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Cảnh báo:} Hiện không khả dụng trên thiết bị di động"
+          "translation": "{Warning:} Hiện không khả dụng trên thiết bị di động"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Danh sách này là} {= Đang chờ xử lý} {= Bạn đã thực hiện một đề nghị cho danh sách này.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Danh sách này là} {= Đang chờ xử lý} {= Một người mua khác đã thực hiện một đề nghị cho danh sách này. Hãy thử truy cập trang danh sách và tìm kiếm một cái gì đó tương tự.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Danh sách này là} {= Đã bán} {= Danh sách này đã được bán hết. Hãy thử truy cập trang danh sách và tìm kiếm một cái gì đó tương tự.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Đã kết nối với {=[networkName]}"
+          "translation": "Đã kết nối với {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Để giao dịch thành công với những người khác trên DApp của chúng tôi, bạn sẽ cần một vài điều trước khi bắt đầu. {= Tại sao tôi cần phải làm điều này?}"
+          "translation": "Để giao dịch thành công với những người khác trên DApp của chúng tôi, bạn sẽ cần một vài điều trước khi bắt đầu. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= Bây giờ bạn đã hoàn thành các bước sau:} {= Wallet CreationMessaging EnablesDesktop Thông báo đã bật}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Tạo ví} {= Đã bật tin nhắn} {= Đã bật thông báo trên màn hình}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Các bước còn lại:} {= Nạp tiền vào ví của bạn Hoàn thành hồ sơ của bạn}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Nạp tiền vào ví của bạn} {= Hoàn thành hồ sơ của bạn}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Bạn đã từ chối yêu cầu của chúng tôi để bật thông báo trên màn hình mà chúng tôi {= rất khuyến khích}."
+          "translation": "Bạn đã từ chối yêu cầu của chúng tôi để bật thông báo trên máy tính để bàn mà chúng tôi {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= Bạn không có tiền} Bạn cần phải có tiền trong ví của mình để tạo danh tính. Bạn luôn có thể thực hiện việc này sau khi bạn nạp tiền vào ví của mình bằng cách vào cài đặt của bạn."
+          "translation": "{You don't have funds} Bạn cần phải có tiền trong ví của mình để tạo danh tính. Bạn luôn có thể thực hiện việc này sau khi bạn nạp tiền vào ví của mình bằng cách vào cài đặt của bạn."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Xác minh hồ sơ của bạn} cho phép người dùng khác biết rằng bạn là người thực và tăng cơ hội giao dịch thành công trên Origin."
+          "translation": "{Verifying your profile} cho phép người dùng khác biết rằng bạn là người thực và tăng cơ hội giao dịch thành công trên Origin."
         }
       ]
     },

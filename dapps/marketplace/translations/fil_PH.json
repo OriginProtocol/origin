@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Mag-enroll} upang kumita ng mga token ng Cryptocurrency ng Origin (OGN)."
+          "translation": "{Enroll} upang kumita ng mga Orihinal na cryptocurrency na mga token (OGN)."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Mag-enroll Ngayon}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Paki-verify ang iyong {= identity} kaya alam ng iba pang mga mamimili at nagbebenta kung sino ka."
+          "translation": "Paki-verify ang iyong {identity} kaya alam ng iba pang mga mamimili at nagbebenta kung sino ka."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Huwag kalimutan na paganahin ang {= Origin Messaging} upang maaari kang makipag-usap sa ibang mga user. Ito'y LIBRE."
+          "translation": "Huwag kalimutan na paganahin ang {Origin Messaging} upang maaari kang makipag-usap sa iba pang mga gumagamit. Ito'y LIBRE."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Kung mayroon kang anumang mga katanungan o kailangang makipagtalo sa isang transaksyon, {= ipaalam sa amin}."
+          "translation": "Kung mayroon kang anumang mga katanungan o kailangang makipagtalo sa isang transaksyon, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Nakakita ng bug o may feedback? Magpadala ng email sa {=[SupportEmail]}, buksan ang isang isyu sa {= GitHub} o mag-post sa aming # channel ng mga ulat-bug sa {= Discord}."
+          "translation": "Nakakita ng bug o may feedback? Magpadala ng email sa {[SupportEmail]} , buksan ang isang isyu sa {GitHub} o mag-post sa aming # bug-ulat na channel sa {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Pangkalahatang-ideya} {= Mga Token ng Pinagmulan ay mga token ng ERC-20 na ginagamit sa Pinagmulan DApp at plataporma. Maaaring gamitin ang mga pinagmulang Token upang gantimpalaan ang mga operator ng merkado, mga tagalikha ng DApp, mga gumagamit, mga developer, at / o iba pa na bumili, nagbebenta, at nag-ambag sa Pinagmulan.}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Ano ang mga pinagmulang Token na ginagamit para sa?} {= Boosting} {= Ang mga nagbebenta ay maaaring gumamit ng Mga Token ng Pinagmulan upang mapalakas ang kanilang mga listahan at makakuha ng mas mataas na visibility sa Origin DApp o sa hinaharap na mga third-party na DApps. Ang mga listahan na may mas mataas na kakayahang makita ay ipinapakita nang mas madalas sa mga mamimili at may mas mataas na mga pagkakataon na mabibili nang matagumpay. Ang mga DApps ay kumita ng Mga Token ng Pinagmulan mula sa mga nagbebenta kapag matagumpay nilang kumpletuhin ang mga benta sa Boost.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Referral Rewards} {= Paparating na}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Platform Pamamahala} {= Paparating na}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Saan ako makakabili ng Mga Token ng Pinagmulan?} {= Mga Palitan} {= Sa panahon ng Mainnet Beta, ang mga Token ng Pinagmulan ay hindi magagamit sa anumang palitan. Matapos ang pagsara ng Mainnet Beta, i-publish namin ang isang listahan ng mga aprubadong palitan kung saan maaari kang bumili ng Mga Pinagmulan na Token na gagamitin sa platform.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Loading} {= Mangyaring maghintay}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Pindutin nang matagal ang 'utos' (⌘) upang pumili ng maraming mga larawan.} {= Maximum na 10 mga larawan sa bawat listahan.} {= Unang larawan ay itampok - i-drag and drop ang mga larawan. }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Magdagdag ng Mga Detalye ng Listahan} Tiyaking ibigay ang iyong listahan ng isang naaangkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+          "translation": "{Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= Ano ang susunod na nangyayari?} Kapag isinumite mo ang listahang ito, hihilingin sa iyo na kumpirmahin ang iyong transaksyon sa MetaMask. Pagkatapos ay maaaring makita ng mga mamimili ang iyong listahan at gumawa ng mga alok dito."
+          "translation": "{What happens next?} Kapag isinumite mo ang listahang ito, tatanungin ka upang kumpirmahin ang iyong transaksyon sa MetaMask. Pagkatapos ay maaaring makita ng mga mamimili ang iyong listahan at gumawa ng mga alok dito."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= Mayroon kang 0 OGN sa iyong wallet.} {= Kapag nakuha mo ang ilang mga OGN, maaari mong mapalakas ang iyong listahan.} {= Matuto Nang Higit Pa}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Mayroon kang 0 {= OGN} sa iyong wallet."
+          "translation": "Mayroon kang 0 {OGN} sa iyong wallet."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{= Matuto nang higit pa}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= Tungkol sa Pagtingin) Pinagmulan ng mga pinagmumulan at nagpapakita ng mga listahan batay sa kaugnayan, pagkakatuguhan, at antas ng pagpapalakas. Ang mas mataas na mga listahan ng pagpapakita ay ipinapakita sa mga mamimili nang mas madalas. {= Origin Tokens} OGN ay isang ERC-20 token na ginamit para sa mga insentibo at pamamahala sa Pinagmulan ng platform. Ang hinaharap na hinahangad na paggamit ng OGN ay maaaring magsama ng mga gantimpala sa referral, insentibo sa reputasyon, pag-iwas sa spam, mga premyo ng developer, at pamamahala ng platform. {= Matuto nang higit pa}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{= Matuto nang higit pa}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Ang mga pagpapalakas ay palaging kinakalkula at sisingilin sa OGN. {= Matuto nang higit pa}"
+          "translation": "Ang mga pagpapalakas ay palaging kinakalkula at sisingilin sa OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Maximum na halaga na gagastusin upang mapalakas ang listahan na ito. Ang mga Boost ay palaging nasa OGN, {= USD ay isang pagtatantya.}"
+          "translation": "Maximum na halaga na gagastusin upang mapalakas ang listahan na ito. Ang mga pagpapalakas ay palaging nasa OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Magdagdag ng Mga Detalye ng Listahan} Tiyaking ibigay ang iyong listahan ng isang naaangkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
+          "translation": "{Add Listing Details} Tiyaking ibigay ang iyong listahan ng angkop na pamagat at paglalarawan upang ipaalam sa iba kung ano ang iyong inaalok. Ang pagdaragdag ng ilang mga larawan ay magpapataas ng mga pagkakataon na ibenta ang iyong listahan."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Ang iyong listahan ay nalikha!} {= Ang iyong listahan ay makikita sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: Ang mga mamimili ay makikita na ang iyong listahan sa marketplace.When ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad mo ang order.You ay makakatanggap ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: {= Ang mga mamimili ay makikita na ngayon ang inyong listahan sa marketplace. Kapag ang isang mamimili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad ang pagkakasunud-sunod. . Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Kapag nakita ng mamimili ang iyong listahan sa marketplace.} {= Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito.} {= Kapag tinanggap ang alok, inaasahang matupad ang order.} {= Makakatanggap ka ng pagbabayad kapag napatunayan ng mamimili na ang order ay natupad na.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Ang iyong listahan ay na-update na!} {= Ang iyong listahan ay makikita sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: Ang mga mamimili ay makikita na ang iyong listahan sa marketplace.When ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad mo ang order.You ay makakatanggap ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito kung ano ang susunod na mangyayari: {= Ang mga mamimili ay makikita na ngayon ang inyong listahan sa marketplace. Kapag ang isang mamimili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito. Kapag tinanggap ang alok, inaasahang matupad ang pagkakasunud-sunod. . Makakatanggap ka ng pagbabayad kapag kinumpirma ng mamimili na ang order ay natupad na."
+          "translation": "Makikita ang iyong listahan sa loob ng ilang segundo. Narito ang susunod na susunod: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Kapag nakita ng mamimili ang iyong listahan sa marketplace.} {= Kapag ang isang bumibili ay gumagawa ng isang nag-aalok sa iyong listahan, maaari mong piliin na tanggapin o tanggihan ito.} {= Kapag tinanggap ang alok, inaasahang matupad ang order.} {= Makakatanggap ka ng pagbabayad kapag napatunayan ng mamimili na ang order ay natupad na.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Babala:} Kasalukuyang hindi magagamit sa mga mobile device"
+          "translation": "{Warning:} Kasalukuyang hindi magagamit sa mga mobile device"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Ang listahan na ito ay} {= Nakabinbin} {= Gumawa ka na ng isang alok sa listahang ito.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Ang listahan na ito ay} {= Nakabinbin} {= Isa pang mamimili ay gumawa ng isang alok sa listahan na ito. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Ang listahan na ito ay} {= Sold} {= Ang listahan na ito ay naibenta. Subukang bisitahin ang pahina ng mga listahan at maghanap ng katulad na bagay.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Nakakonekta sa {=[networkName]}"
+          "translation": "Nakakonekta sa {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Upang matagumpay na makipag-ugnay sa iba sa aming DApp, kakailanganin mo ng ilang mga bagay bago ka magsimula. {= Bakit kailangan kong gawin ito?}"
+          "translation": "Upang matagumpay na makipag-ugnay sa iba sa aming DApp, kakailanganin mo ng ilang mga bagay bago ka magsimula. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= Nakumpleto na ninyo ang mga sumusunod:} {= Paglikha ng WalletMag-enable ang Mga Pagpapasadya sa Pag-enable ngDesktopDesktop}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Paglikha ng Dyuter} {= Pinagana ng Pag-edit} {= Mga Notification sa Desktop Pinagana}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Natitirang hakbang:} {= Pondo ang iyong walletI-complete ang iyong Profile}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Pondo ang iyong wallet} {= Kumpletuhin ang iyong Profile}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Tinanggihan mo ang aming kahilingan upang i-on ang mga abiso sa desktop na aming {= highly recommend}."
+          "translation": "Tinanggihan mo ang aming kahilingan upang i-on ang mga abiso sa desktop kung saan namin {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= Wala kang mga pondo} Kailangan mong magkaroon ng mga pondo sa iyong wallet upang lumikha ng isang pagkakakilanlan. Maaari mong palaging gawin ito sa ibang pagkakataon pagkatapos mong pondohan ang iyong wallet sa pamamagitan ng pagpunta sa iyong mga setting."
+          "translation": "{You don't have funds} Kailangan mong magkaroon ng mga pondo sa iyong wallet upang lumikha ng isang identity. Maaari mong palaging gawin ito sa ibang pagkakataon pagkatapos mong pondohan ang iyong wallet sa pamamagitan ng pagpunta sa iyong mga setting."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Pag-verify ng iyong profile} ay nagpapahintulot sa iba pang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng mga matagumpay na transaksyon sa Pinagmulan."
+          "translation": "{Verifying your profile} nagbibigay-daan sa iba pang mga gumagamit na malaman na ikaw ay isang tunay na tao at pinatataas ang mga pagkakataon ng matagumpay na mga transaksyon sa Pinagmulan."
         }
       ]
     },

@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Enroll} om Origin cryptocurrency tokens (OGN) te verdienen."
+          "translation": "{Enroll} om Origin cryptocurrency tokens (OGN) te verdienen."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Nu inschrijven}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Verifieer uw {= identiteit} zodat andere kopers en verkopers weten wie u bent."
+          "translation": "Verifieer uw {identity} zodat andere kopers en verkopers weten wie u bent."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Vergeet niet om {= Origin Messaging} in te schakelen, zodat u met andere gebruikers kunt communiceren. Het is gratis."
+          "translation": "Vergeet niet om {Origin Messaging} te schakelen, zodat u met andere gebruikers kunt communiceren. Het is gratis."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Als u vragen heeft of een transactie moet betwisten, {= laat het ons weten}."
+          "translation": "Als u vragen heeft of een transactie moet betwisten, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Heeft u een bug gevonden of heeft u feedback? Stuur een e-mail naar {=[SupportEmail]}, open een probleem op {= GitHub} of plaats een bericht in ons # bug-reports-kanaal op {= Discord}."
+          "translation": "Heeft u een bug gevonden of heeft u feedback? Stuur een e-mail naar {[SupportEmail]} , open een probleem op {GitHub} of post in ons # bug-reports kanaal op {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Overzicht} {= Origin Tokens zijn ERC-20-tokens die worden gebruikt op de Origin DApp en het platform. Origin Tokens kunnen worden gebruikt om marketplace-operators, DApp-makers, gebruikers, ontwikkelaars en / of anderen die Origin kopen kopen, verkopen en eraan bijdragen."
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Waar worden de oorsprongsstokjes voor gebruikt?} {= Boosting} {= verkopers kunnen Origin Tokens gebruiken om hun aanbiedingen te verbeteren en een betere zichtbaarheid te krijgen op de DApp's van Origin DApp of toekomstige derden. Advertenties met een hogere zichtbaarheid worden vaker aan kopers getoond en hebben een grotere kans om met succes te worden verkocht. DApps verdienen Origin Tokens van verkopers wanneer ze de verkoop met Boost hebben voltooid.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Rewal Rewards} {= binnenkort verkrijgbaar}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Platformbeheer} {= binnenkort verkrijgbaar}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Waar kan ik Origin Tokens kopen?} {= Exchange} {= Tijdens Mainnet Beta zijn de Origin Tokens niet beschikbaar op beurzen. Na het sluiten van Mainnet Beta zullen we een lijst met goedgekeurde uitwisselingen publiceren, waar u Origin Tokens kunt kopen om op het platform te gebruiken.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Bezig met laden} {= Even geduld}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Houd 'opdracht' (⌘) ingedrukt om meerdere afbeeldingen te selecteren.} {= Maximaal 10 afbeeldingen per lijst.} {= Eerste afbeelding wordt weergegeven - afbeeldingen slepen en neerzetten om opnieuw in te delen.} {= Aanbevolen beeldverhouding is 4: 3 }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Details van vermeldingen toevoegen} Zorg ervoor dat u uw vermelding een toepasselijke titel en beschrijving geeft om anderen te laten weten wat u aanbiedt. Als u enkele foto's toevoegt, vergroot u de kans dat u uw vermelding verkoopt."
+          "translation": "{Add Listing Details} Geef je aanbieding een toepasselijke titel en beschrijving om anderen te laten weten wat je aanbiedt. Als u enkele foto's toevoegt, vergroot u de kans dat u uw vermelding verkoopt."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= Wat gebeurt er hierna?} Wanneer u deze aanbieding indient, wordt u gevraagd om uw transactie in MetaMask te bevestigen. Kopers kunnen dan uw vermelding bekijken en aanbiedingen doen."
+          "translation": "{What happens next?} Wanneer u deze aanbieding indient, wordt u gevraagd om uw transactie in MetaMask te bevestigen. Kopers kunnen dan uw vermelding bekijken en aanbiedingen doen."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= U heeft 0 OGN in uw portemonnee.} {= Als u eenmaal een OGN hebt aangeschaft, kunt u uw vermelding verbeteren.} {= Meer informatie}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Je hebt 0 {= OGN} in je portemonnee."
+          "translation": "U hebt 0 {OGN} in uw portemonnee."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=Meer informatie}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= Over zichtbaarheid} Origin sorteert en geeft aanbiedingen weer op basis van relevantie, recentheid en boostniveau. Advertenties met een hogere zichtbaarheid worden vaker aan kopers getoond. {= Origin Tokens} OGN is een ERC-20-token dat wordt gebruikt voor incentives en governance op het Origin-platform. Toekomstige beoogde toepassingen van OGN kunnen verwijzingsbeloningen, reputatiestimulansen, spampreventie, ontwikkelaarswinsten en platformbeheer omvatten. {= Meer informatie}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=Meer informatie}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Boosts worden altijd berekend en geladen in OGN. {= Meer informatie}"
+          "translation": "Boosts worden altijd berekend en geladen in OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Maximumbedrag dat wordt uitgegeven om deze aanbieding te stimuleren. Boosts zijn altijd in OGN, {= USD is een schatting.}"
+          "translation": "Maximumbedrag dat wordt uitgegeven om deze aanbieding te stimuleren. Boosts zijn altijd in OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Details van vermeldingen toevoegen} Zorg ervoor dat u uw vermelding een toepasselijke titel en beschrijving geeft om anderen te laten weten wat u aanbiedt. Als u enkele foto's toevoegt, vergroot u de kans dat u uw vermelding verkoopt."
+          "translation": "{Add Listing Details} Geef je aanbieding een toepasselijke titel en beschrijving om anderen te laten weten wat je aanbiedt. Als u enkele foto's toevoegt, vergroot u de kans dat u uw vermelding verkoopt."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Uw vermelding is aangemaakt!} {= Uw vermelding zal binnen enkele seconden zichtbaar zijn. Dit is wat er gebeurt: kopers zien uw vermelding nu op de markt. Wanneer een koper een aanbieding doet op uw aanbieding, kunt u ervoor kiezen om deze te accepteren of te weigeren. Zodra de aanbieding is geaccepteerd, wordt van u verwacht dat u de bestelling uitvoert. zal betaling ontvangen zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Je aanbieding is binnen een paar seconden zichtbaar. Dit gebeurt nu: {= kopers zien je vermelding nu op de markt. Wanneer een koper een aanbieding doet op je aanbieding, kun je ervoor kiezen om deze te accepteren of te weigeren. Zodra de aanbieding is geaccepteerd, wordt van jou verwacht dat je de bestelling uitvoert . U ontvangt een betaling zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "Je aanbieding is binnen een paar seconden zichtbaar. Dit is wat er gebeurt: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Kopers zien uw vermelding nu op de markt.} {= Wanneer een koper een aanbieding op uw aanbieding doet, kunt u ervoor kiezen om deze te accepteren of te weigeren.} {= Zodra de aanbieding is geaccepteerd, wordt van u verwacht dat u voldoet aan de bestelling.} {= U ontvangt een betaling zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Uw vermelding is bijgewerkt!} {= Uw vermelding is binnen enkele seconden zichtbaar. Dit is wat er gebeurt: kopers zien uw vermelding nu op de markt. Wanneer een koper een aanbieding doet op uw aanbieding, kunt u ervoor kiezen om deze te accepteren of te weigeren. Zodra de aanbieding is geaccepteerd, wordt van u verwacht dat u de bestelling uitvoert. zal betaling ontvangen zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Je aanbieding is binnen een paar seconden zichtbaar. Dit gebeurt nu: {= kopers zien je vermelding nu op de markt. Wanneer een koper een aanbieding doet op je aanbieding, kun je ervoor kiezen om deze te accepteren of te weigeren. Zodra de aanbieding is geaccepteerd, wordt van jou verwacht dat je de bestelling uitvoert . U ontvangt een betaling zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "Je aanbieding is binnen een paar seconden zichtbaar. Dit is wat er gebeurt: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Kopers zien uw vermelding nu op de markt.} {= Wanneer een koper een aanbieding op uw aanbieding doet, kunt u ervoor kiezen om deze te accepteren of te weigeren.} {= Zodra de aanbieding is geaccepteerd, wordt van u verwacht dat u voldoet aan de bestelling.} {= U ontvangt een betaling zodra de koper bevestigt dat aan de bestelling is voldaan.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Waarschuwing:} Momenteel niet beschikbaar op mobiele apparaten"
+          "translation": "{Warning:} Momenteel niet beschikbaar op mobiele apparaten"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Deze aanbieding is} {= In behandeling} {= U heeft al een aanbieding op deze aanbieding gedaan}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Deze vermelding is} {= In behandeling} {= een andere koper heeft al een aanbieding op deze aanbieding gedaan. Probeer de pagina met vermeldingen te bezoeken en zoek naar iets soortgelijks.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Deze aanbieding is} {= Verkocht} {= Deze aanbieding is uitverkocht. Probeer de pagina met vermeldingen te bezoeken en zoek naar iets soortgelijks.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Verbonden met {=[networkName]}"
+          "translation": "Verbonden met {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Om succesvol met anderen te kunnen werken op onze DApp, hebt u een paar dingen nodig voordat u aan de slag gaat. {= Waarom moet ik dit doen?}"
+          "translation": "Om succesvol met anderen te kunnen werken op onze DApp, hebt u een paar dingen nodig voordat u aan de slag gaat. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= U bent nu klaar met het volgende:} {= Wallet CreationMessaging EnabledDesktop meldingen ingeschakeld}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Wallet-aanmaak} {= Berichten ingeschakeld} {= Desktopmeldingen ingeschakeld}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Overblijvende stappen:} {= Fund your walletCompleet profiel}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Fineer uw portemonnee} {= vul uw profiel in}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "U hebt ons verzoek om bureaubladmeldingen in te schakelen afgewezen die we {= sterk aanbevelen}."
+          "translation": "U hebt ons verzoek afgewezen om bureaubladmeldingen in te schakelen die {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= U heeft geen geld} U moet geld in uw portemonnee hebben om een identiteit te maken. Je kunt dit altijd later doen nadat je je portemonnee hebt gefinancierd door naar je instellingen te gaan."
+          "translation": "{You don't have funds} U moet geld in uw portemonnee hebben om een identiteit te creëren. Je kunt dit altijd later doen nadat je je portemonnee hebt gefinancierd door naar je instellingen te gaan."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Uw profiel verifiëren} stelt andere gebruikers in staat te weten dat u een echt persoon bent en vergroot de kans op succesvolle transacties op Origin."
+          "translation": "{Verifying your profile} stelt andere gebruikers in staat te weten dat u een echte persoon bent en vergroot de kans op succesvolle transacties op Origin."
         }
       ]
     },

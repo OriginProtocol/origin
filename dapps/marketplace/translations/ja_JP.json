@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "Originトークン（OGN）を入手するには{=Enroll} してください。"
+          "translation": "Originの暗号通貨トークン（OGN）を取得するには{Enroll}。"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "他の購入者や販売者があなたが誰であるかがわかるように、{= identity}を確認してください。"
+          "translation": "他の購入者や販売者があなたが誰であるかがわかるように {identity} 確認してください。"
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "他のユーザーと通信できるように、{= Origin Messaging}を有効にすることを忘れないでください。それは無料です。"
+          "translation": "他のユーザーと通信できるように、 {Origin Messaging} を有効にすることを忘れないでください。それは無料です。"
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "質問がある場合、または取引について異議を申し立てる必要がある場合は、{=お知らせください}"
+          "translation": "質問がある場合、または取引について異議を唱える必要がある場合は、 {let us know}。"
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "バグを見つけましたか？ {=[SupportEmail]}にメールを送信するか、{= GitHub}で問題を開くか、{= Discord}の＃bug-reportsチャネルに投稿してください。"
+          "translation": "バグを見つけましたか？ {[SupportEmail]} にEメールを送る、 {GitHub} issueを開く、または {Discord} ＃bug-reportsチャンネルに投稿してください。"
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{=概要}{=Origin トークンは、Origin DAppとプラットフォームで使用されるERC-20トークンです。 Originトークンは、マーケットプレイス、DAppクリエイター、ユーザー、開発者などがOriginを購入、販売し、貢献する他社に報酬を与えるために使用されることがあります。}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "売り手はOriginトークンを使用して自分の出品情報を目立たせたり、Origin DAppや将来のサードパーティ製DAppを目立たせてより購入されやすいように設定できます。このようにブーストされた掲載情報は、購入者へより多く表示され、販売成功率がとても高くなります。 DAppsは販売が成功すると、売り手からOriginトークンを獲得します。"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{=紹介報酬} {=近日公開}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{=プラットフォームガバナンス} {=近日公開}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{=どこでOriginトークンを買えますか?}{=メインネットベータ中は、Originトークンはいかなる交換所でも取扱がありません。メインネットベータの終了後に、プラットフォーム上で使用するOriginトークンを購入できる承認済み取引所のリストを発行します。}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{=読み込み中} {=お待ちください}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{=複数の画像を選択するには 'command'（⌘）を押します。} {= 1出品情報あたり最大10枚の画像をアップロードできます。}} {=最初の画像がサムネイルとして使われます。 - 画像をドラッグアンドドロップして並べ替えてください。} {=推奨アスペクト比は4：3です。}"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{=Add Listing Details} 出品情報には何がオファーされているのか分かるように、適切な説明とタイトルを記入してください。写真を掲載すると購入され易くなりますので、なるべく写真を掲載してください。"
+          "translation": "{Add Listing Details} 他の人があなたが提供しているものを知らせるためにあなたのリストに適切なタイトルと説明を与えるようにしてください。いくつかの写真を追加すると、あなたの出品を販売する可能性が高まります。"
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{=What happens next?} この出品情報を決済するとメタマスクで取引を認証するように求められます。この操作の後に、買い手にあなたの出品情報が表示されるようになります。"
+          "translation": "{What happens next?} このリスティングを送信すると、あなたはMetaMaskであなたの取引を確認するように求められます。その後、バイヤーはあなたの出品を見てそれにオファーをすることができます。"
         }
       ]
     },
@@ -1600,7 +1600,7 @@
     "O1X6MM+wCK4hfwlb0R1FQg==": {
       "translations": [
         {
-          "translation": "手順 {create.details.hourly.step}"
+          "translation": "ステップ {create.details.hourly.step}"
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{=ウォレット残高が0OGNです。} {= OGNを使うことで出品を強化できます。}{=詳細を見る}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "ウォレットの残高が 0 {ogn} です。"
+          "translation": "ウォレットの残高が 0 {OGN} です。"
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=詳細について}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{=可視性について} Originは関連性、新しさ、ブーストレベルに基づいて出品情報をソートして表示します。より高い可視性のリストはより頻繁に買い手の目にとまります。 {= Origin トークン} OGNは、Originプラットフォームでのインセンティブおよびガバナンスに使用されるERC-20トークンです。 OGNの将来の使用目的には、紹介報酬、評判のインセンティブ、スパム防止、開発者報酬、およびプラットフォームガバナンスが含まれる可能性があります。 {=さらに詳しく}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=詳細について}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "ブーストは常に計算され、OGNで課金されます。"
+          "translation": "ブーストは常に計算され、OGNで請求されます。 {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "この出品情報をブーストする為に使用する最大額。ブーストは常にOGNでチャージされます。{= USD表示は概算です。}"
+          "translation": "このリスティングを増やすために費やされる最大額。ブーストは常にOGNで、 {USD is an estimate.}"
         }
       ]
     },
@@ -2069,7 +2069,7 @@
     "si3GOZhOfQ+CSWieJRAPPg==": {
       "translations": [
         {
-          "translation": "手順 {create.details.fractional.step}"
+          "translation": "ステップ {create.details.fractional.step}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{=出品の詳細を追記} 出品情報には何がオファーされているのか分かるように、適切な説明とタイトルを記入してください。写真を掲載すると購入され易くなりますので、なるべく写真を掲載してください。"
+          "translation": "{Add Listing Details} 他の人があなたが提供しているものを知らせるためにあなたのリストに適切なタイトルと説明を与えるようにしてください。いくつかの写真を追加すると、あなたの出品を販売する可能性が高まります。"
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{=出品情報が作成されました！} {=この出品情報は数秒以内に表示可能になります。買い手があなたの出品にオファーすると、あなたはそれを受諾するか、または拒否するか、選ぶことができます。オファーを受諾すると、あなたはその出品情報の取引を完了させなければなりません。買い手が取引の完了を確認した後、あなたは支払いを受け取ります。"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "あなたの出品情報は数秒以内に表示されます。次の手順は以下の通りです。{=買い手がマーケットプレイスであなたの出品情報を見ます。買い手があなたの出品情報にオファーすると、あなたはそれを受諾するか、拒否するかを選択できます。オファーを受諾すると、あなたはその出品情報の取引を完了させなければなりません。買い手が取引の完了を確認した後に、あなたは支払いを受け取ります。}"
+          "translation": "あなたのリスティングは数秒以内に表示されます。これが次に起こることです： {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{=あなたの出品情報がマーケットプレイスに掲載され買い手に見えるようになりました。}{=買い手があなたの出品情報にオファーすると、あなたはそれを受諾するか、拒否するかを選択できます。}{=オファーを受諾すると、あなたはその出品情報の取引を完了させなければなりません。}{=買い手が取引の完了を確認した後に、あなたは支払いを受け取ります。}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{=出品情報が更新されました！} {=この出品情報は数秒以内に表示可能になります。買い手があなたの出品にオファーすると、あなたはそれを受諾するか、または拒否するか、選ぶことができます。オファーを受諾すると、あなたはその出品情報の取引を完了させなければなりません。買い手が取引の完了を確認した後、あなたは支払いを受け取ります。"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "あなたのリスティングは数秒以内に表示されます。これが次に起こることです：{=買い手はマーケットプレイスであなたの出品を見るでしょう。買い手があなたの出品でオファーをするとき、あなたはそれを受け入れるか拒否するかを選択できます。オファーが受け入れられると、あなたは注文を果たすでしょう。注文が完了したことを購入者が確認したら、支払いを受け取ります。"
+          "translation": "あなたのリスティングは数秒以内に表示されます。これが次に起こることです： {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{=購入者はあなたの出品を市場で見ることができます。} {=購入者があなたの出品でオファーをするとき、あなたはそれを受け入れるか拒否するかを選択できます。} {=オファーが受け入れられると、あなたは注文が完了したことを購入者が確認すると、支払いを受け取ります。"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3175,7 +3175,7 @@
     "sbO8XiYlqyNx+ZffAKr2Xw==": {
       "translations": [
         {
-          "translation": "あなた身元の情報を承認したり、友達とOriginを共有したりすることでOGNを獲得できます。 OGNはさまざまな方法で使用できます。獲得したOGNは{campaignName} の後に配布されます。"
+          "translation": "あなたの身元を確認したり、友達とOriginを共有したりすることでOGNを獲得できます。 OGNはさまざまな方法で使用できます。獲得したOGNはトークンを獲得するために {campaignName} の終わりの後に転送されます"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{=警告：}現在携帯端末ではご利用いただけません"
+          "translation": "{Warning:} 現在モバイル機器では利用できません"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{=このリスティングは} {=保留中} {=あなたはすでにこのリスティングを提供しています。}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{=このリスティングは} {=保留中} {=他のバイヤーが既にこのリスティングでオファーをしています。リストページにアクセスして、似たようなものを探してみてください。"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{=このリスティングは} {=売り切れ} {=このリスティングは売り切れですリストページにアクセスして、似たようなものを探してみてください。"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3693,7 +3693,7 @@
     "IOWXtJhXlVb9On/GWu5Ufg==": {
       "translations": [
         {
-          "translation": "注：これは {userTimeZone}タイムゾーンとは異なります{userTimeZone}"
+          "translation": "注：これは {userTimeZone}タイムゾーンとは異なります"
         }
       ]
     },
@@ -3784,7 +3784,7 @@
     "BFrTfCZ9EtXiz3llu4N2aw==": {
       "translations": [
         {
-          "translation": "{number} 掲載情報"
+          "translation": "{number} 出品情報"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "{=[networkName]}に接続しました"
+          "translation": "{[networkName]}接続"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "DAppで他の人とうまくやり取りするには、始める前にいくつかのことが必要です。 {=なぜこれをする必要があるのですか？}"
+          "translation": "DAppで他の人とうまくやり取りするには、始める前にいくつかのことが必要です。 {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{=これで次の作業が完了しました。} {= Wallet CreationMessaging有効デスクトップ通知有効}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Walletの作成} {=メッセージングが有効} {=デスクトップ通知が有効}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{=残りのステップ：} {=あなたの財布に資金を供給あなたのプロフィールを完成させてください}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{=あなたの財布に出資する} {=あなたのプロフィールに記入する}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "デスクトップ通知を有効にするというGoogleの要求を拒否しました。"
+          "translation": "あなたは私たちが {highly recommend}であるデスクトップ通知をオンにするという私たちの要求を拒否しました。"
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{=資金がありません} IDを作成するには、財布に資金が必要です。あなたがあなたの設定に行くことによってあなたの財布に資金を供給した後に、あなたはいつでも後でこれをすることができます。"
+          "translation": "{You don't have funds} アイデンティティを作成するには財布に資金が必要です。あなたがあなたの設定に行くことによってあなたの財布に資金を供給した後に、あなたはいつでも後でこれをすることができます。"
         }
       ]
     },
@@ -5499,7 +5499,7 @@
     "ErUqOhnKC3V7GzECNCCHMQ==": {
       "translations": [
         {
-          "translation": "{sellerOrBuyer} について."
+          "translation": "{sellerOrBuyer}について"
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "貴方のプロフィールがOriginに承認されると、他のユーザーがあなたが実在する人物であることを知る助けになります。また、これは取引の増加にも寄与します。"
+          "translation": "{Verifying your profile} 指定すると、他のユーザーはあなたが本物の人物であることを知ることができ、Origin上でトランザクションが成功する可能性が高まります。"
         }
       ]
     },

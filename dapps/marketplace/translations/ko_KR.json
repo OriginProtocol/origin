@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Enroll} 을 사용하여 오리진 크립토 토큰(OGN) 을 얻어가세요."
+          "translation": "{Enroll} 을 사용하여 Origin cryptocurrency token (OGN)을 얻습니다."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= 지금 등록}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "귀하의 {= 신분}을 확인하여 다른 구매자와 판매자가 귀하의 신원을 알 수 있도록하십시오."
+          "translation": "다른 구매자와 판매자가 누구인지 알 수 있도록 {identity} 확인하십시오."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "다른 사용자와 통신 할 수 있도록 {= Origin Messaging}을 활성화하는 것을 잊지 마십시오. 그것은 무료입니다."
+          "translation": "다른 사용자와 통신 할 수 있도록 {Origin Messaging} 을 사용하는 것을 잊지 마십시오. 그것은 무료입니다."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "문의 사항이 있거나 거래에 이의를 제기해야하는 경우 {= 저희에게 알려주십시오}."
+          "translation": "질문이 있거나 거래에 이의를 제기해야하는 경우 {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "버그를 발견했거나 의견이 있습니까? {=[SupportEmail]}에 이메일을 보내거나 {= GitHub}에서 문제를 열거 나 {= Discord}에서 # # 버그보고 채널에 게시하십시오."
+          "translation": "버그를 발견했거나 의견이 있습니까? {[SupportEmail]} 으로 이메일을 보내거나 {GitHub} 의 문제를 열거 나 {Discord} 의 # 버그보고 채널에 게시하십시오."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= 개요} {= 원점 토큰은 Origin DApp 및 플랫폼에서 사용되는 ERC-20 토큰입니다. Origin Token은 마켓 플레이스 운영자, DApp 제작자, 사용자, 개발자 및 / 또는 Origin을 구매, 판매 및 제공하는 다른 사람들에게 보상 할 수 있습니다."
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= 원점 토큰은 무엇을 위해 사용됩니까?} {= 부스팅} {= 판매자는 원점 토큰을 사용하여 목록을 향상시키고 Origin DApp 또는 향후 타사 DApp에 대한 가시성을 높일 수 있습니다. 높은 가시성을 가진 목록은 구매자에게 더 자주 표시되며 성공적으로 판매 될 확률이 더 높습니다. DApps는 부스트로 성공적으로 판매를 완료하면 판매자로부터 원점 토큰을받습니다.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Referral Rewards} {= 곧 출시 예정}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= 플랫폼 거버넌스} {= 출시 예정}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= 원점 토큰을 구입할 수있는 곳은 어디입니까?} {= 교환} {= 메인 넷 베타 기간 동안 모든 교환에서 원점 토큰을 사용할 수 없습니다. Mainnet Beta를 종료 한 후 플랫폼에서 사용할 Origin Token을 구입할 수있는 승인 된 교환 목록을 게시합니다.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{=로드 중} {= 잠시만 기다려주십시오}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= 여러 이미지를 선택하려면 'command'(⌘)를 누르고 아래로 내려주세요.} {= 목록 당 최대 10 개의 이미지가 보여집니다} {= 첫 번째 이미지가 노출됩니다. 이미지를 드래그 앤 드롭하여 순서를 바꿉니다.} {= 권장 가로 세로 비율은 4: 3입니다.}"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= 목록 세부 정보 추가} 당신이 제공하는 상품에 다른 사람들이 더 잘 이해할 수 있도록 상품 목록에 알맞는 적절한 제목과 부가 설명을 작성해주세요. 사진을 추가하면 상품이 판매 될 가능성이 높아집니다."
+          "translation": "{Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= 다음에 어떤 일이 발생할까요?} 이 리스팅을 제출하면 MetaMask에서 거래를 확인하라는 메시지가 나타납니다. 확인함과 동시에 구매자는 리스팅 정보를보고, 오퍼 제안을 할 수 있습니다."
+          "translation": "{What happens next?} 이 리스팅을 제출하면 MetaMask에서 거래를 확인하라는 메시지가 나타납니다. 그러면 구매자는 업체 정보를보고 제안을 할 수 있습니다."
         }
       ]
     },
@@ -1600,7 +1600,7 @@
     "O1X6MM+wCK4hfwlb0R1FQg==": {
       "translations": [
         {
-          "translation": "단계 {create.details.hourly.step}"
+          "translation": "{create.details.hourly.step}단계"
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{=현재 당신의 지갑에 0 OGN이 있습니다.}{=추가 OGN을 획득한 후에, 당신의 상품 목록을 부스팅 할 수 있습니다.}{=더 알아보기}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "현재 당신의 지갑에 0{=OGN} OGN이 있습니다."
+          "translation": "당신은 지금 0 {OGN} OGN이 지갑에 있습니다."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=더 알아보기}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{=노출 효과} 오리진(Origin) 은 관련성, 날짜순 및 부스트 레벨을 기준으로 상품 목록을 정렬하고 노출 시킵니다. 높은 노출 효과를 가진 리스팅은 구매자에게 더 자주 보여집니다. {=오리진 토큰} OGN은 오리진 플랫폼의 인센티브 및 거버넌스에 사용되는 ERC-20 토큰입니다. 향후 OGN의 용도로는 추천 보상, 평판 인센티브, 스팸 방지, 개발자 보상 및 플랫폼 관리가 포함될 수 있습니다. {=더 알아보기}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=더 알아보기}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "부스팅은 항상 OGN으로 계산되고 청구됩니다. {=더 알아보기}"
+          "translation": "부스트는 항상 OGN에서 계산되고 부과됩니다. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "해당 상품 목록을 부스팅하기 위하여 소요되는 최대 금액. 부스트는 항상 OGN으로 지불되며 {= USD는 예상 가격입니다.}"
+          "translation": "이 리스팅을 향상시키는 데 소요되는 최대 금액. 부스트는 항상 OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2069,7 +2069,7 @@
     "si3GOZhOfQ+CSWieJRAPPg==": {
       "translations": [
         {
-          "translation": "단계 {create.details.fractional.step}"
+          "translation": "{create.details.fractional.step}단계"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= 목록 세부 정보 추가} 당신이 제공하는 상품에 다른 사람들이 더 잘 이해할 수 있도록 상품 목록에 알맞는 적절한 제목과 부가 설명을 작성해주세요. 사진을 추가하면 상품이 판매 될 가능성이 높아집니다."
+          "translation": "{Add Listing Details} 당신이 제공하는 것을 다른 사람들이 알 수 있도록 목록에 적절한 제목과 설명을 제공하십시오. 사진을 추가하면 업체 정보를 판매 할 가능성이 높아집니다."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= 귀하의 업체 정보가 생성되었습니다!} {= 귀하의 업체 정보가 몇 초 내에 표시됩니다. 다음은 구매자가 마켓 플레이스에서 귀하의 목록을 볼 수 있습니다. 구매자가 귀하의 목록에 제안을하면, 귀하는 그것을 수락하거나 거절 할 수 있습니다. 제안이 수락되면 주문을 이행해야합니다. 구매자가 주문이 완료되었음을 확인하면 지급금을 받게됩니다.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {= 구매자가 마켓 플레이스에서 귀하의 업체 정보를 볼 수 있습니다. 구매자가 귀하의 업체 정보에 대한 제안을하면이를 수락하거나 거부 할 수 있습니다. 제안이 수락되면 주문을 이행해야합니다. 구매자가 주문이 완료되었음을 확인하면 지급금을 수령하게됩니다.}"
+          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= 구매자가 마켓에서 상장 목록을 볼 수 있습니다.} {= 구매자가 귀하의 상장에 대한 제안을하면, 그것을 수락하거나 거절 할 수 있습니다.} {= 제안이 수락되면 귀하는 주문} {= 구매자가 주문이 완료되었음을 확인하면 지급금을받습니다.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= 귀하의 업체 정보가 업데이트되었습니다!} {= 귀하의 업체 정보가 몇 초 이내에 표시됩니다. 다음은 구매자가 마켓 플레이스에서 귀하의 목록을 볼 수 있습니다. 구매자가 귀하의 목록에 제안을하면, 귀하는 그것을 수락하거나 거절 할 수 있습니다. 제안이 수락되면 주문을 이행해야합니다. 구매자가 주문이 완료되었음을 확인하면 지급금을 받게됩니다.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {= 구매자가 마켓 플레이스에서 귀하의 업체 정보를 볼 수 있습니다. 구매자가 귀하의 업체 정보에 대한 제안을하면이를 수락하거나 거부 할 수 있습니다. 제안이 수락되면 주문을 이행해야합니다. 구매자가 주문이 완료되었음을 확인하면 지급금을 수령하게됩니다.}"
+          "translation": "목록이 몇 초 내에 표시됩니다. 다음은 다음에 일어나는 일입니다. {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= 구매자가 마켓에서 상장 목록을 볼 수 있습니다.} {= 구매자가 귀하의 상장에 대한 제안을하면, 그것을 수락하거나 거절 할 수 있습니다.} {= 제안이 수락되면 귀하는 주문} {= 구매자가 주문이 완료되었음을 확인하면 지급금을받습니다.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3175,7 +3175,7 @@
     "sbO8XiYlqyNx+ZffAKr2Xw==": {
       "translations": [
         {
-          "translation": "본인 인증 절차를 완료하거나 친구들을 오리진에 초대하는 활동을 완료한 후 OGN을 획득하세요. OGN은 다양한 방법으로 사용할 수 있습니다. {campaignName} 이 종료된 후에, OGN을 얻을 수 있습니다."
+          "translation": "신원을 확인하고 친구와 함께 Origin을 공유하는 등의 작업을 완료하여 OGN을 획득하십시오. OGN은 다양한 방법으로 사용할 수 있습니다. OGN은 {campaignName} 이 끝나면 토큰을 얻습니다."
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= 경고 :} 현재 휴대 기기에서는 사용할 수 없습니다."
+          "translation": "{Warning:} 현재 휴대 기기에서 사용할 수 없음"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{=이 목록}} {= 보류 중} {=이 목록에 이미 제안을했습니다.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{=이 목록}} {= 보류 중} {= 다른 구매자가 이미이 목록에 대한 제안을했습니다. 업체 정보 페이지를 방문하여 비슷한 것을 검색하십시오.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{=이 목록은} {= Sold} {=이 목록은 매진되었습니다. 업체 정보 페이지를 방문하여 비슷한 것을 검색하십시오.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3784,7 +3784,7 @@
     "BFrTfCZ9EtXiz3llu4N2aw==": {
       "translations": [
         {
-          "translation": "{number} 목록"
+          "translation": "{number} 상품 목록"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "{=[networkName]}에 연결됨"
+          "translation": "{[networkName]}연결됨"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "DApp에서 다른 사람들과 성공적으로 거래하려면 시작하기 전에 몇 가지 사항이 필요합니다. {= 왜해야합니까?}"
+          "translation": "DApp에서 다른 사람들과 성공적으로 거래하려면 시작하기 전에 몇 가지 사항이 필요합니다. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= 이제 다음 작업을 완료했습니다.} {= Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= 월렛 생성} {= 메시징 사용} {= 데스크톱 알림 사용}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= 남은 단계 :} {= 귀하의 walletComplete 프로필 작성}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= 지갑 지갑} {= 귀하의 프로필 작성}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "데스크톱 알림을 사용하도록 요청한 것을 거부했습니다. {= 매우 좋습니다}."
+          "translation": "당신은 바탕 화면 알림 우리 켭 우리의 요청을 거부했습니다 {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= 돈이 없습니다.} 신분을 만들기 위해서는 지갑에 돈이 있어야합니다. 당신은 당신의 설정으로 가서 당신의 지갑에 돈을 지불 한 후에 언제든지 이것을 할 수 있습니다."
+          "translation": "{You don't have funds} 신분을 만들기 위해서는 지갑에 돈이 있어야합니다. 당신은 당신의 설정으로 가서 당신의 지갑에 돈을 지불 한 후에 언제든지 이것을 할 수 있습니다."
         }
       ]
     },
@@ -5499,7 +5499,7 @@
     "ErUqOhnKC3V7GzECNCCHMQ==": {
       "translations": [
         {
-          "translation": "{sellerOrBuyer} 에 대하여."
+          "translation": "{sellerOrBuyer}대해서."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{verifyingYourProfile} 는 다른 사용자들이 당신이 실존 인물인 것을 알리며, 따라서 Origin 플렛폼 상에서 성공적인 거래를 할 기회가 커집니다."
+          "translation": "{Verifying your profile} 사용하면 다른 사용자가 자신이 실제 사람이라는 것을 알 수 있고 Origin에서 성공적인 거래 기회를 높일 수 있습니다."
         }
       ]
     },

@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{= Регистрация}, чтобы заработать жетоны криптовалюты Origin (OGN)."
+          "translation": "{Enroll} заработать Происхождение токенов криптовалюты (OGN)."
         }
       ]
     },
@@ -669,7 +669,7 @@
     "SG+OPZyCrM3ZJpIQSUSkyQ==": {
       "translations": [
         {
-          "translation": "{= Зарегистрируйтесь сейчас}"
+          "translation": "{=Enroll Now}"
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Пожалуйста, проверьте вашу {= личность}, чтобы другие покупатели и продавцы знали, кто вы"
+          "translation": "Пожалуйста, подтвердите ваш {identity} чтобы другие покупатели и продавцы знали, кто вы."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Не забудьте включить {= Origin Messaging}, чтобы вы могли общаться с другими пользователями. Это бесплатно."
+          "translation": "Не забудьте включить {Origin Messaging} чтобы вы могли общаться с другими пользователями. Это бесплатно."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Если у вас есть какие-либо вопросы или вам необходимо оспорить транзакцию, {= дайте нам знать}."
+          "translation": "Если у вас есть какие-либо вопросы или вам необходимо оспорить сделку, {let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Нашли ошибку или есть отзывы? Отправьте электронное письмо на {=[SupportEmail]}, откройте вопрос на {= GitHub} или напишите в нашем # канале отчетов об ошибках на {= Discord}"
+          "translation": "Нашли ошибку или есть отзывы? Отправьте электронное письмо на номер {[SupportEmail]} , откройте номер {GitHub} или напишите на нашем канале # bug-reports на {Discord}."
         }
       ]
     },
@@ -1194,7 +1194,7 @@
     "GwcDe9CcWWasPietMqdHww==": {
       "translations": [
         {
-          "translation": "{= Overview} {= Origin токены - это токены ERC-20, которые используются в Origin DApp и платформе. Жетоны Origin могут использоваться для поощрения операторов рынка, создателей DApp, пользователей, разработчиков и / или других лиц, которые покупают, продают и вносят вклад в Origin.}"
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
         }
       ]
     },
@@ -1215,7 +1215,7 @@
     "YStilTZWkt3L9DlXs8HFYQ==": {
       "translations": [
         {
-          "translation": "{= Для чего используются жетоны происхождения?} {= Повышение} {= Продавцы могут использовать жетоны происхождения, чтобы увеличить свои списки и получить более высокую видимость в исходных DApp или будущих сторонних DApps. Списки с более высокой видимостью чаще показываются покупателям и имеют более высокие шансы на успешную продажу. DApps получают жетоны происхождения от продавцов, когда они успешно завершают продажи с помощью Boost.}"
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
         }
       ]
     },
@@ -1243,7 +1243,7 @@
     "WMwhtycSMMCEW+BSsx/KAg==": {
       "translations": [
         {
-          "translation": "{= Награды за рефералов} {= Скоро в продаже}"
+          "translation": "{=Referral Rewards}{=Coming soon}"
         }
       ]
     },
@@ -1264,7 +1264,7 @@
     "gtMBWfRfKMIhVz+1ALiI4Q==": {
       "translations": [
         {
-          "translation": "{= Управление платформой} {= Скоро в продаже}"
+          "translation": "{=Platform Governance}{=Coming soon}"
         }
       ]
     },
@@ -1285,7 +1285,7 @@
     "7o+KdiD481Rnhy9jrb6mOQ==": {
       "translations": [
         {
-          "translation": "{= Где я могу купить жетоны происхождения?} {= Обмены} {= Во время бета-тестирования Mainnet жетоны происхождения не будут доступны ни на одном обмене. После закрытия бета-версии Mainnet мы опубликуем список утвержденных бирж, где вы можете приобрести жетоны Origin для использования на платформе.}"
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
         }
       ]
     },
@@ -1320,7 +1320,7 @@
     "xI4Hor+GVoaMYqnflEKBCQ==": {
       "translations": [
         {
-          "translation": "{= Загрузка} {= Пожалуйста, подождите}"
+          "translation": "{=Loading}{=Please wait}"
         }
       ]
     },
@@ -1432,7 +1432,7 @@
     "6FcU7DSqJ6OEWN3FQ7I8+g==": {
       "translations": [
         {
-          "translation": "{= Удерживайте «команду» (⌘), чтобы выбрать несколько изображений.} {= Максимум 10 изображений в списке.} {= Первое изображение будет отображаться - перетаскивайте изображения, чтобы изменить порядок.} {= Рекомендуемое соотношение сторон 4: 3 }"
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{= Добавить сведения о листинге} Обязательно дайте вашему списку соответствующий заголовок и описание, чтобы другие знали, что вы предлагаете Добавление некоторых фотографий увеличит шансы на продажу вашего списка."
+          "translation": "{Add Listing Details} Обязательно дайте вашему списку соответствующий заголовок и описание, чтобы другие знали, что вы предлагаете. Добавление некоторых фотографий увеличит шансы на продажу вашего списка."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{= Что будет дальше?} Когда вы отправите этот список, вас попросят подтвердить вашу транзакцию в MetaMask. Покупатели смогут увидеть ваш список и сделать предложения на нем."
+          "translation": "{What happens next?} Когда вы отправляете этот список, вас попросят подтвердить вашу транзакцию в MetaMask Покупатели смогут увидеть ваш список и сделать предложения на нем."
         }
       ]
     },
@@ -1691,14 +1691,14 @@
     "f0wHNxTzIoEcxc0zQvqerg==": {
       "translations": [
         {
-          "translation": "{= В вашем кошельке 0 OGN.} {= Как только вы приобретете OGN, вы сможете увеличить свои данные.} {= Узнать больше}"
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
         }
       ]
     },
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "У вас 0 {= OGN} в вашем кошельке."
+          "translation": "В вашем кошельке 0 {OGN}."
         }
       ]
     },
@@ -1719,7 +1719,7 @@
     "1bLRt3UQm/BD/KE8lGl6Tg==": {
       "translations": [
         {
-          "translation": "{=Узнать больше}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1817,7 +1817,7 @@
     "kscNc0rAVSIEomcgmPq7bA==": {
       "translations": [
         {
-          "translation": "{= О видимости} Origin сортирует и отображает списки на основе релевантности, актуальности и уровня повышения. Списки повышенной видимости показываются покупателям чаще. {= Жетоны происхождения} OGN - это жетон ERC-20, используемый для стимулирования и управления на платформе Origin. В будущем предполагаемое использование OGN может включать вознаграждение за рефералов, поощрения репутации, предотвращение спама, вознаграждения разработчиков и управление платформой. {= Узнать больше}"
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
         }
       ]
     },
@@ -1838,7 +1838,7 @@
     "7FwwGMlpFP9xRfTitbG58w==": {
       "translations": [
         {
-          "translation": "{=Узнать больше}"
+          "translation": "{=Learn More}"
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Повышения всегда рассчитываются и начисляются в OGN. {= Узнать больше}"
+          "translation": "Повышения всегда рассчитываются и начисляются в OGN. {Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Максимальная сумма, которая будет потрачена на повышение этого списка. Повышения всегда в OGN, {= USD является оценкой.}"
+          "translation": "Максимальная сумма, которая будет потрачена на повышение этого списка. Повышения всегда в OGN, {USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{= Добавить сведения о листинге} Обязательно дайте вашему списку соответствующий заголовок и описание, чтобы другие знали, что вы предлагаете Добавление некоторых фотографий увеличит шансы на продажу вашего списка."
+          "translation": "{Add Listing Details} Обязательно дайте вашему списку соответствующий заголовок и описание, чтобы другие знали, что вы предлагаете. Добавление некоторых фотографий увеличит шансы на продажу вашего списка."
         }
       ]
     },
@@ -2286,7 +2286,7 @@
     "otra7itIzW9AZHLupEzr2Q==": {
       "translations": [
         {
-          "translation": "{= Ваша запись была создана!} {= Ваша запись будет видна через несколько секунд. Вот что происходит дальше: покупатели теперь увидят ваше объявление на торговой площадке. Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его. Как только предложение будет принято, вы должны будете выполнить заказ. получит оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2300,14 +2300,14 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Ваш список будет виден в течение нескольких секунд. Вот что происходит дальше: {= Покупатели теперь будут видеть ваше объявление на торговой площадке. Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его. . Вы получите оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "Ваш список будет виден в течение нескольких секунд. Вот что происходит дальше: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "4pV8TLLz6hO8WICuh3ObXQ==": {
       "translations": [
         {
-          "translation": "{= Покупатели теперь будут видеть ваше объявление на торговой площадке.} {= Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его.} {= Как только предложение будет принято, вы должны будете выполнить заказ.} {= Вы получите оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2349,7 +2349,7 @@
     "WF5wiQpoQDKFGmsPdhYcTg==": {
       "translations": [
         {
-          "translation": "{= Ваш список был обновлен!} {= Ваш список будет виден в течение нескольких секунд. Вот что происходит дальше: покупатели теперь увидят ваше объявление на торговой площадке. Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его. Как только предложение будет принято, вы должны будете выполнить заказ. получит оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,14 +2363,14 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Ваш список будет виден в течение нескольких секунд. Вот что происходит дальше: {= Покупатели теперь будут видеть ваше объявление на торговой площадке. Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его. . Вы получите оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "Ваш список будет виден в течение нескольких секунд. Вот что происходит дальше: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
     "Ml76SvqVrEtzaHQ2SoM4JQ==": {
       "translations": [
         {
-          "translation": "{= Покупатели теперь будут видеть ваше объявление на торговой площадке.} {= Когда покупатель делает предложение в вашем списке, вы можете принять или отклонить его.} {= Как только предложение будет принято, вы должны будете выполнить заказ.} {= Вы получите оплату, как только покупатель подтвердит, что заказ был выполнен.}"
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{= Warning:} В настоящее время недоступно на мобильных устройствах"
+          "translation": "{Warning:} В настоящее время недоступно на мобильных устройствах"
         }
       ]
     },
@@ -3546,7 +3546,7 @@
     "JA586NEcuAeEOGwkiG9v0g==": {
       "translations": [
         {
-          "translation": "{= Это объявление} {= В ожидании} {= Вы уже сделали предложение в этом списке.}"
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
         }
       ]
     },
@@ -3581,7 +3581,7 @@
     "5xZsR6GEptb2JxRgPaQXNw==": {
       "translations": [
         {
-          "translation": "{= Это объявление} {= В ожидании} {= Другой покупатель уже сделал предложение в этом списке. Попробуйте зайти на страницу списков и найти что-то похожее.}"
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -3616,7 +3616,7 @@
     "i4gBpnp1ab7o+e8in/u62Q==": {
       "translations": [
         {
-          "translation": "{= Это объявление} {= Продано} {= Это объявление распродано. Попробуйте зайти на страницу списков и найти что-то похожее.}"
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Подключено к {=[networkName]}"
+          "translation": "Подключено к {[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Чтобы успешно взаимодействовать с другими в нашем DApp, вам нужно несколько вещей, прежде чем начать. {= Зачем мне это делать?}"
+          "translation": "Чтобы успешно взаимодействовать с другими в нашем DApp, вам нужно несколько вещей, прежде чем начать. {Why do I need to do this?}"
         }
       ]
     },
@@ -4281,7 +4281,7 @@
     "mU3MxuZLQg7n732AsKxtEA==": {
       "translations": [
         {
-          "translation": "{= Вы выполнили следующие действия:} {= Кошелек CreationMessaging EnabledDesktop Уведомления включены}"
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
         }
       ]
     },
@@ -4295,7 +4295,7 @@
     "CxWrPmbgR884ESLoDC1BHw==": {
       "translations": [
         {
-          "translation": "{= Создание кошелька} {= Обмен сообщениями включен} {= Уведомления на рабочем столе включены}"
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
         }
       ]
     },
@@ -4323,7 +4323,7 @@
     "lUrfL6249kxTxaw/dRoqbg==": {
       "translations": [
         {
-          "translation": "{= Остальные шаги:} {= Пополните свой кошелекЗавершите свой профиль}"
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
         }
       ]
     },
@@ -4337,7 +4337,7 @@
     "osEnvv1/nsQxkpQkh23NZw==": {
       "translations": [
         {
-          "translation": "{= Пополнить свой кошелек} {= заполнить свой профиль}"
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Вы отклонили наш запрос на включение уведомлений на рабочем столе, которые мы {= настоятельно рекомендуем}."
+          "translation": "Вы отклонили наш запрос на включение уведомлений на рабочем столе, которые мы {highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{= У вас нет средств} Для создания личности вам необходимо иметь средства в своем кошельке. Вы всегда можете сделать это позже, когда пополните свой кошелек, перейдя в настройки."
+          "translation": "{You don't have funds} Вам нужно иметь средства в своем кошельке для создания личности. Вы всегда можете сделать это позже, когда пополните свой кошелек, перейдя в настройки."
         }
       ]
     },
@@ -5499,7 +5499,7 @@
     "ErUqOhnKC3V7GzECNCCHMQ==": {
       "translations": [
         {
-          "translation": "Про {sellerOrBuyer}."
+          "translation": "О {sellerOrBuyer}."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{= Проверка вашего профиля} позволяет другим пользователям узнать, что вы являетесь реальным человеком, и увеличивает шансы на успешные транзакции в Origin."
+          "translation": "{Verifying your profile} позволяет другим пользователям знать, что вы являетесь реальным человеком, и увеличивает шансы на успешные транзакции в Origin."
         }
       ]
     },
