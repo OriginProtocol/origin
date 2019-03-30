@@ -11,25 +11,74 @@ const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl
   ' '
 )
 
-const bubbleAlphabet = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ'
-const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+// Decodes variable names from crowdin into their original name.
+// See encoding format in fbtToCrowdin.js
+const EqualPrefix = 'E_'
+const VarPrefix = 'VAR_'
+const b64Prefix = '_B64_'
 
-// To prevent machine translation from translating variables, we converted
-// alphabet characters into 'bubble' characters equivalent when in brackets.
-// This functions turns it back into what fbt wants.
-function unhideVars(str) {
+function b64Decode(data) {
+  // The "/" and "+" characters cause MT to alter
+  // the data so they were replace during encoding.
+  const b64Encoded = data
+    .replace(/SLASH/g, '/')
+    .replace(/PLUS/g, '+')
+  return new Buffer(b64Encoded, 'base64').toString()
+}
+
+function decodeVarName(encodedVarName) {
+  let data = encodedVarName
+  let originalVarName = ''
+
+  if (data.startsWith(EqualPrefix)) {
+    data = data.slice(EqualPrefix.length)
+    originalVarName += '='
+  }
+
+  if (!data.startsWith(VarPrefix)) {
+    throw new Error(`Unexpected variable format. Missing prefix ${VarPrefix}. Var=${encodedVarName}`)
+  }
+  data = data.slice(VarPrefix.length)
+
+  // Extract the parts from the encoded variable name.
+  const parts = data.split(b64Prefix)
+  if (parts.length !== 2) {
+    throw new Error(`Unexpected variable format. Expected 2 parts. Var=${encodedVarName}`)
+  }
+
+  // Base64 decode the variable name.
+  const b64 = parts[1]
+  originalVarName += b64Decode(b64)
+
+  return originalVarName
+}
+
+
+function decode(str) {
+  // Special case where the entire string was just concatenated variables.
+  if (str.startsWith('{' + VarPrefix) && str.endsWith('}') && !str.includes('_B64_')) {
+    const b64 = str.slice(1 + VarPrefix.length, str.length -1)
+    const decodedStr = b64Decode(b64)
+    return '{' + decodedStr + '}'
+  }
+
   let out=''
+  let encodedVarName = ''
   let inBracket = false
-  str.replace('DO_NOT_TRANSLATE_','')
   for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
     if (cur==='{') {
       inBracket=true
+      continue
     } else if (cur==='}') {
       inBracket=false
+      const decodedVarName = decodeVarName(encodedVarName)
+      out += '{' + decodedVarName  + '}'
+      encodedVarName = ''
+      continue
     }
     if (inBracket) {
-      out += bubbleAlphabet.indexOf(cur) < 0 ? cur : alphabet.charAt(bubbleAlphabet.indexOf(cur))
+      encodedVarName += cur
     } else {
       out += cur
     }
@@ -62,7 +111,7 @@ locales.forEach(locale => {
     const val = doTestMark ? '◀'+stringKeyValue[key]+'▶' : stringKeyValue[key]
     translations[key] = {
       'translations': [
-        { 'translation': unhideVars(val) }
+        { 'translation': decode(val) }
       ]
     }
   })
