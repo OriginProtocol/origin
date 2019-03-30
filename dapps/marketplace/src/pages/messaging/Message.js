@@ -36,7 +36,7 @@ function renderContent(message) {
       <>
         {content.split('\n').map((c, idx) => (
           <Fragment key={idx}>
-            <Linkify>{c}</Linkify>
+            <Linkify properties={{ rel: 'noopener noreferrer', target: '_blank' }}>{c}</Linkify>
             <br />
           </Fragment>
         ))}
