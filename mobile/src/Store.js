@@ -7,23 +7,21 @@ import exchangeRates from 'reducers/ExchangeRates'
 import notifications from 'reducers/Notifications'
 import users from 'reducers/Users'
 import wallet from 'reducers/Wallet'
-import wallet_events from 'reducers/WalletEvents'
+import walletEvents from 'reducers/WalletEvents'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
   key: 'root',
   storage: storage,
-  whitelist: [
-    'notifications',
-    'wallet_events',
-  ]
+  whitelist: ['notifications', 'walletEvents']
 }
 
 const middlewares = [thunkMiddleware]
 
 const store = createStore(
-  persistReducer(persistConfig, 
+  persistReducer(
+    persistConfig,
     combineReducers({
       activation,
       devices,
@@ -31,11 +29,12 @@ const store = createStore(
       notifications,
       users,
       wallet,
-      wallet_events,
-    })),
+      walletEvents
+    })
+  ),
   applyMiddleware(...middlewares)
 )
 
-const persistor = persistStore(store)
+persistStore(store)
 
 export default store
