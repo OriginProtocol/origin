@@ -77,16 +77,20 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
+    // hide the rewards bar if you're on any of the rewards pages
+    const hideRewardsBar =
+      this.props.location.pathname.match(/^\/welcome$/g) ||
+      this.props.location.pathname.match(/^\/campaigns$/g)
+
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
     const hideNavbar =
       !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
       this.props.location.pathname.match(/^\/welcome.*$/g)
 
-    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
     return (
       <CurrencyContext.Provider value={this.state.currency}>
-        <RewardsBanner />
+        {!hideRewardsBar && <RewardsBanner />}
         {!hideNavbar && <Nav />}
         <main>
           <Switch>
@@ -114,12 +118,8 @@ class App extends Component {
             <Route path="/about/dapp-info" component={DappInfo} />
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
-            {enableGrowth && (
-              <Route exact path="/campaigns" component={GrowthCampaigns} />
-            )}
-            {enableGrowth && (
-              <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
-            )}
+            <Route exact path="/campaigns" component={GrowthCampaigns} />
+            <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route component={Listings} />
           </Switch>
         </main>

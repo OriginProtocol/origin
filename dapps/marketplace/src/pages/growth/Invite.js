@@ -120,7 +120,11 @@ class GrowthInvite extends Component {
       >
         {({ loading, error, networkStatus }) => {
           if (networkStatus === 1 || loading) {
-            return <h5 className="p-2">Loading...</h5>
+            return (
+              <h5 className="p-2">
+                <fbt desc="Loading...">Loading...</fbt>
+              </h5>
+            )
           } else if (error) {
             return <QueryError error={error} query={inviteCodeQuery} />
           }
@@ -493,7 +497,11 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { referralAction, handleNavigationChange } = this.props
+    const { activeCampaign, handleNavigationChange } = this.props
+
+    const referralAction = activeCampaign.actions.filter(
+      action => action.type === 'Referral'
+    )[0]
 
     return (
       <div className="container growth-invite">

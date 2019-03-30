@@ -59,7 +59,7 @@ class ChooseListingType extends Component {
                 {Categories[categoryId].map(([subcategoryId]) => (
                   <option key={subcategoryId} value={subcategoryId}>
                     <fbt desc="category">
-                      {/* Localized category name */}
+                      {/* Localized subcategory name */}
                       <fbt:enum
                         enum-range={CategoriesEnum}
                         value={subcategoryId}
