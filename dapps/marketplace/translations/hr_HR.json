@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} da biste zaradili tokene žigova porijekla (OGN)."
+          "translation": "{=Enroll} da biste zaradili tokene žigova porijekla (OGN)."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Potvrdite svoj broj {identity} tako da drugi kupci i prodavači znaju tko ste."
+          "translation": "Potvrdite svoj broj {=identity} tako da drugi kupci i prodavači znaju tko ste."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Ne zaboravite omogućiti {Origin Messaging} kako biste mogli komunicirati s drugim korisnicima. Slobodno je."
+          "translation": "Ne zaboravite omogućiti {=Origin Messaging} kako biste mogli komunicirati s drugim korisnicima. Slobodno je."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Ako imate bilo kakvih pitanja ili trebate osporiti transakciju, {let us know}."
+          "translation": "Ako imate bilo kakvih pitanja ili trebate osporiti transakciju, {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Pronašli ste bug ili ste dobili povratne informacije? Pošaljite poruku e-pošte na broj {[SupportEmail]} , otvorite problem na {GitHub} ili pošaljite poruku u naš # kanal izvješća o bugovima na {Discord}."
+          "translation": "Pronašli ste bug ili ste dobili povratne informacije? Pošaljite poruku e-pošte na broj {=[SupportEmail]} , otvorite problem na {=GitHub} ili pošaljite poruku u naš # kanal izvješća o bugovima na {=Discord}."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Svakom unosu navedite odgovarajući naslov i opis kako bi drugi znali što nudite. Dodavanje nekih fotografija povećat će šanse za prodaju vašeg unosa."
+          "translation": "{=Add Listing Details} Svakom unosu navedite odgovarajući naslov i opis kako bi drugi znali što nudite. Dodavanje nekih fotografija povećat će šanse za prodaju vašeg unosa."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Kada pošaljete ovaj unos, od vas će se tražiti da potvrdite transakciju u MetaMask. Kupci će moći vidjeti vaš unos i ponuditi ga."
+          "translation": "{=What happens next?} Kada pošaljete ovaj unos, od vas će se tražiti da potvrdite transakciju u MetaMask. Kupci će moći vidjeti vaš unos i ponuditi ga."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "Imate 0 {OGN} u novčaniku."
+          "translation": "Imate 0 {=OGN} u novčaniku."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Pojačanja se uvijek izračunavaju i naplaćuju u OGN. {Learn more}"
+          "translation": "Pojačanja se uvijek izračunavaju i naplaćuju u OGN. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Maksimalni iznos koji će se potrošiti za povećanje popisa. Pojačanja su uvijek u OGN, {USD is an estimate.}"
+          "translation": "Maksimalni iznos koji će se potrošiti za povećanje popisa. Pojačanja su uvijek u OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Svakom unosu navedite odgovarajući naslov i opis kako bi drugi znali što nudite. Dodavanje nekih fotografija povećat će šanse za prodaju vašeg unosa."
+          "translation": "{=Add Listing Details} Svakom unosu navedite odgovarajući naslov i opis kako bi drugi znali što nudite. Dodavanje nekih fotografija povećat će šanse za prodaju vašeg unosa."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Vaš unos bit će vidljiv za nekoliko sekundi. Evo što se dalje događa: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Vaš unos bit će vidljiv za nekoliko sekundi. Evo što se dalje događa: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Vaš unos bit će vidljiv za nekoliko sekundi. Evo što se dalje događa: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Vaš unos bit će vidljiv za nekoliko sekundi. Evo što se dalje događa: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Trenutno nije dostupno na mobilnim uređajima"
+          "translation": "{=Warning:} Trenutno nije dostupno na mobilnim uređajima"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Spojen na {[networkName]}"
+          "translation": "Spojen na {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Da biste uspješno obavljali transakcije s drugima na našem DApp-u, prije nego što počnete, trebat će vam nekoliko stvari. {Why do I need to do this?}"
+          "translation": "Da biste uspješno obavljali transakcije s drugima na našem DApp-u, prije nego što počnete, trebat će vam nekoliko stvari. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Odbili ste naš zahtjev za uključivanje obavijesti na radnoj površini {highly recommend}."
+          "translation": "Odbili ste naš zahtjev za uključivanje obavijesti na radnoj površini {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} Morate imati sredstva u novčaniku da biste stvorili identitet. Uvijek možete to učiniti kasnije nakon što uplatite novčanik odlaskom na postavke."
+          "translation": "{=You don't have funds} Morate imati sredstva u novčaniku da biste stvorili identitet. Uvijek možete to učiniti kasnije nakon što uplatite novčanik odlaskom na postavke."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} dopušta drugim korisnicima da znaju da ste stvarna osoba i povećavaju šanse za uspješne transakcije na Origin."
+          "translation": "{=Verifying your profile} dopušta drugim korisnicima da znaju da ste stvarna osoba i povećavaju šanse za uspješne transakcije na Origin."
         }
       ]
     },

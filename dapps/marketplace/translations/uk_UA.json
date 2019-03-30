@@ -655,7 +655,7 @@
     "inikq8x/L1Z14PL9LSzFzg==": {
       "translations": [
         {
-          "translation": "{Enroll} щоб заробити маркери криптовалюти (OGN)."
+          "translation": "{=Enroll} щоб заробити маркери криптовалюти (OGN)."
         }
       ]
     },
@@ -1005,7 +1005,7 @@
     "afFV4fdQM5Cn1ojptvnUwQ==": {
       "translations": [
         {
-          "translation": "Підтвердьте свій номер {identity} щоб інші покупці та продавці знали, хто ви."
+          "translation": "Підтвердьте свій номер {=identity} щоб інші покупці та продавці знали, хто ви."
         }
       ]
     },
@@ -1019,7 +1019,7 @@
     "OJOJCYDwaeNFYLRD9LpYjw==": {
       "translations": [
         {
-          "translation": "Не забудьте ввімкнути {Origin Messaging} щоб можна було спілкуватися з іншими користувачами. Це безкоштовно."
+          "translation": "Не забудьте ввімкнути {=Origin Messaging} щоб можна було спілкуватися з іншими користувачами. Це безкоштовно."
         }
       ]
     },
@@ -1033,7 +1033,7 @@
     "DM97lxszR6kNQg6jXs0vjg==": {
       "translations": [
         {
-          "translation": "Якщо у вас виникли питання або потрібно оскаржити транзакцію, {let us know}."
+          "translation": "Якщо у вас виникли питання або потрібно оскаржити транзакцію, {=let us know}."
         }
       ]
     },
@@ -1075,7 +1075,7 @@
     "axOOkZLBs4P1DATohXZpyg==": {
       "translations": [
         {
-          "translation": "Знайшли помилку або отримали відгук? Надішліть електронний лист на номер {[SupportEmail]} , відкрийте проблему на {GitHub} або напишіть у нашому каналі # звітів про помилки на {Discord}."
+          "translation": "Знайшли помилку або отримали відгук? Надішліть електронний лист на номер {=[SupportEmail]} , відкрийте проблему на {=GitHub} або напишіть у нашому каналі # звітів про помилки на {=Discord}."
         }
       ]
     },
@@ -1481,7 +1481,7 @@
     "+y0oq3lzR/a/W5VOUiqhSw==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Обов'язково надайте своєму списку назву та опис, щоб інші могли знати, що ви пропонуєте. Додавання декількох фотографій збільшить шанси на продаж Вашого оголошення."
+          "translation": "{=Add Listing Details} Обов'язково надайте своєму списку назву та опис, щоб інші могли знати, що ви пропонуєте. Додавання декількох фотографій збільшить шанси на продаж Вашого оголошення."
         }
       ]
     },
@@ -1586,7 +1586,7 @@
     "LOFIZ11Y8GW1Zlc1RtQIgw==": {
       "translations": [
         {
-          "translation": "{What happens next?} Коли ви надсилаєте цей запис, вам буде запропоновано підтвердити вашу операцію в MetaMask. Потім покупці зможуть побачити вашу інформацію та внести пропозиції."
+          "translation": "{=What happens next?} Коли ви надсилаєте цей запис, вам буде запропоновано підтвердити вашу операцію в MetaMask. Потім покупці зможуть побачити вашу інформацію та внести пропозиції."
         }
       ]
     },
@@ -1698,7 +1698,7 @@
     "s63cGVY8c2v9cd9DFKWTNw==": {
       "translations": [
         {
-          "translation": "У гаманці є 0 {OGN}."
+          "translation": "У гаманці є 0 {=OGN}."
         }
       ]
     },
@@ -1859,7 +1859,7 @@
     "ajMq77c6lEYIxaipqASkOw==": {
       "translations": [
         {
-          "translation": "Підсилення завжди розраховуються і нараховуються в OGN. {Learn more}"
+          "translation": "Підсилення завжди розраховуються і нараховуються в OGN. {=Learn more}"
         }
       ]
     },
@@ -1873,7 +1873,7 @@
     "kyWPelt19yuvWoFxQKtDZQ==": {
       "translations": [
         {
-          "translation": "Максимальна сума, яку буде витрачено на підвищення цього оголошення. Підсилення завжди в OGN, {USD is an estimate.}"
+          "translation": "Максимальна сума, яку буде витрачено на підвищення цього оголошення. Підсилення завжди в OGN, {=USD is an estimate.}"
         }
       ]
     },
@@ -2132,7 +2132,7 @@
     "jlefWFM0G2q6WXliPPUUrA==": {
       "translations": [
         {
-          "translation": "{Add Listing Details} Обов'язково надайте своєму списку назву та опис, щоб інші могли знати, що ви пропонуєте. Додавання декількох фотографій збільшить шанси на продаж Вашого оголошення."
+          "translation": "{=Add Listing Details} Обов'язково надайте своєму списку назву та опис, щоб інші могли знати, що ви пропонуєте. Додавання декількох фотографій збільшить шанси на продаж Вашого оголошення."
         }
       ]
     },
@@ -2300,7 +2300,7 @@
     "aGb4Sr/gKkxCvDv52ZvOcQ==": {
       "translations": [
         {
-          "translation": "Ваша інформація буде відображатися протягом декількох секунд. Ось що відбувається далі: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Ваша інформація буде відображатися протягом декількох секунд. Ось що відбувається далі: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -2363,7 +2363,7 @@
     "0CcI3GADi/MTzFdMlETnhw==": {
       "translations": [
         {
-          "translation": "Ваша інформація буде відображатися протягом декількох секунд. Ось що відбувається далі: {Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+          "translation": "Ваша інформація буде відображатися протягом декількох секунд. Ось що відбувається далі: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
         }
       ]
     },
@@ -3357,7 +3357,7 @@
     "UPltnTXrAbG5MMRJX+SAzw==": {
       "translations": [
         {
-          "translation": "{Warning:} Наразі недоступний на мобільних пристроях"
+          "translation": "{=Warning:} Наразі недоступний на мобільних пристроях"
         }
       ]
     },
@@ -4022,7 +4022,7 @@
     "qpkPtxBNFifg/7q8gJgljQ==": {
       "translations": [
         {
-          "translation": "Підключено до {[networkName]}"
+          "translation": "Підключено до {=[networkName]}"
         }
       ]
     },
@@ -4197,7 +4197,7 @@
     "JZfl/92+OYfoP7WPV/3hAg==": {
       "translations": [
         {
-          "translation": "Для успішної транзакції з іншими на нашому DApp, вам знадобиться кілька речей, перш ніж почати роботу. {Why do I need to do this?}"
+          "translation": "Для успішної транзакції з іншими на нашому DApp, вам знадобиться кілька речей, перш ніж почати роботу. {=Why do I need to do this?}"
         }
       ]
     },
@@ -4638,7 +4638,7 @@
     "86E4W/Du3+E7eCB85BqZJg==": {
       "translations": [
         {
-          "translation": "Ви відхилили наш запит на включення сповіщень на робочому столі, які {highly recommend}."
+          "translation": "Ви відхилили наш запит на включення сповіщень на робочому столі, які {=highly recommend}."
         }
       ]
     },
@@ -4722,7 +4722,7 @@
     "ssnnSYlfF2XPDgbJQI5dLQ==": {
       "translations": [
         {
-          "translation": "{You don't have funds} Для створення ідентичності потрібно мати кошти у вашому гаманці. Ви завжди можете зробити це пізніше після того, як ви поповните свій гаманець, перейшовши до налаштувань."
+          "translation": "{=You don't have funds} Для створення ідентичності потрібно мати кошти у вашому гаманці. Ви завжди можете зробити це пізніше після того, як ви поповните свій гаманець, перейшовши до налаштувань."
         }
       ]
     },
@@ -5877,7 +5877,7 @@
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "{Verifying your profile} дозволяє іншим користувачам знати, що ви реальна особа і збільшуєте шанси на успішні транзакції на Origin."
+          "translation": "{=Verifying your profile} дозволяє іншим користувачам знати, що ви реальна особа і збільшуєте шанси на успішні транзакції на Origin."
         }
       ]
     },
