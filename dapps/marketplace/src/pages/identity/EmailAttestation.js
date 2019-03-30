@@ -159,8 +159,14 @@ class EmailAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Email Address</h2>
-            <div className="instructions">Enter the code we sent you below</div>
+            <h2>
+              <fbt desc="EmailAttestation.title">Verify your Email Address</fbt>
+            </h2>
+            <div className="instructions">
+              <fbt desc="EmailAttestation.enterCode">
+                Enter the code we sent you below
+              </fbt>
+            </div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
@@ -201,13 +207,19 @@ class EmailAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Email address verified!</h2>
+        <h2>
+          <fbt desc="EmailAttestation.verified">Email address verified!</fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button
