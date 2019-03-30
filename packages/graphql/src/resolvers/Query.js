@@ -96,8 +96,7 @@ export default {
 
     let id = args.id
     if (id === 'defaultAccount') {
-      // web3Exec is either MetaMask or a web3 instance using the linker
-      // client provider
+      // web3Exec is either MetaMask or a web3 instance using the mobile bridge
       const accounts = await contracts.web3Exec.eth.getAccounts()
       if (!accounts || !accounts.length) {
         return null
@@ -125,6 +124,5 @@ export default {
       totalUnread: 0,
       nodes: []
     }
-  },
-  walletLinker: () => ({})
+  }
 }

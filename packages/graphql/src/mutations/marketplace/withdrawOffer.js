@@ -5,7 +5,7 @@ import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function withdrawOffer(_, data) {
-  const from = data.from || contracts.defaultLinkerAccount
+  const from = data.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 
   const ipfsHash = await post(contracts.ipfsRPC, data)

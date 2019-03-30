@@ -85,8 +85,8 @@ const web3Resolver = {
     if (localStorage.useWeb3Wallet) {
       return 'Web3 Wallet'
     }
-    if (window && window.webViewBridge) {
-      return 'mobile'
+    if (contracts.mobileBridge) {
+      return 'Mobile'
     }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
@@ -101,22 +101,9 @@ const web3Resolver = {
         return 'Parity'
       return 'Meta Mask'
     }
-    if (!contracts.linker) return null
-    return contracts.linker.session.linked && contracts.linker.session.accounts
-      ? 'mobile-linked'
-      : 'mobile-unlinked'
   },
   mobileWalletAccount: async () => {
-    if (
-      !contracts.linker ||
-      !contracts.linker.session.linked ||
-      contracts.linker.session.accounts.length == 0
-    ) {
-      return null
-    }
-    return {
-      id: contracts.linker.session.accounts[0]
-    }
+    return get(contracts.mobileBridge, 'primaryAccount', null)
   },
   primaryAccount: async () => {
     if (localStorage.useWeb3Wallet) {
@@ -125,7 +112,7 @@ const web3Resolver = {
     if (contracts.metaMaskEnabled) {
       return web3Resolver.metaMaskAccount()
     }
-    if (contracts.linker) {
+    if (contracts.mobileBridge) {
       return web3Resolver.mobileWalletAccount()
     }
     return null

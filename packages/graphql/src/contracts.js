@@ -13,21 +13,12 @@ import pubsub from './utils/pubsub'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
-// We need a separate LINKER_HOST for the mobile wallet, because cookie sharing
-// between http and ws only works when using non-localhost linker URLs. At the
-// same time, js-ipfs only works for non-secure http when the URL is localhost.
-// So, the hostname in the DApp URL can't be the same as the linker hostname
-// when testing locally.
-const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
+let OriginMobileBridge
 if (typeof window !== 'undefined') {
   OriginMessaging = require('@origin/messaging-client').default
-}
-
-let OriginLinkerClient
-if (typeof window !== 'undefined') {
-  OriginLinkerClient = require('@origin/linker-client').default
+  OriginMobileBridge = require('@origin/mobile-bridge').default
 }
 
 const Configs = {
@@ -80,9 +71,7 @@ const Configs = {
       }
     ],
     affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
-    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a',
-    linker: `https://linking.originprotocol.com`,
-    linkerWS: `wss://linking.originprotocol.com`
+    arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
   },
   rinkeby: {
     provider:
@@ -108,10 +97,7 @@ const Configs = {
       messagingNamespace: 'origin:staging',
       globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
     },
-    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
-    linker: `https://linking.staging.originprotocol.com`,
-    linkerWS: `wss://linking.staging.originprotocol.com`,
-    linkingEnabled: true
+    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591'
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -160,9 +146,7 @@ const Configs = {
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
-    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
-    linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -178,8 +162,6 @@ const Configs = {
     affiliate: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
-    linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`,
     messaging: {
       ipfsSwarm: process.env.IPFS_SWARM,
       globalKeyServer: 'http://localhost:6647'
@@ -324,19 +306,17 @@ export function setNetwork(net, customConfig) {
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    context.linker = OriginLinkerClient({
-      httpUrl: config.linker,
-      wsUrl: config.linkerWS,
+    context.mobileBridge = MobileBridge({
       web3: context.web3
     })
     context.messaging = OriginMessaging({
       ...MessagingConfig,
-      web3,
-      walletLinker: context.linker
+      web3
     })
   }
 
   context.metaMaskEnabled = metaMaskEnabled
+
   if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
@@ -425,7 +405,7 @@ export function setNetwork(net, customConfig) {
     })
   }
   setMetaMask()
-  setLinkerClient()
+  setMobileBridge()
 }
 
 function setMetaMask() {
@@ -447,20 +427,16 @@ function setMetaMask() {
   }
 }
 
-function setLinkerClient() {
-  const linkingEnabled =
-    (typeof window !== 'undefined' && window.linkingEnabled) ||
-    process.env.ORIGIN_LINKING ||
-    context.config.linkingEnabled
-
+/* Initialize mobile bridge to funnel transactions through a react-native
+ * webview from the DApp
+ */
+function setMobileBridge() {
   if (context.metaMaskEnabled) return
-  if (!linkingEnabled) return
-  if (!context.linker) return
+  if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
-  const linkerProvider = context.linker.getProvider()
-  context.web3Exec = applyWeb3Hack(new Web3(linkerProvider))
-  context.defaultLinkerAccount = '0x3f17f1962B36e491b30A40b2405849e597Ba5FB5'
+  const mobileBridgeProvider = context.mobileBridge.getProvider()
+  context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
   // Funnel marketplace contract transactions through mobile wallet
   context.marketplaceL = new context.web3Exec.eth.Contract(
@@ -487,7 +463,7 @@ function setLinkerClient() {
     context.messaging.web3 = context.web3Exec
   }
 
-  context.linker.start()
+  context.mobileBridge.start()
 }
 
 export function toggleMetaMask(enabled) {
