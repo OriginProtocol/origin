@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Link from 'components/Link'
 import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
