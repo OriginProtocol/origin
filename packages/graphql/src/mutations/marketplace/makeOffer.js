@@ -119,7 +119,7 @@ async function toIpfsData(data) {
       currency: data.currency
     },
     commission,
-    finalizes: data.finalizes || 60 * 60 * 24 * 365,
+    finalizes: data.finalizes || 60 * 60 * 24 * 14,
     ...(data.fractionalData || {})
   }
 
