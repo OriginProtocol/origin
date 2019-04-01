@@ -13,8 +13,8 @@ It performs the following steps:
 1. **`node scripts/fbtToCrowdin.js`** : Converts `.source_strings.json` to simple key-value json stored at `./translation/crowdin/all-messages.json`
 1. Crowdin automatically reads [`./translation/crowdin/all-messages.json`](https://github.com/OriginProtocol/origin/blob/master/dapps/marketplace/translation/crowdin/all-messages.json) from `master` branch. 
 
-### Import translated string into DApp to be used
-1. Translators do their magic
+### Import translated strings into DApp to be used
+1. _Translators do their magic_
 1. Crowdin will (within 10 minutes) update branch [crowdin](https://github.com/OriginProtocol/origin/tree/crowdin) and create a pull request updating locale-specifc files in `./translation/crowdin/all-messages_<locale>.js`
 1. **`node scripts/crowdinToFbt.js`** : Converts simple key-value back into fbt json format, stored in `./translation/fbt/<locale>.js`
 1. **`npm run fbt:translate`** : Using the translations in `./translation/fbt/<locale>.json`, outputs combined file to `.translated_fbts.json`. (This file could be used by other non-web applications, but we only use it as intermediate file.)
