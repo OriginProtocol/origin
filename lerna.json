@@ -1,37 +1,12 @@
 {
   "packages": [
-    "origin-admin",
-    "origin-bridge",
-    "origin-contracts",
-    "origin-cron",
-    "origin-dapp",
-    "origin-dapp-creator-client",
-    "origin-dapp-creator-server",
-    "origin-discovery",
-    "origin-eventsource",
-    "origin-faucet",
-    "origin-graphql",
-    "origin-graphql-simple-demo",
-    "origin-growth",
-    "origin-identity",
-    "origin-ipfs-proxy",
-    "origin-ipfs",
-    "origin-js",
-    "origin-linker-client",
-    "origin-linking",
-    "origin-messaging-client",
-    "origin-messaging",
-    "origin-mobile",
-    "origin-notifications",
-    "origin-services",
-    "origin-tests",
-    "origin-token",
-    "origin-token-transfer-client",
-    "origin-token-transfer-server",
-    "origin-validator"
+    "dapps/**",
+    "infra/**",
+    "packages/**"
   ],
   "command": {
     "bootstrap": {
+      "hoist": ["**"],
       "nohoist": [
         "openzeppelin-solidity"
       ]

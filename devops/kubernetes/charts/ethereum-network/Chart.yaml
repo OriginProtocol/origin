@@ -1,0 +1,7 @@
+name: ethereum-network
+description: Deploy a stateful Ethereum network
+version: 0.1.0
+home: https://github.com/OriginProtocol
+icon: https://www.ethereum.org/images/logos/ETHEREUM-ICON_Black_small.png
+sources:
+  - https://github.com/OriginProtocol/origin/devops/kubernetes/charts/ethereum-network

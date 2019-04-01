@@ -1,0 +1,26 @@
+FROM node:10 as build
+
+WORKDIR /app
+
+# Copy the necessary files for building origin-dapp
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/eventsource/ ./packages/eventsource/
+COPY ./packages/graphql/ ./packages/graphql/
+COPY ./packages/ipfs/ ./packages/ipfs/
+COPY ./packages/linker-client/ ./packages/linker-client/
+COPY ./packages/messaging-client/ ./packages/messaging-client/
+COPY ./packages/services/ ./packages/services/
+COPY ./packages/validator/ ./packages/validator/
+COPY ./dapps/admin/ ./dapps/admin/
+COPY ./scripts ./scripts
+
+RUN npm install --unsafe-perm
+RUN npm run build --prefix dapps/admin
+
+# Copy built static files to nginx for serving
+FROM nginx:1.15.2-alpine
+COPY --from=build /app/dapps/admin/public /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

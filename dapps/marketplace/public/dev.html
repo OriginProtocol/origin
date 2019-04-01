@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>Origin Protocol DApp - devel</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="icon" href="favicon.ico" />
+    <style>
+      .loading-screen {
+        background: url(images/spinner-animation-dark.svg) no-repeat center;
+        background-size: cover;
+        position: fixed;
+        top: calc(50% - 1.5rem);
+        left: calc(50% - 1.5rem);
+        width: 3rem;
+        height: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"><div class="loading-screen"></div></div>
+  </body>
+  <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
+  <script>
+    openpgp.config.show_comment = false
+    openpgp.config.show_version = false
+    openpgp.initWorker({ path: 'vendor/openpgp.worker.min.js' })
+  </script> -->
+  <script>
+    localStorage.ognNetwork = '{NET}'
+    localStorage.metaMaskEnabled = '{MM_ENABLED}'
+  </script>
+  <script crossorigin src="{HOST}app.js"></script>
+</html>

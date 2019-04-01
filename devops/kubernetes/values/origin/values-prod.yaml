@@ -1,0 +1,57 @@
+databaseInstance: origin-214503:us-west1:prod
+
+# origin-bridge
+bridgeImage: origin-bridge
+bridgeImageTag: '916795e'
+
+# origin-dapp
+dappImage: origin-dapp
+dappImageTag: 'cca4e4b'
+
+# origin-ipfs-proxy
+ipfsProxyImage: origin-ipfs-proxy
+ipfsProxyImageTag: 'ff20be8'
+
+faucetImage: origin-faucet
+faucetImageTag: '28438d2'
+
+eventlistenerImage: event-listener
+eventlistenerImageTag: '9509a68'
+
+discoveryImage: origin-discovery
+discoveryImageTag: '6e22b35'
+
+# origin-growth
+growthImage: origin-growth
+growthImageTag: 'latest'
+
+# origin-messaging
+messagingImage: origin-messaging
+messagingImageTag: '3104d23'
+
+# origin-notifications
+notificationsImage: origin-notifications
+notificationsImageTag: 'latest'
+
+# origin-dapp-creator-client
+creatorClientImage: origin-dapp-creator-client
+creatorClientImageTag: 'latest'
+
+# origin-dapp-creator-server
+creatorServerImage: origin-dapp-creator-server
+creatorServerImageTag: 'latest'
+
+# origin-dapp-creator-issuer
+creatorIssuerImage: origin-dapp-creator-issuer
+creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.185.236.254'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'latest'
+
+# origin-cron
+cronImage: origin-cron
+cronImageTag: 'latest'
+
+ipfsLoadBalancerIP: 35.233.189.126
