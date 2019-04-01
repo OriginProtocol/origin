@@ -185,7 +185,9 @@ class EmailAttestation extends Component {
                 className="form-control form-control-lg"
                 placeholder="Verification code"
                 value={this.state.code}
-                onChange={e => this.setState({ code: e.target.value.replace(/[^0-9]/, '') })}
+                onChange={e =>
+                  this.setState({ code: e.target.value.replace(/[^0-9]/, '') })
+                }
               />
               {this.state.error && (
                 <div className="alert alert-danger mt-3">
