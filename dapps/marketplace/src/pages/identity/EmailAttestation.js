@@ -165,7 +165,7 @@ class EmailAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
 
-              const trimmedCode = this.state.code.trim();
+              const trimmedCode = this.state.code.trim()
 
               if (trimmedCode.length === 0) {
                 this.setState({

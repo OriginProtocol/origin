@@ -168,7 +168,7 @@ class PhoneAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
 
-              const trimmedCode = this.state.code.trim();
+              const trimmedCode = this.state.code.trim()
 
               if (trimmedCode.length === 0) {
                 this.setState({
@@ -212,7 +212,7 @@ class PhoneAttestation extends Component {
                 className="form-control form-control-lg"
                 placeholder="Verification code"
                 value={this.state.code}
-                onChange={e => this.setState({ code: e.target.value }) }
+                onChange={e => this.setState({ code: e.target.value })}
               />
               {this.state.error && (
                 <div className="alert alert-danger mt-3">
