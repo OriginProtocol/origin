@@ -1,6 +1,6 @@
 # Translation
 
-We use [Crowdin](https://crowdin.com/project/originprotocol) to allow the communtity to contribute translations.
+We use [Crowdin](https://crowdin.com/project/originprotocol) to allow the communtity to contribute translations. Github integration is managed by the `OriginProtocol` user, owned by Coleman.
 
 Translations are updated by running `npm run translate` in the `marketplace` directory.
 
