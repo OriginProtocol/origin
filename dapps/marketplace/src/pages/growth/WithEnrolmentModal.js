@@ -465,7 +465,7 @@ function withEnrolmentModal(WrappedComponent) {
   }
 
   //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
-  return withRouter(WithEnrolmentModal)
+  return withRouter(({ staticContext, ...props }) => <WithEnrolmentModal {...props} />)
 }
 
 export default withEnrolmentModal
