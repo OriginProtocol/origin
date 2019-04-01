@@ -1,6 +1,44 @@
 # Translation
 
+In the DApp we use the [FBT](https://github.com/facebookincubator/fbt) localization framework from Facebook. See their [documentation](https://facebookincubator.github.io/fbt/docs/api_intro).
+
+## Wrapping text
+
+All user-facing English text needs to be wrapped in `<fbt>` tags. For example:
+
+    <div className="help">
+      <fbt desc="EnableMessaging.congrats">
+        Congratulations! You can now message other users on Origin and stay up
+        to date with all your purchases and sales.
+      </fbt>
+    </div>
+
+For variables, use `<fbt:param>`. For example:
+
+	<fbt desc="footer.usingOriginBetaOn">
+	  You are currently using the Origin Beta on:
+	  <fbt:param name="networkName">
+	    {networkName}
+	  </fbt:param>.
+	</fbt>
+
+For tag properties, e.g. `tooltip`, use the `fbt()` javascript function. Like this:
+
+	<Tooltip
+	  tooltip={fbt(
+	    'Twitter Account Verified',
+	    'Twitter Account Verified'
+	  )}
+	  placement="bottom"
+	>
+
+It is important to wrap _entire sentances_ that can be translated. That is, do not break a sentance across multiple `<fbt>` tags. This is important because words go in different orders in different languages, and in any case the translators will not know which fragments are meant to be together. 
+
+## Translating
+
 We use [Crowdin](https://crowdin.com/project/originprotocol) to allow the communtity to contribute translations. Github integration is managed by the `OriginProtocol` user, owned by Coleman.
+
+## Integrating Translations
 
 Translations are updated by running `npm run translate` in the `marketplace` directory.
 
