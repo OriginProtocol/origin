@@ -260,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "ギフトカード"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -1069,34 +1076,6 @@
       "translations": [
         {
           "translation": "重要なお知らせ"
-        }
-      ]
-    },
-    "axOOkZLBs4P1DATohXZpyg==": {
-      "translations": [
-        {
-          "translation": "バグを見つけましたか？ {=[SupportEmail]} にEメールを送る、 {=GitHub} issueを開く、または {=Discord} ＃bug-reportsチャンネルに投稿してください。"
-        }
-      ]
-    },
-    "WXEUY0b8xIYw6ctSshzrUA==": {
-      "translations": [
-        {
-          "translation": "{SupportEmail}"
-        }
-      ]
-    },
-    "d/zjx0QiqsSKcmp3VNkGbQ==": {
-      "translations": [
-        {
-          "translation": "GitHub"
-        }
-      ]
-    },
-    "lX/Lgd6k+hZxqbW544UIbw==": {
-      "translations": [
-        {
-          "translation": "不和"
         }
       ]
     },
@@ -4019,17 +3998,10 @@
         }
       ]
     },
-    "qpkPtxBNFifg/7q8gJgljQ==": {
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
       "translations": [
         {
-          "translation": "{=[networkName]}接続"
-        }
-      ]
-    },
-    "NeogRKjWuqqoJ4qjuZjNtg==": {
-      "translations": [
-        {
-          "translation": "{networkName}"
+          "translation": "に接続されています"
         }
       ]
     },

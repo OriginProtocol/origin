@@ -190,7 +190,7 @@ class CampaignRules {
   }
 
   /**
-   * Returns campaign status
+   * Returns campaign status.
    *
    * @returns {Enum<GrowthCampaignStatuses>} - campaign status
    */
@@ -205,6 +205,26 @@ class CampaignRules {
       return GrowthCampaignStatuses.Completed
     }
     throw new Error(`Unexpected status for campaign id:${this.campaign.id}`)
+  }
+
+  /**
+   * Exports the state of the rules for a given user.
+   * Walks thru all the rules and calls the adapter with data for each rule.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data.
+   * @param {string} ethAddress
+   * @returns {Promise<Array<Object>>} List representing state of each rule.
+   */
+  async export(adapter, ethAddress) {
+    const events = await this.getEvents(ethAddress)
+    const level = await this._calculateLevel(ethAddress, events)
+    const data = []
+    for (let i = 0; i < this.numLevels; i++) {
+      data.push(
+        ...(await this.levels[i].export(adapter, ethAddress, events, level))
+      )
+    }
+    return data
   }
 }
 
@@ -238,6 +258,26 @@ class Level {
     }
 
     return rewards
+  }
+
+  /**
+   * Walks thru all the rules and calls the adapter with data for each rule.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data.
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>}
+   * @param {number} level
+   * @returns {Promise<Array<Object>>} List representing state of each rule.
+   */
+  async export(adapter, ethAddress, events, level) {
+    const allData = []
+    for (const rule of this.rules) {
+      const data = await rule.export(adapter, ethAddress, events, level)
+      if (data) {
+        allData.push(data)
+      }
+    }
+    return allData
   }
 }
 
@@ -345,7 +385,7 @@ class BaseRule {
     }
 
     // Evaluate the rule based on events.
-    return await this.evaluate(ethAddress, this._inScope(events))
+    return await this._evaluate(ethAddress, this._inScope(events))
   }
 
   /**
@@ -430,10 +470,52 @@ class BaseRule {
         : GrowthActionStatus.Completed
     } else {
       // Evaluate the rule to determine if it is Completed.
-      return (await this.evaluate(ethAddress, events))
+      return (await this._evaluate(ethAddress, events))
         ? GrowthActionStatus.Completed
         : GrowthActionStatus.Active
     }
+  }
+
+  conditionsToUnlock() {
+    const prevLevel = this.levelId - 1
+    if (prevLevel < 0) {
+      return []
+    }
+    const conditions = []
+    for (const rule of this.crules.levels[prevLevel].rules) {
+      if (rule.config.unlockConditionMsg) {
+        const ruleConditions = rule.config.unlockConditionMsg.map(c => {
+          return {
+            messageKey: c.conditionTranslateKey,
+            iconSource: c.conditionIcon
+          }
+        })
+        conditions.push(...ruleConditions)
+      }
+    }
+    return conditions
+  }
+
+  /**
+   * Gathers the state of the rule. Calls the provided adapter to format the data.
+   *
+   * @param {Adapter} adapter - Class to use for formatting the rule data
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthEvent>}
+   * @param {number} level
+   * @returns {Promise<Array<Object>>}
+   */
+  async export(adapter, ethAddress, events, level) {
+    return adapter.process({
+      ethAddress,
+      visible: this.config.visible,
+      campaign: this.campaign,
+      eventTypes: this.eventTypes,
+      status: await this.getStatus(ethAddress, events, level),
+      reward: this.reward,
+      rewards: await this.getRewards(ethAddress, events),
+      unlockConditions: this.conditionsToUnlock()
+    })
   }
 }
 
@@ -474,7 +556,7 @@ class SingleEventRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
@@ -547,7 +629,7 @@ class MultiEventsRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async evaluate(ethAddress, events) {
+  async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
     return Object.keys(tally).length >= this.numEventsRequired
   }
@@ -568,6 +650,10 @@ class ReferralRule extends BaseRule {
       throw new Error(`${this.str()}: missing levelRequired field`)
     }
     this.levelRequired = this.config.levelRequired
+
+    // Note: 'Referral' is not an actual GrowthEventType.
+    // This is used by the export method.
+    this.eventTypes = ['Referral']
   }
 
   /**
@@ -578,7 +664,7 @@ class ReferralRule extends BaseRule {
    * @param {string} ethAddress - Referrer's account.
    * @returns {boolean}
    */
-  async evaluate(ethAddress) {
+  async _evaluate(ethAddress) {
     return (await this.getRewards(ethAddress).length) > 0
   }
 
