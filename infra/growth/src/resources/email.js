@@ -53,6 +53,10 @@ function generateEmail(emailType, referrerName, targetUrl) {
   const html = htmlTemplate
     .replace(/\${referrerName}/g, referrerName)
     .replace(/\${targetUrl}/g, targetUrl)
+    .replace(
+      /\${referrerImgUrl}/g,
+      'https://www.originprotocol.com/static/img/unknown-user.png'
+    )
 
   return { subject, text, html }
 }

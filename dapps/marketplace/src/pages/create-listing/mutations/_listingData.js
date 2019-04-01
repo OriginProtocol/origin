@@ -20,28 +20,32 @@ export default function applyListingData(props, data) {
     }
   }
 
-  if (listing.__typename === 'UnitListing') {
-    const unitsTotal = Number(listing.quantity)
-    variables.unitData = { unitsTotal }
-    variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
-  } else if (
-    listing.__typename === 'FractionalListing' ||
-    listing.__typename === 'FractionalHourlyListing'
-  ) {
-    variables.fractionalData = {
-      weekendPrice: {
-        currency: listing.currency,
-        amount: listing.weekendPrice
-      },
-      timeZone: listing.timeZone,
-      workingHours: listing.workingHours,
-      booked: listing.booked,
-      customPricing: listing.customPricing,
-      unavailable: listing.unavailable
+  switch (listing.__typename) {
+    case 'UnitListing': {
+      const unitsTotal = Number(listing.quantity)
+      variables.unitData = { unitsTotal }
+      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
+      break
     }
-    variables.commission = listing.boostLimit
-  } else {
-    throw new Error(`Unknown listing.__typename: ${listing.__typename}`)
+
+    case 'FractionalListing':
+    case 'FractionalHourlyListing':
+      variables.fractionalData = {
+        weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
+        timeZone: listing.timeZone,
+        workingHours: listing.workingHours,
+        booked: listing.booked,
+        customPricing: listing.customPricing,
+        unavailable: listing.unavailable
+      }
+      variables.commission = listing.boostLimit
+      break
+
+    case 'AnnouncementListing':
+      break
+
+    default:
+      throw new Error(`Unknown listing.__typename: ${listing.__typename}`)
   }
 
   return variables

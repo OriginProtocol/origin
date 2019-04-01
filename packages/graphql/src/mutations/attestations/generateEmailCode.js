@@ -1,7 +1,7 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function generatePhoneCode(_, { email }) {
+async function generateEmailCode(_, { email }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -20,7 +20,7 @@ async function generatePhoneCode(_, { email }) {
   }
 
   const data = await response.json()
-  return { success: false, reason: get(data, 'errors.email[0]') }
+  return { success: false, reason: get(data, 'errors[0]') }
 }
 
-export default generatePhoneCode
+export default generateEmailCode
