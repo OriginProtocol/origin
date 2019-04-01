@@ -240,7 +240,7 @@ function applyWeb3Hack(web3Instance) {
 }
 
 let lastBlock
-function newBlock(blockHeaders) {
+export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
