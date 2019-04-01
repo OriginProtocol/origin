@@ -164,6 +164,25 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const trimmedCode = this.state.code.trim();
+
+              if (trimmedCode.length === 0) {
+                this.setState({
+                  error: 'Verification code is required',
+                  loading: false
+                })
+                return
+              }
+
+              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                this.setState({
+                  error: 'Verification code is incorrect',
+                  loading: false
+                })
+                return
+              }
+
               verifyCode({
                 variables: { identity: this.props.wallet, email, code }
               })
@@ -185,9 +204,7 @@ class EmailAttestation extends Component {
                 className="form-control form-control-lg"
                 placeholder="Verification code"
                 value={this.state.code}
-                onChange={e =>
-                  this.setState({ code: e.target.value.replace(/[^0-9]/g, '') })
-                }
+                onChange={e => this.setState({ code: e.target.value })}
               />
               {this.state.error && (
                 <div className="alert alert-danger mt-3">
