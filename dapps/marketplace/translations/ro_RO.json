@@ -260,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "Carduri cadou"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -1069,34 +1076,6 @@
       "translations": [
         {
           "translation": "Remitențe importante"
-        }
-      ]
-    },
-    "axOOkZLBs4P1DATohXZpyg==": {
-      "translations": [
-        {
-          "translation": "Ați găsit un bug sau ați primit feedback? Trimiteți un e-mail la {=[SupportEmail]} , deschideți o problemă la {=GitHub} sau postați în canalul # bug-reports de la {=Discord}."
-        }
-      ]
-    },
-    "WXEUY0b8xIYw6ctSshzrUA==": {
-      "translations": [
-        {
-          "translation": "{SupportEmail}"
-        }
-      ]
-    },
-    "d/zjx0QiqsSKcmp3VNkGbQ==": {
-      "translations": [
-        {
-          "translation": "GitHub"
-        }
-      ]
-    },
-    "lX/Lgd6k+hZxqbW544UIbw==": {
-      "translations": [
-        {
-          "translation": "Discordie"
         }
       ]
     },
@@ -4019,17 +3998,10 @@
         }
       ]
     },
-    "qpkPtxBNFifg/7q8gJgljQ==": {
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
       "translations": [
         {
-          "translation": "Conectat la {=[networkName]}"
-        }
-      ]
-    },
-    "NeogRKjWuqqoJ4qjuZjNtg==": {
-      "translations": [
-        {
-          "translation": "{networkName}"
+          "translation": "Conectat la"
         }
       ]
     },

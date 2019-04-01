@@ -260,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "Cadeaubonnen"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -1069,34 +1076,6 @@
       "translations": [
         {
           "translation": "Belangrijke herinneringen"
-        }
-      ]
-    },
-    "axOOkZLBs4P1DATohXZpyg==": {
-      "translations": [
-        {
-          "translation": "Heeft u een bug gevonden of heeft u feedback? Stuur een e-mail naar {=[SupportEmail]} , open een probleem op {=GitHub} of post in ons # bug-reports kanaal op {=Discord}."
-        }
-      ]
-    },
-    "WXEUY0b8xIYw6ctSshzrUA==": {
-      "translations": [
-        {
-          "translation": "{SupportEmail}"
-        }
-      ]
-    },
-    "d/zjx0QiqsSKcmp3VNkGbQ==": {
-      "translations": [
-        {
-          "translation": "GitHub"
-        }
-      ]
-    },
-    "lX/Lgd6k+hZxqbW544UIbw==": {
-      "translations": [
-        {
-          "translation": "Onenigheid"
         }
       ]
     },
@@ -4019,17 +3998,10 @@
         }
       ]
     },
-    "qpkPtxBNFifg/7q8gJgljQ==": {
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
       "translations": [
         {
-          "translation": "Verbonden met {=[networkName]}"
-        }
-      ]
-    },
-    "NeogRKjWuqqoJ4qjuZjNtg==": {
-      "translations": [
-        {
-          "translation": "{networkName}"
+          "translation": "Verbonden met"
         }
       ]
     },

@@ -260,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "Kartu hadiah"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -1069,34 +1076,6 @@
       "translations": [
         {
           "translation": "Pengingat Penting"
-        }
-      ]
-    },
-    "axOOkZLBs4P1DATohXZpyg==": {
-      "translations": [
-        {
-          "translation": "Menemukan bug atau mendapat umpan balik? Kirim email ke {=[SupportEmail]} , buka masalah pada {=GitHub} atau posting di saluran # bug-laporan kami di {=Discord}."
-        }
-      ]
-    },
-    "WXEUY0b8xIYw6ctSshzrUA==": {
-      "translations": [
-        {
-          "translation": "{SupportEmail}"
-        }
-      ]
-    },
-    "d/zjx0QiqsSKcmp3VNkGbQ==": {
-      "translations": [
-        {
-          "translation": "GitHub"
-        }
-      ]
-    },
-    "lX/Lgd6k+hZxqbW544UIbw==": {
-      "translations": [
-        {
-          "translation": "Perselisihan"
         }
       ]
     },
@@ -4019,17 +3998,10 @@
         }
       ]
     },
-    "qpkPtxBNFifg/7q8gJgljQ==": {
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
       "translations": [
         {
-          "translation": "Terhubung ke {=[networkName]}"
-        }
-      ]
-    },
-    "NeogRKjWuqqoJ4qjuZjNtg==": {
-      "translations": [
-        {
-          "translation": "{networkName}"
+          "translation": "Terhubung dengan"
         }
       ]
     },

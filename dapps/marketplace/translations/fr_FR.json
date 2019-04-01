@@ -260,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "Cartes cadeaux"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -1069,34 +1076,6 @@
       "translations": [
         {
           "translation": "Rappels importants"
-        }
-      ]
-    },
-    "axOOkZLBs4P1DATohXZpyg==": {
-      "translations": [
-        {
-          "translation": "Vous avez trouvé un bug ou avez des commentaires? Envoyez un e-mail à {=[SupportEmail]} , ouvrez un numéro sur {=GitHub} ou publiez-le dans notre canal # rapports de bugs sur {=Discord}."
-        }
-      ]
-    },
-    "WXEUY0b8xIYw6ctSshzrUA==": {
-      "translations": [
-        {
-          "translation": "{SupportEmail}"
-        }
-      ]
-    },
-    "d/zjx0QiqsSKcmp3VNkGbQ==": {
-      "translations": [
-        {
-          "translation": "GitHub"
-        }
-      ]
-    },
-    "lX/Lgd6k+hZxqbW544UIbw==": {
-      "translations": [
-        {
-          "translation": "Discorde"
         }
       ]
     },
@@ -4019,17 +3998,10 @@
         }
       ]
     },
-    "qpkPtxBNFifg/7q8gJgljQ==": {
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
       "translations": [
         {
-          "translation": "Connecté à {=[networkName]}"
-        }
-      ]
-    },
-    "NeogRKjWuqqoJ4qjuZjNtg==": {
-      "translations": [
-        {
-          "translation": "{networkName}"
+          "translation": "Connecté à"
         }
       ]
     },
