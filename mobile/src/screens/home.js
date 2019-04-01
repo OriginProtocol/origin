@@ -268,12 +268,12 @@ class HomeScreen extends Component {
 
 const mapStateToProps = state => {
   return {
-    active_event: state.wallet_events.active_event,
+    active_event: state.walletEvents.active_event,
     address: state.wallet.address,
     balances: state.wallet.balances,
     notifications: state.notifications,
-    pending_events: state.wallet_events.pending_events,
-    processed_events: state.wallet_events.processed_events,
+    pending_events: state.walletEvents.pending_events,
+    processed_events: state.walletEvents.processed_events,
   }
 }
 

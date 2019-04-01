@@ -26,7 +26,7 @@
     "@origin/contracts": "^0.8.6",
     "@origin/eventsource": "^0.1.0",
     "@origin/ipfs": "^0.1.0",
-    "@origin/linker-client": "^0.1.0",
+    "@origin/mobile-bridge": "^0.1.0",
     "@origin/messaging-client": "^0.1.0",
     "@origin/services": "^0.1.0",
     "@origin/validator": "^0.1.0",

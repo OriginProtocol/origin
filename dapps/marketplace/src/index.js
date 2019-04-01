@@ -6,9 +6,9 @@ import { HashRouter } from 'react-router-dom'
 
 import Styl from 'react-styl'
 import client from '@origin/graphql'
+import MobileBridge from '@origin/mobile-bridge'
 
 import setLocale from 'utils/setLocale'
-import webViewBridge from 'utils/webViewBridge'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -26,17 +26,13 @@ class AppWrapper extends Component {
 
   async componentDidMount() {
     try {
-      // await persistCache({
-      //   cache: client.cache,
-      //   storage: window.sessionStorage
-      // })
       const locale = await setLocale()
       this.setState({ ready: true, client, locale })
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
     }
 
-    webViewBridge();
+    new MobileBridge()
   }
 
   render() {

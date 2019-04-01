@@ -1,16 +1,11 @@
 'use strict'
 
+import uuid from 'uuid/v1'
+
 let promiseChain = Promise.resolve()
 
 const promises = {}
 const callbacks = {}
-
-const guid = function() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
-}
 
 export default function() {
   window.webViewBridge = {
@@ -28,7 +23,7 @@ export default function() {
       const msgObj = {
         targetFunc: targetFunc,
         data: data || {},
-        msgId: guid(),
+        msgId: uuid(),
       }
 
       const msg = JSON.stringify(msgObj)
@@ -77,3 +72,4 @@ export default function() {
     }
   })
 }
+
