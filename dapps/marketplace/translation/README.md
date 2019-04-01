@@ -16,7 +16,7 @@ It performs the following steps:
 ### Import translated strings into DApp to be used
 1. _Translators do their magic_
 1. Crowdin will (within 10 minutes) update branch [crowdin](https://github.com/OriginProtocol/origin/tree/crowdin) and create a pull request updating locale-specifc files in `./translation/crowdin/all-messages_<locale>.js`
-1. **`node scripts/crowdinToFbt.js`** : Converts simple key-value back into fbt json format, stored in `./translation/fbt/<locale>.js`
+1. **`node scripts/crowdinToFbt.js`** : Converts simple key-value back into fbt json format, stored in `./translation/fbt/<locale>.js` (Note: If we someday want to use advanced fbt features like handling [plurals](https://facebookincubator.github.io/fbt/docs/plurals) and genders, we will need to make this script smarter.)
 1. **`npm run fbt:translate`** : Using the translations in `./translation/fbt/<locale>.json`, outputs combined file to `.translated_fbts.json`. (This file could be used by other non-web applications, but we only use it as intermediate file.)
 1. **`node scripts/splitTranslations.js`** : Using `.translated_fbts.json`, outputs locale-specific translations in a react-friendly format to `./public/translations`
 1. **`cp .enum_manifest.json translations/.enum_manifest.json`** : Copy [enums](https://facebookincubator.github.io/fbt/docs/enums#shared-enums) into same dir, as they are required at runtime.
