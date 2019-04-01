@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 import Link from 'components/Link'
@@ -13,35 +14,48 @@ class BetaModal extends Component {
       >
         <div className="beta-modal">
           <h5>
-            Welcome to Origin Beta! Origin is a decentralized marketplace that
-            works a little differently than most apps.
+            <fbt desc="BetaModel.welcome">
+              Welcome to Origin Beta! Origin is a decentralized marketplace that
+              works a little differently than most apps.
+            </fbt>
           </h5>
           <ul className="list-unstyled">
             <li>
-              We&apos;re in Beta mode, but all transactions are real and use
-              ETH.
+              <fbt desc="BetaModal.txnAreReal">
+                We&apos;re in Beta mode, but all transactions are real and use
+                ETH.
+              </fbt>
             </li>
             <li>
-              Please verify your{' '}
-              <Link
-                to="/profile"
-                onClick={() => this.setState({ shouldClose: true })}
-                children="identity"
-              />
-              {' so other buyers and sellers know who you are.'}
+              <fbt desc="BetaModal.pleaseVerify">
+                Please verify your
+                <Link
+                  to="/profile"
+                  onClick={() => this.setState({ shouldClose: true })}
+                >
+                  identity
+                </Link>
+                so other buyers and sellers know who you are.
+              </fbt>
             </li>
             <li>
-              Don&apos;t forget to enable{' '}
-              <Link
-                to="/messages"
-                onClick={() => this.setState({ shouldClose: true })}
-                children="Origin Messaging"
-              />{' '}
-              so you can communicate with other users. It&apos;s free.
+              <fbt desc="BetaModal.dontForget">
+                Don&apos;t forget to enable
+                <Link
+                  to="/messages"
+                  onClick={() => this.setState({ shouldClose: true })}
+                >
+                  Origin Messaging
+                </Link>
+                so you can communicate with other users. It&apos;s free.
+              </fbt>
             </li>
             <li>
-              {'If you have any questions or need to dispute a transaction, '}
-              <a href="mailto:support@originprotocol.com">let us know</a>.
+              <fbt desc="BetaModal.ifYouHaveQuestions">
+                If you have any questions or need to dispute a transaction,
+                <a href="mailto:support@originprotocol.com">let us know</a>
+                .
+              </fbt>
             </li>
           </ul>
           <div className="actions">
@@ -50,7 +64,7 @@ class BetaModal extends Component {
               onClick={() => {
                 this.setState({ shouldClose: true })
               }}
-              children="I got it."
+              children={fbt('I got it.', 'I got it.')}
             />
           </div>
         </div>

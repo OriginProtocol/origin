@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
@@ -26,21 +27,27 @@ const EnableNotifications = ({ next, skip }) => (
     <div className="status">Desktop Notifications</div>
     <div className="connected">
       <span className="oval warn" />
-      Notifications are turned off
+      <fbt desc="onboard.Notifications.turnedOff">
+        Notifications are turned off
+      </fbt>
     </div>
     <div className="help">
-      Native desktop notifications will allow you to stay on top of what you
-      need to do on the Origin DApp
+      <fbt desc="onboard.Notifications.help">
+        Native desktop notifications will allow you to stay on top of what you
+        need to do on the Origin DApp
+      </fbt>
     </div>
     <em>
-      Click the button below then click confirm the request on the native
-      browser dialog that will appear above.
+      <fbt desc="onboard.Notifications.clickAndConfirm">
+        Click the button below then click confirm the request on the native
+        browser dialog that will appear above.
+      </fbt>
     </em>
     <button className="btn btn-primary" onClick={() => next()}>
-      Turn on Notifications
+      <fbt desc="onboard.Notifications.turnOn">Turn on Notifications</fbt>
     </button>
     <button className="btn btn-link" onClick={() => skip()}>
-      Skip for now
+      <fbt desc="skip">Skip for now</fbt>
     </button>
   </div>
 )
@@ -50,11 +57,13 @@ const Skipped = ({ next }) => (
     <div className="notifications-logo" />
     <div className="status">Wait! Don’t you want updates?</div>
     <div className="help">
-      Not having desktop notifications increases the chances of missing
-      important updates about your transactions.
+      <fbt desc="onboard.Notifications.notHavingNotificationsImpact">
+        Not having desktop notifications increases the chances of missing
+        important updates about your transactions.
+      </fbt>
     </div>
     <button className="btn btn-primary mt-4" onClick={() => next()}>
-      Turn on Notifications
+      <fbt desc="onboard.Notifications.turnOn">Turn on Notifications</fbt>
     </button>
   </div>
 )
@@ -66,8 +75,10 @@ const WaitEnableNotifications = () => (
     </div>
     <div className="status">Waiting for you to grant permission</div>
     <div className="help">
-      The native browser permissions dialog opens at the top of the browser
-      window. Please confirm the request
+      <fbt desc="onboard.Notifications.confirmRequest">
+        The native browser permissions dialog opens at the top of the browser
+        window. Please confirm the request
+      </fbt>
     </div>
     <div className="spinner" />
   </div>
@@ -78,16 +89,28 @@ const Enabled = () => (
     <div className="notifications-logo">
       <div className="qm active" />
     </div>
-    <div className="status">Desktop Notifications Enabled</div>
+    <div className="status">
+      <fbt desc="onboard.Notifications.notificationsEnabled">
+        Desktop Notifications Enabled
+      </fbt>
+    </div>
     <div className="connected">
       <span className="oval" />
-      Notifications are turned on
+      <fbt desc="onboard.Notifications.areTurnedOn">
+        Notifications are turned on
+      </fbt>
     </div>
     <div className="help">
-      Great! It will be much easier for you to respond quickly to requests from
-      buyers and sellers.
+      <fbt desc="onboard.Notifications.turnedOnHelp">
+        Great! It will be much easier for you to respond quickly to requests
+        from buyers and sellers.
+      </fbt>
     </div>
-    <em>Click the continue button below to proceed.</em>
+    <em>
+      <fbt desc="onboard.Notifications.proceed">
+        Click the continue button below to proceed.
+      </fbt>
+    </em>
   </div>
 )
 
@@ -96,20 +119,34 @@ const Denied = () => (
     <div className="notifications-logo">
       <div className="qm error" />
     </div>
-    <div className="status">Uh oh, there’s a problem...</div>
+    <div className="status">
+      <fbt desc="onboard.Notifications.problem">
+        Uh oh, there’s a problem...
+      </fbt>
+    </div>
     <div className="connected">
       <span className="oval danger" />
-      Notifications are turned off
+      <fbt desc="onboard.Notifications.areTurnedOff">
+        Notifications are turned off
+      </fbt>
     </div>
     <div className="help mb">
-      You’ve rejected our request to turn on desktop notifications which we{' '}
-      <b>highly recommend</b>.
+      <fbt desc="onboard.Notifications.youRejected">
+        You’ve rejected our request to turn on desktop notifications which we{' '}
+        <b>highly recommend</b>.
+      </fbt>
     </div>
     <div className="help mb">
-      In order to fix this, please go into your browser settings and turn on
-      notifications for our DApp.
+      <fbt desc="onboard.Notifications.fixIt">
+        In order to fix this, please go into your browser settings and turn on
+        notifications for our DApp.
+      </fbt>
     </div>
-    <button className="btn btn-link cancel big">Visit Browser Settings</button>
+    <button className="btn btn-link cancel big">
+      <fbt desc="onboard.Notifications.visitBrowserSettings">
+        Visit Browser Settings
+      </fbt>
+    </button>
   </div>
 )
 
@@ -138,16 +175,28 @@ class OnboardNotifications extends Component {
             <Query query={query} notifyOnNetworkStatusChange={true}>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
-                  return <div>Loading...</div>
+                  return (
+                    <div>
+                      <fbt desc="onboard.Notifications.loading">Loading...</fbt>
+                    </div>
+                  )
                 } else if (error) {
-                  return <p className="p-3">Error :(</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="error">Error</fbt> :(
+                    </p>
+                  )
                 } else if (!data || !data.web3) {
-                  return <p className="p-3">No Web3</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="onboard.Notifications.noWeb3">No Web3</fbt>
+                    </p>
+                  )
                 }
 
                 let continueBtn = (
                   <Link className="btn btn-outline-primary " to={nextLink}>
-                    Continue
+                    <fbt desc="continue">Continue</fbt>
                   </Link>
                 )
                 let cmp
@@ -171,7 +220,7 @@ class OnboardNotifications extends Component {
                       href="#"
                       onClick={e => e.preventDefault()}
                       className="btn btn-outline-primary disabled"
-                      children="Continue"
+                      children={fbt('Continue', 'Continue')}
                     />
                   )
                 }
@@ -211,9 +260,15 @@ class OnboardNotifications extends Component {
   }
 
   showNotification() {
-    new Notification('Sweet! Desktop notifications are on :)', {
-      icon: 'images/app-icon.png'
-    })
+    new Notification(
+      fbt(
+        'Sweet! Desktop notifications are on :)',
+        'onboard.Notifications.areOn'
+      ),
+      {
+        icon: 'images/app-icon.png'
+      }
+    )
   }
 }
 

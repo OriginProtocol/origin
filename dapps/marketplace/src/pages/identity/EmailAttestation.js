@@ -77,15 +77,20 @@ class EmailAttestation extends Component {
           >
             <h2>Verify your Email Address</h2>
             <div className="instructions">
-              Enter your email address below and OriginID will send you a
-              verification code
+              <fbt desc="Attestation.instructions">
+                Enter your email address below and OriginID will send you a
+                verification code
+              </fbt>
             </div>
             <div className="mt-3">
               <input
                 type="email"
                 ref={ref => (this.inputRef = ref)}
                 className="form-control form-control-lg text-center"
-                placeholder="Verify email address"
+                placeholder={fbt(
+                  'Verify email address',
+                  'Attestation.verify-email-address'
+                )}
                 value={this.state.email}
                 onChange={e => this.setState({ email: e.target.value })}
               />
@@ -103,12 +108,16 @@ class EmailAttestation extends Component {
               <button
                 className="btn btn-outline-light"
                 type="submit"
-                children={this.state.loading ? 'Loading...' : 'Continue'}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="Cancel"
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -150,8 +159,14 @@ class EmailAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Email Address</h2>
-            <div className="instructions">Enter the code we sent you below</div>
+            <h2>
+              <fbt desc="EmailAttestation.title">Verify your Email Address</fbt>
+            </h2>
+            <div className="instructions">
+              <fbt desc="EmailAttestation.enterCode">
+                Enter the code we sent you below
+              </fbt>
+            </div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
@@ -171,12 +186,16 @@ class EmailAttestation extends Component {
               <button
                 type="submit"
                 className="btn btn-outline-light"
-                children={this.state.loading ? 'Loading...' : 'Continue'}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="Cancel"
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -188,13 +207,19 @@ class EmailAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Email address verified!</h2>
+        <h2>
+          <fbt desc="EmailAttestation.verified">Email address verified!</fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button
@@ -203,7 +228,7 @@ class EmailAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>

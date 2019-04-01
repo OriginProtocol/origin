@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 const MetaMaskAnimation = ({ light }) => (
   <video className="metamask-video" width="320" heigh="240" autoPlay loop>
@@ -10,7 +11,9 @@ const MetaMaskAnimation = ({ light }) => (
       }
       type="video/mp4"
     />
-    Your browser does not support the video tag.
+    <fbt desc="MetaMaskAnimation.browserNotSupported">
+      Your browser does not support the video tag.
+    </fbt>
   </video>
 )
 

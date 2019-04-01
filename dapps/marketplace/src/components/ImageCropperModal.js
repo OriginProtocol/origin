@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactCrop from 'react-image-crop'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -79,7 +80,7 @@ class ImageCropperModal extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
           <button
             className="btn btn-outline-light"
@@ -90,7 +91,7 @@ class ImageCropperModal extends Component {
               }
               this.setState({ shouldClose: true })
             }}
-            children="OK"
+            children={fbt('OK', 'OK')}
           />
         </div>
       </Modal>

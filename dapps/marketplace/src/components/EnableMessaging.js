@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 import EnableMessagingModal from 'components/EnableMessagingModal'
@@ -14,7 +15,7 @@ class EnableMessaging extends Component {
           onClick={() => {
             this.setState({ open: true })
           }}
-          children="Enable Messaging"
+          children={fbt('Enable Messaging', 'Enable Messaging')}
         />
 
         {!this.state.open ? null : (

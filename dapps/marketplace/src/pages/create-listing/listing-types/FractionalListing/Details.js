@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { fbt } from 'fbt-runtime'
 import omit from 'lodash/omit'
 
 import Steps from 'components/Steps'
@@ -35,8 +36,13 @@ class Details extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-2">
             <div className="wrap">
-              <div className="step">{`Step ${this.props.step}`}</div>
-              <div className="step-description">Provide listing details</div>
+              <div className="step">
+                <fbt desc="create.step">
+                  Step
+                  <fbt:param name="step">{this.props.step}</fbt:param>
+                </fbt>
+              </div>
+              <fbt desc="create.details.title">Provide listing details</fbt>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -47,20 +53,23 @@ class Details extends Component {
               >
                 {this.state.valid !== false ? null : (
                   <div className="alert alert-danger">
-                    Please fix the errors below...
+                    <fbt desc="fix errors">Please fix the errors below...</fbt>
                   </div>
                 )}
                 <div className="form-group">
-                  <label>Title</label>
+                  <label>
+                    <fbt desc="create.Title">Title</fbt>
+                  </label>
                   <input {...input('title')} ref={r => (this.titleInput = r)} />
                   {Feedback('title')}
                 </div>
                 <div className="form-group">
-                  <label className="mb-0">Description</label>
-                  <div className="help-text">
-                    Make sure to include any product variant details here. Learn
-                    more
-                  </div>
+                  <label className="mb-0">
+                    <fbt desc="create.details.description">Description</fbt>
+                  </label>
+                  <fbt desc="create.description.hourly">
+                    Make sure to include special conditions of your rental here.
+                  </fbt>
                   <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
@@ -69,7 +78,9 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>
-                    Default Weekday Pricing (Sunday - Thursday nights)
+                    <fbt desc="create.fractional.weekday-price">
+                      Default Weekday Pricing (Sunday - Thursday nights)
+                    </fbt>
                   </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -90,13 +101,17 @@ class Details extends Component {
                     </div>
                   </div>
                   {Feedback('price')}
-                  <div className="help-text price">
-                    Price is always in ETH, USD is an estimate.
+                  <div className="create.details.help-text.price">
+                    <fbt desc="create.price.help">
+                      Price is always in ETH, USD is an estimate.
+                    </fbt>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>
-                    Default Weekend Pricing (Friday &amp; Saturday nights)
+                    <fbt desc="create.fractional.weekend-price">
+                      Default Weekend Pricing (Friday &amp; Saturday nights)
+                    </fbt>
                   </label>
                   <div className="d-flex">
                     <div style={{ flex: 1, marginRight: '1rem' }}>
@@ -122,24 +137,30 @@ class Details extends Component {
                 {/* END Homeshare specific code */}
 
                 <div className="form-group">
-                  <label>Select photos</label>
+                  <label>
+                    <fbt desc="create.select-photos">Select photos</fbt>
+                  </label>
                   <ImagePicker
                     images={this.state.media}
                     onChange={media => this.setState({ media })}
                   >
-                    <div className="add-photos">Select photos</div>
+                    <div className="add-photos">
+                      <fbt desc="create.select-photos">Select photos</fbt>
+                    </div>
                   </ImagePicker>
                   <ul className="help-text photo-help list-unstyled">
-                    <li>
-                      Hold down &apos;command&apos; (⌘) to select multiple
-                      images.
-                    </li>
-                    <li>Maximum 10 images per listing.</li>
-                    <li>
-                      First image will be featured - drag and drop images to
-                      reorder.
-                    </li>
-                    <li>Recommended aspect ratio is 4:3</li>
+                    <fbt desc="create.listing.photos.help">
+                      <li>
+                        Hold down &apos;command&apos; (⌘) to select multiple
+                        images.
+                      </li>
+                      <li>Maximum 10 images per listing.</li>
+                      <li>
+                        First image will be featured - drag and drop images to
+                        reorder.
+                      </li>
+                      <li>Recommended aspect ratio is 4:3</li>
+                    </fbt>
                   </ul>
                 </div>
 
@@ -148,10 +169,10 @@ class Details extends Component {
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
-                    Back
+                    <fbt desc="back">Back</fbt>
                   </Link>
                   <button type="submit" className="btn btn-primary">
-                    Continue
+                    <fbt desc="continue">Continue</fbt>
                   </button>
                 </div>
               </form>
@@ -161,10 +182,12 @@ class Details extends Component {
         <div className="col-md-4 d-none d-md-block">
           <Wallet />
           <div className="gray-box">
-            <h5>Add Listing Details</h5>
-            Be sure to give your listing an appropriate title and description to
-            let others know what you&apos;re offering. Adding some photos will
-            increase the chances of selling your listing.
+            <fbt desc="create.details.help">
+              <h5>Add Listing Details</h5>
+              Be sure to give your listing an appropriate title and description
+              to let others know what you&apos;re offering. Adding some photos
+              will increase the chances of selling your listing.
+            </fbt>
           </div>
         </div>
       </div>
@@ -175,37 +198,70 @@ class Details extends Component {
     const newState = {}
 
     if (!this.state.title) {
-      newState.titleError = 'Title is required'
+      newState.titleError = fbt(
+        'Title is required',
+        'create.error.Title is required'
+      )
     } else if (this.state.title.length < 3) {
-      newState.titleError = 'Title is too short'
+      newState.titleError = fbt(
+        'Title is too short',
+        'create.error.Title is too short'
+      )
     } else if (this.state.title.length > 100) {
       // Limit from origin-validator/src/schemas/listing.json
-      newState.titleError = 'Title is too long'
+      newState.titleError = fbt(
+        'Title is too long',
+        'create.error.Title is too long'
+      )
     }
 
     if (!this.state.description) {
-      newState.descriptionError = 'Description is required'
+      newState.descriptionError = fbt(
+        'Description is required',
+        'create.error.Description is required'
+      )
     } else if (this.state.description.length < 10) {
-      newState.descriptionError = 'Description is too short'
+      newState.descriptionError = fbt(
+        'Description is too short',
+        'create.error.Description is too short'
+      )
     } else if (this.state.description.length > 1024) {
       // Limit from origin-validator/src/schemas/listing.json
-      newState.descriptionError = 'Description is too long'
+      newState.descriptionError = fbt(
+        'Description is too long',
+        'create.error.Description is too long'
+      )
     }
 
     if (!this.state.price) {
-      newState.priceError = 'Price is required'
+      newState.priceError = fbt('Price is required', 'Price is required')
     } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
-      newState.priceError = 'Price must be a number'
+      newState.priceError = fbt(
+        'Price must be a number',
+        'Price must be a number'
+      )
     } else if (Number(this.state.price) <= 0) {
-      newState.priceError = 'Price must be greater than zero'
+      newState.priceError = fbt(
+        'Price must be greater than zero',
+        'Price must be greater than zero'
+      )
     }
 
     if (!this.state.weekendPrice) {
-      newState.weekendPriceError = 'Weekend pricing is required'
+      newState.weekendPriceError = fbt(
+        'Weekend pricing is required',
+        'Weekend pricing is required'
+      )
     } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
-      newState.weekendPriceError = 'Weekend pricing must be a number'
+      newState.weekendPriceError = fbt(
+        'Weekend pricing must be a number',
+        'Weekend pricing must be a number'
+      )
     } else if (Number(this.state.weekendPrice) <= 0) {
-      newState.weekendPriceError = 'Weekend pricing must be greater than zero'
+      newState.weekendPriceError = fbt(
+        'Weekend pricing must be greater than zero',
+        'Weekend pricing must be greater than zero'
+      )
     }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)

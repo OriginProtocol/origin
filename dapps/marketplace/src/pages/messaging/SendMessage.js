@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { Mutation } from 'react-apollo'
 import trim from 'lodash/trim'
+import { fbt } from 'fbt-runtime'
 
 import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
@@ -88,7 +89,7 @@ class SendMessage extends Component {
                     <img className="img" src={image.url} />
                     <a
                       className="image-overlay-btn"
-                      aria-label="Close"
+                      aria-label={fbt('Close', 'SendMessage.close')}
                       onClick={() => {
                         this.setState({
                           images: images.filter(img => img !== image)
@@ -104,7 +105,10 @@ class SendMessage extends Component {
             {images.length ? null : (
               <TextareaAutosize
                 className="form-control"
-                placeholder="Type something..."
+                placeholder={fbt(
+                  'Type something...',
+                  'SendMessage.placeholder'
+                )}
                 ref={input => (this.input = input)}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
@@ -132,7 +136,7 @@ class SendMessage extends Component {
             <button
               className="btn btn-sm btn-primary btn-rounded"
               type="submit"
-              children="Send"
+              children={fbt('Send', 'SendMessage.send')}
             />
           </form>
         )}

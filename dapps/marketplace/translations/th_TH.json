@@ -1,24 +1,102 @@
 {
   "fb-locale": "th_TH",
   "translations": {
+    "3K2HLz2eDfqTUU1+MYbpSA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Twitter แล้ว"
+        }
+      ]
+    },
+    "xOpYvzzoMezVMoNOSayQmw==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Google แล้ว"
+        }
+      ]
+    },
+    "wZLSv7ewRaMW79jVk8dClw==": {
+      "translations": [
+        {
+          "translation": "ยืนยันหมายเลขโทรศัพท์แล้ว"
+        }
+      ]
+    },
+    "y1hHLacJcJtPJqQT+ARvMQ==": {
+      "translations": [
+        {
+          "translation": "ยืนยันอีเมลแล้ว"
+        }
+      ]
+    },
+    "9IK97p7cEFz5+KW7ysa14w==": {
+      "translations": [
+        {
+          "translation": "ยืนยัน Facebook แล้ว"
+        }
+      ]
+    },
+    "ajuRGjrScUXkHUc6TO96oQ==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Airbnb แล้ว"
+        }
+      ]
+    },
+    "lpM1WjIFkeXrRw0jHALchw==": {
+      "translations": [
+        {
+          "translation": "ส่งข้อความ"
+        }
+      ]
+    },
+    "BNiTz6TMpmADBvpVMcU3Ow==": {
+      "translations": [
+        {
+          "translation": "ยอดเงินในบัญชี"
+        }
+      ]
+    },
+    "qW+FPWRA0PFau0MxBCNW+g==": {
+      "translations": [
+        {
+          "translation": "เริ่ม"
+        }
+      ]
+    },
+    "W6NnV1uOLvElD9nJ8UncTg==": {
+      "translations": [
+        {
+          "translation": "รับ OGN"
+        }
+      ]
+    },
     "lnRohWpsGR7uMhMbL9Uc4A==": {
       "translations": [
-        {}
+        {
+          "translation": "สำหรับขาย"
+        }
       ]
     },
     "IXnxuAx0PfImJ3UuUrtKNA==": {
       "translations": [
-        {}
+        {
+          "translation": "สำหรับเช่า"
+        }
       ]
     },
     "ghfbnF7r/INujbWiriguzg==": {
       "translations": [
-        {}
+        {
+          "translation": "บริการ"
+        }
       ]
     },
     "66fBzTgLcxkHZ8hhNa6kkQ==": {
       "translations": [
-        {}
+        {
+          "translation": "ประกาศ"
+        }
       ]
     },
     "KFFRQn6ksmQTRyTzCz65sg==": {
@@ -38,14 +116,14 @@
     "YIvbQUezwdnmysfM43g0Vw==": {
       "translations": [
         {
-          "translation": "ศิลปะและหัตถกรรม"
+          "translation": "ศิลปะและงานฝีมือ"
         }
       ]
     },
     "y1wrUJKn06syj0F/jkjGrg==": {
       "translations": [
         {
-          "translation": "Atvs, UTVs, เจ็ตสกีหิมะ"
+          "translation": "Atvs, Utvs, สโนว์โมบิล"
         }
       ]
     },
@@ -59,7 +137,7 @@
     "snA5cNuJlgyAdvZDbZpJrA==": {
       "translations": [
         {
-          "translation": "ล้อและยางรถยนต์อัตโนมัติ"
+          "translation": "ล้อรถยนต์และยางรถยนต์"
         }
       ]
     },
@@ -87,7 +165,7 @@
     "RNUT6gy5oiwEr7Ahqp8ztg==": {
       "translations": [
         {
-          "translation": "อะไหล่เรือและอุปกรณ์เสริม"
+          "translation": "ชิ้นส่วนและอุปกรณ์เรือ"
         }
       ]
     },
@@ -107,7 +185,9 @@
     },
     "1Q0Vv4XgRSWOzYW+aVBrxA==": {
       "translations": [
-        {}
+        {
+          "translation": "ธุรกิจ"
+        }
       ]
     },
     "VEqNKcV23dj1AEzdWpB5HQ==": {
@@ -120,7 +200,7 @@
     "o3QtDvLaCsB7dvSR0fLs9g==": {
       "translations": [
         {
-          "translation": "แผ่นซีดี / ดีวีดี / VHS"
+          "translation": "ซีดีดีวีดี VHS"
         }
       ]
     },
@@ -180,6 +260,13 @@
         }
       ]
     },
+    "+qNzEHNakA5XBj7joTDKIw==": {
+      "translations": [
+        {
+          "translation": "บัตรของขวัญ"
+        }
+      ]
+    },
     "AAgZuF9GK7AzEzHDCYO+DA==": {
       "translations": [
         {
@@ -190,14 +277,14 @@
     "D03RRTZWAmKsWEnr24R/dg==": {
       "translations": [
         {
-          "translation": "อุปกรณ์หนัก"
+          "translation": "เครื่องจักรกลหนัก"
         }
       ]
     },
     "K4pGQAuIr2IaJl7OBH5tFQ==": {
       "translations": [
         {
-          "translation": "รายการที่ใช้ในครัวเรือน"
+          "translation": "รายการของใช้ในครัวเรือน"
         }
       ]
     },
@@ -218,14 +305,14 @@
     "UfzMzPnHFKRY+YA2YYCiMw==": {
       "translations": [
         {
-          "translation": "อะไหล่รถจักรยานยนต์และอุปกรณ์เสริม"
+          "translation": "อะไหล่และอุปกรณ์มอเตอร์ไซค์"
         }
       ]
     },
     "SRXzG3SHl2IsrVr0swey+Q==": {
       "translations": [
         {
-          "translation": "รถจักรยานยนต์และสกู๊ตเตอร์"
+          "translation": "รถจักรยานยนต์และสกูตเตอร์"
         }
       ]
     },
@@ -246,7 +333,7 @@
     "zy7YOcOXbkmeJ1amxDx1Yw==": {
       "translations": [
         {
-          "translation": "รูปภาพและวิดีโอ"
+          "translation": "ภาพถ่ายและวิดีโอ"
         }
       ]
     },
@@ -260,7 +347,7 @@
     "4ZaaZzyo5idIaAHowBKrEA==": {
       "translations": [
         {
-          "translation": "ยานพาหนะสันทนาการ"
+          "translation": "ยานพาหนะนันทนาการ"
         }
       ]
     },
@@ -302,23 +389,29 @@
     "ySVwNQTsweQ/3lIONL7Vdw==": {
       "translations": [
         {
-          "translation": "เกมวิดีโอ"
+          "translation": "วิดีโอเกม"
         }
       ]
     },
     "c4W8KxvjoNvkLaPQiXcBeQ==": {
       "translations": [
-        {}
+        {
+          "translation": "การเคหะ"
+        }
       ]
     },
     "IGExQ86vwIZJBBngF5KxCg==": {
       "translations": [
-        {}
+        {
+          "translation": "ที่จอดรถ"
+        }
       ]
     },
     "zBI2vhzGm3YUFkzAgxhrOw==": {
       "translations": [
-        {}
+        {
+          "translation": "การเก็บรักษา"
+        }
       ]
     },
     "dbmMy1BMoOPmEjBIgZNQkw==": {
@@ -330,7 +423,9 @@
     },
     "KBslCOpxNyf2/f02u4AC9A==": {
       "translations": [
-        {}
+        {
+          "translation": "ออกแบบ"
+        }
       ]
     },
     "9ok6+SExmxGnwGSndfBihw==": {
@@ -343,7 +438,7 @@
     "fLJGWS5/2zZm6lrVMgFdjw==": {
       "translations": [
         {
-          "translation": "Music Lessons"
+          "translation": "บทเรียนดนตรี"
         }
       ]
     },
@@ -356,17 +451,23 @@
     },
     "kO8sPOni/jolamEZLA8Xrw==": {
       "translations": [
-        {}
+        {
+          "translation": "ห้องโถง"
+        }
       ]
     },
     "10HkhoJ+l5kgv0Xp9a5caw==": {
       "translations": [
-        {}
+        {
+          "translation": "สปา"
+        }
       ]
     },
     "KEVzlIlEiThvVr4DsUDjFA==": {
       "translations": [
-        {}
+        {
+          "translation": "การขนส่ง"
+        }
       ]
     },
     "6d3Zf+bS0fophdS2BVpZ1A==": {
@@ -414,7 +515,7 @@
     "S1+qQlACydCmaq1HSnUw4g==": {
       "translations": [
         {
-          "translation": "การขายโรงรถและการขาย"
+          "translation": "การขายโรงรถและขนย้าย"
         }
       ]
     },
@@ -442,13 +543,15 @@
     "j0yAi4eGyUt2LSsXQr92ew==": {
       "translations": [
         {
-          "translation": "สูญหาย"
+          "translation": "ลืมและค้นพบ"
         }
       ]
     },
     "8MgZoixrwmWP6Jsfak1UyA==": {
       "translations": [
-        {}
+        {
+          "translation": "การตลาด"
+        }
       ]
     },
     "3WqpHbrwOloRd96TRFYEbA==": {
@@ -493,31 +596,2628 @@
         }
       ]
     },
-    "HIYV/KBfsIx14LvOIIcHwg==": {
+    "CZ1++NjtjMZAo/LiBqRk3A==": {
       "translations": [
         {
-          "translation": "แอ็พพลิเคชันการกระจายข้อมูล Origin ช่วยให้ผู้ซื้อและผู้ขายสามารถทำธุรกรรมได้โดยไม่ต้องหาพ่อค้าคนกลางเช่าโดยใช้ Ethereum blockchain และ IPFS"
+          "translation": "เปิดใช้งานการส่งข้อความ"
+        }
+      ]
+    },
+    "xqiYZ70sVyhuOX2uyy5oBQ==": {
+      "translations": [
+        {
+          "translation": "ส่งข้อความต้นฉบับ"
+        }
+      ]
+    },
+    "HMZO3MPK1igp+L3DnCYh4A==": {
+      "translations": [
+        {
+          "translation": "เริ่มต้นใช้งาน Origin ก่อนที่คุณจะสามารถส่งข้อความถึงผู้ใช้ได้"
+        }
+      ]
+    },
+    "FHdqFaXVkGt1bTg5qEKySQ==": {
+      "translations": [
+        {
+          "translation": "การส่งข้อความ Origin จะอนุญาตให้คุณแชทกับผู้ซื้อและผู้ขายรายอื่นบน DApp ของเรา"
+        }
+      ]
+    },
+    "YF7bGM9defXtVmKlk2BveQ==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งาน Origin Messaging"
+        }
+      ]
+    },
+    "QgqHU+1OtRn9vYSCzxsbEQ==": {
+      "translations": [
+        {
+          "translation": "รอให้คุณเซ็นข้อความ # {num}"
+        }
+      ]
+    },
+    "lcY3PG8oxX/nshLGkSkqQg==": {
+      "translations": [
+        {
+          "translation": "ไอคอน Metamask ตั้งอยู่ที่ด้านบนขวาของแถบเครื่องมือเบราว์เซอร์ของคุณ"
+        }
+      ]
+    },
+    "Tx81Wy+s9248PR6ud1U10Q==": {
+      "translations": [
+        {
+          "translation": "ขอแสดงความยินดี! ตอนนี้คุณสามารถส่งข้อความถึงผู้ใช้คนอื่นบน Origin และติดตามข่าวสารเกี่ยวกับการซื้อและการขายทั้งหมดของคุณ"
+        }
+      ]
+    },
+    "iAVHXTjGQY4bG85GZ3rgbQ==": {
+      "translations": [
+        {
+          "translation": "คุณทำเสร็จแล้วและสามารถดำเนินการต่อได้โดยกดปุ่มด้านล่าง"
+        }
+      ]
+    },
+    "inikq8x/L1Z14PL9LSzFzg==": {
+      "translations": [
+        {
+          "translation": "{=Enroll} เพื่อรับโทเค็น Origin cryptocurrency (OGN)"
+        }
+      ]
+    },
+    "1nS1em98gKmMqpesguJylw==": {
+      "translations": [
+        {
+          "translation": "ลงทะเบียน"
+        }
+      ]
+    },
+    "SG+OPZyCrM3ZJpIQSUSkyQ==": {
+      "translations": [
+        {
+          "translation": "{=Enroll Now}"
+        }
+      ]
+    },
+    "EnHY9kgzl7/D9IQIpfzW5A==": {
+      "translations": [
+        {
+          "translation": "สมัครเดี๋ยวนี้"
+        }
+      ]
+    },
+    "jpSUKepY+jT83nZZ/dSNow==": {
+      "translations": [
+        {
+          "translation": "รายได้ของแคมเปญ"
+        }
+      ]
+    },
+    "6MBFCcAVLGs1DIGR8/ZPIQ==": {
+      "translations": [
+        {
+          "translation": "จ่ายเงินหลังจากแคมเปญเสร็จสิ้น"
+        }
+      ]
+    },
+    "8M4U4PrythJps9u8JfIWRQ==": {
+      "translations": [
+        {
+          "translation": "ไม่เห็นรายได้ของคุณ? ให้แน่ใจว่าคุณเผยแพร่การเปลี่ยนแปลงของคุณ"
+        }
+      ]
+    },
+    "fP45W6xW5ewpvWlx+grWwA==": {
+      "translations": [
+        {
+          "translation": "ยกเลิก"
+        }
+      ]
+    },
+    "UJ8EZSteGy0rnmvBIah+UA==": {
+      "translations": [
+        {
+          "translation": "ตกลง"
+        }
+      ]
+    },
+    "vK6uEfoyzMBla2soqGDt/Q==": {
+      "translations": [
+        {
+          "translation": "พืชผล"
+        }
+      ]
+    },
+    "eLB7QeERmKNpSpshEiv1mw==": {
+      "translations": [
+        {
+          "translation": "เอาออก"
+        }
+      ]
+    },
+    "cacya5OYjiwSsUsuTN7hYQ==": {
+      "translations": [
+        {
+          "translation": "เบราว์เซอร์ของคุณไม่รองรับแท็กวิดีโอ"
+        }
+      ]
+    },
+    "/ADcoKIBKOrEQaYJdXWIFQ==": {
+      "translations": [
+        {
+          "translation": "คัดลอกและเปิดแอป"
+        }
+      ]
+    },
+    "ad/hbXUYWStNfCtS8DbQUQ==": {
+      "translations": [
+        {
+          "translation": "รายละเอียดความแข็งแกร่ง"
+        }
+      ]
+    },
+    "4XGwGx5rPn9fmcBQUx4o8w==": {
+      "translations": [
+        {
+          "translation": "ข้อผิดพลาด: ดูรายละเอียดที่คอนโซล"
+        }
+      ]
+    },
+    "LeqAwNGdlXUL8rokk73C8g==": {
+      "translations": [
+        {
+          "translation": "รีวิวของผู้ขายนี้"
+        }
+      ]
+    },
+    "jwOObFz9eurn166XgvA7KQ==": {
+      "translations": [
+        {
+          "translation": "ความคิดเห็นของผู้ใช้รายนี้"
+        }
+      ]
+    },
+    "5bnjo+PrKtH3RDx1gvQEIQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้ที่ไม่มีชื่อ"
+        }
+      ]
+    },
+    "YvRLXVAElsp/GcvlIdQxeQ==": {
+      "translations": [
+        {
+          "translation": "อ่านเพิ่มเติม"
+        }
+      ]
+    },
+    "4b2jW7VoOq0mSpln/V61BA==": {
+      "translations": [
+        {
+          "translation": "ส่ง"
+        }
+      ]
+    },
+    "7X7jI5Dg72byWiXktbTpDA==": {
+      "translations": [
+        {
+          "translation": "คุณซื้อรายชื่อ"
+        }
+      ]
+    },
+    "3PNfoS0WxC5afEsXNhg0ZQ==": {
+      "translations": [
+        {
+          "translation": "คุณยอมรับข้อเสนอ"
+        }
+      ]
+    },
+    "bgvxo1HEzv4TqWOpIZcjKw==": {
+      "translations": [
+        {
+          "translation": "คุณสรุปธุรกรรม"
+        }
+      ]
+    },
+    "+rMtD607G7UPpuC/Gh+VRA==": {
+      "translations": [
+        {
+          "translation": "คุณถอนข้อเสนอออก"
+        }
+      ]
+    },
+    "R4DxxKbi2zzfK5Rc0R2DUg==": {
+      "translations": [
+        {
+          "translation": "คุณโต้แย้งข้อเสนอ"
+        }
+      ]
+    },
+    "CVbGw4JkzmasQrRV05U4gA==": {
+      "translations": [
+        {
+          "translation": "คุณสร้างรายชื่อ"
+        }
+      ]
+    },
+    "U3gSxf+/41xWyGGG3WD6Sw==": {
+      "translations": [
+        {
+          "translation": "คุณอัปเดตรายชื่อ"
+        }
+      ]
+    },
+    "nT5QRZqhy9IyO2A1Lc1+fw==": {
+      "translations": [
+        {
+          "translation": "คุณอัพเดตโปรไฟล์ของคุณ"
+        }
+      ]
+    },
+    "UDE8w4e6AOVqtrnFg59OwQ==": {
+      "translations": [
+        {
+          "translation": "เกิดข้อผิดพลาดในการโหลดสถานะกระเป๋าเงิน"
+        }
+      ]
+    },
+    "jKdT19A7+5WJW++AhjaFfA==": {
+      "translations": [
+        {
+          "translation": "ไม่พบกระเป๋าเงิน"
+        }
+      ]
+    },
+    "64gtsUvYRuiC8+Bn/HeEDw==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินของคุณไม่มีเงิน"
+        }
+      ]
+    },
+    "ffjzURZO6ML0U2uAKJpLGw==": {
+      "translations": [
+        {
+          "translation": "โปรดเปลี่ยน MetaMask เป็น {network}"
+        }
+      ]
+    },
+    "WczyPY+IQGu/be2ckvY0IA==": {
+      "translations": [
+        {
+          "translation": "คุณปฏิเสธที่จะเซ็นธุรกรรม"
+        }
+      ]
+    },
+    "z6E8AIdzn6jDySQTVZ5+aA==": {
+      "translations": [
+        {
+          "translation": "เกิดข้อผิดพลาดกับการทำธุรกรรม โปรดดูรายละเอียดที่คอนโซล"
+        }
+      ]
+    },
+    "l/Mt3Ii9rDA4/tziUA7X1A==": {
+      "translations": [
+        {
+          "translation": "วางข้อเสนอแล้ว"
+        }
+      ]
+    },
+    "2B3r4pIiatO5FYIP9E3T0Q==": {
+      "translations": [
+        {
+          "translation": "ข้อเสนอได้รับการยอมรับ"
+        }
+      ]
+    },
+    "4fM9eZbUqZ66bd6SkzCNUA==": {
+      "translations": [
+        {
+          "translation": "การขายเสร็จสมบูรณ์"
+        }
+      ]
+    },
+    "HZDpiKkHU/e1JkAR8jEbkw==": {
+      "translations": [
+        {
+          "translation": "ข้อพิพาทเริ่มต้น"
+        }
+      ]
+    },
+    "j2iAa98O0Kq9r9ET5w6Puw==": {
+      "translations": [
+        {
+          "translation": "ปกครองทำ"
+        }
+      ]
+    },
+    "Sz9bMhbOlfg3eAr2j7K7ew==": {
+      "translations": [
+        {
+          "translation": "ยืนยันการทำธุรกรรม"
+        }
+      ]
+    },
+    "iKfdvkoOrjcLeiBJ9a4vQg==": {
+      "translations": [
+        {
+          "translation": "โปรดยืนยันการทำธุรกรรมนี้ใน {provider}"
+        }
+      ]
+    },
+    "ODAoTKgsu2qyv4M2OMJP+g==": {
+      "translations": [
+        {
+          "translation": "ข้อผิดพลาด - ดูคอนโซล"
+        }
+      ]
+    },
+    "hlx2chxb1wXEwp0V+48VsA==": {
+      "translations": [
+        {
+          "translation": "เขียนถึง blockchain"
+        }
+      ]
+    },
+    "VaQrM/SpyUJoSj46yEzKXQ==": {
+      "translations": [
+        {
+          "translation": "อาจใช้เวลาสักครู่"
+        }
+      ]
+    },
+    "k+DOmsxpC6olp+f7YTifpg==": {
+      "translations": [
+        {
+          "translation": "รอการยืนยัน"
+        }
+      ]
+    },
+    "NTDlcv5byJHU2e2ibIBDag==": {
+      "translations": [
+        {
+          "translation": "ที่อยู่ ETH"
+        }
+      ]
+    },
+    "aYT951Z+6RBjTZE3Jg5tmw==": {
+      "translations": [
+        {
+          "translation": "จอง"
+        }
+      ]
+    },
+    "uQ4CZ5r/l04HK4ww9kJe9g==": {
+      "translations": [
+        {
+          "translation": "ไม่มี"
+        }
+      ]
+    },
+    "4l5fTgfrjh0H1k93n0Z2Yg==": {
+      "translations": [
+        {
+          "translation": "ยินดีต้อนรับสู่ Origin Beta! Origin เป็นตลาดการกระจายอำนาจที่ทำงานแตกต่างจากแอพส่วนใหญ่เล็กน้อย"
+        }
+      ]
+    },
+    "KUTOlStBC3mnQChZ/HbOfg==": {
+      "translations": [
+        {
+          "translation": "เราอยู่ในโหมดเบต้า แต่ธุรกรรมทั้งหมดเป็นของจริงและใช้ ETH"
+        }
+      ]
+    },
+    "afFV4fdQM5Cn1ojptvnUwQ==": {
+      "translations": [
+        {
+          "translation": "โปรดยืนยัน {=identity} ของคุณเพื่อให้ผู้ซื้อและผู้ขายรายอื่นรู้ว่าคุณคือใคร"
+        }
+      ]
+    },
+    "KDRf8/y09hl8uNtTcYT4bg==": {
+      "translations": [
+        {
+          "translation": "เอกลักษณ์"
+        }
+      ]
+    },
+    "OJOJCYDwaeNFYLRD9LpYjw==": {
+      "translations": [
+        {
+          "translation": "อย่าลืมเปิดใช้งาน {=Origin Messaging} เพื่อให้คุณสามารถสื่อสารกับผู้ใช้รายอื่น นั่นฟรี."
+        }
+      ]
+    },
+    "TkYhUNXqK8qjP6JBVTzWDg==": {
+      "translations": [
+        {
+          "translation": "ส่งข้อความต้นฉบับ"
+        }
+      ]
+    },
+    "DM97lxszR6kNQg6jXs0vjg==": {
+      "translations": [
+        {
+          "translation": "หากคุณมีคำถามหรือต้องการโต้แย้งการทำธุรกรรม {=let us know}"
+        }
+      ]
+    },
+    "aOrOr85BD9OMqCaqeGLoVQ==": {
+      "translations": [
+        {
+          "translation": "แจ้งให้เราทราบ"
+        }
+      ]
+    },
+    "EbCUtytNEBvHpMUozUtwmQ==": {
+      "translations": [
+        {
+          "translation": "ฉันเข้าใจแล้ว."
+        }
+      ]
+    },
+    "Kiq4v7lxOraNMcGSuV03fQ==": {
+      "translations": [
+        {
+          "translation": "Origin อนุญาตให้ผู้ซื้อและผู้ขายทำธุรกรรมโดยไม่ต้องมีพ่อค้าคนกลางที่ต้องการเช่าใช้ Ethereum blockchain และ IPFS"
+        }
+      ]
+    },
+    "B9JVfJwAydDAD9972+O7GA==": {
+      "translations": [
+        {
+          "translation": "คุณกำลังใช้ Origin Beta ในวันที่: {networkName}"
+        }
+      ]
+    },
+    "gwPeffiBc/c3/tgXpfwdJQ==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนที่สำคัญ"
+        }
+      ]
+    },
+    "B8tUH76/HTCaTj1p9i2Qqg==": {
+      "translations": [
+        {
+          "translation": "ข้อตกลงและเงื่อนไข"
+        }
+      ]
+    },
+    "dFXfY28mWQJKgKM6uIHqsQ==": {
+      "translations": [
+        {
+          "translation": "ความเป็นส่วนตัว"
+        }
+      ]
+    },
+    "gRyXn/kmXsDGzbnnfoe09A==": {
+      "translations": [
+        {
+          "translation": "นโยบายการใช้งานที่ยอมรับได้"
         }
       ]
     },
     "k2EiJaPGLnYsYgSeb0efig==": {
       "translations": [
         {
-          "translation": "เยี่ยมชมเว็บไซต์ของเรา"
+          "translation": "เรียนรู้เพิ่มเติมเกี่ยวกับ Origin"
+        }
+      ]
+    },
+    "So52/pjUZQ+SOU0tAAvKTw==": {
+      "translations": [
+        {
+          "translation": "สร้างตลาดของคุณเอง"
         }
       ]
     },
     "KuNLu1gPpB8/96R5zz8B9Q==": {
       "translations": [
         {
-          "translation": "การซื้อ"
+          "translation": "ซื้อ"
         }
       ]
     },
     "w/hcQFMC5CWGdGFhaYJXpw==": {
       "translations": [
         {
-          "translation": "เพิ่มรายการ"
+          "translation": "เพิ่มรายชื่อ"
+        }
+      ]
+    },
+    "zUWKqrHlOSVXNTx3ro3MzQ==": {
+      "translations": [
+        {
+          "translation": "รับโทเค็นต้นทางฟรีวันนี้"
+        }
+      ]
+    },
+    "QrtbSmt3JHYzJb4uZ++dDw==": {
+      "translations": [
+        {
+          "translation": "เข้าร่วมในแคมเปญของเราและทำงานให้เสร็จสมบูรณ์ใน DApp ของเราเพื่อรับ Origin Tokens"
+        }
+      ]
+    },
+    "ASi+rLNm1e3O0p/vAQDCWg==": {
+      "translations": [
+        {
+          "translation": "ไป"
+        }
+      ]
+    },
+    "N0aJrKPoNKxjFd5sIupLCQ==": {
+      "translations": [
+        {
+          "translation": "หน้านี้ผ่านการแปลโดยคอมพิวเตอร์ดูข้อผิดพลาดหรือไม่?"
+        }
+      ]
+    },
+    "LrotBDVInKIAGul78ZIkwQ==": {
+      "translations": [
+        {
+          "translation": "ช่วยแปล"
+        }
+      ]
+    },
+    "xIrCn6YhZw1NfC2ar0MD4Q==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับ Origin Tokens"
+        }
+      ]
+    },
+    "GwcDe9CcWWasPietMqdHww==": {
+      "translations": [
+        {
+          "translation": "{=Overview}{=Origin Tokens are ERC-20 tokens that are used on the Origin DApp and platform. Origin Tokens may be used to reward marketplace operators, DApp creators, users, developers, and/or others that buy, sell, and contribute to Origin.}"
+        }
+      ]
+    },
+    "nJke93V/TKDxmDaxzZGitw==": {
+      "translations": [
+        {
+          "translation": "ภาพรวม"
+        }
+      ]
+    },
+    "i0F86KYzT4Niw4JKLm/qkw==": {
+      "translations": [
+        {
+          "translation": "Origin Tokens เป็นโทเค็น ERC-20 ที่ใช้กับ Origin DApp และแพลตฟอร์ม โทเค็นต้นทางสามารถใช้เพื่อให้รางวัลแก่ผู้ประกอบการตลาดผู้สร้าง DApp ผู้ใช้ผู้พัฒนาและ / หรืออื่น ๆ ที่ซื้อขายและมีส่วนร่วมกับ Origin"
+        }
+      ]
+    },
+    "YStilTZWkt3L9DlXs8HFYQ==": {
+      "translations": [
+        {
+          "translation": "{=What are Origin Tokens used for?}{=Boosting}{=Sellers can use Origin Tokens to boost their listings and get higher visibility on the Origin DApp or future third-party DApps. Listings with higher visibility are shown more often to buyers and have higher chances of being sold successfully. DApps earn Origin Tokens from sellers when they successfully complete sales with Boost.}"
+        }
+      ]
+    },
+    "RHhTbNgtz6ZMiFn8b4AEiA==": {
+      "translations": [
+        {
+          "translation": "โทเค็นต้นทางใช้สำหรับทำอะไร"
+        }
+      ]
+    },
+    "2bGXNtBOZfDBlzQhNYVE2A==": {
+      "translations": [
+        {
+          "translation": "การส่งเสริม"
+        }
+      ]
+    },
+    "L8E7ZEtxTffC6yooVS4Ucw==": {
+      "translations": [
+        {
+          "translation": "ผู้ขายสามารถใช้ Origin Tokens เพื่อเพิ่มรายชื่อของพวกเขาและได้รับการมองเห็นสูงขึ้นใน Origin DApp หรือ DApps ในอนาคตของบุคคลที่สาม ผู้ลงโฆษณาที่มีการเปิดเผยสูงจะแสดงต่อผู้ซื้อมากขึ้นและมีโอกาสขายได้สูงขึ้น DApps จะได้รับ Origin Tokens จากผู้ขายเมื่อพวกเขาประสบความสำเร็จในการขายด้วย Boost"
+        }
+      ]
+    },
+    "WMwhtycSMMCEW+BSsx/KAg==": {
+      "translations": [
+        {
+          "translation": "{=Referral Rewards}{=Coming soon}"
+        }
+      ]
+    },
+    "Ecsu8evsCa6+mCp5FFJP5Q==": {
+      "translations": [
+        {
+          "translation": "รางวัลผู้อ้างอิง"
+        }
+      ]
+    },
+    "MAZJoR5QhDcB5qn6u1661A==": {
+      "translations": [
+        {
+          "translation": "เร็ว ๆ นี้"
+        }
+      ]
+    },
+    "gtMBWfRfKMIhVz+1ALiI4Q==": {
+      "translations": [
+        {
+          "translation": "{=Platform Governance}{=Coming soon}"
+        }
+      ]
+    },
+    "Sdh1iGlXwAq8qpv2Jw9eiQ==": {
+      "translations": [
+        {
+          "translation": "การกำกับดูแลแพลตฟอร์ม"
+        }
+      ]
+    },
+    "IRc9jeCD4UzlZo+esRqrRw==": {
+      "translations": [
+        {
+          "translation": "เร็ว ๆ นี้"
+        }
+      ]
+    },
+    "7o+KdiD481Rnhy9jrb6mOQ==": {
+      "translations": [
+        {
+          "translation": "{=Where can I buy Origin Tokens?}{=Exchanges}{=During Mainnet Beta, Origin Tokens will not be available on any exchanges. After the close of Mainnet Beta, we will publish a list of approved exchanges where you can purchase Origin Tokens to be used on the platform.}"
+        }
+      ]
+    },
+    "1uA8qKqQWczafpiu60Vsaw==": {
+      "translations": [
+        {
+          "translation": "ฉันจะซื้อ Origin Tokens ได้ที่ไหน"
+        }
+      ]
+    },
+    "Xxu13cwEVB4lUJQ1ddpUUw==": {
+      "translations": [
+        {
+          "translation": "แลกเปลี่ยน"
+        }
+      ]
+    },
+    "YdD4SWxlipe6jvGHdl9Q4w==": {
+      "translations": [
+        {
+          "translation": "ระหว่าง Mainnet Beta โทเค็นต้นทางจะไม่สามารถใช้ได้กับการแลกเปลี่ยนใด ๆ หลังจากปิด Mainnet Beta เราจะเผยแพร่รายการการแลกเปลี่ยนที่ได้รับอนุมัติซึ่งคุณสามารถซื้อ Origin Tokens เพื่อใช้บนแพลตฟอร์ม"
+        }
+      ]
+    },
+    "6S2bnqF5VoGd1HyPLrOJ9Q==": {
+      "translations": [
+        {
+          "translation": "โปรดรีเฟรชหน้านี้"
+        }
+      ]
+    },
+    "xI4Hor+GVoaMYqnflEKBCQ==": {
+      "translations": [
+        {
+          "translation": "{=Loading}{=Please wait}"
+        }
+      ]
+    },
+    "J2mgIwRLF/KI7IomZlReeA==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด"
+        }
+      ]
+    },
+    "kDg1DNY4vTf/RpzQGpTqWw==": {
+      "translations": [
+        {
+          "translation": "โปรดรอ"
+        }
+      ]
+    },
+    "3qxbOl/o9sGDgVAyMFT7cQ==": {
+      "translations": [
+        {
+          "translation": "เลือก"
+        }
+      ]
+    },
+    "TeGDsV+ClksE6cndLEwsYw==": {
+      "translations": [
+        {
+          "translation": "มาอัปเดตรายชื่อของคุณ"
+        }
+      ]
+    },
+    "nbRMtgeidlTvoFVOSmGxDw==": {
+      "translations": [
+        {
+          "translation": "อัปเดตประเภทรายการ"
+        }
+      ]
+    },
+    "TJEBcSvM6okOHKIkCn895g==": {
+      "translations": [
+        {
+          "translation": "คุณต้องการสร้างรายชื่อประเภทใด"
+        }
+      ]
+    },
+    "BFFySSGl3keiaQSJJ9mLVg==": {
+      "translations": [
+        {
+          "translation": "ต่อ"
+        }
+      ]
+    },
+    "AE1bc3na36ja+05GQjJpcA==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุหมวดหมู่"
+        }
+      ]
+    },
+    "hO2MefBe3pTJSJ6EhgGMRg==": {
+      "translations": [
+        {
+          "translation": "เพิ่มรายชื่อ"
+        }
+      ]
+    },
+    "BOEIRlbRXuQ3sec1umLfsw==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนที่ {step}"
+        }
+      ]
+    },
+    "T4hP+Pz9YaypalU2fcY6fQ==": {
+      "translations": [
+        {
+          "translation": "ระบุรายละเอียดของรายการ"
+        }
+      ]
+    },
+    "y65E1632h+J2j0bzz9JlvA==": {
+      "translations": [
+        {
+          "translation": "โปรดแก้ไขข้อผิดพลาดด้านล่าง ..."
+        }
+      ]
+    },
+    "N4zHAa9d+D9/d5DR/VX8fw==": {
+      "translations": [
+        {
+          "translation": "หัวข้อ"
+        }
+      ]
+    },
+    "o1sCYyiIyp91GJ4c+D+IGw==": {
+      "translations": [
+        {
+          "translation": "ลักษณะ"
+        }
+      ]
+    },
+    "RNXQtJNfSTKosZ8tt7Uhkg==": {
+      "translations": [
+        {
+          "translation": "เลือกรูปภาพ"
+        }
+      ]
+    },
+    "6FcU7DSqJ6OEWN3FQ7I8+g==": {
+      "translations": [
+        {
+          "translation": "{=Hold down 'command' (⌘) to select multiple images.}{=Maximum 10 images per listing.}{=First image will be featured - drag and drop images to reorder.}{=Recommended aspect ratio is 4:3}"
+        }
+      ]
+    },
+    "jyiI/1KtAEeT6GUNTqUwQQ==": {
+      "translations": [
+        {
+          "translation": "กด 'command' (⌘) ค้างไว้เพื่อเลือกหลายภาพ"
+        }
+      ]
+    },
+    "C57QcRF+iWBp2ulYlEf3cQ==": {
+      "translations": [
+        {
+          "translation": "สูงสุด 10 ภาพต่อรายชื่อ"
+        }
+      ]
+    },
+    "S65qVcS0LFiS3FZBkFRFIw==": {
+      "translations": [
+        {
+          "translation": "ภาพแรกจะถูกนำเสนอ - ลากและวางภาพเพื่อจัดเรียงใหม่"
+        }
+      ]
+    },
+    "NBkmGjaTiM8vyyHeArlyVQ==": {
+      "translations": [
+        {
+          "translation": "อัตราส่วนภาพที่แนะนำคือ 4: 3"
+        }
+      ]
+    },
+    "rtCdERSNcNXuc+AAqIqNDQ==": {
+      "translations": [
+        {
+          "translation": "กลับ"
+        }
+      ]
+    },
+    "6aBoGQUr/5UWzMwm8U2nZQ==": {
+      "translations": [
+        {
+          "translation": "ต่อ"
+        }
+      ]
+    },
+    "+y0oq3lzR/a/W5VOUiqhSw==": {
+      "translations": [
+        {
+          "translation": "{=Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
+        }
+      ]
+    },
+    "F+QNKwb7kASCs7SAgAmYXQ==": {
+      "translations": [
+        {
+          "translation": "เพิ่มรายละเอียดรายการ"
+        }
+      ]
+    },
+    "0ctXwv+dP6jEEWKOPv3BEA==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุชื่อ"
+        }
+      ]
+    },
+    "JwgjElhIfEX7/b25EL1IzA==": {
+      "translations": [
+        {
+          "translation": "ชื่อสั้นเกินไป"
+        }
+      ]
+    },
+    "zufGz2cZkzguKJKY9V2Khg==": {
+      "translations": [
+        {
+          "translation": "ชื่อยาวเกินไป"
+        }
+      ]
+    },
+    "yiygv8uC78unCYSHbax9eA==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุรายละเอียด"
+        }
+      ]
+    },
+    "tKwTKrHrCx3N6r44IGkiuA==": {
+      "translations": [
+        {
+          "translation": "คำอธิบายสั้นเกินไป"
+        }
+      ]
+    },
+    "3W9eRi41Z7uPMb8mRXYPwA==": {
+      "translations": [
+        {
+          "translation": "คำอธิบายยาวเกินไป"
+        }
+      ]
+    },
+    "aMGcdKcKpRdEpQbp3Ba1oA==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบรายชื่อของคุณ"
+        }
+      ]
+    },
+    "7n8lvqv++QH2CB5KvxdLZg==": {
+      "translations": [
+        {
+          "translation": "หัวข้อ"
+        }
+      ]
+    },
+    "hNSNWzh7R4Uerr0O/rJ9Cw==": {
+      "translations": [
+        {
+          "translation": "ประเภท"
+        }
+      ]
+    },
+    "F4BKFWWRbyV/cfzRZn+GKg==": {
+      "translations": [
+        {
+          "translation": "ลักษณะ"
+        }
+      ]
+    },
+    "1SWB7U53C4UgGwRXcrKTEw==": {
+      "translations": [
+        {
+          "translation": "ภาพถ่าย"
+        }
+      ]
+    },
+    "p47Cw8eNUmws809ltOX5wQ==": {
+      "translations": [
+        {
+          "translation": "ไม่มีรูป"
+        }
+      ]
+    },
+    "YiV0mg8J2EqbWfBune3OHA==": {
+      "translations": [
+        {
+          "translation": "เสร็จสิ้น"
+        }
+      ]
+    },
+    "LOFIZ11Y8GW1Zlc1RtQIgw==": {
+      "translations": [
+        {
+          "translation": "{=What happens next?} เมื่อคุณส่งรายชื่อนี้คุณจะถูกขอให้ยืนยันการทำธุรกรรมของคุณใน MetaMask ผู้ซื้อจะสามารถเห็นรายชื่อของคุณและทำข้อเสนอได้"
+        }
+      ]
+    },
+    "n7wNRm92mE1K2r34Kwk0HQ==": {
+      "translations": [
+        {
+          "translation": "จะเกิดอะไรขึ้นต่อไป"
+        }
+      ]
+    },
+    "O1X6MM+wCK4hfwlb0R1FQg==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนที่ {create.details.hourly.step}"
+        }
+      ]
+    },
+    "mPHsV3ZeCl9i47gEQD6UoA==": {
+      "translations": [
+        {
+          "translation": "แก้ไขความพร้อมใช้งาน & ราคา"
+        }
+      ]
+    },
+    "QxBrlISY6Qt5QK4v9Dycag==": {
+      "translations": [
+        {
+          "translation": "โปรดแก้ไขข้อผิดพลาดด้านล่าง ..."
+        }
+      ]
+    },
+    "USE0uC/WTidlp9nO06mAKQ==": {
+      "translations": [
+        {
+          "translation": "กลับ"
+        }
+      ]
+    },
+    "h7IT99DnDlrG3h3IYZRUlw==": {
+      "translations": [
+        {
+          "translation": "ทบทวน"
+        }
+      ]
+    },
+    "riDmAhG5FDBLDCbTomrAYA==": {
+      "translations": [
+        {
+          "translation": "คลิกที่ปฏิทินเพื่อป้อนข้อมูลการกำหนดราคาและห้องว่าง หากต้องการเลือกช่วงเวลาหลายช่วงให้คลิกช่วงเวลาเริ่มต้นแล้วลากไปยังช่วงเวลาสุดท้าย"
+        }
+      ]
+    },
+    "bhJvCq3wWgIxEba/0Vz6Eg==": {
+      "translations": [
+        {
+          "translation": "เริ่มต้น"
+        }
+      ]
+    },
+    "SZYKrG3AnoNvLdBXDvORWQ==": {
+      "translations": [
+        {
+          "translation": "ปลาย"
+        }
+      ]
+    },
+    "Vy7sK/HUnzuHwBwQR7IcwQ==": {
+      "translations": [
+        {
+          "translation": "ที่มีจำหน่าย"
+        }
+      ]
+    },
+    "i1wODftyG2G5m4WrAqm6bQ==": {
+      "translations": [
+        {
+          "translation": "ใช่"
+        }
+      ]
+    },
+    "zG5BYwnQJS+D6wM97UlKKA==": {
+      "translations": [
+        {
+          "translation": "ไม่"
+        }
+      ]
+    },
+    "ZIZrAMI/4IMftVSxFaUmjA==": {
+      "translations": [
+        {
+          "translation": "ราคาที่กำหนดเอง"
+        }
+      ]
+    },
+    "fOOrfyqIzHoDPzYveIfm2w==": {
+      "translations": [
+        {
+          "translation": "บันทึก"
+        }
+      ]
+    },
+    "f0wHNxTzIoEcxc0zQvqerg==": {
+      "translations": [
+        {
+          "translation": "{=You have 0 OGN in your wallet.}{=Once you acquire some OGN you will be able to boost your listing.}{=Learn More}"
+        }
+      ]
+    },
+    "s63cGVY8c2v9cd9DFKWTNw==": {
+      "translations": [
+        {
+          "translation": "คุณมี 0 {=OGN} ในกระเป๋าเงินของคุณ"
+        }
+      ]
+    },
+    "ObL7sfTdiNVgNDUh3L473g==": {
+      "translations": [
+        {
+          "translation": "OGN"
+        }
+      ]
+    },
+    "Rq5qj1KA6NC9wA9dYlQhuA==": {
+      "translations": [
+        {
+          "translation": "เมื่อคุณได้รับ OGN แล้วคุณจะสามารถเพิ่มรายชื่อของคุณได้"
+        }
+      ]
+    },
+    "1bLRt3UQm/BD/KE8lGl6Tg==": {
+      "translations": [
+        {
+          "translation": "{=Learn More}"
+        }
+      ]
+    },
+    "UCqpPb9HUCdDPK8PVNoing==": {
+      "translations": [
+        {
+          "translation": "เรียนรู้เพิ่มเติม"
+        }
+      ]
+    },
+    "MKtD2IUm6q0tNgzVNc1Dmg==": {
+      "translations": [
+        {
+          "translation": "เบี้ยประกันภัย"
+        }
+      ]
+    },
+    "VYOEDKnwV8gTpWz1oC49nw==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะได้รับการเปิดเผยที่ดีที่สุด"
+        }
+      ]
+    },
+    "DVk5nEtiS53RISqwMyik4w==": {
+      "translations": [
+        {
+          "translation": "สูง"
+        }
+      ]
+    },
+    "bfw9ucLZfQAABtwix4GiTA==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะได้รับการเปิดเผยที่สูงกว่าค่าเฉลี่ย"
+        }
+      ]
+    },
+    "BIJdlxSDO8YXBFa1bdjM0Q==": {
+      "translations": [
+        {
+          "translation": "ปานกลาง (แนะนำ)"
+        }
+      ]
+    },
+    "ikpZAn8CWIjfpQuegSxzlg==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะได้รับการเปิดเผยโดยเฉลี่ย"
+        }
+      ]
+    },
+    "Z/fYz1c3EvphoMJjKwN7OQ==": {
+      "translations": [
+        {
+          "translation": "ต่ำ"
+        }
+      ]
+    },
+    "f9TtFygZLuPgBdPqVZjnsw==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะได้รับการเปิดเผยต่ำกว่าค่าเฉลี่ย"
+        }
+      ]
+    },
+    "ZQzbdcmmWm0a7hbHALXxKg==": {
+      "translations": [
+        {
+          "translation": "ไม่มี"
+        }
+      ]
+    },
+    "vPWwkfUC6Qd/085WZq2ubg==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะได้รับการเปิดเผยที่ต่ำมาก"
+        }
+      ]
+    },
+    "XooRcxaiD87mvelZppTDhQ==": {
+      "translations": [
+        {
+          "translation": "เพิ่มรายชื่อของคุณ"
+        }
+      ]
+    },
+    "xG2ima+L2iJfrUt1xqdVgQ==": {
+      "translations": [
+        {
+          "translation": "คุณสามารถเพิ่มรายชื่อของคุณเพื่อให้มองเห็นได้ชัดเจนขึ้นใน Origin DApp ผู้ซื้อมากขึ้นจะเห็นรายชื่อของคุณซึ่งจะเพิ่มโอกาสในการขายที่รวดเร็วและประสบความสำเร็จ"
+        }
+      ]
+    },
+    "kscNc0rAVSIEomcgmPq7bA==": {
+      "translations": [
+        {
+          "translation": "{=About Visibility} Origin sorts and displays listings based on relevance, recency, and boost level. Higher-visibility listings are shown to buyers more often. {=Origin Tokens} OGN is an ERC-20 token used for incentives and governance on the Origin platform. Future intended uses of OGN might include referral rewards, reputation incentives, spam prevention, developer rewards, and platform governance. {=Learn More}"
+        }
+      ]
+    },
+    "5tXXwsHR3cFyTUxebdo/TA==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับทัศนวิสัย"
+        }
+      ]
+    },
+    "9gnWoajmSNKs8bXQsuaIeA==": {
+      "translations": [
+        {
+          "translation": "โทเค็นกำเนิด"
+        }
+      ]
+    },
+    "7FwwGMlpFP9xRfTitbG58w==": {
+      "translations": [
+        {
+          "translation": "{=Learn More}"
+        }
+      ]
+    },
+    "UBWmrwwWC7xV44OHJj2pTg==": {
+      "translations": [
+        {
+          "translation": "เรียนรู้เพิ่มเติม"
+        }
+      ]
+    },
+    "0GEIzMCv8QRDTl4rftCvKQ==": {
+      "translations": [
+        {
+          "translation": "เพิ่มระดับ (ต่อชั่วโมง)"
+        }
+      ]
+    },
+    "ajMq77c6lEYIxaipqASkOw==": {
+      "translations": [
+        {
+          "translation": "บูสต์จะคำนวณและคิดค่าใช้จ่ายเป็น OGN {=Learn more}"
+        }
+      ]
+    },
+    "tqNFJ6tnyub41HNB9CGxBw==": {
+      "translations": [
+        {
+          "translation": "เรียนรู้เพิ่มเติม"
+        }
+      ]
+    },
+    "kyWPelt19yuvWoFxQKtDZQ==": {
+      "translations": [
+        {
+          "translation": "จำนวนเงินสูงสุดที่จะใช้เพื่อเพิ่มรายชื่อนี้ บูสต์อยู่ใน OGN เสมอ {=USD is an estimate.}"
+        }
+      ]
+    },
+    "k6LcXYqvMDOmVbR18GgyFg==": {
+      "translations": [
+        {
+          "translation": "USD เป็นค่าประมาณ"
+        }
+      ]
+    },
+    "MHDMB6RUmTj515XS+kI1gg==": {
+      "translations": [
+        {
+          "translation": "จำเป็นต้องเพิ่ม"
+        }
+      ]
+    },
+    "cyMPk4rzJSLjJxydh9dVZw==": {
+      "translations": [
+        {
+          "translation": "การเพิ่มจะต้องเป็นตัวเลข"
+        }
+      ]
+    },
+    "XEkbF9NnI1TDCslHsTiPOg==": {
+      "translations": [
+        {
+          "translation": "การเพิ่มจะต้องเป็นศูนย์หรือมากกว่า"
+        }
+      ]
+    },
+    "27Ow2UUqDzN80/qFwKuagA==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบให้แน่ใจว่าได้ระบุเงื่อนไขพิเศษสำหรับการเช่าของคุณที่นี่"
+        }
+      ]
+    },
+    "xasl1V2DrlXF0w5I0r7s2Q==": {
+      "translations": [
+        {
+          "translation": "ราคาเริ่มต้นต่อชั่วโมง"
+        }
+      ]
+    },
+    "R0NSwOq5WRJL4Uit0/kcog==": {
+      "translations": [
+        {
+          "translation": "ราคาอยู่ใน ETH เสมอ USD เป็นค่าโดยประมาณ"
+        }
+      ]
+    },
+    "hZUhDQEf+9hn/KDNJqY9kA==": {
+      "translations": [
+        {
+          "translation": "ชั่วโมงที่มีมาตรฐาน"
+        }
+      ]
+    },
+    "Gqt08lyE4VtShAgKdMZokA==": {
+      "translations": [
+        {
+          "translation": "วันอาทิตย์"
+        }
+      ]
+    },
+    "oS2bcoizgT1EyTcNcwlNCw==": {
+      "translations": [
+        {
+          "translation": "วันจันทร์"
+        }
+      ]
+    },
+    "i7g7MLC48FvLYQP0Ir0bIg==": {
+      "translations": [
+        {
+          "translation": "วันอังคาร"
+        }
+      ]
+    },
+    "MKm/5MDN1FQjJE7AxFfNTg==": {
+      "translations": [
+        {
+          "translation": "วันพุธ"
+        }
+      ]
+    },
+    "JQn1L0abnE4cy8rIon0tPQ==": {
+      "translations": [
+        {
+          "translation": "วันพฤหัสบดี"
+        }
+      ]
+    },
+    "PA5kXM1YLSHma7cgMbtljQ==": {
+      "translations": [
+        {
+          "translation": "วันศุกร์"
+        }
+      ]
+    },
+    "qi27QvmA7NtNptih1ZgG7w==": {
+      "translations": [
+        {
+          "translation": "วันเสาร์"
+        }
+      ]
+    },
+    "ApWdVpzCY+Eid9Cvcrb/KA==": {
+      "translations": [
+        {
+          "translation": "เขตเวลา"
+        }
+      ]
+    },
+    "ISfX2Tir6jQS9xizqOSuIA==": {
+      "translations": [
+        {
+          "translation": "เลือกรูปภาพ"
+        }
+      ]
+    },
+    "HKxVFSE2OX1CYvKImRfZrw==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุโซนเวลา"
+        }
+      ]
+    },
+    "orj/pqyrSwNcSJ5rzpPkzg==": {
+      "translations": [
+        {
+          "translation": "เขตเวลายาวเกินไป"
+        }
+      ]
+    },
+    "kh91WvP5MrKsaTjaUWzHcQ==": {
+      "translations": [
+        {
+          "translation": "ราคาที่ต้องการ"
+        }
+      ]
+    },
+    "U9nCBXU2eOe8CVPQTCTtEw==": {
+      "translations": [
+        {
+          "translation": "ราคาต้องเป็นตัวเลข"
+        }
+      ]
+    },
+    "t7vjpACSIJ3fETyxhx15DA==": {
+      "translations": [
+        {
+          "translation": "ราคาจะต้องมากกว่าศูนย์"
+        }
+      ]
+    },
+    "B1hVTCqGsBeFXs0fUYnNwg==": {
+      "translations": [
+        {
+          "translation": "เขตเวลา"
+        }
+      ]
+    },
+    "ttxJ16uXKvVyO+pi/N4INw==": {
+      "translations": [
+        {
+          "translation": "ราคา"
+        }
+      ]
+    },
+    "ufNv3S+wktbn9siw6Ytw8g==": {
+      "translations": [
+        {
+          "translation": "เพิ่มระดับ"
+        }
+      ]
+    },
+    "0CtzPjp/uPSPGXYtTtJi8g==": {
+      "translations": [
+        {
+          "translation": "/ ชั่วโมง"
+        }
+      ]
+    },
+    "r/ZH9kdLh49Y545LVS/Nkw==": {
+      "translations": [
+        {
+          "translation": "ความพร้อมใช้งาน"
+        }
+      ]
+    },
+    "si3GOZhOfQ+CSWieJRAPPg==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนที่ {create.details.fractional.step}"
+        }
+      ]
+    },
+    "8bPBAiupzsZ1ZV+u0c0YAQ==": {
+      "translations": [
+        {
+          "translation": "วันที่เริ่มต้น"
+        }
+      ]
+    },
+    "LEATVaBXpWNSOks5HDLq2g==": {
+      "translations": [
+        {
+          "translation": "วันที่สิ้นสุด"
+        }
+      ]
+    },
+    "zYkJcHqnxHF3sUo4vJwCvw==": {
+      "translations": [
+        {
+          "translation": "ใช่"
+        }
+      ]
+    },
+    "QXctQVwGqxmWrLeNL+UR3A==": {
+      "translations": [
+        {
+          "translation": "ไม่"
+        }
+      ]
+    },
+    "J0el3EDr/vsUHJtTGnxMzg==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนที่ {step}"
+        }
+      ]
+    },
+    "a4KERVeW4yfsDcjfY1hciA==": {
+      "translations": [
+        {
+          "translation": "ลักษณะ"
+        }
+      ]
+    },
+    "VLeBXLo9YjCZvjBUoXecHw==": {
+      "translations": [
+        {
+          "translation": "ราคาเริ่มต้นของวันธรรมดา (วันอาทิตย์ - คืนวันพฤหัสบดี)"
+        }
+      ]
+    },
+    "dux6OsEbP2DZz66V92D8sQ==": {
+      "translations": [
+        {
+          "translation": "ราคาเริ่มต้นสุดสัปดาห์ (คืนวันศุกร์และวันเสาร์)"
+        }
+      ]
+    },
+    "jlefWFM0G2q6WXliPPUUrA==": {
+      "translations": [
+        {
+          "translation": "{=Add Listing Details} อย่าลืมตั้งชื่อและคำอธิบายที่เหมาะสมให้รายชื่อของคุณเพื่อให้ผู้อื่นทราบว่าคุณเสนออะไร การเพิ่มรูปถ่ายบางอย่างจะเพิ่มโอกาสในการขายรายชื่อของคุณ"
+        }
+      ]
+    },
+    "uic6XiogIbPWsEBJCl9oQQ==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุราคาวันหยุดสุดสัปดาห์"
+        }
+      ]
+    },
+    "0Jjsr49OFGENCFnKQHde6A==": {
+      "translations": [
+        {
+          "translation": "การกำหนดราคาวันหยุดสุดสัปดาห์ต้องเป็นตัวเลข"
+        }
+      ]
+    },
+    "5mkmOQsVrenk575XecSDMA==": {
+      "translations": [
+        {
+          "translation": "การกำหนดราคาวันหยุดสุดสัปดาห์ต้องมากกว่าศูนย์"
+        }
+      ]
+    },
+    "nT0M9qAbFnd379S0Kmxyvg==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบรายชื่อของคุณ"
+        }
+      ]
+    },
+    "Q3jRFjK2+LP8T5zcxXCN2A==": {
+      "translations": [
+        {
+          "translation": "วันธรรมดา"
+        }
+      ]
+    },
+    "EUD9J8oz2ZPTZeIebJ0nag==": {
+      "translations": [
+        {
+          "translation": "วันหยุดสุดสัปดาห์"
+        }
+      ]
+    },
+    "ARNhSBqI2w2JdkHRDoU/Ew==": {
+      "translations": [
+        {
+          "translation": "เพิ่มระดับ"
+        }
+      ]
+    },
+    "45VwRk/aiVWEQ2+yAHXeIA==": {
+      "translations": [
+        {
+          "translation": "/ กลางคืน"
+        }
+      ]
+    },
+    "H8XhJIXAMIBERHkbp9ERUA==": {
+      "translations": [
+        {
+          "translation": "เพิ่มระดับ (ต่อคืน)"
+        }
+      ]
+    },
+    "jB0ZDhUT3nHg+Pe0I8Ydgg==": {
+      "translations": [
+        {
+          "translation": "จำนวนหน่วย:"
+        }
+      ]
+    },
+    "J/Gu2gnwZe5c9tNKQaU0Qg==": {
+      "translations": [
+        {
+          "translation": "ยอดรวมที่ต้องการ:"
+        }
+      ]
+    },
+    "UBhlfRnsBL2QeLZ9NI9MaQ==": {
+      "translations": [
+        {
+          "translation": "ขีด จำกัด การเพิ่มของคุณต่ำกว่าจำนวนทั้งหมดที่จำเป็นสำหรับการเพิ่มหน่วยของคุณ หลังจากถึงค่าสูงสุดหน่วยที่เหลือจะไม่ได้รับการเพิ่มระดับ"
+        }
+      ]
+    },
+    "WmFLjnV6U9WkxJDB7zXJBA==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบให้แน่ใจว่าได้รวมรายละเอียดชุดย่อยผลิตภัณฑ์ใด ๆ ไว้ที่นี่"
+        }
+      ]
+    },
+    "Vj/aid3BtAiwTrXFhX0Fcg==": {
+      "translations": [
+        {
+          "translation": "ปริมาณ"
+        }
+      ]
+    },
+    "P7p5Bv4g5fmJ1iRlZdnSJA==": {
+      "translations": [
+        {
+          "translation": "ราคา"
+        }
+      ]
+    },
+    "o/4Cqceg8T/otuBikiMApQ==": {
+      "translations": [
+        {
+          "translation": "(ต่อหน่วย)"
+        }
+      ]
+    },
+    "/KPsAHDllbZyEU3ZL0Wgsg==": {
+      "translations": [
+        {
+          "translation": "ค่าใช้จ่ายในการซื้อรายชื่อนี้ ราคาอยู่ใน ETH เสมอ USD เป็นค่าโดยประมาณ"
+        }
+      ]
+    },
+    "dTU/jHOAIiBZe5c4n+B9KA==": {
+      "translations": [
+        {
+          "translation": "ราคาประกาศ"
+        }
+      ]
+    },
+    "Mavu64vvB2L0NTd4aP7jZQ==": {
+      "translations": [
+        {
+          "translation": "ปริมาณ"
+        }
+      ]
+    },
+    "CzUp1ZNtFuIc2N/oRS/cnA==": {
+      "translations": [
+        {
+          "translation": "/ หน่วย"
+        }
+      ]
+    },
+    "tvzc9JxH7jF12bGWxgBqnQ==": {
+      "translations": [
+        {
+          "translation": "Boost Cap"
+        }
+      ]
+    },
+    "otra7itIzW9AZHLupEzr2Q==": {
+      "translations": [
+        {
+          "translation": "{=Your listing has been created!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "zv04vMjoc+u3r4q1bt7R1A==": {
+      "translations": [
+        {
+          "translation": "สร้างรายชื่อของคุณแล้ว!"
+        }
+      ]
+    },
+    "aGb4Sr/gKkxCvDv52ZvOcQ==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "4pV8TLLz6hO8WICuh3ObXQ==": {
+      "translations": [
+        {
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "Rl661Fcr+bgpn50Oln54jQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ซื้อจะเห็นรายชื่อของคุณในตลาด"
+        }
+      ]
+    },
+    "AfFNJdK9NabTywtkMxIDvw==": {
+      "translations": [
+        {
+          "translation": "เมื่อผู้ซื้อทำข้อเสนอในรายชื่อของคุณคุณสามารถเลือกที่จะยอมรับหรือปฏิเสธมันได้"
+        }
+      ]
+    },
+    "SC+yA14d8QpJ7tc3wzY8KA==": {
+      "translations": [
+        {
+          "translation": "เมื่อข้อเสนอได้รับการยอมรับคุณจะต้องปฏิบัติตามคำสั่งซื้อ"
+        }
+      ]
+    },
+    "jJ1u/NM5hhK1lJp2CUgbgA==": {
+      "translations": [
+        {
+          "translation": "คุณจะได้รับการชำระเงินเมื่อผู้ซื้อยืนยันว่าได้ดำเนินการตามคำสั่งซื้อแล้ว"
+        }
+      ]
+    },
+    "8hl1Ul3OvNJe/xaog0d3PQ==": {
+      "translations": [
+        {
+          "translation": "ดูรายการ"
+        }
+      ]
+    },
+    "WF5wiQpoQDKFGmsPdhYcTg==": {
+      "translations": [
+        {
+          "translation": "{=Your listing has been updated!}{=Your listing will be visible within a few seconds. Here's what happens next: Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "jjWWeb9WNsLCNZe4iyCB8g==": {
+      "translations": [
+        {
+          "translation": "อัปเดตรายชื่อของคุณแล้ว!"
+        }
+      ]
+    },
+    "0CcI3GADi/MTzFdMlETnhw==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณจะปรากฏภายในไม่กี่วินาที นี่คือสิ่งที่เกิดขึ้นต่อไป: {=Buyers will now see your listing on the marketplace.When a buyer makes an offer on your listing, you can choose to accept or reject it.Once the offer is accepted, you will be expected to fulfill the order.You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "Ml76SvqVrEtzaHQ2SoM4JQ==": {
+      "translations": [
+        {
+          "translation": "{=Buyers will now see your listing on the marketplace.}{=When a buyer makes an offer on your listing, you can choose to accept or reject it.}{=Once the offer is accepted, you will be expected to fulfill the order.}{=You will receive payment once the buyer confirms that the order has been fulfilled.}"
+        }
+      ]
+    },
+    "53fXPUK5/q2EDCIdZfIbyA==": {
+      "translations": [
+        {
+          "translation": "ผู้ซื้อจะเห็นรายชื่อของคุณในตลาด"
+        }
+      ]
+    },
+    "2G67LZH9s+eKHG1Sj2y8ow==": {
+      "translations": [
+        {
+          "translation": "เมื่อผู้ซื้อทำข้อเสนอในรายชื่อของคุณคุณสามารถเลือกที่จะยอมรับหรือปฏิเสธมันได้"
+        }
+      ]
+    },
+    "SaVgdy0PSIP6B5lc+Ge0VA==": {
+      "translations": [
+        {
+          "translation": "เมื่อข้อเสนอได้รับการยอมรับคุณจะต้องปฏิบัติตามคำสั่งซื้อ"
+        }
+      ]
+    },
+    "V6niUZBFQlOalwott29Wrw==": {
+      "translations": [
+        {
+          "translation": "คุณจะได้รับการชำระเงินเมื่อผู้ซื้อยืนยันว่าได้ดำเนินการตามคำสั่งซื้อแล้ว"
+        }
+      ]
+    },
+    "+h7sHC/I17QA1UrqZTAz/Q==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด"
+        }
+      ]
+    },
+    "T8gKne+us4nDpTQGNQ8bJA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันอีเมลของคุณ"
+        }
+      ]
+    },
+    "c0QHBkLjVu9yvtD4iDg1nQ==": {
+      "translations": [
+        {
+          "translation": "ยืนยันที่อยู่อีเมลของคุณในการยืนยัน"
+        }
+      ]
+    },
+    "4BXZfpHLvTxuvOZU6ZB1SA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันโปรไฟล์ต้นทางของคุณ"
+        }
+      ]
+    },
+    "efh3HEBtewcly2hpwr/vGw==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ต้นทางของคุณในการยืนยัน"
+        }
+      ]
+    },
+    "lgPT2mVlQJFyCjK2pqg6+A==": {
+      "translations": [
+        {
+          "translation": "ยืนยันหมายเลขโทรศัพท์ของคุณ"
+        }
+      ]
+    },
+    "wJcUHuxk0E95IsWvyIsEkA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันหมายเลขโทรศัพท์ของคุณในการยืนยัน"
+        }
+      ]
+    },
+    "FrB+Nm9CDZb0iwO0LjrmVw==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Twitter ของคุณ"
+        }
+      ]
+    },
+    "safqwXZbnd9jMAbIp0ZJkQ==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Twitter ของคุณใน Attestationts"
+        }
+      ]
+    },
+    "vUisCHQyajUJt8rYR/1Lyg==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Airbnb ของคุณ"
+        }
+      ]
+    },
+    "S4hltAKgMaNWmg0utGTD5w==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Airbnb ของคุณในการยืนยัน"
+        }
+      ]
+    },
+    "ZC5PsdFmUya8ASfu6HPrqA==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Facebook ของคุณ"
+        }
+      ]
+    },
+    "6EBmG1n3RISN5Lg2yDuF/g==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อโปรไฟล์ Facebook ของคุณในการยืนยัน"
+        }
+      ]
+    },
+    "ykecxKYjdZbltCVsKbHPng==": {
+      "translations": [
+        {
+          "translation": "สร้างรายชื่อ"
+        }
+      ]
+    },
+    "dd/MYLQ0xC5UehafmvRhWw==": {
+      "translations": [
+        {
+          "translation": "ประสบความสำเร็จในการซื้อรายชื่อใด ๆ"
+        }
+      ]
+    },
+    "Jhk6fFImPZIKPw+CjCqmYQ==": {
+      "translations": [
+        {
+          "translation": "ซื้อรายชื่อ"
+        }
+      ]
+    },
+    "BJRWuiGhr2E2UXX+1mW1zQ==": {
+      "translations": [
+        {
+          "translation": "ประสบความสำเร็จในการขายรายชื่อใด ๆ ให้สำเร็จ"
+        }
+      ]
+    },
+    "wJvCxFGt/9gion68sV/lYg==": {
+      "translations": [
+        {
+          "translation": "ขายรายชื่อ"
+        }
+      ]
+    },
+    "izPJMarYcneaRP9qt6VHYQ==": {
+      "translations": [
+        {
+          "translation": "ขายรายชื่อในตลาด"
+        }
+      ]
+    },
+    "MdJY4cf78iP+T/KfBri2YQ==": {
+      "translations": [
+        {
+          "translation": "เชิญเพื่อน ๆ"
+        }
+      ]
+    },
+    "oX8s+/5fmxu8zUTtSk30ww==": {
+      "translations": [
+        {
+          "translation": "ชวนเพื่อน ๆ ให้เข้าร่วม Origin ด้วยบัญชีที่ใช้งานอยู่"
+        }
+      ]
+    },
+    "pItIdILg9g+OtKVLiwQvOg==": {
+      "translations": [
+        {
+          "translation": "ไป"
+        }
+      ]
+    },
+    "xrpUGZhxxRqqIthtfE/BAA==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "qciHWfxjkHcdGFOsAql8BQ==": {
+      "translations": [
+        {
+          "translation": "ที่ได้รับ"
+        }
+      ]
+    },
+    "5dUXwaQm/5UXra8ThxFHfQ==": {
+      "translations": [
+        {
+          "translation": "แคมเปญมกราคม 2562"
+        }
+      ]
+    },
+    "VLgoMfdf1OOIusJVHVZpZw==": {
+      "translations": [
+        {
+          "translation": "ม.ค. 2019"
+        }
+      ]
+    },
+    "+mYnEmUrhANzuCQc9B98HA==": {
+      "translations": [
+        {
+          "translation": "แคมเปญกุมภาพันธ์ 2019"
+        }
+      ]
+    },
+    "3eZ8IKMmtB76Dag06jgWIw==": {
+      "translations": [
+        {
+          "translation": "ก.พ. 2562"
+        }
+      ]
+    },
+    "XToCRxQ5XKSz2q61DvIBJQ==": {
+      "translations": [
+        {
+          "translation": "แคมเปญมีนาคม 2562"
+        }
+      ]
+    },
+    "SxKtrOTZLfzQixD/wMfwcQ==": {
+      "translations": [
+        {
+          "translation": "มี.ค. 2019"
+        }
+      ]
+    },
+    "ooZThzMGZhUBriS4fp/Rig==": {
+      "translations": [
+        {
+          "translation": "แคมเปญเมษายน 2019"
+        }
+      ]
+    },
+    "dGbIiE9INRHA+HMtxXovjw==": {
+      "translations": [
+        {
+          "translation": "เม.ย. 2562"
+        }
+      ]
+    },
+    "PGr5EIQul8sc7/OQt/TyAw==": {
+      "translations": [
+        {
+          "translation": "ยืนยันอีเมลและโปรไฟล์ Origin แล้ว"
+        }
+      ]
+    },
+    "52K5Lj4iHypLOwCGtkKH5g==": {
+      "translations": [
+        {
+          "translation": "2 จาก 4 การยืนยัน"
+        }
+      ]
+    },
+    "WtowmMXunhmZxZunExTFxw==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบรายละเอียดแล้ว"
+        }
+      ]
+    },
+    "cnpLd+jN4OwsPzxruTplCA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันอีเมลแล้ว"
+        }
+      ]
+    },
+    "QBq4/BFCdLrq0DNDl4rwSQ==": {
+      "translations": [
+        {
+          "translation": "เหลือเวลาอีก"
+        }
+      ]
+    },
+    "2Gs8p0O9zMC1EB3GH13g6A==": {
+      "translations": [
+        {
+          "translation": "รับ Origin Tokens โดยทำภารกิจด้านล่างให้สำเร็จ"
+        }
+      ]
+    },
+    "wmQb40obgjwfSR3PJ3S3gQ==": {
+      "translations": [
+        {
+          "translation": "เริ่มใน"
+        }
+      ]
+    },
+    "Knou4ElxBFWPWsJIbZVMgw==": {
+      "translations": [
+        {
+          "translation": "แคมเปญนี้ยังไม่เริ่ม"
+        }
+      ]
+    },
+    "JO1VHseitmEDOUDtxCa9wg==": {
+      "translations": [
+        {
+          "translation": "แคมเปญนี้เสร็จสิ้นแล้ว"
+        }
+      ]
+    },
+    "ecv4IbTCLocRwfQW+45MbA==": {
+      "translations": [
+        {
+          "translation": "รณรงค์"
+        }
+      ]
+    },
+    "p2725zoulIdk3+lavbjmtw==": {
+      "translations": [
+        {
+          "translation": "รับโทเค็นแล้ว"
+        }
+      ]
+    },
+    "bgW02lGxcvAKpC6dRqoEXA==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "hVGpV7ERzy5YIu1ZVMKSEQ==": {
+      "translations": [
+        {
+          "translation": "เข้าร่วมกับฉันบน Origin และรับโทเค็น cryptocurrency (OGN) Origin เป็นตลาดใหม่ในการซื้อและขายกับผู้ใช้รายอื่น รับโทเค็น Origin เมื่อคุณสร้างโปรไฟล์เชิญเพื่อนและซื้อและขายในตลาด"
+        }
+      ]
+    },
+    "M9Vqnn6x7SZ8oK++pJY2pQ==": {
+      "translations": [
+        {
+          "translation": "เข้าร่วมกับฉันบน Origin และรับโทเค็น cryptocurrency (OGN) Origin เป็นตลาดใหม่ในการซื้อและขายกับผู้ใช้รายอื่น รับโทเค็น Origin เมื่อคุณสร้างโปรไฟล์เชิญเพื่อนและซื้อและขายในตลาด"
+        }
+      ]
+    },
+    "Lh4pGaUC7h8zXIinWwFfCQ==": {
+      "translations": [
+        {
+          "translation": "เชิญด้วยรหัสของคุณ"
+        }
+      ]
+    },
+    "aqT/hPAg2m2SKM5VeMp4Gw==": {
+      "translations": [
+        {
+          "translation": "ส่งรหัสเชิญเฉพาะให้เพื่อนของคุณ"
+        }
+      ]
+    },
+    "GFQlYI4GSu8CrTFxpAZqTg==": {
+      "translations": [
+        {
+          "translation": "คัดลอกรหัส"
+        }
+      ]
+    },
+    "GKEbT4KEKXxpbVnpjfAKJA==": {
+      "translations": [
+        {
+          "translation": "คัดลอก"
+        }
+      ]
+    },
+    "E74Qrf+98uryCrNWNzNWjw==": {
+      "translations": [
+        {
+          "translation": "สำเนา"
+        }
+      ]
+    },
+    "49GWG62Wgbc5Db/cdlOTkA==": {
+      "translations": [
+        {
+          "translation": "แบ่งปันหรือทวีต"
+        }
+      ]
+    },
+    "RHS3QNznWakBVqh3LxpLsg==": {
+      "translations": [
+        {
+          "translation": "ส่งคำเชิญทางอีเมลทั้งหมด {emailsLength} ฉบับ!"
+        }
+      ]
+    },
+    "+BhaVoboQDWnCyFHsoEPTA==": {
+      "translations": [
+        {
+          "translation": "ไม่สามารถชวนเพื่อน ๆ กรุณาลองใหม่อีกครั้งในภายหลัง."
+        }
+      ]
+    },
+    "PjQI6hx3eXSs3uFE1Y5Q4A==": {
+      "translations": [
+        {
+          "translation": "เกิดข้อผิดพลาดในการเชิญเพื่อน กรุณาลองใหม่อีกครั้งในภายหลัง."
+        }
+      ]
+    },
+    "y8ZfSw9m4c64sMJW1HmnEA==": {
+      "translations": [
+        {
+          "translation": "เชิญทางอีเมล"
+        }
+      ]
+    },
+    "HaPE2eDcY04uUukZPTLUQw==": {
+      "translations": [
+        {
+          "translation": "ป้อนที่อยู่อีเมลของเพื่อนที่คุณต้องการเชิญ"
+        }
+      ]
+    },
+    "6B15EXjM35Y0iE//tR2UwQ==": {
+      "translations": [
+        {
+          "translation": "คั่นที่อยู่อีเมลด้วยเครื่องหมายจุลภาค"
+        }
+      ]
+    },
+    "sGU19GHNLvclsLe2y0TIfg==": {
+      "translations": [
+        {
+          "translation": "เชิญเพื่อน ๆ"
+        }
+      ]
+    },
+    "o8lruKi5bNlhzFdPPkolUQ==": {
+      "translations": [
+        {
+          "translation": "รูปแบบอีเมลไม่ถูกต้อง: {errorEmails}"
+        }
+      ]
+    },
+    "awKHO99GBswNSwKToXmf1g==": {
+      "translations": [
+        {
+          "translation": "ใส่ที่อยู่อีเมลที่ถูกต้องอย่างน้อย 1 รายการ"
+        }
+      ]
+    },
+    "qbja3xI+ynbpMcTuFy+VGA==": {
+      "translations": [
+        {
+          "translation": "ส่งการแจ้งเตือนแล้ว!"
+        }
+      ]
+    },
+    "Ak5KYZjlkZWnJf/t1gAqZw==": {
+      "translations": [
+        {
+          "translation": "ความผิดพลาด"
+        }
+      ]
+    },
+    "Hwpah78HyVTFCglJ0pIUfA==": {
+      "translations": [
+        {
+          "translation": "เตือน"
+        }
+      ]
+    },
+    "nBDaGpsKQrlRbAqtA1zH5g==": {
+      "translations": [
+        {
+          "translation": "ติดต่อ"
+        }
+      ]
+    },
+    "NXb3ICr3h1AnNXcUj6aTCg==": {
+      "translations": [
+        {
+          "translation": "รางวัล"
+        }
+      ]
+    },
+    "5l7gzwYtQf+Vq+tUml4DyQ==": {
+      "translations": [
+        {
+          "translation": "สถานะ"
+        }
+      ]
+    },
+    "QTQw/Z0GCwwzejDEKhLiQQ==": {
+      "translations": [
+        {
+          "translation": "การเปิดใช้งานของผู้ใช้ไม่เสร็จสิ้น"
+        }
+      ]
+    },
+    "jhvYbvMES/Ulab6k+ZEVcg==": {
+      "translations": [
+        {
+          "translation": "เตือน"
+        }
+      ]
+    },
+    "5hCA8hXoU2Eqhes9Dx9BMA==": {
+      "translations": [
+        {
+          "translation": "รอคำเชิญ"
+        }
+      ]
+    },
+    "uWsUjDplwEMjhhlqo1t50Q==": {
+      "translations": [
+        {
+          "translation": "ติดตามความคืบหน้าของเพื่อน ๆ ที่ลงทะเบียนด้วยรหัสเชิญของคุณ"
+        }
+      ]
+    },
+    "l88VUqiyI7tOCygCjTchsw==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "jNZTtswQamPR5fqLpuU38Q==": {
+      "translations": [
+        {
+          "translation": "เชิญสำเร็จ"
+        }
+      ]
+    },
+    "J3Czs3Rp2eWVTn9lcDxSQQ==": {
+      "translations": [
+        {
+          "translation": "ช่วยเพื่อนของคุณรับ OGN เช่นเดียวกับคุณ"
+        }
+      ]
+    },
+    "k7bhJpKhGKToRTeBeXr0aQ==": {
+      "translations": [
+        {
+          "translation": "ที่ได้รับ"
+        }
+      ]
+    },
+    "78XdBNtdiw/IfKVviDlg9A==": {
+      "translations": [
+        {
+          "translation": "กลับสู่แคมเปญ"
+        }
+      ]
+    },
+    "mxHZKBbgLYHiU3xCEEwMtQ==": {
+      "translations": [
+        {
+          "translation": "เชิญเพื่อนของคุณมาที่ Origin"
+        }
+      ]
+    },
+    "J5wgD0JPj/65X0jioq1CwA==": {
+      "translations": [
+        {
+          "translation": "รับ Origin Tokens โดยทำภารกิจด้านล่างให้สำเร็จ"
+        }
+      ]
+    },
+    "qOAPDvqXmJHUU1aJ5vsucw==": {
+      "translations": [
+        {
+          "translation": "ส่งคำเชิญ"
+        }
+      ]
+    },
+    "VBU0HgQlL4CtXWPBtwuzAA==": {
+      "translations": [
+        {
+          "translation": "ติดตามการเชิญ"
+        }
+      ]
+    },
+    "mFCtuJZK+KcGUkKQym20yg==": {
+      "translations": [
+        {
+          "translation": "ยินดีต้อนรับสู่ Origin Protocol"
+        }
+      ]
+    },
+    "JIAeR5l0zsySvXjhN/LjXg==": {
+      "translations": [
+        {
+          "translation": "เชิญโดย"
+        }
+      ]
+    },
+    "2jPZ2DnxwxQpSK3roVvLSA==": {
+      "translations": [
+        {
+          "translation": "เพื่อนของคุณ {name} เชิญคุณให้เข้าร่วม Origin"
+        }
+      ]
+    },
+    "8dUMUvTO9y/E2pDMSrgtWw==": {
+      "translations": [
+        {
+          "translation": "ลงทะเบียนและรับโทเค็นต้นทางฟรี"
+        }
+      ]
+    },
+    "fDuELeOXBQ7+DJbX7oyE6Q==": {
+      "translations": [
+        {
+          "translation": "สมัครสมาชิก Origin วันนี้"
+        }
+      ]
+    },
+    "o8qQ/PN7IXGbYwY+4G8VBw==": {
+      "translations": [
+        {
+          "translation": "{firstName} และคุณทั้งคู่จะได้รับโทเค็นสกุลเงินดิจิตอลเข้ารหัส (OGN)"
+        }
+      ]
+    },
+    "KXy/meBwGaf5yVfEd9HDHQ==": {
+      "translations": [
+        {
+          "translation": "รับโทเค็นเพิ่มเติมเมื่อคุณยืนยันโปรไฟล์เชิญเพื่อนและซื้อและขายใน Origin"
+        }
+      ]
+    },
+    "aq5/1FnXv6c/TPNJh+tpEg==": {
+      "translations": [
+        {
+          "translation": "สมัครเลย"
+        }
+      ]
+    },
+    "tzDkMYn3LmF1aKkySIvtAQ==": {
+      "translations": [
+        {
+          "translation": "แหล่งกำเนิดคืออะไร?"
+        }
+      ]
+    },
+    "6YhgbdYLnjKT4XB+UPkgkA==": {
+      "translations": [
+        {
+          "translation": "Origin เป็นตลาดแห่งแรกในโลกที่ถูกสร้างขึ้นบน blockchain"
+        }
+      ]
+    },
+    "CyiodoDeIQn/ar6XbKqt4Q==": {
+      "translations": [
+        {
+          "translation": "ใช้งานฟรีพร้อมค่าธรรมเนียมการทำธุรกรรม 0%"
+        }
+      ]
+    },
+    "s13YMOt7j7kdlx3jc+qggw==": {
+      "translations": [
+        {
+          "translation": "การเรียกดูและการค้นหาที่ต่อต้านการเซ็นเซอร์"
+        }
+      ]
+    },
+    "5CBWzDNJNVigCeBUwiJOLw==": {
+      "translations": [
+        {
+          "translation": "หลายประเภทเช่นบัตรของขวัญการซื้อกลับบ้านอีคอมเมิร์ซและบริการ"
+        }
+      ]
+    },
+    "oegZB/dZhQav6NEGEfpaIw==": {
+      "translations": [
+        {
+          "translation": "โทเค็นต้นทางคืออะไร"
+        }
+      ]
+    },
+    "qXGCW6AVWNckr8ZZXh0sRA==": {
+      "translations": [
+        {
+          "translation": "โทเค็น cryptocurrency Origin (OGN) เป็นโทเค็น ERC-20 ที่สามารถใช้บนแพลตฟอร์มได้หลายวิธี"
+        }
+      ]
+    },
+    "PlCEphvzEyQp/7SnvJWUHg==": {
+      "translations": [
+        {
+          "translation": "โทเค็น Origin ที่ได้รับ (OGN) ได้รับการล็อคเพื่อใช้ในแอพ Origin และแพลตฟอร์ม พวกเขาไม่สามารถถ่ายโอนไปยังผู้ใช้รายอื่นได้ในเวลานี้ ในอนาคตคาดว่า OGN จะปลดล็อคและโอนย้ายได้"
+        }
+      ]
+    },
+    "zQ+amcZcEbrkMHT1gTyR8A==": {
+      "translations": [
+        {
+          "translation": "เรียนรู้เพิ่มเติม"
+        }
+      ]
+    },
+    "SgbXw8gUCvCMRANRfNbZdw==": {
+      "translations": [
+        {
+          "translation": "การส่งเสริม"
+        }
+      ]
+    },
+    "YFtqoYhKvImJqf0XglUXTw==": {
+      "translations": [
+        {
+          "translation": "ผู้ขายใช้ OGN เพื่อเพิ่มรายชื่อในตลาด สิ่งนี้ทำให้รายชื่อของพวกเขามองเห็นและจัดวางได้ดี รายชื่อที่มี OGN จะมีโอกาสขายได้เร็วขึ้น"
+        }
+      ]
+    },
+    "HWTdiJhpW9S+qWAG/3D96g==": {
+      "translations": [
+        {
+          "translation": "รางวัล"
+        }
+      ]
+    },
+    "5vp0hYaYGt8rhy0Z4hKf9w==": {
+      "translations": [
+        {
+          "translation": "OGN เป็นรางวัล cryptocurrency ที่ผู้ใช้ Origin ได้รับ รับรางวัลเมื่อคุณยืนยันบัญชีของคุณหรือเชิญเพื่อนเข้าร่วม Origin แม้แต่รับ OGN เป็นเงินสดคืนเมื่อคุณซื้อและขาย"
+        }
+      ]
+    },
+    "NK8yEk6S/zuO701X4M+TMQ==": {
+      "translations": [
+        {
+          "translation": "เริ่มรับโทเค็น Origin ภายในไม่กี่นาที"
+        }
+      ]
+    },
+    "OxT7PzUj7b+bcTIHNpm2Ug==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อกระเป๋าเงินดิจิตอลของคุณไปยัง Origin"
+        }
+      ]
+    },
+    "QTWkl7l3Zq6SNON+xjM6fg==": {
+      "translations": [
+        {
+          "translation": "ลงทะเบียนและยืนยันบัญชีและสิทธิ์ของคุณ"
+        }
+      ]
+    },
+    "EPa2KOi7VdqeXU4rahzx/g==": {
+      "translations": [
+        {
+          "translation": "เริ่มรับรายได้วันนี้"
+        }
+      ]
+    },
+    "ZYfPOEnoaFfIjmdBj/wQDA==": {
+      "translations": [
+        {
+          "translation": "เริ่ม"
+        }
+      ]
+    },
+    "1jz0lXMtdwPie5XvZGCd4w==": {
+      "translations": [
+        {
+          "translation": "มีคำถาม?"
+        }
+      ]
+    },
+    "uIUyjEjCWzwJBVxnypih1Q==": {
+      "translations": [
+        {
+          "translation": "ได้รับการติดต่อ"
+        }
+      ]
+    },
+    "2a9E/BUZqanf5LzL99VMwQ==": {
+      "translations": [
+        {
+          "translation": "คุณถูกห้ามไม่ให้รับโทเค็น"
+        }
+      ]
+    },
+    "NaM6Vmz6iiRm1WDKnAmoPw==": {
+      "translations": [
+        {
+          "translation": "เข้าร่วม {campaignName} ของเราเพื่อรับโทเค็น"
+        }
+      ]
+    },
+    "sbO8XiYlqyNx+ZffAKr2Xw==": {
+      "translations": [
+        {
+          "translation": "รับ OGN โดยทำภารกิจให้เสร็จเช่นยืนยันตัวตนของคุณและแบ่งปัน Origin กับเพื่อน ๆ ของคุณ OGN สามารถใช้งานได้หลากหลายวิธี OGN ที่ได้รับจะถูกโอนหลังจากสิ้นสุด {campaignName} เพื่อรับโทเค็น"
+        }
+      ]
+    },
+    "8xBa1ZrG+j1EPiS9IifRaQ==": {
+      "translations": [
+        {
+          "translation": "ยกเลิก"
+        }
+      ]
+    },
+    "Z+VvwUtcmCiHHZ/y4kYNLQ==": {
+      "translations": [
+        {
+          "translation": "สมัครสมาชิก Origin"
+        }
+      ]
+    },
+    "NiVro9WP7TRRxKWh3pVKVQ==": {
+      "translations": [
+        {
+          "translation": "ฉันยอมรับข้อกำหนดและเงื่อนไขต่างๆ"
+        }
+      ]
+    },
+    "SitBBxJx3gAiNXHZYDLTYA==": {
+      "translations": [
+        {
+          "translation": "ยอมรับข้อกำหนด"
+        }
+      ]
+    },
+    "WMYdJljtuuVbpA+VRa7M3w==": {
+      "translations": [
+        {
+          "translation": "โอ๊ะโอ {country} ไม่มีสิทธิ์"
+        }
+      ]
+    },
+    "Z7Sx4nV0a/dHqPx5QNIXdg==": {
+      "translations": [
+        {
+          "translation": "น่าเสียดายที่ดูเหมือนว่าคุณกำลังอยู่ในประเทศที่กฎระเบียบของรัฐบาลไม่อนุญาตให้คุณมีส่วนร่วมในแคมเปญต้นทาง"
+        }
+      ]
+    },
+    "kUrilejuCqE9Cmu7uYvtcw==": {
+      "translations": [
+        {
+          "translation": "เราตรวจพบประเทศของคุณอย่างไม่ถูกต้องหรือไม่?"
+        }
+      ]
+    },
+    "yjSH//GTRsIZgQGrshYGyQ==": {
+      "translations": [
+        {
+          "translation": "ฉันรับรองว่าฉันไม่ใช่พลเมืองหรือถิ่นที่อยู่ของ {country}"
+        }
+      ]
+    },
+    "ToBlXADjzL3C1yE3SulP9g==": {
+      "translations": [
+        {
+          "translation": "ข้อผิดพลาด: ไม่สามารถตรวจจับประเทศได้"
         }
       ]
     },
@@ -531,14 +3231,14 @@
     "33EPBwLfS9o3lGs62U+89w==": {
       "translations": [
         {
-          "translation": "ป้อน Url โปรไฟล์ Airbnb ด้านล่าง"
+          "translation": "ป้อน URL โปรไฟล์ Airbnb ด้านล่าง"
         }
       ]
     },
     "QfLmm1Y/WUbCRLJtHN4WAg==": {
       "translations": [
         {
-          "translation": "ผู้ใช้รายอื่นจะทราบว่าคุณมีโปรไฟล์ Airbnb ที่ได้รับการยืนยันแล้ว"
+          "translation": "ผู้ใช้รายอื่นจะรู้ว่าคุณมีโปรไฟล์ Airbnb ที่ยืนยันแล้วและรหัสผู้ใช้ของคุณจะถูกเผยแพร่บน blockchain"
         }
       ]
     },
@@ -552,35 +3252,819 @@
     "3SSVIaE/i8UtPArlfLYLow==": {
       "translations": [
         {
-          "translation": "ไปที่เว็บไซต์ Airbnb แก้ไขโปรไฟล์ของคุณและวางข้อความต่อไปนี้ลงในรายละเอียดโปรไฟล์"
+          "translation": "ไปที่เว็บไซต์ Airbnb แก้ไขโปรไฟล์ของคุณและวางข้อความต่อไปนี้ลงในคำอธิบายโปรไฟล์:"
         }
       ]
     },
     "VQZu4ySJiecJDDKhwmZvlA==": {
       "translations": [
         {
-          "translation": "ดำเนินการต่อเมื่อป้อนรหัสยืนยันในโปรไฟล์ Airbnb ของคุณแล้ว"
+          "translation": "ดำเนินการต่อเมื่อป้อนรหัสยืนยันในโปรไฟล์ Airbnb ของคุณ"
+        }
+      ]
+    },
+    "26B3Ynk36rNu1TVoU/Uq7Q==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Airbnb แล้ว!"
+        }
+      ]
+    },
+    "BlVAmm03lnkWBtZsV9i8zQ==": {
+      "translations": [
+        {
+          "translation": "อย่าลืมที่จะเผยแพร่การเปลี่ยนแปลงของคุณ"
+        }
+      ]
+    },
+    "EpMTM+gxR0t1+atQlJNz6g==": {
+      "translations": [
+        {
+          "translation": "การเผยแพร่ไปยังบล็อกเชนทำให้ผู้ใช้รายอื่นรู้ว่าคุณมีโปรไฟล์ที่ยืนยันแล้ว"
+        }
+      ]
+    },
+    "lRp7RLflwxDci7fil4BTOw==": {
+      "translations": [
+        {
+          "translation": "ป้อนที่อยู่อีเมลของคุณด้านล่างและ OriginID จะส่งรหัสยืนยันให้คุณ"
+        }
+      ]
+    },
+    "FCQzb9sToGt24ikV3xF2LQ==": {
+      "translations": [
+        {
+          "translation": "ยืนยันที่อยู่อีเมล"
+        }
+      ]
+    },
+    "YuuSM/LwS49O8d4HGztcGg==": {
+      "translations": [
+        {
+          "translation": "ในการตรวจสอบอีเมลของคุณคุณให้สิทธิ์ Origin เพื่อส่งอีเมลถึงคุณเป็นครั้งคราวเช่นการแจ้งเตือนเกี่ยวกับธุรกรรมของคุณ"
+        }
+      ]
+    },
+    "hk0K2k9QnD+15KLvRe4Ppg==": {
+      "translations": [
+        {
+          "translation": "ยืนยันที่อยู่อีเมลของคุณ"
+        }
+      ]
+    },
+    "Sp/o1Mpuyl9WKgDIXITGaQ==": {
+      "translations": [
+        {
+          "translation": "ใส่รหัสที่เราส่งให้คุณด้านล่าง"
+        }
+      ]
+    },
+    "eRcQebtSS5jWwVqKU84vPg==": {
+      "translations": [
+        {
+          "translation": "ยืนยันที่อยู่อีเมลแล้ว!"
+        }
+      ]
+    },
+    "WwpLz8qYef22cn4ptqMTew==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Facebook ของคุณ"
+        }
+      ]
+    },
+    "UPltnTXrAbG5MMRJX+SAzw==": {
+      "translations": [
+        {
+          "translation": "{=Warning:} ไม่สามารถใช้งานบนอุปกรณ์มือถือได้ในขณะนี้"
+        }
+      ]
+    },
+    "gfO6jcHq55dE1IQ3KWk2DQ==": {
+      "translations": [
+        {
+          "translation": "คำเตือน:"
+        }
+      ]
+    },
+    "1ilvlskGFH6As45MFKd2cw==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้รายอื่นจะรู้ว่าคุณมีบัญชี Facebook ที่ได้รับการยืนยันแล้ว แต่รายละเอียดบัญชีของคุณจะไม่ถูกเผยแพร่ใน blockchain เราจะไม่โพสต์ในนามของคุณ"
+        }
+      ]
+    },
+    "N/dwdqt311iPHZqTOvL1Jg==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Facebook แล้ว!"
+        }
+      ]
+    },
+    "Jgc8914dz9BLi79OA6YdZA==": {
+      "translations": [
+        {
+          "translation": "ยืนยันหมายเลขโทรศัพท์ของคุณ"
+        }
+      ]
+    },
+    "gLtSMYd36HCni1L2vVTK5g==": {
+      "translations": [
+        {
+          "translation": "ป้อนหมายเลขโทรศัพท์ของคุณด้านล่างและ OriginID จะส่งรหัสยืนยันให้คุณทาง SMS"
+        }
+      ]
+    },
+    "Le4Tec5F+U/jkYxINqFxCg==": {
+      "translations": [
+        {
+          "translation": "เมื่อยืนยันหมายเลขโทรศัพท์ของคุณคุณอนุญาตให้ Origin ส่งอีเมลถึงคุณเป็นครั้งคราวเช่นการแจ้งเตือนเกี่ยวกับธุรกรรม"
+        }
+      ]
+    },
+    "9/lqPBNSYSjdOmXnncrbqQ==": {
+      "translations": [
+        {
+          "translation": "ใส่รหัสที่เราส่งให้คุณด้านล่าง"
+        }
+      ]
+    },
+    "80BXAlOVXtYhmFJD2dDKqw==": {
+      "translations": [
+        {
+          "translation": "ยืนยันหมายเลขโทรศัพท์แล้ว!"
+        }
+      ]
+    },
+    "9PlJCHXfwYjV6OULfLe2Nw==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Twitter ของคุณ"
+        }
+      ]
+    },
+    "fO7UjRhak4WxWI/FYFEZgA==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้รายอื่นจะรู้ว่าคุณมีบัญชี Twitter ที่ได้รับการยืนยันแล้ว แต่รายละเอียดบัญชีของคุณจะไม่ถูกเผยแพร่ใน blockchain เราจะไม่โพสต์ในนามของคุณ"
+        }
+      ]
+    },
+    "YaiXsuELKE5yLW1VaJdYrQ==": {
+      "translations": [
+        {
+          "translation": "ยืนยันบัญชี Twitter แล้ว!"
+        }
+      ]
+    },
+    "idjV2bzcgcdWRmYb+Kh/MA==": {
+      "translations": [
+        {
+          "translation": "เช็คอิน"
+        }
+      ]
+    },
+    "6i3NbGdxeHqAAMe1CjZIVA==": {
+      "translations": [
+        {
+          "translation": "เช็คเอาท์"
+        }
+      ]
+    },
+    "egC3pFdbL8DkfMRT/t8PXg==": {
+      "translations": [
+        {
+          "translation": "ETH / คืน"
+        }
+      ]
+    },
+    "M/PVI8j/6NkKUpHWnIlvlw==": {
+      "translations": [
+        {
+          "translation": "เลื่อนลงเพื่อดูปฏิทินที่มีอยู่"
+        }
+      ]
+    },
+    "Zz1WPYjxJ3Su4UzYSlNmAQ==": {
+      "translations": [
+        {
+          "translation": "ไม่มี"
+        }
+      ]
+    },
+    "iZBl/o1TZqV6vfcowwKpzA==": {
+      "translations": [
+        {
+          "translation": "ราคารวม"
+        }
+      ]
+    },
+    "sxoQF5jfF+ty/WN68uC1AQ==": {
+      "translations": [
+        {
+          "translation": "หนังสือ"
+        }
+      ]
+    },
+    "7c71+w6U7Nbkd+h9e7WxOg==": {
+      "translations": [
+        {
+          "translation": "เริ่มต้น"
+        }
+      ]
+    },
+    "OYSTbu83qKwLoc0ATVRqTQ==": {
+      "translations": [
+        {
+          "translation": "ปลาย"
+        }
+      ]
+    },
+    "HlsHoXg/7lA8sMnqxARtbg==": {
+      "translations": [
+        {
+          "translation": "ETH / ชั่วโมง"
+        }
+      ]
+    },
+    "LY/VClxRIOhqnmCufIorow==": {
+      "translations": [
+        {
+          "translation": "/ แต่ละอัน"
+        }
+      ]
+    },
+    "H7Yn7wWj8QjgxhH6d6TYpg==": {
+      "translations": [
+        {
+          "translation": "ซื้อ"
+        }
+      ]
+    },
+    "MVfYNYO7/LWVBJvfCQD2Eg==": {
+      "translations": [
+        {
+          "translation": "ขาย"
+        }
+      ]
+    },
+    "UdSqyocYhlJiUuENZNivKg==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "k1wQW8bBvTN67vomiMi6zQ==": {
+      "translations": [
+        {
+          "translation": "ที่มีจำหน่าย"
+        }
+      ]
+    },
+    "JA586NEcuAeEOGwkiG9v0g==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Pending}{=You have already made an offer on this listing.}"
+        }
+      ]
+    },
+    "hWTLMPncBrn7NuTNe3adUw==": {
+      "translations": [
+        {
+          "translation": "รายชื่อนี้คือ"
+        }
+      ]
+    },
+    "AXOZAIfpi3fyfbSZZZUWVw==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "Oo0lPpXsGXLI4stFbvxvOQ==": {
+      "translations": [
+        {
+          "translation": "คุณได้ทำข้อเสนอสำหรับรายชื่อนี้แล้ว"
+        }
+      ]
+    },
+    "hBV0SlHyDCq8N+AD5/jzqw==": {
+      "translations": [
+        {
+          "translation": "ดูการซื้อของฉัน"
+        }
+      ]
+    },
+    "5xZsR6GEptb2JxRgPaQXNw==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Pending}{=Another buyer has already made an offer on this listing. Try visiting the listings page and searching for something similar.}"
+        }
+      ]
+    },
+    "oM8UOkBxpejWiBYkIzweQA==": {
+      "translations": [
+        {
+          "translation": "รายชื่อนี้คือ"
+        }
+      ]
+    },
+    "OxViihxm7s5G99NRoHq2ig==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "IRK4mGldV6ZsN6QNm7yfBQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ซื้อรายอื่นได้ยื่นข้อเสนอให้กับรายชื่อนี้แล้ว ลองไปที่หน้ารายชื่อและค้นหาสิ่งที่คล้ายกัน"
+        }
+      ]
+    },
+    "pIN1eB9fKjTSZ/lxQM/HUA==": {
+      "translations": [
+        {
+          "translation": "ดูรายการ"
+        }
+      ]
+    },
+    "i4gBpnp1ab7o+e8in/u62Q==": {
+      "translations": [
+        {
+          "translation": "{=This listing is}{=Sold}{=This listing is sold out. Try visiting the listings page and searching for something similar.}"
+        }
+      ]
+    },
+    "fQXJIdRS1RqeF021uYRFqg==": {
+      "translations": [
+        {
+          "translation": "รายชื่อนี้คือ"
+        }
+      ]
+    },
+    "NeYO+Ltj4nYFHkW6uPsL2Q==": {
+      "translations": [
+        {
+          "translation": "ขาย"
+        }
+      ]
+    },
+    "GV+cUkvlSJKnnakvO/EACA==": {
+      "translations": [
+        {
+          "translation": "รายชื่อนี้หมดแล้ว ลองไปที่หน้ารายชื่อและค้นหาสิ่งที่คล้ายกัน"
+        }
+      ]
+    },
+    "SadssMjUlVtgKoOKVWzHUw==": {
+      "translations": [
+        {
+          "translation": "ปริมาณ"
+        }
+      ]
+    },
+    "0gg54KefGUb3y/W0neIZDQ==": {
+      "translations": [
+        {
+          "translation": "รายการ {id}"
+        }
+      ]
+    },
+    "l4YUMk7fsVyKL2TTsldMdw==": {
+      "translations": [
+        {
+          "translation": "ไม่พบรายชื่อ"
+        }
+      ]
+    },
+    "QkpyTw8uCT69QcDHqAKt7Q==": {
+      "translations": [
+        {
+          "translation": "รายชื่อไม่ถูกต้อง"
+        }
+      ]
+    },
+    "0hZyMC0etK9bwztn8hnbhg==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับผู้ขาย"
+        }
+      ]
+    },
+    "L2oPKF5xsKmJCOtmT+Uwfg==": {
+      "translations": [
+        {
+          "translation": "* คลิกและลากเพื่อเลือกช่วงวันที่"
+        }
+      ]
+    },
+    "9hd32nz5BtBUmOmM269/AA==": {
+      "translations": [
+        {
+          "translation": "เขตเวลา:"
+        }
+      ]
+    },
+    "IOWXtJhXlVb9On/GWu5Ufg==": {
+      "translations": [
+        {
+          "translation": "หมายเหตุ: สิ่งนี้แตกต่างจากเขตเวลาของคุณเป็น {userTimeZone}"
+        }
+      ]
+    },
+    "5hZ6uYzeyyP9j8VnTvQ0Gg==": {
+      "translations": [
+        {
+          "translation": "* คลิกและลากเพื่อเลือกช่วงเวลา"
+        }
+      ]
+    },
+    "o6Z2JUXPEzsq4mjxtgxysg==": {
+      "translations": [
+        {
+          "translation": "ทั้งหมด"
+        }
+      ]
+    },
+    "FRFO6tLpPFCURVOimytNpQ==": {
+      "translations": [
+        {
+          "translation": "ค้นหา"
+        }
+      ]
+    },
+    "6WXI9iYt6WPtHpJwbK2i4g==": {
+      "translations": [
+        {
+          "translation": "หมายเหตุ: การค้นหาไม่พร้อมใช้งาน"
+        }
+      ]
+    },
+    "IL0sLDeP9dTTFxmOm7nEbA==": {
+      "translations": [
+        {
+          "translation": "/ กลางคืน"
+        }
+      ]
+    },
+    "kOyzntM8/j1UQbONQh4jRA==": {
+      "translations": [
+        {
+          "translation": "/ ชั่วโมง"
+        }
+      ]
+    },
+    "fKJBt8Xs1iL0KZrQdPpT0Q==": {
+      "translations": [
+        {
+          "translation": "รายชื่อ"
+        }
+      ]
+    },
+    "gpeQTbRe56v7+THmtTo1dw==": {
+      "translations": [
+        {
+          "translation": "ไม่พบผลลัพธ์การค้นหา"
+        }
+      ]
+    },
+    "kxDQ9H0JkRh27rfshZkoVA==": {
+      "translations": [
+        {
+          "translation": "ตลาดของคุณยังไม่มีรายชื่อใด ๆ"
+        }
+      ]
+    },
+    "Q776FeWv/0+8JXPq6YHQ6Q==": {
+      "translations": [
+        {
+          "translation": "คุณสามารถสร้างรายชื่อด้วยตัวเองหรือเชิญผู้ขายเข้าร่วมแพลตฟอร์มของคุณ!"
+        }
+      ]
+    },
+    "0kTHM7ddLclB+FcU8ttrcQ==": {
+      "translations": [
+        {
+          "translation": "สร้างรายชื่อ"
+        }
+      ]
+    },
+    "vYS+dQLoVNtqFLJqO8A42g==": {
+      "translations": [
+        {
+          "translation": "ไม่พบรายชื่อ"
+        }
+      ]
+    },
+    "BFrTfCZ9EtXiz3llu4N2aw==": {
+      "translations": [
+        {
+          "translation": "{number} รายชื่อ"
+        }
+      ]
+    },
+    "+0fI9MUbai7EjA2MflxNgQ==": {
+      "translations": [
+        {
+          "translation": "1 รายการ"
+        }
+      ]
+    },
+    "H7it/Nh1dTkCwZ8prH+mcw==": {
+      "translations": [
+        {
+          "translation": "โหลดมากขึ้น"
+        }
+      ]
+    },
+    "FA3Sz+Yvj0lD8zBDmiEOeQ==": {
+      "translations": [
+        {
+          "translation": "ข้อความ"
+        }
+      ]
+    },
+    "NVG2B52dMnz2pPid0hWHrw==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลดบทสนทนา ..."
+        }
+      ]
+    },
+    "iITnf069bvCAf0wFFTjdmA==": {
+      "translations": [
+        {
+          "translation": "ไม่สามารถสืบค้นข้อความ"
+        }
+      ]
+    },
+    "sOGxRcYUJAsnpsE2TfRY7w==": {
+      "translations": [
+        {
+          "translation": "ไม่มีการสนทนา!"
+        }
+      ]
+    },
+    "zUBDRYBvIHyFIYSdMxKpmA==": {
+      "translations": [
+        {
+          "translation": "ไม่สามารถสืบค้นข้อความ"
+        }
+      ]
+    },
+    "g3jsZCPyzDhp0H3lcRPbrg==": {
+      "translations": [
+        {
+          "translation": "ปิด"
+        }
+      ]
+    },
+    "lde4nZGa2Q9Owr5E9dQ18w==": {
+      "translations": [
+        {
+          "translation": "พิมพ์บางอย่าง..."
+        }
+      ]
+    },
+    "ahuqzU84qE8WZujfPDjRow==": {
+      "translations": [
+        {
+          "translation": "ส่ง"
+        }
+      ]
+    },
+    "CTNRjx/teJ3kDf+M5Aq+xg==": {
+      "translations": [
+        {
+          "translation": "รอการยืนยัน Blockchain"
+        }
+      ]
+    },
+    "OvbafFNA9qaLyFyagq7xUQ==": {
+      "translations": [
+        {
+          "translation": "รอการยืนยัน Blockchain"
+        }
+      ]
+    },
+    "rsGnOhUcaEN+hW+x0hHJ3A==": {
+      "translations": [
+        {
+          "translation": "{confirmations.noOfConfirmations} จาก 6 การยืนยัน"
+        }
+      ]
+    },
+    "hRPbTuJxxb+xLO8G16c7Gg==": {
+      "translations": [
+        {
+          "translation": "เสร็จสิ้น (ยืนยัน{confirmations.noOfConfirmations})"
+        }
+      ]
+    },
+    "vZz4IJwzaRaGGLkANtyZRQ==": {
+      "translations": [
+        {
+          "translation": "เริ่ม"
+        }
+      ]
+    },
+    "3paaeWPERztrC5zCpsUs8A==": {
+      "translations": [
+        {
+          "translation": "ขายในแหล่งกำเนิด"
+        }
+      ]
+    },
+    "lC0Zq16Tnu762WQln8kZVQ==": {
+      "translations": [
+        {
+          "translation": "เกิดข้อผิดพลาดในการโหลดข้อความ"
+        }
+      ]
+    },
+    "Flym48gbcjw+7qWMcE8J2w==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด ..."
+        }
+      ]
+    },
+    "8+XZq96344YbYNHFy4Mv/w==": {
+      "translations": [
+        {
+          "translation": "ข้อความที่ยังไม่ได้อ่าน"
+        }
+      ]
+    },
+    "1skYvPMWEogMRMf/xYKpEQ==": {
+      "translations": [
+        {
+          "translation": "ข้อความที่ยังไม่ได้อ่าน"
+        }
+      ]
+    },
+    "I3Ubit0eF6p2kxPsdWNPqA==": {
+      "translations": [
+        {
+          "translation": "ดูข้อความ"
+        }
+      ]
+    },
+    "OSw+Z5uyNlHroNxtGMiX+Q==": {
+      "translations": [
+        {
+          "translation": "ค้นหาหมวดหมู่"
+        }
+      ]
+    },
+    "FT41b3HlbYvNCfadzieRZA==": {
+      "translations": [
+        {
+          "translation": "เพิ่มรายชื่อ"
+        }
+      ]
+    },
+    "QCZW33pDrKY20rFahZ1vkg==": {
+      "translations": [
+        {
+          "translation": "การสั่งซื้อสินค้า"
+        }
+      ]
+    },
+    "1M/tpTltyUByYgb7M0guaQ==": {
+      "translations": [
+        {
+          "translation": "รายชื่อ"
+        }
+      ]
+    },
+    "uX4FVwy9nLJdzqyxfWcTWA==": {
+      "translations": [
+        {
+          "translation": "ขาย"
+        }
+      ]
+    },
+    "6m3zRzqbtA1iEoFy2tjugw==": {
+      "translations": [
+        {
+          "translation": "ข้อความ"
+        }
+      ]
+    },
+    "eOnQjifzRCehDAuj+e74tQ==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือน"
+        }
+      ]
+    },
+    "U10zgJUwkYaALaRUApbsog==": {
+      "translations": [
+        {
+          "translation": "เกิดข้อผิดพลาดในการโหลดการแจ้งเตือน"
+        }
+      ]
+    },
+    "bs+KlyM/NbMHzktR8342YA==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด ..."
+        }
+      ]
+    },
+    "Mv6cuSCfewB7BjjKYyGBqw==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือน"
+        }
+      ]
+    },
+    "PURpU3OPAdsnJUVhDUpH5g==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือน"
+        }
+      ]
+    },
+    "gzT3SioJ7I7iiS5z4VOm8g==": {
+      "translations": [
+        {
+          "translation": "ดูทั้งหมด"
+        }
+      ]
+    },
+    "kNz1eO9OH1s6sAI5ulKC9g==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อกับ"
+        }
+      ]
+    },
+    "fCssoMJ7OY8O7CGYo8j0CA==": {
+      "translations": [
+        {
+          "translation": "ที่อยู่ ETH"
+        }
+      ]
+    },
+    "HKFnR0gnVwEyd0YWbVaFOQ==": {
+      "translations": [
+        {
+          "translation": "ยกเลิกการเชื่อมโยงมือถือ"
+        }
+      ]
+    },
+    "Oq+ZNFsqTuq3uYQzNAQbYA==": {
+      "translations": [
+        {
+          "translation": "แก้ไขโปรไฟล์"
+        }
+      ]
+    },
+    "HInnBpa08p5k4Yj/INtqAw==": {
+      "translations": [
+        {
+          "translation": "ตัวตนของฉัน"
+        }
+      ]
+    },
+    "oea0f4wCvEuKEpgRZVUAOQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้ที่ไม่มีชื่อ"
+        }
+      ]
+    },
+    "nDkJLm47Ba0gcbYvGk8vkQ==": {
+      "translations": [
+        {
+          "translation": "รายละเอียดความแข็งแกร่ง"
         }
       ]
     },
     "woogmbq4DRXaFtlVLhim8A==": {
       "translations": [
         {
-          "translation": "รายชื่อของฉัน"
+          "translation": "รายการของฉัน"
         }
       ]
     },
     "0Oc4f1gpOBz24xArpRgELA==": {
       "translations": [
         {
-          "translation": "ขายของฉัน"
+          "translation": "ยอดขายของฉัน"
         }
       ]
     },
     "bWkBLUVYzUfhMbRmOye0Ww==": {
       "translations": [
         {
-          "translation": "เพิ่มรายการ"
+          "translation": "เพิ่มรายชื่อ"
         }
       ]
     },
@@ -591,24 +4075,1732 @@
         }
       ]
     },
+    "c2B3e+aG9e/X9QwOH9c3yw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ปฏิเสธข้อเสนอของคุณในวันที่ {title}"
+        }
+      ]
+    },
+    "YOm+ynQ73tcGI0ilqp6igQ==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ยอมรับข้อเสนอของคุณในวันที่ {title}"
+        }
+      ]
+    },
+    "OJHXhyaxeI6wJgPmAN+79w==": {
+      "translations": [
+        {
+          "translation": "การทำธุรกรรมกับ {nameLink} สรุปแล้วสำหรับ {title}"
+        }
+      ]
+    },
+    "YzuRRanf3CVBwwdoxuvnig==": {
+      "translations": [
+        {
+          "translation": "{nameLink} ทำข้อเสนอในวันที่ {title}"
+        }
+      ]
+    },
+    "oGg+bvcoHD7419PPWtSy0Q==": {
+      "translations": [
+        {
+          "translation": "{nameLink} โต้แย้งข้อเสนอในวันที่ {title}"
+        }
+      ]
+    },
+    "8iWiBR18Lwogh0ILdAmDcw==": {
+      "translations": [
+        {
+          "translation": "{nameLink} แก้ไขข้อพิพาทในวันที่ {title}"
+        }
+      ]
+    },
+    "kRpJt5Z+8QmF0zGEEwO3Xw==": {
+      "translations": [
+        {
+          "translation": "ทั้งหมด"
+        }
+      ]
+    },
+    "I7wdzOzb8p0bzZV0L/fOzQ==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือน"
+        }
+      ]
+    },
+    "wS1dIWkUM4WzsK+i96qErg==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด ..."
+        }
+      ]
+    },
+    "goa8ra1IITxtTLlPqygsJg==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "pJ72jHPAVDJZr/f1TpS/Nw==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loading"
+        }
+      ]
+    },
+    "7qJMk00JA03KqhCdzCM1AQ==": {
+      "translations": [
+        {
+          "translation": "notifications.item.loadmore"
+        }
+      ]
+    },
+    "FCvW5DiJds9kF4OmcP9UFQ==": {
+      "translations": [
+        {
+          "translation": "เริ่มต้นใช้งาน Origin"
+        }
+      ]
+    },
+    "JZfl/92+OYfoP7WPV/3hAg==": {
+      "translations": [
+        {
+          "translation": "เพื่อที่จะทำธุรกรรมกับผู้อื่นได้สำเร็จบน DApp ของเราคุณจะต้องมีบางสิ่งก่อนที่จะเริ่มต้น {=Why do I need to do this?}"
+        }
+      ]
+    },
+    "soYLfqRkHiY0hIsn6V7KOg==": {
+      "translations": [
+        {
+          "translation": "ทำไมฉันต้องทำเช่นนี้?"
+        }
+      ]
+    },
+    "IrLYNrWwH6ZtQ1ImEOOicQ==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับ Origin Messaging"
+        }
+      ]
+    },
+    "hHtAQnGmut84lwdcWI2L6w==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินดิจิตอล cryptocurrency เป็นโปรแกรมซอฟต์แวร์ที่เก็บคีย์ส่วนตัวและสาธารณะและโต้ตอบกับ blockchain ต่าง ๆ เพื่อให้ผู้ใช้ส่งและรับสกุลเงินดิจิตอล หากคุณต้องการใช้ Bitcoin หรือเงินดิจิตอลอื่น ๆ คุณจะต้องมีกระเป๋าเงินดิจิทัล"
+        }
+      ]
+    },
+    "UJNr54cskDebn4LOy1474w==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับตัวตนบนบล็อกเชน"
+        }
+      ]
+    },
+    "RZmj6tEEQAQTby9GXxZXVw==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินดิจิตอล cryptocurrency เป็นโปรแกรมซอฟต์แวร์ที่เก็บคีย์ส่วนตัวและสาธารณะและโต้ตอบกับ blockchain ต่าง ๆ เพื่อให้ผู้ใช้ส่งและรับสกุลเงินดิจิตอล หากคุณต้องการใช้ Bitcoin หรือเงินดิจิตอลอื่น ๆ คุณจะต้องมีกระเป๋าเงินดิจิทัล"
+        }
+      ]
+    },
+    "2d71PZ8vaKwFxFDFRhk1Hw==": {
+      "translations": [
+        {
+          "translation": "เรียนรู้เพิ่มเติม"
+        }
+      ]
+    },
+    "FFVqxLHTicckrmBk8Z/MCA==": {
+      "translations": [
+        {
+          "translation": "Crypto Wallet คืออะไร"
+        }
+      ]
+    },
+    "aknWsMgG2wow2xkgZ28DXg==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินดิจิตอล cryptocurrency เป็นโปรแกรมซอฟต์แวร์ที่เก็บคีย์ส่วนตัวและสาธารณะและโต้ตอบกับ blockchain ต่าง ๆ เพื่อให้ผู้ใช้ส่งและรับสกุลเงินดิจิตอล หากคุณต้องการใช้ Bitcoin หรือเงินดิจิตอลอื่น ๆ คุณจะต้องมีกระเป๋าเงินดิจิทัล"
+        }
+      ]
+    },
+    "WsA95s6VU3x2vfhejrhzOg==": {
+      "translations": [
+        {
+          "translation": "รายชื่อของคุณกำลังรอ ..."
+        }
+      ]
+    },
+    "ds0d/qu6sIALqXUA0iJKuw==": {
+      "translations": [
+        {
+          "translation": "ขอแสดงความยินดี"
+        }
+      ]
+    },
+    "aR7VNiOtKH8VvsNUSilJjA==": {
+      "translations": [
+        {
+          "translation": "คุณเปิดใช้งานบัญชีสำเร็จแล้ว ตอนนี้คุณพร้อมที่จะเดินทางต่อในตลาดกำเนิด"
+        }
+      ]
+    },
+    "mU3MxuZLQg7n732AsKxtEA==": {
+      "translations": [
+        {
+          "translation": "{=You have now completed the following:}{=Wallet CreationMessaging EnabledDesktop Notifications Enabled}"
+        }
+      ]
+    },
+    "QHp9k2YF0PJ8EuAxOFGtNA==": {
+      "translations": [
+        {
+          "translation": "คุณได้ทำสิ่งต่อไปนี้เรียบร้อยแล้ว:"
+        }
+      ]
+    },
+    "CxWrPmbgR884ESLoDC1BHw==": {
+      "translations": [
+        {
+          "translation": "{=Wallet Creation}{=Messaging Enabled}{=Desktop Notifications Enabled}"
+        }
+      ]
+    },
+    "oGs0egKgAj8bmQbSYjfHww==": {
+      "translations": [
+        {
+          "translation": "การสร้างกระเป๋าเงิน"
+        }
+      ]
+    },
+    "CnTLIXLPrAMCoAtnaShyJw==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการส่งข้อความ"
+        }
+      ]
+    },
+    "jLoV7qiALo1aH/xnP6KE9Q==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนบนเดสก์ท็อปถูกเปิดใช้งาน"
+        }
+      ]
+    },
+    "lUrfL6249kxTxaw/dRoqbg==": {
+      "translations": [
+        {
+          "translation": "{=Remaining steps:}{=Fund your walletComplete your Profile}"
+        }
+      ]
+    },
+    "O1IrLRtj0WrvXnVnLCINvQ==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนที่เหลืออยู่:"
+        }
+      ]
+    },
+    "osEnvv1/nsQxkpQkh23NZw==": {
+      "translations": [
+        {
+          "translation": "{=Fund your wallet}{=Complete your Profile}"
+        }
+      ]
+    },
+    "psVzq7xfDPiHYtKsXUP6gw==": {
+      "translations": [
+        {
+          "translation": "ใส่เงินในกระเป๋าของคุณ"
+        }
+      ]
+    },
+    "ysPjg6QGMquwWUCtL+/yEQ==": {
+      "translations": [
+        {
+          "translation": "กรอกข้อมูลส่วนตัวของคุณ"
+        }
+      ]
+    },
+    "Y+1LvSEix1POQBBLBGMaUw==": {
+      "translations": [
+        {
+          "translation": "ส่งข้อความต้นฉบับ"
+        }
+      ]
+    },
+    "CjNGZw8yFs7T6CxrNdzN4g==": {
+      "translations": [
+        {
+          "translation": "การส่งข้อความต้นทาง"
+        }
+      ]
+    },
+    "FKUFlQGWeADq33thpZWNhg==": {
+      "translations": [
+        {
+          "translation": "0 จาก 2 ข้อความ MetaMask ที่ลงนาม"
+        }
+      ]
+    },
+    "MJeJbFx0ouUGjsL7FgLFpQ==": {
+      "translations": [
+        {
+          "translation": "การส่งข้อความจะช่วยให้คุณสามารถแชทกับผู้ซื้อและผู้ขายรายอื่น"
+        }
+      ]
+    },
+    "AX2t/0FaLX6Ri2veomcTcg==": {
+      "translations": [
+        {
+          "translation": "รอให้คุณเซ็นข้อความหมายเลข {messageNumber}"
+        }
+      ]
+    },
+    "ErikvoQGieBd00aYG1DQmg==": {
+      "translations": [
+        {
+          "translation": "{messageNumber} จาก 2 ข้อความ MetaMask ที่ลงนาม"
+        }
+      ]
+    },
+    "ILCAHzQL84S0gcx3t28Kgg==": {
+      "translations": [
+        {
+          "translation": "ไอคอน Metamask ตั้งอยู่ที่ด้านบนขวาของแถบเครื่องมือเบราว์เซอร์ของคุณ"
+        }
+      ]
+    },
+    "N4YddPeOjF23lOAgjWNWHg==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการส่งข้อความ"
+        }
+      ]
+    },
+    "NxbN7hpr4yVr2xgq6CAbDQ==": {
+      "translations": [
+        {
+          "translation": "2 จาก 2 ข้อความ MetaMask ที่ลงนาม"
+        }
+      ]
+    },
+    "+5lOJ8UwNH5y7Tkwmt5sug==": {
+      "translations": [
+        {
+          "translation": "ขอแสดงความยินดี! ตอนนี้คุณสามารถส่งข้อความถึงผู้ใช้คนอื่นบน Origin และติดตามข่าวสารเกี่ยวกับการซื้อและการขายทั้งหมดของคุณ"
+        }
+      ]
+    },
+    "Sj0uCwqO2Lif0EXF2OFjFg==": {
+      "translations": [
+        {
+          "translation": "คุณทำเสร็จแล้วและสามารถดำเนินการต่อได้โดยกดปุ่มด้านล่าง"
+        }
+      ]
+    },
+    "LD5LtA82smKlIU4torypxQ==": {
+      "translations": [
+        {
+          "translation": "ความผิดพลาด"
+        }
+      ]
+    },
+    "qjIAIRzdKNP+o+HVoh/KHg==": {
+      "translations": [
+        {
+          "translation": "ไม่มี Web3"
+        }
+      ]
+    },
+    "Ef8RYDVmPd+o1LstAaP1wA==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการส่งข้อความ"
+        }
+      ]
+    },
+    "iRz4g7tQBcOyW/qYOj/DNQ==": {
+      "translations": [
+        {
+          "translation": "ติดตั้ง MetaMask"
+        }
+      ]
+    },
+    "3A7KlQ1Kjaumhmr49lVUPg==": {
+      "translations": [
+        {
+          "translation": "กำลังติดตั้ง MetaMask ..."
+        }
+      ]
+    },
+    "LEvdn8FJN1P4JhDRVVvjmA==": {
+      "translations": [
+        {
+          "translation": "โปรดคลิกด้านล่างเมื่อติดตั้ง MetaMask แล้ว"
+        }
+      ]
+    },
+    "rTJQT6yFtV7JrE9+Kwrw0g==": {
+      "translations": [
+        {
+          "translation": "รอให้คุณลงชื่อเข้าใช้ MetaMask"
+        }
+      ]
+    },
+    "aHqNeqpWF5FvjYcfAx/UtQ==": {
+      "translations": [
+        {
+          "translation": "ไอคอน MetaMask ตั้งอยู่ที่ด้านบนขวาของแถบเครื่องมือเบราว์เซอร์ของคุณ"
+        }
+      ]
+    },
+    "STOPW2Q2WZLH2Jgu6WdqIw==": {
+      "translations": [
+        {
+          "translation": "อุ๊ปส์คุณปฏิเสธการอนุญาต"
+        }
+      ]
+    },
+    "ZkgVALubZKbCD225z3Vv3g==": {
+      "translations": [
+        {
+          "translation": "คุณต้องให้อนุญาต Origin เพื่อเข้าถึงบัญชี MetaMask ของคุณเพื่อให้คุณสามารถซื้อและขายใน DApp ของเรา"
+        }
+      ]
+    },
+    "YRIz6mlKHIlcOC6yC56Kog==": {
+      "translations": [
+        {
+          "translation": "ได้รับอนุญาต"
+        }
+      ]
+    },
+    "j0xNIbmtip7rDoBRMt9m9g==": {
+      "translations": [
+        {
+          "translation": "รอให้คุณอนุญาต"
+        }
+      ]
+    },
+    "iwgHFwUYIq/ST9H61v2LXw==": {
+      "translations": [
+        {
+          "translation": "โปรดให้สิทธิ์ Origin เพื่อเข้าถึงบัญชี MetaMask ของคุณเพื่อให้คุณสามารถซื้อและขายใน DApp ของเรา"
+        }
+      ]
+    },
+    "GAsJi53lUv/zEVhQAgWdeA==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อ MetaMask แล้ว"
+        }
+      ]
+    },
+    "qXJ7EX08bD1D/KpNQST64Q==": {
+      "translations": [
+        {
+          "translation": "Metamask เชื่อมต่อแล้วโปรดเปลี่ยนเป็น {connectTo} เพื่อทำธุรกรรมบน Origin"
+        }
+      ]
+    },
+    "k7q6a+1CnpyNNwB+lNLsYQ==": {
+      "translations": [
+        {
+          "translation": "MetaMask เชื่อมต่อแล้วและคุณพร้อมที่จะทำธุรกรรมกับ Origin คลิกดำเนินการต่อด้านล่าง"
+        }
+      ]
+    },
+    "jISZ0wfBaodmnuNXoU+VAg==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนถูกปิด"
+        }
+      ]
+    },
+    "KpzI7bx79mkkaT2io1SR8Q==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนเดสก์ท็อปแบบเนทีฟจะช่วยให้คุณไม่พลาดสิ่งที่คุณต้องทำใน Origin DApp"
+        }
+      ]
+    },
+    "HWxdOPUAucyHDSoOK40JHw==": {
+      "translations": [
+        {
+          "translation": "คลิกปุ่มด้านล่างจากนั้นคลิกยืนยันคำขอในกล่องโต้ตอบเบราว์เซอร์ดั้งเดิมที่จะปรากฏด้านบน"
+        }
+      ]
+    },
+    "uSRyxeZTNsqh1FcGEC4RKg==": {
+      "translations": [
+        {
+          "translation": "เปิดการแจ้งเตือน"
+        }
+      ]
+    },
+    "P5qx0I4YTWHZEWnH9lxXpw==": {
+      "translations": [
+        {
+          "translation": "ข้ามไปก่อน"
+        }
+      ]
+    },
+    "133qQN4R4hk3FaW/zXPQlg==": {
+      "translations": [
+        {
+          "translation": "การไม่มีการแจ้งเตือนบนเดสก์ท็อปจะเพิ่มโอกาสในการขาดการปรับปรุงที่สำคัญเกี่ยวกับธุรกรรมของคุณ"
+        }
+      ]
+    },
+    "F52UFt/yddG6Tw1hUts2Xg==": {
+      "translations": [
+        {
+          "translation": "กล่องโต้ตอบการอนุญาตเบราว์เซอร์ดั้งเดิมจะเปิดขึ้นที่ด้านบนของหน้าต่างเบราว์เซอร์ กรุณายืนยันคำขอ"
+        }
+      ]
+    },
+    "Lp1AaLvV/Z/7FgpA3o44Hw==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนบนเดสก์ท็อปถูกเปิดใช้งาน"
+        }
+      ]
+    },
+    "wJsjMb/rTBUgD+U6mn3BKA==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนเปิดอยู่"
+        }
+      ]
+    },
+    "nftxxpaPkYMeJjKOUnZdjw==": {
+      "translations": [
+        {
+          "translation": "ที่ดี! คุณจะสามารถตอบกลับคำขอจากผู้ซื้อและผู้ขายได้ง่ายขึ้น"
+        }
+      ]
+    },
+    "DcwfUYW0NxpH1s5+ul7jyw==": {
+      "translations": [
+        {
+          "translation": "คลิกปุ่มดำเนินการต่อด้านล่างเพื่อดำเนินการต่อ"
+        }
+      ]
+    },
+    "tqYkpJk1jBSLneJPAW6Fpg==": {
+      "translations": [
+        {
+          "translation": "เอ่อโอ้มีปัญหา ..."
+        }
+      ]
+    },
+    "hkOHDepzP/85esMg1eheJQ==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือนถูกปิด"
+        }
+      ]
+    },
+    "86E4W/Du3+E7eCB85BqZJg==": {
+      "translations": [
+        {
+          "translation": "คุณได้ปฏิเสธคำขอของเราที่จะเปิดการแจ้งเตือนบนเดสก์ท็อปที่เรา {=highly recommend}"
+        }
+      ]
+    },
+    "NLI/YsAIRTpzmJdjyUKu+A==": {
+      "translations": [
+        {
+          "translation": "ขอเเนะนำ"
+        }
+      ]
+    },
+    "rdom9ZzkPwJZNuxLz9YaCA==": {
+      "translations": [
+        {
+          "translation": "เพื่อแก้ไขปัญหานี้โปรดไปที่การตั้งค่าเบราว์เซอร์ของคุณและเปิดการแจ้งเตือนสำหรับ DApp ของเรา"
+        }
+      ]
+    },
+    "Ao6PTzPmrwVygpJF55jqmA==": {
+      "translations": [
+        {
+          "translation": "เยี่ยมชมการตั้งค่าเบราว์เซอร์"
+        }
+      ]
+    },
+    "ht9M7LjR23q3m93Op5qY7A==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "twXKaZYDmP8sMVB91202fw==": {
+      "translations": [
+        {
+          "translation": "ความผิดพลาด"
+        }
+      ]
+    },
+    "O+bJPW4vKHXMKS4A1cTr1w==": {
+      "translations": [
+        {
+          "translation": "ไม่มี Web3"
+        }
+      ]
+    },
+    "MPn0Q/LgQuNyOzpKKL9KiA==": {
+      "translations": [
+        {
+          "translation": "หวาน! การแจ้งเตือนบนเดสก์ท็อปเปิดอยู่ :)"
+        }
+      ]
+    },
+    "DW6fLMU0mrvLTV6dHCR3SA==": {
+      "translations": [
+        {
+          "translation": "เริ่มต้นใช้งาน"
+        }
+      ]
+    },
+    "4pkBkxm3fiSdgckUqJNFrQ==": {
+      "translations": [
+        {
+          "translation": "ป้อนข้อมูลโปรไฟล์ของคุณ"
+        }
+      ]
+    },
+    "sgSRRlAr8fmr3HnB1Ykk7g==": {
+      "translations": [
+        {
+          "translation": "ชื่อจริง"
+        }
+      ]
+    },
+    "Cr7l7mRGMBhn5E/iepkWUw==": {
+      "translations": [
+        {
+          "translation": "นามสกุล"
+        }
+      ]
+    },
+    "ssnnSYlfF2XPDgbJQI5dLQ==": {
+      "translations": [
+        {
+          "translation": "{=You don't have funds} คุณต้องมีเงินในกระเป๋าเงินของคุณเพื่อสร้างข้อมูลประจำตัว คุณสามารถทำสิ่งนี้ได้ในภายหลังหลังจากที่คุณใส่เงินในกระเป๋าเงินของคุณโดยไปที่การตั้งค่าของคุณ"
+        }
+      ]
+    },
+    "IGtHEy5CJDngN+7Ucg9x4Q==": {
+      "translations": [
+        {
+          "translation": "คุณไม่มีเงิน"
+        }
+      ]
+    },
+    "s6ga+WNyin+jyBuLqR8uVQ==": {
+      "translations": [
+        {
+          "translation": "ประกาศ"
+        }
+      ]
+    },
+    "gwNdF1XlGWk8ONo6VUrHdw==": {
+      "translations": [
+        {
+          "translation": "ข้ามไปก่อน"
+        }
+      ]
+    },
+    "oNaKnWUDLbhfedJyB7P+Ww==": {
+      "translations": [
+        {
+          "translation": "การตีพิมพ์"
+        }
+      ]
+    },
+    "XIbxUfdlCiQKg4oKOjmCCw==": {
+      "translations": [
+        {
+          "translation": "ชั่วคราว"
+        }
+      ]
+    },
+    "B4LOIQ966Tas1608OZMlHg==": {
+      "translations": [
+        {
+          "translation": "ในไม่ช้า"
+        }
+      ]
+    },
+    "3Qm3xrEt+bnOdbmWNr7JjQ==": {
+      "translations": [
+        {
+          "translation": "โต้ตอบ"
+        }
+      ]
+    },
+    "xIhXyhzildOeU091piinJg==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุชื่อ"
+        }
+      ]
+    },
+    "7xSk0LvXs9aQjN98cCiljA==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินมือถือ Origin"
+        }
+      ]
+    },
+    "WVk1tgmlGe99GNIa7Uk/bA==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินมือถือ Origin จะอนุญาตให้คุณเก็บสกุลเงินดิจิตอลเพื่อให้คุณสามารถซื้อและขายใน DApp ของเรา"
+        }
+      ]
+    },
+    "aOhcZ2U2Bsp9EGJA3zU7Ww==": {
+      "translations": [
+        {
+          "translation": "พร้อมใช้งานสำหรับ iOS และ Android"
+        }
+      ]
+    },
+    "TxG/OdPaBPOz5hx9hge2rg==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อกระเป๋าเงิน Origin"
+        }
+      ]
+    },
+    "QmqTcxlyWuTRoggpY7Y5nw==": {
+      "translations": [
+        {
+          "translation": "MetaMask เป็นส่วนขยายของเบราว์เซอร์ที่จะช่วยให้คุณเข้าถึงเว็บที่กระจายอำนาจ"
+        }
+      ]
+    },
+    "vHiqW6XmWF/OLmE9lKWO1w==": {
+      "translations": [
+        {
+          "translation": "พร้อมใช้งานสำหรับ {browser}"
+        }
+      ]
+    },
+    "VvpwJO3gtIN0GV/UBRWAGA==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อ MetaMask"
+        }
+      ]
+    },
+    "M/7sS5l7W/gdH3mNboamAA==": {
+      "translations": [
+        {
+          "translation": "เชื่อมต่อ Crypto Wallet"
+        }
+      ]
+    },
+    "dIIhiBsOJOemSYWXTm48zQ==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "XdIbTb9DUwkD1P7yTtwRnA==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการแจ้งเตือนบนเดสก์ท็อป✅"
+        }
+      ]
+    },
+    "QEfT0AsqEUDRYXAeo6jiMw==": {
+      "translations": [
+        {
+          "translation": "การตั้งค่า"
+        }
+      ]
+    },
+    "lYXh6Dq4CP6r6aJfWNhySg==": {
+      "translations": [
+        {
+          "translation": "การตั้งค่า"
+        }
+      ]
+    },
+    "qFBczb1fLENKRx8/G4ieGA==": {
+      "translations": [
+        {
+          "translation": "โปรดเลือกจากรายการด้านล่าง"
+        }
+      ]
+    },
+    "gteQ4pqo/4VeBffMWpQfvA==": {
+      "translations": [
+        {
+          "translation": "การแจ้งเตือน"
+        }
+      ]
+    },
+    "24R0XkoqNkj+Q80wcCZRlg==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการแจ้งเตือนของเบราว์เซอร์ด้านล่าง"
+        }
+      ]
+    },
+    "slAgUo4opu8tso8RLT/dLg==": {
+      "translations": [
+        {
+          "translation": "ทำให้สามารถ"
+        }
+      ]
+    },
+    "XE4dDp2PIHkNuhGg8Y/b8w==": {
+      "translations": [
+        {
+          "translation": "เปิดใช้งานการแจ้งเตือนของเบราว์เซอร์"
+        }
+      ]
+    },
+    "ACzYauxPE/+QDd4rdULhOA==": {
+      "translations": [
+        {
+          "translation": "กระเป๋าเงินมือถือ"
+        }
+      ]
+    },
+    "QfPi8+EJJHsPYgLmR16O7w==": {
+      "translations": [
+        {
+          "translation": "ตัดการเชื่อมต่อจากกระเป๋าเงินมือถือของคุณโดยคลิกที่ปุ่มด้านล่าง"
+        }
+      ]
+    },
+    "k6UQCIfTpu+GOQC9zUHVVA==": {
+      "translations": [
+        {
+          "translation": "ปลด"
+        }
+      ]
+    },
+    "qfhGAG2u3+abnoq3mJZtdw==": {
+      "translations": [
+        {
+          "translation": "ไม่ได้เชื่อมต่อ"
+        }
+      ]
+    },
+    "yFYpDVeEQ8oXcHYjijWBTg==": {
+      "translations": [
+        {
+          "translation": "เซิร์ฟเวอร์การค้นพบ"
+        }
+      ]
+    },
+    "Xo2IEzVBpUBSim+cGxiV2A==": {
+      "translations": [
+        {
+          "translation": "กรุณาใส่ URL ด้านล่าง เว้นว่างไว้เพื่อสอบถาม blockchain โดยตรง ฟังก์ชั่นการค้นหาจะปิดใช้งานหากไม่ใช้เซิร์ฟเวอร์การค้นหา"
+        }
+      ]
+    },
+    "9ZMwBvD+hP2nfahk+3LenA==": {
+      "translations": [
+        {
+          "translation": "IPFS Gateway"
+        }
+      ]
+    },
+    "pRCuz6nfvsfhdZOLMdd1Ug==": {
+      "translations": [
+        {
+          "translation": "กรุณาใส่ URL ด้านล่าง"
+        }
+      ]
+    },
+    "aFN2K1TwxnCt3pJ0P93ldg==": {
+      "translations": [
+        {
+          "translation": "ผู้ให้บริการ Web3"
+        }
+      ]
+    },
+    "0hqW8GbEWVfnfkHUgaKwdA==": {
+      "translations": [
+        {
+          "translation": "กรุณาใส่ URL ด้านล่าง"
+        }
+      ]
+    },
+    "fqtlt5+7VR5iw3K3FjAD/g==": {
+      "translations": [
+        {
+          "translation": "เซิร์ฟเวอร์บริดจ์"
+        }
+      ]
+    },
+    "ffkqXBQ0xgCWwCZhHuAp/Q==": {
+      "translations": [
+        {
+          "translation": "กรุณาใส่ URL ด้านล่าง"
+        }
+      ]
+    },
+    "KRXhxUx2Hra4LLq49+q/Tw==": {
+      "translations": [
+        {
+          "translation": "TxName"
+        }
+      ]
+    },
+    "qztpAjXBddBNYsM0s/z17Q==": {
+      "translations": [
+        {
+          "translation": "วันที่"
+        }
+      ]
+    },
+    "sMnltv0vMS+f5SLtoTECcQ==": {
+      "translations": [
+        {
+          "translation": "IPFS Hash"
+        }
+      ]
+    },
+    "qQdpwzfRMHhJUa4w/7FWjA==": {
+      "translations": [
+        {
+          "translation": "Tx Hash"
+        }
+      ]
+    },
+    "6dPov/3WWLjmiAtm66UKtQ==": {
+      "translations": [
+        {
+          "translation": "ราคา / หน่วย"
+        }
+      ]
+    },
+    "7OybV1tFQvw3y2hKaxWUmA==": {
+      "translations": [
+        {
+          "translation": "ปริมาณ"
+        }
+      ]
+    },
+    "ZUn3u79h4cRD2YzH3fXr2A==": {
+      "translations": [
+        {
+          "translation": "เช็คอิน"
+        }
+      ]
+    },
+    "jl093qUjWarZ1XmhSSbXcA==": {
+      "translations": [
+        {
+          "translation": "เช็คเอาท์"
+        }
+      ]
+    },
+    "oqwNF+A0lExDpskbNclwTg==": {
+      "translations": [
+        {
+          "translation": "เริ่มให้เช่า"
+        }
+      ]
+    },
+    "9OMSjLyMkyRiIaJ8SBnqyw==": {
+      "translations": [
+        {
+          "translation": "สิ้นสุดการเช่า"
+        }
+      ]
+    },
+    "FBs6gOAFyap0krOkDiquyg==": {
+      "translations": [
+        {
+          "translation": "ราคารวม"
+        }
+      ]
+    },
+    "pCnW9dCjDjhv0NTuQqUe2A==": {
+      "translations": [
+        {
+          "translation": "สถานะการชำระเงิน"
+        }
+      ]
+    },
+    "3pOzT705Ai9uGcvm95Na3w==": {
+      "translations": [
+        {
+          "translation": "วันที่เสนอ"
+        }
+      ]
+    },
+    "M2BrdF9SwT1krQZ/WEjFpQ==": {
+      "translations": [
+        {
+          "translation": "หมายเลขข้อเสนอ"
+        }
+      ]
+    },
+    "nYPLuTHlpmcjxDT1vlyYMg==": {
+      "translations": [
+        {
+          "translation": "ปฏิเสธข้อเสนอ"
+        }
+      ]
+    },
+    "GN1E8lzMKvP50rMTh92DSA==": {
+      "translations": [
+        {
+          "translation": "ยอมรับข้อเสนอ"
+        }
+      ]
+    },
+    "w9bk0qXot+z5KWdGOoM6XA==": {
+      "translations": [
+        {
+          "translation": "ออกจากการตรวจสอบและจบการทำธุรกรรม"
+        }
+      ]
+    },
+    "VHFifMxtMBpl7wQxqL87Qg==": {
+      "translations": [
+        {
+          "translation": "คุณให้คะแนนประสบการณ์ของคุณอย่างไร?"
+        }
+      ]
+    },
+    "+4fB7ygpazVhmoB3zG8cLA==": {
+      "translations": [
+        {
+          "translation": "คุณต้องการแสดงความคิดเห็นอะไร"
+        }
+      ]
+    },
+    "zAz0qzQAMIZWd6M7n6uZOg==": {
+      "translations": [
+        {
+          "translation": "จบ"
+        }
+      ]
+    },
+    "VQCq6PSOS1vzK290BsnQNw==": {
+      "translations": [
+        {
+          "translation": "รายงานปัญหา"
+        }
+      ]
+    },
+    "NspPzWi6EC+0+hV1ZHJdCQ==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนต่อไป"
+        }
+      ]
+    },
+    "LZrUP+ZIeXqJRqyLiRhYaA==": {
+      "translations": [
+        {
+          "translation": "ให้ที่อยู่จัดส่งของคุณแก่ผู้ขาย"
+        }
+      ]
+    },
+    "sMsaeCID3irEn5xdZJJ+bQ==": {
+      "translations": [
+        {
+          "translation": "คลิกปุ่มเพื่อเปิดการส่งข้อความ"
+        }
+      ]
+    },
+    "ujJ8g0EYiCIH2kwyJyMfVQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ขายข้อความ"
+        }
+      ]
+    },
+    "V1GgdZO6KZeduKxo/ipthQ==": {
+      "translations": [
+        {
+          "translation": "ขั้นตอนต่อไป"
+        }
+      ]
+    },
+    "XLHaYbAmaXCqclP5HM83YA==": {
+      "translations": [
+        {
+          "translation": "ผู้ขายจะตรวจสอบการจองของคุณ"
+        }
+      ]
+    },
+    "mwdxkNowIHDrWwpG03IC2w==": {
+      "translations": [
+        {
+          "translation": "ถอนข้อเสนอ"
+        }
+      ]
+    },
+    "Rr6mOSd9OGeBmenzhAxBAA==": {
+      "translations": [
+        {
+          "translation": "ผู้ซื้อถอนข้อเสนอของพวกเขา"
+        }
+      ]
+    },
+    "pavSaTOWIGUadJJz+LT+dA==": {
+      "translations": [
+        {
+          "translation": "คุณถอนข้อเสนอของคุณ"
+        }
+      ]
+    },
+    "z8w3vsKBV7fTh9OAeb+5Ag==": {
+      "translations": [
+        {
+          "translation": "ข้อเสนอถูกปฏิเสธ"
+        }
+      ]
+    },
+    "I11Qx+yjIro8ClQNygfWyA==": {
+      "translations": [
+        {
+          "translation": "คุณปฏิเสธข้อเสนอนี้"
+        }
+      ]
+    },
+    "78ZwhZYCfj46DlFuXTC8BQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ขายปฏิเสธข้อเสนอของคุณ"
+        }
+      ]
+    },
+    "zXe0CpHR3Ollxxf5AoX7UA==": {
+      "translations": [
+        {
+          "translation": "ข้อเสนอถูกโต้แย้ง"
+        }
+      ]
+    },
+    "2ssaM9V9RN/jWiOAzPJSBQ==": {
+      "translations": [
+        {
+          "translation": "รอการติดต่อจากสมาชิกทีม Origin"
+        }
+      ]
+    },
+    "GzywuT3H7qeJlmK6UgbS5w==": {
+      "translations": [
+        {
+          "translation": "แก้ไขข้อพิพาทแล้ว"
+        }
+      ]
+    },
+    "VNosphgosByxNu7E0v6k8w==": {
+      "translations": [
+        {
+          "translation": "Origin ได้แก้ไขข้อพิพาทนี้แล้ว"
+        }
+      ]
+    },
+    "DayNJyKzoBH/IaNeKPXkSg==": {
+      "translations": [
+        {
+          "translation": "สรุปการทำธุรกรรม"
+        }
+      ]
+    },
+    "Y3sp8Tv0rCOhBhNoqfiotA==": {
+      "translations": [
+        {
+          "translation": "การทำธุรกรรมนี้ได้รับการสรุปผลสำเร็จแล้วและมีการอนุมัติเงินทุนให้แก่ผู้ขาย"
+        }
+      ]
+    },
+    "N5pM2WbYjZGzn+35rDpssA==": {
+      "translations": [
+        {
+          "translation": "ให้แน่ใจว่าคุณทำตามคำสั่งซื้อและรอการยืนยันจากผู้ซื้อ"
+        }
+      ]
+    },
+    "iUsZ9XU931fYMNKBTeqx9g==": {
+      "translations": [
+        {
+          "translation": "ดูรายการตรวจสอบการปฏิบัติตาม"
+        }
+      ]
+    },
+    "YkkjLoelBh8tfKxaGGO6HA==": {
+      "translations": [
+        {
+          "translation": "รายงานปัญหา"
+        }
+      ]
+    },
+    "SxmvkqrwlKQKpnbugoF2nQ==": {
+      "translations": [
+        {
+          "translation": "รายการตรวจสอบการปฏิบัติตาม"
+        }
+      ]
+    },
+    "kzoeHvMMOD0KnB9Jl7KnIA==": {
+      "translations": [
+        {
+          "translation": "ตรวจสอบความหลากหลายกับผู้ขาย"
+        }
+      ]
+    },
+    "FkRITz2i1lnwVgJ+TnWPcQ==": {
+      "translations": [
+        {
+          "translation": "แพคเกจผลิตภัณฑ์และส่งออก"
+        }
+      ]
+    },
+    "cugqsOArck9WsncrI/yzHQ==": {
+      "translations": [
+        {
+          "translation": "แจ้งผู้ซื้อและแจ้งหมายเลขการติดตาม"
+        }
+      ]
+    },
+    "7JqkqcKaQqp/ulOyrCedkw==": {
+      "translations": [
+        {
+          "translation": "รอให้ผู้ซื้อได้รับสินค้า"
+        }
+      ]
+    },
+    "OGSHiC9s4FiQeRCd3wxw+A==": {
+      "translations": [
+        {
+          "translation": "ถอนเงินของคุณ"
+        }
+      ]
+    },
+    "zSUtImIcpEjCOnXDwhRuBA==": {
+      "translations": [
+        {
+          "translation": "ที่ประสบความสำเร็จ!"
+        }
+      ]
+    },
+    "8jjVVnJhBLiHo5x/+9nueA==": {
+      "translations": [
+        {
+          "translation": "ที่ประสบความสำเร็จ!"
+        }
+      ]
+    },
+    "Q7RQiJmdkwPTctx2s5dcoQ==": {
+      "translations": [
+        {
+          "translation": "มีปัญหาอะไรไหม?"
+        }
+      ]
+    },
+    "pWoAumXQ9fYRG4/WKCO1zw==": {
+      "translations": [
+        {
+          "translation": "คุณแน่ใจหรือไม่ว่าต้องการรายงานปัญหา นี่จะเป็นการเริ่มกระบวนการแก้ไขข้อขัดแย้ง ใครบางคนจาก Origin จะได้รับแจ้งและประวัติการแชทของคุณจะถูกเปิดเผยต่ออนุญาโตตุลาการ"
+        }
+      ]
+    },
+    "X23G7YI9cvqkEJ8GhVueqQ==": {
+      "translations": [
+        {
+          "translation": "อ๊ะไม่ต้องรอ ..."
+        }
+      ]
+    },
+    "yaqFWwu3EkEQh7GBY1CtRg==": {
+      "translations": [
+        {
+          "translation": "ใช่โปรด"
+        }
+      ]
+    },
+    "ciQOKZFTUJuVTIiKxHQDlA==": {
+      "translations": [
+        {
+          "translation": "เสนอ"
+        }
+      ]
+    },
+    "MsPV+MCh0HtvCFVCptYr/w==": {
+      "translations": [
+        {
+          "translation": "คุณได้ส่งต่อปัญหานี้ไปยังสมาชิกในทีม Origin คุณจะได้รับการติดต่อเมื่อมีการออกแบบ"
+        }
+      ]
+    },
+    "kfS7RSi+eTq2o4LR/sPR7Q==": {
+      "translations": [
+        {
+          "translation": "ที่ประสบความสำเร็จ!"
+        }
+      ]
+    },
+    "pk3KYayGmBREn0PI4iFlVg==": {
+      "translations": [
+        {
+          "translation": "ปฏิเสธข้อเสนอ"
+        }
+      ]
+    },
+    "Wu+qdvW6dZoUQ2a8YcuJ5w==": {
+      "translations": [
+        {
+          "translation": "คุณแน่ใจหรือว่าต้องการปฏิเสธข้อเสนอนี้ กองทุนผู้ซื้อจะถูกส่งกลับไปให้พวกเขา"
+        }
+      ]
+    },
+    "iIQRnV5hXaAtOzwlMaKG1g==": {
+      "translations": [
+        {
+          "translation": "ปฏิเสธ"
+        }
+      ]
+    },
+    "nYgXfvklP8K6I287NGYvBA==": {
+      "translations": [
+        {
+          "translation": "ข้อเสนอนี้ถูกปฏิเสธ"
+        }
+      ]
+    },
+    "j40DCoib9csmgk7p1qB0eA==": {
+      "translations": [
+        {
+          "translation": "คุณได้ปฏิเสธข้อเสนอของผู้ซื้อรายนี้"
+        }
+      ]
+    },
+    "m0BMtaQu9jw3yFO7nBl3Vg==": {
+      "translations": [
+        {
+          "translation": "ถอนข้อเสนอ"
+        }
+      ]
+    },
+    "pLCZDndYDvgrvDQTSi27OA==": {
+      "translations": [
+        {
+          "translation": "ถอนข้อเสนอ"
+        }
+      ]
+    },
+    "r6xzKSXU04+FE5VHRpUYVg==": {
+      "translations": [
+        {
+          "translation": "คุณแน่ใจหรือไม่ว่าต้องการถอนข้อเสนอของคุณ การชำระเงิน escrowed ของคุณจะถูกส่งกลับไปยังกระเป๋าเงินของคุณ"
+        }
+      ]
+    },
+    "2goCMoy69ARZSLk1PjdVqQ==": {
+      "translations": [
+        {
+          "translation": "ถอน"
+        }
+      ]
+    },
+    "HJowvY/6xmgkY3lXCgNQrQ==": {
+      "translations": [
+        {
+          "translation": "ที่ประสบความสำเร็จ!"
+        }
+      ]
+    },
+    "VGM31/n7NCk61OuI0Wz2fA==": {
+      "translations": [
+        {
+          "translation": "ข้อเสนอ {id}"
+        }
+      ]
+    },
+    "sijwJsqaANPV7KUAvSIubw==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "hccda74CwmCatYfhm387eQ==": {
+      "translations": [
+        {
+          "translation": "ความคืบหน้าการทำธุรกรรม"
+        }
+      ]
+    },
+    "r49/Dx4NYLPBCkNVtxCCfw==": {
+      "translations": [
+        {
+          "translation": "ประวัติการทำรายการ"
+        }
+      ]
+    },
+    "Ey4Sd7cIJJPB3nj9OStOVQ==": {
+      "translations": [
+        {
+          "translation": "รายละเอียดประกาศ"
+        }
+      ]
+    },
+    "Da38AMJbLvBFbijuOHF6Xg==": {
+      "translations": [
+        {
+          "translation": "รายละเอียดข้อเสนอ"
+        }
+      ]
+    },
+    "ErUqOhnKC3V7GzECNCCHMQ==": {
+      "translations": [
+        {
+          "translation": "เกี่ยวกับ {sellerOrBuyer}"
+        }
+      ]
+    },
+    "MSS8kemsC1gNq34uoD4fKg==": {
+      "translations": [
+        {
+          "translation": "ผู้ซื้อ"
+        }
+      ]
+    },
+    "jKHS7SWemBx920wc9baQDQ==": {
+      "translations": [
+        {
+          "translation": "ผู้ขาย"
+        }
+      ]
+    },
+    "Vy9+qH9dhX/MjDBFbbau/A==": {
+      "translations": [
+        {
+          "translation": "ยอดขายของฉัน"
+        }
+      ]
+    },
+    "ryJsozU2awI4nvYi5MwSqg==": {
+      "translations": [
+        {
+          "translation": "การซื้อของฉัน"
+        }
+      ]
+    },
+    "g8yomS7zK+dg5WQmAPDMsQ==": {
+      "translations": [
+        {
+          "translation": "รายการของฉัน"
+        }
+      ]
+    },
+    "vHm8g0uk8a8fdg3zaYmJMg==": {
+      "translations": [
+        {
+          "translation": "รายการของฉัน"
+        }
+      ]
+    },
+    "R4FcWDcOIqO7Tlc5qDj4yw==": {
+      "translations": [
+        {
+          "translation": "ทั้งหมด"
+        }
+      ]
+    },
+    "FllrY75ccaaHIC0TfV3wtg==": {
+      "translations": [
+        {
+          "translation": "คล่องแคล่ว"
+        }
+      ]
+    },
+    "AceTpRre2gN9HdDBQaKrbw==": {
+      "translations": [
+        {
+          "translation": "เฉื่อยชา"
+        }
+      ]
+    },
+    "cenWOoZ8JHLcfWm2tZJnOw==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "jFQ7644SCdcZTdP770XQuQ==": {
+      "translations": [
+        {
+          "translation": "จดทะเบียนใน"
+        }
+      ]
+    },
+    "y+3l9CFy8fwAqeSdux+IUQ==": {
+      "translations": [
+        {
+          "translation": "แก้ไขรายชื่อ"
+        }
+      ]
+    },
+    "c6JpaJWP06U7c47JBBcLNA==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "2ZiI1i1R1/hHvBDHcRLEZQ==": {
+      "translations": [
+        {
+          "translation": "โหลดมากขึ้น"
+        }
+      ]
+    },
+    "b8rO1MkJzb3hMKSpcZsfcA==": {
+      "translations": [
+        {
+          "translation": "ปิดรายการ"
+        }
+      ]
+    },
+    "CR/0eNb4uyRVMRig1DV79w==": {
+      "translations": [
+        {
+          "translation": "การซื้อของฉัน"
+        }
+      ]
+    },
+    "M1mxwCvjbP9eAG3t51F0wQ==": {
+      "translations": [
+        {
+          "translation": "การซื้อของฉัน"
+        }
+      ]
+    },
+    "tl9fsk5aKtXOfDHbWvZIAg==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "iiDxVPoljj15ediYDd3zsA==": {
+      "translations": [
+        {
+          "translation": "สมบูรณ์"
+        }
+      ]
+    },
+    "1NuhArdh+XwQVOO7TCl6hA==": {
+      "translations": [
+        {
+          "translation": "ทั้งหมด"
+        }
+      ]
+    },
+    "jSbLCuknDhZSIirFxB46Eg==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "4gsleVszXBRGkXpyI4Yztw==": {
+      "translations": [
+        {
+          "translation": "ทำข้อเสนอ"
+        }
+      ]
+    },
+    "xGeosYr5EVfdyy6fUr9R7A==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "JbM6gj53IguD10JFC64o6A==": {
+      "translations": [
+        {
+          "translation": "โหลดมากขึ้น"
+        }
+      ]
+    },
+    "b0FRfo4QDI6zzl6oVIVIPQ==": {
+      "translations": [
+        {
+          "translation": "ยอดขายของฉัน"
+        }
+      ]
+    },
+    "S+acB/JxUqQ6+IpstXgzzA==": {
+      "translations": [
+        {
+          "translation": "ยอดขายของฉัน"
+        }
+      ]
+    },
+    "3tRlfdG4nQfSuWZIb+XoAw==": {
+      "translations": [
+        {
+          "translation": "รอดำเนินการ"
+        }
+      ]
+    },
+    "buuucNhreFnajK3t1O3bzA==": {
+      "translations": [
+        {
+          "translation": "สมบูรณ์"
+        }
+      ]
+    },
+    "jQ9i8K9tI2hHt2ODqZQ2UQ==": {
+      "translations": [
+        {
+          "translation": "ทั้งหมด"
+        }
+      ]
+    },
+    "ro2583PslzKZhuolvesI/g==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "8jvi4qLLVB5A3DmDQiFdMw==": {
+      "translations": [
+        {
+          "translation": "ทำข้อเสนอ"
+        }
+      ]
+    },
+    "/H1/OJnfBBC4bzKiZp2X+g==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "fUPthq4dBACknykVl2yIHw==": {
+      "translations": [
+        {
+          "translation": "โหลดมากขึ้น"
+        }
+      ]
+    },
+    "p1aHgndckng0cIWC5sNAjw==": {
+      "translations": [
+        {
+          "translation": "แก้ไขโปรไฟล์"
+        }
+      ]
+    },
+    "VTbmHdaWRvm1fESc/VerTw==": {
+      "translations": [
+        {
+          "translation": "ชื่อจริง"
+        }
+      ]
+    },
+    "IjGi8QXZRD9rcM2mQJr24w==": {
+      "translations": [
+        {
+          "translation": "นามสกุล"
+        }
+      ]
+    },
+    "VlV9VZz3J84sVOLSd3qpzQ==": {
+      "translations": [
+        {
+          "translation": "ลักษณะ"
+        }
+      ]
+    },
+    "NI5vw9QeYHXy81wZxU+ARg==": {
+      "translations": [
+        {
+          "translation": "ข้อมูลนี้จะถูกเผยแพร่บน blockchain และทุกคนจะมองเห็นได้"
+        }
+      ]
+    },
+    "vhjDWeZuJa2szAmOG5kLLA==": {
+      "translations": [
+        {
+          "translation": "ต้องระบุชื่อ"
+        }
+      ]
+    },
+    "Sy/m4fI1v+lIL0apzMVyOw==": {
+      "translations": [
+        {
+          "translation": "กำลังโหลด..."
+        }
+      ]
+    },
+    "EO3o5BXWLICGLwcnHAYbmA==": {
+      "translations": [
+        {
+          "translation": "ไม่มีสัญญาซื้อขายในตลาด?"
+        }
+      ]
+    },
+    "I1sgwHyAcG8bg7ojs5hMsA==": {
+      "translations": [
+        {
+          "translation": "โหลดมากขึ้น"
+        }
+      ]
+    },
+    "YAWDILzZ3E5NO0VUMCfOhg==": {
+      "translations": [
+        {
+          "translation": "ยินดีต้อนรับสู่ Origin Protocol"
+        }
+      ]
+    },
+    "8necMjpWXqiRsgeWRyKzeQ==": {
+      "translations": [
+        {
+          "translation": "แก้ไขโปรไฟล์ของคุณ"
+        }
+      ]
+    },
     "VW+rdneKehxRKMdZLVmIVQ==": {
       "translations": [
         {
-          "translation": "ผู้ใช้แหล่งที่มาโดยไม่มีคำอธิบาย"
+          "translation": "ผู้ใช้ Origin โดยไม่มีคำอธิบาย"
         }
       ]
     },
     "UIdfC16+vG+mJVKO27x/BQ==": {
       "translations": [
         {
-          "translation": "ตรวจสอบตัวเองที่ Origin"
+          "translation": "ยืนยันตัวเองใน Origin"
         }
       ]
     },
     "HEVHfHEPEpTtceUGDpiIuQ==": {
       "translations": [
         {
-          "translation": "โปรดเชื่อมต่อบัญชีของคุณด้านล่างเพื่อสร้างความเป็นตัวตนของคุณใน Origin"
+          "translation": "โปรดเชื่อมต่อบัญชีของคุณด้านล่างเพื่อเสริมความแข็งแกร่งให้กับตัวคุณใน Origin"
         }
       ]
     },
@@ -643,21 +5835,70 @@
     "lZG5rsJQfdkgo3Q+WVNgug==": {
       "translations": [
         {
-          "translation": "พูดเบาและรวดเร็ว"
+          "translation": "ทวิตเตอร์"
         }
       ]
     },
     "Wv2V0lIW3vp91Vdq6gBmEg==": {
       "translations": [
         {
-          "translation": "เผยแพร่เลย"
+          "translation": "เผยแพร่ทันที"
         }
       ]
     },
     "dqAA0K4wHnKPEwSR3HPYfQ==": {
       "translations": [
         {
-          "translation": "การยืนยันโปรไฟล์ช่วยให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin"
+          "translation": "{=Verifying your profile} ทำให้ผู้ใช้รายอื่นรู้ว่าคุณเป็นคนจริงและเพิ่มโอกาสในการทำธุรกรรมที่ประสบความสำเร็จใน Origin"
+        }
+      ]
+    },
+    "nKccGV4lhmxhDoHN+UDtgg==": {
+      "translations": [
+        {
+          "translation": "การยืนยันโปรไฟล์ของคุณ"
+        }
+      ]
+    },
+    "VXkw3rZOG6nmHYODyFTqOg==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้ที่ไม่มีชื่อ"
+        }
+      ]
+    },
+    "tKwSeiu9lfDPt5+SHwfkgA==": {
+      "translations": [
+        {
+          "translation": "ข้อมูลที่ยืนยันแล้ว"
+        }
+      ]
+    },
+    "6qJXNMMKNFfx4VLsW2kJuA==": {
+      "translations": [
+        {
+          "translation": "โทรศัพท์"
+        }
+      ]
+    },
+    "4KDtIeVHCSQ1Hx+o9Ugqwg==": {
+      "translations": [
+        {
+          "translation": "อีเมล์"
+        }
+      ]
+    },
+    "5C6dlhx/VKCxxrro4D0otA==": {
+      "translations": [
+        {
+          "translation": "ผู้ใช้ที่ไม่มีชื่อ"
+        }
+      ]
+    },
+    "W8DLWmRqV9o0OFVHEAa6DA==": {
+      "translations": [
+        {
+          "translation": "ไม่มีคำอธิบาย"
         }
       ]
     }

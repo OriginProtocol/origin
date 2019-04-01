@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
@@ -17,22 +18,30 @@ class CannotTransact extends Component {
 
     let reason = this.props.reason
     if (reason === 'load-error') {
-      reason = 'Error loading wallet status'
+      reason = fbt('Error loading wallet status', 'TransactionError.loadWallet')
     } else if (reason === 'loading') {
-      reason = 'Error loading wallet status'
+      reason = fbt('Error loading wallet status', 'TransactionError.loadWallet')
     } else if (reason === 'no-wallet') {
-      reason = 'No wallet detected'
+      reason = fbt('No wallet detected', 'TransactionError.noWalletDetected')
     } else if (reason === 'no-balance') {
-      reason = 'Your wallet has no funds'
+      reason = fbt('Your wallet has no funds', 'TransactionError.noBalance')
     } else if (reason === 'wrong-network') {
-      reason = `Please switch MetaMask to ${this.props.data}`
+      reason = fbt(
+        'Please switch MetaMask to ' + fbt.param('network', this.props.data),
+        'TransactionError.wrongNetwork'
+      )
     } else if (reason === 'mutation') {
       if (get(this.props, 'data.message', '').match(UserDenied)) {
-        reason = 'You declined to sign the transaction'
+        reason = fbt(
+          'You declined to sign the transaction',
+          'TransactionError.declinedSigning'
+        )
       } else {
         reason = (
           <div onClick={() => alert(this.props.data)}>
-            Error with transaction. Please see console for details.
+            <fbt desc="TransactionError.seeConsole">
+              Error with transaction. Please see console for details.
+            </fbt>
           </div>
         )
         console.warn(this.props.data)
@@ -48,7 +57,7 @@ class CannotTransact extends Component {
             href="#"
             className="btn btn-outline-light"
             onClick={() => this.setState({ shouldClose: true })}
-            children="OK"
+            children={fbt('OK', 'OK')}
           />
         </div>
       </Modal>
