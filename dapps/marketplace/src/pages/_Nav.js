@@ -13,9 +13,14 @@ import Confirmations from './nav/Confirmations'
 import Mobile from './nav/Mobile'
 import Sell from './nav/Sell'
 import GetStarted from './nav/GetStarted'
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 class Nav extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {}
+    this.EarnTokens = withEnrolmentModal('button')
+  }
 
   render() {
     const navProps = nav => ({
@@ -53,6 +58,13 @@ class Nav extends Component {
                   </NavLink>
                 </li>
                 <Sell {...navProps('sell')} />
+                <li className="nav-item d-none d-md-flex">
+                  <this.EarnTokens className="nav-link earn-tokens text">
+                    <span>
+                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                    </span>
+                  </this.EarnTokens>
+                </li>
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/create" className="nav-link add-listing text">
                     <span>
@@ -97,6 +109,8 @@ require('react-styl')(`
       &.dark
         &.show
           background-color: var(--dark)
+      button
+        border: 0px
       .nav-link
         padding: 0 0.75rem
         color: var(--pale-grey)
@@ -113,9 +127,14 @@ require('react-styl')(`
               background-color: var(--dark-grey-blue)
           &.active span
             background-color: var(--dark-grey-blue)
-        &.add-listing span
+        span
           display: inline-block
-          padding-left: 2rem
+          padding-left: 2rem !important
+
+        &.add-listing span
+          background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
+          background-size: 1rem
+        &.earn-tokens span
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
           background-size: 1rem
 
