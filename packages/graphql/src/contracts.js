@@ -306,7 +306,7 @@ export function setNetwork(net, customConfig) {
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    context.mobileBridge = MobileBridge({
+    context.mobileBridge = OriginMobileBridge({
       web3: context.web3
     })
     context.messaging = OriginMessaging({
