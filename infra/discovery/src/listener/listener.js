@@ -39,17 +39,15 @@ setNetwork(process.env.NETWORK || 'docker')
  * @example
  * buildSignatureToRules()
  *  { '0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c':
- *      { Marketplace:
- *           { contractName: 'Marketplace',
- *             eventName: 'ListingCreated',
- *             eventAbi: [Object],
- *             handler: [...] } },
+ *      { contractName: 'Marketplace',
+ *        eventName: 'ListingCreated',
+ *        eventAbi: [Object],
+ *        handler: [...] } },
  *    '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
- *       { Marketplace:
- *           { contractName: 'Marketplace',
- *             eventName: 'ListingUpdated',
- *             eventAbi: [Object],
- *             handler: [...] } }
+ *      { contractName: 'Marketplace',
+ *        eventName: 'ListingUpdated',
+ *        eventAbi: [Object],
+ *        handler: [...] } }
  *  }
  */
 function buildSignatureToRules(config) {
@@ -115,6 +113,8 @@ async function runBatch(opts, context) {
   const toBlock = opts.toBlock
   let lastLogBlock
 
+  // Make sure the @origin/graphql event caches are updated for the markateplace
+  // and identity contracts
   for (let i = fromBlock; i <= toBlock; i++) {
     const blockHeaders = await context.web3.eth.getBlock(i)
     newBlock(blockHeaders)
