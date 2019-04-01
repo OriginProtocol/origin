@@ -15,7 +15,17 @@ async function uniswapCreateExchange(_, { from, tokenAddress }) {
     from
   })
 
-  return txHelper({ tx, from, mutation: 'uniswapCreateExchange' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'uniswapCreateExchange',
+    onReceipt: receipt => {
+      if (typeof window !== 'undefined') {
+        window.localStorage.uniswapDaiExchange =
+          receipt.events.NewExchange.returnValues.exchange
+      }
+    }
+  })
 }
 
 export default uniswapCreateExchange

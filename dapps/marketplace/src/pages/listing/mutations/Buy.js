@@ -317,7 +317,7 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.from,
       to: 'marketplace',
-      value: web3.utils.toWei('50000', 'ether')
+      value: '50000'
     }
 
     allowToken({ variables })

@@ -17,7 +17,8 @@ import {
   UniswapDeployFactory,
   UniswapDeployExchangeTemplate,
   UniswapInitFactory,
-  UniswapCreateExchange
+  UniswapCreateExchange,
+  UniswapAddLiquidity
 } from 'queries/Mutations'
 
 const TransactionSubscription = gql`
@@ -90,18 +91,6 @@ export default async function populate(NodeAccount, gqlClient) {
   })
   console.log('Deployed DAI stablecoin to', DAI)
 
-  const UniswapFactory = await mutate(UniswapDeployFactory, Admin)
-  console.log('Deployed Uniswap Factory to', UniswapFactory)
-
-  await mutate(UniswapDeployExchangeTemplate, Admin)
-  console.log('Deployed Uniswap Exhange Template')
-
-  await mutate(UniswapInitFactory, Admin)
-  console.log('Initialized Uniswap Factory')
-
-  const tx = await mutate(UniswapCreateExchange, Admin, { tokenAddress: DAI })
-  console.log('Created Uniswap Dai Exchange', tx.logs[0].topics[1])
-
   const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN,
     version: '001',
@@ -171,6 +160,33 @@ export default async function populate(NodeAccount, gqlClient) {
     attestations: []
   })
   console.log('Deployed Seller Identity')
+
+  const UniswapFactory = await mutate(UniswapDeployFactory, Admin)
+  console.log('Deployed Uniswap Factory to', UniswapFactory)
+
+  await mutate(UniswapDeployExchangeTemplate, Admin)
+  console.log('Deployed Uniswap Exhange Template')
+
+  await mutate(UniswapInitFactory, Admin)
+  console.log('Initialized Uniswap Factory')
+
+  await mutate(UniswapCreateExchange, Admin, { tokenAddress: DAI })
+  console.log('Created Uniswap Dai Exchange', localStorage.uniswapDaiExchange)
+
+  await mutate(UpdateTokenAllowanceMutation, Admin, {
+    token: 'token-DAI',
+    to: localStorage.uniswapDaiExchange,
+    value: '100000'
+  })
+  console.log('Approved DAI on Uniswap Dai Exchange')
+
+  await mutate(UniswapAddLiquidity, Admin, {
+    exchange: localStorage.uniswapDaiExchange,
+    value: '1',
+    tokens: '100000',
+    liquidity: '0'
+  })
+  console.log('Added liquidity to Uniswap Dai Exchange')
 
   for (const listing of demoListings) {
     const commissionPerUnit = listing.commissionPerUnit || '0'

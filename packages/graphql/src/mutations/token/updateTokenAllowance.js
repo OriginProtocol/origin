@@ -17,12 +17,12 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
     to = contracts.marketplace.options.address
   }
   await checkMetaMask(from)
-  // value = contracts.web3.utils.toWei(value, 'ether')
+  value = contracts.web3.utils.toWei(value, 'ether')
   const tx = tokenContract.contractExec.methods.approve(to, value).send({
     gas: 4612388,
     from
   })
-  return txHelper({ tx, from, mutation: 'transferToken' })
+  return txHelper({ tx, from, mutation: 'updateTokenAllowance' })
 }
 
 export default updateTokenAllowance

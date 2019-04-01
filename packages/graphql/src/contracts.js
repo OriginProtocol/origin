@@ -163,8 +163,7 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`,
-    DaiExchange: '0x6a2c6b4b58D15f099321457fFdd33c5c2Ba0D9cf'
+    linkerWS: `ws://${LINKER_HOST}:3008`
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -324,6 +323,7 @@ export function setNetwork(net, customConfig) {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
     config.IdentityEvents = window.localStorage.identityEventsContract
+    config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
   context.net = net
   context.config = config

@@ -85,8 +85,6 @@ class Sales extends Component {
                 } = data.marketplace.user.sales
                 const { hasNextPage, endCursor: after } = pageInfo
 
-                console.log(nodes)
-
                 return (
                   <BottomScrollListener
                     ready={networkStatus === 7}

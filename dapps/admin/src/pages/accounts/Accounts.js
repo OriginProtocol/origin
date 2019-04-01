@@ -41,6 +41,30 @@ function updateTruffle() {
   })
 }
 
+function contractAddresses() {
+  let tokens = ''
+  const net = localStorage.ognNetwork
+  if (localStorage[`${net}Tokens`]) {
+    tokens = `localStorage.${net}Tokens = ${JSON.stringify(
+      localStorage[`${net}Tokens`]
+    )}\n`
+  }
+  return (
+    `localStorage.clear()\n` +
+    `sessionStorage.clear()\n` +
+    `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
+    `localStorage.marketplaceContract = "${
+      localStorage.marketplaceContract
+    }"\n` +
+    `localStorage.identityEventsContract = "${
+      localStorage.identityEventsContract
+    }"\n` +
+    `localStorage.uniswapDaiExchange = "${localStorage.uniswapDaiExchange}"\n` +
+    tokens +
+    `location.reload()\n`
+  )
+}
+
 const Accounts = () => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
     {({ networkStatus, error, data, refetch, client }) => {
@@ -115,18 +139,7 @@ const Accounts = () => (
               overflowY: 'scroll'
             }}
             onClick={e => e.target.select()}
-            value={
-              `localStorage.clear()\n` +
-              `sessionStorage.clear()\n` +
-              `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
-              `localStorage.marketplaceContract = "${
-                localStorage.marketplaceContract
-              }"\n` +
-              `localStorage.identityEventsContract = "${
-                localStorage.identityEventsContract
-              }"\n` +
-              `location.reload()\n`
-            }
+            value={contractAddresses()}
           />
         </div>
       )
