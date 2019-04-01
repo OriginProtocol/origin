@@ -62,6 +62,7 @@
     "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.8.4",
     "react-image-crop": "^6.0.17",
+    "react-linkify": "^0.2.2",
     "react-popper-tooltip": "^2.8.1",
     "react-styl": "^0.0.3",
     "serve-static": "^1.13.2",

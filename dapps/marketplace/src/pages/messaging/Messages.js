@@ -105,7 +105,16 @@ class Messages extends Component {
                   )
                 }
 
-                const conversations = get(data, 'messaging.conversations', [])
+                const conversations = get(
+                  data,
+                  'messaging.conversations',
+                  []
+                ).sort((a, b) => {
+                  const alm = a.lastMessage || { timestamp: Date.now() }
+                  const blm = b.lastMessage || { timestamp: Date.now() }
+
+                  return alm.timestamp > blm.timestamp ? -1 : 1
+                })
                 const room = get(this.props, 'match.params.room')
                 const defaultRoom = this.state.smallScreen
                   ? ''
