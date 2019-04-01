@@ -194,7 +194,7 @@ class PhoneAttestation extends Component {
                 placeholder="Verification code"
                 value={this.state.code}
                 onChange={e =>
-                  this.setState({ code: e.target.value.replace(/[^0-9]/, '') })
+                  this.setState({ code: e.target.value.replace(/[^0-9]/g, '') })
                 }
               />
               {this.state.error && (
