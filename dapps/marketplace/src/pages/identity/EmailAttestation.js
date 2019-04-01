@@ -177,7 +177,7 @@ class EmailAttestation extends Component {
 
               if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
                 this.setState({
-                  error: 'Verification code is incorrect',
+                  error: 'Verification code should be a 6 digit number',
                   loading: false
                 })
                 return
