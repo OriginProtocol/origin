@@ -36,7 +36,7 @@ export default function applyListingData(props, data) {
       unavailable: listing.unavailable
     }
     variables.commission = listing.boostLimit
-  } else {
+  } else if (listing.__typename !== 'AnnouncementListing') {
     throw new Error(`Unknown listing.__typename: ${listing.__typename}`)
   }
 
