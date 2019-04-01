@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Link from 'components/Link'
 import { fbt } from 'fbt-runtime'
 
 class RewardsBanner extends Component {
@@ -27,12 +28,9 @@ class RewardsBanner extends Component {
                   </span>
                 </div>
                 <div className="float-right">
-                  <a
-                    className="btn btn-primary"
-                    href="https://dapp.originprotocol.com/#/welcome"
-                  >
+                  <Link to="/welcome" className="btn btn-primary">
                     <fbt desc="RewardsBanner.go">Go</fbt>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
