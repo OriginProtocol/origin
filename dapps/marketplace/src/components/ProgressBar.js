@@ -7,7 +7,7 @@ class ProgressBar extends Component {
   }
 
   render() {
-    const { progress, showIndicators } = this.props
+    const { progress, showIndicators, style } = this.props
     /* For triggering animation first render of react component needs to set
      * the width to 0. All subsequent renders set it to the actuall value.
      */
@@ -20,7 +20,11 @@ class ProgressBar extends Component {
     }
 
     return (
-      <div className="blue-progress-bar-holder">
+      <div
+        className={`blue-progress-bar-holder ${
+          style === 'compact' ? 'compact' : ''
+        }`}
+      >
         <div className="blue-progress-bar mt-3">
           <div className="background" />
           {progress > 0 && (
@@ -80,5 +84,13 @@ require('react-styl')(`
         transition: width 0.5s
       height: 10px
       width: 100%
-      position: relative    
+      position: relative
+  .blue-progress-bar-holder.compact
+    .blue-progress-bar
+      .background
+        border: 0px
+        height: 2px
+      .foreground
+        border: 0px
+      height: 2px
 `)

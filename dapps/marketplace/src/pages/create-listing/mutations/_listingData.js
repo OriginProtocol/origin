@@ -20,13 +20,13 @@ export default function applyListingData(props, data) {
   }
 
   switch (listing.__typename) {
-    case 'AnnouncementListing':
-      break
-    case 'UnitListing':
+    case 'UnitListing': {
       const unitsTotal = Number(listing.quantity)
       variables.unitData = { unitsTotal }
       variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
       break
+    }
+
     case 'FractionalListing':
     case 'FractionalHourlyListing':
       variables.fractionalData = {
@@ -39,8 +39,13 @@ export default function applyListingData(props, data) {
       }
       variables.commission = listing.boostLimit
       break
+
+    case 'AnnouncementListing':
+      break
+
     default:
       throw new Error(`Unknown listing.__typename: ${listing.__typename}`)
   }
+
   return variables
 }

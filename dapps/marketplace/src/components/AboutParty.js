@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
@@ -42,7 +43,10 @@ const AboutParty = ({ id }) => {
                 <div className="attestations">
                   {profile.twitterVerified && (
                     <Tooltip
-                      tooltip="Twitter Account Verified"
+                      tooltip={fbt(
+                        'Twitter Account Verified',
+                        'Twitter Account Verified'
+                      )}
                       placement="bottom"
                     >
                       <div className="attestation twitter" />
@@ -50,30 +54,45 @@ const AboutParty = ({ id }) => {
                   )}
                   {profile.googleVerified && (
                     <Tooltip
-                      tooltip="Google Account Verified"
+                      tooltip={fbt(
+                        'Google Account Verified',
+                        'Google Account Verified'
+                      )}
                       placement="bottom"
                     >
                       <div className="attestation google" />
                     </Tooltip>
                   )}
                   {profile.phoneVerified && (
-                    <Tooltip tooltip="Phone Verified" placement="bottom">
+                    <Tooltip
+                      tooltip={fbt('Phone Verified', 'Phone Verified')}
+                      placement="bottom"
+                    >
                       <div className="attestation phone" />
                     </Tooltip>
                   )}
                   {profile.emailVerified && (
-                    <Tooltip tooltip="Email Verified" placement="bottom">
+                    <Tooltip
+                      tooltip={fbt('Email Verified', 'Email Verified')}
+                      placement="bottom"
+                    >
                       <div className="attestation email" />
                     </Tooltip>
                   )}
                   {profile.facebookVerified && (
-                    <Tooltip tooltip="Facebook Verified" placement="bottom">
+                    <Tooltip
+                      tooltip={fbt('Facebook Verified', 'Facebook Verified')}
+                      placement="bottom"
+                    >
                       <div className="attestation facebook" />
                     </Tooltip>
                   )}
                   {profile.airbnbVerified && (
                     <Tooltip
-                      tooltip="Airbnb Account Verified"
+                      tooltip={fbt(
+                        'Airbnb Account Verified',
+                        'Airbnb Account Verified'
+                      )}
                       placement="bottom"
                     >
                       <div className="attestation airbnb" />
@@ -98,7 +117,7 @@ const AboutParty = ({ id }) => {
         <SendMessage
           to={id}
           className="btn btn-outline-primary btn-rounded"
-          children="Send Message"
+          children={fbt('Send Message', 'Send Message')}
         />
         <Link
           to={`/user/${id}`}

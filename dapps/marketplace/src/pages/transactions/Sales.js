@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -10,7 +11,7 @@ import TokenPrice from 'components/TokenPrice'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
-import PageTitle from 'components/PageTitle'
+import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Stages from 'components/TransactionStages'
 import Pic from './_Pic'
@@ -31,24 +32,26 @@ class Sales extends Component {
 
     return (
       <div className="container transactions">
-        <PageTitle>My Sales</PageTitle>
-        <h1>My Sales</h1>
+        <DocumentTitle pageTitle={<fbt desc="Sales.title">My Sales</fbt>} />
+        <h1>
+          <fbt desc="Sales.mySales">My Sales</fbt>
+        </h1>
         <div className="row">
           <div className="col-md-3">
             <ul className="nav nav-pills">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-sales" exact>
-                  Pending
+                  <fbt desc="Sales.pending">Pending</fbt>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-sales/complete">
-                  Complete
+                  <fbt desc="Sales.complete">Complete</fbt>
                 </NavLink>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/my-sales/all">
-                  All
+                  <fbt desc="Sales.all">All</fbt>
                 </NavLink>
               </li>
             </ul>
@@ -66,7 +69,13 @@ class Sales extends Component {
                 } else if (error) {
                   return <QueryError error={error} query={query} vars={vars} />
                 } else if (!data || !data.marketplace) {
-                  return <p className="p-3">No marketplace contract?</p>
+                  return (
+                    <p className="p-3">
+                      <fbt desc="Sales.noContract">
+                        No marketplace contract?
+                      </fbt>
+                    </p>
+                  )
                 }
 
                 const {
@@ -102,9 +111,12 @@ class Sales extends Component {
                                 {listing.title}
                               </Link>
                             </div>
-                            <div className="date">{`Offer made on ${dayjs
-                              .unix(offer.createdEvent.timestamp)
-                              .format('MMMM D, YYYY')}`}</div>
+                            <div className="date">
+                              <fbt desc="Sales.offerMadeOn">Offer made on</fbt>
+                              {` ${dayjs
+                                .unix(offer.createdEvent.timestamp)
+                                .format('MMMM D, YYYY')}`}
+                            </div>
                             <div className="price">
                               <TokenPrice {...offer} />
                             </div>
@@ -115,7 +127,9 @@ class Sales extends Component {
                       {!hasNextPage ? null : (
                         <button
                           children={
-                            networkStatus === 3 ? 'Loading...' : 'Load more'
+                            networkStatus === 3
+                              ? fbt('Loading...', 'Sale.loading')
+                              : fbt('Load more', 'Sales.loadMode')
                           }
                           className="btn btn-outline-primary btn-rounded mt-3"
                           onClick={() =>

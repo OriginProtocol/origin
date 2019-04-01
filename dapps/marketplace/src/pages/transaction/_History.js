@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import dayjs from 'dayjs'
+import { fbt } from 'fbt-runtime'
 
 import query from 'queries/OfferEvents'
 import QueryError from 'components/QueryError'
@@ -34,8 +35,12 @@ class TxHistory extends Component {
       <table className="tx-history table table-sm">
         <thead>
           <tr>
-            <th>TxName</th>
-            <th>Date</th>
+            <th>
+              <fbt desc="History.txName">TxName</fbt>
+            </th>
+            <th>
+              <fbt desc="History.date">Date</fbt>
+            </th>
             <th className="expand" />
           </tr>
         </thead>
@@ -68,7 +73,7 @@ class TxHistory extends Component {
                       <tr {...trProps(idx, true)}>
                         <td colSpan={3} className="info">
                           <div>
-                            IPFS Hash:
+                            <fbt desc="History.ipfsHash">IPFS Hash</fbt>:
                             <a
                               onClick={e => e.stopPropagation()}
                               target="_blank"
@@ -78,7 +83,8 @@ class TxHistory extends Component {
                             />
                           </div>
                           <div>
-                            Tx Hash: <TxHash hash={item.id} />
+                            <fbt desc="History.txHash">Tx Hash</fbt>:{' '}
+                            <TxHash hash={item.id} />
                           </div>
                         </td>
                       </tr>

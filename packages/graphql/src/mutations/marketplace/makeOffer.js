@@ -104,7 +104,7 @@ async function toIpfsData(data) {
       currency: 'ETH'
     },
     commission,
-    finalizes: data.finalizes || 60 * 60 * 24 * 365,
+    finalizes: data.finalizes || 60 * 60 * 24 * 14,
     ...(data.fractionalData || {})
   }
 

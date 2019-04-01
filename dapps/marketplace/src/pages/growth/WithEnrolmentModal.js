@@ -166,12 +166,12 @@ function withEnrolmentModal(WrappedComponent) {
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.handleJoinCampaignContinue()}
-                    children="Get Started"
+                    children={fbt('Get Started', 'Get Started')}
                   />
                   <button
                     className="btn btn-no-outline"
                     onClick={() => this.handleCloseModal()}
-                    children="Dismiss"
+                    children={fbt('Dismiss', 'Dismiss')}
                   />
                 </div>
               </div>
@@ -241,7 +241,7 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className="btn btn-outline-light mr-2"
               onClick={() => this.handleCloseModal()}
-              children="Cancel"
+              children={fbt('Cancel', 'Cancel')}
             />
             <button
               className={`btn btn-lg ml-2 ${
@@ -249,7 +249,7 @@ function withEnrolmentModal(WrappedComponent) {
               }`}
               onClick={() => this.handleTermsContinue()}
               disabled={termsAccepted ? undefined : 'disabled'}
-              children="Accept Terms"
+              children={fbt('Accept Terms', 'Accept Terms')}
             />
           </div>
         </div>
@@ -314,14 +314,14 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className="btn btn-outline-light"
               onClick={() => this.handleCloseModal()}
-              children="Done"
+              children={fbt('Done', 'Done')}
             />
           )}
           {isRestricted && notCitizenChecked && (
             <button
               className="btn btn-primary btn-rounded btn-lg"
               onClick={() => this.handleEligibilityContinue()}
-              children="Continue"
+              children={fbt('Continue', 'Continue')}
             />
           )}
         </div>
@@ -391,7 +391,7 @@ function withEnrolmentModal(WrappedComponent) {
           <button
             className="btn btn-primary btn-rounded btn-lg"
             onClick={() => this.handleCloseModal()}
-            children="Ok"
+            children={fbt('OK', 'OK')}
           />
         </div>
       )
@@ -402,16 +402,15 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data, networkStatus, loading }) => {
-            if (networkStatus === 1 || loading) {
-              return 'Loading...'
-            } else if (error) {
+          {({ error, data }) => {
+            if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount
-              ? data.web3.primaryAccount.id
-              : null
+            const walletAddress =
+              data.web3 && data.web3.primaryAccount
+                ? data.web3.primaryAccount.id
+                : null
             return (
               <Query
                 query={enrollmentStatusQuery}
@@ -423,10 +422,8 @@ function withEnrolmentModal(WrappedComponent) {
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
-                {({ networkStatus, error, loading, data }) => {
-                  if (networkStatus === 1 || loading) {
-                    return 'Loading...'
-                  } else if (error) {
+                {({ error, data }) => {
+                  if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />
                     )

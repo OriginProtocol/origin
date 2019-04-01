@@ -81,10 +81,14 @@ class PhoneAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Phone Number</h2>
+            <h2>
+              <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+            </h2>
             <div className="instructions">
-              Enter your phone number below and OriginID will send you a
-              verification code via SMS.
+              <fbt desc="PhoneAttestation.description">
+                Enter your phone number below and OriginID will send you a
+                verification code via SMS.
+              </fbt>
             </div>
             <div className="d-flex mt-3">
               <CountryDropdown
@@ -118,12 +122,16 @@ class PhoneAttestation extends Component {
               <button
                 type="submit"
                 className="btn btn-outline-light"
-                children={this.state.loading ? 'Loading...' : 'Continue'}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="Cancel"
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -159,6 +167,25 @@ class PhoneAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const trimmedCode = this.state.code.trim()
+
+              if (trimmedCode.length === 0) {
+                this.setState({
+                  error: 'Verification code is required',
+                  loading: false
+                })
+                return
+              }
+
+              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                this.setState({
+                  error: 'Verification code should be a 6 digit number',
+                  loading: false
+                })
+                return
+              }
+
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
@@ -169,11 +196,18 @@ class PhoneAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Phone Number</h2>
-            <div className="instructions">Enter the code we sent you below</div>
+            <h2>
+              <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+            </h2>
+            <div className="instructions">
+              <fbt desc="PhoneAttestation.enterCode">
+                Enter the code we sent you below
+              </fbt>
+            </div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
+                maxLength="6"
                 ref={ref => (this.inputRef = ref)}
                 className="form-control form-control-lg"
                 placeholder="Verification code"
@@ -190,12 +224,16 @@ class PhoneAttestation extends Component {
               <button
                 type="submit"
                 className="btn btn-outline-light"
-                children={this.state.loading ? 'Loading...' : 'Continue'}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
+                }
               />
               <button
                 className="btn btn-link"
                 onClick={() => this.setState({ shouldClose: true })}
-                children="Cancel"
+                children={fbt('Cancel', 'Cancel')}
               />
             </div>
           </form>
@@ -207,13 +245,19 @@ class PhoneAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Phone number verified!</h2>
+        <h2>
+          <fbt desc="PhoneAttestation.verified">Phone number verified!</fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button
@@ -222,7 +266,7 @@ class PhoneAttestation extends Component {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
             }}
-            children="Continue"
+            children={fbt('Continue', 'Continue')}
           />
         </div>
       </>
