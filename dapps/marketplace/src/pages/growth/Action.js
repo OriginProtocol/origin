@@ -90,18 +90,8 @@ function Action(props) {
     )
   }
 
-  const renderActionButton = handleOnClick => {
-    return (
-      <button
-        className="btn btn-primary ml-2 mt-2 mb-2"
-        onClick={handleOnClick}
-      >
-        <img className="button-caret" src="images/caret-white.svg" />
-      </button>
-    )
-  }
-
   let showPossibleRewardAmount = !actionCompleted && reward !== null
+  const isInteractable = !actionCompleted && !actionLocked
 
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
@@ -111,8 +101,37 @@ function Action(props) {
       (rewardEarned === null || rewardEarned.amount === '0')
   }
 
-  return (
-    <div className="d-flex action">
+  const wrapIntoInteraction = (actionComponent) => {
+    return (
+      <Fragment>
+        {isInteractable && (
+          <div>
+            {buttonLink && (
+              <Link
+                to={buttonLink}
+                className="mt-auto mb-auto"
+                onClick={(() => buttonOnClick())}
+              >
+                {actionComponent}
+              </Link>
+            )}
+            {!buttonLink && (
+              <div
+                className="mt-auto mb-auto"
+                onClick={(() => buttonOnClick())}
+              >
+                {actionComponent}
+              </div>
+            )}
+          </div>
+        )}
+        {!isInteractable && actionComponent}
+      </Fragment>
+    )
+  }
+
+  return wrapIntoInteraction(
+    <div className={`d-flex action ${isInteractable && 'active'}`}>
       <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
           {
@@ -181,16 +200,11 @@ function Action(props) {
         {showPossibleRewardAmount && renderReward(reward.amount)}
         {!actionCompleted && !actionLocked && (
           <div className="ml-3">
-            {buttonLink && (
-              <Link to={buttonLink} className="mt-auto mb-auto">
-                {renderActionButton(buttonOnClick)}
-              </Link>
-            )}
-            {!buttonLink && (
-              <div className="mt-auto mb-auto">
-                {renderActionButton(buttonOnClick)}
-              </div>
-            )}
+            <div
+              className="btn btn-primary ml-2 mt-2 mb-2"
+            >
+              <img className="button-caret" src="images/caret-white.svg" />
+            </div>
           </div>
         )}
         {actionLocked && (
@@ -219,6 +233,10 @@ require('react-styl')(`
       border-radius: 5px
       margin-top: 20px
       padding: 20px
+      color: var(--dark)
+      &.active:hover
+        background-color: var(--pale-grey-three)
+        color: var(--dark)
       .background
         width: 60px
       .profile
