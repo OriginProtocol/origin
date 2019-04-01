@@ -180,11 +180,12 @@ class EmailAttestation extends Component {
             <div className="my-3 verification-code">
               <input
                 type="tel"
+                maxLength="6"
                 ref={ref => (this.inputRef = ref)}
                 className="form-control form-control-lg"
                 placeholder="Verification code"
                 value={this.state.code}
-                onChange={e => this.setState({ code: e.target.value })}
+                onChange={e => this.setState({ code: e.target.value.replace(/[^0-9]/, '') })}
               />
               {this.state.error && (
                 <div className="alert alert-danger mt-3">
