@@ -101,7 +101,7 @@ function Action(props) {
       (rewardEarned === null || rewardEarned.amount === '0')
   }
 
-  const wrapIntoInteraction = (actionComponent) => {
+  const wrapIntoInteraction = actionComponent => {
     return (
       <Fragment>
         {isInteractable && (
@@ -110,16 +110,13 @@ function Action(props) {
               <Link
                 to={buttonLink}
                 className="mt-auto mb-auto"
-                onClick={(() => buttonOnClick())}
+                onClick={() => buttonOnClick()}
               >
                 {actionComponent}
               </Link>
             )}
             {!buttonLink && (
-              <div
-                className="mt-auto mb-auto"
-                onClick={(() => buttonOnClick())}
-              >
+              <div className="mt-auto mb-auto" onClick={() => buttonOnClick()}>
                 {actionComponent}
               </div>
             )}
@@ -200,9 +197,7 @@ function Action(props) {
         {showPossibleRewardAmount && renderReward(reward.amount)}
         {!actionCompleted && !actionLocked && (
           <div className="ml-3">
-            <div
-              className="btn btn-primary ml-2 mt-2 mb-2"
-            >
+            <div className="btn btn-primary ml-2 mt-2 mb-2">
               <img className="button-caret" src="images/caret-white.svg" />
             </div>
           </div>

@@ -464,8 +464,11 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
-  return withRouter(({ staticContext, ...props }) => <WithEnrolmentModal {...props} />)
+  // do not pass staticContext prop to component to prevent react errors in browser console
+  // eslint-disable-next-line no-unused-vars
+  return withRouter(({ staticContext, ...props }) => (
+    <WithEnrolmentModal {...props} />
+  ))
 }
 
 export default withEnrolmentModal
