@@ -235,7 +235,9 @@ const config = {
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
   providerUrl:
-    args['--provider-url'] || process.env.PROVIDER_URL || 'http://localhost:8545',
+    args['--provider-url'] ||
+    process.env.PROVIDER_URL ||
+    'http://localhost:8545',
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
