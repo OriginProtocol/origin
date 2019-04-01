@@ -23,16 +23,17 @@ const SingleUnit = ({ listing, from, refetch }) => {
               acceptedTokens={listing.acceptedTokens}
               value={token}
               onChange={setToken}
-            />
-            <Buy
-              refetch={refetch}
-              listing={listing}
-              from={from}
-              value={listing.price.amount}
-              quantity={1}
-              className="btn btn-primary"
-              children={fbt('Purchase', 'Purchase')}
-            />
+            >
+              <Buy
+                refetch={refetch}
+                listing={listing}
+                from={from}
+                value={listing.price.amount}
+                quantity={1}
+                className="btn btn-primary"
+                children={fbt('Purchase', 'Purchase')}
+              />
+            </PaymentOptions>
           </div>
         )
       }}

@@ -283,10 +283,10 @@ require('react-styl')(`
 
     .listing-buy
       padding: 1.5rem
-      border-radius: var(--default-radius);
+      border-radius: var(--default-radius)
       background-color: var(--pale-grey-eight)
       margin-bottom: 1rem
-      > .btn
+      .btn-primary
         border-radius: 2rem
         padding: 0.5rem 1rem
         width: 100%

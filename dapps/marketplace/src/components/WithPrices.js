@@ -31,8 +31,16 @@ const WithPrices = ({
     return memo
   }, {})
 
+  const ethBalance = web3.utils.toBN(
+    get(results, `token-ETH.currency.balance`) || '0'
+  )
+  const targetValue = web3.utils.toBN(
+    web3.utils.toWei(get(results, `${target}.amount`) || '0', 'ether')
+  )
+  const hasEthBalance = ethBalance.gte(targetValue)
+
   if (target === 'token-ETH') {
-    hasBalance = true
+    hasBalance = hasEthBalance
     hasAllowance = true
   } else if (target) {
     const availableBalance = web3.utils.toBN(
@@ -40,9 +48,6 @@ const WithPrices = ({
     )
     const availableAllowance = web3.utils.toBN(
       get(results, `${target}.currency.allowance`) || '0'
-    )
-    const targetValue = web3.utils.toBN(
-      web3.utils.toWei(get(results, `${target}.amount`) || '0', 'ether')
     )
 
     hasBalance = availableBalance.gte(targetValue)
@@ -57,6 +62,7 @@ const WithPrices = ({
   const tokenStatus = {
     hasBalance,
     hasAllowance,
+    hasEthBalance,
     needsAllowance,
     needsBalance
   }

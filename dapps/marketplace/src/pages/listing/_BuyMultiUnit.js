@@ -56,18 +56,20 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
               value={token}
               onChange={setToken}
               hasBalance={tokenStatus.hasBalance}
-            />
-            <Buy
-              refetch={refetch}
-              listing={listing}
-              from={from}
-              value={get(prices, `${token}.amount`)}
-              quantity={quantity}
-              currency={token}
-              tokenStatus={tokenStatus}
-              className="btn btn-primary"
-              children={fbt('Purchase', 'Purchase')}
-            />
+              hasEthBalance={tokenStatus.hasEthBalance}
+            >
+              <Buy
+                refetch={refetch}
+                listing={listing}
+                from={from}
+                value={get(prices, `${token}.amount`)}
+                quantity={quantity}
+                currency={token}
+                tokenStatus={tokenStatus}
+                className="btn btn-primary"
+                children={fbt('Purchase', 'Purchase')}
+              />
+            </PaymentOptions>
           </div>
         )
       }}

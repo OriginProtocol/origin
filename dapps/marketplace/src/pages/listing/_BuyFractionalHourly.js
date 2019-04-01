@@ -94,7 +94,11 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
                 <fbt desc="Unavailable">Unavailable</fbt>
               </div>
             )}
-            {!totalPrice ? null : (
+            {!totalPrice ? (
+              <button className="btn btn-primary disabled">
+                {fbt('Book', 'Book')}
+              </button>
+            ) : (
               <>
                 <div className="total">
                   <span>
@@ -111,23 +115,24 @@ const FractionalHourly = ({ listing, from, range, availability, refetch }) => {
                   value={token}
                   onChange={setToken}
                   hasBalance={tokenStatus.hasBalance}
-                />
+                >
+                  <Buy
+                    refetch={refetch}
+                    listing={listing}
+                    from={from}
+                    value={get(prices, `['${token}'].amount`)}
+                    quantity={1}
+                    disabled={available ? false : true}
+                    startDate={startDate}
+                    endDate={endDate}
+                    currency={token}
+                    tokenStatus={tokenStatus}
+                    className={`btn btn-primary${available ? '' : ' disabled'}`}
+                    children={fbt('Book', 'Book')}
+                  />
+                </PaymentOptions>
               </>
             )}
-            <Buy
-              refetch={refetch}
-              listing={listing}
-              from={from}
-              value={get(prices, `['${token}'].amount`)}
-              quantity={1}
-              disabled={available ? false : true}
-              startDate={startDate}
-              endDate={endDate}
-              currency={token}
-              tokenStatus={tokenStatus}
-              className={`btn btn-primary${available ? '' : ' disabled'}`}
-              children={fbt('Book', 'Book')}
-            />
           </div>
         )
       }}
