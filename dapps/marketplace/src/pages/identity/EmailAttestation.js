@@ -73,7 +73,10 @@ class EmailAttestation extends Component {
 
               const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
               if (!emailRegex.test(this.state.email)) {
-                this.setState({ error: 'This is not a valid email address', loading: false })
+                this.setState({
+                  error: 'This is not a valid email address',
+                  loading: false
+                })
                 return
               }
 
