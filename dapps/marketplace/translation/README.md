@@ -34,6 +34,8 @@ For tag properties, e.g. `tooltip`, use the `fbt()` javascript function. Like th
 
 It is important to wrap _entire sentances_ that can be translated. That is, do not break a sentance across multiple `<fbt>` tags. This is important because words go in different orders in different languages, and in any case the translators will not know which fragments are meant to be together. 
 
+NOTE: We do not yet have localization of dates, times, and numbers. This would be a great project for someone. 
+
 ## Translating
 
 We use [Crowdin](https://crowdin.com/project/originprotocol) to allow the communtity to contribute translations. Github integration is managed by the `OriginProtocol` user, owned by Coleman.
