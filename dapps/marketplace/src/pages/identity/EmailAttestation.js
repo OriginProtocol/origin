@@ -60,7 +60,7 @@ class EmailAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.eror('Error', errorData)
+          console.error('Error', errorData)
           this.setState({ error: 'Check console' })
         }}
       >
@@ -70,6 +70,16 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              if (!emailRegex.test(this.state.email)) {
+                this.setState({
+                  error: 'This is not a valid email address',
+                  loading: false
+                })
+                return
+              }
+
               generateCode({
                 variables: { email: this.state.email }
               })
