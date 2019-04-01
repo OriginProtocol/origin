@@ -1,6 +1,6 @@
 import contracts from '../contracts'
 import parseId from '../utils/parseId'
-import Currencies from '../constants/Currencies'
+import currencies from '../utils/currencies'
 import get from 'lodash/get'
 
 import { getFeatured, getHidden } from './marketplace/_featuredAndHidden'
@@ -44,10 +44,10 @@ export default {
     const hiddenIds = await getHidden(contracts.net)
     return hiddenIds.indexOf(listingId) >= 0
   },
-  price: listing => {
+  price: async listing => {
     return {
       amount: listing.price.amount,
-      currency: Currencies[get(listing, 'price.currency.id', 'token-ETH')]
+      currency: await currencies.get(get(listing, 'price.currency.id', 'token-ETH'))
     }
   }
 }
