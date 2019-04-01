@@ -135,7 +135,7 @@ require('react-styl')(`
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
           background-size: 1rem
         &.earn-tokens span
-          background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
+          background: url(images/ogn-icon-nav.svg) no-repeat 0.5rem center
           background-size: 1rem
 
       .dropdown-menu
