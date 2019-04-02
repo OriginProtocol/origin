@@ -161,6 +161,7 @@
   "45kim7": "Ulteriori informazioni su Origin",
   "2CIGBu": "Crea il tuo Marketplace",
   "1xF0Sp": "Acquista",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Aggiungi Elenco",
   "1HTMvk": "Guadagna Token Origin Free oggi",
   "2cup7z": "Partecipa alle nostre campagne e completa le attività sulla nostra DApp per ottenere i Token Origin.",
@@ -353,7 +354,7 @@
   "2hr27C": "Vendi un Articolo",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Campagna di Gennaio 2019",
     "growth.jan2019.short_name": "Gen 2019",
     "growth.feb2019.name": "Campagna di Febbraio 2019",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "Campagna di Aprile 2019",
     "growth.apr2019.short_name": "Apr 2019",
     "growth.profile.and.email.requirement": "Email e profilo Origin verificati",
-    "growth.two.attestations.requirement": "2 su 4 attestazioni",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Email verificata"
   },

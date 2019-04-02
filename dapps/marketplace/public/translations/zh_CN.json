@@ -161,6 +161,7 @@
   "45kim7": "了解更多关于 Origin 的信息",
   "2CIGBu": "创建您自己的市场",
   "1xF0Sp": "购买",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "添加列表",
   "1HTMvk": "立即赚取免费的 Origin 代币",
   "2cup7z": "参与我们的奖励活动并在我们的 DApp 上完成一些动作即可获得 Origin Tokens。",
@@ -353,7 +354,7 @@
   "2hr27C": "售卖一件商品",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "2019年1月活动",
     "growth.jan2019.short_name": "2019年1月",
     "growth.feb2019.name": "2019年2月活动",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "2019年4月活动",
     "growth.apr2019.short_name": "2019年4月",
     "growth.profile.and.email.requirement": "已验证电子邮件和 Origin 个人资料",
-    "growth.two.attestations.requirement": "四项认证中的两项",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "电子邮件已验证"
   },
