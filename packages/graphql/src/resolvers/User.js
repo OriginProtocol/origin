@@ -257,8 +257,20 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
   )
   const u2BuyerIds = u2BuyerEvents.map(e => Number(e.returnValues.listingID))
 
-  const u1SellEvents = await ec().offers(u1BuyerIds, null, SellerEvents, null, u2)
-  const u2SellEvents = await ec().offers(u2BuyerIds, null, SellerEvents, null, u1)
+  const u1SellEvents = await ec().offers(
+    u1BuyerIds,
+    null,
+    SellerEvents,
+    null,
+    u2
+  )
+  const u2SellEvents = await ec().offers(
+    u2BuyerIds,
+    null,
+    SellerEvents,
+    null,
+    u1
+  )
 
   const allEvents = sortBy(
     [...u1BuyerEvents, ...u2BuyerEvents, ...u1SellEvents, ...u2SellEvents],
