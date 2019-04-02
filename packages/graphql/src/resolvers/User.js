@@ -221,12 +221,91 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
+const SellerEvents = ['OfferAccepted', 'OfferWithdrawn', 'OfferDisputed']
+const BuyerEvents = [
+  'OfferCreated',
+  'OfferFinalized',
+  'OfferWithdrawn',
+  'OfferDisputed'
+]
+
+// Sourced from offer events where user is alternate party
+async function counterparty(user, { first = 100, after, id }, _, info) {
+  const fields = graphqlFields(info)
+  const u1 = user.id,
+    u2 = id
+
+  const u1Listings = await ec().allEvents('ListingCreated', u1)
+  const u1ListingIds = u1Listings.map(e => Number(e.returnValues.listingID))
+  const u2Listings = await ec().allEvents('ListingCreated', u2)
+  const u2ListingIds = u2Listings.map(e => Number(e.returnValues.listingID))
+
+  const u1BuyerEvents = await ec().offers(
+    u2ListingIds,
+    null,
+    BuyerEvents,
+    null,
+    u1
+  )
+  const u1BuyerIds = u1BuyerEvents.map(e => Number(e.returnValues.listingID))
+  const u2BuyerEvents = await ec().offers(
+    u1ListingIds,
+    null,
+    BuyerEvents,
+    null,
+    u2
+  )
+  const u2BuyerIds = u2BuyerEvents.map(e => Number(e.returnValues.listingID))
+
+  const u1SellEvents = await ec().offers(u1BuyerIds, null, SellerEvents, null, u2)
+  const u2SellEvents = await ec().offers(u2BuyerIds, null, SellerEvents, null, u1)
+
+  const allEvents = sortBy(
+    [...u1BuyerEvents, ...u2BuyerEvents, ...u1SellEvents, ...u2SellEvents],
+    e => -e.blockNumber
+  )
+
+  const totalCount = allEvents.length,
+    allIds = allEvents.map(e => e.id)
+
+  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
+  const filteredEvents = allEvents.filter(e => ids.indexOf(e.id) >= 0)
+
+  let offers = [],
+    nodes = []
+
+  if (fields.nodes) {
+    offers = await Promise.all(
+      filteredEvents.map(event =>
+        contracts.eventSource.getOffer(
+          event.returnValues.listingID,
+          event.returnValues.offerID,
+          event.blockNumber
+        )
+      )
+    )
+    nodes = filteredEvents.map((event, idx) => {
+      const party = event.returnValues.party
+      return {
+        id: event.id,
+        offer: offers[idx],
+        party: { id: party, account: { id: party } },
+        event,
+        read: false
+      }
+    })
+  }
+
+  return getConnection({ start, first, nodes, ids, totalCount })
+}
+
 export default {
   offers,
   sales,
   reviews,
   notifications,
   transactions,
+  counterparty,
   listings: listingsBySeller,
   firstEvent: async user => {
     if (user.firstEvent) return user.firstEvent
