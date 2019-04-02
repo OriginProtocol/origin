@@ -43,19 +43,22 @@ const Price = ({ className, target, currencies, descriptor, ...props }) => {
     if (listingType === 'FractionalListing') {
       return (
         <fbt desc="Price.fractionalNightly">
-          <fbt:param name="content">{content}</fbt:param> per night
+          <fbt:param name="content">{content}</fbt:param>
+          <span className="desc">per night</span>
         </fbt>
       )
     } else if (listingType === 'FractionalHourlyListing') {
       return (
         <fbt desc="Price.fractionalHourly">
-          <fbt:param name="content">{content}</fbt:param> per hour
+          <fbt:param name="content">{content}</fbt:param>
+          <span className="desc">per hour</span>
         </fbt>
       )
     } else if (get(props, 'listing.multiUnit')) {
       return (
         <fbt desc="Price.multiUnit">
-          <fbt:param name="content">{content}</fbt:param> each
+          <fbt:param name="content">{content}</fbt:param>
+          <span className="desc">each</span>
         </fbt>
       )
     }
