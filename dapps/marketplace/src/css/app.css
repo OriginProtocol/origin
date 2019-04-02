@@ -19,6 +19,7 @@ body {
   font-weight: 300;
   height: 100%;
   line-height: 1.5;
+  background-color: var(--pale-grey-four)
 }
 
 .loading-screen {

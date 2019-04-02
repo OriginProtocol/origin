@@ -21,14 +21,18 @@ class ProfileWizzard extends Component {
   	return (<DeployIdentity {...props} />)
   }
 
-  renderWizzardBos(title, subtitle, rewardText, rewardAmount, buttonElements) {
-  	return(<div className="profile-wizzard-box">
-  	 {this.renderPublishChanges('what is up yo?')}
-  	</div>)
+  renderWizzardBox(title, subtitle, rewardText, rewardAmount, buttonElements) {
+  	return(
+      <div className="profile-wizzard-box d-flex justify-content-center pl-4 pr-4 pt-4">
+        {this.renderPublishChanges('what is up yo?')}
+
+
+      </div>
+    )
   }
 
   render() {
-  	return this.renderWizzardBos('what is up yo1', 'what is up yo1')
+  	return this.renderWizzardBox('what is up yo1', 'what is up yo1')
   }
 }
 
@@ -36,6 +40,10 @@ export default ProfileWizzard
 
 require('react-styl')(`
 	.profile-wizzard-box
-		border: solid 1px var(--light)
-		border-radius: 5px;
+    background-color: white
+    border-radius: 5px
+    border: 1px solid var(--light)
+    min-height: 190px
+    position: relative
+    padding-bottom: 35px
 `)
