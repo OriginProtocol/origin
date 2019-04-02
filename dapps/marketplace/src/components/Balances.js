@@ -58,10 +58,7 @@ const Balances = ({ ethBalance, account }) => {
             children={fbt('Get Started', 'Get Started')}
             skipjoincampaign="false"
           >
-            <img className="mr-1" src="images/growth/blue-add-icon.svg" />
-            <div className="mr-2 value">
-              <fbt desc="Balances.getOgn">Get OGN</fbt>
-            </div>
+            <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>
         )}
       </div>

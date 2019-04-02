@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactCrop from 'react-image-crop'
-import loadImage from 'blueimp-load-image'
+import loadImage from 'utils/loadImage'
 import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
