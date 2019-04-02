@@ -36,6 +36,7 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
+      this.goToWelcomeWhenNotEnrolled = !!(props.goToWelcomeWhenNotEnrolled)
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -59,9 +60,13 @@ function withEnrolmentModal(WrappedComponent) {
       } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
-        this.setState({
-          open: true
-        })
+        if (this.goToWelcomeWhenNotEnrolled) {
+          this.props.history.push('/welcome')
+        } else {
+          this.setState({
+            open: true
+          })
+        }
       } else if (enrollmentStatus === 'Banned') {
         alert(
           fbt(
