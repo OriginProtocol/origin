@@ -68,7 +68,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { active_event, address, balances: { eth, ogn/*, dai*/ }, navigation, notifications, pending_events, processed_events } = this.props
+    const { address, navigation } = this.props
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
     // const daiBalance = dai

@@ -23,7 +23,7 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoParam}-${fiatParam}`
   return new Promise(resolve => {
     fetch(exchangeURL)
-      .then(res =>  {  
+      .then(res =>  {
         if (!res.ok) {
           throw Error(res.statusText)
         }
@@ -176,8 +176,11 @@ const updateExchangeRate = async () => {
   }
 }
 
+/*
+
 updateExchangeRate()
 
 setInterval(async () => {
   updateExchangeRate()
 }, EXCHANGE_RATE_POLL_INTERVAL)
+*/

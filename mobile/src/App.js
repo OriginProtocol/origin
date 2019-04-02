@@ -31,6 +31,7 @@ import {
 import Onboarding from 'components/onboarding'
 import { loadData } from './tools'
 import { OriginNavigator, OnboardingStack } from './Navigation'
+import { EVENTS } from './constants'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -41,13 +42,9 @@ YellowBox.ignoreWarnings([
   'Module RCTImageLoader requires main queue setup'
 ])
 
-// Origin Nav wrapper
 class OriginNavWrapper extends Component {
   constructor(props) {
     super(props)
-
-    this.balancePoll = null
-
     this.state = {
       loading: true
     }
@@ -60,7 +57,22 @@ class OriginNavWrapper extends Component {
       })
     }
 
-    // originWallet.openWallet()
+    originWallet.events.on(EVENTS.LOADED, () => {
+      console.log('Loaded')
+      this.setState({ loading: false })
+    })
+
+    originWallet.events.on(EVENTS.AVAILABLE_ACCOUNTS, ({ accounts }) => {
+      console.log('Updating accounts')
+      this.props.updateAccounts(accounts)
+    })
+
+    originWallet.events.on(EVENTS.CURRENT_ACCOUNT, ({ address }) => {
+      console.log('Initialising accounts')
+      this.props.initWallet(address)
+    })
+
+    originWallet.open()
   }
 
   componentDidUpdate() {
@@ -76,7 +88,7 @@ class OriginNavWrapper extends Component {
   }
 
   componentWillUnmount() {
-    // originWallet.closeWallet()
+    originWallet.closeWallet()
   }
 
   render() {

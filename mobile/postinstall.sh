@@ -9,4 +9,5 @@ npx install-local -S ../packages/contracts \
 	../packages/linker-client \
 	../packages/messaging-client \
 	../packages/services \
-	../packages/validator
+	../packages/validator \
+	../packages/mobile-bridge

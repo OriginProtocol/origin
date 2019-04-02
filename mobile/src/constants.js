@@ -2,6 +2,8 @@
 
 import keyMirror from './utils/keyMirror'
 
+export const ACCOUNT_MAPPING = 'ACCOUNT_MAPPING'
+
 export const DEFAULT_NOTIFICATION_PERMISSIONS = {
   alert: true,
   badge: true,
@@ -10,7 +12,6 @@ export const DEFAULT_NOTIFICATION_PERMISSIONS = {
 
 export const EVENTS = keyMirror(
   {
-    PROMPT_LINK: null,
     PROMPT_TRANSACTION: null,
     PROMPT_SIGN: null,
     CURRENT_ACCOUNT: null,
@@ -18,9 +19,7 @@ export const EVENTS = keyMirror(
     LOADED: null,
     LINKED: null,
     TRANSACTED: null,
-    UNLINKED: null,
     REJECT: null,
-    LINKS: null,
     UPDATE: null,
     SHOW_MESSAGES: null,
     NOTIFICATION: null,
