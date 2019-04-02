@@ -220,14 +220,6 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
-const SellerEvents = ['OfferAccepted', 'OfferWithdrawn', 'OfferDisputed']
-const BuyerEvents = [
-  'OfferCreated',
-  'OfferFinalized',
-  'OfferWithdrawn',
-  'OfferDisputed'
-]
-
 // Sourced from offer events where user is alternate party
 async function counterparty(user, { first = 100, after, id }, _, info) {
   const fields = graphqlFields(info)
