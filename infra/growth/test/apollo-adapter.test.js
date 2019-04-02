@@ -285,39 +285,48 @@ describe('Apollo adapter', () => {
       const expectedActionStates = {
         Profile: {
           status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: null
         },
         Email: {
           status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: null
         },
         Phone: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         Airbnb: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         Facebook: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         Twitter: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
         },
         ListingPurchased: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
         },
         ListingSold: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
         },
         Referral: {
           status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
         },
       }
 
@@ -325,6 +334,7 @@ describe('Apollo adapter', () => {
         const action = actionByType[actionType]
         expect(action.status).to.deep.equal(expectedState.status)
         expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
+        expect(action.reward).to.deep.equal(expectedState.reward)
       }
     })
 
