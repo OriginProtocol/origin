@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 class RewardsBanner extends Component {
+  constructor(props) {
+    super(props)
+    this.GetOgn = withEnrolmentModal('button')
+  }
+
   render() {
     return (
       <>
@@ -27,12 +33,12 @@ class RewardsBanner extends Component {
                   </span>
                 </div>
                 <div className="float-right">
-                  <a
+                  <this.GetOgn
                     className="btn btn-primary"
-                    href="https://dapp.originprotocol.com/#/welcome"
+                    goToWelcomeWhenNotEnrolled={true}
                   >
                     <fbt desc="RewardsBanner.go">Go</fbt>
-                  </a>
+                  </this.GetOgn>
                 </div>
               </div>
             </div>
