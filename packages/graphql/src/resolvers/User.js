@@ -174,7 +174,6 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
         e.event === 'OfferCreated' &&
         events.some(t => t.event.match(/Offer(Withdrawn|Finalized)/))
       ) {
-        console.log(events)
         return false
       } else if (
         e.event === 'OfferAccepted' &&
@@ -243,39 +242,29 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
   const u1BuyerEvents = await ec().offers(
     u2ListingIds,
     null,
-    BuyerEvents,
-    null,
+    'OfferCreated',
+    u2,
     u1
   )
-  const u1BuyerIds = u1BuyerEvents.map(e => Number(e.returnValues.listingID))
+  const u1OfferIds = u1BuyerEvents.map(
+    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
+  )
   const u2BuyerEvents = await ec().offers(
     u1ListingIds,
     null,
-    BuyerEvents,
-    null,
+    'OfferCreated',
+    u1,
     u2
   )
-  const u2BuyerIds = u2BuyerEvents.map(e => Number(e.returnValues.listingID))
-
-  const u1SellEvents = await ec().offers(
-    u1BuyerIds,
-    null,
-    SellerEvents,
-    null,
-    u2
-  )
-  const u2SellEvents = await ec().offers(
-    u2BuyerIds,
-    null,
-    SellerEvents,
-    null,
-    u1
+  const u2OfferIds = u2BuyerEvents.map(
+    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
   )
 
-  const allEvents = sortBy(
-    [...u1BuyerEvents, ...u2BuyerEvents, ...u1SellEvents, ...u2SellEvents],
-    e => -e.blockNumber
-  )
+  const unsortedEvents = await ec().allEvents(null, null, [
+    ...u1OfferIds,
+    ...u2OfferIds
+  ])
+  const allEvents = sortBy(unsortedEvents, e => -e.blockNumber)
 
   const totalCount = allEvents.length,
     allIds = allEvents.map(e => e.id)
