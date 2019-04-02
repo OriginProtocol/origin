@@ -1,5 +1,5 @@
 // Input: Source strings file from fbt, json in fbt format
-// Output: Simple key-value json of strings, for consumption by crowdin
+// Output: Simple key-value json of strings, for consumption by Crowdin
 
 const srcFile = `${__dirname}/../.source_strings.json`
 const dstFile = `${__dirname}/../translation/crowdin/all-messages.json`
@@ -24,7 +24,7 @@ const allMessages = {}
 // {E_VAR_APPLE_AND_BANANA_B64_QXBwbGUgYW5kIGJhbmFuYQ}
 //
 // For the decoding counterpart of this method, see crowdinToFbt.js
-//
+
 const EqualPrefix = 'E_'
 const VarPrefix = 'VAR_'
 const b64Prefix = '_B64_'
