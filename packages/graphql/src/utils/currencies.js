@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 
+const API_TIMEOUT_MS = 5000 // 5sec
 const EXCHANGE_RATES_POLL_INTERVAL = 10 * 60 * 1000 // 10 min.
 
 class Currencies {
@@ -111,7 +112,7 @@ class Currencies {
       this.currencyCodes.join(',')
     let rates
     try {
-      const response = await fetch(url, { timeout: 2000 })
+      const response = await fetch(url, { timeout: API_TIMEOUT_MS })
       rates = await response.json()
     } catch (e) {
       console.error('API call to fetch xrates from CryptoCompare failed.')
