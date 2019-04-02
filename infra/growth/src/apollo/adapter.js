@@ -41,7 +41,7 @@ class ApolloAdapter {
     return await GrowthInvite.getReferralsInfo(
       data.ethAddress,
       data.campaign.id,
-      data.reward,
+      data.reward.value,
       data.rewards
     )
   }
@@ -62,7 +62,7 @@ class ApolloAdapter {
       type: this._eventTypeToActionType(data.eventTypes[0]),
       status: data.status,
       rewardEarned: Money.sum(data.rewards, data.campaign.currency),
-      reward: data.reward,
+      reward: data.reward ? data.reward.value : null,
       unlockConditions: data.unlockConditions
     }
 
