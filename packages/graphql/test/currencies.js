@@ -25,7 +25,7 @@ describe('Currencies', () => {
       const currency = await currencies.get(id)
       assert(currency.name)
       assert(currency.code)
-      assert.equal(typeof(currency.priceInUSD), 'number')
+      assert.equal(typeof currency.priceInUSD, 'number')
       if (id.startsWith('fiat')) {
         assert(currency.countryCodes)
       } else {
