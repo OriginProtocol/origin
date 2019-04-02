@@ -46,7 +46,7 @@ const config = {
             [
               'babel-plugin-fbt',
               {
-                fbtEnumManifest: require('./translations/.enum_manifest.json')
+                fbtEnumManifest: require('./translation/fbt/.enum_manifest.json')
               }
             ],
             'babel-plugin-fbt-runtime'
