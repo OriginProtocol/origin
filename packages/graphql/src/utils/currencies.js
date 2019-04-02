@@ -4,47 +4,51 @@ const EXCHANGE_RATES_POLL_INTERVAL = 10 * 60 * 1000 // 10 min.
 
 class Currencies {
   constructor() {
+    // Note: we set default values for the priceInUSD field in case the
+    // centralized server we query to dynamically fetch exchange rates is down.
+    // We have an open issue https://github.com/OriginProtocol/origin/issues/1860
+    // to show a warning banner to the user in case rates are stale.
     this.data = {
       'fiat-USD': {
         id: 'fiat-USD',
         name: 'US Dollar',
         code: 'USD',
-        priceInUSD: undefined,
+        priceInUSD: 1,
         countryCodes: ['US']
       },
       'fiat-GBP': {
         id: 'fiat-GBP',
         name: 'British Pound',
         code: 'GBP',
-        priceInUSD: undefined,
+        priceInUSD: 1.31,
         countryCodes: ['GB']
       },
       'fiat-EUR': {
         id: 'fiat-EUR',
         name: 'Euro',
         code: 'EUR',
-        priceInUSD: 1.13,
+        priceInUSD: 1.12,
         countryCodes: ['FR']
       },
       'fiat-KRW': {
         id: 'fiat-KRW',
         name: 'South Korean Won',
         code: 'KRW',
-        priceInUSD: undefined,
+        priceInUSD: 0.0009,
         countryCodes: ['KR']
       },
       'fiat-JPY': {
         id: 'fiat-JPY',
         name: 'Japanese Yen',
         code: 'JPY',
-        priceInUSD: undefined,
+        priceInUSD: 0.1441,
         countryCodes: ['JP']
       },
       'fiat-CNY': {
         id: 'fiat-CNY',
         name: 'Chinese Yuan',
         code: 'CNY',
-        priceInUSD: undefined,
+        priceInUSD: 0.15,
         countryCodes: ['CN']
       },
       'token-ETH': {
@@ -52,7 +56,7 @@ class Currencies {
         address: '0x0000000000000000000000000000000000000000',
         code: 'ETH',
         name: 'Ether',
-        priceInUSD: undefined,
+        priceInUSD: 158.16,
         decimals: 18
       },
       'token-DAI': {
@@ -60,7 +64,7 @@ class Currencies {
         // address: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
         name: 'DAI Stablecoin',
         code: 'DAI',
-        priceInUSD: undefined,
+        priceInUSD: 1,
         decimals: 18
       },
       'token-USDC': {
@@ -68,7 +72,7 @@ class Currencies {
         // address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
         name: 'USDC Stablecoin',
         code: 'USDC',
-        priceInUSD: undefined,
+        priceInUSD: 1,
         decimals: 6
       },
       'token-GUSD': {
@@ -76,7 +80,7 @@ class Currencies {
         // address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd',
         name: 'Gemini Dollar',
         code: 'GUSD',
-        priceInUSD: undefined,
+        priceInUSD: 1,
         decimals: 2
       }
     }
@@ -107,7 +111,7 @@ class Currencies {
       this.currencyCodes.join(',')
     let rates
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, { timeout: 2000 })
       rates = await response.json()
     } catch (e) {
       console.error('API call to fetch xrates from CryptoCompare failed.')
@@ -121,7 +125,11 @@ class Currencies {
         console.error(`CryptoCompare did not return xrate for ${currencyCode}.`)
         continue
       }
-      this.data[key].priceInUSD = rates[currencyCode]
+      // Note: We inverse the rate since we query CryptoCompare for rates
+      // from USD to other currencies, but we store price of a given currency in USD.
+      // CryptoCompare has another api (called pricemulti) that we could use so that
+      // we don't have to reverse but it does not work for all currencies (ex. KRW).
+      this.data[key].priceInUSD = 1.0 / rates[currencyCode]
     }
     this.polled = true
     return true
@@ -139,7 +147,9 @@ class Currencies {
     // Poll exchange rates if they haven't been populated yet.
     if (!this.polled) {
       if ((await this._poll()) !== true) {
-        throw new Error('Failed fetching currency exchange rates.')
+        console.error(
+          'Failed fetching currency exchange rates. Falling back to stale rates.'
+        )
       }
     }
     return this.data[currencyId]
