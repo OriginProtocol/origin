@@ -60,7 +60,7 @@ class EmailAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.eror('Error', errorData)
+          console.error('Error', errorData)
           this.setState({ error: 'Check console' })
         }}
       >
@@ -70,6 +70,16 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              if (!emailRegex.test(this.state.email)) {
+                this.setState({
+                  error: 'This is not a valid email address',
+                  loading: false
+                })
+                return
+              }
+
               generateCode({
                 variables: { email: this.state.email }
               })
@@ -154,6 +164,25 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const trimmedCode = this.state.code.trim()
+
+              if (trimmedCode.length === 0) {
+                this.setState({
+                  error: 'Verification code is required',
+                  loading: false
+                })
+                return
+              }
+
+              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                this.setState({
+                  error: 'Verification code should be a 6 digit number',
+                  loading: false
+                })
+                return
+              }
+
               verifyCode({
                 variables: { identity: this.props.wallet, email, code }
               })
@@ -170,6 +199,7 @@ class EmailAttestation extends Component {
             <div className="my-3 verification-code">
               <input
                 type="tel"
+                maxLength="6"
                 ref={ref => (this.inputRef = ref)}
                 className="form-control form-control-lg"
                 placeholder="Verification code"
