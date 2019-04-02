@@ -20,8 +20,9 @@ export default {
     }
   },
   code: async token => {
-    if (await currencies.get(token.id)) {
-      return await currencies.get(token.id).code
+    const currency = currencies.data[token.id]
+    if (currency) {
+      return currency.code
     }
     if (token.code) return token.code
     try {
