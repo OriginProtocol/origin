@@ -47,7 +47,9 @@ export default {
   price: async listing => {
     return {
       amount: listing.price.amount,
-      currency: await currencies.get(get(listing, 'price.currency.id', 'token-ETH'))
+      currency: await currencies.get(
+        get(listing, 'price.currency.id', 'token-ETH')
+      )
     }
   }
 }
