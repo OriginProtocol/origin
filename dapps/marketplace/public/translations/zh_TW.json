@@ -161,6 +161,7 @@
   "45kim7": "了解更多關於原產地",
   "2CIGBu": "創建自己的市場",
   "1xF0Sp": "購買",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "添加清單",
   "1HTMvk": "今天獲得免費原產地代幣",
   "2cup7z": "參與我們的活動並完成DApp的任務以獲得Origin Tokens。",
@@ -353,7 +354,7 @@
   "2hr27C": "賣出一個清單",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "2019年1月運動",
     "growth.jan2019.short_name": "2019年1月",
     "growth.feb2019.name": "2019年2月運動",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "2019年4月運動",
     "growth.apr2019.short_name": "2019年4月",
     "growth.profile.and.email.requirement": "已驗證的電子郵件和原始資",
-    "growth.two.attestations.requirement": "4個證明中有2個",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "已驗證電郵"
   },

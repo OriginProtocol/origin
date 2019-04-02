@@ -161,6 +161,7 @@
   "45kim7": "Matuto Nang Higit Pa Tungkol sa Pinagmulan",
   "2CIGBu": "Lumikha ng Iyong Sariling Marketplace",
   "1xF0Sp": "Bumili",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Magdagdag ng Listahan",
   "1HTMvk": "Kumita ng Libreng Token Pinagmulan Ngayon",
   "2cup7z": "Makilahok sa aming mga kampanya at kumpletong mga gawain sa aming DApp upang kumita ng Mga Token ng Pinagmulan.",
@@ -353,7 +354,7 @@
   "2hr27C": "Ibenta ang Listahan",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Enero 2019 Kampanya",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Pebrero 2019 Kampanya",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "Abril 2019 Kampanya",
     "growth.apr2019.short_name": "Abril 2019",
     "growth.profile.and.email.requirement": "Na-verify na email at Pinagmulan ng profile",
-    "growth.two.attestations.requirement": "2 sa 4 na attestations",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Na-verify na email"
   },
