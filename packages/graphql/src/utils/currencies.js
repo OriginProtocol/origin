@@ -87,11 +87,13 @@ class Currencies {
       this.currencyCodes.push(this.data[key].code)
     }
 
-    // Start the background polling of exchange rate.
+    // Start the background polling of exchange rates.
     this.polled = false
-    setInterval(async () => {
-      this._poll()
-    }, EXCHANGE_RATES_POLL_INTERVAL)
+    if (process.env.NODE_ENV !== 'test') {
+      setInterval(async () => {
+        this._poll()
+      }, EXCHANGE_RATES_POLL_INTERVAL)
+    }
   }
 
   /**
