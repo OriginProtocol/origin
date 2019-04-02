@@ -3,6 +3,10 @@ import fetch from 'node-fetch'
 const API_TIMEOUT_MS = 5000 // 5sec
 const EXCHANGE_RATES_POLL_INTERVAL = 10 * 60 * 1000 // 10 min.
 
+let fetching = false
+const requestQueue = []
+const isDone = () => new Promise(resolve => requestQueue.push(resolve))
+
 class Currencies {
   constructor() {
     // Note: we set default values for the priceInUSD field in case the
@@ -145,6 +149,13 @@ class Currencies {
     if (!this.data[currencyId]) {
       throw new Error('Unsupported currency id', currencyId)
     }
+
+    // Wait until any existing fetching is completed before continuing
+    // execution. This prevents multiple requests being fired at the same time
+    // on initial page load.
+    if (fetching) await isDone()
+    fetching = true
+
     // Poll exchange rates if they haven't been populated yet.
     if (!this.polled) {
       if ((await this._poll()) !== true) {
@@ -153,6 +164,13 @@ class Currencies {
         )
       }
     }
+
+    // Let any queued requests continue their execution
+    fetching = false
+    while (requestQueue.length) {
+      requestQueue.pop()()
+    }
+
     return this.data[currencyId]
   }
 

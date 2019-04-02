@@ -45,10 +45,8 @@ export default {
     return await contract.methods.totalSupply().call()
   },
   priceInUSD: async token => {
-    if (await currencies.get(token.id)) {
-      return await currencies.get(token.id).priceInUSD
-    }
-    return null
+    const currency = await currencies.get(token.id)
+    return currency ? currency.priceInUSD : null
   },
   balance: async (token, { address }) => {
     if (token.code === 'ETH') {
