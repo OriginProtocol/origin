@@ -4,7 +4,7 @@ import { fbt } from 'fbt-runtime'
 import Tooltip from 'components/Tooltip'
 import ImageCropper from 'components/ImageCropperModal'
 
-import loadImage from 'blueimp-load-image'
+import loadImage from 'utils/loadImage'
 
 import { fileSize, postFile } from 'utils/fileUtils'
 const acceptedFileTypes = [
