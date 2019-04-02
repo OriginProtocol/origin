@@ -2,16 +2,13 @@ import { Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import EventEmitter from 'events'
 import CryptoJS from 'crypto-js'
-import UUIDGenerator from 'react-native-uuid-generator'
 
 import { storeData, loadData } from './tools'
 import { EthNotificationTypes } from './enums'
 import {
-  ACCOUNT_MAPPING,
   DEFAULT_NOTIFICATION_PERMISSIONS,
   EVENTS,
   WALLET_STORE,
-  WALLET_INFO,
   WALLET_PASSWORD
 } from './constants'
 
@@ -125,6 +122,8 @@ class OriginWallet {
 
           const { length } = web3.eth.accounts.wallet
 
+          console.debug(`Loaded Origin Wallet with ${length} accounts`)
+
           if (length) {
             const accounts = this.getAccountAddresses()
             const active = accounts.find(({ active }) => active) || {}
@@ -138,7 +137,7 @@ class OriginWallet {
         this.fireEvent(EVENTS.LOADED)
       })
       .catch(error => {
-        console.log(`Could not load wallet data: ${error}`)
+        console.error(`Could not load Origin Wallet: ${error}`)
       })
   }
 
@@ -162,8 +161,9 @@ class OriginWallet {
 
     try {
       await storeData(WALLET_STORE, encryptedAccounts)
+      console.debug(`Saved Origin Wallet`)
     } catch (error) {
-      console.log(`Could not save wallet data: ${error}`)
+      console.error(`Could not save Origin Wallet: ${error}`)
     }
   }
 
@@ -180,11 +180,9 @@ class OriginWallet {
    *
    */
   async createAccount() {
-    const prevAccountAddresses = this.getAccountAddresses()
+    console.debug(`Creating a new account`)
     const wallet = web3.eth.accounts.wallet.create(1)
-    const address = this.getAccountAddresses().find(
-      address => !prevAccountAddresses.find(x => x === address)
-    )
+    const address = wallet[0].address
     this.setEthAddress(address)
     return address
   }
@@ -192,8 +190,7 @@ class OriginWallet {
   /* Remove an account
    *
    */
-  async removeAccount () {
-    const accounts = await web3.eth.getAccounts()
+  async removeAccount (address) {
     const result = web3.eth.accounts.wallet.remove(address)
     if (result ) {
       this.save()

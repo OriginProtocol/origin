@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Alert, Clipboard, FlatList, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Alert,
+  Clipboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import OriginButton from 'components/origin-button'
-import Separator from 'components/separator'
-
 import { truncateAddress } from 'utils/user'
-
 import originWallet from '../OriginWallet'
 
 const ONE_MINUTE = 1000 * 60
@@ -25,7 +29,7 @@ class AccountScreen extends Component {
 
     this.state = {
       nameValue,
-      priorNameValue: nameValue,
+      priorNameValue: nameValue
     }
   }
 
@@ -34,8 +38,8 @@ class AccountScreen extends Component {
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
-      fontWeight: 'normal',
-    },
+      fontWeight: 'normal'
+    }
   }
 
   async handleActivate() {
@@ -46,7 +50,7 @@ class AccountScreen extends Component {
       originWallet.setWeb3Address(address)
 
       navigation.goBack()
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
@@ -56,20 +60,23 @@ class AccountScreen extends Component {
       'Important!',
       'As a security precaution, your key will be removed from the clipboard after one minute.',
       [
-        { text: 'Got it.', onPress: async () => {
-          await Clipboard.setString(privateKey)
+        {
+          text: 'Got it.',
+          onPress: async () => {
+            await Clipboard.setString(privateKey)
 
-          Alert.alert('Copied to clipboard!')
+            Alert.alert('Copied to clipboard!')
 
-          setTimeout(async () => {
-            const s = await Clipboard.getString()
+            setTimeout(async () => {
+              const s = await Clipboard.getString()
 
-            if (s === privateKey) {
-              Clipboard.setString('')
-            }
-          }, ONE_MINUTE)
-        }},
-      ],
+              if (s === privateKey) {
+                Clipboard.setString('')
+              }
+            }, ONE_MINUTE)
+          }
+        }
+      ]
     )
   }
 
@@ -80,20 +87,23 @@ class AccountScreen extends Component {
     Alert.alert(
       'Important!',
       'Have you backed up your private key for this account? ' +
-      'The account will be permanently deleted and you must have the private key to recover it. ' +
-      'Are you sure that you want to delete this account?',
+        'The account will be permanently deleted and you must have the private key to recover it. ' +
+        'Are you sure that you want to delete this account?',
       [
         { text: 'Cancel' },
-        { text: 'Delete', onPress: () => {
-          try {
-            originWallet.removeAccount(address)
+        {
+          text: 'Delete',
+          onPress: () => {
+            try {
+              originWallet.removeAccount(address)
 
-            navigation.goBack()
-          } catch(e) {
-            console.error(e)
+              navigation.goBack()
+            } catch (e) {
+              console.error(e)
+            }
           }
-        }},
-      ],
+        }
+      ]
     )
   }
 
@@ -108,7 +118,8 @@ class AccountScreen extends Component {
     const { navigation } = this.props
     const { address } = navigation.getParam('account')
 
-    nameValue !== priorNameValue && originWallet.nameAccount(address, nameValue.trim())
+    nameValue !== priorNameValue &&
+      originWallet.nameAccount(address, nameValue.trim())
   }
 
   showPrivateKey(address) {
@@ -149,7 +160,7 @@ class AccountScreen extends Component {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          {multipleAccounts &&
+          {multipleAccounts && (
             <OriginButton
               size="large"
               type="primary"
@@ -159,7 +170,7 @@ class AccountScreen extends Component {
               title={'Make Active Account'}
               onPress={this.handleActivate}
             />
-          }
+          )}
           <OriginButton
             size="large"
             type="primary"
@@ -176,7 +187,7 @@ class AccountScreen extends Component {
             title={'Copy Private Key'}
             onPress={() => this.handleDangerousCopy(privateKey)}
           />
-          {multipleAccounts &&
+          {multipleAccounts && (
             <OriginButton
               size="large"
               type="danger"
@@ -186,7 +197,7 @@ class AccountScreen extends Component {
               title={'Delete Account'}
               onPress={this.handleDelete}
             />
-          }
+          )}
         </View>
       </View>
     )
@@ -204,56 +215,56 @@ export default connect(mapStateToProps)(AccountScreen)
 const styles = StyleSheet.create({
   button: {
     marginBottom: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 20
   },
   buttonsContainer: {
     marginBottom: 10,
-    paddingTop: 20,
+    paddingTop: 20
   },
   container: {
-    flex: 1,
+    flex: 1
   },
   content: {
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   header: {
     paddingBottom: 5,
     paddingHorizontal: 20,
-    paddingTop: 30,
+    paddingTop: 30
   },
   heading: {
     fontFamily: 'Lato',
     fontSize: 13,
-    opacity: 0.5,
+    opacity: 0.5
   },
   iconContainer: {
     height: 17,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   image: {
     height: 24,
-    width: 24,
+    width: 24
   },
   input: {
     backgroundColor: 'white',
     fontFamily: 'Lato',
     fontSize: 17,
     paddingHorizontal: 20,
-    paddingVertical: '5%',
+    paddingVertical: '5%'
   },
   item: {
     backgroundColor: 'white',
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: '5%',
+    paddingVertical: '5%'
   },
   text: {
     flex: 1,
     fontSize: 17,
-    fontFamily: 'Lato',
+    fontFamily: 'Lato'
   },
   wrapper: {
     backgroundColor: '#f7f8f8',
-    flex: 1,
-  },
+    flex: 1
+  }
 })

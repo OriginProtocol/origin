@@ -2,7 +2,6 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
 import activation from 'reducers/Activation'
-import devices from 'reducers/Devices'
 import exchangeRates from 'reducers/ExchangeRates'
 import notifications from 'reducers/Notifications'
 import users from 'reducers/Users'
@@ -24,7 +23,6 @@ const store = createStore(
     persistConfig,
     combineReducers({
       activation,
-      devices,
       exchangeRates,
       notifications,
       users,

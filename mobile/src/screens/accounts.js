@@ -1,5 +1,11 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import AccountItem from 'components/account-item'
@@ -13,7 +19,7 @@ class AccountsScreen extends Component {
 
     this.toggleModal = this.toggleModal.bind(this)
     this.state = {
-      modalOpen: false,
+      modalOpen: false
     }
   }
 
@@ -23,18 +29,20 @@ class AccountsScreen extends Component {
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,
-        fontWeight: 'normal',
+        fontWeight: 'normal'
       },
       headerRight: (
-        <TouchableOpacity onPress={() => {
-          navigation.state.params.toggleModal()
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.state.params.toggleModal()
+          }}
+        >
           <Image
             source={require(`${IMAGES_PATH}add.png`)}
             style={{ marginRight: 15 }}
           />
         </TouchableOpacity>
-      ),
+      )
     }
   }
 
@@ -57,12 +65,16 @@ class AccountsScreen extends Component {
             <AccountItem item={item} navigation={navigation} wallet={wallet} />
           )}
           keyExtractor={({ address }) => address}
-          ItemSeparatorComponent={({ highlighted }) => (
+          ItemSeparatorComponent={() => (
             <View style={styles.separator} />
           )}
           style={styles.list}
         />
-        <AccountModal visible={this.state.modalOpen} onPress={this.toggleModal} onRequestClose={this.toggleModal} />
+        <AccountModal
+          visible={this.state.modalOpen}
+          onPress={this.toggleModal}
+          onRequestClose={this.toggleModal}
+        />
       </Fragment>
     )
   }
@@ -70,7 +82,7 @@ class AccountsScreen extends Component {
 
 const mapStateToProps = ({ wallet }) => {
   return {
-    wallet,
+    wallet
   }
 }
 
@@ -81,16 +93,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f8f8',
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 20
   },
   list: {
     backgroundColor: '#f7f8f8',
-    height: '100%',
+    height: '100%'
   },
   separator: {
     backgroundColor: 'white',
     height: 1,
     marginRight: 'auto',
-    width: '5%',
-  },
+    width: '5%'
+  }
 })

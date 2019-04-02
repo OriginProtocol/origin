@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'

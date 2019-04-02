@@ -19,7 +19,6 @@ import {
   updateBackupWarningStatus,
   updateCarouselStatus
 } from 'actions/Activation'
-import { setDevices } from 'actions/Devices'
 import { add as addNotification } from 'actions/Notification'
 import { init, updateAccounts } from 'actions/Wallet'
 import {
@@ -225,7 +224,6 @@ const mapDispatchToProps = dispatch => ({
   processedEvent: (matcher, update, newEvent) =>
     dispatch(processedEvent(matcher, update, newEvent)),
   setActiveEvent: event => dispatch(setActiveEvent(event)),
-  setDevices: devices => dispatch(setDevices(devices)),
   storeNotificationsPermissions: permissions =>
     dispatch(storeNotificationsPermissions(permissions)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
