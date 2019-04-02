@@ -329,7 +329,7 @@ require('react-styl')(`
       margin-bottom: 2rem
     .avatar-wrap
       margin-right: 2rem
-      width: 10rem
+      width: 7.5rem
       .avatar
         border-radius: 1rem
     .actions

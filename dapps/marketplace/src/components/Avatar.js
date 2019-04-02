@@ -39,12 +39,12 @@ require('react-styl')(`
         background-size: 63%
     &.with-cam::after
       content: ""
-      width: 2.5rem
-      height: 2.5rem
+      width: 2rem
+      height: 2rem
       background: url(images/camera-icon-circle.svg) no-repeat center
       background-size: 100%
       position: absolute
-      bottom: 0.5rem
-      right: 0.5rem
+      bottom: 0.3rem
+      right: 0.3rem
 
 `)
