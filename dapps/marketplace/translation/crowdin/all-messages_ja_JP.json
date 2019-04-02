@@ -524,7 +524,7 @@
   "0hZyMC0etK9bwztn8hnbhg==": "売り手について",
   "L2oPKF5xsKmJCOtmT+Uwfg==": "*クリックしてドラッグして期間を選択",
   "9hd32nz5BtBUmOmM269/AA==": "タイムゾーン:",
-  "IOWXtJhXlVb9On/GWu5Ufg==": "注：これは {VAR_USERTIMEZONE_B64_dXNlclRpbWVab25l}タイムゾーンとは異なります{userTimeZone}",
+  "IOWXtJhXlVb9On/GWu5Ufg==": "注：これは {VAR_USERTIMEZONE_B64_dXNlclRpbWVab25l}タイムゾーンとは異なります",
   "5hZ6uYzeyyP9j8VnTvQ0Gg==": "*クリックしてドラッグして時間範囲を選択",
   "o6Z2JUXPEzsq4mjxtgxysg==": "すべて",
   "FRFO6tLpPFCURVOimytNpQ==": "検索",
