@@ -161,6 +161,7 @@
   "45kim7": "Узнайте больше о происхождении",
   "2CIGBu": "Создайте свой собственный рынок",
   "1xF0Sp": "Купить",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Добавить объявление",
   "1HTMvk": "Заработайте бесплатные жетоны происхождения сегодня",
   "2cup7z": "Участвуйте в наших кампаниях и выполняйте задания на нашем DApp, чтобы заработать Origin Tokens.",
@@ -353,7 +354,7 @@
   "2hr27C": "Продать объявление",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Январь 2019 Кампания",
     "growth.jan2019.short_name": "Январь 2019",
     "growth.feb2019.name": "Февраль 2019 Кампания",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "Апрель 2019 Кампания",
     "growth.apr2019.short_name": "Апрель 2019",
     "growth.profile.and.email.requirement": "Подтвержденный адрес электронной почты и Происхождение",
-    "growth.two.attestations.requirement": "2 из 4 аттестаций",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Подтвержденный адрес электронной почты"
   },

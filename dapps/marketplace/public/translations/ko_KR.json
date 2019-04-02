@@ -161,6 +161,7 @@
   "45kim7": "Origin에 대해 알아보기",
   "2CIGBu": "나만의 마켓 플레이스 만들기",
   "1xF0Sp": "구매",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "상품 목록 추가",
   "1HTMvk": "지금 오리진 토큰(Origin Tokens) 을 무료로 얻어보세요.",
   "2cup7z": "오리진 토큰을 얻으려면 DApp에서 캠페인에 참여하고 작업을 완료하십시오.",
@@ -353,7 +354,7 @@
   "2hr27C": "상품 판매",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "2019 년 1 월 캠페인",
     "growth.jan2019.short_name": "2019 년 1 월",
     "growth.feb2019.name": "2019 년 2 월 캠페인",
@@ -363,7 +364,7 @@
     "growth.apr2019.name": "2019 년 4 월 캠페인",
     "growth.apr2019.short_name": "2019 년 4 월",
     "growth.profile.and.email.requirement": "인증된 이메일 및 오리진 프로필",
-    "growth.two.attestations.requirement": "4 가지 증명 중 2 가지",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "인증된 이메일(email)"
   },
