@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Link from 'components/Link'
 import { fbt } from 'fbt-runtime'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
