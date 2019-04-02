@@ -7,7 +7,7 @@ export default async function setLocale(newLocale) {
     localStorage.locale = newLocale
   } else if (!userLocale) {
     // Only switch to languages that we know have good translations.
-    const autoSwitchLocales = ['zh_CN']
+    const autoSwitchLocales = ['zh_CN', 'ko_KR']
     if (autoSwitchLocales.includes(navigator.language.replace('-', '_'))) {
       userLocale = navigator.language.replace('-', '_')
     } else {
