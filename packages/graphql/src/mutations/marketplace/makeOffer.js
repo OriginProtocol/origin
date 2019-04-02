@@ -4,7 +4,7 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
-import Currencies from '../../constants/Currencies'
+import currencies from '../../utils/currencies'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -40,7 +40,7 @@ async function makeOffer(_, data) {
   )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
   const arbitrator = data.arbitrator || contracts.config.arbitrator
-  const currency = Currencies[data.currency]
+  const currency = await currencies.get(data.currency)
 
   let currencyAddress = currency.address
   if (!currencyAddress) {

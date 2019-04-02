@@ -1,4 +1,4 @@
-import Currencies from '../constants/Currencies'
+import currencies from '../utils/currencies'
 import contracts from '../contracts'
 
 function tokenContract(id) {
@@ -20,8 +20,8 @@ export default {
     }
   },
   code: async token => {
-    if (Currencies[token.id]) {
-      return Currencies[token.id].code
+    if (await currencies.get(token.id)) {
+      return await currencies.get(token.id).code
     }
     if (token.code) return token.code
     try {
@@ -43,16 +43,11 @@ export default {
     if (!contract) return ''
     return await contract.methods.totalSupply().call()
   },
-  priceInUSD: async (token, args) => {
-    if (Currencies[token.id]) {
-      return Currencies[token.id].priceInUSD
+  priceInUSD: async token => {
+    if (await currencies.get(token.id)) {
+      return await currencies.get(token.id).priceInUSD
     }
-    const currency = args.currency || 'USD'
-    if (currency === 'USD') {
-      return 200
-    } else {
-      return 200
-    }
+    return null
   },
   balance: async (token, { address }) => {
     if (token.code === 'ETH') {

@@ -2,9 +2,8 @@ import messaging from './messaging/_messaging'
 
 import contracts from '../contracts'
 import creatorConfig from '../constants/CreatorConfig'
-import Currencies from '../constants/Currencies'
+import currencies from '../utils/currencies'
 
-let ethPrice
 const marketplaceExists = {}
 
 import { identity } from './IdentityEvents'
@@ -77,19 +76,9 @@ export default {
     }
     return contracts.tokens.find(t => t.id === args.id)
   },
-  ethUsd: () =>
-    new Promise((resolve, reject) => {
-      if (ethPrice) {
-        return resolve(ethPrice)
-      }
-      fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
-        .then(response => response.json())
-        .then(response => {
-          ethPrice = response.USD
-          resolve(response.USD)
-        })
-        .catch(reject)
-    }),
+  ethUsd: async () => {
+    return await currencies.get('token-ETH').priceInUSD
+  },
   messaging: async (_, args) => {
     if (typeof window !== 'undefined' && window.localStorage.disableMessaging) {
       return null
@@ -129,12 +118,12 @@ export default {
   },
   walletLinker: () => ({}),
 
-  currency: (_, args) => Currencies[args.id],
-  currencies: (_, args) => {
-    let currencies = Object.keys(Currencies)
+  currency: async (_, args) => await currencies.get(args.id),
+  currencies: async (_, args) => {
+    let ids = currencies.ids()
     if (args.tokens) {
-      currencies = currencies.filter(c => args.tokens.indexOf(c) >= 0)
+      ids = ids.filter(c => args.tokens.indexOf(c) >= 0)
     }
-    return currencies.map(id => Currencies[id])
+    return await Promise.all(ids.map(id => currencies.get(id)))
   }
 }
