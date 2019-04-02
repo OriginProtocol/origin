@@ -15,6 +15,7 @@ import MessageWithIdentity from './Message'
 import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
+import Stages from 'components/TransactionStages'
 
 function eventName(name) {
   if (name === 'OfferCreated') {
@@ -31,14 +32,21 @@ function eventName(name) {
 }
 
 const OfferEvent = ({ event, wallet, identity }) => (
-  <div className="offer-event">
-    {event.event.returnValues.party === wallet
-      ? 'You'
-      : get(identity, 'fullName')}
-    {` ${eventName(event.event.event)} `}
-    <Link to={`/purchases/${event.offer.id}`}>{event.offer.listing.title}</Link>
-    {` on ${dayjs.unix(event.event.timestamp).format('MMM Do, YYYY')}`}
-  </div>
+  <>
+    <div className="offer-event">
+      {event.event.returnValues.party === wallet
+        ? 'You'
+        : get(identity, 'fullName')}
+      {` ${eventName(event.event.event)} `}
+      <Link to={`/purchases/${event.offer.id}`}>
+        {event.offer.listing.title}
+      </Link>
+      {` on ${dayjs.unix(event.event.timestamp).format('MMM Do, YYYY')}`}
+    </div>
+    {event.event.event !== 'OfferCreated' ? null : (
+      <Stages offer={event.offer} />
+    )}
+  </>
 )
 
 const OfferEventWithIdentity = withIdentity(
@@ -189,4 +197,6 @@ require('react-styl')(`
       align-self: center
       margin-bottom: 1rem
       font-weight: normal
+    .stages
+      min-height: 4rem
 `)

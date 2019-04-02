@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import fragments from './Fragments'
 
 export default gql`
   query CounterpartyEvents($user: ID!, $counterparty: String!) {
@@ -16,18 +17,9 @@ export default gql`
               }
             }
             offer {
-              id
-              buyer {
-                id
-              }
+              ...basicOfferFields
               listing {
-                ... on Listing {
-                  id
-                  title
-                  seller {
-                    id
-                  }
-                }
+                ...basicListingFields
               }
             }
           }
@@ -35,4 +27,6 @@ export default gql`
       }
     }
   }
+  ${fragments.Listing.basic}
+  ${fragments.Offer.basic}
 `
