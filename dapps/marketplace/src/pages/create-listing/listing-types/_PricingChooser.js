@@ -1,4 +1,5 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 import CoinPrice from 'components/CoinPrice'
 import Tooltip from 'components/Tooltip'
@@ -17,14 +18,22 @@ const HelpIcon = ({ tooltip }) => (
 const PricingChooser = ({ value, onChange, children }) => {
   return (
     <div className="form-group">
-      <label>Payment</label>
+      <label>
+        <fbt desc="pricingChooser.payment">Payment</fbt>
+      </label>
       <div className="pricing-chooser">
         {children}
         <div className="form-group accepted-currencies">
-          <label className="mb-0">Accepted Cryptocurrencies</label>
+          <label className="mb-0">
+            <fbt desc="pricingChooser.acceptedCurrenciesHeading">
+              Accepted Cryptocurrencies
+            </fbt>
+          </label>
           <div className="help-text price mt-0">
-            Buyers will be able to purchase your listing using either of these
-            currencies if you select both.
+            <fbt desc="pricingChooser.acceptedCurrenciesDescription">
+              Buyers will be able to purchase your listing using either of these
+              currencies if you select both.
+            </fbt>
           </div>
           <div className="custom-control custom-checkbox">
             <input
@@ -44,8 +53,15 @@ const PricingChooser = ({ value, onChange, children }) => {
               <CoinPrice coin="dai" iconOnly className="lg" />
               Maker Dai (DAI)
             </label>
-            <div className="help-text">Stable but less buyers</div>
-            <HelpIcon tooltip="Maker Dai is good for long term listings like rentals or property sales." />
+            <div className="help-text">
+              <fbt desc="PricingChooser.helpDai">Stable but less buyers</fbt>
+            </div>
+            <HelpIcon
+              tooltip={fbt(
+                'Maker Dai is good for long term listings like rentals or property sales.',
+                'PricingChooser.maker'
+              )}
+            />
           </div>
           <div className="custom-control custom-checkbox">
             <input
@@ -65,8 +81,15 @@ const PricingChooser = ({ value, onChange, children }) => {
               <CoinPrice coin="eth" iconOnly className="lg" />
               Ether (ETH)
             </label>
-            <div className="help-text">Volatile but more buyers</div>
-            <HelpIcon tooltip="Ether is good for short term listings." />
+            <div className="help-text">
+              <fbt desc="PricingChooser.helpEth">Volatile but more buyers</fbt>
+            </div>
+            <HelpIcon
+              tooltip={fbt(
+                'Ether is good for short term listings.',
+                'pricingChooser.ether'
+              )}
+            />
           </div>
         </div>
       </div>
