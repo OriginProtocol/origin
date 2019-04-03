@@ -8,7 +8,6 @@
   "2xyXwd": "Pošalji poruku",
   "2gtpRD": "Stanje na računu",
   "4fuMIp": "Započnite",
-  "9hzrv": "Nabavite OGN",
   "3ZvG6A": {
     "schema.forSale": "Za prodaju",
     "schema.forRent": "Za najam",
@@ -161,6 +160,7 @@
   "45kim7": "Saznajte više o podrijetlu",
   "2CIGBu": "Stvorite vlastitu tržnicu",
   "1xF0Sp": "Kupiti",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Dodaj popis",
   "1HTMvk": "Zaradite besplatno tokena danas",
   "2cup7z": "Sudjelujte u našim kampanjama i dovršite zadatke na našem DApp-u kako biste zaradili Origin Tokens.",
@@ -353,7 +353,7 @@
   "2hr27C": "Prodaj Oglas",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Kampanja u siječnju 2019. godine",
     "growth.jan2019.short_name": "Siječnja 2019",
     "growth.feb2019.name": "Kampanja veljače 2019. godine",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Kampanja u travnju 2019. godine",
     "growth.apr2019.short_name": "Travanj 2019",
     "growth.profile.and.email.requirement": "Potvrđena adresa e-pošte i profil porijekla",
-    "growth.two.attestations.requirement": "2 od 4 potvrde",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Potvrđena e-pošta"
   },

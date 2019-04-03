@@ -8,7 +8,6 @@
   "2xyXwd": "Enviar mensagem",
   "2gtpRD": "Saldo da conta",
   "4fuMIp": "Iniciar",
-  "9hzrv": "Obter OGN",
   "3ZvG6A": {
     "schema.forSale": "Á venda",
     "schema.forRent": "Para alugar",
@@ -161,6 +160,7 @@
   "45kim7": "Saiba mais sobre a origem",
   "2CIGBu": "Crie seu próprio mercado",
   "1xF0Sp": "Comprar",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Adicionar listagem",
   "1HTMvk": "Ganhe Tokens de Origem Gratuitos Hoje",
   "2cup7z": "Participe em nossas campanhas e complete as tarefas em nosso DApp para ganhar Tokens de Origem.",
@@ -353,7 +353,7 @@
   "2hr27C": "Vender uma listagem",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Campanha de janeiro de 2019",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Campanha de fevereiro de 2019",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Campanha de abril de 2019",
     "growth.apr2019.short_name": "Abr 2019",
     "growth.profile.and.email.requirement": "E-mail confirmado e perfil de origem",
-    "growth.two.attestations.requirement": "2 de 4 atestados",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "E-mail confirmado"
   },

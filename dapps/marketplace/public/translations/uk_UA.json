@@ -8,7 +8,6 @@
   "2xyXwd": "Відправити повідомлення",
   "2gtpRD": "Баланс акаунту",
   "4fuMIp": "Почати",
-  "9hzrv": "Отримати OGN",
   "3ZvG6A": {
     "schema.forSale": "Для продажу",
     "schema.forRent": "В оренду",
@@ -161,6 +160,7 @@
   "45kim7": "Дізнайтеся більше про походження",
   "2CIGBu": "Створіть свій власний ринок",
   "1xF0Sp": "Купити",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Додати лістинг",
   "1HTMvk": "Заробити безкоштовні маркери походження сьогодні",
   "2cup7z": "Беріть участь в наших кампаніях і виконуйте завдання на нашому DApp, щоб заробити токени Origin.",
@@ -353,7 +353,7 @@
   "2hr27C": "Продаж лістингу",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Кампанія в січні 2019 року",
     "growth.jan2019.short_name": "Січня 2019",
     "growth.feb2019.name": "Акція лютого 2019 року",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Акція квітня 2019 року",
     "growth.apr2019.short_name": "Apr 2019",
     "growth.profile.and.email.requirement": "Підтверджена електронна пошта й профіль Origin",
-    "growth.two.attestations.requirement": "2 з 4 атестацій",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Підтверджена електронна пошта"
   },

@@ -8,7 +8,6 @@
   "2xyXwd": "ส่งข้อความ",
   "2gtpRD": "ยอดเงินในบัญชี",
   "4fuMIp": "เริ่ม",
-  "9hzrv": "รับ OGN",
   "3ZvG6A": {
     "schema.forSale": "สำหรับขาย",
     "schema.forRent": "สำหรับเช่า",
@@ -161,6 +160,7 @@
   "45kim7": "เรียนรู้เพิ่มเติมเกี่ยวกับ Origin",
   "2CIGBu": "สร้างตลาดของคุณเอง",
   "1xF0Sp": "ซื้อ",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "เพิ่มรายชื่อ",
   "1HTMvk": "รับโทเค็นต้นทางฟรีวันนี้",
   "2cup7z": "เข้าร่วมในแคมเปญของเราและทำงานให้เสร็จสมบูรณ์ใน DApp ของเราเพื่อรับ Origin Tokens",
@@ -353,7 +353,7 @@
   "2hr27C": "ขายรายชื่อ",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "แคมเปญมกราคม 2562",
     "growth.jan2019.short_name": "ม.ค. 2019",
     "growth.feb2019.name": "แคมเปญกุมภาพันธ์ 2019",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "แคมเปญเมษายน 2019",
     "growth.apr2019.short_name": "เม.ย. 2562",
     "growth.profile.and.email.requirement": "ยืนยันอีเมลและโปรไฟล์ Origin แล้ว",
-    "growth.two.attestations.requirement": "2 จาก 4 การยืนยัน",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "ยืนยันอีเมลแล้ว"
   },

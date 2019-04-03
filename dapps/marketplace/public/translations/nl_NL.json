@@ -8,7 +8,6 @@
   "2xyXwd": "Bericht versturen",
   "2gtpRD": "Saldo",
   "4fuMIp": "Begin",
-  "9hzrv": "Krijg OGN",
   "3ZvG6A": {
     "schema.forSale": "Te koop",
     "schema.forRent": "Te huur",
@@ -161,6 +160,7 @@
   "45kim7": "Meer informatie over Origin",
   "2CIGBu": "Creëer uw eigen marktplaats",
   "1xF0Sp": "Kopen",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Advertentie toevoegen",
   "1HTMvk": "Verdien vandaag nog gratis Origin Tokens",
   "2cup7z": "Neem deel aan onze campagnes en voltooi taken op onze DApp om Origin Tokens te verdienen.",
@@ -353,7 +353,7 @@
   "2hr27C": "Verkoop een aanbieding",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "2019 campagne",
     "growth.jan2019.short_name": "Januari 2019",
     "growth.feb2019.name": "Februari 2019 Campagne",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Campagne april 2019",
     "growth.apr2019.short_name": "April 2019",
     "growth.profile.and.email.requirement": "Geverifieerd e-mailadres en herkomstprofiel",
-    "growth.two.attestations.requirement": "2 van de 4 attestaties",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Geverifieerd e-mailadres"
   },

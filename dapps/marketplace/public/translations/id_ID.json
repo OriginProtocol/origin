@@ -8,7 +8,6 @@
   "2xyXwd": "Mengirim pesan",
   "2gtpRD": "Saldo Akun",
   "4fuMIp": "Memulai",
-  "9hzrv": "Dapatkan OGN",
   "3ZvG6A": {
     "schema.forSale": "Dijual",
     "schema.forRent": "Disewakan",
@@ -161,6 +160,7 @@
   "45kim7": "Pelajari Lebih Lanjut Tentang Asal",
   "2CIGBu": "Buat Pasar Anda Sendiri",
   "1xF0Sp": "Membeli",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Tambahkan Cantuman",
   "1HTMvk": "Hasilkan Token Asal Gratis Hari Ini",
   "2cup7z": "Berpartisipasilah dalam kampanye kami dan selesaikan tugas di DApp kami untuk mendapatkan Token Asal.",
@@ -353,7 +353,7 @@
   "2hr27C": "Jual Daftar",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Kampanye Januari 2019",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Kampanye Februari 2019",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Kampanye April 2019",
     "growth.apr2019.short_name": "Apr 2019",
     "growth.profile.and.email.requirement": "Email yang diverifikasi dan profil Asal",
-    "growth.two.attestations.requirement": "2 dari 4 pengesahan",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Email yang diverifikasi"
   },

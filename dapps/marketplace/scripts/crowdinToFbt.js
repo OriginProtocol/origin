@@ -1,6 +1,5 @@
-// Iterates over files in `translation/crowdin` over our languages, expecting them to be in key-value format that crowdin uses
-// Output: files in fbt formatin in `translations` dir
-//
+// Iterates over files in `./translation/crowdin` over our languages, expecting them to be in key-value format that crowdin uses
+// Output: files in fbt formatin in `./translation/fbt` dir
 
 const doTestMark = process.argv.length>=3 && process.argv[2]=='doTestMark'
 if (doTestMark) {
@@ -92,7 +91,7 @@ locales.forEach(locale => {
   const srcFile = doTestMark ?
     `${__dirname}/../translation/crowdin/all-messages.json` :
     `${__dirname}/../translation/crowdin/all-messages_${locale}.json`
-  const dstFile = `${__dirname}/../translations/${locale}.json`
+  const dstFile = `${__dirname}/../translation/fbt/${locale}.json`
 
   const fs = require('fs')
   const translations = {}
@@ -108,10 +107,10 @@ locales.forEach(locale => {
   console.log(`Processing file: ${srcFile}`)
 
   Object.keys(stringKeyValue).forEach(key => {
-    const val = doTestMark ? '◀'+stringKeyValue[key]+'▶' : stringKeyValue[key]
+    const val = doTestMark ? '◀'+decode(stringKeyValue[key])+'▶' : decode(stringKeyValue[key])
     translations[key] = {
       'translations': [
-        { 'translation': decode(val) }
+        { 'translation': val }
       ]
     }
   })
@@ -124,7 +123,7 @@ locales.forEach(locale => {
 
   const output = JSON.stringify(file, null, 2)
 
-  // This should be writign to the fbt translations in ./translations
+  // Write out fbt translation format
   fs.writeFileSync(dstFile, output)
 
   console.log(`✅ ${locale}`)

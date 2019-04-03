@@ -24,7 +24,10 @@ async function generatePhoneCode(_, { prefix, method = 'sms', phone }) {
   }
 
   const data = await response.json()
-  return { success: false, reason: get(data, 'errors.phone[0]') }
+  return {
+    success: false,
+    reason: get(data, 'errors.phone[0]') || get(data, 'errors[0]')
+  }
 }
 
 export default generatePhoneCode

@@ -8,7 +8,6 @@
   "2xyXwd": "Gửi tin nhắn",
   "2gtpRD": "Số dư tài khoản",
   "4fuMIp": "Bắt đầu",
-  "9hzrv": "Nhận OGN",
   "3ZvG6A": {
     "schema.forSale": "Để bán",
     "schema.forRent": "Cho thuê",
@@ -161,6 +160,7 @@
   "45kim7": "Tìm hiểu thêm về nguồn gốc",
   "2CIGBu": "Tạo thị trường của riêng bạn",
   "1xF0Sp": "Mua",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Thêm danh sách",
   "1HTMvk": "Kiếm mã thông báo nguồn gốc miễn phí ngay hôm nay",
   "2cup7z": "Tham gia vào các chiến dịch của chúng tôi và hoàn thành các nhiệm vụ trên DApp của chúng tôi để kiếm Token gốc.",
@@ -353,7 +353,7 @@
   "2hr27C": "Bán một danh sách",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Chiến dịch tháng 1 năm 2019",
     "growth.jan2019.short_name": "Tháng 1 năm 2019",
     "growth.feb2019.name": "Chiến dịch tháng 2 năm 2019",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Chiến dịch tháng 4 năm 2019",
     "growth.apr2019.short_name": "Tháng 4 năm 2019",
     "growth.profile.and.email.requirement": "Email được xác minh và hồ sơ gốc",
-    "growth.two.attestations.requirement": "2 trong 4 chứng thực",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Email đã xác minh"
   },

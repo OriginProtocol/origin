@@ -8,7 +8,6 @@
   "2xyXwd": "Να στείλετε μήνυμα",
   "2gtpRD": "Το υπόλοιπο του λογαριασμού",
   "4fuMIp": "Ξεκίνα",
-  "9hzrv": "Λήψη OGN",
   "3ZvG6A": {
     "schema.forSale": "Προς πώληση",
     "schema.forRent": "Προς ενοικίαση",
@@ -161,6 +160,7 @@
   "45kim7": "Μάθετε περισσότερα για την προέλευση",
   "2CIGBu": "Δημιουργήστε τη δική σας αγορά",
   "1xF0Sp": "Αγορά",
+  "3wrISb": "Earn Tokens",
   "3i2AJC": "Προσθέστε Καταχώρηση",
   "1HTMvk": "Κερδίστε δωρεάν σημάδια προέλευσης σήμερα",
   "2cup7z": "Συμμετάσχετε στις καμπάνιες μας και ολοκληρώστε τις εργασίες σας στο DApp για να κερδίσετε τα Tokens Origin.",
@@ -353,7 +353,7 @@
   "2hr27C": "Πωλήστε μια λίστα",
   "4rFkyn": "Invite Friends to Join Origin",
   "3XLL4i": "Requires:",
-  "9NSux": {
+  "6TcSB": {
     "growth.jan2019.name": "Ιανουάριος 2019 Εκστρατεία",
     "growth.jan2019.short_name": "Ιαν 2019",
     "growth.feb2019.name": "Φεβρουάριος 2019 Εκστρατεία",
@@ -363,7 +363,7 @@
     "growth.apr2019.name": "Απρίλιος 2019 Καμπάνια",
     "growth.apr2019.short_name": "Απρίλιος 2019",
     "growth.profile.and.email.requirement": "Επαληθευμένο προφίλ email και προέλευσης",
-    "growth.two.attestations.requirement": "2 από τις 4 βεβαιώσεις",
+    "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
     "growth.email.requirement": "Επαληθευμένο μήνυμα ηλεκτρονικού ταχυδρομείου"
   },
