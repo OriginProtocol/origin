@@ -186,7 +186,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  async function offers(listingIds, offerId, eventNames, notParty) {
+  async function offers(listingIds, offerId, eventNames, notParty, isParty) {
     await getPastEvents()
     const matchListings = typeof listingIds !== 'undefined'
     if (!Array.isArray(listingIds)) {
@@ -212,6 +212,13 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
         if (
           topics[1].toLowerCase() ===
           web3.utils.padLeft(notParty, 64).toLowerCase()
+        )
+          matchesParty = false
+      }
+      if (isParty) {
+        if (
+          topics[1].toLowerCase() !==
+          web3.utils.padLeft(isParty, 64).toLowerCase()
         )
           matchesParty = false
       }
