@@ -74,9 +74,9 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                        Found a bug or have feedback? Send an email to
-                        <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a> ,
-                        open an issue on
+                        {'Found a bug or have feedback? Send an email to '}
+                        <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a>
+                        {', open an issue on '}
                         <a
                           href={GitHubLink}
                           target="_blank"
@@ -84,7 +84,7 @@ class Footer extends Component {
                         >
                           GitHub
                         </a>
-                        or post in our #bug-reports channel on
+                        {' or post in our #bug-reports channel on '}
                         <a
                           href="https://discord.gg/jyxpUSe"
                           target="_blank"
@@ -97,23 +97,23 @@ class Footer extends Component {
                       <br />
                       <div className="copyright">
                         © {new Date().getFullYear()} Origin Protocol, Inc.{' '}
-                        <span>&bull;</span>{' '}
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/tos"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
-                        </a>{' '}
-                        <span>&bull;</span>{' '}
+                        </a>
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/privacy"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.privacy">Privacy</fbt>
-                        </a>{' '}
-                        <span>&bull;</span>{' '}
+                        </a>
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/aup"
                           target="_blank"
@@ -211,6 +211,7 @@ require('react-styl')(`
       font-size: 10px
       span
         color: var(--pale-grey-two-darker)
+        padding: 0 0.125rem
 
 
   @media (max-width: 767.98px)
