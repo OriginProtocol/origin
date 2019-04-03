@@ -43,7 +43,9 @@ class Details extends Component {
                   <fbt:param name="step">{this.props.step}</fbt:param>
                 </fbt>
               </div>
-              <fbt desc="create.details.title">Provide listing details</fbt>
+              <div className="step-description">
+                <fbt desc="create.details.title">Provide listing details</fbt>
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -68,9 +70,12 @@ class Details extends Component {
                   <label className="mb-0">
                     <fbt desc="create.details.description">Description</fbt>
                   </label>
-                  <fbt desc="create.description.hourly">
-                    Make sure to include special conditions of your rental here.
-                  </fbt>
+                  <div className="help-text">
+                    <fbt desc="create.description.hourly">
+                      Make sure to include special conditions of your rental
+                      here.
+                    </fbt>
+                  </div>
                   <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
