@@ -8,6 +8,8 @@ module.exports = gql`
       listing(id: $listingId) {
         ...basicListingFields
         ... on Listing {
+          valid
+          validationError
           events {
             id
             event
