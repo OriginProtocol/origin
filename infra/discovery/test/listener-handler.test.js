@@ -50,8 +50,7 @@ const mockIdentity = {
         }
       }
     })
-  ],
-  avatar: '0x1234'
+  ]
 }
 const mockOffer = {
   id: offerId,
