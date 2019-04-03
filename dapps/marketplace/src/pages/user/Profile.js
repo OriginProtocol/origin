@@ -6,7 +6,7 @@ import { fbt } from 'fbt-runtime'
 import { Switch, Route } from 'react-router-dom'
 
 import Store from 'utils/store'
-import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+import { unpublishedStrength } from 'utils/profileTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -188,7 +188,7 @@ class UserProfile extends Component {
             <ProfileStrength
               large={true}
               published={get(this.props, 'identity.strength') || 0}
-              unpublished={unpublishedProfileStrength(this)}
+              unpublished={unpublishedStrength(this)}
             />
 
             <div className="actions">
@@ -213,6 +213,10 @@ class UserProfile extends Component {
                   ,
                   children: fbt('Publish Now', 'Profile.publishNow')
                 }}
+                publishedProfile={this.props.identity || {}}
+                currentProfile={this.state}
+                unpublishedStrength={unpublishedStrength(this)}
+                publishedStrength={get(this.props, 'identity.strength') || 0}
               />
             </div>
           </div>

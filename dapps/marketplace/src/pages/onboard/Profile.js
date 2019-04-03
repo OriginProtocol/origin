@@ -8,7 +8,7 @@ import Steps from 'components/Steps'
 import Link from 'components/Link'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
-import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+import { unpublishedStrength } from 'utils/profileTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -154,7 +154,7 @@ class OnboardProfile extends Component {
 
                   <ProfileStrength
                     published={get(this.props, 'identity.strength', 0)}
-                    unpublished={unpublishedProfileStrength(this)}
+                    unpublished={unpublishedStrength(this)}
                   />
                 </div>
 
