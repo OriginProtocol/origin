@@ -102,8 +102,7 @@ const web3Resolver = {
       return 'Meta Mask'
     }
   },
-  mobileWalletAccount: async () => {
-  },
+  mobileWalletAccount: async () => {},
   primaryAccount: async () => {
     if (localStorage.useWeb3Wallet) {
       return { id: localStorage.useWeb3Wallet }
