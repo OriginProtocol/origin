@@ -1,9 +1,9 @@
 // Iterates over files in `./translation/crowdin` over our languages, expecting them to be in key-value format that crowdin uses
 // Output: files in fbt formatin in `./translation/fbt` dir
 
-const doTestMark = process.argv.length>=3 && process.argv[2]=='doTestMark'
+const doTestMark = process.argv.length>=3 && process.argv[2]=='proof'
 if (doTestMark) {
-  console.warn('⚠️ Doing translation with test marks included for testing.')
+  console.warn('⚠️ Proofread mode: Doing translation with test marks included for testing.')
 }
 
 const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl_NL pt_PT ro_RO ru_RU th_TH tr_TR uk_UA vi_VN zh_CN zh_TW'.split(

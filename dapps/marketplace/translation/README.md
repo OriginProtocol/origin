@@ -32,9 +32,9 @@ For tag properties, e.g. `tooltip`, use the `fbt()` javascript function. Like th
 	  placement="bottom"
 	>
 
-It is important to wrap _entire sentances_ that can be translated. That is, do not break a sentance across multiple `<fbt>` tags. This is important because words go in different orders in different languages, and in any case the translators will not know which fragments are meant to be together. 
+It is important to wrap _entire sentances_ that can be translated. That is, do not break a sentance across multiple `<fbt>` tags. This is important because words go in different orders in different languages, and in any case the translators will not know which fragments are meant to be together.
 
-NOTE: We do not yet have localization of dates, times, and numbers. This would be a great project for someone. 
+NOTE: We do not yet have localization of dates, times, and numbers. This would be a great project for someone.
 
 ## Translating
 
@@ -51,7 +51,7 @@ It performs the following steps:
 1. **`npm run fbt:manifest`** : Generate fbt enum manifests and source manifests that indicate which files need to be translated (`.src_manifest.json` and `.enum_manifest.json`)
 1. **`npm run fbt:collect`** : Collects translatable strings from throughout the app. Outputs to `.source_strings.json`
 1. **`node scripts/fbtToCrowdin.js`** : Converts `.source_strings.json` to simple key-value json stored at `./translation/crowdin/all-messages.json`
-1. Crowdin automatically reads [`./translation/crowdin/all-messages.json`](https://github.com/OriginProtocol/origin/blob/master/dapps/marketplace/translation/crowdin/all-messages.json) from `master` branch. 
+1. Crowdin automatically reads [`./translation/crowdin/all-messages.json`](https://github.com/OriginProtocol/origin/blob/master/dapps/marketplace/translation/crowdin/all-messages.json) from `master` branch.
 
 ### Import translated strings into DApp to be used
 1. _Translators do their magic_
@@ -73,7 +73,15 @@ Run all in terminal as:
     node scripts/splitTranslations
     cp .enum_manifest.json translations/.enum_manifest.json
 
-
 The pipeline then looks like this:
 
 `./.source_strings.json` → `./trasnlation/crowdin/all-messages.json` → _Translation Occurs_ → `./trasnlation/crowdin/all-messages_<locale>.js` → `./trasnlation/fbt/<locale>.js` → `.translated_fbts.json` → `./public/translations`
+
+For proofreading which strings have been wrapped, you can use **`npm run translate:proof`**. This will indicate wrapped strings by putting arrows around them, ◀Like This▶. It will appear thus:
+
+![image](https://user-images.githubusercontent.com/673455/55511500-02f30780-561e-11e9-9b8d-2dac187658f1.png)
+
+
+
+
+
