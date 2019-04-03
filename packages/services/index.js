@@ -137,6 +137,11 @@ module.exports = async function start(opts = {}) {
     }
   }
 
+  if (opts.extras && !started.extras) {
+    await opts.extras()
+    started.extras = true
+  }
+
   return async function shutdown() {
     if (started.ganache) {
       await started.ganache.close()

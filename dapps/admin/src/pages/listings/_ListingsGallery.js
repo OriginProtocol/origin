@@ -46,7 +46,9 @@ const Listings = ({ listings, history, hasNextPage }) => {
             />
           ) : null}
           <div className="price">
-            <Price price={a.price} />
+            <span>
+              <Price listing={a} descriptor />
+            </span>
             {a.seller ? <Identity account={a.seller.id} /> : ''}
           </div>
           <div className="info">

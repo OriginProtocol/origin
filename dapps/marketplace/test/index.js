@@ -1,76 +1,75 @@
-const puppeteer = require('puppeteer')
-import { spawn } from 'child_process'
-import services from '@origin/services'
+import { changeAccount, waitForText, clickByText, pic } from './_helpers'
 
-import { changeAccount, clickByText } from './_helpers'
-
-const headless = process.env.HEADLESS === 'false' ? false : true
-
-let browser, page, webpackProcess, shutdownServices
-before(async function() {
-  shutdownServices = await services({
-    ganache: { inMemory: true },
-    deployContracts: true,
-    ipfs: true,
-    populate: true
-  })
-
-  webpackProcess = spawn(
-    './node_modules/.bin/webpack-dev-server',
-    ['--port=8083', '--host=0.0.0.0', '--no-info', '--progress'],
-    {
-      stdio: 'inherit',
-      env: process.env
-    }
-  )
-  process.on('exit', () => webpackProcess.kill())
-
-  await new Promise(resolve => setTimeout(resolve, 5000))
-
-  browser = await puppeteer.launch({
-    headless,
-    defaultViewport: {
-      width: 1280,
-      height: 1024
-    },
-    slowMo: headless ? undefined : 40
-  })
-  page = (await browser.pages())[0]
-  await page.goto('http://localhost:8083')
-  console.log('Browser ready.\n')
-})
-
-after(async function() {
-  if (browser) {
-    await browser.close()
-  }
-  if (shutdownServices) {
-    await shutdownServices()
-  }
-  if (webpackProcess) {
-    webpackProcess.kill()
-  }
-})
+const page = global.page
 
 describe('Marketplace Dapp', function() {
   it('should allow a new listing to be created', async function() {
-    await changeAccount(page, '0xf17f52151EbEF6C7334FAD080c5704D77216b732')
+    this.timeout(30000)
+
+    await changeAccount(page, 'seller')
     await clickByText(page, 'Add Listing')
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'For Sale')
     await page.select('select', 'schema.clothingAccessories')
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'Continue')
+    await pic(page, 'add-listing')
+
     await page.type('input[name=title]', 'T-Shirt')
     await page.type('textarea[name=description]', 'T-Shirt in size large')
     await page.type('input[name=price]', '0.01')
+    const input = await page.$('input[type="file"]')
+    await input.uploadFile('./test/fixtures/image-1.jpg')
+
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'Continue')
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'Review')
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'Done')
+    await waitForText(page, 'View Listing')
+    await pic(page, 'add-listing')
+
     await clickByText(page, 'View Listing')
   })
 
   it('should allow a new listing to be purchased', async function() {
-    await changeAccount(page, '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef')
+    this.timeout(10000)
+    await pic(page, 'listing-detail')
+    await changeAccount(page, 'buyer')
     await clickByText(page, 'Purchase')
+    await waitForText(page, 'View Purchase')
+    await pic(page, 'purchase-listing')
+
     await clickByText(page, 'View Purchase')
+    await waitForText(page, 'Transaction Progress')
+    await pic(page, 'transaction-wait-for-seller')
+  })
+
+  it('should allow a new listing to be accepted', async function() {
+    this.timeout(10000)
+    await changeAccount(page, 'seller')
+    await waitForText(page, 'Accept or Reject')
+    await pic(page, 'transaction-accept')
+    await clickByText(page, 'Accept Offer')
+    await clickByText(page, 'OK')
+    await waitForText(page, 'Wait for buyer')
+    await pic(page, 'transaction-accepted')
+  })
+
+  it('should allow a new listing to be finalized', async function() {
+    this.timeout(10000)
+    await changeAccount(page, 'buyer')
+    await waitForText(page, 'Leave a review')
+    await pic(page, 'transaction-finalize')
+    await clickByText(page, 'Finalize')
+    await clickByText(page, 'OK')
+    await waitForText(page, 'Transaction Finalized')
+    await pic(page, 'transaction-finalized')
   })
 })

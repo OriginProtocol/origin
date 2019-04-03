@@ -33,6 +33,9 @@ export default {
   web3: () => ({}),
   marketplace: async () => {
     const address = contracts.marketplace.options.address
+    if (!address) {
+      return null
+    }
     if (marketplaceExists[address]) {
       return contracts.marketplace
     }

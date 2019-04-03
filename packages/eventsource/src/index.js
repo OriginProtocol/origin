@@ -8,7 +8,7 @@ const _get = require('lodash/get')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 function mutatePrice(price) {
-  let currency = price.currency
+  let currency = price.currency || 'token-ETH'
   if (currency === 'ETH') currency = 'token-ETH'
   if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
   price.currency = { id: currency }

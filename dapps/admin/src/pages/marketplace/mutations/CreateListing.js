@@ -25,7 +25,7 @@ import withAccounts from 'hoc/withAccountsAndAllowance'
 import withTokens from 'hoc/withTokens'
 import withCurrencies from 'hoc/withCurrencies'
 
-import demoListings from './_demoListings'
+import demoListings from '@origin/graphql/fixtures/_demoListings'
 import { CreateListingMutation, UpdateListingMutation } from 'queries/Mutations'
 
 import ErrorCallout from 'components/ErrorCallout'

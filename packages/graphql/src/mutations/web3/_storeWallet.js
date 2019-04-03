@@ -28,7 +28,9 @@ function storeWallet({ id, name, role, privateKey }) {
     ...names,
     [id]: name
   })
-  contracts.web3.eth.defaultAccount = window.localStorage.defaultAccount = id
+  if (id) {
+    contracts.web3.eth.defaultAccount = window.localStorage.defaultAccount = id    
+  }
 }
 
 export default storeWallet

@@ -49,7 +49,6 @@ export default {
           currency {
             ... on Currency {
               id
-              code
             }
           }
         }
@@ -67,6 +66,8 @@ export default {
           unitsTotal
           unitsAvailable
           unitsSold
+          unitsPending
+          multiUnit
         }
         ... on FractionalListing {
           weekendPrice {
@@ -74,10 +75,16 @@ export default {
             currency {
               ... on Currency {
                 id
-                code
               }
             }
           }
+          timeZone
+          workingHours
+          booked
+          customPricing
+          unavailable
+        }
+        ... on FractionalHourlyListing {
           timeZone
           workingHours
           booked

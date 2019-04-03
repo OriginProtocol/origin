@@ -242,7 +242,11 @@ class Listing extends Component {
   }
 
   renderBreadcrumbs() {
-    const listingId = this.props.match.params.listingID
+    const { match, history } = this.props
+    const [netId, contractId, id] = match.params.listingID.split('-')
+    const url = `/marketplace/listings/${netId}-${contractId}-`
+    const listingId = Number(id)
+
     return (
       <ul className="bp3-breadcrumbs">
         <li>
@@ -259,19 +263,11 @@ class Listing extends Component {
               icon="arrow-left"
               style={{ marginLeft: 10 }}
               disabled={listingId === 0}
-              onClick={() => {
-                this.props.history.push(
-                  `/marketplace/listings/${Number(listingId - 1)}`
-                )
-              }}
+              onClick={() => history.push(`${url}${listingId - 1}`)}
             />
             <Button
               icon="arrow-right"
-              onClick={() => {
-                this.props.history.push(
-                  `/marketplace/listings/${Number(listingId + 1)}`
-                )
-              }}
+              onClick={() => history.push(`${url}${listingId + 1}`)}
             />
           </ButtonGroup>
         </li>

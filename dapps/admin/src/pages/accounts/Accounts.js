@@ -1,6 +1,7 @@
 import React from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import populate from '@origin/graphql/fixtures/populate'
 
 import { Button } from '@blueprintjs/core'
 
@@ -12,7 +13,6 @@ import CreateWallet from './mutations/CreateWallet'
 
 import Contracts from '../contracts/Contracts'
 
-import populate from './_populate'
 import query from 'queries/AllAccounts'
 
 import AccountBalances from './AccountBalances'
@@ -111,7 +111,9 @@ const Accounts = () => (
             style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
             intent="success"
             onClick={() =>
-              populate(maxNodeAccount ? maxNodeAccount.id : null, client)
+              populate(client, maxNodeAccount ? maxNodeAccount.id : null, msg =>
+                console.log(msg)
+              )
             }
             text="Populate"
           />

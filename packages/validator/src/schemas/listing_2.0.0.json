@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "https://schema.originprotocol.com/listing_2.0.0.json",
+  "title": "Origin Protocol core listing schema",
+  "definitions": {
+    "money": {
+      "type": "object",
+      "title": "An amount of money in a specified currency",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        }
+      },
+      "required": ["currency", "amount"]
+    },
+    "media": {
+      "type": "object",
+      "title": "Representation of a media asset such as an image or a video",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "dimension": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "type": "integer"
+            },
+            "width": {
+              "type": "integer"
+            }
+          },
+          "required": ["height", "width"]
+        }
+      },
+      "required": ["url"]
+    },
+    "unitListing": {
+      "type": "object",
+      "properties": {
+        "unitsTotal": {
+          "type": "integer"
+        }
+      },
+      "required": ["unitsTotal"]
+    },
+    "fractionalListing": {
+      "type": "object",
+      "properties": {
+        "weekendPrice": {
+          "$ref": "#/definitions/money"
+        },
+        "unavailable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customPricing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "booked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fractionalHourlyListing": {
+      "type": "object",
+      "properties": {
+        "timeZone": {
+          "$type": "string"
+        },
+        "workingHours": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unavailable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customPricing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "booked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "schemaId": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "subCategory": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 1024
+    },
+    "marketplacePublisher": {
+      "type": "string"
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/media"
+      }
+    },
+    "price": {
+      "$ref": "#/definitions/money"
+    },
+    "commission": {
+      "$ref": "#/definitions/money"
+    },
+    "commissionPerUnit": {
+      "$ref": "#/definitions/money"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/definitions/unitListing"
+    },
+    {
+      "$ref": "#/definitions/fractionalListing"
+    },
+    {
+      "$ref": "#/definitions/fractionalHourlyListing"
+    }
+  ],
+  "required": [
+    "schemaId",
+    "category",
+    "subCategory",
+    "language",
+    "title",
+    "description"
+  ]
+}

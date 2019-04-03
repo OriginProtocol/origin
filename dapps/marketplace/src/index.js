@@ -18,6 +18,20 @@ if (process.env.NODE_ENV === 'production') {
   } catch (e) {
     console.warn('No built CSS found')
   }
+} else {
+  try {
+    const populate = require('@origin/graphql/fixtures/populate')
+    window.populate = (log, finished) => {
+      populate.default(
+        client,
+        '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+        log,
+        finished
+      )
+    }
+  } catch (e) {
+    console.warn('No fixtures found')
+  }
 }
 
 class AppWrapper extends Component {

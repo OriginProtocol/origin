@@ -9,6 +9,7 @@ public/origin.html
 public/fonts
 data/db
 data/ipfs
+test/screenshots/*.png
 NOTES
 src/contracts/deployed.js
 issuer-services/package-lock.json
