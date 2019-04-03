@@ -49,7 +49,7 @@ class SellNav extends Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <span className="padding-center">
+          <span>
             <fbt desc="navbar.selling">Sell</fbt>
           </span>
         </a>
