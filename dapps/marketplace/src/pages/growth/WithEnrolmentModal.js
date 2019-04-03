@@ -36,7 +36,8 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
-      this.goToWelcomeWhenNotEnrolled = props.gotowelcomewhennotenrolled === 'true'
+      this.goToWelcomeWhenNotEnrolled =
+        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
