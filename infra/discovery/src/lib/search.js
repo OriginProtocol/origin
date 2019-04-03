@@ -115,6 +115,11 @@ class Listing {
       }
     }
 
+    // Never return any invalid listings
+    esQuery.bool.must_not.push({
+      term: { valid: false }
+    })
+
     if (hiddenIds.length > 0) {
       esQuery.bool.must_not.push({
         ids: {
