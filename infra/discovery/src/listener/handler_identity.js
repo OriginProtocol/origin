@@ -72,8 +72,11 @@ class IdentityEventHandler {
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
     await Promise.all(
-      decoratedIdentity.attestations.map(async attestation => {
-        switch (attestation.service) {
+      decoratedIdentity.attestations.map(async attestationJson => {
+        // TODO: Clean this up
+        const attestation = JSON.parse(attestationJson)
+        const attestationService = Object.keys(attestation.data.attestation.verificationMethod)[0]
+        switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
               decoratedIdentity.id,
@@ -120,18 +123,18 @@ class IdentityEventHandler {
     // Decorate the user object with extra attestation related info.
     const decoratedIdentity = await this._decorateIdentity(identity)
 
-    logger.info(`Indexing identity ${decoratedIdentity.address} in DB`)
+    logger.info(`Indexing identity ${decoratedIdentity.id} in DB`)
 
-    if (!Web3.utils.isAddress(decoratedIdentity.address)) {
-      throw new Error(`Invalid eth address ${decoratedIdentity.address}`)
+    if (!Web3.utils.isAddress(decoratedIdentity.id)) {
+      throw new Error(`Invalid eth address: ${decoratedIdentity.id}`)
     }
 
     // Construct an decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
     const identityRow = {
-      ethAddress: decoratedIdentity.address.toLowerCase(),
-      firstName: decoratedIdentity.profile.firstName,
-      lastName: decoratedIdentity.profile.lastName,
+      ethAddress: decoratedIdentity.id.toLowerCase(),
+      firstName: decoratedIdentity.firstName,
+      lastName: decoratedIdentity.lastName,
       email: decoratedIdentity.email,
       phone: decoratedIdentity.phone,
       airbnb: decoratedIdentity.airbnb,
@@ -155,10 +158,10 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
-    // Check profile is populated.
+    // Check required fields are populated.
     const validProfile =
-      (identity.profile.firstName.length > 0 ||
-        identity.profile.lastName.length > 0) &&
+      (identity.firstName.length > 0 ||
+        identity.lastName.length > 0) &&
       identity.avatar.length > 0
     if (!validProfile) {
       return
@@ -167,7 +170,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
-      identity.address,
+      identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
       { blockInfo },
@@ -185,12 +188,15 @@ class IdentityEventHandler {
    */
   async _recordGrowthAttestationEvents(identity, blockInfo, date) {
     await Promise.all(
-      identity.attestations.map(attestation => {
-        const eventType = AttestationServiceToEventType[attestation.service]
+      identity.attestations.map(attestationJson => {
+        // TODO: Clean this up
+        const attestation = JSON.parse(attestationJson)
+        const attestationService = Object.keys(attestation.data.attestation.verificationMethod)[0]
+        const eventType = AttestationServiceToEventType[attestationService]
         if (!eventType) {
           logger.error(
             `Unrecognized attestation service received: ${
-              attestation.service
+              attestationService
             }. Skipping.`
           )
           return
@@ -198,7 +204,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
-          identity.address,
+          identity.id,
           eventType,
           null,
           { blockInfo },
