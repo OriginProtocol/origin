@@ -25,7 +25,6 @@ const NoOgn = () => (
   </div>
 )
 
-
 class Boost extends Component {
   constructor(props) {
     super(props)
@@ -33,7 +32,6 @@ class Boost extends Component {
   }
 
   render() {
-
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
@@ -152,7 +150,10 @@ class Boost extends Component {
         0,
         'none',
         fbt('None', 'create.boost.None'),
-        fbt('Your listing will get very low visibility.', 'create.boost.very-low')
+        fbt(
+          'Your listing will get very low visibility.',
+          'create.boost.very-low'
+        )
       ]
     ]
 
@@ -169,10 +170,12 @@ class Boost extends Component {
       <>
         <div className="boost-info">
           <h5>
-            {isMulti ?
-            fbt('Boost Level (per unit)', 'create.boost.boostlevel-multiunit') :
-            fbt('Boost Level', 'create.boost.boostlevel-unit')
-          }
+            {isMulti
+              ? fbt(
+                  'Boost Level (per unit)',
+                  'create.boost.boostlevel-multiunit'
+                )
+              : fbt('Boost Level', 'create.boost.boostlevel-unit')}
           </h5>
           <i />
         </div>
@@ -202,7 +205,9 @@ class Boost extends Component {
 
         {!isMulti ? null : (
           <div className="form-group boost-limit">
-          <label><fbt desc="create.boost-limit">Boost Limit</fbt></label>
+            <label>
+              <fbt desc="create.boost-limit">Boost Limit</fbt>
+            </label>
             <div className="d-flex">
               <div style={{ flex: 1, marginRight: '1rem' }}>
                 <div className="with-symbol">

@@ -29,7 +29,6 @@ const NoOgn = () => (
   </div>
 )
 
-
 class Boost extends Component {
   constructor(props) {
     super(props)
@@ -155,7 +154,10 @@ class Boost extends Component {
         0,
         'none',
         fbt('None', 'create.boost.None'),
-        fbt('Your listing will get very low visibility.', 'create.boost.very-low')
+        fbt(
+          'Your listing will get very low visibility.',
+          'create.boost.very-low'
+        )
       ]
     ]
 
@@ -199,7 +201,9 @@ class Boost extends Component {
         </div>
 
         <div className="form-group boost-limit">
-          <label><fbt desc="create.boost-limit">Boost Limit</fbt></label>
+          <label>
+            <fbt desc="create.boost-limit">Boost Limit</fbt>
+          </label>
           <div className="d-flex">
             <div style={{ flex: 1, marginRight: '1rem' }}>
               <div className="with-symbol">
