@@ -25,7 +25,7 @@ class WaitForTransaction extends Component {
     if (id === 'pending') {
       const walletType = this.props.walletType
       const provider =
-        walletType && walletType.startsWith('mobile-')
+        walletType && walletType === 'Mobile'
           ? 'mobile wallet'
           : walletType
       return (

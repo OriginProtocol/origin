@@ -2,6 +2,7 @@ import { Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import EventEmitter from 'events'
 import CryptoJS from 'crypto-js'
+import Web3 from 'web3'
 
 import { storeData, loadData } from './tools'
 import { EthNotificationTypes } from './enums'
@@ -13,7 +14,7 @@ import {
 } from './constants'
 
 // Environment variables
-import { GCM_SENDER_ID } from 'react-native-dotenv'
+import { GCM_SENDER_ID, PROVIDER_URL } from 'react-native-dotenv'
 
 class OriginWallet {
   constructor() {
@@ -126,13 +127,18 @@ class OriginWallet {
 
           if (length) {
             const accounts = this.getAccountAddresses()
+            // TODO
             const active = accounts.find(({ active }) => active) || {}
 
             // Set the active address to either the one that is flagged as
             // active or as the first address
-            this.setEthAddress(active.address || accounts[0].address)
+            console.debug(`Setting Ethereum address`)
+            await this.setEthAddress(active.address || accounts[0])
           }
         }
+
+        console.debug(`Setting provider to ${PROVIDER_URL}`)
+        web3.setProvider(new Web3.providers.HttpProvider(PROVIDER_URL, 20000))
 
         this.fireEvent(EVENTS.LOADED)
       })
@@ -202,13 +208,14 @@ class OriginWallet {
    *
    */
   async setEthAddress(ethAddress) {
+    console.log(this.state)
     if (ethAddress !== this.state.ethAddress) {
       web3.eth.defaultAccount = ethAddress
+      console.log(`Setting default account to: ${ethAddress}`)
       Object.assign(this.state, { ethAddress })
       this.fireEvent(EVENTS.CURRENT_ACCOUNT, {
         address: this.state.ethAddress
       })
-      this.save()
     }
   }
 }

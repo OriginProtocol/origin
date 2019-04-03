@@ -31,8 +31,6 @@ class AppWrapper extends Component {
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
     }
-
-    new MobileBridge()
   }
 
   render() {

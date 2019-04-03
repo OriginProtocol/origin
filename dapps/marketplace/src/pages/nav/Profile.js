@@ -76,7 +76,7 @@ const Network = withNetwork(({ networkName }) => (
 
 const ProfileDropdown = ({ data, onClose }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
-  const mobileWallet = data.web3.walletType.startsWith('mobile-')
+  const mobileWallet = data.web3.walletType === 'Mobile'
   return (
     <Mutation mutation={UnlinkMobileWalletMutation}>
       {unlinkMutation => (

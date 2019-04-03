@@ -57,17 +57,14 @@ class OriginNavWrapper extends Component {
     }
 
     originWallet.events.on(EVENTS.LOADED, () => {
-      console.log('Loaded')
       this.setState({ loading: false })
     })
 
     originWallet.events.on(EVENTS.AVAILABLE_ACCOUNTS, ({ accounts }) => {
-      console.log('Updating accounts')
       this.props.updateAccounts(accounts)
     })
 
     originWallet.events.on(EVENTS.CURRENT_ACCOUNT, ({ address }) => {
-      console.log('Initialising accounts')
       this.props.initWallet(address)
     })
 
@@ -78,7 +75,7 @@ class OriginNavWrapper extends Component {
     const { activation, wallet } = this.props
 
     // Prompt with private key backup warning if funds are detected
-    if (!activation.backupWarningDismissed && Number(wallet.balances.eth) > 0) {
+    if (!activation.backupWarningDismissed && false && Number(wallet.balances.eth) > 0) {
       NavigationService.navigate('Home', {
         backupWarning: true,
         walletExpanded: true

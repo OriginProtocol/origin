@@ -47,12 +47,18 @@ export default function() {
   }
 
   window.addEventListener('message', function(e) {
+    if (e.data.source !== 'Marketplace') {
+      return
+    }
+
+    console.log(e.data)
+
     let message
     try {
       message = JSON.parse(e.data)
     }
     catch(e) {
-      console.log(`Failed to parse WebViewBridge message: ${e.message}`)
+      console.log(`Failed to parse WebViewBridge message: ${e.message}, ${e.data}`)
       return
     }
 
@@ -72,4 +78,3 @@ export default function() {
     }
   })
 }
-

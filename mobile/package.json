@@ -24,7 +24,6 @@
     "preset": "react-native"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.2.2",
     "cross-fetch": "^3.0.1",
     "eth-ecies": "^1.0.3",
     "graphql": "^14.2.0",
@@ -42,7 +41,6 @@
     "react-native-qrcode-scanner": "^1.1.0",
     "react-native-randombytes": "^3.5.1",
     "react-native-sentry": "^0.42.0",
-    "react-native-uuid-generator": "^5.0.0",
     "react-native-webview": "^5.2.1",
     "react-navigation": "^2.2.5",
     "react-redux": "^5.0.7",

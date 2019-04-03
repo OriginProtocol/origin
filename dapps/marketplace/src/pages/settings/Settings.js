@@ -154,53 +154,6 @@ class Settings extends Component {
                     </button>
                   </div>
                   */}
-
-                  <Query query={ProfileQuery}>
-                    {({ data }) => {
-                      const walletType = get(data.web3, 'walletType')
-                      const mobileWalletConnected =
-                        walletType && walletType.startsWith('mobile-')
-                      return (
-                        <div className="form-group">
-                          <label htmlFor="language">
-                            <fbt desc="settings.mobileLabel">Mobile Wallet</fbt>
-                          </label>
-                          {mobileWalletConnected ? (
-                            <>
-                              <div className="form-text form-text-muted">
-                                <small>
-                                  <fbt desc="settings.mobileHint">
-                                    Disconnect from your mobile wallet by
-                                    clicking the button below.
-                                  </fbt>
-                                </small>
-                              </div>
-                              <Mutation mutation={UnlinkMobileWallet}>
-                                <button className="btn btn-outline-danger">
-                                  <fbt desc="settings.mobileButton">
-                                    Disconnect
-                                  </fbt>
-                                </button>
-                              </Mutation>
-                            </>
-                          ) : (
-                            <div>
-                              <button
-                                className="btn btn-outline-secondary"
-                                disabled
-                              >
-                                <span>
-                                  <fbt desc="settings.mobileDisabled">
-                                    Not connected
-                                  </fbt>
-                                </span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    }}
-                  </Query>
                 </div>
               </div>
 

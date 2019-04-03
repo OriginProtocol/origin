@@ -306,9 +306,7 @@ export function setNetwork(net, customConfig) {
   if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    context.mobileBridge = OriginMobileBridge({
-      web3: context.web3
-    })
+    context.mobileBridge = OriginMobileBridge({ web3 })
     context.messaging = OriginMessaging({
       ...MessagingConfig,
       web3
@@ -436,6 +434,7 @@ function setMobileBridge() {
   if (metaMask && metaMaskEnabled) return
 
   const mobileBridgeProvider = context.mobileBridge.getProvider()
+  console.log(mobileBridgeProvider)
   context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
   // Funnel marketplace contract transactions through mobile wallet
@@ -463,7 +462,7 @@ function setMobileBridge() {
     context.messaging.web3 = context.web3Exec
   }
 
-  context.mobileBridge.start()
+  console.debug(`Mobile bridge configured`)
 }
 
 export function toggleMetaMask(enabled) {

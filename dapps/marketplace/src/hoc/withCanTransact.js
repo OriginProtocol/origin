@@ -22,7 +22,7 @@ function withCanTransact(WrappedComponent) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
           // Use mobile wallet if it's available and MetaMask isn't enabled.
-          if (walletType.startsWith('mobile') && !metaMaskId) {
+          if (walletType == 'Mobile' && !metaMaskId) {
             return <WrappedComponent {...props} />
           }
           if (walletType === 'Web3 Wallet') {

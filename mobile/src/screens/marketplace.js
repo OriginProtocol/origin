@@ -14,6 +14,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewMessage(event) {
+    console.debug(`Got event: ${event}`)
+
     let msgData
     try {
       msgData = JSON.parse(event.nativeEvent.data)
@@ -33,6 +35,7 @@ class MarketplaceScreen extends Component {
   }
 
   render() {
+    console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
     return (
       <WebView
         ref={webview => {
