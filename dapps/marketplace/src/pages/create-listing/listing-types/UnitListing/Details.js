@@ -45,7 +45,9 @@ class Details extends Component {
                   <fbt:param name="step">{this.props.step}</fbt:param>
                 </fbt>
               </div>
-              <div className="step-description">Provide listing details</div>
+              <div className="step-description">
+                <fbt desc="create.details.title">Provide listing details</fbt>
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form

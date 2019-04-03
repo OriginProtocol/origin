@@ -13,6 +13,7 @@ import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
+import Attestations from 'components/Attestations'
 
 class ProfileNav extends Component {
   constructor() {
@@ -109,6 +110,9 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Link onClick={() => onClose()} to="/profile">
             <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
           </Link>
+          <Link onClick={() => onClose()} to="/settings">
+            <fbt desc="nav.profile.settings">Settings</fbt>
+          </Link>
         </div>
       )}
     </Mutation>
@@ -133,22 +137,7 @@ const Identity = ({ id }) => (
                 {profile.fullName ||
                   fbt('Unnamed User', 'nav.profile.unnamedUser')}
               </div>
-              <div className="attestations">
-                {profile.twitterVerified && (
-                  <div className="attestation twitter" />
-                )}
-                {profile.googleVerified && (
-                  <div className="attestation google" />
-                )}
-                {profile.phoneVerified && <div className="attestation phone" />}
-                {profile.emailVerified && <div className="attestation email" />}
-                {profile.facebookVerified && (
-                  <div className="attestation facebook" />
-                )}
-                {profile.airbnbVerified && (
-                  <div className="attestation airbnb" />
-                )}
-              </div>
+              <Attestations profile={profile} />
             </div>
           </div>
           <div className="strength">
@@ -239,12 +228,14 @@ require('react-styl')(`
       background: var(--dark-grey-blue)
       color: var(--white)
       text-align: center
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-      border-radius: 0 0 5px 5px;
-      &.unlink-wallet
-        border-bottom: 1px solid black
-        border-radius: 0
+      padding: 0.75rem 1rem
+      font-weight: bold
+      border-bottom: 1px solid black
+      &:hover
+        background: var(--dusk)
+      &:last-child
+        border: 0
+        border-radius: 0 0 5px 5px
 
   .attestations
     display: flex
