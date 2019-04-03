@@ -172,6 +172,7 @@ module.exports = `
     listings(first: Int, after: String, filter: String): ListingConnection!
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
+    counterparty(first: Int, after: String, id: String!): UserNotificationConnection!
     reviews(first: Int, after: String): ReviewConnection!
     notifications(first: Int, after: String, filter: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!
