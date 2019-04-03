@@ -55,7 +55,7 @@ async function deployContracts(deployer) {
   // scout
   await createListing(
     marketplace00,
-    getBytes32FromIpfsHash('QmVH8jbXWjjHzeFmMFVgoWMxMAx9KnjZzTQVbnfxixC2ia'),
+    getBytes32FromIpfsHash('QmWybYPvhjeCfvUf1eTWibayoJwuBnTMpV771syXCc7iZe'),
     Seller
   )
   // taylor-swift-tix
@@ -73,7 +73,7 @@ async function deployContracts(deployer) {
   // origin-spaceman
   await createListing(
     marketplace00,
-    getBytes32FromIpfsHash('QmfQKXAvEEkHKTcg5km5YqqT53ZDBcpPsNuJhvhD2DoHJE'),
+    getBytes32FromIpfsHash('QmRu1wze7iGY2TJD8jxtN7QFUyALbkiDidgfopvEfwFTSP'),
     Seller
   )
 }
