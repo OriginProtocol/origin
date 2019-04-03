@@ -52,7 +52,7 @@ class Nav extends Component {
               <ul className="navbar-nav">
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-purchases" className="nav-link text">
-                    <span>
+                    <span className="padding-center">
                       <fbt desc="navbar.buying">Buy</fbt>
                     </span>
                   </NavLink>
@@ -65,7 +65,7 @@ class Nav extends Component {
                     </span>
                   </this.EarnTokens>
                 </li>
-                <li className="nav-item d-none d-md-flex">
+                <li className="nav-item d-none d-lg-flex">
                   <NavLink to="/create" className="nav-link add-listing text">
                     <span>
                       <fbt desc="navbar.addListing">Add Listing</fbt>
@@ -130,6 +130,8 @@ require('react-styl')(`
         span
           display: inline-block
           padding-left: 2rem !important
+        .padding-center
+          padding-left: 0.75rem !important
 
         &.add-listing span
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
