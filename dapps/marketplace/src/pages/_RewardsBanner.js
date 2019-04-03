@@ -35,7 +35,7 @@ class RewardsBanner extends Component {
                 <div className="float-right">
                   <this.GetOgn
                     className="btn btn-primary"
-                    goToWelcomeWhenNotEnrolled={true}
+                    gotowelcomewhennotenrolled="true"
                   >
                     <fbt desc="RewardsBanner.go">Go</fbt>
                   </this.GetOgn>
