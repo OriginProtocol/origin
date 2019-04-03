@@ -1,11 +1,9 @@
 import React from 'react'
-import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
-import WithPrices from 'components/WithPrices'
 
 import numberFormat from 'utils/numberFormat'
 
@@ -20,14 +18,13 @@ const WarningIcon = ({ tooltip }) => (
     >
       <path
         fill="#F4C110"
-        fill-rule="evenodd"
         d="M11 17.646a1.146 1.146 0 1 1 0-2.293 1.146 1.146 0 0 1 0 2.293zm-.917-3.896h1.834V7.333h-1.834v6.417zM11 0L0 20.167h22L11 0z"
       />
     </svg>
   </Tooltip>
 )
 
-function paymentStatus(status) {
+function escrowStatus(status) {
   return status === 'Pending'
     ? fbt('Held', 'EscrowDetails.held')
     : fbt('Released', 'EscrowDetails.released')
@@ -78,7 +75,7 @@ const EscrowDetails = ({ offer }) => (
       <span>
         <fbt desc="EscrowDetails.status">Status</fbt>
       </span>
-      <span>{paymentStatus(offer.statusStr)}</span>
+      <span>{escrowStatus(offer.statusStr)}</span>
     </li>
   </ul>
 )

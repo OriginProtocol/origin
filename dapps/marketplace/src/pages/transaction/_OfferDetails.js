@@ -3,13 +3,6 @@ import Price from 'components/Price'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 
-function paymentStatus(status) {
-  if (status === 'Pending') {
-    return 'In Escrow'
-  }
-  return status
-}
-
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
     {offer.listing.__typename === 'FractionalListing' ||
