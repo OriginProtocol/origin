@@ -25,47 +25,6 @@ const NoOgn = () => (
   </div>
 )
 
-const BoostLevels = [
-  [
-    76,
-    'premium',
-    fbt('Premium', 'create.boost.Premium'),
-    fbt(
-      'Your listing will get the best visibility.',
-      'create.boost.best visibility.'
-    )
-  ],
-  [
-    51,
-    'high',
-    fbt('High', 'create.boost.High'),
-    fbt(
-      'Your listing will get above-average visibility.',
-      'create.boost.above-average.'
-    )
-  ],
-  [
-    26,
-    'med',
-    fbt('Medium (recommended)', 'create.boost.Medium'),
-    fbt('Your listing will get average visibility.', 'create.boost.average.')
-  ],
-  [
-    1,
-    'low',
-    fbt('Low', 'create.boost.Low'),
-    fbt(
-      'Your listing will get below-average visibility.',
-      'create.boost.below-average'
-    )
-  ],
-  [
-    0,
-    'none',
-    fbt('None', 'create.boost.None'),
-    fbt('Your listing will get very low visibility.', 'create.boost.very-low')
-  ]
-]
 
 class Boost extends Component {
   constructor(props) {
@@ -74,6 +33,7 @@ class Boost extends Component {
   }
 
   render() {
+
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
@@ -83,8 +43,15 @@ class Boost extends Component {
         <div className="col-md-8">
           <div className="create-listing-step-3">
             <div className="wrap">
-              <div className="step">{`Step ${this.props.step}`}</div>
-              <div className="step-description">Boost your listing</div>
+              <div className="step">
+                <fbt desc="create.details.step">
+                  Step
+                  <fbt:param name="step">{this.props.step}</fbt:param>
+                </fbt>
+              </div>
+              <div className="step-description">
+                <fbt desc="create.boost.title">Boost your listing</fbt>
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -94,9 +61,11 @@ class Boost extends Component {
                 }}
               >
                 <div className="help-text">
-                  You can boost your listing to get higher visibility in the
-                  Origin DApp. More buyers will see your listing, which
-                  increases the chances of a fast and successful sale.
+                  <fbt desc="create.boost.help">
+                    You can boost your listing to get higher visibility in the
+                    Origin DApp. More buyers will see your listing, which
+                    increases the chances of a fast and successful sale.
+                  </fbt>
                 </div>
 
                 {this.props.tokenBalance === 0 ? (
@@ -110,10 +79,10 @@ class Boost extends Component {
                     className="btn btn-outline-primary"
                     to={this.props.prev}
                   >
-                    Back
+                    <fbt desc="back">Back</fbt>
                   </Link>
                   <button type="submit" className="btn btn-primary">
-                    Review
+                    <fbt desc="continue">Continue</fbt>
                   </button>
                 </div>
               </form>
@@ -145,6 +114,48 @@ class Boost extends Component {
   }
 
   renderBoostSlider() {
+    const BoostLevels = [
+      [
+        76,
+        'premium',
+        fbt('Premium', 'create.boost.Premium'),
+        fbt(
+          'Your listing will get the best visibility.',
+          'create.boost.best visibility.'
+        )
+      ],
+      [
+        51,
+        'high',
+        fbt('High', 'create.boost.High'),
+        fbt(
+          'Your listing will get above-average visibility.',
+          'create.boost.above-average.'
+        )
+      ],
+      [
+        26,
+        'med',
+        fbt('Medium (recommended)', 'create.boost.Medium'),
+        fbt('Your listing will get average visibility.', 'create.boost.average')
+      ],
+      [
+        1,
+        'low',
+        fbt('Low', 'create.boost.Low'),
+        fbt(
+          'Your listing will get below-average visibility.',
+          'create.boost.below-average'
+        )
+      ],
+      [
+        0,
+        'none',
+        fbt('None', 'create.boost.None'),
+        fbt('Your listing will get very low visibility.', 'create.boost.very-low')
+      ]
+    ]
+
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
     const isMulti = Number(this.state.quantity || 0) > 1
 
@@ -158,9 +169,10 @@ class Boost extends Component {
       <>
         <div className="boost-info">
           <h5>
-            <fbt desc="create.boost.boostlevel-hour">
-              Boost Level (per night)
-            </fbt>
+            {isMulti ?
+            fbt('Boost Level (per unit)', 'create.boost.boostlevel-multiunit') :
+            fbt('Boost Level', 'create.boost.boostlevel-unit')
+          }
           </h5>
           <i />
         </div>
@@ -190,7 +202,7 @@ class Boost extends Component {
 
         {!isMulti ? null : (
           <div className="form-group boost-limit">
-            <label>Boost Limit</label>
+          <label><fbt desc="create.boost-limit">Boost Limit</fbt></label>
             <div className="d-flex">
               <div style={{ flex: 1, marginRight: '1rem' }}>
                 <div className="with-symbol">

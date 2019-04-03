@@ -107,10 +107,10 @@ locales.forEach(locale => {
   console.log(`Processing file: ${srcFile}`)
 
   Object.keys(stringKeyValue).forEach(key => {
-    const val = doTestMark ? '◀'+stringKeyValue[key]+'▶' : stringKeyValue[key]
+    const val = doTestMark ? '◀'+decode(stringKeyValue[key])+'▶' : decode(stringKeyValue[key])
     translations[key] = {
       'translations': [
-        { 'translation': decode(val) }
+        { 'translation': val }
       ]
     }
   })
