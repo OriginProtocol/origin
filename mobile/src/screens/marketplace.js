@@ -14,7 +14,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewMessage(event) {
-    console.debug(`Got event: ${event}`)
+    console.debug(event)
+    console.debug(`Got event:`)
 
     let msgData
     try {
@@ -36,6 +37,13 @@ class MarketplaceScreen extends Component {
 
   render() {
     console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
+
+    const injectedJavaScript = `
+      window.__mobileBridge = true;
+      window.__mobileBridgeAccount = '1234';
+      true;
+    `
+
     return (
       <WebView
         ref={webview => {
@@ -43,6 +51,7 @@ class MarketplaceScreen extends Component {
         }}
         source={{ uri: MARKETPLACE_DAPP_URL }}
         onMessage={this.onWebViewMessage.bind(this)}
+        injectedJavaScript={injectedJavaScript}
       />
     )
   }

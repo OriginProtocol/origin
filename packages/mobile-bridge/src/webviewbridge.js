@@ -38,6 +38,7 @@ export default function() {
           }
 
           window.ReactNativeWebView.postMessage(msg)
+          console.debug(`WebViewBridge send succeeded`)
         })
       }).catch(function (e) {
         alert(e)
@@ -47,6 +48,7 @@ export default function() {
   }
 
   window.addEventListener('message', function(e) {
+    console.log(e)
     if (e.data.source !== 'Marketplace') {
       return
     }

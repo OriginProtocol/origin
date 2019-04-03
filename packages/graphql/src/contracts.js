@@ -403,7 +403,9 @@ export function setNetwork(net, customConfig) {
     })
   }
   setMetaMask()
-  setMobileBridge()
+  if (window.__mobileBridge && window.__mobileBridgeAccount) {
+    setMobileBridge()
+  }
 }
 
 function setMetaMask() {
@@ -429,12 +431,16 @@ function setMetaMask() {
  * webview from the DApp
  */
 function setMobileBridge() {
+  console.debug('Configuring mobile bridge')
+
   if (context.metaMaskEnabled) return
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
+  console.debug(`Setting default eth account to: ${window.__mobileBridgeAccount}`)
+  context.mobileBridge.web3.eth.defaultAccount = window.__mobileBridgeAccount
+
   const mobileBridgeProvider = context.mobileBridge.getProvider()
-  console.log(mobileBridgeProvider)
   context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
   // Funnel marketplace contract transactions through mobile wallet
@@ -461,6 +467,7 @@ function setMobileBridge() {
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec
   }
+
 
   console.debug(`Mobile bridge configured`)
 }

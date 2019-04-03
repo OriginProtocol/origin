@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
 import { HashRouter } from 'react-router-dom'
-
 import Styl from 'react-styl'
 import client from '@origin/graphql'
-import MobileBridge from '@origin/mobile-bridge'
+console.log(window)
 
 import setLocale from 'utils/setLocale'
 

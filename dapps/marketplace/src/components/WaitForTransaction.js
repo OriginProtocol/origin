@@ -4,7 +4,6 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
-import MobileLinkerCode from 'components/MobileLinkerCode'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
@@ -30,7 +29,6 @@ class WaitForTransaction extends Component {
           : walletType
       return (
         <>
-          <MobileLinkerCode role={role} />
           <Modal
             onClose={() => {
               if (this.props.onClose) {

@@ -14,16 +14,13 @@ class MobileBridge {
   }
 
   processTransaction(transaction, callback) {
-    console.log('Process transaction')
+    console.debug('Process transaction for mobile-bridge')
     transaction.gasLimit = transaction.gas
+    window.webViewBridge.send('processTransaction', transaction)
   }
 
   getAccounts() {
-    console.log('Called get accounts')
-    const accounts = Object.keys(this.web3.eth.accounts.wallet).filter(k => {
-      return web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k)
-    })
-    return accounts
+    window.webViewBridge.send('getAccounts')
   }
 
   getProvider() {
@@ -53,7 +50,6 @@ class MobileBridge {
     provider._providers.splice(3, 1)
     provider._providers.splice(4, 1)
     provider.isOrigin = true
-    console.log('Returning provider')
     return provider
   }
 }
