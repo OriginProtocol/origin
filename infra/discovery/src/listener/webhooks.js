@@ -40,11 +40,11 @@ async function postToDiscordWebhook(url, data) {
   }
 
   const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
-  const listing = data.related.listing
+  const listing = data.listing
 
   let discordData = {}
 
-  if (data.related.offer !== undefined) {
+  if (data.offer !== undefined) {
     // Offer
     discordData = {
       embeds: [
@@ -53,11 +53,9 @@ async function postToDiscordWebhook(url, data) {
             listing.title
           } - ${priceDisp(listing)}`,
           description: [
-            `https://dapp.originprotocol.com/#/purchases/${
-              data.related.offer.id
-            }`,
-            `Seller: ${personDisp(data.related.seller)}`,
-            `Buyer: ${personDisp(data.related.buyer)}`
+            `https://dapp.originprotocol.com/#/purchases/${data.offer.id}`,
+            `Seller: ${personDisp(data.seller)}`,
+            `Buyer: ${personDisp(data.buyer)}`
           ].join('\n')
         }
       ]
@@ -73,7 +71,7 @@ async function postToDiscordWebhook(url, data) {
           description: [
             `${listing.description.split('\n')[0].slice(0, 60)}...`,
             `https://dapp.originprotocol.com/#/listing/${listing.id}`,
-            `Seller: ${personDisp(data.related.seller)}`
+            `Seller: ${personDisp(data.seller)}`
           ].join('\n')
         }
       ]
@@ -87,7 +85,7 @@ async function postToDiscordWebhook(url, data) {
  * our global Origin mailing list.
  */
 async function postToEmailWebhook(url, data) {
-  const user = data.related.user
+  const user = data.user
   if (!user.email) {
     logger.debug('No email present in identity, skipping email webhook.')
     return
