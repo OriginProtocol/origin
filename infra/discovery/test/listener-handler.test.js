@@ -27,9 +27,30 @@ const mockListing = {
   }
 }
 const mockIdentity = {
-  address: seller,
-  profile: { firstName: 'foo', lastName: 'bar', avatar: '0xABCDEF' },
-  attestations: [{ service: 'email' }, { service: 'phone' }],
+  id: seller,
+  firstName: 'foo',
+  lastName: 'bar',
+  avatar: '0xABCDEF',
+  attestations: [
+    JSON.stringify({
+      data: {
+        attestation: {
+          verificationMethod: {
+            email: true
+          }
+        }
+      }
+    }),
+    JSON.stringify({
+      data: {
+        attestation: {
+          verificationMethod: {
+            phone: true
+          }
+        }
+      }
+    })
+  ],
   avatar: '0x1234'
 }
 const mockOffer = {
@@ -234,7 +255,7 @@ describe('Listener Handlers', () => {
 
     // Check output.
     expect(result.identity).to.be.an('object')
-    expect(result.identity.address).to.equal(seller)
+    expect(result.identity.id).to.equal(seller)
     expect(result.identity.ipfsHash).to.equal(
       'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
     )
