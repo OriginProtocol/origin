@@ -31,7 +31,6 @@ class Details extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-
     return (
       <div className="row">
         <div className="col-md-8">
@@ -72,7 +71,8 @@ class Details extends Component {
                   </label>
                   <div className="help-text">
                     <fbt desc="create.description.hourly">
-                      Make sure to include special conditions of your rental here.
+                      Make sure to include special conditions of your rental
+                      here.
                     </fbt>
                   </div>
                   <textarea {...input('description')} />
