@@ -1,7 +1,7 @@
 import contracts from '../../contracts'
 import get from 'lodash/get'
 
-async function generatePhoneCode(_, { identity, airbnbUserId }) {
+async function generateAirbnbCode(_, { identity, airbnbUserId }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -29,4 +29,4 @@ async function generatePhoneCode(_, { identity, airbnbUserId }) {
   return { success: false, reason: get(data, 'errors.airbnbUserId[0]') }
 }
 
-export default generatePhoneCode
+export default generateAirbnbCode
