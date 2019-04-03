@@ -104,7 +104,7 @@ const Transaction = props => {
                 <fbt desc="Transaction.offerDetails">Offer Details</fbt>
                 <HelpIcon
                   tooltip={fbt(
-                    'This includes price values at the time that the offer was made. The current value of the escrowed cryptocurrency may have changed due to market fluctuations.',
+                    'This includes the price at the time that the offer was made. The current value of the escrowed cryptocurrency may have changed due to market fluctuations.',
                     'Transaction.offerInfo'
                   )}
                 />
