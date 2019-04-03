@@ -75,7 +75,9 @@ class IdentityEventHandler {
       decoratedIdentity.attestations.map(async attestationJson => {
         // TODO: Clean this up
         const attestation = JSON.parse(attestationJson)
-        const attestationService = Object.keys(attestation.data.attestation.verificationMethod)[0]
+        const attestationService = Object.keys(
+          attestation.data.attestation.verificationMethod
+        )[0]
         switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
@@ -160,8 +162,7 @@ class IdentityEventHandler {
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
     // Check required fields are populated.
     const validProfile =
-      (identity.firstName.length > 0 ||
-        identity.lastName.length > 0) &&
+      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
       identity.avatar.length > 0
     if (!validProfile) {
       return
@@ -191,13 +192,13 @@ class IdentityEventHandler {
       identity.attestations.map(attestationJson => {
         // TODO: Clean this up
         const attestation = JSON.parse(attestationJson)
-        const attestationService = Object.keys(attestation.data.attestation.verificationMethod)[0]
+        const attestationService = Object.keys(
+          attestation.data.attestation.verificationMethod
+        )[0]
         const eventType = AttestationServiceToEventType[attestationService]
         if (!eventType) {
           logger.error(
-            `Unrecognized attestation service received: ${
-              attestationService
-            }. Skipping.`
+            `Unrecognized attestation service received: ${attestationService}. Skipping.`
           )
           return
         }
