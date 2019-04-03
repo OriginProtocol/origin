@@ -11,6 +11,6 @@ Please explain the changes you made here:
 ### Checklist:
 
 - [ ] Test your work and double-check to confirm that you didn't break anything
-- [ ] Wrap any new text/strings for translation (see [fbt](https://facebookincubator.github.io/fbt/))
-- [ ] If there are any new/changed strings to translate, [`npm run translate`](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace#translation)
+- [ ] [Wrap any new text/strings with `fbt`](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace/translation#wrapping-text) for translation
+- [ ] If there are any new/changed strings to translate, [`npm run translate`](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace/translation#integrating-translations)
 - [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/origin/tree/master/docs)
