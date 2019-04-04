@@ -112,6 +112,7 @@ class GrowthInvite extends Component {
     return (
       <Query
         query={inviteCodeQuery}
+        fetchPolicy="network-only"
         onCompleted={({ inviteCode }) => {
           if (inviteCode !== this.state.inviteCode) {
             this.setState({ inviteCode })
