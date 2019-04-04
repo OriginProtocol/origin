@@ -6,7 +6,7 @@ import { fbt } from 'fbt-runtime'
 import { Switch, Route } from 'react-router-dom'
 
 import Store from 'utils/store'
-import { unpublishedStrength } from 'utils/profileTools'
+import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -215,7 +215,7 @@ class UserProfile extends Component {
                 }}
                 publishedProfile={this.props.identity || {}}
                 currentProfile={this.state}
-                unpublishedStrength={unpublishedStrength(this)}
+                changesToPublishExist={changesToPublishExist(this)}
                 publishedStrength={get(this.props, 'identity.strength') || 0}
                 openEditProfile={(e) => this.openEditProfile(e)}
               />

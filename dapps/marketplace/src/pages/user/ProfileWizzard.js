@@ -1,15 +1,23 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
+import { withApollo, Query } from 'react-apollo'
+import get from 'lodash/get'
 
 import Enum from 'utils/enum'
-import { profileEmpty } from 'utils/profileTools'
+import { changesToPublishExist } from 'utils/profileTools'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+
+import enrollmentStatusQuery from 'queries/EnrollmentStatus'
+import profileQuery from 'queries/Profile'
 
 const WizzardStep = new Enum(
   'Publish',
   'RewardsEnroll',
-  'SetOriginProfile'
+  'SetOriginProfile',
+  'SetEmail',
+  'SetPhoneNumber',
+  'VerifyYourOtherProfiles'
 )
 
 class ProfileWizzard extends Component {
@@ -18,43 +26,123 @@ class ProfileWizzard extends Component {
     this.state = {
       uiStep: WizzardStep.Publish,
       publishChanges: false,
-      skipRewardsEnroll: false
+      skipRewardsEnroll: false,
+      skipVerifyOtherProfiles: false,
+      userEnroledIntoRewards: false
     }
 
     this.EnrollButton = withEnrolmentModal('button')
+    this.componentIsMounted = false
+    setTimeout(() => this.calculateUIStep(), 1)
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidMount() {
+    this.componentIsMounted = true
+    const profileResult = await this.props.client.query({
+      query: profileQuery
+    })
+    const accountId = get(profileResult, 'data.web3.primaryAccount.id')
+    if (!accountId)
+      return
+
+    const enrolmentResult = await this.props.client.query({
+      query: enrollmentStatusQuery,
+      variables: {
+        walletAddress: accountId
+      }
+    })
+
+    const enrolmentStatus = get(enrolmentResult, 'data.enrollmentStatus')
+
+    if (enrolmentStatus === 'Enrolled' && this.componentIsMounted) {
+      this.setState({
+        userEnroledIntoRewards: true
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentIsMounted = false
+  }
+
+  componentDidUpdate() {
+    this.calculateUIStep()
+  }
+
+  calculateUIStep() {
     const {
       publishedProfile,
       currentProfile,
-      unpublishedStrength,
+      changesToPublishExist,
       publishedStrength
     } = this.props
 
     const {
-      skipRewardsEnroll
+      skipRewardsEnroll,
+      skipVerifyOtherProfiles,
+      userEnroledIntoRewards
     } = this.state
 
-    if (profileEmpty(publishedProfile) && profileEmpty(currentProfile) && !skipRewardsEnroll) {
-      this.updateUiStepIfNecessary(WizzardStep.RewardsEnroll)
-    } else if (profileEmpty(publishedProfile) && profileEmpty(currentProfile)) {
-      this.updateUiStepIfNecessary(WizzardStep.SetOriginProfile)
-    } else {
+    const meetsCritria = ({ originProfile=false, email=false, phone=false, allAttestations=false }) => {
+      const isOriginProfile = (profile) => {
+        return profile.firstName && profile.lastName && profile.description
+      }
+      const hasEmailAttestation = (profile) => {
+        return profile.emailVerified || profile.emailAttestation
+      }
+      const hasPhoneAttestation = (profile) => {
+        return profile.phoneVerified || profile.phoneAttestation
+      }
+
+      const hasAllAttestation = (profile) => {
+        return 
+          (profile.emailVerified || profile.emailAttestation) &&
+          (profile.phoneVerified || profile.phoneAttestation) &&
+          (profile.facebookVerified || profile.facebookAttestation) &&
+          (profile.twitterVerified || profile.twitterAttestation) &&
+          (profile.airbnbVerified || profile.airbnbAttestation)
+      }
+
+      if (originProfile && !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))) {
+        return false
+      }
+
+      if (email && !(hasEmailAttestation(currentProfile) || hasEmailAttestation(publishedProfile))) {
+        return false
+      }
+
+      if (phone && !(hasPhoneAttestation(currentProfile) || hasPhoneAttestation(publishedProfile))) {
+        return false
+      }
+
+      if (allAttestations && !(hasAllAttestation(currentProfile) || hasAllAttestation(publishedProfile))) {
+        return false
+      }
+
+      return true
+    }
+
+    if (meetsCritria({ originProfile: true, email: true, phone: true, allAttestations: true })) {
       this.updateUiStepIfNecessary(WizzardStep.Publish)
+    } else if (meetsCritria({ originProfile: true, email: true, phone: true }) && skipVerifyOtherProfiles) {
+      this.updateUiStepIfNecessary(WizzardStep.Publish)
+    } else if (meetsCritria({ originProfile: true, email: true, phone: true })) {
+      this.updateUiStepIfNecessary(WizzardStep.VerifyYourOtherProfiles)
+    } else if (meetsCritria({ originProfile: true, email: true })) {
+      this.updateUiStepIfNecessary(WizzardStep.SetPhoneNumber)
+    } else if (meetsCritria({ originProfile: true })) {
+      this.updateUiStepIfNecessary(WizzardStep.SetEmail)
+    } else if (!skipRewardsEnroll && !userEnroledIntoRewards) {
+      this.updateUiStepIfNecessary(WizzardStep.RewardsEnroll)
+    } else {
+      this.updateUiStepIfNecessary(WizzardStep.SetOriginProfile)
     }
 
-    if (unpublishedStrength !== publishedStrength && !this.state.publishChanges) {
+    if (changesToPublishExist !== this.state.publishChanges) {
       this.setState({
-        publishChanges: true
+        publishChanges: changesToPublishExist
       })
     }
-    if (unpublishedStrength === publishedStrength && this.state.publishChanges) {
-      this.setState({
-        publishChanges: false
-      })
-    }
-
   }
 
   updateUiStepIfNecessary(wizzardStep) {
@@ -63,6 +151,18 @@ class ProfileWizzard extends Component {
         uiStep: wizzardStep
       })
     }
+  }
+
+  renderVerifyYourOtherProfiles() {
+    return "lala1"
+  }
+
+  renderSetPhoneNumber() {
+    return "lala2"
+  }
+
+  renderSetEmail() {
+    return "lala3"
   }
 
   renderPublishChanges(buttonTextOption) {
@@ -122,7 +222,7 @@ class ProfileWizzard extends Component {
       <Fragment>
         <div className="title">
           <fbt desc="ProfileWizzard.OriginProfileStep">
-            Next Step: Upload a photo and provide a name and description
+            Upload a photo and provide a name and description
           </fbt>
         </div>
         <button
@@ -168,7 +268,7 @@ class ProfileWizzard extends Component {
   }
 }
 
-export default ProfileWizzard
+export default withApollo(ProfileWizzard)
 
 require('react-styl')(`
 	.profile-wizzard-box
@@ -213,6 +313,7 @@ require('react-styl')(`
       font-size: 14px
       text-decoration: underline
       color: var(--dark-blue-grey)
+      background-color: white
 
 
 `)

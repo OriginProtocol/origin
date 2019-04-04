@@ -16,21 +16,17 @@ export function unpublishedStrength({ props, state }) {
   return strength
 }
 
-export function profileEmpty(profile) {
-  return (
-    !profile.firstName &&
-    !profile.lastName &&
-    !profile.description &&
-    !profile.avatar &&
-    !profile.emailVerified &&
-    !profile.phoneVerified &&
-    !profile.facebookVerified &&
-    !profile.twitterVerified &&
-    !profile.airbnbVerified &&
-    !profile.emailAttestation &&
-    !profile.phoneAttestation &&
-    !profile.facebookAttestation &&
-    !profile.twitterAttestation &&
-    !profile.airbnbAttestation
+export function changesToPublishExist({ props, state }) {
+  const profile = get(props, 'identity') || {}
+  return !(
+    profile.firstName === state.firstName &&
+    profile.lastName === state.lastName &&
+    profile.description === state.description &&
+    profile.avatar === state.avatar &&
+    profile.emailVerified === !!state.emailAttestation &&
+    profile.phoneVerified === !!state.phoneAttestation &&
+    profile.facebookVerified === !!state.facebookAttestation &&
+    profile.twitterVerified === !!state.twitterAttestation &&
+    profile.airbnbVerified === !!state.airbnbAttestation
   )
 }
