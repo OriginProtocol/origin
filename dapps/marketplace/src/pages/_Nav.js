@@ -19,7 +19,7 @@ class Nav extends Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.EarnTokens = withEnrolmentModal('button')
+    this.EarnTokens = withEnrolmentModal('a')
   }
 
   render() {
