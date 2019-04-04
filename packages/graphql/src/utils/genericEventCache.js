@@ -50,7 +50,7 @@ export default function eventCache(
 
   const isDone = () => new Promise(resolve => queue.push(resolve))
 
-  async function getPastEvents() {
+  async function getPastEvents(fromBlock, toBlock) {
     if (processing) {
       await isDone()
     }
@@ -114,10 +114,9 @@ export default function eventCache(
         lastLookup,
         events
       })
-
-      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
-      // console.log('IPFS Hash', hash)
     }
+
+    return events
   }
 
   async function allEvents(eventNames, filterTopics = []) {
@@ -143,5 +142,5 @@ export default function eventCache(
     return filteredEvents
   }
 
-  return { allEvents, updateBlock, getBlockNumber }
+  return { getPastEvents, allEvents, updateBlock, getBlockNumber }
 }
