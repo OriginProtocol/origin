@@ -25,7 +25,6 @@ const errorCounter = new bundle.promClient.Counter({
   help: 'Number of errors from the event listener handler '
 })
 
-
 const port = 9499
 
 // Start express server for serving metrics

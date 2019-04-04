@@ -134,7 +134,9 @@ async function main() {
       // Flatten array of arrays filtering out anything undefined
       const events = [].concat(...eventArrays.filter(x => x))
       // Filter to only new events
-      const newEvents = events.filter(event => event.blockNumber >= lastProcessedBlock)
+      const newEvents = events.filter(
+        event => event.blockNumber >= lastProcessedBlock
+      )
       logger.debug(`Got ${newEvents.length} new events`)
       // Process each new event
       for (event of newEvents) {

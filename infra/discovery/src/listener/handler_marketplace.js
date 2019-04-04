@@ -37,7 +37,9 @@ function getOriginListingId(networkId, event) {
 }
 
 function getOriginOfferId(networkId, event) {
-  return `${networkId}-000-${event.returnValues.listingID}-${event.returnValues.offerID}`
+  return `${networkId}-000-${event.returnValues.listingID}-${
+    event.returnValues.offerID
+  }`
 }
 
 /* Removes the block number that is appended to listing IDs when they are
