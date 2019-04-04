@@ -65,7 +65,7 @@ const mockOffer = {
 
 describe('Listener Handlers', () => {
   class MockWeb3Eth {
-    constructor(decoded) {
+    constructor() {
       this.getBlock = () => {
         return { timestamp: 1554418195 }
       }
@@ -100,7 +100,7 @@ describe('Listener Handlers', () => {
       marketplace: true,
       identity: true,
       growth: true,
-      networkId: 999,
+      networkId: 999
     }
 
     this.context = {
@@ -128,7 +128,7 @@ describe('Listener Handlers', () => {
           '0x7f154a14b9975c7b2269475892fa3f875dc518b6a3f76259fd29212e956c7f64'
       },
       raw: {
-        topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+        topics: ['topic0', 'topic1', 'topic2', 'topic3']
       }
     }
 
@@ -141,12 +141,14 @@ describe('Listener Handlers', () => {
       logIndex: 1,
       returnValues: {
         address: seller,
-        ipfsHash: '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
+        ipfsHash:
+          '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
       },
       raw: {
-        topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+        topics: ['topic0', 'topic1', 'topic2', 'topic3']
       }
-} })
+    }
+  })
 
   it(`Main`, async () => {
     const stub = sinon
@@ -168,7 +170,10 @@ describe('Listener Handlers', () => {
       this.context.graphqlClient
     )
 
-    const result = await handler.process({ timestamp: 1 }, this.marketplaceEvent)
+    const result = await handler.process(
+      { timestamp: 1 },
+      this.marketplaceEvent
+    )
 
     // Check output
     expect(result.listing).to.be.an('object')
