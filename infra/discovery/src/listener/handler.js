@@ -156,6 +156,8 @@ async function handleEvent(event, context) {
       logger.error(`Skipping Google Cloud Pub/Sub for ${eventDetails}`)
     }
   }
+
+  return handler
 }
 
 module.exports = { handleEvent }

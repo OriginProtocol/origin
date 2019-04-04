@@ -11,7 +11,7 @@ const graphqlClient = esmImport('@origin/graphql').default
 
 const _discoveryModels = require('../src/models')
 const db = { ..._discoveryModels, ..._identityModels }
-const { handleLog } = require('../src/listener/handler')
+const { handleEvent } = require('../src/listener/handler')
 const MarketplaceEventHandler = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')
 
@@ -28,8 +28,8 @@ const mockListing = {
 }
 const mockIdentity = {
   id: seller,
-  firstName: 'foo',
-  lastName: 'bar',
+  firstName: 'Origin',
+  lastName: 'Protocol',
   avatar: '0xABCDEF',
   attestations: [
     JSON.stringify({
@@ -37,7 +37,8 @@ const mockIdentity = {
         attestation: {
           verificationMethod: {
             email: true
-          }
+          },
+          phone: '+00 00000000'
         }
       }
     }),
@@ -46,7 +47,8 @@ const mockIdentity = {
         attestation: {
           verificationMethod: {
             phone: true
-          }
+          },
+          email: 'test@originprotocol.com'
         }
       }
     })
@@ -65,22 +67,8 @@ describe('Listener Handlers', () => {
   class MockWeb3Eth {
     constructor(decoded) {
       this.getBlock = () => {
-        return { timestamp: 1 }
+        return { timestamp: 1554418195 }
       }
-      this.abi = {}
-      this.abi.decodeLog = () => {
-        return decoded
-      }
-    }
-  }
-
-  class MockHandler {
-    constructor() {
-      this.process = sinon.fake.returns({})
-      this.webhookEnabled = sinon.fake.returns(false)
-      this.discordWebhookEnabled = sinon.fake.returns(false)
-      this.emailWebhookEnabled = sinon.fake.returns(false)
-      this.gcloudPubsubEnabled = sinon.fake.returns(false)
     }
   }
 
@@ -111,12 +99,12 @@ describe('Listener Handlers', () => {
     this.config = {
       marketplace: true,
       identity: true,
-      growth: true
+      growth: true,
+      networkId: 999,
     }
 
     this.context = {
       web3: {},
-      networkId: 999,
       config: this.config,
       graphqlClient: graphqlClient
     }
@@ -126,68 +114,52 @@ describe('Listener Handlers', () => {
       offerId: offerId
     })
 
-    // Marketplace test fixtures.
-    this.marketplaceRule = {
-      eventName: 'OfferFinalized',
-      eventAbi: {
-        inputs: null
-      },
-      handler: new MockHandler()
-    }
-
-    this.marketplaceLog = {
-      address: '0x123',
-      contractName: 'MarketplaceContract',
-      eventName: this.marketplaceRule.eventName,
-      networkId: context.networkId,
+    this.marketplaceEvent = {
+      id: 'log_e8ed0356',
+      event: 'OfferFinalized',
+      address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
+      transactionHash: 'testTransactionHash',
       blockNumber: 1,
       logIndex: 1,
-      transactionHash: 'testTxnHash',
-      transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
-      date: new Date()
-    }
-
-    // Identity test fixtures.
-    this.identityRule = {
-      eventName: 'IdentityUpdated',
-      eventAbi: {
-        inputs: null
-      },
-      handler: new MockHandler()
-    }
-
-    this.identityLog = {
-      address: seller,
-      decoded: {
-        account: seller,
+      returnValues: {
+        party: '123',
+        listingID: '240',
         ipfsHash:
-          '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
+          '0x7f154a14b9975c7b2269475892fa3f875dc518b6a3f76259fd29212e956c7f64'
       },
-      contractName: 'IdentityEventsContract',
-      eventName: this.identityRule.eventName,
-      networkId: context.networkId,
+      raw: {
+        topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      }
+    }
+
+    this.identityEvent = {
+      id: 'log_e8ed0357',
+      event: 'IdentityUpdated',
+      address: seller,
+      transactionHash: 'testTransactionHash',
       blockNumber: 1,
       logIndex: 1,
-      transactionHash: 'testTxnHash',
-      transactionIndex: 1,
-      topics: ['topic0', 'topic1', 'topic2', 'topic3'],
-      date: new Date()
-    }
-  })
+      returnValues: {
+        address: seller,
+        ipfsHash: '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
+      },
+      raw: {
+        topics: ['topic0', 'topic1', 'topic2', 'topic3'],
+      }
+} })
 
   it(`Main`, async () => {
-    await handleLog(this.marketplaceLog, this.marketplaceRule, this.context)
-    expect(this.marketplaceRule.handler.process.calledOnce).to.equal(true)
-    expect(this.marketplaceRule.handler.webhookEnabled.calledOnce).to.equal(
-      true
-    )
-    expect(
-      this.marketplaceRule.handler.discordWebhookEnabled.calledOnce
-    ).to.equal(true)
-    expect(
-      this.marketplaceRule.handler.emailWebhookEnabled.calledOnce
-    ).to.equal(true)
+    const stub = sinon
+      .stub(MarketplaceEventHandler.prototype, 'process')
+      .returns({})
+
+    const handler = await handleEvent(this.marketplaceEvent, this.context)
+    expect(handler.process.calledOnce).to.equal(true)
+    expect(handler.webhookEnabled.calledOnce).to.equal(true)
+    expect(handler.discordWebhookEnabled.calledOnce).to.equal(true)
+    expect(handler.emailWebhookEnabled.calledOnce).to.equal(true)
+
+    stub.restore()
   })
 
   it(`Marketplace`, async () => {
@@ -195,9 +167,10 @@ describe('Listener Handlers', () => {
       this.config,
       this.context.graphqlClient
     )
-    const result = await handler.process(this.marketplaceLog)
 
-    // Check output.
+    const result = await handler.process({ timestamp: 1 }, this.marketplaceEvent)
+
+    // Check output
     expect(result.listing).to.be.an('object')
     expect(result.listing.id).to.equal(listingId)
     expect(result.offer).to.be.an('object')
@@ -242,15 +215,15 @@ describe('Listener Handlers', () => {
 
     handler._loadValueFromAttestation = (ethAddress, method) => {
       if (method === 'EMAIL') {
-        return 'toto@spirou.com'
+        return 'test@originprotocol.com'
       } else if (method === 'PHONE') {
-        return '+33 0555875838'
+        return '+00 00000000'
       } else {
         return null
       }
     }
 
-    const result = await handler.process(this.identityLog)
+    const result = await handler.process({ timestamp: 1 }, this.identityEvent)
 
     // Check output.
     expect(result.identity).to.be.an('object')
@@ -263,10 +236,10 @@ describe('Listener Handlers', () => {
     const identityRow = await db.Identity.findAll({
       where: {
         ethAddress: seller,
-        firstName: 'foo',
-        lastName: 'bar',
-        email: 'toto@spirou.com',
-        phone: '+33 0555875838'
+        firstName: 'Origin',
+        lastName: 'Protocol',
+        email: 'test@originprotocol.com',
+        phone: '+00 00000000'
       }
     })
     expect(identityRow.length).to.equal(1)
