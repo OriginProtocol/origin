@@ -36,7 +36,9 @@ class Context {
   }
 
   async init(config, errorCounter) {
-    const web3Provider = new Web3.providers.HttpProvider(config.providerUrl)
+    const web3Provider = new Web3.providers.HttpProvider(
+      contractsContext.config.provider
+    )
     this.web3 = new Web3(web3Provider)
     this.config = config
     this.config.networkId = await this.web3.eth.net.getId()
@@ -87,10 +89,6 @@ const config = {
   trailBlocks: parseInt(
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
-  providerUrl:
-    args['--provider-url'] ||
-    process.env.PROVIDER_URL ||
-    'http://localhost:8545',
   network: args['--network'] || process.env.NETWORK || 'docker',
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
