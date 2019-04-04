@@ -3,7 +3,6 @@ const search = require('../lib/search')
 const db = require('../models')
 const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
-const { checkEventsFreshness } = require('./utils')
 const listingQuery = require('./queries/Listing')
 const offerQuery = require('./queries/Offer')
 
@@ -71,9 +70,6 @@ class MarketplaceEventHandler {
         listingId: getOriginListingId(this.config.networkId, event)
       }
     })
-
-    checkEventsFreshness(result.data.marketplace.listing.events, event)
-
     return result.data.marketplace
   }
 
@@ -92,9 +88,6 @@ class MarketplaceEventHandler {
         listingId: getOriginListingId(this.config.networkId, event)
       }
     })
-
-    checkEventsFreshness(result.data.marketplace.offer.listing.events, event)
-
     return result.data.marketplace
   }
 
@@ -195,7 +188,7 @@ class MarketplaceEventHandler {
       buyerAddress: offer.buyer.id.toLowerCase(),
       data: offer
     }
-    if (log.eventName === 'OfferCreated') {
+    if (event.event === 'OfferCreated') {
       offerData.createdAt = blockDate
     } else {
       offerData.updatedAt = blockDate

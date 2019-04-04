@@ -21,14 +21,11 @@ const promBundle = require('express-prom-bundle')
 const Web3 = require('web3')
 
 const esmImport = require('esm')(module)
-const graphqlClient = esmImport('@origin/graphql').default
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 const { handleEvent } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
-
-const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
 
 /**
  * Helper class passed to logic methods containing config and shared resources.
@@ -143,14 +140,15 @@ async function main() {
   const check = async () => {
     await withRetrys(async () => {
       start = new Date()
-      let currentBlock = await context.web3.eth.getBlockNumber()
+      const currentBlock = await context.web3.eth.getBlockNumber()
       if (currentBlock === lastProcessedBlock) {
         logger.debug('No new blocks to process')
         return scheduleNextCheck()
       }
-      let fromBlock = lastProcessedBlock + 1
+      blockGauge.set(currentBlock)
+      const fromBlock = lastProcessedBlock + 1
       // Respect the trailBlocks option
-      let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
+      const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
       logger.debug(`Querying events from ${fromBlock} to ${toBlock}`)
       const newEventArrays = await Promise.all([
         contractsContext.marketplace.eventCache.getPastEvents(
@@ -166,7 +164,6 @@ async function main() {
       const newEvents = [].concat(...newEventArrays.filter(x => x))
       newEvents.map(event => handleEvent(event, context))
       // Record state of processing
-      lastLogBlock = toBlock
       logger.debug(`Updating last processed block to ${toBlock}`)
       await setLastBlock(context.config, toBlock)
       lastProcessedBlock = currentBlock

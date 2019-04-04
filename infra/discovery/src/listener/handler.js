@@ -47,7 +47,7 @@ async function handleEvent(event, context) {
   await withRetrys(async () => {
     block = await context.web3.eth.getBlock(event.blockNumber)
   })
-  let blockDate = new Date(block.timestamp * 1000)
+  const blockDate = new Date(block.timestamp * 1000)
 
   const eventDetails = `blockNumber=${event.blockNumber} \
     transactionIndex=${event.transactionIndex} \
@@ -111,7 +111,7 @@ async function handleEvent(event, context) {
         return postToWebhook(context.config.webhook, json)
       }, false)
     } catch (e) {
-      logger.error(`Skipping webhook for ${logDetails}`)
+      logger.error(`Skipping webhook for ${eventDetails}`)
     }
   }
 
@@ -123,7 +123,7 @@ async function handleEvent(event, context) {
         return postToEmailWebhook(context.config.emailWebhook, output)
       }, false)
     } catch (e) {
-      logger.error(`Skipping email webhook for ${logDetails}`)
+      logger.error(`Skipping email webhook for ${eventDetails}`)
     }
   }
 
@@ -135,7 +135,7 @@ async function handleEvent(event, context) {
         return postToDiscordWebhook(context.config.discordWebhook, output)
       }, false)
     } catch (e) {
-      logger.error(`Skipping discord webhook for ${logDetails}`)
+      logger.error(`Skipping discord webhook for ${eventDetails}`)
     }
   }
 
@@ -153,7 +153,7 @@ async function handleEvent(event, context) {
         )
       }, false)
     } catch (e) {
-      logger.error(`Skipping Google Cloud Pub/Sub for ${logDetails}`)
+      logger.error(`Skipping Google Cloud Pub/Sub for ${eventDetails}`)
     }
   }
 }
