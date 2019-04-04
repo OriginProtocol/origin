@@ -88,11 +88,13 @@ class MarketplaceEventHandler {
     const result = await this.graphqlClient.query({
       query: offerQuery,
       variables: {
-        offerId: getOriginOfferId(this.config.networkId, event),
-        listingId: getOriginListingId(this.config.networkId, event)
+        offerId: getOriginOfferId(this.config.networkId, event)
       }
     })
-    return result.data.marketplace
+    return {
+      offer: result.data.marketplace.offer,
+      listing: result.data.marketplace.offer.listing
+    }
   }
 
   /**
