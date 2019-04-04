@@ -425,7 +425,10 @@ class GrowthInvite extends Component {
                 ? invite.contact
                 : invite.walletAddress
               return (
-                <div className="invite-row d-flex pt-2 pb-2" key={invite.pendingId}>
+                <div
+                  className="invite-row d-flex pt-2 pb-2"
+                  key={invite.pendingId}
+                >
                   <div className="col-4 p-0 d-flex align-items-center">
                     <div className="name">{name}</div>
                   </div>
