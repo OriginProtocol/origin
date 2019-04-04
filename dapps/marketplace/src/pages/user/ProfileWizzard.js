@@ -127,9 +127,7 @@ class ProfileWizzard extends Component {
         </div>
         <button
           className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-          onClick={() =>
-            this.setState({ skipRewardsEnroll: true })
-          }
+          onClick={(e) => this.props.openEditProfile(e)}
         >
           <fbt desc="ProfileWizzard.getStarted">
             Get Started

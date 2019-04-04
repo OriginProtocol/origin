@@ -103,6 +103,11 @@ class UserProfile extends Component {
     )
   }
 
+  openEditProfile(e) {
+    e.preventDefault()
+    this.setState({ editProfile: true })
+  }
+
   renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
@@ -131,10 +136,7 @@ class UserProfile extends Component {
                 <a
                   className="edit"
                   href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.setState({ editProfile: true })
-                  }}
+                  onClick={e => this.openEditProfile(e)}
                 />
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
@@ -215,6 +217,7 @@ class UserProfile extends Component {
                 currentProfile={this.state}
                 unpublishedStrength={unpublishedStrength(this)}
                 publishedStrength={get(this.props, 'identity.strength') || 0}
+                openEditProfile={(e) => this.openEditProfile(e)}
               />
             </div>
           </div>

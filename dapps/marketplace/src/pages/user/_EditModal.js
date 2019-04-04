@@ -29,10 +29,10 @@ class EditProfileModal extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
+      // Using css hide Edit Profile dialog when image cropper is opened
       <Modal
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
-        {/* Hide Edit Profile dialog when image cropper is opened */}
         className={this.state.imageCropperOpened ? 'd-none': ''}
       >
         <form
