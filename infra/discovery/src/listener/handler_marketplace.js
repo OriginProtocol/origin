@@ -1,11 +1,11 @@
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
-const base58 = require('bs58')
-const web3 = require('web3')
 const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const { checkEventsFreshness } = require('./utils')
+const listingQuery = require('./queries/Listing')
+const offerQuery = require('./queries/Offer')
 
 const LISTING_EVENTS = [
   'ListingCreated',
@@ -33,150 +33,91 @@ function isOfferEvent(eventName) {
   return OFFER_EVENTS.includes(eventName)
 }
 
-function generateListingId(log) {
-  return [log.networkId, log.contractVersionKey, log.decoded.listingID].join(
-    '-'
-  )
+function listingIdFromLog(log) {
+  return `${log.networkId}-000-${log.decoded.listingID}-${log.blockNumber}`
 }
 
-function generateOfferId(log) {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    log.decoded.listingID,
-    log.decoded.offerID
-  ].join('-')
-}
-
-const generateListingIdFromUnique = ({ network, version, uniqueId }) => {
-  return [network, version, uniqueId].join('-')
-}
-
-const toNoGasListingID = listingID => {
-  return base58.encode(web3.utils.toBN(listingID).toBuffer())
-}
-
-const generateNoGasListingId = log => {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    toNoGasListingID(log.decoded.listingID)
-  ].join('-')
-}
-
-function generateNoGasOfferId(log) {
-  return [
-    log.networkId,
-    log.contractVersionKey,
-    toNoGasListingID(log.decoded.listingID),
-    log.decoded.offerID
-  ].join('-')
+/* Removes the block number that is appended to listing IDs when they are
+ * returned from @origin/graphql.
+ * @param {String} listingId - listing id as returned from @origin/graphql.
+ *    format is {networkId}-000-{listingId}-{blockNumber}
+ */
+function removeListingIdBlockNumber(listingId) {
+  return listingId
+    .split('-')
+    .splice(0, 3)
+    .join('-')
 }
 
 class MarketplaceEventHandler {
-  constructor(config, origin) {
+  constructor(config, graphqlClient) {
     this.config = config
-    this.origin = origin
+    this.graphqlClient = graphqlClient
   }
 
   /**
-   * Gets details about a listing by calling Origin-js.
+   * Gets details about a listing from @origin/graphql
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, seller: User}>}
+   * @returns {Object} result of GraphQL query
    * @private
    */
-  async _getListingDetails(log, origin, blockInfo) {
-    const listingId = generateListingId(log)
-
-    // Note: Passing blockInfo as an arg to the getListing call ensures that we preserve
-    // listings version history if the listener is re-indexing data.
-    // Otherwise all the listing version rows in the DB would end up with the same data.
-    const listing = await origin.marketplace.getListing(listingId, {
-      blockInfo: blockInfo,
-      loadOffers: true
+  async _getListingDetails(log, blockInfo) {
+    // Note: Passing blockInfo.blockNumber as an arg to the getListing call
+    // ensures that we preserve listings version history if the listener is
+    // re-indexing data. Otherwise all the listing version rows in the DB would
+    // end up with the same data.
+    const result = await this.graphqlClient.query({
+      query: listingQuery,
+      variables: {
+        listingId: listingIdFromLog(log)
+      }
     })
-    checkEventsFreshness(listing.events, blockInfo)
 
-    let seller
-    try {
-      seller = await origin.users.get(listing.seller)
-    } catch (e) {
-      logger.error('Failed to fetch seller', e)
-      // If fetching the seller fails, we still want to index the listing
-    }
-    return {
-      listing: listing,
-      seller: seller
-    }
+    checkEventsFreshness(result.data.marketplace.listing.events, blockInfo)
+
+    return result.data.marketplace
   }
 
   /**
-   * Gets details about an offer by calling Origin-js.
+   * Gets details about an offer by calling @origin/graphql
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
+   * @returns {Object} result of GraphQL query
    * @private
    */
-  async _getOfferDetails(log, origin, blockInfo) {
-    const listingId = generateListingId(log)
-    const offerId = generateOfferId(log)
-
-    // Notes:
-    //  - Passing blockInfo as an arg to the getListing call ensures that we preserve
-    // listings version history if the listener is re-indexing data.
-    // Otherwise all the listing versions in the DB would end up with the same data.
-    //  - BlockInfo is not needed for the call to getOffer since offer data stored in the DB
-    // is not versioned.
-    const listing = await origin.marketplace.getListing(listingId, {
-      blockInfo: blockInfo,
-      loadOffers: true
+  async _getOfferDetails(log, blockInfo) {
+    const result = await this.graphqlClient.query({
+      query: offerQuery,
+      variables: {
+        offerId: log.decoded.offerID,
+        listingId: listingIdFromLog(log)
+      }
     })
-    checkEventsFreshness(listing.events, blockInfo)
 
-    const offer = await origin.marketplace.getOffer(offerId)
-    checkEventsFreshness(offer.events, blockInfo)
+    checkEventsFreshness(
+      result.data.marketplace.offer.listing.events,
+      blockInfo
+    )
 
-    let seller
-    let buyer
-    try {
-      seller = await origin.users.get(listing.seller)
-    } catch (e) {
-      // If fetching the seller fails, we still want to index the listing/offer
-      logger.error('Failed to fetch seller', e)
-    }
-    try {
-      buyer = await origin.users.get(offer.buyer)
-    } catch (e) {
-      // If fetching the buyer fails, we still want to index the listing/offer
-      logger.error('Failed to fetch buyer', e)
-    }
-    return {
-      listing: listing,
-      offer: offer,
-      seller: seller,
-      buyer: buyer
-    }
+    return result.data.marketplace
   }
 
   /**
-   * Gets details about a listing or an offer by calling Origin-js.
+   * Gets details about a listing or an offer by calling @origin/graphql
    * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @returns {Promise<
    *    {listing: Listing, seller: User}|
    *    {listing: Listing, offer: Offer, seller: User, buyer: User}>}
    * @private
    */
-  async _getDetails(log, origin, blockInfo) {
+  async _getDetails(log, blockInfo) {
     if (isListingEvent(log.eventName)) {
-      return this._getListingDetails(log, origin, blockInfo)
+      return this._getListingDetails(log, blockInfo)
     }
     if (isOfferEvent(log.eventName)) {
-      return this._getOfferDetails(log, origin, blockInfo)
+      return this._getOfferDetails(log, blockInfo)
     }
     throw new Error(`Unexpected event ${log.eventName}`)
   }
@@ -188,36 +129,28 @@ class MarketplaceEventHandler {
    * @returns {Promise<void>}
    * @private
    */
-  async _indexListing(log, details) {
+  async _indexListing(log, { listing }) {
     const userAddress = log.decoded.party
     const ipfsHash = log.decoded.ipfsHash
 
-    const listing = details.listing
-    const listingId = listing.id
-
-    // Data consistency: check  listingId from the JSON stored in IPFS
+    // Data consistency: check listingId from the JSON stored in IPFS
     // matches with listingID emitted in the event.
     // TODO: use method utils/id.js:parseListingId
-    // DVF: this should really be handled in origin js - origin.js should throw
-    // an error if this happens.
-    const contractListingId = listingId.split('-')[2]
-    if (
-      contractListingId !== log.decoded.listingID &&
-      contractListingId != toNoGasListingID(log.decoded.listingID)
-    ) {
+    const contractListingId = listing.id.split('-')[2]
+    if (contractListingId !== log.decoded.listingID) {
       throw new Error(
         `ListingId mismatch: ${contractListingId} !== ${log.decoded.listingID}`
       )
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listingId} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
+      id=${listing.id} blockNumber=${log.blockNumber} logIndex=${log.logIndex}`)
     const listingData = {
-      id: listingId,
+      id: removeListingIdBlockNumber(listing.id),
       blockNumber: log.blockNumber,
       logIndex: log.logIndex,
       status: listing.status,
-      sellerAddress: listing.seller.toLowerCase(),
+      sellerAddress: listing.seller.id.toLowerCase(),
       data: listing
     }
     if (log.eventName === 'ListingCreated') {
@@ -228,8 +161,13 @@ class MarketplaceEventHandler {
     await db.Listing.upsert(listingData)
 
     if (this.config.elasticsearch) {
-      logger.info(`Indexing listing in Elastic: id=${listingId}`)
-      search.Listing.index(listingId, userAddress, ipfsHash, listing)
+      logger.info(`Indexing listing in Elastic:  id=${listing.id}`)
+      search.Listing.index(
+        removeListingIdBlockNumber(listing.id),
+        userAddress,
+        ipfsHash,
+        listing
+      )
     }
   }
 
@@ -243,13 +181,14 @@ class MarketplaceEventHandler {
   async _indexOffer(log, details) {
     const listing = details.listing
     const offer = details.offer
+
     logger.info(`Indexing offer in DB: id=${offer.id}`)
     const offerData = {
       id: offer.id,
-      listingId: listing.id,
+      listingId: removeListingIdBlockNumber(listing.id),
       status: offer.status,
-      sellerAddress: listing.seller.toLowerCase(),
-      buyerAddress: offer.buyer.toLowerCase(),
+      sellerAddress: listing.seller.id.toLowerCase(),
+      buyerAddress: offer.buyer.id.toLowerCase(),
       data: offer
     }
     if (log.eventName === 'OfferCreated') {
@@ -274,9 +213,9 @@ class MarketplaceEventHandler {
       case 'ListingCreated':
         await GrowthEvent.insert(
           logger,
-          details.listing.seller.toLowerCase(),
+          details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingCreated,
-          details.listing.id,
+          removeListingIdBlockNumber(details.listing.id),
           { blockInfo },
           log.date
         )
@@ -286,7 +225,7 @@ class MarketplaceEventHandler {
         // a ListingSold event on the seller side.
         await GrowthEvent.insert(
           logger,
-          details.offer.buyer.toLowerCase(),
+          details.offer.buyer.id.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
           details.offer.id,
           { blockInfo },
@@ -294,7 +233,7 @@ class MarketplaceEventHandler {
         )
         await GrowthEvent.insert(
           logger,
-          details.listing.seller.toLowerCase(),
+          details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingSold,
           details.offer.id,
           { blockInfo },
@@ -320,7 +259,7 @@ class MarketplaceEventHandler {
       blockNumber: log.blockNumber,
       logIndex: log.logIndex
     }
-    const details = await this._getDetails(log, this.origin, blockInfo)
+    const details = await this._getDetails(log, blockInfo)
 
     // On both listing and offer event, index the listing.
     // Notes:
@@ -359,91 +298,4 @@ class MarketplaceEventHandler {
   }
 }
 
-class NoGasMarketplaceEventHandler extends MarketplaceEventHandler {
-  /**
-   * Gets details about an offer by calling Origin-js.
-   * @param {Object} log
-   * @param {Object} origin - Instance of origin-js.
-   * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<{listing: Listing, offer: Offer, seller: User, buyer: User}>}
-   * @private
-   */
-  async _getOfferDetails(log, origin, blockInfo) {
-    const listingId = generateNoGasListingId(log)
-    const offerId = generateNoGasOfferId(log)
-
-    const offer = await origin.marketplace.getOffer(offerId)
-
-    checkEventsFreshness(offer.events, blockInfo)
-
-    // TODO: need to load from db to verify that the listingIpfs haven't already been set!!!
-    //const status = web3.utils.toBN(offer.seller) != 0 ? 'pending': 'active'
-    const network = await origin.contractService.web3.eth.net.getId()
-
-    const listing = await origin.marketplace._listingFromData(listingId, {
-      status: 'active',
-      seller: offer.seller,
-      ipfsHash: offer.listingIpfsHash
-    })
-
-    if (
-      generateListingIdFromUnique({
-        version: 'A',
-        network,
-        uniqueId: listing.uniqueId
-      }) != listingId
-    ) {
-      throw new Error(
-        `ListingIpfs and Id mismatch: ${listingId} !== ${
-          listing.creator.listing.createDate
-        }`
-      )
-    }
-
-    if (listing.creator != offer.buyer) {
-      if (listing.creator != offer.seller) {
-        throw new Error(
-          `listing creator ${listing.creator} does not match buyer(${
-            offer.buyer
-          }) or seller(${offer.seller})`
-        )
-      }
-
-      if (
-        !(await origin.marketplace.verifyListingSignature(
-          listing,
-          listing.seller
-        ))
-      ) {
-        throw new Error(
-          `listing signature does not match seller ${listing.seller}.`
-        )
-      }
-    }
-
-    let seller
-    let buyer
-    if (web3.utils.toBN(offer.seller) != 0) {
-      try {
-        seller = await origin.users.get(offer.seller)
-      } catch (e) {
-        // If fetching the seller fails, we still want to index the listing/offer
-        console.log('Failed to fetch seller', e)
-      }
-    }
-    try {
-      buyer = await origin.users.get(offer.buyer)
-    } catch (e) {
-      // If fetching the buyer fails, we still want to index the listing/offer
-      console.log('Failed to fetch buyer', e)
-    }
-    return {
-      listing,
-      offer: offer,
-      seller: seller,
-      buyer: buyer
-    }
-  }
-}
-
-module.exports = { MarketplaceEventHandler, NoGasMarketplaceEventHandler }
+module.exports = MarketplaceEventHandler
