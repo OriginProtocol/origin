@@ -102,16 +102,16 @@ class Listing {
   ) {
     const esQuery = {
       bool: {
-        must: [
+        must: [],
+        must_not: [
           {
             match: {
-              status: 'active'
+              status: 'withdrawn'
             }
           }
         ],
         should: [],
-        filter: [],
-        must_not: []
+        filter: []
       }
     }
 
