@@ -472,7 +472,7 @@ function withEnrolmentModal(WrappedComponent) {
 
   // do not pass staticContext prop to component to prevent react errors in browser console
   // eslint-disable-next-line no-unused-vars
-  return withRouter(({ staticContext, ...props }) => (
+  return withRouter(({ staticContext, location, match, ...props }) => (
     <WithEnrolmentModal {...props} />
   ))
 }
