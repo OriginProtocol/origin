@@ -2,7 +2,7 @@ require('dotenv').config()
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  console.error('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const path = require('path')
@@ -25,7 +25,7 @@ const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
 const dappOfferUrl = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
-  console.log(
+  console.warn(
     'Warning: VAPID public or private key not defined, generating one'
   )
   const vapidKeys = webpush.generateVAPIDKeys()
@@ -138,14 +138,14 @@ app.post('/events', async (req, res) => {
   //res.sendStatus(200)
 
   if (!listing || (!seller.address && !buyer.address)) {
-    console.log(`Error: Missing data. Skipping ${eventDetails}`)
+    console.error(`Error: Missing data. Skipping ${eventDetails}`)
     return
   }
 
   // ETH address of the party who initiated the action.
   // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
   if (!decoded.party) {
-    console.log(`Error: Invalid part, skipping ${eventDetails}`)
+    console.error(`Error: Invalid part, skipping ${eventDetails}`)
     return
   }
 
@@ -154,7 +154,7 @@ app.post('/events', async (req, res) => {
   const sellerAddress = seller.address ? seller.address.toLowerCase() : null
 
   if (!processableEvent(eventName)) {
-    console.log(`Info: Not a processable event. Skipping ${eventDetails}`)
+    console.warn(`Info: Not a processable event. Skipping ${eventDetails}`)
     return
   }
 
@@ -202,7 +202,7 @@ app.post('/events', async (req, res) => {
           body: JSON.stringify({ receivers, token: linkingNotifyToken })
         })
       } catch (error) {
-        console.log('Error notifying linking api ', error)
+        console.error('Error notifying linking api ', error)
       }
     }
   }
@@ -263,12 +263,12 @@ app.post('/events', async (req, res) => {
         if (e.statusCode === 410) {
           s.destroy()
         } else {
-          console.log(e)
+          console.error(e)
         }
       }
     })
 })
 
 app.listen(port, () =>
-  console.log(`Notifications server listening on port ${port}!`)
+  console.log(`Notifications server listening on port ${port}`)
 )
