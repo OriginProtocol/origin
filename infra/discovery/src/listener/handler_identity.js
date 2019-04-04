@@ -2,10 +2,11 @@ const Web3 = require('web3')
 const logger = require('./logger')
 
 const { bytes32ToIpfsHash } = require('./utils')
-const _bridgeModels = require('@origin/bridge/src/models')
-const _identityModels = require('@origin/identity/src/models')
-const _discoveryModels = require('../models')
-const db = { ..._bridgeModels, ..._discoveryModels, ..._identityModels }
+const db = {
+  ...require('@origin/bridge/src/models'),
+  ...require('@origin/identity/src/models'),
+  ...require('../models')
+}
 const identityQuery = require('./queries/Identity')
 
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
@@ -20,7 +21,31 @@ class IdentityEventHandler {
     this.graphqlClient = graphqlClient
   }
 
-  /* Get deteails about an account from @origin/graphql
+  /*
+   *
+   */
+  _getAttestationService(attestation) {
+    if (attestation.data.attestation.site) {
+      const siteName = attestation.data.attestation.site.siteName
+      if (siteName === 'facebook.com') {
+        return 'facebook'
+      } else if (siteName === 'twitter.com') {
+        return 'twitter'
+      } else if (siteName === 'airbnb.com') {
+        return 'airbnb'
+      } else {
+        logger.error(`Unexpected siteName for attestation ${attestation}`)
+      }
+    } else if (attestation.data.attestation.phone) {
+      return 'phone'
+    } else if (attestation.data.attestation.email) {
+      return 'email'
+    } else {
+      logger.error(`Failed extracting service from attestation ${attestation}`)
+    }
+  }
+
+  /* Get details about an account from @origin/graphql
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query
    * @private
@@ -60,7 +85,11 @@ class IdentityEventHandler {
       order: [['id', 'DESC']],
       limit: 1
     })
-    return attestation ? attestation.value : null
+    if (!attestation) {
+      logger.warn(`Could not find ${method} attestation for ${ethAddress}`)
+      return null
+    }
+    return attestation.value
   }
 
   /**
@@ -73,11 +102,8 @@ class IdentityEventHandler {
     const decoratedIdentity = Object.assign({}, identity)
     await Promise.all(
       decoratedIdentity.attestations.map(async attestationJson => {
-        // TODO: Clean this up
         const attestation = JSON.parse(attestationJson)
-        const attestationService = Object.keys(
-          attestation.data.attestation.verificationMethod
-        )[0]
+        const attestationService = this._getAttestationService(attestation)
         switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
@@ -192,9 +218,7 @@ class IdentityEventHandler {
       identity.attestations.map(attestationJson => {
         // TODO: Clean this up
         const attestation = JSON.parse(attestationJson)
-        const attestationService = Object.keys(
-          attestation.data.attestation.verificationMethod
-        )[0]
+        const attestationService = this._getAttestationService(attestation)
         const eventType = AttestationServiceToEventType[attestationService]
         if (!eventType) {
           logger.error(
