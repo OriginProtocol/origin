@@ -231,5 +231,12 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  return { getPastEvents, listings, offers, allEvents, updateBlock, getBlockNumber }
+  return {
+    getPastEvents,
+    listings,
+    offers,
+    allEvents,
+    updateBlock,
+    getBlockNumber
+  }
 }
