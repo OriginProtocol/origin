@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 try {
   require('envkey')
 } catch (error) {
@@ -73,7 +74,7 @@ app.use(bodyParser.json({ limit: '10mb' }))
  * For development purposes only. Disabled in production.
  */
 app.get('/', async (req, res) => {
-  let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
+  let markup = `<h1>Origin Notifications v${process.env.npm_package_version}</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
   try {
     if (app.get('env') === 'development') {
