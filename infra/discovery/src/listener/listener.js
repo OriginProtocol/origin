@@ -137,7 +137,7 @@ async function main() {
       const newEvents = events.filter(event => event.blockNumber >= lastProcessedBlock)
       logger.debug(`Got ${newEvents.length} new events`)
       // Process each new event
-      newEvents.map(newEvent => handleEvent(newEvent, context))
+      newEvents.map(async newEvent => await handleEvent(newEvent, context))
 
       // Record state of processing
       logger.debug(`Updating last processed block to ${toBlock}`)

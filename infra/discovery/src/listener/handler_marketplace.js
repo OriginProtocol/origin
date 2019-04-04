@@ -36,6 +36,10 @@ function getOriginListingId(networkId, event) {
   return `${networkId}-000-${event.returnValues.listingID}-${event.blockNumber}`
 }
 
+function getOriginOfferId(networkId, event) {
+  return `${networkId}-000-${event.returnValues.listingID}-${event.returnValues.offerID}`
+}
+
 /* Removes the block number that is appended to listing IDs when they are
  * returned from @origin/graphql.
  * @param {String} listingId - listing id as returned from @origin/graphql.
@@ -84,7 +88,7 @@ class MarketplaceEventHandler {
     const result = await this.graphqlClient.query({
       query: offerQuery,
       variables: {
-        offerId: event.returnValues.offerID,
+        offerId: getOriginOfferId(this.config.networkId, event),
         listingId: getOriginListingId(this.config.networkId, event)
       }
     })
@@ -103,11 +107,11 @@ class MarketplaceEventHandler {
   async _getDetails(block, event) {
     if (isListingEvent(event.event)) {
       return this._getListingDetails(block, event)
-    }
-    if (isOfferEvent(event.event)) {
+    } else if (isOfferEvent(event.event)) {
       return this._getOfferDetails(block, event)
+    } else {
+      throw new Error(`Unexpected event ${event.event}`)
     }
-    throw new Error(`Unexpected event ${event.event}`)
   }
 
   /**

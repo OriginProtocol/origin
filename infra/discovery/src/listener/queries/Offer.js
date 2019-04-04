@@ -1,5 +1,4 @@
 const gql = require('graphql-tag')
-
 const fragments = require('./Fragments')
 
 module.exports = gql`
