@@ -2,10 +2,7 @@ const chai = require('chai')
 
 const fs = require('fs')
 const db = require('../src/models')
-const {
-  getLastBlock,
-  setLastBlock
-} = require('../src/listener/utils')
+const { getLastBlock, setLastBlock } = require('../src/listener/utils')
 
 const expect = chai.expect
 
