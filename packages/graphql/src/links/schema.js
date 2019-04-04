@@ -26,7 +26,7 @@ const authLink = setContext((queryInfo, { headers }) => {
     headers: {
       ...headers,
       'X-Growth-secret': '8a5B83C0f22cB1',
-      'X-Growth-wallet': '0x8F99230434E14BD2D3C7e63c0e26F96f3Dd45e38'
+      'X-Growth-wallet': '0x8f99230434e14bd2d3c7e63c0e26f96f3dd45e38'
     }
   }
 
