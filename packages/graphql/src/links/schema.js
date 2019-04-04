@@ -6,7 +6,7 @@ import {
   addMockFunctionsToSchema
 } from 'graphql-tools'
 
-import fetch from 'node-fetch'
+import fetch from 'cross-fetch'
 import typeDefs from '../typeDefs/index'
 import resolvers from '../resolvers/index'
 import growthTypeDefs from '../typeDefs/Growth'
