@@ -74,7 +74,9 @@ app.use(bodyParser.json({ limit: '10mb' }))
  * For development purposes only. Disabled in production.
  */
 app.get('/', async (req, res) => {
-  let markup = `<h1>Origin Notifications v${process.env.npm_package_version}</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
+  let markup =
+    `<h1>Origin Notifications v${process.env.npm_package_version}</h1>` +
+    `<p><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></p>`
 
   try {
     if (app.get('env') === 'development') {
@@ -88,7 +90,7 @@ app.get('/', async (req, res) => {
       )}</ul>`
     }
   } catch (error) {
-    markup += `<p>Could not get subscriptions. Is DATABASE_URL env var set?</p><p>Error returned was:</p><pre>${error}</pre>`
+    markup += `<p>Could not get subscriptions. Is postgres running and DATABASE_URL env var set?</p><p>Error returned was:</p><pre>${error}</pre>`
   }
 
   res.send(markup)
@@ -132,6 +134,7 @@ app.post('/', async (req, res) => {
  * origin/devops/cloud-functions/gcf-pin-ipfs-hash/fixtures/listing-log.json
  */
 app.post('/events', async (req, res) => {
+  console.log(req.body)
   const { log = {}, related = {} } = req.body
   const { decoded = {}, eventName } = log
   const { buyer = {}, listing, offer, seller = {} } = related
@@ -276,6 +279,4 @@ app.post('/events', async (req, res) => {
     })
 })
 
-app.listen(port, () =>
-  console.log(`Notifications server listening at ${port}`)
-)
+app.listen(port, () => console.log(`Notifications server listening at ${port}`))
