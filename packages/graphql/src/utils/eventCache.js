@@ -81,9 +81,11 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
       }
       if (ipfsData && ipfsData.events) {
         debug('Got IPFS cache')
+        // console.log(ipfsData)
         events = ipfsData.events
         lastLookup = ipfsData.lastLookup
         fromBlock = ipfsData.lastLookup
+        // ({ events, lastLookup } = ipfsData)
       } else {
         debug('Error getting IPFS cache')
       }
@@ -127,9 +129,10 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
         lastLookup,
         events
       })
-    }
 
-    return events
+      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
+      // console.log('IPFS Hash', hash)
+    }
   }
 
   // offerIds an optional array in the format ['0-1', '1-2'] (listingId-offerId)
@@ -231,12 +234,5 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
     })
   }
 
-  return {
-    getPastEvents,
-    listings,
-    offers,
-    allEvents,
-    updateBlock,
-    getBlockNumber
-  }
+  return { listings, offers, allEvents, updateBlock, getBlockNumber }
 }

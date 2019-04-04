@@ -114,9 +114,10 @@ export default function eventCache(
         lastLookup,
         events
       })
-    }
 
-    return events
+      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
+      // console.log('IPFS Hash', hash)
+    }
   }
 
   async function allEvents(eventNames, filterTopics = []) {
@@ -142,5 +143,5 @@ export default function eventCache(
     return filteredEvents
   }
 
-  return { getPastEvents, allEvents, updateBlock, getBlockNumber }
+  return { allEvents, updateBlock, getBlockNumber }
 }

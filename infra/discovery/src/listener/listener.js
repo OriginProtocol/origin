@@ -146,23 +146,29 @@ async function main() {
         return scheduleNextCheck()
       }
       blockGauge.set(currentBlock)
+
+      contractsContext.marketplace.eventCache.updateBlock(currentBlock)
+      contractsContext.identityEvents.eventCache.updateBlock(currentBlock)
+
       const fromBlock = lastProcessedBlock + 1
       // Respect the trailBlocks option
       const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
       logger.debug(`Querying events from ${fromBlock} to ${toBlock}`)
-      const newEventArrays = await Promise.all([
-        contractsContext.marketplace.eventCache.getPastEvents(
-          fromBlock,
-          toBlock
-        ),
-        contractsContext.identityEvents.eventCache.getPastEvents(
-          fromBlock,
-          toBlock
-        )
+
+      // Retrieve all events for the relevant contracts
+      const eventArrays = await Promise.all([
+        contractsContext.marketplace.eventCache.allEvents(),
+        contractsContext.identityEvents.eventCache.allEvents()
       ])
+
       // Flatten array of arrays filtering out anything undefined
-      const newEvents = [].concat(...newEventArrays.filter(x => x))
-      newEvents.map(event => handleEvent(event, context))
+      const events = [].concat(...eventArrays.filter(x => x))
+      events
+        // Filter to only new events
+        .filter(event => event.blockNumber >= lastProcessedBlock)
+        // Process each new event
+        .map(newEvent => handleEvent(newEvent, context))
+
       // Record state of processing
       logger.debug(`Updating last processed block to ${toBlock}`)
       await setLastBlock(context.config, toBlock)
