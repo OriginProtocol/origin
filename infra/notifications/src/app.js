@@ -75,15 +75,19 @@ app.use(bodyParser.json({ limit: '10mb' }))
 app.get('/', async (req, res) => {
   let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
 
-  if (app.get('env') === 'development') {
-    const subs = await PushSubscription.findAll()
+  try {
+    if (app.get('env') === 'development') {
+      const subs = await PushSubscription.findAll()
 
-    markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
-      s =>
-        `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(
-          s
-        )}</pre></li>`
-    )}</ul>`
+      markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
+        s =>
+          `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(
+            s
+          )}</pre></li>`
+      )}</ul>`
+    }
+  } catch (error) {
+    markup += `<p>Could not get subscriptions. Is DATABASE_URL env var set?</p><p>Error returned was:</p><pre>${error}</pre>`
   }
 
   res.send(markup)
@@ -123,6 +127,8 @@ app.post('/', async (req, res) => {
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
+ * Sample json payload at:
+ * origin/devops/cloud-functions/gcf-pin-ipfs-hash/fixtures/listing-log.json
  */
 app.post('/events', async (req, res) => {
   const { log = {}, related = {} } = req.body
@@ -270,5 +276,5 @@ app.post('/events', async (req, res) => {
 })
 
 app.listen(port, () =>
-  console.log(`Notifications server listening on port ${port}`)
+  console.log(`Notifications server listening at ${port}`)
 )
