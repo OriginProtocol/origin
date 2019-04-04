@@ -50,7 +50,7 @@ export default function eventCache(
 
   const isDone = () => new Promise(resolve => queue.push(resolve))
 
-  async function getPastEvents(fromBlock, toBlock) {
+  async function getPastEvents() {
     if (processing) {
       await isDone()
     }
@@ -142,5 +142,5 @@ export default function eventCache(
     return filteredEvents
   }
 
-  return { getPastEvents, allEvents, updateBlock, getBlockNumber }
+  return { gettPastEvents, allEvents, updateBlock, getBlockNumber }
 }

@@ -66,7 +66,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
 
   const isDone = () => new Promise(resolve => queue.push(resolve))
 
-  async function getPastEvents(fromBlock, toBlock) {
+  async function getPastEvents() {
     if (processing) {
       await isDone()
     }
@@ -83,13 +83,7 @@ export default function eventCache(contract, fromBlock = 0, web3, config) {
         debug('Got IPFS cache')
         events = ipfsData.events
         lastLookup = ipfsData.lastLookup
-        if (fromBlock && fromBlock < ipfsData.lastLookup) {
-          // IPFS cache contains events passed the fromBlock argument, so we
-          // only need to continue from where the IPFS cache is up to. If the
-          // passed fromBlock is ahead of this we aren't interested in the old
-          // events anyway.
-          fromBlock = ipfsData.lastLookup
-        }
+        fromBlock = ipfsData.lastLookup
       } else {
         debug('Error getting IPFS cache')
       }
