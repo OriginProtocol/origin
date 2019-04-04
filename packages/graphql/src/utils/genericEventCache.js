@@ -142,5 +142,5 @@ export default function eventCache(
     return filteredEvents
   }
 
-  return { gettPastEvents, allEvents, updateBlock, getBlockNumber }
+  return { getPastEvents, allEvents, updateBlock, getBlockNumber }
 }
