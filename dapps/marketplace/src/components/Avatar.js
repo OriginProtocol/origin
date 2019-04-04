@@ -1,13 +1,13 @@
 import React from 'react'
 
-const Avatar = ({ size, avatar, className }) => {
+const Avatar = ({ size, avatar, className, emptyClass='empty' }) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }
   }
 
   if (!avatar) {
-    props.className += ' empty'
+    props.className += ` ${emptyClass}`
   } else {
     props.style.backgroundImage = `url(${avatar})`
   }
@@ -37,6 +37,8 @@ require('react-styl')(`
       &.dark
         background: var(--dark-two) url(images/avatar-unnamed.svg) no-repeat center bottom;
         background-size: 63%
+    &.camera
+      background: var(--dark-two) url(images/camera-icon.svg) no-repeat center;
     &.with-cam::after
       content: ""
       width: 2rem

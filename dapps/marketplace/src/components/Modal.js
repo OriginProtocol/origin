@@ -61,7 +61,7 @@ export default class Modal extends Component {
             this.state.active ? ' is-active' : ''
           }`}
         />
-        <div className="pl-modal" onMouseDown={e => this.onClose(e)}>
+        <div className={`${this.props.className} pl-modal`} onMouseDown={e => this.onClose(e)}>
           <div className="pl-modal-table">
             <div
               className={`pl-modal-cell ${this.state.anim}${

@@ -161,7 +161,7 @@ class ProfileWizzard extends Component {
               <fbt desc="ProfileWizzard.poweredBy">
                 Powered by
               </fbt>
-              <img className="ml-2 mr-3" src="images/origin-logo-footer.svg" />
+              <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
             </div>
           </div>
         </div>}

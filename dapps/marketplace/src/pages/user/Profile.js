@@ -125,9 +125,7 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <ImageCropper onChange={avatar => this.setState({ avatar })}>
-                  <Avatar className="with-cam" avatar={this.state.avatar} />
-                </ImageCropper>
+                <Avatar avatar={this.state.avatar} />
               </div>
               <div className="info">
                 <a
@@ -243,10 +241,12 @@ class UserProfile extends Component {
               'description',
               'avatar'
             ])}
+            avatar={this.state.avatar}
             onClose={() => this.setState({ editProfile: false })}
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
+            avatarupdate={(avatar) => this.setState({ avatar })}
           />
         )}
       </div>
