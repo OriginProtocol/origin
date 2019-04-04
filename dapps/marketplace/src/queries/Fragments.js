@@ -196,7 +196,7 @@ export default {
             }
             invites {
               nodes {
-                id
+                pendingId
                 status
                 walletAddress
                 contact
