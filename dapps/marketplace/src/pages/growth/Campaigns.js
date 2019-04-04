@@ -344,6 +344,11 @@ class GrowthCampaigns extends Component {
                       // do not cache, so user does not need to refresh page when an
                       // action is completed
                       fetchPolicy="network-only"
+                      context={{
+                        headers: {
+                          test: 1
+                        }
+                      }}
                     >
                       {({ error, data, networkStatus, loading }) => {
                         if (networkStatus === 1 || loading) {
