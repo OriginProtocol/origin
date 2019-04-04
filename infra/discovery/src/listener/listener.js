@@ -17,6 +17,7 @@ try {
 }
 
 const Web3 = require('web3')
+const pLimit = require('p-limit')
 const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
@@ -138,10 +139,16 @@ async function main() {
         event => event.blockNumber >= lastProcessedBlock
       )
       logger.debug(`Got ${newEvents.length} new events`)
-      // Process each new event
-      for (event of newEvents) {
-        await handleEvent(event, context)
-      }
+
+      const concurrency = 50
+      const limit = pLimit(concurrency)
+
+      let promises = []
+      newEvents.forEach(newEvent => {
+        promises.push(limit(() => handleEvent(newEvent, context)))
+      })
+
+      await Promise.all(promises)
 
       // Record state of processing
       logger.debug(`Updating last processed block to ${toBlock}`)
