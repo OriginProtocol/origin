@@ -5,24 +5,18 @@ class Money {
     if (values === null || values.length === 0) {
       return { amount: '0', currency }
     }
-    values = values.map(reward => reward.value)
-
-    const total = values.reduce((first, second) => {
-      if (first.currency !== second.currency)
-        throw new Error(
-          `At least two values have different currencies. ${first.currency} ${
-            second.currency
-          }`
-        )
-      return {
-        amount: BigNumber(first.amount).plus(BigNumber(second.amount)),
-        currency: first.currency
+    let total = BigNumber(0)
+    for (const value of values) {
+      console.log('ADDING ', value)
+      if (value.currency !== currency) {
+        throw new Error(`unexpect currency ${value.currency}`)
       }
-    })
+      total = total.plus(BigNumber(value.amount))
+    }
 
     return {
-      amount: total.amount.toString(),
-      currency: total.currency
+      amount: total.toFixed(),
+      currency: currency
     }
   }
 }
