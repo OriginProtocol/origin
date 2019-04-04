@@ -7,7 +7,6 @@ class Money {
     }
     let total = BigNumber(0)
     for (const value of values) {
-      console.log('ADDING ', value)
       if (value.currency !== currency) {
         throw new Error(`unexpect currency ${value.currency}`)
       }
