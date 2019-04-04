@@ -4,8 +4,7 @@ const fs = require('fs')
 const db = require('../src/models')
 const {
   getLastBlock,
-  setLastBlock,
-  checkEventsFreshness
+  setLastBlock
 } = require('../src/listener/utils')
 
 const expect = chai.expect
@@ -61,29 +60,5 @@ describe('get/setLastBlock with DB', () => {
     }
     const block = await getLastBlock(config)
     expect(block).to.equal(987)
-  })
-})
-
-describe('checkEventsFreshness', () => {
-  it(`Should not throw`, () => {
-    const blockInfo = {
-      blockNumber: 1,
-      logIndex: 1
-    }
-
-    let events = [{ blockNumber: 2, logIndex: 1 }]
-    expect(() => checkEventsFreshness(events, blockInfo)).to.not.throw()
-
-    events = [{ blockNumber: 1, logIndex: 1 }]
-    expect(() => checkEventsFreshness(events, blockInfo)).to.not.throw()
-  })
-
-  it(`Should throw`, () => {
-    const events = []
-    const blockInfo = {
-      blockNumber: 1,
-      logIndex: 1
-    }
-    expect(() => checkEventsFreshness(events, blockInfo)).to.throw()
   })
 })
