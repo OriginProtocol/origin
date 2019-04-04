@@ -62,13 +62,13 @@ async function setLastBlock(config, blockNumber) {
  * @param {{blockNumber: number, logIndex: number}} blockInfo
  * @throws {Error} If freshness check fails
  */
-function checkEventsFreshness(events, blockInfo) {
+function checkEventsFreshness(events, event) {
   // Find at least 1 event that is as fresh as blockInfo.
   const fresh = events.some(event => {
     return (
-      event.blockNumber > blockInfo.blockNumber ||
-      (event.blockNumber === blockInfo.blockNumber &&
-        event.logIndex >= blockInfo.logIndex)
+      event.blockNumber > event.blockNumber ||
+      (event.blockNumber === event.blockNumber &&
+        event.logIndex >= event.logIndex)
     )
   })
   if (!fresh) {

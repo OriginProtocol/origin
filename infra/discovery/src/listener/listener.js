@@ -23,64 +23,12 @@ const Web3 = require('web3')
 const esmImport = require('esm')(module)
 const graphqlClient = esmImport('@origin/graphql').default
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
-const { newBlock, setNetwork } = esmImport('@origin/graphql/src/contracts')
+const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
-const { handleLog, EVENT_TO_HANDLER_MAP } = require('./handler')
+const { handleEvent } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
 const MAX_BATCH_BLOCKS = 3000 // Adjust as needed as Origin gets more popular
-
-setNetwork(process.env.NETWORK || 'docker')
-
-/**
- * Builds a lookup object that allows you to start from an ETH event signature,
- * and find out what contract and what event fired it. Each event also includes a
- * list of our javascript event handler functions we want to fire for that log.
- * @example
- * buildSignatureToRules()
- *  { '0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c':
- *      { contractName: 'Marketplace',
- *        eventName: 'ListingCreated',
- *        eventAbi: [Object],
- *        handler: [...] } },
- *    '0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0':
- *      { contractName: 'Marketplace',
- *        eventName: 'ListingUpdated',
- *        eventAbi: [Object],
- *        handler: [...] } }
- *  }
- */
-function buildSignatureToRules(config) {
-  const signatureLookup = {}
-
-  for (const contractName in EVENT_TO_HANDLER_MAP) {
-    const eventHandlers = EVENT_TO_HANDLER_MAP[contractName]
-    const contract = contractsContext[contractName]
-    if (contract === undefined) {
-      throw Error("Can't find contract " + contractName)
-    }
-
-    const events = contract._jsonInterface.filter(x => x.type === 'event')
-    events.forEach(eventAbi => {
-      const handlerClass = eventHandlers[eventAbi.name]
-      if (handlerClass === undefined) {
-        return
-      }
-
-      // Instantiate a handler for this event type
-      const handler = new handlerClass(config, graphqlClient)
-
-      signatureLookup[eventAbi.signature] = {
-        contractName,
-        eventName: eventAbi.name,
-        eventAbi,
-        handler
-      }
-    })
-  }
-
-  return signatureLookup
-}
 
 /**
  * Helper class passed to logic methods containing config and shared resources.
@@ -89,107 +37,17 @@ class Context {
   constructor() {
     this.config = undefined
     this.web3 = undefined
-    this.signatureToRules = undefined
     this.networkId = undefined
   }
 
   async init(config, errorCounter) {
-    this.config = config
-    this.errorCounter = errorCounter
-
     const web3Provider = new Web3.providers.HttpProvider(config.providerUrl)
     this.web3 = new Web3(web3Provider)
-    this.networkId = await this.web3.eth.net.getId()
-    this.signatureToRules = buildSignatureToRules(config)
+    this.config = config
+    this.config.networkId = await this.web3.eth.net.getId()
+    this.errorCounter = errorCounter
     return this
   }
-}
-
-/**
- * runBatch - gets and processes logs for a range of blocks
- */
-async function runBatch(opts, context) {
-  const fromBlock = opts.fromBlock
-  const toBlock = opts.toBlock
-  let lastLogBlock
-
-  // Make sure the @origin/graphql event caches are updated for the markateplace
-  // and identity contracts
-  for (let i = fromBlock; i <= toBlock; i++) {
-    const blockHeaders = await context.web3.eth.getBlock(i)
-    newBlock(blockHeaders)
-  }
-
-  logger.info(
-    `Looking for logs from block ${fromBlock} to ${toBlock || 'Latest'}`
-  )
-
-  const eventTopics = Object.keys(context.signatureToRules)
-  const logs = await context.web3.eth.getPastLogs({
-    fromBlock: context.web3.utils.toHex(fromBlock), // Hex required for infura
-    toBlock: toBlock ? context.web3.utils.toHex(toBlock) : 'latest', // Hex required for infura
-    topics: [eventTopics]
-  })
-
-  if (logs.length > 0) {
-    logger.info(`${logs.length} logs found`)
-  }
-
-  for (const log of logs) {
-    const rule = context.signatureToRules[log.topics[0]]
-    if (rule === undefined) {
-      continue // Skip - No handler defined
-    }
-    lastLogBlock = log.blockNumber
-    // Process it
-    await handleLog(log, rule, context)
-  }
-  return lastLogBlock
-}
-
-/**
- *  liveTracking
- *  - checks for a new block every checkIntervalSeconds
- *  - if new block appeared, look for all events after the last found event
- */
-async function liveTracking(context) {
-  let lastLogBlock = await getLastBlock(context.config)
-  let lastCheckedBlock = 0
-  const checkIntervalSeconds = 5
-  let start
-
-  const check = async () => {
-    await withRetrys(async () => {
-      start = new Date()
-      const currentBlockNumber = await context.web3.eth.getBlockNumber()
-      if (currentBlockNumber === lastCheckedBlock) {
-        logger.debug('No new block.')
-        return scheduleNextCheck()
-      }
-      logger.info(`New block: ${currentBlockNumber}`)
-      blockGauge.set(currentBlockNumber)
-      const toBlock = Math.min(
-        // Pick the smallest of either
-        // the last log we processed, plus the max batch size
-        lastLogBlock + MAX_BATCH_BLOCKS,
-        // or the current block number, minus any trailing blocks we waiting on
-        Math.max(currentBlockNumber - context.config.trailBlocks, 0)
-      )
-      const opts = { fromBlock: lastLogBlock + 1, toBlock: toBlock }
-      await runBatch(opts, context)
-      lastLogBlock = toBlock
-      await setLastBlock(context.config, toBlock)
-      lastCheckedBlock = currentBlockNumber
-      return scheduleNextCheck()
-    })
-  }
-  const scheduleNextCheck = async () => {
-    const elapsed = new Date() - start
-    const delay = Math.max(checkIntervalSeconds * 1000 - elapsed, 1)
-    setTimeout(check, delay)
-  }
-
-  check()
 }
 
 // ---------------------------
@@ -238,10 +96,13 @@ const config = {
     args['--provider-url'] ||
     process.env.PROVIDER_URL ||
     'http://localhost:8545',
+  network: args['--network'] || process.env.NETWORK || 'docker',
   blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
   // Default continue block.
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
+
+setNetwork(config.network)
 
 const port = 9499
 
@@ -269,12 +130,46 @@ const errorCounter = new bundle.promClient.Counter({
 })
 
 /**
- * Creates runtime context and starts the live tracking engine.
+ * Creates runtime context and starts the tracking loop
  * @return {Promise<void>}
  */
 async function main() {
   const context = await new Context().init(config, errorCounter)
-  liveTracking(context)
+
+  let currentBlock = await context.web3.eth.getBlockNumber()
+  let lastProcessedBlock = await getLastBlock(context.config)
+  let fromBlock = lastProcessedBlock + 1
+  // Respect the trailBlocks option
+  let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
+
+  const checkIntervalSeconds = 5
+  let start
+
+  const check = async () => {
+    await withRetrys(async () => {
+      start = new Date()
+      const newEventArrays = await Promise.all([
+        contractsContext.marketplace.eventCache.getPastEvents(fromBlock, toBlock),
+        contractsContext.identityEvents.eventCache.getPastEvents(fromBlock, toBlock)
+      ])
+      // Flatten array of arrays filtering out anything undefined
+      const newEvents = [].concat(...newEventArrays.filter(x => x))
+      newEvents.map(event => handleEvent(event, context))
+      // Record state of processing
+      lastLogBlock = toBlock
+      await setLastBlock(context.config, toBlock)
+      lastProcessedBlock = currentBlock
+      return scheduleNextCheck()
+    })
+  }
+
+  const scheduleNextCheck = async () => {
+    const elapsed = new Date() - start
+    const delay = Math.max(checkIntervalSeconds * 1000 - elapsed, 1)
+    setTimeout(check, delay)
+  }
+
+  check()
 }
 
 app.listen({ port: port }, () => {
