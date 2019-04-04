@@ -143,7 +143,7 @@ async function main() {
       const concurrency = 50
       const limit = pLimit(concurrency)
 
-      let promises = []
+      const promises = []
       newEvents.forEach(newEvent => {
         promises.push(limit(() => handleEvent(newEvent, context)))
       })
