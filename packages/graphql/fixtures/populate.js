@@ -40,7 +40,7 @@ function transactionConfirmed(hash, gqlClient) {
         const t = result.data.transactionUpdated
         if (t.id === hash && t.status === 'receipt') {
           sub.unsubscribe()
-          const result = await web3.eth.getTransactionReceipt(hash)
+          const result = await web3.eth.getTransactionReceipt(hash) // eslint-disable-line
           resolve(result)
         }
       }
@@ -67,7 +67,7 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
   const accounts = mnemonicToAccounts()
   await mutate(ImportWalletsMutation, null, { accounts })
   const [Admin, Seller, Buyer, Arbitrator, Affiliate] = accounts.map(
-    account => web3.eth.accounts.privateKeyToAccount(account.privateKey).address
+    account => web3.eth.accounts.privateKeyToAccount(account.privateKey).address // eslint-disable-line
   )
 
   await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
