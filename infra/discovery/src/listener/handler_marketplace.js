@@ -93,10 +93,7 @@ class MarketplaceEventHandler {
       }
     })
 
-    checkEventsFreshness(
-      result.data.marketplace.offer.listing.events,
-      event
-    )
+    checkEventsFreshness(result.data.marketplace.offer.listing.events, event)
 
     return result.data.marketplace
   }
@@ -138,12 +135,16 @@ class MarketplaceEventHandler {
     const contractListingId = listing.id.split('-')[2]
     if (contractListingId !== event.returnValues.listingID) {
       throw new Error(
-        `ListingId mismatch: ${contractListingId} !== ${event.returnValues.listingID}`
+        `ListingId mismatch: ${contractListingId} !== ${
+          event.returnValues.listingID
+        }`
       )
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listing.id} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`)
+      id=${listing.id} blockNumber=${event.blockNumber} logIndex=${
+      event.logIndex
+    }`)
 
     const listingData = {
       id: removeListingIdBlockNumber(listing.id),
@@ -265,7 +266,6 @@ class MarketplaceEventHandler {
     }
 
     const details = await this._getDetails(block, event)
-
 
     // On both listing and offer event, index the listing.
     // Notes:

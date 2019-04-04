@@ -135,28 +135,39 @@ const errorCounter = new bundle.promClient.Counter({
  */
 async function main() {
   const context = await new Context().init(config, errorCounter)
-
-  let currentBlock = await context.web3.eth.getBlockNumber()
   let lastProcessedBlock = await getLastBlock(context.config)
-  let fromBlock = lastProcessedBlock + 1
-  // Respect the trailBlocks option
-  let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
-
+  logger.info(`Resuming processing from ${lastProcessedBlock}`)
   const checkIntervalSeconds = 5
   let start
 
   const check = async () => {
     await withRetrys(async () => {
       start = new Date()
+      let currentBlock = await context.web3.eth.getBlockNumber()
+      if (currentBlock === lastProcessedBlock) {
+        logger.debug('No new blocks to process')
+        return scheduleNextCheck()
+      }
+      let fromBlock = lastProcessedBlock + 1
+      // Respect the trailBlocks option
+      let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
+      logger.debug(`Querying events from ${fromBlock} to ${toBlock}`)
       const newEventArrays = await Promise.all([
-        contractsContext.marketplace.eventCache.getPastEvents(fromBlock, toBlock),
-        contractsContext.identityEvents.eventCache.getPastEvents(fromBlock, toBlock)
+        contractsContext.marketplace.eventCache.getPastEvents(
+          fromBlock,
+          toBlock
+        ),
+        contractsContext.identityEvents.eventCache.getPastEvents(
+          fromBlock,
+          toBlock
+        )
       ])
       // Flatten array of arrays filtering out anything undefined
       const newEvents = [].concat(...newEventArrays.filter(x => x))
       newEvents.map(event => handleEvent(event, context))
       // Record state of processing
       lastLogBlock = toBlock
+      logger.debug(`Updating last processed block to ${toBlock}`)
       await setLastBlock(context.config, toBlock)
       lastProcessedBlock = currentBlock
       return scheduleNextCheck()

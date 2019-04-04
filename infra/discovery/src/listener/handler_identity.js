@@ -217,15 +217,16 @@ class IdentityEventHandler {
 
   /**
    * Main entry point for the identity event handler.
-   * @param {Object} log
+   * @param {Object} block
+   * @param {Object} event
    * @returns {Promise<{user: User}>}
    */
-  async process(log) {
+  async process(block, event) {
     if (!this.config.identity) {
       return null
     }
 
-    const account = log.decoded.account
+    const account = event.returnValues.account
 
     logger.info(`Processing Identity event for account ${account}`)
 
@@ -236,20 +237,21 @@ class IdentityEventHandler {
       identity.avatar = identity.avatar.slice(0, 32) + '...'
     }
 
-    if (log.decoded.ipfsHash) {
-      identity.ipfsHash = bytes32ToIpfsHash(log.decoded.ipfsHash)
+    if (event.returnValues.ipfsHash) {
+      identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
     }
 
     const blockInfo = {
-      blockNumber: log.blockNumber,
-      logIndex: log.logIndex
+      blockNumber: event.blockNumber,
+      logIndex: event.logIndex
     }
+    const blockDate = new Date(block.timestamp * 1000)
 
     const decoratedIdentity = await this._indexIdentity(identity, blockInfo)
 
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(identity, blockInfo, log.date)
-      await this._recordGrowthAttestationEvents(identity, blockInfo, log.date)
+      await this._recordGrowthProfileEvent(identity, blockInfo, blockDate)
+      await this._recordGrowthAttestationEvents(identity, blockInfo, blockDate)
     }
 
     return { identity: decoratedIdentity }
