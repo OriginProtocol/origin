@@ -16,14 +16,12 @@ try {
   logger.warn('EnvKey not configured')
 }
 
-const express = require('express')
-const promBundle = require('express-prom-bundle')
 const Web3 = require('web3')
-
 const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
+const { blockGauge, errorCounter } = require('./metrics')
 const { handleEvent } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
@@ -34,7 +32,6 @@ class Context {
   constructor() {
     this.config = undefined
     this.web3 = undefined
-    this.networkId = undefined
   }
 
   async init(config, errorCounter) {
@@ -99,33 +96,6 @@ const config = {
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
-setNetwork(config.network)
-
-const port = 9499
-
-// Create an express server for Prometheus to scrape metrics
-const app = express()
-const bundle = promBundle({
-  includeMethod: true,
-  promClient: {
-    collectDefaultMetrics: {
-      timeout: 1000
-    }
-  }
-})
-app.use(bundle)
-
-// Create metrics.
-const blockGauge = new bundle.promClient.Gauge({
-  name: 'event_listener_last_block',
-  help: 'The last block processed by the event listener'
-})
-
-const errorCounter = new bundle.promClient.Counter({
-  name: 'event_listener_handler_error',
-  help: 'Number of errors from the event listener handler '
-})
-
 /**
  * Creates runtime context and starts the tracking loop
  * @return {Promise<void>}
@@ -163,11 +133,11 @@ async function main() {
 
       // Flatten array of arrays filtering out anything undefined
       const events = [].concat(...eventArrays.filter(x => x))
-      events
-        // Filter to only new events
-        .filter(event => event.blockNumber >= lastProcessedBlock)
-        // Process each new event
-        .map(newEvent => handleEvent(newEvent, context))
+      // Filter to only new events
+      const newEvents = events.filter(event => event.blockNumber >= lastProcessedBlock)
+      logger.debug(`Got ${newEvents.length} new events`)
+      // Process each new event
+      newEvents.map(newEvent => handleEvent(newEvent, context))
 
       // Record state of processing
       logger.debug(`Updating last processed block to ${toBlock}`)
@@ -186,11 +156,9 @@ async function main() {
   check()
 }
 
-app.listen({ port: port }, () => {
-  logger.info(`Serving Prometheus metrics on port ${port}`)
+// Start the listener.
+logger.info(`Starting event-listener with config:\n
+  ${JSON.stringify(config, (k, v) => (v === undefined ? null : v), 2)}`)
 
-  // Start the listener.
-  logger.info(`Starting event-listener with config:\n
-    ${JSON.stringify(config, (k, v) => (v === undefined ? null : v), 2)}`)
-  main()
-})
+setNetwork(config.network)
+main()
