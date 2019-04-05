@@ -130,8 +130,7 @@ app.post('/', async (req, res) => {
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
- * Sample json payload at:
- * origin/devops/cloud-functions/gcf-pin-ipfs-hash/fixtures/listing-log.json
+ * Sample json payloads in test/fixtures
  */
 app.post('/events', async (req, res) => {
   console.log(req.body)
