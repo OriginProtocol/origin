@@ -74,7 +74,10 @@ async function withRetrys(fn, exitOnError = true) {
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      logger.error(e, `will retry in ${waitTime / 1000} seconds, retry count ${tryCount}`)
+      logger.error(
+        e,
+        `will retry in ${waitTime / 1000} seconds, retry count ${tryCount}`
+      )
       tryCount += 1
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }
