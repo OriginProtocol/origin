@@ -37,7 +37,10 @@ const WithPrices = ({
   const targetValue = web3.utils.toBN(
     web3.utils.toWei(get(results, `${target}.amount`) || '0', 'ether')
   )
-  const hasEthBalance = ethBalance.gte(targetValue)
+  const targetValueEth = web3.utils.toBN(
+    web3.utils.toWei(get(results, `token-ETH.amount`) || '0', 'ether')
+  )
+  const hasEthBalance = ethBalance.gte(targetValueEth)
 
   if (target === 'token-ETH') {
     hasBalance = hasEthBalance

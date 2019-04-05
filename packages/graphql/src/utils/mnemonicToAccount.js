@@ -9,7 +9,7 @@ export const defaultMnemonic =
 
 export default function mnemonicToAccounts(
   mnemonic = defaultMnemonic,
-  num = 5
+  num = Names.length
 ) {
   const keys = []
   for (let offset = 0; offset < num; offset++) {

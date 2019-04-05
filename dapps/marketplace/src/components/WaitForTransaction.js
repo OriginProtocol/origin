@@ -111,8 +111,10 @@ class WaitForTransaction extends Component {
       )
     }
 
+    const poll = window.transactionPoll || 3000
+
     return (
-      <Query query={query} variables={{ id }} pollInterval={3000}>
+      <Query query={query} variables={{ id }} pollInterval={poll}>
         {({ data, client, error }) => {
           const events = get(data, 'web3.transactionReceipt.events', [])
           const currentBlock = get(data, 'web3.blockNumber')

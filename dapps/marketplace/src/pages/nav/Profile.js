@@ -22,8 +22,9 @@ class ProfileNav extends Component {
   }
 
   render() {
+    const poll = window.transactionPoll || 1000
     return (
-      <Query query={ProfileQuery} pollInterval={1000}>
+      <Query query={ProfileQuery} pollInterval={poll}>
         {({ data, error }) => {
           if (error) {
             console.error(error)

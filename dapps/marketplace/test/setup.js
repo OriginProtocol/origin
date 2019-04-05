@@ -4,67 +4,19 @@
  * (ethereum test node and IPFS) required to run tests.
  */
 
-const puppeteer = require('puppeteer')
-import { spawn } from 'child_process'
-import services from '@origin/services'
+import services from './_services'
 
-const headless = process.env.HEADLESS === 'false' ? false : true
 const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')
 
 let browser, webpackProcess, shutdownServices
 
 before(async function() {
-  this.timeout(30000)
+  this.timeout(60000)
 
-  shutdownServices = await services({
-    ganache: { inMemory: true },
-    ipfs: true,
-    populate: true,
-    extras: async () => {
-      webpackProcess = spawn(
-        './node_modules/.bin/webpack-dev-server',
-        ['--port=8083', '--host=0.0.0.0', '--no-info', '--progress'],
-        {
-          stdio: 'inherit',
-          env: process.env
-        }
-      )
-      process.on('exit', () => webpackProcess.kill())
+  shutdownServices = await services()
 
-      await new Promise(resolve => setTimeout(resolve, 5000))
-
-      browser = await puppeteer.launch({
-        headless,
-        defaultViewport: {
-          width: 1280,
-          height: 1024
-        },
-        // slowMo: headless ? undefined : 40
-      })
-
-      const pages = await browser.pages()
-      global.page = pages[0]
-
-      console.log('Browser ready.\n')
-    }
-  })
-
-  await global.page.goto('http://localhost:8083')
-  await global.page.evaluate(() => {
-    window.localStorage.clear()
-    window.sessionStorage.clear()
-  })
-
-  await global.page.reload()
-  await global.page.evaluate(
-    () =>
-      new Promise(resolve => {
-        window.populate(log => console.log(log), resolve)
-        window.localStorage.useWeb3Wallet =
-          '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
-      })
-  )
-  await global.page.reload()
+  browser = shutdownServices.extrasResult.browser
+  webpackProcess = shutdownServices.extrasResult.webpackProcess
 })
 
 after(async function() {

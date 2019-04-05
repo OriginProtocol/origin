@@ -14,6 +14,7 @@ import {
   DeployIdentityEventsContractMutation,
   DeployIdentityMutation,
   CreateListingMutation,
+  CreateWalletMutation,
   UniswapDeployFactory,
   UniswapDeployExchangeTemplate,
   UniswapInitFactory,
@@ -46,6 +47,23 @@ function transactionConfirmed(hash, gqlClient) {
       }
     })
   })
+}
+
+export async function createUser(gqlClient, NodeAccount) {
+  await gqlClient.mutate({
+    mutation: ToggleMetaMaskMutation,
+    variables: { enabled: false }
+  })
+  const result = await gqlClient.mutate({
+    mutation: CreateWalletMutation,
+    variables: { name: 'Seller', role: 'Seller' }
+  })
+  const user = result.data.createWallet.id
+  await gqlClient.mutate({
+    mutation: SendFromNodeMutation,
+    variables: { from: NodeAccount, to: user, value: '0.5' }
+  })
+  return user
 }
 
 export default async function populate(gqlClient, NodeAccount, log, done) {
