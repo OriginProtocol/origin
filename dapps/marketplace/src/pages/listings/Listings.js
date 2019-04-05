@@ -44,7 +44,7 @@ const Populate = () => {
         ) : state === 'populated' ? (
           <button
             className="btn btn-primary mt-3"
-            children="Populated"
+            children="Refresh to continue"
             onClick={() => location.reload()}
           />
         ) : (

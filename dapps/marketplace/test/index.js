@@ -14,20 +14,57 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
+const reset = async () => {
+  const seller = await createAccount(page)
+  const buyer = await createAccount(page)
+  await page.evaluate(() => {
+    window.transactionPoll = 100
+    window.sessionStorage.clear()
+    window.location = '/#/'
+  })
+  return { buyer, seller }
+}
+
+const purchaseListing = async ({ buyer }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+  await clickByText(page, 'Purchase')
+  await waitForText(page, 'View Purchase')
+  await pic(page, 'purchase-listing')
+
+  await clickByText(page, 'View Purchase')
+  await waitForText(page, 'Transaction Progress')
+  await pic(page, 'transaction-wait-for-seller')
+}
+
+const acceptOffer = async ({ seller }) => {
+  await changeAccount(page, seller)
+  await waitForText(page, 'Accept Offer', 'button')
+  await pic(page, 'transaction-accept')
+
+  await clickByText(page, 'Accept Offer')
+  await clickByText(page, 'OK')
+  await waitForText(page, 'Wait for buyer')
+  await pic(page, 'transaction-accepted')
+}
+
+const finalizeOffer = async ({ buyer }) => {
+  await changeAccount(page, buyer)
+  await waitForText(page, 'Finalize', 'button')
+  await pic(page, 'transaction-finalize')
+  await clickByText(page, 'Finalize', 'button')
+  await clickByText(page, 'OK')
+  await waitForText(page, 'Transaction Finalized')
+  await pic(page, 'transaction-finalized')
+}
+
 describe('Marketplace Dapp', function() {
   let seller, buyer
   this.timeout(5000)
 
   describe('Single Unit Listing for Eth', function() {
-
     before(async function() {
-      seller = await createAccount(page)
-      buyer = await createAccount(page)
-      await page.evaluate(() => {
-        window.transactionPoll = 100
-        window.sessionStorage.clear()
-        window.location = '/#/'
-      })
+      ({ seller, buyer } = await reset())
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -84,48 +121,21 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await pic(page, 'listing-detail')
-      await changeAccount(page, buyer)
-      await clickByText(page, 'Purchase')
-      await waitForText(page, 'View Purchase')
-      await pic(page, 'purchase-listing')
-
-      await clickByText(page, 'View Purchase')
-      await waitForText(page, 'Transaction Progress')
-      await pic(page, 'transaction-wait-for-seller')
+      await purchaseListing({ buyer })
     })
 
     it('should allow a new listing to be accepted', async function() {
-      await changeAccount(page, seller)
-      await waitForText(page, 'Accept Offer', 'button')
-      await pic(page, 'transaction-accept')
-
-      await clickByText(page, 'Accept Offer')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Wait for buyer')
-      await pic(page, 'transaction-accepted')
+      await acceptOffer({ seller })
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await changeAccount(page, buyer)
-      await waitForText(page, 'Finalize', 'button')
-      await pic(page, 'transaction-finalize')
-      await clickByText(page, 'Finalize', 'button')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Transaction Finalized')
-      await pic(page, 'transaction-finalized')
+      await finalizeOffer({ buyer })
     })
   })
 
   describe('Single Unit Listing for Dai', function() {
     before(async function() {
-      seller = await createAccount(page)
-      buyer = await createAccount(page)
-      await page.evaluate(() => {
-        window.transactionPoll = 100
-        window.sessionStorage.clear()
-        window.location = '/#/'
-      })
+      ({ seller, buyer } = await reset())
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -206,37 +216,17 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow a new listing to be accepted', async function() {
-      await changeAccount(page, seller)
-      await waitForText(page, 'Accept Offer', 'button')
-      await pic(page, 'transaction-accept')
-
-      await clickByText(page, 'Accept Offer')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Wait for buyer')
-      await pic(page, 'transaction-accepted')
+      await acceptOffer({ seller })
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await changeAccount(page, buyer)
-      await waitForText(page, 'Finalize', 'button')
-      await pic(page, 'transaction-finalize')
-      await clickByText(page, 'Finalize', 'button')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Transaction Finalized')
-      await pic(page, 'transaction-finalized')
+      await finalizeOffer({ buyer })
     })
   })
 
   describe('Multi Unit Listing for Eth', function() {
-
     before(async function() {
-      seller = await createAccount(page)
-      buyer = await createAccount(page)
-      await page.evaluate(() => {
-        window.transactionPoll = 100
-        window.sessionStorage.clear()
-        window.location = '/#/'
-      })
+      ({ seller, buyer } = await reset())
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -308,24 +298,11 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow a new listing to be accepted', async function() {
-      await changeAccount(page, seller)
-      await waitForText(page, 'Accept Offer', 'button')
-      await pic(page, 'transaction-accept')
-
-      await clickByText(page, 'Accept Offer')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Wait for buyer')
-      await pic(page, 'transaction-accepted')
+      await acceptOffer({ seller })
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await changeAccount(page, buyer)
-      await waitForText(page, 'Finalize', 'button')
-      await pic(page, 'transaction-finalize')
-      await clickByText(page, 'Finalize', 'button')
-      await clickByText(page, 'OK')
-      await waitForText(page, 'Transaction Finalized')
-      await pic(page, 'transaction-finalized')
+      await finalizeOffer({ buyer })
     })
   })
 })
