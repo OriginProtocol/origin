@@ -38,10 +38,10 @@ export async function getFeatured(net) {
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
         featured[netId] = ids
 
-        // queues.featured.fetching = false
-        // while (queues.featured.requestQueue.length) {
-        //   queues.featured.requestQueue.pop()()
-        // }
+        queues.featured.fetching = false
+        while (queues.featured.requestQueue.length) {
+          queues.featured.requestQueue.pop()()
+        }
 
         resolve(ids)
       })
