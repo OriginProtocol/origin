@@ -1,3 +1,11 @@
+// Ensure storage is cleared on each deploy
+const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
+if (localStorage.appHash !== appHash) {
+  localStorage.clear()
+  sessionStorage.clear()
+  localStorage.appHash = appHash
+}
+
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
