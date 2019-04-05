@@ -56,7 +56,7 @@ const mockIdentity = {
 }
 const mockOffer = {
   id: offerId,
-  status: 'finalized',
+  statusStr: 'Finalized',
   buyer: {
     id: buyer
   },
@@ -196,7 +196,7 @@ describe('Listener Handlers', () => {
       where: {
         id: offerId,
         listingId: listingId,
-        status: 'finalized',
+        status: 'Finalized',
         sellerAddress: seller,
         buyerAddress: buyer
       }

@@ -2,6 +2,7 @@ import { get } from '@origin/ipfs'
 // import { post } from '@origin/ipfs'
 import uniqBy from 'lodash/uniqBy'
 import createDebug from 'debug'
+import LZString from 'lz-string'
 
 const debug = createDebug('generic-event-cache:')
 
@@ -40,8 +41,13 @@ export default function eventCache(
 
   try {
     if (window.localStorage[cacheStr]) {
-      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr])) // eslint-disable-line
-      fromBlock = lastLookup
+      let str = window.localStorage[cacheStr]
+      if (str[0] !== '{') {
+        str = LZString.decompress(str)
+      }
+      const parsed = JSON.parse(str)
+      events = parsed.events
+      lastLookup = fromBlock = parsed.lastLookup
       triedIpfs = true
     }
   } catch (e) {
@@ -60,6 +66,10 @@ export default function eventCache(
       let ipfsData
       try {
         ipfsData = await get(config.ipfsGateway, ipfsEventCache)
+        if (ipfsData.compressed) {
+          const decompressed = LZString.decompress(ipfsData.compressed)
+          ipfsData = JSON.parse(decompressed)
+        }
       } catch (e) {
         /* Ignore */
       }
@@ -110,12 +120,15 @@ export default function eventCache(
     }
 
     if (typeof window !== 'undefined') {
-      window.localStorage[cacheStr] = JSON.stringify({
-        lastLookup,
-        events
-      })
+      const compressed = LZString.compress(
+        JSON.stringify({
+          lastLookup,
+          events
+        })
+      )
+      window.localStorage[cacheStr] = compressed
 
-      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
+      // const hash = await post(config.ipfsRPC, { compressed }, true)
       // console.log('IPFS Hash', hash)
     }
   }
