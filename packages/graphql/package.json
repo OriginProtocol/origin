@@ -71,6 +71,7 @@
     "apollo-link": "^1.2.9",
     "apollo-link-schema": "^1.2.0",
     "apollo-server": "^2.4.8",
+    "cross-fetch": "^3.0.1",
     "debug": "^4.1.1",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.3",
@@ -78,7 +79,6 @@
     "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.4",
     "lodash-es": "^4.17.11",
-    "node-fetch": "^2.3.0",
     "subscriptions-transport-ws": "^0.9.16",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.29.6"

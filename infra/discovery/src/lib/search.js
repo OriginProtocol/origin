@@ -102,16 +102,16 @@ class Listing {
   ) {
     const esQuery = {
       bool: {
-        must: [
+        must: [],
+        must_not: [
           {
             match: {
-              status: 'active'
+              status: 'withdrawn'
             }
           }
         ],
         should: [],
-        filter: [],
-        must_not: []
+        filter: []
       }
     }
 
@@ -220,7 +220,7 @@ class Listing {
         query: esQuery,
         field_value_factor: {
           field: 'commissionPerUnit',
-          factor: 0.05, // the same as delimited by 20
+          factor: 0.0000000000000000005, // the same as delimited by 20
           missing: 0
         },
         boost_mode: 'sum'
