@@ -48,7 +48,7 @@ const Configs = {
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
-    ipfsEventCache: 'QmUu2kP6akKKujcqBfGFAo35xjAXXactvierQDH5KFCTtW',
+    ipfsEventCache: 'QmWyqzZMoQB1zzxJyCAhTZ5XenzX5H8sfE3Uh58uEN3MJh',
     messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
     messaging: {
       ipfsSwarm:
