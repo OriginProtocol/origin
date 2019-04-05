@@ -55,7 +55,7 @@ const server = new ApolloServer({
       if (headers['x-growth-secret'] === process.env.GROWTH_ADMIN_SECRET) {
         // Grant admin access.
         authToken = 'AdminToken'
-        walletAddress = headers['x-growth-wallet']
+        walletAddress = headers['x-growth-wallet'].toLowerCase()
         authStatus = enums.GrowthParticipantAuthenticationStatus.Enrolled
       } else {
         logger.error('Invalid admin secret')
