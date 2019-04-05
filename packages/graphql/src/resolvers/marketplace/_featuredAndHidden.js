@@ -21,11 +21,11 @@ export async function getFeatured(net) {
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
 
+  if (featured[netId]) return featured[netId]
+
   queues.featured = queues.featured || new Queue()
   if (queues.featured.fetching) await queues.featured.isDone()
   queues.featured.fetching = true
-
-  if (featured[netId]) return featured[netId]
 
   return await new Promise(resolve => {
     fetch(
@@ -55,11 +55,11 @@ export async function getHidden(net) {
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
 
+  if (hidden[netId]) return hidden[netId]
+
   queues.hidden = queues.hidden || new Queue()
   if (queues.hidden.fetching) await queues.hidden.isDone()
   queues.hidden.fetching = true
-
-  if (hidden[netId]) return hidden[netId]
 
   return await new Promise(resolve => {
     fetch(
