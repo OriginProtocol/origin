@@ -6,7 +6,7 @@ bridgeImageTag: 'ed37ae1'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '92b3d2d'
+dappImageTag: '378a2de'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -14,7 +14,7 @@ ipfsProxyImageTag: 'ed37ae1'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '35b1974'
+faucetImageTag: '8354455'
 
 # event-listener
 eventlistenerImage: event-listener
