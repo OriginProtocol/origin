@@ -38,6 +38,7 @@ module.exports = {
         }
         commission
         commissionPerUnit
+        marketplacePublisher
         ... on UnitListing {
           unitsTotal
           unitsAvailable
