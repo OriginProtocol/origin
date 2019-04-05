@@ -1,15 +1,58 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import dayjs from 'dayjs'
 import get from 'lodash/get'
+import sortBy from 'lodash/sortBy'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
+import withCounterpartyEvents from 'hoc/withCounterpartyEvents'
 
 import query from 'queries/Room'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
+import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
+import Stages from 'components/TransactionStages'
+
+function eventName(name) {
+  if (name === 'OfferCreated') {
+    return fbt('made an offer', 'EventDescription.offerCreated')
+  } else if (name === 'OfferAccepted') {
+    return fbt('accepted an offer on', 'EventDescription.offerAccepted')
+  } else if (name === 'OfferFinalized') {
+    return fbt('finalized an offer on', 'EventDescription.offerFinalized')
+  } else if (name === 'OfferWithdrawn') {
+    return fbt('withdrew an offer on', 'EventDescription.offerWithdrawn')
+  } else if (name === 'OfferDisputed') {
+    return fbt('disputed an offer on', 'EventDescription.offerDisputed')
+  }
+}
+
+const OfferEvent = ({ event, wallet, identity }) => (
+  <>
+    <div className="offer-event">
+      {event.event.returnValues.party === wallet
+        ? 'You'
+        : get(identity, 'fullName')}
+      {` ${eventName(event.event.event)} `}
+      <Link to={`/purchases/${event.offer.id}`}>
+        {event.offer.listing.title}
+      </Link>
+      {` on ${dayjs.unix(event.event.timestamp).format('MMM Do, YYYY')}`}
+    </div>
+    {event.event.event !== 'OfferCreated' ? null : (
+      <Stages offer={event.offer} />
+    )}
+  </>
+)
+
+const OfferEventWithIdentity = withIdentity(
+  OfferEvent,
+  'event.event.returnValues.party'
+)
 
 class AllMessages extends Component {
   componentDidMount() {
@@ -20,6 +63,7 @@ class AllMessages extends Component {
       this.props.markRead()
     }
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.messages.length !== prevProps.messages.length) {
       this.el.scrollTop = this.el.scrollHeight
@@ -31,21 +75,46 @@ class AllMessages extends Component {
       this.props.markRead()
     }
   }
+
   render() {
-    const { messages } = this.props
+    const messages = this.props.messages.map(message => ({
+      message,
+      timestamp: message.timestamp
+    }))
+    const events = this.props.events.map(event => ({
+      event,
+      timestamp: event.event.timestamp
+    }))
+    const items = sortBy([...messages, ...events], ['timestamp'])
 
     return (
       <div className="messages" ref={el => (this.el = el)}>
-        {messages.map((message, idx) => (
-          <MessageWithIdentity
-            message={message}
-            lastMessage={idx > 0 ? messages[idx - 1] : null}
-            nextMessage={messages[idx + 1]}
-            key={idx}
-            wallet={get(message, 'address')}
-            isUser={this.props.wallet === get(message, 'address')}
-          />
-        ))}
+        {this.props.eventsLoading ? (
+          <div className="offer-event">Loading Events...</div>
+        ) : null}
+        {items.map((item, idx) => {
+          const { message, event } = item
+          if (message) {
+            return (
+              <MessageWithIdentity
+                message={message}
+                lastMessage={idx > 0 ? messages[idx - 1] : null}
+                nextMessage={messages[idx + 1]}
+                key={idx}
+                wallet={get(message, 'address')}
+                isUser={this.props.wallet === get(message, 'address')}
+              />
+            )
+          } else if (event) {
+            return (
+              <OfferEventWithIdentity
+                key={idx}
+                event={event}
+                wallet={this.props.wallet}
+              />
+            )
+          }
+        })}
       </div>
     )
   }
@@ -53,7 +122,7 @@ class AllMessages extends Component {
 
 class Room extends Component {
   render() {
-    const { id, wallet, markRead, enabled } = this.props
+    const { id, wallet, markRead, enabled, counterpartyEvents } = this.props
     return (
       <div className="container">
         <Query
@@ -80,6 +149,8 @@ class Room extends Component {
             return (
               <>
                 <AllMessages
+                  events={counterpartyEvents}
+                  eventsLoading={this.props.counterpartyEventsLoading}
                   messages={messages}
                   wallet={wallet}
                   convId={id}
@@ -101,7 +172,7 @@ class Room extends Component {
   }
 }
 
-export default withWallet(Room)
+export default withWallet(withCounterpartyEvents(Room))
 
 require('react-styl')(`
   .messages-page .messages
@@ -119,4 +190,13 @@ require('react-styl')(`
       font-size: 12px;
       align-self: center
       margin-bottom: 1rem
+    .offer-event
+      color: var(--bluey-grey)
+      font-size: 18px
+      font-style: italic
+      align-self: center
+      margin-bottom: 1rem
+      font-weight: normal
+    .stages
+      min-height: 4rem
 `)

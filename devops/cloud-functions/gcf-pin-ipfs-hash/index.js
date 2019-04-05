@@ -78,7 +78,7 @@ const parseIncomingData = data => {
 
   if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
     console.log(`Processing event ${eventName}`)
-    const ipfsData = data.related.listing.ipfs
+    const ipfsData = data.listing.ipfs
     hashesToPin.push(ipfsData.hash)
     if ('media' in ipfsData.data && ipfsData.data.media.length > 0) {
       const mediaData = ipfsData.data.media
@@ -90,7 +90,7 @@ const parseIncomingData = data => {
     }
   } else if (eventName === 'IdentityUpdated') {
     console.log(`Processing event ${eventName}`)
-    const ipfsData = data.related.user.ipfs
+    const ipfsData = data.user
     hashesToPin.push(ipfsData.hash)
   }
 

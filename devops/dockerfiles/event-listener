@@ -14,7 +14,6 @@ RUN mv envkey-source /usr/local/bin
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./packages/origin-js ./packages/origin-js
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/graphql ./packages/graphql
@@ -32,11 +31,8 @@ COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
-# Copy release contracts into build directory overwriting existing built
+# Copy release contracts into build directory
 COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
-
-# Build js so it is available for the event-listener to import
-RUN npm run build --prefix packages/origin-js
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/discovery && \

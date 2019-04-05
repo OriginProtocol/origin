@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 const featured = {},
   hidden = {}
 

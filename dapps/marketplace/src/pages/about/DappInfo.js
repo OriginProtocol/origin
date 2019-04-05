@@ -75,7 +75,7 @@ const DappInfo = () => {
           <table className="config-table">
             {sectionThead({ title: 'DApp' })}
             <tbody>
-              {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
+              {dataTr({ key: 'DApp Version', value: DAPP_VERSION })}
               {buildTimestamp
                 ? dataTr({
                     key: 'Build time',

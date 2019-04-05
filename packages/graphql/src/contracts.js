@@ -155,7 +155,6 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
-    growth: `http://${HOST}:4001`,
     bridge: 'https://bridge.dev.originprotocol.com',
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
@@ -186,11 +185,12 @@ const Configs = {
     }
   },
   docker: {
-    provider: `http://localhost:8545`,
-    providerWS: `ws://localhost:8545`,
-    ipfsGateway: `http://localhost:9999`,
-    ipfsRPC: `http://localhost:9999`,
+    provider: get(process.env, 'PROVIDER_URL', `http://localhost:8545`),
+    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://localhost:8545`),
+    ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://localhost:9999`),
+    ipfsRPC: get(process.env, 'IPFS_API_URL', `http://localhost:9999`),
     bridge: 'http://localhost:5000',
+    growth: 'http://localhost:4001',
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,
     OriginToken: get(OriginTokenContract, 'networks.999.address'),
@@ -240,7 +240,7 @@ function applyWeb3Hack(web3Instance) {
 }
 
 let lastBlock
-function newBlock(blockHeaders) {
+export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number

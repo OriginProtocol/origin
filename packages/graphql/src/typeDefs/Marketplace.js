@@ -38,6 +38,7 @@ const ListingInterface = `
   commission: String
   "IPFS: commission, in natural units, to be paid for each unit sold"
   commissionPerUnit: String
+  marketplacePublisher: String
 `
 
 module.exports = `
@@ -172,6 +173,7 @@ module.exports = `
     listings(first: Int, after: String, filter: String): ListingConnection!
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
+    counterparty(first: Int, after: String, id: String!): UserNotificationConnection!
     reviews(first: Int, after: String): ReviewConnection!
     notifications(first: Int, after: String, filter: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!

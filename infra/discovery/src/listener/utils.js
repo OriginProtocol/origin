@@ -55,28 +55,6 @@ async function setLastBlock(config, blockNumber) {
 }
 
 /**
- * Ensures data fetched from the blockchain meets the freshness criteria
- * specified in blockInfo. This is to catch the case where data is fetched from
- * an out of sync node that returns stale data.
- * @param {Array<Event>} events
- * @param {{blockNumber: number, logIndex: number}} blockInfo
- * @throws {Error} If freshness check fails
- */
-function checkEventsFreshness(events, blockInfo) {
-  // Find at least 1 event that is as fresh as blockInfo.
-  const fresh = events.some(event => {
-    return (
-      event.blockNumber > blockInfo.blockNumber ||
-      (event.blockNumber === blockInfo.blockNumber &&
-        event.logIndex >= blockInfo.logIndex)
-    )
-  })
-  if (!fresh) {
-    throw new Error('Freshness check failed')
-  }
-}
-
-/**
  * Retries up to N times, with exponential backoff.
  * @param {async function} fn - Async function to call
  * @param {boolean} exitOnError - Whether or not to exit the process when
@@ -96,7 +74,10 @@ async function withRetrys(fn, exitOnError = true) {
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
       waitTime = Math.min(waitTime, MAX_RETRY_WAIT_MS)
-      logger.error(e, `will retry in ${waitTime / 1000} seconds`)
+      logger.error(
+        e,
+        `will retry in ${waitTime / 1000} seconds, retry count ${tryCount}`
+      )
       tryCount += 1
       await new Promise(resolve => setTimeout(resolve, waitTime))
     }
@@ -122,6 +103,5 @@ module.exports = {
   bytes32ToIpfsHash,
   getLastBlock,
   setLastBlock,
-  checkEventsFreshness,
   withRetrys
 }

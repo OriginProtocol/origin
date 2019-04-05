@@ -96,7 +96,9 @@ class Settings extends Component {
               <div className="col-lg-6 col-md-12">
                 <div className="settings-box">
                   <div className="form-group">
-                    <label htmlFor="language">Language</label>
+                    <label htmlFor="language">
+                      <fbt desc="settings.languageLabel">Language</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
                       <small>
                         <fbt desc="settings.language">

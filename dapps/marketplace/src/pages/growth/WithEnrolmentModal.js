@@ -36,7 +36,8 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
-      this.goToWelcomeWhenNotEnrolled = !!props.goToWelcomeWhenNotEnrolled
+      this.goToWelcomeWhenNotEnrolled =
+        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -471,7 +472,7 @@ function withEnrolmentModal(WrappedComponent) {
 
   // do not pass staticContext prop to component to prevent react errors in browser console
   // eslint-disable-next-line no-unused-vars
-  return withRouter(({ staticContext, ...props }) => (
+  return withRouter(({ staticContext, location, match, ...props }) => (
     <WithEnrolmentModal {...props} />
   ))
 }

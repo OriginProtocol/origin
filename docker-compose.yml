@@ -1,9 +1,6 @@
 ---
 version: "3"
 
-volumes:
-  ipfs:
-
 services:
   postgres:
     container_name: postgres
@@ -45,6 +42,8 @@ services:
       - ./lerna.json:/app/lerna.json
       # Mount source code for all packages from host
       - ./packages/contracts/build:/app/packages/contracts/build
+      # Contract migrations that get run when @origin/services starts
+      - ./packages/contracts/migrations:/app/packages/contracts/migrations
       # Core packages
       - ./packages/services/:/app/packages/services/
       - ./packages/graphql/:/app/packages/graphql/
@@ -63,6 +62,8 @@ services:
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
       - ./infra/linking/:/app/infra/linking/
+      # Exclude IPFS and blockchain data from @origin/services
+      - /app/packages/services/data
       # Exclude all node_modules from the host
       - /app/packages/services/node_modules/
       - /app/packages/graphql/node_modules/
@@ -80,8 +81,6 @@ services:
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
       - /app/infra/linking/node_modules/
-      # IPFS data
-      - ipfs:/app/ipfs
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
       # interacted with via ipfs-proxy
@@ -106,7 +105,11 @@ services:
     ports:
       - "9012:9012"
       - "6647:6647"
-    command: npm run start --prefix infra/messaging
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
+      npm run migrate --prefix infra/messaging &&
+      npm run start --prefix infra/messaging"
 
   ipfs-proxy:
     container_name: ipfs-proxy
@@ -124,28 +127,24 @@ services:
     image: origin
     volumes: *volumes
     environment:
-      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
-      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-      - BLOCK_EPOCH=
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - DISCORD_WEBHOOK=
       - ELASTICSEARCH=true
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - EMAIL_WEBHOOK=
-      - ENVKEY=
       - GCLOUD_PUBSUB_TOPIC=
       - GCLOUD_PROJECT_ID=
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
-      - IPFS_URL=http://ipfs-proxy:9999
       - TRAIL_BEHIND_BLOCKS=
-      - WEB3_URL=http://services:8545
+      - NETWORK=docker
       - WEBHOOK=
+      - ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
+      - ipfs-proxy
       - services
     command:
       >
@@ -165,17 +164,16 @@ services:
       - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
       # MetaMask account 5 (default local blockchain) aka accounts[4]
       - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-      # MetaMask account 5 (default local blockchain) aka accounts[4]
       - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
-      - IPFS_URL=http://ipfs-proxy:9999
       - NETWORK_ID=999
-      - WEB3_URL=http://services:8545
       - ENVKEY=
     depends_on:
       - postgres
       - elasticsearch
+      - ipfs-proxy
+      - services
     ports:
       - "4000:4000"
     command:
@@ -251,12 +249,13 @@ services:
       - DAPP_URL=http://localhost:3000
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - DISCOVERY_SERVER_URL=http://localhost:4000
-      - PROVIDER_URL=http://localhost:8545
+      - PROVIDER_URL=http://services:8545
       - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
     depends_on:
       - postgres
       - redis-master
+      - services
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
