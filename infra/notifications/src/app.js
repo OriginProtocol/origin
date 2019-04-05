@@ -25,6 +25,7 @@ const Sequelize = require('sequelize')
 const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 const PushSubscription = require('./models').PushSubscription
+const Identity = require('./models').Identity
 const { getNotificationMessage, processableEvent } = require('./notification')
 
 const app = express()
@@ -139,35 +140,6 @@ app.post('/', async (req, res) => {
 })
 
 
-//
-// TESTING
-//
-app.get('/emailtest', async (req, res) => {
-
-  const now = new Date()
-
-  const email = {
-    to: 'wanderingstan@gmail.com',
-    from: process.env.SENDGRID_FROM_EMAIL,
-    subject: 'Testing notification',
-    text: `Ist sie Schlau? Geneau.`
-  }
-
-  try {
-    await sendgridMail.send(email)
-  } catch (error) {
-    console.error(`Could not email via Sendgrid: ${error}`)
-    return res.status(500).send({
-      errors: [
-        'Could not send email, please try again shortly.'
-      ]
-    })
-  }
-
-  res.send(`Send email: ${email}`)
-})
-
-
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
@@ -209,6 +181,12 @@ app.post('/events', async (req, res) => {
   }
 
   console.log(`Info: Processing event ${eventDetails}`)
+
+  //
+  // Mobile Push (linker) notifications
+  //
+
+  console.log('📱 Mobile Push')
 
   if (linkingNotifyEndpoint) {
     const receivers = {}
@@ -259,8 +237,10 @@ app.post('/events', async (req, res) => {
   }
 
   //
-  // Webpush subscripttions
+  // Browser push subscripttions
   //
+
+  console.log('🖥 Browser Push')
 
   // Query the DB to get subscriptions from the seller and/or buyer.
   // Note the filter ensures we do not send notification to the party
@@ -322,6 +302,69 @@ app.post('/events', async (req, res) => {
         }
       }
     })
+
+
+
+
+
+  //
+  // Email notifications
+  //
+  console.log('✉️ Emails')
+  const emails = await Identity.findAll({
+    where: {
+      email: 'stan@originprotocol.com'
+    }
+  })
+
+  // Filter out redundants before iterating.
+  await emails
+    .filter((s, i, self) => {
+      return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
+    })
+    .forEach(async s => {
+      try {
+        console.log(`Yo ${s.firstName}`)
+      } catch (e) {
+        // Subscription is no longer valid - delete it in the DB.
+        if (e.statusCode === 410) {
+          s.destroy()
+        } else {
+          console.error(e)
+        }
+      }
+    })
+
 })
+
+//
+// TESTING
+// TODO: Remove (Stan)
+//
+app.get('/emailtest', async (req, res) => {
+
+  const now = new Date()
+
+  const email = {
+    to: 'wanderingstan@gmail.com',
+    from: process.env.SENDGRID_FROM_EMAIL,
+    subject: 'Testing notification',
+    text: `Ist sie Schlau? Geneau.`
+  }
+
+  try {
+    await sendgridMail.send(email)
+  } catch (error) {
+    console.error(`Could not email via Sendgrid: ${error}`)
+    return res.status(500).send({
+      errors: [
+        'Could not send email, please try again shortly.'
+      ]
+    })
+  }
+
+  res.send(`Send email: ${email}`)
+})
+
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))
