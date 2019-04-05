@@ -74,6 +74,7 @@ module.exports = {
         refund
         commission
         status
+        statusStr
         finalizes
         quantity
         valid
