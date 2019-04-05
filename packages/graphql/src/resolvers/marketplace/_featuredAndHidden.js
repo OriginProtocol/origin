@@ -1,7 +1,18 @@
 import fetch from 'cross-fetch'
 
 const featured = {},
-  hidden = {}
+  hidden = {},
+  queues = {}
+
+class Queue {
+  constructor() {
+    this.fetching = false
+    this.requestQueue = []
+  }
+  async isDone() {
+    return new Promise(resolve => this.requestQueue.push(resolve))
+  }
+}
 
 export async function getFeatured(net) {
   if (net === 'localhost') return [1]
@@ -9,6 +20,11 @@ export async function getFeatured(net) {
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
+
+  queues.featured = queues.featured || new Queue()
+  if (queues.featured.fetching) await queues.featured.isDone()
+  queues.featured.fetching = true
+
   if (featured[netId]) return featured[netId]
 
   return await new Promise(resolve => {
@@ -21,6 +37,12 @@ export async function getFeatured(net) {
           .split(',')
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
         featured[netId] = ids
+
+        queues.featured.fetching = false
+        while (queues.featured.requestQueue.length) {
+          queues.featured.requestQueue.pop()()
+        }
+
         resolve(ids)
       })
       .catch(() => resolve([]))
@@ -32,6 +54,11 @@ export async function getHidden(net) {
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
+
+  queues.hidden = queues.hidden || new Queue()
+  if (queues.hidden.fetching) await queues.hidden.isDone()
+  queues.hidden.fetching = true
+
   if (hidden[netId]) return hidden[netId]
 
   return await new Promise(resolve => {
@@ -44,6 +71,11 @@ export async function getHidden(net) {
           .split(',')
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
         hidden[netId] = ids
+
+        queues.hidden.fetching = false
+        while (queues.hidden.requestQueue.length) {
+          queues.hidden.requestQueue.pop()()
+        }
         resolve(ids)
       })
       .catch(() => resolve([]))

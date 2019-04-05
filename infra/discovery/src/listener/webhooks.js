@@ -72,7 +72,7 @@ async function postToDiscordWebhook(url, data) {
           )}`,
           description: [
             `${listing.description.split('\n')[0].slice(0, 60)}...`,
-            `https://dapp.originprotocol.com/#/listing/${listing}`,
+            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
             `Seller: ${personDisp(listing.seller)}`
           ].join('\n')
         }

@@ -43,12 +43,12 @@ const Configs = {
     bridge: 'https://bridge.originprotocol.com',
     IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
     IdentityEvents_Epoch: '7046530',
-    IdentityEvents_EventCache: 'QmWkUzib3YaGBMtrF5Wam7KLPFZ4VhWqS3NrAd5aVS3qeP',
+    IdentityEvents_EventCache: 'QmYu5bTLHYnFMCxgnWd6ywfasQQCeKbkzrU2UJAedycKQL',
     attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
     OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
     V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
     V00_Marketplace_Epoch: '6436157',
-    ipfsEventCache: 'QmUu2kP6akKKujcqBfGFAo35xjAXXactvierQDH5KFCTtW',
+    ipfsEventCache: 'QmWyqzZMoQB1zzxJyCAhTZ5XenzX5H8sfE3Uh58uEN3MJh',
     messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
     messaging: {
       ipfsSwarm:
