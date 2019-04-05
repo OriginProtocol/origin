@@ -27,7 +27,7 @@ export async function getFeatured(net) {
   if (queues.featured.fetching) await queues.featured.isDone()
   queues.featured.fetching = true
 
-  if (hidden[netId]) return hidden[netId]
+  if (featured[netId]) return featured[netId]
 
   return await new Promise(resolve => {
     fetch(
