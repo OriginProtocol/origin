@@ -141,7 +141,7 @@ async function get(gateway, hashAsBytes) {
   // }, party) {
   if (!hashAsBytes) return null
 
-  const reqQueue = queues[hashAsBytes] = queues[hashAsBytes] || new Queue()
+  const reqQueue = (queues[hashAsBytes] = queues[hashAsBytes] || new Queue())
   if (reqQueue.fetching) await reqQueue.isDone()
   reqQueue.fetching = true
 
