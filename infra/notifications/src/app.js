@@ -305,15 +305,14 @@ app.post('/events', async (req, res) => {
 
 
 
-
-
   //
   // Email notifications
   //
+
   console.log('✉️ Emails')
   const emails = await Identity.findAll({
     where: {
-      email: 'stan@originprotocol.com'
+      ethAddress: buyer.address
     }
   })
 
@@ -324,14 +323,36 @@ app.post('/events', async (req, res) => {
     })
     .forEach(async s => {
       try {
-        console.log(`Yo ${s.firstName}`)
-      } catch (e) {
-        // Subscription is no longer valid - delete it in the DB.
-        if (e.statusCode === 410) {
-          s.destroy()
-        } else {
-          console.error(e)
+
+        const emailSubject = `An email to ${s.firstName}`
+        const emailBody = `Hello there, ${s.firstName}`
+
+        const email = {
+          to: s.email,
+          from: process.env.SENDGRID_FROM_EMAIL,
+          subject: emailSubject,
+          text: emailBody
         }
+
+        try {
+          await sendgridMail.send(email)
+          console.log(`- Email sent to ${buyer} at ${s.email}`)
+        } catch (error) {
+          console.error(`Could not email via Sendgrid: ${error}`)
+          return res.status(500).send({
+            errors: [
+              'Could not send email, please try again shortly.'
+            ]
+          })
+        }
+
+      } catch (error) {
+        console.error(`Could not email via Sendgrid: ${error}`)
+        return res.status(500).send({
+          errors: [
+            'Could not send email, please try again shortly.'
+          ]
+        })
       }
     })
 
@@ -342,8 +363,6 @@ app.post('/events', async (req, res) => {
 // TODO: Remove (Stan)
 //
 app.get('/emailtest', async (req, res) => {
-
-  const now = new Date()
 
   const email = {
     to: 'wanderingstan@gmail.com',
