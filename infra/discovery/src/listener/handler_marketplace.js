@@ -188,10 +188,11 @@ class MarketplaceEventHandler {
     const blockDate = new Date(block.timestamp * 1000)
 
     logger.info(`Indexing offer in DB: id=${offer.id}`)
+
     const offerData = {
       id: offer.id,
       listingId: removeListingIdBlockNumber(listing.id),
-      status: offer.status,
+      status: offer.statusStr,
       sellerAddress: listing.seller.id.toLowerCase(),
       buyerAddress: offer.buyer.id.toLowerCase(),
       data: offer
