@@ -61,7 +61,10 @@ class ApolloAdapter {
       // TODO: handle multi-events type
       type: this._eventTypeToActionType(data.eventTypes[0]),
       status: data.status,
-      rewardEarned: Money.sum(data.rewards, data.campaign.currency),
+      rewardEarned: Money.sum(
+        data.rewards.map(r => r.value),
+        data.campaign.currency
+      ),
       reward: data.reward ? data.reward.value : null,
       unlockConditions: data.unlockConditions
     }
@@ -113,7 +116,10 @@ const campaignToApolloObject = async (
 
   // Calculate total rewards earned so far.
   const rewards = await crules.getRewards(ethAddress)
-  out.rewardEarned = Money.sum(rewards, crules.campaign.currency)
+  out.rewardEarned = Money.sum(
+    rewards.map(r => r.value),
+    crules.campaign.currency
+  )
 
   return out
 }
