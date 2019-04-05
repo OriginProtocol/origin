@@ -34,6 +34,7 @@
     "apollo-link-http": "^1.5.12",
     "dayjs": "^1.8.10",
     "json-stable-stringify": "^1.0.1",
+    "lz-string": "^1.4.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.4",
     "rlp": "^2.2.2"
