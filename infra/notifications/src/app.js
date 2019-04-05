@@ -1,10 +1,21 @@
 require('dotenv').config()
 
+
 try {
   require('envkey')
 } catch (error) {
   console.error('EnvKey not configured. Please set env var ENVKEY')
 }
+
+const sendgridMail = require('@sendgrid/mail')
+sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
+if (!process.env.SENDGRID_API_KEY) {
+  console.warn('Warning: SENDGRID_API_KEY env var is not set')
+}
+if (!process.env.SENDGRID_FROM_EMAIL) {
+  console.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
+}
+
 
 const path = require('path')
 const express = require('express')
@@ -127,6 +138,36 @@ app.post('/', async (req, res) => {
   res.sendStatus(201)
 })
 
+
+//
+// TESTING
+//
+app.get('/emailtest', async (req, res) => {
+
+  const now = new Date()
+
+  const email = {
+    to: 'wanderingstan@gmail.com',
+    from: process.env.SENDGRID_FROM_EMAIL,
+    subject: 'Testing notification',
+    text: `Ist sie Schlau? Geneau.`
+  }
+
+  try {
+    await sendgridMail.send(email)
+  } catch (error) {
+    console.error(`Could not email via Sendgrid: ${error}`)
+    return res.status(500).send({
+      errors: [
+        'Could not send email, please try again shortly.'
+      ]
+    })
+  }
+
+  res.send(`Send email: ${email}`)
+})
+
+
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
@@ -202,6 +243,7 @@ app.post('/events', async (req, res) => {
         )
       }
       try {
+        // POST to linking server
         fetch(linkingNotifyEndpoint, {
           method: 'POST',
           headers: {
@@ -215,6 +257,10 @@ app.post('/events', async (req, res) => {
       }
     }
   }
+
+  //
+  // Webpush subscripttions
+  //
 
   // Query the DB to get subscriptions from the seller and/or buyer.
   // Note the filter ensures we do not send notification to the party
