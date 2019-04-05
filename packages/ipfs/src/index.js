@@ -126,11 +126,29 @@ async function getText(gateway, hashAsBytes) {
   return await response.text()
 }
 
+const queues = {}
+class Queue {
+  constructor() {
+    this.fetching = false
+    this.requestQueue = []
+  }
+  async isDone() {
+    return new Promise(resolve => this.requestQueue.push(resolve))
+  }
+}
+
 async function get(gateway, hashAsBytes) {
   // }, party) {
   if (!hashAsBytes) return null
 
-  const text = cache[hashAsBytes] || (await getText(gateway, hashAsBytes))
+  const reqQueue = queues[hashAsBytes] = queues[hashAsBytes] || new Queue()
+  if (reqQueue.fetching) await reqQueue.isDone()
+  reqQueue.fetching = true
+
+  let text = cache[hashAsBytes]
+  if (!text) {
+    text = await getText(gateway, hashAsBytes)
+  }
   // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
   //   try {
   //     text = await decode(text, party.privateKey, party.pgpPass)
@@ -139,6 +157,12 @@ async function get(gateway, hashAsBytes) {
   //   }
   // }
   cache[hashAsBytes] = text
+
+  reqQueue.fetching = false
+  while (reqQueue.requestQueue.length) {
+    reqQueue.requestQueue.pop()()
+  }
+
   return JSON.parse(text)
 }
 
