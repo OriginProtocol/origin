@@ -90,8 +90,7 @@ const config = {
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
   network: args['--network'] || process.env.NETWORK || 'docker',
-  blockEpoch: parseInt(process.env.BLOCK_EPOCH || 0),
-  // Default continue block.
+  // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
 }
 
