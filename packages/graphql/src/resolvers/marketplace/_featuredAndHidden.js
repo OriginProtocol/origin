@@ -15,15 +15,16 @@ class Queue {
 }
 
 export async function getFeatured(net) {
-  queues.featured = queues.featured || new Queue()
-  if (queues.featured.fetching) await queues.featured.isDone()
-  queues.featured.fetching = true
-
   if (net === 'localhost') return [1]
   let netId
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
+
+  queues.featured = queues.featured || new Queue()
+  if (queues.featured.fetching) await queues.featured.isDone()
+  queues.featured.fetching = true
+
   if (featured[netId]) return featured[netId]
 
   return await new Promise(resolve => {
@@ -37,10 +38,10 @@ export async function getFeatured(net) {
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
         featured[netId] = ids
 
-        queues.featured.fetching = false
-        while (queues.featured.requestQueue.length) {
-          queues.featured.requestQueue.pop()()
-        }
+        // queues.featured.fetching = false
+        // while (queues.featured.requestQueue.length) {
+        //   queues.featured.requestQueue.pop()()
+        // }
 
         resolve(ids)
       })
@@ -49,14 +50,15 @@ export async function getFeatured(net) {
 }
 
 export async function getHidden(net) {
-  queues.hidden = queues.hidden || new Queue()
-  if (queues.hidden.fetching) await queues.hidden.isDone()
-  queues.hidden.fetching = true
-
   let netId
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
+
+  queues.hidden = queues.hidden || new Queue()
+  if (queues.hidden.fetching) await queues.hidden.isDone()
+  queues.hidden.fetching = true
+
   if (hidden[netId]) return hidden[netId]
 
   return await new Promise(resolve => {
