@@ -27,6 +27,8 @@ export async function getFeatured(net) {
   if (queues.featured.fetching) await queues.featured.isDone()
   queues.featured.fetching = true
 
+  if (hidden[netId]) return hidden[netId]
+
   return await new Promise(resolve => {
     fetch(
       `https://cdn.jsdelivr.net/gh/originprotocol/origin@hidefeature_list/featurelist_${netId}.txt`
@@ -60,6 +62,8 @@ export async function getHidden(net) {
   queues.hidden = queues.hidden || new Queue()
   if (queues.hidden.fetching) await queues.hidden.isDone()
   queues.hidden.fetching = true
+
+  if (hidden[netId]) return hidden[netId]
 
   return await new Promise(resolve => {
     fetch(
