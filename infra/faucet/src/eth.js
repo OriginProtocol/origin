@@ -116,7 +116,8 @@ class TxnManager {
     const medianGasPrice = await this.web3.eth.getGasPrice()
 
     // Apply our ratio.
-    return BigNumber(medianGasPrice).times(gasPriceMultiplier)
+    const gasPrice = BigNumber(medianGasPrice).times(gasPriceMultiplier)
+    return gasPrice.integerValue()
   }
 
   // Submits a transaction and returns a promise that resolves

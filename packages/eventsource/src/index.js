@@ -93,6 +93,7 @@ class OriginEventSource {
         'unitsTotal',
         'commission',
         'commissionPerUnit',
+        'marketplacePublisher',
 
         'weekendPrice',
         'booked',

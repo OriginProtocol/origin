@@ -9,6 +9,11 @@ module.exports = {
         totalEvents
         seller {
           id
+          identity {
+            firstName
+            lastName
+            fullName
+          }
         }
         arbitrator {
           id
@@ -38,6 +43,7 @@ module.exports = {
         }
         commission
         commissionPerUnit
+        marketplacePublisher
         ... on UnitListing {
           unitsTotal
           unitsAvailable
@@ -68,6 +74,7 @@ module.exports = {
         refund
         commission
         status
+        statusStr
         finalizes
         quantity
         valid
@@ -80,6 +87,11 @@ module.exports = {
         }
         buyer {
           id
+          identity {
+            firstName
+            lastName
+            fullName
+          }
         }
         withdrawnBy {
           id

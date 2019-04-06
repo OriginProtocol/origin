@@ -59,7 +59,7 @@ module.exports =
 
   type Invite {
     # only pending invites require an ID - for remind functionality
-    id: ID
+    pendingId: ID
     status: GrowthInviteStatus!
     walletAddress: ID
     # email or firstName + lastName of the contact
