@@ -89,9 +89,7 @@ const config = {
   trailBlocks: parseInt(
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
-  concurrency: parseInt(
-    args['--concurrency'] || process.env.CONCURRENCY || 1
-  ),
+  concurrency: parseInt(args['--concurrency'] || process.env.CONCURRENCY || 1),
   network: args['--network'] || process.env.NETWORK || 'docker',
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
