@@ -1,4 +1,4 @@
-First pull request? Read our [guide to contributing](http://docs.originprotocol.com/#contributing)
+First pull request? Read our [guide to contributing](https://docs.originprotocol.com/guides/getting_started/contributing.html)
 
 ### Description:
 
@@ -11,8 +11,6 @@ Please explain the changes you made here:
 ### Checklist:
 
 - [ ] Test your work and double-check to confirm that you didn't break anything
-- [ ] Wrap any displayed ETH addresses with [`formattedAddress`](https://github.com/OriginProtocol/origin/blob/master/origin-dapp/src/utils/user.js#L15-L17)
-- [ ] Wrap any new text/strings for translation
-- [ ] Run `npm run translations` if there are any changes to translated strings
-- [ ] Map any new environment variables with a default value in the Webpack config
-- [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/origin/tree/master/origin-docs)
+- [ ] [Wrap any new text/strings with `fbt`](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace/translation#wrapping-text) for translation
+- [ ] If there are any new/changed strings to translate, [`npm run translate`](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace/translation#integrating-translations)
+- [ ] Update any relevant READMEs and [docs](https://github.com/OriginProtocol/origin/tree/master/docs)

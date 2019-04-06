@@ -36,6 +36,8 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
+      this.goToWelcomeWhenNotEnrolled =
+        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -59,9 +61,13 @@ function withEnrolmentModal(WrappedComponent) {
       } else if (enrollmentStatus === 'Enrolled') {
         this.props.history.push('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
-        this.setState({
-          open: true
-        })
+        if (this.goToWelcomeWhenNotEnrolled) {
+          this.props.history.push('/welcome')
+        } else {
+          this.setState({
+            open: true
+          })
+        }
       } else if (enrollmentStatus === 'Banned') {
         alert(
           fbt(
@@ -402,16 +408,15 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data, networkStatus, loading }) => {
-            if (networkStatus === 1 || loading) {
-              return 'Loading...'
-            } else if (error) {
+          {({ error, data }) => {
+            if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
 
-            const walletAddress = data.web3.primaryAccount
-              ? data.web3.primaryAccount.id
-              : null
+            const walletAddress =
+              data.web3 && data.web3.primaryAccount
+                ? data.web3.primaryAccount.id
+                : null
             return (
               <Query
                 query={enrollmentStatusQuery}
@@ -423,10 +428,8 @@ function withEnrolmentModal(WrappedComponent) {
                 // enrollment info can change, do not cache it
                 fetchPolicy="network-only"
               >
-                {({ networkStatus, error, loading, data }) => {
-                  if (networkStatus === 1 || loading) {
-                    return 'Loading...'
-                  } else if (error) {
+                {({ error, data }) => {
+                  if (error) {
                     return (
                       <QueryError error={error} query={enrollmentStatusQuery} />
                     )
@@ -467,8 +470,11 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  //TODO: withRouter is firing some kind of unknown 'staticContext' Dom element in console
-  return withRouter(WithEnrolmentModal)
+  // do not pass staticContext prop to component to prevent react errors in browser console
+  // eslint-disable-next-line no-unused-vars
+  return withRouter(({ staticContext, location, match, ...props }) => (
+    <WithEnrolmentModal {...props} />
+  ))
 }
 
 export default withEnrolmentModal

@@ -60,7 +60,7 @@ class EmailAttestation extends Component {
           }
         }}
         onError={errorData => {
-          console.eror('Error', errorData)
+          console.error('Error', errorData)
           this.setState({ error: 'Check console' })
         }}
       >
@@ -70,6 +70,16 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              if (!emailRegex.test(this.state.email)) {
+                this.setState({
+                  error: 'This is not a valid email address',
+                  loading: false
+                })
+                return
+              }
+
               generateCode({
                 variables: { email: this.state.email }
               })
@@ -154,16 +164,42 @@ class EmailAttestation extends Component {
               e.preventDefault()
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
+
+              const trimmedCode = this.state.code.trim()
+
+              if (trimmedCode.length === 0) {
+                this.setState({
+                  error: 'Verification code is required',
+                  loading: false
+                })
+                return
+              }
+
+              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                this.setState({
+                  error: 'Verification code should be a 6 digit number',
+                  loading: false
+                })
+                return
+              }
+
               verifyCode({
                 variables: { identity: this.props.wallet, email, code }
               })
             }}
           >
-            <h2>Verify your Email Address</h2>
-            <div className="instructions">Enter the code we sent you below</div>
+            <h2>
+              <fbt desc="EmailAttestation.title">Verify your Email Address</fbt>
+            </h2>
+            <div className="instructions">
+              <fbt desc="EmailAttestation.enterCode">
+                Enter the code we sent you below
+              </fbt>
+            </div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
+                maxLength="6"
                 ref={ref => (this.inputRef = ref)}
                 className="form-control form-control-lg"
                 placeholder="Verification code"
@@ -201,13 +237,19 @@ class EmailAttestation extends Component {
   renderVerifiedOK() {
     return (
       <>
-        <h2>Email address verified!</h2>
+        <h2>
+          <fbt desc="EmailAttestation.verified">Email address verified!</fbt>
+        </h2>
         <div className="instructions">
-          Don&apos;t forget to publish your changes.
+          <fbt desc="Attestation.DontForget">
+            Don&apos;t forget to publish your changes.
+          </fbt>
         </div>
         <div className="help">
-          Publishing to the blockchain lets other users know that you have a
-          verified profile.
+          <fbt desc="Attestation.publishingBlockchain">
+            Publishing to the blockchain lets other users know that you have a
+            verified profile.
+          </fbt>
         </div>
         <div className="actions">
           <button

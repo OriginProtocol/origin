@@ -8,8 +8,8 @@ const Growth$FbtEnum = {
   'growth.apr2019.name': 'April 2019 Campaign',
   'growth.apr2019.short_name': 'Apr 2019',
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
-  'growth.two.attestations.requirement': '2 out of 4 attestations',
-  'growth.profile.requirement': 'Verified profile',
+  'growth.two.attestations.requirement': 'Two profile verifications',
+  'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email'
 }
 

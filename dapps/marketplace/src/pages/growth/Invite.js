@@ -112,6 +112,7 @@ class GrowthInvite extends Component {
     return (
       <Query
         query={inviteCodeQuery}
+        fetchPolicy="network-only"
         onCompleted={({ inviteCode }) => {
           if (inviteCode !== this.state.inviteCode) {
             this.setState({ inviteCode })
@@ -120,7 +121,11 @@ class GrowthInvite extends Component {
       >
         {({ loading, error, networkStatus }) => {
           if (networkStatus === 1 || loading) {
-            return <h5 className="p-2">Loading...</h5>
+            return (
+              <h5 className="p-2">
+                <fbt desc="Loading...">Loading...</fbt>
+              </h5>
+            )
           } else if (error) {
             return <QueryError error={error} query={inviteCodeQuery} />
           }
@@ -420,7 +425,10 @@ class GrowthInvite extends Component {
                 ? invite.contact
                 : invite.walletAddress
               return (
-                <div className="invite-row d-flex pt-2 pb-2" key={invite.id}>
+                <div
+                  className="invite-row d-flex pt-2 pb-2"
+                  key={invite.pendingId}
+                >
                   <div className="col-4 p-0 d-flex align-items-center">
                     <div className="name">{name}</div>
                   </div>
@@ -441,7 +449,7 @@ class GrowthInvite extends Component {
                         <button
                           className="remind-button"
                           onClick={async e =>
-                            await this.handleRemindClick(invite.id, e)
+                            await this.handleRemindClick(invite.pendingId, e)
                           }
                           children={fbt('Remind', 'RewardInvite.remind')}
                         />
@@ -493,7 +501,11 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { referralAction, handleNavigationChange } = this.props
+    const { activeCampaign, handleNavigationChange } = this.props
+
+    const referralAction = activeCampaign.actions.filter(
+      action => action.type === 'Referral'
+    )[0]
 
     return (
       <div className="container growth-invite">

@@ -1,6 +1,3 @@
-# NOTE/TODO: discovery doesn't need Origin.js but it shares a
-# package.json with the event listener which does
-
 FROM node:10 as build
 
 WORKDIR /app
@@ -9,7 +6,6 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./packages/origin-js ./packages/origin-js
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/graphql ./packages/graphql
@@ -26,11 +22,5 @@ COPY ./infra/identity ./infra/identity
 COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
-
-# Copy release contracts into build directory overwriting existing built
-COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
-
-# Build js so it is available for the discovery server to import.
-RUN npm run build --prefix packages/origin-js
 
 CMD npm run start:discovery --prefix infra/discovery

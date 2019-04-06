@@ -13,6 +13,7 @@ import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
+import Attestations from 'components/Attestations'
 
 class ProfileNav extends Component {
   constructor() {
@@ -69,7 +70,7 @@ class ProfileNav extends Component {
 
 const Network = withNetwork(({ networkName }) => (
   <div className="connected">
-    {`Connected to `}
+    <fbt desc="nav.profile.connectedToNetwork">Connected to</fbt>
     <span className="net">{networkName}</span>
   </div>
 ))
@@ -84,7 +85,9 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Network />
           <div className="wallet-info">
             <div>
-              <h5>ETH Address</h5>
+              <h5>
+                <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
+              </h5>
               <div className="wallet-address">{checksumAddress}</div>
             </div>
             <div className="identicon">
@@ -101,11 +104,14 @@ const ProfileDropdown = ({ data, onClose }) => {
                 unlinkMutation()
               }}
               href="#"
-              children={fbt('Unlink Mobile', 'Unlink Mobile')}
+              children={fbt('Unlink Mobile', 'nav.profile.unlinkMobile')}
             />
           )}
           <Link onClick={() => onClose()} to="/profile">
-            Edit Profile
+            <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
+          </Link>
+          <Link onClick={() => onClose()} to="/settings">
+            <fbt desc="nav.profile.settings">Settings</fbt>
           </Link>
         </div>
       )}
@@ -121,27 +127,17 @@ const Identity = ({ id }) => (
 
       return (
         <div className="identity">
-          <h5>My Identity</h5>
+          <h5>
+            <fbt desc="nav.profile.myIdentity">My Identity</fbt>
+          </h5>
           <div className="info">
             <Avatar avatar={profile.avatar} size="3rem" />
             <div>
-              <div className="name">{profile.fullName || 'Unnamed User'}</div>
-              <div className="attestations">
-                {profile.twitterVerified && (
-                  <div className="attestation twitter" />
-                )}
-                {profile.googleVerified && (
-                  <div className="attestation google" />
-                )}
-                {profile.phoneVerified && <div className="attestation phone" />}
-                {profile.emailVerified && <div className="attestation email" />}
-                {profile.facebookVerified && (
-                  <div className="attestation facebook" />
-                )}
-                {profile.airbnbVerified && (
-                  <div className="attestation airbnb" />
-                )}
+              <div className="name">
+                {profile.fullName ||
+                  fbt('Unnamed User', 'nav.profile.unnamedUser')}
               </div>
+              <Attestations profile={profile} />
             </div>
           </div>
           <div className="strength">
@@ -153,7 +149,7 @@ const Identity = ({ id }) => (
             </div>
             {`${fbt(
               'Profile Strength',
-              'ProfileStrength.ProfileStrength'
+              'nav.profile.ProfileStrength'
             )} - ${profile.strength || '0'}%`}
           </div>
         </div>
@@ -232,12 +228,14 @@ require('react-styl')(`
       background: var(--dark-grey-blue)
       color: var(--white)
       text-align: center
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-      border-radius: 0 0 5px 5px;
-      &.unlink-wallet
-        border-bottom: 1px solid black
-        border-radius: 0
+      padding: 0.75rem 1rem
+      font-weight: bold
+      border-bottom: 1px solid black
+      &:hover
+        background: var(--dusk)
+      &:last-child
+        border: 0
+        border-radius: 0 0 5px 5px
 
   .attestations
     display: flex

@@ -28,10 +28,10 @@ async function postToDiscordWebhook(url, data) {
 
   const personDisp = p => {
     let str = ''
-    if (p.profile && (p.profile.firstName || p.profile.lastName)) {
-      str += `${p.profile.firstName || ''} ${p.profile.lastName || ''} - `
+    if (p.identity && (p.identity.firstName || p.identity.lastName)) {
+      str += `${p.firstName || ''} ${p.lastName || ''} - `
     }
-    str += p.address
+    str += p.id
     return str
   }
   const priceDisp = listing => {
@@ -39,25 +39,25 @@ async function postToDiscordWebhook(url, data) {
     return price ? `${price.amount}${price.currency}` : ''
   }
 
-  const icon = eventIcons[data.log.eventName] || ':dromedary_camel: '
+  const icon = eventIcons[data.event.event] || ':dromedary_camel: '
   const listing = data.related.listing
 
   let discordData = {}
 
-  if (data.related.offer !== undefined) {
+  if (data.offer !== undefined) {
     // Offer
     discordData = {
       embeds: [
         {
-          title: `${icon} ${data.log.eventName} - ${
-            listing.title
-          } - ${priceDisp(listing)}`,
+          title: `${icon} ${data.event.event} - ${listing.title} - ${priceDisp(
+            listing
+          )}`,
           description: [
             `https://dapp.originprotocol.com/#/purchases/${
               data.related.offer.id
             }`,
-            `Seller: ${personDisp(data.related.seller)}`,
-            `Buyer: ${personDisp(data.related.buyer)}`
+            `Seller: ${personDisp(listing.seller)}`,
+            `Buyer: ${personDisp(data.related.offer.buyer)}`
           ].join('\n')
         }
       ]
@@ -67,13 +67,13 @@ async function postToDiscordWebhook(url, data) {
     discordData = {
       embeds: [
         {
-          title: `${icon} ${data.log.eventName} - ${
-            listing.title
-          } - ${priceDisp(listing)}`,
+          title: `${icon} ${data.event.event} - ${listing.title} - ${priceDisp(
+            listing
+          )}`,
           description: [
             `${listing.description.split('\n')[0].slice(0, 60)}...`,
             `https://dapp.originprotocol.com/#/listing/${listing.id}`,
-            `Seller: ${personDisp(data.related.seller)}`
+            `Seller: ${personDisp(listing.seller)}`
           ].join('\n')
         }
       ]
@@ -87,13 +87,13 @@ async function postToDiscordWebhook(url, data) {
  * our global Origin mailing list.
  */
 async function postToEmailWebhook(url, data) {
-  const user = data.related.user
-  if (!user.email) {
-    logger.debug('No email present in identity, skipping email webhook.')
+  const identity = data.related.identity
+  if (!identity.email) {
+    logger.warn('No email present in identity, skipping email webhook.')
     return
   }
 
-  const emailData = `email=${encodeURIComponent(user.email)}&dapp_user=1`
+  const emailData = `email=${encodeURIComponent(identity.email)}&dapp_user=1`
   await postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 

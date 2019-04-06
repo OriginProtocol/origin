@@ -2,17 +2,17 @@ import { HttpLink } from 'apollo-link-http'
 import {
   makeExecutableSchema,
   makeRemoteExecutableSchema,
-  mergeSchemas
+  mergeSchemas,
+  addMockFunctionsToSchema
 } from 'graphql-tools'
 
-import fetch from 'node-fetch'
+import fetch from 'cross-fetch'
 import typeDefs from '../typeDefs/index'
 import resolvers from '../resolvers/index'
 import growthTypeDefs from '../typeDefs/Growth'
 import context from '../contracts'
 import { setContext } from 'apollo-link-context'
 
-const growthServerAddress = context.growth || 'http://localhost:4001'
 const growthSchema = makeExecutableSchema({
   typeDefs: growthTypeDefs,
   resolverValidationOptions: {
@@ -36,16 +36,22 @@ const authLink = setContext((_, { headers }) => {
   return returnObject
 })
 
-const httpLink = new HttpLink({ uri: `${growthServerAddress}/graphql`, fetch })
+const httpLink = new HttpLink({ uri: `${context.growth}/graphql`, fetch })
 
-const schema = mergeSchemas({
-  schemas: [
+const schemas = [makeExecutableSchema({ typeDefs, resolvers })]
+
+if (context.growth) {
+  schemas.unshift(
     makeRemoteExecutableSchema({
       schema: growthSchema,
       link: authLink.concat(httpLink)
-    }),
-    makeExecutableSchema({ typeDefs, resolvers })
-  ]
-})
+    })
+  )
+} else {
+  addMockFunctionsToSchema({ schema: growthSchema })
+  schemas.unshift(growthSchema)
+}
+
+const schema = mergeSchemas({ schemas })
 
 export default schema
