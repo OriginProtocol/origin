@@ -123,7 +123,7 @@ async function handleLog(log, rule, contractVersion, context) {
   // Call the notification webhook.
   const json = JSON.stringify(output, null, 2)
   logger.debug(`Handler result: ${json}`)
-
+  console.log("POSTED TO NOTIFICATIONS: ", json)
   if (rule.handler.webhookEnabled() && context.config.webhook) {
     logger.info(`Webhook to ${context.config.webhook}`)
     try {

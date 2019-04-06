@@ -19,14 +19,14 @@ export function unpublishedStrength({ props, state }) {
 export function changesToPublishExist({ props, state }) {
   const profile = get(props, 'identity') || {}
   return !(
-    profile.firstName === state.firstName &&
-    profile.lastName === state.lastName &&
-    profile.description === state.description &&
-    profile.avatar === state.avatar &&
-    profile.emailVerified === !!state.emailAttestation &&
-    profile.phoneVerified === !!state.phoneAttestation &&
-    profile.facebookVerified === !!state.facebookAttestation &&
-    profile.twitterVerified === !!state.twitterAttestation &&
-    profile.airbnbVerified === !!state.airbnbAttestation
+    (profile.firstName || '') === state.firstName &&
+    (profile.lastName || '') === state.lastName &&
+    (profile.description || '') === state.description &&
+    (profile.avatar || '') === state.avatar &&
+    !!profile.emailVerified === !!state.emailAttestation &&
+    !!profile.phoneVerified === !!state.phoneAttestation &&
+    !!profile.facebookVerified === !!state.facebookAttestation &&
+    !!profile.twitterVerified === !!state.twitterAttestation &&
+    !!profile.airbnbVerified === !!state.airbnbAttestation
   )
 }

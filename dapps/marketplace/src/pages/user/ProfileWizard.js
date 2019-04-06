@@ -11,7 +11,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
 
-const WizzardStep = new Enum(
+const WizardStep = new Enum(
   'Publish',
   'RewardsEnroll',
   'SetOriginProfile',
@@ -20,11 +20,11 @@ const WizzardStep = new Enum(
   'VerifyYourOtherProfiles'
 )
 
-class ProfileWizzard extends Component {
+class ProfileWizard extends Component {
 	constructor(props) {
     super(props)
     this.state = {
-      uiStep: WizzardStep.Publish,
+      uiStep: WizardStep.Publish,
       publishChanges: false,
       skipRewardsEnroll: false,
       skipVerifyOtherProfiles: false,
@@ -123,19 +123,19 @@ class ProfileWizzard extends Component {
     }
 
     if (meetsCritria({ originProfile: true, email: true, phone: true, allAttestations: true })) {
-      this.updateUiStepIfNecessary(WizzardStep.Publish)
+      this.updateUiStepIfNecessary(WizardStep.Publish)
     } else if (meetsCritria({ originProfile: true, email: true, phone: true }) && skipVerifyOtherProfiles) {
-      this.updateUiStepIfNecessary(WizzardStep.Publish)
+      this.updateUiStepIfNecessary(WizardStep.Publish)
     } else if (meetsCritria({ originProfile: true, email: true, phone: true })) {
-      this.updateUiStepIfNecessary(WizzardStep.VerifyYourOtherProfiles)
+      this.updateUiStepIfNecessary(WizardStep.VerifyYourOtherProfiles)
     } else if (meetsCritria({ originProfile: true, email: true })) {
-      this.updateUiStepIfNecessary(WizzardStep.SetPhoneNumber)
+      this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
     } else if (meetsCritria({ originProfile: true })) {
-      this.updateUiStepIfNecessary(WizzardStep.SetEmail)
+      this.updateUiStepIfNecessary(WizardStep.SetEmail)
     } else if (!skipRewardsEnroll && !userEnroledIntoRewards) {
-      this.updateUiStepIfNecessary(WizzardStep.RewardsEnroll)
+      this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
     } else {
-      this.updateUiStepIfNecessary(WizzardStep.SetOriginProfile)
+      this.updateUiStepIfNecessary(WizardStep.SetOriginProfile)
     }
 
     if (changesToPublishExist !== this.state.publishChanges) {
@@ -145,10 +145,10 @@ class ProfileWizzard extends Component {
     }
   }
 
-  updateUiStepIfNecessary(wizzardStep) {
-    if (this.state.uiStep !== wizzardStep) {
+  updateUiStepIfNecessary(wizardStep) {
+    if (this.state.uiStep !== wizardStep) {
       this.setState({
-        uiStep: wizzardStep
+        uiStep: wizardStep
       })
     }
   }
@@ -158,11 +158,65 @@ class ProfileWizzard extends Component {
   }
 
   renderSetPhoneNumber() {
-    return "lala2"
+    return (
+      <Fragment>
+        <div className="title">
+          <fbt desc="ProfileWizard.VerifyEmailTitle">
+            Next Step: Verify your email
+          </fbt>
+        </div>
+        <div className="sub-title">
+          <fbt desc="ProfileWizard.VerifyEmailSubTitle">
+            Publish to save your changes or continue with verifications
+          </fbt>
+        </div>
+        <div className="d-flex mr-auto ml-auto mt-3">
+          {this.addPublishNowButtonIfApplicable()}
+          <button
+            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+            onClick={(e) => {
+              e.preventDefault()
+              document.getElementById('attestation-component-email').click()
+            }}
+          >
+          <fbt desc="ProfileWizard.continue">
+            Continue
+          </fbt>
+        </button>
+        </div>
+      </Fragment>
+    )
   }
 
   renderSetEmail() {
-    return "lala3"
+    return (
+      <Fragment>
+        <div className="title">
+          <fbt desc="ProfileWizard.VerifyEmailTitle">
+            Next Step: Verify your email
+          </fbt>
+        </div>
+        <div className="sub-title">
+          <fbt desc="ProfileWizard.VerifyEmailSubTitle">
+            Publish to save your changes or continue with verifications
+          </fbt>
+        </div>
+        <div className="d-flex mr-auto ml-auto mt-3">
+          {this.addPublishNowButtonIfApplicable()}
+          <button
+            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+            onClick={(e) => {
+              e.preventDefault()
+              document.getElementById('attestation-component-email').click()
+            }}
+          >
+          <fbt desc="ProfileWizard.continue">
+            Continue
+          </fbt>
+        </button>
+        </div>
+      </Fragment>
+    )
   }
 
   renderPublishChanges(buttonTextOption) {
@@ -172,13 +226,26 @@ class ProfileWizzard extends Component {
   	}
 
   	return (<div className="mr-auto ml-auto">
-      <DeployIdentity {...props} />    
+      <DeployIdentity {...props} />
     </div>)
+  }
+
+  addPublishNowButtonIfApplicable() {
+    if (this.state.publishChanges) {
+      return (
+        <DeployIdentity
+          {...this.props.deployIdentityProps}
+          children={fbt('Publish Changes', 'ProfileWizard.PubishChanges')}
+          className="btn btn-primary btn-rounded btn-light mr-3"
+        />
+      )
+    }
+    return ''
   }
 
   renderPublish() {
     return this.renderPublishChanges(
-      fbt('Publish Changes', 'ProfileWizzard.PublishChanges')
+      fbt('Publish Changes', 'ProfileWizard.PublishChanges')
     )
   }
 
@@ -186,12 +253,12 @@ class ProfileWizzard extends Component {
     return (
       <Fragment>
         <div className="title">
-          <fbt desc="ProfileWizzard.EnrollToEarn">
+          <fbt desc="ProfileWizard.EnrollToEarn">
             Enroll to earn Origin cryptocurrency tokens (OGN)
           </fbt>
         </div>
         <div className="sub-title">
-          <fbt desc="ProfileWizzard.EarnByCompletingYourProfile">
+          <fbt desc="ProfileWizard.EarnByCompletingYourProfile">
             Earn tokens by completing your profile.
           </fbt>
         </div>
@@ -199,7 +266,7 @@ class ProfileWizzard extends Component {
           className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
           skipjoincampaign="false"
         >
-          <fbt desc="ProfileWizzard.EnrollNow">
+          <fbt desc="ProfileWizard.EnrollNow">
             Enroll Now
           </fbt>
         </this.EnrollButton>
@@ -209,7 +276,7 @@ class ProfileWizzard extends Component {
             this.setState({ skipRewardsEnroll: true })
           }
         >
-          <fbt desc="ProfileWizzard.skip">
+          <fbt desc="ProfileWizard.skip">
             Skip
           </fbt>
         </button>
@@ -221,18 +288,21 @@ class ProfileWizzard extends Component {
     return (
       <Fragment>
         <div className="title">
-          <fbt desc="ProfileWizzard.OriginProfileStep">
+          <fbt desc="ProfileWizard.OriginProfileStep">
             Upload a photo and provide a name and description
           </fbt>
         </div>
-        <button
-          className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-          onClick={(e) => this.props.openEditProfile(e)}
-        >
-          <fbt desc="ProfileWizzard.getStarted">
+        <div className="d-flex mr-auto ml-auto mt-3">
+          {this.addPublishNowButtonIfApplicable()}
+          <button
+            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+            onClick={(e) => this.props.openEditProfile(e)}
+          >
+          <fbt desc="ProfileWizard.getStarted">
             Get Started
           </fbt>
         </button>
+        </div>
       </Fragment>
     )
   }
@@ -245,18 +315,18 @@ class ProfileWizzard extends Component {
 
     return (
       <Fragment>
-        {uiStep === WizzardStep.Publish && this.renderPublish()}
-        {uiStep !== WizzardStep.Publish &&  <div className="profile-wizzard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
+        {uiStep === WizardStep.Publish && this.renderPublish()}
+        {uiStep !== WizardStep.Publish &&  <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
           {this[`render${uiStep}`]()}
           <div className="status-bar d-flex justify-content-end">
             {publishChanges && <div className="publish-changes d-flex align-items-center mr-auto ml-3">
               <div className="indicator mr-2"/>
-              <fbt desc="ProfileWizzard.unpublishedChanges">
+              <fbt desc="ProfileWizard.unpublishedChanges">
                 You have unpublished changes
               </fbt>
             </div>}
             <div className="origin-id d-flex align-items-center">
-              <fbt desc="ProfileWizzard.poweredBy">
+              <fbt desc="ProfileWizard.poweredBy">
                 Powered by
               </fbt>
               <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
@@ -268,16 +338,20 @@ class ProfileWizzard extends Component {
   }
 }
 
-export default withApollo(ProfileWizzard)
+export default withApollo(ProfileWizard)
 
 require('react-styl')(`
-	.profile-wizzard-box
+	.profile-wizard-box
     background-color: white
     border-radius: 5px
     border: 1px solid var(--light)
     min-height: 190px
     position: relative
     padding-bottom: 35px
+    .btn-light
+      border: 1px solid var(--clear-blue)
+      background-color: white
+      color: var(--clear-blue)
     .status-bar
       position: absolute
       bottom: 10px

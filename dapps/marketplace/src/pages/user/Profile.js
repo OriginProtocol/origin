@@ -23,7 +23,7 @@ import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
-import ProfileWizzard from 'pages/user/ProfileWizzard'
+import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
@@ -192,7 +192,7 @@ class UserProfile extends Component {
             />
 
             <div className="actions">
-              <ProfileWizzard
+              <ProfileWizard
                 deployIdentityProps={{
                   className: `btn btn-primary btn-rounded btn-lg`,
                   identity: get(this.props, 'identity.id'),
@@ -291,6 +291,7 @@ class UserProfile extends Component {
     return (
       <>
         <div
+          id={`attestation-component-${type}`}
           className={`profile-attestation ${type}${status}`}
           onClick={() => this.setState({ [type]: true })}
         >
