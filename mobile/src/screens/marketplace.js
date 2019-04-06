@@ -1,16 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
+import CardsModal from 'components/cards-modal'
+
 class MarketplaceScreen extends Component {
-  static navigationOptions = {
-    title: 'Marketplace',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  constructor(props) {
+    super(props)
+
+    this.toggleModal = this.toggleModal.bind(this)
+    this.state = {
+      modalOpen: false
     }
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Marketplace',
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      },
+      headerRight: (
+        <TouchableOpacity onPress={() => {
+          navigation.state.params.toggleModal()
+        }}>
+          <Text style={{ marginRight: 10 }}>💄</Text>
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ toggleModal: this.toggleModal })
   }
 
   onWebViewMessage(event) {
@@ -35,6 +60,10 @@ class MarketplaceScreen extends Component {
     alert('Please confirm purchase of: ' + listingID)
   }
 
+  toggleModal() {
+    this.setState({ modalOpen: !this.state.modalOpen })
+  }
+
   render() {
     console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
 
@@ -45,14 +74,21 @@ class MarketplaceScreen extends Component {
     `
 
     return (
-      <WebView
-        ref={webview => {
-          this.dappWebView = webview
-        }}
-        source={{ uri: MARKETPLACE_DAPP_URL }}
-        onMessage={this.onWebViewMessage.bind(this)}
-        injectedJavaScript={injectedJavaScript}
-      />
+      <Fragment>
+        <WebView
+          ref={webview => {
+            this.dappWebView = webview
+          }}
+          source={{ uri: MARKETPLACE_DAPP_URL }}
+          onMessage={this.onWebViewMessage.bind(this)}
+          injectedJavaScript={injectedJavaScript}
+        />
+        <CardsModal
+          visible={this.state.modalOpen}
+          onPress={this.toggleModal}
+          onRequestClose={this.toggleModal}
+        />
+      </Fragment>
     )
   }
 }
