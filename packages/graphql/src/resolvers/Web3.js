@@ -101,7 +101,6 @@ const web3Resolver = {
         return 'Parity'
       return 'Meta Mask'
     }
-
   },
   mobileWalletAccount: async () => {
     return {
