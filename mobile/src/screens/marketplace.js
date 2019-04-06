@@ -1,6 +1,9 @@
+'use strict'
+
 import React, { Component, Fragment } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview'
+import { connect } from 'react-redux'
 
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
@@ -10,10 +13,12 @@ class MarketplaceScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
-      modalOpen: false
+      modalOpen: false,
+      injected: false
     }
+
+    this.toggleModal = this.toggleModal.bind(this)
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -39,6 +44,7 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewMessage(event) {
+    alert('Hello from react-native')
     console.debug(event)
     console.debug(`Got event:`)
 
@@ -68,8 +74,7 @@ class MarketplaceScreen extends Component {
     console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
 
     const injectedJavaScript = `
-      window.__mobileBridge = true;
-      window.__mobileBridgeAccount = '1234';
+      window.__mobileBridgeAccount = '${this.props.wallet.address}';
       true;
     `
 
@@ -81,7 +86,18 @@ class MarketplaceScreen extends Component {
           }}
           source={{ uri: MARKETPLACE_DAPP_URL }}
           onMessage={this.onWebViewMessage.bind(this)}
-          injectedJavaScript={injectedJavaScript}
+          onLoadStart={e => {
+            this.setState({ injected: false })
+            console.log('Injected false')
+          }}
+          onLoadProgress={e => {
+            console.log('Load progress')
+            if (!this.state.injected) {
+              console.log('Injecting javascript')
+              this.dappWebView.injectJavaScript(injectedJavaScript)
+              this.setState({ injected: true })
+            }
+          }}
         />
         <CardsModal
           visible={this.state.modalOpen}
@@ -93,4 +109,8 @@ class MarketplaceScreen extends Component {
   }
 }
 
-export default MarketplaceScreen
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(MarketplaceScreen)

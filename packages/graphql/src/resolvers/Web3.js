@@ -101,8 +101,13 @@ const web3Resolver = {
         return 'Parity'
       return 'Meta Mask'
     }
+
   },
-  mobileWalletAccount: async () => {},
+  mobileWalletAccount: async () => {
+    return {
+      id: window.__mobileBridgeAccount || null
+    }
+  },
   primaryAccount: async () => {
     if (localStorage.useWeb3Wallet) {
       return { id: localStorage.useWeb3Wallet }
