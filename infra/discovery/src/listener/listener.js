@@ -89,6 +89,9 @@ const config = {
   trailBlocks: parseInt(
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
+  concurrency: parseInt(
+    args['--concurrency'] || process.env.CONCURRENCY || 1
+  ),
   network: args['--network'] || process.env.NETWORK || 'docker',
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
@@ -137,8 +140,7 @@ async function main() {
       )
       logger.debug(`Got ${newEvents.length} new events`)
 
-      const concurrency = 50
-      const limit = pLimit(concurrency)
+      const limit = pLimit(context.config.concurrency)
 
       const promises = []
       newEvents.forEach(newEvent => {
