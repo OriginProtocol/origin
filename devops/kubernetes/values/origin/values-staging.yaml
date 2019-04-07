@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'f8ded14'
+dappImageTag: 'bde6cb4'
 dappReplicas: 2
 
 # origin-ipfs-proxy
