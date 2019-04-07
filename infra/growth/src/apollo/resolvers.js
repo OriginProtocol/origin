@@ -94,7 +94,7 @@ const resolvers = {
         }
       } else {
         // Geolocalize based on IP and check eligibility.
-        eligibility = getLocationInfo(context.req.headers['x-real-ip'])
+        eligibility = await getLocationInfo(context.req.headers['x-real-ip'])
       }
       logger.debug('Eligibility:', JSON.stringify(eligibility))
       return eligibility
