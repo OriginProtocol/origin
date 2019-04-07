@@ -118,7 +118,7 @@ const resolvers = {
     },
     async enroll(_, args, context) {
       const ip = context.req.headers['x-real-ip']
-      const { eligibility, countryCode } = getLocationInfo(ip)
+      const { eligibility, countryCode } = await getLocationInfo(ip)
       if (eligibility === 'Forbidden') {
         logger.warn('Enrollment declined for user in country ', countryCode)
         throw new ForbiddenError('Forbidden country')
