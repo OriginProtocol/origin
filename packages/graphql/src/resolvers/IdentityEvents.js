@@ -181,5 +181,5 @@ export default {
     })
     const authData = await response.json()
     return authData.url
-  },
+  }
 }

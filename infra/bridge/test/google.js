@@ -19,7 +19,8 @@ describe('google attestations', () => {
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.GOOGLE_CLIENT_ID = 'facebook-client-id'
     process.env.GOOGLE_CLIENT_SECRET = 'facebook-client-secret'
-    process.env.GOOGLE_BASE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth?'
+    process.env.GOOGLE_BASE_AUTH_URL =
+      'https://accounts.google.com/o/oauth2/v2/auth?'
     process.env.GOOGLE_BASE_API_URL = 'https://www.googleapis.com'
     process.env.HOST = 'originprotocol.com'
 
@@ -59,8 +60,8 @@ describe('google attestations', () => {
         grant_type: 'authorization_code'
       })
       .reply(200, { access_token: '12345' })
-    
-      nock(process.env.GOOGLE_BASE_API_URL)
+
+    nock(process.env.GOOGLE_BASE_API_URL)
       .get('/oauth2/v2/userinfo')
       .query({
         access_token: 12345
@@ -85,9 +86,7 @@ describe('google attestations', () => {
     expect(response.body.data.attestation.verificationMethod.oAuth).to.equal(
       true
     )
-    expect(response.body.data.attestation.site.siteName).to.equal(
-      'google.com'
-    )
+    expect(response.body.data.attestation.site.siteName).to.equal('google.com')
     expect(response.body.data.attestation.site.userId.verified).to.equal(true)
 
     // Verify attestation was recorded in the database

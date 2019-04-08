@@ -55,9 +55,7 @@ class GoogleAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="GoogleAttestation.verfify">
-            Verify your Google Account
-          </fbt>
+          <fbt desc="GoogleAttestation.verfify">Verify your Google Account</fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
@@ -131,9 +129,7 @@ class GoogleAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="GoogleAttestation.verified">
-            Google account verified!
-          </fbt>
+          <fbt desc="GoogleAttestation.verified">Google account verified!</fbt>
         </h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">
