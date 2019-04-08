@@ -36,7 +36,7 @@ class OriginEventSource {
   }
 
   async getNetworkId() {
-    return await netId(this.web3, this.net)
+    return await netId(this.web3)
   }
 
   async getMarketplace() {
