@@ -3,6 +3,7 @@ import Modal from 'components/Modal'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
+import Fingerprint2 from 'fingerprintjs2'
 
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
@@ -44,7 +45,8 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
-        userAlreadyEnrolled: false
+        userAlreadyEnrolled: false,
+        fingerprint: null
       }
     }
 
@@ -76,6 +78,22 @@ function withEnrolmentModal(WrappedComponent) {
           )
         )
       }
+    }
+
+    componentDidMount() {
+      // Delay the fingerprint calculation to ensure consistent fingerprinting.
+      setTimeout(() => this.calcFingerprint(), 500)
+    }
+
+    async calcFingerprint() {
+      const options = {}
+      Fingerprint2.get(options, components => {
+        const values = components.map(component => component.value)
+        const hash = Fingerprint2.x64hash128(values.join(''), 31)
+        this.setState({
+          fingerprint: `V1-${hash}`
+        })
+      })
     }
 
     handleNotCitizenClick(e) {
@@ -384,7 +402,9 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return <Enroll />
+      return <Enroll
+        fingerprint={this.state.fingerprint}
+      />
     }
 
     renderNotSupportedOnMobile() {

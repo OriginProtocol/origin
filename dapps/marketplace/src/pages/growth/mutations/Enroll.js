@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
-import Fingerprint2 from 'fingerprintjs2'
 
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
@@ -15,19 +14,7 @@ class Enroll extends Component {
     message: 'I accept the terms of growth campaign version: 1.0'
   }
 
-  async calcFingerprint() {
-    const options = {}
-    Fingerprint2.get(options, components => {
-      const values = components.map(component => component.value)
-      const hash = Fingerprint2.x64hash128(values.join(''), 31)
-      this.fingerprint = 'V1-' + hash
-    })
-  }
-
   render() {
-    // Delay the fingerprint calculation to ensure consistent fingerprinting.
-    setTimeout(() => this.calcFingerprint(), 500)
-
     return (
       <Query query={profileQuery}>
         {({ networkStatus, error, loading, data }) => {
@@ -37,7 +24,6 @@ class Enroll extends Component {
           }
 
           const accountId = data.web3.primaryAccount.id
-
           return (
             <Mutation
               mutation={GrowthEnroll}
@@ -62,7 +48,7 @@ class Enroll extends Component {
                         agreementMessage: this.state.message,
                         signature: signMessage,
                         inviteCode: localStorage.getItem('growth_invite_code'),
-                        fingerprint: this.fingerprint
+                        fingerprint: this.props.fingerprint
                       }
                     })
                   }}
