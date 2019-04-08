@@ -7,7 +7,7 @@
 const bs58 = require('bs58')
 const FormData = require('form-data')
 const fetch = require('cross-fetch')
-const cache = {}
+const memoize = require('lodash/memoize')
 
 function getBytes32FromIpfsHash(hash) {
   return `0x${bs58
@@ -95,7 +95,7 @@ async function post(gateway, json, rawHash) {
 //   return decrypted.data
 // }
 
-async function getText(gateway, hashAsBytes) {
+async function getTextFn(gateway, hashAsBytes) {
   const hash =
     hashAsBytes.indexOf('0x') === 0
       ? getIpfsHashFromBytes32(hashAsBytes)
@@ -126,29 +126,13 @@ async function getText(gateway, hashAsBytes) {
   return await response.text()
 }
 
-const queues = {}
-class Queue {
-  constructor() {
-    this.fetching = false
-    this.requestQueue = []
-  }
-  async isDone() {
-    return new Promise(resolve => this.requestQueue.push(resolve))
-  }
-}
+const getText = memoize(getTextFn, (...args) => args[1])
 
 async function get(gateway, hashAsBytes) {
   // }, party) {
   if (!hashAsBytes) return null
 
-  const reqQueue = (queues[hashAsBytes] = queues[hashAsBytes] || new Queue())
-  if (reqQueue.fetching) await reqQueue.isDone()
-  reqQueue.fetching = true
-
-  let text = cache[hashAsBytes]
-  if (!text) {
-    text = await getText(gateway, hashAsBytes)
-  }
+  const text = await getText(gateway, hashAsBytes)
   // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
   //   try {
   //     text = await decode(text, party.privateKey, party.pgpPass)
@@ -156,12 +140,6 @@ async function get(gateway, hashAsBytes) {
   //     return { encrypted: true, decryptError: e }
   //   }
   // }
-  cache[hashAsBytes] = text
-
-  reqQueue.fetching = false
-  while (reqQueue.requestQueue.length) {
-    reqQueue.requestQueue.pop()()
-  }
 
   return JSON.parse(text)
 }

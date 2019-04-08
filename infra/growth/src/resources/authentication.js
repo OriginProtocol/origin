@@ -12,11 +12,21 @@ const currentAgreementMessage =
   'I accept the terms of growth campaign version: 1.0'
 
 /**
- * Authenticates user's enrollment to the growth campaign
- * @param {string} referrer - Eth address of the referrer.
- * @param {Array<string>>} recipients - List of email addresses.
+ * Authenticate and enroll the user into the Origin Rewards program.
+ * @param {string} accountId - Eth address of the user.
+ * @param {string} agreementMessage - Message presented to user to sign.
+ * @param {string} signature - Signed message.
+ * @param {string} ip - IP address the request was initiated from.
+ * @param {string} country - 2 letters country code.
+ * @returns {Promise<any>}
  */
-async function authenticateEnrollment(accountId, agreementMessage, signature) {
+async function authenticateEnrollment(
+  accountId,
+  agreementMessage,
+  signature,
+  ip,
+  country
+) {
   if (currentAgreementMessage !== agreementMessage) {
     throw new Error(
       `Incorrect agreementMessage. Expected: "${currentAgreementMessage}" received: "${agreementMessage}"`
@@ -58,7 +68,9 @@ async function authenticateEnrollment(accountId, agreementMessage, signature) {
     ethAddress: accountId.toLowerCase(),
     status: enums.GrowthParticipantStatuses.Active,
     agreementId: agreementMessage,
-    authToken: authToken
+    authToken: authToken,
+    ip,
+    country
   }
 
   if (participant !== null) {
