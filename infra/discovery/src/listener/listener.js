@@ -153,9 +153,7 @@ async function main() {
     // Flatten array of arrays filtering out anything undefined
     const events = [].concat(...eventArrays.filter(x => x))
     // Filter to only new events
-    let newEvents = events.filter(
-      event => event.blockNumber > processedToBlock
-    )
+    let newEvents = events.filter(event => event.blockNumber > processedToBlock)
     logger.debug(`Got ${newEvents.length} new events`)
 
     if (context.config.concurrency > 1) {
@@ -195,7 +193,6 @@ async function main() {
     await setLastBlock(context.config, toBlock)
     processedToBlock = toBlock
     blockGauge.set(toBlock)
-
   } while (await nextTick())
 }
 
