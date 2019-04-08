@@ -1,6 +1,10 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../contracts'
 import get from 'lodash/get'
+import memoize from 'lodash/memoize'
+
+const netId = memoize(async () => await contracts.web3.eth.net.getId())
+const mmNetId = memoize(async () => await contracts.metaMask.eth.net.getId())
 
 import { getTransaction, getTransactionReceipt } from './web3/transactions'
 
@@ -14,10 +18,10 @@ function networkName(netId) {
 }
 
 const web3Resolver = {
-  networkId: () => contracts.web3.eth.net.getId(),
+  networkId: async () => await netId(contracts.net),
   networkName: async () => {
-    const netId = await contracts.web3.eth.net.getId()
-    return networkName(netId)
+    const id = await netId(contracts.net)
+    return networkName(id)
   },
   blockNumber: () => contracts.marketplace.eventCache.getBlockNumber(),
   nodeAccounts: () =>
@@ -47,17 +51,12 @@ const web3Resolver = {
   metaMaskAvailable: () => (contracts.metaMask ? true : false),
   metaMaskNetworkId: async () => {
     if (!contracts.metaMask) return null
-    return new Promise(resolve => {
-      contracts.metaMask.eth.net
-        .getId()
-        .then(id => resolve(id))
-        .catch(() => resolve(null))
-    })
+    return await mmNetId(contracts.net)
   },
   metaMaskNetworkName: async () => {
     if (!contracts.metaMask) return null
-    const netId = await contracts.metaMask.eth.net.getId()
-    return networkName(netId)
+    const id = await mmNetId(contracts.net)
+    return networkName(id)
   },
   useMetaMask: () => (contracts.metaMaskEnabled ? true : false),
   metaMaskEnabled: async () => {

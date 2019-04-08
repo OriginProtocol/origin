@@ -26,9 +26,6 @@ const query = gql`
       metaMaskNetworkName
       metaMaskAccount {
         id
-        balance {
-          eth
-        }
       }
     }
   }

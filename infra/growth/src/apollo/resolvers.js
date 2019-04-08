@@ -94,7 +94,7 @@ const resolvers = {
         }
       } else {
         // Geolocalize based on IP and check eligibility.
-        eligibility = getLocationInfo(context.req.headers['x-real-ip'])
+        eligibility = await getLocationInfo(context.req.headers['x-real-ip'])
       }
       logger.debug('Eligibility:', JSON.stringify(eligibility))
       return eligibility
@@ -117,9 +117,18 @@ const resolvers = {
       return true
     },
     async enroll(_, args, context) {
-      const { eligibility, countryCode } = getLocationInfo(
-        context.req.headers['x-real-ip']
-      )
+      let ip, eligibility, countryCode
+      if (process.env.NODE_ENV !== 'production') {
+        ip = '192.168.1.1'
+        eligibility = 'Eligible'
+        countryCode = 'NA'
+      } else {
+        ip = context.req.headers['x-real-ip']
+        const locationInfo = await getLocationInfo(ip)
+        eligibility = locationInfo.eligibility
+        countryCode = locationInfo.countryCode
+      }
+
       if (eligibility === 'Forbidden') {
         logger.warn('Enrollment declined for user in country ', countryCode)
         throw new ForbiddenError('Forbidden country')
@@ -129,7 +138,10 @@ const resolvers = {
         const authToken = await authenticateEnrollment(
           args.accountId,
           args.agreementMessage,
-          args.signature
+          args.signature,
+          args.fingerprint,
+          ip,
+          countryCode
         )
 
         /* Make referral connection after we are sure user provided the correct accountId
