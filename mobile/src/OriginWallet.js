@@ -18,6 +18,11 @@ import { GCM_SENDER_ID } from 'react-native-dotenv'
 
 import origin, {apiUrl, defaultProviderUrl, localApi, defaultLocalRemoteHost, getEthCode} from 'services/origin'
 
+import {
+  MAINNET_DAI_CONTRACT_ADDRESS,
+  RINKEBY_DAI_CONTRACT_ADDRESS
+} from 'react-native-dotenv'
+
 const ETHEREUM_QR_PREFIX = "ethereum:"
 const ORIGIN_QR_PREFIX = "orgw:"
 const ORIGIN_WALLET = "OriginWallet"
@@ -36,6 +41,22 @@ const DEFAULT_NOTIFICATION_PERMISSIONS = {
   badge: true,
   sound: true
 }
+const MIN_ABI = [
+  {
+    "constant":true,
+    "inputs":[{"name":"_owner","type":"address"}],
+    "name":"balanceOf",
+    "outputs":[{"name":"balance","type":"uint256"}],
+    "type":"function"
+  },
+  {
+    "constant":true,
+    "inputs":[],
+    "name":"decimals",
+    "outputs":[{"name":"","type":"uint8"}],
+    "type":"function"
+  }
+]
 
 const Events = keyMirror({
   PROMPT_LINK:null,
@@ -98,12 +119,13 @@ const timeout = (ms) => {
 class OriginWallet {
   constructor() {
     this.state = {
-      notifyTime: null,
-      notifyMessage: null,
-      deviceToken: undefined,
-      notificationType: undefined,
       ethAddress: undefined,
+      daiDecimals: undefined,
+      deviceToken: undefined,
       linkCode: undefined,
+      notificationType: undefined,
+      notifyMessage: null,
+      notifyTime: null,
       walletToken: undefined
     }
 
@@ -1117,6 +1139,23 @@ class OriginWallet {
     return `https://buy.coinbase.com/widget?address=${this.state.ethAddress}&amount=0&code=${getEthCode}&crypto_currency=ETH`
   }
 
+  async getDaiBalance() {
+    try {
+      const contract = new web3.eth.Contract(MIN_ABI, this.daiContractAddress);
+      if (!this.state.daiDecimals)
+      {
+        this.state.daiDecimals = await contract.methods.decimals().call()
+      }
+      return await contract.methods.balanceOf(this.state.ethAddress).call()
+    } catch (error) {
+      console.log("Cannot get DAI balance:", error)
+    }
+  }
+
+  getDaiDecimals() {
+    return this.state.daiDecimals
+  }
+
   async initWeb3() {
     this.remote_localhost = await loadData(REMOTE_LOCALHOST_STORE)
     if (this.remote_localhost == undefined) {
@@ -1157,7 +1196,7 @@ class OriginWallet {
         origin.initInstance()
       }
 
-      this.dappUrl = dapp_url
+      this.dappUrl = 'https://originprotocol.github.io/test-builds/dai'//dapp_url
       // update the contract addresses contract
       origin.contractService.updateContractAddresses(contract_addresses)
       origin.ipfsService.gateway = localfy(ipfs_gateway)
@@ -1175,6 +1214,18 @@ class OriginWallet {
         this.checkSyncMessages(true)
       }
       this.providerUrl = provider_url
+      if (this.state.netId === 1)
+      {
+        this.daiContractAddress = MAINNET_DAI_CONTRACT_ADDRESS
+      }
+      else if (this.state.netId === 4)
+      {
+        this.daiContractAddress = RINKEBY_DAI_CONTRACT_ADDRESS
+      }
+      else
+      {
+        this.daiContractAddress = null
+      }
     } catch(error)
     {
       console.log("Cannot fetch server info:", error)

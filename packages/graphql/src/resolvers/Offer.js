@@ -1,5 +1,7 @@
 import contracts from '../contracts'
 import parseId from '../utils/parseId'
+import currencies from '../utils/currencies'
+import get from 'lodash/get'
 
 import { getIpfsHashFromBytes32 } from '@origin/ipfs'
 
@@ -45,5 +47,14 @@ export default {
   withdrawnEvent: async offer => _firstEventByType(offer, 'OfferWithdrawn'),
   fundsAddedEvent: async offer => _firstEventByType(offer, 'OfferFundsAdded'),
   disputedEvent: async offer => _firstEventByType(offer, 'OfferDisputed'),
-  rulingEvent: async offer => _firstEventByType(offer, 'OfferRuling')
+  rulingEvent: async offer => _firstEventByType(offer, 'OfferRuling'),
+
+  totalPrice: async offer => {
+    return {
+      amount: offer.totalPrice.amount,
+      currency: await currencies.get(
+        get(offer, 'totalPrice.currency.id', 'token-ETH')
+      )
+    }
+  }
 }

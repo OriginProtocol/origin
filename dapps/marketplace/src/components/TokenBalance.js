@@ -14,7 +14,11 @@ class TokenBalance extends Component {
     const { account, token } = this.props
     if (!account || !token) return null
     return (
-      <Query query={AccountTokenBalance} variables={{ account, token }}>
+      <Query
+        query={AccountTokenBalance}
+        variables={{ account, token }}
+        fetchPolicy="network-only"
+      >
         {({ loading, error, data }) => {
           if (loading || error) return null
           const tokenHolder = data.web3.account.token

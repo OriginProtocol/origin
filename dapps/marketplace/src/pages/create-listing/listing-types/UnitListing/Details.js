@@ -5,11 +5,13 @@ import omit from 'lodash/omit'
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-import Price from 'components/Price'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+
+import PricingChooser from '../_PricingChooser'
 
 class Details extends Component {
   constructor(props) {
@@ -88,37 +90,37 @@ class Details extends Component {
                   <input {...input('quantity')} />
                   {Feedback('quantity')}
                 </div>
-                <div className="form-group">
-                  <label>
-                    <fbt desc="price">Price</fbt>
-                    {`${isMulti ? fbt(' (per unit)', ' (per unit)') : ''}`}
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
+
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>
+                      {!isMulti && <fbt desc="price-per-unit">Price</fbt>}
+                      {isMulti && (
+                        <fbt desc="price-per-unit">Price (per unit)</fbt>
+                      )}
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      <fbt desc="create.details.help-text.price">
+                        Price is an approximation of what you will receive.
+                      </fbt>
+                      <a
+                        href="#/about/payments"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        &nbsp;
+                        <fbt desc="create.details.help-text.price.more">
+                          Learn More
+                        </fbt>
+                      </a>
                     </div>
                   </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    <fbt desc="create.details.help-text.price">
-                      The cost to buy this listing. Price is always in ETH, USD
-                      is an estimate.
-                    </fbt>
-                  </div>
-                </div>
+                </PricingChooser>
 
                 {/* END Unit specific code */}
 
@@ -246,3 +248,10 @@ class Details extends Component {
 }
 
 export default Details
+
+require('react-styl')(`
+  .create-listing .create-listing-step-2 .pricing-chooser
+    .help-text
+      .help-icon
+        margin-left: auto
+`)

@@ -11,7 +11,6 @@ import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
 import { getCurrentNetwork } from 'utils/networks'
-import { toOgns } from 'utils/ogn'
 import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'

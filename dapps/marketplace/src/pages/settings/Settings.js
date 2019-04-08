@@ -10,6 +10,7 @@ import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
+import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
 import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
@@ -71,7 +72,7 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const { locale, onLocale } = this.props
+    const { locale, onLocale, currency, onCurrency } = this.props
 
     return (
       <Mutation
@@ -111,6 +112,24 @@ class Settings extends Component {
                       onLocale={onLocale}
                       className="btn btn-secondary"
                       dropdown={true}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="language">
+                      <fbt desc="settings.currencyLabel">Currency</fbt>
+                    </label>
+                    <div className="form-text form-text-muted">
+                      <small>
+                        <fbt desc="settings.currency">
+                          Please make a selection from the list below.
+                        </fbt>
+                      </small>
+                    </div>
+                    <CurrencyDropdown
+                      value={currency}
+                      onChange={onCurrency}
+                      className="btn btn-secondary"
                     />
                   </div>
 

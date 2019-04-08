@@ -177,7 +177,7 @@ class UserProfile extends Component {
               <div className="profile-attestations">
                 {this.renderAtt(
                   'phone',
-                  fbt('Phone Number', '_ProvisionedChanges.phoneNumber')
+                  fbt('Phone', '_ProvisionedChanges.phone')
                 )}
                 {this.renderAtt(
                   'email',
