@@ -24,6 +24,8 @@ const affiliatesFn = async (contract, address) =>
   await contract.methods.allowedAffiliates(address).call()
 const getAffiliates = memoize(affiliatesFn, (...args) => args[1])
 
+const netId = memoize(async web3 => await web3.eth.net.getId())
+
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
@@ -34,10 +36,7 @@ class OriginEventSource {
   }
 
   async getNetworkId() {
-    if (!this.networkId) {
-      this.networkId = await this.web3.eth.net.getId()
-    }
-    return this.networkId
+    return await netId(this.web3, this.net)
   }
 
   async getMarketplace() {
