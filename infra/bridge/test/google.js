@@ -66,7 +66,7 @@ describe('google attestations', () => {
       .query({
         access_token: 12345
       })
-      .reply(200, { name: 'Origin Protocol' })
+      .reply(200, { email: 'Origin Protocol' })
 
     const response = await request(app)
       .post('/api/attestations/google/verify')

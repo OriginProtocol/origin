@@ -55,18 +55,18 @@ class GoogleAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="GoogleAttestation.verfify">Verify your Google Account</fbt>
+          <fbt desc="GoogleAttestation.verify">Verify your Google Account</fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verfify.warning">
+          <fbt desc="Attestation.verify.warning">
             <b>Warning:</b> Currently unavailable on mobile devices
           </fbt>
         </div>
         <div className="help">
-          <fbt desc="GoogleAttestation.verfify.explanation">
+          <fbt desc="GoogleAttestation.verify.explanation">
             Other users will know that you have a verified Google account, but
             your account details will not be published on the blockchain. We
             will never post on your behalf.

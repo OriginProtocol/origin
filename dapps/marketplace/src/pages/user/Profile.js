@@ -184,7 +184,10 @@ class UserProfile extends Component {
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
-                {this.renderAtt('google', 'Google')}
+                {this.renderAtt(
+                  'google',
+                  fbt('Google', '_ProvisionedChanges.google')
+                )}
               </div>
             </div>
 
