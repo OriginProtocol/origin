@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
+
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
 import SignMessageMutation from 'mutations/SignMessage'
@@ -12,6 +13,7 @@ class Enroll extends Component {
     // TODO: change version programatically
     message: 'I accept the terms of growth campaign version: 1.0'
   }
+
   render() {
     return (
       <Query query={profileQuery}>
@@ -22,7 +24,6 @@ class Enroll extends Component {
           }
 
           const accountId = data.web3.primaryAccount.id
-
           return (
             <Mutation
               mutation={GrowthEnroll}
@@ -46,7 +47,8 @@ class Enroll extends Component {
                         accountId: accountId,
                         agreementMessage: this.state.message,
                         signature: signMessage,
-                        inviteCode: localStorage.getItem('growth_invite_code')
+                        inviteCode: localStorage.getItem('growth_invite_code'),
+                        fingerprint: this.props.fingerprint
                       }
                     })
                   }}

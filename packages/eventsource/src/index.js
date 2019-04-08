@@ -31,6 +31,8 @@ function mutatePrice(price) {
   price.currency = { id: currency }
 }
 
+const netId = memoize(async web3 => await web3.eth.net.getId())
+
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
@@ -41,10 +43,7 @@ class OriginEventSource {
   }
 
   async getNetworkId() {
-    if (!this.networkId) {
-      this.networkId = await this.web3.eth.net.getId()
-    }
-    return this.networkId
+    return await netId(this.web3)
   }
 
   async getMarketplace() {
