@@ -29,6 +29,7 @@ import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
+import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import CurrencyContext from 'constants/CurrencyContext'
 
@@ -116,6 +117,7 @@ class App extends Component {
               )}
             />
             <Route path="/about/dapp-info" component={DappInfo} />
+            <Route path="/about/crypto" component={AboutCrypto} />
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route exact path="/campaigns" component={GrowthCampaigns} />
