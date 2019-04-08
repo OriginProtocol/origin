@@ -95,6 +95,7 @@ const config = {
   ),
   // Warning: only use concurrency > 1 for backfills. Not under normal operation.
   concurrency: parseInt(args['--concurrency'] || process.env.CONCURRENCY || 1),
+  // Possible values: origin, rinkeby, mainnet, ...
   network: args['--network'] || process.env.NETWORK || 'docker',
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
@@ -120,7 +121,7 @@ async function main() {
   async function nextTick() {
     const elapsed = new Date() - start
     const delay = Math.max(tickIntervalSeconds * 1000 - elapsed, 1)
-    return new Promise(resolve => setTimeout(resolve(true), delay))
+    return new Promise(resolve => setTimeout(() => resolve(true), delay))
   }
 
   do {
@@ -129,15 +130,14 @@ async function main() {
     // Compute the range of blocks to process,
     // while respecting trailing block configuration.
     const currentBlock = await context.web3.eth.getBlockNumber()
-    let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
-    toBlock = Math.min(toBlock, processedToBlock + 10000) // At most process a chunk of 10k blocks at once.
+    const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
 
     // Listener is up to date. Nothing to do.
     if (toBlock <= processedToBlock) {
       logger.debug('No new blocks to process')
       continue
     }
-    logger.debug(`Querying events up to ${toBlock}`)
+    logger.info(`Querying events from ${processedToBlock} up to ${toBlock}`)
 
     // Update the event caches to set their max block number.
     contractsContext.marketplace.eventCache.updateBlock(toBlock)
