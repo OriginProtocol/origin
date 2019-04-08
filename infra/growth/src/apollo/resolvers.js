@@ -129,6 +129,7 @@ const resolvers = {
           args.accountId,
           args.agreementMessage,
           args.signature,
+          args.fingerprint,
           ip,
           countryCode
         )
