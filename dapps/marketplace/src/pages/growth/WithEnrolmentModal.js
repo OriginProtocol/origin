@@ -402,9 +402,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return <Enroll
-        fingerprint={this.state.fingerprint}
-      />
+      return <Enroll fingerprint={this.state.fingerprint} />
     }
 
     renderNotSupportedOnMobile() {
