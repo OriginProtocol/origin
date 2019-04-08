@@ -20,8 +20,8 @@ const AboutCrypto = () => (
           <fbt desc="aboutCrypto.fiatExplanation">
             Ether (ETH) is the name of the currency used to record data on the
             Ethereum blockchain. Maker Dai (DAI) is the first decentralized
-            stablecoin built on Ethereum. Both cryptocurrencies can be
-            used to make purchases on Origin, but a tiny amount of ETH is always
+            stablecoin built on Ethereum. Both cryptocurrencies can be used to
+            make purchases on Origin, but a tiny amount of ETH is always
             required to create a listing, make an offer, or publish an identity.
           </fbt>
         </p>
