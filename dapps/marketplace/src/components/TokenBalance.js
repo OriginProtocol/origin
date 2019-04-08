@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
+import get from 'lodash/get'
 
 import AccountTokenBalance from 'queries/TokenBalance'
 
@@ -17,11 +18,10 @@ class TokenBalance extends Component {
       <Query
         query={AccountTokenBalance}
         variables={{ account, token }}
-        fetchPolicy="network-only"
+        fetchPolicy="cache-and-network"
       >
-        {({ loading, error, data }) => {
-          if (loading || error) return null
-          const tokenHolder = data.web3.account.token
+        {({ data }) => {
+          const tokenHolder = get(data, 'web3.account.token')
           if (!tokenHolder || !tokenHolder.balance) return null
           const decimals = tokenHolder.token.decimals
           return tokenBalance(tokenHolder.balance, decimals)

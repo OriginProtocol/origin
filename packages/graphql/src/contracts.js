@@ -160,7 +160,17 @@ const Configs = {
     IdentityEvents: '0xe760d066bd8bbe22d7e9d8107be878102bd8d57d',
     IdentityEvents_Epoch: '0',
     affiliate: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
-    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9'
+    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
+    DaiExchange: '0xD4fbAF1dFe100d07f8Ef73d8c92e93d0Bcf7b45D',
+    tokens: [
+      {
+        id: '0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ]
   },
   localhost: {
     provider: `http://${HOST}:8545`,

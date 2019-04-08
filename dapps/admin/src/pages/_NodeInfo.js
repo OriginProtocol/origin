@@ -70,9 +70,9 @@ const Subs = () => (
                     }}
                   />
                   <Menu.Item
-                    text="Stablecoin Test"
+                    text="Origin Testnet"
                     onClick={() => {
-                      setNetwork({ variables: { network: 'dai' } })
+                      setNetwork({ variables: { network: 'origin' } })
                       client.resetStore()
                     }}
                   />

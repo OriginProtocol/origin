@@ -54,7 +54,7 @@ const WaitForConfirmation = () => (
 
 const Error = () => (
   <div className="make-offer-modal">
-    <div className="spinner light" />
+    <div className="error-icon" />
     <div>
       <b>
         <fbt desc="WaitForTransaction.errorSeeConsole">Error - see console</fbt>
@@ -75,6 +75,7 @@ const Confirm = () => (
 )
 
 class WaitForTransaction extends Component {
+  state = {}
   render() {
     const id = this.props.hash
     const role = roleForEvent(this.props.event)
@@ -103,7 +104,12 @@ class WaitForTransaction extends Component {
         <>
           <MobileLinkerCode role={role} />
           <Modal
-            onClose={() => (this.props.onClose ? this.props.onClose() : null)}
+            shouldClose={this.state.shouldClose}
+            onClose={() => {
+              this.setState({ shouldClose: false }, () => {
+                this.props.onClose ? this.props.onClose() : null
+              })
+            }}
           >
             {content}
           </Modal>
@@ -116,6 +122,7 @@ class WaitForTransaction extends Component {
     return (
       <Query query={query} variables={{ id }} pollInterval={poll}>
         {({ data, client, error }) => {
+          const receipt = get(data, 'web3.transactionReceipt')
           const events = get(data, 'web3.transactionReceipt.events', [])
           const currentBlock = get(data, 'web3.blockNumber')
           const confirmedBlock = get(
@@ -128,9 +135,16 @@ class WaitForTransaction extends Component {
           let content
           if (error) {
             console.error(error)
-            content = <Error />
-          } else if (!event) {
+            content = (
+              <Error />
+            )
+          } else if (!receipt) {
             content = <WaitForFirstBlock />
+          } else if (!event) {
+            console.error('Expected event not found')
+            content = (
+              <Error />
+            )
           } else if (currentBlock <= confirmedBlock) {
             content = <WaitForConfirmation />
           } else {
