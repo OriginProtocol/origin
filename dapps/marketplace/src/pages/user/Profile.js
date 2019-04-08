@@ -15,7 +15,6 @@ import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
-import ImageCropper from 'components/ImageCropper'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'

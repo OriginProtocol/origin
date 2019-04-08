@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
-import { withApollo, Query } from 'react-apollo'
+import { withApollo } from 'react-apollo'
 import get from 'lodash/get'
 
 import Enum from 'utils/enum'
-import { changesToPublishExist } from 'utils/profileTools'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
@@ -72,8 +71,7 @@ class ProfileWizard extends Component {
     const {
       publishedProfile,
       currentProfile,
-      changesToPublishExist,
-      publishedStrength
+      changesToPublishExist
     } = this.props
 
     const {
@@ -99,12 +97,13 @@ class ProfileWizard extends Component {
       }
 
       const hasAllAttestation = profile => {
-        return
-        ;(profile.emailVerified || profile.emailAttestation) &&
+        return (
+          (profile.emailVerified || profile.emailAttestation) &&
           (profile.phoneVerified || profile.phoneAttestation) &&
           (profile.facebookVerified || profile.facebookAttestation) &&
           (profile.twitterVerified || profile.twitterAttestation) &&
           (profile.airbnbVerified || profile.airbnbAttestation)
+        )
       }
 
       if (
