@@ -56,10 +56,12 @@ class ContractHelper {
     // `await contract.methods.MyMethod(...).send(...)`:
     //
     // https://github.com/INFURA/infura/issues/95
-
-    // Blocks are mined every ~15 seconds, but it sometimes takes ~40-60 seconds
-    // to get a transaction receipt from rinkeby.infura.io.
-    const retryOpts = { maxRetries: 10, verbose: this.config.verbose }
+    //
+    // Note: allowing plenty of retries since a transaction on Mainnet
+    // may take tens of minutes to get confirmed (depending among other
+    // things on gas price and network congestion).
+    //
+    const retryOpts = { maxRetries: 30, verbose: this.config.verbose }
     return await withRetries(retryOpts, async () => {
       if (transactionHash) {
         const receipt = await web3.eth.getTransactionReceipt(transactionHash)

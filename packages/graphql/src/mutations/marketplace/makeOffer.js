@@ -95,7 +95,7 @@ async function toIpfsData(data) {
   }
 
   const ipfsData = {
-    schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
+    schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
     listingId: data.listingID,
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
@@ -108,7 +108,7 @@ async function toIpfsData(data) {
     ...(data.fractionalData || {})
   }
 
-  validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
+  validator('https://schema.originprotocol.com/offer_2.0.0.json', ipfsData)
 
   return ipfsData
 }
