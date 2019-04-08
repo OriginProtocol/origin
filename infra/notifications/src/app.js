@@ -193,32 +193,5 @@ app.post('/events', async (req, res) => {
 
 })
 
-//
-// TESTING
-// TODO: Remove (Stan)
-//
-app.get('/emailtest', async (req, res) => {
-
-  const email = {
-    to: 'wanderingstan@gmail.com',
-    from: process.env.SENDGRID_FROM_EMAIL,
-    subject: 'Testing notification',
-    text: `Ist sie Schlau? Geneau.`
-  }
-
-  try {
-    await sendgridMail.send(email)
-  } catch (error) {
-    console.error(`Could not email via Sendgrid: ${error}`)
-    return res.status(500).send({
-      errors: [
-        'Could not send email, please try again shortly.'
-      ]
-    })
-  }
-
-  res.send(`Send email: ${email}`)
-})
-
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))
