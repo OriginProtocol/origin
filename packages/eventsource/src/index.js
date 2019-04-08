@@ -5,7 +5,24 @@ const get = ipfs.get
 const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
 const _get = require('lodash/get')
+const memoize = require('lodash/memoize')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+const getListingFn = async (contract, listingId) =>
+  await contract.methods.listings(listingId).call()
+
+const getListing = memoize(getListingFn, (...args) => args[1])
+
+const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
+  await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
+
+const getOffer = memoize(getOfferFn, (...args) => {
+  return [args[1], args[2], args[3]].join('-')
+})
+
+const affiliatesFn = async (contract, address) =>
+  await contract.methods.allowedAffiliates(address).call()
+const getAffiliates = memoize(affiliatesFn, (...args) => args[1])
 
 function mutatePrice(price) {
   let currency = price.currency || 'token-ETH'
@@ -13,6 +30,7 @@ function mutatePrice(price) {
   if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
   price.currency = { id: currency }
 }
+
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract, web3 }) {
     this.ipfsGateway = ipfsGateway
@@ -58,7 +76,7 @@ class OriginEventSource {
       status = 'active'
 
     try {
-      listing = await this.contract.methods.listings(listingId).call()
+      listing = await getListing(this.contract, listingId)
     } catch (e) {
       console.log(`No such listing on contract ${listingId}`)
       return null
@@ -392,9 +410,7 @@ class OriginEventSource {
       status = 5
     }
 
-    const offer = await this.contract.methods
-      .offers(listingId, offerId)
-      .call(undefined, latestBlock)
+    const offer = await getOffer(this.contract, listingId, offerId, latestBlock)
 
     if (status === undefined) {
       status = offer.status
@@ -466,15 +482,16 @@ class OriginEventSource {
       throw new Error('No arbitrator set')
     }
 
-    const affiliateWhitelistDisabled = await this.contract.methods
-      .allowedAffiliates(this.contract._address)
-      .call()
+    const affiliateWhitelistDisabled = await getAffiliates(
+      this.contract,
+      this.contract._address
+    )
     const offerAffiliate = offer.affiliate
       ? offer.affiliate.id.toLowerCase()
       : ZERO_ADDRESS
     const affiliateAllowed =
       affiliateWhitelistDisabled ||
-      (await this.contract.methods.allowedAffiliates(offerAffiliate).call())
+      (await getAffiliates(this.contract, offerAffiliate))
     if (!affiliateAllowed) {
       throw new Error(`Offer affiliate ${offerAffiliate} not whitelisted`)
     }

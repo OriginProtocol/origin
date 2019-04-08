@@ -1,17 +1,10 @@
 import graphqlFields from 'graphql-fields'
 import { getIdsForPage, getConnection } from '../_pagination'
 import contracts from '../../contracts'
+import memoize from 'lodash/memoize'
 
-const transactionCache = {},
-  receiptCache = {}
-
-export async function getTransactionReceipt(id) {
-  const rawReceipt =
-    receiptCache[id] || (await contracts.web3.eth.getTransactionReceipt(id))
-
-  if (rawReceipt && !receiptCache[id]) {
-    receiptCache[id] = rawReceipt
-  }
+export async function getTransactionReceiptFn(id) {
+  const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
 
   if (!rawReceipt) {
     return null
@@ -56,13 +49,13 @@ export async function getTransactionReceipt(id) {
   return { id, ...rawReceipt, events }
 }
 
-export async function getTransaction(id, fields = {}, localTransactions = []) {
-  const transaction =
-    transactionCache[id] || (await contracts.web3.eth.getTransaction(id))
+export const getTransactionReceipt = memoize(getTransactionReceiptFn)
 
-  if (transaction && !transactionCache[id]) {
-    transactionCache[id] = transaction
-  }
+const getTrRaw = async id => await contracts.web3.eth.getTransaction(id)
+const getTr = memoize(getTrRaw)
+
+export async function getTransaction(id, fields = {}, localTransactions = []) {
+  const transaction = await getTr(id)
 
   const localTx = localTransactions.find(tx => tx.id === id) || {}
 

@@ -4,7 +4,11 @@ const Sequelize = require('sequelize')
 const Web3 = require('web3')
 
 const logger = require('./logger')
-const db = require('./models')
+
+const _attestationModels = require('@origin/bridge/src/models')
+const _faucetModels = require('./models')
+const db = { ..._attestationModels, ..._faucetModels }
+
 const enums = require('./enums')
 
 // HTML template for the /eth landing page.
@@ -308,7 +312,7 @@ class EthDistributor {
         return this._error(res, `Campaign budget exhausted.`)
       }
 
-      // Check for existing transaction for this account on non-testnet networks
+      // Non-testnet networks checks.
       if (this.config.networkIds[0] !== 2222) {
         // Check the ethAddress hasn't already been used for this campaign.
         const existingTxn = await db.FaucetTxn.findOne({
@@ -327,6 +331,21 @@ class EthDistributor {
           return this._error(
             res,
             `Address ${ethAddress} already used this code.`
+          )
+        }
+
+        // A requirement to use the ETH faucet on Mainnet is to
+        // first do a phone attestation.
+        const phoneAttestation = await db.Attestation.findOne({
+          where: {
+            ethAddress: ethAddress.toLowerCase(),
+            method: 'PHONE'
+          }
+        })
+        if (!phoneAttestation) {
+          return this._error(
+            res,
+            `Please verify your phone number on the DApp profile page before using the ETH faucet.`
           )
         }
       }
