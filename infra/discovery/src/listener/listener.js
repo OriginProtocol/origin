@@ -101,8 +101,10 @@ const config = {
  */
 async function main() {
   const context = await new Context().init(config, errorCounter)
-  let lastProcessedBlock = await getLastBlock(context.config)
-  logger.info(`Resuming processing from ${lastProcessedBlock}`)
+  let processedToBlock = await getLastBlock(context.config)
+
+  logger.info(`Resuming processing from block ${processedToBlock}`)
+
   const checkIntervalSeconds = 5
   let start
 
@@ -110,21 +112,18 @@ async function main() {
     await withRetrys(async () => {
       start = new Date()
       const currentBlock = await context.web3.eth.getBlockNumber()
-      if (currentBlock === lastProcessedBlock) {
+      // Respect the trailBlocks option
+      const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
+      if (toBlock === processedToBlock) {
         logger.debug('No new blocks to process')
         return scheduleNextCheck()
       }
-      blockGauge.set(currentBlock)
+      logger.debug(`Processing to block ${toBlock}`)
+      contractsContext.marketplace.eventCache.updateBlock(toBlock)
+      contractsContext.identityEvents.eventCache.updateBlock(toBlock)
 
-      contractsContext.marketplace.eventCache.updateBlock(currentBlock)
-      contractsContext.identityEvents.eventCache.updateBlock(currentBlock)
-
-      const fromBlock = lastProcessedBlock + 1
-      // Respect the trailBlocks option
-      const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
-      logger.debug(`Querying events from ${fromBlock} to ${toBlock}`)
-
-      // Retrieve all events for the relevant contracts
+      // Retrieve all events for the relevant contracts up to the the block
+      // specified in the previous calls to updateBlock
       const eventArrays = await Promise.all([
         contractsContext.marketplace.eventCache.allEvents(),
         contractsContext.identityEvents.eventCache.allEvents()
@@ -134,23 +133,23 @@ async function main() {
       const events = [].concat(...eventArrays.filter(x => x))
       // Filter to only new events
       const newEvents = events.filter(
-        event => event.blockNumber >= lastProcessedBlock
+        event => event.blockNumber > processedToBlock
       )
       logger.debug(`Got ${newEvents.length} new events`)
 
       const limit = pLimit(context.config.concurrency)
-
       const promises = []
       newEvents.forEach(newEvent => {
         promises.push(limit(() => handleEvent(newEvent, context)))
       })
-
       await Promise.all(promises)
 
       // Record state of processing
       logger.debug(`Updating last processed block to ${toBlock}`)
       await setLastBlock(context.config, toBlock)
-      lastProcessedBlock = currentBlock
+      processedToBlock = toBlock
+      blockGauge.set(toBlock)
+
       return scheduleNextCheck()
     })
   }
