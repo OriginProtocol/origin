@@ -135,16 +135,12 @@ class WaitForTransaction extends Component {
           let content
           if (error) {
             console.error(error)
-            content = (
-              <Error />
-            )
+            content = <Error />
           } else if (!receipt) {
             content = <WaitForFirstBlock />
           } else if (!event) {
             console.error('Expected event not found')
-            content = (
-              <Error />
-            )
+            content = <Error />
           } else if (currentBlock <= confirmedBlock) {
             content = <WaitForConfirmation />
           } else {
