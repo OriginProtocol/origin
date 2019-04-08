@@ -56,13 +56,13 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.review.price">Price</fbt>
+                <fbt desc="create.review.price">Price per Hour</fbt>
               </div>
               <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{ amount: listing.price, currency: listing.currency }}
+                />
               </div>
             </div>
             <div className="row">
@@ -115,6 +115,8 @@ class Review extends Component {
                       timeZone: listing.timeZone
                     })
                   }
+                  currency={listing.currency}
+                  originalCurrency
                 />
               </div>
             </div>

@@ -5,6 +5,8 @@ module.exports = {
     basic: gql`
       fragment basicListingFields on Listing {
         id
+        valid
+        validationError
         status
         totalEvents
         seller {
@@ -34,7 +36,14 @@ module.exports = {
         hidden
         price {
           amount
-          currency
+          currency {
+            ... on Currency {
+              id
+            }
+          }
+        }
+        acceptedTokens {
+          id
         }
         media {
           url
@@ -48,12 +57,23 @@ module.exports = {
           unitsTotal
           unitsAvailable
           unitsSold
+          unitsPending
+          multiUnit
         }
         ... on FractionalListing {
           weekendPrice {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
+          booked
+          customPricing
+          unavailable
+        }
+        ... on FractionalHourlyListing {
           timeZone
           workingHours
           booked

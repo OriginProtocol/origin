@@ -1,14 +1,7 @@
 import React from 'react'
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
-
-function paymentStatus(status) {
-  if (status === 'Pending') {
-    return 'In Escrow'
-  }
-  return status
-}
 
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
@@ -21,7 +14,7 @@ const OfferDetails = ({ offer }) => (
             <fbt desc="OfferDetails.pricePerUnit">Price / unit</fbt>
           </span>
           <span>
-            <TokenPrice {...offer.listing.price} />
+            <Price price={offer.listing.price} />
           </span>
         </li>
         <li className="quantity">
@@ -66,17 +59,20 @@ const OfferDetails = ({ offer }) => (
     )}
     <li className="total-price">
       <span>
-        <fbt desc="OfferDetails.totalPrice">Total Price</fbt>
+        {offer.quantity > 1 ? (
+          <fbt desc="OfferDetails.totalPrice">Total Price</fbt>
+        ) : (
+          <fbt desc="OfferDetails.price">Price</fbt>
+        )}
       </span>
       <span>
-        <TokenPrice {...offer} />
+        <Price
+          price={{
+            ...offer.listing.price,
+            amount: offer.listing.price.amount * offer.quantity
+          }}
+        />
       </span>
-    </li>
-    <li className="payment-status">
-      <span>
-        <fbt desc="OfferDetails.paymentStatus">Payment Status</fbt>
-      </span>
-      <span>{paymentStatus(offer.statusStr)}</span>
     </li>
     <li className="offer-date">
       <span>
@@ -124,6 +120,8 @@ require('react-styl')(`
         color: var(--dusk)
       span:nth-child(2)
         color: #000
+        span
+          color: #000
       background-position: left center
       background-repeat: no-repeat
       background-size: 0.75rem
@@ -133,8 +131,6 @@ require('react-styl')(`
         background-image: url(images/order/quantity-icon.svg)
       &.total-price
         background-image: url(images/order/total-price-icon.svg)
-      &.payment-status
-        background-image: url(images/order/payment-status-icon.svg)
       &.offer-date
         background-image: url(images/order/offer-date-icon.svg)
       &.offer-number

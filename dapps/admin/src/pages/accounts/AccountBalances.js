@@ -28,7 +28,7 @@ class AccountBalances extends Component {
             <th>Eth</th>
             <th>USD</th>
             {tokens.map(token => (
-              <th key={token.id}>{token.symbol}</th>
+              <th key={token.id}>{token.code}</th>
             ))}
             <th />
           </tr>
