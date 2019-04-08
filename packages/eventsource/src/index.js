@@ -20,9 +20,9 @@ const getOffer = memoize(getOfferFn, (...args) => {
   return [args[1], args[2], args[3]].join('-')
 })
 
-const affilaitesFn = async (contract, address) =>
+const affiliatesFn = async (contract, address) =>
   await contract.methods.allowedAffiliates(address).call()
-const getAffiliates = memoize(affilaitesFn, (...args) => args[1])
+const getAffiliates = memoize(affiliatesFn, (...args) => args[1])
 
 class OriginEventSource {
   constructor({ ipfsGateway, marketplaceContract, web3 }) {
