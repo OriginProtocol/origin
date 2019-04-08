@@ -319,10 +319,12 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
-    config.DaiExchange = window.localStorage.uniswapDaiExchange
+    if (typeof window !== 'undefined') {
+      config.OriginToken = window.localStorage.OGNContract
+      config.V00_Marketplace = window.localStorage.marketplaceContract
+      config.IdentityEvents = window.localStorage.identityEventsContract
+      config.DaiExchange = window.localStorage.uniswapDaiExchange
+    }
   } else if (net === 'localhost') {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
