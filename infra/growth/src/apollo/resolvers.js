@@ -120,7 +120,7 @@ const resolvers = {
       let ip, eligibility, countryCode
       if (process.env.NODE_ENV !== 'production') {
         ip = '192.168.1.1'
-        eligibilit = 'Eligible'
+        eligibility = 'Eligible'
         countryCode = 'NA'
       } else {
         ip = context.req.headers['x-real-ip']
