@@ -176,15 +176,12 @@ async function main() {
 
       // Have the handler process each event.
       for (const event of newEvents) {
-        try {
-          await withRetrys(async () => {
-            handleEvent(event, context)
-          }, false)
-        } catch (e) {
-          // Log but and skip processing of the event if it failed all retries
-          logger.error('Handler failure:', e)
-          logger.error('Skipping event:', event)
-        }
+        // Note: we purposely do not set the exitOnError option of withRetrys to false.
+        // In case all retries fails, it indicates something is wrong at the system
+        // level and a process restart may fix it.
+        await withRetrys(async () => {
+          handleEvent(event, context)
+        })
       }
     }
 
