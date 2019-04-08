@@ -32,6 +32,7 @@ module.exports = `
       sort: String
     ): IdentityConnection
     facebookAuthUrl: String
+    googleAuthUrl: String
   }
 
   type IdentityConnection {
@@ -56,6 +57,7 @@ module.exports = `
     airbnbVerified: Boolean
     phoneVerified: Boolean
     emailVerified: Boolean
+    googleVerified: Boolean
 
     name: String
     ipfsHash: String

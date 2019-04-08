@@ -49,6 +49,9 @@ function getAttestations(account, attestations) {
       if (siteName === 'twitter.com') {
         result.twitterVerified = true
       }
+      if (siteName === 'google.com') {
+        result.googleVerified = true
+      }
     }
   })
   return result
@@ -166,5 +169,17 @@ export default {
     })
     const authData = await response.json()
     return authData.url
-  }
+  },
+  googleAuthUrl: async () => {
+    const bridgeServer = contracts.config.bridge
+    if (!bridgeServer) {
+      return null
+    }
+    const authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    const response = await fetch(authUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    return authData.url
+  },
 }

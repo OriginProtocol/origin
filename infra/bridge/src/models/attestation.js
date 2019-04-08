@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true
       },
       // Attestation method
-      method: DataTypes.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER'),
+      method: DataTypes.ENUM('PHONE', 'EMAIL', 'AIRBNB', 'FACEBOOK', 'TWITTER', 'GOOGLE'),
       // Ethereum address of the attestation. Lowercase.
       ethAddress: DataTypes.CHAR(42),
       // Value of the attestation
@@ -38,7 +38,8 @@ module.exports = (sequelize, DataTypes) => {
     EMAIL: 'EMAIL',
     AIRBNB: 'AIRBNB',
     FACEBOOK: 'FACEBOOK',
-    TWITTER: 'TWITTER'
+    TWITTER: 'TWITTER',
+    GOOGLE: 'GOOGLE'
   }
   Attestation.associate = function() {
     // associations can be defined here

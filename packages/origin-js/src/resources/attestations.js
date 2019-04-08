@@ -124,6 +124,22 @@ export class Attestations {
     )
   }
 
+  async googleAuthUrl() {
+    return await this.get(`google/auth-url`, {}, responseToUrl)
+  }
+
+  async googleVerify({ wallet, code }) {
+    const identity = await this.getIdentityAddress(wallet)
+    return await this.post(
+      'google/verify',
+      {
+        identity,
+        code
+      },
+      this.responseToAttestation
+    )
+  }
+
   async http(baseUrl, url, body, successFn, method) {
     const response = await this.fetch(appendSlash(baseUrl) + url, {
       method,

@@ -21,6 +21,7 @@ import GrowthCampaignBox from 'components/GrowthCampaignBox'
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
@@ -35,7 +36,8 @@ const AttestationComponents = {
   email: EmailAttestation,
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
-  airbnb: AirbnbAttestation
+  airbnb: AirbnbAttestation,
+  google: GoogleAttestation
 }
 
 const ProfileFields = [
@@ -49,7 +51,8 @@ const ProfileFields = [
   'twitterVerified',
   'airbnbVerified',
   'phoneVerified',
-  'emailVerified'
+  'emailVerified',
+  'googleVerified'
 ]
 
 function getState(profile) {
@@ -181,7 +184,7 @@ class UserProfile extends Component {
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
-                {this.renderAtt('google', 'Google', true)}
+                {this.renderAtt('google', 'Google')}
               </div>
             </div>
 

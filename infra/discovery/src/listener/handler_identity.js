@@ -33,6 +33,8 @@ class IdentityEventHandler {
         return 'twitter'
       } else if (siteName === 'airbnb.com') {
         return 'airbnb'
+      } else if (siteName === 'google.com') {
+        return 'google'
       } else {
         logger.error(`Unexpected siteName for attestation ${attestation}`)
       }

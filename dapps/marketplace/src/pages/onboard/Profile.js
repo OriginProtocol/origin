@@ -20,6 +20,7 @@ import Avatar from 'components/Avatar'
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
@@ -31,7 +32,8 @@ const AttestationComponents = {
   phone: PhoneAttestation,
   email: EmailAttestation,
   facebook: FacebookAttestation,
-  twitter: TwitterAttestation
+  twitter: TwitterAttestation,
+  google: GoogleAttestation
 }
 
 class OnboardProfile extends Component {
@@ -57,7 +59,8 @@ class OnboardProfile extends Component {
           'twitterVerified',
           'airbnbVerified',
           'phoneVerified',
-          'emailVerified'
+          'emailVerified',
+          'googleVerified'
         ])
       )
     }
