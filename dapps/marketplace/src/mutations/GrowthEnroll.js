@@ -6,12 +6,14 @@ export default gql`
     $agreementMessage: String!
     $signature: String!
     $inviteCode: String
+    $fingerprint: String!
   ) {
     enroll(
       accountId: $accountId
       agreementMessage: $agreementMessage
       signature: $signature
       inviteCode: $inviteCode
+      fingerprint: $fingerprint
     ) {
       authToken
       error
