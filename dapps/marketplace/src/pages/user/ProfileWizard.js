@@ -154,21 +154,31 @@ class ProfileWizard extends Component {
   }
 
   renderVerifyYourOtherProfiles() {
-    return "lala1"
-  }
-
-  renderSetPhoneNumber() {
     return (
       <Fragment>
         <div className="title">
-          <fbt desc="ProfileWizard.VerifyEmailTitle">
-            Next Step: Verify your email
+          <fbt desc="ProfileWizard.VerifyOtherProfiles">
+            Verify your other profiles
           </fbt>
         </div>
         <div className="sub-title">
-          <fbt desc="ProfileWizard.VerifyEmailSubTitle">
-            Publish to save your changes or continue with verifications
+          <fbt desc="ProfileWizard.EarnEvenMoreOgnOtherProfiles">
+            Earn even more OGN when you verify your Facebook, Twitter, and Airbnb profiles.
           </fbt>
+        </div>
+        <div className="d-flex rewards justify-content-center mt-2">
+          <div>
+            <fbt desc="ProfileWizard.earnUpTo">
+              Earn up to
+            </fbt>
+          </div>
+          <div className="d-flex align-items-center">
+            <div className="icon"/>
+              <div className="ogn-coin">
+                30&nbsp;
+                <span>OGN</span>
+              </div>
+            </div>
         </div>
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
@@ -176,7 +186,52 @@ class ProfileWizard extends Component {
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
             onClick={(e) => {
               e.preventDefault()
-              document.getElementById('attestation-component-email').click()
+              this.setState({ skipVerifyOtherProfiles: true })
+            }}
+          >
+          <fbt desc="ProfileWizard.gotIt!">
+            Got it!
+          </fbt>
+        </button>
+        </div>
+      </Fragment>
+    )
+  }
+
+  renderSetPhoneNumber() {
+    return (
+      <Fragment>
+        <div className="title">
+          <fbt desc="ProfileWizard.VerifyPhoneNumberTitle">
+            Next Step: Verify your phone number
+          </fbt>
+        </div>
+        <div className="sub-title">
+          <fbt desc="ProfileWizard.VerifyPhoneNumberSubTitle">
+            Strengthen your profile even further by verifying a valid 10-digit phone number
+          </fbt>
+        </div>
+        <div className="d-flex rewards justify-content-center mt-2">
+          <div>
+            <fbt desc="ProfileWizard.verifyToEarn">
+              Verify to earn
+            </fbt>
+          </div>
+          <div className="d-flex align-items-center">
+            <div className="icon"/>
+              <div className="ogn-coin">
+                10&nbsp;
+                <span>OGN</span>
+              </div>
+            </div>
+        </div>
+        <div className="d-flex mr-auto ml-auto mt-3">
+          {this.addPublishNowButtonIfApplicable()}
+          <button
+            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+            onClick={(e) => {
+              e.preventDefault()
+              document.getElementById('attestation-component-phone').click()
             }}
           >
           <fbt desc="ProfileWizard.continue">
@@ -226,7 +281,10 @@ class ProfileWizard extends Component {
   	}
 
   	return (<div className="mr-auto ml-auto">
-      <DeployIdentity {...props} />
+      <DeployIdentity
+        {...props}
+        disabled={!this.state.publishChanges}
+      />
     </div>)
   }
 
@@ -244,6 +302,7 @@ class ProfileWizard extends Component {
   }
 
   renderPublish() {
+
     return this.renderPublishChanges(
       fbt('Publish Changes', 'ProfileWizard.PublishChanges')
     )
@@ -388,6 +447,19 @@ require('react-styl')(`
       text-decoration: underline
       color: var(--dark-blue-grey)
       background-color: white
-
-
+    .rewards
+      font-size: 16px
+      color: var(--dark-blue-grey)
+      font-weight: normal
+    .icon
+      width: 1rem
+      height: 1rem
+      background: url(images/ogn-icon.svg) no-repeat center
+      background-size: cover
+      margin-right: 0.2rem
+      margin-left: 0.5rem
+    .ogn-coin
+      font-size: 16px
+      font-weight: bold
+      color: var(--clear-blue)
 `)
