@@ -1,6 +1,7 @@
 require('dotenv').config()
 
-// TODO: Debugging
+// TODO: Debugging line for auto-reload
+console.log("\033[2J")
 console.log("─────────────────────────────────────────────────────────────────────────────────")
 
 try {
@@ -9,34 +10,24 @@ try {
   console.error('EnvKey not configured. Please set env var ENVKEY')
 }
 
-const sendgridMail = require('@sendgrid/mail')
-sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
-if (!process.env.SENDGRID_API_KEY) {
-  console.warn('Warning: SENDGRID_API_KEY env var is not set')
-}
-if (!process.env.SENDGRID_FROM_EMAIL) {
-  console.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
-}
 
 
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
-const Sequelize = require('sequelize')
 const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
-const PushSubscription = require('./models').PushSubscription
-const Identity = require('./models').Identity
-const { getNotificationMessage, processableEvent } = require('./notification')
+
+const { mobilePush } = require('./mobilePush')
+const { browserPush } = require('./browserPush')
+const { emailSend } = require('./emailSend')
 
 const app = express()
 const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
-const linkingNotifyEndpoint = process.env.LINKING_NOTIFY_ENDPOINT
-const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
 const dappOfferUrl = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
@@ -50,194 +41,10 @@ if (!privateKey || !publicKey) {
 
 webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
-
-// ------------------------------------------------------------------
-
-
-//
-// Mobile Push (linker) notifications
-//
-async function mobilePush(party, buyerAddress, sellerAddress)
-{
-  console.log('📱 Mobile Push')
-
-  if (linkingNotifyEndpoint) {
-    const receivers = {}
-    const buyerMessage = getNotificationMessage(
-      eventName,
-      party,
-      buyerAddress,
-      'buyer'
-    )
-    const sellerMessage = getNotificationMessage(
-      eventName,
-      party,
-      sellerAddress,
-      'seller'
-    )
-    const eventData = {
-      url: offer && path.join(dappOfferUrl, offer.id),
-      to_dapp: true
-    }
-
-    if (buyerMessage || sellerMessage) {
-      if (buyerMessage) {
-        receivers[buyerAddress] = Object.assign(
-          { msg: buyerMessage },
-          eventData
-        )
-      }
-      if (sellerMessage) {
-        receivers[sellerAddress] = Object.assign(
-          { msg: sellerMessage },
-          eventData
-        )
-      }
-      try {
-        // POST to linking server
-        fetch(linkingNotifyEndpoint, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ receivers, token: linkingNotifyToken })
-        })
-      } catch (error) {
-        console.error('Error notifying linking api ', error)
-      }
-    }
-  }
-}
-
-//
-// Browser push subscripttions
-//
-async function browserPush(party, buyerAddress, sellerAddress) {
-
-  console.log('🖥 Browser Push')
-
-  // Query the DB to get subscriptions from the seller and/or buyer.
-  // Note the filter ensures we do not send notification to the party
-  // who initiated the action:
-  //  - seller initiated action -> only buyer gets notified.
-  //  - buyer initiated action -> only seller gets notified.
-  //  - 3rd party initiated action -> both buyer and seller get notified.
-  const subs = await PushSubscription.findAll({
-    where: {
-      account: {
-        [Sequelize.Op.in]: [buyerAddress, sellerAddress].filter(
-          a => a && a !== party
-        )
-      }
-    }
-  })
-
-  // Filter out redundant endpoints before iterating.
-  await subs
-    .filter((s, i, self) => {
-      return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
-    })
-    .forEach(async s => {
-      try {
-        const recipient = s.account
-        const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
-
-        const message = getNotificationMessage(
-          eventName,
-          party,
-          recipient,
-          recipientRole
-        )
-        if (!message) {
-          return
-        }
-
-        // Send the push notification.
-        // TODO: Add safeguard against sending duplicate messages since the
-        // event-listener only provides at-least-once guarantees and may
-        // call this webhook more than once for the same event.
-        const pushSubscription = {
-          endpoint: s.endpoint,
-          keys: s.keys
-        }
-        const pushPayload = JSON.stringify({
-          title: message.title,
-          body: message.body,
-          account: recipient,
-          offerId: offer.id
-        })
-        await webpush.sendNotification(pushSubscription, pushPayload)
-      } catch (e) {
-        // Subscription is no longer valid - delete it in the DB.
-        if (e.statusCode === 410) {
-          s.destroy()
-        } else {
-          console.error(e)
-        }
-      }
-    })
-
-}
-
-//
-// Email notifications
-//
-async function emailSend(party, buyerAddress, sellerAddress) {
-console.log('✉️ Email Send')
-  const emails = await Identity.findAll({
-    where: {
-      ethAddress: buyerAddress
-    }
-  })
-
-// Email templates.
-// const templateDir = `${__dirname}/templates`
-// const inviteTextTemplate = fs
-//   .readFileSync(`${templateDir}/emailInvite.txt`)
-//   .toString()
+const { getNotificationMessage, processableEvent } = require('./notification')
 
 
-  // Filter out redundants before iterating.
-  await emails
-    .filter((s, i, self) => {
-      return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
-    })
-    .forEach(async s => {
-      try {
 
-        const emailSubject = `An email to ${s.firstName}`
-        const emailBody = `Hello there, ${s.firstName}`
-
-        const email = {
-          to: s.email,
-          from: process.env.SENDGRID_FROM_EMAIL,
-          subject: emailSubject,
-          text: emailBody
-        }
-
-        try {
-          await sendgridMail.send(email)
-          console.log(`- Email sent to ${buyer} at ${s.email}`)
-        } catch (error) {
-          console.error(`Could not email via Sendgrid: ${error}`)
-          return res.status(500).send({
-            errors: [
-              'Could not send email, please try again shortly.'
-            ]
-          })
-        }
-
-      } catch (error) {
-        console.error(`Could not email via Sendgrid: ${error}`)
-        return res.status(500).send({
-          errors: [
-            'Could not send email, please try again shortly.'
-          ]
-        })
-      }
-    })
-}
 // ------------------------------------------------------------------
 
 
@@ -376,13 +183,13 @@ app.post('/events', async (req, res) => {
   console.log(`Info: Processing event ${eventDetails}`)
 
   // Mobile Push (linker) notifications
-  mobilePush(party, buyerAddress, sellerAddress)
+  mobilePush(eventName, party, buyerAddress, sellerAddress)
 
   // Browser push subscripttions
-  browserPush(party, buyerAddress, sellerAddress)
+  browserPush(eventName, party, buyerAddress, sellerAddress)
 
   // Email notifications
-  emailSend(party, buyerAddress, sellerAddress)
+  emailSend(eventName, party, buyerAddress, sellerAddress)
 
 })
 
