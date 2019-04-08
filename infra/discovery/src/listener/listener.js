@@ -129,16 +129,15 @@ async function main() {
     // Compute the range of blocks to process,
     // while respecting trailing block configuration.
     const currentBlock = await context.web3.eth.getBlockNumber()
-    const fromBlock = processedToBlock + 1
     let toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
-    toBlock = Math.min(currentBlock, fromBlock + 10000) // At most process a chunk of 10k blocks at once.
-    logger.debug(`Querying events from ${fromBlock} to ${toBlock}`)
+    toBlock = Math.min(toBlock, processedToBlock + 10000) // At most process a chunk of 10k blocks at once.
 
     // Listener is up to date. Nothing to do.
     if (toBlock <= processedToBlock) {
       logger.debug('No new blocks to process')
       continue
     }
+    logger.debug(`Querying events up to ${toBlock}`)
 
     // Update the event caches to set their max block number.
     contractsContext.marketplace.eventCache.updateBlock(toBlock)
