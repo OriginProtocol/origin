@@ -17,7 +17,7 @@ class Enroll extends Component {
 
   async calcFingerprint() {
     const options = {}
-    Fingerprint2.get(options, (components) => {
+    Fingerprint2.get(options, components => {
       const values = components.map(component => component.value)
       const hash = Fingerprint2.x64hash128(values.join(''), 31)
       this.fingerprint = 'V1-' + hash
