@@ -145,7 +145,7 @@ const Configs = {
     automine: 2000,
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
-    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544'
   },
   truffle: {
     provider: `http://${HOST}:8545`,
