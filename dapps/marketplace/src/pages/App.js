@@ -113,6 +113,8 @@ class App extends Component {
                   {...props}
                   locale={this.props.locale}
                   onLocale={this.props.onLocale}
+                  currency={this.state.currency}
+                  onCurrency={currency => this.setCurrency(currency)}
                 />
               )}
             />
@@ -131,12 +133,14 @@ class App extends Component {
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
           currency={this.state.currency}
-          onCurrency={currency => {
-            this.setState({ currency }, () => store.set('currency', currency))
-          }}
+          onCurrency={this.props.onCurrency}
         />
       </CurrencyContext.Provider>
     )
+  }
+
+  setCurrency(currency) {
+    this.setState({ currency }, () => store.set('currency', currency))
   }
 }
 

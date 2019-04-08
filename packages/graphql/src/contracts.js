@@ -80,6 +80,7 @@ const Configs = {
         decimals: '2'
       }
     ],
+    DaiExchange: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14',
     affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
     arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a',
     linker: `https://linking.originprotocol.com`,
@@ -112,7 +113,17 @@ const Configs = {
     messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
     linker: `https://linking.staging.originprotocol.com`,
     linkerWS: `wss://linking.staging.originprotocol.com`,
-    linkingEnabled: true
+    linkingEnabled: true,
+    DaiExchange: '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
+    tokens: [
+      {
+        id: '0x2448eE2641d78CC42D7AD76498917359D961A783',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ]
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -210,45 +221,10 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
-    // OriginToken: get(OriginTokenContract, 'networks.999.address'),
-    // V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
-    // IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     automine: 500
-  },
-  dai: {
-    provider: 'https://rinkeby.infura.io',
-    ipfsGateway: 'https://ipfs.dev.originprotocol.com',
-    ipfsRPC: 'https://ipfs.dev.originprotocol.com',
-    OriginToken: '0x804Ac2c5663fA7dA1F10E9B9C917c61e86474C74',
-    V00_Marketplace: '0x12008630685dD64560bFcBFaB7828A4510eF0A23',
-    V00_Marketplace_Epoch: '4000000',
-    IdentityEvents: '0x160455a06d8e5aa38862afc34e4eca0566ee4e7e',
-    IdentityEvents_Epoch: '3670528',
-    affiliate: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
-    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
-    tokens: [
-      {
-        id: '0x2448eE2641d78CC42D7AD76498917359D961A783',
-        type: 'Standard',
-        name: 'DAI Stablecoin',
-        symbol: 'DAI',
-        decimals: '18'
-      }
-    ],
-    DaiExchange: '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
-    messaging: {
-      ipfsSwarm:
-        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
-      messagingNamespace: 'origin:staging',
-      globalKeyServer: 'https://messaging.staging.originprotocol.com'
-    },
-    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
-    linker: `https://linking.staging.originprotocol.com`,
-    linkerWS: `wss://linking.staging.originprotocol.com`,
-    linkingEnabled: true
   }
 }
 
