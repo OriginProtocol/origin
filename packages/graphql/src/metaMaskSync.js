@@ -19,9 +19,6 @@ const GetMetaMaskStateQuery = gql`
       metaMaskAccount {
         id
         checksumAddress
-        balance {
-          eth
-        }
       }
       primaryAccount {
         id
