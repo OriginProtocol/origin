@@ -10,14 +10,6 @@ const forbiddenCountryCodes = ['CU', 'IR', 'KP', 'SY']
  * @returns {{countryName: string, countryCode: string, eligibility: string}}
  */
 async function getLocationInfo(ip) {
-  if (process.env.NODE_ENV !== 'production') {
-    return {
-      eligibility: 'Unknown',
-      countryName: 'NA',
-      countryCode: 'NA'
-    }
-  }
-
   if (!ip) {
     return null
   }
