@@ -118,7 +118,6 @@ async function main() {
         logger.debug('No new blocks to process')
         return scheduleNextCheck()
       }
-
       logger.debug(`Processing to block ${toBlock}`)
       contractsContext.marketplace.eventCache.updateBlock(toBlock)
       contractsContext.identityEvents.eventCache.updateBlock(toBlock)
@@ -149,6 +148,8 @@ async function main() {
       logger.debug(`Updating last processed block to ${toBlock}`)
       await setLastBlock(context.config, toBlock)
       processedToBlock = toBlock
+      blockGauge.set(toBlock)
+
       return scheduleNextCheck()
     })
   }
