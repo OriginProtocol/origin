@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Avatar = ({ size, avatar, className, emptyClass='empty' }) => {
+const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }

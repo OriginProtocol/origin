@@ -209,15 +209,14 @@ class UserProfile extends Component {
                   ],
                   validate: () => this.validate(),
                   onComplete: () =>
-                    store.set(`attestations-${this.props.wallet}`, undefined)
-                  ,
+                    store.set(`attestations-${this.props.wallet}`, undefined),
                   children: fbt('Publish Now', 'Profile.publishNow')
                 }}
-                publishedProfile={this.props.identity || {}}
+                publishedProfile={this.props.identity || {}}
                 currentProfile={this.state}
                 changesToPublishExist={changesToPublishExist(this)}
                 publishedStrength={get(this.props, 'identity.strength') || 0}
-                openEditProfile={(e) => this.openEditProfile(e)}
+                openEditProfile={e => this.openEditProfile(e)}
               />
             </div>
           </div>
@@ -249,7 +248,7 @@ class UserProfile extends Component {
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            avatarupdate={(avatar) => this.setState({ avatar })}
+            avatarupdate={avatar => this.setState({ avatar })}
           />
         )}
       </div>

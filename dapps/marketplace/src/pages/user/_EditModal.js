@@ -33,7 +33,7 @@ class EditProfileModal extends Component {
       <Modal
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
-        className={this.state.imageCropperOpened ? 'd-none': ''}
+        className={this.state.imageCropperOpened ? 'd-none' : ''}
       >
         <form
           className="edit-profile-modal"
@@ -49,9 +49,11 @@ class EditProfileModal extends Component {
             <div className="col-6">
               <ImageCropper
                 onChange={avatar => this.setState({ avatar })}
-                openChange={(open) => this.setState({
-                  imageCropperOpened: open
-                })}
+                openChange={open =>
+                  this.setState({
+                    imageCropperOpened: open
+                  })
+                }
               >
                 <Avatar
                   className={`avatar ${this.state.avatar ? 'with-cam' : ''}`}

@@ -50,7 +50,10 @@ class ImageCropper extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    if (prevState.open !== this.state.open && this.props.openChange !== undefined) {
+    if (
+      prevState.open !== this.state.open &&
+      this.props.openChange !== undefined
+    ) {
       this.props.openChange(this.state.open)
     }
   }

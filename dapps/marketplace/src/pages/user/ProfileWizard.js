@@ -21,7 +21,7 @@ const WizardStep = new Enum(
 )
 
 class ProfileWizard extends Component {
-	constructor(props) {
+  constructor(props) {
     super(props)
     this.state = {
       uiStep: WizardStep.Publish,
@@ -42,8 +42,7 @@ class ProfileWizard extends Component {
       query: profileQuery
     })
     const accountId = get(profileResult, 'data.web3.primaryAccount.id')
-    if (!accountId)
-      return
+    if (!accountId) return
 
     const enrolmentResult = await this.props.client.query({
       query: enrollmentStatusQuery,
@@ -83,50 +82,88 @@ class ProfileWizard extends Component {
       userEnroledIntoRewards
     } = this.state
 
-    const meetsCritria = ({ originProfile=false, email=false, phone=false, allAttestations=false }) => {
-      const isOriginProfile = (profile) => {
+    const meetsCritria = ({
+      originProfile = false,
+      email = false,
+      phone = false,
+      allAttestations = false
+    }) => {
+      const isOriginProfile = profile => {
         return profile.firstName && profile.lastName && profile.description
       }
-      const hasEmailAttestation = (profile) => {
+      const hasEmailAttestation = profile => {
         return profile.emailVerified || profile.emailAttestation
       }
-      const hasPhoneAttestation = (profile) => {
+      const hasPhoneAttestation = profile => {
         return profile.phoneVerified || profile.phoneAttestation
       }
 
-      const hasAllAttestation = (profile) => {
-        return 
-          (profile.emailVerified || profile.emailAttestation) &&
+      const hasAllAttestation = profile => {
+        return
+        ;(profile.emailVerified || profile.emailAttestation) &&
           (profile.phoneVerified || profile.phoneAttestation) &&
           (profile.facebookVerified || profile.facebookAttestation) &&
           (profile.twitterVerified || profile.twitterAttestation) &&
           (profile.airbnbVerified || profile.airbnbAttestation)
       }
 
-      if (originProfile && !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))) {
+      if (
+        originProfile &&
+        !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))
+      ) {
         return false
       }
 
-      if (email && !(hasEmailAttestation(currentProfile) || hasEmailAttestation(publishedProfile))) {
+      if (
+        email &&
+        !(
+          hasEmailAttestation(currentProfile) ||
+          hasEmailAttestation(publishedProfile)
+        )
+      ) {
         return false
       }
 
-      if (phone && !(hasPhoneAttestation(currentProfile) || hasPhoneAttestation(publishedProfile))) {
+      if (
+        phone &&
+        !(
+          hasPhoneAttestation(currentProfile) ||
+          hasPhoneAttestation(publishedProfile)
+        )
+      ) {
         return false
       }
 
-      if (allAttestations && !(hasAllAttestation(currentProfile) || hasAllAttestation(publishedProfile))) {
+      if (
+        allAttestations &&
+        !(
+          hasAllAttestation(currentProfile) ||
+          hasAllAttestation(publishedProfile)
+        )
+      ) {
         return false
       }
 
       return true
     }
 
-    if (meetsCritria({ originProfile: true, email: true, phone: true, allAttestations: true })) {
+    if (
+      meetsCritria({
+        originProfile: true,
+        email: true,
+        phone: true,
+        allAttestations: true
+      })
+    ) {
       this.updateUiStepIfNecessary(WizardStep.Publish)
-    } else if (meetsCritria({ originProfile: true, email: true, phone: true }) && skipVerifyOtherProfiles) {
+    } else if (
+      meetsCritria({ originProfile: true, email: true, phone: true }) &&
+      skipVerifyOtherProfiles
+    ) {
       this.updateUiStepIfNecessary(WizardStep.Publish)
-    } else if (meetsCritria({ originProfile: true, email: true, phone: true })) {
+    } else if (
+      meetsCritria({ originProfile: true, email: true, phone: true })
+    ) {
       this.updateUiStepIfNecessary(WizardStep.VerifyYourOtherProfiles)
     } else if (meetsCritria({ originProfile: true, email: true })) {
       this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
@@ -163,36 +200,33 @@ class ProfileWizard extends Component {
         </div>
         <div className="sub-title">
           <fbt desc="ProfileWizard.EarnEvenMoreOgnOtherProfiles">
-            Earn even more OGN when you verify your Facebook, Twitter, and Airbnb profiles.
+            Earn even more OGN when you verify your Facebook, Twitter, and
+            Airbnb profiles.
           </fbt>
         </div>
         <div className="d-flex rewards justify-content-center mt-2">
           <div>
-            <fbt desc="ProfileWizard.earnUpTo">
-              Earn up to
-            </fbt>
+            <fbt desc="ProfileWizard.earnUpTo">Earn up to</fbt>
           </div>
           <div className="d-flex align-items-center">
-            <div className="icon"/>
-              <div className="ogn-coin">
-                30&nbsp;
-                <span>OGN</span>
-              </div>
+            <div className="icon" />
+            <div className="ogn-coin">
+              30&nbsp;
+              <span>OGN</span>
             </div>
+          </div>
         </div>
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault()
               this.setState({ skipVerifyOtherProfiles: true })
             }}
           >
-          <fbt desc="ProfileWizard.gotIt!">
-            Got it!
-          </fbt>
-        </button>
+            <fbt desc="ProfileWizard.gotIt!">Got it!</fbt>
+          </button>
         </div>
       </Fragment>
     )
@@ -208,36 +242,33 @@ class ProfileWizard extends Component {
         </div>
         <div className="sub-title">
           <fbt desc="ProfileWizard.VerifyPhoneNumberSubTitle">
-            Strengthen your profile even further by verifying a valid 10-digit phone number
+            Strengthen your profile even further by verifying a valid 10-digit
+            phone number
           </fbt>
         </div>
         <div className="d-flex rewards justify-content-center mt-2">
           <div>
-            <fbt desc="ProfileWizard.verifyToEarn">
-              Verify to earn
-            </fbt>
+            <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
           </div>
           <div className="d-flex align-items-center">
-            <div className="icon"/>
-              <div className="ogn-coin">
-                10&nbsp;
-                <span>OGN</span>
-              </div>
+            <div className="icon" />
+            <div className="ogn-coin">
+              10&nbsp;
+              <span>OGN</span>
             </div>
+          </div>
         </div>
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault()
               document.getElementById('attestation-component-phone').click()
             }}
           >
-          <fbt desc="ProfileWizard.continue">
-            Continue
-          </fbt>
-        </button>
+            <fbt desc="ProfileWizard.continue">Continue</fbt>
+          </button>
         </div>
       </Fragment>
     )
@@ -260,32 +291,29 @@ class ProfileWizard extends Component {
           {this.addPublishNowButtonIfApplicable()}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault()
               document.getElementById('attestation-component-email').click()
             }}
           >
-          <fbt desc="ProfileWizard.continue">
-            Continue
-          </fbt>
-        </button>
+            <fbt desc="ProfileWizard.continue">Continue</fbt>
+          </button>
         </div>
       </Fragment>
     )
   }
 
   renderPublishChanges(buttonTextOption) {
-  	const props = this.props.deployIdentityProps
-  	if (buttonTextOption) {
-  		props.children = buttonTextOption
-  	}
+    const props = this.props.deployIdentityProps
+    if (buttonTextOption) {
+      props.children = buttonTextOption
+    }
 
-  	return (<div className="mr-auto ml-auto">
-      <DeployIdentity
-        {...props}
-        disabled={!this.state.publishChanges}
-      />
-    </div>)
+    return (
+      <div className="mr-auto ml-auto">
+        <DeployIdentity {...props} disabled={!this.state.publishChanges} />
+      </div>
+    )
   }
 
   addPublishNowButtonIfApplicable() {
@@ -302,7 +330,6 @@ class ProfileWizard extends Component {
   }
 
   renderPublish() {
-
     return this.renderPublishChanges(
       fbt('Publish Changes', 'ProfileWizard.PublishChanges')
     )
@@ -325,19 +352,13 @@ class ProfileWizard extends Component {
           className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
           skipjoincampaign="false"
         >
-          <fbt desc="ProfileWizard.EnrollNow">
-            Enroll Now
-          </fbt>
+          <fbt desc="ProfileWizard.EnrollNow">Enroll Now</fbt>
         </this.EnrollButton>
         <button
           className="skip ml-auto mr-auto p-2"
-          onClick={() =>
-            this.setState({ skipRewardsEnroll: true })
-          }
+          onClick={() => this.setState({ skipRewardsEnroll: true })}
         >
-          <fbt desc="ProfileWizard.skip">
-            Skip
-          </fbt>
+          <fbt desc="ProfileWizard.skip">Skip</fbt>
         </button>
       </Fragment>
     )
@@ -355,43 +376,40 @@ class ProfileWizard extends Component {
           {this.addPublishNowButtonIfApplicable()}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={(e) => this.props.openEditProfile(e)}
+            onClick={e => this.props.openEditProfile(e)}
           >
-          <fbt desc="ProfileWizard.getStarted">
-            Get Started
-          </fbt>
-        </button>
+            <fbt desc="ProfileWizard.getStarted">Get Started</fbt>
+          </button>
         </div>
       </Fragment>
     )
   }
 
   render() {
-    const {
-      uiStep,
-      publishChanges
-    } = this.state
+    const { uiStep, publishChanges } = this.state
 
     return (
       <Fragment>
         {uiStep === WizardStep.Publish && this.renderPublish()}
-        {uiStep !== WizardStep.Publish &&  <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
-          {this[`render${uiStep}`]()}
-          <div className="status-bar d-flex justify-content-end">
-            {publishChanges && <div className="publish-changes d-flex align-items-center mr-auto ml-3">
-              <div className="indicator mr-2"/>
-              <fbt desc="ProfileWizard.unpublishedChanges">
-                You have unpublished changes
-              </fbt>
-            </div>}
-            <div className="origin-id d-flex align-items-center">
-              <fbt desc="ProfileWizard.poweredBy">
-                Powered by
-              </fbt>
-              <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
+        {uiStep !== WizardStep.Publish && (
+          <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
+            {this[`render${uiStep}`]()}
+            <div className="status-bar d-flex justify-content-end">
+              {publishChanges && (
+                <div className="publish-changes d-flex align-items-center mr-auto ml-3">
+                  <div className="indicator mr-2" />
+                  <fbt desc="ProfileWizard.unpublishedChanges">
+                    You have unpublished changes
+                  </fbt>
+                </div>
+              )}
+              <div className="origin-id d-flex align-items-center">
+                <fbt desc="ProfileWizard.poweredBy">Powered by</fbt>
+                <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
+              </div>
             </div>
           </div>
-        </div>}
+        )}
       </Fragment>
     )
   }
