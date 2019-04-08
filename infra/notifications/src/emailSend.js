@@ -1,6 +1,7 @@
 const Identity = require('./models').Identity
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
+var _ = require('lodash') // TODO: (Stan) Cherry pick??
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -21,36 +22,23 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
 
+  // Load email template
+  const templateDir = `${__dirname}/../templates`
 
-// TODO: Hard-coded for now...
+  var emailTemplate = _.template(fs
+    .readFileSync(`${templateDir}/emailTemplate.html`)
+    .toString());
 
+  // TODO: Hard-coded for now...
   const recipient = buyerAddress
   const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
 
-  const message = getNotificationMessage(
-    eventName,
-    party,
-    recipient,
-    recipientRole
-  )
 
   const emails = await Identity.findAll({
     where: {
       ethAddress: buyerAddress
-      // ethAddress: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57' //buyerAddress
     }
   })
-
-  console.log(emails)
-
-  // Email templates
-  const templateDir = `${__dirname}/../templates`
-  const inviteTextTemplate = fs
-    .readFileSync(`${templateDir}/emailInvite.txt`)
-    .toString()
-  const inviteHtmlTemplate = fs
-    .readFileSync(`${templateDir}/emailInvite.html`)
-    .toString()
 
 
   // Filter out redundants before iterating.
@@ -64,13 +52,29 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
         const emailSubject = `An email to ${s.firstName}`
         // const emailBodyText = `Hello there, ${s.firstName}`
 
+        console.log(`eventName: ${eventName}`)
+        console.log(`party: ${party}`)
+        console.log(`recipient: ${recipient}`)
+        console.log(`recipientRole: ${recipientRole}`)
+
+        const message = getNotificationMessage(
+          eventName,
+          party,
+          recipient,
+          recipientRole
+        )
+
+        if (!message) {
+          console.warn('No message found.')
+          return
+        }
 
         const email = {
           to: s.email,
           from: process.env.SENDGRID_FROM_EMAIL,
-          subject: emailSubject,
-          text: inviteTextTemplate,
-          html: inviteHtmlTemplate
+          subject: message.title,
+          text: message.body,
+          html: emailTemplate({ 'message': message.body })
         }
 
         try {
