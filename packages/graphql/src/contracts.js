@@ -202,10 +202,10 @@ const Configs = {
     }
   },
   docker: {
-    provider: get(process.env, 'PROVIDER_URL', `http://localhost:8545`),
-    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://localhost:8545`),
-    ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://localhost:9999`),
-    ipfsRPC: get(process.env, 'IPFS_API_URL', `http://localhost:9999`),
+    provider: get(process.env, 'PROVIDER_URL', `http://services:8545`),
+    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://services:8545`),
+    ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://ipfs-proxy:9999`),
+    ipfsRPC: get(process.env, 'IPFS_API_URL', `http://ipfs-proxy:9999`),
     bridge: 'http://localhost:5000',
     growth: 'http://localhost:4001',
     discovery: 'http://localhost:4000/graphql',
