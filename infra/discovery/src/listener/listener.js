@@ -120,6 +120,7 @@ async function main() {
   // Helper function to wait at most tickIntervalSeconds.
   const tickIntervalSeconds = 5
   let start
+
   async function nextTick() {
     const elapsed = new Date() - start
     const delay = Math.max(tickIntervalSeconds * 1000 - elapsed, 1)
@@ -194,19 +195,25 @@ async function main() {
       blockGauge.set(toBlock)
     }
   } while (await nextTick())
+}
 
 // Start the metrics server.
-if (context.config.enableMetrics) {
+if (config.enableMetrics) {
   const port = 9499
   // Start express server for serving metrics
   metricsServer.listen({ port: port }, () => {
     logger.info(`Serving Prometheus metrics on port ${port}`)
   })
 }
-    
+
 // Start the listener.
-logger.info(`Starting event-listener with config:\n
-  ${JSON.stringify(config, (k, v) => (v === undefined ? null : v), 2)}`)
+logger.info(
+  `Starting event-listener with config: ${JSON.stringify(
+    config,
+    (k, v) => (v === undefined ? null : v),
+    2
+  )}`
+)
 
 setNetwork(config.network)
 main()
