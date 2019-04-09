@@ -1,6 +1,10 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
+import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
+
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
 
@@ -57,8 +61,13 @@ const PaymentOptions = ({
   price,
   hasBalance,
   hasEthBalance,
-  children
+  children,
+  cannotTransact
 }) => {
+  if (cannotTransact) {
+    return children
+  }
+
   const daiActive = value === 'token-DAI' ? ' active' : ''
   const ethActive = value === 'token-ETH' ? ' active' : ''
   const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
@@ -145,7 +154,7 @@ const PaymentOptions = ({
   )
 }
 
-export default PaymentOptions
+export default withWeb3(withWallet(withCanTransact(PaymentOptions)))
 
 require('react-styl')(`
   .payment-options
@@ -202,5 +211,4 @@ require('react-styl')(`
       border-top: 1px solid var(--light)
       padding-top: 1.5rem
       font-size: 14px
-
 `)

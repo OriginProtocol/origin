@@ -139,7 +139,10 @@ class OnboardProfile extends Component {
                         <label>Description</label>
                         <textarea
                           className="form-control"
-                          placeholder="{fbt('Tell us a bit about yourself', 'onboard.Profile.tellAboutYourself')}"
+                          placeholder={fbt(
+                            'Tell us a bit about yourself',
+                            'onboard.Profile.tellAboutYourself'
+                          )}
                           {...input('description')}
                         />
                         {Feedback('description')}
