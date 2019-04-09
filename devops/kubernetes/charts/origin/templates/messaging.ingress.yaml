@@ -25,6 +25,10 @@ metadata:
     nginx.ingress.kubernetes.io/server-snippet: |
       large_client_header_buffers 8 32k;
     nginx.ingress.kubernetes.io/limit-connections: "20"
+    # CORS
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
 spec:
   tls:
     - secretName: {{ template "messaging.host" . }}
@@ -37,4 +41,4 @@ spec:
           - path: /
             backend:
               serviceName: {{ template "messaging.fullname" . }}
-              servicePort: 443
+              servicePort: 6647
