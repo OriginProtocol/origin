@@ -138,7 +138,7 @@ services:
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
       - TRAIL_BEHIND_BLOCKS=
-      - NETWORK=docker
+      - NETWORK=services
       - WEBHOOK=
       - ENVKEY=
     depends_on:
