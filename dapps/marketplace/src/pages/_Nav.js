@@ -51,40 +51,40 @@ class Nav extends Component {
               <ul className="navbar-nav">
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-purchases" className="nav-link text">
-                    <span className="d-md-none d-lg-flex">
+                    <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.myPurchases">My Purchases</fbt>
                     </span>
-                    <span className="d-lg-none">
+                    <span className="d-xl-none">
                       <fbt desc="navbar.purchases">Purchases</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-listings" className="nav-link text">
-                    <span className="d-md-none d-lg-flex">
+                    <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.myListings">My Listings</fbt>
                     </span>
-                    <span className="d-lg-none">
+                    <span className="d-xl-none">
                       <fbt desc="navbar.listings">Listings</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-sales" className="nav-link text">
-                    <span className="d-md-none d-lg-flex">
+                    <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.mySales">My Sales</fbt>
                     </span>
-                    <span className="d-lg-none">
+                    <span className="d-xl-none">
                       <fbt desc="navbar.sales">Sales</fbt>
                     </span>
                   </NavLink>
                 </li>
-                <li className="nav-item d-none d-md-flex">
+                <li className="nav-item d-none d-lg-flex">
                   <this.EarnTokens className="nav-link icon-padding earn-tokens text">
-                    <span className="d-md-none d-lg-flex">
+                    <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
                     </span>
-                    <span className="d-lg-none">
+                    <span className="d-xl-none">
                       <fbt desc="navbar.tokens">Tokens</fbt>
                     </span>
                   </this.EarnTokens>
