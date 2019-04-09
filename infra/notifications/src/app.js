@@ -147,20 +147,34 @@ app.post('/', async (req, res) => {
  */
 app.post('/events', async (req, res) => {
   console.log(req.body)
-  const { log = {}, related = {} } = req.body
-  const { decoded = {}, eventName } = log
-  const { buyer = {}, listing, offer, seller = {} } = related
+  const { event = {}, related = {} } = req.body
+  const { decoded = {} } = event
+  const eventName = event.event
+  const { listing, offer } = related
+  const { seller = {}} = listing
+  const { buyer = {}} = offer
   const eventDetails = `eventName=${eventName} blockNumber=${
-    log.blockNumber
-  } logIndex=${log.logIndex}`
+    event.blockNumber
+  } logIndex=${event.logIndex}`
 
   // Return 200 to the event-listener without
   // waiting for processing of the event.
   res.json({ status: 'ok' })
-  //res.sendStatus(200)
+  // res.sendStatus(200)
 
-  if (!listing || (!seller.address && !buyer.address)) {
-    console.error(`Error: Missing data. Skipping ${eventDetails}`)
+console.log("---------------")
+console.log(buyer)
+
+  if (!listing) {
+    console.error(`Error: Missing listing data. Skipping ${eventDetails}`)
+    return
+  }
+  if (!seller.id) {
+    console.error(`Error: Missing seller.address. Skipping ${eventDetails}`)
+    return
+  }
+  if (!buyer.id) {
+    console.error(`Error: Missing buyer.address. Skipping ${eventDetails}`)
     return
   }
 
