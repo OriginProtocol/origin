@@ -29,17 +29,14 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
     .readFileSync(`${templateDir}/emailTemplate.html`)
     .toString());
 
-  // TODO: Hard-coded for now...
   const recipient = buyerAddress
   const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
-
 
   const emails = await Identity.findAll({
     where: {
       ethAddress: buyerAddress
     }
   })
-
 
   // Filter out redundants before iterating.
   await emails
@@ -48,14 +45,10 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
     })
     .forEach(async s => {
       try {
-        console.log('got one')
-        const emailSubject = `An email to ${s.firstName}`
-        // const emailBodyText = `Hello there, ${s.firstName}`
-
-        console.log(`eventName: ${eventName}`)
-        console.log(`party: ${party}`)
-        console.log(`recipient: ${recipient}`)
-        console.log(`recipientRole: ${recipientRole}`)
+        // console.log(`eventName: ${eventName}`)
+        // console.log(`party: ${party}`)
+        // console.log(`recipient: ${recipient}`)
+        // console.log(`recipientRole: ${recipientRole}`)
 
         const message = getNotificationMessage(
           eventName,
@@ -74,7 +67,10 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
           from: process.env.SENDGRID_FROM_EMAIL,
           subject: message.title,
           text: message.body,
-          html: emailTemplate({ 'message': message.body })
+          html: emailTemplate({ 'message': message.body }),
+          asm: {
+            groupId: 9092
+          }
         }
 
         try {
