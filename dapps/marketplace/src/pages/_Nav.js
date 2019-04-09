@@ -80,16 +80,6 @@ class Nav extends Component {
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-lg-flex">
-                  <this.EarnTokens className="nav-link icon-padding earn-tokens text">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-                    </span>
-                    <span className="d-xl-none">
-                      <fbt desc="navbar.tokens">Tokens</fbt>
-                    </span>
-                  </this.EarnTokens>
-                </li>
-                <li className="nav-item d-none d-lg-flex">
                   <NavLink
                     to="/create"
                     className="nav-link icon-padding add-listing text"
@@ -98,6 +88,16 @@ class Nav extends Component {
                       <fbt desc="navbar.addListing">Add Listing</fbt>
                     </span>
                   </NavLink>
+                </li>
+                <li className="nav-item d-none d-lg-flex">
+                  <this.EarnTokens className="nav-link icon-padding earn-tokens text">
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                    </span>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.tokens">Tokens</fbt>
+                    </span>
+                  </this.EarnTokens>
                 </li>
                 <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />
