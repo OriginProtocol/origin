@@ -194,11 +194,19 @@ export default {
           status
           rewardEarned {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
           reward {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
           unlockConditions {
             messageKey
@@ -207,11 +215,19 @@ export default {
           ... on ReferralAction {
             rewardPending {
               amount
-              currency
+              currency {
+                ... on Currency {
+                  id
+                }
+              }
             }
             rewardEarned {
               amount
-              currency
+              currency {
+                ... on Currency {
+                  id
+                }
+              }
             }
             invites {
               nodes {
@@ -221,7 +237,11 @@ export default {
                 contact
                 reward {
                   amount
-                  currency
+                  currency {
+                    ... on Currency {
+                      id
+                    }
+                  }
                 }
               }
             }
@@ -229,7 +249,11 @@ export default {
         }
         rewardEarned {
           amount
-          currency
+          currency {
+            ... on Currency {
+              id
+            }
+          }
         }
       }
     `
