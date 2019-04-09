@@ -25,9 +25,7 @@ const WarningIcon = ({ tooltip }) => (
 )
 
 function escrowStatus(status) {
-  return status === 'Pending'
-    ? fbt('Held', 'EscrowDetails.held')
-    : fbt('Released', 'EscrowDetails.released')
+  return status.match(/accepted|disputed|pending/i) ? fbt('Held', 'EscrowDetails.held') : fbt('Released', 'EscrowDetails.released')
 }
 
 const EscrowDetails = ({ offer }) => (
