@@ -4,10 +4,11 @@ import React, { Component, Fragment } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
-
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
+
 import CardsModal from 'components/cards-modal'
+import { decodeTransaction } from '../utils/contractDecoder'
 import originWallet from '../OriginWallet'
 
 class MarketplaceScreen extends Component {
@@ -55,17 +56,25 @@ class MarketplaceScreen extends Component {
     }
 
     if (this[msgData.targetFunc]) {
+      // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       msgData.isSuccessful = true
       msgData.args = [response]
       this.dappWebView.postMessage(JSON.stringify(msgData))
     } else {
-      console.log(`Unhandled function call: ${msgData.targetFunc}`)
+      // Attempt to decode web3 transaction and call the appropriate handler
+      const functionInterface = decodeTransaction(msgData.data.data)
+      if (functionInterface) {
+        // Got an interface from the contract
+        const response = this.handleWeb3Request(functionInterface)
+      }
     }
   }
 
-  handleMakeOffer({ listingID, value, from, quantity }) {
-    alert('Please confirm purchase of: ' + listingID)
+  handleWeb3Request({ name, parameters }) {
+    if (name === 'makeOffer') {
+      this.toggleModal()
+    }
   }
 
   toggleModal() {
