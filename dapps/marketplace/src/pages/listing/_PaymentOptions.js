@@ -64,7 +64,6 @@ const PaymentOptions = ({
   children,
   cannotTransact
 }) => {
-
   if (cannotTransact) {
     return children
   }
@@ -212,5 +211,4 @@ require('react-styl')(`
       border-top: 1px solid var(--light)
       padding-top: 1.5rem
       font-size: 14px
-
 `)
