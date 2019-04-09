@@ -51,10 +51,8 @@ const Configs = {
     ipfsEventCache: 'QmWyqzZMoQB1zzxJyCAhTZ5XenzX5H8sfE3Uh58uEN3MJh',
     messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
     messaging: {
-      ipfsSwarm:
-        '/dnsaddr/messaging.originprotocol.com/tcp/443/wss/ipfs/Qmc2YF8broVfy3BmUoUEnrHFgQnC5ZPe1jypnsPAtdnunX',
       messagingNamespace: 'origin',
-      globalKeyServer: 'https://messaging-api.originprotocol.com'
+      globalKeyServer: 'https://messaging.originprotocol.com'
     },
     tokens: [
       {
@@ -103,10 +101,8 @@ const Configs = {
     affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
     arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
     messaging: {
-      ipfsSwarm:
-        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
       messagingNamespace: 'origin:staging',
-      globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
+      globalKeyServer: 'https://messaging.staging.originprotocol.com'
     },
     messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
     linker: `https://linking.staging.originprotocol.com`,
@@ -180,7 +176,6 @@ const Configs = {
     linker: `http://${LINKER_HOST}:3008`,
     linkerWS: `ws://${LINKER_HOST}:3008`,
     messaging: {
-      ipfsSwarm: process.env.IPFS_SWARM,
       globalKeyServer: 'http://localhost:6647'
     }
   },
@@ -199,7 +194,6 @@ const Configs = {
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
-      ipfsSwarm: process.env.IPFS_SWARM,
       messagingNamespace: 'origin:docker',
       globalKeyServer: 'http://localhost:6647'
     }
@@ -220,10 +214,8 @@ const Configs = {
 }
 
 const DefaultMessagingConfig = {
-  ipfsSwarm:
-    '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
   messagingNamespace: 'origin:dev',
-  globalKeyServer: 'https://messaging-api.dev.originprotocol.com'
+  globalKeyServer: 'https://messaging.dev.originprotocol.com'
 }
 
 const context = {}

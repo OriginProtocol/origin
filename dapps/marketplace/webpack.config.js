@@ -124,8 +124,7 @@ const config = {
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
-      ORIGIN_LINKING: null,
-      IPFS_SWARM: ''
+      ORIGIN_LINKING: null
     })
   ],
 
