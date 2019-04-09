@@ -1,7 +1,6 @@
 module.exports = `
   type Price {
-    # TODO: change currency to CurrencyResult
-    currency: String
+    currency: CurrencyResult
     amount: String
   }
 
