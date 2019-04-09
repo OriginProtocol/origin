@@ -26,8 +26,9 @@ class DeployIdentity extends Component {
         {upsertIdentity => (
           <>
             <button
-              className={`${this.props.className} ${this.props.disabled ?
-                'disabled' : ''}`}
+              className={`${this.props.className} ${
+                this.props.disabled ? 'disabled' : ''
+              }`}
               onClick={() => {
                 if (this.props.disabled) {
                   return
