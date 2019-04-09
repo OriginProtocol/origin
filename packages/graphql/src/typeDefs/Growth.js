@@ -57,6 +57,12 @@ module.exports = `
     Banned
   }
 
+  # TODO: use Common.Price
+  type GrowthPrice {
+    currency: String
+    amount: String
+  }
+
   type Invite {
     # only pending invites require an ID - for remind functionality
     pendingId: ID
@@ -64,7 +70,7 @@ module.exports = `
     walletAddress: ID
     # email or firstName + lastName of the contact
     contact: String
-    reward: Price
+    reward: GrowthPrice
   }
 
   type InviteInfo {
@@ -80,16 +86,16 @@ module.exports = `
   interface GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
-    rewardEarned: Price
-    reward: Price            # information about reward
+    rewardEarned: GrowthPrice
+    reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
   }
 
   type GrowthAction implements GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
-    rewardEarned: Price
-    reward: Price            # information about reward
+    rewardEarned: GrowthPrice
+    reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
   }
 
@@ -102,9 +108,9 @@ module.exports = `
   type ReferralAction implements GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus!
-    rewardEarned: Price
-    rewardPending: Price
-    reward: Price            # information about reward
+    rewardEarned: GrowthPrice
+    rewardPending: GrowthPrice
+    reward: GrowthPrice            # information about reward
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection
@@ -120,7 +126,7 @@ module.exports = `
     distributionDate: DateTime
     status: GrowthCampaignStatus!
     actions: [GrowthBaseAction]
-    rewardEarned: Price      # amount earned all actions combined
+    rewardEarned: GrowthPrice      # amount earned all actions combined
   }
 
   type GrowthCampaignConnection {
