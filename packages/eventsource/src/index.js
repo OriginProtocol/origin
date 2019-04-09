@@ -25,6 +25,9 @@ const affiliatesFn = async (contract, address) =>
 const getAffiliates = memoize(affiliatesFn, (...args) => args[1])
 
 function mutatePrice(price) {
+  if (_get(price, 'currency.id')) {
+    return
+  }
   let currency = price.currency || 'token-ETH'
   if (currency === 'ETH') currency = 'token-ETH'
   if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
