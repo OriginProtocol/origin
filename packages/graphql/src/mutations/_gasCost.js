@@ -3,7 +3,7 @@ export default {
   // -----------
   createListing: 189553,
   updateListing: 38048,
-  makeOffer: 201785,
+  makeOffer: 301785,
   acceptOffer: 48099,
   finalizeOffer: 128219,
   withdrawOffer: 41321,

@@ -26,7 +26,7 @@ const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
-const { blockGauge, errorCounter } = require('./metrics')
+const { blockGauge, errorCounter, metricsServer } = require('./metrics')
 const { handleEvent } = require('./handler')
 const { getLastBlock, setLastBlock, withRetrys } = require('./utils')
 
@@ -98,7 +98,9 @@ const config = {
   // Possible values: origin, rinkeby, mainnet, ...
   network: args['--network'] || process.env.NETWORK || 'docker',
   // Default continue block
-  defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0)
+  defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0),
+  enableMetrics:
+    args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
 }
 
 /**
@@ -188,10 +190,20 @@ async function main() {
     logger.debug(`Updating last processed block to ${toBlock}`)
     await setLastBlock(context.config, toBlock)
     processedToBlock = toBlock
-    blockGauge.set(toBlock)
+    if (context.config.enableMetrics) {
+      blockGauge.set(toBlock)
+    }
   } while (await nextTick())
-}
 
+// Start the metrics server.
+if (context.config.enableMetrics) {
+  const port = 9499
+  // Start express server for serving metrics
+  metricsServer.listen({ port: port }, () => {
+    logger.info(`Serving Prometheus metrics on port ${port}`)
+  })
+}
+    
 // Start the listener.
 logger.info(`Starting event-listener with config:\n
   ${JSON.stringify(config, (k, v) => (v === undefined ? null : v), 2)}`)

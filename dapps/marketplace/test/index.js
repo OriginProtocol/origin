@@ -1,76 +1,308 @@
-const puppeteer = require('puppeteer')
-import { spawn } from 'child_process'
-import services from '@origin/services'
+import {
+  changeAccount,
+  waitForText,
+  clickByText,
+  pic,
+  createAccount
+} from './_helpers'
+import services from './_services'
 
-import { changeAccount, clickByText } from './_helpers'
+let page
 
-const headless = process.env.HEADLESS === 'false' ? false : true
-
-let browser, page, webpackProcess, shutdownServices
 before(async function() {
-  shutdownServices = await services({
-    ganache: { inMemory: true },
-    deployContracts: true,
-    ipfs: true,
-    populate: true
-  })
-
-  webpackProcess = spawn(
-    './node_modules/.bin/webpack-dev-server',
-    ['--port=8083', '--host=0.0.0.0', '--no-info', '--progress'],
-    {
-      stdio: 'inherit',
-      env: process.env
-    }
-  )
-  process.on('exit', () => webpackProcess.kill())
-
-  await new Promise(resolve => setTimeout(resolve, 5000))
-
-  browser = await puppeteer.launch({
-    headless,
-    defaultViewport: {
-      width: 1280,
-      height: 1024
-    },
-    slowMo: headless ? undefined : 40
-  })
-  page = (await browser.pages())[0]
-  await page.goto('http://localhost:8083')
-  console.log('Browser ready.\n')
+  this.timeout(60000)
+  page = (await services()).extrasResult.page
 })
 
-after(async function() {
-  if (browser) {
-    await browser.close()
-  }
-  if (shutdownServices) {
-    await shutdownServices()
-  }
-  if (webpackProcess) {
-    webpackProcess.kill()
-  }
-})
+const reset = async () => {
+  const seller = await createAccount(page)
+  const buyer = await createAccount(page)
+  await page.evaluate(() => {
+    window.transactionPoll = 100
+    window.sessionStorage.clear()
+    window.location = '/#/'
+  })
+  return { buyer, seller }
+}
+
+const purchaseListing = async ({ buyer }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+  await clickByText(page, 'Purchase')
+  await waitForText(page, 'View Purchase')
+  await pic(page, 'purchase-listing')
+
+  await clickByText(page, 'View Purchase')
+  await waitForText(page, 'Transaction Progress')
+  await pic(page, 'transaction-wait-for-seller')
+}
+
+const acceptOffer = async ({ seller }) => {
+  await changeAccount(page, seller)
+  await waitForText(page, 'Accept Offer', 'button')
+  await pic(page, 'transaction-accept')
+
+  await clickByText(page, 'Accept Offer')
+  await clickByText(page, 'OK')
+  await waitForText(page, 'Wait for buyer')
+  await pic(page, 'transaction-accepted')
+}
+
+const finalizeOffer = async ({ buyer }) => {
+  await changeAccount(page, buyer)
+  await waitForText(page, 'Finalize', 'button')
+  await pic(page, 'transaction-finalize')
+  await clickByText(page, 'Finalize', 'button')
+  await clickByText(page, 'OK')
+  await waitForText(page, 'Transaction Finalized')
+  await pic(page, 'transaction-finalized')
+}
 
 describe('Marketplace Dapp', function() {
-  it('should allow a new listing to be created', async function() {
-    await changeAccount(page, '0xf17f52151EbEF6C7334FAD080c5704D77216b732')
-    await clickByText(page, 'Add Listing')
-    await clickByText(page, 'For Sale')
-    await page.select('select', 'schema.clothingAccessories')
-    await clickByText(page, 'Continue')
-    await page.type('input[name=title]', 'T-Shirt')
-    await page.type('textarea[name=description]', 'T-Shirt in size large')
-    await page.type('input[name=price]', '0.01')
-    await clickByText(page, 'Continue')
-    await clickByText(page, 'Review')
-    await clickByText(page, 'Done')
-    await clickByText(page, 'View Listing')
+  let seller, buyer
+  this.timeout(5000)
+
+  describe('Single Unit Listing for Eth', function() {
+    before(async function() {
+      ({ seller, buyer } = await reset())
+    })
+
+    it('should navigate to the Add Listing page', async function() {
+      await changeAccount(page, seller)
+      await clickByText(page, 'Add Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should select For Sale', async function() {
+      await clickByText(page, 'For Sale')
+    })
+
+    it('should select Clothing', async function() {
+      await page.select('select', 'schema.clothingAccessories')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to details', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow detail entry', async function() {
+      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
+      await page.type('input[name=price]', '1')
+      await page.click('#eth-checkbox') // Select Eth
+      await page.click('#dai-checkbox') // De-select Dai
+      const input = await page.$('input[type="file"]')
+      await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
+      await page.waitForSelector('.image-picker .preview-row')
+
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to boost', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to review', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should create listing', async function() {
+      await clickByText(page, 'Done', 'button')
+      await waitForText(page, 'View Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to listing', async function() {
+      await clickByText(page, 'View Listing')
+    })
+
+    it('should allow a new listing to be purchased', async function() {
+      await purchaseListing({ buyer })
+    })
+
+    it('should allow a new listing to be accepted', async function() {
+      await acceptOffer({ seller })
+    })
+
+    it('should allow a new listing to be finalized', async function() {
+      await finalizeOffer({ buyer })
+    })
   })
 
-  it('should allow a new listing to be purchased', async function() {
-    await changeAccount(page, '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef')
-    await clickByText(page, 'Purchase')
-    await clickByText(page, 'View Purchase')
+  describe('Single Unit Listing for Dai', function() {
+    before(async function() {
+      ({ seller, buyer } = await reset())
+    })
+
+    it('should navigate to the Add Listing page', async function() {
+      await changeAccount(page, seller)
+      await clickByText(page, 'Add Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should select For Sale', async function() {
+      await clickByText(page, 'For Sale')
+    })
+
+    it('should select Clothing', async function() {
+      await page.select('select', 'schema.clothingAccessories')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to details', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow detail entry', async function() {
+      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
+      await page.type('input[name=price]', '1')
+      const input = await page.$('input[type="file"]')
+      await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
+      await page.waitForSelector('.image-picker .preview-row')
+
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to boost', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to review', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should create listing', async function() {
+      await clickByText(page, 'Done', 'button')
+      await waitForText(page, 'View Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to listing', async function() {
+      await clickByText(page, 'View Listing')
+      await pic(page, 'listing-detail')
+    })
+
+    it('should allow a new listing to be purchased', async function() {
+      await changeAccount(page, buyer)
+      await clickByText(page, 'Purchase')
+    })
+
+    it('should prompt the user to approve their Dai', async function() {
+      await waitForText(page, 'Approve')
+      await pic(page, 'listing-detail')
+      await clickByText(page, 'Approve')
+
+      await waitForText(page, 'Origin may now move DAI on your behalf.')
+      await pic(page, 'listing-detail')
+    })
+
+    it('should prompt to continue with purchase', async function() {
+      await clickByText(page, 'Continue')
+
+      await waitForText(page, 'View Purchase')
+      await pic(page, 'purchase-listing')
+
+      await clickByText(page, 'View Purchase')
+      await waitForText(page, 'Transaction Progress')
+      await pic(page, 'transaction-wait-for-seller')
+    })
+
+    it('should allow a new listing to be accepted', async function() {
+      await acceptOffer({ seller })
+    })
+
+    it('should allow a new listing to be finalized', async function() {
+      await finalizeOffer({ buyer })
+    })
+  })
+
+  describe('Multi Unit Listing for Eth', function() {
+    before(async function() {
+      ({ seller, buyer } = await reset())
+    })
+
+    it('should navigate to the Add Listing page', async function() {
+      await changeAccount(page, seller)
+      await clickByText(page, 'Add Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should select For Sale', async function() {
+      await clickByText(page, 'For Sale')
+    })
+
+    it('should select Clothing', async function() {
+      await page.select('select', 'schema.clothingAccessories')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to details', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow detail entry', async function() {
+      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
+      await page.type('input[name=price]', '1')
+      await page.type('input[name=quantity]', '0') // Add a zero
+      await page.click('#eth-checkbox') // Select Eth
+      await page.click('#dai-checkbox') // De-select Dai
+      const input = await page.$('input[type="file"]')
+      await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
+      await page.waitForSelector('.image-picker .preview-row')
+
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to boost', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to review', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should create listing', async function() {
+      await clickByText(page, 'Done', 'button')
+      await waitForText(page, 'View Listing')
+      await pic(page, 'add-listing')
+    })
+
+    it('should continue to listing', async function() {
+      await clickByText(page, 'View Listing')
+    })
+
+    it('should allow a new listing to be purchased', async function() {
+      await pic(page, 'listing-detail')
+      await changeAccount(page, buyer)
+      await page.waitForSelector('.quantity select')
+      await page.select('.quantity select', '2')
+      await clickByText(page, 'Purchase')
+      await waitForText(page, 'View Purchase')
+      await pic(page, 'purchase-listing')
+
+      await clickByText(page, 'View Purchase')
+      await waitForText(page, 'Transaction Progress')
+      await pic(page, 'transaction-wait-for-seller')
+    })
+
+    it('should allow a new listing to be accepted', async function() {
+      await acceptOffer({ seller })
+    })
+
+    it('should allow a new listing to be finalized', async function() {
+      await finalizeOffer({ buyer })
+    })
   })
 })

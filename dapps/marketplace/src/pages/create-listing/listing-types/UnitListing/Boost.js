@@ -20,7 +20,9 @@ const NoOgn = () => (
     </div>
     <div>Once you acquire some OGN you will be able to boost your listing.</div>
     <div>
-      <Link to="/about/tokens">Learn More</Link>
+      <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
+        Learn More
+      </a>
     </div>
   </div>
 )
@@ -102,7 +104,13 @@ class Boost extends Component {
               referral rewards, reputation incentives, spam prevention,
               developer rewards, and platform governance.
               <div className="mt-3">
-                <Link to="/about-tokens">Learn More</Link>
+                <a
+                  href="#/about/tokens"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn More
+                </a>
               </div>
             </fbt>
           </div>
@@ -199,8 +207,10 @@ class Boost extends Component {
         <div className="info">
           <fbt desc="create.boost.info">
             Boosts are always calculated and charged in OGN.
-            <Link to="/about-tokens">Learn more</Link>
           </fbt>
+          <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
+            &nbsp;<fbt desc="create.boost.more">Learn More</fbt>
+          </a>
         </div>
 
         {!isMulti ? null : (

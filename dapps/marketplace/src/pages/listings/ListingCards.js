@@ -3,7 +3,6 @@ import Redirect from 'components/Redirect'
 import Price from 'components/Price'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
-import { fbt } from 'fbt-runtime'
 
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
@@ -51,18 +50,7 @@ class ListingCards extends Component {
             </h5>
             {a.__typename === 'AnnouncementListing' ? null : (
               <div className="price">
-                <div className="eth">
-                  {`${a.price.amount} ETH`}
-                  {a.__typename !== 'FractionalListing'
-                    ? ''
-                    : fbt(' / night', ' / night')}
-                  {a.__typename !== 'FractionalHourlyListing'
-                    ? ''
-                    : fbt(' / hour', ' / hour')}
-                </div>
-                <div className="usd">
-                  <Price amount={a.price.amount} />
-                </div>
+                <Price listing={a} descriptor />
               </div>
             )}
           </div>
@@ -121,24 +109,20 @@ require('react-styl')(`
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
-      margin-top: 0.5rem
+      margin: 0.25rem 0
+      line-height: 1.5
       a
         color: var(--dark)
 
     .price
-      background: url(images/eth-icon.svg) no-repeat
-      padding-left: 2rem
-      line-height: 1.25rem
       font-family: var(--default-font)
-
-      .eth
-        font-size: 18px
-        font-weight: normal
-        color: var(--bluish-purple)
-
-      .usd
-        font-size: 10px
-        font-weight: normal
-        letter-spacing: 0.8px
+      font-size: 22px
+      color: var(--dark)
+      font-weight: bold
+      line-height: 1
+      span.desc
         color: var(--steel)
+        font-size: 14px
+        font-weight: normal
+        margin-left: 0.25rem
 `)

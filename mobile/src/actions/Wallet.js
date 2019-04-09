@@ -2,6 +2,8 @@ import origin from 'services/origin'
 
 import keyMirror from 'utils/keyMirror'
 
+import originWallet from '../OriginWallet'
+
 export const WalletConstants = keyMirror(
   {
     INIT: null,
@@ -12,6 +14,7 @@ export const WalletConstants = keyMirror(
     BALANCE_SUCCESS: null,
     BALANCE_ERROR: null,
 
+    DAI_SUCCESS: null,
     OGN_SUCCESS: null,
 
     UPDATE_ACCOUNTS: null,
@@ -48,7 +51,18 @@ export function getBalance() {
         console.log("error getting balance. ", error)
       }
       try {
+        const dais = await originWallet.getDaiBalance()
+
+        dispatch({
+          type: WalletConstants.DAI_SUCCESS,
+          dais
+        })
+      } catch (error) {
+        console.log("error getting dai for balance. ", error)
+      }
+      try {
         const ogns = await origin.token.balanceOf(account)
+        
         dispatch({
           type: WalletConstants.OGN_SUCCESS,
           ogns,

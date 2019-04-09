@@ -2,7 +2,6 @@ import React from 'react'
 
 import Price from 'components/Price'
 import Category from 'components/Category'
-import CoinPrice from 'components/CoinPrice'
 
 const ListingDetail = ({ listing }) => (
   <div className="tx-listing-detail">
@@ -20,10 +19,7 @@ const ListingDetail = ({ listing }) => (
         <Category listing={listing} />
       </div>
       <div className="price">
-        <CoinPrice price={listing.price.amount} coin="eth" />
-        <div className="fiat">
-          ~ <Price amount={listing.price.amount} />
-        </div>
+        <Price price={listing.price} />
       </div>
     </div>
   </div>

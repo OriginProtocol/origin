@@ -105,12 +105,13 @@ class AirbnbAttestation extends Component {
           </fbt>
         </div>
         <div className="my-3 verification-code">
-          <input
+          <textarea
             ref={ref => (this.inputRef = ref)}
-            className="form-control form-control-lg"
-            value={this.state.code}
+            className="form-control form-control-lg airbnb-verification-code"
             readOnly
-          />
+          >
+            {this.state.code}
+          </textarea>
           {this.state.error && (
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
@@ -258,4 +259,8 @@ class AirbnbAttestation extends Component {
 export default AirbnbAttestation
 
 require('react-styl')(`
+  .attestation-modal > div .verification-code .form-control.airbnb-verification-code
+    height: 6rem
+    max-width: 24rem
+    resize: none
 `)

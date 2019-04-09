@@ -11,8 +11,8 @@ import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
 import { getFiatPrice } from 'utils/price'
+import { toOgns } from 'utils/tokens'
 import { sufficientFunds } from 'utils/transaction'
-import { toOgns } from 'utils/ogn'
 
 import originWallet from '../OriginWallet'
 
