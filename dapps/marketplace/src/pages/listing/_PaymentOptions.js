@@ -3,7 +3,6 @@ import { fbt } from 'fbt-runtime'
 
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
-import Link from 'components/Link'
 
 const NotEnoughEth = ({ tryDai, noEthOrDai }) =>
   noEthOrDai ? (
@@ -43,11 +42,11 @@ const SwapEthToDai = () => (
 
 const CannotPurchase = () => (
   <div className="cannot-purchase">
-    <Link to="/about/crypto">
+    <a href="#/about/crypto" target="_blank" rel="noopener noreferrer">
       <fbt desc="paymentOptions.howToGetCrypto">
         How do I get cryptocurrency?
       </fbt>
-    </Link>
+    </a>
   </div>
 )
 
