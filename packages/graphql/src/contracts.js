@@ -438,9 +438,7 @@ function setMobileBridge() {
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
-  console.log(
-    `Setting default eth account to: ${window.__mobileBridgeAccount}`
-  )
+  console.log(`Setting default eth account to: ${window.__mobileBridgeAccount}`)
   context.mobileBridge.web3.eth.defaultAccount = window.__mobileBridgeAccount
 
   const mobileBridgeProvider = context.mobileBridge.getProvider()
