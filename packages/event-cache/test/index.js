@@ -143,7 +143,7 @@ describe('EventCache', function() {
 
   })
 
-  it('should path web3 Contract', async () => {
+  it('should patch web3 Contract', async () => {
     const memoryBackend = new InMemoryBackend()
 
     assert(
