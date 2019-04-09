@@ -1,4 +1,4 @@
-// Script to backfill the columns ip and country of hte growth_participant table.
+// One-off script to backfill the columns ip and country of the growth_participant table.
 
 const _growthModels = require('../../models')
 const _bridgeModels = require('@origin/bridge/src/models')
