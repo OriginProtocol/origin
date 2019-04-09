@@ -32,12 +32,10 @@ class ProfileWizard extends Component {
     }
 
     this.EnrollButton = withEnrolmentModal('button')
-    this.componentIsMounted = false
     setTimeout(() => this.calculateUIStep(), 1)
   }
 
   async componentDidMount() {
-    this.componentIsMounted = true
     const profileResult = await this.props.client.query({
       query: profileQuery
     })
@@ -53,15 +51,11 @@ class ProfileWizard extends Component {
 
     const enrolmentStatus = get(enrolmentResult, 'data.enrollmentStatus')
 
-    if (enrolmentStatus === 'Enrolled' && this.componentIsMounted) {
+    if (enrolmentStatus === 'Enrolled') {
       this.setState({
         userEnroledIntoRewards: true
       })
     }
-  }
-
-  componentWillUnmount() {
-    this.componentIsMounted = false
   }
 
   componentDidUpdate() {
