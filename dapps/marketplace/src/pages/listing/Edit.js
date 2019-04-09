@@ -13,6 +13,7 @@ class EditListing extends Component {
     // representation.
     // TODO: Can we unify field names or otherwise keep knowledge of
     // special fields limited to their file in `listings-types` dir?
+    const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
       listing: {
         // HomeShare fields:
@@ -35,6 +36,7 @@ class EditListing extends Component {
           'category',
           'subCategory'
         ]),
+        acceptedTokens: tokens.length ? tokens : ['token-ETH'],
         quantity: String(props.listing.unitsTotal),
         currency: get(props, 'listing.price.currency.id', ''),
         price: String(props.listing.price.amount),
@@ -54,12 +56,14 @@ class EditListing extends Component {
       listing.currency = 'fiat-USD'
       const ethCurrency = currencies.find(c => c.id === 'token-ETH')
       if (ethCurrency) {
-        listing.price = String(Number(listing.price) * ethCurrency.priceInUSD)
-      }
-      if (listing.weekendPrice) {
-        listing.weekendPrice = String(
-          Number(listing.weekendPrice) * ethCurrency.priceInUSD
-        )
+        listing.price = String(
+          Number(listing.price) * ethCurrency.priceInUSD
+        ).replace(/^([0-9]+\.[0-9]{2}).*/, '$1')
+        if (listing.weekendPrice) {
+          listing.weekendPrice = String(
+            Number(listing.weekendPrice) * ethCurrency.priceInUSD
+          ).replace(/^([0-9]+\.[0-9]{2}).*/, '$1')
+        }
       }
     }
 
