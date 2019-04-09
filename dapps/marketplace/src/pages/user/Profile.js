@@ -261,7 +261,7 @@ class UserProfile extends Component {
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            avatarupdate={avatar => this.setState({ avatar })}
+            onAvatarChange={avatar => this.setState({ avatar })}
           />
         )}
       </div>

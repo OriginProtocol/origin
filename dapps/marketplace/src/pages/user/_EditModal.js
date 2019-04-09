@@ -112,7 +112,7 @@ class EditProfileModal extends Component {
                     pick(this.state, ['firstName', 'lastName', 'description'])
                   )
                   if (this.state.avatar) {
-                    this.props.avatarupdate(this.state.avatar)
+                    this.props.onAvatarChange(this.state.avatar)
                   }
                   this.setState({ shouldClose: true })
                 }
