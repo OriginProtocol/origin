@@ -4,7 +4,6 @@ import get from 'lodash/get'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
-
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import inviteInfoQuery from 'queries/InviteInfo'

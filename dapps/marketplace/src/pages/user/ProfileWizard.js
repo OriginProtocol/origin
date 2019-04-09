@@ -21,7 +21,6 @@ const WizardStep = new Enum(
 )
 
 class ProfileWizard extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -154,7 +153,9 @@ class ProfileWizard extends Component {
      * that step. Is user is on mobile and we do not yet support mobile
      * also skip this step
      */
-    if (!skipRewardsEnroll && !userEnroledIntoRewards &&
+    if (
+      !skipRewardsEnroll &&
+      !userEnroledIntoRewards &&
       (!isMobile || (isMobile && rewardsOnMobileEnabled))
     ) {
       this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
