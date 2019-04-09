@@ -403,7 +403,8 @@ export function setNetwork(net, customConfig) {
     })
   }
   setMetaMask()
-  if (window.__mobileBridge && window.__mobileBridgeAccount) {
+
+  if (window.__mobileBridgeAccount) {
     setMobileBridge()
   }
 }
@@ -431,13 +432,13 @@ function setMetaMask() {
  * webview from the DApp
  */
 function setMobileBridge() {
-  console.debug('Configuring mobile bridge')
+  console.log('Configuring mobile bridge')
 
   if (context.metaMaskEnabled) return
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
-  console.debug(
+  console.log(
     `Setting default eth account to: ${window.__mobileBridgeAccount}`
   )
   context.mobileBridge.web3.eth.defaultAccount = window.__mobileBridgeAccount

@@ -22,55 +22,50 @@ export default function() {
 
       const msgObj = {
         targetFunc: targetFunc,
-        data: data || {},
-        msgId: uuid(),
+        data: data || {}
+      }
+
+      // If we have callbacks give the message an id so the callbacks for the
+      // correct message can be called
+      if (success || error) {
+        msgObj.msgId = uuid()
       }
 
       const msg = JSON.stringify(msgObj)
 
       promiseChain = promiseChain.then(function () {
         return new Promise(function (resolve, reject) {
-          promises[msgObj.msgId] = {resolve: resolve, reject: reject}
-
-          callbacks[msgObj.msgId] = {
-            onsuccess: success,
-            onerror: error
+          if (msgObj.msgId) {
+            // Call the callbacks for the matching id
+            callbacks[msgObj.msgId] = {
+              onsuccess: success,
+              onerror: error
+            }
           }
 
-          window.ReactNativeWebView.postMessage(msg)
-          console.debug(`WebViewBridge send succeeded`)
+          window.ReactNativeWebView.postMessage(msg, '*')
+
+          console.debug(`WebViewBridge send succeeded: ${msg}`)
+          resolve()
         })
       }).catch(function (e) {
-        alert(e)
         console.error(`WebViewBridge send failed ${e.message}`)
       })
     },
   }
 
   window.addEventListener('message', function(e) {
-    console.log(e)
-    if (e.data.source !== 'Marketplace') {
-      return
-    }
-
-    console.log(e.data)
-
     let message
     try {
       message = JSON.parse(e.data)
     }
     catch(e) {
-      console.log(`Failed to parse WebViewBridge message: ${e.message}, ${e.data}`)
+      // Not encoded as JSON, safe to ignore as its not relevant
       return
     }
 
-    if (promises[message.msgId]) {
-      promises[message.msgId].resolve();
-      delete promises[message.msgId];
-    }
-
     if (message.args && callbacks[message.msgId]) {
-      if (message.isSuccessfull) {
+      if (message.isSuccessful) {
         callbacks[message.msgId].onsuccess.apply(null, message.args);
       }
       else {

@@ -8,16 +8,18 @@ import { connect } from 'react-redux'
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
 import CardsModal from 'components/cards-modal'
+import originWallet from '../OriginWallet'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      modalOpen: false,
-      injected: false
+      modalOpen: false
     }
 
+    this.onWebViewMessage = this.onWebViewMessage.bind(this)
+    this.getAccounts = originWallet.getAccountAddresses.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
   }
 
@@ -44,10 +46,6 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewMessage(event) {
-    alert('Hello from react-native')
-    console.debug(event)
-    console.debug(`Got event:`)
-
     let msgData
     try {
       msgData = JSON.parse(event.nativeEvent.data)
@@ -56,9 +54,13 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    let response
     if (this[msgData.targetFunc]) {
-      response = this[msgData.targetFunc].apply(this, [msgData.data])
+      const response = this[msgData.targetFunc].apply(this, [msgData.data])
+      msgData.isSuccessful = true
+      msgData.args = [response]
+      this.dappWebView.postMessage(JSON.stringify(msgData))
+    } else {
+      console.log(`Unhandled function call: ${msgData.targetFunc}`)
     }
   }
 
@@ -74,7 +76,9 @@ class MarketplaceScreen extends Component {
     console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
 
     const injectedJavaScript = `
-      window.__mobileBridgeAccount = '${this.props.wallet.address}';
+      if (!window.__mobileBridgeAccount) {
+        window.__mobileBridgeAccount = '${this.props.wallet.address}';
+      }
       true;
     `
 
@@ -85,18 +89,9 @@ class MarketplaceScreen extends Component {
             this.dappWebView = webview
           }}
           source={{ uri: MARKETPLACE_DAPP_URL }}
-          onMessage={this.onWebViewMessage.bind(this)}
-          onLoadStart={e => {
-            this.setState({ injected: false })
-            console.log('Injected false')
-          }}
+          onMessage={this.onWebViewMessage}
           onLoadProgress={e => {
-            console.log('Load progress')
-            if (!this.state.injected) {
-              console.log('Injecting javascript')
-              this.dappWebView.injectJavaScript(injectedJavaScript)
-              this.setState({ injected: true })
-            }
+            this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />
         <CardsModal

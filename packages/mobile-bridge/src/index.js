@@ -14,13 +14,26 @@ class MobileBridge {
   }
 
   processTransaction(transaction, callback) {
-    console.debug('Process transaction for mobile-bridge')
+    console.log('Process transaction for mobile-bridge')
     transaction.gasLimit = transaction.gas
     window.webViewBridge.send('processTransaction', transaction)
   }
 
-  getAccounts() {
-    window.webViewBridge.send('getAccounts')
+  getAccounts(callback) {
+    const data = null
+    let onSuccess
+    if (callback) {
+      onSuccess = (result) => {
+        console.log('Got result with callback: ', result)
+        callback(undefined, result)
+      }
+    } else {
+      onSuccess = (result) => {
+        console.log('Got result without callback')
+        return new Promise(resolve => resolve(result))
+      }
+    }
+    window.webViewBridge.send('getAccounts', data, onSuccess)
   }
 
   getProvider() {
@@ -32,7 +45,7 @@ class MobileBridge {
       processTransaction: this.processTransaction.bind(this)
     })
 
-    /*
+      /*
     // Disable transaction validation, which interferes with our work.
     const hookedWallet = provider._providers[6]
     if (!hookedWallet.validateTransaction) {
