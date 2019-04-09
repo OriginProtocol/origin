@@ -15,6 +15,7 @@ import Category from 'components/Category'
 
 import Sold from './_ListingSold'
 import Pending from './_ListingPending'
+import Withdrawn from './_ListingWithdrawn'
 import EditOnly from './_ListingEditOnly'
 import OfferMade from './_ListingOfferMade'
 import SingleUnit from './_BuySingleUnit'
@@ -207,6 +208,8 @@ class ListingDetail extends Component {
       )
     } else if (listing.status === 'pending') {
       return <Pending />
+    } else if (listing.status === 'withdrawn') {
+      return <Withdrawn />
     } else if (isFractional) {
       return (
         <Fractional
