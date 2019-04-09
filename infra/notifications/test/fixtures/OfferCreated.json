@@ -1,46 +1,46 @@
 {
   "event": {
-    "blockHash": "0x887185ba7687ac7b960e2bf7fcc8405cf02fefa10aa439e980511eb36467f925",
-    "transactionHash": "0xd6cf37e2ec095b9634d1d81a85e98637ed3a9bd0db071ac01dc94b86852650ca",
-    "blockNumber": 4181146,
+    "blockHash": "0x0a92de76b9d7100d06967fd92f0e19f7595405604778f34a21b2482a4c10f0c5",
+    "transactionHash": "0x7c569a81fd5d938dd3329a3df6c11ee3e8c384bf096833fd11f5032abaef34b4",
+    "blockNumber": 4181066,
     "address": "0xe842831533c4bf4B0F71B4521C4320BDB669324E",
-    "logIndex": 1,
+    "logIndex": 4,
     "removed": false,
-    "transactionIndex": 2,
-    "id": "log_59db736d",
+    "transactionIndex": 5,
+    "id": "log_725125dc",
     "returnValues": {
-      "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "0": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
       "1": "522",
-      "2": "2",
-      "3": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4",
-      "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "2": "0",
+      "3": "0xce7523e865a37324b4296a0d523c1e397dfaa5117849f2e7234f773737b186e3",
+      "party": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
       "listingID": "522",
-      "offerID": "2",
-      "ipfsHash": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4"
+      "offerID": "0",
+      "ipfsHash": "0xce7523e865a37324b4296a0d523c1e397dfaa5117849f2e7234f773737b186e3"
     },
-    "event": "OfferAccepted",
-    "signature": "0x449224201a35688b74a38ff24770e8b2a326ebf42357bf19a36f5fedbbe552a0",
+    "event": "OfferCreated",
+    "signature": "0x6ee68cb753f284cf771c1a32c236d7ffcab6011345186a30e57837d761e86837",
     "raw": {
-      "data": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4",
+      "data": "0xce7523e865a37324b4296a0d523c1e397dfaa5117849f2e7234f773737b186e3",
       "topics": [
-        "0x449224201a35688b74a38ff24770e8b2a326ebf42357bf19a36f5fedbbe552a0",
-        "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
+        "0x6ee68cb753f284cf771c1a32c236d7ffcab6011345186a30e57837d761e86837",
+        "0x000000000000000000000000627306090abab3a6e1400e9345bc60c78a8bef57",
         "0x000000000000000000000000000000000000000000000000000000000000020a",
-        "0x0000000000000000000000000000000000000000000000000000000000000002"
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
       ]
     },
     "block": {
-      "id": 4181146
+      "id": 4181066
     }
   },
   "related": {
     "offer": {
       "listing": {
-        "id": "4-000-522-4181140",
+        "id": "4-000-522-4181066",
         "valid": true,
         "validationError": null,
         "status": "pending",
-        "totalEvents": 8,
+        "totalEvents": 2,
         "seller": {
           "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
           "identity": {
@@ -81,10 +81,6 @@
           {
             "id": "token-DAI",
             "__typename": "Token"
-          },
-          {
-            "id": "token-ETH",
-            "__typename": "Token"
           }
         ],
         "media": [],
@@ -98,16 +94,16 @@
         "multiUnit": false,
         "__typename": "UnitListing"
       },
-      "id": "4-000-522-2",
+      "id": "4-000-522-0",
       "listingId": "4-000-522",
-      "offerId": "2",
+      "offerId": "0",
       "value": "257500000000000000",
       "currency": "0x2448eE2641d78CC42D7AD76498917359D961A783",
       "refund": "0",
       "commission": "0",
-      "status": 2,
-      "statusStr": "Accepted",
-      "finalizes": 1556056158,
+      "status": 1,
+      "statusStr": "Pending",
+      "finalizes": 1209600,
       "quantity": 1,
       "valid": true,
       "validationError": null,
@@ -133,11 +129,11 @@
       "__typename": "Offer"
     },
     "listing": {
-      "id": "4-000-522-4181140",
+      "id": "4-000-522-4181066",
       "valid": true,
       "validationError": null,
       "status": "pending",
-      "totalEvents": 8,
+      "totalEvents": 2,
       "seller": {
         "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
         "identity": {
@@ -177,10 +173,6 @@
       "acceptedTokens": [
         {
           "id": "token-DAI",
-          "__typename": "Token"
-        },
-        {
-          "id": "token-ETH",
           "__typename": "Token"
         }
       ],
