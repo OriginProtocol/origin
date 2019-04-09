@@ -54,12 +54,14 @@ class EditListing extends Component {
       listing.currency = 'fiat-USD'
       const ethCurrency = currencies.find(c => c.id === 'token-ETH')
       if (ethCurrency) {
-        listing.price = String(Number(listing.price) * ethCurrency.priceInUSD)
-      }
-      if (listing.weekendPrice) {
-        listing.weekendPrice = String(
-          Number(listing.weekendPrice) * ethCurrency.priceInUSD
-        )
+        listing.price = String(
+          Number(listing.price) * ethCurrency.priceInUSD
+        ).replace(/^([0-9]+\.[0-9]{2}).*/, '$1')
+        if (listing.weekendPrice) {
+          listing.weekendPrice = String(
+            Number(listing.weekendPrice) * ethCurrency.priceInUSD
+          ).replace(/^([0-9]+\.[0-9]{2}).*/, '$1')
+        }
       }
     }
 
