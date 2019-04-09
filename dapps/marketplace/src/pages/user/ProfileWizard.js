@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import Enum from 'utils/enum'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
@@ -20,6 +21,7 @@ const WizardStep = new Enum(
 )
 
 class ProfileWizard extends Component {
+
   constructor(props) {
     super(props)
     this.state = {
@@ -79,6 +81,8 @@ class ProfileWizard extends Component {
       skipVerifyOtherProfiles,
       userEnroledIntoRewards
     } = this.state
+
+    const isMobile = window.innerWidth < 767
 
     const meetsCritria = ({
       originProfile = false,
@@ -146,7 +150,15 @@ class ProfileWizard extends Component {
       return true
     }
 
-    if (
+    /* show enroll step if user is not enrolled, or user has skipped
+     * that step. Is user is on mobile and we do not yet support mobile
+     * also skip this step
+     */
+    if (!skipRewardsEnroll && !userEnroledIntoRewards &&
+      (!isMobile || (isMobile && rewardsOnMobileEnabled))
+    ) {
+      this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
+    } else if (
       meetsCritria({
         originProfile: true,
         email: true,
@@ -168,8 +180,6 @@ class ProfileWizard extends Component {
       this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
     } else if (meetsCritria({ originProfile: true })) {
       this.updateUiStepIfNecessary(WizardStep.SetEmail)
-    } else if (!skipRewardsEnroll && !userEnroledIntoRewards) {
-      this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
     } else {
       this.updateUiStepIfNecessary(WizardStep.SetOriginProfile)
     }
