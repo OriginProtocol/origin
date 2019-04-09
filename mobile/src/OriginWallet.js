@@ -1,3 +1,6 @@
+'use strict'
+
+import React, { Component } from 'react'
 import { Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import EventEmitter from 'events'
@@ -16,10 +19,13 @@ import {
 // Environment variables
 import { GCM_SENDER_ID, PROVIDER_URL } from 'react-native-dotenv'
 
-class OriginWallet {
+class OriginWallet extends Component {
   constructor() {
+    super()
+
     this.state = {
-      ethAddress: null
+      ethAddress: null,
+      accountMapping: []
     }
 
     this.events = new EventEmitter()
@@ -93,9 +99,8 @@ class OriginWallet {
     }
   }
 
-  /* Opens the save wallet data and loads the private keys for the saved wallets
-   * into web3.
-   *
+  /* Opens the saved wallet data and loads the private keys for the saved
+   * accounts into web3.
    */
   open() {
     loadData(WALLET_STORE)
@@ -126,7 +131,7 @@ class OriginWallet {
           console.debug(`Loaded Origin Wallet with ${length} accounts`)
 
           if (length) {
-            const accounts = this.getAccountAddresses()
+            const accounts = this.getAccounts()
             // TODO
             const active = accounts.find(({ active }) => active) || {}
 
@@ -135,6 +140,8 @@ class OriginWallet {
             console.debug(`Setting Ethereum address`)
             await this.setEthAddress(active.address || accounts[0])
           }
+
+          this.syncAccountMapping()
         }
 
         console.debug(`Setting provider to ${PROVIDER_URL}`)
@@ -152,7 +159,7 @@ class OriginWallet {
    */
   async save() {
     const encryptedAccounts = []
-    const addresses = this.getAccountAddresses()
+    const addresses = this.getAccounts()
 
     addresses.forEach(address => {
       const account = web3.eth.accounts.wallet[address]
@@ -176,7 +183,7 @@ class OriginWallet {
   /* Get account addresses available on the wallet
    *
    */
-  getAccountAddresses() {
+  getAccounts() {
     return Object.keys(web3.eth.accounts.wallet).filter(k => {
       return web3.utils.isAddress(k) && k === web3.utils.toChecksumAddress(k)
     })
@@ -190,6 +197,7 @@ class OriginWallet {
     const wallet = web3.eth.accounts.wallet.create(1)
     const address = wallet[0].address
     this.setEthAddress(address)
+    this.syncAccountMapping()
     return address
   }
 
@@ -199,6 +207,7 @@ class OriginWallet {
   async removeAccount (address) {
     const result = web3.eth.accounts.wallet.remove(address)
     if (result ) {
+      this.syncAccountMapping()
       this.save()
     }
     return result
@@ -208,15 +217,57 @@ class OriginWallet {
    *
    */
   async setEthAddress(ethAddress) {
-    console.log(this.state)
     if (ethAddress !== this.state.ethAddress) {
       web3.eth.defaultAccount = ethAddress
-      console.log(`Setting default account to: ${ethAddress}`)
       Object.assign(this.state, { ethAddress })
       this.fireEvent(EVENTS.CURRENT_ACCOUNT, {
         address: this.state.ethAddress
       })
     }
+  }
+
+  /*
+   *
+   *
+   */
+  async syncAccountMapping() {
+    let accounts = this.state.accountMapping || []
+
+    // Remove any accounts that were removed from web3
+    accounts = accounts.filter(({ address }) =>  web3.eth.accounts.wallet[address])
+
+    // Add any new accounts that were added to web3
+    this.getAccounts()
+      .filter(address => !accounts.find(account => account.address === address))
+      .forEach(address => { accounts.push({ address }) })
+
+    this.fireEvent(EVENTS.AVAILABLE_ACCOUNTS, { accounts })
+    this.setState({ accountMapping: accounts })
+
+    return accounts
+  }
+
+  /* Record a name for an address in the account mapping.
+   *
+   */
+  async nameAccount(name, address) {
+    try {
+      let accounts = this.state.accountMapping
+
+      accounts = accounts.map(account => {
+        if (address !== account.address) {
+          return account
+        }
+
+        return Object.assign({}, account, { name })
+      })
+    } catch(error) {
+      console.log('Could not name account')
+    }
+  }
+
+  render() {
+    return null
   }
 }
 

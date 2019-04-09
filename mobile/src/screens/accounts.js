@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 
 import AccountItem from 'components/account-item'
 import AccountModal from 'components/account-modal'
+import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -17,10 +18,11 @@ class AccountsScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
       modalOpen: false
     }
+
+    this.toggleModal = this.toggleModal.bind(this)
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -55,14 +57,16 @@ class AccountsScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
+    const { navigation } = this.props
+
+    const accounts = originWallet.getAccounts()
 
     return (
       <Fragment>
         <FlatList
-          data={wallet.accounts}
+          data={originWallet.getAccounts()}
           renderItem={({ item }) => (
-            <AccountItem item={item} navigation={navigation} wallet={wallet} />
+            <AccountItem item={item} navigation={navigation} />
           )}
           keyExtractor={({ address }) => address}
           ItemSeparatorComponent={() => (
@@ -80,13 +84,7 @@ class AccountsScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return {
-    wallet
-  }
-}
-
-export default connect(mapStateToProps)(AccountsScreen)
+export default AccountsScreen
 
 const styles = StyleSheet.create({
   container: {

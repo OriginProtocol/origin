@@ -20,7 +20,7 @@ class MarketplaceScreen extends Component {
     }
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
-    this.getAccounts = originWallet.getAccountAddresses.bind(this)
+    this.getAccounts = originWallet.getAccounts.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
   }
 

@@ -7,29 +7,29 @@ import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class DeviceItem extends Component {
+export default class AccountItem extends Component {
   render() {
-    const { item, navigation, wallet } = this.props
-    const { address, name } = item
+    const { item, navigation } = this.props
 
     return (
       <TouchableHighlight onPress={() => navigation.navigate('Account', {
         account: {
-          address,
-          name,
+          item
         },
       })}>
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{name || 'Unnamed Account'}</Text>
-            <Address address={address} label={'Address'} style={styles.address} />
+            <Text style={styles.name}>{'Unnamed Account'}</Text>
+            <Address address={item} label={'Address'} style={styles.address} />
           </View>
+          {/*
           <View style={styles.iconContainer}>
             {wallet.address === address &&
               <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.selected} />
             }
             <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
           </View>
+          */}
         </View>
       </TouchableHighlight>
     )
