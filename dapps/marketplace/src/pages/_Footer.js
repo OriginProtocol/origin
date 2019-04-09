@@ -4,8 +4,6 @@ import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 
 import NetworkQuery from 'queries/Network'
-import LocaleDropdown from 'components/LocaleDropdown'
-import CurrencyDropdown from 'components/CurrencyDropdown'
 import BetaModal from './_BetaModal'
 
 const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
@@ -16,13 +14,7 @@ class Footer extends Component {
     reminders: false
   }
   render() {
-    const {
-      locale,
-      onLocale,
-      creatorConfig,
-      currency = 'USD',
-      onCurrency
-    } = this.props
+    const { creatorConfig } = this.props
     return (
       <Query query={NetworkQuery}>
         {({ data }) => {
@@ -139,18 +131,6 @@ class Footer extends Component {
                   )}
                 </div>
                 <div className="links">
-                  <LocaleDropdown
-                    locale={locale}
-                    onLocale={onLocale}
-                    dropup={true}
-                    className={'dropdown-toggle'}
-                  />
-                  <CurrencyDropdown
-                    value={currency}
-                    onChange={onCurrency}
-                    dropup={true}
-                  />
-
                   <a
                     href="https://www.originprotocol.com/"
                     target="_blank"
@@ -215,9 +195,8 @@ require('react-styl')(`
       flex-wrap: wrap
       display: flex
       align-items: flex-start
-      justify-content: space-between
       a
-        margin-right: 1rem
+        margin-left: auto
     .about
       font-size: 12px
       a
@@ -229,6 +208,14 @@ require('react-styl')(`
         color: var(--pale-grey-two-darker)
         padding: 0 0.125rem
 
+  @media (max-width: 1200px)
+    footer
+      .container
+        .links
+          flex-direction: column
+          align-items: left
+          a
+            margin: 0 0 1rem
 
   @media (max-width: 767.98px)
     footer
@@ -245,14 +232,5 @@ require('react-styl')(`
           margin-bottom: 1rem
         .links
           align-items: center
-
-  @media (max-width: 1200px)
-    footer
-      .container
-        .links
-          flex-direction: column
-          align-items: left
           margin-top: 1rem
-          a
-            margin: 0
 `)
