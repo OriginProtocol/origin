@@ -1,42 +1,42 @@
 {
   "event": {
-    "blockHash": "0xfacf80923398593882b65da3afde7622a41c5e702fa987a7d7a8f9a59c7fd904",
-    "transactionHash": "0xe29295d1b91fc0012e0eb49b28bc8bb23777694e05d4df71f7a9ab1c1d4b0eec",
-    "blockNumber": 4181051,
+    "blockHash": "0xe32650a41c58a4e2ec6b14f2510a0d2e6662f29165b2814e9a0c29c2c89e5e74",
+    "transactionHash": "0x6589d102e394778172fb91ffd23fbdce80645c4a4c0b5348b5434f424085cf52",
+    "blockNumber": 4181086,
     "address": "0xe842831533c4bf4B0F71B4521C4320BDB669324E",
-    "logIndex": 3,
+    "logIndex": 4,
     "removed": false,
-    "transactionIndex": 5,
-    "id": "log_1acbe2fb",
+    "transactionIndex": 3,
+    "id": "log_352cf5d3",
     "returnValues": {
       "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
       "1": "522",
-      "2": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+      "2": "0xd342badc140968e645594b5219b9cd34b30a0d5d904cd127314d219a31c3aa2a",
       "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
       "listingID": "522",
-      "ipfsHash": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d"
+      "ipfsHash": "0xd342badc140968e645594b5219b9cd34b30a0d5d904cd127314d219a31c3aa2a"
     },
-    "event": "ListingCreated",
-    "signature": "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+    "event": "ListingUpdated",
+    "signature": "0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0",
     "raw": {
-      "data": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+      "data": "0xd342badc140968e645594b5219b9cd34b30a0d5d904cd127314d219a31c3aa2a",
       "topics": [
-        "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+        "0x470503ad37642fff73a57bac35e69733b6b38281a893f39b50c285aad1f040e0",
         "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
         "0x000000000000000000000000000000000000000000000000000000000000020a"
       ]
     },
     "block": {
-      "id": 4181051
+      "id": 4181086
     }
   },
   "related": {
     "listing": {
-      "id": "4-000-522-4181051",
+      "id": "4-000-522-4181086",
       "valid": true,
       "validationError": null,
       "status": "active",
-      "totalEvents": 1,
+      "totalEvents": 4,
       "seller": {
         "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
         "identity": {
@@ -77,6 +77,10 @@
         {
           "id": "token-DAI",
           "__typename": "Token"
+        },
+        {
+          "id": "token-ETH",
+          "__typename": "Token"
         }
       ],
       "media": [],
@@ -97,6 +101,48 @@
           "logIndex": 3,
           "returnValues": {
             "ipfsHash": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+            "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+            "offerID": null,
+            "listingID": "522",
+            "__typename": "EventReturnValues"
+          },
+          "__typename": "Event"
+        },
+        {
+          "id": "log_725125dc",
+          "event": "OfferCreated",
+          "blockNumber": 4181066,
+          "logIndex": 4,
+          "returnValues": {
+            "ipfsHash": "0xce7523e865a37324b4296a0d523c1e397dfaa5117849f2e7234f773737b186e3",
+            "party": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+            "offerID": "0",
+            "listingID": "522",
+            "__typename": "EventReturnValues"
+          },
+          "__typename": "Event"
+        },
+        {
+          "id": "log_6ac5e5fb",
+          "event": "OfferWithdrawn",
+          "blockNumber": 4181075,
+          "logIndex": 8,
+          "returnValues": {
+            "ipfsHash": "0xff50289fa6f4257367d5e232217ff9b1cf5a215f8f4cf6e9710d59dd7f762ba0",
+            "party": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+            "offerID": "0",
+            "listingID": "522",
+            "__typename": "EventReturnValues"
+          },
+          "__typename": "Event"
+        },
+        {
+          "id": "log_352cf5d3",
+          "event": "ListingUpdated",
+          "blockNumber": 4181086,
+          "logIndex": 4,
+          "returnValues": {
+            "ipfsHash": "0xd342badc140968e645594b5219b9cd34b30a0d5d904cd127314d219a31c3aa2a",
             "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
             "offerID": null,
             "listingID": "522",
