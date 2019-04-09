@@ -25,7 +25,8 @@ function getAttestations(account, attestations) {
     phoneVerified: false,
     facebookVerified: false,
     twitterVerified: false,
-    airbnbVerified: false
+    airbnbVerified: false,
+    googleVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {

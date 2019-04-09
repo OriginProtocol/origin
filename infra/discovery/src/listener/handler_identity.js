@@ -136,6 +136,9 @@ class IdentityEventHandler {
             // only whether the account was verified or not.
             decoratedIdentity.facebookVerified = true
             break
+          case 'google':
+            decoratedIdentity.googleVerified = true
+            break
         }
       })
     )

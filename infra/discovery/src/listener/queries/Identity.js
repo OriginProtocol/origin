@@ -18,6 +18,7 @@ const identityQuery = gql`
           airbnbVerified
           phoneVerified
           emailVerified
+          googleVerified
         }
       }
     }
