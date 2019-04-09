@@ -1,0 +1,48 @@
+{
+  "name": "@origin/event-cache",
+  "version": "0.1.0",
+  "description": "Origin Event Cache",
+  "author": "Mike Shultz <mike@mikeshultz.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register --file test/setup test",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
+  },
+  "dependencies": {
+    "@origin/ipfs": "^0.1.0",
+    "debug": "^4.1.1",
+    "lodash": "^4.17.11",
+    "web3": "1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "@origin/contracts": "^0.8.6",
+    "@origin/services": "^0.1.0",
+    "lodash-es": "^4.17.11",
+    "eslint": "^5.15.1",
+    "mocha": "^5.2.0",
+    "prettier": "^1.16.4"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}
