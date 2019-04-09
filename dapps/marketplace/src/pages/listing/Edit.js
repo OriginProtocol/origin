@@ -13,6 +13,7 @@ class EditListing extends Component {
     // representation.
     // TODO: Can we unify field names or otherwise keep knowledge of
     // special fields limited to their file in `listings-types` dir?
+    const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
       listing: {
         // HomeShare fields:
@@ -35,6 +36,7 @@ class EditListing extends Component {
           'category',
           'subCategory'
         ]),
+        acceptedTokens: tokens.length ? tokens : ['token-ETH'],
         quantity: String(props.listing.unitsTotal),
         currency: get(props, 'listing.price.currency.id', ''),
         price: String(props.listing.price.amount),
