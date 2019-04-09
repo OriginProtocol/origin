@@ -56,10 +56,13 @@ class Review extends Component {
                 <fbt desc="create.review.price">Listing Price</fbt>
               </div>
               <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.price,
+                    currency: { id: listing.currency }
+                  }}
+                />
               </div>
             </div>
             {quantity <= 1 ? null : (

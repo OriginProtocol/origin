@@ -1,6 +1,7 @@
 import React from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import populate from '@origin/graphql/fixtures/populate'
 
 import { Button } from '@blueprintjs/core'
 
@@ -12,7 +13,6 @@ import CreateWallet from './mutations/CreateWallet'
 
 import Contracts from '../contracts/Contracts'
 
-import populate from './_populate'
 import query from 'queries/AllAccounts'
 
 import AccountBalances from './AccountBalances'
@@ -41,7 +41,31 @@ function updateTruffle() {
   })
 }
 
-const Accounts = props => (
+function contractAddresses() {
+  let tokens = ''
+  const net = localStorage.ognNetwork
+  if (localStorage[`${net}Tokens`]) {
+    tokens = `localStorage.${net}Tokens = ${JSON.stringify(
+      localStorage[`${net}Tokens`]
+    )}\n`
+  }
+  return (
+    `localStorage.clear()\n` +
+    `sessionStorage.clear()\n` +
+    `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
+    `localStorage.marketplaceContract = "${
+      localStorage.marketplaceContract
+    }"\n` +
+    `localStorage.identityEventsContract = "${
+      localStorage.identityEventsContract
+    }"\n` +
+    `localStorage.uniswapDaiExchange = "${localStorage.uniswapDaiExchange}"\n` +
+    tokens +
+    `location.reload()\n`
+  )
+}
+
+const Accounts = () => (
   <Query query={query} notifyOnNetworkStatusChange={true}>
     {({ networkStatus, error, data, refetch, client }) => {
       if (networkStatus === 1) {
@@ -65,7 +89,6 @@ const Accounts = props => (
         <div className="p-3">
           <CreateWallet />
           <AccountBalances
-            tokens={props.tokens}
             maxNodeAccount={maxNodeAccount ? maxNodeAccount.id : null}
           />
           <NodeAccounts data={data.web3.nodeAccounts} />
@@ -88,7 +111,9 @@ const Accounts = props => (
             style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
             intent="success"
             onClick={() =>
-              populate(maxNodeAccount ? maxNodeAccount.id : null, client)
+              populate(client, maxNodeAccount ? maxNodeAccount.id : null, msg =>
+                console.log(msg)
+              )
             }
             text="Populate"
           />
@@ -116,18 +141,7 @@ const Accounts = props => (
               overflowY: 'scroll'
             }}
             onClick={e => e.target.select()}
-            value={
-              `localStorage.clear()\n` +
-              `sessionStorage.clear()\n` +
-              `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
-              `localStorage.marketplaceContract = "${
-                localStorage.marketplaceContract
-              }"\n` +
-              `localStorage.identityEventsContract = "${
-                localStorage.identityEventsContract
-              }"\n` +
-              `location.reload()\n`
-            }
+            value={contractAddresses()}
           />
         </div>
       )

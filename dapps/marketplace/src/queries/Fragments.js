@@ -51,7 +51,14 @@ export default {
         hidden
         price {
           amount
-          currency
+          currency {
+            ... on Currency {
+              id
+            }
+          }
+        }
+        acceptedTokens {
+          id
         }
         media {
           url
@@ -70,7 +77,11 @@ export default {
         ... on FractionalListing {
           weekendPrice {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
           booked
           customPricing
@@ -135,6 +146,14 @@ export default {
         statusStr
         startDate
         endDate
+        totalPrice {
+          amount
+          currency {
+            ... on Currency {
+              id
+            }
+          }
+        }
       }
     `
   },
