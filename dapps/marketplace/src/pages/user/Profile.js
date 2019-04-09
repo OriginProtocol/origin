@@ -4,6 +4,7 @@ import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 import { Switch, Route } from 'react-router-dom'
+import validator from '@origin/validator'
 
 import Store from 'utils/store'
 import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
@@ -66,7 +67,20 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const storedAttestations = store.get(`attestations-${props.wallet}`, {})
+    const attestations = store.get(`attestations-${props.wallet}`, {})
+    const storedAttestations = {}
+    Object.keys(attestations).forEach(key => {
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...JSON.parse(attestations[key]),
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+        storedAttestations[key] = attestations[key]
+      } catch (e) {
+        // Invalid attestation
+        console.log('Invalid attestation', attestations[key])
+      }
+    })
     this.state = { ...getState(profile), ...storedAttestations }
   }
 
@@ -163,7 +177,7 @@ class UserProfile extends Component {
               <div className="profile-attestations">
                 {this.renderAtt(
                   'phone',
-                  fbt('Phone Number', '_ProvisionedChanges.phoneNumber')
+                  fbt('Phone', '_ProvisionedChanges.phone')
                 )}
                 {this.renderAtt(
                   'email',
