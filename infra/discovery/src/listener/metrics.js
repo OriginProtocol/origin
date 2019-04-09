@@ -3,7 +3,7 @@ const express = require('express')
 const promBundle = require('express-prom-bundle')
 
 // Create an express server for Prometheus to scrape metrics
-const app = express()
+const metricsServer = express()
 const bundle = promBundle({
   includeMethod: true,
   promClient: {
@@ -12,7 +12,7 @@ const bundle = promBundle({
     }
   }
 })
-app.use(bundle)
+metricsServer.use(bundle)
 
 // Create metrics.
 const blockGauge = new bundle.promClient.Gauge({
@@ -25,11 +25,4 @@ const errorCounter = new bundle.promClient.Counter({
   help: 'Number of errors from the event listener handler '
 })
 
-const port = 9499
-
-// Start express server for serving metrics
-app.listen({ port: port }, () => {
-  logger.info(`Serving Prometheus metrics on port ${port}`)
-})
-
-module.exports = { blockGauge, errorCounter }
+module.exports = { blockGauge, errorCounter, metricsServer }
