@@ -18,7 +18,7 @@ import TransactionModal from 'components/transaction-modal'
 import WalletModal from 'components/wallet-modal'
 
 import currencies from 'utils/currencies'
-import { toOgns } from 'utils/ogn'
+import { toDais, toOgns } from 'utils/tokens'
 
 import originWallet from '../OriginWallet'
 
@@ -68,10 +68,10 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { active_event, address, balances: { eth, ogn/*, dai*/ }, navigation, notifications, pending_events, processed_events } = this.props
+    const { active_event, address, balances: { dai, eth, ogn }, navigation, notifications, pending_events, processed_events } = this.props
     const ethBalance = web3.utils.fromWei(eth, 'ether')
     // To Do: convert tokens with decimal counts
-    // const daiBalance = dai
+    const daiBalance = toDais(dai)
     const ognBalance = toOgns(ogn)
     const eventsCount = pending_events.length + processed_events.length + notifications.length
     const { params = {} } = navigation.state
@@ -99,15 +99,6 @@ class HomeScreen extends Component {
               onPress={this.toggleWallet}
             />
             <Currency
-              abbreviation={'OGN'}
-              balance={ognBalance}
-              labelColor={currencies['ogn'].color}
-              name={currencies['ogn'].name}
-              imageSource={currencies['ogn'].icon}
-              onPress={this.toggleWallet}
-            />
-            {/*
-            <Currency
               abbreviation={'DAI'}
               balance={daiBalance}
               labelColor={currencies['dai'].color}
@@ -115,7 +106,14 @@ class HomeScreen extends Component {
               imageSource={currencies['dai'].icon}
               onPress={this.toggleWallet}
             />
-            */}
+            <Currency
+              abbreviation={'OGN'}
+              balance={ognBalance}
+              labelColor={currencies['ogn'].color}
+              name={currencies['ogn'].name}
+              imageSource={currencies['ogn'].icon}
+              onPress={this.toggleWallet}
+            />
           </ScrollView>
           <WalletModal address={address} backupWarning={params.backupWarning} visible={params.walletExpanded} onPress={this.toggleWallet} onRequestClose={this.toggleWallet} />
         </View>

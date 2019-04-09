@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 
+import { toOgns } from 'utils/tokens'
 import { sufficientFunds } from 'utils/transaction'
-import { toOgns } from 'utils/ogn'
 
 const IMAGES_PATH = '../../assets/images/'
 

@@ -24,10 +24,7 @@ const ListingPreview = ({ listing }) => {
         <div className="category">{listing.categoryStr}</div>
         <h5>{listing.title}</h5>
         <div className="price">
-          <div className="eth">{`${listing.price.amount} ETH`}</div>
-          <div className="usd">
-            <Price amount={listing.price.amount} />
-          </div>
+          <Price price={listing.price} />
         </div>
       </div>
     </div>

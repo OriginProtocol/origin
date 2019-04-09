@@ -245,10 +245,6 @@ const DappInfo = () => {
                       <td>{process.env.HOST}</td>
                     </tr>
                     <tr>
-                      <th>IPFS_SWARM</th>
-                      <td>{process.env.IPFS_SWARM}</td>
-                    </tr>
-                    <tr>
                       <th>ORIGIN_LINKING</th>
                       <td>{process.env.ORIGIN_LINKING}</td>
                     </tr>
