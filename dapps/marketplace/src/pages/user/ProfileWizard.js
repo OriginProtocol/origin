@@ -150,8 +150,8 @@ class ProfileWizard extends Component {
     }
 
     /* show enroll step if user is not enrolled, or user has skipped
-     * that step. Is user is on mobile and we do not yet support mobile
-     * also skip this step
+     * that step. If user is on mobile and we do not yet support mobile
+     * Origin Rewards also skip this step
      */
     if (
       !skipRewardsEnroll &&
