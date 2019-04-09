@@ -1,4 +1,3 @@
-const logger = require('./logger')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
