@@ -56,10 +56,13 @@ class Review extends Component {
                 <fbt desc="listing.review.weekdays">Weekdays</fbt>
               </div>
               <div className="col-9">
-                <CoinPrice price={listing.price} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.price} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.price,
+                    currency: listing.currency
+                  }}
+                />
               </div>
             </div>
             <div className="row">
@@ -67,10 +70,13 @@ class Review extends Component {
                 <fbt desc="listing.review.weekends">Weekends</fbt>
               </div>
               <div className="col-9">
-                <CoinPrice price={listing.weekendPrice} coin="eth" />
-                <div className="fiat">
-                  ~ <Price amount={listing.weekendPrice} />
-                </div>
+                <Price
+                  target={listing.currency}
+                  price={{
+                    amount: listing.weekendPrice,
+                    currency: listing.currency
+                  }}
+                />
               </div>
             </div>
             <div className="row">
@@ -112,6 +118,8 @@ class Review extends Component {
                 <Calendar
                   interactive={false}
                   small={true}
+                  currency={listing.currency}
+                  originalCurrency
                   availability={
                     new AvailabilityCalculator({
                       weekdayPrice: listing.price,

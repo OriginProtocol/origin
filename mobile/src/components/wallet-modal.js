@@ -11,7 +11,7 @@ import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
 import { getCurrentNetwork } from 'utils/networks'
-import { toOgns } from 'utils/ogn'
+import { toDais, toOgns } from 'utils/tokens'
 import { evenlySplitAddress } from 'utils/user'
 
 import originWallet from '../OriginWallet'
@@ -114,9 +114,10 @@ class WalletModal extends Component {
 
   render() {
     const { address, backupWarning, onPress, visible, wallet, onRequestClose } = this.props
-    const { /*dai, */eth, ogn } = wallet.balances
+    const { dai, eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
+    const daiBalance = toDais(dai)
     const ognBalance = toOgns(ogn)
     const privateKey = originWallet.getPrivateKey(address)
 
@@ -156,6 +157,15 @@ class WalletModal extends Component {
               onPress={() => this.handleFunding('ETH')}
             />
             <Currency
+              abbreviation={'DAI'}
+              balance={daiBalance}
+              labelColor={currencies['dai'].color}
+              name={currencies['dai'].name}
+              imageSource={currencies['dai'].icon}
+              vertical={true}
+              onPress={() => this.handleFunding('DAI')}
+            />
+            <Currency
               abbreviation={'OGN'}
               balance={ognBalance}
               labelColor={currencies['ogn'].color}
@@ -164,17 +174,6 @@ class WalletModal extends Component {
               vertical={true}
               onPress={() => this.handleFunding('OGN')}
             />
-            {/*
-            <Currency
-              abbreviation={'DAI'}
-              balance={dai}
-              labelColor={currencies['dai'].color}
-              name={currencies['dai'].name}
-              imageSource={currencies['dai'].icon}
-              vertical={true}
-              onPress={() => this.handleFunding('DAI')}
-            />
-            */}
           </ScrollView>
           <View style={styles.buttonsContainer}>
             <OriginButton

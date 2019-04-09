@@ -15,7 +15,7 @@ export default gql`
     }
     tokens {
       id
-      symbol
+      code
       address
       name
       decimals

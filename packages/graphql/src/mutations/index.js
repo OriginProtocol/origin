@@ -48,6 +48,13 @@ import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
 import linkMobileWallet from './walletLinker/linkMobileWallet'
 
+import swapToToken from './uniswap/swapToToken'
+import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
+import uniswapDeployExchangeTemplate from './uniswap/uniswapDeployExchangeTemplate'
+import uniswapInitializeFactory from './uniswap/uniswapInitializeFactory'
+import uniswapCreateExchange from './uniswap/uniswapCreateExchange'
+import uniswapAddLiquidity from './uniswap/uniswapAddLiquidity'
+
 export default {
   acceptOffer,
   addAffiliate,
@@ -78,8 +85,14 @@ export default {
   setActiveWallet,
   setNetwork,
   signMessage,
+  swapToToken,
   toggleMetaMask,
   transferToken,
+  uniswapAddLiquidity,
+  uniswapCreateExchange,
+  uniswapDeployFactory,
+  uniswapDeployExchangeTemplate,
+  uniswapInitializeFactory,
   unlinkMobileWallet,
   updateListing,
   updateRefund,

@@ -110,6 +110,7 @@ const deployContracts = () =>
   })
 
 const started = {}
+let extrasResult
 
 module.exports = async function start(opts = {}) {
   if (opts.ganache && !started.ganache) {
@@ -137,7 +138,12 @@ module.exports = async function start(opts = {}) {
     }
   }
 
-  return async function shutdown() {
+  if (opts.extras && !started.extras) {
+    extrasResult = await opts.extras()
+    started.extras = true
+  }
+
+  const shutdownFn = async function shutdown() {
     if (started.ganache) {
       await started.ganache.close()
     }
@@ -145,4 +151,8 @@ module.exports = async function start(opts = {}) {
       await new Promise(resolve => started.ipfs.stop(() => resolve()))
     }
   }
+
+  shutdownFn.extrasResult = extrasResult
+
+  return shutdownFn
 }

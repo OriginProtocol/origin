@@ -6,7 +6,7 @@ const GetTokensQuery = gql`
   query GetTokens {
     tokens {
       id
-      symbol
+      code
     }
   }
 `
