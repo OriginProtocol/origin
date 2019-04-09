@@ -3,6 +3,7 @@ import pick from 'lodash/pick'
 import get from 'lodash/get'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withCurrencies from 'hoc/withCurrencies'
 import CreateListing from '../create-listing/CreateListing'
 
 class EditListing extends Component {
@@ -35,6 +36,7 @@ class EditListing extends Component {
           'subCategory'
         ]),
         quantity: String(props.listing.unitsTotal),
+        currency: get(props, 'listing.price.currency.id', ''),
         price: String(props.listing.price.amount),
         boost: '0',
         boostLimit: '0',
@@ -44,16 +46,28 @@ class EditListing extends Component {
   }
 
   render() {
-    return (
-      <CreateListing
-        listing={this.state.listing}
-        refetch={this.props.refetch}
-      />
-    )
+    const listing = this.state.listing,
+      currencies = this.props.currencies
+
+    // Convert legacy listings priced in ETH to USD
+    if (listing.currency === 'token-ETH') {
+      listing.currency = 'fiat-USD'
+      const ethCurrency = currencies.find(c => c.id === 'token-ETH')
+      if (ethCurrency) {
+        listing.price = String(Number(listing.price) * ethCurrency.priceInUSD)
+      }
+      if (listing.weekendPrice) {
+        listing.weekendPrice = String(
+          Number(listing.weekendPrice) * ethCurrency.priceInUSD
+        )
+      }
+    }
+
+    return <CreateListing listing={listing} refetch={this.props.refetch} />
   }
 }
 
-export default withCreatorConfig(EditListing)
+export default withCreatorConfig(withCurrencies(EditListing))
 
 require('react-styl')(`
 `)
