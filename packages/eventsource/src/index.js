@@ -24,6 +24,13 @@ const affiliatesFn = async (contract, address) =>
   await contract.methods.allowedAffiliates(address).call()
 const getAffiliates = memoize(affiliatesFn, (...args) => args[1])
 
+function mutatePrice(price) {
+  let currency = price.currency || 'token-ETH'
+  if (currency === 'ETH') currency = 'token-ETH'
+  if (currency.indexOf('0x00') === 0) currency = 'token-ETH'
+  price.currency = { id: currency }
+}
+
 const netId = memoize(async web3 => await web3.eth.net.getId())
 
 class OriginEventSource {
@@ -103,6 +110,7 @@ class OriginEventSource {
         'description',
         'currencyId',
         'price',
+        'acceptedTokens',
         'category',
         'subCategory',
         'media',
@@ -133,8 +141,11 @@ class OriginEventSource {
           const isWeekend = _get(rawData, 'availability.3.6.0') === 'x-price'
           const weekendPrice = _get(rawData, 'availability.3.6.3')
           if (isWeekly && isWeekend) {
-            data.price = { amount: weekdayPrice, currency: 'ETH' }
-            data.weekendPrice = { amount: weekendPrice, currency: 'ETH' }
+            data.price = { amount: weekdayPrice, currency: { id: 'token-ETH' } }
+            data.weekendPrice = {
+              amount: weekendPrice,
+              currency: { id: 'token-ETH' }
+            }
           }
         } catch (e) {
           /* Ignore */
@@ -175,6 +186,14 @@ class OriginEventSource {
       }
     }
 
+    if (data.price) {
+      mutatePrice(data.price)
+    }
+
+    if (data.weekendPrice) {
+      mutatePrice(data.weekendPrice)
+    }
+
     if (data.category) {
       data.categoryStr = startCase(data.category.replace(/^schema\./, ''))
     }
@@ -201,6 +220,16 @@ class OriginEventSource {
         __typename = 'UnitListing'
       }
     }
+    if (
+      [
+        'UnitListing',
+        'FractionalListing',
+        'FractionalHourlyListing',
+        'AnnouncementListing'
+      ].indexOf(__typename) < 0
+    ) {
+      __typename = 'UnitListing'
+    }
 
     let commissionPerUnit = '0',
       commission = '0'
@@ -222,6 +251,7 @@ class OriginEventSource {
         blockNumber ? `-${blockNumber}` : ''
       }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
+      acceptedTokens: (data.acceptedTokens || []).map(id => ({ id })),
       deposit: listing.deposit,
       arbitrator: listing.depositManager
         ? { id: listing.depositManager }
@@ -236,7 +266,6 @@ class OriginEventSource {
     })
 
     this.listingCache[cacheKey] = listingWithOffers
-
     return this.listingCache[cacheKey]
   }
 
@@ -409,9 +438,13 @@ class OriginEventSource {
       arbitrator: { id: offer.arbitrator },
       quantity: _get(data, 'unitsPurchased'),
       startDate: _get(data, 'startDate'),
-      endDate: _get(data, 'endDate')
+      endDate: _get(data, 'endDate'),
+      totalPrice: _get(data, 'totalPrice')
     }
     offerObj.statusStr = offerStatus(offerObj)
+    if (offerObj.totalPrice) {
+      mutatePrice(offerObj.totalPrice)
+    }
 
     if (!data) {
       offerObj.valid = false
@@ -464,6 +497,10 @@ class OriginEventSource {
 
     if (listing.__typename !== 'UnitListing') {
       // TODO: validate fractional offers
+      return
+    }
+
+    if (_get(listing, 'price.currency.id') !== 'token-ETH') {
       return
     }
 

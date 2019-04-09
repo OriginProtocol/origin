@@ -1,6 +1,9 @@
 import React from 'react'
 
-export const formInput = (state, setState, className) => field => ({
+export const formInput = (state, setState, className) => (
+  field,
+  valueOnly
+) => ({
   value: state[field] || '',
   className: `form-control form-control-lg${
     state[`${field}Error`] ? ' is-invalid' : ''
@@ -8,7 +11,7 @@ export const formInput = (state, setState, className) => field => ({
   name: field,
   onChange: e =>
     setState({
-      [field]: e.target.value,
+      [field]: valueOnly ? e : e.target.value,
       [`${field}Error`]: false
     })
 })

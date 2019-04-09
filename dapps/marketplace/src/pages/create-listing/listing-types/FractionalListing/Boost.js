@@ -23,7 +23,9 @@ const NoOgn = () => (
         Once you acquire some OGN you will be able to boost your listing.
       </div>
       <div>
-        <Link to="/about/tokens">Learn More</Link>
+        <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
+          Learn More
+        </a>
       </div>
     </fbt>
   </div>

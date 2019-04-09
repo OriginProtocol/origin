@@ -5,6 +5,7 @@ import get from 'lodash/get'
 
 import NetworkQuery from 'queries/Network'
 import LocaleDropdown from 'components/LocaleDropdown'
+import CurrencyDropdown from 'components/CurrencyDropdown'
 import BetaModal from './_BetaModal'
 
 const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
@@ -15,7 +16,13 @@ class Footer extends Component {
     reminders: false
   }
   render() {
-    const { locale, onLocale, creatorConfig } = this.props
+    const {
+      locale,
+      onLocale,
+      creatorConfig,
+      currency = 'USD',
+      onCurrency
+    } = this.props
     return (
       <Query query={NetworkQuery}>
         {({ data }) => {
@@ -137,6 +144,11 @@ class Footer extends Component {
                     onLocale={onLocale}
                     dropup={true}
                     className={'dropdown-toggle'}
+                  />
+                  <CurrencyDropdown
+                    value={currency}
+                    onChange={onCurrency}
+                    dropup={true}
                   />
 
                   <a

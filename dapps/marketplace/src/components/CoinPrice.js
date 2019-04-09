@@ -1,9 +1,15 @@
 import React from 'react'
 
-const CoinPrice = ({ price, coin }) => (
-  <div className={`coin-price ${coin}`}>
-    {price}
-    <span>{coin}</span>
+const CoinPrice = ({ price, coin, iconOnly, className }) => (
+  <div className={`coin-price ${coin}${className ? ` ${className}` : ''}`}>
+    {iconOnly ? (
+      <>&nbsp;</>
+    ) : (
+      <>
+        {price}
+        <span>{coin}</span>
+      </>
+    )}
   </div>
 )
 
@@ -29,4 +35,11 @@ require('react-styl')(`
       background-image: url(images/ogn-icon.svg)
       span
         color: #007bff
+    &.dai
+      background-image: url(images/dai-icon.svg)
+      span
+        color: #007bff
+    &.lg
+      background-size: 1.5rem
+      background-position: 0px 2px
 `)

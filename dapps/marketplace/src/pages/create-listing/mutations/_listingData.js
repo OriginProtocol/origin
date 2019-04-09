@@ -10,7 +10,8 @@ export default function applyListingData(props, data) {
       typename: listing.__typename,
       title: listing.title,
       description: listing.description,
-      price: { currency: 'ETH', amount: listing.price },
+      price: { currency: listing.currency, amount: listing.price },
+      acceptedTokens: listing.acceptedTokens,
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
@@ -30,7 +31,10 @@ export default function applyListingData(props, data) {
     case 'FractionalListing':
     case 'FractionalHourlyListing':
       variables.fractionalData = {
-        weekendPrice: { currency: 'ETH', amount: listing.weekendPrice },
+        weekendPrice: {
+          currency: listing.currency,
+          amount: listing.weekendPrice
+        },
         timeZone: listing.timeZone,
         workingHours: listing.workingHours,
         booked: listing.booked,

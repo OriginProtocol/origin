@@ -1,8 +1,8 @@
 const Common = require('./Common')
 
-module.exports =
-  Object.values(Common).reduce((acc, item) => acc + item) +
-  `
+module.exports = `
+  ${Common}
+
   scalar JSON
   scalar DateTime
 

@@ -6,7 +6,7 @@ if (doTestMark) {
   console.warn('⚠️ Proofread mode: Doing translation with test marks included for testing.')
 }
 
-const locales = 'de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl_NL pt_PT ro_RO ru_RU th_TH tr_TR uk_UA vi_VN zh_CN zh_TW'.split(
+const locales = 'en_US de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl_NL pt_PT ro_RO ru_RU th_TH tr_TR uk_UA vi_VN zh_CN zh_TW'.split(
   ' '
 )
 

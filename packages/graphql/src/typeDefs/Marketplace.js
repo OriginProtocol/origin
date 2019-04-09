@@ -30,6 +30,7 @@ const ListingInterface = `
   description: String
   currencyId: String
   price: Price
+  acceptedTokens: [Token]
   category: String
   subCategory: String
   categoryStr: String
@@ -330,6 +331,7 @@ module.exports = `
 
     # IPFS
     quantity: Int
+    totalPrice: Price
     startDate: String
     endDate: String
   }
@@ -372,6 +374,7 @@ module.exports = `
     category: String
     subCategory: String
     currency: String
+    acceptedTokens: [String]
     media: [MediaInput]
     price: PriceInput
 
