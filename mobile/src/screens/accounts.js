@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
   FlatList,
@@ -62,7 +62,7 @@ class AccountsScreen extends Component {
     const { navigation } = this.props
 
     return (
-      <Fragment>
+      <>
         <FlatList
           data={this.props.wallet.accounts}
           renderItem={({ item }) => (
@@ -81,7 +81,7 @@ class AccountsScreen extends Component {
           onPress={this.toggleModal}
           onRequestClose={this.toggleModal}
         />
-      </Fragment>
+      </>
     )
   }
 }

@@ -1,20 +1,21 @@
 'use strict'
 
 import React, { Component, Fragment } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Modal, StyleSheet, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
 import CardsModal from 'components/cards-modal'
 import { decodeTransaction } from '../utils/contractDecoder'
+import TransactionCard from 'components/transaction-card'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      modalOpen: false
+      modals: []
     }
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
@@ -28,16 +29,7 @@ class MarketplaceScreen extends Component {
         fontFamily: 'Poppins',
         fontSize: 17,
         fontWeight: 'normal'
-      },
-      headerRight: (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.state.params.toggleModal()
-          }}
-        >
-          <Text style={{ marginRight: 10 }}>💄</Text>
-        </TouchableOpacity>
-      )
+      }
     }
   }
 
@@ -65,8 +57,7 @@ class MarketplaceScreen extends Component {
       const functionInterface = decodeTransaction(msgData.data.data)
       if (functionInterface) {
         // Got an interface from the contract
-        const response = this.handleWeb3Request(functionInterface)
-        console.log(response)
+        this.handleWeb3Request(msgData, functionInterface)
       }
     }
   }
@@ -75,25 +66,38 @@ class MarketplaceScreen extends Component {
     return this.props.wallet.accounts.map(account => account.address)
   }
 
-  handleWeb3Request({ name, parameters }) {
+  handleWeb3Request(msgData, { name, parameters }) {
     if (name === 'makeOffer') {
-      this.toggleModal(parameters)
+      this.setState(prevState => ({
+        modals: [
+          ...prevState.modals,
+          {
+            type: 'transaction',
+            method: name,
+            props: parameters,
+            msgData: msgData
+          }
+        ]
+      }))
     }
   }
 
-  toggleModal() {
-    this.setState({ modalOpen: !this.state.modalOpen })
+  toggleModal(modal) {
+    this.setState(prevState => {
+      modals: prevState.modals.filter(x => x === modal)
+    })
+    // Call the appropriate callback
   }
 
   render() {
-    console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
-
     const injectedJavaScript = `
       if (!window.__mobileBridge) {
         window.__mobileBridge = true;
       }
       true;
     `
+
+    const { modals } = this.state
 
     return (
       <Fragment>
@@ -107,15 +111,49 @@ class MarketplaceScreen extends Component {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />
-        <CardsModal
-          visible={this.state.modalOpen}
-          onPress={this.toggleModal}
-          onRequestClose={this.toggleModal}
-        />
+        {modals.map((modal, index) => {
+
+          let card
+          if (modal.type === 'transaction') {
+            card = (
+              <TransactionCard
+                transactionType={modal.method}
+                onPress={() => this.toggleModal(modal)}
+              />
+            )
+          }
+
+          return (
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={true}
+              onRequestClose={() => {
+                this.toggalModal(modal)
+              }}
+            >
+              <SafeAreaView style={styles.container}>
+                <View style={styles.transparent} onPress={() => {this.toggleModal(modal) }}>
+                  {card}
+                </View>
+              </SafeAreaView>
+            </Modal>
+          )
+        })}
       </Fragment>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#0B18234C',
+    flex: 1
+  },
+  transparent: {
+    flex: 1
+  }
+})
 
 const mapStateToProps = ({ wallet }) => {
   return { wallet }

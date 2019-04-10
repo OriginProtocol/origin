@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 
 import { DEFAULT_NOTIFICATION_PERMISSIONS, ETH_NOTIFICATION_TYPES } from './constants'
-import { init, addAccount, updateAccounts } from 'actions/Wallet'
+import { addAccount, nameAccount, updateAccounts } from 'actions/Wallet'
 import { updateNotificationsPermissions } from 'actions/Activation'
 
 // Environment variables
@@ -70,7 +70,15 @@ class OriginWallet extends Component {
 
   /* Add a new account from a private key
    */
-  async addAccount(privateKey) {}
+  async addAccount(privateKey) {
+    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+      privateKey = '0x' + privateKey
+    }
+    const account = web3.eth.accounts.wallet.add(privateKey)
+    web3.eth.defaultAccount = account.address
+    this.props.addAccount(account)
+    return account.address
+  }
 
   /* Remove an account
    */
@@ -85,7 +93,7 @@ class OriginWallet extends Component {
   /* Record a name for an address in the account mapping
    */
   async nameAccount(name, address) {
-    console.log('Name account')
+    this.props.nameAccount(name, address)
   }
 
   /* Configure push notifications
@@ -158,8 +166,8 @@ const mapStateToProps = ({ activation, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  initWallet: address => dispatch(init(address)),
   addAccount: account => dispatch(addAccount(account)),
+  nameAccount: payload => dispatch(nameAccount(payload)),
   removeAccount: account => dispatch(removeAccount(account)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>

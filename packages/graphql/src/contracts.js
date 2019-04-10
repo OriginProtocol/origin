@@ -484,10 +484,12 @@ function setMobileBridge() {
     context.marketplace._address
   )
 
-  context.ognExec = new context.web3Exec.eth.Contract(
-    OriginTokenContract.abi,
-    context.ogn._address
-  )
+  if (context.config.OriginToken) {
+    context.ognExec = new context.web3Exec.eth.Contract(
+      OriginTokenContract.abi,
+      context.ogn._address
+    )
+  }
 
   context.identityEventsExec = new context.web3Exec.eth.Contract(
     IdentityEventsContract.abi,

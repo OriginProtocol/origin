@@ -16,7 +16,7 @@ const encryptor = createEncryptor({
 })
 
 const persistConfig = {
-  key: 'OriginWallet',
+  key: 'OriginWallet-enc',
   storage: storage,
   whitelist: ['activation', 'notifications', 'wallet'],
   transforms: [encryptor]

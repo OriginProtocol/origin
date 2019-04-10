@@ -14,9 +14,20 @@ class MobileBridge {
   }
 
   processTransaction(transaction, callback) {
-    console.log('Process transaction for mobile-bridge')
-    transaction.gasLimit = transaction.gas
-    window.webViewBridge.send('processTransaction', transaction)
+    let onSuccess
+    if (callback) {
+      onSuccess = (result) => {
+        callback(undefined, result)
+      }
+    } else {
+      onSuccess = (result) => {
+        return new Promise(resolve => resolve(result))
+      }
+    }
+    const onError = (result) => {
+      return new Promise((resolve, reject) => reject(result))
+    }
+    window.webViewBridge.send('processTransaction', transaction, onSuccess, onError)
   }
 
   getAccounts(callback) {
@@ -24,12 +35,10 @@ class MobileBridge {
     let onSuccess
     if (callback) {
       onSuccess = (result) => {
-        console.log('Got result with callback: ', result)
         callback(undefined, result)
       }
     } else {
       onSuccess = (result) => {
-        console.log('Got result without callback')
         return new Promise(resolve => resolve(result))
       }
     }

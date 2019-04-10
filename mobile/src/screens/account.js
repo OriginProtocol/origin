@@ -1,6 +1,9 @@
+'use strict'
+
 import React, { Component } from 'react'
 import {
   Alert,
+  DeviceEventEmitter,
   Clipboard,
   StyleSheet,
   Text,
@@ -11,7 +14,6 @@ import { connect } from 'react-redux'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
-import originWallet from '../OriginWallet'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -23,14 +25,7 @@ class AccountScreen extends Component {
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleNameChange = this.handleNameChange.bind(this)
-    this.handleNameUpdate = this.handleNameUpdate.bind(this)
-
-    const nameValue = props.navigation.getParam('account').name
-
-    this.state = {
-      nameValue,
-      priorNameValue: nameValue
-    }
+    console.log(this.props.navigation.getParam('account'))
   }
 
   static navigationOptions = {
@@ -44,15 +39,6 @@ class AccountScreen extends Component {
 
   async handleActivate() {
     const { navigation } = this.props
-    const { address } = navigation.getParam('account')
-
-    try {
-      originWallet.setWeb3Address(address)
-
-      navigation.goBack()
-    } catch (e) {
-      console.error(e)
-    }
   }
 
   async handleDangerousCopy(privateKey) {
@@ -95,8 +81,6 @@ class AccountScreen extends Component {
           text: 'Delete',
           onPress: () => {
             try {
-              originWallet.removeAccount(address)
-
               navigation.goBack()
             } catch (e) {
               console.error(e)
@@ -107,33 +91,22 @@ class AccountScreen extends Component {
     )
   }
 
-  handleNameChange(e) {
-    const nameValue = e.nativeEvent.text
-
-    this.setState({ nameValue })
-  }
-
-  handleNameUpdate() {
-    const { nameValue, priorNameValue } = this.state
-    const { navigation } = this.props
-    const { address } = navigation.getParam('account')
-
-    nameValue !== priorNameValue &&
-      originWallet.nameAccount(address, nameValue.trim())
+  handleNameChange(event) {
+    const { address } = this.props.navigation.getParam('account')
+    const nameValue = event.nativeEvent.text.trim()
+    DeviceEventEmitter.emit('nameAccount', { address, name: nameValue })
   }
 
   showPrivateKey(address) {
-    const privateKey = originWallet.getPrivateKey(address)
-
+    const { privateKey } = this.props.navigation.getParam('account')
     Alert.alert('Private Key', privateKey)
   }
 
   render() {
-    const { nameValue, priorNameValue } = this.state
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
-    const { address, name } = account
-    const privateKey = originWallet.getPrivateKey(address)
+    const { address, privateKey } = account
+    const name = wallet.accountNameMapping[address]
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.address
 
@@ -145,7 +118,7 @@ class AccountScreen extends Component {
           </View>
           <TextInput
             placeholder={'Unnamed Account'}
-            value={name === priorNameValue ? nameValue : name}
+            value={name}
             style={styles.input}
             onChange={this.handleNameChange}
             onSubmitEditing={this.handleNameUpdate}
@@ -204,14 +177,6 @@ class AccountScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return {
-    wallet
-  }
-}
-
-export default connect(mapStateToProps)(AccountScreen)
-
 const styles = StyleSheet.create({
   button: {
     marginBottom: 10,
@@ -268,3 +233,9 @@ const styles = StyleSheet.create({
     flex: 1
   }
 })
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountScreen)

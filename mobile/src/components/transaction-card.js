@@ -33,7 +33,7 @@ class TransactionCard extends Component {
     let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
 
     switch (this.props.transactionType) {
-      case 'create-listing':
+      case 'createListing':
         // To boost or not to boost, up to 100
         boost =
           0 && Math.floor(Math.random() * 2) * Math.ceil(Math.random() * 100)
@@ -41,7 +41,7 @@ class TransactionCard extends Component {
         ognInvolved = !!boost
         heading = 'Create Listing'
         break
-      case 'make-offer':
+      case 'makeOffer':
         paymentCurrency =
           paymentCurrencies[
             Math.floor(Math.random() * paymentCurrencies.length)
@@ -53,7 +53,7 @@ class TransactionCard extends Component {
         daiInvolved = paymentCurrency === 'dai'
         heading = 'Purchase'
         break
-      case 'publish-identity':
+      case 'publishIdentity':
         heading = 'Publish Identity'
         break
       default:

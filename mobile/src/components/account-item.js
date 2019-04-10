@@ -16,14 +16,16 @@ export default class AccountItem extends Component {
         onPress={() =>
           navigation.navigate('Account', {
             account: {
-              item
+              ...item
             }
           })
         }
       >
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{item.name || 'Unnamed Account'}</Text>
+            <Text style={styles.name}>
+              {wallet.accountNameMapping[item.address] || 'Unnamed Account'}
+            </Text>
             <Address
               address={item.address}
               label={'Address'}

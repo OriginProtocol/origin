@@ -34,7 +34,7 @@ export default function Wallet(state = initialState, action = {}) {
         ...state,
         accountNameMapping: {
           ...state.accountNameMapping,
-          [action.address]: action.name
+          [action.payload.address]: action.payload.name
         }
       }
 
