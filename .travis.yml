@@ -120,6 +120,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
+        - npm install --ignore-scripts --only=dev
         - npm run bootstrap -- --scope @origin/notifications
       script:
         - npm run test --prefix infra/notifications
