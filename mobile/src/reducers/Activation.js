@@ -9,15 +9,18 @@ const initialState = {
     prompt: null,
     permissions: {
       hard: {},
-      soft: {},
-    },
-  },
+      soft: {}
+    }
+  }
 }
 
 export default function Activation(state = initialState, action = {}) {
   switch (action.type) {
     case ActivationConstants.PROMPT_FOR_NOTIFICATIONS:
-      return { ...state, notifications: { ...state.notifications, prompt: action.prompt }}
+      return {
+        ...state,
+        notifications: { ...state.notifications, prompt: action.prompt }
+      }
 
     case ActivationConstants.UPDATE_NOTIFICATIONS_PERMISSIONS:
       const obj = {
@@ -25,9 +28,9 @@ export default function Activation(state = initialState, action = {}) {
         notifications: {
           permissions: {
             ...state.notifications.permissions.soft,
-            hard: action.permissions || {},
-          },
-        },
+            hard: action.permissions || {}
+          }
+        }
       }
 
       return obj

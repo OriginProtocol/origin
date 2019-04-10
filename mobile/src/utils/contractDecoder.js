@@ -24,6 +24,9 @@ export function decodeTransaction(data) {
 
   return {
     name: functionInterface.name,
-    parameters: web3.eth.abi.decodeLog(functionInterface.inputs, '0x' + data.substr(10))
+    parameters: web3.eth.abi.decodeLog(
+      functionInterface.inputs,
+      '0x' + data.substr(10)
+    )
   }
 }

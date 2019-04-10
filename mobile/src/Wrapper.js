@@ -29,13 +29,16 @@ class OriginWrapper extends Component {
     super(props)
   }
 
-  async componentDidMount() {
-  }
+  async componentDidMount() {}
 
   componentDidUpdate() {
     const { activation, wallet } = this.props
     // Prompt with private key backup warning if funds are detected
-    if (!activation.backupWarningDismissed && false && Number(wallet.balances.eth) > 0) {
+    if (
+      !activation.backupWarningDismissed &&
+      false &&
+      Number(wallet.balances.eth) > 0
+    ) {
       NavigationService.navigate('Home', {
         backupWarning: true,
         walletExpanded: true
@@ -56,13 +59,13 @@ class OriginWrapper extends Component {
     }
   }
 
-  renderOnboardingStack () {
+  renderOnboardingStack() {
     return (
       <OnboardingStack screenProps={{ smallScreen: this.props.smallScreen }} />
     )
   }
 
-  renderOnboardingCarousel () {
+  renderOnboardingCarousel() {
     console.log(this.props)
     return (
       <Onboarding
@@ -75,7 +78,10 @@ class OriginWrapper extends Component {
                 resizeMethod={'scale'}
                 resizeMode={'contain'}
                 source={require(IMAGES_PATH + 'carousel-1.png')}
-                style={[styles.image, this.props.smallScreen ? { height: '33%' } : {}]}
+                style={[
+                  styles.image,
+                  this.props.smallScreen ? { height: '33%' } : {}
+                ]}
               />
             ),
             title: 'Store & Use Crypto',
@@ -88,7 +94,10 @@ class OriginWrapper extends Component {
                 resizeMethod={'scale'}
                 resizeMode={'contain'}
                 source={require(IMAGES_PATH + 'carousel-2.png')}
-                style={[styles.image, this.props.smallScreen ? { height: '33%' } : {}]}
+                style={[
+                  styles.image,
+                  this.props.smallScreen ? { height: '33%' } : {}
+                ]}
               />
             ),
             title: 'Message Buyers & Sellers',
@@ -101,7 +110,10 @@ class OriginWrapper extends Component {
                 resizeMethod={'scale'}
                 resizeMode={'contain'}
                 source={require(IMAGES_PATH + 'carousel-3.png')}
-                style={[styles.image, this.props.smallScreen ? { height: '33%' } : {}]}
+                style={[
+                  styles.image,
+                  this.props.smallScreen ? { height: '33%' } : {}
+                ]}
               />
             ),
             title: 'Stay Up-To-Date',
@@ -113,7 +125,7 @@ class OriginWrapper extends Component {
     )
   }
 
-  renderNavigator () {
+  renderNavigator() {
     return (
       <OriginNavigator
         ref={navigatorRef =>
@@ -135,7 +147,7 @@ const mapStateToProps = ({ activation, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool)),
+  updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool))
 })
 
 export default connect(

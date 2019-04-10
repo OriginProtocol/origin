@@ -55,8 +55,7 @@ class AccountsScreen extends Component {
   }
 
   toggleModal() {
-    DeviceEventEmitter.emit('createAccount')
-    // this.setState({ modalOpen: !this.state.modalOpen })
+    this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
@@ -67,12 +66,14 @@ class AccountsScreen extends Component {
         <FlatList
           data={this.props.wallet.accounts}
           renderItem={({ item }) => (
-            <AccountItem item={item} wallet={this.props.wallet} navigation={navigation} />
+            <AccountItem
+              item={item}
+              wallet={this.props.wallet}
+              navigation={navigation}
+            />
           )}
           keyExtractor={({ address }) => address}
-          ItemSeparatorComponent={() => (
-            <View style={styles.separator} />
-          )}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}
         />
         <AccountModal

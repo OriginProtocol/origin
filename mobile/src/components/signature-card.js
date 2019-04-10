@@ -25,7 +25,9 @@ class SignatureCard extends Component {
     return (
       <View style={styles.card}>
         <Text style={styles.heading}>Signature Request</Text>
-        <Text style={styles.content}>I agree to the Origin Rewards Terms & Conditions.</Text>
+        <Text style={styles.content}>
+          I agree to the Origin Rewards Terms & Conditions.
+        </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
@@ -51,21 +53,21 @@ export default connect(mapStateToProps)(SignatureCard)
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   cancel: {
     color: '#1a82ff',
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: '900',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 20,
     marginTop: 'auto',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   content: {
     fontFamily: 'Lato',
@@ -73,13 +75,13 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: 'bold',
     marginBottom: 40,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   heading: {
     color: '#0b1823',
     fontFamily: 'Lato',
     fontSize: 18,
     marginBottom: 20,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })

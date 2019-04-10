@@ -1,5 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import { remove } from 'actions/Notification'
@@ -24,35 +31,38 @@ class NotificationItem extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  remove: id => dispatch(remove(id)),
+  remove: id => dispatch(remove(id))
 })
 
-export default connect(undefined, mapDispatchToProps)(NotificationItem)
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(NotificationItem)
 
 const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 10
   },
   external: {
     height: 12,
-    width: 12,
+    width: 12
   },
   imageless: {
-    backgroundColor: '#f7f8f8',
+    backgroundColor: '#f7f8f8'
   },
   item: {
     backgroundColor: 'white',
-    padding: '5%',
+    padding: '5%'
   },
   message: {
     fontFamily: 'Lato',
     fontSize: 17,
-    fontWeight: '300',
+    fontWeight: '300'
   },
   thumbnail: {
     height: 50,
     marginRight: 10,
-    width: 50,
-  },
+    width: 50
+  }
 })

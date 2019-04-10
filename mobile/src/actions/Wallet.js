@@ -9,7 +9,7 @@ export const WalletConstants = keyMirror(
     INIT_ERROR: null,
     ADD_ACCOUNT: null,
     REMOVE_ACCOUNT: null,
-    UPDATE_ACCOUNTS: null,
+    UPDATE_ACCOUNTS: null
   },
   'WALLET'
 )
@@ -17,7 +17,7 @@ export const WalletConstants = keyMirror(
 export function init(address) {
   return {
     type: WalletConstants.INIT_SUCCESS,
-    address,
+    address
   }
 }
 

@@ -17,9 +17,7 @@ YellowBox.ignoreWarnings([
   'Module RCTImageLoader requires main queue setup'
 ])
 
-
 class OriginApp extends Component {
-
   render() {
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812

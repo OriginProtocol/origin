@@ -9,5 +9,7 @@ export function sufficientFunds(wallet, transaction) {
   const { eth } = wallet.balances
   const { cost, gas_cost } = transaction
 
-  return web3.utils.toBN(eth).gt(web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost)))
+  return web3.utils
+    .toBN(eth)
+    .gt(web3.utils.toBN(cost).add(web3.utils.toBN(gas_cost)))
 }

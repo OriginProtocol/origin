@@ -3,10 +3,10 @@ import { WalletEventsConstants } from 'actions/WalletEvents'
 const initialState = {
   active_event: null,
   pending_events: [],
-  processed_events: [],
+  processed_events: []
 }
 
-function _addToEvents(matcher, event, events){
+function _addToEvents(matcher, event, events) {
   return [event, ...events.filter(i => !matcher(i))]
 }
 
@@ -20,9 +20,9 @@ function _matchUpdate(matcher, update) {
   }
 }
 
-function _findEvent(matcher, list){
+function _findEvent(matcher, list) {
   for (let i of list) {
-    if (matcher(i)){
+    if (matcher(i)) {
       return i
     }
   }
@@ -47,11 +47,21 @@ export default function WalletEvents(state = initialState, action = {}) {
     case WalletEventsConstants.NEW_EVENT:
       return {
         ...state,
-        pending_events: _addToEvents(action.matcher, action.event, state.pending_events),
+        pending_events: _addToEvents(
+          action.matcher,
+          action.event,
+          state.pending_events
+        )
       }
 
     case WalletEventsConstants.PROCESSED_EVENT:
-      const [pending_events, processed_events] = _updateAndMove(action.matcher, action.update, action.new_event, state.pending_events, state.processed_events)
+      const [pending_events, processed_events] = _updateAndMove(
+        action.matcher,
+        action.update,
+        action.new_event,
+        state.pending_events,
+        state.processed_events
+      )
       return { ...state, pending_events, processed_events }
 
     case WalletEventsConstants.SET_ACTIVE_EVENT:
@@ -60,8 +70,12 @@ export default function WalletEvents(state = initialState, action = {}) {
     case WalletEventsConstants.UPDATE_EVENT:
       return {
         ...state,
-        pending_events: state.pending_events.map(_matchUpdate(action.matcher, action.update)),
-        processed_events: state.processed_events.map(_matchUpdate(action.matcher, action.update)),
+        pending_events: state.pending_events.map(
+          _matchUpdate(action.matcher, action.update)
+        ),
+        processed_events: state.processed_events.map(
+          _matchUpdate(action.matcher, action.update)
+        )
       }
   }
 

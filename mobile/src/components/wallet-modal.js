@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Alert, Clipboard, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  Clipboard,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
 
@@ -28,12 +38,15 @@ class WalletModal extends Component {
     this.showBackupWarning = this.showBackupWarning.bind(this)
     this.showPrivateKey = this.showPrivateKey.bind(this)
     this.state = {
-      showBackupWarning: this.props.backupWarning,
+      showBackupWarning: this.props.backupWarning
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.state.showBackupWarning || (this.props.backupWarning && !prevProps.backupWarning)) {
+    if (
+      this.state.showBackupWarning ||
+      (this.props.backupWarning && !prevProps.backupWarning)
+    ) {
       this.showBackupWarning()
     }
   }
@@ -43,20 +56,23 @@ class WalletModal extends Component {
       'Important!',
       'As a security precaution, your key will be removed from the clipboard after one minute.',
       [
-        { text: 'Got it.', onPress: async () => {
-          await Clipboard.setString(privateKey)
+        {
+          text: 'Got it.',
+          onPress: async () => {
+            await Clipboard.setString(privateKey)
 
-          Alert.alert('Copied to clipboard!')
+            Alert.alert('Copied to clipboard!')
 
-          setTimeout(async () => {
-            const s = await Clipboard.getString()
+            setTimeout(async () => {
+              const s = await Clipboard.getString()
 
-            if (s === privateKey) {
-              Clipboard.setString('')
-            }
-          }, ONE_MINUTE)
-        }},
-      ],
+              if (s === privateKey) {
+                Clipboard.setString('')
+              }
+            }, ONE_MINUTE)
+          }
+        }
+      ]
     )
   }
 
@@ -72,15 +88,27 @@ class WalletModal extends Component {
         'Funding',
         `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
         [
-          { text: 'Show Address', onPress: () => {
-            Alert.alert('Wallet Address', evenlySplitAddress(address).join('\n'))
-          }},
-          { text: 'Copy Address', onPress: async () => {
-            await Clipboard.setString(address)
+          {
+            text: 'Show Address',
+            onPress: () => {
+              Alert.alert(
+                'Wallet Address',
+                evenlySplitAddress(address).join('\n')
+              )
+            }
+          },
+          {
+            text: 'Copy Address',
+            onPress: async () => {
+              await Clipboard.setString(address)
 
-            Alert.alert('Copied to clipboard!', evenlySplitAddress(address).join('\n'))
-          }},
-        ],
+              Alert.alert(
+                'Copied to clipboard!',
+                evenlySplitAddress(address).join('\n')
+              )
+            }
+          }
+        ]
       )
     }
   }
@@ -93,15 +121,21 @@ class WalletModal extends Component {
         'Important!',
         `Be sure to back up your private key so that you don't lose access to your wallet. If your device is lost or you delete this app, we won't be able to help recover your funds.`,
         [
-          { text: `Done. Don't show me this again.`, onPress: () => {
-            this.props.updateBackupWarningStatus(true, Date.now())
-          }},
-          { text: 'Show Private Key', onPress: () => {
-            this.showPrivateKey()
+          {
+            text: `Done. Don't show me this again.`,
+            onPress: () => {
+              this.props.updateBackupWarningStatus(true, Date.now())
+            }
+          },
+          {
+            text: 'Show Private Key',
+            onPress: () => {
+              this.showPrivateKey()
 
-            this.props.updateBackupWarningStatus(true)
-          }},
-        ],
+              this.props.updateBackupWarningStatus(true)
+            }
+          }
+        ]
       )
     }, 1000)
   }
@@ -113,7 +147,14 @@ class WalletModal extends Component {
   }
 
   render() {
-    const { address, backupWarning, onPress, visible, wallet, onRequestClose } = this.props
+    const {
+      address,
+      backupWarning,
+      onPress,
+      visible,
+      wallet,
+      onRequestClose
+    } = this.props
     const { dai, eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')
@@ -127,7 +168,7 @@ class WalletModal extends Component {
         visible={!!visible}
         onRequestClose={() => {
           onRequestClose()
-        } }
+        }}
       >
         <SafeAreaView style={styles.container}>
           <View style={styles.nav}>
@@ -135,12 +176,22 @@ class WalletModal extends Component {
             <View style={styles.navHeadingContainer}>
               <Text style={styles.heading}>Wallet Balances</Text>
             </View>
-            <TouchableOpacity onPress={onPress} style={styles.navImageContainer}>
-              <Image source={require(`${IMAGES_PATH}close-icon.png`)} style={styles.close} />
+            <TouchableOpacity
+              onPress={onPress}
+              style={styles.navImageContainer}
+            >
+              <Image
+                source={require(`${IMAGES_PATH}close-icon.png`)}
+                style={styles.close}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.addressContainer}>
-            <Address address={address} label={'Wallet Address'} style={styles.address} />
+            <Address
+              address={address}
+              label={'Wallet Address'}
+              style={styles.address}
+            />
           </View>
           <ScrollView
             style={styles.svContainer}
@@ -201,15 +252,19 @@ class WalletModal extends Component {
 
 const mapStateToProps = ({ wallet }) => {
   return {
-    wallet,
+    wallet
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateBackupWarningStatus: (bool, datetime) => dispatch(updateBackupWarningStatus(bool, datetime)),
+  updateBackupWarningStatus: (bool, datetime) =>
+    dispatch(updateBackupWarningStatus(bool, datetime))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletModal)
 
 const styles = StyleSheet.create({
   address: {
@@ -217,51 +272,51 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 13,
     fontWeight: '300',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   addressContainer: {
     paddingHorizontal: 18 * 3,
-    paddingVertical: 22,
+    paddingVertical: 22
   },
   button: {
     marginBottom: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 10
   },
   buttonsContainer: {
-    paddingTop: 10,
+    paddingTop: 10
   },
   close: {
-    margin: 'auto',
+    margin: 'auto'
   },
   container: {
     backgroundColor: '#0b1823',
-    flex: 1,
+    flex: 1
   },
   heading: {
     color: 'white',
     fontFamily: 'Poppins',
     fontSize: 17,
     marginVertical: 'auto',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   nav: {
     height: 44,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   navHeadingContainer: {
     alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   navImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 18 * 3,
+    width: 18 * 3
   },
   svContainer: {
-    flex: 1,
+    flex: 1
   },
   walletSVContainer: {
-    paddingHorizontal: 10,
-  },
+    paddingHorizontal: 10
+  }
 })

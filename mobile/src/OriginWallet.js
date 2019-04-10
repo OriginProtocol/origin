@@ -24,9 +24,15 @@ class OriginWallet extends Component {
   constructor() {
     super()
     DeviceEventEmitter.addListener('addAccount', this.addAccount.bind(this))
-    DeviceEventEmitter.addListener('createAccount', this.createAccount.bind(this))
+    DeviceEventEmitter.addListener(
+      'createAccount',
+      this.createAccount.bind(this)
+    )
     DeviceEventEmitter.addListener('nameAccount', this.nameAccount.bind(this))
-    DeviceEventEmitter.addListener('removeAccount', this.removeAccount.bind(this))
+    DeviceEventEmitter.addListener(
+      'removeAccount',
+      this.removeAccount.bind(this)
+    )
   }
 
   componentDidMount() {
@@ -35,7 +41,7 @@ class OriginWallet extends Component {
 
   /* Configure web3 using the accounts persisted in redux
    */
-  initAccounts () {
+  initAccounts() {
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from tbe data store
     web3.eth.accounts.wallet.clear()
@@ -71,14 +77,13 @@ class OriginWallet extends Component {
 
   /* Add a new account from a private key
    */
-  async addAccount(privateKey) {
-  }
+  async addAccount(privateKey) {}
 
   /* Remove an account
    */
-  async removeAccount (account) {
+  async removeAccount(account) {
     const result = web3.eth.accounts.wallet.remove(account)
-    if (result ) {
+    if (result) {
       this.props.removeAccount(account)
     }
     return result
@@ -89,7 +94,6 @@ class OriginWallet extends Component {
   async nameAccount(name, address) {
     connsole.log('Name account')
   }
-
 
   /* Configure push notifications
    */
@@ -169,7 +173,7 @@ const mapDispatchToProps = dispatch => ({
   removeAccount: account => dispatch(remvoeAccount(account)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>
-    dispatch(updateNotificationsPermissions(permissions)),
+    dispatch(updateNotificationsPermissions(permissions))
 })
 
 export default connect(

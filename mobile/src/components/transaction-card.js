@@ -27,22 +27,31 @@ class TransactionCard extends Component {
   }
 
   render() {
-    const { address = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57' } = this.props
+    const {
+      address = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+    } = this.props
     const paymentCurrencies = ['dai', 'eth']
-    const gas = (Math.random() / 10000 * 160).toFixed(5)
+    const gas = ((Math.random() / 10000) * 160).toFixed(5)
     let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
 
     switch (this.props.transactionType) {
       case 'create-listing':
         // To boost or not to boost, up to 100
-        boost = 0 && Math.floor(Math.random() * 2) * Math.ceil(Math.random() * 100)
+        boost =
+          0 && Math.floor(Math.random() * 2) * Math.ceil(Math.random() * 100)
         // Boolean coercion
         ognInvolved = !!boost
         heading = 'Create Listing'
         break
       case 'make-offer':
-        paymentCurrency = paymentCurrencies[Math.floor(Math.random() * paymentCurrencies.length)]
-        payment = paymentCurrency === 'eth' ? (Math.random() / 1000 * 160).toFixed(5) : (Math.random() * 100).toFixed(2)
+        paymentCurrency =
+          paymentCurrencies[
+            Math.floor(Math.random() * paymentCurrencies.length)
+          ]
+        payment =
+          paymentCurrency === 'eth'
+            ? ((Math.random() / 1000) * 160).toFixed(5)
+            : (Math.random() * 100).toFixed(2)
         daiInvolved = paymentCurrency === 'dai'
         heading = 'Purchase'
         break
@@ -56,7 +65,9 @@ class TransactionCard extends Component {
     // Can we convert all involved cryptocurrencies and derive a fiat-equivalent sum?
     const calculableTotal = !ognInvolved
     const gasInUSD = gas * currencies['eth'].priceToUSD
-    const paymentInUSD = paymentCurrency ? payment * currencies[paymentCurrency].priceToUSD : 0
+    const paymentInUSD = paymentCurrency
+      ? payment * currencies[paymentCurrency].priceToUSD
+      : 0
     const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
 
     return (
@@ -74,9 +85,14 @@ class TransactionCard extends Component {
                     <Text style={styles.label}>Payment</Text>
                   </View>
                   <View>
-                    <Text style={[styles.amount, styles.converted]}>{`$${paymentInUSD.toFixed(2)}`}</Text>
+                    <Text
+                      style={[styles.amount, styles.converted]}
+                    >{`$${paymentInUSD.toFixed(2)}`}</Text>
                     <Text style={styles.amount}>
-                      <Image source={currencies[paymentCurrency].icon} style={styles.icon} />
+                      <Image
+                        source={currencies[paymentCurrency].icon}
+                        style={styles.icon}
+                      />
                       {` ${payment} ${paymentCurrency.toUpperCase()}`}
                     </Text>
                   </View>
@@ -87,9 +103,14 @@ class TransactionCard extends Component {
                   <Text style={styles.label}>Gas Cost</Text>
                 </View>
                 <View>
-                  <Text style={[styles.amount, styles.converted]}>{`$${gasInUSD.toFixed(2)}`}</Text>
+                  <Text
+                    style={[styles.amount, styles.converted]}
+                  >{`$${gasInUSD.toFixed(2)}`}</Text>
                   <Text style={styles.amount}>
-                    <Image source={currencies['eth'].icon} style={styles.icon} />
+                    <Image
+                      source={currencies['eth'].icon}
+                      style={styles.icon}
+                    />
                     {` ${gas} ETH`}
                   </Text>
                 </View>
@@ -114,7 +135,9 @@ class TransactionCard extends Component {
             <Address address={address} style={styles.account} />
           </View>
           <View style={styles.accountText}>
-            <Text style={styles.account}>{daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}: </Text>
+            <Text style={styles.account}>
+              {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
+            </Text>
             <Text style={styles.account}>
               {`${(Math.random() * 160).toFixed(5)} ETH`}
               {daiInvolved && ` ~ ${(Math.random() * 100).toFixed(2)} DAI`}
@@ -150,65 +173,65 @@ const styles = StyleSheet.create({
     color: '#94a7b5',
     fontFamily: 'Lato',
     fontSize: 11,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   accountSummary: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   accountText: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 4,
+    marginBottom: 4
   },
   amount: {
     color: '#94a7b5',
     fontFamily: 'Lato',
     fontSize: 11,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   buttonContainer: {
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   cancel: {
     color: '#1a82ff',
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: '900',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 20,
     marginTop: 'auto',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   converted: {
     color: '#0b1823',
     fontSize: 18,
-    marginBottom: 4,
+    marginBottom: 4
   },
   heading: {
     color: '#0b1823',
     fontFamily: 'Lato',
     fontSize: 18,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   icon: {
     height: 8,
-    width: 8,
+    width: 8
   },
   label: {
     color: '#94a7b5',
     fontFamily: 'Lato',
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   lineItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 20
   },
   lineItems: {
     backgroundColor: '#f7f8f8',
@@ -220,15 +243,15 @@ const styles = StyleSheet.create({
     marginRight: -20,
     marginTop: 10,
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 20
   },
   primary: {
     color: 'black',
     fontSize: 40,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   primaryContainer: {
-    paddingBottom: 20,
-  },
+    paddingBottom: 20
+  }
 })

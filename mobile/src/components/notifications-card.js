@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { promptForNotifications, storeNotificationsPermissions } from 'actions/Activation'
+import {
+  promptForNotifications,
+  storeNotificationsPermissions
+} from 'actions/Activation'
 
 import OriginButton from 'components/origin-button'
 
@@ -25,12 +28,18 @@ class Card extends Component {
         Alert.alert(
           '!',
           `You've declined our request to turn on push notifications, which we HIGHLY recommend. To fix this, you will need to change the permissions in your iPhone's Settings > Notifications > Origin Wallet.`,
-          [{ text: 'OK', onPress: () => this.props.storeNotificationsPermissions(permissions) }]
+          [
+            {
+              text: 'OK',
+              onPress: () =>
+                this.props.storeNotificationsPermissions(permissions)
+            }
+          ]
         )
       } else {
         this.props.storeNotificationsPermissions(permissions)
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e)
       throw e
     }
@@ -45,7 +54,10 @@ class Card extends Component {
     return (
       <View style={styles.card}>
         <Text style={styles.heading}>Enable Notifications</Text>
-        <Text style={styles.content}>We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts.</Text>
+        <Text style={styles.content}>
+          We highly recommend enabling notifications to get the latest updates
+          about your transaction with timely alerts.
+        </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
@@ -69,28 +81,32 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => ({
   promptForNotifications: () => dispatch(promptForNotifications(null)),
-  storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  storeNotificationsPermissions: permissions =>
+    dispatch(storeNotificationsPermissions(permissions))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Card)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Card)
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   cancel: {
     color: '#1a82ff',
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: '900',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 20,
     marginTop: 'auto',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 30
   },
   content: {
     fontFamily: 'Lato',
@@ -98,13 +114,13 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: 300,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   heading: {
     fontFamily: 'Lato',
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })

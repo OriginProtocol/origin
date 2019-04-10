@@ -3,7 +3,7 @@
 import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
-  accounts: [],
+  accounts: []
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -14,7 +14,7 @@ export default function Wallet(state = initialState, action = {}) {
     case WalletConstants.ADD_ACCOUNT:
       return {
         ...state,
-        accounts: [ action.account, ...state.accounts ]
+        accounts: [action.account, ...state.accounts]
       }
 
     case WalletConstants.REMOVE_ACCOUNT:

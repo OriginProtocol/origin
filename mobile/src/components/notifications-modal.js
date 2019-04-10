@@ -1,8 +1,19 @@
 import React, { Component, Fragment } from 'react'
-import { Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
-import { promptForNotifications, storeNotificationsPermissions } from 'actions/Activation'
+import {
+  promptForNotifications,
+  storeNotificationsPermissions
+} from 'actions/Activation'
 
 import OriginButton from 'components/origin-button'
 
@@ -26,12 +37,18 @@ class NotifcationsModal extends Component {
         Alert.alert(
           '!',
           `You've declined our request to turn on push notifications, which we HIGHLY recommend. To fix this, you will need to change the permissions in your iPhone's Settings > Notifications > Origin Wallet.`,
-          [{ text: 'OK', onPress: () => this.props.storeNotificationsPermissions(permissions) }]
+          [
+            {
+              text: 'OK',
+              onPress: () =>
+                this.props.storeNotificationsPermissions(permissions)
+            }
+          ]
         )
       } else {
         this.props.storeNotificationsPermissions(permissions)
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e)
       throw e
     }
@@ -46,7 +63,7 @@ class NotifcationsModal extends Component {
     const visible = prompt && !permissions.hard.alert
     let instruction
 
-    switch(prompt) {
+    switch (prompt) {
       case 'createListing':
         instruction = (
           <Fragment>
@@ -125,7 +142,9 @@ class NotifcationsModal extends Component {
         animationType="fade"
         transparent={true}
         visible={!!visible}
-        onRequestClose={() => { console.log('Wallet modal closed') } }
+        onRequestClose={() => {
+          console.log('Wallet modal closed')
+        }}
       >
         <View style={styles.backdrop}>
           <View style={styles.content}>
@@ -138,9 +157,7 @@ class NotifcationsModal extends Component {
               />
             </View>
             <Text style={styles.heading}>Enable Notifications</Text>
-            <Text style={styles.instruction}>
-              {instruction}
-            </Text>
+            <Text style={styles.instruction}>{instruction}</Text>
             <OriginButton
               onPress={this.handlePress}
               size="large"
@@ -161,13 +178,14 @@ class NotifcationsModal extends Component {
 
 const mapStateToProps = ({ activation }) => {
   return {
-    activation,
+    activation
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   promptForNotifications: () => dispatch(promptForNotifications(null)),
-  storeNotificationsPermissions: permissions => dispatch(storeNotificationsPermissions(permissions)),
+  storeNotificationsPermissions: permissions =>
+    dispatch(storeNotificationsPermissions(permissions))
 })
 
 const styles = StyleSheet.create({
@@ -176,13 +194,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 20
   },
   button: {
     marginBottom: 20,
     marginLeft: 'auto',
     marginRight: 'auto',
-    maxWidth: 230,
+    maxWidth: 230
   },
   content: {
     alignItems: 'center',
@@ -190,39 +208,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     maxHeight: '100%',
     paddingHorizontal: 20,
-    paddingVertical: 60,
+    paddingVertical: 60
   },
   emphatic: {
     color: '#26d198',
-    fontStyle: 'italic',
+    fontStyle: 'italic'
   },
   heading: {
     color: 'white',
     fontSize: 22,
     fontFamily: 'Poppins',
-    marginBottom: 10,
+    marginBottom: 10
   },
   image: {
-    height: '100%',
+    height: '100%'
   },
   imageContainer: {
     flexShrink: 1,
     marginBottom: 20,
     maxHeight: 209,
-    paddingLeft: '20%',
+    paddingLeft: '20%'
   },
   instruction: {
     color: 'white',
     fontFamily: 'Lato',
     fontSize: 18,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   skip: {
     color: 'white',
     fontSize: 14,
-    textDecorationLine: 'underline',
-  },
+    textDecorationLine: 'underline'
+  }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotifcationsModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotifcationsModal)

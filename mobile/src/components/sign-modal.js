@@ -1,5 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
@@ -8,7 +15,13 @@ const IMAGES_PATH = '../../assets/images/'
 
 export default class SignModal extends Component {
   render() {
-    const { item, address, handleApprove, handleReject, toggleModal } = this.props
+    const {
+      item,
+      address,
+      handleApprove,
+      handleReject,
+      toggleModal
+    } = this.props
     const msg = item.msg && JSON.stringify(item.msg).substr(0, 100)
 
     return (
@@ -19,10 +32,10 @@ export default class SignModal extends Component {
         onRequestClose={() => {
           console.log('Modal closed')
           toggleModal()
-        } }
+        }}
       >
         <TouchableOpacity onPress={toggleModal}>
-          <View style={styles.above}></View>
+          <View style={styles.above} />
         </TouchableOpacity>
         <View style={styles.main}>
           <TouchableOpacity onPress={toggleModal} style={{ width: '100%' }}>
@@ -34,21 +47,36 @@ export default class SignModal extends Component {
             <Text style={styles.question}>
               Do you wish to sign this message?
             </Text>
-            <Text style={styles.listingName}>
-              {msg}
-            </Text>
+            <Text style={styles.listingName}>{msg}</Text>
           </View>
           <View style={styles.counterparties}>
             <View style={styles.party}>
-              <Image source={require(`${IMAGES_PATH}avatar.png`)} style={styles.avatar} />
-              <Address address={address} label="From Address" style={styles.address} />
+              <Image
+                source={require(`${IMAGES_PATH}avatar.png`)}
+                style={styles.avatar}
+              />
+              <Address
+                address={address}
+                label="From Address"
+                style={styles.address}
+              />
             </View>
           </View>
           <View style={styles.fundingAvailable}>
             <View style={{ marginBottom: 20 }}>
-              <OriginButton size="large" type="primary" title="Approve" onPress={handleApprove} />
+              <OriginButton
+                size="large"
+                type="primary"
+                title="Approve"
+                onPress={handleApprove}
+              />
             </View>
-            <OriginButton size="large" type="danger" title="Reject" onPress={handleReject} />
+            <OriginButton
+              size="large"
+              type="danger"
+              title="Reject"
+              onPress={handleReject}
+            />
           </View>
         </View>
       </Modal>
@@ -59,59 +87,59 @@ export default class SignModal extends Component {
 const styles = StyleSheet.create({
   above: {
     backgroundColor: 'transparent',
-    height: 88,
+    height: 88
   },
   address: {
     color: '#3e5d77',
     fontFamily: 'Lato',
     fontSize: 12,
-    fontWeight: '300',
+    fontWeight: '300'
   },
   arrow: {
     height: 22,
     marginLeft: 20,
     marginRight: 20,
-    width: 26,
+    width: 26
   },
   avatar: {
-    marginBottom: 4,
+    marginBottom: 4
   },
   close: {
     alignItems: 'center',
     marginBottom: 11,
     paddingBottom: 5,
-    paddingTop: 5,
+    paddingTop: 5
   },
   counterparties: {
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    marginBottom: 30,
+    marginBottom: 30
   },
   fundingAvailable: {
-    width: '83%',
+    width: '83%'
   },
   fundingRequired: {
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   image: {
     borderRadius: 4,
     flex: 1,
     height: undefined,
     marginBottom: 40,
-    width: undefined,
+    width: undefined
   },
   imageContainer: {
     flex: 1,
-    width: '83%',
+    width: '83%'
   },
   listingName: {
     fontFamily: 'Lato',
     fontSize: 23,
     marginBottom: 30,
     textAlign: 'center',
-    width: '90%',
+    width: '90%'
   },
   main: {
     alignItems: 'center',
@@ -121,15 +149,15 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '95%',
     justifyContent: 'space-around',
-    paddingBottom: '10%',
+    paddingBottom: '10%'
   },
   party: {
     alignItems: 'center',
-    marginLeft: 'auto',
+    marginLeft: 'auto'
   },
   promptContainer: {
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   question: {
     fontFamily: 'Lato',
@@ -137,13 +165,13 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     marginBottom: 17,
     textAlign: 'center',
-    width: '90%',
+    width: '90%'
   },
   wallet: {
     fontFamily: 'Lato',
     fontSize: 17,
     textAlign: 'center',
-    width: '60%',
+    width: '60%'
   },
   warning: {
     fontFamily: 'Lato',
@@ -151,6 +179,6 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     marginBottom: 17,
     textAlign: 'center',
-    width: '90%',
-  },
+    width: '90%'
+  }
 })

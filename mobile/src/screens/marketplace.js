@@ -30,9 +30,11 @@ class MarketplaceScreen extends Component {
         fontWeight: 'normal'
       },
       headerRight: (
-        <TouchableOpacity onPress={() => {
-          navigation.state.params.toggleModal()
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.state.params.toggleModal()
+          }}
+        >
           <Text style={{ marginRight: 10 }}>💄</Text>
         </TouchableOpacity>
       )
@@ -69,7 +71,7 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  getAccounts () {
+  getAccounts() {
     return this.props.wallet.accounts.map(account => account.address)
   }
 

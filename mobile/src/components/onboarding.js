@@ -1,10 +1,21 @@
+'use strict'
+
 import React, { Component } from 'react'
-import { Animated, Dimensions, FlatList, Image, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet
+} from 'react-native'
 
 import OnboardingPage from 'components/onboarding-page'
 import OnboardingPagination from 'components/onboarding-pagination'
 
 const IMAGES_PATH = '../../assets/images/'
+
 // hotfix: https://github.com/facebook/react-native/issues/16710
 const itemVisibleHotfix = { itemVisiblePercentThreshold: 100 }
 
@@ -14,7 +25,7 @@ class Onboarding extends Component {
 
     this.state = {
       currentPage: 0,
-      previousPage: null,
+      previousPage: null
     }
   }
 
@@ -27,7 +38,7 @@ class Onboarding extends Component {
         this.props.pageIndexCallback(viewableItems[0].index)
       return {
         previousPage: state.currentPage,
-        currentPage: viewableItems[0].index,
+        currentPage: viewableItems[0].index
       }
     })
   }
@@ -35,7 +46,7 @@ class Onboarding extends Component {
   goNext = () => {
     this.flatList.scrollToIndex({
       animated: true,
-      index: this.state.currentPage + 1,
+      index: this.state.currentPage + 1
     })
   }
 
@@ -62,10 +73,9 @@ class Onboarding extends Component {
       controlStatusBar,
       pages,
       onCompletion,
-      onEnable,
+      onEnable
     } = this.props
-    const { height, width } = Dimensions.get('window')
-    const currentPage = pages[this.state.currentPage]
+    const { width } = Dimensions.get('window')
 
     return (
       <Animated.View style={styles.container}>
@@ -110,6 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingBottom: '5%',
-    paddingTop: 56,
+    paddingTop: 56
   }
 })

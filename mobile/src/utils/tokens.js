@@ -10,23 +10,17 @@ function toNum(balance, decimals) {
 export function toDais(balance) {
   const decimals = originWallet.getDaiDecimals()
 
-  if (decimals)
-  {
+  if (decimals) {
     return balance ? toNum(balance, decimals) : 0
-  }
-  else
-  {
+  } else {
     return 0
   }
 }
 
 export function toOgns(balance) {
-  if (origin.token.decimals)
-  {
+  if (origin.token.decimals) {
     return balance ? toNum(balance, origin.token.decimals) : 0
-  }
-  else
-  {
+  } else {
     return 0
   }
 }

@@ -37,7 +37,9 @@ export function truncateAddress(address = '', chars = 5) {
   if (address.length <= MAX_ADDRESS_LENGTH) return address
   const separator = '...'
 
-  return address.substr(0, chars)
-    + separator
-    + address.substr(address.length - chars)
+  return (
+    address.substr(0, chars) +
+    separator +
+    address.substr(address.length - chars)
+  )
 }

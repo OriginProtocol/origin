@@ -16,7 +16,11 @@ class CardsModal extends Component {
 
   render() {
     const { visible, onPress, onRequestClose } = this.props
-    const transactionTypes = ['create-listing', 'make-offer', 'publish-identity']
+    const transactionTypes = [
+      'create-listing',
+      'make-offer',
+      'publish-identity'
+    ]
 
     return (
       <Modal
@@ -31,7 +35,11 @@ class CardsModal extends Component {
           <View style={styles.transparent} onPress={onPress}>
             {Math.random() >= 0.5 ? (
               <TransactionCard
-                transactionType={transactionTypes[Math.floor(Math.random() * transactionTypes.length)]}
+                transactionType={
+                  transactionTypes[
+                    Math.floor(Math.random() * transactionTypes.length)
+                  ]
+                }
                 onPress={onPress}
               />
             ) : Math.random() >= 0.5 ? (
@@ -55,9 +63,9 @@ export default connect(mapStateToProps)(CardsModal)
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#0B18234C',
-    flex: 1,
+    flex: 1
   },
   transparent: {
-    flex: 1,
-  },
+    flex: 1
+  }
 })
