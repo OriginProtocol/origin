@@ -98,6 +98,7 @@ class Listings extends Component {
     }
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
+    const showCount = vars.search || vars.filters.length
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
@@ -122,7 +123,7 @@ class Listings extends Component {
             })
           }}
         />
-        <div className="container">
+        <div className="container listings-container">
           <Query
             query={query}
             variables={vars}
@@ -207,13 +208,15 @@ class Listings extends Component {
 
                     {totalCount > 0 && (
                       <>
-                        <h5 className="listings-count">
-                          <fbt desc="Num Listings">
-                            <fbt:plural count={totalCount} showCount="yes">
-                              Listing
-                            </fbt:plural>
-                          </fbt>
-                        </h5>
+                        {showCount ? (
+                          <h5 className="listings-count">
+                            <fbt desc="Num Listings">
+                              <fbt:plural count={totalCount} showCount="yes">
+                                Listing
+                              </fbt:plural>
+                            </fbt>
+                          </h5>
+                        ) : null}
                         <ListingsGallery
                           listings={nodes}
                           hasNextPage={hasNextPage}
@@ -254,16 +257,19 @@ class Listings extends Component {
 export default withCreatorConfig(Listings)
 
 require('react-styl')(`
+  .listings-container
+    padding-top: 3rem
   .listings-count
     font-family: var(--heading-font);
     font-size: 40px;
     font-weight: 200;
     color: var(--dark);
-    margin-top: 3rem
   .listings-empty
     margin-top: 10rem
   @media (max-width: 767.98px)
+    .listings-container
+      padding-top: 2rem
     .listings-count
-      margin: 2rem 0 0 0
+      margin: 0
       font-size: 32px
 `)

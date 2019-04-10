@@ -1,8 +1,13 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
+import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
+
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
+import Tooltip from 'components/Tooltip'
 
 const NotEnoughEth = ({ tryDai, noEthOrDai }) =>
   noEthOrDai ? (
@@ -57,8 +62,13 @@ const PaymentOptions = ({
   price,
   hasBalance,
   hasEthBalance,
-  children
+  children,
+  cannotTransact
 }) => {
+  if (cannotTransact) {
+    return children
+  }
+
   const daiActive = value === 'token-DAI' ? ' active' : ''
   const ethActive = value === 'token-ETH' ? ' active' : ''
   const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
@@ -107,26 +117,40 @@ const PaymentOptions = ({
     }
   }
 
+  const noDaiTooltip = fbt(
+    'The seller does not accept DAI for this listing.',
+    'PaymentOptions.noDai'
+  )
+
+  const noEthTooltip = fbt(
+    'The seller does not accept Eth for this listing.',
+    'PaymentOptions.noDai'
+  )
+
   return (
     <div className="payment-options">
       <h6>
         <fbt desc="paymentOptions.payWith">Pay with</fbt>
       </h6>
       <div className="btn-group">
-        <button
-          className={`btn btn-outline-secondary${daiActive}${daiDisabled}`}
-          onClick={() => (daiDisabled ? null : onChange('token-DAI'))}
-        >
-          <CoinPrice iconOnly coin="dai" className="lg" />
-          DAI
-        </button>
-        <button
-          className={`btn btn-outline-secondary${ethActive}${ethDisabled}`}
-          onClick={() => (ethDisabled ? null : onChange('token-ETH'))}
-        >
-          <CoinPrice iconOnly coin="eth" className="lg" />
-          ETH
-        </button>
+        <Tooltip tooltip={acceptsDai ? null : noDaiTooltip} placement="top">
+          <button
+            className={`btn btn-outline-secondary${daiActive}${daiDisabled}`}
+            onClick={() => (daiDisabled ? null : onChange('token-DAI'))}
+          >
+            <CoinPrice iconOnly coin="dai" className="lg" />
+            DAI
+          </button>
+        </Tooltip>
+        <Tooltip tooltip={acceptsEth ? null : noEthTooltip} placement="top">
+          <button
+            className={`btn btn-outline-secondary${ethActive}${ethDisabled}`}
+            onClick={() => (ethDisabled ? null : onChange('token-ETH'))}
+          >
+            <CoinPrice iconOnly coin="eth" className="lg" />
+            ETH
+          </button>
+        </Tooltip>
       </div>
       <div className="payment-total">
         <span>
@@ -145,7 +169,7 @@ const PaymentOptions = ({
   )
 }
 
-export default PaymentOptions
+export default withWeb3(withWallet(withCanTransact(PaymentOptions)))
 
 require('react-styl')(`
   .payment-options
@@ -202,5 +226,4 @@ require('react-styl')(`
       border-top: 1px solid var(--light)
       padding-top: 1.5rem
       font-size: 14px
-
 `)

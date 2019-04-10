@@ -14,6 +14,7 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
@@ -281,6 +282,7 @@ class Buy extends Component {
       return false
     } else if (this.props.cannotTransact) {
       this.setState({
+        modal: true,
         error: this.props.cannotTransact,
         errorData: this.props.cannotTransactData
       })
