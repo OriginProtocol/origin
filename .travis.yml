@@ -43,9 +43,6 @@ matrix:
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/services --scope @origin/ipfs --scope @origin/event-cache
-        - pwd
-        - ls -lah ./node_modules/.bin/mocha
-        - ls -lah ./packages/event-cache/node_modules/.bin
       script:
         - npm run test --prefix packages/event-cache
 
