@@ -132,7 +132,9 @@ async function main() {
 
     // Compute the range of blocks to process,
     // while respecting trailing block configuration.
-    const currentBlock = await context.web3.eth.getBlockNumber()
+    const currentBlock = await withRetrys(async () => {
+      return context.web3.eth.getBlockNumber()
+    })
     const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
 
     // Listener is up to date. Nothing to do.
@@ -148,8 +150,12 @@ async function main() {
 
     // Retrieve all events for the relevant contracts
     const eventArrays = await Promise.all([
-      contractsContext.marketplace.eventCache.allEvents(),
-      contractsContext.identityEvents.eventCache.allEvents()
+      withRetrys(async () => {
+        return contractsContext.marketplace.eventCache.allEvents()
+      }),
+      withRetrys(async () => {
+        return contractsContext.identityEvents.eventCache.allEvents()
+      })
     ])
 
     // Flatten array of arrays filtering out anything undefined
