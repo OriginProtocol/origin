@@ -37,6 +37,18 @@ matrix:
       script:
         - npm run test --prefix packages/graphql
 
+    - name: "@origin/event-cache unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
+        - pwd
+        - ls -lah ./node_modules/.bin/mocha
+        - ls -lah ./packages/event-cache/node_modules/.bin
+      script:
+        - npm run test --prefix packages/event-cache
+
     - name: "@origin/bridge unit tests"
       language: node_js
       node_js: 10
@@ -123,18 +135,6 @@ matrix:
         - npm run bootstrap -- --scope @origin/notifications
       script:
         - npm run test --prefix infra/notifications
-
-    - name: "@origin/event-cache unit tests"
-      language: node_js
-      node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
-        - pwd
-        - ls -lah ./node_modules/.bin/mocha
-        - ls -lah ./packages/event-cache/node_modules/.bin/mocha
-      script:
-        - npm run test --prefix packages/event-cache
 
     # - name: "@origin/token-transfer-* unit tests"
     #  language: node_js
