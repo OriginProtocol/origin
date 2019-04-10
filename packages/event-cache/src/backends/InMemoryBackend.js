@@ -2,7 +2,7 @@ import AbstractBackend from './AbstractBackend'
 
 /**
  * @class
- * @classdesc AbstractBackend to define the interface for EventCache backends
+ * @classdesc InMemoryBackend to handle storage of EventCache data in memory
  */
 export default class InMemoryBackend extends AbstractBackend {
   constructor() {
