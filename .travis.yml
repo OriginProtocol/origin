@@ -42,7 +42,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services --scope @origin/event-cache
         - pwd
         - ls -lah ./node_modules/.bin/mocha
         - ls -lah ./packages/event-cache/node_modules/.bin
