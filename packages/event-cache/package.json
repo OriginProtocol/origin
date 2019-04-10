@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register --file test/setup test",
+    "test": "NODE_ENV=test mocha -r @babel/register --file test/setup test",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
