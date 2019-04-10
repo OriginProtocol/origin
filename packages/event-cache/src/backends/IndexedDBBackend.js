@@ -110,7 +110,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} of events
    */
   async serialize() {
-    return this._storage
+    return this._db.getAll()
   }
 
   /**
@@ -119,7 +119,13 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @param ipfsData {Array} An array of events to load
    */
   async loadSerialized(ipfsData) {
-    this._storage = ipfsData
+    if (!(ipfsData instanceof Array)) {
+      throw new TypeError('Serialized data should be an Array of objects')
+    }
+
+    for (let i = 0; i < ipfsData.length; i++) {
+      await this.addEvent(ipfsData[i])
+    }
   }
 
   /**
