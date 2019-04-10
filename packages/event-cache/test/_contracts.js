@@ -4,7 +4,7 @@ import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEv
 
 import Web3 from 'web3'
 
-// Mainnet should be fine for read-only testing
+// We're testing against a ganache instance launched from ./setup
 export const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
 
 export default {

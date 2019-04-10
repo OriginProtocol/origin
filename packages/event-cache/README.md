@@ -4,7 +4,7 @@ The `event-cache` package provides an augmentation to web3.js Contracts to allow
 
 ## Usage
 
-Best usage is just just patch the Web3 contract
+Best usage is just to patch the Web3 contract with `patchWeb3Contract()`.  Then you can access the EventCache API from the `eventCache` attribute on the Web3 contract.
 
     import { patchWeb3Contract } from 'event-cache'
     
@@ -17,8 +17,6 @@ Best usage is just just patch the Web3 contract
     })
 
 ## EventCache API
-
-For the purpose of this document, we'll call the primary class `EventCache`.  This could probably continue to be a function [like the current implementation](https://github.com/OriginProtocol/origin/blob/master/packages/graphql/src/utils/eventCache.js#L31) that's appended on as a method of `web3.eth.Contract`.  Either way, the API stays the same and should require no changes from dependents.
 
 ### Usage
 
@@ -38,13 +36,13 @@ For the purpose of this document, we'll call the primary class `EventCache`.  Th
 Example `config` object provided to constructor:
 
     {
-        platform: ['browser', 'mobile', 'nodejs', 'ipfs', 'auto'],
-        backend: [EventCacheBackend],
+        platform: 'browser',
+        backend: new InMemoryBackend(),
         ipfsEventCache: 'QmO0O0O0base64YOO000000....',
         ipfsGateway: 'http://localhost:8080'
     }
 
-- `platform` will tell EC which backend to use.
+- `platform` will tell EC which backend to use.  Can be `browser`, `mobile`, `nodejs`, `ipfs`, or `auto`
 - `backend` is an alternative to `platform` and will override any setting there and can provide any object with the Below API
 - `ipfsEventcache`: The IPFS hash of the latest known cached results
 - `ipfsGateway`: The HTTP(S) IPFS gateway to fetch cached results from
@@ -71,7 +69,7 @@ Retrieve all event logs matching the params.
 
 ### `AbstractBackend` API
 
-This is the storage interface that `EventCache` uses to store and fetch events. Any backend implemented needs to match this interface
+This is the storage interface that `EventCache` uses to store and fetch events. Any backend implemented needs to match this interface at a minimum.
 
 #### `setLatestBlock(blockNumber)`
 
