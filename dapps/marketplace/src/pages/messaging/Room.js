@@ -100,7 +100,7 @@ class AllMessages extends Component {
                 message={message}
                 lastMessage={idx > 0 ? messages[idx - 1] : null}
                 nextMessage={messages[idx + 1]}
-                key={idx}
+                key={`message-${idx}`}
                 wallet={get(message, 'address')}
                 isUser={this.props.wallet === get(message, 'address')}
               />
@@ -108,7 +108,7 @@ class AllMessages extends Component {
           } else if (event) {
             return (
               <OfferEventWithIdentity
-                key={idx}
+                key={`event-${idx}`}
                 event={event}
                 wallet={this.props.wallet}
               />

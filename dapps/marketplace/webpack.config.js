@@ -150,7 +150,7 @@ if (isProduction) {
   ]
   config.plugins.push(
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['public/app.*.css', 'public/app.*.js']
+      cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js']
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
     new webpack.IgnorePlugin(/redux-logger/),
