@@ -1,8 +1,10 @@
 require('dotenv').config()
 
 // TODO: Debugging line for auto-reload
-console.log("\033[2J")
-console.log("─────────────────────────────────────────────────────────────────────────────────")
+// console.log('\033[2J')
+// console.log(
+//   '─────────────────────────────────────────────────────────────────────────────────'
+// )
 
 try {
   require('envkey')
@@ -10,13 +12,9 @@ try {
   console.error('EnvKey not configured. Please set env var ENVKEY')
 }
 
-
-
-const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
-const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 const { mobilePush } = require('./mobilePush')
@@ -28,7 +26,6 @@ const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
-const dappOfferUrl = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
   console.warn(
@@ -41,12 +38,9 @@ if (!privateKey || !publicKey) {
 
 webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
-const { getNotificationMessage, processableEvent } = require('./notification')
-
-
+const { processableEvent } = require('./notification')
 
 // ------------------------------------------------------------------
-
 
 // should be tightened up for security
 app.use((req, res, next) => {
@@ -139,7 +133,6 @@ app.post('/', async (req, res) => {
   res.sendStatus(201)
 })
 
-
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
@@ -153,29 +146,37 @@ app.post('/events', async (req, res) => {
   const { returnValues = {} } = event
   const eventName = event.event
   const { listing, offer } = related
-  const { seller = {}} = listing
+  const { seller = {} } = listing
   const buyer = offer ? offer.buyer : null // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${
     event.blockNumber
   } logIndex=${event.logIndex}`
 
-console.log("──────────────────────────────")
+  console.log('──────────────────────────────')
 
   if (!processableEvent(eventName)) {
-    console.log(`Info: Not a processable event. Skipping ${eventDetailsSummary}`)
+    console.log(
+      `Info: Not a processable event. Skipping ${eventDetailsSummary}`
+    )
     return
   }
 
   if (!listing) {
-    console.error(`Error: Missing listing data. Skipping ${eventDetailsSummary}`)
+    console.error(
+      `Error: Missing listing data. Skipping ${eventDetailsSummary}`
+    )
     return
   }
   if (!seller.id) {
-    console.error(`Error: Missing seller.address. Skipping ${eventDetailsSummary}`)
+    console.error(
+      `Error: Missing seller.address. Skipping ${eventDetailsSummary}`
+    )
     return
   }
   if (!buyer.id) {
-    console.error(`Error: Missing buyer.address. Skipping ${eventDetailsSummary}`)
+    console.error(
+      `Error: Missing buyer.address. Skipping ${eventDetailsSummary}`
+    )
     return
   }
 
@@ -190,22 +191,19 @@ console.log("──────────────────────�
   const buyerAddress = buyer.address ? buyer.address.toLowerCase() : null
   const sellerAddress = seller.address ? seller.address.toLowerCase() : null
 
-
   console.log(`Info: Processing event ${eventDetailsSummary}`)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
 
   // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress)
+  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress)
+  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Email notifications
-  emailSend(eventName, party, buyerAddress, sellerAddress)
-
+  emailSend(eventName, party, buyerAddress, sellerAddress, offer)
 })
-
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))

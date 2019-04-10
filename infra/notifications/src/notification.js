@@ -1,4 +1,3 @@
-
 const sellerEventNotificationMap = {
   OfferCreated: {
     title: 'New Offer',

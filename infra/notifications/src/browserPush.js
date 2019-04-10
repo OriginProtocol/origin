@@ -1,12 +1,18 @@
 const Sequelize = require('sequelize')
-
 const PushSubscription = require('./models').PushSubscription
+const { getNotificationMessage } = require('./notification')
+const webpush = require('web-push')
 
 //
 // Browser push subscripttions
 //
-async function browserPush(eventName, party, buyerAddress, sellerAddress) {
-
+async function browserPush(
+  eventName,
+  party,
+  buyerAddress,
+  sellerAddress,
+  offer
+) {
   console.log('🖥 Browser Push')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
@@ -72,8 +78,6 @@ async function browserPush(eventName, party, buyerAddress, sellerAddress) {
         }
       }
     })
-
 }
 
 module.exports = { browserPush }
-

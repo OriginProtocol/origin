@@ -1,7 +1,7 @@
 const Identity = require('./models').Identity
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
-var _ = require('lodash') // TODO: (Stan) Cherry pick??
+const _ = require('lodash') // TODO: (Stan) Cherry pick??
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -15,19 +15,20 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
 //
 // Email notifications
 //
-async function emailSend(eventName, party, buyerAddress, sellerAddress) {
-
+async function emailSend(eventName, party, buyerAddress, sellerAddress, offer) {
   console.log('✉️ Email Send')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
 
+  console.log(offer.id)
+
   // Load email template
   const templateDir = `${__dirname}/../templates`
 
-  var emailTemplate = _.template(fs
-    .readFileSync(`${templateDir}/emailTemplate.html`)
-    .toString());
+  const emailTemplate = _.template(
+    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+  )
 
   const recipient = buyerAddress
   const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
@@ -67,7 +68,7 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
           from: process.env.SENDGRID_FROM_EMAIL,
           subject: message.title,
           text: message.body,
-          html: emailTemplate({ 'message': message.body }),
+          html: emailTemplate({ message: message.body }),
           asm: {
             groupId: 9092
           }
@@ -75,26 +76,14 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress) {
 
         try {
           await sendgridMail.send(email)
-          console.log(`- Email sent to ${buyerAddress} at ${s.email}`)
+          console.log(`Email sent to ${buyerAddress} at ${s.email}`)
         } catch (error) {
           console.error(`Could not email via Sendgrid: ${error}`)
-          return res.status(500).send({
-            errors: [
-              'Could not send email, please try again shortly.'
-            ]
-          })
         }
-
       } catch (error) {
         console.error(`Could not email via Sendgrid: ${error}`)
-        return res.status(500).send({
-          errors: [
-            'Could not send email, please try again shortly.'
-          ]
-        })
       }
     })
 }
 
 module.exports = { emailSend }
-
