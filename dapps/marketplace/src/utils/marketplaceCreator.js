@@ -33,7 +33,7 @@ function applyConfiguration(config) {
     document.title = config.title
     const metaTitleElement = document.querySelector('meta[name="title"]')
     if (metaTitleElement) {
-      metaTitleElement.setAttribute(config.title)
+      metaTitleElement.setAttribute('content', config.title)
     }
   }
 

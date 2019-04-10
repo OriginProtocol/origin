@@ -96,7 +96,7 @@ const config = {
   // Warning: only use concurrency > 1 for backfills. Not under normal operation.
   concurrency: parseInt(args['--concurrency'] || process.env.CONCURRENCY || 1),
   // Possible values: origin, rinkeby, mainnet, ...
-  network: args['--network'] || process.env.NETWORK || 'services',
+  network: args['--network'] || process.env.NETWORK || 'docker',
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0),
   enableMetrics:
