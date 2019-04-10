@@ -11,6 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/bridge": "^0.1.0",
     "@origin/graphql": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@origin/token": "^0.1.0",

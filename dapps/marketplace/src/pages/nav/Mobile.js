@@ -60,6 +60,12 @@ class MobileNav extends Component {
               className="dropdown-item notifications"
               children={fbt('Notifications', 'navigation.notifications')}
             />
+            <Link
+              onClick={() => onClose()}
+              to="/settings"
+              className="dropdown-item settings"
+              children={fbt('Settings', 'navigation.settings')}
+            />
             {/* <a href="#" className="dropdown-item transactions">
               Transactions
             </a> */}
@@ -146,6 +152,8 @@ require('react-styl')(`
           background-image: url(images/messages-icon-selected.svg)
         &.notifications::before
           background-image: url(images/alerts-icon-selected.svg)
+        &.settings::before
+          background-image: url(images/settings-icon.svg)
         &.transactions::before
           background-image: url(images/nav/arrows-dark.svg)
         &::after

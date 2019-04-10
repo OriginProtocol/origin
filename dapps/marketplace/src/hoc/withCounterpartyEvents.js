@@ -17,11 +17,11 @@ function withCounterpartyEvents(WrappedComponent) {
             <WrappedComponent
               {...props}
               counterpartyEventsLoading={loading}
-              counterpartyEvents={get(
-                data,
-                'marketplace.user.counterparty.nodes',
-                []
-              )}
+              counterpartyEvents={
+                loading
+                  ? []
+                  : get(data, 'marketplace.user.counterparty.nodes', [])
+              }
             />
           )
         }}
