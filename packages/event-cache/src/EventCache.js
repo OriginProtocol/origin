@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import { get, post } from '@origin/ipfs'
 
 import { debug, validateParams } from './utils'
-import { InMemoryBackend } from './backends'
+import { InMemoryBackend, IndexedDBBackend } from './backends'
 
 /**
  * @class
@@ -66,6 +66,8 @@ export default class EventCache {
         throw new Error('nodejs platform not yet implemented')
 
       case 'browser':
+        return new IndexedDBBackend()
+
       default:
         return new InMemoryBackend()
     }
@@ -78,7 +80,7 @@ export default class EventCache {
     if (typeof conf.backend !== 'undefined') {
       this.backend = conf.backend
     } else {
-      this.backend = this._getBackend(conf)
+      this.backend = this._getBackend(conf.platform)
     }
 
     this.ipfsServer =
@@ -134,10 +136,18 @@ export default class EventCache {
    * @returns {Array} An array of event objects
    */
   async getPastEvents(eventName, options) {
-    return await this.getEvents({
-      event: eventName,
-      ...options.filter
-    })
+    let args = {}
+    if (options && options.filter) {
+      args = {
+        event: eventName,
+        ...options.filter
+      }
+    } else {
+      args = {
+        event: eventName
+      }
+    }
+    return await this.getEvents(args)
   }
 
   /**

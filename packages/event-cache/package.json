@@ -14,6 +14,7 @@
   "dependencies": {
     "@origin/ipfs": "^0.1.0",
     "debug": "^4.1.1",
+    "idb": "^4.0.3",
     "lodash": "^4.17.11",
     "web3": "1.0.0-beta.34"
   },
@@ -22,8 +23,9 @@
     "@babel/register": "^7.0.0",
     "@origin/contracts": "^0.8.6",
     "@origin/services": "^0.1.0",
-    "lodash-es": "^4.17.11",
     "eslint": "^5.15.1",
+    "fake-indexeddb": "^2.1.0",
+    "lodash-es": "^4.17.11",
     "mocha": "^5.2.0",
     "prettier": "^1.16.4"
   },

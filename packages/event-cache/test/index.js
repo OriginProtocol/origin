@@ -5,13 +5,7 @@ import { EventCache, patchWeb3Contract } from '../src'
 
 import contracts, { web3 } from './_contracts'
 import ipfs from './_ipfs'
-
-const STD_GAS = 1e6
-const STD_GAS_DEPLOY = 6e6
-const STD_GAS_PRICE = 3e9
-// Due to some random web3.js/BN.js encoding issue...
-// const INT_1E18 = '1000000000000000000'
-const INT_1E24 = '1000000000000000000000000'
+import { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE, INT_1E24 } from './const'
 
 describe('EventCache', function() {
 
@@ -63,13 +57,7 @@ describe('EventCache', function() {
     )
 
     /* TODO
-    // Browser
-    const eventCacheBrowser = new EventCache(IdentityEvents, 0, {
-      platform: 'browser'
-    })
-    assert(eventCacheBrowser.backend.type == 'indexeddb')
-
-    // Browser
+    // Node
     const eventCacheNode = new EventCache(IdentityEvents, 0, {
       platform: 'nodejs'
     })
