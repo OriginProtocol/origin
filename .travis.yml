@@ -131,8 +131,8 @@ matrix:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
         - pwd
-        - ls -lah
-        - ls -lah ./node_modules/.bin
+        - ls -lah ./node_modules/.bin/mocha
+        - ls -lah ./packages/event-cache/node_modules/.bin/mocha
       script:
         - npm run test --prefix packages/event-cache
 
