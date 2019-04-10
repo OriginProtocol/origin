@@ -6,9 +6,11 @@ import Attestations from './Attestations'
 import Messaging from './Messaging'
 import Notifications from './Notifications'
 import CreatorConfig from './CreatorConfig'
+import Currency from './Currency'
+import Uniswap from './Uniswap'
 
 export default [
-  ...Object.values(Common),
+  Common,
   Web3,
   Marketplace,
   Identity,
@@ -16,4 +18,6 @@ export default [
   Notifications,
   Attestations,
   CreatorConfig
+  Currency,
+  Uniswap
 ]

@@ -25,7 +25,7 @@ import {
 import Offers from '../marketplace/_Offers'
 import EventsTable from '../marketplace/_EventsTable'
 import Identity from 'components/Identity'
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import Gallery from 'components/Gallery'
 import LoadingSpinner from 'components/LoadingSpinner'
 import QueryError from 'components/QueryError'
@@ -122,11 +122,7 @@ class Listing extends Component {
                               onClick={() => this.setState({ makeOffer: true })}
                             >
                               {`Make Offer for `}
-                              <Price
-                                amount={
-                                  listing.price ? listing.price.amount : 0
-                                }
-                              />
+                              <Price price={listing.price} />
                             </Button>
                           </>
                         }
@@ -182,10 +178,7 @@ class Listing extends Component {
         <Identity account={listing.seller} />
         <span style={{ marginRight: 10 }}>
           {` for `}
-          <Price
-            amount={listing.price ? listing.price.amount : 0}
-            showEth={true}
-          />
+          <Price price={listing.price} />
           {`. Deposit managed by `}
           <Identity account={listing.arbitrator} />
         </span>
@@ -249,7 +242,11 @@ class Listing extends Component {
   }
 
   renderBreadcrumbs() {
-    const listingId = this.props.match.params.listingID
+    const { match, history } = this.props
+    const [netId, contractId, id] = match.params.listingID.split('-')
+    const url = `/marketplace/listings/${netId}-${contractId}-`
+    const listingId = Number(id)
+
     return (
       <ul className="bp3-breadcrumbs">
         <li>
@@ -266,19 +263,11 @@ class Listing extends Component {
               icon="arrow-left"
               style={{ marginLeft: 10 }}
               disabled={listingId === 0}
-              onClick={() => {
-                this.props.history.push(
-                  `/marketplace/listings/${Number(listingId - 1)}`
-                )
-              }}
+              onClick={() => history.push(`${url}${listingId - 1}`)}
             />
             <Button
               icon="arrow-right"
-              onClick={() => {
-                this.props.history.push(
-                  `/marketplace/listings/${Number(listingId + 1)}`
-                )
-              }}
+              onClick={() => history.push(`${url}${listingId + 1}`)}
             />
           </ButtonGroup>
         </li>

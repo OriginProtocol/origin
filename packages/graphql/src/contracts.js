@@ -2,6 +2,7 @@ import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketpla
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
+import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
@@ -42,10 +43,8 @@ const Configs = {
     ipfsEventCache: 'QmWyqzZMoQB1zzxJyCAhTZ5XenzX5H8sfE3Uh58uEN3MJh',
     messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
     messaging: {
-      ipfsSwarm:
-        '/dnsaddr/messaging.originprotocol.com/tcp/443/wss/ipfs/Qmc2YF8broVfy3BmUoUEnrHFgQnC5ZPe1jypnsPAtdnunX',
       messagingNamespace: 'origin',
-      globalKeyServer: 'https://messaging-api.originprotocol.com'
+      globalKeyServer: 'https://messaging.originprotocol.com'
     },
     tokens: [
       {
@@ -70,6 +69,7 @@ const Configs = {
         decimals: '2'
       }
     ],
+    DaiExchange: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14',
     affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
     arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
   },
@@ -92,12 +92,21 @@ const Configs = {
     affiliate: '0xc1a33cda27c68e47e370ff31cdad7d6522ea93d5',
     arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
     messaging: {
-      ipfsSwarm:
-        '/dnsaddr/messaging.staging.originprotocol.com/tcp/443/wss/ipfs/QmR4xhzHSKJiHmhCTf3tWXLe3UV4RL5kqUJ2L81cV4RFbb',
       messagingNamespace: 'origin:staging',
-      globalKeyServer: 'https://messaging-api.staging.originprotocol.com'
+      globalKeyServer: 'https://messaging.staging.originprotocol.com'
     },
     messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591'
+    messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
+    DaiExchange: '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
+    tokens: [
+      {
+        id: '0x2448eE2641d78CC42D7AD76498917359D961A783',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ]
   },
   rinkebyTst: {
     provider: 'https://rinkeby.infura.io',
@@ -134,7 +143,17 @@ const Configs = {
     IdentityEvents: '0xe760d066bd8bbe22d7e9d8107be878102bd8d57d',
     IdentityEvents_Epoch: '0',
     affiliate: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
-    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9'
+    arbitrator: '0x1E3844b4752172B6E85F390E2DF4FfC4D63425f9',
+    DaiExchange: '0xD4fbAF1dFe100d07f8Ef73d8c92e93d0Bcf7b45D',
+    tokens: [
+      {
+        id: '0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a',
+        type: 'Standard',
+        name: 'DAI Stablecoin',
+        symbol: 'DAI',
+        decimals: '18'
+      }
+    ]
   },
   localhost: {
     provider: `http://${HOST}:8545`,
@@ -162,15 +181,14 @@ const Configs = {
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
-      ipfsSwarm: process.env.IPFS_SWARM,
       globalKeyServer: 'http://localhost:6647'
     }
   },
   docker: {
-    provider: get(process.env, 'PROVIDER_URL', `http://localhost:8545`),
-    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://localhost:8545`),
-    ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://localhost:9999`),
-    ipfsRPC: get(process.env, 'IPFS_API_URL', `http://localhost:9999`),
+    provider: get(process.env, 'PROVIDER_URL', `http://services:8545`),
+    providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://services:8545`),
+    ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://ipfs-proxy:9999`),
+    ipfsRPC: get(process.env, 'IPFS_API_URL', `http://ipfs-proxy:9999`),
     bridge: 'http://localhost:5000',
     growth: 'http://localhost:4001',
     discovery: 'http://localhost:4000/graphql',
@@ -181,7 +199,6 @@ const Configs = {
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
-      ipfsSwarm: process.env.IPFS_SWARM,
       messagingNamespace: 'origin:docker',
       globalKeyServer: 'http://localhost:6647'
     }
@@ -191,10 +208,7 @@ const Configs = {
     providerWS: `ws://${HOST}:8545`,
     ipfsGateway: `http://${HOST}:8080`,
     ipfsRPC: `http://${HOST}:5002`,
-    OriginToken: get(OriginTokenContract, 'networks.999.address'),
-    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
-    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
-    affiliate: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
+    affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     automine: 500
@@ -202,10 +216,8 @@ const Configs = {
 }
 
 const DefaultMessagingConfig = {
-  ipfsSwarm:
-    '/dnsaddr/messaging.dev.originprotocol.com/tcp/443/wss/ipfs/Qma8wRkeXeYtE3RQfqFDGjsKCEqXR5CGxfmRxvus9aULcs',
   messagingNamespace: 'origin:dev',
-  globalKeyServer: 'https://messaging-api.dev.originprotocol.com'
+  globalKeyServer: 'https://messaging.dev.originprotocol.com'
 }
 
 const context = {}
@@ -268,10 +280,17 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
+    if (typeof window !== 'undefined') {
+      config.OriginToken = window.localStorage.OGNContract
+      config.V00_Marketplace = window.localStorage.marketplaceContract
+      config.IdentityEvents = window.localStorage.identityEventsContract
+      config.DaiExchange = window.localStorage.uniswapDaiExchange
+    }
   } else if (net === 'localhost') {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
     config.IdentityEvents = window.localStorage.identityEventsContract
+    config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
   context.net = net
   context.config = config
@@ -319,7 +338,9 @@ export function setNetwork(net, customConfig) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
-    web3.eth.defaultAccount = window.localStorage.defaultAccount
+    if (window.localStorage.defaultAccount) {
+      web3.eth.defaultAccount = window.localStorage.defaultAccount
+    }
   }
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0
@@ -382,6 +403,22 @@ export function setNetwork(net, customConfig) {
     token.contractExec = contract
   })
 
+  context.uniswapFactory = new web3.eth.Contract(factoryAbi)
+  if (config.DaiExchange) {
+    const contract = new web3.eth.Contract(exchangeAbi, config.DaiExchange)
+    context.daiExchange = contract
+    context.daiExchangeExec = contract
+    if (metaMask) {
+      context.daiExchangeMM = new metaMask.eth.Contract(
+        exchangeAbi,
+        config.DaiExchange
+      )
+      if (metaMaskEnabled) {
+        context.daiExchangeExec = context.daiExchangeMM
+      }
+    }
+  }
+
   context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
@@ -416,12 +453,14 @@ function setMetaMask() {
     context.marketplaceExec = context.marketplaceMM
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
+    context.daiExchangeExec = context.daiExchangeMM
   } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
     context.marketplaceExec = context.marketplace
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
+    context.daiExchangeExec = context.daiExchange
   }
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec

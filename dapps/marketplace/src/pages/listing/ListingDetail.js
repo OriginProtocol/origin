@@ -15,6 +15,7 @@ import Category from 'components/Category'
 
 import Sold from './_ListingSold'
 import Pending from './_ListingPending'
+import Withdrawn from './_ListingWithdrawn'
 import EditOnly from './_ListingEditOnly'
 import OfferMade from './_ListingOfferMade'
 import SingleUnit from './_BuySingleUnit'
@@ -130,6 +131,7 @@ class ListingDetail extends Component {
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availability}
+              currency={listing.price.currency}
             />
             <div className="availability-help">
               <fbt desc="listingDetail.clickAndDrag">
@@ -160,6 +162,7 @@ class ListingDetail extends Component {
               small={true}
               onChange={state => this.setState(state)}
               availability={this.state.availabilityHourly}
+              currency={listing.price.currency}
             />
             <div className="availability-help">
               <fbt desc="listingDetail.weekCalendarHelp">
@@ -205,6 +208,8 @@ class ListingDetail extends Component {
       )
     } else if (listing.status === 'pending') {
       return <Pending />
+    } else if (listing.status === 'withdrawn') {
+      return <Withdrawn />
     } else if (isFractional) {
       return (
         <Fractional
@@ -222,7 +227,7 @@ class ListingDetail extends Component {
         />
       )
     } else if (listing.multiUnit) {
-      return <MultiUnit {...this.props} />
+      return <MultiUnit {...this.props} isPendingBuyer={isPendingBuyer} />
     }
     return <SingleUnit {...this.props} />
   }
@@ -281,23 +286,42 @@ require('react-styl')(`
 
     .listing-buy
       padding: 1.5rem
-      border-radius: var(--default-radius);
+      border-radius: var(--default-radius)
       background-color: var(--pale-grey-eight)
       margin-bottom: 1rem
-      > .btn
+      .btn-primary
         border-radius: 2rem
         padding: 0.5rem 1rem
         width: 100%
       .quantity,.total
-        padding: 1rem
         font-family: var(--default-font)
         font-size: 18px
+        color: #000
         font-weight: normal
         display: flex
         justify-content: space-between
+        margin-bottom: 1rem
+        span:last-child
+          font-weight: bold
       .total
         padding-top: 0
+
       .price
+        font-family: var(--default-font)
+        font-size: 22px
+        color: var(--dark)
+        font-weight: bold
+        line-height: 1
+        margin-bottom: 1rem
+        span.desc
+          font-weight: normal
+          margin-left: 0.25rem
+        .orig
+          color: var(--steel)
+          font-weight: normal
+          margin-left: 1rem
+          font-size: 16px
+      .price-old
         display: flex
         align-items: baseline
         margin-bottom: 1.5rem
@@ -320,10 +344,6 @@ require('react-styl')(`
           font-weight: normal
           margin-left: 1rem
           font-size: 16px
-      &.multi .price
-        padding-bottom: 1.5rem
-        border-bottom: 1px solid var(--light)
-        margin-bottom: 0
       &.fractional
         .choose-dates
           display: flex;

@@ -69,6 +69,13 @@ const Subs = () => (
                       client.resetStore()
                     }}
                   />
+                  <Menu.Item
+                    text="Origin Testnet"
+                    onClick={() => {
+                      setNetwork({ variables: { network: 'origin' } })
+                      client.resetStore()
+                    }}
+                  />
                 </Menu>
               }
               position={Position.BOTTOM}

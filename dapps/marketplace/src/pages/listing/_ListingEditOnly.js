@@ -11,12 +11,9 @@ const EditOnly = ({
   isFractionalHourly
 }) => (
   <div className="listing-buy">
-    {isAnnouncement || isFractional ? null : (
+    {isAnnouncement ? null : (
       <div className="price">
-        <div className="eth">{`${listing.price.amount} ETH`}</div>
-        <div className="usd">
-          <Price amount={listing.price.amount} />
-        </div>
+        <Price listing={listing} descriptor />
       </div>
     )}
     {isFractional || isFractionalHourly || isAnnouncement ? null : (

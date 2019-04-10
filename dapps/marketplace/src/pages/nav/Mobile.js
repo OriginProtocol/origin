@@ -62,9 +62,9 @@ class MobileNav extends Component {
             />
             <Link
               onClick={() => onClose()}
-              to="/about/dapp-info"
-              className="dropdown-item dapp-info"
-              children={fbt('DApp Info', 'DApp Info')}
+              to="/settings"
+              className="dropdown-item settings"
+              children={fbt('Settings', 'navigation.settings')}
             />
             {/* <a href="#" className="dropdown-item transactions">
               Transactions
@@ -152,6 +152,8 @@ require('react-styl')(`
           background-image: url(images/messages-icon-selected.svg)
         &.notifications::before
           background-image: url(images/alerts-icon-selected.svg)
+        &.settings::before
+          background-image: url(images/settings-icon.svg)
         &.transactions::before
           background-image: url(images/nav/arrows-dark.svg)
         &::after
