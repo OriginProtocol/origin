@@ -4,7 +4,7 @@ const _growthModels = require('../../models')
 const _bridgeModels = require('@origin/bridge/src/models')
 const db = { ..._growthModels, ..._bridgeModels }
 const { ip2geo } = require('../../util/ip2geo')
-const parseArgv = require('../util/args')
+const parseArgv = require('../../util/args')
 
 const Logger = require('logplease')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
