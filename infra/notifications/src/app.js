@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 // TODO: Debugging line for auto-reload
-// console.log('\033[2J')
-// console.log(
-//   '─────────────────────────────────────────────────────────────────────────────────'
-// )
+console.log('\033[2J')
+console.log(
+  '─────────────────────────────────────────────────────────────────────────────────'
+)
 
 try {
   require('envkey')
@@ -155,7 +155,7 @@ app.post('/events', async (req, res) => {
   console.log('──────────────────────────────')
 
   if (!processableEvent(eventName)) {
-    console.log(
+    console.info(
       `Info: Not a processable event. Skipping ${eventDetailsSummary}`
     )
     return
@@ -169,13 +169,13 @@ app.post('/events', async (req, res) => {
   }
   if (!seller.id) {
     console.error(
-      `Error: Missing seller.address. Skipping ${eventDetailsSummary}`
+      `Error: Missing seller.id. Skipping ${eventDetailsSummary}`
     )
     return
   }
   if (!buyer.id) {
     console.error(
-      `Error: Missing buyer.address. Skipping ${eventDetailsSummary}`
+      `Error: Missing buyer.id. Skipping ${eventDetailsSummary}`
     )
     return
   }
@@ -188,8 +188,8 @@ app.post('/events', async (req, res) => {
   }
 
   const party = returnValues.party.toLowerCase()
-  const buyerAddress = buyer.address ? buyer.address.toLowerCase() : null
-  const sellerAddress = seller.address ? seller.address.toLowerCase() : null
+  const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
+  const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
   console.log(`Info: Processing event ${eventDetailsSummary}`)
 
