@@ -233,6 +233,11 @@ require('react-styl')(`
         font-weight: normal
         margin-top: 0.5rem
         flex: 1
+        span.desc
+          color: var(--steel)
+          font-size: 14px
+          font-weight: normal
+          margin-left: 0.25rem
       .stages
         margin: 1rem 0
         flex: 1

@@ -282,6 +282,7 @@ class Buy extends Component {
       return false
     } else if (this.props.cannotTransact) {
       this.setState({
+        modal: true,
         error: this.props.cannotTransact,
         errorData: this.props.cannotTransactData
       })
