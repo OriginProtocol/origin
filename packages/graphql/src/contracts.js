@@ -404,7 +404,7 @@ export function setNetwork(net, customConfig) {
   }
   setMetaMask()
 
-  if (window.__mobileBridgeAccount) {
+  if (window.__mobileBridge) {
     setMobileBridge()
   }
 }
@@ -438,32 +438,23 @@ function setMobileBridge() {
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
-  console.log(`Setting default eth account to: ${window.__mobileBridgeAccount}`)
-  context.mobileBridge.web3.eth.defaultAccount = window.__mobileBridgeAccount
-
   const mobileBridgeProvider = context.mobileBridge.getProvider()
   context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
-  // Funnel marketplace contract transactions through mobile wallet
-  context.marketplaceL = new context.web3Exec.eth.Contract(
+  context.marketplaceExec = new context.web3Exec.eth.Contract(
     MarketplaceContract.abi,
     context.marketplace._address
   )
-  context.marketplaceExec = context.marketplaceL
 
-  // Funnel token contract transactions through mobile wallet
-  context.ognExecL = new context.web3Exec.eth.Contract(
+  context.ognExec = new context.web3Exec.eth.Contract(
     OriginTokenContract.abi,
     context.ogn._address
   )
-  context.ognExec = context.ognExecL
 
-  // Funnel identity contract transactions through mobile wallet
-  context.identityEventsExecL = new context.web3Exec.eth.Contract(
+  context.identityEventsExec = new context.web3Exec.eth.Contract(
     IdentityEventsContract.abi,
     context.identityEvents._address
   )
-  context.identityEventsExec = context.identityEventsExecL
 
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec

@@ -5,20 +5,25 @@
     "@babel/core": "^7.3.4",
     "@babel/plugin-transform-new-target": "^7.0.0",
     "@babel/polyfill": "^7.2.5",
+    "eslint": "^5.15.1",
     "install-local": "^0.6.2",
     "jest": "^23.6.0",
     "jest-react-native": "^18.0.0",
     "metro-react-native-babel-preset": "^0.51.1",
+    "prettier": "^1.16.4",
     "react-devtools-core": "^3.6.1",
     "react-test-renderer": "16.6.3"
   },
   "scripts": {
-    "clean": "git clean -fdX .",
-    "start": "react-native start",
     "android": "react-native run-android",
+    "clean": "git clean -fdX .",
     "ios": "react-native run-ios",
-    "test": "jest",
-    "postinstall": "./postinstall.sh"
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "postinstall": "./postinstall.sh",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\"",
+    "start": "react-native start",
+    "test": "jest"
   },
   "jest": {
     "preset": "react-native"
@@ -46,6 +51,7 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
+    "redux-persist-transform-encrypt": "^2.0.1",
     "redux-thunk": "^2.3.0",
     "sequelize-cli": "^5.4.0",
     "vm-browserify": "^1.1.0",
@@ -68,5 +74,9 @@
     "@origin/services": "../packages/services",
     "@origin/validator": "../packages/validator",
     "@origin/mobile-bridge": "../packages/mobile-bridge"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

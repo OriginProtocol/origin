@@ -102,9 +102,10 @@ const web3Resolver = {
     }
   },
   mobileWalletAccount: async () => {
-    return {
-      id: window.__mobileBridgeAccount || null
-    }
+    if (!contracts.mobileBridge) return null
+    const accounts = await contracts.web3Exec.eth.getAccounts()
+    if (!accounts || !accounts.length) return null
+    return { id: accounts[0] }
   },
   primaryAccount: async () => {
     if (localStorage.useWeb3Wallet) {

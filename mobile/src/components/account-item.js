@@ -1,5 +1,6 @@
+'use strict'
+
 import React, { Component } from 'react'
-import Moment from 'react-moment'
 import { Alert, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
 import Address from 'components/address'
@@ -9,7 +10,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 export default class AccountItem extends Component {
   render() {
-    const { item, navigation } = this.props
+    const { item, navigation, wallet } = this.props
 
     return (
       <TouchableHighlight onPress={() => navigation.navigate('Account', {
@@ -19,17 +20,17 @@ export default class AccountItem extends Component {
       })}>
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{'Unnamed Account'}</Text>
-            <Address address={item} label={'Address'} style={styles.address} />
+            <Text style={styles.name}>{item.name || 'Unnamed Account'}</Text>
+            <Address address={item.address} label={'Address'} style={styles.address} />
           </View>
-          {/*
+          {
           <View style={styles.iconContainer}>
-            {wallet.address === address &&
+            {wallet.accounts[0].address === item.address &&
               <Image source={require(`${IMAGES_PATH}selected.png`)} style={styles.selected} />
             }
             <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
           </View>
-          */}
+          }
         </View>
       </TouchableHighlight>
     )

@@ -1,7 +1,11 @@
 'use strict'
 
+import Web3 from 'web3'
+
 import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
+
+const web3 = new Web3()
 
 export function decodeTransaction(data) {
   const functionSignature = data.substr(0, 10)

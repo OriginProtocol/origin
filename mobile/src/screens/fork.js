@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { DeviceEventEmitter, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
-import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -50,7 +49,7 @@ class ForkScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Create New Wallet'}
-            onPress={() => originWallet.createAccount()}
+            onPress={() => DeviceEventEmitter.emit('createAccount')}
           />
           <OriginButton
             size="large"

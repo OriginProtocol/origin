@@ -63,6 +63,7 @@ class MobileBridge {
     provider._providers.splice(3, 1)
     provider._providers.splice(4, 1)
     provider.isOrigin = true
+
     return provider
   }
 }

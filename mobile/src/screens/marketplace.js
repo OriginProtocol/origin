@@ -1,15 +1,13 @@
 'use strict'
 
 import React, { Component, Fragment } from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
 
-
 import CardsModal from 'components/cards-modal'
 import { decodeTransaction } from '../utils/contractDecoder'
-import originWallet from '../OriginWallet'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -20,7 +18,6 @@ class MarketplaceScreen extends Component {
     }
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
-    this.getAccounts = originWallet.getAccounts.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
   }
 
@@ -67,13 +64,18 @@ class MarketplaceScreen extends Component {
       if (functionInterface) {
         // Got an interface from the contract
         const response = this.handleWeb3Request(functionInterface)
+        console.log(response)
       }
     }
   }
 
+  getAccounts () {
+    return this.props.wallet.accounts.map(account => account.address)
+  }
+
   handleWeb3Request({ name, parameters }) {
     if (name === 'makeOffer') {
-      this.toggleModal()
+      this.toggleModal(parameters)
     }
   }
 
@@ -85,8 +87,8 @@ class MarketplaceScreen extends Component {
     console.debug(`Loading marketplace at ${MARKETPLACE_DAPP_URL}`)
 
     const injectedJavaScript = `
-      if (!window.__mobileBridgeAccount) {
-        window.__mobileBridgeAccount = '${this.props.wallet.address}';
+      if (!window.__mobileBridge) {
+        window.__mobileBridge = true;
       }
       true;
     `
@@ -99,7 +101,7 @@ class MarketplaceScreen extends Component {
           }}
           source={{ uri: MARKETPLACE_DAPP_URL }}
           onMessage={this.onWebViewMessage}
-          onLoadProgress={e => {
+          onLoadProgress={() => {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />

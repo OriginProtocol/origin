@@ -1,22 +1,30 @@
+'use strict'
+
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
 import notifications from 'reducers/Notifications'
-import users from 'reducers/Users'
 import wallet from 'reducers/Wallet'
-import walletEvents from 'reducers/WalletEvents'
 import { persistStore, persistReducer } from 'redux-persist'
+import createEncryptor from 'redux-persist-transform-encrypt'
 import storage from 'redux-persist/lib/storage'
 
+const encryptor = createEncryptor({
+  secretKey: 'WALLET_PASSWORD'
+})
+
 const persistConfig = {
-  key: 'root',
+  key: 'OriginWallet',
   storage: storage,
-  whitelist: ['notifications', 'walletEvents']
+  whitelist: ['activation', 'notifications', 'wallet'],
+  transforms: [encryptor]
 }
 
 const middlewares = [thunkMiddleware]
+// eslint-disable-next-line no-underscore-dangle
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   persistReducer(
@@ -25,14 +33,14 @@ const store = createStore(
       activation,
       exchangeRates,
       notifications,
-      users,
-      wallet,
-      walletEvents
+      wallet
     })
   ),
-  applyMiddleware(...middlewares)
+  composeEnhancers(applyMiddleware(...middlewares))
 )
 
-persistStore(store)
+const persistor = persistStore(store)
 
 export default store
+
+export { store, persistor }

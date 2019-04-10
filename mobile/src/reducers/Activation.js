@@ -1,3 +1,5 @@
+'use strict'
+
 import { ActivationConstants } from 'actions/Activation'
 
 const initialState = {
@@ -17,7 +19,7 @@ export default function Activation(state = initialState, action = {}) {
     case ActivationConstants.PROMPT_FOR_NOTIFICATIONS:
       return { ...state, notifications: { ...state.notifications, prompt: action.prompt }}
 
-    case ActivationConstants.STORE_NOTIFICATIONS_PERMISSIONS:
+    case ActivationConstants.UPDATE_NOTIFICATIONS_PERMISSIONS:
       const obj = {
         ...state,
         notifications: {
@@ -36,6 +38,6 @@ export default function Activation(state = initialState, action = {}) {
     case ActivationConstants.UPDATE_CAROUSEL_STATUS:
       return { ...state, carouselCompleted: action.completed }
   }
-  
+
   return state
 }

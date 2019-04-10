@@ -1,5 +1,8 @@
+'use strict'
+
 import React, { Component, Fragment } from 'react'
 import {
+  DeviceEventEmitter,
   FlatList,
   Image,
   StyleSheet,
@@ -10,7 +13,6 @@ import { connect } from 'react-redux'
 
 import AccountItem from 'components/account-item'
 import AccountModal from 'components/account-modal'
-import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -53,20 +55,19 @@ class AccountsScreen extends Component {
   }
 
   toggleModal() {
-    this.setState({ modalOpen: !this.state.modalOpen })
+    DeviceEventEmitter.emit('createAccount')
+    // this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
     const { navigation } = this.props
 
-    const accounts = originWallet.getAccounts()
-
     return (
       <Fragment>
         <FlatList
-          data={originWallet.getAccounts()}
+          data={this.props.wallet.accounts}
           renderItem={({ item }) => (
-            <AccountItem item={item} navigation={navigation} />
+            <AccountItem item={item} wallet={this.props.wallet} navigation={navigation} />
           )}
           keyExtractor={({ address }) => address}
           ItemSeparatorComponent={() => (
@@ -83,8 +84,6 @@ class AccountsScreen extends Component {
     )
   }
 }
-
-export default AccountsScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -104,3 +103,9 @@ const styles = StyleSheet.create({
     width: '5%'
   }
 })
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountsScreen)
