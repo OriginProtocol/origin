@@ -146,55 +146,55 @@ app.post('/', async (req, res) => {
  * Sample json payloads in test/fixtures
  */
 app.post('/events', async (req, res) => {
-  console.log(req.body)
+  // Source of queries, and resulting json structure:
+  // https://github.com/OriginProtocol/origin/tree/master/infra/discovery/src/listener/queries
+
   const { event = {}, related = {} } = req.body
-  const { decoded = {} } = event
+  const { returnValues = {} } = event
   const eventName = event.event
   const { listing, offer } = related
   const { seller = {}} = listing
-  const { buyer = {}} = offer
-  const eventDetails = `eventName=${eventName} blockNumber=${
+  const buyer = offer ? offer.buyer : null // Not all events have offers
+  const eventDetailsSummary = `eventName=${eventName} blockNumber=${
     event.blockNumber
   } logIndex=${event.logIndex}`
 
-  // Return 200 to the event-listener without
-  // waiting for processing of the event.
-  res.json({ status: 'ok' })
-  // res.sendStatus(200)
+console.log("──────────────────────────────")
 
-console.log("---------------")
-console.log(buyer)
+  if (!processableEvent(eventName)) {
+    console.log(`Info: Not a processable event. Skipping ${eventDetailsSummary}`)
+    return
+  }
 
   if (!listing) {
-    console.error(`Error: Missing listing data. Skipping ${eventDetails}`)
+    console.error(`Error: Missing listing data. Skipping ${eventDetailsSummary}`)
     return
   }
   if (!seller.id) {
-    console.error(`Error: Missing seller.address. Skipping ${eventDetails}`)
+    console.error(`Error: Missing seller.address. Skipping ${eventDetailsSummary}`)
     return
   }
   if (!buyer.id) {
-    console.error(`Error: Missing buyer.address. Skipping ${eventDetails}`)
+    console.error(`Error: Missing buyer.address. Skipping ${eventDetailsSummary}`)
     return
   }
 
   // ETH address of the party who initiated the action.
   // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
-  if (!decoded.party) {
-    console.error(`Error: Invalid part, skipping ${eventDetails}`)
+  if (!returnValues.party) {
+    console.error(`Error: Invalid part, skipping ${eventDetailsSummary}`)
     return
   }
 
-  const party = decoded.party.toLowerCase()
+  const party = returnValues.party.toLowerCase()
   const buyerAddress = buyer.address ? buyer.address.toLowerCase() : null
   const sellerAddress = seller.address ? seller.address.toLowerCase() : null
 
-  if (!processableEvent(eventName)) {
-    console.warn(`Info: Not a processable event. Skipping ${eventDetails}`)
-    return
-  }
 
-  console.log(`Info: Processing event ${eventDetails}`)
+  console.log(`Info: Processing event ${eventDetailsSummary}`)
+
+  // Return 200 to the event-listener without waiting for processing of the event.
+  res.status(200).send({ status: 'ok' })
 
   // Mobile Push (linker) notifications
   mobilePush(eventName, party, buyerAddress, sellerAddress)
