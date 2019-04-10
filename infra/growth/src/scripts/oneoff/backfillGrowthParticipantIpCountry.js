@@ -50,7 +50,7 @@ async function main(dryRun) {
 }
 
 const args = parseArgv()
-const dryRun = (args['--dryRun'] === 'false') ? false : true
+const dryRun = args['--dryRun'] === 'false' ? false : true
 
 logger.info('Starting backfill...')
 logger.info('DryRun mode=', dryRun)
