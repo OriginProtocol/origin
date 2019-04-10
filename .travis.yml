@@ -120,7 +120,6 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
-        - npm install --ignore-scripts --only=dev
         - npm run bootstrap -- --scope @origin/notifications
       script:
         - npm run test --prefix infra/notifications
@@ -130,6 +129,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
+        - npm install --ignore-scripts --only=dev
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
       script:
         - npm run test --prefix packages/event-cache
