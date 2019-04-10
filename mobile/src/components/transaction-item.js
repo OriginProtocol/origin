@@ -30,37 +30,41 @@ class TransactionItem extends Component {
       style,
       wallet
     } = this.props
+
     const {
       cost,
-      gas_cost,
-      ogn_cost,
+      gasCost,
+      ognCost,
       identity = {},
       listing = {},
       meta,
       status,
       to
     } = item
+
     const hasNotificationsEnabled =
       activation.notifications.permissions.hard.alert
+
     // To Do: account for possible commission
     const hasSufficientFunds = sufficientFunds(wallet, item)
     const counterpartyAddress = listing.seller || to
     const { price = { amount: '', currency: '' } } = listing
     const { profile = {} } = identity
-    const { avatar, firstName = '', lastName = '' } = profile
+    const { avatar } = profile
     const picture = (listing.media && listing.media[0]) || avatar
     const costEth = Number(web3.utils.fromWei(cost.toString())).toFixed(5)
-    const gasEth = Number(web3.utils.fromWei(gas_cost.toString())).toFixed(5)
+    const gasEth = Number(web3.utils.fromWei(gasCost.toString())).toFixed(5)
     const totalEth = Number(
       web3.utils.fromWei(
         web3.utils
           .toBN(cost)
-          .add(web3.utils.toBN(gas_cost))
+          .add(web3.utils.toBN(gasCost))
           .toString()
       )
     ).toFixed(5)
-    const totalOgn = toOgns(ogn_cost)
+    const totalOgn = toOgns(ognCost)
     let activitySummary, heading
+
     const fullName =
       `${profile.firstName} ${profile.lastName}`.trim() || 'Unnamed User'
 
@@ -276,7 +280,7 @@ class TransactionItem extends Component {
                   <Text style={styles.amount}>{totalEth} </Text>
                   <Text style={styles.abbreviation}>ETH</Text>
                 </View>
-                {ogn_cost > 0 && (
+                {ognCost > 0 && (
                   <View style={styles.price}>
                     <Image
                       source={require(`${IMAGES_PATH}ogn-icon.png`)}

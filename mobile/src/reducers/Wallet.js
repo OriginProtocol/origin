@@ -3,7 +3,8 @@
 import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
-  accounts: []
+  accounts: [],
+  accountNameMapping: {}
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -24,7 +25,18 @@ export default function Wallet(state = initialState, action = {}) {
       }
 
     case WalletConstants.SET_DEFAULT_ACCOUNT:
-      return state
+      return {
+        ...state
+      }
+
+    case WalletConstants.SET_ACCOUNT_NAME:
+      return {
+        ...state,
+        accountNameMapping: {
+          ...state.accountNameMapping,
+          [action.address]: action.name
+        }
+      }
 
     case WalletConstants.UPDATE_ACCOUNTS:
       return { ...state, accounts: action.accounts }

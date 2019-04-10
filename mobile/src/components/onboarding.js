@@ -69,7 +69,6 @@ class Onboarding extends Component {
 
   render() {
     const {
-      alterBottomColor,
       controlStatusBar,
       pages,
       onCompletion,

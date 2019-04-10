@@ -149,7 +149,6 @@ class WalletModal extends Component {
   render() {
     const {
       address,
-      backupWarning,
       onPress,
       visible,
       wallet,

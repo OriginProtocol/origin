@@ -1,23 +1,18 @@
-import React, { Component, Fragment } from 'react'
+'use strict'
+
+import React, { Component } from 'react'
 import {
-  Image,
   StyleSheet,
   Text,
-  TouchableHighlight,
-  TouchableOpacity,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
 
 import { remove } from 'actions/Notification'
 
-import originWallet from '../OriginWallet'
-
-const IMAGES_PATH = '../../assets/images/'
-
 class NotificationItem extends Component {
   render() {
-    const { id, message, url } = this.props.item
+    const { message } = this.props.item
 
     return (
       <View style={styles.item}>

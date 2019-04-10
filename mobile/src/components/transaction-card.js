@@ -7,8 +7,6 @@ import OriginButton from 'components/origin-button'
 
 import currencies from 'utils/currencies'
 
-const IMAGES_PATH = '../../assets/images/'
-
 class TransactionCard extends Component {
   constructor(props) {
     super(props)

@@ -2,10 +2,8 @@
 
 import React, { Component } from 'react'
 import {
-  ActivityIndicator,
   Image,
   StyleSheet,
-  View,
   YellowBox
 } from 'react-native'
 import { connect } from 'react-redux'

@@ -19,7 +19,7 @@ export default class Selling extends Component {
   }
 
   render() {
-    const { height, width } = Dimensions.get('window')
+    const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
     return (

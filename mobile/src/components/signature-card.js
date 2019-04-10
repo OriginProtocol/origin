@@ -1,5 +1,7 @@
+'use strict'
+
 import React, { Component } from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import OriginButton from 'components/origin-button'

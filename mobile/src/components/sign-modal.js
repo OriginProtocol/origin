@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from 'react'
+'use strict'
+
+import React, { Component } from 'react'
 import {
   Image,
   Modal,

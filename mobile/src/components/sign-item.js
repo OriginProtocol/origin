@@ -12,7 +12,6 @@ export default class SignItem extends Component {
     const msg = item.msg && JSON.stringify(item.msg).substring(0, 40)
     const listing = item.listing
     const signType = item.signType || ''
-    const status = item.status
 
     return (
       <TouchableHighlight onPress={handlePress}>

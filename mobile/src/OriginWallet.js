@@ -2,18 +2,13 @@
 
 import React, { Component } from 'react'
 import { DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
-import CryptoJS from 'crypto-js'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
 
-import {
-  DEFAULT_NOTIFICATION_PERMISSIONS,
-  WALLET_STORE,
-  WALLET_PASSWORD
-} from './constants'
+import { DEFAULT_NOTIFICATION_PERMISSIONS, ETH_NOTIFICATION_TYPES } from './constants'
 import { init, addAccount, updateAccounts } from 'actions/Wallet'
-import { updateNotificationPermissions } from 'actions/Activation'
+import { updateNotificationsPermissions } from 'actions/Activation'
 
 // Environment variables
 import { GCM_SENDER_ID, PROVIDER_URL } from 'react-native-dotenv'
@@ -45,11 +40,9 @@ class OriginWallet extends Component {
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from tbe data store
     web3.eth.accounts.wallet.clear()
-
     // Load the accounts from the saved redux state into web3
     for (let i = 0; i < this.props.wallet.accounts.length; i++) {
-      const account = this.props.wallet.accounts[i]
-      web3.eth.accounts.wallet.add(account)
+      web3.eth.accounts.wallet.add(this.props.wallet.accounts[i])
     }
 
     const { length } = this.props.wallet.accounts
@@ -92,7 +85,7 @@ class OriginWallet extends Component {
   /* Record a name for an address in the account mapping
    */
   async nameAccount(name, address) {
-    connsole.log('Name account')
+    console.log('Name account')
   }
 
   /* Configure push notifications
@@ -131,7 +124,6 @@ class OriginWallet extends Component {
   }
 
   /* Return the notification type that should be used for the platform
-   *
    */
   getNotificationType() {
     if (Platform.OS === 'ios') {
@@ -142,7 +134,6 @@ class OriginWallet extends Component {
   }
 
   /* Request permissions to send push notifications
-   *
    */
   requestNotifications() {
     if (Platform.OS === 'ios') {
@@ -156,7 +147,6 @@ class OriginWallet extends Component {
   }
 
   /* This is a renderless component
-   *
    */
   render() {
     return null
@@ -170,7 +160,7 @@ const mapStateToProps = ({ activation, wallet }) => {
 const mapDispatchToProps = dispatch => ({
   initWallet: address => dispatch(init(address)),
   addAccount: account => dispatch(addAccount(account)),
-  removeAccount: account => dispatch(remvoeAccount(account)),
+  removeAccount: account => dispatch(removeAccount(account)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>
     dispatch(updateNotificationsPermissions(permissions))
