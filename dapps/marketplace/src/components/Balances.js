@@ -53,11 +53,7 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
         {!enableGrowth ? null : (
-          <EnrollButton
-            className="btn get-ogn d-flex"
-            children={fbt('Get Started', 'Get Started')}
-            skipjoincampaign="false"
-          >
+          <EnrollButton className="btn get-ogn d-flex" skipjoincampaign="false">
             <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>
         )}

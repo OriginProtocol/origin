@@ -216,6 +216,7 @@ require('react-styl')(`
       font-weight: 900
       color: var(--clear-blue)
       border: 0px
+      background-color: white
     .ogn-icon
       position: relative
       top: -3px

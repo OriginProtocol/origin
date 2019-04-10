@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 
+import withFingerprint from 'hoc/withFingerprint'
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
 import SignMessageMutation from 'mutations/SignMessage'
@@ -111,7 +112,7 @@ class Enroll extends Component {
   }
 }
 
-export default withRouter(Enroll)
+export default withRouter(withFingerprint(Enroll))
 
 require('react-styl')(`
   .growth-enrollment
