@@ -5,13 +5,21 @@ import intersectionBy from 'lodash/intersectionBy'
 import AbstractBackend from './AbstractBackend'
 import { debug } from '../utils'
 
+/**
+ * Check and see if IndexedDB is available for use
+ */
 function checkForIndexedDB() {
   // Just look for a global, since testing in node may inject
   if (typeof indexedDB === 'undefined') {
     throw new Error('Unable to find IndexedDB')
   }
 }
-
+/**
+ * Normalize index names so they would match get() args. Used for matching.
+ *
+ * @param indexes {Array} of fully qualified index names
+ * @returns {Array} of normalized index names
+ */
 function normalizedIndexes(indexes) {
   return uniq(
     indexes.map(idx => {
@@ -23,6 +31,12 @@ function normalizedIndexes(indexes) {
   )
 }
 
+/**
+ * Create a map of arg names to fully qualified index names
+ *
+ * @param indexes {Array} of fully qualified index names
+ * @returns {object} mapping of arg -> index name
+ */
 function createIndexeMap(indexes) {
   const idxMap = {}
   indexes.map(idx => {
@@ -89,6 +103,9 @@ export default class IndexedDBBackend extends AbstractBackend {
     return this.ready
   }
 
+  /**
+   * Initialize the IndexedDB, object store, and indexes
+   */
   async initDB() {
     this._db = await openDB(DB_NAME, SCHEMA_VERSION, {
       upgrade(db) {
