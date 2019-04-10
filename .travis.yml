@@ -124,6 +124,15 @@ matrix:
       script:
         - npm run test --prefix infra/notifications
 
+    - name: "@origin/event-cache unit tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
+      script:
+        - npm run test --prefix packages/event-cache
+
     # - name: "@origin/token-transfer-* unit tests"
     #  language: node_js
     #  node_js: 10
