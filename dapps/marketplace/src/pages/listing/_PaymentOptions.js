@@ -7,6 +7,7 @@ import withWeb3 from 'hoc/withWeb3'
 
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
+import Tooltip from 'components/Tooltip'
 
 const NotEnoughEth = ({ tryDai, noEthOrDai }) =>
   noEthOrDai ? (
@@ -116,26 +117,40 @@ const PaymentOptions = ({
     }
   }
 
+  const noDaiTooltip = fbt(
+    'The seller does not accept DAI for this listing.',
+    'PaymentOptions.noDai'
+  )
+
+  const noEthTooltip = fbt(
+    'The seller does not accept Eth for this listing.',
+    'PaymentOptions.noDai'
+  )
+
   return (
     <div className="payment-options">
       <h6>
         <fbt desc="paymentOptions.payWith">Pay with</fbt>
       </h6>
       <div className="btn-group">
-        <button
-          className={`btn btn-outline-secondary${daiActive}${daiDisabled}`}
-          onClick={() => (daiDisabled ? null : onChange('token-DAI'))}
-        >
-          <CoinPrice iconOnly coin="dai" className="lg" />
-          DAI
-        </button>
-        <button
-          className={`btn btn-outline-secondary${ethActive}${ethDisabled}`}
-          onClick={() => (ethDisabled ? null : onChange('token-ETH'))}
-        >
-          <CoinPrice iconOnly coin="eth" className="lg" />
-          ETH
-        </button>
+        <Tooltip tooltip={acceptsDai ? null : noDaiTooltip} placement="top">
+          <button
+            className={`btn btn-outline-secondary${daiActive}${daiDisabled}`}
+            onClick={() => (daiDisabled ? null : onChange('token-DAI'))}
+          >
+            <CoinPrice iconOnly coin="dai" className="lg" />
+            DAI
+          </button>
+        </Tooltip>
+        <Tooltip tooltip={acceptsEth ? null : noEthTooltip} placement="top">
+          <button
+            className={`btn btn-outline-secondary${ethActive}${ethDisabled}`}
+            onClick={() => (ethDisabled ? null : onChange('token-ETH'))}
+          >
+            <CoinPrice iconOnly coin="eth" className="lg" />
+            ETH
+          </button>
+        </Tooltip>
       </div>
       <div className="payment-total">
         <span>
