@@ -480,11 +480,13 @@ function withEnrolmentModal(WrappedComponent) {
 export default withEnrolmentModal
 
 require('react-styl')(`
+  .pl-modal-table
+    .growth-enrollment-modal
+      padding-top: 20px
+      max-width: 620px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
-    padding-top: 20px
-    max-width: 620px !important
     .normal-line-height
       line-height: normal
     .title
