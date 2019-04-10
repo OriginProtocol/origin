@@ -6,7 +6,7 @@ Head to https://www.originprotocol.com/developers to learn more about what we're
 
 To get started quickly, you can run a "light" version of the Origin DApp, which automatically sets up our DApp, a local IPFS server, and a local blockchain. 
 
-Or you can use a more full featured development environment with Docker Compose orchestrating several containers and providing access to the full suite of the Origin DApp features, include messaging, browser notifications, and attestation services.
+Or you can use a more full featured development environment with Docker Compose orchestrating several containers and providing access to the full suite of the Origin DApp features, including messaging, browser notifications, and attestation services.
 
 ## Quick start - Running a local DApp
 
@@ -27,7 +27,7 @@ This will start a `webpack-dev-server` with hot reloading on `http://localhost:3
 
 3. Deploy contracts (optional)
 
-By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network you'll need to deploy some contracts and create some sample listings using the `admin` tool. This can be done by running:
+By default the DApp will start its own Ethereum blockchain using Ganache. Because it is a fresh network, you'll need to deploy some contracts and create some sample listings using the `admin` tool. This can be done by running:
 
 ```
 cd dapps/admin && npm start
@@ -35,7 +35,7 @@ cd dapps/admin && npm start
 
 Then open your browser to `http://localhost:3001` and:
 
-- Select the Settings page (last icon on the right)
+- Select the Settings page (last icon on the right).
 - Click the green `Populate` button.
 - Copy and pasting the commands at the bottom of the page into the console for `dapp`.
 
@@ -55,13 +55,13 @@ You can also change the Ethereum network being used by the marketplace DApp by a
 - Open MetaMask's settings by clicking on the account icon in the top right and selecting `Settings` from the menu.
 - Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC URL.
 - Select the Origin Testnet from the network selection in MetaMask.
-- To receive Ethereum to transact on this network visit our faucet at `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your wallet address.
+- To receive Ethereum to transact on this network, visit our faucet at `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your wallet address.
 
 You can view the state of the network at https://testnet.originprotocol.com/.
 
 ### Other settings
 
-The marketplace DApp includes a settings page at `http://localhost:3000/settings` which is useful if you want to switch individual services, e.g. use a different Web3 provider or atteestation server.
+The marketplace DApp includes a settings page at `http://localhost:3000/settings` that is useful if you want to switch individual services, e.g. use a different Web3 provider or attestation server.
 
 ### About the Origin repository
 
@@ -86,7 +86,7 @@ There is a Docker Compose configuration available for running a variety of backe
 - @origin/notifications on http://localhost:3456)
 ```
 
-⚠️  If you want to run the Docker Compose setup ensure that both `@origin/marketplace` and `@origin/admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
+⚠️  If you want to run the Docker Compose setup, ensure that both `@origin/marketplace` and `@origin/admin` are not running before you start the services. The required ports will not be available if either of those two are started before running `docker-compose up`.
 
 ### System Requirements
 
@@ -112,7 +112,7 @@ There is a Docker Compose configuration available for running a variety of backe
 git checkout --track origin/stable
 ```
 
-3. From the root of the repository run `docker-compose up`. The first time this command runs it will take some time to complete due to the initial building of the containers.
+3. From the root of the repository, run `docker-compose up`. The first time this command runs it will take some time to complete due to the initial building of the containers.
 
 Please note this can take some time. If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues). When the containers are running you can access the DApp at `http://localhost:3000`.
 
@@ -131,7 +131,7 @@ Start and stop the environment:
 	docker-compose stop
 ```
 
-⚠️ When docker builds an image part of the build process is `npm install` meaning that dependent packages from `package.json` are built into the image. This image is immutable. With `docker-compose up` a container is created where image gets a volume where any changes are stored. Running `docker-compose down` will remove that volume and any changes to the container after the image build will be lost.
+⚠️ When docker builds an image, part of the build process is `npm install`, meaning that dependent packages from `package.json` are built into the image. This image is immutable. Running `docker-compose up` creates a container for the image and a volume where any changes are stored. Running `docker-compose down` will remove that volume, and any changes to the container after the image build will be lost.
 
 Spawn a shell (command line) in a container:
 
@@ -152,7 +152,7 @@ Rebuild containers (takes some time), in case you update dependencies (including
 
 ### Suggested workflow
 
-Switching between branches or developing on a fresh branch can cause the dependencies in one of the `package.json` files to change. The host `node_modules` directories are not mounted inside the Docker container. For that reason installing dependencies needs to be done inside the containers. One solution is to rebuild the image with `docker-compose build` but that can be time consuming. To install new dependencies get a shell in the container and run `npm install`.
+Switching between branches or developing on a fresh branch can cause the dependencies in one of the `package.json` files to change. The host `node_modules` directories are not mounted inside the Docker container. For that reason, installing dependencies needs to be done inside the containers. One solution is to rebuild the image with `docker-compose build`, which can be time consuming. To install new dependencies, get a shell in the container and run `npm install`.
 
 ```
 host-machine$ docker exec -ti <container_name> /bin/bash
@@ -161,7 +161,7 @@ docker-container$ npm run bootstrap # run inside /app directory
 host-machine$ docker-compose restart <container_name>
 ```
 
-⚠️ Don't run `docker-compose down` when stopping containers! Any changes made since the initial Docker build will be lost. Instead use `docker-compose stop`
+⚠️ Don't run `docker-compose down` when stopping containers! Any changes made since the initial Docker build will be lost. Instead use `docker-compose stop`.
 
 ### Troubleshooting
 
@@ -184,11 +184,11 @@ Running `docker down/up` and rebuilding image `docker-compose build` will consum
 $docker system prune --volumes --all
 ```
 
-When doing a hard delete of Docker data Origin images need to be rebuilt `docker-compose build`
+When doing a hard delete of Docker data Origin, images need to be rebuilt `docker-compose build`
 
 #### Elasticsearch fails to start with virtual memory error
 
-The development stack includes an Elasticsearch container which may require an increase in the mmap counts for your OS. On Linux this can be achieved by running:
+The development stack includes an Elasticsearch container that may require an increase in the mmap counts for your OS. On Linux this can be achieved by running:
 
 	sysctl -w vm.max_map_count=262144
 
@@ -196,12 +196,12 @@ For more information, see this [link.](https://www.elastic.co/guide/en/elasticse
 
 #### Docker Container exited with code 137
 
-If a container is failing with code 137 it could be that it has encountered Out Of Memory error. To fix this dedicate more memory to Docker [see this link](https://www.petefreitag.com/item/848.cfm).
+If a container is failing with code 137 it could be that it has encountered Out Of Memory error. To fix this, dedicate more memory to Docker [see this link](https://www.petefreitag.com/item/848.cfm).
 
 #### Port errors
 
-The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail. This includes `@origin/dapp` and `@origin/admin`. Ensure you start those after you run `docker-compose up`.
+The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available, spinning up the development environment may fail. This includes `@origin/dapp` and `@origin/admin`. Ensure you start those after you run `docker-compose up`.
 
 #### Metamask errors
 
-Sometimes Metamask gets confused on private networks. If you see errors generated by Metamask in your console while developing then clicking `Settings`→`Reset Account` in Metamask should resolve the issue.
+Sometimes Metamask gets confused on private networks. If you see errors generated by Metamask in your console while developing, clicking `Settings`→`Reset Account` in Metamask should resolve the issue.
