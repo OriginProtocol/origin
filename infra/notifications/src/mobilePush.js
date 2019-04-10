@@ -1,13 +1,20 @@
 const linkingNotifyEndpoint = process.env.LINKING_NOTIFY_ENDPOINT
 const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
-const { getNotificationMessage, processableEvent } = require('./notification')
-
+const { getNotificationMessage } = require('./notification')
+const dappOfferUrl = process.env.DAPP_OFFER_URL
+const fetch = require('cross-fetch')
+const path = require('path')
 
 //
 // Mobile Push (linker) notifications
 //
-async function mobilePush(eventName, party, buyerAddress, sellerAddress)
-{
+async function mobilePush(
+  eventName,
+  party,
+  buyerAddress,
+  sellerAddress,
+  offer
+) {
   console.log('📱 Mobile Push')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
@@ -63,4 +70,3 @@ async function mobilePush(eventName, party, buyerAddress, sellerAddress)
 }
 
 module.exports = { mobilePush }
-
