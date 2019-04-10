@@ -128,8 +128,11 @@ matrix:
       language: node_js
       node_js: 10
       install:
-        - NODE_ENV=test npm install --ignore-scripts
+        - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/services
+        - pwd
+        - ls -lah
+        - ls -lah ./node_modules/.bin
       script:
         - npm run test --prefix packages/event-cache
 
