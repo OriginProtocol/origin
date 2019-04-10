@@ -23,10 +23,15 @@ export function changesToPublishExist({ props, state }) {
     (profile.lastName || '') === state.lastName &&
     (profile.description || '') === state.description &&
     (profile.avatar || '') === state.avatar &&
-    !!profile.emailVerified === !!state.emailAttestation &&
-    !!profile.phoneVerified === !!state.phoneAttestation &&
-    !!profile.facebookVerified === !!state.facebookAttestation &&
-    !!profile.twitterVerified === !!state.twitterAttestation &&
-    !!profile.airbnbVerified === !!state.airbnbAttestation
+    !!profile.emailVerified ===
+      (!!state.emailAttestation || !!state.emailVerified) &&
+    !!profile.phoneVerified ===
+      (!!state.phoneAttestation || !!state.phoneVerified) &&
+    !!profile.facebookVerified ===
+      (!!state.facebookAttestation || !!state.facebookVerified) &&
+    !!profile.twitterVerified ===
+      (!!state.twitterAttestation || !!state.twitterVerified) &&
+    !!profile.airbnbVerified ===
+      (!!state.airbnbAttestation || !!state.airbnbVerified)
   )
 }
