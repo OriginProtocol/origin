@@ -81,7 +81,7 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   walletType: () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return 'Web3 Wallet'
     }
     if (contracts.mobileBridge) {
@@ -108,7 +108,7 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   primaryAccount: async () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return { id: localStorage.useWeb3Wallet }
     }
     if (contracts.metaMaskEnabled) {

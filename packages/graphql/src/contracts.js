@@ -18,7 +18,7 @@ const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !=
 
 let OriginMessaging
 let OriginMobileBridge
-if (isBrowser) {
+if (typeof window !== 'undefined') {
   OriginMessaging = require('@origin/messaging-client').default
   OriginMobileBridge = require('@origin/mobile-bridge').default
 }
