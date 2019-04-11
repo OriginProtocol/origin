@@ -83,10 +83,8 @@ class Enroll extends Component {
                               variables: {
                                 address: accountId,
                                 // TODO: change version programatically
-                                message: fbt(
-                                  'I accept the terms of growth campaign version: 1.0',
-                                  'growth.acceptTerms'
-                                )
+                                message:
+                                  'I accept the terms of growth campaign version: 1.0'
                               }
                             })
                           }}
