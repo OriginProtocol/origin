@@ -191,7 +191,14 @@ app.post('/events', async (req, res) => {
   const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
   const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
-  console.log(`Info: Processing event ${eventDetailsSummary}`)
+  console.info(`Info: Processing event ${eventDetailsSummary}`)
+
+console.log('party:')
+console.log(party)
+console.log('buyerAddress:')
+console.log(buyerAddress)
+console.log('sellerAddress:')
+console.log(sellerAddress)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
