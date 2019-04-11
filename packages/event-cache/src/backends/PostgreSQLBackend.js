@@ -1,5 +1,7 @@
 import AbstractBackend from './AbstractBackend'
 
+import { debug } from '../utils'
+
 /**
  * Convert an event object to an object compatible with sequelize
  *
@@ -99,7 +101,31 @@ export default class PostgreSQLBackend extends AbstractBackend {
      */
     this._models = require('../models')
     this._Sequelize = this._models.Sequelize
+    this._sequelize = this._models.sequelize
     this._eventTableColumns = Object.keys(this._models.Event.tableAttributes)
+
+    this._loadLatestBlock()
+  }
+
+  /**
+   * Get and set the latest known block from the DB
+   *
+   * @returns {number} The latest block number known by the cache
+   */
+  async _loadLatestBlock() {
+    const result = await this._models.Event.findOne({
+      attributes: [[
+        this._sequelize.fn('MAX', this._sequelize.col('block_number')),
+        'max_block'
+      ]]
+    })
+    if (result) {
+      const maxBlock = result.dataValues.max_block
+      this.setLatestBlock(maxBlock)
+      debug(`Cache is current up to block #${maxBlock}`)
+      return maxBlock
+    }
+    return 0
   }
 
   /**

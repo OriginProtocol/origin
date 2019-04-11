@@ -89,8 +89,25 @@ export default class IndexedDBBackend extends AbstractBackend {
     }
 
     const that = this
-    this.initDB().then(() => {
+    this.initDB().then((db) => {
       that.ready = true
+
+      /**
+       * Get the known block number from cache. Can be a little slow, but should
+       * be non-blocking(I think)
+       */
+      db.getAll(EVENT_STORE).then(res => {
+        if (res) {
+          const maxBlock = res.reduce((acc, cur, idx) => {
+            const thisNumber = res[idx].blockNumber
+            if (acc > thisNumber) {
+              acc = thisNumber
+            }
+          }, 0)
+          debug(`Cache is current up to block #${maxBlock}`)
+          that.setLatestBlock(maxBlock)
+        }
+      })
     })
   }
 
@@ -119,6 +136,7 @@ export default class IndexedDBBackend extends AbstractBackend {
         }
       }
     })
+    return this._db
   }
 
   /**
@@ -127,7 +145,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} of events
    */
   async serialize() {
-    return this._db.getAll()
+    return await this._db.getAll(EVENT_STORE)
   }
 
   /**
