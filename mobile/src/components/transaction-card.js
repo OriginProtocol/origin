@@ -1,19 +1,21 @@
+'use strict'
+
 import React, { Component, Fragment } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
+import GraphqlClient from '@origin/graphql'
+import balanceQuery from 'queries/Balance'
 
 import currencies from 'utils/currencies'
 
 class TransactionCard extends Component {
   constructor(props) {
     super(props)
-
     this.handleCancel = this.handleCancel.bind(this)
     this.handleConfirm = this.handleConfirm.bind(this)
-    this.state = {}
   }
 
   handleCancel() {
@@ -25,32 +27,19 @@ class TransactionCard extends Component {
   }
 
   render() {
-    const {
-      address = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
-    } = this.props
-    const paymentCurrencies = ['dai', 'eth']
-    const gas = ((Math.random() / 10000) * 160).toFixed(5)
-    let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
+    const { callParameters, wallet } = this.props
+    const { _commission, _currency, _ipfsHash, _value, listingID } = callParameters
 
+    const daiInvolved = true, ognInvolved = true
+    const gas = 10
+    const boost = 10
+
+    let heading
     switch (this.props.transactionType) {
       case 'createListing':
-        // To boost or not to boost, up to 100
-        boost =
-          0 && Math.floor(Math.random() * 2) * Math.ceil(Math.random() * 100)
-        // Boolean coercion
-        ognInvolved = !!boost
         heading = 'Create Listing'
         break
       case 'makeOffer':
-        paymentCurrency =
-          paymentCurrencies[
-            Math.floor(Math.random() * paymentCurrencies.length)
-          ]
-        payment =
-          paymentCurrency === 'eth'
-            ? ((Math.random() / 1000) * 160).toFixed(5)
-            : (Math.random() * 100).toFixed(2)
-        daiInvolved = paymentCurrency === 'dai'
         heading = 'Purchase'
         break
       case 'publishIdentity':
@@ -60,62 +49,10 @@ class TransactionCard extends Component {
         heading = 'Blockchain Transaction'
     }
 
-    // Can we convert all involved cryptocurrencies and derive a fiat-equivalent sum?
-    const calculableTotal = !ognInvolved
-    const gasInUSD = gas * currencies['eth'].priceToUSD
-    const paymentInUSD = paymentCurrency
-      ? payment * currencies[paymentCurrency].priceToUSD
-      : 0
-    const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
-
     return (
-      <View style={styles.card}>
-        <Text style={styles.heading}>{heading}</Text>
-        {calculableTotal ? (
-          <Fragment>
-            <View style={styles.primaryContainer}>
-              <Text style={[styles.amount, styles.primary]}>{total}</Text>
-            </View>
-            <View style={styles.lineItems}>
-              {!!paymentInUSD && (
-                <View style={styles.lineItem}>
-                  <View>
-                    <Text style={styles.label}>Payment</Text>
-                  </View>
-                  <View>
-                    <Text
-                      style={[styles.amount, styles.converted]}
-                    >{`$${paymentInUSD.toFixed(2)}`}</Text>
-                    <Text style={styles.amount}>
-                      <Image
-                        source={currencies[paymentCurrency].icon}
-                        style={styles.icon}
-                      />
-                      {` ${payment} ${paymentCurrency.toUpperCase()}`}
-                    </Text>
-                  </View>
-                </View>
-              )}
-              <View style={styles.lineItem}>
-                <View>
-                  <Text style={styles.label}>Gas Cost</Text>
-                </View>
-                <View>
-                  <Text
-                    style={[styles.amount, styles.converted]}
-                  >{`$${gasInUSD.toFixed(2)}`}</Text>
-                  <Text style={styles.amount}>
-                    <Image
-                      source={currencies['eth'].icon}
-                      style={styles.icon}
-                    />
-                    {` ${gas} ETH`}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </Fragment>
-        ) : (
+      <Query query={balanceQuery}>
+        <View style={styles.card}>
+          <Text style={styles.heading}>{heading}</Text>
           <Fragment>
             <View style={styles.primaryContainer}>
               <Text style={[styles.amount, styles.primary]}>{gas} ETH</Text>
@@ -126,42 +63,42 @@ class TransactionCard extends Component {
               <Text style={styles.label}>Boost</Text>
             </View>
           </Fragment>
-        )}
-        <View style={styles.accountSummary}>
-          <View style={styles.accountText}>
-            <Text style={styles.account}>Your Account: </Text>
-            <Address address={address} style={styles.account} />
+          <View style={styles.accountSummary}>
+            <View style={styles.accountText}>
+              <Text style={styles.account}>Your Account: </Text>
+              <Address address={wallet.accounts[0].address} style={styles.account} />
+            </View>
+            <View style={styles.accountText}>
+              <Text style={styles.account}>
+                {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
+              </Text>
+              <Text style={styles.account}>
+                {`${(Math.random() * 160).toFixed(5)} ETH`}
+                {daiInvolved && ` ~ ${(Math.random() * 100).toFixed(2)} DAI`}
+                {ognInvolved && ` ~ ${Math.ceil(Math.random() * 1000)} OGN`}
+              </Text>
+            </View>
           </View>
-          <View style={styles.accountText}>
-            <Text style={styles.account}>
-              {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
-            </Text>
-            <Text style={styles.account}>
-              {`${(Math.random() * 160).toFixed(5)} ETH`}
-              {daiInvolved && ` ~ ${(Math.random() * 100).toFixed(2)} DAI`}
-              {ognInvolved && ` ~ ${Math.ceil(Math.random() * 1000)} OGN`}
-            </Text>
+          <View style={styles.buttonContainer}>
+            <OriginButton
+              size="large"
+              type="primary"
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Confirm'}
+              onPress={this.handleConfirm}
+            />
           </View>
+          <TouchableOpacity onPress={this.handleCancel}>
+            <Text style={styles.cancel}>Cancel</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.buttonContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Confirm'}
-            onPress={this.handleConfirm}
-          />
-        </View>
-        <TouchableOpacity onPress={this.handleCancel}>
-          <Text style={styles.cancel}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
+      </Query>
     )
   }
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
 }
 
 export default connect(mapStateToProps)(TransactionCard)

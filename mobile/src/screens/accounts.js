@@ -59,20 +59,19 @@ class AccountsScreen extends Component {
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, wallet } = this.props
 
     return (
       <>
         <FlatList
-          data={this.props.wallet.accounts}
+          data={wallet.accounts.sort((a, b) => a.address > b.address)}
           renderItem={({ item }) => (
             <AccountItem
               item={item}
-              wallet={this.props.wallet}
+              wallet={wallet}
               navigation={navigation}
             />
           )}
-          keyExtractor={({ address }) => address}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}
         />

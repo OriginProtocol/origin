@@ -1,6 +1,6 @@
 'use strict'
 
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
 import activation from 'reducers/Activation'
@@ -16,7 +16,7 @@ const encryptor = createEncryptor({
 })
 
 const persistConfig = {
-  key: 'OriginWallet-enc',
+  key: 'OriginWallet.encrypted!',
   storage: storage,
   whitelist: ['activation', 'notifications', 'wallet'],
   transforms: [encryptor]

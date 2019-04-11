@@ -6,6 +6,7 @@ export const WalletConstants = keyMirror(
   {
     ADD_ACCOUNT: null,
     REMOVE_ACCOUNT: null,
+    SET_ACCOUNT_ACTIVE: null,
     SET_ACCOUNT_NAME: null,
     UPDATE_ACCOUNTS: null
   },
@@ -19,17 +20,24 @@ export function addAccount(account) {
   }
 }
 
-export function nameAccount(payload) {
+export function removeAccount(account) {
+  return {
+    type: WalletConstants.REMOVE_ACCOUNT,
+    account
+  }
+}
+
+export function setAccountName(payload) {
   return {
     type: WalletConstants.SET_ACCOUNT_NAME,
     payload
   }
 }
 
-export function removeAccount(address) {
+export function setAccountActive(account) {
   return {
-    type: WalletConstants.REMOVE_ACCOUNT,
-    address
+    type: WalletConstants.SET_ACCOUNT_ACTIVE,
+    account
   }
 }
 

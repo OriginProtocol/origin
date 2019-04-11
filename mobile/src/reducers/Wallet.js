@@ -13,20 +13,34 @@ export default function Wallet(state = initialState, action = {}) {
       return { ...state, address: action.address }
 
     case WalletConstants.ADD_ACCOUNT:
-      return {
-        ...state,
-        accounts: [action.account, ...state.accounts]
+      const exists = state.accounts.find(a => a.address === action.account.address)
+      if (!exists) {
+        return {
+          ...state,
+          accounts: [action.account, ...state.accounts]
+        }
+      } else {
+        return state
       }
 
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
-        accounts: accounts.filter(a => a.address == actions.address)
+        accounts: state.accounts.filter(a => a.address !== action.account.address)
       }
 
-    case WalletConstants.SET_DEFAULT_ACCOUNT:
+    case WalletConstants.SET_ACCOUNT_ACTIVE:
+      // Remove the account from the accounts array
+      const accounts = [
+        action.account,
+        ...state.accounts.filter(a => a.address !== action.account.address)
+      ].map((account, index) => {
+        // Rebuild the index attribute
+        return { ...account, index: index }
+      })
       return {
-        ...state
+        ...state,
+        accounts: accounts
       }
 
     case WalletConstants.SET_ACCOUNT_NAME:

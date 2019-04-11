@@ -68,12 +68,7 @@ class Onboarding extends Component {
   }
 
   render() {
-    const {
-      controlStatusBar,
-      pages,
-      onCompletion,
-      onEnable
-    } = this.props
+    const { controlStatusBar, pages, onCompletion, onEnable } = this.props
     const { width } = Dimensions.get('window')
 
     return (

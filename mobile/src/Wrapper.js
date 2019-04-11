@@ -1,11 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  Image,
-  StyleSheet,
-  YellowBox
-} from 'react-native'
+import { Image, StyleSheet, YellowBox } from 'react-native'
 import { connect } from 'react-redux'
 
 import NavigationService from './NavigationService'

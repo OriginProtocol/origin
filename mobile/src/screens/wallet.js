@@ -3,6 +3,11 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
+import { Query } from 'react-apollo'
+
+import ProfileQuery from 'queries/Profile'
+import TokenBalance from 'components/token-balance'
+import Loading from 'components/loading'
 
 class WalletScreen extends Component {
   static navigationOptions = {
@@ -18,13 +23,33 @@ class WalletScreen extends Component {
 
   render() {
     return (
-      <View style={styles.wrapper}>
-        <View contentContainerStyle={styles.content} style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.heading}>NAME</Text>
-          </View>
-        </View>
-      </View>
+      <Query query={ProfileQuery} pollInterval={1000}>
+        {({ data, loading, error }) => {
+          if (loading) {
+            return <Loading />
+          }
+
+          if (error) {
+            console.log(error)
+            return <Text>An error occurred.</Text>
+          }
+
+          console.log(data)
+
+          const primaryAccount = data.web3.primaryAccount
+          const { id, checksumAddress } = primaryAccount
+          const ethBalance = primaryAccount.balance.eth
+
+          return (
+            <>
+              <Text>Address: {id}</Text>
+              <Text>ETH: {ethBalance}</Text>
+              <Text>DAI: <TokenBalance account={checksumAddress} token="DAI" /></Text>
+              <Text>OGN: <TokenBalance account={checksumAddress} token="OGN" /></Text>
+            </>
+          )
+        }}
+      </Query>
     )
   }
 }
@@ -36,15 +61,15 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
+  header: {
+  },
+  heading: {
+  },
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,
     justifyContent: 'center',
     padding: 20
-  },
-  list: {
-    backgroundColor: '#f7f8f8',
-    height: '100%'
   },
   placeholder: {
     fontFamily: 'Lato',

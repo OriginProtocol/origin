@@ -1,14 +1,26 @@
 'use strict'
 
 import React, { Component, Fragment } from 'react'
-import { Modal, StyleSheet, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Modal,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
-import { MARKETPLACE_DAPP_URL } from 'react-native-dotenv'
+import { MARKETPLACE_DAPP_URL, NETWORK } from 'react-native-dotenv'
 
 import CardsModal from 'components/cards-modal'
 import { decodeTransaction } from '../utils/contractDecoder'
 import TransactionCard from 'components/transaction-card'
+
+let marketplaceDappUrl = MARKETPLACE_DAPP_URL
+if (NETWORK !== 'localhost') {
+  marketplaceDappUrl = `${marketplaceDappUrl}${NETWORK}`
+}
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -49,15 +61,14 @@ class MarketplaceScreen extends Component {
     if (this[msgData.targetFunc]) {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
-      msgData.isSuccessful = true
-      msgData.args = [response]
-      this.dappWebView.postMessage(JSON.stringify(msgData))
+      this.handleBridgeResponse(msgData, response)
     } else {
-      // Attempt to decode web3 transaction and call the appropriate handler
+      // Attempt to decode the Ethereum transaction and add the appropriate
+      // modal to the stack
       const functionInterface = decodeTransaction(msgData.data.data)
       if (functionInterface) {
         // Got an interface from the contract
-        this.handleWeb3Request(msgData, functionInterface)
+        this.handleBridgeRequest(msgData, functionInterface)
       }
     }
   }
@@ -66,7 +77,9 @@ class MarketplaceScreen extends Component {
     return this.props.wallet.accounts.map(account => account.address)
   }
 
-  handleWeb3Request(msgData, { name, parameters }) {
+  /* Add a modal to the stack passing the message data from the webview bridge.
+   */
+  handleBridgeRequest(msgData, { name, parameters }) {
     if (name === 'makeOffer') {
       this.setState(prevState => ({
         modals: [
@@ -74,7 +87,7 @@ class MarketplaceScreen extends Component {
           {
             type: 'transaction',
             method: name,
-            props: parameters,
+            callParameters: parameters,
             msgData: msgData
           }
         ]
@@ -82,11 +95,21 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  toggleModal(modal) {
+  handleBridgeResponse(msgData, result) {
+    msgData.isSuccessful = Boolean(result)
+    msgData.args = [result]
+    this.dappWebView.postMessage(JSON.stringify(msgData))
+  }
+
+  toggleModal(modal, result) {
     this.setState(prevState => {
-      modals: prevState.modals.filter(x => x === modal)
+      return {
+        ...prevState,
+        modals: [...prevState.modals.filter(m => m.msgData.msgId !== modal.msgData.msgId)]
+      }
     })
-    // Call the appropriate callback
+    // Send the response to the webview
+    this.handleBridgeResponse(modal.msgData, result)
   }
 
   render() {
@@ -105,26 +128,28 @@ class MarketplaceScreen extends Component {
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: MARKETPLACE_DAPP_URL }}
+          source={{ uri: marketplaceDappUrl }}
           onMessage={this.onWebViewMessage}
           onLoadProgress={() => {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />
         {modals.map((modal, index) => {
-
           let card
           if (modal.type === 'transaction') {
             card = (
               <TransactionCard
                 transactionType={modal.method}
+                callParameters={modal.callParameters}
                 onPress={() => this.toggleModal(modal)}
+                onRequestClose={() => this.toggleModal(modal, { data: 'denied transaction signature'})}
               />
             )
           }
 
           return (
             <Modal
+              key={modal.msgData.msgId}
               animationType="fade"
               transparent={true}
               visible={true}
@@ -133,7 +158,12 @@ class MarketplaceScreen extends Component {
               }}
             >
               <SafeAreaView style={styles.container}>
-                <View style={styles.transparent} onPress={() => {this.toggleModal(modal) }}>
+                <View
+                  style={styles.transparent}
+                  onPress={() => {
+                    this.toggleModal(modal)
+                  }}
+                >
                   {card}
                 </View>
               </SafeAreaView>

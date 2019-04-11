@@ -21,11 +21,10 @@ class AccountScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.handleActivate = this.handleActivate.bind(this)
+    this.handleSetAccountActive = this.handleSetAccountActive.bind(this)
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
-    this.handleNameChange = this.handleNameChange.bind(this)
-    console.log(this.props.navigation.getParam('account'))
+    this.handleSetAccountName = this.handleSetAccountName.bind(this)
   }
 
   static navigationOptions = {
@@ -35,10 +34,6 @@ class AccountScreen extends Component {
       fontSize: 17,
       fontWeight: 'normal'
     }
-  }
-
-  async handleActivate() {
-    const { navigation } = this.props
   }
 
   async handleDangerousCopy(privateKey) {
@@ -81,6 +76,7 @@ class AccountScreen extends Component {
           text: 'Delete',
           onPress: () => {
             try {
+              DeviceEventEmitter.emit('removeAccount', navigation.getParam('account'))
               navigation.goBack()
             } catch (e) {
               console.error(e)
@@ -91,10 +87,15 @@ class AccountScreen extends Component {
     )
   }
 
-  handleNameChange(event) {
+  handleSetAccountActive() {
+    const { navigation } = this.props
+    DeviceEventEmitter.emit('setAccountActive', navigation.getParam('account'))
+  }
+
+  handleSetAccountName(event) {
     const { address } = this.props.navigation.getParam('account')
     const nameValue = event.nativeEvent.text.trim()
-    DeviceEventEmitter.emit('nameAccount', { address, name: nameValue })
+    DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
   }
 
   showPrivateKey(address) {
@@ -120,7 +121,7 @@ class AccountScreen extends Component {
             placeholder={'Unnamed Account'}
             value={name}
             style={styles.input}
-            onChange={this.handleNameChange}
+            onChange={this.handleSetAccountName}
             onSubmitEditing={this.handleNameUpdate}
           />
           <View style={styles.header}>
@@ -141,7 +142,7 @@ class AccountScreen extends Component {
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={'Make Active Account'}
-              onPress={this.handleActivate}
+              onPress={this.handleSetAccountActive}
             />
           )}
           <OriginButton

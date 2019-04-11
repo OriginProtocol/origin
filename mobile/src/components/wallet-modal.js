@@ -147,13 +147,7 @@ class WalletModal extends Component {
   }
 
   render() {
-    const {
-      address,
-      onPress,
-      visible,
-      wallet,
-      onRequestClose
-    } = this.props
+    const { address, onPress, visible, wallet, onRequestClose } = this.props
     const { dai, eth, ogn } = wallet.balances
 
     const ethBalance = web3.utils.fromWei(eth, 'ether')

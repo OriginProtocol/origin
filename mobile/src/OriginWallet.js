@@ -1,17 +1,24 @@
-'use strict'
+'cuse strict'
 
 import React, { Component } from 'react'
 import { DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
+import CryptoJS from 'crypto-js'
 
-import { DEFAULT_NOTIFICATION_PERMISSIONS, ETH_NOTIFICATION_TYPES } from './constants'
-import { addAccount, nameAccount, updateAccounts } from 'actions/Wallet'
+import graphqlContext from '@origin/graphql/src/contracts'
+
+import {
+  DEFAULT_NOTIFICATION_PERMISSIONS,
+  ETH_NOTIFICATION_TYPES
+} from './constants'
+import { addAccount, removeAccount, setAccountActive, setAccountName } from 'actions/Wallet'
 import { updateNotificationsPermissions } from 'actions/Activation'
+import { loadData, deleteData } from './tools'
 
 // Environment variables
-import { GCM_SENDER_ID, PROVIDER_URL } from 'react-native-dotenv'
+import { GCM_SENDER_ID } from 'react-native-dotenv'
 
 const web3 = new Web3()
 
@@ -23,7 +30,8 @@ class OriginWallet extends Component {
       'createAccount',
       this.createAccount.bind(this)
     )
-    DeviceEventEmitter.addListener('nameAccount', this.nameAccount.bind(this))
+    DeviceEventEmitter.addListener('setAccountName', this.setAccountName.bind(this))
+    DeviceEventEmitter.addListener('setAccountActive', this.setAccountActive.bind(this))
     DeviceEventEmitter.addListener(
       'removeAccount',
       this.removeAccount.bind(this)
@@ -31,7 +39,30 @@ class OriginWallet extends Component {
   }
 
   componentDidMount() {
+    this._migrateLegacyAccounts()
     this.initAccounts()
+  }
+
+  /* Move accounts from the old data store into the new redux store
+   */
+  async _migrateLegacyAccounts() {
+    loadData('WALLET_STORE').then(async walletData => {
+      if (walletData) {
+        for (let i = 0; i < walletData.length; i++) {
+          const data = walletData[i]
+          if (data.crypt == 'aes' && data.enc) {
+            const privateKey = CryptoJS.AES.decrypt(
+              data.enc,
+              'WALLET_PASSWORD'
+            ).toString(CryptoJS.enc.Utf8)
+            if (privateKey) {
+              this.addAccount(privateKey)
+            }
+          }
+        }
+        await deleteData('WALLET_STORE')
+      }
+    })
   }
 
   /* Configure web3 using the accounts persisted in redux
@@ -48,14 +79,13 @@ class OriginWallet extends Component {
     const { length } = this.props.wallet.accounts
     console.debug(`Loaded Origin Wallet with ${length} accounts`)
 
-    if (this.props.wallet.accounts.length) {
-      // Set the active address to either the one that is flagged as
-      // active or as the first address
+    if (length) {
       web3.eth.defaultAccount = this.props.wallet.accounts[0].address
     }
 
-    console.debug(`Setting provider to ${PROVIDER_URL}`)
-    web3.setProvider(new Web3.providers.HttpProvider(PROVIDER_URL, 20000))
+    const provider = graphqlContext.config.provider
+    console.debug(`Setting provider to ${provider}`)
+    web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
   }
 
   /* Create new account
@@ -84,16 +114,20 @@ class OriginWallet extends Component {
    */
   async removeAccount(account) {
     const result = web3.eth.accounts.wallet.remove(account)
-    if (result) {
-      this.props.removeAccount(account)
-    }
+    this.props.removeAccount(account)
     return result
   }
 
   /* Record a name for an address in the account mapping
    */
-  async nameAccount(name, address) {
-    this.props.nameAccount(name, address)
+  async setAccountName(name, address) {
+    this.props.setAccountName(name, address)
+  }
+
+  /*
+   */
+  async setAccountActive(account) {
+    this.props.setAccountActive(account)
   }
 
   /* Configure push notifications
@@ -167,8 +201,9 @@ const mapStateToProps = ({ activation, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   addAccount: account => dispatch(addAccount(account)),
-  nameAccount: payload => dispatch(nameAccount(payload)),
   removeAccount: account => dispatch(removeAccount(account)),
+  setAccountName: payload => dispatch(setAccountName(payload)),
+  setAccountActive: payload => dispatch(setAccountActive(payload)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>
     dispatch(updateNotificationsPermissions(permissions))

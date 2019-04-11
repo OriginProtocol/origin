@@ -43,7 +43,13 @@ class AccountModal extends Component {
   }
 
   async handleSubmit() {
-    DeviceEventEmitter.emit('addAccount', this.state.keyValue)
+    try {
+      DeviceEventEmitter.emit('addAccount', this.state.keyValue)
+      this.setState({ keyValue: '' })
+      this.props.onRequestClose()
+    } catch (error) {
+      this.setState({ keyError: error.message })
+    }
   }
 
   render() {
