@@ -46,7 +46,6 @@ async function handleEvent(event, context) {
   await withRetrys(async () => {
     block = await context.web3.eth.getBlock(event.blockNumber)
   })
-  const blockDate = new Date(block.timestamp * 1000)
 
   const eventDetails = `blockNumber=${event.blockNumber} \
     transactionIndex=${event.transactionIndex} \

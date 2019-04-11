@@ -40,6 +40,15 @@ matrix:
     - name: "@origin/event-cache unit tests"
       language: node_js
       node_js: 10
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope @origin/event-cache
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/contracts --scope @origin/services --scope @origin/ipfs --scope @origin/event-cache

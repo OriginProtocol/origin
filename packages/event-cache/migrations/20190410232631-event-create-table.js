@@ -3,12 +3,7 @@
 const TABLE_NAME = 'event'
 
 module.exports = {
-  up: queryInterface => {
-    return queryInterface.dropTable(TABLE_NAME)
-  },
-
-  down: (queryInterface, Sequelize) => {
-    // The above is kind of irreversible, but...
+  up: (queryInterface, Sequelize) => {
     return queryInterface
       .createTable(TABLE_NAME, {
         block_number: {
@@ -19,8 +14,12 @@ module.exports = {
           type: Sequelize.INTEGER,
           primaryKey: true
         },
-        contract_address: {
-          type: Sequelize.CHAR(42),
+        transaction_index: {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        },
+        block_hash: {
+          type: Sequelize.CHAR(66),
           allowNull: false
         },
         transaction_hash: {
@@ -28,8 +27,7 @@ module.exports = {
           allowNull: false
         },
         topic0: {
-          type: Sequelize.CHAR(66),
-          allowNull: false
+          type: Sequelize.CHAR(66)
         },
         topic1: {
           type: Sequelize.CHAR(66),
@@ -43,20 +41,43 @@ module.exports = {
           type: Sequelize.CHAR(66),
           allowNull: true
         },
+        address: {
+          type: Sequelize.CHAR(42),
+          allowNull: false
+        },
+        event: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
+        signature: {
+          type: Sequelize.STRING,
+          allowNull: false
+        },
         data: {
           type: Sequelize.JSONB,
-          allowNull: false
+          allowNull: true
+        },
+        return_values: {
+          type: Sequelize.JSONB,
+          allowNull: true
         },
         created_at: {
           type: Sequelize.DATE,
           allowNull: true
         }
       })
+      .then(() => queryInterface.addIndex(TABLE_NAME, ['event']))
+      .then(() => queryInterface.addIndex(TABLE_NAME, ['address']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['contract_address']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['transaction_hash']))
+      .then(() => queryInterface.addIndex(TABLE_NAME, ['block_number']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['topic0']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['topic1']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['topic2']))
       .then(() => queryInterface.addIndex(TABLE_NAME, ['topic3']))
+  },
+
+  down: queryInterface => {
+    return queryInterface.dropTable(TABLE_NAME)
   }
 }

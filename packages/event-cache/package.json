@@ -9,7 +9,8 @@
     "test": "NODE_ENV=test $(pwd)/node_modules/.bin/mocha -r @babel/register --file test/setup test",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
-    "prettier:check": "prettier -c *.js \"src/**/*.js\""
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "migrate": "sequelize db:migrate"
   },
   "dependencies": {
     "@origin/ipfs": "^0.1.0",
@@ -17,9 +18,11 @@
     "idb": "^4.0.3",
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
+    "sequelize": "^5.3.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.4",
@@ -28,20 +31,19 @@
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.3.4",
-    "@babel/core": "^7.3.4",
     "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.3.4",
     "@origin/contracts": "^0.8.6",
     "@origin/services": "^0.1.0",
     "eslint": "^5.15.1",
     "fake-indexeddb": "^2.1.0",
     "lodash-es": "^4.17.11",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "sequelize-cli": "^5.4.0"
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
+      "@babel/preset-env"
     ],
     "plugins": [
       "@babel/plugin-proposal-export-default-from",
