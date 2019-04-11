@@ -162,12 +162,12 @@ class UserProfile extends Component {
               </div>
             </div>
             <h3>
-              <fbt desc="Profile.verifyYourselfHeading">
-                Verify yourself on Origin
+              <fbt desc="Profile.originVerifications">
+                Origin Verifications
               </fbt>
             </h3>
-            <div className="gray-box">
-              <label className="mb-3">
+            <div className="attestation-container">
+              <label className="mb-4">
                 <fbt desc="_Services.pleaseConnectAccounts">
                   Please connect your accounts below to strengthen your identity
                   on Origin.
@@ -240,7 +240,7 @@ class UserProfile extends Component {
             )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
-                <b>Verifying your profile</b> allows other users to know that
+                <b>Verifying your profile</b> allows oher users to know that
                 you are a real person and increases the chances of successful
                 transactions on Origin.
               </fbt>
@@ -271,10 +271,12 @@ class UserProfile extends Component {
   renderAtt(type, text, soon) {
     const { wallet } = this.props
     const profile = get(this.props, 'identity') || {}
+    let attestationPublished = false
 
     let status = ''
     if (profile[`${type}Verified`]) {
       status = ' published'
+      attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
     }
@@ -299,7 +301,7 @@ class UserProfile extends Component {
         />
       )
     }
-
+    
     return (
       <>
         <div
@@ -309,6 +311,10 @@ class UserProfile extends Component {
         >
           <i />
           {text}
+          {attestationPublished && <img
+            className="ml-auto"
+            src="images/identity/completed-tick.svg"
+          />}
         </div>
         {AttestationComponent}
       </>
@@ -342,11 +348,22 @@ export default withWallet(withIdentity(UserProfile))
 require('react-styl')(`
   .profile-edit
     margin-top: 3rem
+    h3
+      font-size: 24px
+      font-weight: 300
+      color: var(--dark)
+    .attestation-container
+      padding-bottom: 1rem
+      margin-bottom: 2rem
+      label
+        font-family: Lato
+        font-size: 16px
+        font-weight: 300
+        color: var(--dark-blue-grey)
     .gray-box
       border: 1px solid var(--light)
       border-radius: var(--default-radius)
       padding: 1rem
-      margin-bottom: 2rem
     .avatar-wrap
       margin-right: 2rem
       width: 7.5rem
@@ -370,10 +387,10 @@ require('react-styl')(`
         display: block
         margin: 0.75rem 0 0 0.5rem
     .profile-help
-      font-size: 14px;
-      background: url(images/identity/identity.svg) no-repeat center 1.5rem;
-      background-size: 5rem;
-      padding-top: 8rem;
+      font-size: 14px
+      background: url(images/identity/identity.svg) no-repeat center 1.5rem
+      background-size: 5rem
+      padding-top: 8rem
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem

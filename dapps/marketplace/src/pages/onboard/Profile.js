@@ -338,7 +338,7 @@ require('react-styl')(`
     grid-row-gap: 0.5rem
     grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
     .profile-attestation
-      padding: 0.75rem 1rem
+      padding: 0.65rem 1rem
       border: 1px dashed var(--light)
       border-radius: var(--default-radius)
       display: flex
@@ -347,7 +347,7 @@ require('react-styl')(`
       font-weight: normal
       color: var(--bluey-grey)
       background-color: var(--pale-grey-eight)
-      align-items: center;
+      align-items: center
       overflow: hidden
       &.interactive
         cursor: pointer
@@ -357,10 +357,10 @@ require('react-styl')(`
       > i
         display: block
         position: relative
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center;
-        width: 2.5rem;
-        height: 2.5rem;
-        background-size: 95%;
+        background: url(images/identity/verification-shape-grey.svg) no-repeat center
+        width: 2rem
+        height: 2rem
+        background-size: 95%
         display: flex
         margin-right: 1rem
         &::before
@@ -368,25 +368,24 @@ require('react-styl')(`
           flex: 1
           background-repeat: no-repeat
           background-position: center
-
       &.phone > i::before
         background-image: url(images/identity/phone-icon-light.svg)
-        background-size: 0.9rem
+        background-size: 0.67rem
       &.email > i::before
         background-image: url(images/identity/email-icon-light.svg)
-        background-size: 1.4rem
+        background-size: 1.05rem
       &.airbnb > i::before
         background-image: url(images/identity/airbnb-icon-light.svg)
-        background-size: 1.6rem
+        background-size: 1.2rem
       &.facebook > i::before
         background-image: url(images/identity/facebook-icon-light.svg)
-        background-size: 0.8rem
+        background-size: 0.6rem
       &.twitter > i::before
         background-image: url(images/identity/twitter-icon-light.svg)
-        background-size: 1.3rem
+        background-size: 0.975rem
       &.google > i::before
         background-image: url(images/identity/google-icon.svg)
-        background-size: 1.3rem
+        background-size: 0.975rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)
@@ -399,14 +398,14 @@ require('react-styl')(`
         &::after
           content: "Coming Soon"
           background: var(--light)
-          position: absolute;
-          color: var(--pale-grey-five);
-          font-size: 8px;
-          font-weight: 900;
-          right: -2.2rem;
+          position: absolute
+          color: var(--pale-grey-five)
+          font-size: 8px
+          font-weight: 900
+          right: -2.2rem
           top: -1rem
-          text-transform: uppercase;
-          transform: rotate(45deg);
+          text-transform: uppercase
+          transform: rotate(45deg)
           padding: 2rem 2rem 0.5rem 2rem
           width: 6rem
           text-align: center
@@ -420,13 +419,13 @@ require('react-styl')(`
   .profile-attestations.with-checkmarks
     .profile-attestation
       &.published::after,&.provisional::after
-        content: "";
-        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 2rem;
-        margin-left: auto;
-        background-size: 59%;
+        content: ""
+        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
+        width: 2rem
+        height: 2rem
+        border-radius: 2rem
+        margin-left: auto
+        background-size: 59%
 
   @media (max-width: 767.98px)
     .onboard .onboard-box.profile
