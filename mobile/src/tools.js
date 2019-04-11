@@ -16,4 +16,8 @@ function loadData(key) {
     })
 }
 
-export { storeData, loadData }
+function deleteData(key) {
+  return AsyncStorage.removeItem(key)
+}
+
+export { storeData, loadData, deleteData }
