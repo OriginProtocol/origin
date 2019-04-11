@@ -47,6 +47,10 @@ class OriginWallet extends Component {
       'removeAccount',
       this.removeAccount.bind(this)
     )
+    DeviceEventEmitter.addListener(
+      'signTransaction',
+      this.signTransaction.bind(this)
+    )
   }
 
   componentDidMount() {
@@ -139,6 +143,22 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     this.props.setAccountActive(account)
+  }
+
+  /*
+   */
+  async signTransaction(transaction) {
+    const account = this.props.wallet.accounts[0]
+    if (transaction.from !== account.address.toLowerCase()) {
+      console.error('Account mismatch')
+      return null
+    }
+    const signedTransaction = await web3.eth.accounts.signTransaction(
+      transaction,
+      account.privateKey
+    )
+    DeviceEventEmitter.emit('transactionSigned', { transaction, signedTransaction })
+    return signedTransaction
   }
 
   /* Configure push notifications

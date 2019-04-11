@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react'
 import {
+  DeviceEventEmitter,
   Modal,
   StyleSheet,
   SafeAreaView,
@@ -29,6 +30,11 @@ class MarketplaceScreen extends Component {
     this.state = {
       modals: []
     }
+
+    this.listener = DeviceEventEmitter.addListener(
+      'transactionSigned',
+      this.handleTransactionSigned.bind(this)
+    )
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
@@ -119,6 +125,15 @@ class MarketplaceScreen extends Component {
     this.handleBridgeResponse(modal.msgData, result)
   }
 
+  signTransaction(transaction) {
+    DeviceEventEmitter.emit('signTransaction', transaction)
+  }
+
+  handleTransactionSigned({ transaction, signedTransaction }) {
+    const modal = this.state.modals.find(m => m.msgData.data === transaction)
+    this.toggleModal(modal, signedTransaction)
+  }
+
   render() {
     const injectedJavaScript = `
       if (!window.__mobileBridge) {
@@ -149,7 +164,9 @@ class MarketplaceScreen extends Component {
                 transactionMethod={modal.method}
                 transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
-                onConfirm={() => this.toggleModal(modal)}
+                onConfirm={() =>
+                  this.signTransaction(modal.msgData.data)
+                }
                 onRequestClose={() =>
                   this.toggleModal(modal, {
                     message: 'User denied transaction signature'
