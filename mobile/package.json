@@ -37,6 +37,7 @@
     "node-libs-react-native": "^1.0.3",
     "prop-types": "^15.6.2",
     "react": "^16.8.4",
+    "react-apollo": "^2.5.4",
     "react-hot-loader": "^4.8.0",
     "react-moment": "^0.7.5",
     "react-native": "^0.59.1",
