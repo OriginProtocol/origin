@@ -402,11 +402,11 @@ require('react-styl')(`
           color: var(--pale-grey-five)
           font-size: 8px
           font-weight: 900
-          right: -2.2rem
-          top: -1rem
+          right: -2.4rem
+          top: -1.1rem
           text-transform: uppercase
           transform: rotate(45deg)
-          padding: 2rem 2rem 0.5rem 2rem
+          padding: 2rem 2rem 0.2rem 2rem
           width: 6rem
           text-align: center
           line-height: 8px
