@@ -1,7 +1,7 @@
 const Identity = require('./models').Identity
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
-const _ = require('lodash') // TODO: (Stan) Cherry pick??
+const _ = require('lodash')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
@@ -28,10 +28,10 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
 
   const emailBegin = fs.readFileSync(`${templateDir}/emailBegin.html`).toString()
   const emailEnd = fs.readFileSync(`${templateDir}/emailEnd.html`).toString()
-  const emailTemplate = _.template(
-    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString(),
-    {imports: {'emailBegin': emailBegin ,'emailEnd' : emailEnd}}
-  )
+  // const emailTemplate = _.template(
+  //   fs.readFileSync(`${templateDir}/emailTemplate.html`).toString(),
+  //   {imports: {'emailBegin': emailBegin ,'emailEnd' : emailEnd}}
+  // )
 
   console.log('buyerAddress:')
   console.log(buyerAddress)
@@ -64,7 +64,8 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
           eventName,
           party,
           recipient,
-          recipientRole
+          recipientRole,
+          'email'
         )
 
         if (!message) {
@@ -75,9 +76,9 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
           const email = {
             to: config.overrideEmail || s.email,
             from: process.env.SENDGRID_FROM_EMAIL,
-            subject: message.title,
-            text: message.body,
-            html: emailTemplate({ message: message.body, listing:listing }),
+            subject: message.subject,
+            text: message.text({ listing:listing }),
+            html: emailBegin + message.html({ listing:listing }) + emailEnd,
             asm: {
               groupId: 9092
             }

@@ -175,7 +175,10 @@ app.post('/events', async (req, res) => {
 
 console.log('──────────────────────────────')
 
-  if (!processableEvent(eventName)) {
+  // TODO: Temp hack for now that we only test for mobile messages.
+  // Thats how the old listener decided if there was a message. Will do
+  // now until we get real pipeline built.
+  if (!processableEvent(eventName, 'mobile')) {
     console.info(
       `Info: Not a processable event. Skipping ${eventDetailsSummary}`
     )
