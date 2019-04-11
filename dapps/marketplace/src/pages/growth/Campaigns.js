@@ -7,11 +7,11 @@ import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
-import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import AccountTokenBalance from 'queries/TokenBalance'
 import ActionList from 'pages/growth/ActionList'
 import GrowthInvite from 'pages/growth/Invite'
 import ProgressBar from 'components/ProgressBar'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -289,6 +289,13 @@ class GrowthCampaigns extends Component {
     this.setState({ navigation })
   }
 
+  componentDidUpdate(){
+    if (this.props.growthEnrollmentStatus === 'NotEnrolled' || 
+      this.props.growthEnrollmentStatus === 'Banned') {
+      this.props.history.push('/welcome')
+    }
+  }
+
   render() {
     const { navigation } = this.state
 
@@ -307,128 +314,75 @@ class GrowthCampaigns extends Component {
             }
 
             const accountId = data.web3.primaryAccount.id
+
+            if (!this.props.growthCampaigns) {
+              return (
+                <h5 className="p-2">
+                  <fbt desc="Loading...">Loading...</fbt>
+                </h5>
+              )
+            }
+
+            const campaigns = this.props.growthCampaigns
+            if (campaigns.length == 0) {
+              return (
+                <h5 className="p-2">
+                  <fbt desc="growth.campaigns.noCampaignsDetected">
+                    No campaigns detected
+                  </fbt>
+                </h5>
+              )
+            }
+
+            const activeCampaign = campaigns.find(
+              campaign => campaign.status === 'Active'
+            )
+
             return (
               <Query
-                query={enrollmentStatusQuery}
-                variables={{ walletAddress: accountId }}
-                notifyOnNetworkStatusChange={true}
-                // enrollment info can change, do not cache it
-                fetchPolicy="network-only"
-                onCompleted={({ enrollmentStatus }) => {
-                  // if user is not enrolled redirect him to welcome page
-                  if (enrollmentStatus !== 'Enrolled') {
-                    this.props.history.push('/welcome')
-                  }
-                }}
+                query={AccountTokenBalance}
+                variables={{ account: accountId, token: 'OGN' }}
               >
-                {({ error, networkStatus, loading }) => {
-                  if (networkStatus === 1 || loading) {
-                    return (
-                      <h5 className="p-2">
-                        <fbt desc="Loading...">Loading...</fbt>
-                      </h5>
-                    )
-                  } else if (error) {
-                    return (
-                      <QueryError error={error} query={enrollmentStatusQuery} />
-                    )
-                  }
+                {({ loading, error, data }) => {
+                  let decimalDivision = web3.utils
+                    .toBN(10)
+                    .pow(web3.utils.toBN(18))
 
-                  const vars = pick(this.state, 'first')
+                  if (!loading && !error) {
+                    const tokenHolder = data.web3.account.token
+                    if (tokenHolder && tokenHolder.token) {
+                      decimalDivision = web3.utils
+                        .toBN(10)
+                        .pow(
+                          web3.utils.toBN(
+                            tokenHolder.token.decimals
+                          )
+                        )
+                    }
+                  }
 
                   return (
-                    <Query
-                      query={allCampaignsQuery}
-                      variables={vars}
-                      notifyOnNetworkStatusChange={true}
-                      // do not cache, so user does not need to refresh page when an
-                      // action is completed
-                      fetchPolicy="network-only"
-                    >
-                      {({ error, data, networkStatus, loading }) => {
-                        if (networkStatus === 1 || loading) {
-                          return (
-                            <h5 className="p-2">
-                              <fbt desc="Loading...">Loading...</fbt>
-                            </h5>
-                          )
-                        } else if (error) {
-                          return (
-                            <QueryError
-                              error={error}
-                              query={allCampaignsQuery}
-                              vars={vars}
-                            />
-                          )
-                        }
-
-                        const campaigns = data.campaigns.nodes
-
-                        if (campaigns.length == 0) {
-                          return (
-                            <h5 className="p-2">
-                              <fbt desc="growth.campaigns.noCampaignsDetected">
-                                No campaigns detected
-                              </fbt>
-                            </h5>
-                          )
-                        }
-
-                        const activeCampaign = campaigns.find(
-                          campaign => campaign.status === 'Active'
-                        )
-
-                        return (
-                          <Query
-                            query={AccountTokenBalance}
-                            variables={{ account: accountId, token: 'OGN' }}
-                          >
-                            {({ loading, error, data }) => {
-                              let decimalDivision = web3.utils
-                                .toBN(10)
-                                .pow(web3.utils.toBN(18))
-
-                              if (!loading && !error) {
-                                const tokenHolder = data.web3.account.token
-                                if (tokenHolder && tokenHolder.token) {
-                                  decimalDivision = web3.utils
-                                    .toBN(10)
-                                    .pow(
-                                      web3.utils.toBN(
-                                        tokenHolder.token.decimals
-                                      )
-                                    )
-                                }
-                              }
-
-                              return (
-                                <Fragment>
-                                  {navigation === 'Campaigns' && (
-                                    <GrowthCampaign
-                                      campaigns={campaigns}
-                                      accountId={accountId}
-                                      decimalDivision={decimalDivision}
-                                      handleNavigationChange={navigation =>
-                                        this.handleNavigationChange(navigation)
-                                      }
-                                    />
-                                  )}
-                                  {navigation === 'Invite' && (
-                                    <GrowthInvite
-                                      handleNavigationChange={navigation =>
-                                        this.handleNavigationChange(navigation)
-                                      }
-                                      activeCampaign={activeCampaign}
-                                      decimalDivision={decimalDivision}
-                                    />
-                                  )}
-                                </Fragment>
-                              )
-                            }}
-                          </Query>
-                        )
-                      }}
-                    </Query>
+                    <Fragment>
+                      {navigation === 'Campaigns' && (
+                        <GrowthCampaign
+                          campaigns={campaigns}
+                          accountId={accountId}
+                          decimalDivision={decimalDivision}
+                          handleNavigationChange={navigation =>
+                            this.handleNavigationChange(navigation)
+                          }
+                        />
+                      )}
+                      {navigation === 'Invite' && (
+                        <GrowthInvite
+                          handleNavigationChange={navigation =>
+                            this.handleNavigationChange(navigation)
+                          }
+                          activeCampaign={activeCampaign}
+                          decimalDivision={decimalDivision}
+                        />
+                      )}
+                    </Fragment>
                   )
                 }}
               </Query>
@@ -440,7 +394,7 @@ class GrowthCampaigns extends Component {
   }
 }
 
-export default withApollo(GrowthCampaigns)
+export default withApollo(withGrowthCampaign(GrowthCampaigns))
 
 require('react-styl')(`
   .growth-campaigns.container

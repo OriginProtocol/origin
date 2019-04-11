@@ -6,7 +6,9 @@ import get from 'lodash/get'
 import Enum from 'utils/enum'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+import { getAttestationReward } from 'utils/growthTools'
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
@@ -208,18 +210,21 @@ class ProfileWizard extends Component {
             Airbnb profiles.
           </fbt>
         </div>
-        <div className="d-flex rewards justify-content-center mt-2">
+        {this.attestationRewardsAvailable() && <div className="d-flex rewards justify-content-center mt-2">
           <div>
             <fbt desc="ProfileWizard.earnUpTo">Earn up to</fbt>
           </div>
           <div className="d-flex align-items-center">
             <div className="icon" />
             <div className="ogn-coin">
-              30&nbsp;
+              {getAttestationReward({
+                growthCampaigns: this.props.growthCampaigns,
+                attestation: 'Phone'
+              })}30&nbsp;
               <span>OGN</span>
             </div>
           </div>
-        </div>
+        </div>}
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
@@ -250,18 +255,21 @@ class ProfileWizard extends Component {
             phone number
           </fbt>
         </div>
-        <div className="d-flex rewards justify-content-center mt-2">
+        {this.attestationRewardsAvailable() && <div className="d-flex rewards justify-content-center mt-2">
           <div>
             <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
           </div>
           <div className="d-flex align-items-center">
             <div className="icon" />
             <div className="ogn-coin">
-              10&nbsp;
+              {getAttestationReward({
+                growthCampaigns: this.props.growthCampaigns,
+                attestation: 'Phone'
+              })}&nbsp;
               <span>OGN</span>
             </div>
           </div>
-        </div>
+        </div>}
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
@@ -389,6 +397,11 @@ class ProfileWizard extends Component {
     )
   }
 
+  attestationRewardsAvailable() {
+    return this.props.growthEnrollmentStatus === 'Enrolled' &&
+      this.props.growthCampaigns
+  }
+
   render() {
     const { uiStep, publishChanges } = this.state
 
@@ -419,7 +432,7 @@ class ProfileWizard extends Component {
   }
 }
 
-export default withApollo(ProfileWizard)
+export default withApollo(withGrowthCampaign(ProfileWizard))
 
 require('react-styl')(`
 	.profile-wizard-box
