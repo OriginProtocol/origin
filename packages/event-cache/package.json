@@ -10,7 +10,7 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\"",
-    "migrate": "sequelize db:migrate --migrations-path migrations"
+    "migrate": "sequelize db:migrate --migrations-path migrations --config src/pgconfig.js"
   },
   "dependencies": {
     "@origin/ipfs": "^0.1.0",
