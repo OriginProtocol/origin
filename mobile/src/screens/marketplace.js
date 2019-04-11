@@ -31,10 +31,7 @@ class MarketplaceScreen extends Component {
       modals: []
     }
 
-    this.listener = DeviceEventEmitter.addListener(
-      'transactionSigned',
-      this.handleTransactionSigned.bind(this)
-    )
+    DeviceEventEmitter.addListener('transactionHash', this.handleTransactionHash.bind(this))
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
@@ -125,13 +122,13 @@ class MarketplaceScreen extends Component {
     this.handleBridgeResponse(modal.msgData, result)
   }
 
-  signTransaction(transaction) {
-    DeviceEventEmitter.emit('signTransaction', transaction)
+  sendTransaction(transaction) {
+    DeviceEventEmitter.emit('sendTransaction', transaction)
   }
 
-  handleTransactionSigned({ transaction, signedTransaction }) {
+  handleTransactionHash({ transaction, hash }) {
     const modal = this.state.modals.find(m => m.msgData.data === transaction)
-    this.toggleModal(modal, signedTransaction)
+    this.toggleModal(modal, hash)
   }
 
   render() {
@@ -164,9 +161,9 @@ class MarketplaceScreen extends Component {
                 transactionMethod={modal.method}
                 transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
-                onConfirm={() =>
-                  this.signTransaction(modal.msgData.data)
-                }
+                onConfirm={() => {
+                    this.sendTransaction(modal.msgData.data)
+                }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
                     message: 'User denied transaction signature'

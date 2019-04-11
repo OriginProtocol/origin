@@ -51,6 +51,10 @@ class OriginWallet extends Component {
       'signTransaction',
       this.signTransaction.bind(this)
     )
+    DeviceEventEmitter.addListener(
+      'sendTransaction',
+      this.sendTransaction.bind(this)
+    )
   }
 
   componentDidMount() {
@@ -159,6 +163,17 @@ class OriginWallet extends Component {
     )
     DeviceEventEmitter.emit('transactionSigned', { transaction, signedTransaction })
     return signedTransaction
+  }
+
+  async sendTransaction(transaction) {
+    console.log('Sending transaction: ', transaction)
+    web3.eth.sendTransaction(transaction).on('transactionHash', (hash) => {
+      DeviceEventEmitter.emit('transactionHash', { transaction, hash })
+    }).on('receipt', (receipt) => {
+      DeviceEventEmitter.emit('transactionReceipt', { transaction, receipt })
+    }).on('error', (error, receipt) => {
+      console.error(error)
+    })
   }
 
   /* Configure push notifications
