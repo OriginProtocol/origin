@@ -80,18 +80,21 @@ class MarketplaceScreen extends Component {
   /* Add a modal to the stack passing the message data from the webview bridge.
    */
   handleBridgeRequest(msgData, { name, parameters }) {
-    if (name === 'makeOffer') {
+    const handledTransactions = ['makeOffer', 'emitIdentityUpdated']
+    if (handledTransactions.includes(name)) {
       this.setState(prevState => ({
         modals: [
           ...prevState.modals,
           {
             type: 'transaction',
             method: name,
-            callParameters: parameters,
+            transactionParameters: parameters,
             msgData: msgData
           }
         ]
       }))
+    } else {
+      console.log('Unhandled transaction: ', name)
     }
   }
 
@@ -139,10 +142,13 @@ class MarketplaceScreen extends Component {
           if (modal.type === 'transaction') {
             card = (
               <TransactionCard
-                transactionType={modal.method}
-                callParameters={modal.callParameters}
-                onPress={() => this.toggleModal(modal)}
-                onRequestClose={() => this.toggleModal(modal, { data: 'denied transaction signature'})}
+                transactionMethod={modal.method}
+                transactionParameters={modal.transactionParameters}
+                msgData={modal.msgData}
+                onConfirm={() => this.toggleModal(modal)}
+                onRequestClose={() => this.toggleModal(modal, {
+                  message: 'User denied transaction signature'
+                })}
               />
             )
           }

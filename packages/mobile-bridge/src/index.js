@@ -14,6 +14,7 @@ class MobileBridge {
   }
 
   processTransaction(transaction, callback) {
+    transaction.gasLimit = transaction.gas
     let onSuccess, onError
     if (callback) {
       onSuccess = (result) => {

@@ -26,15 +26,12 @@ class WalletScreen extends Component {
       <Query query={ProfileQuery} pollInterval={1000}>
         {({ data, loading, error }) => {
           if (loading) {
-            return <Loading />
+            return <Text>Loading</Text>
           }
 
           if (error) {
-            console.log(error)
-            return <Text>An error occurred.</Text>
+            return <Text>An error occurred: {error}</Text>
           }
-
-          console.log(data)
 
           const primaryAccount = data.web3.primaryAccount
           const { id, checksumAddress } = primaryAccount
