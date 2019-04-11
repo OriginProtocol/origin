@@ -152,7 +152,7 @@ app.post('/events', async (req, res) => {
     event.blockNumber
   } logIndex=${event.logIndex}`
 
-  console.log('──────────────────────────────')
+console.log('──────────────────────────────')
 
   if (!processableEvent(eventName)) {
     console.info(
@@ -210,7 +210,7 @@ console.log(sellerAddress)
   browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Email notifications
-  emailSend(eventName, party, buyerAddress, sellerAddress, offer)
+  emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing)
 })
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))

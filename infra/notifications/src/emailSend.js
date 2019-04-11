@@ -17,7 +17,7 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
 //
 // Email notifications
 //
-async function emailSend(eventName, party, buyerAddress, sellerAddress, offer) {
+async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing) {
   console.log('✉️ Email Send')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
@@ -27,7 +27,8 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer) {
   const templateDir = `${__dirname}/../templates`
 
   const emailTemplate = _.template(
-    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString(),
+    {imports: {'emailBegin': 'start' ,'emailEnd' : 'end'}}
   )
 
   console.log('buyerAddress:')
@@ -74,7 +75,7 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer) {
             from: process.env.SENDGRID_FROM_EMAIL,
             subject: message.title,
             text: message.body,
-            html: emailTemplate({ message: message.body }),
+            html: emailTemplate({ message: message.body, listing:listing }),
             asm: {
               groupId: 9092
             }
