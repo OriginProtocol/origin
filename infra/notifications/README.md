@@ -42,7 +42,7 @@ In origin-dapp...
   NOTIFICATIONS_URL=http://localhost:3456/
   ```
   - Run `npm start`
-  
+
 In origin-discovery...
   - Add variables to origin-discovery/.env
   ```
@@ -55,9 +55,9 @@ In origin-discovery...
   WEB3_URL=http://localhost:8545/
   ```
   - Run `node src/listener/listener.js --continue-file=continue --webhook=http://localhost:3456/events`
-  
+
   (From time to time, you may need to `rm continue` in origin-discovery.)
-  
+
 To test in the DApp...
 
 1. Create a listing
@@ -65,3 +65,9 @@ To test in the DApp...
 1. Make an offer from a different account
 
 For more (outdated) information, see [the original pull request](https://github.com/OriginProtocol/origin/pull/795#issue-224602842).
+
+## Testing
+
+You can set an email which will recieve **all** emails. This can be useful for testing on live data where you want to see what emails users would receive. Set env var OVERRIDE_EMAIL or pass in param like this:
+
+    node src/app.js --override-email=bob@originprotocol.com

@@ -40,6 +40,27 @@ webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
 const { processableEvent } = require('./notification')
 
+
+// ---------------------------
+// Notifications startup
+// ---------------------------
+
+const args = {}
+process.argv.forEach(arg => {
+  const t = arg.split('=')
+  const argVal = t.length > 1 ? t[1] : true
+  args[t[0]] = argVal
+})
+
+const config = {
+  // Override email. All emails will be sent to this address, regardless of
+  // actual intended email address.
+  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
+}
+
+console.log(config)
+
+
 // ------------------------------------------------------------------
 
 // should be tightened up for security
@@ -210,7 +231,7 @@ console.log(sellerAddress)
   browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Email notifications
-  emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing)
+  emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing, config)
 })
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))

@@ -17,7 +17,7 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
 //
 // Email notifications
 //
-async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing) {
+async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing, config) {
   console.log('✉️ Email Send')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
@@ -26,9 +26,11 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
   // Load email template
   const templateDir = `${__dirname}/../templates`
 
+  const emailBegin = fs.readFileSync(`${templateDir}/emailBegin.html`).toString()
+  const emailEnd = fs.readFileSync(`${templateDir}/emailEnd.html`).toString()
   const emailTemplate = _.template(
     fs.readFileSync(`${templateDir}/emailTemplate.html`).toString(),
-    {imports: {'emailBegin': 'start' ,'emailEnd' : 'end'}}
+    {imports: {'emailBegin': emailBegin ,'emailEnd' : emailEnd}}
   )
 
   console.log('buyerAddress:')
@@ -71,7 +73,7 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
         else {
 
           const email = {
-            to: s.email,
+            to: config.overrideEmail || s.email,
             from: process.env.SENDGRID_FROM_EMAIL,
             subject: message.title,
             text: message.body,
@@ -83,7 +85,7 @@ async function emailSend(eventName, party, buyerAddress, sellerAddress, offer, l
 
           try {
             await sendgridMail.send(email)
-            console.log(`Email sent to ${buyerAddress} at ${s.email}`)
+            console.log(`Email sent to ${buyerAddress} at ${email.to}`)
           } catch (error) {
             console.error(`Could not email via Sendgrid: ${error}`)
           }
