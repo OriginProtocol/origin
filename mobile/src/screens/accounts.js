@@ -66,11 +66,7 @@ class AccountsScreen extends Component {
         <FlatList
           data={wallet.accounts.sort((a, b) => a.address > b.address)}
           renderItem={({ item }) => (
-            <AccountItem
-              item={item}
-              wallet={wallet}
-              navigation={navigation}
-            />
+            <AccountItem item={item} wallet={wallet} navigation={navigation} />
           )}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}

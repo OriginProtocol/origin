@@ -10,7 +10,9 @@ const web3 = new Web3()
 export function decodeTransaction(data) {
   const functionSignature = data.substr(0, 10)
   const marketplaceContract = new web3.eth.Contract(MarketplaceContract.abi)
-  const identityEventsContract = new web3.eth.Contract(IdentityEventsContract.abi)
+  const identityEventsContract = new web3.eth.Contract(
+    IdentityEventsContract.abi
+  )
 
   const interfaces = [
     ...marketplaceContract._jsonInterface,

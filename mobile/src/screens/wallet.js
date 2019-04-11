@@ -41,8 +41,12 @@ class WalletScreen extends Component {
             <>
               <Text>Address: {id}</Text>
               <Text>ETH: {ethBalance}</Text>
-              <Text>DAI: <TokenBalance account={checksumAddress} token="DAI" /></Text>
-              <Text>OGN: <TokenBalance account={checksumAddress} token="OGN" /></Text>
+              <Text>
+                DAI: <TokenBalance account={checksumAddress} token="DAI" />
+              </Text>
+              <Text>
+                OGN: <TokenBalance account={checksumAddress} token="OGN" />
+              </Text>
             </>
           )
         }}
@@ -58,10 +62,8 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
-  header: {
-  },
-  heading: {
-  },
+  header: {},
+  heading: {},
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,

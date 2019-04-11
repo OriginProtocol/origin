@@ -13,7 +13,9 @@ export default function Wallet(state = initialState, action = {}) {
       return { ...state, address: action.address }
 
     case WalletConstants.ADD_ACCOUNT:
-      const exists = state.accounts.find(a => a.address === action.account.address)
+      const exists = state.accounts.find(
+        a => a.address === action.account.address
+      )
       if (!exists) {
         return {
           ...state,
@@ -26,7 +28,9 @@ export default function Wallet(state = initialState, action = {}) {
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
-        accounts: state.accounts.filter(a => a.address !== action.account.address)
+        accounts: state.accounts.filter(
+          a => a.address !== action.account.address
+        )
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:

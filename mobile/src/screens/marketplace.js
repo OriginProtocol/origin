@@ -108,7 +108,11 @@ class MarketplaceScreen extends Component {
     this.setState(prevState => {
       return {
         ...prevState,
-        modals: [...prevState.modals.filter(m => m.msgData.msgId !== modal.msgData.msgId)]
+        modals: [
+          ...prevState.modals.filter(
+            m => m.msgData.msgId !== modal.msgData.msgId
+          )
+        ]
       }
     })
     // Send the response to the webview
@@ -146,9 +150,11 @@ class MarketplaceScreen extends Component {
                 transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
                 onConfirm={() => this.toggleModal(modal)}
-                onRequestClose={() => this.toggleModal(modal, {
-                  message: 'User denied transaction signature'
-                })}
+                onRequestClose={() =>
+                  this.toggleModal(modal, {
+                    message: 'User denied transaction signature'
+                  })
+                }
               />
             )
           }

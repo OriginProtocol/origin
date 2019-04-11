@@ -76,7 +76,10 @@ class AccountScreen extends Component {
           text: 'Delete',
           onPress: () => {
             try {
-              DeviceEventEmitter.emit('removeAccount', navigation.getParam('account'))
+              DeviceEventEmitter.emit(
+                'removeAccount',
+                navigation.getParam('account')
+              )
               navigation.goBack()
             } catch (e) {
               console.error(e)

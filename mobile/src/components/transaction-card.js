@@ -33,7 +33,13 @@ class TransactionCard extends Component {
 
   render() {
     const { transactionParameters, msgData, wallet } = this.props
-    const { _commission, _currency, _ipfsHash, _value, listingID } = transactionParameters
+    const {
+      _commission,
+      _currency,
+      _ipfsHash,
+      _value,
+      listingID
+    } = transactionParameters
     const gas = web3.utils.fromWei(msgData.data.gas)
 
     let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
@@ -63,7 +69,9 @@ class TransactionCard extends Component {
 
     const calculableTotal = !!ognInvolved
     const gasInUSD = gas * currencies['eth'].priceToUSD
-    const paymentInUSD = paymentCurrency ? payment * currencies[paymentCurrency].priceToUSD : 0
+    const paymentInUSD = paymentCurrency
+      ? payment * currencies[paymentCurrency].priceToUSD
+      : 0
     const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
 
     return (
@@ -92,9 +100,14 @@ class TransactionCard extends Component {
                           <Text style={styles.label}>Payment</Text>
                         </View>
                         <View>
-                          <Text style={[styles.amount, styles.converted]}>{`$${paymentInUSD.toFixed(2)}`}</Text>
+                          <Text
+                            style={[styles.amount, styles.converted]}
+                          >{`$${paymentInUSD.toFixed(2)}`}</Text>
                           <Text style={styles.amount}>
-                            <Image source={currencies[paymentCurrency].icon} style={styles.icon} />
+                            <Image
+                              source={currencies[paymentCurrency].icon}
+                              style={styles.icon}
+                            />
                             {` ${payment} ${paymentCurrency.toUpperCase()}`}
                           </Text>
                         </View>
@@ -105,9 +118,14 @@ class TransactionCard extends Component {
                         <Text style={styles.label}>Gas Cost</Text>
                       </View>
                       <View>
-                        <Text style={[styles.amount, styles.converted]}>{`$${gasInUSD.toFixed(2)}`}</Text>
+                        <Text
+                          style={[styles.amount, styles.converted]}
+                        >{`$${gasInUSD.toFixed(2)}`}</Text>
                         <Text style={styles.amount}>
-                          <Image source={currencies['eth'].icon} style={styles.icon} />
+                          <Image
+                            source={currencies['eth'].icon}
+                            style={styles.icon}
+                          />
                           {` ${gas} ETH`}
                         </Text>
                       </View>
@@ -117,11 +135,15 @@ class TransactionCard extends Component {
               ) : (
                 <Fragment>
                   <View style={styles.primaryContainer}>
-                    <Text style={[styles.amount, styles.primary]}>{gas} ETH</Text>
+                    <Text style={[styles.amount, styles.primary]}>
+                      {gas} ETH
+                    </Text>
                     <Text style={styles.label}>Gas Cost</Text>
                   </View>
                   <View style={styles.primaryContainer}>
-                    <Text style={[styles.amount, styles.primary]}>{boost} OGN</Text>
+                    <Text style={[styles.amount, styles.primary]}>
+                      {boost} OGN
+                    </Text>
                     <Text style={styles.label}>Boost</Text>
                   </View>
                 </Fragment>
@@ -129,15 +151,22 @@ class TransactionCard extends Component {
               <View style={styles.accountSummary}>
                 <View style={styles.accountText}>
                   <Text style={styles.account}>Your Account: </Text>
-                  <Address address={wallet.accounts[0].address} style={styles.account} />
+                  <Address
+                    address={wallet.accounts[0].address}
+                    style={styles.account}
+                  />
                 </View>
                 <View style={styles.accountText}>
                   <Text style={styles.account}>
-                    {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
+                    {daiInvolved || ognInvolved
+                      ? 'Your Balances'
+                      : 'Your Balance'}
+                    :{' '}
                   </Text>
                   <Text style={styles.account}>
                     {data.web3.primaryAccount.balance.eth} ETH
-                    {daiInvolved && ` ~ ${(Math.random() * 100).toFixed(2)} DAI`}
+                    {daiInvolved &&
+                      ` ~ ${(Math.random() * 100).toFixed(2)} DAI`}
                     {ognInvolved && ` ~ ${Math.ceil(Math.random() * 1000)} OGN`}
                   </Text>
                 </View>

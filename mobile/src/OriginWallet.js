@@ -13,7 +13,12 @@ import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES
 } from './constants'
-import { addAccount, removeAccount, setAccountActive, setAccountName } from 'actions/Wallet'
+import {
+  addAccount,
+  removeAccount,
+  setAccountActive,
+  setAccountName
+} from 'actions/Wallet'
 import { updateNotificationsPermissions } from 'actions/Activation'
 import { loadData, deleteData } from './tools'
 
@@ -30,8 +35,14 @@ class OriginWallet extends Component {
       'createAccount',
       this.createAccount.bind(this)
     )
-    DeviceEventEmitter.addListener('setAccountName', this.setAccountName.bind(this))
-    DeviceEventEmitter.addListener('setAccountActive', this.setAccountActive.bind(this))
+    DeviceEventEmitter.addListener(
+      'setAccountName',
+      this.setAccountName.bind(this)
+    )
+    DeviceEventEmitter.addListener(
+      'setAccountActive',
+      this.setAccountActive.bind(this)
+    )
     DeviceEventEmitter.addListener(
       'removeAccount',
       this.removeAccount.bind(this)
