@@ -173,7 +173,7 @@ const GrowthCampaignBox = props => (
         >
           {({ networkStatus, error, loading, data }) => {
             if (networkStatus === 1 || loading) {
-              return 'Loading...'
+              return fbt('Loading...', 'Loading...')
             } else if (error) {
               return <QueryError error={error} query={enrollmentStatusQuery} />
             }

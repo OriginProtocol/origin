@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { fbt } from 'fbt-runtime'
 import { Query, Mutation } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 
@@ -12,14 +13,18 @@ class Enroll extends Component {
   state = {
     error: null,
     // TODO: change version programatically
-    message: 'I accept the terms of growth campaign version: 1.0'
+    message: fbt(
+      'I accept the terms of growth campaign version: 1.0',
+      'growth.acceptTerms'
+    )
   }
 
   render() {
     return (
       <Query query={profileQuery}>
         {({ networkStatus, error, loading, data }) => {
-          if (networkStatus === 1 || loading) return 'Loading...'
+          if (networkStatus === 1 || loading)
+            return fbt('Loading...', 'Loading...')
           else if (error) {
             return <QueryError error={error} query={profileQuery} />
           }
@@ -35,7 +40,10 @@ class Enroll extends Component {
               onError={errorData => {
                 console.error('Error: ', errorData)
                 this.setState({
-                  error: 'Problems enrolling into growth campaign.'
+                  error: fbt(
+                    'Problems enrolling into growth campaign.',
+                    'growth.errorProblemEnrolling'
+                  )
                 })
               }}
             >
@@ -55,7 +63,10 @@ class Enroll extends Component {
                   }}
                   onError={errorData =>
                     this.setState({
-                      error: 'Message signature unsuccessful',
+                      error: fbt(
+                        'Message signature unsuccessful',
+                        'growth.errorSignatureUnsuccesful'
+                      ),
                       errorData
                     })
                   }
@@ -72,8 +83,10 @@ class Enroll extends Component {
                               variables: {
                                 address: accountId,
                                 // TODO: change version programatically
-                                message:
-                                  'I accept the terms of growth campaign version: 1.0'
+                                message: fbt(
+                                  'I accept the terms of growth campaign version: 1.0',
+                                  'growth.acceptTerms'
+                                )
                               }
                             })
                           }}
@@ -84,15 +97,23 @@ class Enroll extends Component {
                             src="images/growth/metamask_in_browser_dark_bg.mp4"
                             type="video/mp4"
                           />
-                          Your browser does not support the video tag.
+                          <fbt desc="growth.errorVideoTag">
+                            Your browser does not support the video tag.
+                          </fbt>
                         </video>
-                        <div className="title">Confirm Metamask Signature</div>
+                        <div className="title">
+                          <fbt desc="growth.confirmMetaMask">
+                            Confirm Metamask Signature
+                          </fbt>
+                        </div>
                         <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
                           {/* TODO: Wallet provider should be set dynamicly in here */
                           !this.state.error && (
                             <span>
-                              Open your Metamask browser extension and confirm
-                              your signature.
+                              <fbt desc="groth.openMetaMask">
+                                Open your Metamask browser extension and confirm
+                                your signature.
+                              </fbt>
                             </span>
                           )}
                           {this.state.error && (
