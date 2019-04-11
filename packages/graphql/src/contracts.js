@@ -14,10 +14,11 @@ import pubsub from './utils/pubsub'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
+const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
 let OriginMessaging
 let OriginMobileBridge
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   OriginMessaging = require('@origin/messaging-client').default
   OriginMobileBridge = require('@origin/mobile-bridge').default
 }
@@ -262,9 +263,10 @@ export function setNetwork(net, customConfig) {
   if (!Configs[net]) {
     net = 'rinkeby'
   }
+
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
-    typeof window !== 'undefined' &&
+    isBrowser &&
     window.localStorage.customConfig &&
     window.localStorage.customConfig !== 'undefined'
   ) {
@@ -274,23 +276,26 @@ export function setNetwork(net, customConfig) {
       console.log('Could not load custom config: ', error)
     }
   }
+
   if (!config) {
     return
   }
-  if (net === 'test') {
-    config = { ...config, ...customConfig }
-    if (typeof window !== 'undefined') {
+
+  if (isBrowser) {
+    if (net === 'test') {
+      config = { ...config, ...customConfig }
+      config.OriginToken = window.localStorage.OGNContract
+      config.V00_Marketplace = window.localStorage.marketplaceContract
+      config.IdentityEvents = window.localStorage.identityEventsContract
+      config.DaiExchange = window.localStorage.uniswapDaiExchange
+    } else if (net === 'localhost') {
       config.OriginToken = window.localStorage.OGNContract
       config.V00_Marketplace = window.localStorage.marketplaceContract
       config.IdentityEvents = window.localStorage.identityEventsContract
       config.DaiExchange = window.localStorage.uniswapDaiExchange
     }
-  } else if (net === 'localhost') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
-    config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
+
   context.net = net
   context.config = config
   context.automine = config.automine
@@ -314,7 +319,7 @@ export function setNetwork(net, customConfig) {
   clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
@@ -333,7 +338,7 @@ export function setNetwork(net, customConfig) {
 
   context.metaMaskEnabled = metaMaskEnabled
 
-  if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
+  if (isBrowser && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
@@ -347,7 +352,7 @@ export function setNetwork(net, customConfig) {
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     if (config.providerWS) {
       web3WS = applyWeb3Hack(new Web3(config.providerWS))
       wsSub = web3WS.eth
@@ -382,16 +387,19 @@ export function setNetwork(net, customConfig) {
       supply: '1000000000'
     })
   }
-  try {
-    const storedTokens = JSON.parse(window.localStorage[`${net}Tokens`])
-    storedTokens.forEach(token => {
-      if (context.tokens.find(t => t.id === token.id)) {
-        return
-      }
-      context.tokens.push(token)
-    })
-  } catch (e) {
-    /* Ignore */
+
+  if (isBrowser) {
+    try {
+      const storedTokens = JSON.parse(window.localStorage[`${net}Tokens`])
+      storedTokens.forEach(token => {
+        if (context.tokens.find(t => t.id === token.id)) {
+          return
+        }
+        context.tokens.push(token)
+      })
+    } catch (e) {
+      /* Ignore */
+    }
   }
 
   context.tokens.forEach(token => {
@@ -418,11 +426,13 @@ export function setNetwork(net, customConfig) {
     }
   }
 
-  context.transactions = {}
-  try {
-    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
-  } catch (e) {
-    /* Ignore */
+  if (isBrowser) {
+    context.transactions = {}
+    try {
+      context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+    } catch (e) {
+      /* Ignore */
+    }
   }
 
   if (metaMask) {
@@ -505,7 +515,7 @@ function setMobileBridge() {
 
 export function toggleMetaMask(enabled) {
   metaMaskEnabled = enabled
-  if (metaMaskEnabled) {
+  if (isBrowser && metaMaskEnabled) {
     window.localStorage.metaMaskEnabled = true
   } else {
     delete window.localStorage.metaMaskEnabled
@@ -569,7 +579,7 @@ export function setIdentityEvents(address, epoch) {
   }
 }
 
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
@@ -577,9 +587,7 @@ if (typeof window !== 'undefined') {
     metaMask = applyWeb3Hack(new Web3(window.web3.currentProvider))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   }
-
   setNetwork(window.localStorage.ognNetwork || 'mainnet')
-
   window.context = context
 }
 
