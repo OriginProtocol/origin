@@ -97,17 +97,6 @@ const ProfileDropdown = ({ data, onClose }) => {
           </div>
           <Balances account={id} />
           <Identity id={id} />
-          {mobileWallet && (
-            <a
-              className="unlink-wallet"
-              onClick={e => {
-                e.preventDefault()
-                unlinkMutation()
-              }}
-              href="#"
-              children={fbt('Unlink Mobile', 'nav.profile.unlinkMobile')}
-            />
-          )}
           <Link onClick={() => onClose()} to="/profile">
             <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
           </Link>
