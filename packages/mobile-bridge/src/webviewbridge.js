@@ -38,14 +38,11 @@ export default function() {
           if (msgObj.msgId) {
             // Call the callbacks for the matching id
             callbacks[msgObj.msgId] = {
-              onsuccess: success,
-              onerror: error
+              onSuccess: success,
+              onError: error
             }
           }
-
           window.ReactNativeWebView.postMessage(msg, '*')
-
-          console.debug(`WebViewBridge send succeeded: ${msg}`)
           resolve()
         })
       }).catch(function (e) {
@@ -66,10 +63,10 @@ export default function() {
 
     if (message.args && callbacks[message.msgId]) {
       if (message.isSuccessful) {
-        callbacks[message.msgId].onsuccess.apply(null, message.args);
+        callbacks[message.msgId].onSuccess.apply(null, message.args);
       }
       else {
-        callbacks[message.msgId].onerror.apply(null, message.args);
+        callbacks[message.msgId].onError.apply(null, message.args);
       }
       delete callbacks[message.msgId];
     }

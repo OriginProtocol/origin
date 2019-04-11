@@ -14,23 +14,30 @@ class MobileBridge {
   }
 
   processTransaction(transaction, callback) {
-    let onSuccess
+    let onSuccess, onError
     if (callback) {
       onSuccess = (result) => {
+        console.log('Calling success callback: ', result)
+        callback(undefined, result)
+      }
+      onError = (result) => {
+        console.log('Calling error callback: ', result)
         callback(undefined, result)
       }
     } else {
       onSuccess = (result) => {
+        console.log('Returning promise: ', result)
         return new Promise(resolve => resolve(result))
       }
-    }
-    const onError = (result) => {
-      return new Promise((resolve, reject) => reject(result))
+      onError = (result) => {
+        return new Promise((resolve, reject) => reject(result))
+      }
     }
     window.webViewBridge.send('processTransaction', transaction, onSuccess, onError)
   }
 
   getAccounts(callback) {
+    console.log('Get accounts called')
     const data = null
     let onSuccess
     if (callback) {
