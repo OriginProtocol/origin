@@ -42,13 +42,21 @@ const messageTemplates = {
       },
       OfferRuling: {
         subject: 'Dispute Resolved',
-        html: _.template('A ruling has been issued on your disputed transaction.'),
-        text: _.template('A ruling has been issued on your disputed transaction.')
+        html: _.template(
+          'A ruling has been issued on your disputed transaction.'
+        ),
+        text: _.template(
+          'A ruling has been issued on your disputed transaction.'
+        )
       },
       OfferFinalized: {
         subject: 'Sale Completed',
-        html: _.template('Your transaction has been completed. <%= listing.id %>'),
-        text: _.template('Your transaction has been completed. <%= listing.id %>')
+        html: _.template(
+          'Your transaction has been completed. <%= listing.id %>'
+        ),
+        text: _.template(
+          'Your transaction has been completed. <%= listing.id %>'
+        )
       }
     }
   },
@@ -93,8 +101,12 @@ const messageTemplates = {
       },
       OfferRuling: {
         subject: 'Dispute Resolved',
-        html: _.template('A ruling has been issued on your disputed transaction.'),
-        text: _.template('A ruling has been issued on your disputed transaction.')
+        html: _.template(
+          'A ruling has been issued on your disputed transaction.'
+        ),
+        text: _.template(
+          'A ruling has been issued on your disputed transaction.'
+        )
       },
       OfferData: {
         subject: 'New Review',
@@ -104,7 +116,6 @@ const messageTemplates = {
     }
   }
 }
-
 
 /**
  * Returns true if an event should be processed based on its event name.

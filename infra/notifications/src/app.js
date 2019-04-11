@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 // TODO: Debugging line for auto-reload
-console.log('\033[2J')
-console.log(
-  '─────────────────────────────────────────────────────────────────────────────────'
-)
+// console.log('\033[2J')
+// console.log(
+//   '─────────────────────────────────────────────────────────────────────────────────'
+// )
 
 try {
   require('envkey')
@@ -40,7 +40,6 @@ webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
 const { processableEvent } = require('./notification')
 
-
 // ---------------------------
 // Notifications startup
 // ---------------------------
@@ -55,11 +54,10 @@ process.argv.forEach(arg => {
 const config = {
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
-  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
+  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null
 }
 
 console.log(config)
-
 
 // ------------------------------------------------------------------
 
@@ -173,8 +171,6 @@ app.post('/events', async (req, res) => {
     event.blockNumber
   } logIndex=${event.logIndex}`
 
-console.log('──────────────────────────────')
-
   // TODO: Temp hack for now that we only test for mobile messages.
   // Thats how the old listener decided if there was a message. Will do
   // now until we get real pipeline built.
@@ -192,15 +188,11 @@ console.log('──────────────────────�
     return
   }
   if (!seller.id) {
-    console.error(
-      `Error: Missing seller.id. Skipping ${eventDetailsSummary}`
-    )
+    console.error(`Error: Missing seller.id. Skipping ${eventDetailsSummary}`)
     return
   }
   if (!buyer.id) {
-    console.error(
-      `Error: Missing buyer.id. Skipping ${eventDetailsSummary}`
-    )
+    console.error(`Error: Missing buyer.id. Skipping ${eventDetailsSummary}`)
     return
   }
 
@@ -217,12 +209,12 @@ console.log('──────────────────────�
 
   console.info(`Info: Processing event ${eventDetailsSummary}`)
 
-console.log('party:')
-console.log(party)
-console.log('buyerAddress:')
-console.log(buyerAddress)
-console.log('sellerAddress:')
-console.log(sellerAddress)
+  console.log('party:')
+  console.log(party)
+  console.log('buyerAddress:')
+  console.log(buyerAddress)
+  console.log('sellerAddress:')
+  console.log(sellerAddress)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
@@ -234,7 +226,15 @@ console.log(sellerAddress)
   browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Email notifications
-  emailSend(eventName, party, buyerAddress, sellerAddress, offer, listing, config)
+  emailSend(
+    eventName,
+    party,
+    buyerAddress,
+    sellerAddress,
+    offer,
+    listing,
+    config
+  )
 })
 
 app.listen(port, () => console.log(`Notifications server listening at ${port}`))
