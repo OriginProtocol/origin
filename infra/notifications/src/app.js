@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 // TODO: Debugging line for auto-reload
-console.log('\033[2J')
-console.log(
-  '─────────────────────────────────────────────────────────────────────────────────'
-)
+// console.log('\033[2J')
+// console.log(
+//   '─────────────────────────────────────────────────────────────────────────────────'
+// )
 
 try {
   require('envkey')

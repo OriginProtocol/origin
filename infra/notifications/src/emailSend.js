@@ -34,9 +34,13 @@ async function emailSend(
   const templateDir = `${__dirname}/../templates`
 
   // Standard template for HTML emails
-  const emailTemplateHtml = _.template(fs.readFileSync(`${templateDir}/emailTemplate.html`).toString())
+  const emailTemplateHtml = _.template(
+    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+  )
   // Standard template for text emails
-  const emailTemplateTxt = _.template(fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString())
+  const emailTemplateTxt = _.template(
+    fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
+  )
 
   // TODO: Debug info to remove
   console.log('✉️ Email Send')
@@ -80,8 +84,12 @@ async function emailSend(
           to: config.overrideEmail || s.email,
           from: config.fromEmail,
           subject: message.subject,
-          text: emailTemplateTxt({ message: message.text({ listing: listing, offer: offer }) }),
-          html: emailTemplateHtml({ message: message.html({ listing: listing, offer: offer }) }),
+          text: emailTemplateTxt({
+            message: message.text({ listing: listing, offer: offer })
+          }),
+          html: emailTemplateHtml({
+            message: message.html({ listing: listing, offer: offer })
+          }),
           asm: {
             groupId: config.asmGroupId
           }
