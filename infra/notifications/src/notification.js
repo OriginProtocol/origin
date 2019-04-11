@@ -52,10 +52,10 @@ const messageTemplates = {
       OfferFinalized: {
         subject: 'Sale Completed',
         html: _.template(
-          'Your transaction has been completed. <%= listing.id %>'
+          'Your transaction with <em><%= offer.buyer.identity.fullName %></em> for <em><%= listing.title %></em> has been completed. <%= listing.id %> '
         ),
         text: _.template(
-          'Your transaction has been completed. <%= listing.id %>'
+          'Your transaction with <%= offer.buyer.identity.fullName %> for "<%= listing.title %>" has been completed. <%= listing.id %> '
         )
       }
     }

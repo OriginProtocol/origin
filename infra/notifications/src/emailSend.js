@@ -3,6 +3,7 @@ const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const _ = require('lodash')
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -25,7 +26,6 @@ async function emailSend(
   listing,
   config
 ) {
-  console.log('✉️ Email Send')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
@@ -33,15 +33,13 @@ async function emailSend(
   // Load email template
   const templateDir = `${__dirname}/../templates`
 
-  const emailBegin = fs
-    .readFileSync(`${templateDir}/emailBegin.html`)
-    .toString()
-  const emailEnd = fs.readFileSync(`${templateDir}/emailEnd.html`).toString()
-  // const emailTemplate = _.template(
-  //   fs.readFileSync(`${templateDir}/emailTemplate.html`).toString(),
-  //   {imports: {'emailBegin': emailBegin ,'emailEnd' : emailEnd}}
-  // )
+  // Standard template for HTML emails
+  const emailTemplateHtml = _.template(fs.readFileSync(`${templateDir}/emailTemplate.html`).toString())
+  // Standard template for text emails
+  const emailTemplateTxt = _.template(fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString())
 
+  // TODO: Debug info to remove
+  console.log('✉️ Email Send')
   console.log('buyerAddress:')
   console.log(buyerAddress)
   console.log('sellerAddress:')
@@ -80,12 +78,12 @@ async function emailSend(
       } else {
         const email = {
           to: config.overrideEmail || s.email,
-          from: process.env.SENDGRID_FROM_EMAIL,
+          from: config.fromEmail,
           subject: message.subject,
-          text: message.text({ listing: listing }),
-          html: emailBegin + message.html({ listing: listing }) + emailEnd,
+          text: emailTemplateTxt({ message: message.text({ listing: listing, offer: offer }) }),
+          html: emailTemplateHtml({ message: message.html({ listing: listing, offer: offer }) }),
           asm: {
-            groupId: 9092
+            groupId: config.asmGroupId
           }
         }
 

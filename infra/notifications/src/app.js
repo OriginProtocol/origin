@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 // TODO: Debugging line for auto-reload
-// console.log('\033[2J')
-// console.log(
-//   '─────────────────────────────────────────────────────────────────────────────────'
-// )
+console.log('\033[2J')
+console.log(
+  '─────────────────────────────────────────────────────────────────────────────────'
+)
 
 try {
   require('envkey')
@@ -40,6 +40,8 @@ webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
 const { processableEvent } = require('./notification')
 
+// ------------------------------------------------------------------
+
 // ---------------------------
 // Notifications startup
 // ---------------------------
@@ -54,7 +56,11 @@ process.argv.forEach(arg => {
 const config = {
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
-  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null
+  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
+  // Email account from whom emails will be sent
+  fromEmail: args['--fromEmail'] || process.env.SENDGRID_FROM_EMAIL,
+  // SendGrid ASM Group ID. Used for unsubscribing.
+  asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092
 }
 
 console.log(config)

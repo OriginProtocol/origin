@@ -1,5 +1,209 @@
-<!-- Begin Message -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Earn Origin cryptocurrency</title>
 
-<%= emailBegin %> <%= message %> <%= emailEnd %>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato:400,300,500"
+    />
 
-<!-- ENd Message -->
+    <style>
+      /* What it does: Remove spaces around the email design added by some email clients. */
+      /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+      html,
+      body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+      }
+
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      div[style*='margin: 16px 0'] {
+        margin: 0 !important;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+
+      table {
+        border-spacing: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        margin: 0 auto !important;
+      }
+
+      table table table {
+        table-layout: auto;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+      }
+
+      *[x-apple-data-detectors] {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+
+      .x-gmail-data-detectors,
+      .x-gmail-data-detectors *,
+      .aBn {
+        border-bottom: 0 !important;
+        cursor: default !important;
+      }
+
+      .button-link {
+        text-decoration: none !important;
+      }
+
+      @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+        /* iPhone 6 and 6+ */
+        .email-container {
+          min-width: 375px !important;
+        }
+      }
+    </style>
+
+    <style>
+      .button-td,
+      .button-a {
+        transition: all 100ms ease-in;
+      }
+      .button-td:hover,
+      .button-a:hover {
+        background: #2e97ff !important;
+        border-color: #2e97ff !important;
+      }
+
+      .button-share,
+      .button-share-a {
+        transition: all 100ms ease-in;
+      }
+    </style>
+  </head>
+  <body
+    width="100%"
+    bgcolor="#f1f6f9"
+    style="margin: 0; mso-line-height-rule: exactly;"
+  >
+    <center style="width: 100%; background: #f1f6f9;">
+      <!--
+      Set the email width. Defined in two places:
+      1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
+      2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+    -->
+      <div style="max-width: 600px; margin: auto;" class="email-container">
+        <!--[if mso]>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+      <tr>
+      <td>
+      <![endif]-->
+        <table
+          role="presentation"
+          cellspacing="0"
+          cellpadding="0"
+          border="0"
+          align="center"
+          width="100%"
+          style="max-width: 600px;"
+        >
+          <tr>
+            <td bgcolor="#f1f6f9" height="60">
+              <center>
+                <img
+                  src="https://www.originprotocol.com/static/img/origin-logo-dark@3x.png"
+                  srcset="
+                    https://www.originprotocol.com/static/img/origin-logo-dark.png,
+                    https://www.originprotocol.com/static/img/origin-logo-dark@2x.png 2x,
+                    https://www.originprotocol.com/static/img/origin-logo-dark@3x.png 3x
+                  "
+                  height="20"
+                  style="margin:22px 0 18px 0"
+                />
+              </center>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#ffffff">
+
+              <br /><br />
+
+              <div
+                style="max-width: 400px; margin: auto;"
+                class="email-container"
+              >
+
+                <!-- Begin Message -->
+
+                <%= message %>
+
+                <!-- End Message -->
+
+              </div>
+
+              <br /><br />
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- Email Footer : BEGIN -->
+        <table
+          role="presentation"
+          cellspacing="0"
+          cellpadding="0"
+          border="0"
+          align="center"
+          width="100%"
+          style="max-width: 680px;"
+        >
+          <tr>
+            <td
+              style="padding: 20px 10px 40px 10px;width: 100%;font-size: 10px; font-family: 'Lato', sans-serif; line-height:18px; text-align: center; color: #666666;"
+              class="x-gmail-data-detectors"
+            >
+              <br />845 Market Street, Suite 450A, San Francisco, CA, 94103<br />
+              If you no longer want to hear from us, you can
+              <a
+                href="https://www.originprotocol.com/mailing-list/unsubscribe?email=[unsubscribe]"
+                style="color: #666666;"
+                >unsubscribe</a
+              >.<br /><br />
+              <a
+                href="https://www.originprotocol.com"
+                style="color:#666666;text-decoration:none"
+                >originprotocol.com</a
+              >
+
+              Or: [unsubscribe]
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- Email Footer : END -->
+
+        <!--[if mso]>
+      </td>
+      </tr>
+      </table>
+    <![endif]-->
+      </div>
+    </center>
+  </body>
+</html>
+
