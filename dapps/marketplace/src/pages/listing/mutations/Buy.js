@@ -353,7 +353,7 @@ class Buy extends Component {
           <div className="make-offer-modal success">
             <div className="success-icon" />
             <h5>
-              <fbt desc="sucess">Success!</fbt>
+              <fbt desc="success">Success!</fbt>
             </h5>
             <div className="disclaimer">
               <fbt desc="buy.successOffer">
