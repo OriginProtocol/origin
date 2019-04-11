@@ -352,7 +352,7 @@ export function setNetwork(net, customConfig) {
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
-  if (isBrowser) {
+  if (typeof window !== undefined) {
     if (config.providerWS) {
       web3WS = applyWeb3Hack(new Web3(config.providerWS))
       wsSub = web3WS.eth
