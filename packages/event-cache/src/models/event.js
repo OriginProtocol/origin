@@ -34,14 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       // JSON data for the event as returned by web3 method getPastEvents.
       data: DataTypes.JSONB,
       // JSON data of decoded event arguments
-      return_values: DataTypes.JSONB,
-      // Creation date.
-      created_at: DataTypes.DATE
+      return_values: DataTypes.JSONB
     },
     {
-      tableName: 'event',
-      // Do not automatically add the timestamp attributes (updatedAt, createdAt).
-      timestamps: false
+      tableName: 'event'
     }
   )
 

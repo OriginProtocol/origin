@@ -60,10 +60,6 @@ module.exports = {
         return_values: {
           type: Sequelize.JSONB,
           allowNull: true
-        },
-        created_at: {
-          type: Sequelize.DATE,
-          allowNull: true
         }
       })
       .then(() => queryInterface.addIndex(TABLE_NAME, ['event']))
