@@ -5,7 +5,11 @@ import Web3 from 'web3'
 import { get, post } from '@origin/ipfs'
 
 import { debug, validateParams } from './utils'
-import { InMemoryBackend, IndexedDBBackend } from './backends'
+import {
+  InMemoryBackend,
+  IndexedDBBackend,
+  PostgreSQLBackend
+} from './backends'
 
 /**
  * @class
@@ -75,8 +79,7 @@ export default class EventCache {
         throw new Error('mobile platform not yet implemented')
 
       case 'nodejs':
-        // TODO
-        throw new Error('nodejs platform not yet implemented')
+        return new PostgreSQLBackend()
 
       case 'browser':
         return new IndexedDBBackend()
