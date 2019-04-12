@@ -24,14 +24,27 @@ export default class EventCache {
    * constructor
    *
    * @param contract {web3.eth.Contract} The contract to patch
-   * @param fromBlock {number} The block number to start the event search at
+   * @param fromBlock {number} The block number to start the event search at. If
+   *    null, or not given it will start at the latest known to the cache
+   *    backend
    * @param config {object} A configuration JS object (See EventCache)
    */
-  constructor(contract, fromBlock = 0, config) {
+  constructor(contract, fromBlock = null, config) {
     this._processConfig(config)
 
     this.contract = contract
     this.web3 = new Web3(contract.currentProvider)
+
+    // If the cache is populated, start from the latest known block
+    if (fromBlock === null) {
+      const latestKnown = this.backend.getLatestBlock()
+      if (latestKnown && latestKnown > 0) {
+        fromBlock = latestKnown
+      } else {
+        fromBlock = 0
+      }
+    }
+
     this.originBlock = fromBlock
     this.fromBlock = this.originBlock
   }
