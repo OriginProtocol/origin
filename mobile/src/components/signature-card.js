@@ -2,8 +2,11 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Web3 from 'web3'
 
 import OriginButton from 'components/origin-button'
+
+const web3 = new Web3()
 
 class SignatureCard extends Component {
   constructor(props) {
@@ -11,11 +14,13 @@ class SignatureCard extends Component {
   }
 
   render() {
-    const { message } = this.props
+    const { msgData } = this.props
+    const decodedMessage = web3.utils.hexToAscii(msgData.data.data)
+
     return (
       <View style={styles.card}>
         <Text style={styles.heading}>Signature Request</Text>
-        <Text style={styles.content}>{message}</Text>
+        <Text style={styles.content}>{decodedMessage}</Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"

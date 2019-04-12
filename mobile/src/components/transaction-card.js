@@ -8,6 +8,7 @@ import Web3 from 'web3'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
+import { decodeTransaction } from '../utils/contractDecoder'
 
 const web3 = new Web3()
 
@@ -17,12 +18,14 @@ class TransactionCard extends Component {
   }
 
   render() {
-    const { transactionParameters, msgData, wallet } = this.props
-    const { _commission, _currency, _value } = transactionParameters
+    const { msgData, wallet } = this.props
+    const { functionName, parameters } = decodeTransaction(msgData.data.data)
+    const { _commission, _currency, _value } = parameters
+    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
     const gas = web3.utils.fromWei(msgData.data.gas)
 
     let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
-    switch (this.props.transactionMethod) {
+    switch (functionName) {
       case 'createListing':
         heading = 'Create Listing'
         // To boost or not to boost, up to 100
@@ -35,7 +38,7 @@ class TransactionCard extends Component {
         if (_currency === '0x0000000000000000000000000000000000000000') {
           paymentCurrency = 'eth'
         }
-        ognInvolved = _commission > 0
+        ognInvolved = parseInt(_commission) > 0
         daiInvolved = paymentCurrency === 'dai'
         payment = web3.utils.fromWei(_value)
         break
@@ -46,14 +49,12 @@ class TransactionCard extends Component {
         heading = 'Blockchain Transaction'
     }
 
-    const calculableTotal = !!ognInvolved
+    const calculableTotal = true
     const gasInUSD = gas * currencies['eth'].priceToUSD
     const paymentInUSD = paymentCurrency
       ? payment * currencies[paymentCurrency].priceToUSD
       : 0
     const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
-
-    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
 
     return (
       <View style={styles.card}>

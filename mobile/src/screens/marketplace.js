@@ -16,7 +16,6 @@ import { MARKETPLACE_DAPP_URL, NETWORK } from 'react-native-dotenv'
 
 import TransactionCard from 'components/transaction-card'
 import SignatureCard from 'components/signature-card'
-import { decodeTransaction } from '../utils/contractDecoder'
 
 let marketplaceDappUrl = MARKETPLACE_DAPP_URL
 if (NETWORK !== 'localhost') {
@@ -70,16 +69,13 @@ class MarketplaceScreen extends Component {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
-    } else if (msgData.targetFunc === 'signMessage') {
-      this.handleBridgeSigningRequest(msgData, msgData.data)
     } else {
-      // Attempt to decode the Ethereum transaction and add the appropriate
-      // modal to the stack
-      const functionInterface = decodeTransaction(msgData.data.data)
-      if (functionInterface) {
-        // Got an interface from the contract
-        this.handleBridgeTransactionRequest(msgData, functionInterface)
-      }
+      this.setState(prevState => ({
+        modals: [
+          ...prevState.modals,
+          { msgData: msgData }
+        ]
+      }))
     }
   }
 
@@ -91,39 +87,6 @@ class MarketplaceScreen extends Component {
       ...filteredAccounts.map(a => a.address)
     ]
     return accounts
-  }
-
-  handleBridgeSigningRequest(msgData, { data, from }) {
-    this.setState(prevState => ({
-      modals: [
-        ...prevState.modals,
-        {
-          type: 'signing',
-          msgData: msgData
-        }
-      ]
-    }))
-  }
-
-  /* Add a modal to the stack passing the message data from the webview bridge.
-   */
-  handleBridgeTransactionRequest(msgData, { name, parameters }) {
-    const handledTransactions = ['createListing', 'emitIdentityUpdates', 'makeOffer']
-    if (handledTransactions.includes(name)) {
-      this.setState(prevState => ({
-        modals: [
-          ...prevState.modals,
-          {
-            type: 'transaction',
-            method: name,
-            transactionParameters: parameters,
-            msgData: msgData
-          }
-        ]
-      }))
-    } else {
-      console.log('Unhandled transaction: ', name)
-    }
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -192,11 +155,9 @@ class MarketplaceScreen extends Component {
         />
         {modals.map(modal => {
           let card
-          if (modal.type === 'transaction') {
+          if (modal.msgData.targetFunc === 'processTransaction') {
             card = (
               <TransactionCard
-                transactionMethod={modal.method}
-                transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
                 onConfirm={() => {
                   DeviceEventEmitter.emit('sendTransaction', modal.msgData.data)
@@ -208,10 +169,9 @@ class MarketplaceScreen extends Component {
                 }
               />
             )
-          } else if (modal.type === 'signing') {
+          } else if (modal.msgData.targetFunc === 'signMessage') {
             card = (
               <SignatureCard
-                message={web3.utils.hexToAscii(modal.msgData.data.data)}
                 msgData={modal.msgData}
                 onConfirm={() => {
                   DeviceEventEmitter.emit('signMessage', modal.msgData.data)

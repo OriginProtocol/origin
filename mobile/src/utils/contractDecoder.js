@@ -31,7 +31,7 @@ export function decodeTransaction(data) {
   }
 
   return {
-    name: functionInterface.name,
+    functionName: functionInterface.name,
     parameters: web3.eth.abi.decodeLog(
       functionInterface.inputs,
       '0x' + data.substr(10)
