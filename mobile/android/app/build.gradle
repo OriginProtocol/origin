@@ -158,7 +158,6 @@ android {
 dependencies {
     implementation project(':react-native-push-notification')
     implementation project(':react-native-webview')
-    implementation project(':react-native-randombytes')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
@@ -166,7 +165,6 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.google.android.gms:play-services-gcm:15.0.1"
-    implementation project(':react-native-camera')
 }
 
 // Run this once to be able to run the application with BUCK

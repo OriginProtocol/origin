@@ -4,13 +4,11 @@ import React, { Component } from 'react'
 import { Dimensions, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { ApolloProvider } from 'react-apollo'
 
 import graphqlClient from '@origin/graphql'
 import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 import { NETWORK } from 'react-native-dotenv'
 setNetwork(NETWORK)
-console.log(graphqlContext)
 
 import OriginWallet from './OriginWallet'
 import OriginWrapper from './Wrapper'
@@ -30,14 +28,12 @@ class OriginApp extends Component {
     const smallScreen = height < 812
 
     return (
-      <ApolloProvider client={graphqlClient}>
-        <ReduxProvider store={Store}>
-          <PersistGate loading={<Loading />} persistor={persistor}>
-            <OriginWallet />
-            <OriginWrapper smallScreen={smallScreen} />
-          </PersistGate>
-        </ReduxProvider>
-      </ApolloProvider>
+      <ReduxProvider store={Store}>
+        <PersistGate loading={<Loading />} persistor={persistor}>
+          <OriginWallet />
+          <OriginWrapper smallScreen={smallScreen} />
+        </PersistGate>
+      </ReduxProvider>
     )
   }
 }
