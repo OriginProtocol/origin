@@ -31,6 +31,10 @@ function applyConfiguration(config) {
   // Set the page title
   if (config.title) {
     document.title = config.title
+    const metaTitleElement = document.querySelector('meta[name="title"]')
+    if (metaTitleElement) {
+      metaTitleElement.setAttribute('content', config.title)
+    }
   }
 
   // Set the language code

@@ -124,8 +124,7 @@ const config = {
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
-      ORIGIN_LINKING: null,
-      IPFS_SWARM: ''
+      ORIGIN_LINKING: null
     })
   ],
 
@@ -151,7 +150,7 @@ if (isProduction) {
   ]
   config.plugins.push(
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['public/app.*.css', 'public/app.*.js']
+      cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js']
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
     new webpack.IgnorePlugin(/redux-logger/),

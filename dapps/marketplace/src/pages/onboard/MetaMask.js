@@ -26,9 +26,6 @@ const query = gql`
       metaMaskNetworkName
       metaMaskAccount {
         id
-        balance {
-          eth
-        }
       }
     }
   }
@@ -64,7 +61,7 @@ const ConfirmInstalled = () => (
       className="btn btn-outline-primary"
       onClick={() => window.location.reload()}
     >
-      <fbt desc="Continue">Continue</fbt>
+      <fbt desc="continue">Continue</fbt>
     </button>
   </div>
 )
@@ -256,7 +253,7 @@ class OnboardMetaMask extends Component {
                           nextEnabled ? '' : ' disabled'
                         }`}
                       >
-                        <fbt desc="Continue">Continue</fbt>
+                        <fbt desc="continue">Continue</fbt>
                       </Link>
                     </div>
                   </>

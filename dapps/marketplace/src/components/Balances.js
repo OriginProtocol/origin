@@ -23,9 +23,24 @@ const Balances = ({ ethBalance, account }) => {
             <span>ETH</span>
           </div>
           <div className="usd">
-            <Price amount={ethBalance} />
+            <Price price={{ amount: ethBalance, currency: 'token-ETH' }} />
           </div>
         </div>
+      </div>
+      <div className="account dai justify-content-between">
+        <div className="d-flex">
+          <div className="icon" />
+          <div className="balance">
+            <div className="coin dai">
+              <TokenBalance account={account} token="DAI" />
+              <span>DAI</span>
+            </div>
+          </div>
+        </div>
+        {/* <div className="actions">
+          <button className="btn btn-outline-primary">Activate</button>
+          <button className="btn btn-outline-primary">Get</button>
+        </div> */}
       </div>
       <div className="account ogn d-flex justify-content-between">
         <div className="d-flex">
@@ -38,11 +53,7 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
         {!enableGrowth ? null : (
-          <EnrollButton
-            className="btn get-ogn d-flex"
-            children={fbt('Get Started', 'Get Started')}
-            skipjoincampaign="false"
-          >
+          <EnrollButton className="btn get-ogn d-flex" skipjoincampaign="false">
             <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>
         )}
@@ -69,6 +80,30 @@ require('react-styl')(`
         margin-right: 0.5rem
       &.ogn .icon
         background-image: url(images/ogn-icon.svg)
+      &.dai .icon
+        background-image: url(images/dai-icon.svg)
+      .actions
+        display: flex
+        flex-direction: row
+        .btn
+          margin-left: 0.5rem
+          height: 24px
+          padding: 0 0.25rem 0 0
+          border-radius: 1rem
+          font-weight: normal
+          font-size: 12px
+          display: flex
+          align-items: center
+          &::before
+            content: "";
+            background: url(images/growth/blue-add-icon.svg) no-repeat;
+            width: 1rem;
+            height: 1rem;
+            display: inline-block;
+            background-size: contain;
+            margin: 0 0.25rem;
+          &:hover::before
+            background-image: url(images/add-icon-white.svg)
       .balance
         font-weight: bold
         .coin
@@ -80,6 +115,8 @@ require('react-styl')(`
             margin-left: 0.25rem
           &.ogn > span
             color: #007bff
+          &.dai > span
+            color: #fec102
         .usd
           font-size: 10px
           line-height: 10px

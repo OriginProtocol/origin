@@ -120,16 +120,6 @@ module.exports = `
     allowance(contract: String): String
   }
 
-  type Token {
-    id: ID!
-    address: String
-    name: String
-    symbol: String
-    decimals: Int
-    totalSupply: String
-    exchangeRate(currency: String!): Int
-  }
-
   type Contract {
     id: ID!
     balance: Balance

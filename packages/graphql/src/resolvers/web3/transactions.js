@@ -1,17 +1,10 @@
 import graphqlFields from 'graphql-fields'
 import { getIdsForPage, getConnection } from '../_pagination'
 import contracts from '../../contracts'
-
-const transactionCache = {},
-  receiptCache = {}
+// import memoize from 'lodash/memoize'
 
 export async function getTransactionReceipt(id) {
-  const rawReceipt =
-    receiptCache[id] || (await contracts.web3.eth.getTransactionReceipt(id))
-
-  if (rawReceipt && !receiptCache[id]) {
-    receiptCache[id] = rawReceipt
-  }
+  const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
 
   if (!rawReceipt) {
     return null
@@ -19,7 +12,10 @@ export async function getTransactionReceipt(id) {
 
   const jsonInterfaces = [
     ...contracts.marketplace.options.jsonInterface,
-    ...contracts.identityEvents.options.jsonInterface
+    ...contracts.identityEvents.options.jsonInterface,
+    ...(contracts.daiExchange
+      ? contracts.daiExchange.options.jsonInterface
+      : [])
   ]
 
   const events = rawReceipt.logs.map(log => {
@@ -53,13 +49,13 @@ export async function getTransactionReceipt(id) {
   return { id, ...rawReceipt, events }
 }
 
-export async function getTransaction(id, fields = {}, localTransactions = []) {
-  const transaction =
-    transactionCache[id] || (await contracts.web3.eth.getTransaction(id))
+// export const getTransactionReceipt = memoize(getTransactionReceiptFn)
 
-  if (transaction && !transactionCache[id]) {
-    transactionCache[id] = transaction
-  }
+const getTr = async id => await contracts.web3.eth.getTransaction(id)
+// const getTr = memoize(getTrRaw)
+
+export async function getTransaction(id, fields = {}, localTransactions = []) {
+  const transaction = await getTr(id)
 
   const localTx = localTransactions.find(tx => tx.id === id) || {}
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
+import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -27,10 +28,15 @@ import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
+import AboutPayments from './about/AboutPayments'
+import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import CurrencyContext from 'constants/CurrencyContext'
+
+const store = Store('localStorage')
 
 class App extends Component {
-  state = { hasError: false }
+  state = { hasError: false, currency: store.get('currency', 'fiat-USD') }
 
   componentDidMount() {
     if (window.ethereum) {
@@ -84,7 +90,7 @@ class App extends Component {
       this.props.location.pathname.match(/^\/welcome.*$/g)
 
     return (
-      <>
+      <CurrencyContext.Provider value={this.state.currency}>
         {!hideRewardsBar && <RewardsBanner />}
         {!hideNavbar && <Nav />}
         <main>
@@ -107,10 +113,14 @@ class App extends Component {
                   {...props}
                   locale={this.props.locale}
                   onLocale={this.props.onLocale}
+                  currency={this.state.currency}
+                  onCurrency={currency => this.setCurrency(currency)}
                 />
               )}
             />
             <Route path="/about/dapp-info" component={DappInfo} />
+            <Route path="/about/crypto" component={AboutCrypto} />
+            <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route exact path="/campaigns" component={GrowthCampaigns} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
@@ -122,9 +132,15 @@ class App extends Component {
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
+          currency={this.state.currency}
+          onCurrency={this.props.onCurrency}
         />
-      </>
+      </CurrencyContext.Provider>
     )
+  }
+
+  setCurrency(currency) {
+    this.setState({ currency }, () => store.set('currency', currency))
   }
 }
 
