@@ -17,6 +17,7 @@ import {
   addAccount,
   removeAccount,
   setAccountActive,
+  setAccountBalances,
   setAccountName
 } from 'actions/Wallet'
 import { updateNotificationsPermissions } from 'actions/Activation'
@@ -55,11 +56,44 @@ class OriginWallet extends Component {
       'sendTransaction',
       this.sendTransaction.bind(this)
     )
+    DeviceEventEmitter.addListener(
+      'getBalances',
+      this.getBalances.bind(this)
+    )
   }
 
   componentDidMount() {
     this._migrateLegacyAccounts()
     this.initAccounts()
+    this.balancePoller = setInterval(() => this.getBalances(), 5000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.balancePoller)
+  }
+
+  async getBalances() {
+    const account = this.props.wallet.accounts[0]
+    const ethBalance = await web3.eth.getBalance(account.address)
+
+    let tokenBalances = {}
+    if (graphqlContext.config.tokens) {
+      for (token of graphqlContext.config.tokens) {
+        const tokenContract = graphqlContext.tokens.find(t => t.symbol === token.id)
+        if (tokenContract) {
+          const balance = await tokenContract.methods.balanceOf(account.address).call()
+          tokenBalances[t.symbol] = balance
+        }
+      }
+    }
+
+    this.props.setAccountBalances({
+      address: account.address,
+      balances: {
+        eth: web3.utils.fromWei(ethBalance),
+        ...tokenBalances
+      }
+    })
   }
 
   /* Move accounts from the old data store into the new redux store
@@ -94,14 +128,8 @@ class OriginWallet extends Component {
     for (let i = 0; i < this.props.wallet.accounts.length; i++) {
       web3.eth.accounts.wallet.add(this.props.wallet.accounts[i])
     }
-
     const { length } = this.props.wallet.accounts
     console.debug(`Loaded Origin Wallet with ${length} accounts`)
-
-    if (length) {
-      web3.eth.defaultAccount = this.props.wallet.accounts[0].address
-    }
-
     const provider = graphqlContext.config.provider
     console.debug(`Setting provider to ${provider}`)
     web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
@@ -112,7 +140,6 @@ class OriginWallet extends Component {
   async createAccount() {
     const wallet = web3.eth.accounts.wallet.create(1)
     const account = wallet[wallet.length - 1]
-    web3.eth.defaultAccount = account.address
     this.props.addAccount(account)
     return account.address
   }
@@ -124,7 +151,6 @@ class OriginWallet extends Component {
       privateKey = '0x' + privateKey
     }
     const account = web3.eth.accounts.wallet.add(privateKey)
-    web3.eth.defaultAccount = account.address
     this.props.addAccount(account)
     return account.address
   }
@@ -250,6 +276,7 @@ const mapDispatchToProps = dispatch => ({
   removeAccount: account => dispatch(removeAccount(account)),
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
+  setAccountBalances: payload => dispatch(setAccountBalances(payload)),
   updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>
     dispatch(updateNotificationsPermissions(permissions))

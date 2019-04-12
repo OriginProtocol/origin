@@ -4,7 +4,8 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   accounts: [],
-  accountNameMapping: {}
+  accountNameMapping: {},
+  accountBalanceMapping: {}
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -46,6 +47,16 @@ export default function Wallet(state = initialState, action = {}) {
         ...state,
         accounts: accounts
       }
+
+    case WalletConstants.SET_ACCOUNT_BALANCES:
+      return {
+        ...state,
+        accountBalanceMapping: {
+          ...state.accountBalanceMapping,
+          [action.payload.address]: action.payload.balances
+        }
+      }
+
 
     case WalletConstants.SET_ACCOUNT_NAME:
       return {

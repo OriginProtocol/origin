@@ -3,11 +3,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
-import { Query } from 'react-apollo'
-
-import ProfileQuery from 'queries/Profile'
-import TokenBalance from 'components/token-balance'
-import Loading from 'components/loading'
 
 class WalletScreen extends Component {
   static navigationOptions = {
@@ -22,41 +17,26 @@ class WalletScreen extends Component {
   componentDidMount() {}
 
   render() {
+    const { wallet } = this.props
+    const activeAddress = wallet.accounts[0].address
+    const balances = wallet.accountBalanceMapping[activeAddress]
+    console.log(balances)
+
     return (
-      <Query query={ProfileQuery} pollInterval={1000}>
-        {({ data, loading, error }) => {
-          if (loading) {
-            return <Text>Loading</Text>
-          }
-
-          if (error) {
-            return <Text>An error occurred: {error}</Text>
-          }
-
-          const primaryAccount = data.web3.primaryAccount
-          const { id, checksumAddress } = primaryAccount
-          const ethBalance = primaryAccount.balance.eth
-
+      <>
+        <Text>Address: { activeAddress }</Text>
+        {Object.keys(balances).map((token, index) => {
           return (
-            <>
-              <Text>Address: {id}</Text>
-              <Text>ETH: {ethBalance}</Text>
-              <Text>
-                DAI: <TokenBalance account={checksumAddress} token="DAI" />
-              </Text>
-              <Text>
-                OGN: <TokenBalance account={checksumAddress} token="OGN" />
-              </Text>
-            </>
+            <Text key={token}>{token}: {balances[token]}</Text>
           )
-        }}
-      </Query>
+        })}
+      </>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {}
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
 }
 
 export default connect(mapStateToProps)(WalletScreen)

@@ -7,10 +7,10 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { ApolloProvider } from 'react-apollo'
 
 import graphqlClient from '@origin/graphql'
-import { setNetwork } from '@origin/graphql/src/contracts'
+import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 import { NETWORK } from 'react-native-dotenv'
-console.log(NETWORK)
 setNetwork(NETWORK)
+console.log(graphqlContext)
 
 import OriginWallet from './OriginWallet'
 import OriginWrapper from './Wrapper'
