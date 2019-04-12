@@ -1,6 +1,6 @@
 const IMAGES_PATH = '../../assets/images/'
 
-export default (currencies = {
+export default {
   dai: {
     color: '#fec100',
     icon: require(`${IMAGES_PATH}dai-icon.png`),
@@ -18,4 +18,4 @@ export default (currencies = {
     icon: require(`${IMAGES_PATH}ogn-icon.png`),
     name: 'Origin Token'
   }
-})
+}

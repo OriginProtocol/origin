@@ -26,7 +26,7 @@ export function updateNotificationsPermissions(permissions) {
   }
 }
 
-export function updateBackupWarningStatus(dismissed, hidden) {
+export function updateBackupWarningStatus(dismissed) {
   return {
     type: ActivationConstants.UPDATE_BACKUP_WARNING_STATUS,
     dismissed

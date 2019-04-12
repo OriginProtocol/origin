@@ -1,28 +1,13 @@
+'use strict'
+
 import React, { Component } from 'react'
-import {
-  Alert,
-  Clipboard,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Alert, StyleSheet, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import {
   promptForNotifications,
   updateBackupWarningStatus
 } from 'actions/Activation'
-
-import Address from 'components/address'
-import OriginButton from 'components/origin-button'
-
-import currencies from 'utils/currencies'
-import { sufficientFunds } from 'utils/transaction'
-import { evenlySplitAddress } from 'utils/user'
-
-import originWallet from '../OriginWallet'
 
 class WalletFundingScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -57,8 +42,6 @@ class WalletFundingScreen extends Component {
           {
             text: 'Show Private Key',
             onPress: () => {
-              originWallet.showPrivateKey()
-
               this.props.updateBackupWarningStatus(true)
             }
           }
@@ -68,85 +51,7 @@ class WalletFundingScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
-    const { address, balances } = wallet
-    const { currency, item } = navigation.state.params
-    const balance = web3.utils.fromWei(balances[currency], 'ether')
-    const fundsRequired = web3.utils
-      .toBN(item.cost)
-      .add(web3.utils.toBN(item.gas_cost))
-    const readableRequired = web3.utils.fromWei(fundsRequired.toString())
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.currency}>
-          <Text
-            style={{ ...styles.heading, color: currencies[currency].color }}
-          >
-            {currency.toUpperCase()}
-          </Text>
-          <Image
-            source={currencies[currency].icon}
-            style={
-              smallScreen
-                ? { ...styles.icon, height: 30, width: 30 }
-                : styles.icon
-            }
-          />
-          <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
-          <Address
-            address={address}
-            label="Wallet Address"
-            style={styles.address}
-          />
-        </View>
-        <View style={styles.content}>
-          <Text style={styles.contentHeading}>Add Funds</Text>
-          <Text
-            style={{ ...styles.contentBody, fontSize: smallScreen ? 14 : 18 }}
-          >
-            {`You don't have enough ${
-              currencies[currency].name
-            } in your wallet to complete this transaction. Please transfer at least ${Number(
-              readableRequired
-            ).toFixed(5)} ${currency.toUpperCase()} into your wallet.`}
-          </Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Copy Wallet Address'}
-            onPress={async () => {
-              await Clipboard.setString(address)
-
-              Alert.alert(
-                'Copied to clipboard!',
-                evenlySplitAddress(address).join('\n')
-              )
-            }}
-          />
-          <OriginButton
-            disabled={!sufficientFunds(wallet, item)}
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Done'}
-            onDisabledPress={() => {
-              Alert.alert('You must add funds to continue.')
-            }}
-            onPress={() => {
-              navigation.navigate('Transaction', { item })
-            }}
-          />
-        </View>
-      </View>
-    )
+    return <Text>Funding</Text>
   }
 }
 

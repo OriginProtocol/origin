@@ -6,17 +6,14 @@ import {
   Modal,
   StyleSheet,
   SafeAreaView,
-  Text,
-  TouchableOpacity,
   View
 } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import { MARKETPLACE_DAPP_URL, NETWORK } from 'react-native-dotenv'
 
-import CardsModal from 'components/cards-modal'
-import { decodeTransaction } from '../utils/contractDecoder'
 import TransactionCard from 'components/transaction-card'
+import { decodeTransaction } from '../utils/contractDecoder'
 
 let marketplaceDappUrl = MARKETPLACE_DAPP_URL
 if (NETWORK !== 'localhost') {
@@ -40,7 +37,7 @@ class MarketplaceScreen extends Component {
     this.toggleModal = this.toggleModal.bind(this)
   }
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: 'Marketplace',
       headerTitleStyle: {
@@ -156,7 +153,7 @@ class MarketplaceScreen extends Component {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />
-        {modals.map((modal, index) => {
+        {modals.map(modal => {
           let card
           if (modal.type === 'transaction') {
             card = (

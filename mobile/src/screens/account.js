@@ -63,7 +63,6 @@ class AccountScreen extends Component {
 
   handleDelete() {
     const { navigation } = this.props
-    const { address } = navigation.getParam('account')
 
     Alert.alert(
       'Important!',
@@ -101,7 +100,7 @@ class AccountScreen extends Component {
     DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
   }
 
-  showPrivateKey(address) {
+  showPrivateKey() {
     const { privateKey } = this.props.navigation.getParam('account')
     Alert.alert('Private Key', privateKey)
   }

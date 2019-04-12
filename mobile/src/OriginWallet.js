@@ -73,9 +73,9 @@ class OriginWallet extends Component {
     const account = this.props.wallet.accounts[0]
     const ethBalance = await web3.eth.getBalance(account.address)
 
-    let tokenBalances = {}
+    const tokenBalances = {}
     if (graphqlContext.config.tokens) {
-      for (token of graphqlContext.config.tokens) {
+      for (const token of graphqlContext.config.tokens) {
         const tokenContract = graphqlContext.tokens.find(
           t => t.symbol === token.id
         )
@@ -83,7 +83,7 @@ class OriginWallet extends Component {
           const balance = await tokenContract.methods
             .balanceOf(account.address)
             .call()
-          tokenBalances[t.symbol] = balance
+          tokenBalances[token.symbol] = balance
         }
       }
     }
@@ -206,7 +206,7 @@ class OriginWallet extends Component {
         DeviceEventEmitter.emit('transactionReceipt', { transaction, receipt })
       })
       .on('error', (error, receipt) => {
-        console.error(error)
+        console.error(error, receipt)
       })
   }
 
@@ -249,9 +249,9 @@ class OriginWallet extends Component {
    */
   getNotificationType() {
     if (Platform.OS === 'ios') {
-      return EthNotificationTypes.APN
+      return ETH_NOTIFICATION_TYPES.APN
     } else if (Platform.OS === 'android') {
-      return EthNotificationTypes.FCM
+      return ETH_NOTIFICATION_TYPES.FCM
     }
   }
 
@@ -285,7 +285,6 @@ const mapDispatchToProps = dispatch => ({
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
   setAccountBalances: payload => dispatch(setAccountBalances(payload)),
-  updateAccounts: accounts => dispatch(updateAccounts(accounts)),
   updateNotificationsPermissions: permissions =>
     dispatch(updateNotificationsPermissions(permissions))
 })

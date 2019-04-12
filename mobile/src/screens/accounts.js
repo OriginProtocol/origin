@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import {
-  DeviceEventEmitter,
   FlatList,
   Image,
   StyleSheet,

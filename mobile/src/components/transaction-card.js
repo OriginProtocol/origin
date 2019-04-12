@@ -18,13 +18,7 @@ class TransactionCard extends Component {
 
   render() {
     const { transactionParameters, msgData, wallet } = this.props
-    const {
-      _commission,
-      _currency,
-      _ipfsHash,
-      _value,
-      listingID
-    } = transactionParameters
+    const { _commission, _currency, _value } = transactionParameters
     const gas = web3.utils.fromWei(msgData.data.gas)
 
     let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency

@@ -5,8 +5,7 @@ import { Dimensions, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import graphqlClient from '@origin/graphql'
-import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
+import { setNetwork } from '@origin/graphql/src/contracts'
 import { NETWORK } from 'react-native-dotenv'
 setNetwork(NETWORK)
 

@@ -1,7 +1,5 @@
 'use strict'
 
-import keyMirror from './utils/keyMirror'
-
 export const ACCOUNT_MAPPING = 'ACCOUNT_MAPPING'
 
 export const DEFAULT_NOTIFICATION_PERMISSIONS = {
