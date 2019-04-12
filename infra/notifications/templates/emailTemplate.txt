@@ -1,3 +1,8 @@
 <%= message %>
 
-[unsubscribe]
+
+To unsubscribe click here: <%= "\<%asm_group_unsubscribe_raw_url%\>" %>
+<% { /*
+  The above is lodash template syntax to escape the unsubscribe
+  tag so it is ignored and passed through to Sendgrid.
+*/ } %>
