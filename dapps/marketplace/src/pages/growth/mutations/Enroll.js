@@ -82,11 +82,12 @@ class Enroll extends Component {
                             signMessage({
                               variables: {
                                 address: accountId,
-                                // TODO: change version programatically
-                                message: fbt(
-                                  'I accept the terms of growth campaign version: 1.0',
-                                  'growth.acceptTerms'
-                                )
+                                /* TODO: change version programatically
+                                 * (!)important do not translate this message or the enrollment
+                                 * on the growth server will fail
+                                 */
+                                message:
+                                  'I accept the terms of growth campaign version: 1.0'
                               }
                             })
                           }}
