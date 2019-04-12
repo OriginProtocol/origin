@@ -133,7 +133,7 @@ const GrowthCampaignBox = props => (
       const walletAddress = data.web3.primaryAccount
         ? data.web3.primaryAccount.id
         : null
-        
+
       let notEnrolled = true
       if (props.growthEnrollmentStatus) {
         notEnrolled = ['NotEnrolled', 'Banned'].includes(
