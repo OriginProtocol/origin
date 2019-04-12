@@ -34,6 +34,8 @@ In origin-notifications...
   - Run `sequelize db:migrate`
   - Run `npm run start:development`
 
+NOTE: VAPID key is for web-push. More detail [here](https://stackoverflow.com/questions/40392257/what-is-vapid-and-why-is-it-useful).
+
 In origin-dapp...
 
   - Add public key and notifications url to origin-dapp/.env
@@ -65,6 +67,11 @@ To test in the DApp...
 1. Make an offer from a different account
 
 For more (outdated) information, see [the original pull request](https://github.com/OriginProtocol/origin/pull/795#issue-224602842).
+
+## Templates
+
+We use templating from Lodash. Documentation can be found here:
+https://lodash.com/docs/4.17.11#template
 
 ## Testing
 
