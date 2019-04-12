@@ -20,7 +20,6 @@ class WalletScreen extends Component {
     const { wallet } = this.props
     const activeAddress = wallet.accounts[0].address
     const balances = wallet.accountBalanceMapping[activeAddress]
-    console.log(balances)
 
     return (
       <>
