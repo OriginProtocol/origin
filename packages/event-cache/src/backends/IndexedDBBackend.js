@@ -89,7 +89,7 @@ export default class IndexedDBBackend extends AbstractBackend {
     }
 
     const that = this
-    this.initDB().then((db) => {
+    this.initDB().then(db => {
       that.ready = true
 
       /**

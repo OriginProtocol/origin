@@ -114,10 +114,12 @@ export default class PostgreSQLBackend extends AbstractBackend {
    */
   async _loadLatestBlock() {
     const result = await this._models.Event.findOne({
-      attributes: [[
-        this._sequelize.fn('MAX', this._sequelize.col('block_number')),
-        'max_block'
-      ]]
+      attributes: [
+        [
+          this._sequelize.fn('MAX', this._sequelize.col('block_number')),
+          'max_block'
+        ]
+      ]
     })
     if (result) {
       const maxBlock = result.dataValues.max_block
