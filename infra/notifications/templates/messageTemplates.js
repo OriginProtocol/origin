@@ -118,4 +118,3 @@ const messageTemplates = {
 }
 
 module.exports = { messageTemplates }
-

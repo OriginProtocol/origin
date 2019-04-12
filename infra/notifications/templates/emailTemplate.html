@@ -179,7 +179,11 @@
               <br />845 Market Street, Suite 450A, San Francisco, CA, 94103<br />
               If you no longer want to hear from us, you can
               <a
-                href="https://www.originprotocol.com/mailing-list/unsubscribe?email=[unsubscribe]"
+                href="<%= "\<%asm_group_unsubscribe_raw_url%\>" %>"
+                  <% { /*
+                    Note: The above is lodash template syntax to escape the unsubscribe
+                    tag so it is ignored and passed through to Sendgrid.
+                  */ } %>
                 style="color: #666666;"
                 >unsubscribe</a
               >.<br /><br />
@@ -190,11 +194,7 @@
               >
 
               <hr/>
-              <%= "\<%asm_group_unsubscribe_raw_url%\>" %>
-              <% { /*
-                The above is lodash template syntax to escape the unsubscribe
-                tag so it is ignored and passed through to Sendgrid.
-              */ } %>
+
 
             </td>
           </tr>
