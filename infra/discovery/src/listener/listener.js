@@ -66,7 +66,7 @@ const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
   listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
-  // Notification web hook URL.
+  // Notification web hook URL. e.g. http://localhost:3456/events
   webhook: args['--webhook'] || process.env.WEBHOOK,
   // Discord webhook URL.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
