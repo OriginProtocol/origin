@@ -112,15 +112,11 @@ class TransactionCard extends Component {
         ) : (
           <Fragment>
             <View style={styles.primaryContainer}>
-              <Text style={[styles.amount, styles.primary]}>
-                {gas} ETH
-              </Text>
+              <Text style={[styles.amount, styles.primary]}>{gas} ETH</Text>
               <Text style={styles.label}>Gas Cost</Text>
             </View>
             <View style={styles.primaryContainer}>
-              <Text style={[styles.amount, styles.primary]}>
-                {boost} OGN
-              </Text>
+              <Text style={[styles.amount, styles.primary]}>{boost} OGN</Text>
               <Text style={styles.label}>Boost</Text>
             </View>
           </Fragment>
@@ -135,15 +131,12 @@ class TransactionCard extends Component {
           </View>
           <View style={styles.accountText}>
             <Text style={styles.account}>
-              {daiInvolved || ognInvolved
-                ? 'Your Balances'
-                : 'Your Balance'}
-              :{' '}
+              {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
             </Text>
             <Text style={styles.account}>
               {balances['eth']} ETH
-              {daiInvolved && balances['dai'] `DAI`}
-              {ognInvolved && balances['ogn'] `OGN`}
+              {daiInvolved && balances['dai']`DAI`}
+              {ognInvolved && balances['ogn']`OGN`}
             </Text>
           </View>
         </View>

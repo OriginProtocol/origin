@@ -57,7 +57,6 @@ export default function Wallet(state = initialState, action = {}) {
         }
       }
 
-
     case WalletConstants.SET_ACCOUNT_NAME:
       return {
         ...state,

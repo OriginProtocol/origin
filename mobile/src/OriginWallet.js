@@ -56,10 +56,7 @@ class OriginWallet extends Component {
       'sendTransaction',
       this.sendTransaction.bind(this)
     )
-    DeviceEventEmitter.addListener(
-      'getBalances',
-      this.getBalances.bind(this)
-    )
+    DeviceEventEmitter.addListener('getBalances', this.getBalances.bind(this))
   }
 
   componentDidMount() {
@@ -79,9 +76,13 @@ class OriginWallet extends Component {
     let tokenBalances = {}
     if (graphqlContext.config.tokens) {
       for (token of graphqlContext.config.tokens) {
-        const tokenContract = graphqlContext.tokens.find(t => t.symbol === token.id)
+        const tokenContract = graphqlContext.tokens.find(
+          t => t.symbol === token.id
+        )
         if (tokenContract) {
-          const balance = await tokenContract.methods.balanceOf(account.address).call()
+          const balance = await tokenContract.methods
+            .balanceOf(account.address)
+            .call()
           tokenBalances[t.symbol] = balance
         }
       }
@@ -187,19 +188,26 @@ class OriginWallet extends Component {
       transaction,
       account.privateKey
     )
-    DeviceEventEmitter.emit('transactionSigned', { transaction, signedTransaction })
+    DeviceEventEmitter.emit('transactionSigned', {
+      transaction,
+      signedTransaction
+    })
     return signedTransaction
   }
 
   async sendTransaction(transaction) {
     console.log('Sending transaction: ', transaction)
-    web3.eth.sendTransaction(transaction).on('transactionHash', (hash) => {
-      DeviceEventEmitter.emit('transactionHash', { transaction, hash })
-    }).on('receipt', (receipt) => {
-      DeviceEventEmitter.emit('transactionReceipt', { transaction, receipt })
-    }).on('error', (error, receipt) => {
-      console.error(error)
-    })
+    web3.eth
+      .sendTransaction(transaction)
+      .on('transactionHash', hash => {
+        DeviceEventEmitter.emit('transactionHash', { transaction, hash })
+      })
+      .on('receipt', receipt => {
+        DeviceEventEmitter.emit('transactionReceipt', { transaction, receipt })
+      })
+      .on('error', (error, receipt) => {
+        console.error(error)
+      })
   }
 
   /* Configure push notifications

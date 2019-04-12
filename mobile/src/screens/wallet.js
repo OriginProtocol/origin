@@ -23,10 +23,12 @@ class WalletScreen extends Component {
 
     return (
       <>
-        <Text>Address: { activeAddress }</Text>
+        <Text>Address: {activeAddress}</Text>
         {Object.keys(balances).map((token, index) => {
           return (
-            <Text key={token}>{token}: {balances[token]}</Text>
+            <Text key={token}>
+              {token}: {balances[token]}
+            </Text>
           )
         })}
       </>

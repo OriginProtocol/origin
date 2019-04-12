@@ -31,7 +31,10 @@ class MarketplaceScreen extends Component {
       modals: []
     }
 
-    DeviceEventEmitter.addListener('transactionHash', this.handleTransactionHash.bind(this))
+    DeviceEventEmitter.addListener(
+      'transactionHash',
+      this.handleTransactionHash.bind(this)
+    )
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
@@ -162,7 +165,7 @@ class MarketplaceScreen extends Component {
                 transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
                 onConfirm={() => {
-                    this.sendTransaction(modal.msgData.data)
+                  this.sendTransaction(modal.msgData.data)
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
