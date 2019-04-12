@@ -33,6 +33,8 @@ class IdentityEventHandler {
         return 'twitter'
       } else if (siteName === 'airbnb.com') {
         return 'airbnb'
+      } else if (siteName === 'google.com') {
+        return 'google'
       } else {
         logger.error(`Unexpected siteName for attestation ${attestation}`)
       }
@@ -133,6 +135,9 @@ class IdentityEventHandler {
             // Note: we don't have access to the decoratedIdentity's fbook id,
             // only whether the account was verified or not.
             decoratedIdentity.facebookVerified = true
+            break
+          case 'google':
+            decoratedIdentity.googleVerified = true
             break
         }
       })

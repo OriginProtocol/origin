@@ -294,4 +294,32 @@ describe('Attestation Resource', function() {
       expectAttestation(response)
     })
   })
+
+  describe('googleAuthUrl', () => {
+    it('should process the request', async () => {
+      const attestations = setupWithServer({
+        expectedMethod: 'GET',
+        expectedPath: 'google/auth-url',
+        responseStub: { url: 'foo.bar' }
+      })
+      const response = await attestations.googleAuthUrl()
+      expect(response).to.equal('foo.bar')
+    })
+  })
+
+  describe('googleVerify', () => {
+    it('should process the request', async () => {
+      const attestations = setupWithServer({
+        expectedMethod: 'POST',
+        expectedPath: 'google/verify',
+        expectedParams: ['identity', 'code'],
+        responseStub: attestationResponse
+      })
+      const response = await attestations.googleVerify({
+        wallet: sampleWallet,
+        code: '12345'
+      })
+      expectAttestation(response)
+    })
+  })
 })
