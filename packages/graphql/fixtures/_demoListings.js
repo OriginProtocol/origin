@@ -239,7 +239,7 @@ const LakeHouse = {
   autoApprove: true,
   data: {
     typename: 'FractionalListing',
-    title: 'Casa Wolf',
+    title: 'Casa Wulf',
     description:
       'Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.',
     category: 'schema.forRent',
@@ -288,7 +288,7 @@ const ZincHouse = {
     typename: 'FractionalListing',
     title: 'Zinc House',
     description:
-      'Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.',
+      'Due to multiple limitations, the Zinc House goes against tradition to capture the best views of the sea. The contemporary structure is comprised of four interlocking volumes. A white wing houses the garage, leading to a two-story zinc entrance hall. From here, the home flips the conventional layout, putting bedrooms on the ground floor and the main living area above in a timber-clad box. Flanked by glazed panels, the kitchen and living room can overlook the garden in the rear and the coast ahead.',
     category: 'schema.forRent',
     subCategory: 'schema.housing',
     media: [
