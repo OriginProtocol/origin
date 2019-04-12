@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
       return_values: DataTypes.JSONB
     },
     {
-      tableName: 'event'
+      tableName: 'event',
+      timestamps: false
     }
   )
 
