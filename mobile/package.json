@@ -1,6 +1,9 @@
 {
   "name": "@origin/mobile",
-  "version": "0.1.11",
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "repository": "https://github.com/OriginProtocol/origin/mobile",
+  "version": "0.1.12",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-transform-new-target": "^7.0.0",
@@ -19,7 +22,7 @@
     "clean": "git clean -fdX .",
     "ios": "react-native run-ios",
     "lint": "eslint '**/*.js' && npm run prettier:check",
-    "postinstall": "node patch-warning.js && ./postinstall.sh",
+    "postinstall": "./postinstall.sh",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"**/*.js\"",
     "start": "react-native start",
@@ -29,11 +32,13 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "acorn": "^6.1.1",
     "cross-fetch": "^3.0.1",
     "node-libs-react-native": "^1.0.3",
-    "react": "^16.8.4",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.6",
     "react-hot-loader": "^4.8.0",
-    "react-native": "^0.59.1",
+    "react-native": "^0.59.4",
     "react-native-dotenv": "^0.2.0",
     "react-native-push-notification": "^3.1.2",
     "react-native-sentry": "^0.42.0",
@@ -45,7 +50,8 @@
     "redux-persist-transform-encrypt": "^2.0.1",
     "redux-thunk": "^2.3.0",
     "vm-browserify": "^1.1.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.34",
+    "whatwg-url": "^7.0.0"
   },
   "rnpm": {
     "assets": [
@@ -60,7 +66,9 @@
     "@origin/messaging-client": "../packages/messaging-client",
     "@origin/services": "../packages/services",
     "@origin/validator": "../packages/validator",
-    "@origin/mobile-bridge": "../packages/mobile-bridge"
+    "@origin/mobile-bridge": "../packages/mobile-bridge",
+    "@origin/linker-client": "../packages/linker-client",
+    "@origin/js": "../packages/origin-js"
   },
   "prettier": {
     "semi": false,

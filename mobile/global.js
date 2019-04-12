@@ -18,4 +18,9 @@ if (typeof atob === 'undefined') {
   }
 }
 
-global.navigator.userAgent = 'React Native'
+// see https://github.com/facebook/react-native/issues/16434
+import { URL, URLSearchParams } from 'whatwg-url'
+global.URL = URL
+global.URLSearchParams = URLSearchParams
+
+// global.navigator.userAgent = 'React Native'
