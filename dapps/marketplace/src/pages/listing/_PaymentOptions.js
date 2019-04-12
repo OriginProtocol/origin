@@ -65,7 +65,7 @@ const PaymentOptions = ({
   children,
   cannotTransact
 }) => {
-  if (cannotTransact) {
+  if (cannotTransact && cannotTransact !== 'no-balance') {
     return children
   }
 

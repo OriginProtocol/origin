@@ -371,6 +371,7 @@ const Spaceman = {
       amount: '15',
       currency: 'fiat-USD'
     },
+    acceptedTokens: ['token-ETH', 'token-DAI'],
     commission: '10',
     commissionPerUnit: '0',
     marketplacePublisher: '0x627306090abab3a6e1400e9345bc60c78a8bef57'
