@@ -55,7 +55,6 @@ class App extends Component {
   }
 
   render() {
-    
     if (this.state.hasError) {
       return (
         <div className="app-spinner">

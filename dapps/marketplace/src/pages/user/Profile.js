@@ -12,7 +12,6 @@ import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
-import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 import ProfileStrength from 'components/ProfileStrength'
@@ -165,9 +164,7 @@ class UserProfile extends Component {
               </div>
             </div>
             <h3>
-              <fbt desc="Profile.originVerifications">
-                Origin Verifications
-              </fbt>
+              <fbt desc="Profile.originVerifications">Origin Verifications</fbt>
             </h3>
             <div className="attestation-container">
               <label className="mb-4">
@@ -243,8 +240,8 @@ class UserProfile extends Component {
             )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
-                <b>Verifying your profile</b> allows oher users to know that
-                you are a real person and increases the chances of successful
+                <b>Verifying your profile</b> allows oher users to know that you
+                are a real person and increases the chances of successful
                 transactions on Origin.
               </fbt>
             </div>
@@ -306,9 +303,12 @@ class UserProfile extends Component {
         />
       )
     }
-    
+
     let attestationReward = 0
-    if (this.props.growthCampaigns && this.props.growthEnrollmentStatus === 'Enrolled') {
+    if (
+      this.props.growthCampaigns &&
+      this.props.growthEnrollmentStatus === 'Enrolled'
+    ) {
       const capitalize = function(string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       }
@@ -329,16 +329,19 @@ class UserProfile extends Component {
         >
           <i />
           {text}
-          {attestationPublished && <img
-            className="ml-auto"
-            src="images/identity/completed-tick.svg"
-          />}
+          {attestationPublished && (
+            <img className="ml-auto" src="images/identity/completed-tick.svg" />
+          )}
           {attestationProvisional && <div className="indicator" />}
-          {!attestationPublished && attestationReward !== 0 &&
-            <div className={`growth-reward ml-auto d-flex justify-content-center ${attestationProvisional ? 'provisional' : ''}`}>
+          {!attestationPublished && attestationReward !== 0 && (
+            <div
+              className={`growth-reward ml-auto d-flex justify-content-center ${
+                attestationProvisional ? 'provisional' : ''
+              }`}
+            >
               {attestationReward.toString()}
             </div>
-          }
+          )}
         </div>
         {AttestationComponent}
       </>

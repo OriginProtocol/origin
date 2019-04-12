@@ -211,15 +211,15 @@ class ProfileWizard extends Component {
             Airbnb profiles.
           </fbt>
         </div>
-        {this.attestationRewardsAvailable() && <div className="d-flex rewards justify-content-center mt-2">
-          <div>
-            <fbt desc="ProfileWizard.earnUpTo">Earn up to</fbt>
-          </div>
-          <div className="d-flex align-items-center">
-            <div className="icon" />
-            <div className="ogn-coin">
-              {
-                (
+        {this.attestationRewardsAvailable() && (
+          <div className="d-flex rewards justify-content-center mt-2">
+            <div>
+              <fbt desc="ProfileWizard.earnUpTo">Earn up to</fbt>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="icon" />
+              <div className="ogn-coin">
+                {(
                   getAttestationReward({
                     growthCampaigns: this.props.growthCampaigns,
                     attestation: 'Airbnb',
@@ -235,11 +235,13 @@ class ProfileWizard extends Component {
                     attestation: 'Twitter',
                     tokenDecimals: this.props.tokenDecimals || 18
                   })
-                ).toString()}&nbsp;
-              <span>OGN</span>
+                ).toString()}
+                &nbsp;
+                <span>OGN</span>
+              </div>
             </div>
           </div>
-        </div>}
+        )}
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
@@ -270,22 +272,25 @@ class ProfileWizard extends Component {
             phone number
           </fbt>
         </div>
-        {this.attestationRewardsAvailable() && <div className="d-flex rewards justify-content-center mt-2">
-          <div>
-            <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
-          </div>
-          <div className="d-flex align-items-center">
-            <div className="icon" />
-            <div className="ogn-coin">
-              {getAttestationReward({
-                growthCampaigns: this.props.growthCampaigns,
-                attestation: 'Phone',
-                tokenDecimals: this.props.tokenDecimals || 18
-              }).toString()}&nbsp;
-              <span>OGN</span>
+        {this.attestationRewardsAvailable() && (
+          <div className="d-flex rewards justify-content-center mt-2">
+            <div>
+              <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="icon" />
+              <div className="ogn-coin">
+                {getAttestationReward({
+                  growthCampaigns: this.props.growthCampaigns,
+                  attestation: 'Phone',
+                  tokenDecimals: this.props.tokenDecimals || 18
+                }).toString()}
+                &nbsp;
+                <span>OGN</span>
+              </div>
             </div>
           </div>
-        </div>}
+        )}
         <div className="d-flex mr-auto ml-auto mt-3">
           {this.addPublishNowButtonIfApplicable()}
           <button
@@ -414,8 +419,10 @@ class ProfileWizard extends Component {
   }
 
   attestationRewardsAvailable() {
-    return this.props.growthEnrollmentStatus === 'Enrolled' &&
+    return (
+      this.props.growthEnrollmentStatus === 'Enrolled' &&
       this.props.growthCampaigns
+    )
   }
 
   render() {

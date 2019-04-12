@@ -12,9 +12,9 @@ function withTokenBalance(WrappedComponent) {
       skip={!wallet}
     >
       {({ data }) => {
-        const {tokenBalance, tokenDecimals} = tokenInfo(data)
+        const { tokenBalance, tokenDecimals } = tokenInfo(data)
         return (
-           <WrappedComponent
+          <WrappedComponent
             {...props}
             tokenBalance={tokenBalance}
             tokenDecimals={tokenDecimals}

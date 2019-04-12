@@ -1,6 +1,6 @@
 import React from 'react'
 import { Query } from 'react-apollo'
-import get from 'lodash/get'
+import QueryError from 'components/QueryError'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
@@ -12,7 +12,7 @@ function withGrowthCampaign(WrappedComponent) {
       <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
         {({ error, data, networkStatus, loading }) => {
           if (networkStatus === 1 || loading) {
-            return <WrappedComponent {...props}/>
+            return <WrappedComponent {...props} />
           } else if (error) {
             return <QueryError error={error} query={profileQuery} />
           }
@@ -31,9 +31,11 @@ function withGrowthCampaign(WrappedComponent) {
             >
               {({ networkStatus, error, loading, data }) => {
                 if (networkStatus === 1 || loading) {
-                  return <WrappedComponent {...props}/>
+                  return <WrappedComponent {...props} />
                 } else if (error) {
-                  return <QueryError error={error} query={enrollmentStatusQuery} />
+                  return (
+                    <QueryError error={error} query={enrollmentStatusQuery} />
+                  )
                 }
 
                 const enrollmentStatus = data.enrollmentStatus
@@ -56,9 +58,11 @@ function withGrowthCampaign(WrappedComponent) {
                   >
                     {({ networkStatus, error, loading, data }) => {
                       if (networkStatus === 1 || loading) {
-                        return <WrappedComponent {...props}/>
+                        return <WrappedComponent {...props} />
                       } else if (error) {
-                        return <QueryError error={error} query={allCampaignsQuery} />
+                        return (
+                          <QueryError error={error} query={allCampaignsQuery} />
+                        )
                       }
 
                       return (

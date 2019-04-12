@@ -1,11 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
-import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
-import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import AccountTokenBalance from 'queries/TokenBalance'
 import ActionList from 'pages/growth/ActionList'
@@ -289,9 +287,11 @@ class GrowthCampaigns extends Component {
     this.setState({ navigation })
   }
 
-  componentDidUpdate(){
-    if (this.props.growthEnrollmentStatus === 'NotEnrolled' || 
-      this.props.growthEnrollmentStatus === 'Banned') {
+  componentDidUpdate() {
+    if (
+      this.props.growthEnrollmentStatus === 'NotEnrolled' ||
+      this.props.growthEnrollmentStatus === 'Banned'
+    ) {
       this.props.history.push('/welcome')
     }
   }
@@ -353,11 +353,7 @@ class GrowthCampaigns extends Component {
                     if (tokenHolder && tokenHolder.token) {
                       decimalDivision = web3.utils
                         .toBN(10)
-                        .pow(
-                          web3.utils.toBN(
-                            tokenHolder.token.decimals
-                          )
-                        )
+                        .pow(web3.utils.toBN(tokenHolder.token.decimals))
                     }
                   }
 

@@ -60,9 +60,7 @@ const renderEnrolledBox = (props, walletAddress) => {
         variables={{ account: walletAddress, token: 'OGN' }}
       >
         {({ loading, error, data }) => {
-          let decimalDivision = web3.utils
-            .toBN(10)
-            .pow(web3.utils.toBN(18))
+          let decimalDivision = web3.utils.toBN(10).pow(web3.utils.toBN(18))
 
           if (!loading && !error) {
             const tokenHolder = data.web3.account.token
@@ -89,10 +87,7 @@ const renderEnrolledBox = (props, walletAddress) => {
                 </fbt>
               </div>
               <div className="mt-2">
-                <img
-                  className="ogn-icon pr-2"
-                  src="images/ogn-icon.svg"
-                />
+                <img className="ogn-icon pr-2" src="images/ogn-icon.svg" />
                 <span className="ogn-amount font-weight-bold big">
                   {tokensEarned.toString()}
                 </span>
@@ -106,10 +101,7 @@ const renderEnrolledBox = (props, walletAddress) => {
                 showIndicators={false}
               />
               <div className="small-dark">
-                {`Time left: ${formatTimeDifference(
-                  Date.now(),
-                  endDate
-                )}`}
+                {`Time left: ${formatTimeDifference(Date.now(), endDate)}`}
               </div>
               <div className="small-steel">
                 <fbt desc="profile.growthPaidOut">
@@ -118,8 +110,7 @@ const renderEnrolledBox = (props, walletAddress) => {
               </div>
               <div className="small-steel">
                 <fbt desc="profile.notSeeingEarnings">
-                  Not seeing your earnings? Make sure you publish your
-                  changes.
+                  Not seeing your earnings? Make sure you publish your changes.
                 </fbt>
               </div>
             </div>
