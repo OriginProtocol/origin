@@ -5,10 +5,6 @@ import { Dimensions, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import { setNetwork } from '@origin/graphql/src/contracts'
-import { NETWORK } from 'react-native-dotenv'
-setNetwork(NETWORK)
-
 import OriginWallet from './OriginWallet'
 import OriginWrapper from './Wrapper'
 import Store, { persistor } from './Store'

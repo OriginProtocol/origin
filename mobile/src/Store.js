@@ -6,6 +6,7 @@ import thunkMiddleware from 'redux-thunk'
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
 import notifications from 'reducers/Notifications'
+import settings from 'reducers/Settings'
 import wallet from 'reducers/Wallet'
 import { persistStore, persistReducer } from 'redux-persist'
 import createEncryptor from 'redux-persist-transform-encrypt'
@@ -18,7 +19,7 @@ const encryptor = createEncryptor({
 const persistConfig = {
   key: 'OriginWallet.encrypted',
   storage: storage,
-  whitelist: ['activation', 'notifications', 'wallet'],
+  whitelist: ['activation', 'notifications', 'settings', 'wallet'],
   transforms: [encryptor]
 }
 
@@ -33,6 +34,7 @@ const store = createStore(
       activation,
       exchangeRates,
       notifications,
+      settings,
       wallet
     })
   ),

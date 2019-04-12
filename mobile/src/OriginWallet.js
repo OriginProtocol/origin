@@ -7,7 +7,7 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 
-import graphqlContext from '@origin/graphql/src/contracts'
+import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 
 import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
@@ -24,9 +24,7 @@ import { updateNotificationsPermissions } from 'actions/Activation'
 import { loadData, deleteData } from './tools'
 
 // Environment variables
-import { GCM_SENDER_ID } from 'react-native-dotenv'
-
-const web3 = new Web3()
+import { GCM_SENDER_ID }  from 'react-native-dotenv'
 
 class OriginWallet extends Component {
   constructor() {
@@ -56,15 +54,14 @@ class OriginWallet extends Component {
       'sendTransaction',
       this.sendTransaction.bind(this)
     )
-    DeviceEventEmitter.addListener(
-      'signMessage',
-      this.signMessage.bind(this)
-    )
+    DeviceEventEmitter.addListener('signMessage', this.signMessage.bind(this))
     DeviceEventEmitter.addListener('getBalances', this.getBalances.bind(this))
+    this.web3 = new Web3()
   }
 
   componentDidMount() {
     this._migrateLegacyAccounts()
+    this.initWeb3()
     this.initAccounts()
     this.balancePoller = setInterval(() => this.getBalances(), 5000)
   }
@@ -73,40 +70,9 @@ class OriginWallet extends Component {
     clearInterval(this.balancePoller)
   }
 
-  async getBalances() {
-    const { wallet } = this.props
-
-    if (wallet.accounts.length && wallet.activeAccount) {
-      let ethBalance
-      try {
-        ethBalance = await web3.eth.getBalance(wallet.activeAccount.address)
-      } catch (error) {
-        console.debug('web3 connection failed')
-        return
-      }
-
-      const tokenBalances = {}
-      if (graphqlContext.config.tokens) {
-        for (const token of graphqlContext.config.tokens) {
-          const tokenContract = graphqlContext.tokens.find(
-            t => t.symbol === token.id
-          )
-          if (tokenContract) {
-            const balance = await tokenContract.methods
-              .balanceOf(wallet.activeAccount.address)
-              .call()
-            tokenBalances[token.symbol] = balance
-          }
-        }
-      }
-
-      this.props.setAccountBalances({
-        address: wallet.activeAccount.address,
-        balances: {
-          eth: web3.utils.fromWei(ethBalance),
-          ...tokenBalances
-        }
-      })
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings.network.id !== this.props.settings.network.id) {
+      this.initWeb3()
     }
   }
 
@@ -132,6 +98,15 @@ class OriginWallet extends Component {
     })
   }
 
+  /*
+  */
+  initWeb3() {
+    setNetwork(this.props.settings.network.name.toLowerCase())
+    const provider = graphqlContext.config.provider
+    console.debug(`Setting provider to ${provider}`)
+    this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
+  }
+
   /* Configure web3 using the accounts persisted in redux
    */
   initAccounts() {
@@ -139,21 +114,19 @@ class OriginWallet extends Component {
 
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from tbe data store
-    web3.eth.accounts.wallet.clear()
+    this.web3.eth.accounts.wallet.clear()
     // Load the accounts from the saved redux state into web3
     for (let i = 0; i < wallet.accounts.length; i++) {
-      web3.eth.accounts.wallet.add(wallet.accounts[i])
+      this.web3.eth.accounts.wallet.add(wallet.accounts[i])
     }
 
     const { length } = wallet.accounts
     console.debug(`Loaded Origin Wallet with ${length} accounts`)
-    const provider = graphqlContext.config.provider
-    console.debug(`Setting provider to ${provider}`)
-    web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
-
-    let hasValidActiveAccount = false
+      let hasValidActiveAccount = false
     if (wallet.activeAccount) {
-      hasValidActiveAccount = wallet.accounts.find(a => a.address === wallet.activeAccount.address)
+      hasValidActiveAccount = wallet.accounts.find(
+        a => a.address === wallet.activeAccount.address
+      )
     }
 
     if (length && !hasValidActiveAccount) {
@@ -165,7 +138,7 @@ class OriginWallet extends Component {
   /* Create new account
    */
   async createAccount() {
-    const wallet = web3.eth.accounts.wallet.create(1)
+    const wallet = this.web3.eth.accounts.wallet.create(1)
     const account = wallet[wallet.length - 1]
     this.props.addAccount(account)
     this.props.setAccountActive(account)
@@ -178,7 +151,7 @@ class OriginWallet extends Component {
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
       privateKey = '0x' + privateKey
     }
-    const account = web3.eth.accounts.wallet.add(privateKey)
+    const account = this.web3.eth.accounts.wallet.add(privateKey)
     this.props.addAccount(account)
     this.props.setAccountActive(account)
     return account.address
@@ -188,12 +161,13 @@ class OriginWallet extends Component {
    */
   async removeAccount(account) {
     const { wallet } = this.props
-    const result = web3.eth.accounts.wallet.remove(account.address)
+    const result = this.web3.eth.accounts.wallet.remove(account.address)
     this.props.removeAccount(account)
     if (wallet.activeAccount.address === account.address) {
       // The removed account was an active account, update the active account
       // to the first account found that is not the removed account
-      const newActiveAccount = wallet.accounts.find(a => a.address !== account.address) || null
+      const newActiveAccount =
+        wallet.accounts.find(a => a.address !== account.address) || null
       this.props.setAccountActive(newActiveAccount)
     }
     return result
@@ -212,13 +186,52 @@ class OriginWallet extends Component {
   }
 
   /*
+  */
+  async getBalances() {
+    const { wallet } = this.props
+
+    if (wallet.accounts.length && wallet.activeAccount) {
+      let ethBalance
+      try {
+        ethBalance = await this.web3.eth.getBalance(wallet.activeAccount.address)
+      } catch (error) {
+        console.debug('web3 connection failed')
+        return
+      }
+
+      const tokenBalances = {}
+      if (graphqlContext.config.tokens) {
+        for (const token of graphqlContext.config.tokens) {
+          const tokenContract = graphqlContext.tokens.find(
+            t => t.symbol === token.id
+          )
+          if (tokenContract) {
+            const balance = await tokenContract.methods
+              .balanceOf(wallet.activeAccount.address)
+              .call()
+            tokenBalances[token.symbol] = balance
+          }
+        }
+      }
+
+      this.props.setAccountBalances({
+        address: wallet.activeAccount.address,
+        balances: {
+          eth: this.web3.utils.fromWei(ethBalance),
+          ...tokenBalances
+        }
+      })
+    }
+  }
+
+  /*
    */
   async signTransaction(transaction) {
     if (transaction.from !== wallet.activeAccount.address.toLowerCase()) {
       console.error('Account mismatch')
       return null
     }
-    const signedTransaction = await web3.eth.accounts.signTransaction(
+    const signedTransaction = await this.web3.eth.accounts.signTransaction(
       transaction,
       wallet.activeAccount.privateKey
     )
@@ -230,12 +243,12 @@ class OriginWallet extends Component {
   }
 
   async signMessage(data) {
-    const { wallet }= this.props
+    const { wallet } = this.props
     if (data.from !== wallet.activeAccount.address.toLowerCase()) {
       console.error('Account mismatch')
       return null
     }
-    const signedMessage = await web3.eth.accounts.sign(
+    const signedMessage = await this.web3.eth.accounts.sign(
       data.data,
       wallet.activeAccount.privateKey
     )
@@ -246,7 +259,7 @@ class OriginWallet extends Component {
   }
 
   async sendTransaction(transaction) {
-    web3.eth
+    this.web3.eth
       .sendTransaction(transaction)
       .on('transactionHash', hash => {
         console.debug('Transaction hash: ', hash)
@@ -326,8 +339,8 @@ class OriginWallet extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, wallet }) => {
-  return { activation, wallet }
+const mapStateToProps = ({ activation, settings, wallet }) => {
+  return { activation, settings, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({

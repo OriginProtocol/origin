@@ -69,7 +69,7 @@ class AccountsScreen extends Component {
           )}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}
-          keyExtractor={(item) => item.address}
+          keyExtractor={item => item.address}
         />
         <AccountModal
           visible={this.state.modalOpen}

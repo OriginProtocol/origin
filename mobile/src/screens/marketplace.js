@@ -76,17 +76,16 @@ class MarketplaceScreen extends Component {
       this.handleBridgeResponse(msgData, response)
     } else {
       this.setState(prevState => ({
-        modals: [
-          ...prevState.modals,
-          { msgData: msgData }
-        ]
+        modals: [...prevState.modals, { msgData: msgData }]
       }))
     }
   }
 
   getAccounts() {
     const { wallet } = this.props
-    const filteredAccounts = wallet.accounts.filter(a => a.address !== wallet.activeAccount.address)
+    const filteredAccounts = wallet.accounts.filter(
+      a => a.address !== wallet.activeAccount.address
+    )
     const accounts = [
       wallet.activeAccount.address,
       ...filteredAccounts.map(a => a.address)
@@ -150,12 +149,14 @@ class MarketplaceScreen extends Component {
     const { modals } = this.state
 
     return (
-      <Fragment>
+      {/* Use key of network id on fragment to force a remount of component on
+      network changes */}
+      <Fragment key={this.props.settings.network.id}>
         <WebView
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: marketplaceDappUrl }}
+          source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
           onLoadProgress={() => {
             this.dappWebView.injectJavaScript(injectedJavaScript)
@@ -231,8 +232,8 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ wallet, settings }) => {
+  return { wallet, settings }
 }
 
 export default connect(mapStateToProps)(MarketplaceScreen)

@@ -1,16 +1,20 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  Separator,
   StyleSheet,
   Text,
   TouchableHighlight,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+
+import { setNetwork } from 'actions/Settings'
+import { NETWORKS } from '../constants'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -22,6 +26,10 @@ class SettingsScreen extends Component {
       fontSize: 17,
       fontWeight: 'normal'
     }
+  }
+
+  handleSetNetwork(network) {
+    this.props.setNetwork(network)
   }
 
   render() {
@@ -44,17 +52,47 @@ class SettingsScreen extends Component {
               </View>
             </View>
           </TouchableHighlight>
+          <View style={styles.header}>
+            <Text style={styles.heading}>NETWORK</Text>
+          </View>
+          {NETWORKS.map((network, i) => (
+            <Fragment key={network.id}>
+              <TouchableHighlight onPress={() => this.handleSetNetwork(network)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{network.name}</Text>
+                  <View style={styles.iconContainer}>
+                    {network.id === this.props.settings.network.id && (
+                      <Image
+                        source={require(`${IMAGES_PATH}selected.png`)}
+                        style={styles.image}
+                      />
+                    )}
+                    {network.id !== this.props.settings.network.id && (
+                      <Image
+                        source={require(`${IMAGES_PATH}deselected.png`)}
+                        style={styles.image}
+                      />
+                    )}
+                  </View>
+                </View>
+              </TouchableHighlight>
+            </Fragment>
+          ))}
         </ScrollView>
       </KeyboardAvoidingView>
     )
   }
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapDispatchToProps = dispatch => ({
+  setNetwork: network => dispatch(setNetwork(network)),
+})
+
+const mapStateToProps = ({ settings }) => {
+  return { settings }
 }
 
-export default connect(mapStateToProps)(SettingsScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen)
 
 const styles = StyleSheet.create({
   container: {
