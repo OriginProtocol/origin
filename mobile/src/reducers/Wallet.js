@@ -30,11 +30,9 @@ export default function Wallet(state = initialState, action = {}) {
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
-        accounts: [
-          ...state.accounts.filter(
-            a => a.address !== action.account.address
-          )
-        ]
+        accounts: state.accounts.filter(
+          a => a.address !== action.account.address
+        )
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
