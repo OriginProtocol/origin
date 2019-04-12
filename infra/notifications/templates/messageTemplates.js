@@ -52,7 +52,12 @@ const messageTemplates = {
       OfferFinalized: {
         subject: 'Sale Completed',
         html: _.template(
-          'Your transaction with <em><%- offer.buyer.identity.fullName %></em> for <em><%= listing.title %></em> has been completed. '
+          `Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
+          <em><%= listing.title %></em> has been completed.
+          <% if (listing.media[0]) { %>
+          <img class="img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+          <% } %>
+          `
         ),
         text: _.template(
           'Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.'

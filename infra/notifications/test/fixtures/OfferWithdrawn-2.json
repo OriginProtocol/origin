@@ -87,7 +87,48 @@
             "__typename": "Token"
           }
         ],
-        "media": [],
+        "media": [
+            {
+              "url": "ipfs://QmfFFvvY2jUZaEsGyaxwtMEnsyVPpCHruLbQEkR8XhSpJq",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmVC84UfjAZwwusJU2mC2Lq3VXcTVpJzCB7V9Rujz1jELr",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmNWWqDZWC9qzRaMDX7Gq61qxhdSymNsYFGXS1QjZo1fDe",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmVdbpzoUjo3mV8QAFnh32dsDnrGVj6WnFNPsAu1JZh68X",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmW9iwKTq89kBrQx3io587QS8oUkg4H7bSzBS1oi8oa1aN",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmYAtgg2s6kHHurKneF95pyncrN8FKsDmU4tPhDDdQQAe4",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmRNa1GoiyQJeFcLXL38cLCpzJQjgyhTKnmp1Wfoo1Kgui",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://Qmb84TG5qWPY7nZXvzGnr3z9APB1t8aiPd8YeVooKg1mQc",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmbsGhwdba8s8FCJcvNbrPtVsigR4VoK1p65k1YgGgFT6m",
+              "contentType": "image/jpeg"
+            },
+            {
+              "url": "ipfs://QmUg8RS85PKGdgAVSDhoSRBfU19XeHaWdjEmGo7zS3McLW",
+              "contentType": "image/jpeg"
+            }
+          ],
         "commission": "0",
         "commissionPerUnit": "0",
         "marketplacePublisher": null,
@@ -187,7 +228,48 @@
           "__typename": "Token"
         }
       ],
-      "media": [],
+      "media": [
+          {
+            "url": "ipfs://QmfFFvvY2jUZaEsGyaxwtMEnsyVPpCHruLbQEkR8XhSpJq",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVC84UfjAZwwusJU2mC2Lq3VXcTVpJzCB7V9Rujz1jELr",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmNWWqDZWC9qzRaMDX7Gq61qxhdSymNsYFGXS1QjZo1fDe",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVdbpzoUjo3mV8QAFnh32dsDnrGVj6WnFNPsAu1JZh68X",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmW9iwKTq89kBrQx3io587QS8oUkg4H7bSzBS1oi8oa1aN",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmYAtgg2s6kHHurKneF95pyncrN8FKsDmU4tPhDDdQQAe4",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmRNa1GoiyQJeFcLXL38cLCpzJQjgyhTKnmp1Wfoo1Kgui",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://Qmb84TG5qWPY7nZXvzGnr3z9APB1t8aiPd8YeVooKg1mQc",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmbsGhwdba8s8FCJcvNbrPtVsigR4VoK1p65k1YgGgFT6m",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmUg8RS85PKGdgAVSDhoSRBfU19XeHaWdjEmGo7zS3McLW",
+            "contentType": "image/jpeg"
+          }
+        ],
       "commission": "0",
       "commissionPerUnit": "0",
       "marketplacePublisher": null,
