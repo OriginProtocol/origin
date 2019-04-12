@@ -97,9 +97,21 @@ async function emailSend(
 
         if (config.emailFileOut) {
           // Optional writing of email contents to files
-          const now = new Date
-          fs.writeFile(`${config.emailFileOut}_${now.getTime()}_${email.to}.html`, email.html, (error, fileDescriptor) => {});
-          fs.writeFile(`${config.emailFileOut}_${now.getTime()}_${email.to}.txt`, email.text, (error, fileDescriptor) => {});
+          const now = new Date()
+          fs.writeFile(
+            `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
+            email.html,
+            error => {
+              console.error(error)
+            }
+          )
+          fs.writeFile(
+            `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
+            email.text,
+            error => {
+              console.error(error)
+            }
+          )
         }
 
         try {
