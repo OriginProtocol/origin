@@ -173,7 +173,8 @@ export default class PostgreSQLBackend extends AbstractBackend {
    * @param ipfsData {Array} An array of events to load
    */
   async loadSerialized(ipfsData) {
-    throw new Error('TODO', ipfsData)
+    // TODO?  Not sure this is healthy for this backend
+    throw new Error('Cannot load serialized data on this platform')
   }
 
   /**
