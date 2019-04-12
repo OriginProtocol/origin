@@ -4,7 +4,7 @@ import keyMirror from 'utils/keyMirror'
 
 export const SettingsConstants = keyMirror(
   {
-    SET_NETWORK: null,
+    SET_NETWORK: null
   },
   'SETTINGS'
 )

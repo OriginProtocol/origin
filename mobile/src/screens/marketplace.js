@@ -10,19 +10,9 @@ import {
 } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
-import Web3 from 'web3'
-
-import { MARKETPLACE_DAPP_URL, NETWORK } from 'react-native-dotenv'
 
 import TransactionCard from 'components/transaction-card'
 import SignatureCard from 'components/signature-card'
-
-let marketplaceDappUrl = MARKETPLACE_DAPP_URL
-if (NETWORK !== 'localhost') {
-  marketplaceDappUrl = `${marketplaceDappUrl}${NETWORK}`
-}
-
-const web3 = new Web3()
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -148,9 +138,9 @@ class MarketplaceScreen extends Component {
 
     const { modals } = this.state
 
+    // Use key of network id on fragment to force a remount of component on
+    // network changes
     return (
-      {/* Use key of network id on fragment to force a remount of component on
-      network changes */}
       <Fragment key={this.props.settings.network.id}>
         <WebView
           ref={webview => {

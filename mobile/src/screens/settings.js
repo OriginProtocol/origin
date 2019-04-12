@@ -5,7 +5,6 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
-  Separator,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -55,9 +54,11 @@ class SettingsScreen extends Component {
           <View style={styles.header}>
             <Text style={styles.heading}>NETWORK</Text>
           </View>
-          {NETWORKS.map((network, i) => (
+          {NETWORKS.map((network) => (
             <Fragment key={network.id}>
-              <TouchableHighlight onPress={() => this.handleSetNetwork(network)}>
+              <TouchableHighlight
+                onPress={() => this.handleSetNetwork(network)}
+              >
                 <View style={styles.item}>
                   <Text style={styles.text}>{network.name}</Text>
                   <View style={styles.iconContainer}>
@@ -85,14 +86,17 @@ class SettingsScreen extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setNetwork: network => dispatch(setNetwork(network)),
+  setNetwork: network => dispatch(setNetwork(network))
 })
 
 const mapStateToProps = ({ settings }) => {
   return { settings }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsScreen)
 
 const styles = StyleSheet.create({
   container: {

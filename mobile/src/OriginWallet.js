@@ -24,7 +24,7 @@ import { updateNotificationsPermissions } from 'actions/Activation'
 import { loadData, deleteData } from './tools'
 
 // Environment variables
-import { GCM_SENDER_ID }  from 'react-native-dotenv'
+import { GCM_SENDER_ID } from 'react-native-dotenv'
 
 class OriginWallet extends Component {
   constructor() {
@@ -99,7 +99,7 @@ class OriginWallet extends Component {
   }
 
   /*
-  */
+   */
   initWeb3() {
     setNetwork(this.props.settings.network.name.toLowerCase())
     const provider = graphqlContext.config.provider
@@ -122,7 +122,7 @@ class OriginWallet extends Component {
 
     const { length } = wallet.accounts
     console.debug(`Loaded Origin Wallet with ${length} accounts`)
-      let hasValidActiveAccount = false
+    let hasValidActiveAccount = false
     if (wallet.activeAccount) {
       hasValidActiveAccount = wallet.accounts.find(
         a => a.address === wallet.activeAccount.address
@@ -186,14 +186,16 @@ class OriginWallet extends Component {
   }
 
   /*
-  */
+   */
   async getBalances() {
     const { wallet } = this.props
 
     if (wallet.accounts.length && wallet.activeAccount) {
       let ethBalance
       try {
-        ethBalance = await this.web3.eth.getBalance(wallet.activeAccount.address)
+        ethBalance = await this.web3.eth.getBalance(
+          wallet.activeAccount.address
+        )
       } catch (error) {
         console.debug('web3 connection failed')
         return
@@ -227,6 +229,7 @@ class OriginWallet extends Component {
   /*
    */
   async signTransaction(transaction) {
+    const { wallet } = this.props
     if (transaction.from !== wallet.activeAccount.address.toLowerCase()) {
       console.error('Account mismatch')
       return null
