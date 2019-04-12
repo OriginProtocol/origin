@@ -336,7 +336,7 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.from,
       to: 'marketplace',
-      value: '50000'
+      value: this.props.value
     }
 
     allowToken({ variables })
