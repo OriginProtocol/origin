@@ -173,7 +173,6 @@ class OriginWallet extends Component {
     const result = web3.eth.accounts.wallet.remove(account.address)
     this.props.removeAccount(account)
     if (wallet.activeAccount.address === account.address) {
-      console.log('Setting new active account')
       const newActiveAccount = wallet.accounts.length ? wallet.accounts[0] : null
       this.props.setAccountActive(newActiveAccount)
     }
@@ -215,9 +214,11 @@ class OriginWallet extends Component {
     web3.eth
       .sendTransaction(transaction)
       .on('transactionHash', hash => {
+        console.debug('Transaction hash: ', hash)
         DeviceEventEmitter.emit('transactionHash', { transaction, hash })
       })
       .on('receipt', receipt => {
+        console.debug('Transaction receipt: ', receipt)
         DeviceEventEmitter.emit('transactionReceipt', { transaction, receipt })
       })
       .on('error', (error, receipt) => {

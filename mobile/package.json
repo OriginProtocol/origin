@@ -41,6 +41,7 @@
     "react-native": "^0.59.4",
     "react-native-dotenv": "^0.2.0",
     "react-native-push-notification": "^3.1.2",
+    "react-native-randombytes": "^3.5.2",
     "react-native-sentry": "^0.42.0",
     "react-native-webview": "^5.2.1",
     "react-navigation": "^2.2.5",
