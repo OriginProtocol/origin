@@ -332,7 +332,8 @@ export function setNetwork(net, customConfig) {
     context.mobileBridge = OriginMobileBridge({ web3 })
     context.messaging = OriginMessaging({
       ...MessagingConfig,
-      web3
+      web3,
+      mobileBridge: context.mobileBridge
     })
   }
 
@@ -480,8 +481,6 @@ function setMetaMask() {
  * webview from the DApp
  */
 function setMobileBridge() {
-  console.log('Configuring mobile bridge')
-
   if (context.metaMaskEnabled) return
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
@@ -509,8 +508,6 @@ function setMobileBridge() {
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec
   }
-
-  console.debug(`Mobile bridge configured`)
 }
 
 export function toggleMetaMask(enabled) {

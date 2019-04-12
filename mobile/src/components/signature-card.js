@@ -2,44 +2,30 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import OriginButton from 'components/origin-button'
 
 class SignatureCard extends Component {
   constructor(props) {
     super(props)
-
-    this.handleCancel = this.handleCancel.bind(this)
-    this.handleSign = this.handleSign.bind(this)
-    this.state = {}
-  }
-
-  handleCancel() {
-    this.props.onPress()
-  }
-
-  handleSign() {
-    this.props.onPress()
   }
 
   render() {
+    const { message } = this.props
     return (
       <View style={styles.card}>
         <Text style={styles.heading}>Signature Request</Text>
-        <Text style={styles.content}>
-          I agree to the Origin Rewards Terms & Conditions.
-        </Text>
+        <Text style={styles.content}>{message}</Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Sign'}
-            onPress={this.handleSign}
+            onPress={this.props.onConfirm}
           />
         </View>
-        <TouchableOpacity onPress={this.handleCancel}>
+        <TouchableOpacity onPress={this.props.onRequestClose}>
           <Text style={styles.cancel}>Cancel</Text>
         </TouchableOpacity>
       </View>
@@ -47,11 +33,7 @@ class SignatureCard extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {}
-}
-
-export default connect(mapStateToProps)(SignatureCard)
+export default SignatureCard
 
 const styles = StyleSheet.create({
   buttonContainer: {

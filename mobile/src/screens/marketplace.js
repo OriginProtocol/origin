@@ -10,15 +10,20 @@ import {
 } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
+import Web3 from 'web3'
+
 import { MARKETPLACE_DAPP_URL, NETWORK } from 'react-native-dotenv'
 
 import TransactionCard from 'components/transaction-card'
+import SignatureCard from 'components/signature-card'
 import { decodeTransaction } from '../utils/contractDecoder'
 
 let marketplaceDappUrl = MARKETPLACE_DAPP_URL
 if (NETWORK !== 'localhost') {
   marketplaceDappUrl = `${marketplaceDappUrl}${NETWORK}`
 }
+
+const web3 = new Web3()
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -65,13 +70,15 @@ class MarketplaceScreen extends Component {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
+    } else if (msgData.targetFunc === 'signMessage') {
+      this.handleBridgeSigningRequest(msgData, msgData.data)
     } else {
       // Attempt to decode the Ethereum transaction and add the appropriate
       // modal to the stack
       const functionInterface = decodeTransaction(msgData.data.data)
       if (functionInterface) {
         // Got an interface from the contract
-        this.handleBridgeRequest(msgData, functionInterface)
+        this.handleBridgeTransactionRequest(msgData, functionInterface)
       }
     }
   }
@@ -86,9 +93,21 @@ class MarketplaceScreen extends Component {
     return accounts
   }
 
+  handleBridgeSigningRequest(msgData, { data, from }) {
+    this.setState(prevState => ({
+      modals: [
+        ...prevState.modals,
+        {
+          type: 'signing',
+          msgData: msgData
+        }
+      ]
+    }))
+  }
+
   /* Add a modal to the stack passing the message data from the webview bridge.
    */
-  handleBridgeRequest(msgData, { name, parameters }) {
+  handleBridgeTransactionRequest(msgData, { name, parameters }) {
     const handledTransactions = ['createListing', 'emitIdentityUpdates', 'makeOffer']
     if (handledTransactions.includes(name)) {
       this.setState(prevState => ({
@@ -107,12 +126,33 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  /* Send a response back to the DApp using postMessage in the webview
+   *
+   */
   handleBridgeResponse(msgData, result) {
     msgData.isSuccessful = Boolean(result)
     msgData.args = [result]
     this.dappWebView.postMessage(JSON.stringify(msgData))
   }
 
+  /* Handle a transaction hash event from the Origin Wallet
+   *
+   */
+  handleTransactionHash({ transaction, hash }) {
+    const modal = this.state.modals.find(m => m.msgData.data === transaction)
+    // Toggle the matching modal and return the hash
+    this.toggleModal(modal, hash)
+  }
+
+  /* Handle a signed message event from the Origin Wallet
+   *
+   */
+  handleSignedMessage({ data, signature }) {
+  }
+
+  /* Remove a modal and return the given result to the DApp
+   *
+   */
   toggleModal(modal, result) {
     this.setState(prevState => {
       return {
@@ -126,15 +166,6 @@ class MarketplaceScreen extends Component {
     })
     // Send the response to the webview
     this.handleBridgeResponse(modal.msgData, result)
-  }
-
-  sendTransaction(transaction) {
-    DeviceEventEmitter.emit('sendTransaction', transaction)
-  }
-
-  handleTransactionHash({ transaction, hash }) {
-    const modal = this.state.modals.find(m => m.msgData.data === transaction)
-    this.toggleModal(modal, hash)
   }
 
   render() {
@@ -168,7 +199,22 @@ class MarketplaceScreen extends Component {
                 transactionParameters={modal.transactionParameters}
                 msgData={modal.msgData}
                 onConfirm={() => {
-                  this.sendTransaction(modal.msgData.data)
+                  DeviceEventEmitter.emit('sendTransaction', modal.msgData.data)
+                }}
+                onRequestClose={() =>
+                  this.toggleModal(modal, {
+                    message: 'User denied transaction signature'
+                  })
+                }
+              />
+            )
+          } else if (modal.type === 'signing') {
+            card = (
+              <SignatureCard
+                message={web3.utils.hexToAscii(modal.msgData.data.data)}
+                msgData={modal.msgData}
+                onConfirm={() => {
+                  DeviceEventEmitter.emit('signMessage', modal.msgData.data)
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {

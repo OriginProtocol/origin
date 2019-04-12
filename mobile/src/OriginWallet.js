@@ -73,7 +73,13 @@ class OriginWallet extends Component {
     const { wallet } = this.props
 
     if (wallet.accounts.length && wallet.activeAccount) {
-      const ethBalance = await web3.eth.getBalance(wallet.activeAccount.address)
+      let ethBalance
+      try {
+        ethBalance = await web3.eth.getBalance(wallet.activeAccount.address)
+      } catch (error) {
+        console.debug('web3 connection failed')
+        return
+      }
 
       const tokenBalances = {}
       if (graphqlContext.config.tokens) {
@@ -217,6 +223,9 @@ class OriginWallet extends Component {
       signedTransaction
     })
     return signedTransaction
+  }
+
+  async signMessage({ data, from }) {
   }
 
   async sendTransaction(transaction) {
