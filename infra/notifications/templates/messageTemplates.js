@@ -1,5 +1,9 @@
 const _ = require('lodash')
 
+// We use lodash templates.
+// Docs: https://lodash.com/docs/4.17.11#template
+// Codepen: https://codepen.io/matthewbeta/pen/ZGaYXW
+
 const messageTemplates = {
   seller: {
     mobile: {
