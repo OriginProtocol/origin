@@ -23,6 +23,7 @@ import GrowthCampaignBox from 'components/GrowthCampaignBox'
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
@@ -37,7 +38,8 @@ const AttestationComponents = {
   email: EmailAttestation,
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
-  airbnb: AirbnbAttestation
+  airbnb: AirbnbAttestation,
+  google: GoogleAttestation
 }
 
 const ProfileFields = [
@@ -51,7 +53,8 @@ const ProfileFields = [
   'twitterVerified',
   'airbnbVerified',
   'phoneVerified',
-  'emailVerified'
+  'emailVerified',
+  'googleVerified'
 ]
 
 function getState(profile) {
@@ -194,7 +197,11 @@ class UserProfile extends Component {
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
-                {this.renderAtt('google', 'Google', true)}
+                {this.renderAtt(
+                  'google',
+                  fbt('Google', '_ProvisionedChanges.google'),
+                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                )}
               </div>
             </div>
 
@@ -293,7 +300,7 @@ class UserProfile extends Component {
       AttestationComponent = (
         <AttestationComponent
           wallet={wallet}
-          open={this.state[type]}
+          open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
             this.setState({ [`${type}Attestation`]: att }, () => {

@@ -115,6 +115,16 @@ const twitterVerifyCode = [
   handleValidationError
 ]
 
+const googleVerify = [
+  identityValidation,
+  check('code')
+    .not()
+    .isEmpty()
+    .withMessage('Field code must not be empty.')
+    .trim(),
+  handleValidationError
+]
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -123,5 +133,6 @@ module.exports = {
   facebookVerify,
   phoneGenerateCode,
   phoneVerifyCode,
-  twitterVerifyCode
+  twitterVerifyCode,
+  googleVerify
 }
