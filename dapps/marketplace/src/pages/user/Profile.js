@@ -186,7 +186,8 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google')
+                  fbt('Google', '_ProvisionedChanges.google'),
+                  process.env.ENABLE_GOOGLE_ATTESTATION != 'true'
                 )}
               </div>
             </div>
@@ -274,7 +275,7 @@ class UserProfile extends Component {
       AttestationComponent = (
         <AttestationComponent
           wallet={wallet}
-          open={this.state[type]}
+          open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
             this.setState({ [`${type}Attestation`]: att }, () => {
