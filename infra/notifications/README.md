@@ -2,7 +2,21 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-# Origin Notifications
+# Origin Notifications Server
+
+This service is capable of contacting users on various channels. Right now it supports email, browser push, and mobile push.
+
+Messages are normally triggered by a POST to the `/events` endpoint on this server. See the `test` directory for examples manually triggering messages for testing.
+
+Options
+
+ - `--override-email` or env var `OVERRIDE_EMAIL` : Email which will recieve **all** emails. This can be useful for testing on live data where you want to see what emails users would receive.
+ - `--fromEmail` or env var `SENDGRID_FROM_EMAIL` : Email from which messages are sent
+ - `--asmGroupId` or env var `ASM_GROUP_ID` : SendGrid ASM group for handling unsubscribes.
+ - `--email-file-out` or env var `EMAIL_FILE_OUT` : Write emails also to files, using this directory+prefix. e.g. "emails/finalized"
+
+
+## Browser Notifcations (Old)
 
 See https://github.com/OriginProtocol/origin/issues/806 👊
 
@@ -68,16 +82,6 @@ To test in the DApp...
 
 For more (outdated) information, see [the original pull request](https://github.com/OriginProtocol/origin/pull/795#issue-224602842).
 
-## Templates
-
-We use templating from Lodash. Documentation can be found here:
-https://lodash.com/docs/4.17.11#template
-
-## Testing
-
-You can set an email which will recieve **all** emails. This can be useful for testing on live data where you want to see what emails users would receive. Set env var OVERRIDE_EMAIL or pass in param like this:
-
-    node src/app.js --override-email=bob@originprotocol.com
 
 ### Eventlistener
 
