@@ -78,3 +78,10 @@ https://lodash.com/docs/4.17.11#template
 You can set an email which will recieve **all** emails. This can be useful for testing on live data where you want to see what emails users would receive. Set env var OVERRIDE_EMAIL or pass in param like this:
 
     node src/app.js --override-email=bob@originprotocol.com
+
+### Eventlistener
+
+For local testing, these options are usual for testing against `rinkeby` network.
+
+    npm run start:listener:development -- --identity --growth --marketplace --network=rinkeby --continue-file=../continue --webhook=http://localhost:3456/events --verbose --concurrency=4
+

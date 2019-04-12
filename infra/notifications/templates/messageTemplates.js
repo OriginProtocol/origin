@@ -31,12 +31,28 @@ const messageTemplates = {
     email: {
       OfferCreated: {
         subject: 'New Offer',
-        html: _.template('A buyer has made an offer on your listing.'),
+        html: _.template(
+          `
+          A buyer (<em><%- offer.buyer.identity.fullName %></em>) has made an offer on your listing <em><%= listing.title %></em>.
+
+          <% if (listing.media[0]) { %>
+          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+          <% } %>
+          `
+        ),
         text: _.template('A buyer has made an offer on your listing.')
       },
       OfferWithdrawn: {
         subject: 'Offer Withdrawn',
-        html: _.template('An offer on your listing has been withdrawn.'),
+        html: _.template(
+          `
+          The buyer <em><%- offer.buyer.identity.fullName %></em> has withdrawn their offer on your listing <em><%= listing.title %></em>.
+
+          <% if (listing.media[0]) { %>
+          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+          <% } %>
+          `
+        ),
         text: _.template('An offer on your listing has been withdrawn.')
       },
       OfferDisputed: {
@@ -56,10 +72,13 @@ const messageTemplates = {
       OfferFinalized: {
         subject: 'Sale Completed',
         html: _.template(
-          `Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
+          `
+          Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
           <em><%= listing.title %></em> has been completed.
+
+
           <% if (listing.media[0]) { %>
-          <img class="img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
           <% } %>
           `
         ),
