@@ -23,7 +23,7 @@ export default class AbstractBackend {
    * Sets the latest block number known by the backend
    */
   setLatestBlock(blockNumber) {
-    if (!blockNumber) return
+    if (!blockNumber || blockNumber < this.latestBlock) return
     this.latestBlock = blockNumber
   }
 
