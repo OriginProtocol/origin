@@ -22,5 +22,3 @@ if (typeof atob === 'undefined') {
 import { URL, URLSearchParams } from 'whatwg-url'
 global.URL = URL
 global.URLSearchParams = URLSearchParams
-
-// global.navigator.userAgent = 'React Native'

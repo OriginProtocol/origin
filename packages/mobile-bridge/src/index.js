@@ -7,8 +7,7 @@ import initBridge from './webviewbridge'
 class MobileBridge {
   constructor({ web3 }) {
     this.web3 = web3
-
-    if (window) {
+    if (window.__mobileBridge) {
       initBridge()
     }
   }
@@ -57,19 +56,6 @@ class MobileBridge {
       getAccounts: this.getAccounts.bind(this),
       processTransaction: this.processTransaction.bind(this)
     })
-
-      /*
-    // Disable transaction validation, which interferes with our work.
-    const hookedWallet = provider._providers[6]
-    if (!hookedWallet.validateTransaction) {
-      console.error('The subprovider at [6] is NOT a hooked wallet.')
-    } else {
-      // Pass through validate for now
-      hookedWallet.validateTransaction = (_, cb) => {
-        cb()
-      }
-    }
-    */
 
     // Disable caching subProviders, because they interfere with the provider
     // we're returning.

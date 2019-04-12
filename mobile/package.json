@@ -67,9 +67,7 @@
     "@origin/messaging-client": "../packages/messaging-client",
     "@origin/services": "../packages/services",
     "@origin/validator": "../packages/validator",
-    "@origin/mobile-bridge": "../packages/mobile-bridge",
-    "@origin/linker-client": "../packages/linker-client",
-    "@origin/js": "../packages/origin-js"
+    "@origin/mobile-bridge": "../packages/mobile-bridge"
   },
   "prettier": {
     "semi": false,

@@ -164,7 +164,7 @@ class AccountScreen extends Component {
             title={'Copy Private Key'}
             onPress={() => this.handleDangerousCopy(privateKey)}
           />
-          {multipleAccounts && (
+          {(multipleAccounts || true) && (
             <OriginButton
               size="large"
               type="danger"

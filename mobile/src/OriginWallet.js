@@ -72,30 +72,32 @@ class OriginWallet extends Component {
   async getBalances() {
     const { wallet } = this.props
 
-    const ethBalance = await web3.eth.getBalance(wallet.activeAccount.address)
+    if (wallet.accounts.length && wallet.activeAccount) {
+      const ethBalance = await web3.eth.getBalance(wallet.activeAccount.address)
 
-    const tokenBalances = {}
-    if (graphqlContext.config.tokens) {
-      for (const token of graphqlContext.config.tokens) {
-        const tokenContract = graphqlContext.tokens.find(
-          t => t.symbol === token.id
-        )
-        if (tokenContract) {
-          const balance = await tokenContract.methods
-            .balanceOf(wallet.activeAccount.address)
-            .call()
-          tokenBalances[token.symbol] = balance
+      const tokenBalances = {}
+      if (graphqlContext.config.tokens) {
+        for (const token of graphqlContext.config.tokens) {
+          const tokenContract = graphqlContext.tokens.find(
+            t => t.symbol === token.id
+          )
+          if (tokenContract) {
+            const balance = await tokenContract.methods
+              .balanceOf(wallet.activeAccount.address)
+              .call()
+            tokenBalances[token.symbol] = balance
+          }
         }
       }
-    }
 
-    this.props.setAccountBalances({
-      address: wallet.activeAccount.address,
-      balances: {
-        eth: web3.utils.fromWei(ethBalance),
-        ...tokenBalances
-      }
-    })
+      this.props.setAccountBalances({
+        address: wallet.activeAccount.address,
+        balances: {
+          eth: web3.utils.fromWei(ethBalance),
+          ...tokenBalances
+        }
+      })
+    }
   }
 
   /* Move accounts from the old data store into the new redux store
@@ -139,8 +141,13 @@ class OriginWallet extends Component {
     console.debug(`Setting provider to ${provider}`)
     web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
 
-    // Set the first account active if none are active
-    if (length && !wallet.activeAccount) {
+    let hasValidActiveAccount = false
+    if (wallet.activeAccount) {
+      hasValidActiveAccount = wallet.accounts.find(a => a.address === wallet.activeAccount.address)
+    }
+
+    if (length && !hasValidActiveAccount) {
+      // Set the first account active if none are active
       this.props.setAccountActive(wallet.accounts[0])
     }
   }
@@ -151,6 +158,7 @@ class OriginWallet extends Component {
     const wallet = web3.eth.accounts.wallet.create(1)
     const account = wallet[wallet.length - 1]
     this.props.addAccount(account)
+    this.props.setAccountActive(account)
     return account.address
   }
 
@@ -162,6 +170,7 @@ class OriginWallet extends Component {
     }
     const account = web3.eth.accounts.wallet.add(privateKey)
     this.props.addAccount(account)
+    this.props.setAccountActive(account)
     return account.address
   }
 
@@ -169,11 +178,12 @@ class OriginWallet extends Component {
    */
   async removeAccount(account) {
     const { wallet } = this.props
-    // Remove from web3
     const result = web3.eth.accounts.wallet.remove(account.address)
     this.props.removeAccount(account)
     if (wallet.activeAccount.address === account.address) {
-      const newActiveAccount = wallet.accounts.length ? wallet.accounts[0] : null
+      // The removed account was an active account, update the active account
+      // to the first account found that is not the removed account
+      const newActiveAccount = wallet.accounts.find(a => a.address !== account.address) || null
       this.props.setAccountActive(newActiveAccount)
     }
     return result
