@@ -18,16 +18,13 @@ class MobileBridge {
     let onSuccess, onError
     if (callback) {
       onSuccess = (result) => {
-        console.log('Calling success callback: ', result)
         callback(undefined, result)
       }
       onError = (result) => {
-        console.log('Calling error callback: ', result)
         callback(undefined, result)
       }
     } else {
       onSuccess = (result) => {
-        console.log('Returning promise: ', result)
         return new Promise(resolve => resolve(result))
       }
       onError = (result) => {
@@ -38,7 +35,6 @@ class MobileBridge {
   }
 
   getAccounts(callback) {
-    console.log('Get accounts called')
     const data = null
     let onSuccess
     if (callback) {

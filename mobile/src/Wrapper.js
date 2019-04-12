@@ -27,8 +27,11 @@ class OriginWrapper extends Component {
 
   componentDidUpdate() {
     const { activation, wallet } = this.props
+    const activeAddress = wallet.accounts[0].address
+    const balances = wallet.accountBalanceMapping[activeAddress]
+
     // Prompt with private key backup warning if funds are detected
-    if (!activation.backupWarningDismissed && Number(wallet.balances.eth) > 0) {
+    if (!activation.backupWarningDismissed && Number(balances.eth) > 0) {
       NavigationService.navigate('Home', {
         backupWarning: true,
         walletExpanded: true
