@@ -37,6 +37,11 @@ class MarketplaceScreen extends Component {
       this.handleTransactionHash.bind(this)
     )
 
+    DeviceEventEmitter.addListener(
+      'messageSigned',
+      this.handleSignedMessage.bind(this)
+    )
+
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
   }
@@ -110,7 +115,10 @@ class MarketplaceScreen extends Component {
   /* Handle a signed message event from the Origin Wallet
    *
    */
-  handleSignedMessage({ data, signature }) {
+  handleSignedMessage({ data, signedMessage }) {
+    const modal = this.state.modals.find(m => m.msgData.data === data)
+    // Toggle the matching modal and return the hash
+    this.toggleModal(modal, signedMessage.signature)
   }
 
   /* Remove a modal and return the given result to the DApp

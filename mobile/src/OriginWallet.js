@@ -56,6 +56,10 @@ class OriginWallet extends Component {
       'sendTransaction',
       this.sendTransaction.bind(this)
     )
+    DeviceEventEmitter.addListener(
+      'signMessage',
+      this.signMessage.bind(this)
+    )
     DeviceEventEmitter.addListener('getBalances', this.getBalances.bind(this))
   }
 
@@ -225,11 +229,23 @@ class OriginWallet extends Component {
     return signedTransaction
   }
 
-  async signMessage({ data, from }) {
+  async signMessage(data) {
+    const { wallet }= this.props
+    if (data.from !== wallet.activeAccount.address.toLowerCase()) {
+      console.error('Account mismatch')
+      return null
+    }
+    const signedMessage = await web3.eth.accounts.sign(
+      data.data,
+      wallet.activeAccount.privateKey
+    )
+    DeviceEventEmitter.emit('messageSigned', {
+      data,
+      signedMessage
+    })
   }
 
   async sendTransaction(transaction) {
-    console.log('Sending transaction: ', transaction)
     web3.eth
       .sendTransaction(transaction)
       .on('transactionHash', hash => {
