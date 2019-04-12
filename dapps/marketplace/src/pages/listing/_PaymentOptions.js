@@ -41,7 +41,7 @@ const PayWithEth = () => (
 
 const SwapEthToDai = () => (
   <fbt desc="paymentOptions.swapEthToDai">
-    DAI amount will be converted from ETH (ETH value is an approximation).
+    You don’t have enough DAI to make this purchase
   </fbt>
 )
 
@@ -81,7 +81,8 @@ const PaymentOptions = ({
   const daiPrice = <Price price={price} target="token-DAI" />
 
   let cannotPurchase = false,
-    content
+    content,
+    needsSwap = false
 
   if (acceptsDai && acceptsEth && daiActive) {
     if (hasBalance) {
@@ -90,6 +91,7 @@ const PaymentOptions = ({
       cannotPurchase = true
       content = <NotEnoughEth noEthOrDai />
     } else {
+      needsSwap = true
       content = <SwapEthToDai />
     }
   } else if (acceptsDai && acceptsEth && ethActive) {
@@ -103,6 +105,7 @@ const PaymentOptions = ({
     if (hasBalance) {
       content = <PayWithDai />
     } else if (hasEthBalance) {
+      needsSwap = true
       content = <SwapEthToDai />
     } else {
       cannotPurchase = true
@@ -156,14 +159,28 @@ const PaymentOptions = ({
         <span>
           <fbt desc="paymentOptions.payment">Payment</fbt>
         </span>
-        <span className={cannotPurchase ? 'danger' : ''}>
+        <span className={cannotPurchase || needsSwap ? 'danger' : ''}>
           {ethActive ? ethPrice : daiPrice}
         </span>
       </div>
-      {ethActive || hasBalance ? null : (
+      {ethActive || hasBalance || needsSwap ? null : (
         <div className="exchanged">{ethPrice}</div>
       )}
-      <div className={`help${cannotPurchase ? ' danger' : ''}`}>{content}</div>
+      <div className={`help${cannotPurchase || needsSwap ? ' danger' : ''}`}>
+        {content}
+      </div>
+      {!needsSwap ? null : (
+        <div className="needs-swap">
+          <div>Swap currency</div>
+          <div>
+            <div>
+              <Price price={price} target="token-ETH" decimals={3} />
+            </div>
+            <div className="chevron" />
+            <div>{daiPrice}</div>
+          </div>
+        </div>
+      )}
       {cannotPurchase ? <CannotPurchase /> : children}
     </div>
   )
@@ -226,4 +243,24 @@ require('react-styl')(`
       border-top: 1px solid var(--light)
       padding-top: 1.5rem
       font-size: 14px
+    .needs-swap
+      border-top: 1px solid var(--light)
+      padding-top: 1.25rem
+      margin-top: 1.5rem
+      font-weight: normal
+      div.chevron
+        border-width: 1px 1px 0 0
+        border-style: solid
+        border-color: #000
+        transform: rotate(45deg) translate(10px, 10px)
+        width: 10px
+        height: 10px
+      > div:nth-child(1)
+        font-size: 14px
+      > div:nth-child(2)
+        display: flex
+        flex-direction: row
+        justify-content: space-around
+        font-size: 24px
+        margin: 1rem 0 1.5rem 0
 `)

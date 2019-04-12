@@ -56,7 +56,7 @@ class Buy extends Component {
     } else if (this.state.allow) {
       content = this.renderAllowTokenModal()
     } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation('Purchase')
+      action = this.renderSwapTokenMutation('Swap Now')
       content = this.renderSwapTokenModal()
     } else if (!this.hasAllowance()) {
       action = this.renderAllowTokenMutation('Purchase')
