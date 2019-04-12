@@ -18,12 +18,11 @@ class WalletScreen extends Component {
 
   render() {
     const { wallet } = this.props
-    const activeAddress = wallet.accounts[0].address
-    const balances = wallet.accountBalanceMapping[activeAddress]
+    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
 
     return (
       <>
-        <Text>Address: {activeAddress}</Text>
+        <Text>Address: {wallet.activeAccount.address}</Text>
         {Object.keys(balances).map(token => {
           return (
             <Text key={token}>

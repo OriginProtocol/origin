@@ -53,8 +53,7 @@ class TransactionCard extends Component {
       : 0
     const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
 
-    const activeAddress = wallet.accounts[0].address
-    const balances = wallet.accountBalanceMapping[activeAddress]
+    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
 
     return (
       <View style={styles.card}>

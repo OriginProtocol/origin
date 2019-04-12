@@ -5,7 +5,8 @@ import { WalletConstants } from 'actions/Wallet'
 const initialState = {
   accounts: [],
   accountNameMapping: {},
-  accountBalanceMapping: {}
+  accountBalanceMapping: {},
+  activeAccount: null
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -36,16 +37,9 @@ export default function Wallet(state = initialState, action = {}) {
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
       // Remove the account from the accounts array
-      const accounts = [
-        action.account,
-        ...state.accounts.filter(a => a.address !== action.account.address)
-      ].map((account, index) => {
-        // Rebuild the index attribute
-        return { ...account, index: index }
-      })
       return {
         ...state,
-        accounts: accounts
+        activeAccount: action.account
       }
 
     case WalletConstants.SET_ACCOUNT_BALANCES:

@@ -77,13 +77,19 @@ class MarketplaceScreen extends Component {
   }
 
   getAccounts() {
-    return this.props.wallet.accounts.map(account => account.address)
+    const { wallet } = this.props
+    const filteredAccounts = wallet.accounts.filter(a => a.address !== wallet.activeAccount.address)
+    const accounts = [
+      wallet.activeAccount.address,
+      ...filteredAccounts.map(a => a.address)
+    ]
+    return accounts
   }
 
   /* Add a modal to the stack passing the message data from the webview bridge.
    */
   handleBridgeRequest(msgData, { name, parameters }) {
-    const handledTransactions = ['makeOffer', 'emitIdentityUpdated']
+    const handledTransactions = ['createListing', 'emitIdentityUpdates', 'makeOffer']
     if (handledTransactions.includes(name)) {
       this.setState(prevState => ({
         modals: [

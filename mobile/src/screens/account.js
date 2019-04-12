@@ -92,6 +92,7 @@ class AccountScreen extends Component {
   handleSetAccountActive() {
     const { navigation } = this.props
     DeviceEventEmitter.emit('setAccountActive', navigation.getParam('account'))
+    navigation.goBack()
   }
 
   handleSetAccountName(event) {
