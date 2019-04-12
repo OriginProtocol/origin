@@ -60,7 +60,9 @@ const config = {
   // Email account from whom emails will be sent
   fromEmail: args['--fromEmail'] || process.env.SENDGRID_FROM_EMAIL,
   // SendGrid ASM Group ID. Used for unsubscribing.
-  asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092
+  asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
+  // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
+  emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null
 }
 
 console.log(config)
