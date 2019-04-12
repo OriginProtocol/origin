@@ -8,9 +8,12 @@ import validator from '@origin/validator'
 
 import Store from 'utils/store'
 import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
+import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withTokenBalance from 'hoc/withTokenBalance'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -272,6 +275,7 @@ class UserProfile extends Component {
     const { wallet } = this.props
     const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
+    let attestationProvisional = false
 
     let status = ''
     if (profile[`${type}Verified`]) {
@@ -279,6 +283,7 @@ class UserProfile extends Component {
       attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
+      attestationProvisional = true
     }
     if (soon) {
       status = ' soon'
@@ -302,6 +307,19 @@ class UserProfile extends Component {
       )
     }
     
+    let attestationReward = 0
+    if (this.props.growthCampaigns && this.props.growthEnrollmentStatus === 'Enrolled') {
+      const capitalize = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1)
+      }
+
+      attestationReward = getAttestationReward({
+        growthCampaigns: this.props.growthCampaigns,
+        attestation: capitalize(type),
+        tokenDecimals: this.props.tokenDecimals || 18
+      })
+    }
+
     return (
       <>
         <div
@@ -315,6 +333,12 @@ class UserProfile extends Component {
             className="ml-auto"
             src="images/identity/completed-tick.svg"
           />}
+          {attestationProvisional && <div className="indicator" />}
+          {!attestationPublished && attestationReward !== 0 &&
+            <div className={`growth-reward ml-auto d-flex justify-content-center ${attestationProvisional ? 'provisional' : ''}`}>
+              {attestationReward.toString()}
+            </div>
+          }
         </div>
         {AttestationComponent}
       </>
@@ -343,7 +367,7 @@ class UserProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(UserProfile))
+export default withWallet(withIdentity(withGrowthCampaign(UserProfile)))
 
 require('react-styl')(`
   .profile-edit
@@ -391,6 +415,30 @@ require('react-styl')(`
       background: url(images/identity/identity.svg) no-repeat center 1.5rem
       background-size: 5rem
       padding-top: 8rem
+    .attestation-container
+      .growth-reward
+        font-family: Lato
+        font-size: 16px
+        font-weight: bold
+        color: var(--pale-grey-two)
+        img
+          width: 15px
+        &::before
+          display: block
+          position: relative
+          content: ""
+          background: url(images/ogn-icon-grayed-out.svg) no-repeat center
+          background-size: 1rem
+          width: 1rem
+          height: 1rem
+          margin-right: 0.25rem
+          margin-top: 0.25rem
+      .growth-reward.provisional
+        color: var(--clear-blue)
+        &::before
+          background: url(images/ogn-icon.svg) no-repeat center
+          background-size: 1rem
+
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem

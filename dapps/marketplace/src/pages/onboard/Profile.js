@@ -337,6 +337,14 @@ require('react-styl')(`
     grid-column-gap: 0.5rem
     grid-row-gap: 0.5rem
     grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
+    .indicator
+      position: absolute
+      width: 0.62rem
+      height: 0.62rem
+      border-radius: 0.62rem
+      background-color: var(--golden-rod)
+      right: 0.27rem
+      top: 0.27rem
     .profile-attestation
       padding: 0.65rem 1rem
       border: 1px dashed var(--light)
@@ -377,6 +385,7 @@ require('react-styl')(`
       &.airbnb > i::before
         background-image: url(images/identity/airbnb-icon-light.svg)
         background-size: 1.2rem
+        margin-left: 0.1rem
       &.facebook > i::before
         background-image: url(images/identity/facebook-icon-light.svg)
         background-size: 0.6rem
@@ -385,7 +394,8 @@ require('react-styl')(`
         background-size: 0.975rem
       &.google > i::before
         background-image: url(images/identity/google-icon.svg)
-        background-size: 0.975rem
+        background-size: 1.1rem
+        margin-left: 0.1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)
