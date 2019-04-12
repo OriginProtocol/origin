@@ -9,6 +9,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import { getAttestationReward } from 'utils/growthTools'
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withTokenBalance from 'hoc/withTokenBalance'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
@@ -217,10 +218,24 @@ class ProfileWizard extends Component {
           <div className="d-flex align-items-center">
             <div className="icon" />
             <div className="ogn-coin">
-              {getAttestationReward({
-                growthCampaigns: this.props.growthCampaigns,
-                attestation: 'Phone'
-              })}30&nbsp;
+              {
+                (
+                  getAttestationReward({
+                    growthCampaigns: this.props.growthCampaigns,
+                    attestation: 'Airbnb',
+                    tokenDecimals: this.props.tokenDecimals || 18
+                  }) +
+                  getAttestationReward({
+                    growthCampaigns: this.props.growthCampaigns,
+                    attestation: 'Facebook',
+                    tokenDecimals: this.props.tokenDecimals || 18
+                  }) +
+                  getAttestationReward({
+                    growthCampaigns: this.props.growthCampaigns,
+                    attestation: 'Twitter',
+                    tokenDecimals: this.props.tokenDecimals || 18
+                  })
+                ).toString()}&nbsp;
               <span>OGN</span>
             </div>
           </div>
@@ -264,8 +279,9 @@ class ProfileWizard extends Component {
             <div className="ogn-coin">
               {getAttestationReward({
                 growthCampaigns: this.props.growthCampaigns,
-                attestation: 'Phone'
-              })}&nbsp;
+                attestation: 'Phone',
+                tokenDecimals: this.props.tokenDecimals || 18
+              }).toString()}&nbsp;
               <span>OGN</span>
             </div>
           </div>
@@ -432,7 +448,7 @@ class ProfileWizard extends Component {
   }
 }
 
-export default withApollo(withGrowthCampaign(ProfileWizard))
+export default withApollo(withGrowthCampaign(withTokenBalance(ProfileWizard)))
 
 require('react-styl')(`
 	.profile-wizard-box

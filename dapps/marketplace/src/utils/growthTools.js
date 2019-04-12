@@ -1,6 +1,9 @@
 import get from 'lodash/get'
 
-export function getAttestationReward({ growthCampaigns, attestation }) {
+export function getAttestationReward({ growthCampaigns, attestation, tokenDecimals }) {
+  if (!growthCampaigns)
+    return 0
+  
   const activeCampaign = growthCampaigns.find(
     campaign => campaign.status === 'Active'
   )
@@ -9,7 +12,15 @@ export function getAttestationReward({ growthCampaigns, attestation }) {
     .filter(action => action.type === attestation)
     .map(action => action.reward)[0]
 
-  const tokensEarned = web3.utils
-    .toBN(reward ? reward.amount : 0)
-    .div(decimalDivision)
+  let decimalDivision = web3.utils
+    .toBN(10)
+    .pow(web3.utils.toBN(tokenDecimals))
+
+
+  return parseInt(
+    web3.utils
+      .toBN(reward ? reward.amount : 0)
+      .div(decimalDivision)
+      .toString()
+  )
 }
