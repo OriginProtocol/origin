@@ -11,6 +11,7 @@ import get from 'lodash/get'
 import eventCache from './utils/eventCache'
 import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
+import currencies from './utils/currencies'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
@@ -602,6 +603,7 @@ export function shutdown() {
     web3WS.currentProvider.connection.close()
   }
   clearInterval(blockInterval)
+  clearInterval(currencies.interval)
 }
 
 if (typeof window !== 'undefined') {
