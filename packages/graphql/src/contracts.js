@@ -40,18 +40,18 @@ const GanacheContracts = {
   DaiExchange: '0x440B7f9b667420af04e88d4dA0B9122E05cCa5A0',
   tokens: [
     {
-      'type':'OriginToken',
-      'id':'0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0',
-      'name':'Origin Token',
-      'symbol':'OGN',
-      'decimals':'18',
+      type: 'OriginToken',
+      id: '0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0',
+      name: 'Origin Token',
+      symbol: 'OGN',
+      decimals: '18'
     },
     {
-      'type':'Standard',
-      'id':'0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da',
-      'name':'Dai Stablecoin',
-      'symbol':'DAI',
-      'decimals':'18',
+      type: 'Standard',
+      id: '0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da',
+      name: 'Dai Stablecoin',
+      symbol: 'DAI',
+      decimals: '18'
     }
   ]
 }
