@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   sav: {
     backgroundColor: 'white',
-    flex: 1,
+    flex: 1
   },
   transparent: {
     flex: 1
