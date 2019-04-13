@@ -39,9 +39,11 @@ const PayWithEth = () => (
   </fbt>
 )
 
-const SwapEthToDai = () => (
+const SwapEthToDai = ({ ethPrice }) => (
   <fbt desc="paymentOptions.swapEthToDai">
-    You don’t have enough DAI to make this purchase
+    You don’t have enough DAI to make this purchase. You can convert
+    approximately <fbt:param name="EthPrice">{ethPrice}</fbt:param> into the
+    amount of DAI that you need.
   </fbt>
 )
 
@@ -92,7 +94,7 @@ const PaymentOptions = ({
       content = <NotEnoughEth noEthOrDai />
     } else {
       needsSwap = true
-      content = <SwapEthToDai />
+      content = <SwapEthToDai ethPrice={ethPrice} />
     }
   } else if (acceptsDai && acceptsEth && ethActive) {
     if (hasBalance) {
@@ -106,7 +108,7 @@ const PaymentOptions = ({
       content = <PayWithDai />
     } else if (hasEthBalance) {
       needsSwap = true
-      content = <SwapEthToDai />
+      content = <SwapEthToDai ethPrice={ethPrice} />
     } else {
       cannotPurchase = true
       content = <NotEnoughEth />
@@ -229,7 +231,7 @@ require('react-styl')(`
       font-weight: bold
       margin-bottom: 0.5rem
     .help
-      margin-top: 0.5rem
+      margin-top: 1rem
       font-size: 14px
       color: var(--steel)
       font-weight: normal
