@@ -1,9 +1,4 @@
 module.exports = `
-  extend type Query {
-    facebookAuthURL: String
-    googleAuthURL: String
-  }
-
   extend type Mutation {
     generatePhoneCode(prefix: String!, method: String, phone: String!): AttestationCodeResult!
     verifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): AttestationVerifyResult!
@@ -12,7 +7,7 @@ module.exports = `
     verifyEmailCode(email: String!, identity: String, code: String!): AttestationVerifyResult!
 
     verifyFacebook(identity: String!, authUrl: String): AttestationVerifyResult!
-    verifyTwitter(identity: String!, authUrl: String): AttestationVerifyResult!
+    verifyTwitter(identity: String!, redirect: Boolean, authUrl: String): AttestationVerifyResult!
     verifyGoogle(identity: String!, authUrl: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!

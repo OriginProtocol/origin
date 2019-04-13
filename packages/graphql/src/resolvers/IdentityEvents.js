@@ -171,6 +171,22 @@ export default {
     const authData = await response.json()
     return authData.url
   },
+  twitterAuthUrl: async (_, args) => {
+    console.log(args)
+    const bridgeServer = contracts.config.bridge
+    if (!bridgeServer) {
+      return null
+    }
+    let authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
+    if (args.redirect) {
+      authUrl += `?dappRedirectUrl=${args.redirect}`
+    }
+    const response = await fetch(authUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    return authData.url
+  },
   googleAuthUrl: async () => {
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {

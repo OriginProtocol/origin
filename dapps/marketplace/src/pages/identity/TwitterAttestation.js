@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
+import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
 import VerifyTwitterMutation from 'mutations/VerifyTwitter'
+import query from 'queries/TwitterAuthUrl'
 
 class TwitterAttestation extends Component {
   state = {
-    stage: 'GenerateCode',
-    email: '',
-    code: ''
+    stage: 'GenerateCode'
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,12 +42,24 @@ class TwitterAttestation extends Component {
           this.props.onClose()
         }}
       >
-        <div>{this[`render${this.state.stage}`]()}</div>
+        <Query
+          query={query}
+          variables={{
+            redirect: encodeURIComponent(
+              'http://localhost:3000#/profile/twitter-attestation'
+            )
+          }}
+        >
+          {({ data }) => {
+            const authUrl = get(data, 'identityEvents.twitterAuthUrl')
+            return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
+          }}
+        </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode() {
+  renderGenerateCode({ authUrl }) {
     return (
       <>
         <h2>
@@ -58,11 +70,6 @@ class TwitterAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verfify.warning">
-            <b>Warning:</b> Currently unavailable on mobile devices
-          </fbt>
-        </div>
         <div className="help">
           <fbt desc="TwitterAttestation.description">
             Other users will know that you have a verified Twitter account, but
@@ -71,7 +78,10 @@ class TwitterAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          {this.renderVerifyButton()}
+          <a href={authUrl} className="btn btn-outline-light">
+            {fbt('Continue', 'Continue')}
+          </a>
+          {/* }{this.renderVerifyButton()} */}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -105,15 +115,13 @@ class TwitterAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light d-none d-sm-block"
+            className="btn btn-outline-light"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
-                  identity: this.props.wallet,
-                  email: this.state.email,
-                  code: this.state.code
+                  identity: this.props.wallet
                 }
               })
             }}
