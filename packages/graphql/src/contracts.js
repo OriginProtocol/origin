@@ -31,6 +31,31 @@ if (typeof window !== 'undefined') {
   OriginLinkerClient = require('@origin/linker-client').default
 }
 
+const GanacheContracts = {
+  OriginToken: '0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0',
+  V00_Marketplace: '0x345cA3e014Aaf5dcA488057592ee47305D9B3e10',
+  V00_Marketplace_Epoch: '0',
+  IdentityEvents: '0x30753E4A8aad7F8597332E813735Def5dD395028',
+  IdentityEvents_Epoch: '0',
+  DaiExchange: '0x440B7f9b667420af04e88d4dA0B9122E05cCa5A0',
+  tokens: [
+    {
+      'type':'OriginToken',
+      'id':'0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0',
+      'name':'Origin Token',
+      'symbol':'OGN',
+      'decimals':'18',
+    },
+    {
+      'type':'Standard',
+      'id':'0xF12b5dd4EAD5F743C6BaA640B0216200e89B60Da',
+      'name':'Dai Stablecoin',
+      'symbol':'DAI',
+      'decimals':'18',
+    }
+  ]
+}
+
 const Configs = {
   mainnet: {
     // provider:
@@ -179,7 +204,8 @@ const Configs = {
     attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     linker: `http://${LINKER_HOST}:3008`,
-    linkerWS: `ws://${LINKER_HOST}:3008`
+    linkerWS: `ws://${LINKER_HOST}:3008`,
+    ...GanacheContracts
   },
   truffle: {
     provider: `http://${HOST}:8545`,
@@ -210,15 +236,13 @@ const Configs = {
     growth: 'http://localhost:4001',
     discovery: 'http://localhost:4000/graphql',
     automine: 2000,
-    OriginToken: get(OriginTokenContract, 'networks.999.address'),
-    V00_Marketplace: get(MarketplaceContract, 'networks.999.address'),
-    IdentityEvents: get(IdentityEventsContract, 'networks.999.address'),
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
     messaging: {
       messagingNamespace: 'origin:docker',
       globalKeyServer: 'http://localhost:6647'
-    }
+    },
+    ...GanacheContracts
   },
   test: {
     provider: `http://${HOST}:8545`,
@@ -228,7 +252,8 @@ const Configs = {
     affiliate: '0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2',
     attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
     arbitrator: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
-    automine: 500
+    automine: 500,
+    ...GanacheContracts
   }
 }
 
@@ -297,17 +322,6 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-    if (typeof window !== 'undefined') {
-      config.OriginToken = window.localStorage.OGNContract
-      config.V00_Marketplace = window.localStorage.marketplaceContract
-      config.IdentityEvents = window.localStorage.identityEventsContract
-      config.DaiExchange = window.localStorage.uniswapDaiExchange
-    }
-  } else if (net === 'localhost') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
-    config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
   context.net = net
   context.config = config
