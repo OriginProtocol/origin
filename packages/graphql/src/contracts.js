@@ -485,12 +485,20 @@ function setMobileBridge() {
   if (!context.mobileBridge) return
   if (metaMask && metaMaskEnabled) return
 
+  // Init our custom web3 provider which modifies certain methods
   const mobileBridgeProvider = context.mobileBridge.getProvider()
   context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
+  // Replace all the contracts with versions that use our custom web3 provider
+  // so that contract calls get routed through window.postMessage
   context.marketplaceExec = new context.web3Exec.eth.Contract(
     MarketplaceContract.abi,
     context.marketplace._address
+  )
+
+  context.identityEventsExec = new context.web3Exec.eth.Contract(
+    IdentityEventsContract.abi,
+    context.identityEvents._address
   )
 
   if (context.config.OriginToken) {
@@ -500,10 +508,21 @@ function setMobileBridge() {
     )
   }
 
-  context.identityEventsExec = new context.web3Exec.eth.Contract(
-    IdentityEventsContract.abi,
-    context.identityEvents._address
-  )
+  if (context.config.DaiExchange) {
+    const contract = new web3.eth.Contract(exchangeAbi, context.config.DaiExchange)
+    context.daiExchangeExec = new context.web3Exec.eth.Contract(
+      exchangeAbi,
+      context.daiExchange._address
+    )
+  }
+
+  context.tokens.forEach(token => {
+    const contractDef =
+      token.type === 'OriginToken' ? OriginTokenContract : TokenContract
+    const contract = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
+    token.contract = contract
+    token.contractExec = contract
+  })
 
   if (context.messaging) {
     context.messaging.web3 = context.web3Exec

@@ -35,8 +35,12 @@ class TransactionCard extends Component {
         break
       case 'makeOffer':
         heading = 'Purchase'
+        // TODO: handle this detection better, this will only work while there
+        // is a single alternate payment currency
         if (_currency === '0x0000000000000000000000000000000000000000') {
           paymentCurrency = 'eth'
+        } else {
+          paymentCurrency = 'dai'
         }
         ognInvolved = parseInt(_commission) > 0
         daiInvolved = paymentCurrency === 'dai'
