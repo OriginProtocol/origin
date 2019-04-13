@@ -112,11 +112,15 @@ const populateIpfs = ({ logFiles } = {}) =>
 const startGraphQL = () =>
   new Promise((resolve, reject) => {
     const originContractsPath = path.resolve(__dirname, '../graphql')
-    const startServer = spawn(`node`, ['-r', '@babel/register', 'fixtures/populate-server.js'], {
-      cwd: originContractsPath,
-      stdio: 'inherit',
-      env: process.env
-    })
+    const startServer = spawn(
+      `node`,
+      ['-r', '@babel/register', 'fixtures/populate-server.js'],
+      {
+        cwd: originContractsPath,
+        stdio: 'inherit',
+        env: process.env
+      }
+    )
     startServer.on('exit', code => {
       if (code === 0) {
         console.log('GraphQL finished OK.')

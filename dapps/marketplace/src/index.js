@@ -31,11 +31,7 @@ if (process.env.NODE_ENV === 'production') {
     const populate = require('@origin/graphql/fixtures/populate')
     window.pop = populate
     window.populate = (log, finished) => {
-      populate.default(
-        client,
-        log,
-        finished
-      )
+      populate.default(client, log, finished)
     }
   } catch (e) {
     console.warn('No fixtures found')
