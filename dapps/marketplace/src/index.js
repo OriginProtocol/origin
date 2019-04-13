@@ -33,7 +33,6 @@ if (process.env.NODE_ENV === 'production') {
     window.populate = (log, finished) => {
       populate.default(
         client,
-        '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
         log,
         finished
       )

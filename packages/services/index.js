@@ -86,24 +86,43 @@ const populateIpfs = ({ logFiles } = {}) =>
     )
   })
 
-const deployContracts = () =>
+// const deployContracts = () =>
+//   new Promise((resolve, reject) => {
+//     const originContractsPath = path.resolve(__dirname, '../contracts')
+//     const truffleMigrate = spawn(
+//       `./node_modules/.bin/truffle`,
+//       ['migrate', '--reset'],
+//       {
+//         cwd: originContractsPath,
+//         stdio: 'inherit',
+//         env: process.env
+//       }
+//     )
+//     truffleMigrate.on('exit', code => {
+//       if (code === 0) {
+//         console.log('Truffle migrate finished OK.')
+//         resolve()
+//       } else {
+//         reject('Truffle migrate failed.')
+//         reject()
+//       }
+//     })
+//   })
+
+const startGraphQL = () =>
   new Promise((resolve, reject) => {
-    const originContractsPath = path.resolve(__dirname, '../contracts')
-    const truffleMigrate = spawn(
-      `./node_modules/.bin/truffle`,
-      ['migrate', '--reset'],
-      {
-        cwd: originContractsPath,
-        stdio: 'inherit',
-        env: process.env
-      }
-    )
-    truffleMigrate.on('exit', code => {
+    const originContractsPath = path.resolve(__dirname, '../graphql')
+    const startServer = spawn(`node`, ['-r', '@babel/register', 'fixtures/populate-server.js'], {
+      cwd: originContractsPath,
+      stdio: 'inherit',
+      env: process.env
+    })
+    startServer.on('exit', code => {
       if (code === 0) {
-        console.log('Truffle migrate finished OK.')
+        console.log('GraphQL finished OK.')
         resolve()
       } else {
-        reject('Truffle migrate failed.')
+        reject('GraphQL failed.')
         reject()
       }
     })
@@ -122,10 +141,6 @@ module.exports = async function start(opts = {}) {
     }
   }
 
-  if (opts.deployContracts) {
-    await deployContracts()
-  }
-
   if (opts.ipfs && !started.ipfs) {
     if (await portInUse(5002)) {
       console.log('IPFS already started')
@@ -136,6 +151,11 @@ module.exports = async function start(opts = {}) {
       started.populate = true
       await populateIpfs()
     }
+  }
+
+  if (opts.deployContracts) {
+    // await deployContracts()
+    await startGraphQL()
   }
 
   if (opts.extras && !started.extras) {

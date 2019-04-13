@@ -2,6 +2,8 @@ import gql from 'graphql-tag'
 
 import mnemonicToAccounts from '../src/utils/mnemonicToAccount'
 import demoListings from './_demoListings'
+import get from 'lodash/get'
+import sortBy from 'lodash/sortBy'
 
 import {
   ImportWalletsMutation,
@@ -34,6 +36,42 @@ const query = gql`
   }
 `
 
+const NodeAccountsQuery = gql`
+  query NodeAccounts {
+    web3 {
+      nodeAccounts {
+        id
+        balance {
+          eth
+        }
+      }
+    }
+  }
+`
+
+const TransactionReceipt = gql`
+  query TransactionReceipt($id: ID!) {
+    web3 {
+      transactionReceipt(id: $id) {
+        id
+        blockNumber
+        contractAddress
+        events {
+          id
+          event
+          returnValuesArr {
+            field
+            value
+          }
+          raw {
+            topics
+          }
+        }
+      }
+    }
+  }
+`
+
 function transactionConfirmed(hash, gqlClient) {
   return new Promise(resolve => {
     const sub = gqlClient.subscribe({ query }).subscribe({
@@ -41,8 +79,11 @@ function transactionConfirmed(hash, gqlClient) {
         const t = result.data.transactionUpdated
         if (t.id === hash && t.status === 'receipt') {
           sub.unsubscribe()
-          const result = await web3.eth.getTransactionReceipt(hash) // eslint-disable-line
-          resolve(result)
+          const result = await gqlClient.query({
+            query: TransactionReceipt,
+            variables: { id: hash }
+          })
+          resolve(result.data.web3.transactionReceipt)
         }
       }
     })
@@ -66,10 +107,16 @@ export async function createUser(gqlClient, NodeAccount) {
   return user
 }
 
-export default async function populate(gqlClient, NodeAccount, log, done) {
+export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {
     variables.from = from
-    const result = await gqlClient.mutate({ mutation, variables })
+    let result
+    try {
+      result = await gqlClient.mutate({ mutation, variables })
+    } catch (e) {
+      console.log(JSON.stringify(e, null, 4))
+      throw e
+    }
     const key = Object.keys(result.data)[0]
     const hash = result.data[key].id
     if (hash) {
@@ -79,15 +126,20 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
     return result.data[key]
   }
 
+  const NodeAcctsData = await gqlClient.query({ query: NodeAccountsQuery })
+  const UnsortedAccts = get(NodeAcctsData, 'data.web3.nodeAccounts')
+  const NodeAccountObj = sortBy(UnsortedAccts, a => -Number(a.balance.eth))[0]
+  const NodeAccount = NodeAccountObj.id
+  log(`Using NodeAccount ${NodeAccount}`)
+
   await mutate(ToggleMetaMaskMutation, null, { enabled: false })
   log(`Disabled MetaMask`)
 
   const accounts = mnemonicToAccounts()
-  await mutate(ImportWalletsMutation, null, { accounts })
-  const [Admin, Seller, Buyer, Arbitrator, Affiliate] = accounts.map(
-    account => web3.eth.accounts.privateKeyToAccount(account.privateKey).address // eslint-disable-line
-  )
+  const res = await mutate(ImportWalletsMutation, null, { accounts })
+  const [Admin, Seller, Buyer, Arbitrator, Affiliate] = res.map(r => r.id)
 
+  log('Sending from node...')
   await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
   log('Sent eth to Admin')
 
@@ -127,7 +179,7 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
   log('Sent ogn to seller')
 
   await mutate(UpdateTokenAllowanceMutation, Seller, {
-    token: 'ogn',
+    token: OGN,
     to: Marketplace,
     value: '500'
   })
@@ -165,8 +217,11 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
   await mutate(AddAffiliateMutation, Admin, { affiliate: Affiliate })
   log('Added affiliate to marketplace')
 
-  const IE = await mutate(DeployIdentityEventsContractMutation, Admin)
-  log(`Deployed Identity Events contract to ${IE}`)
+  const IdentityEvents = await mutate(
+    DeployIdentityEventsContractMutation,
+    Admin
+  )
+  log(`Deployed Identity Events contract to ${IdentityEvents}`)
 
   await mutate(DeployIdentityMutation, Seller, {
     profile: {
@@ -182,24 +237,36 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
   const UniswapFactory = await mutate(UniswapDeployFactory, Admin)
   log('Deployed Uniswap Factory to', UniswapFactory)
 
-  await mutate(UniswapDeployExchangeTemplate, Admin)
-  log('Deployed Uniswap Exhange Template')
+  const UniswapExchTpl = await mutate(UniswapDeployExchangeTemplate, Admin)
+  log('Deployed Uniswap Exchange Template to', UniswapExchTpl)
 
-  await mutate(UniswapInitFactory, Admin)
+  await mutate(UniswapInitFactory, Admin, {
+    factory: UniswapFactory,
+    exchange: UniswapExchTpl
+  })
   log('Initialized Uniswap Factory')
 
-  await mutate(UniswapCreateExchange, Admin, { tokenAddress: DAI })
-  log(`Created Uniswap Dai Exchange ${localStorage.uniswapDaiExchange}`)
+  const UniswapDaiExchangeResult = await mutate(UniswapCreateExchange, Admin, {
+    tokenAddress: DAI,
+    factory: UniswapFactory
+  })
+  const NewExchangeEvent = UniswapDaiExchangeResult.events.find(
+    e => e.event === 'NewExchange'
+  )
+  const UniswapDaiExchange = NewExchangeEvent.returnValuesArr.find(
+    v => v.field === 'exchange'
+  ).value
+  log(`Created Uniswap Dai Exchange ${UniswapDaiExchange}`)
 
   await mutate(UpdateTokenAllowanceMutation, Admin, {
-    token: 'token-DAI',
-    to: localStorage.uniswapDaiExchange,
+    token: DAI,
+    to: UniswapDaiExchange,
     value: '100000'
   })
   log('Approved DAI on Uniswap Dai Exchange')
 
   await mutate(UniswapAddLiquidity, Admin, {
-    exchange: localStorage.uniswapDaiExchange,
+    exchange: UniswapDaiExchange,
     value: '1',
     tokens: '100000',
     liquidity: '0'
@@ -215,6 +282,19 @@ export default async function populate(gqlClient, NodeAccount, log, done) {
   log(`Enabled MetaMask`)
 
   if (done) {
-    done()
+    done({
+      Admin,
+      Seller,
+      Buyer,
+      Arbitrator,
+      Affiliate,
+      OGN,
+      DAI,
+      Marketplace,
+      IdentityEvents,
+      UniswapFactory,
+      UniswapExchTpl,
+      UniswapDaiExchange
+    })
   }
 }

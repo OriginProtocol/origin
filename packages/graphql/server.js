@@ -4,12 +4,15 @@ global.fetch = require('node-fetch')
 
 import typeDefs from './src/typeDefs/index'
 import resolvers from './src/resolvers/server'
-import { setNetwork } from './src/contracts'
+import { setNetwork, shutdown } from './src/contracts'
 
-setNetwork('mainnet')
+setNetwork('test')
 
 const server = new ApolloServer({ typeDefs, resolvers })
+server.shutdown = shutdown
 
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`)
-})
+// server.listen().then(({ url }) => {
+//   console.log(`🚀  Server ready at ${url}`)
+// })
+
+export default server

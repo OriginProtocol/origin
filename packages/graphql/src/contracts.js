@@ -303,7 +303,7 @@ export function setNetwork(net, customConfig) {
       config.IdentityEvents = window.localStorage.identityEventsContract
       config.DaiExchange = window.localStorage.uniswapDaiExchange
     }
-  } else if (net === 'localhost') {
+  } else if (net === 'localhost' && typeof window !== 'undefined') {
     config.OriginToken = window.localStorage.OGNContract
     config.V00_Marketplace = window.localStorage.marketplaceContract
     config.IdentityEvents = window.localStorage.identityEventsContract
@@ -369,24 +369,23 @@ export function setNetwork(net, customConfig) {
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
-  if (typeof window !== 'undefined') {
-    if (config.providerWS) {
-      web3WS = applyWeb3Hack(new Web3(config.providerWS))
-      wsSub = web3WS.eth
-        .subscribe('newBlockHeaders')
-        .on('data', newBlock)
-        .on('error', () => {
-          console.log('WS connection error. Polling for new blocks...')
-          pollForBlocks()
-        })
-    } else {
-      pollForBlocks()
-    }
-    web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(newBlock)
-    })
-    context.pubsub = pubsub
+  if (config.providerWS) {
+    web3WS = applyWeb3Hack(new Web3(config.providerWS))
+    context.web3WS = web3WS
+    wsSub = web3WS.eth
+      .subscribe('newBlockHeaders')
+      .on('data', newBlock)
+      .on('error', () => {
+        console.log('WS connection error. Polling for new blocks...')
+        pollForBlocks()
+      })
+  } else {
+    pollForBlocks()
   }
+  web3.eth.getBlockNumber().then(block => {
+    web3.eth.getBlock(block).then(newBlock)
+  })
+  context.pubsub = pubsub
 
   context.tokens = config.tokens || []
   if (config.OriginToken) {
@@ -529,6 +528,9 @@ function setLinkerClient() {
 }
 
 export function toggleMetaMask(enabled) {
+  if (typeof window === 'undefined') {
+    return
+  }
   metaMaskEnabled = enabled
   if (metaMaskEnabled) {
     window.localStorage.metaMaskEnabled = true
@@ -592,6 +594,14 @@ export function setIdentityEvents(address, epoch) {
       context.identityEventsExec = context.identityEventsMM
     }
   }
+}
+
+export function shutdown() {
+  if (wsSub) {
+    wsSub.unsubscribe()
+    web3WS.currentProvider.connection.close()
+  }
+  clearInterval(blockInterval)
 }
 
 if (typeof window !== 'undefined') {

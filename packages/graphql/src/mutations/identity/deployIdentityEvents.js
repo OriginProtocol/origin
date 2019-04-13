@@ -3,6 +3,8 @@ import IdentityEvents from '@origin/contracts/build/contracts/IdentityEvents'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setIdentityEvents } from '../../contracts'
 
+const isBrowser = typeof window !== 'undefined'
+
 async function deployIdentityEvents(_, { from }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
@@ -18,7 +20,7 @@ async function deployIdentityEvents(_, { from }) {
     mutation: 'deployIdentityEvents',
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress
-      if (contracts.net === 'localhost') {
+      if (contracts.net === 'localhost' && isBrowser) {
         window.localStorage.identityEventsContract = receipt.contractAddress
       }
       setIdentityEvents(receipt.contractAddress, receipt.blockNumber)

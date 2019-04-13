@@ -67,7 +67,7 @@ module.exports = `
     setActiveWallet(address: String!): Account
     createWallet(role: String, name: String): Account
     importWallet(role: String, name: String, privateKey: String!): Account
-    importWallets(accounts: [WalletInput]): Boolean
+    importWallets(accounts: [WalletInput]): [Account]
     removeWallet(address: String!): String
     signMessage(address: ID!, message: String!): String
   }
