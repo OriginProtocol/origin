@@ -204,15 +204,16 @@ class OriginWallet extends Component {
       const tokenBalances = {}
       if (graphqlContext.config.tokens) {
         for (const token of graphqlContext.config.tokens) {
-          const tokenContract = graphqlContext.tokens.find(
-            t => t.symbol === token.id
+          const balance = await token.contractExec.methods
+            .balanceOf(wallet.activeAccount.address)
+            .call()
+          // Divide by number of decimals for token
+          balance = Number(
+            this.web3.utils
+              .toBN(balance)
+              .div(this.web3.utils.toBN(10 ** token.decimals))
           )
-          if (tokenContract) {
-            const balance = await tokenContract.methods
-              .balanceOf(wallet.activeAccount.address)
-              .call()
-            tokenBalances[token.symbol] = balance
-          }
+          tokenBalances[token.symbol.toLowerCase()] = balance
         }
       }
 
