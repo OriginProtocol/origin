@@ -2,6 +2,7 @@ import {
   changeAccount,
   waitForText,
   clickByText,
+  clickBySelector,
   pic,
   createAccount
 } from './_helpers'
@@ -303,6 +304,57 @@ describe('Marketplace Dapp', function() {
 
     it('should allow a new listing to be finalized', async function() {
       await finalizeOffer({ buyer })
+    })
+  })
+
+
+  describe('Edit user profile', function() {
+    before(async function() {
+      ({ seller, buyer } = await reset())
+    })
+
+    it('should open the profile quickview', async function() {
+      await changeAccount(page, buyer)
+      await clickBySelector(page, 'img[alt="Wallet icon"]')
+      await pic(page, 'profile-quickview')
+    })
+
+    it('should go to the profile page', async function() {
+      await clickByText(page, 'Edit Profile')
+      await pic(page, 'profile-page')
+    })
+
+    it('should open the edit modal', async function(){
+      await clickBySelector(page, '.profile a.edit')
+    })
+
+    it('should enter new profile information', async function(){
+      await page.type('input[name=firstName]', 'Amerigo vespucci')
+      await page.type('input[name=lastName]', 'Vespucci')
+      await page.type(
+        'textarea[name=description]',
+        `In that hemisphere I have seen things not compatible with the opinions of philosophers.`
+      )
+      await pic(page, 'profile-edit-modal')
+    })
+
+    it('should close the edit modal', async function(){
+      await clickByText(page, 'OK', 'button')
+      await page.waitForSelector('.pl-modal', { hidden: true })
+    })
+
+    it('should skip the wizard', async function(){
+      await clickByText(page, 'Skip', 'button')
+    })
+
+    it('should publish the profile changes', async function(){
+      await pic(page, 'profile-before-publish')
+      await clickByText(page, 'Publish Changes')
+    })
+
+    it('should reach a success page', async function(){
+      await waitForText(page, 'Success')
+      await pic(page, 'profile-edited')
     })
   })
 })

@@ -49,6 +49,16 @@ export const clickByText = async (page, text, path) => {
   }
 }
 
+export const clickBySelector = async (page, path) => {
+  await page.waitForSelector(path)
+  const linkHandler = await page.$(path)
+  if (linkHandler) {
+    await linkHandler.click()
+  } else {
+    throw new Error(`Link not found: ${path}`)
+  }
+}
+
 export const changeAccount = async (page, account) => {
   await page.evaluate((account) => {
     window.localStorage.useWeb3Wallet = account
