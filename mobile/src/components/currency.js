@@ -15,16 +15,15 @@ export default class Currency extends Component {
       onPress
     } = this.props
 
-    return vertical ? (
-      <View style={{ ...styles.container, ...styles.vertical }}>
+    return (
+      <View style={styles.container}>
         <View style={{ height: 28 }}>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.colored}>
-            <Image source={imageSource} style={styles.iconSmall} />
+            <Image source={imageSource} style={styles.icon} />
             <Text
               style={{
                 ...styles.abbreviation,
-                ...styles.abbreviationLarge,
                 color: labelColor
               }}
             >
@@ -39,23 +38,11 @@ export default class Currency extends Component {
               style={styles.plus}
             />
           </TouchableOpacity>
-          <Text style={{ ...styles.balance, ...styles.balanceLarge }}>
+          <Text style={styles.balance}>
             {Number(balance).toFixed(5)}
           </Text>
         </View>
       </View>
-    ) : (
-      <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
-        <View style={{ ...styles.container, ...styles.horizontal }}>
-          <Image source={imageSource} style={styles.iconLarge} />
-          <View style={styles.text}>
-            <Text style={{ ...styles.abbreviation, color: labelColor }}>
-              {abbreviation}
-            </Text>
-            <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
     )
   }
 }
@@ -63,18 +50,12 @@ export default class Currency extends Component {
 const styles = StyleSheet.create({
   abbreviation: {
     fontFamily: 'Lato',
-    fontSize: 8
-  },
-  abbreviationLarge: {
     fontSize: 12,
     marginLeft: 5
   },
   balance: {
-    color: 'white',
+    color: '#0b1823',
     fontFamily: 'Lato',
-    fontSize: 14
-  },
-  balanceLarge: {
     fontSize: 28,
     fontWeight: 'bold',
     marginLeft: 'auto',
@@ -86,26 +67,18 @@ const styles = StyleSheet.create({
     height: 28
   },
   container: {
-    backgroundColor: '#293f55',
+    backgroundColor: 'white',
     borderRadius: 10,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 10,
+    padding: 17
   },
-  horizontal: {
-    height: 56,
-    marginRight: 10,
-    padding: 10,
-    width: 160
-  },
-  iconLarge: {
-    height: 30,
-    width: 30
-  },
-  iconSmall: {
+  icon: {
     height: 16,
     width: 16
   },
   name: {
-    color: 'white',
+    color: '#0b1823',
     fontFamily: 'Lato',
     fontSize: 18,
     fontWeight: 'bold',
@@ -116,12 +89,5 @@ const styles = StyleSheet.create({
   },
   right: {
     marginLeft: 'auto'
-  },
-  text: {
-    paddingLeft: 10
-  },
-  vertical: {
-    marginBottom: 10,
-    padding: 17
   }
 })
