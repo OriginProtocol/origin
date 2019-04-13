@@ -26,4 +26,15 @@ router.get('/twitter', (req, res) => {
   }
 })
 
+router.get('/google', (req, res) => {
+  if (req.query.dappRedirectUrl) {
+    const dappRedirectUrl = req.query.dappRedirectUrl
+    res.redirect(`${dappRedirectUrl}?origin-code=${req.query.code}`)
+  } else {
+    // res.sendFile requires absoluite paths and ../ is considered malicious
+    // so resolve first
+    res.sendFile(path.resolve(`${__dirname}/../static/google.html`))
+  }
+})
+
 module.exports = router

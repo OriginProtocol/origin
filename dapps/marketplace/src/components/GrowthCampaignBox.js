@@ -173,7 +173,7 @@ const GrowthCampaignBox = props => (
         >
           {({ networkStatus, error, loading, data }) => {
             if (networkStatus === 1 || loading) {
-              return 'Loading...'
+              return fbt('Loading...', 'Loading...')
             } else if (error) {
               return <QueryError error={error} query={enrollmentStatusQuery} />
             }
@@ -216,6 +216,7 @@ require('react-styl')(`
       font-weight: 900
       color: var(--clear-blue)
       border: 0px
+      background-color: white
     .ogn-icon
       position: relative
       top: -3px

@@ -7,7 +7,7 @@ import { Switch, Route } from 'react-router-dom'
 import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -16,15 +16,15 @@ import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
-import ImageCropper from 'components/ImageCropper'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
@@ -36,7 +36,8 @@ const AttestationComponents = {
   email: EmailAttestation,
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
-  airbnb: AirbnbAttestation
+  airbnb: AirbnbAttestation,
+  google: GoogleAttestation
 }
 
 const ProfileFields = [
@@ -50,7 +51,8 @@ const ProfileFields = [
   'twitterVerified',
   'airbnbVerified',
   'phoneVerified',
-  'emailVerified'
+  'emailVerified',
+  'googleVerified'
 ]
 
 function getState(profile) {
@@ -117,6 +119,11 @@ class UserProfile extends Component {
     )
   }
 
+  openEditProfile(e) {
+    e.preventDefault()
+    this.setState({ editProfile: true })
+  }
+
   renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
@@ -139,18 +146,13 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <ImageCropper onChange={avatar => this.setState({ avatar })}>
-                  <Avatar className="with-cam" avatar={this.state.avatar} />
-                </ImageCropper>
+                <Avatar avatar={this.state.avatar} />
               </div>
               <div className="info">
                 <a
                   className="edit"
                   href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.setState({ editProfile: true })
-                  }}
+                  onClick={e => this.openEditProfile(e)}
                 />
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
@@ -195,36 +197,46 @@ class UserProfile extends Component {
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
-                {this.renderAtt('google', 'Google', true)}
+                {this.renderAtt(
+                  'google',
+                  fbt('Google', '_ProvisionedChanges.google'),
+                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                )}
               </div>
             </div>
 
             <ProfileStrength
               large={true}
               published={get(this.props, 'identity.strength') || 0}
-              unpublished={unpublishedProfileStrength(this)}
+              unpublished={unpublishedStrength(this)}
             />
 
             <div className="actions">
-              <DeployIdentity
-                className={`btn btn-primary btn-rounded btn-lg`}
-                identity={get(this.props, 'identity.id')}
-                refetch={this.props.identityRefetch}
-                profile={pick(this.state, [
-                  'firstName',
-                  'lastName',
-                  'description',
-                  'avatar'
-                ])}
-                attestations={[
-                  ...(this.state.attestations || []),
-                  ...attestations
-                ]}
-                validate={() => this.validate()}
-                onComplete={() =>
-                  store.set(`attestations-${this.props.wallet}`, undefined)
-                }
-                children={fbt('Publish Now', 'Profile.publishNow')}
+              <ProfileWizard
+                deployIdentityProps={{
+                  className: `btn btn-primary btn-rounded btn-lg`,
+                  identity: get(this.props, 'identity.id'),
+                  refetch: this.props.identityRefetch,
+                  profile: pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatar'
+                  ]),
+                  attestations: [
+                    ...(this.state.attestations || []),
+                    ...attestations
+                  ],
+                  validate: () => this.validate(),
+                  onComplete: () =>
+                    store.set(`attestations-${this.props.wallet}`, undefined),
+                  children: fbt('Publish Now', 'Profile.publishNow')
+                }}
+                publishedProfile={this.props.identity || {}}
+                currentProfile={this.state}
+                changesToPublishExist={changesToPublishExist(this)}
+                publishedStrength={get(this.props, 'identity.strength') || 0}
+                openEditProfile={e => this.openEditProfile(e)}
               />
             </div>
           </div>
@@ -251,10 +263,12 @@ class UserProfile extends Component {
               'description',
               'avatar'
             ])}
+            avatar={this.state.avatar}
             onClose={() => this.setState({ editProfile: false })}
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
+            onAvatarChange={avatar => this.setState({ avatar })}
           />
         )}
       </div>
@@ -282,7 +296,7 @@ class UserProfile extends Component {
       AttestationComponent = (
         <AttestationComponent
           wallet={wallet}
-          open={this.state[type]}
+          open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
             this.setState({ [`${type}Attestation`]: att }, () => {
@@ -296,6 +310,7 @@ class UserProfile extends Component {
     return (
       <>
         <div
+          id={`attestation-component-${type}`}
           className={`profile-attestation ${type}${status}`}
           onClick={() => this.setState({ [type]: true })}
         >
@@ -341,7 +356,7 @@ require('react-styl')(`
       margin-bottom: 2rem
     .avatar-wrap
       margin-right: 2rem
-      width: 10rem
+      width: 7.5rem
       .avatar
         border-radius: 1rem
     .actions

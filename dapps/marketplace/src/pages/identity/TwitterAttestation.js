@@ -117,7 +117,11 @@ class TwitterAttestation extends Component {
                 }
               })
             }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
+            children={
+              this.state.loading
+                ? fbt('Loading...', 'Loading...')
+                : fbt('Continue', 'Continue')
+            }
           />
         )}
       </Mutation>

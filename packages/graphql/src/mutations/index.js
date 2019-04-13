@@ -44,6 +44,7 @@ import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
+import verifyGoogle from './attestations/verifyGoogle'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -96,6 +97,7 @@ export default {
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
   withdrawListing,
