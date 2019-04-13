@@ -120,7 +120,7 @@ matrix:
         - lerna run migrate --scope @origin/identity
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/linker-client --scope @origin/graphql --scope @origin/identity --scope @origin/token --scope @origin/growth
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/linker-client --scope @origin/graphql --scope @origin/bridge --scope @origin/identity --scope @origin/token --scope @origin/growth
       script:
         - npm run test --prefix infra/growth
 

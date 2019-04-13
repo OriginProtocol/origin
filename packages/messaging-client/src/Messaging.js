@@ -5,6 +5,7 @@ import EventEmitter from 'events'
 import Ajv from 'ajv'
 import cookieStorage from './cookieStorage'
 import createDebug from 'debug'
+import Bottleneck from 'bottleneck'
 
 import stringify from 'json-stable-stringify'
 
@@ -48,6 +49,8 @@ const validator = new Ajv()
 const validateMessage = validator.compile(MESSAGE_FORMAT)
 
 const DEFAULT_ORBIT_OPTIONS = { referenceCount: 0 }
+
+const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 class Messaging {
   constructor({
@@ -529,10 +532,12 @@ class Messaging {
     const convObj = { keys: [], messages: [] }
     this.convs[roomId] = convObj
 
-    const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
-      headers: { 'content-type': 'application/json' }
+    const messages = await limiter.schedule(async () => {
+      const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
+        headers: { 'content-type': 'application/json' }
+      })
+      return await res.json()
     })
-    const messages = await res.json()
 
     messages.forEach(entry => {
       this.processContent(

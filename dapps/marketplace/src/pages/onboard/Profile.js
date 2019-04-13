@@ -8,7 +8,7 @@ import Steps from 'components/Steps'
 import Link from 'components/Link'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
-import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+import { unpublishedStrength } from 'utils/profileTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -20,6 +20,7 @@ import Avatar from 'components/Avatar'
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
@@ -31,7 +32,8 @@ const AttestationComponents = {
   phone: PhoneAttestation,
   email: EmailAttestation,
   facebook: FacebookAttestation,
-  twitter: TwitterAttestation
+  twitter: TwitterAttestation,
+  google: GoogleAttestation
 }
 
 class OnboardProfile extends Component {
@@ -57,7 +59,8 @@ class OnboardProfile extends Component {
           'twitterVerified',
           'airbnbVerified',
           'phoneVerified',
-          'emailVerified'
+          'emailVerified',
+          'googleVerified'
         ])
       )
     }
@@ -157,7 +160,7 @@ class OnboardProfile extends Component {
 
                   <ProfileStrength
                     published={get(this.props, 'identity.strength', 0)}
-                    unpublished={unpublishedProfileStrength(this)}
+                    unpublished={unpublishedStrength(this)}
                   />
                 </div>
 

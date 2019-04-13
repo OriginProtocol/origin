@@ -2,6 +2,11 @@ import withCurrencyBalances from 'hoc/withCurrencyBalances'
 import withWallet from 'hoc/withWallet'
 import get from 'lodash/get'
 
+// web3.utils.toWei only accepts up to 18 decimal places
+function removeExtraDecimals(numStr) {
+  return numStr.replace(/^([0-9]+\.[0-9]{18}).*/, '$1')
+}
+
 const WithPrices = ({
   target,
   targets = [],
@@ -34,12 +39,10 @@ const WithPrices = ({
   const ethBalance = web3.utils.toBN(
     get(results, `token-ETH.currency.balance`) || '0'
   )
-  const targetValue = web3.utils.toBN(
-    web3.utils.toWei(get(results, `${target}.amount`) || '0', 'ether')
-  )
-  const targetValueEth = web3.utils.toBN(
-    web3.utils.toWei(get(results, `token-ETH.amount`) || '0', 'ether')
-  )
+  const targetWei = removeExtraDecimals(get(results, `${target}.amount`) || '0')
+  const targetValue = web3.utils.toBN(web3.utils.toWei(targetWei, 'ether'))
+  const ethInWei = removeExtraDecimals(get(results, `token-ETH.amount`) || '0')
+  const targetValueEth = web3.utils.toBN(web3.utils.toWei(ethInWei, 'ether'))
   const hasEthBalance = ethBalance.gte(targetValueEth)
 
   if (target === 'token-ETH') {

@@ -28,11 +28,11 @@ const reset = async () => {
 const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
-  await clickByText(page, 'Purchase')
-  await waitForText(page, 'View Purchase')
+  await clickByText(page, 'Purchase', 'button')
+  await waitForText(page, 'View Purchase', 'button')
   await pic(page, 'purchase-listing')
 
-  await clickByText(page, 'View Purchase')
+  await clickByText(page, 'View Purchase', 'button')
   await waitForText(page, 'Transaction Progress')
   await pic(page, 'transaction-wait-for-seller')
 }
@@ -42,8 +42,8 @@ const acceptOffer = async ({ seller }) => {
   await waitForText(page, 'Accept Offer', 'button')
   await pic(page, 'transaction-accept')
 
-  await clickByText(page, 'Accept Offer')
-  await clickByText(page, 'OK')
+  await clickByText(page, 'Accept Offer', 'button')
+  await clickByText(page, 'OK', 'button')
   await waitForText(page, 'Wait for buyer')
   await pic(page, 'transaction-accepted')
 }
@@ -53,7 +53,7 @@ const finalizeOffer = async ({ buyer }) => {
   await waitForText(page, 'Finalize', 'button')
   await pic(page, 'transaction-finalize')
   await clickByText(page, 'Finalize', 'button')
-  await clickByText(page, 'OK')
+  await clickByText(page, 'OK', 'button')
   await waitForText(page, 'Transaction Finalized')
   await pic(page, 'transaction-finalized')
 }
@@ -117,7 +117,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing')
+      await clickByText(page, 'View Listing', 'button')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -170,47 +170,47 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should continue to boost', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
       await clickByText(page, 'Done', 'button')
-      await waitForText(page, 'View Listing')
+      await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing')
+      await clickByText(page, 'View Listing', 'button')
       await pic(page, 'listing-detail')
     })
 
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
-      await clickByText(page, 'Purchase')
+      await clickByText(page, 'Swap Now', 'button')
     })
 
     it('should prompt the user to approve their Dai', async function() {
-      await waitForText(page, 'Approve')
+      await waitForText(page, 'Approve', 'button')
       await pic(page, 'listing-detail')
-      await clickByText(page, 'Approve')
+      await clickByText(page, 'Approve', 'button')
 
       await waitForText(page, 'Origin may now move DAI on your behalf.')
       await pic(page, 'listing-detail')
     })
 
     it('should prompt to continue with purchase', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
 
-      await waitForText(page, 'View Purchase')
+      await waitForText(page, 'View Purchase', 'button')
       await pic(page, 'purchase-listing')
 
-      await clickByText(page, 'View Purchase')
+      await clickByText(page, 'View Purchase', 'button')
       await waitForText(page, 'Transaction Progress')
       await pic(page, 'transaction-wait-for-seller')
     })
@@ -245,7 +245,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should continue to details', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
@@ -264,23 +264,23 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should continue to boost', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
       await clickByText(page, 'Done', 'button')
-      await waitForText(page, 'View Listing')
+      await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
 
     it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing')
+      await clickByText(page, 'View Listing', 'button')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -288,11 +288,11 @@ describe('Marketplace Dapp', function() {
       await changeAccount(page, buyer)
       await page.waitForSelector('.quantity select')
       await page.select('.quantity select', '2')
-      await clickByText(page, 'Purchase')
-      await waitForText(page, 'View Purchase')
+      await clickByText(page, 'Purchase', 'button')
+      await waitForText(page, 'View Purchase', 'button')
       await pic(page, 'purchase-listing')
 
-      await clickByText(page, 'View Purchase')
+      await clickByText(page, 'View Purchase', 'button')
       await waitForText(page, 'Transaction Progress')
       await pic(page, 'transaction-wait-for-seller')
     })
