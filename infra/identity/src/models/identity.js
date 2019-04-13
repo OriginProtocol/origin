@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       airbnb: DataTypes.STRING,
       twitter: DataTypes.STRING,
       facebookVerified: DataTypes.BOOLEAN,
+      googleVerified: DataTypes.BOOLEAN,
       data: DataTypes.JSONB
     },
     {

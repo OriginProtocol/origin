@@ -18,6 +18,7 @@ import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
   state = {}
@@ -55,7 +56,9 @@ class Buy extends Component {
     } else if (this.state.allow) {
       content = this.renderAllowTokenModal()
     } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation('Purchase')
+      action = this.renderSwapTokenMutation(
+        this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+      )
       content = this.renderSwapTokenModal()
     } else if (!this.hasAllowance()) {
       action = this.renderAllowTokenMutation('Purchase')
@@ -101,7 +104,7 @@ class Buy extends Component {
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
           {this.renderSwapTokenMutation()}
         </div>
@@ -124,7 +127,7 @@ class Buy extends Component {
           <button
             className={buttonContent ? this.props.className : 'btn btn-clear'}
             onClick={() => this.onSwapToToken(swapToToken)}
-            children={buttonContent || 'Swap Now'}
+            children={buttonContent || fbt('buy.DaiSwapNow', 'Swap Now')}
           />
         )}
       </Mutation>
@@ -157,14 +160,28 @@ class Buy extends Component {
           return (
             <div className="make-offer-modal success">
               <div className="success-icon-lg" />
-              <h5>Success!</h5>
-              <div className="help">{`Swapped ${eth} ETH for ${dai} DAI`}</div>
+              <h5>
+                <fbt desc="success">Success!</fbt>
+              </h5>
+              <div className="help">
+                <fbt desc="buy.swappedEthForDai">
+                  Swapped
+                  <fbt:param name="eth">${eth}</fbt:param>
+                  ETH for
+                  <fbt:param name="dai">${dai}</fbt:param>
+                  DAI
+                </fbt>
+              </div>
               {this.hasAllowance() ? (
-                this.renderMakeOfferMutation('Continue')
+                this.renderMakeOfferMutation(
+                  <fbt desc="continue">Continue</fbt>
+                )
               ) : (
                 <>
                   <div className="help">
-                    Please authorize Origin to move DAI on your behalf.
+                    <fbt desc="buy.authorizeOriginMoveDai">
+                      Please authorize Origin to move DAI on your behalf.
+                    </fbt>
                   </div>
                   {this.renderAllowTokenMutation()}
                 </>
@@ -180,12 +197,14 @@ class Buy extends Component {
     return (
       <>
         <h2>Approve DAI</h2>
-        Click below to approve DAI for use on Origin
+        <fbt desc="buy.approveDaiOrigin">
+          Click below to approve DAI for use on Origin
+        </fbt>
         <div className="actions">
           <button
             className="btn btn-outline-light"
             onClick={() => this.setState({ shouldClose: true })}
-            children="Cancel"
+            children={fbt('Cancel', 'Cancel')}
           />
           {this.renderAllowTokenMutation()}
         </div>
@@ -208,7 +227,7 @@ class Buy extends Component {
           <button
             className={buttonContent ? this.props.className : 'btn btn-clear'}
             onClick={() => this.onAllowToken(allowToken)}
-            children={buttonContent || 'Approve'}
+            children={buttonContent || fbt('Approve', 'Approve')}
           />
         )}
       </Mutation>
@@ -319,7 +338,7 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.from,
       to: 'marketplace',
-      value: '50000'
+      value: this.props.value
     }
 
     allowToken({ variables })
@@ -335,23 +354,28 @@ class Buy extends Component {
         {({ event }) => (
           <div className="make-offer-modal success">
             <div className="success-icon" />
-            <h5>Success!</h5>
+            <h5>
+              <fbt desc="success">Success!</fbt>
+            </h5>
             <div className="disclaimer">
-              You have made an offer on this listing. Your offer will be visible
-              within a few seconds. Your ETH payment has been transferred to an
-              escrow contract. Here&apos;s what happens next:
-              <ul>
-                <li>The seller can choose to accept or reject your offer.</li>
-                <li>
-                  If the offer is accepted and fulfilled, you will be able to
-                  confirm that the sale is complete. Your escrowed payment will
-                  be sent to the seller.
-                </li>
-                <li>
-                  If the offer is rejected, the escrowed payment will be
-                  immediately returned to your wallet.
-                </li>
-              </ul>
+              <fbt desc="buy.successOffer">
+                You have made an offer on this listing. Your offer will be
+                visible within a few seconds. Your ETH payment has been
+                transferred to an escrow contract. Here&apos;s what happens
+                next:
+                <ul>
+                  <li>The seller can choose to accept or reject your offer.</li>
+                  <li>
+                    If the offer is accepted and fulfilled, you will be able to
+                    confirm that the sale is complete. Your escrowed payment
+                    will be sent to the seller.
+                  </li>
+                  <li>
+                    If the offer is rejected, the escrowed payment will be
+                    immediately returned to your wallet.
+                  </li>
+                </ul>
+              </fbt>
             </div>
             <button
               href="#"
@@ -367,7 +391,11 @@ class Buy extends Component {
                   this.props.refetch(redirect)
                 }
               }}
-              children={this.state.loading ? 'Loading...' : 'View Purchase'}
+              children={
+                this.state.loading
+                  ? fbt('Loading...', 'Loading...')
+                  : fbt('View Purchase', 'View Purchase')
+              }
             />
           </div>
         )}
@@ -381,9 +409,15 @@ class Buy extends Component {
         {() => (
           <div className="make-offer-modal success">
             <div className="success-icon-lg" />
-            <h5>Success</h5>
-            <div className="help">Origin may now move DAI on your behalf.</div>
-            {this.renderMakeOfferMutation('Continue')}
+            <h5>
+              <fbt desc="success">Success!</fbt>
+            </h5>
+            <div className="help">
+              <fbt desc="buy.sucessMoveDai">
+                Origin may now move DAI on your behalf.
+              </fbt>
+            </div>
+            {this.renderMakeOfferMutation(fbt('Continue', 'Continue'))}
           </div>
         )}
       </WaitForTransaction>

@@ -190,6 +190,18 @@
             }
           },
           "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "google.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
         }
       ],
       "required": ["userId"]

@@ -5,10 +5,10 @@ import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
-import VerifyFacebookMutation from 'mutations/VerifyFacebook'
-import query from 'queries/FacebookAuthUrl'
+import VerifyGoogleMutation from 'mutations/VerifyGoogle'
+import query from 'queries/GoogleAuthUrl'
 
-class FacebookAttestation extends Component {
+class GoogleAttestation extends Component {
   state = {
     stage: 'GenerateCode'
   }
@@ -28,7 +28,7 @@ class FacebookAttestation extends Component {
 
     return (
       <Modal
-        className={`attestation-modal facebook${
+        className={`attestation-modal google${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
@@ -43,7 +43,7 @@ class FacebookAttestation extends Component {
       >
         <Query query={query}>
           {({ data }) => {
-            const authUrl = get(data, 'identityEvents.facebookAuthUrl')
+            const authUrl = get(data, 'identityEvents.googleAuthUrl')
             return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
           }}
         </Query>
@@ -55,21 +55,19 @@ class FacebookAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verfify">
-            Verify your Facebook Account
-          </fbt>
+          <fbt desc="GoogleAttestation.verify">Verify your Google Account</fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verfify.warning">
+          <fbt desc="Attestation.verify.warning">
             <b>Warning:</b> Currently unavailable on mobile devices
           </fbt>
         </div>
         <div className="help">
-          <fbt desc="FacebookAttestation.verfify.explanation">
-            Other users will know that you have a verified Facebook account, but
+          <fbt desc="GoogleAttestation.verify.explanation">
+            Other users will know that you have a verified Google account, but
             your account details will not be published on the blockchain. We
             will never post on your behalf.
           </fbt>
@@ -89,9 +87,9 @@ class FacebookAttestation extends Component {
   renderVerifyButton({ authUrl }) {
     return (
       <Mutation
-        mutation={VerifyFacebookMutation}
+        mutation={VerifyGoogleMutation}
         onCompleted={res => {
-          const result = res.verifyFacebook
+          const result = res.verifyGoogle
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
@@ -120,11 +118,7 @@ class FacebookAttestation extends Component {
                 }
               })
             }}
-            children={
-              this.state.loading
-                ? fbt('Loading...', 'Loading...')
-                : fbt('Continue', 'Continue')
-            }
+            children={this.state.loading ? 'Loading...' : 'Continue'}
           />
         )}
       </Mutation>
@@ -135,9 +129,7 @@ class FacebookAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verified">
-            Facebook account verified!
-          </fbt>
+          <fbt desc="GoogleAttestation.verified">Google account verified!</fbt>
         </h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">
@@ -165,7 +157,7 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default FacebookAttestation
+export default GoogleAttestation
 
 require('react-styl')(`
 `)
