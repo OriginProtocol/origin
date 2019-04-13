@@ -45,6 +45,8 @@ export default class Attestation {
         return 4
       } else if (siteName === 'airbnb.com') {
         return 5
+      } else if (siteName === 'google.com') {
+        return 6
       } else {
         throw new Error(`Unexpected siteName for attestation ${attestation}`)
       }

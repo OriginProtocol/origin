@@ -44,6 +44,7 @@ import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
+import verifyGoogle from './attestations/verifyGoogle'
 
 import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
 import linkMobileWallet from './walletLinker/linkMobileWallet'
@@ -101,6 +102,7 @@ export default {
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
   withdrawListing,
