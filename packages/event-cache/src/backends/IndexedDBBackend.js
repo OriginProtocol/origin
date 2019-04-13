@@ -1,4 +1,4 @@
-import { openDB } from 'idb'
+import Dexie from 'dexie'
 import uniq from 'lodash/uniq'
 import intersectionBy from 'lodash/intersectionBy'
 
@@ -49,13 +49,30 @@ function createIndexeMap(indexes) {
   return idxMap
 }
 
+/**
+ * Get a value from an object, using dot notation
+ *
+ * @param key {string} key name, can include dot notation
+ * @returns {any} value
+ */
+function getFromObject(key, obj) {
+  if (key.indexOf('.') > -1) {
+    return key.split('.').reduce((o, i) => o[i], obj)
+  } else {
+    return obj[key]
+  }
+}
+
 const DB_NAME = 'origin-event-cache'
 const EVENT_STORE = 'events'
 const SCHEMA_VERSION = 1
 // TODO: Fill out the indexes
 const INDEXES = [
+  '[blockNumber+transactionHash+transactionIndex]',
   'event',
+  'blockNumber',
   'transactionHash',
+  'transactionIndex',
   'address',
   'returnValues.account',
   'returnValues.party'
@@ -74,6 +91,9 @@ export default class IndexedDBBackend extends AbstractBackend {
     this.type = 'indexeddb'
     this.ready = false
     this._db = null
+    this._eventStore = null
+    this.IndexedDB = null
+    this.IDBKeyRange = null
 
     // Make sure we're sane
     if (testing) {
@@ -84,6 +104,8 @@ export default class IndexedDBBackend extends AbstractBackend {
        * We're testing here, anything goes!
        */
       require('fake-indexeddb/auto')
+      this.IndexedDB = require('fake-indexeddb')
+      this.IDBKeyRange = require('fake-indexeddb/lib/FDBKeyRange')
     } else {
       checkForIndexedDB()
     }
@@ -96,18 +118,13 @@ export default class IndexedDBBackend extends AbstractBackend {
        * Get the known block number from cache. Can be a little slow, but should
        * be non-blocking(I think)
        */
-      db.getAll(EVENT_STORE).then(res => {
-        if (res) {
-          const maxBlock = res.reduce((acc, cur, idx) => {
-            const thisNumber = res[idx].blockNumber
-            if (acc > thisNumber) {
-              acc = thisNumber
-            }
-          }, 0)
-          debug(`Cache is current up to block #${maxBlock}`)
-          that.setLatestBlock(maxBlock)
-        }
-      })
+      db[EVENT_STORE].orderBy('blockNumber')
+        .reverse()
+        .limit(1)
+        .toArray()
+        .then(res => {
+          that.setLatestBlock(res[0].blockNumber)
+        })
     })
   }
 
@@ -124,18 +141,16 @@ export default class IndexedDBBackend extends AbstractBackend {
    * Initialize the IndexedDB, object store, and indexes
    */
   async initDB() {
-    this._db = await openDB(DB_NAME, SCHEMA_VERSION, {
-      upgrade(db) {
-        const eventStore = db.createObjectStore(EVENT_STORE, {
-          keyPath: 'id',
-          autoIncrement: true
-        })
-        for (let i = 0; i < INDEXES.length; i++) {
-          debug(`creatIndex(${INDEXES[i]}, ${INDEXES[i]}, { unique: false })`)
-          eventStore.createIndex(INDEXES[i], INDEXES[i], { unique: false })
-        }
-      }
-    })
+    const opts = {}
+    const stores = {}
+
+    if (this.IndexedDB) opts['indexedDB'] = this.IndexedDB
+    if (this.IndexedDB) opts['IDBKeyRange'] = this.IDBKeyRange
+
+    this._db = new Dexie(DB_NAME, opts)
+    stores[EVENT_STORE] = INDEXES.join(', ')
+    this._db.version(SCHEMA_VERSION).stores(stores)
+    this._eventStore = this._db[EVENT_STORE]
     return this._db
   }
 
@@ -145,7 +160,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} of events
    */
   async serialize() {
-    return await this._db.getAll(EVENT_STORE)
+    return await this._eventStore.getAll(EVENT_STORE)
   }
 
   /**
@@ -158,9 +173,7 @@ export default class IndexedDBBackend extends AbstractBackend {
       throw new TypeError('Serialized data should be an Array of objects')
     }
 
-    for (let i = 0; i < ipfsData.length; i++) {
-      await this.addEvent(ipfsData[i])
-    }
+    await this.addEvents(ipfsData)
   }
 
   /**
@@ -205,12 +218,26 @@ export default class IndexedDBBackend extends AbstractBackend {
 
       // Query against each index that maches an arg
       for (let i = 0; i < indexedArgs.length; i++) {
-        const res = await this._db.getAllFromIndex(
-          EVENT_STORE,
-          ARG_TO_INDEX_MAP[indexedArgs[i]],
-          argMatchObject[indexedArgs[i]]
-        )
-        indexedSet.push(res)
+        // We need to iterate the index manually if we're checking an array
+        if (argMatchObject[indexedArgs[i]] instanceof Array) {
+          const res = await this._eventStore
+            .where(ARG_TO_INDEX_MAP[indexedArgs[i]])
+            .anyOf(argMatchObject[indexedArgs[i]])
+            .toArray()
+
+          indexedSet.push(res)
+        } else {
+          try {
+            const res = await this._eventStore
+              .where(ARG_TO_INDEX_MAP[indexedArgs[i]])
+              .equals(argMatchObject[indexedArgs[i]])
+              .toArray()
+            indexedSet.push(res)
+          } catch (err) {
+            console.log('Error trying to do an index get')
+            throw err
+          }
+        }
       }
 
       // Get only the objects that matched all the indexed args
@@ -221,14 +248,22 @@ export default class IndexedDBBackend extends AbstractBackend {
       // And do further matching against the unindexed args, if any
       if (unindexedArgs.length > 0) {
         return matchedSet.filter(el => {
-          return unindexedArgs.filter(key => {
-            if (
-              typeof argMatchObject[key] !== 'undefined' &&
-              argMatchObject[key] == el[key]
-            ) {
-              return el[key]
+          const matches = Object.keys(unindexedArgs).filter(key => {
+            if (typeof argMatchObject[key] !== 'undefined') {
+              if (
+                (argMatchObject[key] instanceof Array &&
+                  argMatchObject[key].indexOf(getFromObject(key, el)) > -1) ||
+                argMatchObject[key] == getFromObject(key, el)
+              ) {
+                return el
+              }
             }
           })
+
+          // Make sure all provided keys were matched
+          if (matches.length === Object.keys(unindexedArgs).length) {
+            return el
+          }
         })
       }
 
@@ -237,17 +272,25 @@ export default class IndexedDBBackend extends AbstractBackend {
       // What the hell, index your life
       debug('unindexed get(). This will be slow!', argMatchObject)
 
-      const everything = await this._db.getAll(EVENT_STORE)
+      const everything = await this._eventStore.toArray()
 
       return everything.filter(el => {
-        return unindexedArgs.map(key => {
-          if (
-            typeof argMatchObject[key] !== 'undefined' &&
-            argMatchObject[key] == el[key]
-          ) {
-            return el[key]
+        const matches = Object.keys(unindexedArgs).filter(key => {
+          if (typeof argMatchObject[key] !== 'undefined') {
+            if (
+              (argMatchObject[key] instanceof Array &&
+                argMatchObject[key].indexOf(getFromObject(key, el)) > -1) ||
+              argMatchObject[key] == getFromObject(key, el)
+            ) {
+              return el
+            }
           }
         })
+
+        // Make sure all provided keys were matched
+        if (matches.length === Object.keys(unindexedArgs).length) {
+          return el
+        }
       })
     }
   }
@@ -261,7 +304,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    */
   async addEvent(eventObject) {
     await this.waitForReady()
-    this._db.add(EVENT_STORE, eventObject)
+    this._eventStore.add(eventObject)
     this.setLatestBlock(eventObject.blockNumber)
   }
 }

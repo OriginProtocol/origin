@@ -1,5 +1,20 @@
 import AbstractBackend from './AbstractBackend'
 
+const ROOT_EVENT_KEYS = [
+  'logIndex',
+  'transactionIndex',
+  'transactionHash',
+  'blockHash',
+  'blockNumber',
+  'address',
+  'type',
+  'id',
+  'returnValues',
+  'event',
+  'signature',
+  'raw'
+]
+
 /**
  * @class
  * @classdesc InMemoryBackend to handle storage of EventCache data in memory
@@ -38,14 +53,32 @@ export default class InMemoryBackend extends AbstractBackend {
    */
   async get(argMatchObject) {
     return this._storage.filter(el => {
-      return Object.keys(argMatchObject).map(key => {
-        if (
-          typeof argMatchObject[key] !== 'undefined' &&
-          argMatchObject[key] == el[key]
-        ) {
-          return el[key]
+      const matches = Object.keys(argMatchObject).filter(key => {
+        let isReturnValue = false
+
+        if (ROOT_EVENT_KEYS.indexOf(key) < 0) {
+          isReturnValue = true
+        }
+
+        let matchingEl = el
+
+        if (isReturnValue) matchingEl = el.returnValues
+
+        if (typeof argMatchObject[key] !== 'undefined') {
+          if (
+            (argMatchObject[key] instanceof Array &&
+              argMatchObject[key].indexOf(matchingEl[key]) > -1) ||
+            argMatchObject[key] == matchingEl[key]
+          ) {
+            return el
+          }
         }
       })
+
+      // Make sure all provided keys were matched
+      if (matches.length === Object.keys(argMatchObject).length) {
+        return el
+      }
     })
   }
 

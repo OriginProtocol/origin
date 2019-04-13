@@ -142,8 +142,9 @@ export default class PostgreSQLBackend extends AbstractBackend {
     const newObj = eventToDB(obj)
     Object.keys(newObj).map(key => {
       if (!this._eventTableColumns.includes(key)) {
+        const op = newObj[key] instanceof Array ? Op.or : Op.eq
         newObj['return_values.' + key] = {
-          [Op.eq]: newObj[key]
+          [op]: newObj[key]
         }
         delete newObj[key]
       }

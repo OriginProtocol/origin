@@ -14,9 +14,9 @@ describe('PostgreSQL', function() {
   let owner,
       alice,
       bob,
-      charlie
-
-  let expectedEvents = 0
+      charlie,
+      denise,
+      elmer
 
   before(async function() {
     const accounts = await web3.eth.getAccounts()
@@ -24,6 +24,8 @@ describe('PostgreSQL', function() {
     alice = accounts[1]
     bob = accounts[2]
     charlie = accounts[3]
+    denise = accounts[4]
+    elmer = accounts[5]
 
     IdentityEvents = await contracts.identity.deploy().send({
       from: owner,
@@ -45,6 +47,7 @@ describe('PostgreSQL', function() {
   })
 
   it('should dump serialized data from PostgreSQL', async () => {
+    let expectedEvents = 0
     const postgresBackend = new PostgreSQLBackend()
     const pgCache = new EventCache(IdentityEvents, 0, {
       backend: postgresBackend
@@ -97,13 +100,11 @@ describe('PostgreSQL', function() {
     const testObjectHash = await ipfs.addObject({ one: 1 })
     const receipt = await IdentityEvents.methods.emitIdentityUpdated(testObjectHash).send(tx)
     assert(receipt.status == 1, 'emitIdentityUpdated() transaction failed')
-    expectedEvents += 1
 
     // Add more events!
     const secondObjectHash = await ipfs.addObject({ two: 2 })
     const secondReceipt = await IdentityEvents.methods.emitIdentityUpdated(secondObjectHash).send(tx)
     assert(secondReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
-    expectedEvents += 1
 
     const thirdObjectHash = await ipfs.addObject({ two: 2 })
     const thirdReceipt = await IdentityEvents.methods.emitIdentityUpdated(thirdObjectHash).send(
@@ -112,7 +113,6 @@ describe('PostgreSQL', function() {
       })
     )
     assert(thirdReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
-    expectedEvents += 1
 
     // Now we should see 2 from alice and one from bob
     const charlieEvents = await pgCache.getPastEvents('IdentityUpdated', {
@@ -130,5 +130,43 @@ describe('PostgreSQL', function() {
       bobEvents.length == 1,
       `Bob should have 1 event, got ${bobEvents.length}`
     )
+  })
+
+  it('should be able to fetch events with array parameters', async () => {
+    const postgresBackend = new PostgreSQLBackend()
+    const pgCache = new EventCache(IdentityEvents, 0, {
+      backend: postgresBackend
+    })
+
+    let expectedEvents = 0
+    const tx = {
+      gas: STD_GAS,
+      gasPrice: STD_GAS_PRICE,
+      from: denise
+    }
+
+    const firstObjectHash = await ipfs.addObject({ one: 1 })
+    const firstReceipt = await IdentityEvents.methods.emitIdentityUpdated(firstObjectHash).send(tx)
+    assert(firstReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
+    expectedEvents += 1
+
+    const secondObjectHash = await ipfs.addObject({ two: 2 })
+    const secondReceipt = await IdentityEvents.methods.emitIdentityUpdated(secondObjectHash).send(
+      Object.assign({}, tx, { from: elmer })
+    )
+    assert(secondReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
+    expectedEvents += 1
+
+    const orEvents = await pgCache.getPastEvents('IdentityUpdated', {
+      filter: { account: [denise, elmer] }
+    })
+
+    assert(
+      orEvents.length == expectedEvents,
+      `Request should have returned 2 events, got ${orEvents.length}`
+    )
+    const possibleAccounts = [denise, elmer]
+    assert(possibleAccounts.indexOf(orEvents[0].returnValues.account) > -1, 'Unexpected account')
+    assert(possibleAccounts.indexOf(orEvents[1].returnValues.account) > -1, 'Unexpected account')
   })
 })

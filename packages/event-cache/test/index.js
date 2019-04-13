@@ -15,13 +15,17 @@ describe('EventCache', function() {
 
   let owner,
       alice,
-      bob
+      bob,
+      charlie,
+      denise
 
   before(async function() {
     const accounts = await web3.eth.getAccounts()
     owner = accounts[0]
     alice = accounts[1]
     bob = accounts[2]
+    charlie = accounts[3]
+    denise = accounts[4]
 
     const deploytx = {
       from: owner,
@@ -114,9 +118,7 @@ describe('EventCache', function() {
     expectedEvents += 1
 
     // Let's see what the cache knows about now
-    const finalEvents = await eventCacheMemory.getPastEvents('IdentityUpdated', {
-      filter: { account: alice }
-    })
+    const finalEvents = await eventCacheMemory.getPastEvents('IdentityUpdated')
 
     assert(
       finalEvents.length == expectedEvents,
@@ -152,6 +154,41 @@ describe('EventCache', function() {
       NewMarketplace.hasOwnProperty('eventCache'),
       'NewMarketplace should have eventsCache prop after patch'
     )
+  })
+
+  it('should be able to fetch events with array parameters', async () => {
+    const indexedBackend = new InMemoryBackend()
+    const eventCache = new EventCache(IdentityEvents, 0, {
+      backend: indexedBackend
+    })
+
+    const tx = {
+      gas: STD_GAS,
+      gasPrice: STD_GAS_PRICE,
+      from: charlie
+    }
+
+    const firstObjectHash = await ipfs.addObject({ one: 1 })
+    const firstReceipt = await IdentityEvents.methods.emitIdentityUpdated(firstObjectHash).send(tx)
+    assert(firstReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
+
+    const secondObjectHash = await ipfs.addObject({ two: 2 })
+    const secondReceipt = await IdentityEvents.methods.emitIdentityUpdated(secondObjectHash).send(
+      Object.assign({}, tx, { from: denise })
+    )
+    assert(secondReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
+
+    const orEvents = await eventCache.getPastEvents('IdentityUpdated', {
+      filter: { account: [charlie, denise] }
+    })
+
+    assert(
+      orEvents.length == 2,
+      `Request should have returned 2 events, got ${orEvents.length}`
+    )
+    const possibleAccounts = [charlie, denise]
+    assert(possibleAccounts.indexOf(orEvents[0].returnValues.account) > -1, 'Unexpected account')
+    assert(possibleAccounts.indexOf(orEvents[1].returnValues.account) > -1, 'Unexpected account')
   })
 
 })
