@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
-import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
-import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
   'bridge',
