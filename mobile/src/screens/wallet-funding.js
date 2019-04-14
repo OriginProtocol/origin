@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import {
   promptForNotifications,
-  updateBackupWarningStatus
+  setBackupWarningStatus
 } from 'actions/Activation'
 
 class WalletFundingScreen extends Component {
@@ -36,13 +36,13 @@ class WalletFundingScreen extends Component {
           {
             text: `Done. Don't show me this again.`,
             onPress: () => {
-              this.props.updateBackupWarningStatus(true, Date.now())
+              this.props.setBackupWarningStatus(true, Date.now())
             }
           },
           {
             text: 'Show Private Key',
             onPress: () => {
-              this.props.updateBackupWarningStatus(true)
+              this.props.setBackupWarningStatus(true)
             }
           }
         ]
@@ -61,8 +61,8 @@ const mapStateToProps = ({ activation, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   promptForNotifications: method => dispatch(promptForNotifications(method)),
-  updateBackupWarningStatus: (bool, datetime) =>
-    dispatch(updateBackupWarningStatus(bool, datetime))
+  setBackupWarningStatus: (bool, datetime) =>
+    dispatch(setBackupWarningStatus(bool, datetime))
 })
 
 export default connect(

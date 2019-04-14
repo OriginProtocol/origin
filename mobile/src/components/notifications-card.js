@@ -1,29 +1,36 @@
+'use strict'
+
 import React, { Component } from 'react'
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  DeviceEventEmitter,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import {
   promptForNotifications,
-  storeNotificationsPermissions
+  setNotificationsPermissions
 } from 'actions/Activation'
 
 import OriginButton from 'components/origin-button'
 
-import originWallet from '../OriginWallet'
-
-class Card extends Component {
+class NotificationCard extends Component {
   constructor(props) {
     super(props)
 
-    this.handleEnable = this.handleEnable.bind(this)
-    this.handleSkip = this.handleSkip.bind(this)
-    this.state = {}
+    DeviceEventEmitter.addListener(
+      'notificationPermission',
+      this.handleNotificationPermission.bind(this)
+    )
   }
 
-  async handleEnable() {
+  handleNotificationPermission(permissions) {
+    console.debug('Got notification permissions: ', permissions)
     try {
-      const permissions = await originWallet.requestNotifications()
-
       if (!permissions.alert) {
         Alert.alert(
           '!',
@@ -31,23 +38,21 @@ class Card extends Component {
           [
             {
               text: 'OK',
-              onPress: () =>
-                this.props.storeNotificationsPermissions(permissions)
+              onPress: () => {
+                this.props.setNotificationsPermissions(permissions)
+                this.props.onRequestClose()
+              }
             }
           ]
         )
       } else {
-        this.props.storeNotificationsPermissions(permissions)
+        this.props.setNotificationsPermissions(permissions)
+        this.props.onRequestClose()
       }
     } catch (e) {
       console.error(e)
       throw e
     }
-  }
-
-  handleSkip() {
-    // this.props.promptForNotifications()
-    this.props.onPress()
   }
 
   render() {
@@ -64,10 +69,12 @@ class Card extends Component {
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Enable Notifications'}
-            onPress={this.handleEnable}
+            onPress={() => {
+              DeviceEventEmitter.emit('requestNotificationPermissions')
+            }}
           />
         </View>
-        <TouchableOpacity onPress={this.handleSkip}>
+        <TouchableOpacity onPress={this.props.onRequestClose}>
           <Text style={styles.cancel}>Cancel</Text>
         </TouchableOpacity>
       </View>
@@ -81,14 +88,14 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => ({
   promptForNotifications: () => dispatch(promptForNotifications(null)),
-  storeNotificationsPermissions: permissions =>
-    dispatch(storeNotificationsPermissions(permissions))
+  setNotificationsPermissions: permissions =>
+    dispatch(setNotificationsPermissions(permissions))
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Card)
+)(NotificationCard)
 
 const styles = StyleSheet.create({
   buttonContainer: {

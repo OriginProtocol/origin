@@ -5,9 +5,9 @@ import keyMirror from 'utils/keyMirror'
 export const ActivationConstants = keyMirror(
   {
     PROMPT_FOR_NOTIFICATIONS: null,
-    UPDATE_NOTIFICATIONS_PERMISSIONS: null,
-    UPDATE_BACKUP_WARNING_STATUS: null,
-    UPDATE_CAROUSEL_STATUS: null
+    SET_NOTIFICATIONS_PERMISSIONS: null,
+    SET_BACKUP_WARNING_STATUS: null,
+    SET_CAROUSEL_STATUS: null
   },
   'App'
 )
@@ -19,23 +19,23 @@ export function promptForNotifications(prompt) {
   }
 }
 
-export function updateNotificationsPermissions(permissions) {
+export function setNotificationsPermissions(permissions) {
   return {
-    type: ActivationConstants.UPDATE_NOTIFICATIONS_PERMISSIONS,
+    type: ActivationConstants.SET_NOTIFICATIONS_PERMISSIONS,
     permissions
   }
 }
 
-export function updateBackupWarningStatus(dismissed) {
+export function setBackupWarningStatus(dismissed) {
   return {
-    type: ActivationConstants.UPDATE_BACKUP_WARNING_STATUS,
+    type: ActivationConstants.SET_BACKUP_WARNING_STATUS,
     dismissed
   }
 }
 
-export function updateCarouselStatus(completed) {
+export function setCarouselStatus(completed) {
   return {
-    type: ActivationConstants.UPDATE_CAROUSEL_STATUS,
+    type: ActivationConstants.SET_CAROUSEL_STATUS,
     completed
   }
 }

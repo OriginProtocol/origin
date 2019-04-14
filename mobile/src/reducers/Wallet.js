@@ -59,9 +59,6 @@ export default function Wallet(state = initialState, action = {}) {
           [action.payload.address]: action.payload.name
         }
       }
-
-    case WalletConstants.UPDATE_ACCOUNTS:
-      return { ...state, accounts: action.accounts }
   }
 
   return state

@@ -22,7 +22,7 @@ export default function Activation(state = initialState, action = {}) {
         notifications: { ...state.notifications, prompt: action.prompt }
       }
 
-    case ActivationConstants.UPDATE_NOTIFICATIONS_PERMISSIONS:
+    case ActivationConstants.SET_NOTIFICATIONS_PERMISSIONS:
       const obj = {
         ...state,
         notifications: {
@@ -35,10 +35,10 @@ export default function Activation(state = initialState, action = {}) {
 
       return obj
 
-    case ActivationConstants.UPDATE_BACKUP_WARNING_STATUS:
+    case ActivationConstants.SET_BACKUP_WARNING_STATUS:
       return { ...state, backupWarningDismissed: action.dismissed }
 
-    case ActivationConstants.UPDATE_CAROUSEL_STATUS:
+    case ActivationConstants.SET_CAROUSEL_STATUS:
       return { ...state, carouselCompleted: action.completed }
   }
 

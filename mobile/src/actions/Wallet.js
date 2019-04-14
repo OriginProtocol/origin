@@ -8,8 +8,7 @@ export const WalletConstants = keyMirror(
     REMOVE_ACCOUNT: null,
     SET_ACCOUNT_ACTIVE: null,
     SET_ACCOUNT_NAME: null,
-    SET_ACCOUNT_BALANCES: null,
-    UPDATE_ACCOUNTS: null
+    SET_ACCOUNT_BALANCES: null
   },
   'WALLET'
 )
@@ -46,12 +45,5 @@ export function setAccountName(payload) {
   return {
     type: WalletConstants.SET_ACCOUNT_NAME,
     payload
-  }
-}
-
-export function updateAccounts(accounts) {
-  return {
-    type: WalletConstants.UPDATE_ACCOUNTS,
-    accounts
   }
 }

@@ -133,8 +133,8 @@ class TransactionCard extends Component {
             </Text>
             <Text style={styles.account}>
               {balances['eth']} ETH
-              {daiInvolved && `${balances['dai']} DAI`}
-              {ognInvolved && `${balances['ogn']} OGN`}
+              {daiInvolved && ` ${balances['dai']} DAI`}
+              {ognInvolved && ` ${balances['ogn']} OGN`}
             </Text>
           </View>
         </View>

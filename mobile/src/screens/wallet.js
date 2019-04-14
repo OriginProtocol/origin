@@ -1,7 +1,14 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Alert, Clipboard, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  Clipboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
@@ -23,28 +30,34 @@ class WalletScreen extends Component {
   componentDidMount() {}
 
   handleFunding(currency) {
-    // const apiHost = originWallet.getCurrentRemoteLocal()
-    // const currentNetwork = getCurrentNetwork(apiHost)
     const { address } = this.props.wallet.activeAccount
 
-    // if (currency === 'ETH' && currentNetwork.custom) {
-      // originWallet.giveMeEth('1')
-    // } else {
-      Alert.alert(
-        'Funding',
-        `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
-        [
-          { text: 'Show Address', onPress: () => {
-            Alert.alert('Wallet Address', evenlySplitAddress(address).join('\n'))
-          }},
-          { text: 'Copy Address', onPress: async () => {
+    Alert.alert(
+      'Funding',
+      `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
+      [
+        {
+          text: 'Show Address',
+          onPress: () => {
+            Alert.alert(
+              'Wallet Address',
+              evenlySplitAddress(address).join('\n')
+            )
+          }
+        },
+        {
+          text: 'Copy Address',
+          onPress: async () => {
             await Clipboard.setString(address)
 
-            Alert.alert('Copied to clipboard!', evenlySplitAddress(address).join('\n'))
-          }},
-        ],
-      )
-    // }
+            Alert.alert(
+              'Copied to clipboard!',
+              evenlySplitAddress(address).join('\n')
+            )
+          }
+        }
+      ]
+    )
   }
 
   render() {
@@ -54,7 +67,11 @@ class WalletScreen extends Component {
     return (
       <>
         <View style={styles.addressContainer}>
-          <Address address={wallet.activeAccount.address} label={'Wallet Address'} style={styles.address} />
+          <Address
+            address={wallet.activeAccount.address}
+            label={'Wallet Address'}
+            style={styles.address}
+          />
         </View>
         <ScrollView
           style={styles.svContainer}
@@ -69,22 +86,26 @@ class WalletScreen extends Component {
             withAdd={true}
             onPress={() => this.handleFunding('ETH')}
           />
-          <Currency
-            abbreviation={'DAI'}
-            balance={balances['dai']}
-            labelColor={currencies['dai'].color}
-            name={currencies['dai'].name}
-            imageSource={currencies['dai'].icon}
-            onPress={() => this.handleFunding('DAI')}
-          />
-          <Currency
-            abbreviation={'OGN'}
-            balance={balances['ogn']}
-            labelColor={currencies['ogn'].color}
-            name={currencies['ogn'].name}
-            imageSource={currencies['ogn'].icon}
-            onPress={() => this.handleFunding('OGN')}
-          />
+          {balances['dai'] && (
+            <Currency
+              abbreviation={'DAI'}
+              balance={balances['dai']}
+              labelColor={currencies['dai'].color}
+              name={currencies['dai'].name}
+              imageSource={currencies['dai'].icon}
+              onPress={() => this.handleFunding('DAI')}
+            />
+          )}
+          {balances['ogn'] && (
+            <Currency
+              abbreviation={'OGN'}
+              balance={balances['ogn']}
+              labelColor={currencies['ogn'].color}
+              name={currencies['ogn'].name}
+              imageSource={currencies['ogn'].icon}
+              onPress={() => this.handleFunding('OGN')}
+            />
+          )}
         </ScrollView>
       </>
     )
@@ -103,11 +124,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 13,
     fontWeight: '300',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   addressContainer: {
     paddingHorizontal: 18 * 3,
-    paddingVertical: 22,
+    paddingVertical: 22
   },
   container: {
     backgroundColor: '#f7f8f8',
@@ -128,9 +149,9 @@ const styles = StyleSheet.create({
     width: '5%'
   },
   svContainer: {
-    flex: 1,
+    flex: 1
   },
   walletSVContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   }
 })

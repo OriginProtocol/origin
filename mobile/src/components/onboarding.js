@@ -68,7 +68,12 @@ class Onboarding extends Component {
   }
 
   render() {
-    const { controlStatusBar, pages, onCompletion, onEnable } = this.props
+    const {
+      controlStatusBar,
+      pages,
+      onCompletion,
+      onEnableNotifications
+    } = this.props
     const { width } = Dimensions.get('window')
 
     return (
@@ -97,7 +102,7 @@ class Onboarding extends Component {
             controlStatusBar={controlStatusBar}
             pagesCount={pages.length}
             onCompletion={onCompletion}
-            onEnable={onEnable}
+            onEnableNotifications={onEnableNotifications}
             onNext={this.goNext}
           />
         </SafeAreaView>

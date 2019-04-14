@@ -11,8 +11,9 @@ import {
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 
-import TransactionCard from 'components/transaction-card'
+import NotificationCard from 'components/notifications-card'
 import SignatureCard from 'components/signature-card'
+import TransactionCard from 'components/transaction-card'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -49,6 +50,11 @@ class MarketplaceScreen extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
+    this.setState(prevState => ({
+      modals: [...prevState.modals, {
+        type: 'enableNotifications'
+      }]
+    }))
   }
 
   onWebViewMessage(event) {
@@ -66,7 +72,7 @@ class MarketplaceScreen extends Component {
       this.handleBridgeResponse(msgData, response)
     } else {
       this.setState(prevState => ({
-        modals: [...prevState.modals, { msgData: msgData }]
+        modals: [...prevState.modals, { type: msgData.targetFunc, msgData: msgData }]
       }))
     }
   }
@@ -118,14 +124,14 @@ class MarketplaceScreen extends Component {
       return {
         ...prevState,
         modals: [
-          ...prevState.modals.filter(
-            m => m.msgData.msgId !== modal.msgData.msgId
-          )
+          ...prevState.modals.filter(m => m !== modal)
         ]
       }
     })
-    // Send the response to the webview
-    this.handleBridgeResponse(modal.msgData, result)
+    if (modal.msgData) {
+      // Send the response to the webview
+      this.handleBridgeResponse(modal.msgData, result)
+    }
   }
 
   render() {
@@ -152,9 +158,15 @@ class MarketplaceScreen extends Component {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
         />
-        {modals.map(modal => {
+        {modals.map((modal, index) => {
           let card
-          if (modal.msgData.targetFunc === 'processTransaction') {
+          if (modal.type === 'enableNotifications') {
+            card = (
+              <NotificationCard
+                onRequestClose={() => this.toggleModal(modal)}
+              />
+            )
+          } else if (modal.type === 'processTransaction') {
             card = (
               <TransactionCard
                 msgData={modal.msgData}
@@ -168,7 +180,7 @@ class MarketplaceScreen extends Component {
                 }
               />
             )
-          } else if (modal.msgData.targetFunc === 'signMessage') {
+          } else if (modal.type === 'signMessage') {
             card = (
               <SignatureCard
                 msgData={modal.msgData}
@@ -186,7 +198,7 @@ class MarketplaceScreen extends Component {
 
           return (
             <Modal
-              key={modal.msgData.msgId}
+              key={index}
               animationType="fade"
               transparent={true}
               visible={true}

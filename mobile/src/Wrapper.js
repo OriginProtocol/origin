@@ -1,29 +1,24 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, YellowBox } from 'react-native'
+import { DeviceEventEmitter, Image, StyleSheet, YellowBox } from 'react-native'
 import { connect } from 'react-redux'
 
 import NavigationService from './NavigationService'
 import Onboarding from 'components/onboarding'
 import { OriginNavigator, OnboardingStack } from './Navigation'
-import { updateCarouselStatus } from 'actions/Activation'
+import { setCarouselStatus } from 'actions/Activation'
 
 const IMAGES_PATH = '../assets/images/'
-
-YellowBox.ignoreWarnings([
-  // https://github.com/facebook/react-native/issues/18868
-  'Warning: isMounted(...) is deprecated',
-  // https://github.com/facebook/react-native/issues/17504
-  'Module RCTImageLoader requires main queue setup'
-])
 
 class OriginWrapper extends Component {
   constructor(props) {
     super(props)
+    DeviceEventEmitter.addListener(
+      'notificationPermission',
+      this.handleNotificationPermission.bind(this)
+    )
   }
-
-  async componentDidMount() {}
 
   componentDidUpdate() {
     const { activation, wallet } = this.props
@@ -64,12 +59,20 @@ class OriginWrapper extends Component {
     )
   }
 
+  handleNotificationPermission(permissions) {
+    console.debug('Got notification permissions: ', permissions)
+    // We don't care if the permission was denied or accepted, we still want
+    // to advance
+    this.props.setCarouselStatus(true)
+  }
+
   renderOnboardingCarousel() {
-    console.log(this.props)
     return (
       <Onboarding
-        onCompletion={() => this.props.updateCarouselStatus(true)}
-        onEnable={this.handleNotifications}
+        onCompletion={() => this.props.setCarouselStatus(true)}
+        onEnableNotifications={() => {
+          DeviceEventEmitter.emit('requestNotificationPermissions')
+        }}
         pages={[
           {
             image: (
@@ -146,7 +149,7 @@ const mapStateToProps = ({ activation, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateCarouselStatus: bool => dispatch(updateCarouselStatus(bool))
+  setCarouselStatus: bool => dispatch(setCarouselStatus(bool))
 })
 
 export default connect(

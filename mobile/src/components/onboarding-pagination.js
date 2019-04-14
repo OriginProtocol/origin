@@ -10,7 +10,7 @@ const OnboardingPagination = ({
   currentPage,
   pagesCount,
   onCompletion,
-  onEnable,
+  onEnableNotifications,
   onNext
 }) => {
   const isLastPage = currentPage + 1 === pagesCount
@@ -38,7 +38,7 @@ const OnboardingPagination = ({
             type="success"
             title="Enable Notifications"
             textStyle={{ fontSize: 18 }}
-            onPress={onEnable}
+            onPress={onEnableNotifications}
           />
         )}
       </View>
