@@ -14,7 +14,8 @@ import pubsub from './utils/pubsub'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 const HOST = process.env.HOST || 'localhost'
-const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+const isBrowser =
+  typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
 let OriginMessaging
 let OriginMobileBridge
@@ -430,7 +431,9 @@ export function setNetwork(net, customConfig) {
   if (isBrowser) {
     context.transactions = {}
     try {
-      context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+      context.transactions = JSON.parse(
+        window.localStorage[`${net}Transactions`]
+      )
     } catch (e) {
       /* Ignore */
     }
@@ -518,7 +521,10 @@ function setMobileBridge() {
   context.tokens.forEach(token => {
     const contractDef =
       token.type === 'OriginToken' ? OriginTokenContract : TokenContract
-    const contract = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
+    const contract = new context.web3Exec.eth.Contract(
+      contractDef.abi,
+      token.id
+    )
     token.contract = contract
     token.contractExec = contract
   })
