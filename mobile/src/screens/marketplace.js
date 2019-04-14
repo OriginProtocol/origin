@@ -13,7 +13,7 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 
 import { DEFAULT_NOTIFICATION_PERMISSIONS } from '../constants'
-import NotificationCard from 'components/notifications-card'
+import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
 
@@ -47,14 +47,6 @@ class MarketplaceScreen extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
-    this.setState(prevState => ({
-      modals: [
-        ...prevState.modals,
-        {
-          type: 'enableNotifications'
-        }
-      ]
-    }))
   }
 
   onWebViewMessage(event) {
@@ -71,6 +63,19 @@ class MarketplaceScreen extends Component {
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
     } else {
+      const hasNotificationsEnabled = this.props.activation.notifications.permissions.hard.alert
+
+      if (!hasNotificationsEnabled) {
+        this.setState(prevState => ({
+          modals: [
+            ...prevState.modals,
+            {
+              type: 'enableNotifications'
+            }
+          ]
+        }))
+      }
+
       this.setState(prevState => ({
         modals: [
           ...prevState.modals,
