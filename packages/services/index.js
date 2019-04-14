@@ -19,7 +19,7 @@ const portInUse = port =>
 const startGanache = (opts = {}) =>
   new Promise((resolve, reject) => {
     const ganacheOpts = {
-      total_accounts: 5,
+      total_accounts: opts.total_accounts || 5,
       default_balance_ether: 100,
       db_path: `${__dirname}/data/db`,
       network_id: 999,
