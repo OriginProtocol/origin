@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'column',
-    marginTop: width / 6,
+    marginTop: width / 6
   },
   padding: {
     paddingHorizontal: 50

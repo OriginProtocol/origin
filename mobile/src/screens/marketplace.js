@@ -63,7 +63,8 @@ class MarketplaceScreen extends Component {
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
     } else {
-      const hasNotificationsEnabled = this.props.activation.notifications.permissions.hard.alert
+      const hasNotificationsEnabled = this.props.activation.notifications
+        .permissions.hard.alert
 
       if (!hasNotificationsEnabled) {
         this.setState(prevState => ({
