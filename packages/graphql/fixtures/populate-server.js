@@ -27,23 +27,15 @@ client.defaultOptions = {
 
 server.listen().then((srv) => {
   console.log(`🚀  Server ready at ${srv.url}`)
-  // console.log(srv)
   populate(
     client,
     console.log,
     async addresses => {
       console.log(addresses)
       await wsClient.close()
-      // console.log(server.httpServer)
       server.httpServer.close()
       server.subscriptionServer.close()
       server.shutdown()
-      // console.log(server.httpServer.disconnect)
-      // console.log(server.httpServer.destroy)
-      // // server.disconnect()
-      // server.close()
-      // await new Promise(resolve => setTimeout(resolve, 2000))
-      // wtfnode.dump()
     }
   )
 })

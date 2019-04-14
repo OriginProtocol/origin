@@ -2,8 +2,6 @@ import { exchangeAbi, exchangeBytecode } from '../../contracts/UniswapExchange'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 
-const isBrowser = typeof window !== 'undefined'
-
 async function uniswapDeployExchangeTemplate(_, { from }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
@@ -13,16 +11,7 @@ async function uniswapDeployExchangeTemplate(_, { from }) {
     from
   })
 
-  return txHelper({
-    tx,
-    from,
-    mutation: 'uniswapDeployFactory',
-    onReceipt: receipt => {
-      if (isBrowser) {
-        window.localStorage.uniswapExchangeTemplate = receipt.contractAddress
-      }
-    }
-  })
+  return txHelper({ tx, from, mutation: 'uniswapDeployFactory' })
 }
 
 export default uniswapDeployExchangeTemplate

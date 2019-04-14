@@ -14,7 +14,7 @@ let shutdown
 before(async function() {
   // Start Ganache (in-memory) and IPFS
   shutdown = await services({ ganache: { inMemory: true }, ipfs: true })
-  setNetwork('test')
+  setNetwork('nodeTest')
 
   // Disable GraphQL response caching
   client.defaultOptions = {

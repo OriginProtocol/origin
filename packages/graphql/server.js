@@ -6,7 +6,7 @@ import typeDefs from './src/typeDefs/index'
 import resolvers from './src/resolvers/server'
 import { setNetwork, shutdown } from './src/contracts'
 
-setNetwork('test')
+setNetwork(process.env.NETWORK || 'test')
 
 const server = new ApolloServer({ typeDefs, resolvers })
 server.shutdown = shutdown

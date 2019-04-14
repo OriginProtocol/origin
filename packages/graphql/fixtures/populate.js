@@ -83,7 +83,7 @@ function transactionConfirmed(hash, gqlClient) {
             query: TransactionReceipt,
             variables: { id: hash }
           })
-          resolve(result.data.web3.transactionReceipt)
+          resolve(get(result, 'data.web3.transactionReceipt'))
         }
       }
     })
@@ -139,7 +139,6 @@ export default async function populate(gqlClient, log, done) {
   const res = await mutate(ImportWalletsMutation, null, { accounts })
   const [Admin, Seller, Buyer, Arbitrator, Affiliate] = res.map(r => r.id)
 
-  log('Sending from node...')
   await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
   log('Sent eth to Admin')
 
