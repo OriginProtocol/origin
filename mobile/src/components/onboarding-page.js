@@ -36,10 +36,8 @@ const { width, height } = Dimensions.get('window')
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    paddingTop: 0
+    marginTop: width / 6,
   },
   padding: {
     paddingHorizontal: 50
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '300',
     paddingBottom: 15,
     textAlign: 'center'
@@ -55,7 +53,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '300',
     textAlign: 'center'
   }

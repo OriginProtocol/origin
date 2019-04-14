@@ -82,7 +82,7 @@ class OriginWrapper extends Component {
                 source={require(IMAGES_PATH + 'carousel-1.png')}
                 style={[
                   styles.image,
-                  this.props.smallScreen ? { height: '33%' } : {}
+                  this.props.smallScreen ? { height: '20%' } : {}
                 ]}
               />
             ),
@@ -98,7 +98,7 @@ class OriginWrapper extends Component {
                 source={require(IMAGES_PATH + 'carousel-2.png')}
                 style={[
                   styles.image,
-                  this.props.smallScreen ? { height: '33%' } : {}
+                  this.props.smallScreen ? { height: '20%' } : {}
                 ]}
               />
             ),
@@ -114,7 +114,7 @@ class OriginWrapper extends Component {
                 source={require(IMAGES_PATH + 'carousel-3.png')}
                 style={[
                   styles.image,
-                  this.props.smallScreen ? { height: '33%' } : {}
+                  this.props.smallScreen ? { height: '20%' } : {}
                 ]}
               />
             ),

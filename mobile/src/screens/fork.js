@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
+  Dimensions,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -81,6 +82,8 @@ class ForkScreen extends Component {
 
 export default ForkScreen
 
+const { width, height } = Dimensions.get('window')
+
 const styles = StyleSheet.create({
   button: {
     marginBottom: 20,
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '300',
     marginHorizontal: 50,
     paddingBottom: 15,
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '300',
     marginHorizontal: 50,
     textAlign: 'center'

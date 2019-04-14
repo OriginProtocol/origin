@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#293f55',
     flex: 1,
     justifyContent: 'center',
-    paddingBottom: '5%',
+    paddingBottom: 20,
     paddingTop: 56
   }
 })
