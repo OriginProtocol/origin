@@ -41,6 +41,7 @@
     "react-native": "^0.59.4",
     "react-native-camera": "^2.3.0",
     "react-native-dotenv": "^0.2.0",
+    "react-native-permissions": "^1.1.1",
     "react-native-push-notification": "^3.1.2",
     "react-native-randombytes": "^3.5.2",
     "react-native-sentry": "^0.42.0",
