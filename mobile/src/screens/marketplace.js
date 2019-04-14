@@ -159,6 +159,7 @@ class MarketplaceScreen extends Component {
           onLoadProgress={() => {
             this.dappWebView.injectJavaScript(injectedJavaScript)
           }}
+          allowsBackForwardNavigationGestures
         />
         {modals.map((modal, index) => {
           let card
