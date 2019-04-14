@@ -509,7 +509,6 @@ function setMobileBridge() {
   }
 
   if (context.config.DaiExchange) {
-    const contract = new web3.eth.Contract(exchangeAbi, context.config.DaiExchange)
     context.daiExchangeExec = new context.web3Exec.eth.Contract(
       exchangeAbi,
       context.daiExchange._address
