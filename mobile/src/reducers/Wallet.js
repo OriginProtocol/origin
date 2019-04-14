@@ -6,7 +6,8 @@ const initialState = {
   accounts: [],
   accountNameMapping: {},
   accountBalanceMapping: {},
-  activeAccount: null
+  activeAccount: null,
+  accountServerNotifications: {}
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -57,6 +58,15 @@ export default function Wallet(state = initialState, action = {}) {
         accountNameMapping: {
           ...state.accountNameMapping,
           [action.payload.address]: action.payload.name
+        }
+      }
+
+    case WalletConstants.SET_ACCOUNT_SERVER_NOTIFICATIONS:
+      return {
+        ...state,
+        accountServerNotifications: {
+          ...state.accountServerNotifications,
+          [action.address]: action.status
         }
       }
   }

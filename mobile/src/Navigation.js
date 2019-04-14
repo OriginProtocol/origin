@@ -9,7 +9,6 @@ import ForkScreen from 'screens/fork'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
-import WalletFundingScreen from 'screens/wallet-funding'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
 
@@ -33,8 +32,7 @@ const MarketplaceStack = createStackNavigator(
 
 const WalletStack = createStackNavigator(
   {
-    Wallet: WalletScreen,
-    WalletFunding: WalletFundingScreen
+    Wallet: WalletScreen
   },
   {
     navigationOptions

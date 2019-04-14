@@ -1,12 +1,11 @@
+'use strict'
+
 import store from '../Store'
 import fetch from 'cross-fetch'
-
-import { setExchangeRate } from 'actions/ExchangeRates'
 
 const DEFAULT_CRYPTO = 'ETH'
 const DEFAULT_FIAT = 'USD'
 const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
-const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
 
 /**
  * @function fetchRate
@@ -17,7 +16,7 @@ const EXCHANGE_RATE_POLL_INTERVAL = 2 * 60 * 1000 // 2 minutes
  * @return {object} exchange rate number and cache hit boolean to indicate if a valid cache was found
  */
 
-const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
+export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const cryptoParam = cryptoCurrencyCode.toLowerCase()
   const fiatParam = fiatCurrencyCode.toLowerCase()
   const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoParam}-${fiatParam}`
@@ -53,7 +52,10 @@ const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
  * @return {object} exchange rate number and cache hit boolean to indicate if a valid cache was found
  */
 
-const getFiatExchangeRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
+export const getFiatExchangeRate = async (
+  fiatCurrencyCode,
+  cryptoCurrencyCode
+) => {
   const { fiatCode, cryptoCode } = setDefaults(
     fiatCurrencyCode,
     cryptoCurrencyCode
@@ -169,28 +171,3 @@ export const getCryptoPrice = async (
 
   return Number(priceFiat / rate)
 }
-
-/**
- *
- * @function updateExchangeRate
- * @description sets the USD/ETH exchange rate object in redux
- *
- */
-
-const updateExchangeRate = async () => {
-  const exchangeRate = await getFiatExchangeRate()
-  if (!exchangeRate.cacheHit) {
-    store.dispatch(
-      setExchangeRate(DEFAULT_FIAT, DEFAULT_CRYPTO, exchangeRate.rate)
-    )
-  }
-}
-
-/*
-
-updateExchangeRate()
-
-setInterval(async () => {
-  updateExchangeRate()
-}, EXCHANGE_RATE_POLL_INTERVAL)
-*/

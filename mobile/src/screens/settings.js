@@ -62,13 +62,13 @@ class SettingsScreen extends Component {
                 <View style={styles.item}>
                   <Text style={styles.text}>{network.name}</Text>
                   <View style={styles.iconContainer}>
-                    {network.id === this.props.settings.network.id && (
+                    {network === this.props.settings.network && (
                       <Image
                         source={require(`${IMAGES_PATH}selected.png`)}
                         style={styles.image}
                       />
                     )}
-                    {network.id !== this.props.settings.network.id && (
+                    {network !== this.props.settings.network && (
                       <Image
                         source={require(`${IMAGES_PATH}deselected.png`)}
                         style={styles.image}

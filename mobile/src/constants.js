@@ -21,17 +21,23 @@ export const NETWORKS = [
 ]
 */
 
-export let NETWORKS = [
-  { id: 1, name: 'Ethereum Mainnet', dappUrl: 'http://localhost:3000/mainnet' },
-  { id: 4, name: 'Rinkeby Testnet', dappUrl: 'http://localhost:3000/rinkeby' },
-  { id: 2222, name: 'Origin Testnet', dappUrl: 'http://localhost:3000/origin' }
+export const NETWORKS = [
+  { id: 1, name: 'Mainnet', dappUrl: 'http://localhost:3000/mainnet' },
+  { id: 4, name: 'Rinkeby', dappUrl: 'http://localhost:3000/rinkeby' },
+  { id: 2222, name: 'Origin', dappUrl: 'http://localhost:3000/origin' }
 ]
 
 // Push additional networks if in development
+// eslint-disable-next-line no-undef
 if (__DEV__) {
   NETWORKS.push({
     id: 999,
     name: 'Localhost',
     dappUrl: 'http://localhost:3000'
+  })
+  NETWORKS.push({
+    id: 999,
+    name: 'Docker',
+    dappUrl: 'http://localhost:3000/docker'
   })
 }

@@ -11,7 +11,7 @@
  * to also listen to events to get return values.
  */
 
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
@@ -20,22 +20,24 @@ import CryptoJS from 'crypto-js'
 
 import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 
-import {
-  DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES
-} from './constants'
+import { setNotificationsPermissions } from 'actions/Activation'
+import { setDeviceToken } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
   setAccountActive,
   setAccountBalances,
-  setAccountName
+  setAccountName,
+  setAccountServerNotifications
 } from 'actions/Wallet'
-import { setNotificationsPermissions } from 'actions/Activation'
+import {
+  DEFAULT_NOTIFICATION_PERMISSIONS,
+  ETH_NOTIFICATION_TYPES
+} from './constants'
 import { loadData, deleteData } from './tools'
 
 // Environment variables
-import { GCM_SENDER_ID } from 'react-native-dotenv'
+import { GCM_SENDER_ID, NOTIFICATION_SERVER_URL } from 'react-native-dotenv'
 
 class OriginWallet extends Component {
   constructor() {
@@ -127,6 +129,15 @@ class OriginWallet extends Component {
     })
   }
 
+  async _migrateLegacyDeviceTokens() {
+    loadData('WALLET_INFO').then(async walletInfo => {
+      if (walletInfo && walletInfo.deviceToken) {
+        this.setDeviceToken(walletInfo.deviceToken)
+      }
+    })
+    await deleteData('WALLET_INFO')
+  }
+
   /* Set the provider for web3 to the provider for the current network in the
    * graphql configuration for the current network
    */
@@ -211,6 +222,11 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     this.props.setAccountActive(account)
+    // Change active account, make sure notifications are registered with server
+    const { settings } = this.props
+    if (settings.network.id === 1 && settings.deviceToken) {
+      this.registerNotificationAddress(account.address, settings.deviceToken)
+    }
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
@@ -233,7 +249,7 @@ class OriginWallet extends Component {
       const tokenBalances = {}
       if (graphqlContext.config.tokens) {
         for (const token of graphqlContext.config.tokens) {
-          const balance = await token.contractExec.methods
+          let balance = await token.contractExec.methods
             .balanceOf(wallet.activeAccount.address)
             .call()
           // Divide by number of decimals for token
@@ -314,14 +330,16 @@ class OriginWallet extends Component {
   /* Configure push notifications
    */
   initNotifications() {
+    const { wallet } = this.props
     PushNotification.configure({
       // Called when Token is generated (iOS and Android) (optional)
       onRegister: function(deviceToken) {
         this.registerNotificationAddress(
           wallet.activeAccount.address,
-          deviceToken['token'],
-          this.getNotifyType()
+          deviceToken['token']
         )
+        // Save the device token into redux for later use with other accounts
+        this.setDeviceToken(deviceToken['token'])
       }.bind(this),
       // Called when a remote or local notification is opened or received
       onNotification: function(notification) {
@@ -350,21 +368,31 @@ class OriginWallet extends Component {
   /* Register the Ethereum address and device token for notifications with the
    * notification server
    */
-  registerNotificationAddress(ethAddress, deviceToken, notificationType) {
+  registerNotificationAddress(address, deviceToken) {
+    const notificationType = this.getNotificationType()
     return fetch(NOTIFICATION_SERVER_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ ethAddress, deviceToken, notificationType })
-    }).then(response => {
-      // Save registration
-    }).catch(error => {
-      console.debug('Failed to register notification address with notifications server')
-      // Don't hard fail because this maybe deployed in advance of the
-      // notificationn server being completed
+      body: JSON.stringify({ address, deviceToken, notificationType })
     })
+      .then(() => {
+        // Only record notification status for Ethereum mainnet
+        if (this.props.settings.network.id === 1) {
+          // Save registration
+          this.setAccountServerNotifications({ address, status: true })
+        }
+      })
+      .catch(error => {
+        console.debug(
+          'Failed to register notification address with notifications server',
+          error
+        )
+        // Don't hard fail because this maybe deployed in advance of the
+        // notificationn server being completed
+      })
   }
 
   /* Return the notification type that should be used for the platform
@@ -411,6 +439,9 @@ const mapDispatchToProps = dispatch => ({
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
   setAccountBalances: payload => dispatch(setAccountBalances(payload)),
+  setAccountServerNotifications: payload =>
+    dispatch(setAccountServerNotifications(payload)),
+  setDeviceToken: payload => dispatch(setDeviceToken(payload)),
   setNotificationsPermissions: permissions =>
     dispatch(setNotificationsPermissions(permissions))
 })

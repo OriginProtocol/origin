@@ -11,7 +11,6 @@ export default class Currency extends Component {
       imageSource,
       labelColor,
       name,
-      vertical,
       onPress
     } = this.props
 

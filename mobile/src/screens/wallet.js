@@ -1,14 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  Alert,
-  Clipboard,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'

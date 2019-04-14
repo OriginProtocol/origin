@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
   Modal,
@@ -47,9 +47,12 @@ class MarketplaceScreen extends Component {
   componentDidMount() {
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
     this.setState(prevState => ({
-      modals: [...prevState.modals, {
-        type: 'enableNotifications'
-      }]
+      modals: [
+        ...prevState.modals,
+        {
+          type: 'enableNotifications'
+        }
+      ]
     }))
   }
 
@@ -68,7 +71,10 @@ class MarketplaceScreen extends Component {
       this.handleBridgeResponse(msgData, response)
     } else {
       this.setState(prevState => ({
-        modals: [...prevState.modals, { type: msgData.targetFunc, msgData: msgData }]
+        modals: [
+          ...prevState.modals,
+          { type: msgData.targetFunc, msgData: msgData }
+        ]
       }))
     }
   }
@@ -119,9 +125,7 @@ class MarketplaceScreen extends Component {
     this.setState(prevState => {
       return {
         ...prevState,
-        modals: [
-          ...prevState.modals.filter(m => m !== modal)
-        ]
+        modals: [...prevState.modals.filter(m => m !== modal)]
       }
     })
     if (modal.msgData) {

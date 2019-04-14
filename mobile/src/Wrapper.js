@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { DeviceEventEmitter, Image, StyleSheet, YellowBox } from 'react-native'
+import { DeviceEventEmitter, Image, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
 import NavigationService from './NavigationService'
