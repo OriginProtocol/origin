@@ -12,6 +12,7 @@ import {
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 
+import { DEFAULT_NOTIFICATION_PERMISSIONS } from '../constants'
 import NotificationCard from 'components/notifications-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -239,8 +240,8 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({ wallet, settings }) => {
-  return { wallet, settings }
+const mapStateToProps = ({ activation, wallet, settings }) => {
+  return { activation, wallet, settings }
 }
 
 export default connect(mapStateToProps)(MarketplaceScreen)

@@ -55,20 +55,20 @@ class SettingsScreen extends Component {
             <Text style={styles.heading}>NETWORK</Text>
           </View>
           {NETWORKS.map(network => (
-            <Fragment key={network.id}>
+            <Fragment key={network.name}>
               <TouchableHighlight
                 onPress={() => this.handleSetNetwork(network)}
               >
                 <View style={styles.item}>
                   <Text style={styles.text}>{network.name}</Text>
                   <View style={styles.iconContainer}>
-                    {network === this.props.settings.network && (
+                    {network.name === this.props.settings.network.name && (
                       <Image
                         source={require(`${IMAGES_PATH}selected.png`)}
                         style={styles.image}
                       />
                     )}
-                    {network !== this.props.settings.network && (
+                    {network.name !== this.props.settings.network.name && (
                       <Image
                         source={require(`${IMAGES_PATH}deselected.png`)}
                         style={styles.image}

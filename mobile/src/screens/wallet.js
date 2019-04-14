@@ -79,7 +79,7 @@ class WalletScreen extends Component {
             withAdd={true}
             onPress={() => this.handleFunding('ETH')}
           />
-          {balances['dai'] && (
+          {balances['dai'] !== undefined && (
             <Currency
               abbreviation={'DAI'}
               balance={balances['dai']}
@@ -89,7 +89,7 @@ class WalletScreen extends Component {
               onPress={() => this.handleFunding('DAI')}
             />
           )}
-          {balances['ogn'] && (
+          {balances['ogn'] !== undefined && (
             <Currency
               abbreviation={'OGN'}
               balance={balances['ogn']}

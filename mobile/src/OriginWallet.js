@@ -78,11 +78,19 @@ class OriginWallet extends Component {
     )
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this._migrateLegacyAccounts()
     this.initWeb3()
     this.initAccounts()
+    this.initNotifications()
     this.balancePoller = setInterval(() => this.getBalances(), 5000)
+
+    if (Platform.OS === 'ios') {
+      PushNotificationIOS.checkPermissions(permissions => {
+        console.log(permissions)
+        this.props.setNotificationsPermissions(permissions)
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -224,9 +232,7 @@ class OriginWallet extends Component {
     this.props.setAccountActive(account)
     // Change active account, make sure notifications are registered with server
     const { settings } = this.props
-    if (settings.network.id === 1 && settings.deviceToken) {
-      this.registerNotificationAddress(account.address, settings.deviceToken)
-    }
+    this.registerNotificationAddress(account.address, settings.deviceToken)
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
@@ -379,11 +385,8 @@ class OriginWallet extends Component {
       body: JSON.stringify({ address, deviceToken, notificationType })
     })
       .then(() => {
-        // Only record notification status for Ethereum mainnet
-        if (this.props.settings.network.id === 1) {
-          // Save registration
-          this.setAccountServerNotifications({ address, status: true })
-        }
+        // Save registration
+        this.setAccountServerNotifications({ address, status: true })
       })
       .catch(error => {
         console.debug(
