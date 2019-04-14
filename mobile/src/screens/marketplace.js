@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   SafeAreaView,
+  StatusBar,
   View
 } from 'react-native'
 import { WebView } from 'react-native-webview'
@@ -39,12 +40,7 @@ class MarketplaceScreen extends Component {
 
   static navigationOptions = () => {
     return {
-      title: 'Marketplace',
-      headerTitleStyle: {
-        fontFamily: 'Poppins',
-        fontSize: 17,
-        fontWeight: 'normal'
-      }
+      header: null
     }
   }
 
@@ -144,10 +140,11 @@ class MarketplaceScreen extends Component {
 
     const { modals } = this.state
 
-    // Use key of network id on fragment to force a remount of component on
+    // Use key of network id on safeareaview to force a remount of component on
     // network changes
     return (
-      <Fragment key={this.props.settings.network.id}>
+      <SafeAreaView key={this.props.settings.network.id} style={styles.sav}>
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
           ref={webview => {
             this.dappWebView = webview
@@ -219,7 +216,7 @@ class MarketplaceScreen extends Component {
             </Modal>
           )
         })}
-      </Fragment>
+      </SafeAreaView>
     )
   }
 }
@@ -227,6 +224,10 @@ class MarketplaceScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#0B18234C',
+    flex: 1
+  },
+  sav: {
+    backgroundColor: 'white',
     flex: 1
   },
   transparent: {

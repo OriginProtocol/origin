@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00719DBB71114B64A8DFAE31 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E5D147B05604E5589F34F27 /* libReactNativePermissions.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -36,6 +37,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* OriginCatcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OriginCatcherTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		4751C20DEE424524AADDFBBF /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 276DD242EA474F558640B1C3 /* libRNRandomBytes.a */; };
 		768A86372224A5D20061132A /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861B2224A5D10061132A /* Poppins-ThinItalic.ttf */; };
 		768A86382224A5D20061132A /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861C2224A5D10061132A /* Poppins-Italic.ttf */; };
 		768A86392224A5D20061132A /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861D2224A5D10061132A /* Lato-Light.ttf */; };
@@ -67,14 +69,10 @@
 		7692E7282224A18300FA984E /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7692E7252224A13A00FA984E /* libRCTPushNotification.a */; };
 		7E6DD0FEDF8549F8B65861F8 /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BEBCD3CA1A4818AE827217 /* libRNCWebView.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9F5520622FD4491F9D253139 /* libRNRandomBytes-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2A981BB7394CB78377930A /* libRNRandomBytes-tvOS.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
-		4751C20DEE424524AADDFBBF /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 276DD242EA474F558640B1C3 /* libRNRandomBytes.a */; };
-		9F5520622FD4491F9D253139 /* libRNRandomBytes-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2A981BB7394CB78377930A /* libRNRandomBytes-tvOS.a */; };
-		FEA7887766CC43AFA454EA84 /* libRNSentry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC319D7C97D4BD495792613 /* libRNSentry.a */; };
-		99A06E6CAA1D4C9890BDACD6 /* libRNSentry-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F589CE8D0E2A4E5D9EECFC2D /* libRNSentry-tvOS.a */; };
-		C478AB4497994731A8ECD5E9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C255D42B967A45CE8F73B894 /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,6 +300,20 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		7554E3C922628C72008B3280 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 73EEC9391BFE4B1D00D468EB;
+			remoteInfo = RNRandomBytes;
+		};
+		7554E3CB22628C72008B3280 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 163CDE4E2087CAD3001065FB;
+			remoteInfo = "RNRandomBytes-tvOS";
+		};
 		7692E70022248FBC00FA984E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -401,10 +413,12 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OriginCatcher/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OriginCatcher/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		276DD242EA474F558640B1C3 /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* OriginCatcher-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OriginCatcher-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* OriginCatcher-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OriginCatcher-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		756AF17A22288D5C00A35211 /* OriginCatcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OriginCatcher.entitlements; path = OriginCatcher/OriginCatcher.entitlements; sourceTree = "<group>"; };
 		768A861B2224A5D10061132A /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ThinItalic.ttf"; path = "../assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		768A861C2224A5D10061132A /* Poppins-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
@@ -442,15 +456,9 @@
 		9E5D147B05604E5589F34F27 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B493841E17A84960BC141BDF /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCWebView.xcodeproj; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; };
+		DB2A981BB7394CB78377930A /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		276DD242EA474F558640B1C3 /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		DB2A981BB7394CB78377930A /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; name = "libRNRandomBytes-tvOS.a"; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		5444F232E04D45FA8D53BA50 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; name = "RNSentry.xcodeproj"; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		BEC319D7C97D4BD495792613 /* libRNSentry.a */ = {isa = PBXFileReference; name = "libRNSentry.a"; path = "libRNSentry.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		F589CE8D0E2A4E5D9EECFC2D /* libRNSentry-tvOS.a */ = {isa = PBXFileReference; name = "libRNSentry-tvOS.a"; path = "libRNSentry-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		C255D42B967A45CE8F73B894 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -483,8 +491,6 @@
 				7E6DD0FEDF8549F8B65861F8 /* libRNCWebView.a in Frameworks */,
 				00719DBB71114B64A8DFAE31 /* libReactNativePermissions.a in Frameworks */,
 				4751C20DEE424524AADDFBBF /* libRNRandomBytes.a in Frameworks */,
-				FEA7887766CC43AFA454EA84 /* libRNSentry.a in Frameworks */,
-				C478AB4497994731A8ECD5E9 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,9 +507,7 @@
 				2D02E4C61E0B4AEC006451C7 /* libRCTSettings-tvOS.a in Frameworks */,
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
-				CAECB6C4C424414AAAAAB658 /* libRNRandomBytes-tvOS.a in Frameworks */,
 				9F5520622FD4491F9D253139 /* libRNRandomBytes-tvOS.a in Frameworks */,
-				99A06E6CAA1D4C9890BDACD6 /* libRNSentry-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,7 +645,6 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				C255D42B967A45CE8F73B894 /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -651,6 +654,15 @@
 			children = (
 				5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7554E39D22628BF7008B3280 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7554E3CA22628C72008B3280 /* libRNRandomBytes.a */,
+				7554E3CC22628C72008B3280 /* libRNRandomBytes-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -693,12 +705,10 @@
 		7692E6DA22248FBB00FA984E /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				C926767F374A433CA400E22B /* libRNCamera.a */,
-				FE26EF612F0B4A96AD88F245 /* libRNRandomBytes.a */,
-				8BE07949848E4E3FA5523815 /* libRNUUIDGenerator.a */,
 				82BEBCD3CA1A4818AE827217 /* libRNCWebView.a */,
-				6EA126E077FC44A8832D41F4 /* libRNRandomBytes-tvOS.a */,
 				9E5D147B05604E5589F34F27 /* libReactNativePermissions.a */,
+				276DD242EA474F558640B1C3 /* libRNRandomBytes.a */,
+				DB2A981BB7394CB78377930A /* libRNRandomBytes-tvOS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -756,7 +766,6 @@
 				B493841E17A84960BC141BDF /* RNCWebView.xcodeproj */,
 				96E20D4D3D714036B5BA0BAD /* ReactNativePermissions.xcodeproj */,
 				733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */,
-				5444F232E04D45FA8D53BA50 /* RNSentry.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -985,6 +994,10 @@
 					ProductGroup = 7692E70E22248FBC00FA984E /* Products */;
 					ProjectRef = B493841E17A84960BC141BDF /* RNCWebView.xcodeproj */;
 				},
+				{
+					ProductGroup = 7554E39D22628BF7008B3280 /* Products */;
+					ProjectRef = 733E6D6DC13844DFAA0E73C5 /* RNRandomBytes.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1207,6 +1220,20 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		7554E3CA22628C72008B3280 /* libRNRandomBytes.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNRandomBytes.a;
+			remoteRef = 7554E3C922628C72008B3280 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7554E3CC22628C72008B3280 /* libRNRandomBytes-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNRandomBytes-tvOS.a";
+			remoteRef = 7554E3CB22628C72008B3280 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		7692E70122248FBC00FA984E /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1240,13 +1267,6 @@
 			fileType = archive.ar;
 			path = libRNCWebView.a;
 			remoteRef = 7692E71422248FBC00FA984E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7692E71B22248FBC00FA984E /* libRNRandomBytes-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRNRandomBytes-tvOS.a";
-			remoteRef = 7692E71A22248FBC00FA984E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7692E7252224A13A00FA984E /* libRCTPushNotification.a */ = {
@@ -1462,13 +1482,14 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = OriginCatcherTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1490,13 +1511,14 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = OriginCatcherTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1521,7 +1543,6 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = OriginCatcher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1548,7 +1569,6 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = OriginCatcher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1580,12 +1600,13 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = "OriginCatcher-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1616,12 +1637,13 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = "OriginCatcher-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1651,12 +1673,13 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = "OriginCatcher-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1686,12 +1709,13 @@
 					"$(SRCROOT)/../node_modules/react-native-webview/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 				);
 				INFOPLIST_FILE = "OriginCatcher-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",

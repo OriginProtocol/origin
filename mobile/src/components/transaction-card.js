@@ -24,7 +24,14 @@ class TransactionCard extends Component {
     const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
     const gas = web3.utils.fromWei(msgData.data.gas)
 
-    let boost, heading, daiInvolved, ognInvolved, payment, paymentCurrency
+    let boost,
+      heading,
+      daiInvolved,
+      ognInvolved,
+      payment,
+      paymentCurrency,
+      daiRequired = 0,
+      ethRequired = Number(gas)
     switch (functionName) {
       case 'createListing':
         heading = 'Create Listing'
@@ -35,16 +42,18 @@ class TransactionCard extends Component {
         break
       case 'makeOffer':
         heading = 'Purchase'
+        payment = web3.utils.fromWei(_value)
         // TODO: handle this detection better, this will only work while there
         // is a single alternate payment currency
         if (_currency === '0x0000000000000000000000000000000000000000') {
           paymentCurrency = 'eth'
+          ethRequired += Number(payment)
         } else {
           paymentCurrency = 'dai'
+          daiRequired += Number(payment)
         }
         ognInvolved = parseInt(_commission) > 0
         daiInvolved = paymentCurrency === 'dai'
-        payment = web3.utils.fromWei(_value)
         break
       case 'emitIdentityUpdated':
         heading = 'Publish Identity'
@@ -59,6 +68,8 @@ class TransactionCard extends Component {
       ? payment * currencies[paymentCurrency].priceToUSD
       : 0
     const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
+    const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
+    const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
 
     return (
       <View style={styles.card}>
@@ -101,7 +112,7 @@ class TransactionCard extends Component {
                       source={currencies['eth'].icon}
                       style={styles.icon}
                     />
-                    {` ${gas} ETH`}
+                    {` ${Number(gas).toFixed(5)} ETH`}
                   </Text>
                 </View>
               </View>
@@ -110,7 +121,9 @@ class TransactionCard extends Component {
         ) : (
           <Fragment>
             <View style={styles.primaryContainer}>
-              <Text style={[styles.amount, styles.primary]}>{gas} ETH</Text>
+              <Text style={[styles.amount, styles.primary]}>
+                {Number(gas).toFixed(5)} ETH
+              </Text>
               <Text style={styles.label}>Gas Cost</Text>
             </View>
             <View style={styles.primaryContainer}>
@@ -132,10 +145,27 @@ class TransactionCard extends Component {
               {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
             </Text>
             <Text style={styles.account}>
-              {balances['eth']} ETH
-              {daiInvolved && ` ${balances['dai']} DAI`}
-              {ognInvolved && ` ${balances['ogn']} OGN`}
+              {Number(balances['eth']).toFixed(5)} ETH
+              {daiInvolved && `${Number(balances['dai']).toFixed(2)} DAI`}
+              {ognInvolved && `${balances['ogn']} OGN`}
             </Text>
+          </View>
+          <View style={styles.accountText}>
+            {!hasSufficientDai && (
+              <Text style={styles.danger}>
+                {`You don't have enough ETH to submit this transaction.`}
+              </Text>
+            )}
+          </View>
+          <View style={styles.accountText}>
+            {!hasSufficientEth && (
+              <Text style={styles.danger}>
+                {functionName === 'emitIdentityUpdated' &&
+                  `You don't have enough ETH to publish your identity.`}
+                {functionName !== 'emitIdentityUpdated' &&
+                  `You don't have enough ETH to submit this transaction.`}
+              </Text>
+            )}
           </View>
         </View>
         <View style={styles.buttonContainer}>
@@ -144,6 +174,7 @@ class TransactionCard extends Component {
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Confirm'}
+            disabled={!hasSufficientDai || !hasSufficientEth}
             onPress={this.props.onConfirm}
           />
         </View>
@@ -198,6 +229,12 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     paddingHorizontal: 20,
     paddingVertical: 30
+  },
+  danger: {
+    color: 'red',
+    fontFamily: 'Lato',
+    fontSize: 11,
+    textAlign: 'center'
   },
   converted: {
     color: '#0b1823',
