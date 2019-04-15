@@ -99,7 +99,6 @@ class MarketplaceScreen extends Component {
   }
 
   /* Send a response back to the DApp using postMessage in the webview
-   *
    */
   handleBridgeResponse(msgData, result) {
     msgData.isSuccessful = Boolean(result)
@@ -108,7 +107,6 @@ class MarketplaceScreen extends Component {
   }
 
   /* Handle a transaction hash event from the Origin Wallet
-   *
    */
   handleTransactionHash({ transaction, hash }) {
     const modal = this.state.modals.find(m => m.msgData.data === transaction)
@@ -117,7 +115,6 @@ class MarketplaceScreen extends Component {
   }
 
   /* Handle a signed message event from the Origin Wallet
-   *
    */
   handleSignedMessage({ data, signedMessage }) {
     const modal = this.state.modals.find(m => m.msgData.data === data)
@@ -126,7 +123,6 @@ class MarketplaceScreen extends Component {
   }
 
   /* Remove a modal and return the given result to the DApp
-   *
    */
   toggleModal(modal, result) {
     this.setState(prevState => {
