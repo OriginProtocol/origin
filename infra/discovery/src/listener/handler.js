@@ -110,7 +110,9 @@ async function handleEvent(event, context) {
 
   // Call the notifications server webhook
   if (handler.webhookEnabled() && context.config.notificationsWebhook) {
-    logger.info(`Notifications Webhook to ${context.config.notificationsWebhook}`)
+    logger.info(
+      `Notifications Webhook to ${context.config.notificationsWebhook}`
+    )
     try {
       await withRetrys(async () => {
         return postToWebhook(context.config.notificationsWebhook, json)

@@ -67,7 +67,8 @@ const config = {
   // that may run concurrently (ex: main vs webhook vs re-indexing).
   listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
   // Notification web hook URL. e.g. http://localhost:3456/events
-  notificationsWebhook: args['--notifications-webhook'] || process.env.NOTIFICATIONS_WEBHOOK,
+  notificationsWebhook:
+    args['--notifications-webhook'] || process.env.NOTIFICATIONS_WEBHOOK,
   // Discord webhook URL.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Mailing list webhook URL.
