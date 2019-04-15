@@ -187,9 +187,7 @@ app.post('/events', async (req, res) => {
   }
 
   if (!listing) {
-    logger.error(
-      `Error: Missing listing data. Skipping ${eventDetailsSummary}`
-    )
+    logger.error(`Error: Missing listing data. Skipping ${eventDetailsSummary}`)
     return
   }
   if (!seller.id) {
