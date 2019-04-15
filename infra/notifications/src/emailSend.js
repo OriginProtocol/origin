@@ -7,7 +7,7 @@ const Op = Sequelize.Op
 const _ = require('lodash')
 
 if (!Identity) {
-  throw('Identity model not found.')
+  throw 'Identity model not found.'
 }
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -60,7 +60,6 @@ async function emailSend(
   // Filter out redundants before iterating.
   await emails.forEach(async s => {
     try {
-
       if (config.verbose) {
         console.log(`Checking messages for: ${s.ethAddress}`)
       }
@@ -78,8 +77,7 @@ async function emailSend(
 
       if (!s.email && !config.overrideEmail && config.verbose) {
         console.info(`${s.ethAddress} has no email address. Skipping.`)
-      }
-      else if (!message) {
+      } else if (!message) {
         console.warn('No message found.')
       } else {
         const email = {
@@ -87,10 +85,18 @@ async function emailSend(
           from: config.fromEmail,
           subject: message.subject,
           text: emailTemplateTxt({
-            message: message.text({ listing: listing, offer: offer, config: config })
+            message: message.text({
+              listing: listing,
+              offer: offer,
+              config: config
+            })
           }),
           html: emailTemplateHtml({
-            message: message.html({ listing: listing, offer: offer, config: config })
+            message: message.html({
+              listing: listing,
+              offer: offer,
+              config: config
+            })
           }),
           asm: {
             groupId: config.asmGroupId
@@ -123,7 +129,11 @@ async function emailSend(
 
         try {
           await sendgridMail.send(email)
-          console.log(`Email sent to ${buyerAddress} at ${email.to} ${config.overrideEmail ? ' instead of '+s.email : ''}`)
+          console.log(
+            `Email sent to ${buyerAddress} at ${email.to} ${
+              config.overrideEmail ? ' instead of ' + s.email : ''
+            }`
+          )
         } catch (error) {
           console.error(`Could not email via Sendgrid: ${error}`)
         }
