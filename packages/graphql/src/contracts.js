@@ -142,9 +142,6 @@ export function setNetwork(net, customConfig) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
-    if (window.localStorage.defaultAccount) {
-      web3.eth.defaultAccount = window.localStorage.defaultAccount
-    }
   }
 
   context.EventBlock = config.V00_Marketplace_Epoch || 0

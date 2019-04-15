@@ -118,8 +118,14 @@ const writeTruffle = () =>
 
 const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
   new Promise((resolve, reject) => {
-    if (skipIfExists && fs.existsSync(`${contractsPath}/${filename}.json`)) {
-      return resolve()
+    const filePath = `${contractsPath}/${filename}.json`
+    if (skipIfExists && fs.existsSync(filePath)) {
+      try {
+        const c = JSON.parse(fs.readFileSync(filePath))
+        if (Object.keys(c).length) return resolve()
+      } catch (e) {
+        /* Regenerate file */
+      }
     }
     const originContractsPath = path.resolve(__dirname, '../graphql')
     const startServer = spawn(
@@ -168,6 +174,12 @@ module.exports = async function start(opts = {}) {
   }
 
   if (opts.deployContracts && !started.contracts) {
+    if (!fs.existsSync(`${contractsPath}/contracts.json`)) {
+      fs.writeFileSync(`${contractsPath}/contracts.json`, '{}')
+    }
+    if (!fs.existsSync(`${contractsPath}/tests.json`)) {
+      fs.writeFileSync(`${contractsPath}/tests.json`, '{}')
+    }
     await deployContracts({
       skipIfExists: opts.skipContractsIfExists,
       filename: opts.contractsFile
