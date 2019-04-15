@@ -20,15 +20,13 @@ import CryptoJS from 'crypto-js'
 
 import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 
-import { setNotificationsPermissions } from 'actions/Activation'
 import { setDeviceToken } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
   setAccountActive,
   setAccountBalances,
-  setAccountName,
-  setAccountServerNotifications
+  setAccountName
 } from 'actions/Wallet'
 import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
@@ -84,13 +82,6 @@ class OriginWallet extends Component {
     this.initAccounts()
     this.initNotifications()
     this.balancePoller = setInterval(() => this.getBalances(), 5000)
-
-    if (Platform.OS === 'ios') {
-      PushNotificationIOS.checkPermissions(permissions => {
-        console.log(permissions)
-        this.props.setNotificationsPermissions(permissions)
-      })
-    }
   }
 
   componentWillUnmount() {
@@ -159,7 +150,7 @@ class OriginWallet extends Component {
   /* Configure web3 using the accounts persisted in redux
    */
   initAccounts() {
-    const { wallet } = this.props
+    const { wallet, settings } = this.props
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from the data store
     this.web3.eth.accounts.wallet.clear()
@@ -169,6 +160,7 @@ class OriginWallet extends Component {
     }
     const { length } = wallet.accounts
     console.debug(`Loaded Origin Wallet with ${length} accounts`)
+    // Verify there is a valid active account, and if not set one
     let hasValidActiveAccount = false
     if (wallet.activeAccount) {
       hasValidActiveAccount = wallet.accounts.find(
@@ -178,6 +170,13 @@ class OriginWallet extends Component {
     if (length && !hasValidActiveAccount) {
       // Set the first account active if none are active
       this.props.setAccountActive(wallet.accounts[0])
+    } else if (settings.deviceToken) {
+      // Make sure the active account is registered with the notifications
+      // server
+      this.registerNotificationAddress(
+        wallet.activeAccount.address,
+        settings.deviceToken
+      )
     }
   }
 
@@ -383,19 +382,14 @@ class OriginWallet extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ address, deviceToken, notificationType })
+    }).catch(error => {
+      console.debug(
+        'Failed to register notification address with notifications server',
+        error
+      )
+      // Don't hard fail because this maybe deployed in advance of the
+      // notificationn server being completed
     })
-      .then(() => {
-        // Save registration
-        this.setAccountServerNotifications({ address, status: true })
-      })
-      .catch(error => {
-        console.debug(
-          'Failed to register notification address with notifications server',
-          error
-        )
-        // Don't hard fail because this maybe deployed in advance of the
-        // notificationn server being completed
-      })
   }
 
   /* Return the notification type that should be used for the platform
@@ -444,9 +438,7 @@ const mapDispatchToProps = dispatch => ({
   setAccountBalances: payload => dispatch(setAccountBalances(payload)),
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
-  setDeviceToken: payload => dispatch(setDeviceToken(payload)),
-  setNotificationsPermissions: permissions =>
-    dispatch(setNotificationsPermissions(permissions))
+  setDeviceToken: payload => dispatch(setDeviceToken(payload))
 })
 
 export default connect(

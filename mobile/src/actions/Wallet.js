@@ -48,10 +48,3 @@ export function setAccountName(payload) {
     payload
   }
 }
-
-export function setAccountServerNotifications(payload) {
-  return {
-    type: WalletConstants.SET_ACCOUNT_SERVER_NOTIFICATIONS,
-    payload
-  }
-}

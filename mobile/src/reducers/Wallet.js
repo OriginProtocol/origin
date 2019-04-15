@@ -60,15 +60,6 @@ export default function Wallet(state = initialState, action = {}) {
           [action.payload.address]: action.payload.name
         }
       }
-
-    case WalletConstants.SET_ACCOUNT_SERVER_NOTIFICATIONS:
-      return {
-        ...state,
-        accountServerNotifications: {
-          ...state.accountServerNotifications,
-          [action.address]: action.status
-        }
-      }
   }
 
   return state
