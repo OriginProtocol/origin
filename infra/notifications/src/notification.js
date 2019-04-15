@@ -1,7 +1,8 @@
 const { messageTemplates } = require('../templates/messageTemplates')
+const logger = require('./logger')
 
 if (!messageTemplates) {
-  console.error('error: messageTemplates not found.')
+  logger.error('error: messageTemplates not found.')
 }
 /**
  * Returns true if an event should be processed based on its event name.

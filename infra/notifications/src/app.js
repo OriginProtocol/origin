@@ -3,7 +3,7 @@ require('dotenv').config()
 try {
   require('envkey')
 } catch (error) {
-  console.error('EnvKey not configured. Please set env var ENVKEY')
+  logger.error('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const express = require('express')
@@ -14,6 +14,7 @@ const { RateLimiterMemory } = require('rate-limiter-flexible')
 const { mobilePush } = require('./mobilePush')
 const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
+const logger = require('./logger')
 
 const app = express()
 const port = 3456
@@ -22,7 +23,7 @@ let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
 
 if (!privateKey || !publicKey) {
-  console.warn(
+  logger.warn(
     'Warning: VAPID public or private key not defined, generating one'
   )
   const vapidKeys = webpush.generateVAPIDKeys()
@@ -61,7 +62,7 @@ const config = {
   verbose: args['--verbose'] || false
 }
 
-console.log(config)
+logger.log(config)
 
 // ------------------------------------------------------------------
 
@@ -179,31 +180,31 @@ app.post('/events', async (req, res) => {
   // Thats how the old listener decided if there was a message. Will do
   // now until we get real pipeline built.
   if (!processableEvent(eventName, 'mobile')) {
-    console.info(
+    logger.info(
       `Info: Not a processable event. Skipping ${eventDetailsSummary}`
     )
     return
   }
 
   if (!listing) {
-    console.error(
+    logger.error(
       `Error: Missing listing data. Skipping ${eventDetailsSummary}`
     )
     return
   }
   if (!seller.id) {
-    console.error(`Error: Missing seller.id. Skipping ${eventDetailsSummary}`)
+    logger.error(`Error: Missing seller.id. Skipping ${eventDetailsSummary}`)
     return
   }
   if (!buyer.id) {
-    console.error(`Error: Missing buyer.id. Skipping ${eventDetailsSummary}`)
+    logger.error(`Error: Missing buyer.id. Skipping ${eventDetailsSummary}`)
     return
   }
 
   // ETH address of the party who initiated the action.
   // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
   if (!returnValues.party) {
-    console.error(`Error: Invalid part, skipping ${eventDetailsSummary}`)
+    logger.error(`Error: Invalid part, skipping ${eventDetailsSummary}`)
     return
   }
 
@@ -211,17 +212,17 @@ app.post('/events', async (req, res) => {
   const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
   const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
-  console.info(`Info: Processing event ${eventDetailsSummary}`)
+  logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
   if (config.verbose) {
-    console.log(`>eventName: ${eventName}`)
-    console.log(`>party: ${party}`)
-    console.log(`>buyerAddress: ${buyerAddress}`)
-    console.log(`>sellerAddress: ${sellerAddress}`)
-    console.log(`offer:`)
-    console.log(offer)
-    console.log(`listing:`)
-    console.log(listing)
+    logger.log(`>eventName: ${eventName}`)
+    logger.log(`>party: ${party}`)
+    logger.log(`>buyerAddress: ${buyerAddress}`)
+    logger.log(`>sellerAddress: ${sellerAddress}`)
+    logger.log(`offer:`)
+    logger.log(offer)
+    logger.log(`listing:`)
+    logger.log(listing)
   }
 
   // Return 200 to the event-listener without waiting for processing of the event.
@@ -245,4 +246,4 @@ app.post('/events', async (req, res) => {
   )
 })
 
-app.listen(port, () => console.log(`Notifications server listening at ${port}`))
+app.listen(port, () => logger.log(`Notifications server listening at ${port}`))

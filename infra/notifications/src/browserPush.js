@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const PushSubscription = require('./models').PushSubscription
 const { getNotificationMessage } = require('./notification')
 const webpush = require('web-push')
+const logger = require('./logger')
 
 //
 // Browser push subscripttions
@@ -75,7 +76,7 @@ async function browserPush(
         if (e.statusCode === 410) {
           s.destroy()
         } else {
-          console.error(e)
+          logger.error(e)
         }
       }
     })

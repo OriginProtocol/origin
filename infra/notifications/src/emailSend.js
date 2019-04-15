@@ -5,6 +5,7 @@ const fs = require('fs')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
+const logger = require('./logger')
 
 if (!Identity) {
   throw 'Identity model not found.'
@@ -12,10 +13,10 @@ if (!Identity) {
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 if (!process.env.SENDGRID_API_KEY) {
-  console.warn('Warning: SENDGRID_API_KEY env var is not set')
+  logger.warn('Warning: SENDGRID_API_KEY env var is not set')
 }
 if (!process.env.SENDGRID_FROM_EMAIL) {
-  console.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
+  logger.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
 }
 
 //
@@ -61,7 +62,7 @@ async function emailSend(
   await emails.forEach(async s => {
     try {
       if (config.verbose) {
-        console.log(`Checking messages for: ${s.ethAddress}`)
+        logger.log(`Checking messages for: ${s.ethAddress}`)
       }
 
       const recipient = s.ethAddress
@@ -76,9 +77,9 @@ async function emailSend(
       )
 
       if (!s.email && !config.overrideEmail && config.verbose) {
-        console.info(`${s.ethAddress} has no email address. Skipping.`)
+        logger.info(`${s.ethAddress} has no email address. Skipping.`)
       } else if (!message) {
-        console.warn('No message found.')
+        logger.warn('No message found.')
       } else {
         const email = {
           to: config.overrideEmail || s.email,
@@ -104,8 +105,8 @@ async function emailSend(
         }
 
         if (config.verbose) {
-          console.log('email:')
-          console.log(email)
+          logger.log('email:')
+          logger.log(email)
         }
 
         if (config.emailFileOut) {
@@ -115,31 +116,31 @@ async function emailSend(
             `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
             email.html,
             error => {
-              console.error(error)
+              logger.error(error)
             }
           )
           fs.writeFile(
             `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
             email.text,
             error => {
-              console.error(error)
+              logger.error(error)
             }
           )
         }
 
         try {
           await sendgridMail.send(email)
-          console.log(
+          logger.log(
             `Email sent to ${buyerAddress} at ${email.to} ${
               config.overrideEmail ? ' instead of ' + s.email : ''
             }`
           )
         } catch (error) {
-          console.error(`Could not email via Sendgrid: ${error}`)
+          logger.error(`Could not email via Sendgrid: ${error}`)
         }
       }
     } catch (error) {
-      console.error(`Could not email via Sendgrid: ${error}`)
+      logger.error(`Could not email via Sendgrid: ${error}`)
     }
   })
 }

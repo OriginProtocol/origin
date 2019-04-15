@@ -4,6 +4,7 @@ const { getNotificationMessage } = require('./notification')
 const dappOfferUrl = process.env.DAPP_OFFER_URL
 const fetch = require('cross-fetch')
 const path = require('path')
+const logger = require('./logger')
 
 //
 // Mobile Push (linker) notifications
@@ -66,7 +67,7 @@ async function mobilePush(
           body: JSON.stringify({ receivers, token: linkingNotifyToken })
         })
       } catch (error) {
-        console.error('Error notifying linking api ', error)
+        logger.error('Error notifying linking api ', error)
       }
     }
   }
