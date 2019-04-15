@@ -14,8 +14,10 @@ async function browserPush(
   offer
 ) {
   if (!eventName) throw 'eventName not defined'
+  if (!party) throw 'party not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
+  if (!offer) throw 'offer not defined'
 
   // Query the DB to get subscriptions from the seller and/or buyer.
   // Note the filter ensures we do not send notification to the party

@@ -27,8 +27,11 @@ async function emailSend(
   config
 ) {
   if (!eventName) throw 'eventName not defined'
+  if (!party) throw 'party not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
+  if (!offer) throw 'offer not defined'
+  if (!listing) throw 'listing not defined'
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
