@@ -90,7 +90,15 @@ function transactionConfirmed(hash, gqlClient) {
   })
 }
 
-export async function createUser(gqlClient, NodeAccount) {
+async function getNodeAccount(gqlClient) {
+  const NodeAcctsData = await gqlClient.query({ query: NodeAccountsQuery })
+  const UnsortedAccts = get(NodeAcctsData, 'data.web3.nodeAccounts')
+  const NodeAccountObj = sortBy(UnsortedAccts, a => -Number(a.balance.eth))[0]
+  return NodeAccountObj.id
+}
+
+export async function createAccount(gqlClient) {
+  const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
     variables: { enabled: false }
@@ -126,10 +134,7 @@ export default async function populate(gqlClient, log, done) {
     return result.data[key]
   }
 
-  const NodeAcctsData = await gqlClient.query({ query: NodeAccountsQuery })
-  const UnsortedAccts = get(NodeAcctsData, 'data.web3.nodeAccounts')
-  const NodeAccountObj = sortBy(UnsortedAccts, a => -Number(a.balance.eth))[0]
-  const NodeAccount = NodeAccountObj.id
+  const NodeAccount = await getNodeAccount(gqlClient)
   log(`Using NodeAccount ${NodeAccount}`)
 
   await mutate(ToggleMetaMaskMutation, null, { enabled: false })

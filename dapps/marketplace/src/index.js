@@ -28,11 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   try {
-    const populate = require('@origin/graphql/fixtures/populate')
-    window.pop = populate
-    window.populate = (log, finished) => {
-      populate.default(client, log, finished)
-    }
+    window.ognTools = require('@origin/graphql/fixtures/populate')
   } catch (e) {
     console.warn('No fixtures found')
   }

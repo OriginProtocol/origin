@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 import ws from 'ws'
-// import wtfnode from 'wtfnode'
+import fs from 'fs'
 
-import server from '../server'
+import server from '../src/server'
 
 import ApolloClient from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
@@ -25,17 +25,21 @@ client.defaultOptions = {
   query: { fetchPolicy: 'network-only' }
 }
 
-server.listen().then((srv) => {
+server.listen().then(srv => {
   console.log(`🚀  Server ready at ${srv.url}`)
-  populate(
-    client,
-    console.log,
-    async addresses => {
-      console.log(addresses)
-      await wsClient.close()
-      server.httpServer.close()
-      server.subscriptionServer.close()
-      server.shutdown()
+  populate(client, console.log, async addresses => {
+    const output = process.argv[2] || 'contracts'
+    try {
+      fs.writeFileSync(
+        `${__dirname}/../../contracts/build/${output}.json`,
+        JSON.stringify(addresses, null, 4)
+      )
+    } catch (e) {
+      console.log('Could not write contracts.json')
     }
-  )
+    await wsClient.close()
+    server.httpServer.close()
+    server.subscriptionServer.close()
+    server.shutdown()
+  })
 })

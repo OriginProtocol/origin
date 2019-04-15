@@ -91,17 +91,6 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-    if (typeof window !== 'undefined') {
-      config.OriginToken = window.localStorage.OGNContract
-      config.V00_Marketplace = window.localStorage.marketplaceContract
-      config.IdentityEvents = window.localStorage.identityEventsContract
-      config.DaiExchange = window.localStorage.uniswapDaiExchange
-    }
-  } else if (net === 'localhost' && typeof window !== 'undefined') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
-    config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
   context.net = net
   context.config = config

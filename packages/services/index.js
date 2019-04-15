@@ -86,35 +86,45 @@ const populateIpfs = ({ logFiles } = {}) =>
     )
   })
 
-// const deployContracts = () =>
-//   new Promise((resolve, reject) => {
-//     const originContractsPath = path.resolve(__dirname, '../contracts')
-//     const truffleMigrate = spawn(
-//       `./node_modules/.bin/truffle`,
-//       ['migrate', '--reset'],
-//       {
-//         cwd: originContractsPath,
-//         stdio: 'inherit',
-//         env: process.env
-//       }
-//     )
-//     truffleMigrate.on('exit', code => {
-//       if (code === 0) {
-//         console.log('Truffle migrate finished OK.')
-//         resolve()
-//       } else {
-//         reject('Truffle migrate failed.')
-//         reject()
-//       }
-//     })
-//   })
+function writeTruffleAddress(contract, network, address) {
+  const filename = `${__dirname}/../contracts/build/contracts/${contract}.json`
+  const rawContract = fs.readFileSync(filename)
+  const Contract = JSON.parse(rawContract)
+  Contract.networks[network].address = address
+  fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+}
 
-const startGraphQL = () =>
+const contractsPath = `${__dirname}/../contracts/build`
+const writeTruffle = () =>
+  new Promise(resolve => {
+    console.log('Writing truffle...')
+    try {
+      const rawAddresses = fs.readFileSync(contractsPath + '/contracts.json')
+      const addresses = JSON.parse(rawAddresses)
+      if (addresses.Marketplace) {
+        writeTruffleAddress('V00_Marketplace', '999', addresses.Marketplace)
+      }
+      if (addresses.IdentityEvents) {
+        writeTruffleAddress('IdentityEvents', '999', addresses.IdentityEvents)
+      }
+      if (addresses.OGN) {
+        writeTruffleAddress('OriginToken', '999', addresses.OGN)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    resolve()
+  })
+
+const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
   new Promise((resolve, reject) => {
+    if (skipIfExists && fs.existsSync(`${contractsPath}/${filename}.json`)) {
+      return resolve()
+    }
     const originContractsPath = path.resolve(__dirname, '../graphql')
     const startServer = spawn(
       `node`,
-      ['-r', '@babel/register', 'fixtures/populate-server.js'],
+      ['-r', '@babel/register', 'fixtures/populate-server.js', filename],
       {
         cwd: originContractsPath,
         stdio: 'inherit',
@@ -123,10 +133,10 @@ const startGraphQL = () =>
     )
     startServer.on('exit', code => {
       if (code === 0) {
-        console.log('GraphQL finished OK.')
+        console.log('Deploying contracts finished OK.')
         resolve()
       } else {
-        reject('GraphQL failed.')
+        reject('Deploying contracts failed.')
         reject()
       }
     })
@@ -157,9 +167,16 @@ module.exports = async function start(opts = {}) {
     }
   }
 
-  if (opts.deployContracts) {
-    // await deployContracts()
-    await startGraphQL()
+  if (opts.deployContracts && !started.contracts) {
+    await deployContracts({
+      skipIfExists: opts.skipContractsIfExists,
+      filename: opts.contractsFile
+    })
+    started.contracts = true
+  }
+
+  if (opts.writeTruffle) {
+    await writeTruffle()
   }
 
   if (opts.extras && !started.extras) {

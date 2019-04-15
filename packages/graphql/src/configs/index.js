@@ -2,7 +2,6 @@ import docker from './docker'
 import kovanTst from './kovanTst'
 import localhost from './localhost'
 import mainnet from './mainnet'
-import nodeTest from './nodeTest'
 import origin from './origin'
 import rinkeby from './rinkeby'
 import test from './test'
@@ -13,7 +12,6 @@ export default {
   kovanTst,
   localhost,
   mainnet,
-  nodeTest,
   origin,
   rinkeby,
   test,

@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "start": "node -r @babel/register server",
-    "test": "mocha -r @babel/register --file test/setup test",
-    "test:watch": "mocha -r @babel/register --file test/setup test -w",
+    "test": "NODE_ENV=test mocha -r @babel/register --file test/setup test",
+    "test:watch": "NODE_ENV=test mocha -r @babel/register --file test/setup test -w",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
