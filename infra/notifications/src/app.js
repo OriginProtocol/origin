@@ -106,7 +106,7 @@ app.get('/', async (req, res) => {
     `<p><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></p>`
 
   try {
-    if (app.get('env') === 'development') {
+    if (process.env.NODE_ENV) === 'development') {
       const subs = await PushSubscription.findAll()
 
       markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
