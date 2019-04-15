@@ -56,7 +56,9 @@ const config = {
   // SendGrid ASM Group ID. Used for unsubscribing.
   asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
   // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
-  emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null
+  emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
+  // Output debugging and other info. Boolean.
+  verbose: args['--verbose'] || false
 }
 
 console.log(config)
@@ -210,6 +212,17 @@ app.post('/events', async (req, res) => {
   const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
   console.info(`Info: Processing event ${eventDetailsSummary}`)
+
+  if (config.verbose) {
+    console.log(`>eventName: ${eventName}`)
+    console.log(`>party: ${party}`)
+    console.log(`>buyerAddress: ${buyerAddress}`)
+    console.log(`>sellerAddress: ${sellerAddress}`)
+    console.log(`offer:`)
+    console.log(offer)
+    console.log(`listing:`)
+    console.log(listing)
+  }
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })

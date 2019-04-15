@@ -27,13 +27,15 @@ async function mobilePush(
       eventName,
       party,
       buyerAddress,
-      'buyer'
+      'buyer',
+      'mobile'
     )
     const sellerMessage = getNotificationMessage(
       eventName,
       party,
       sellerAddress,
-      'seller'
+      'seller',
+      'mobile'
     )
     const eventData = {
       url: offer && path.join(dappOfferUrl, offer.id),

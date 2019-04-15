@@ -1,10 +1,14 @@
-const Identity = require('./models').Identity
+// TODO: We need better way to refer to models in other packages.
+const Identity = require('../../identity/src/models').Identity
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
 
+if (!Identity) {
+  throw('Identity model not found.')
+}
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 if (!process.env.SENDGRID_API_KEY) {
@@ -56,8 +60,10 @@ async function emailSend(
   // Filter out redundants before iterating.
   await emails.forEach(async s => {
     try {
-      console.log('Checking messages for:')
-      console.log(s.ethAddress)
+
+      if (config.verbose) {
+        console.log(`Checking messages for: ${s.ethAddress}`)
+      }
 
       const recipient = s.ethAddress
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
@@ -70,7 +76,10 @@ async function emailSend(
         'email'
       )
 
-      if (!message) {
+      if (!s.email && !config.overrideEmail && config.verbose) {
+        console.info(`${s.ethAddress} has no email address. Skipping.`)
+      }
+      else if (!message) {
         console.warn('No message found.')
       } else {
         const email = {
@@ -78,14 +87,19 @@ async function emailSend(
           from: config.fromEmail,
           subject: message.subject,
           text: emailTemplateTxt({
-            message: message.text({ listing: listing, offer: offer })
+            message: message.text({ listing: listing, offer: offer, config: config })
           }),
           html: emailTemplateHtml({
-            message: message.html({ listing: listing, offer: offer })
+            message: message.html({ listing: listing, offer: offer, config: config })
           }),
           asm: {
             groupId: config.asmGroupId
           }
+        }
+
+        if (config.verbose) {
+          console.log('email:')
+          console.log(email)
         }
 
         if (config.emailFileOut) {
@@ -109,7 +123,7 @@ async function emailSend(
 
         try {
           await sendgridMail.send(email)
-          console.log(`Email sent to ${buyerAddress} at ${email.to}`)
+          console.log(`Email sent to ${buyerAddress} at ${email.to} ${config.overrideEmail ? ' instead of '+s.email : ''}`)
         } catch (error) {
           console.error(`Could not email via Sendgrid: ${error}`)
         }
