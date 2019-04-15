@@ -61,12 +61,12 @@ async function emailSend(
   // Filter out redundants before iterating.
   await emails.forEach(async s => {
     try {
-      if (config.verbose) {
-        logger.log(`Checking messages for: ${s.ethAddress}`)
-      }
-
       const recipient = s.ethAddress
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
+
+      if (config.verbose) {
+        logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
+      }
 
       const message = getNotificationMessage(
         eventName,
@@ -76,10 +76,14 @@ async function emailSend(
         'email'
       )
 
-      if (!s.email && !config.overrideEmail && config.verbose) {
-        logger.info(`${s.ethAddress} has no email address. Skipping.`)
+      if (!s.email && !config.overrideEmail) {
+        if (config.verbose) {
+          logger.info(`${s.ethAddress} has no email address. Skipping.`)
+        }
       } else if (!message) {
-        logger.warn('No message found.')
+        if (config.verbose) {
+          logger.info(`No message found`)
+        }
       } else {
         const email = {
           to: config.overrideEmail || s.email,
