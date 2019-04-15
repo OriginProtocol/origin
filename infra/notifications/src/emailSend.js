@@ -42,16 +42,6 @@ async function emailSend(
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
-  // TODO: Debug info to remove
-  console.log('✉️ Email Send')
-  console.log('buyerAddress:')
-  console.log(buyerAddress)
-  console.log('sellerAddress:')
-  console.log(sellerAddress)
-  console.log('party:')
-  console.log(party)
-  console.log('-----\n\n')
-
   const emails = await Identity.findAll({
     where: {
       ethAddress: {

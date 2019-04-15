@@ -1,11 +1,5 @@
 require('dotenv').config()
 
-// TODO: Debugging line for auto-reload
-// console.log('\033[2J')
-// console.log(
-//   '─────────────────────────────────────────────────────────────────────────────────'
-// )
-
 try {
   require('envkey')
 } catch (error) {
@@ -216,13 +210,6 @@ app.post('/events', async (req, res) => {
   const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
   console.info(`Info: Processing event ${eventDetailsSummary}`)
-
-  console.log('party:')
-  console.log(party)
-  console.log('buyerAddress:')
-  console.log(buyerAddress)
-  console.log('sellerAddress:')
-  console.log(sellerAddress)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })

@@ -13,7 +13,6 @@ async function browserPush(
   sellerAddress,
   offer
 ) {
-  console.log('🖥 Browser Push')
   if (!eventName) throw 'eventName not defined'
   if (!buyerAddress) throw 'buyerAddress not defined'
   if (!sellerAddress) throw 'sellerAddress not defined'
