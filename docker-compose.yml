@@ -139,7 +139,7 @@ services:
       - INDEX_GROWTH=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
-      - WEBHOOK=
+      - NOTIFICATIONS_WEBHOOK=
       - ENVKEY=
     depends_on:
       - postgres
