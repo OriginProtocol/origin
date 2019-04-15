@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'da23c0b'
+bridgeImageTag: '03da795'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'd088ff9'
+dappImageTag: 'c9baf23'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
