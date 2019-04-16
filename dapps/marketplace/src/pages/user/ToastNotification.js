@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 
 class ToastNotification extends Component {
   constructor(props) {
@@ -18,8 +18,7 @@ class ToastNotification extends Component {
   }
 
   show(text, color) {
-    if (this.timeoutRoutine)
-      clearTimeout(this.timeoutRoutine)
+    if (this.timeoutRoutine) clearTimeout(this.timeoutRoutine)
 
     this.setState({
       text,
@@ -27,23 +26,26 @@ class ToastNotification extends Component {
       visible: true
     })
 
-    this.timeoutRoutine = setTimeout(() => this.setState({ visible: false }), 5000)
+    this.timeoutRoutine = setTimeout(
+      () => this.setState({ visible: false }),
+      5000
+    )
   }
 
   render() {
-    const {
-      visible,
-      color,
-      text
-    } = this.state
+    const { visible, color, text } = this.state
 
-    return(<div className="toast-notification-holder">
-      <div className={`toast-notification-wrap d-flex justify-content-center ${visible ? 'show' : ''}`}>
-        <div className={`toast-notification ${color}`}>
-          {text}
+    return (
+      <div className="toast-notification-holder">
+        <div
+          className={`toast-notification-wrap d-flex justify-content-center ${
+            visible ? 'show' : ''
+          }`}
+        >
+          <div className={`toast-notification ${color}`}>{text}</div>
         </div>
       </div>
-    </div>)
+    )
   }
 }
 

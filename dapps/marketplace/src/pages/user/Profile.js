@@ -97,48 +97,36 @@ class UserProfile extends Component {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
 
-    return (profile.firstName !== prevProfile.firstName ||
-      profile.lastName !== prevProfile.lastName ||
-      profile.description !== prevProfile.description ||
-      profile.avatar !== prevProfile.avatar ||
-      profile.emailVerified !== prevProfile.emailVerified ||
-      profile.phoneVerified !== prevProfile.phoneVerified ||
-      profile.facebookVerified !== prevProfile.facebookVerified ||
-      profile.twitterVerified !== prevProfile.twitterVerified ||
-      profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+    return (
+      (profile.firstName !== prevProfile.firstName ||
+        profile.lastName !== prevProfile.lastName ||
+        profile.description !== prevProfile.description ||
+        profile.avatar !== prevProfile.avatar ||
+        profile.emailVerified !== prevProfile.emailVerified ||
+        profile.phoneVerified !== prevProfile.phoneVerified ||
+        profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.twitterVerified !== prevProfile.twitterVerified ||
+        profile.airbnbVerified !== prevProfile.airbnbVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
-  }
-
-  changesPublishedToBlockchain(props, prevProps) {
-    const profile = get(props, 'identity') || {}
-    const prevProfile = get(prevProps, 'identity') || {}
-
-    return (profile.firstName !== prevProfile.firstName ||
-      profile.lastName !== prevProfile.lastName ||
-      profile.description !== prevProfile.description ||
-      profile.avatar !== prevProfile.avatar ||
-      profile.emailVerified !== prevProfile.emailVerified ||
-      profile.phoneVerified !== prevProfile.phoneVerified ||
-      profile.facebookVerified !== prevProfile.facebookVerified ||
-      profile.twitterVerified !== prevProfile.twitterVerified ||
-      profile.airbnbVerified !== prevProfile.airbnbVerified) &&
-      profile.id === prevProfile.id &&
-      prevProfile.id !== undefined
+    )
   }
 
   profileDataUpdated(state, prevState) {
-    return (state.firstName !== prevState.firstName ||
-      state.lastName !== prevState.lastName ||
-      state.description !== prevState.description ||
-      state.avatar !== prevState.avatar) &&
+    return (
+      (state.firstName !== prevState.firstName ||
+        state.lastName !== prevState.lastName ||
+        state.description !== prevState.description ||
+        state.avatar !== prevState.avatar) &&
       !this.accountsSwitched
+    )
   }
 
   attestationUpdated(state, prevState, attestation) {
-    return state[attestation] !== prevState[attestation] &&
-      !this.accountsSwitched
+    return (
+      state[attestation] !== prevState[attestation] && !this.accountsSwitched
+    )
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -151,10 +139,10 @@ class UserProfile extends Component {
        * data we are observing this component's state. False positive notifications
        * need to be prevented to not falsely fire when state is initially populated or when user
        * changes wallets.
-       * 
-       * The biggest challenge is that wallet id prop changes immediately when the wallet 
+       *
+       * The biggest challenge is that wallet id prop changes immediately when the wallet
        * changes and bit later identity information prop is populated (which can also be empty).
-       * 
+       *
        * Current solution is just to disable any notifications fireing 3 seconds after
        * account switch.
        */
@@ -165,7 +153,10 @@ class UserProfile extends Component {
 
     if (this.changesPublishedToBlockchain(this.props, prevProps)) {
       this.handleShowNotification(
-        fbt('Changes published to blockchain', 'profile.changesPublishedToBlockchain'),
+        fbt(
+          'Changes published to blockchain',
+          'profile.changesPublishedToBlockchain'
+        ),
         'green'
       )
     }
@@ -211,7 +202,7 @@ class UserProfile extends Component {
     return (
       <Fragment>
         <ToastNotification
-          setShowHandler={handler => this.handleShowNotification = handler }
+          setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         <DocumentTitle
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
