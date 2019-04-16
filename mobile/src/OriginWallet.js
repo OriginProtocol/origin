@@ -98,16 +98,20 @@ class OriginWallet extends Component {
       this.updateBalancesNow()
     }
 
-    if (prevProps.wallet.activeAccount.address !== this.props.wallet.activeAccount.address) {
+    if (
+      prevProps.wallet.activeAccount &&
+      prevProps.wallet.activeAccount.address !==
+        this.props.wallet.activeAccount.address
+    ) {
       this.updateBalancesNow()
-        // Make sure device token is registered with server
+      // Make sure device token is registered with server
       const { settings } = this.props
       this.registerDeviceToken(settings.deviceToken)
     }
   }
 
   /* Update balances now annd restart the balance poller in BALANCE_POLL_INTERVAL
-  */
+   */
   updateBalancesNow() {
     clearInterval(this.balancePoller)
     this.getBalances()
