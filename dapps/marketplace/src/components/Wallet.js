@@ -3,41 +3,43 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import ProfileQuery from 'queries/Profile'
+import withWallet from 'hoc/withWallet'
 
 import Identicon from 'components/Identicon'
 import Balances from 'components/Balances'
 import EthAddress from 'components/EthAddress'
 
-const Wallet = () => (
-  <Query query={ProfileQuery}>
-    {({ data, loading, error }) => {
-      if (loading || error) return null
-
-      if (!data || !data.web3 || !data.web3.primaryAccount) {
-        return null
-      }
-      const { checksumAddress, balance, id } = data.web3.primaryAccount
-      return (
-        <div className="wallet">
-          <div className="wallet-info">
-            <div>
-              <h5>
-                <fbt desc="Wallet.ethAddress">ETH Address</fbt>
-              </h5>
-              <EthAddress address={checksumAddress} />
-            </div>
-            <div className="identicon">
-              <Identicon size={50} address={checksumAddress} />
-            </div>
-          </div>
-          <Balances balance={balance} account={id} />
+const Wallet = ({ wallet, walletProxyOwner }) => (
+  <div className="wallet">
+    <div className="wallet-info">
+      <div>
+        <h5>
+          <fbt desc="Wallet.ethAddress">ETH Address</fbt>
+        </h5>
+        <EthAddress address={wallet} />
+      </div>
+      <div className="identicon">
+        <Identicon size={50} address={wallet} />
+      </div>
+    </div>
+    {!walletProxyOwner ? null : (
+      <div className="wallet-info">
+        <div>
+          <h5>
+            <fbt desc="Wallet.ethAddress">Owner Wallet</fbt>
+          </h5>
+          <EthAddress address={walletProxyOwner} />
         </div>
-      )
-    }}
-  </Query>
+        <div className="identicon">
+          <Identicon size={50} address={walletProxyOwner} />
+        </div>
+      </div>
+    )}
+    <Balances account={wallet} />
+  </div>
 )
 
-export default Wallet
+export default withWallet(Wallet)
 
 require('react-styl')(`
   .wallet

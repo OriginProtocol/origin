@@ -265,7 +265,6 @@ class Buy extends Component {
 
     const {
       listing,
-      from,
       value,
       quantity,
       startDate,
@@ -277,7 +276,7 @@ class Buy extends Component {
       listingID: listing.id,
       value,
       currency: currency || 'token-ETH',
-      from,
+      from: this.props.wallet,
       quantity: Number(quantity)
     }
 
@@ -319,7 +318,7 @@ class Buy extends Component {
     this.setState({ modal: true, waitForSwap: 'pending' })
 
     const variables = {
-      from: this.props.from,
+      from: this.props.wallet,
       token: this.props.currency,
       tokenValue: String(this.props.tokenStatus.needsBalance)
     }
@@ -336,7 +335,7 @@ class Buy extends Component {
 
     const variables = {
       token: this.props.currency,
-      from: this.props.from,
+      from: this.props.wallet,
       to: 'marketplace',
       value: this.props.value
     }

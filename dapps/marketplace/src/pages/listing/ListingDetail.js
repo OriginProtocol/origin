@@ -4,6 +4,8 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
+
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
@@ -116,7 +118,7 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-    const isOwnerViewing = listing.seller.id === this.props.from
+    const isOwnerViewing = listing.seller.id === this.props.wallet
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
@@ -181,10 +183,10 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.from
+      b => b.id === this.props.wallet
     )
 
-    if (listing.seller.id === this.props.from) {
+    if (listing.seller.id === this.props.wallet) {
       return (
         <EditOnly
           {...this.props}
@@ -233,7 +235,7 @@ class ListingDetail extends Component {
   }
 }
 
-export default ListingDetail
+export default withWallet(ListingDetail)
 
 require('react-styl')(`
   .listing-detail

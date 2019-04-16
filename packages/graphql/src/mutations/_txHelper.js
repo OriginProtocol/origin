@@ -3,6 +3,7 @@ import contracts from '../contracts'
 
 import { getTransaction } from '../resolvers/web3/transactions'
 import relayerHelper from './_relayer'
+import { isProxy, proxyOwnerOrNull } from '../utils/identityProxy'
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -10,6 +11,9 @@ export async function checkMetaMask(from) {
     const mmNet = await contracts.metaMask.eth.net.getId()
     if (net !== mmNet) {
       throw new Error(`MetaMask is not on network ${net}`)
+    }
+    if (isProxy(from)) {
+      from = proxyOwnerOrNull(from)
     }
     const mmAccount = await contracts.metaMask.eth.getAccounts()
     if (!mmAccount || mmAccount[0] !== from) {
@@ -21,7 +25,6 @@ export async function checkMetaMask(from) {
 // Do not listen for confirmations if we're on the server as it causes mocha
 // to hang
 const isServer = typeof window === 'undefined'
-const relayerEnabled = true
 
 export default function txHelper({
   tx,
@@ -34,7 +37,7 @@ export default function txHelper({
   value,
   web3
 }) {
-  if (relayerEnabled) {
+  if (proxyOwnerOrNull(from) || mutation === 'deployIdentity') {
     return relayerHelper({ tx, from, address: tx._parent._address })
   }
   return new Promise((resolve, reject) => {

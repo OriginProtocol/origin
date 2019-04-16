@@ -1,32 +1,42 @@
 import contracts from '../contracts'
+import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy'
+
+import { isProxy, proxyOwnerOrNull, setProxy } from '../utils/identityProxy'
 
 export default async function relayerHelper({ tx, from, address }) {
+  let nonce = 0
+  const proxy = isProxy(from) ? from : null
+  from = isProxy(from) ? proxyOwnerOrNull(from) : from
+
+  if (proxy) {
+    const IdentityProxy = new contracts.web3Exec.eth.Contract(
+      IdentityProxyContract.abi,
+      proxy
+    )
+    nonce = await IdentityProxy.methods.nonce(from).call()
+  }
   const txData = tx.encodeABI()
   const dataToSign = contracts.web3.utils.soliditySha3(
     { t: 'address', v: from }, // Signer
     { t: 'address', v: address }, // Marketplace address
     { t: 'uint256', v: contracts.web3.utils.toWei('0', 'ether') }, // value
     { t: 'bytes', v: txData },
-    // Should get nonce from DB
-    { t: 'uint256', v: 0 } // nonce
+    { t: 'uint256', v: nonce } // nonce
   )
-  // console.log(dataToSign)
 
   const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
 
   // const signedAlt = await new Promise(resolve =>
   //   setTimeout(() => {
-  //   //   buff = Buffer.from(dataToSign.substr(2), 'hex')
-  //   // return buff.length === 32 ? hex : buff.toString('utf8')
   //     context.web3Exec.currentProvider.sendAsync(
   //       {
   //         method: 'eth_signTypedData',
   //         params: [
   //           [
   //             {
-  //               type: 'string',
+  //               type: 'bytes',
   //               name: 'Create Listing Hash',
-  //               value: dataToSign.substr(2)
+  //               value: dataToSign
   //             }
   //           ],
   //           from
@@ -38,7 +48,7 @@ export default async function relayerHelper({ tx, from, address }) {
   //   }, 500)
   // )
   //
-  // console.log(signed)
+  // console.log(signature)
   // console.log(signedAlt)
 
   const response = await fetch('http://localhost:5100', {
@@ -49,7 +59,8 @@ export default async function relayerHelper({ tx, from, address }) {
       from,
       signature,
       txData,
-      provider: contracts.web3.currentProvider.host
+      provider: contracts.web3.currentProvider.host,
+      identity: proxy
     })
   })
 
@@ -60,5 +71,9 @@ export default async function relayerHelper({ tx, from, address }) {
   }
 
   const data = await response.json()
+  if (data.userProxy) {
+    setProxy(from, data.userProxy)
+  }
+
   return { id: data.id }
 }

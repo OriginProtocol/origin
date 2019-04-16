@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
+import withWallet from 'hoc/withWallet'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
@@ -40,12 +41,7 @@ class ProfileNav extends Component {
               className="nav-item dark profile"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={
-                <ProfileDropdown
-                  onClose={() => this.props.onClose()}
-                  data={data}
-                />
-              }
+              content={<ProfileDropdown onClose={() => this.props.onClose()} />}
             >
               <a
                 className="nav-link"
@@ -75,8 +71,7 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdown = ({ data, onClose }) => {
-  const { checksumAddress, id } = data.web3.primaryAccount
+const ProfileDropdown = withWallet(({ wallet, walletProxyOwner, onClose }) => {
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
       <Network />
@@ -85,14 +80,27 @@ const ProfileDropdown = ({ data, onClose }) => {
           <h5>
             <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
           </h5>
-          <div className="wallet-address">{checksumAddress}</div>
+          <div className="wallet-address">{wallet}</div>
         </div>
         <div className="identicon">
-          <Identicon size={50} address={checksumAddress} />
+          <Identicon size={50} address={wallet} />
         </div>
       </div>
-      <Balances account={id} />
-      <Identity id={id} />
+      {!walletProxyOwner ? null : (
+        <div className="wallet-info">
+          <div>
+            <h5>
+              <fbt desc="nav.profile.ethAddress">Owner Wallet</fbt>
+            </h5>
+            <div className="wallet-address">{walletProxyOwner}</div>
+          </div>
+          <div className="identicon">
+            <Identicon size={50} address={walletProxyOwner} />
+          </div>
+        </div>
+      )}
+      <Balances account={wallet} />
+      <Identity id={wallet} />
       <Link onClick={() => onClose()} to="/profile">
         <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
       </Link>
@@ -101,7 +109,7 @@ const ProfileDropdown = ({ data, onClose }) => {
       </Link>
     </div>
   )
-}
+})
 
 const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>

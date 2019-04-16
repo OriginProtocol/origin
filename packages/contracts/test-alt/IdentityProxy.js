@@ -43,9 +43,13 @@ describe('Identity', async function() {
       from: Forwarder,
       path: `${contractPath}/identity`,
       file: 'IdentityProxy.sol',
-      args: [NewUserAccount.address],
+      args: [Forwarder],
       trackGas
     })
+
+    // console.log('Try change to', owner)
+    // console.log('Proxy imp owner', await IdentityProxyImp.methods.owner().call())
+    // console.log('Forwarder', Forwarder)
 
     const res = await ProxyFactory.methods
       .createProxy(
@@ -59,6 +63,8 @@ describe('Identity', async function() {
       IdentityProxyImp.options.jsonInterface,
       res.events.ProxyDeployed.returnValues.targetAddress
     )
+
+    // console.log('New owner', await IdentityProxy.methods.owner().call())
   }
 
   describe('IdentityProxy.sol', function() {
@@ -78,7 +84,8 @@ describe('Identity', async function() {
       const signer = NewUserAccount.address
       const sign = web3.eth.accounts.sign(dataToSign, NewUserAccount.privateKey)
 
-      await deployNewProxyContract()
+      await deployNewProxyContract(NewUserAccount.address)
+      // console.log(await IdentityProxy.methods.owner().call())
 
       const result = await IdentityProxy.methods
         .forward(Marketplace._address, sign.signature, signer, txData)

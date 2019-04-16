@@ -4,6 +4,7 @@ import { fbt } from 'fbt-runtime'
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
 import withEthBalance from 'hoc/withEthBalance'
+import withWallet from 'hoc/withWallet'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 const Balances = ({ ethBalance, account }) => {
@@ -62,7 +63,7 @@ const Balances = ({ ethBalance, account }) => {
   )
 }
 
-export default withEthBalance(Balances)
+export default withWallet(withEthBalance(Balances))
 
 require('react-styl')(`
   .balances
