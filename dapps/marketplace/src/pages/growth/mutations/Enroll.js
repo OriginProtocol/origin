@@ -12,11 +12,11 @@ import GrowthEnroll from 'mutations/GrowthEnroll'
 class Enroll extends Component {
   state = {
     error: null,
-    // TODO: change version programatically
-    message: fbt(
-      'I accept the terms of growth campaign version: 1.0',
-      'growth.acceptTerms'
-    )
+    /* TODO: change version programatically
+     * (!)important do not translate this message or the enrollment
+     * on the growth server will fail
+     */
+    message: 'I accept the terms of growth campaign version: 1.0'
   }
 
   render() {
@@ -86,8 +86,7 @@ class Enroll extends Component {
                                  * (!)important do not translate this message or the enrollment
                                  * on the growth server will fail
                                  */
-                                message:
-                                  'I accept the terms of growth campaign version: 1.0'
+                                message: this.state.message
                               }
                             })
                           }}

@@ -18,7 +18,7 @@ async function uniswapAddLiquidity(
   const tx = uniswapDaiExchange.methods
     .addLiquidity(liquidity, web3.utils.toWei(tokens, 'ether'), deadline)
     .send({
-      gas: 5500000,
+      gas: 4000000,
       from,
       value: web3.utils.toWei(value, 'ether')
     })

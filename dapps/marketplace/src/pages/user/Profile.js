@@ -288,16 +288,12 @@ class UserProfile extends Component {
               </label>
               <div className="profile-attestations">
                 {this.renderAtt(
-                  'phone',
-                  fbt('Phone', '_ProvisionedChanges.phone')
-                )}
-                {this.renderAtt(
                   'email',
                   fbt('Email', '_ProvisionedChanges.email')
                 )}
                 {this.renderAtt(
-                  'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                  'phone',
+                  fbt('Phone', '_ProvisionedChanges.phone')
                 )}
                 {this.renderAtt(
                   'facebook',
@@ -306,6 +302,10 @@ class UserProfile extends Component {
                 {this.renderAtt(
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
+                )}
+                {this.renderAtt(
+                  'airbnb',
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
                 )}
                 {this.renderAtt(
                   'google',

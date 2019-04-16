@@ -118,9 +118,6 @@ function Campaign(props) {
             fbt('Campaign', 'Campaign')
           )}
         </h1>
-        <a className="info-icon">
-          <img src="images/growth/info-icon-inactive.svg" />
-        </a>
       </div>
       <div>{subTitleText}</div>
       <div className="d-flex justify-content-between campaign-info">

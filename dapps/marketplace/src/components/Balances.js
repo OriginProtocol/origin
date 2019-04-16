@@ -32,7 +32,7 @@ const Balances = ({ ethBalance, account }) => {
           <div className="icon" />
           <div className="balance">
             <div className="coin dai">
-              <TokenBalance account={account} token="DAI" />
+              <TokenBalance account={account} token="DAI" places={2} />
               <span>DAI</span>
             </div>
           </div>

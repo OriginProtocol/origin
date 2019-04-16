@@ -56,7 +56,9 @@ class Buy extends Component {
     } else if (this.state.allow) {
       content = this.renderAllowTokenModal()
     } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation('Purchase')
+      action = this.renderSwapTokenMutation(
+        this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+      )
       content = this.renderSwapTokenModal()
     } else if (!this.hasAllowance()) {
       action = this.renderAllowTokenMutation('Purchase')
@@ -336,7 +338,7 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.from,
       to: 'marketplace',
-      value: '50000'
+      value: this.props.value
     }
 
     allowToken({ variables })
