@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const logger = require('./logger')
 try {
   require('envkey')
 } catch (error) {
@@ -14,7 +15,6 @@ const { RateLimiterMemory } = require('rate-limiter-flexible')
 const { mobilePush } = require('./mobilePush')
 const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
-const logger = require('./logger')
 
 const app = express()
 const port = 3456
