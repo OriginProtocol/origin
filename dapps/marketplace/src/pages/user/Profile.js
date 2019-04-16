@@ -48,6 +48,7 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'avatarUrl',
   'strength',
   'attestations',
   'facebookVerified',
@@ -332,7 +333,8 @@ class UserProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar'
+                    'avatar',
+                    'avatarUrl'
                   ]),
                   attestations: [
                     ...(this.state.attestations || []),
@@ -379,7 +381,9 @@ class UserProfile extends Component {
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            onAvatarChange={avatar => this.setState({ avatar })}
+            onAvatarChange={(avatar, avatarUrl) =>
+              this.setState({ avatar, avatarUrl })
+            }
           />
         )}
       </div>

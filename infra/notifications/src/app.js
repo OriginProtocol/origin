@@ -1,31 +1,29 @@
 require('dotenv').config()
+
 try {
   require('envkey')
 } catch (error) {
-  console.log('EnvKey not configured')
+  logger.error('EnvKey not configured. Please set env var ENVKEY')
 }
 
-const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
-const Sequelize = require('sequelize')
-const fetch = require('cross-fetch')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
-const PushSubscription = require('./models').PushSubscription
-const { getNotificationMessage, processableEvent } = require('./notification')
+
+const { mobilePush } = require('./mobilePush')
+const { browserPush } = require('./browserPush')
+const { emailSend } = require('./emailSend')
+const logger = require('./logger')
 
 const app = express()
 const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
 let privateKey = process.env.VAPID_PRIVATE_KEY
 let publicKey = process.env.VAPID_PUBLIC_KEY
-const linkingNotifyEndpoint = process.env.LINKING_NOTIFY_ENDPOINT
-const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
-const dappOfferUrl = process.env.DAPP_OFFER_URL
 
 if (!privateKey || !publicKey) {
-  console.log(
+  logger.warn(
     'Warning: VAPID public or private key not defined, generating one'
   )
   const vapidKeys = webpush.generateVAPIDKeys()
@@ -34,6 +32,39 @@ if (!privateKey || !publicKey) {
 }
 
 webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
+
+const { processableEvent } = require('./notification')
+
+// ------------------------------------------------------------------
+
+// ---------------------------
+// Notifications startup
+// ---------------------------
+
+const args = {}
+process.argv.forEach(arg => {
+  const t = arg.split('=')
+  const argVal = t.length > 1 ? t[1] : true
+  args[t[0]] = argVal
+})
+
+const config = {
+  // Override email. All emails will be sent to this address, regardless of
+  // actual intended email address.
+  overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
+  // Email account from whom emails will be sent
+  fromEmail: args['--fromEmail'] || process.env.SENDGRID_FROM_EMAIL,
+  // SendGrid ASM Group ID. Used for unsubscribing.
+  asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
+  // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
+  emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
+  // Output debugging and other info. Boolean.
+  verbose: args['--verbose'] || false
+}
+
+logger.log(config)
+
+// ------------------------------------------------------------------
 
 // should be tightened up for security
 app.use((req, res, next) => {
@@ -73,17 +104,23 @@ app.use(bodyParser.json({ limit: '10mb' }))
  * For development purposes only. Disabled in production.
  */
 app.get('/', async (req, res) => {
-  let markup = `<h1>Origin Notifications</h1><h2><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></h2>`
+  let markup =
+    `<h1>Origin Notifications v${process.env.npm_package_version}</h1>` +
+    `<p><a href="https://github.com/OriginProtocol/origin/issues/806">Learn More</a></p>`
 
-  if (app.get('env') === 'development') {
-    const subs = await PushSubscription.findAll()
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      const subs = await PushSubscription.findAll()
 
-    markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
-      s =>
-        `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(
-          s
-        )}</pre></li>`
-    )}</ul>`
+      markup += `<h3>${subs.length} Push Subscriptions</h3><ul>${subs.map(
+        s =>
+          `<li><pre style="white-space: pre-wrap;word-break: break-all">${JSON.stringify(
+            s
+          )}</pre></li>`
+      )}</ul>`
+    }
+  } catch (error) {
+    markup += `<p>Could not get subscriptions. Is postgres running and DATABASE_URL env var set?</p><p>Error returned was:</p><pre>${error}</pre>`
   }
 
   res.send(markup)
@@ -123,152 +160,88 @@ app.post('/', async (req, res) => {
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
+ * Sample json payloads in test/fixtures
  */
 app.post('/events', async (req, res) => {
-  const { log = {}, related = {} } = req.body
-  const { decoded = {}, eventName } = log
-  const { buyer = {}, listing, offer, seller = {} } = related
-  const eventDetails = `eventName=${eventName} blockNumber=${
-    log.blockNumber
-  } logIndex=${log.logIndex}`
+  // Source of queries, and resulting json structure:
+  // https://github.com/OriginProtocol/origin/tree/master/infra/discovery/src/listener/queries
 
-  // Return 200 to the event-listener without
-  // waiting for processing of the event.
-  res.json({ status: 'ok' })
-  //res.sendStatus(200)
+  const { event = {}, related = {} } = req.body
+  const { returnValues = {} } = event
+  const eventName = event.event
+  const { listing, offer } = related
+  const { seller = {} } = listing
+  const buyer = offer ? offer.buyer : null // Not all events have offers
+  const eventDetailsSummary = `eventName=${eventName} blockNumber=${
+    event.blockNumber
+  } logIndex=${event.logIndex}`
 
-  if (!listing || (!seller.address && !buyer.address)) {
-    console.log(`Error: Missing data. Skipping ${eventDetails}`)
+  // TODO: Temp hack for now that we only test for mobile messages.
+  // Thats how the old listener decided if there was a message. Will do
+  // now until we get real pipeline built.
+  if (!processableEvent(eventName, 'mobile')) {
+    logger.info(
+      `Info: Not a processable event. Skipping ${eventDetailsSummary}`
+    )
+    return
+  }
+
+  if (!listing) {
+    logger.error(`Error: Missing listing data. Skipping ${eventDetailsSummary}`)
+    return
+  }
+  if (!seller.id) {
+    logger.error(`Error: Missing seller.id. Skipping ${eventDetailsSummary}`)
+    return
+  }
+  if (!buyer.id) {
+    logger.error(`Error: Missing buyer.id. Skipping ${eventDetailsSummary}`)
     return
   }
 
   // ETH address of the party who initiated the action.
   // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
-  if (!decoded.party) {
-    console.log(`Error: Invalid part, skipping ${eventDetails}`)
+  if (!returnValues.party) {
+    logger.error(`Error: Invalid part, skipping ${eventDetailsSummary}`)
     return
   }
 
-  const party = decoded.party.toLowerCase()
-  const buyerAddress = buyer.address ? buyer.address.toLowerCase() : null
-  const sellerAddress = seller.address ? seller.address.toLowerCase() : null
+  const party = returnValues.party.toLowerCase()
+  const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
+  const sellerAddress = seller.id ? seller.id.toLowerCase() : null
 
-  if (!processableEvent(eventName)) {
-    console.log(`Info: Not a processable event. Skipping ${eventDetails}`)
-    return
+  logger.info(`Info: Processing event ${eventDetailsSummary}`)
+
+  if (config.verbose) {
+    logger.log(`>eventName: ${eventName}`)
+    logger.log(`>party: ${party}`)
+    logger.log(`>buyerAddress: ${buyerAddress}`)
+    logger.log(`>sellerAddress: ${sellerAddress}`)
+    logger.log(`offer:`)
+    logger.log(offer)
+    logger.log(`listing:`)
+    logger.log(listing)
   }
 
-  console.log(`Info: Processing event ${eventDetails}`)
+  // Return 200 to the event-listener without waiting for processing of the event.
+  res.status(200).send({ status: 'ok' })
 
-  if (linkingNotifyEndpoint) {
-    const receivers = {}
-    const buyerMessage = getNotificationMessage(
-      eventName,
-      party,
-      buyerAddress,
-      'buyer'
-    )
-    const sellerMessage = getNotificationMessage(
-      eventName,
-      party,
-      sellerAddress,
-      'seller'
-    )
-    const eventData = {
-      url: offer && path.join(dappOfferUrl, offer.id),
-      to_dapp: true
-    }
+  // Mobile Push (linker) notifications
+  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
 
-    if (buyerMessage || sellerMessage) {
-      if (buyerMessage) {
-        receivers[buyerAddress] = Object.assign(
-          { msg: buyerMessage },
-          eventData
-        )
-      }
-      if (sellerMessage) {
-        receivers[sellerAddress] = Object.assign(
-          { msg: sellerMessage },
-          eventData
-        )
-      }
-      try {
-        fetch(linkingNotifyEndpoint, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ receivers, token: linkingNotifyToken })
-        })
-      } catch (error) {
-        console.log('Error notifying linking api ', error)
-      }
-    }
-  }
+  // Browser push subscripttions
+  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
-  // Query the DB to get subscriptions from the seller and/or buyer.
-  // Note the filter ensures we do not send notification to the party
-  // who initiated the action:
-  //  - seller initiated action -> only buyer gets notified.
-  //  - buyer initiated action -> only seller gets notified.
-  //  - 3rd party initiated action -> both buyer and seller get notified.
-  const subs = await PushSubscription.findAll({
-    where: {
-      account: {
-        [Sequelize.Op.in]: [buyerAddress, sellerAddress].filter(
-          a => a && a !== party
-        )
-      }
-    }
-  })
-
-  // Filter out redundant endpoints before iterating.
-  await subs
-    .filter((s, i, self) => {
-      return self.map(ms => ms.endpoint).indexOf(s.endpoint) === i
-    })
-    .forEach(async s => {
-      try {
-        const recipient = s.account
-        const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
-
-        const message = getNotificationMessage(
-          eventName,
-          party,
-          recipient,
-          recipientRole
-        )
-        if (!message) {
-          return
-        }
-
-        // Send the push notification.
-        // TODO: Add safeguard against sending duplicate messages since the
-        // event-listener only provides at-least-once guarantees and may
-        // call this webhook more than once for the same event.
-        const pushSubscription = {
-          endpoint: s.endpoint,
-          keys: s.keys
-        }
-        const pushPayload = JSON.stringify({
-          title: message.title,
-          body: message.body,
-          account: recipient,
-          offerId: offer.id
-        })
-        await webpush.sendNotification(pushSubscription, pushPayload)
-      } catch (e) {
-        // Subscription is no longer valid - delete it in the DB.
-        if (e.statusCode === 410) {
-          s.destroy()
-        } else {
-          console.log(e)
-        }
-      }
-    })
+  // Email notifications
+  emailSend(
+    eventName,
+    party,
+    buyerAddress,
+    sellerAddress,
+    offer,
+    listing,
+    config
+  )
 })
 
-app.listen(port, () =>
-  console.log(`Notifications server listening on port ${port}!`)
-)
+app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
