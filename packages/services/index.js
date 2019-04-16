@@ -90,8 +90,13 @@ function writeTruffleAddress(contract, network, address) {
   const filename = `${__dirname}/../contracts/build/contracts/${contract}.json`
   const rawContract = fs.readFileSync(filename)
   const Contract = JSON.parse(rawContract)
-  Contract.networks[network].address = address
-  fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+  try {
+    Contract.networks[network].address = address
+    fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+  } catch (error) {
+    // Didn't copy contract build files into the build directory?
+    console.log('Could not write contract address to truffle file')
+  }
 }
 
 const contractsPath = `${__dirname}/../contracts/build`

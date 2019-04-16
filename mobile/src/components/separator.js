@@ -7,8 +7,8 @@ export default class Separator extends Component {
 
     return (
       <View style={styles.container}>
-        {padded && <View style={styles.space}></View>}
-        <View style={styles.line}></View>
+        {padded && <View style={styles.space} />}
+        <View style={styles.line} />
       </View>
     )
   }
@@ -17,16 +17,16 @@ export default class Separator extends Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 1,
+    height: 1
   },
   line: {
     backgroundColor: '#c8c7cc',
     flex: 1,
-    height: 1,
+    height: 1
   },
   space: {
     backgroundColor: 'white',
     height: 1,
-    width: '5%',
-  },
+    width: '5%'
+  }
 })
