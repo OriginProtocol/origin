@@ -74,7 +74,7 @@ export function setNetwork(net, customConfig) {
 
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
-    isBrowser &&
+    typeof window !== 'undefined' &&
     window.localStorage.customConfig &&
     window.localStorage.customConfig !== 'undefined'
   ) {
@@ -115,14 +115,15 @@ export function setNetwork(net, customConfig) {
   clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
-  if (isBrowser) {
+  if (typeof window !== 'undefined') {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
+
   context.web3 = web3
   context.web3Exec = web3
 
-  if (isBrowser) {
+  if (typeof window !== 'undefined') {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
     context.mobileBridge = OriginMobileBridge({ web3 })
@@ -134,8 +135,7 @@ export function setNetwork(net, customConfig) {
   }
 
   context.metaMaskEnabled = metaMaskEnabled
-
-  if (isBrowser && window.localStorage.privateKeys) {
+  if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
@@ -181,18 +181,16 @@ export function setNetwork(net, customConfig) {
     })
   }
 
-  if (isBrowser) {
-    try {
-      const storedTokens = JSON.parse(window.localStorage[`${net}Tokens`])
-      storedTokens.forEach(token => {
-        if (context.tokens.find(t => t.id === token.id)) {
-          return
-        }
-        context.tokens.push(token)
-      })
-    } catch (e) {
-      /* Ignore */
-    }
+  try {
+    const storedTokens = JSON.parse(window.localStorage[`${net}Tokens`])
+    storedTokens.forEach(token => {
+      if (context.tokens.find(t => t.id === token.id)) {
+        return
+      }
+      context.tokens.push(token)
+    })
+  } catch (e) {
+    /* Ignore */
   }
 
   context.tokens.forEach(token => {
@@ -219,15 +217,11 @@ export function setNetwork(net, customConfig) {
     }
   }
 
-  if (isBrowser) {
-    context.transactions = {}
-    try {
-      context.transactions = JSON.parse(
-        window.localStorage[`${net}Transactions`]
-      )
-    } catch (e) {
-      /* Ignore */
-    }
+  context.transactions = {}
+  try {
+    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+  } catch (e) {
+    /* Ignore */
   }
 
   if (metaMask) {
@@ -245,7 +239,7 @@ export function setNetwork(net, customConfig) {
   }
   setMetaMask()
 
-  if (window.__mobileBridge) {
+  if (typeof window !== 'undefined' && window.__mobileBridge) {
     setMobileBridge()
   }
 }
@@ -330,7 +324,7 @@ export function toggleMetaMask(enabled) {
     return
   }
   metaMaskEnabled = enabled
-  if (isBrowser && metaMaskEnabled) {
+  if (metaMaskEnabled) {
     window.localStorage.metaMaskEnabled = true
   } else {
     delete window.localStorage.metaMaskEnabled
