@@ -32,9 +32,9 @@ function withCanTransact(WrappedComponent) {
           if (!metaMaskId) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
-          if (get(data, 'web3.metaMaskAccount.balance.eth') === '0') {
-            return <WrappedComponent {...props} cannotTransact="no-balance" />
-          }
+          // if (get(data, 'web3.metaMaskAccount.balance.eth') === '0') {
+          //   return <WrappedComponent {...props} cannotTransact="no-balance" />
+          // }
 
           const desiredNetwork = get(data, 'web3.networkId'),
             selectedNetwork = get(data, 'web3.metaMaskNetworkId')

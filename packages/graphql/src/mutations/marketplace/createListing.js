@@ -2,6 +2,7 @@ import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
+import relayerHelper from '../_relayerHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 
@@ -83,8 +84,14 @@ async function createListing(_, input) {
     )
   }
 
-  const tx = createListingCall.send({ gas: cost.createListing, from })
-  return txHelper({ tx, from, mutation: 'createListing' })
+  return relayerHelper({
+    tx: createListingCall,
+    from,
+    address: contracts.marketplace.options.address
+  })
+
+  // const tx = createListingCall.send({ gas: cost.createListing, from })
+  // return txHelper({ tx, from, mutation: 'createListing' })
 }
 
 export default createListing

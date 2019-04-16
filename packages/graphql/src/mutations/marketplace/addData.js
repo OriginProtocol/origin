@@ -20,11 +20,8 @@ async function addData(_, data) {
     args = [parsed.listingId, ipfsHash]
   }
 
-  const tx = contracts.marketplaceExec.methods.addData(...args).send({
-    gas: cost.addData,
-    from
-  })
-  return txHelper({ tx, from, mutation: 'addData' })
+  const tx = contracts.marketplaceExec.methods.addData(...args)
+  return txHelper({ tx, from, mutation: 'addData', gas: cost.addData })
 }
 
 export default addData
