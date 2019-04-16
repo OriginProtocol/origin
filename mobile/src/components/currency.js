@@ -38,7 +38,9 @@ export default class Currency extends Component {
               style={styles.plus}
             />
           </TouchableOpacity>
-          <Text style={styles.balance}>{Number(balance).toFixed(precision)}</Text>
+          <Text style={styles.balance}>
+            {Number(balance).toFixed(precision)}
+          </Text>
         </View>
       </View>
     )

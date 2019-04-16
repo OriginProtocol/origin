@@ -1,3 +1,5 @@
+const HOST = process.env.HOST || 'localhost'
+
 let addresses = {}
 try {
   addresses = require('@origin/contracts/build/contracts.json')
@@ -6,16 +8,16 @@ try {
 }
 
 const config = {
-  provider: `http://localhost:8545`,
-  providerWS: `ws://localhost:8545`,
-  ipfsGateway: `http://localhost:8080`,
-  ipfsRPC: `http://localhost:5002`,
-  growth: `http://localhost:4001`,
-  bridge: 'http://localhost:5000',
+  provider: `http://${HOST}:8545`,
+  providerWS: `ws://${HOST}:8545`,
+  ipfsGateway: `http://${HOST}:8080`,
+  ipfsRPC: `http://${HOST}:5002`,
+  growth: `http://${HOST}:4001`,
+  bridge: `http://${HOST}:5000`,
   automine: 2000,
   attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
   messaging: {
-    globalKeyServer: 'http://localhost:6647'
+    globalKeyServer: 'http://${HOST}:6647'
   },
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,

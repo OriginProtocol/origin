@@ -145,6 +145,10 @@ class MarketplaceScreen extends Component {
       true;
     `
 
+    console.debug(
+      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
+    )
+
     const { modals } = this.state
 
     // Use key of network id on safeareaview to force a remount of component on
