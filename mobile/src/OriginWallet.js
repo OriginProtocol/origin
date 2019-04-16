@@ -371,7 +371,7 @@ class OriginWallet extends Component {
     this.props.addNotification({
       id: notification.data.notificationId,
       message: notification.message.body,
-      url: notification.data.url,
+      url: notification.data.url
     })
   }
 

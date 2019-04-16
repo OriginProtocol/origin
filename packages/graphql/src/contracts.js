@@ -14,7 +14,8 @@ import currencies from './utils/currencies'
 
 import Configs from './configs'
 
-const isBrowser = typeof window !== 'undefined' && window.localStorage ? true : false
+const isBrowser =
+  typeof window !== 'undefined' && window.localStorage ? true : false
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 
