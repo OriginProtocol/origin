@@ -3,11 +3,10 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
-import com.reactnativecommunity.webview.RNCWebViewPackage;
-import org.reactnative.camera.RNCameraPackage;
+import io.sentry.RNSentryPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -28,11 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSentryPackage(),
+            new RandomBytesPackage(),
             new ReactNativePushNotificationPackage(),
-            new RNUUIDGeneratorPackage(),
-            new RNCWebViewPackage(),
-            new RNCameraPackage(),
-            new RandomBytesPackage()
+            new RNCWebViewPackage()
       );
     }
 

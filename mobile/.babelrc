@@ -1,4 +1,4 @@
 {
-  "plugins": ["@babel/plugin-transform-new-target"],
+  "plugins": ["@babel/plugin-transform-new-target", "inline-dotenv"],
   "presets": ["module:metro-react-native-babel-preset", "module:react-native-dotenv"]
 }

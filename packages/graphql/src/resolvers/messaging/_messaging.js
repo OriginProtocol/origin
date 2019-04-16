@@ -21,8 +21,8 @@ export default memoize(async function(id) {
     contracts.messaging.events.once('initRemote', async () => {
       setTimeout(() => resolve({ id }), 500)
     })
-    const messagingData = get(contracts, 'linker.session.privData.messaging')
-    if (contracts.linker && messagingData) {
+    const messagingData = get(contracts, 'mobileBridge.privData.messaging')
+    if (contracts.mobileBridge && messagingData) {
       await contracts.messaging.onPreGenKeys(messagingData)
     }
     await contracts.messaging.init(id)
