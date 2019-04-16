@@ -92,6 +92,7 @@ class DeployIdentity extends Component {
           if (this.props.onComplete) {
             this.props.onComplete()
           }
+          gql.reFetchObservableQueries()
           this.setState({ waitFor: false, error: false, shouldClose: false })
         }}
         hash={this.state.waitFor}

@@ -36,6 +36,7 @@ describe('Identity', async function() {
       path: `${contractPath}/identity`,
       file: 'ProxyFactory.sol'
     })
+    // console.log('Proxy Factory at', ProxyFactory._address)
   })
 
   async function deployNewProxyContract() {
@@ -47,14 +48,22 @@ describe('Identity', async function() {
       trackGas
     })
 
-    // console.log('Try change to', owner)
-    // console.log('Proxy imp owner', await IdentityProxyImp.methods.owner().call())
+    const abi = await IdentityProxyImp.deploy({
+      data: IdentityProxyImp.options.bytecode,
+      arguments: [NewUserAccount.address]
+    }).encodeABI()
+
+    // console.log('Try change to', NewUserAccount.address)
+    // console.log(
+    //   'Proxy imp owner',
+    //   await IdentityProxyImp.methods.owner().call()
+    // )
     // console.log('Forwarder', Forwarder)
 
     const res = await ProxyFactory.methods
       .createProxy(
         IdentityProxyImp.options.address,
-        `0x${IdentityProxyImp.options.bytecode}`
+        abi
       )
       .send({ from: Forwarder, gas: 4000000 })
       .once('receipt', trackGas('Create Proxy from Factory'))
@@ -63,6 +72,13 @@ describe('Identity', async function() {
       IdentityProxyImp.options.jsonInterface,
       res.events.ProxyDeployed.returnValues.targetAddress
     )
+
+    // console.log('Old owner', await IdentityProxy.methods.owner().call())
+
+    await IdentityProxy.methods.changeOwner(NewUserAccount.address).send({
+      from: Forwarder,
+      gas: 4000000
+    })
 
     // console.log('New owner', await IdentityProxy.methods.owner().call())
   }

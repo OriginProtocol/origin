@@ -26,7 +26,7 @@ async function start() {
     deployContracts: true,
     ipfs: true,
     populate: true,
-    skipContractsIfExists: true,
+    skipContractsIfExists: process.env.CLEAN ? false : true,
     writeTruffle: true
   })
 

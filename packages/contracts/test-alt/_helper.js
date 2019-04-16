@@ -190,7 +190,7 @@ export default async function testHelper(contracts, provider) {
       // Set some default options on the contract
       contract.options.gas = solidityCoverage ? 1500000 * 5 : 1500000
       contract.options.from = from
-      contract.options.bytecode = bytecode.object
+      contract.options.bytecode = '0x' + bytecode.object
     }
 
     return contract
