@@ -14,6 +14,8 @@ import currencies from './utils/currencies'
 
 import Configs from './configs'
 
+const isBrowser = typeof window !== 'undefined' && window.localStorage ? true : false
+
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 
 let OriginMessaging
@@ -74,7 +76,7 @@ export function setNetwork(net, customConfig) {
 
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
-    typeof window !== 'undefined' &&
+    isBrowser &&
     window.localStorage.customConfig &&
     window.localStorage.customConfig !== 'undefined'
   ) {
@@ -115,7 +117,7 @@ export function setNetwork(net, customConfig) {
   clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
@@ -123,7 +125,7 @@ export function setNetwork(net, customConfig) {
   context.web3 = web3
   context.web3Exec = web3
 
-  if (typeof window !== 'undefined') {
+  if (isBrowser) {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
     context.mobileBridge = OriginMobileBridge({ web3 })
@@ -135,7 +137,7 @@ export function setNetwork(net, customConfig) {
   }
 
   context.metaMaskEnabled = metaMaskEnabled
-  if (typeof window !== 'undefined' && window.localStorage.privateKeys) {
+  if (isBrowser && window.localStorage.privateKeys) {
     JSON.parse(window.localStorage.privateKeys).forEach(key =>
       web3.eth.accounts.wallet.add(key)
     )
@@ -239,7 +241,7 @@ export function setNetwork(net, customConfig) {
   }
   setMetaMask()
 
-  if (typeof window !== 'undefined' && window.__mobileBridge) {
+  if (isBrowser && window.__mobileBridge) {
     setMobileBridge()
   }
 }
@@ -320,7 +322,7 @@ function setMobileBridge() {
 }
 
 export function toggleMetaMask(enabled) {
-  if (typeof window === 'undefined') {
+  if (!isBrowser) {
     return
   }
   metaMaskEnabled = enabled
