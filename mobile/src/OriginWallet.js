@@ -95,21 +95,27 @@ class OriginWallet extends Component {
     // of provider to match
     if (prevProps.settings.network.id !== this.props.settings.network.id) {
       this.initWeb3()
+      this.updateBalancesNow()
     }
 
     if (prevProps.wallet.activeAccount.address !== this.props.wallet.activeAccount.address) {
-      // Update balances now instead of waiting for balancePoller
-      clearInterval(this.balancePoller)
-      this.getBalances()
-      // Restart poller
-      this.balancePoller = setInterval(
-        () => this.getBalances(),
-        BALANCE_POLL_INTERVAL
-      )
-      // Make sure device token is registered with server
+      this.updateBalancesNow()
+        // Make sure device token is registered with server
       const { settings } = this.props
       this.registerDeviceToken(settings.deviceToken)
     }
+  }
+
+  /* Update balances now annd restart the balance poller in BALANCE_POLL_INTERVAL
+  */
+  updateBalancesNow() {
+    clearInterval(this.balancePoller)
+    this.getBalances()
+    // Restart poller
+    this.balancePoller = setInterval(
+      () => this.getBalances(),
+      BALANCE_POLL_INTERVAL
+    )
   }
 
   /* Move accounts from the old method of storing them into the new redux store
