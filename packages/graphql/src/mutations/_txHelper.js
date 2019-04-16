@@ -80,9 +80,6 @@ export default function txHelper({
         })
         if (contracts.automine) {
           setTimeout(() => {
-            // This needs to be sendAsync, because the provider engine used for
-            // the mobile wallet linker client doesn't support synchronous
-            // transactions.
             contracts.web3.currentProvider.send(
               { method: 'evm_mine' },
               () => {}
