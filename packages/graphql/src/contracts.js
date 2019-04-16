@@ -126,7 +126,7 @@ export function setNetwork(net, customConfig) {
   context.web3 = web3
   context.web3Exec = web3
 
-  if (isBrowser) {
+  if (isBrowser && window.__mobileBridge) {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
     context.mobileBridge = OriginMobileBridge({ web3 })
