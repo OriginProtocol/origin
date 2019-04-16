@@ -55,7 +55,6 @@ class WalletScreen extends Component {
 
   render() {
     const { wallet } = this.props
-    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
 
     return (
       <>
@@ -72,7 +71,7 @@ class WalletScreen extends Component {
         >
           <Currency
             abbreviation={'ETH'}
-            balance={balances['eth']}
+            balance={wallet.accountBalance.eth}
             labelColor={currencies['eth'].color}
             name={currencies['eth'].name}
             imageSource={currencies['eth'].icon}
@@ -80,7 +79,7 @@ class WalletScreen extends Component {
           />
           <Currency
             abbreviation={'DAI'}
-            balance={balances['dai'] || 0}
+            balance={wallet.accountBalance.dai || 0}
             labelColor={currencies['dai'].color}
             name={currencies['dai'].name}
             imageSource={currencies['dai'].icon}
@@ -89,7 +88,7 @@ class WalletScreen extends Component {
           />
           <Currency
             abbreviation={'OGN'}
-            balance={balances['ogn'] || 0}
+            balance={wallet.accountBalance.ogn || 0}
             labelColor={currencies['ogn'].color}
             name={currencies['ogn'].name}
             imageSource={currencies['ogn'].icon}

@@ -21,7 +21,7 @@ class TransactionCard extends Component {
     const { msgData, wallet } = this.props
     const { functionName, parameters } = decodeTransaction(msgData.data.data)
     const { _commission, _currency, _value } = parameters
-    const balances = wallet.accountBalanceMapping[wallet.activeAccount.address]
+    const balances = wallet.accountBalance
     const gas = web3.utils.fromWei(
       web3.utils
         .toBN(msgData.data.gasPrice)

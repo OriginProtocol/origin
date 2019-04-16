@@ -30,13 +30,11 @@ import {
   setAccountName
 } from 'actions/Wallet'
 import {
+  BALANCE_POLL_INTERVAL,
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES
 } from './constants'
 import { loadData, deleteData } from './tools'
-
-// Environment variables
-import { GCM_SENDER_ID, NOTIFICATION_SERVER_URL } from 'react-native-dotenv'
 
 class OriginWallet extends Component {
   constructor() {
@@ -82,7 +80,10 @@ class OriginWallet extends Component {
     this.initWeb3()
     this.initAccounts()
     this.initNotifications()
-    this.balancePoller = setInterval(() => this.getBalances(), 5000)
+    this.balancePoller = setInterval(
+      () => this.getBalances(),
+      BALANCE_POLL_INTERVAL
+    )
   }
 
   componentWillUnmount() {
@@ -94,6 +95,20 @@ class OriginWallet extends Component {
     // of provider to match
     if (prevProps.settings.network.id !== this.props.settings.network.id) {
       this.initWeb3()
+    }
+
+    if (prevProps.wallet.activeAccount.address !== this.props.wallet.activeAccount.address) {
+      // Update balances now instead of waiting for balancePoller
+      clearInterval(this.balancePoller)
+      this.getBalances()
+      // Restart poller
+      this.balancePoller = setInterval(
+        () => this.getBalances(),
+        BALANCE_POLL_INTERVAL
+      )
+      // Make sure device token is registered with server
+      const { settings } = this.props
+      this.registerDeviceToken(settings.deviceToken)
     }
   }
 
@@ -174,10 +189,7 @@ class OriginWallet extends Component {
     } else if (settings.deviceToken) {
       // Make sure the active account is registered with the notifications
       // server
-      this.registerNotificationAddress(
-        wallet.activeAccount.address,
-        settings.deviceToken
-      )
+      this.registerDeviceToken(settings.deviceToken)
     }
   }
 
@@ -230,9 +242,6 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     this.props.setAccountActive(account)
-    // Change active account, make sure notifications are registered with server
-    const { settings } = this.props
-    this.registerNotificationAddress(account.address, settings.deviceToken)
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
@@ -269,11 +278,8 @@ class OriginWallet extends Component {
       }
 
       this.props.setAccountBalances({
-        address: wallet.activeAccount.address,
-        balances: {
-          eth: this.web3.utils.fromWei(ethBalance),
-          ...tokenBalances
-        }
+        eth: this.web3.utils.fromWei(ethBalance),
+        ...tokenBalances
       })
     }
   }
@@ -340,12 +346,11 @@ class OriginWallet extends Component {
     PushNotification.configure({
       // Called when Token is generated (iOS and Android) (optional)
       onRegister: function(deviceToken) {
-        this.registerNotificationAddress(
-          wallet.activeAccount.address,
-          deviceToken['token']
-        )
-        // Save the device token into redux for later use with other accounts
-        this.setDeviceToken(deviceToken['token'])
+        if (wallet.activeAccount && wallet.activeAccount.address) {
+          this.registerDeviceToken(deviceToken['token'])
+          // Save the device token into redux for later use with other accounts
+          this.setDeviceToken(deviceToken['token'])
+        }
       }.bind(this),
       // Called when a remote or local notification is opened or received
       onNotification: function(notification) {
@@ -356,7 +361,7 @@ class OriginWallet extends Component {
         }
       }.bind(this),
       // Android only
-      senderID: GCM_SENDER_ID,
+      senderID: process.env.GCM_SENDER_ID,
       // iOS only
       permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
       // Should the initial notification be popped automatically
@@ -378,15 +383,19 @@ class OriginWallet extends Component {
   /* Register the Ethereum address and device token for notifications with the
    * notification server
    */
-  registerNotificationAddress(address, deviceToken) {
+  registerDeviceToken(deviceToken) {
+    const activeAddress = this.props.wallet.activeAccount.address
+    if (!activeAddress) {
+      return
+    }
     const notificationType = this.getNotificationType()
-    return fetch(NOTIFICATION_SERVER_URL, {
+    return fetch(process.env.NOTIFICATION_SERVER_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ address, deviceToken, notificationType })
+      body: JSON.stringify({ activeAddress, deviceToken, notificationType })
     }).catch(error => {
       console.debug(
         'Failed to register notification address with notifications server',
@@ -440,7 +449,7 @@ const mapDispatchToProps = dispatch => ({
   removeAccount: account => dispatch(removeAccount(account)),
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
-  setAccountBalances: payload => dispatch(setAccountBalances(payload)),
+  setAccountBalances: balances => dispatch(setAccountBalances(balances)),
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),

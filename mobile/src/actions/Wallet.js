@@ -35,10 +35,10 @@ export function setAccountActive(account) {
   }
 }
 
-export function setAccountBalances(payload) {
+export function setAccountBalances(balances) {
   return {
     type: WalletConstants.SET_ACCOUNT_BALANCES,
-    payload
+    balances
   }
 }
 
