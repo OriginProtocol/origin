@@ -149,7 +149,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q services:8080 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run migrate --prefix infra/discovery &&
       npm run migrate --prefix infra/growth &&
       npm run migrate --prefix infra/identity &&
@@ -160,14 +160,10 @@ services:
     image: origin
     volumes: *volumes
     environment:
-      # MetaMask account 4 (default local blockchain) aka accounts[3]
-      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
-      # MetaMask account 5 (default local blockchain) aka accounts[4]
-      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
-      - NETWORK_ID=999
+      - ELASTICSEARCH=true
+      - NETWORK=docker
       - ENVKEY=
     depends_on:
       - postgres
