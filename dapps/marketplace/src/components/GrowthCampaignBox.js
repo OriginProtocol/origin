@@ -40,13 +40,21 @@ const renderNotEnrolledBox = openmodalonstart => {
 const renderEnrolledBox = (props, walletAddress) => {
   const campaigns = props.growthCampaigns
   if (campaigns.length == 0) {
-    return <h5 className="p-2">No campaigns detected</h5>
+    return <h5 className="p-2">
+        <fbt desc="growthCampaignBox.noCampaignsDetected">
+          No campaigns detected
+        </fbt>
+      </h5>
   }
   const activeCampaign = campaigns.find(
     campaign => campaign.status === 'Active'
   )
 
-  if (activeCampaign === null) return 'No active campaign found'
+  if (activeCampaign === null){
+    return <fbt desc="growthCampaignBox.noActiveCampaignFound">
+      No active campaign found
+    </fbt>
+  }
 
   return (
     <div

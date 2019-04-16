@@ -30,6 +30,7 @@ import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
+import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
@@ -43,6 +44,7 @@ const AttestationComponents = {
 }
 
 const ProfileFields = [
+  'id',
   'firstName',
   'lastName',
   'description',
@@ -58,6 +60,7 @@ const ProfileFields = [
 ]
 
 function getState(profile) {
+  console.log("GETTING STATE: ", profile)
   return {
     firstName: '',
     lastName: '',
@@ -85,18 +88,125 @@ class UserProfile extends Component {
         console.log('Invalid attestation', attestations[key])
       }
     })
-    this.state = { ...getState(profile), ...storedAttestations }
+    this.state = {
+      ...getState(profile),
+      ...storedAttestations
+    }
   }
 
-  componentDidUpdate(prevProps) {
+  changesPublishedToBlockchain(props, prevProps) {
+    const profile = get(props, 'identity') || {}
+    const prevProfile = get(prevProps, 'identity') || {}
+
+    return (profile.firstName !== prevProfile.firstName ||
+      profile.lastName !== prevProfile.lastName ||
+      profile.description !== prevProfile.description ||
+      profile.avatar !== prevProfile.avatar ||
+      profile.emailVerified !== prevProfile.emailVerified ||
+      profile.phoneVerified !== prevProfile.phoneVerified ||
+      profile.facebookVerified !== prevProfile.facebookVerified ||
+      profile.twitterVerified !== prevProfile.twitterVerified ||
+      profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+      profile.id === prevProfile.id &&
+      // initial profile data population
+      prevProfile.id !== undefined
+  }
+
+  changesPublishedToBlockchain(props, prevProps) {
+    const profile = get(props, 'identity') || {}
+    const prevProfile = get(prevProps, 'identity') || {}
+
+    return (profile.firstName !== prevProfile.firstName ||
+      profile.lastName !== prevProfile.lastName ||
+      profile.description !== prevProfile.description ||
+      profile.avatar !== prevProfile.avatar ||
+      profile.emailVerified !== prevProfile.emailVerified ||
+      profile.phoneVerified !== prevProfile.phoneVerified ||
+      profile.facebookVerified !== prevProfile.facebookVerified ||
+      profile.twitterVerified !== prevProfile.twitterVerified ||
+      profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+      profile.id === prevProfile.id &&
+      prevProfile.id !== undefined
+  }
+
+  profileDataUpdated(state, prevState) {
+    console.log("STATE: ", (state.firstName !== prevState.firstName ||
+      state.lastName !== prevState.lastName ||
+      state.description !== prevState.description ||
+      state.avatar !== prevState.avatar) &&
+      state.id === prevState.id &&
+      prevState.id !== undefined, state, prevState)
+
+    return (state.firstName !== prevState.firstName ||
+      state.lastName !== prevState.lastName ||
+      state.description !== prevState.description ||
+      state.avatar !== prevState.avatar) &&
+      state.id === prevState.id &&
+      prevState.id !== undefined
+  }
+
+  attestationUpdated(state, prevState, attestation) {
+    return state[attestation] !== prevState[attestation] &&
+      state.id === prevState.id &&
+      prevState.id !== undefined
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
     }
+
+    if (this.changesPublishedToBlockchain(this.props, prevProps)) {
+      this.handleShowNotification(
+        fbt('Changes published to blockchain', 'profile.changesPublishedToBlockchain'),
+        'green'
+      )
+    }
+
+    if (this.profileDataUpdated(this.state, prevState, this.props, prevProps)) {
+      this.handleShowNotification(
+        fbt('Profile updated', 'profile.profileUpdated'),
+        'blue'
+      )
+    }
+
+    const attestationNotificationConf = [
+      {
+        attestation: 'emailAttestation',
+        message: fbt('Email updated', 'profile.emailUpdated')
+      },
+      {
+        attestation: 'phoneAttestation',
+        message: fbt('Phone number updated', 'profile.phoneUpdated')
+      },
+      {
+        attestation: 'facebookAttestation',
+        message: fbt('Facebook updated', 'profile.facebookUpdated')
+      },
+      {
+        attestation: 'twitterAttestation',
+        message: fbt('Twitter updated', 'profile.twitterUpdated')
+      },
+      {
+        attestation: 'airbnbAttestation',
+        message: fbt('Airbnb updated', 'profile.airbnbUpdated')
+      }
+    ]
+
+    attestationNotificationConf.forEach(({ attestation, message }) => {
+      if (this.attestationUpdated(this.state, prevState, attestation)) {
+        console.log("ATTESTATION UPDATED!")
+        this.handleShowNotification(message, 'blue')
+      }
+    })
   }
 
   render() {
     return (
       <Fragment>
+        <ToastNotification
+          setShowHandler={handler => this.handleShowNotification = handler }
+        />
         <DocumentTitle
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
