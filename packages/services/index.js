@@ -201,6 +201,12 @@ module.exports = async function start(opts = {}) {
     started.extras = true
   }
 
+  if (process.env.DOCKER) {
+    // Used to indicate to other services in Docker that the services package
+    // is complete via wait-for.sh
+    net.createServer().listen(1111, '0.0.0.0')
+  }
+
   const shutdownFn = async function shutdown() {
     if (started.ganache) {
       await started.ganache.close()
