@@ -90,7 +90,7 @@ services:
     environment:
       - DOCKER=true
       - DEPLOY_CONTRACTS=true
-    command: npm run start --prefix packages/services
+    command: npm run start --prefix packages/services -- -g -i -p -f -t
 
   messaging:
     container_name: messaging
