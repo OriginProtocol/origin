@@ -76,29 +76,26 @@ class WalletScreen extends Component {
             labelColor={currencies['eth'].color}
             name={currencies['eth'].name}
             imageSource={currencies['eth'].icon}
-            withAdd={true}
             onPress={() => this.handleFunding('ETH')}
           />
-          {balances['dai'] !== undefined && (
-            <Currency
-              abbreviation={'DAI'}
-              balance={balances['dai']}
-              labelColor={currencies['dai'].color}
-              name={currencies['dai'].name}
-              imageSource={currencies['dai'].icon}
-              onPress={() => this.handleFunding('DAI')}
-            />
-          )}
-          {balances['ogn'] !== undefined && (
-            <Currency
-              abbreviation={'OGN'}
-              balance={balances['ogn']}
-              labelColor={currencies['ogn'].color}
-              name={currencies['ogn'].name}
-              imageSource={currencies['ogn'].icon}
-              onPress={() => this.handleFunding('OGN')}
-            />
-          )}
+          <Currency
+            abbreviation={'DAI'}
+            balance={balances['dai'] || 0}
+            labelColor={currencies['dai'].color}
+            name={currencies['dai'].name}
+            imageSource={currencies['dai'].icon}
+            precision={2}
+            onPress={() => this.handleFunding('DAI')}
+          />
+          <Currency
+            abbreviation={'OGN'}
+            balance={balances['ogn'] || 0}
+            labelColor={currencies['ogn'].color}
+            name={currencies['ogn'].name}
+            imageSource={currencies['ogn'].icon}
+            precision={0}
+            onPress={() => this.handleFunding('OGN')}
+          />
         </ScrollView>
       </>
     )

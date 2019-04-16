@@ -11,6 +11,7 @@ export default class Currency extends Component {
       imageSource,
       labelColor,
       name,
+      precision = 5,
       onPress
     } = this.props
 
@@ -37,7 +38,7 @@ export default class Currency extends Component {
               style={styles.plus}
             />
           </TouchableOpacity>
-          <Text style={styles.balance}>{Number(balance).toFixed(5)}</Text>
+          <Text style={styles.balance}>{Number(balance).toFixed(precision)}</Text>
         </View>
       </View>
     )
