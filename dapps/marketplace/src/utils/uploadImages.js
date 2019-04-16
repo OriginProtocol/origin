@@ -12,7 +12,7 @@ export const acceptedFileTypes = [
  * Uploads an array of image files to IPFS.
  * Resizes images down to a maximum size if they are too big.
  * Returns file information, IPFS hash, and base64 encoded data urls
- * @param {string} ipfsRPC 
+ * @param {string} ipfsRPC
  * @param {File[]} files
  */
 
