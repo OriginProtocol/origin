@@ -2,7 +2,6 @@ import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
-import relayerHelper from '../_relayerHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 
@@ -59,7 +58,7 @@ async function createListing(_, input) {
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
-  let createListingCall
+  let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
   if (autoApprove && input.deposit > 0) {
@@ -70,28 +69,26 @@ async function createListing(_, input) {
       ['bytes32', 'uint', 'address'],
       [ipfsHash, deposit, depositManager]
     )
-    createListingCall = contracts.ognExec.methods.approveAndCallWithSender(
+    tx = contracts.ognExec.methods.approveAndCallWithSender(
       contracts.marketplace._address,
       deposit,
       fnSig,
       params
     )
   } else {
-    createListingCall = contracts.marketplaceExec.methods.createListing(
+    tx = contracts.marketplaceExec.methods.createListing(
       ipfsHash,
       deposit,
       depositManager
     )
   }
 
-  return relayerHelper({
-    tx: createListingCall,
+  return txHelper({
+    tx,
     from,
-    address: contracts.marketplace.options.address
+    mutation: 'createListing',
+    gas: cost.createListing
   })
-
-  // const tx = createListingCall.send({ gas: cost.createListing, from })
-  // return txHelper({ tx, from, mutation: 'createListing' })
 }
 
 export default createListing

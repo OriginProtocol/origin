@@ -10,44 +10,44 @@ export default async function relayerHelper({ tx, from, address }) {
     // Should get nonce from DB
     { t: 'uint256', v: 0 } // nonce
   )
-  console.log(dataToSign)
+  // console.log(dataToSign)
 
-  const signed = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
+  const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
 
-  const signedAlt = await new Promise(resolve =>
-    setTimeout(() => {
-    //   buff = Buffer.from(dataToSign.substr(2), 'hex')
-    // return buff.length === 32 ? hex : buff.toString('utf8')
-      context.web3Exec.currentProvider.sendAsync(
-        {
-          method: 'eth_signTypedData',
-          params: [
-            [
-              {
-                type: 'string',
-                name: 'Create Listing Hash',
-                value: dataToSign.substr(2)
-              }
-            ],
-            from
-          ],
-          from
-        },
-        (err, res) => resolve(res.result)
-      )
-    }, 500)
-  )
-
-  console.log(signed)
-  console.log(signedAlt)
+  // const signedAlt = await new Promise(resolve =>
+  //   setTimeout(() => {
+  //   //   buff = Buffer.from(dataToSign.substr(2), 'hex')
+  //   // return buff.length === 32 ? hex : buff.toString('utf8')
+  //     context.web3Exec.currentProvider.sendAsync(
+  //       {
+  //         method: 'eth_signTypedData',
+  //         params: [
+  //           [
+  //             {
+  //               type: 'string',
+  //               name: 'Create Listing Hash',
+  //               value: dataToSign.substr(2)
+  //             }
+  //           ],
+  //           from
+  //         ],
+  //         from
+  //       },
+  //       (err, res) => resolve(res.result)
+  //     )
+  //   }, 500)
+  // )
+  //
+  // console.log(signed)
+  // console.log(signedAlt)
 
   const response = await fetch('http://localhost:5100', {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify({
       to: address,
-      sign: signed,
-      signer: from,
+      from,
+      signature,
       txData,
       provider: contracts.web3.currentProvider.host
     })
@@ -60,5 +60,5 @@ export default async function relayerHelper({ tx, from, address }) {
   }
 
   const data = await response.json()
-  return { id: data.txHash }
+  return { id: data.id }
 }

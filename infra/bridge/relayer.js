@@ -13,15 +13,15 @@ app.use(cors({ origin: true, credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const verifySign = async ({ to, web3, sign, signer, txData }) => {
+const verifySign = async ({ web3, to, from, signature, txData }) => {
   const nonce = 0 // Should get from database
 
   const signedData = web3.utils.soliditySha3(
-    { t: 'address', v: signer }, // Signer
-    { t: 'address', v: to }, // Marketplace address
-    { t: 'uint256', v: web3.utils.toWei('0', 'ether') }, // value
+    { t: 'address', v: from },
+    { t: 'address', v: to },
+    { t: 'uint256', v: web3.utils.toWei('0', 'ether') },
     { t: 'bytes', v: txData },
-    { t: 'uint256', v: nonce } // nonce
+    { t: 'uint256', v: nonce }
   )
 
   try {
@@ -32,32 +32,30 @@ const verifySign = async ({ to, web3, sign, signer, txData }) => {
       Buffer.concat([prefix, Buffer.from(String(msgBuffer.length)), msgBuffer])
     )
 
-    const r = utils.toBuffer(sign.slice(0, 66))
-    const s = utils.toBuffer('0x' + sign.slice(66, 130))
-    const v = utils.bufferToInt(utils.toBuffer('0x' + sign.slice(130, 132)))
+    const r = utils.toBuffer(signature.slice(0, 66))
+    const s = utils.toBuffer('0x' + signature.slice(66, 130))
+    const v = utils.bufferToInt(
+      utils.toBuffer('0x' + signature.slice(130, 132))
+    )
 
     const pub = utils.ecrecover(prefixedMsg, v, r, s)
     const address = '0x' + utils.pubToAddress(pub).toString('hex')
 
-    return address.toLowerCase() === signer.toLowerCase()
+    return address.toLowerCase() === from.toLowerCase()
   } catch (e) {
     return false
   }
 }
 
-const verifyFunctionSignature = async ({ functionSignature, data }) => {
-  return data.toLowerCase().startsWith(functionSignature)
-}
-
 app.post('/', async function(req, res) {
-  const { sign, signer, txData, provider, to } = req.body
+  const { signature, from, txData, provider, to, identity } = req.body
 
   const web3 = new Web3(provider)
 
   const nodeAccounts = await web3.eth.getAccounts()
-  const from = nodeAccounts[0]
+  const forwarder = nodeAccounts[0]
 
-  const signValid = await verifySign({ to, web3, sign, signer, txData })
+  const signValid = await verifySign({ to, from, signature, txData, web3 })
 
   // 1. Verify sign
   if (!signValid) {
@@ -65,28 +63,30 @@ app.post('/', async function(req, res) {
   }
 
   // 2. Verify txData and check function signature
-  if (
-    !verifyFunctionSignature({ functionSignature: '0xca27eb1c', data: txData })
-  ) {
-    return res.status(400).send({ errors: ['Invalid function signature'] })
-  }
+  // if (!txData.toLowerCase().startsWith('0xca27eb1c')) {
+  //   return res.status(400).send({ errors: ['Invalid function signature'] })
+  // }
 
   // 3. Deploy or get user's proxy instance
-  // const IdentityProxy = await deployProxy({ web3, forAddress: signer })
-  const ProxyContract = new web3.eth.Contract(IdentityProxyContract.abi)
-  const IdentityProxy = await ProxyContract.deploy({
-    data: IdentityProxyContract.bytecode,
-    arguments: [signer]
-  }).send({
-    from: nodeAccounts[0],
-    gas: 4000000
-  })
+  const IdentityProxy = new web3.eth.Contract(IdentityProxyContract.abi)
+  if (identity) {
+    IdentityProxy.options.address = identity
+  } else {
+    const resp = await IdentityProxy.deploy({
+      data: IdentityProxyContract.bytecode,
+      arguments: [from]
+    }).send({
+      from: nodeAccounts[0],
+      gas: 4000000
+    })
+    IdentityProxy.options.address = resp._address
+  }
 
   // 4. Call the forward method
   const txHash = await new Promise((resolve, reject) =>
     IdentityProxy.methods
-      .forward(to, sign, signer, txData)
-      .send({ from, gas: 4000000 })
+      .forward(to, signature, from, txData)
+      .send({ from: forwarder, gas: 4000000 })
       .once('transactionHash', resolve)
       .catch(reject)
   )
@@ -95,10 +95,7 @@ app.post('/', async function(req, res) {
   // TODO
 
   res.status(200)
-  res.send({
-    userProxy: IdentityProxy._address,
-    txHash
-  })
+  res.send({ userProxy: IdentityProxy._address, id: txHash })
 })
 
 app.listen(5100, () => {

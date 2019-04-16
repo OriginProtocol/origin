@@ -21,11 +21,18 @@ async function finalizeOffer(_, data) {
   }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const tx = contracts.marketplaceExec.methods
-    .finalize(listingId, offerId, ipfsHash)
-    .send({ gas: cost.finalizeOffer, from })
+  const tx = contracts.marketplaceExec.methods.finalize(
+    listingId,
+    offerId,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'finalizeOffer' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'finalizeOffer',
+    gas: cost.finalizeOffer
+  })
 }
 
 export default finalizeOffer

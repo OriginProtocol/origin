@@ -15,17 +15,17 @@ async function uniswapAddLiquidity(
   const deadline = (block.timestamp < now - 60 ? now : block.timestamp) + 300
 
   const uniswapDaiExchange = new web3.eth.Contract(exchangeAbi, exchange)
-  const tx = uniswapDaiExchange.methods
-    .addLiquidity(liquidity, web3.utils.toWei(tokens, 'ether'), deadline)
-    .send({
-      gas: 4000000,
-      from,
-      value: web3.utils.toWei(value, 'ether')
-    })
+  const tx = uniswapDaiExchange.methods.addLiquidity(
+    liquidity,
+    web3.utils.toWei(tokens, 'ether'),
+    deadline
+  )
 
   return txHelper({
     tx,
+    gas: 4000000,
     from,
+    value: web3.utils.toWei(value, 'ether'),
     mutation: 'uniswapAddLiquidity'
   })
 }

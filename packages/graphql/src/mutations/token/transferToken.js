@@ -11,8 +11,8 @@ async function transferToken(_, { token, from, to, value }) {
     return
   }
   value = contracts.web3.utils.toWei(value, 'ether')
-  const tx = contract.methods.transfer(to, value).send({ gas: 4612388, from })
-  return txHelper({ tx, from, mutation: 'transferToken' })
+  const tx = contract.methods.transfer(to, value)
+  return txHelper({ tx, from, mutation: 'transferToken', gas: 4612388 })
 }
 
 export default transferToken

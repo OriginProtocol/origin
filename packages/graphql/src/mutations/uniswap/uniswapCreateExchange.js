@@ -7,12 +7,9 @@ async function uniswapCreateExchange(_, { from, tokenAddress, factory }) {
   await checkMetaMask(from)
 
   const uniswapFactory = new web3.eth.Contract(factoryAbi, factory)
-  const tx = uniswapFactory.methods.createExchange(tokenAddress).send({
-    gas: 5500000,
-    from
-  })
+  const tx = uniswapFactory.methods.createExchange(tokenAddress)
 
-  return txHelper({ tx, from, mutation: 'uniswapCreateExchange' })
+  return txHelper({ tx, from, gas: 5500000, mutation: 'uniswapCreateExchange' })
 }
 
 export default uniswapCreateExchange

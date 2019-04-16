@@ -7,14 +7,11 @@ async function deployIdentityEvents(_, { from }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(IdentityEvents.abi)
-  const tx = Contract.deploy({ data: IdentityEvents.bytecode }).send({
-    gas: 5500000,
-    from
-  })
 
   return txHelper({
-    tx,
+    tx: Contract.deploy({ data: IdentityEvents.bytecode }),
     from,
+    gas: 5500000,
     mutation: 'deployIdentityEvents',
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress

@@ -7,13 +7,10 @@ async function deployMarketplace(_, { token, from, autoWhitelist }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(Marketplace.abi)
-  const tx = Contract.deploy({ data, arguments: [token] }).send({
-    gas: 5500000,
-    from
-  })
 
   return txHelper({
-    tx,
+    tx: Contract.deploy({ data, arguments: [token] }),
+    gas: 5500000,
     from,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {

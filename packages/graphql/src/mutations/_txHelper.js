@@ -2,6 +2,7 @@ import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
 
 import { getTransaction } from '../resolvers/web3/transactions'
+import relayerHelper from './_relayer'
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -20,6 +21,7 @@ export async function checkMetaMask(from) {
 // Do not listen for confirmations if we're on the server as it causes mocha
 // to hang
 const isServer = typeof window === 'undefined'
+const relayerEnabled = true
 
 export default function txHelper({
   tx,
@@ -27,12 +29,22 @@ export default function txHelper({
   onConfirmation,
   onReceipt,
   from,
+  to,
   gas,
-  value
+  value,
+  web3
 }) {
+  if (relayerEnabled) {
+    return relayerHelper({ tx, from, address: tx._parent._address })
+  }
   return new Promise((resolve, reject) => {
     let txHash
-    tx.send({ gas, from, value })
+    let toSend = tx
+    if (web3 && to) {
+      toSend = web3.eth.sendTransaction({ from, to, value, gas })
+    }
+    toSend
+      .send({ gas, from, value })
       .once('transactionHash', async hash => {
         txHash = hash
         resolve({ id: hash })

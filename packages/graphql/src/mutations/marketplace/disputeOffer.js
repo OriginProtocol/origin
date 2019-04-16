@@ -10,11 +10,12 @@ async function disputeOffer(_, data) {
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
 
-  const tx = contracts.marketplaceExec.methods
-    .dispute(listingId, offerId, ipfsHash)
-    .send({ gas: cost.disputeOffer, from })
-
-  return txHelper({ tx, from, mutation: 'disputeOffer' })
+  return txHelper({
+    tx: contracts.marketplaceExec.methods.dispute(listingId, offerId, ipfsHash),
+    from,
+    mutation: 'disputeOffer',
+    gas: cost.disputeOffer
+  })
 }
 
 export default disputeOffer

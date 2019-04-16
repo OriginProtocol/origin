@@ -42,11 +42,13 @@ async function deployIdentity(
   })
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const tx = contracts.identityEventsExec.methods
-    .emitIdentityUpdated(ipfsHash)
-    .send({ gas: costs.emitIdentityUpdated, from })
 
-  return txHelper({ tx, from, mutation: 'deployIdentity' })
+  return txHelper({
+    tx: contracts.identityEventsExec.methods.emitIdentityUpdated(ipfsHash),
+    from,
+    mutation: 'deployIdentity',
+    gas: costs.emitIdentityUpdated
+  })
 }
 
 export default deployIdentity

@@ -10,11 +10,19 @@ async function updateRefund(_, data) {
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
 
-  const tx = contracts.marketplaceExec.methods
-    .updateRefund(listingId, offerId, data.amount, ipfsHash)
-    .send({ gas: cost.updateRefund, from })
+  const tx = contracts.marketplaceExec.methods.updateRefund(
+    listingId,
+    offerId,
+    data.amount,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'updateRefund' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'updateRefund',
+    gas: cost.updateRefund
+  })
 }
 
 export default updateRefund

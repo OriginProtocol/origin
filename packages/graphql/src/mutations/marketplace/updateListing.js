@@ -14,7 +14,7 @@ async function updateListing(_, args) {
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
-  let updateListingCall
+  let tx
   const additionalDeposit = contracts.web3.utils.toWei(
     args.additionalDeposit,
     'ether'
@@ -37,22 +37,26 @@ async function updateListing(_, args) {
       ['uint256', 'bytes32', 'uint256'],
       [listingId, ipfsHash, additionalDeposit]
     )
-    updateListingCall = contracts.ognExec.methods.approveAndCallWithSender(
+    tx = contracts.ognExec.methods.approveAndCallWithSender(
       contracts.marketplace._address,
       additionalDeposit,
       fnSig,
       params
     )
   } else {
-    updateListingCall = contracts.marketplaceExec.methods.updateListing(
+    tx = contracts.marketplaceExec.methods.updateListing(
       listingId,
       ipfsHash,
       additionalDeposit
     )
   }
 
-  const tx = updateListingCall.send({ gas: cost.updateListing, from })
-  return txHelper({ tx, from, mutation: 'updateListing' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'updateListing',
+    gas: cost.updateListing
+  })
 }
 
 export default updateListing

@@ -69,14 +69,13 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
-  // console.log(args)
-
-  const tx = marketplace.methods.makeOffer(...args).send({
-    gas: cost.makeOffer,
+  return txHelper({
+    tx: marketplace.methods.makeOffer(...args),
     from: buyer,
+    mutation: 'makeOffer',
+    gas: cost.makeOffer,
     value: currencyAddress === ZeroAddress ? value : 0
   })
-  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
 
 async function toIpfsData(data) {
