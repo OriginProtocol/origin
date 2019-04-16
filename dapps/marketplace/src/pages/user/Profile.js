@@ -99,11 +99,14 @@ class UserProfile extends Component {
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
         <Switch>
+          {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
+           * For that reason Origin wallet is disabled.
+           */}
           <Route
             path="/profile/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={true}
                 linkprefix="/profile"
                 redirectTo="/profile/continue"
               />
