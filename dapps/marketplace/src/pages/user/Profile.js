@@ -141,9 +141,10 @@ class UserProfile extends Component {
        * changes wallets.
        *
        * The biggest challenge is that wallet id prop changes immediately when the wallet
-       * changes and bit later identity information prop is populated (which can also be empty).
+       * changes and bit later identity information prop is populated (which can also be empty). It
+       * is hard to connect the wallet change to the identity change, to rule out profile switches.
        *
-       * Current solution is just to disable any notifications fireing 3 seconds after
+       * Current solution is just to disable any notifications firing 3 seconds after
        * account switch.
        */
       setTimeout(() => {
@@ -354,8 +355,8 @@ class UserProfile extends Component {
             )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
-                <b>Verifying your profile</b> allows oher users to know that you
-                are a real person and increases the chances of successful
+                <b>Verifying your profile</b> allows other users to know that you
+                you are a real person and increases the chances of successful
                 transactions on Origin.
               </fbt>
             </div>
