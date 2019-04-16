@@ -6,7 +6,7 @@ bridgeImageTag: '03da795'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '57e4626'
+dappImageTag: 'a8542d2'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: 'ef650fe'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'fd97d0a'
+eventlistenerImageTag: 'dc230cd'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -34,7 +34,7 @@ messagingImageTag: 'f7d2ec1'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'ed37ae1'
+notificationsImageTag: '95deb73'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client

@@ -50,7 +50,7 @@ services:
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
-      - ./packages/linker-client/:/app/packages/linker-client/
+      - ./packages/mobile-bridge/:/app/packages/mobile-bridge/
       - ./packages/validator:/app/packages/validator/
       - ./packages/token/:/app/packages/token/
       # Infrastructure packages
@@ -70,7 +70,7 @@ services:
       - /app/packages/eventsource/node_modules/
       - /app/packages/ipfs/node_modules/
       - /app/packages/messaging-client/node_modules/
-      - /app/packages/linker-client/node_modules/
+      - /app/packages/mobile-bridge/node_modules/
       - /app/packages/validator/node_modules/
       - /app/packages/token/node_modules/
       - /app/infra/bridge/node_modules/
@@ -139,7 +139,7 @@ services:
       - INDEX_GROWTH=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
-      - WEBHOOK=
+      - NOTIFICATIONS_WEBHOOK=
       - ENVKEY=
     depends_on:
       - postgres
