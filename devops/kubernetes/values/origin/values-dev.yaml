@@ -6,7 +6,7 @@ bridgeImageTag: '03da795'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'c9baf23'
+dappImageTag: 'c94dac7'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -59,4 +59,4 @@ cronImageTag: 'a3e5d66'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: 'b6e9dd5'
+adminImageTag: 'c94dac7'
