@@ -38,8 +38,10 @@ class ToastNotification extends Component {
     } = this.state
 
     return(<div className="toast-notification-holder">
-      <div className={`toast-notification ${visible ? 'show' : ''} ${color}`}>
-        {text}
+      <div className={`toast-notification-wrap d-flex justify-content-center ${visible ? 'show' : ''}`}>
+        <div className={`toast-notification ${color}`}>
+          {text}
+        </div>
       </div>
     </div>)
   }
@@ -51,27 +53,29 @@ require('react-styl')(`
   .toast-notification-holder
     position:relative
     height: 0px
-
-    .toast-notification
+    .toast-notification-wrap
       position: absolute
-      left: 50%
-      top: 0px
-      border-radius: 5px
-      background-color: var(--clear-blue)
-      font-size: 18px
-      font-weight: bold
-      color: white
+      left: 0
+      right: 0
+      top: -15px
       z-index: 1
-      padding: 8px 38px
       visibility: hidden
       opacity: 0
-      transition: visibility 0s linear 0.33s, opacity 0.33s linear
+      transition: visibility 0s 2s, opacity 0.33s linear, top 0.33s ease-in
       &.show
+        top: 0px
         visibility: visible
         opacity: 1
-        transition-delay: 0s
-      &.blue
+        transition: opacity 0.33s linear, top 0.33s ease-in
+      .toast-notification
+        border-radius: 5px
         background-color: var(--clear-blue)
-      &.green
-        background-color: var(--greenblue)
+        font-size: 18px
+        font-weight: bold
+        color: white
+        padding: 8px 38px
+        &.blue
+          background-color: var(--clear-blue)
+        &.green
+          background-color: var(--greenblue)
 `)

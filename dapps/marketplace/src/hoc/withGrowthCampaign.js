@@ -11,7 +11,7 @@ function withGrowthCampaign(WrappedComponent) {
     return (
       <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
         {({ error, data, networkStatus, loading }) => {
-          if (networkStatus === 1 || loading) {
+          if (networkStatus === 1 || loading || !data.web3) {
             return <WrappedComponent {...props} />
           } else if (error) {
             return <QueryError error={error} query={profileQuery} />
