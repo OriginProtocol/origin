@@ -1,13 +1,14 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import QueryError from 'components/QueryError'
+import get from 'lodash/get'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 
 function withGrowthCampaign(WrappedComponent) {
-  const withGrowthCampaign = props => {
+  const WithGrowthCampaign = props => {
     return (
       <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
         {({ error, data, networkStatus, loading }) => {
@@ -17,9 +18,8 @@ function withGrowthCampaign(WrappedComponent) {
             return <QueryError error={error} query={profileQuery} />
           }
 
-          const walletAddress = data.web3.primaryAccount
-            ? data.web3.primaryAccount.id
-            : null
+          const walletAddress = get(data, 'web3.primaryAccount.id')
+
           return (
             <Query
               query={enrollmentStatusQuery}
@@ -82,7 +82,7 @@ function withGrowthCampaign(WrappedComponent) {
       </Query>
     )
   }
-  return withGrowthCampaign
+  return WithGrowthCampaign
 }
 
 export default withGrowthCampaign
