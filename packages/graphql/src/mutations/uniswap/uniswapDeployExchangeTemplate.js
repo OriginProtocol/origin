@@ -11,16 +11,7 @@ async function uniswapDeployExchangeTemplate(_, { from }) {
     from
   })
 
-  return txHelper({
-    tx,
-    from,
-    mutation: 'uniswapDeployFactory',
-    onReceipt: receipt => {
-      if (typeof window !== 'undefined') {
-        window.localStorage.uniswapExchangeTemplate = receipt.contractAddress
-      }
-    }
-  })
+  return txHelper({ tx, from, mutation: 'uniswapDeployFactory' })
 }
 
 export default uniswapDeployExchangeTemplate

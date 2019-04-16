@@ -13,6 +13,7 @@ export async function getTransactionReceipt(id) {
   const jsonInterfaces = [
     ...contracts.marketplace.options.jsonInterface,
     ...contracts.identityEvents.options.jsonInterface,
+    ...contracts.uniswapFactory.options.jsonInterface,
     ...(contracts.daiExchange
       ? contracts.daiExchange.options.jsonInterface
       : [])

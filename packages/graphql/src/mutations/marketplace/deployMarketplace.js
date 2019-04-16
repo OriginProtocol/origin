@@ -3,7 +3,7 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
 const data = Marketplace.bytecode
 
-async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
+async function deployMarketplace(_, { token, from, autoWhitelist }) {
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(Marketplace.abi)
@@ -20,17 +20,6 @@ async function deployMarketplace(_, { token, version, from, autoWhitelist }) {
       // console.log('Deployed marketplace to', receipt.contractAddress)
       if (typeof window !== 'undefined') {
         window.localStorage.marketplaceContract = receipt.contractAddress
-      }
-
-      let marketplaces = {}
-      try {
-        marketplaces = JSON.parse(window.localStorage.marketplaces)
-      } catch (e) {
-        /* Ignore */
-      }
-      marketplaces[version] = receipt.contractAddress
-      if (typeof window !== 'undefined') {
-        window.localStorage.marketplaces = JSON.stringify(marketplaces)
       }
 
       setMarketplace(receipt.contractAddress, receipt.blockNumber)

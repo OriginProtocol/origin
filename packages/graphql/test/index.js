@@ -2,7 +2,7 @@ import assert from 'assert'
 import get from 'lodash/get'
 
 import client from '../src/index'
-import contracts, { setNetwork } from '../src/contracts'
+import contracts from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -16,7 +16,6 @@ describe('Marketplace', function() {
   let OGN, Marketplace
 
   before(async function() {
-    setNetwork('test')
     await trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
