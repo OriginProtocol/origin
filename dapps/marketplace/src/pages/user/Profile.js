@@ -355,7 +355,7 @@ class UserProfile extends Component {
             )}
             <div className="gray-box profile-help">
               <fbt desc="onboarding-steps.stepTwoContent">
-                <b>Verifying your profile</b> allows other users to know that you
+                <b>Verifying your profile</b> allows other users to know that
                 you are a real person and increases the chances of successful
                 transactions on Origin.
               </fbt>
