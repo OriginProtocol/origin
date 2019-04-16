@@ -45,6 +45,7 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'avatarUrl',
   'strength',
   'attestations',
   'facebookVerified',
@@ -99,11 +100,14 @@ class UserProfile extends Component {
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
         <Switch>
+          {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
+           * For that reason Origin wallet is disabled.
+           */}
           <Route
             path="/profile/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={true}
                 linkprefix="/profile"
                 redirectTo="/profile/continue"
               />
@@ -221,7 +225,8 @@ class UserProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar'
+                    'avatar',
+                    'avatarUrl'
                   ]),
                   attestations: [
                     ...(this.state.attestations || []),
@@ -268,7 +273,9 @@ class UserProfile extends Component {
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            onAvatarChange={avatar => this.setState({ avatar })}
+            onAvatarChange={(avatar, avatarUrl) =>
+              this.setState({ avatar, avatarUrl })
+            }
           />
         )}
       </div>
