@@ -46,7 +46,5 @@ export default {
   ],
   DaiExchange: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14',
   affiliate: '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8',
-  arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a',
-  linker: `https://linking.originprotocol.com`,
-  linkerWS: `wss://linking.originprotocol.com`
+  arbitrator: '0x64967e8cb62b0cd1bbed27bee4f0a6a2e454f06a'
 }

@@ -16,7 +16,7 @@ const config = {
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 
-  affiliate: addresses.Affilaite,
+  affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,

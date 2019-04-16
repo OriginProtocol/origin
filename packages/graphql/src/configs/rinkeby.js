@@ -21,9 +21,6 @@ export default {
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
   },
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
-  linker: `https://linking.staging.originprotocol.com`,
-  linkerWS: `wss://linking.staging.originprotocol.com`,
-  linkingEnabled: true,
   DaiExchange: '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
   tokens: [
     {

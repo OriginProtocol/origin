@@ -11,7 +11,6 @@ import Event from './Event'
 import Token from './Token'
 import IdentityEvents from './IdentityEvents'
 import Conversation from './messaging/Conversation'
-import WalletLinker from './linker/WalletLinker'
 import Mutation from '../mutations/index'
 
 export default {
@@ -28,6 +27,5 @@ export default {
   Token,
   TokenHolder,
   IdentityEvents,
-  Conversation,
-  WalletLinker
+  Conversation
 }

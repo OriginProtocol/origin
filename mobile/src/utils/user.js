@@ -1,7 +1,8 @@
-import origin from '../services/origin'
+'use strict'
 
-const { web3 } = origin.contractService
+import Web3 from 'web3'
 
+const web3 = new Web3()
 const MAX_ADDRESS_LENGTH = 10
 
 export function abbreviateName(party, defaultName = '') {
@@ -36,7 +37,9 @@ export function truncateAddress(address = '', chars = 5) {
   if (address.length <= MAX_ADDRESS_LENGTH) return address
   const separator = '...'
 
-  return address.substr(0, chars)
-    + separator
-    + address.substr(address.length - chars)
+  return (
+    address.substr(0, chars) +
+    separator +
+    address.substr(address.length - chars)
+  )
 }
