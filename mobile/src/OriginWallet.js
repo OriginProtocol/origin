@@ -20,6 +20,7 @@ import CryptoJS from 'crypto-js'
 
 import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
 
+import { addNotification } from 'actions/Notification'
 import { setDeviceToken } from 'actions/Settings'
 import {
   addAccount,
@@ -366,8 +367,12 @@ class OriginWallet extends Component {
 
   /*
    */
-  onNotification() {
-    console.log('Got a notification')
+  onNotification(notification) {
+    this.props.addNotification({
+      id: notification.data.notificationId,
+      message: notification.message.body,
+      url: notification.data.url,
+    })
   }
 
   /* Register the Ethereum address and device token for notifications with the
@@ -438,7 +443,8 @@ const mapDispatchToProps = dispatch => ({
   setAccountBalances: payload => dispatch(setAccountBalances(payload)),
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
-  setDeviceToken: payload => dispatch(setDeviceToken(payload))
+  setDeviceToken: payload => dispatch(setDeviceToken(payload)),
+  addNotification: notification => dispatch(addNotification(notification))
 })
 
 export default connect(
