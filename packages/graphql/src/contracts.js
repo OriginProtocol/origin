@@ -399,7 +399,7 @@ export function shutdown() {
   clearInterval(currencies.interval)
 }
 
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   if (window.ethereum) {
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
@@ -408,6 +408,9 @@ if (typeof window !== 'undefined') {
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   }
   setNetwork(window.localStorage.ognNetwork || 'mainnet')
+}
+
+if (typeof window !== 'undefined') {
   window.context = context
 }
 
