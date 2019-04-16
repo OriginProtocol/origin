@@ -22,17 +22,12 @@ app.use(serveStatic('public'))
 
 async function start() {
   await services({
-    ganache:
-      process.env.START_GANACHE !== undefined
-        ? process.env.START_GANACHE
-        : true,
-    deployContracts:
-      process.env.DEPLOY_CONTRACTS !== undefined
-        ? process.env.DEPLOY_CONTRACTS
-        : false,
-    ipfs: process.env.START_IPFS !== undefined ? process.env.START_IPFS : true,
-    populate:
-      process.env.POPULATE_IPFS !== undefined ? process.env.POPULATE_IPFS : true
+    ganache: true,
+    deployContracts: true,
+    ipfs: true,
+    populate: true,
+    skipContractsIfExists: true,
+    writeTruffle: true
   })
 
   const webpackDevServer = spawn(
