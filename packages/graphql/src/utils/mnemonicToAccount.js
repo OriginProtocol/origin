@@ -12,9 +12,11 @@ export default function mnemonicToAccounts(
   num = Names.length
 ) {
   const keys = []
+  const seed = bip39.mnemonicToSeed(mnemonic)
+  const masterSeed = HDKey.fromMasterSeed(seed)
+
   for (let offset = 0; offset < num; offset++) {
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    const acct = HDKey.fromMasterSeed(seed).derive(`m/44'/60'/0'/0/${offset}`)
+    const acct = masterSeed.derive(`m/44'/60'/0'/0/${offset}`)
     keys.push({
       name: Names[offset],
       role: Roles[offset],
