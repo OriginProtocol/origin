@@ -62,6 +62,9 @@ class TransactionCard extends Component {
       case 'emitIdentityUpdated':
         heading = 'Publish Identity'
         break
+      case 'approve':
+        heading = 'Approval to Convert ETH to DAI'
+        break
       default:
         heading = 'Blockchain Transaction'
     }
