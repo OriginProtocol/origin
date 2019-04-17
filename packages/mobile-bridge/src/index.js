@@ -16,32 +16,37 @@ class MobileBridge {
     transaction.gasLimit = transaction.gas
     let onSuccess, onError
     if (callback) {
-      onSuccess = (result) => {
+      onSuccess = result => {
         callback(undefined, result)
       }
-      onError = (result) => {
+      onError = result => {
         callback(undefined, result)
       }
     } else {
-      onSuccess = (result) => {
+      onSuccess = result => {
         return new Promise(resolve => resolve(result))
       }
-      onError = (result) => {
+      onError = result => {
         return new Promise((resolve, reject) => reject(result))
       }
     }
-    window.webViewBridge.send('processTransaction', transaction, onSuccess, onError)
+    window.webViewBridge.send(
+      'processTransaction',
+      transaction,
+      onSuccess,
+      onError
+    )
   }
 
   getAccounts(callback) {
     const data = null
     let onSuccess
     if (callback) {
-      onSuccess = (result) => {
+      onSuccess = result => {
         callback(undefined, result)
       }
     } else {
-      onSuccess = (result) => {
+      onSuccess = result => {
         return new Promise(resolve => resolve(result))
       }
     }
@@ -51,17 +56,17 @@ class MobileBridge {
   signMessage(data, callback) {
     let onSuccess, onError
     if (callback) {
-      onSuccess = (result) => {
+      onSuccess = result => {
         callback(undefined, result)
       }
-      onError = (result) => {
+      onError = result => {
         callback(undefined, result)
       }
     } else {
-      onSuccess = (result) => {
+      onSuccess = result => {
         return new Promise(resolve => resolve(result))
       }
-      onError = (result) => {
+      onError = result => {
         return new Promise((resolve, reject) => reject(result))
       }
     }
