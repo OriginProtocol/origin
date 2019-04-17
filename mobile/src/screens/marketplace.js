@@ -113,7 +113,9 @@ class MarketplaceScreen extends Component {
   /* Handle a transaction hash event from the Origin Wallet
    */
   handleTransactionHash({ transaction, hash }) {
-    const modal = this.state.modals.find(m => m.msgData && m.msgData.data === transaction)
+    const modal = this.state.modals.find(
+      m => m.msgData && m.msgData.data === transaction
+    )
     // Toggle the matching modal and return the hash
     this.toggleModal(modal, hash)
   }
