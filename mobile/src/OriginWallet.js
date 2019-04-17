@@ -151,7 +151,6 @@ class OriginWallet extends Component {
             }
           }
         }
-        await deleteData('WALLET_STORE')
       }
     })
   }
@@ -163,7 +162,6 @@ class OriginWallet extends Component {
         console.debug('Migrated legacy device token')
       }
     })
-    await deleteData('WALLET_INFO')
   }
 
   /* Set the provider for web3 to the provider for the current network in the
@@ -229,7 +227,6 @@ class OriginWallet extends Component {
       privateKey = '0x' + privateKey
     }
     const account = this.web3.eth.accounts.wallet.add(privateKey)
-    // TODO: verify that this won't add multiples of the same account
     this.props.addAccount(account)
     this.props.setAccountActive(account)
     return account.address
