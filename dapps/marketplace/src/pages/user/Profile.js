@@ -94,6 +94,17 @@ class UserProfile extends Component {
     this.accountsSwitched = false
   }
 
+  componentDidMount() {
+    document.body.style.backgroundColor = 'var(--pale-grey-four)'
+  }
+
+  componentWillUnmount() {
+    /* unfortunately this needs to be hardcoded and can not be read from document.body.style.backgroundColor
+     * since it initially returns an empty string
+     */
+    document.body.style.backgroundColor = 'white'
+  }
+
   changesPublishedToBlockchain(props, prevProps) {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
