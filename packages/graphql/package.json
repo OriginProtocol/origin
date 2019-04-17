@@ -10,7 +10,8 @@
     "url": "https://github.com/OriginProtocol/origin/origin-playground"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "start": "node -r @babel/register server",
@@ -26,18 +27,33 @@
     "@origin/contracts": "^0.8.6",
     "@origin/eventsource": "^0.1.0",
     "@origin/ipfs": "^0.1.0",
-    "@origin/linker-client": "^0.1.0",
+    "@origin/mobile-bridge": "^0.1.0",
     "@origin/messaging-client": "^0.1.0",
     "@origin/services": "^0.1.0",
     "@origin/validator": "^0.1.0",
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link": "^1.2.11",
     "apollo-link-context": "^1.0.17",
     "apollo-link-http": "^1.5.14",
+    "apollo-link-schema": "^1.2.2",
+    "apollo-link-ws": "^1.0.17",
+    "apollo-server": "^2.4.8",
+    "cross-fetch": "^3.0.1",
     "dayjs": "^1.8.10",
+    "graphql": "^14.1.1",
+    "graphql-fields": "^2.0.3",
+    "graphql-subscriptions": "^1.0.0",
+    "graphql-tag": "^2.10.1",
+    "graphql-tools": "^4.0.4",
     "json-stable-stringify": "^1.0.1",
+    "lodash-es": "^4.17.11",
     "lz-string": "^1.4.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.4",
-    "rlp": "^2.2.2"
+    "rlp": "^2.2.2",
+    "subscriptions-transport-ws": "^0.9.16",
+    "web3": "1.0.0-beta.34"
   },
   "prettier": {
     "semi": false,
@@ -67,21 +83,7 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.3.4",
-    "apollo-cache-inmemory": "^1.5.1",
-    "apollo-client": "^2.5.1",
-    "apollo-link": "^1.2.11",
-    "apollo-link-schema": "^1.2.2",
-    "apollo-server": "^2.4.8",
-    "cross-fetch": "^3.0.1",
     "debug": "^4.1.1",
-    "graphql": "^14.1.1",
-    "graphql-fields": "^2.0.3",
-    "graphql-subscriptions": "^1.0.0",
-    "graphql-tag": "^2.10.1",
-    "graphql-tools": "^4.0.4",
-    "lodash-es": "^4.17.11",
-    "subscriptions-transport-ws": "^0.9.16",
-    "web3": "1.0.0-beta.34",
     "webpack": "^4.29.6"
   }
 }
