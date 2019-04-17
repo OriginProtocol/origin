@@ -15,9 +15,9 @@ const pastEventBatcher = async (contract, fromBlock, uptoBlock) => {
   if (fromBlock > uptoBlock) throw new Error('fromBlock > toBlock')
   const partitions = []
   while (fromBlock <= uptoBlock) {
-    const toBlock = Math.min(fromBlock + 20000, uptoBlock)
+    const toBlock = Math.min(fromBlock + 10000, uptoBlock)
     partitions.push(contract.getPastEvents('allEvents', { fromBlock, toBlock }))
-    fromBlock += 20000
+    fromBlock += 10000
   }
   const results = []
   const chunks = chunk(partitions, 7)
