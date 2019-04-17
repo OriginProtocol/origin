@@ -13,7 +13,7 @@ RUN mv envkey-source /usr/local/bin
 COPY ./infra/notifications /app
 
 # identity required for the db mode
-COPY ./infra/identity /app l
+COPY ./infra/identity /app
 
 RUN npm install --loglevel notice
 
