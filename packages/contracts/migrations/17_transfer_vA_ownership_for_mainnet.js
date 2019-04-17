@@ -28,4 +28,3 @@ async function transferVAMarketplaceToMultiSig() {
   await marketplace.transferOwnership(marketplaceMultiSig, { from: owner })
   console.log(`marketplace contract owner set to ${marketplaceMultiSig}`)
 }
-

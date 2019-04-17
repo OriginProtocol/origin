@@ -30,7 +30,7 @@ async function transferTokensAndContractsToMultiSig() {
   const balance = await token.balanceOf(owner)
   const decimals = await token.decimals()
   await token.transfer(tokenMultiSig, balance, { from: owner })
-  const balanceTokens = balance / 10**decimals
+  const balanceTokens = balance / 10 ** decimals
   console.log(`transferred ${balanceTokens} OGN to ${tokenMultiSig}`)
 
   // Contract owner is a throwaway account, so remove it from the transactor
@@ -46,4 +46,3 @@ async function transferTokensAndContractsToMultiSig() {
   await marketplace.transferOwnership(marketplaceMultiSig, { from: owner })
   console.log(`marketplace contract owner set to ${marketplaceMultiSig}`)
 }
-

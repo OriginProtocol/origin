@@ -1,9 +1,13 @@
-const bs58 = require('bs58');
+const bs58 = require('bs58')
 const V00_Marketplace = artifacts.require('./V00_Marketplace.sol')
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
-    if (network === 'mainnet' || network === 'rinkeby' || network === 'ropsten') {
+    if (
+      network === 'mainnet' ||
+      network === 'rinkeby' ||
+      network === 'ropsten'
+    ) {
       console.log(`Skipping sample listings creation on ${network}`)
     } else {
       return deployContracts(deployer)
@@ -17,16 +21,15 @@ async function createListing(marketplace, hash, from) {
 
 function getBytes32FromIpfsHash(ipfsListing) {
   return (
-      "0x" +
-      bs58
-        .decode(ipfsListing)
-        .slice(2)
-        .toString("hex")
+    '0x' +
+    bs58
+      .decode(ipfsListing)
+      .slice(2)
+      .toString('hex')
   )
 }
 
 async function deployContracts(deployer) {
-
   const accounts = await new Promise((resolve, reject) => {
     web3.eth.getAccounts((error, result) => {
       if (error) {

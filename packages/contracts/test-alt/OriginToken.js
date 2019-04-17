@@ -1,5 +1,9 @@
 import assert from 'assert'
-import helper, { assertRevert, assertRevertWithMessage, contractPath } from './_helper'
+import helper, {
+  assertRevert,
+  assertRevertWithMessage,
+  contractPath
+} from './_helper'
 
 // These tests are specifically for the OriginToken contract and not for any
 // contracts from which it inherits. Any OpenZeppelin contracts are covered
@@ -15,24 +19,14 @@ describe('OriginToken.sol', async function() {
   let OriginToken, Spender
 
   async function assertBalanceEquals(address, balance) {
-    assert.equal(
-      await OriginToken.methods.balanceOf(address).call(),
-      balance
-    )
+    assert.equal(await OriginToken.methods.balanceOf(address).call(), balance)
   }
   async function assertTotalSupplyEquals(totalSupply) {
-    assert.equal(
-      await OriginToken.methods.totalSupply().call(),
-      totalSupply
-    )
+    assert.equal(await OriginToken.methods.totalSupply().call(), totalSupply)
   }
 
   beforeEach(async function() {
-    ({
-      deploy,
-      accounts,
-      web3,
-    } = await helper(`${__dirname}/..`))
+    ({ deploy, accounts, web3 } = await helper(`${__dirname}/..`))
     owner = accounts[1]
     account1 = accounts[2]
 
@@ -52,33 +46,40 @@ describe('OriginToken.sol', async function() {
     await assertBalanceEquals(owner, initialSupply)
     await assertBalanceEquals(account1, 0)
 
-    await OriginToken.methods.transfer(account1, transferAmount).send({from: owner})
+    await OriginToken.methods
+      .transfer(account1, transferAmount)
+      .send({ from: owner })
     await assertBalanceEquals(owner, initialSupply - transferAmount)
     await assertBalanceEquals(account1, transferAmount)
   })
 
   it('does not allow regular accounts to burn tokens', async function() {
     await assertRevert(
-      OriginToken.methods.burn(transferAmount).send({from: account1})
+      OriginToken.methods.burn(transferAmount).send({ from: account1 })
     )
   })
 
   it('allows owner to burn its own tokens', async function() {
-    const res = await OriginToken.methods.burn(burnAmount).send({from: owner})
+    const res = await OriginToken.methods.burn(burnAmount).send({ from: owner })
     assert(res.events.Burn)
     await assertTotalSupplyEquals(initialSupply - burnAmount)
-    await assertBalanceEquals(owner, initialSupply - transferAmount - burnAmount)
+    await assertBalanceEquals(
+      owner,
+      initialSupply - transferAmount - burnAmount
+    )
     await assertBalanceEquals(account1, transferAmount)
   })
 
-  it('does not allow regular accounts to burn other\'s tokens', async function() {
+  it("does not allow regular accounts to burn other's tokens", async function() {
     await assertRevert(
-      OriginToken.methods.burn(owner, transferAmount).send({from: account1})
+      OriginToken.methods.burn(owner, transferAmount).send({ from: account1 })
     )
   })
 
-  it('allows owner to burn others\' tokens', async function() {
-    const res = await OriginToken.methods.burn(account1, burnAmount).send({from: owner})
+  it("allows owner to burn others' tokens", async function() {
+    const res = await OriginToken.methods
+      .burn(account1, burnAmount)
+      .send({ from: owner })
     assert(res.events.Burn)
     await assertBalanceEquals(account1, transferAmount - burnAmount)
     await assertTotalSupplyEquals(initialSupply - burnAmount)
@@ -100,26 +101,38 @@ describe('OriginToken.sol', async function() {
     it('passes the correct parameters to the called contract', async function() {
       let res
       const amount = 10
-      const bytes32 = '0xdeadbeef12432342432300000000000000000000000000000000000000000000'
+      const bytes32 =
+        '0xdeadbeef12432342432300000000000000000000000000000000000000000000'
       const bool = true
       const uint8 = 174
       const uint32 = '1714639093'
       const uint256 = '2260611357253958188'
       const int8 = -123
       const int256 = '-2432429611987047402'
-      res = await OriginToken.methods.addCallSpenderWhitelist(Spender._address).send({from: owner})
+      res = await OriginToken.methods
+        .addCallSpenderWhitelist(Spender._address)
+        .send({ from: owner })
       assert(res.events.AddCallSpenderWhitelist)
 
       const sig = web3.eth.abi.encodeFunctionSignature(
         'transferTokens(address,uint256,bytes32,bool,uint8,uint32,uint256,int8,int256)'
       )
       const params = web3.eth.abi.encodeParameters(
-        [ 'uint256', 'bytes32', 'bool', 'uint8', 'uint32', 'uint256', 'int8', 'int256' ],
-        [ amount,    bytes32,   bool,   uint8,   uint32,   uint256,   int8,   int256 ]
+        [
+          'uint256',
+          'bytes32',
+          'bool',
+          'uint8',
+          'uint32',
+          'uint256',
+          'int8',
+          'int256'
+        ],
+        [amount, bytes32, bool, uint8, uint32, uint256, int8, int256]
       )
       res = await OriginToken.methods
         .approveAndCallWithSender(Spender._address, amount, sig, params)
-        .send({from: owner})
+        .send({ from: owner })
 
       assert(res.events.Approval)
       assert.equal(
@@ -138,42 +151,54 @@ describe('OriginToken.sol', async function() {
 
     it('allows owner to add to spender whitelist', async function() {
       const whitelisted = accounts[2]
-      let res
-      res = await OriginToken.methods.addCallSpenderWhitelist(whitelisted).send({from: owner})
+      const res = await OriginToken.methods
+        .addCallSpenderWhitelist(whitelisted)
+        .send({ from: owner })
       assert(res.events.AddCallSpenderWhitelist)
     })
 
     it('allows owner to remove from spender whitelist', async function() {
       const whitelisted = accounts[2]
       let res
-      res = await OriginToken.methods.addCallSpenderWhitelist(whitelisted).send({from: owner})
+      res = await OriginToken.methods
+        .addCallSpenderWhitelist(whitelisted)
+        .send({ from: owner })
       assert(res.events.AddCallSpenderWhitelist)
-      res = await OriginToken.methods.removeCallSpenderWhitelist(whitelisted).send({from: owner})
+      res = await OriginToken.methods
+        .removeCallSpenderWhitelist(whitelisted)
+        .send({ from: owner })
       assert(res.events.RemoveCallSpenderWhitelist)
     })
 
     it('does not allow non-owners to add to spender whitelist', async function() {
       const nonOwner = accounts[4]
       await assertRevert(
-        OriginToken.methods.addCallSpenderWhitelist(nonOwner).send({from: nonOwner})
+        OriginToken.methods
+          .addCallSpenderWhitelist(nonOwner)
+          .send({ from: nonOwner })
       )
     })
 
     it('does not allow non-owners to remove from spender whitelist', async function() {
       const whitelisted = accounts[2]
       const nonOwner = accounts[3]
-      await OriginToken.methods.addCallSpenderWhitelist(whitelisted).send({from: owner})
+      await OriginToken.methods
+        .addCallSpenderWhitelist(whitelisted)
+        .send({ from: owner })
       await assertRevert(
-        OriginToken.methods.removeCallSpenderWhitelist(whitelisted).send({from: nonOwner})
+        OriginToken.methods
+          .removeCallSpenderWhitelist(whitelisted)
+          .send({ from: nonOwner })
       )
     })
 
     it('does not allow call with spender not in whitelist', async function() {
-      await assertRevertWithMessage('spender not in whitelist',
+      await assertRevertWithMessage(
+        'spender not in whitelist',
         OriginToken.methods
           .approveAndCallWithSender(ZERO_ADDRESS, 5, '0xdeadbeef', '0xdeadbeef')
           .send({ from: owner })
-    )
+      )
     })
 
     it('does not allow token contract to call itself', async function() {
@@ -184,10 +209,16 @@ describe('OriginToken.sol', async function() {
         ['address', 'address', 'uint256'],
         [owner, account1, 5]
       )
-      await assertRevertWithMessage(`token contract can't be approved`,
+      await assertRevertWithMessage(
+        `token contract can't be approved`,
         OriginToken.methods
-          .approveAndCallWithSender(OriginToken._address, 5, transferSig, params)
-          .send({from: owner})
+          .approveAndCallWithSender(
+            OriginToken._address,
+            5,
+            transferSig,
+            params
+          )
+          .send({ from: owner })
       )
     })
   })
