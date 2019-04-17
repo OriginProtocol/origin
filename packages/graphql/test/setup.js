@@ -6,15 +6,15 @@
 
 import client from '../src/index'
 import services from '@origin/services'
-import { setNetwork } from '../src/contracts'
+import { shutdown, setNetwork } from '../src/contracts'
 
 const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')
-let shutdown
+let shutdownServices
 
 before(async function() {
   this.timeout(30000)
   // Start Ganache (in-memory) and IPFS
-  shutdown = await services({
+  shutdownServices = await services({
     ganache: { inMemory: true },
     ipfs: true,
     deployContracts: true,
@@ -36,5 +36,6 @@ if (isWatchMode) {
   // Shutdown ganache etc if we're not in watch mode and tests are finished.
   after(async function() {
     await shutdown()
+    await shutdownServices()
   })
 }

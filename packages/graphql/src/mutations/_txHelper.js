@@ -37,8 +37,10 @@ export default function txHelper({
   value,
   web3
 }) {
-  if (proxyOwnerOrNull(from) || mutation === 'deployIdentity') {
-    return relayerHelper({ tx, from, address: tx._parent._address })
+  if (contracts.config.relayer) {
+    if (proxyOwnerOrNull(from) || mutation === 'deployIdentity') {
+      return relayerHelper({ tx, from, address: tx._parent._address })
+    }
   }
   return new Promise((resolve, reject) => {
     let txHash

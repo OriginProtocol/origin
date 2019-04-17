@@ -51,7 +51,7 @@ export default async function relayerHelper({ tx, from, address }) {
   // console.log(signature)
   // console.log(signedAlt)
 
-  const response = await fetch('http://localhost:5100', {
+  const response = await fetch(contracts.config.relayer, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify({
