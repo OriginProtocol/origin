@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint '**/*.js' && npm run prettier:check",
-    "postinstall": "./postinstall.sh",
-    "prettier": "prettier --write *.js \"**/*.js\""
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\""
   },
   "repository": {
     "type": "git",

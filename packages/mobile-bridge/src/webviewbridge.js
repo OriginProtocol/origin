@@ -4,7 +4,6 @@ import uuid from 'uuid/v1'
 
 let promiseChain = Promise.resolve()
 
-const promises = {}
 const callbacks = {}
 
 export default function() {
@@ -35,7 +34,7 @@ export default function() {
 
       promiseChain = promiseChain
         .then(function() {
-          return new Promise(function(resolve, reject) {
+          return new Promise(function(resolve) {
             if (msgObj.msgId) {
               // Call the callbacks for the matching id
               callbacks[msgObj.msgId] = {
