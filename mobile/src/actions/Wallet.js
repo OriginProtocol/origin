@@ -1,82 +1,50 @@
-import origin from 'services/origin'
+'use strict'
 
 import keyMirror from 'utils/keyMirror'
 
-import originWallet from '../OriginWallet'
-
 export const WalletConstants = keyMirror(
   {
-    INIT: null,
-    INIT_SUCCESS: null,
-    INIT_ERROR: null,
-
-    BALANCE: null,
-    BALANCE_SUCCESS: null,
-    BALANCE_ERROR: null,
-
-    DAI_SUCCESS: null,
-    OGN_SUCCESS: null,
-
-    UPDATE_ACCOUNTS: null,
+    ADD_ACCOUNT: null,
+    REMOVE_ACCOUNT: null,
+    SET_ACCOUNT_ACTIVE: null,
+    SET_ACCOUNT_NAME: null,
+    SET_ACCOUNT_BALANCES: null,
+    SET_ACCOUNT_SERVER_NOTIFICATIONS: null
   },
   'WALLET'
 )
 
-export function init(address) {
+export function addAccount(account) {
   return {
-    type: WalletConstants.INIT_SUCCESS,
-    address,
+    type: WalletConstants.ADD_ACCOUNT,
+    account
   }
 }
 
-export function getBalance() {
-  return async function(dispatch) {
-    let account
-    try {
-      account = await origin.contractService.currentAccount()
-    } catch(error) {
-      console.log("error getting account for balance. ", error)
-      return
-    }
-    if (account)
-    {
-      try {
-        const balance = await web3.eth.getBalance(account)
-
-        dispatch({
-          type: WalletConstants.BALANCE_SUCCESS,
-          balance,
-        })
-      } catch (error) {
-        console.log("error getting balance. ", error)
-      }
-      try {
-        const dais = await originWallet.getDaiBalance()
-
-        dispatch({
-          type: WalletConstants.DAI_SUCCESS,
-          dais
-        })
-      } catch (error) {
-        console.log("error getting dai for balance. ", error)
-      }
-      try {
-        const ogns = await origin.token.balanceOf(account)
-        
-        dispatch({
-          type: WalletConstants.OGN_SUCCESS,
-          ogns,
-        })
-      } catch (error) {
-        console.log("error getting ogn for balance. ", error)
-      }
-    }
+export function removeAccount(account) {
+  return {
+    type: WalletConstants.REMOVE_ACCOUNT,
+    account
   }
 }
 
-export function updateAccounts(accounts) {
+export function setAccountActive(account) {
   return {
-    type: WalletConstants.UPDATE_ACCOUNTS,
-    accounts,
+    type: WalletConstants.SET_ACCOUNT_ACTIVE,
+    account
+  }
+}
+
+export function setAccountBalances(balances) {
+  return {
+    type: WalletConstants.SET_ACCOUNT_BALANCES,
+    balances
+  }
+}
+
+export function setAccountName(payload) {
+  return {
+    type: WalletConstants.SET_ACCOUNT_NAME,
+    payload
   }
 }
