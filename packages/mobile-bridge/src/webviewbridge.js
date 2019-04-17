@@ -42,16 +42,16 @@ export default function() {
               onError: error
             }
           }
-          window.ReactNativeWebView.postMessage(msg, '*')
+          window.ReactNativeWebView.postMessage(msg)
           resolve()
         })
       }).catch(function (e) {
-        console.error(`WebViewBridge send failed ${e.message}`)
+        console.error(`WebViewBridge send failed: ${e.message}`)
       })
     },
   }
 
-  window.addEventListener('message', function(e) {
+  function handleMessage(e) {
     let message
     try {
       message = JSON.parse(e.data)
@@ -70,5 +70,11 @@ export default function() {
       }
       delete callbacks[message.msgId];
     }
-  })
+  }
+
+  if (window.__mobileBridgePlatform === 'ios') {
+    window.addEventListener('message', handleMessage)
+  } else if (window.__mobileBridgePlatform === 'android') {
+    document.addEventListener('message', handleMessage)
+  }
 }

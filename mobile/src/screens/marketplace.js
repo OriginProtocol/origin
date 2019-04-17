@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
   Modal,
+  Platform,
   StyleSheet,
   SafeAreaView,
   StatusBar,
@@ -46,6 +47,9 @@ class MarketplaceScreen extends Component {
   }
 
   componentDidMount() {
+    console.debug(
+      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
+    )
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
   }
 
@@ -109,7 +113,7 @@ class MarketplaceScreen extends Component {
   /* Handle a transaction hash event from the Origin Wallet
    */
   handleTransactionHash({ transaction, hash }) {
-    const modal = this.state.modals.find(m => m.msgData.data === transaction)
+    const modal = this.state.modals.find(m => m.msgData && m.msgData.data === transaction)
     // Toggle the matching modal and return the hash
     this.toggleModal(modal, hash)
   }
@@ -139,15 +143,12 @@ class MarketplaceScreen extends Component {
 
   render() {
     const injectedJavaScript = `
-      if (!window.__mobileBridge) {
+      if (!window.__mobileBridge || !window.__mobileBridgePlatform) {
         window.__mobileBridge = true;
+        window.__mobileBridgePlatform = '${Platform.OS}';
       }
       true;
     `
-
-    console.debug(
-      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
-    )
 
     const { modals } = this.state
 
