@@ -1,40 +1,31 @@
 import React from 'react'
-import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
-import ProfileQuery from 'queries/Profile'
 import withWallet from 'hoc/withWallet'
 
-import Identicon from 'components/Identicon'
 import Balances from 'components/Balances'
-import EthAddress from 'components/EthAddress'
+import WalletInfo from 'components/WalletInfo'
 
 const Wallet = ({ wallet, walletProxyOwner }) => (
   <div className="wallet">
-    <div className="wallet-info">
-      <div>
-        <h5>
-          <fbt desc="Wallet.ethAddress">ETH Address</fbt>
-        </h5>
-        <EthAddress address={wallet} />
-      </div>
-      <div className="identicon">
-        <Identicon size={50} address={wallet} />
-      </div>
-    </div>
-    {!walletProxyOwner ? null : (
-      <div className="wallet-info">
-        <div>
-          <h5>
-            <fbt desc="Wallet.ethAddress">Owner Wallet</fbt>
-          </h5>
-          <EthAddress address={walletProxyOwner} />
-        </div>
-        <div className="identicon">
-          <Identicon size={50} address={walletProxyOwner} />
-        </div>
-      </div>
+    {walletProxyOwner ? (
+      <>
+        <WalletInfo
+          title={fbt('Identity Contract', 'Wallet.identityContract')}
+          wallet={wallet}
+        />
+        <WalletInfo
+          title={fbt('Identity Owner', 'Wallet.identityOwner')}
+          wallet={walletProxyOwner}
+        />
+      </>
+    ) : (
+      <WalletInfo
+        title={fbt('ETH Address', 'Wallet.ethAddress')}
+        wallet={wallet}
+      />
     )}
+
     <Balances account={wallet} />
   </div>
 )
@@ -56,6 +47,7 @@ require('react-styl')(`
       font-size: 14px
       border-bottom: 2px solid black
       padding-bottom: 1rem
+      font-weight: normal
       a
         color: var(--white)
       .identicon

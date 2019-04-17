@@ -25,12 +25,8 @@ contract IdentityProxy is ERC725 {
 
     event Forwarded (bytes sig, address signer, address destination, uint value, bytes data, bytes32 _hash);
 
-    constructor(address _owner) public {
-        owner = _owner;
-    }
-
     modifier onlyOwner() {
-        require(msg.sender == owner, "only-owner-allowed");
+        require(owner == 0x0 || msg.sender == owner, "only-owner-allowed");
         _;
     }
 

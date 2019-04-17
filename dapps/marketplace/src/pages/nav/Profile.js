@@ -14,6 +14,7 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
+import WalletInfo from 'components/WalletInfo'
 
 class ProfileNav extends Component {
   constructor() {
@@ -75,29 +76,22 @@ const ProfileDropdown = withWallet(({ wallet, walletProxyOwner, onClose }) => {
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
       <Network />
-      <div className="wallet-info">
-        <div>
-          <h5>
-            <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
-          </h5>
-          <div className="wallet-address">{wallet}</div>
-        </div>
-        <div className="identicon">
-          <Identicon size={50} address={wallet} />
-        </div>
-      </div>
-      {!walletProxyOwner ? null : (
-        <div className="wallet-info">
-          <div>
-            <h5>
-              <fbt desc="nav.profile.ethAddress">Owner Wallet</fbt>
-            </h5>
-            <div className="wallet-address">{walletProxyOwner}</div>
-          </div>
-          <div className="identicon">
-            <Identicon size={50} address={walletProxyOwner} />
-          </div>
-        </div>
+      {walletProxyOwner ? (
+        <>
+          <WalletInfo
+            title={fbt('Identity Contract', 'nav.profile.identityContract')}
+            wallet={wallet}
+          />
+          <WalletInfo
+            title={fbt('Identity Owner', 'nav.profile.identityOwner')}
+            wallet={walletProxyOwner}
+          />
+        </>
+      ) : (
+        <WalletInfo
+          title={fbt('ETH Address', 'nav.profile.ethAddress')}
+          wallet={wallet}
+        />
       )}
       <Balances account={wallet} />
       <Identity id={wallet} />

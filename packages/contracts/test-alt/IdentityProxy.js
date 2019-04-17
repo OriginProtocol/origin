@@ -5,7 +5,7 @@ import Table from 'cli-table'
 import GasPriceInDollars from './_gasPriceInDollars'
 
 const gasPriceInDollars = GasPriceInDollars({
-  gasPriceGwei: 8,
+  gasPriceGwei: 4,
   pricePerEth: 170
 })
 const gasUsed = []
@@ -13,7 +13,7 @@ const trackGas = id => receipt => gasUsed.push([id, receipt.cumulativeGasUsed])
 
 describe('Identity', async function() {
   let web3, accounts, deploy
-  let Marketplace, Forwarder, NewUserAccount, IdentityProxy, ProxyFactory
+  let Marketplace, Forwarder, NewUserAccount, ProxyFactory, IdentityProxyImp
 
   before(async function() {
     ({ web3, deploy, accounts } = await helper(`${__dirname}/..`))
@@ -33,54 +33,36 @@ describe('Identity', async function() {
 
     ProxyFactory = await deploy('ProxyFactory', {
       from: accounts[0],
-      path: `${contractPath}/identity`,
+      path: `${contractPath}/proxy`,
       file: 'ProxyFactory.sol'
     })
-    // console.log('Proxy Factory at', ProxyFactory._address)
-  })
 
-  async function deployNewProxyContract() {
-    const IdentityProxyImp = await deploy('IdentityProxy', {
+    IdentityProxyImp = await deploy('IdentityProxy', {
       from: Forwarder,
       path: `${contractPath}/identity`,
       file: 'IdentityProxy.sol',
-      args: [Forwarder],
-      trackGas
+      args: [Forwarder]
     })
+  })
 
-    const abi = await IdentityProxyImp.deploy({
-      data: IdentityProxyImp.options.bytecode,
-      arguments: [NewUserAccount.address]
-    }).encodeABI()
+  async function deployNewProxyContract() {
 
-    // console.log('Try change to', NewUserAccount.address)
-    // console.log(
-    //   'Proxy imp owner',
-    //   await IdentityProxyImp.methods.owner().call()
-    // )
-    // console.log('Forwarder', Forwarder)
+      const changeOwner = await IdentityProxyImp.methods
+        .changeOwner(NewUserAccount.address)
+        .encodeABI()
 
-    const res = await ProxyFactory.methods
-      .createProxy(
-        IdentityProxyImp.options.address,
-        abi
+      const res = await ProxyFactory.methods.createProxy(
+        IdentityProxyImp._address,
+        changeOwner
+      ).send({
+        from: Forwarder,
+        gas: 4000000
+      }).once('receipt', trackGas('Deploy Proxy'))
+
+      return new web3.eth.Contract(
+        IdentityProxyImp.options.jsonInterface,
+        res.events.ProxyCreation.returnValues.proxy
       )
-      .send({ from: Forwarder, gas: 4000000 })
-      .once('receipt', trackGas('Create Proxy from Factory'))
-
-    IdentityProxy = new web3.eth.Contract(
-      IdentityProxyImp.options.jsonInterface,
-      res.events.ProxyDeployed.returnValues.targetAddress
-    )
-
-    // console.log('Old owner', await IdentityProxy.methods.owner().call())
-
-    await IdentityProxy.methods.changeOwner(NewUserAccount.address).send({
-      from: Forwarder,
-      gas: 4000000
-    })
-
-    // console.log('New owner', await IdentityProxy.methods.owner().call())
   }
 
   describe('IdentityProxy.sol', function() {
@@ -100,8 +82,10 @@ describe('Identity', async function() {
       const signer = NewUserAccount.address
       const sign = web3.eth.accounts.sign(dataToSign, NewUserAccount.privateKey)
 
-      await deployNewProxyContract(NewUserAccount.address)
-      // console.log(await IdentityProxy.methods.owner().call())
+      const IdentityProxy = await deployNewProxyContract(NewUserAccount.address)
+      const owner = await IdentityProxy.methods.owner().call()
+
+      assert(owner, NewUserAccount.address)
 
       const result = await IdentityProxy.methods
         .forward(Marketplace._address, sign.signature, signer, txData)

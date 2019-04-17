@@ -59,18 +59,40 @@ export default async function testHelper(contracts, provider) {
     { from, args, log, path, trackGas, file }
   ) {
     file = file || `${contractName}.sol`
-    const sources = {
-      [file]: {
-        content: fs.readFileSync(`${path || contracts}/${file}`).toString()
-      }
-    }
+    const content = fs.readFileSync(`${path || contracts}/${file}`).toString()
+    const sources = { [file]: { content } }
     const compileOpts = JSON.stringify({ ...solcOpts, sources })
 
     // Compile the contract using solc
     const rawOutput = solc.compileStandardWrapper(
       compileOpts,
-      findImportsPath(path) //contracts)
+      findImportsPath(path)
     )
+
+    // Multi Version support. Comment out above and use below instead.
+    // requires a dir solc/ with different solc versions inside.
+    //
+    // curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.5.3+commit.10d17f24.js" --output soljson-v0.5.3.js
+    //
+    // import requireFromString from 'require-from-string'
+    // const version = content.match(/pragma solidity \^?([^;]+);/)[1]
+    // const versions = {
+    //   '0.4.24': 'v0.4.24+commit.e67f0147',
+    //   '0.4.25': 'v0.4.25+commit.59dbf8f1',
+    //   '0.5.0': 'v0.5.0+commit.1d4f565a',
+    //   '0.5.3': 'v0.5.3+commit.10d17f24'
+    // }
+    // const rawOutput = await new Promise(resolve => {
+    //   const solcSnapshot = solc.setupMethods(
+    //     requireFromString(
+    //       fs.readFileSync(`${__dirname}/solc/soljson-v${version}.js`).toString()
+    //     )
+    //   )
+    //   resolve(
+    //     solcSnapshot.compileStandardWrapper(compileOpts, findImportsPath(path))
+    //   )
+    // })
+
     const output = JSON.parse(rawOutput)
 
     // If there were any compilation errors, throw them
@@ -270,10 +292,14 @@ export async function assertRevert(promise, expectedErrorMsg = '') {
   try {
     await promise
   } catch (error) {
-    const revertFound = error.message.search('revert') >= 0 && error.message.search(expectedErrorMsg) >= 0
+    const revertFound =
+      error.message.search('revert') >= 0 &&
+      error.message.search(expectedErrorMsg) >= 0
     assert(
       revertFound,
-      `Expected "revert" ${expectedErrorMsg ? `with error message: ${expectedErrorMsg}`: ''}, got ${error} instead`
+      `Expected "revert" ${
+        expectedErrorMsg ? `with error message: ${expectedErrorMsg}` : ''
+      }, got ${error} instead`
     )
     return
   }

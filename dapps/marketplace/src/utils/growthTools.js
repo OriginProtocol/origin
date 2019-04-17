@@ -8,6 +8,9 @@ export function getAttestationReward({
   const activeCampaign = growthCampaigns.find(
     campaign => campaign.status === 'Active'
   )
+  if (!activeCampaign) {
+    return ''
+  }
 
   const reward = activeCampaign.actions
     .filter(action => action.type === attestation)

@@ -97,67 +97,40 @@ app.post('/', async function(req, res) {
 
   // 3. Deploy or get user's proxy instance
   if (!identity) {
-    // if (!ProxyFactory) {
-    //   ProxyFactory = new web3.eth.Contract(ProxyFactoryContract.abi)
-    //   const fr = await ProxyFactory.deploy({
-    //     data: ProxyFactoryContract.bytecode
-    //   }).send({
-    //     from: nodeAccounts[0],
-    //     gas: 4000000
-    //   })
-    //   ProxyFactory.options.address = fr._address
-    //
-    //   IdentityProxyImp = await IdentityProxy.deploy({
-    //     data: IdentityProxyContract.bytecode,
-    //     arguments: [nodeAccounts[0]]
-    //   }).send({
-    //     from: nodeAccounts[0],
-    //     gas: 4000000
-    //   })
-    //   console.log('Deployed Proxy Factory')
-    // }
-    //
-    // const abi = await IdentityProxy.deploy({
-    //   data: IdentityProxyContract.bytecode,
-    //   arguments: [nodeAccounts[0]]
-    // }).encodeABI()
-    //
-    // const resp = await ProxyFactory.methods
-    //   .createProxy(IdentityProxyImp._address, abi)
-    //   .send({ from: nodeAccounts[0], gas: 4000000 })
-    //   .once('receipt', receipt => {
-    //     console.log(
-    //       `Deployed identity for ${from.substr(0, 10)} (${receipt.gasUsed} gas)`
-    //     )
-    //   })
-    //
-    // IdentityProxy.options.address =
-    //   resp.events.ProxyDeployed.returnValues.targetAddress
-    //
-    // await IdentityProxy.methods
-    //   .changeOwner(from)
-    //   .send({ from: nodeAccounts[0], gas: 4000000 })
-    //   .once('receipt', receipt => {
-    //     console.log(`Changed owner of identity (${receipt.gasUsed} gas)`)
-    //   })
-
-      const res = await IdentityProxy.deploy({
-        data: IdentityProxyContract.bytecode,
-        arguments: [nodeAccounts[0]]
+    if (!ProxyFactory) {
+      ProxyFactory = new web3.eth.Contract(ProxyFactoryContract.abi)
+      const fr = await ProxyFactory.deploy({
+        data: ProxyFactoryContract.bytecode
       }).send({
+        from: nodeAccounts[0],
+        gas: 4000000
+      })
+      ProxyFactory.options.address = fr._address
+
+      IdentityProxyImp = await IdentityProxy.deploy({
+        data: IdentityProxyContract.bytecode
+      }).send({
+        from: nodeAccounts[0],
+        gas: 4000000
+      })
+      console.log('Deployed Proxy Factory')
+    }
+
+    const changeOwner = await IdentityProxyImp.methods
+      .changeOwner(from)
+      .encodeABI()
+
+    const res = await ProxyFactory.methods
+      .createProxy(IdentityProxyImp._address, changeOwner)
+      .send({
         from: nodeAccounts[0],
         gas: 4000000
       })
       .once('receipt', receipt => {
         console.log(`Deployed identity proxy (${receipt.gasUsed} gas)`)
       })
-      IdentityProxy.options.address = res._address
-      await IdentityProxy.methods
-        .changeOwner(from)
-        .send({ from: nodeAccounts[0], gas: 4000000 })
-        .once('receipt', receipt => {
-          console.log(`Changed owner of identity (${receipt.gasUsed} gas)`)
-        })
+
+    IdentityProxy.options.address = res.events.ProxyCreation.returnValues.proxy
   }
 
   // 4. Call the forward method
@@ -169,12 +142,9 @@ app.post('/', async function(req, res) {
         .send({ from: forwarder, gas: 4000000 })
         .once('transactionHash', resolve)
         .once('receipt', receipt => {
-          console.log(
-            `Paid ${receipt.gasUsed} gas on behalf of ${from.substr(
-              0,
-              10
-            )} for ${method.name}`
-          )
+          const gas = receipt.gasUsed
+          const acct = from.substr(0, 10)
+          console.log(`Paid ${gas} gas on behalf of ${acct} for ${method.name}`)
         })
         .catch(reject)
     )
