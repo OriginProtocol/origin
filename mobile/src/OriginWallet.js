@@ -18,7 +18,9 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 
-import graphqlContext, { setNetwork as setGraphqlNetwork} from '@origin/graphql/src/contracts'
+import graphqlContext, {
+  setNetwork as setGraphqlNetwork
+} from '@origin/graphql/src/contracts'
 
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken, setNetwork } from 'actions/Settings'
@@ -158,7 +160,7 @@ class OriginWallet extends Component {
   async _migrateLegacyDeviceTokens() {
     loadData('WALLET_INFO').then(async walletInfo => {
       if (walletInfo && walletInfo.deviceToken) {
-        this.setDeviceToken(walletInfo.deviceToken)
+        this.props.setDeviceToken(walletInfo.deviceToken)
         console.debug('Migrated legacy device token')
       }
     })
@@ -365,7 +367,7 @@ class OriginWallet extends Component {
         if (wallet.activeAccount && wallet.activeAccount.address) {
           this.registerDeviceToken(deviceToken['token'])
           // Save the device token into redux for later use with other accounts
-          this.setDeviceToken(deviceToken['token'])
+          this.props.setDeviceToken(deviceToken['token'])
         }
       }.bind(this),
       // Called when a remote or local notification is opened or received
