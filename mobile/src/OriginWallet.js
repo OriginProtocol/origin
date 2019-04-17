@@ -18,10 +18,10 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 
-import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
+import graphqlContext, { setNetwork as setGraphqlNetwork} from '@origin/graphql/src/contracts'
 
 import { addNotification } from 'actions/Notification'
-import { setDeviceToken } from 'actions/Settings'
+import { setDeviceToken, setNetwork } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
@@ -32,7 +32,8 @@ import {
 import {
   BALANCE_POLL_INTERVAL,
   DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES
+  ETH_NOTIFICATION_TYPES,
+  NETWORKS
 } from './constants'
 import { loadData, deleteData } from './tools'
 
@@ -146,6 +147,7 @@ class OriginWallet extends Component {
             }
             if (privateKey) {
               this.addAccount(privateKey)
+              console.debug('Migrated legacy account')
             }
           }
         }
@@ -158,6 +160,7 @@ class OriginWallet extends Component {
     loadData('WALLET_INFO').then(async walletInfo => {
       if (walletInfo && walletInfo.deviceToken) {
         this.setDeviceToken(walletInfo.deviceToken)
+        console.debug('Migrated legacy device token')
       }
     })
     await deleteData('WALLET_INFO')
@@ -167,7 +170,13 @@ class OriginWallet extends Component {
    * graphql configuration for the current network
    */
   initWeb3() {
-    setNetwork(this.props.settings.network.name.toLowerCase())
+    // Verify that the saved network is valid
+    const networkExists = NETWORKS.find(n => n === this.props.settings.network)
+    if (!networkExists) {
+      // Set to mainnet if for some reason the network doesn't exist
+      this.props.setNetwork(NETWORKS.find(n => n.id === 1))
+    }
+    setGraphqlNetwork(this.props.settings.network.name.toLowerCase())
     const provider = graphqlContext.config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
@@ -463,6 +472,7 @@ const mapDispatchToProps = dispatch => ({
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
+  setNetwork: network => dispatch(setNetwork(network)),
   addNotification: notification => dispatch(addNotification(notification))
 })
 
