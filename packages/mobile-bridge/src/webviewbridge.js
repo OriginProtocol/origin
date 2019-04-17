@@ -4,7 +4,6 @@ import uuid from 'uuid/v1'
 
 let promiseChain = Promise.resolve()
 
-const promises = {}
 const callbacks = {}
 
 export default function() {
@@ -18,7 +17,7 @@ export default function() {
      */
     send: function(targetFunc, data, success, error) {
       success = success || function() {}
-      error = error || function () {}
+      error = error || function() {}
 
       const msgObj = {
         targetFunc: targetFunc,
@@ -33,42 +32,48 @@ export default function() {
 
       const msg = JSON.stringify(msgObj)
 
-      promiseChain = promiseChain.then(function () {
-        return new Promise(function (resolve, reject) {
-          if (msgObj.msgId) {
-            // Call the callbacks for the matching id
-            callbacks[msgObj.msgId] = {
-              onSuccess: success,
-              onError: error
+      promiseChain = promiseChain
+        .then(function() {
+          return new Promise(function(resolve) {
+            if (msgObj.msgId) {
+              // Call the callbacks for the matching id
+              callbacks[msgObj.msgId] = {
+                onSuccess: success,
+                onError: error
+              }
             }
-          }
-          window.ReactNativeWebView.postMessage(msg, '*')
-          resolve()
+            window.ReactNativeWebView.postMessage(msg)
+            resolve()
+          })
         })
-      }).catch(function (e) {
-        console.error(`WebViewBridge send failed ${e.message}`)
-      })
-    },
+        .catch(function(e) {
+          console.error(`WebViewBridge send failed: ${e.message}`)
+        })
+    }
   }
 
-  window.addEventListener('message', function(e) {
+  function handleMessage(e) {
     let message
     try {
       message = JSON.parse(e.data)
-    }
-    catch(e) {
+    } catch (e) {
       // Not encoded as JSON, safe to ignore as its not relevant
       return
     }
 
     if (message.args && callbacks[message.msgId]) {
       if (message.isSuccessful) {
-        callbacks[message.msgId].onSuccess.apply(null, message.args);
+        callbacks[message.msgId].onSuccess.apply(null, message.args)
+      } else {
+        callbacks[message.msgId].onError.apply(null, message.args)
       }
-      else {
-        callbacks[message.msgId].onError.apply(null, message.args);
-      }
-      delete callbacks[message.msgId];
+      delete callbacks[message.msgId]
     }
-  })
+  }
+
+  if (window.__mobileBridgePlatform === 'ios') {
+    window.addEventListener('message', handleMessage)
+  } else if (window.__mobileBridgePlatform === 'android') {
+    document.addEventListener('message', handleMessage)
+  }
 }
