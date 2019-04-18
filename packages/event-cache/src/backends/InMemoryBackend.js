@@ -1,4 +1,5 @@
-import AbstractBackend from './AbstractBackend'
+const { AbstractBackend } = require('./AbstractBackend')
+const { compareEvents } = require('../utils')
 
 const ROOT_EVENT_KEYS = [
   'logIndex',
@@ -19,7 +20,7 @@ const ROOT_EVENT_KEYS = [
  * @class
  * @classdesc InMemoryBackend to handle storage of EventCache data in memory
  */
-export default class InMemoryBackend extends AbstractBackend {
+class InMemoryBackend extends AbstractBackend {
   constructor() {
     super()
 
@@ -52,34 +53,36 @@ export default class InMemoryBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async get(argMatchObject) {
-    return this._storage.filter(el => {
-      const matches = Object.keys(argMatchObject).filter(key => {
-        let isReturnValue = false
+    return this._storage
+      .filter(el => {
+        const matches = Object.keys(argMatchObject).filter(key => {
+          let isReturnValue = false
 
-        if (ROOT_EVENT_KEYS.indexOf(key) < 0) {
-          isReturnValue = true
-        }
-
-        let matchingEl = el
-
-        if (isReturnValue) matchingEl = el.returnValues
-
-        if (typeof argMatchObject[key] !== 'undefined') {
-          if (
-            (argMatchObject[key] instanceof Array &&
-              argMatchObject[key].indexOf(matchingEl[key]) > -1) ||
-            argMatchObject[key] == matchingEl[key]
-          ) {
-            return el
+          if (ROOT_EVENT_KEYS.indexOf(key) < 0) {
+            isReturnValue = true
           }
+
+          let matchingEl = el
+
+          if (isReturnValue) matchingEl = el.returnValues
+
+          if (typeof argMatchObject[key] !== 'undefined') {
+            if (
+              (argMatchObject[key] instanceof Array &&
+                argMatchObject[key].indexOf(matchingEl[key]) > -1) ||
+              argMatchObject[key] == matchingEl[key]
+            ) {
+              return el
+            }
+          }
+        })
+
+        // Make sure all provided keys were matched
+        if (matches.length === Object.keys(argMatchObject).length) {
+          return el
         }
       })
-
-      // Make sure all provided keys were matched
-      if (matches.length === Object.keys(argMatchObject).length) {
-        return el
-      }
-    })
+      .sort(compareEvents)
   }
 
   /**
@@ -88,7 +91,7 @@ export default class InMemoryBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
-    return this._storage
+    return this._storage.sort(compareEvents)
   }
 
   /**
@@ -102,4 +105,8 @@ export default class InMemoryBackend extends AbstractBackend {
     this._storage.push(eventObject)
     this.setLatestBlock(eventObject.blockNumber)
   }
+}
+
+module.exports = {
+  InMemoryBackend
 }

@@ -1,6 +1,6 @@
-import AbstractBackend from './AbstractBackend'
+const { AbstractBackend } = require('./AbstractBackend')
 
-import { debug } from '../utils'
+const { debug } = require('../utils')
 
 /**
  * Convert an event object to an object compatible with sequelize
@@ -82,7 +82,7 @@ function DBToEvent(dbObject) {
  * @class
  * @classdesc PostgreSQLBackend to handle event storage in PostgreSQL
  */
-export default class PostgreSQLBackend extends AbstractBackend {
+class PostgreSQLBackend extends AbstractBackend {
   constructor() {
     super()
 
@@ -217,4 +217,8 @@ export default class PostgreSQLBackend extends AbstractBackend {
     await this._models.Event.upsert(dbObject)
     this.setLatestBlock(eventObject.blockNumber)
   }
+}
+
+module.exports = {
+  PostgreSQLBackend
 }

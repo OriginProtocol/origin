@@ -1,3 +1,9 @@
-export { default as InMemoryBackend } from './InMemoryBackend'
-export { default as IndexedDBBackend } from './IndexedDBBackend'
-export { default as PostgreSQLBackend } from './PostgreSQLBackend'
+const { InMemoryBackend } = require('./InMemoryBackend')
+const { IndexedDBBackend } = require('./IndexedDBBackend')
+const { PostgreSQLBackend } = require('./PostgreSQLBackend')
+
+module.exports = {
+  InMemoryBackend,
+  IndexedDBBackend,
+  PostgreSQLBackend
+}

@@ -2,7 +2,7 @@
  * @class
  * @classdesc AbstractBackend to define the interface for EventCache backends
  */
-export default class AbstractBackend {
+class AbstractBackend {
   constructor() {
     this.type = null
 
@@ -78,4 +78,8 @@ export default class AbstractBackend {
       await this.addEvent(eventObjects[i])
     }
   }
+}
+
+module.exports = {
+  AbstractBackend
 }

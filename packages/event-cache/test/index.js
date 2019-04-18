@@ -1,11 +1,11 @@
-import assert from 'assert'
+const assert = require('assert')
 
-import { InMemoryBackend } from '../src/backends'
-import { EventCache, patchWeb3Contract } from '../src'
+const { InMemoryBackend } = require('../src/backends')
+const { EventCache, patchWeb3Contract } = require('../src')
 
-import contracts, { web3 } from './_contracts'
-import ipfs from './_ipfs'
-import { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE, INT_1E24 } from './const'
+const contracts = require('./_contracts')
+const ipfs = require('./_ipfs')
+const { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE, INT_1E24 } = require('./const')
 
 describe('EventCache', function() {
 
@@ -20,7 +20,7 @@ describe('EventCache', function() {
       denise
 
   before(async function() {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await contracts.web3.eth.getAccounts()
     owner = accounts[0]
     alice = accounts[1]
     bob = accounts[2]

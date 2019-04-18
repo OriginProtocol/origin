@@ -1,16 +1,16 @@
-import Dexie from 'dexie'
-import uniq from 'lodash/uniq'
-import intersectionBy from 'lodash/intersectionBy'
+const Dexie = require('dexie').default
+const uniq = require('lodash/uniq')
+const intersectionBy = require('lodash/intersectionBy')
 
-import AbstractBackend from './AbstractBackend'
-import { debug } from '../utils'
+const { AbstractBackend } = require('./AbstractBackend')
+const { debug, compareEvents } = require('../utils')
 
 /**
  * Check and see if IndexedDB is available for use
  */
 function checkForIndexedDB() {
   // Just look for a global, since testing in node may inject
-  if (typeof indexedDB === 'undefined') {
+  if (typeof window !== 'undefined' && typeof indexedDB === 'undefined') {
     throw new Error('Unable to find IndexedDB')
   }
 }
@@ -86,7 +86,7 @@ const ARG_TO_INDEX_MAP = createIndexeMap(INDEXES)
  * @class
  * @classdesc IndexedDBBackend for running in-browser storage
  */
-export default class IndexedDBBackend extends AbstractBackend {
+class IndexedDBBackend extends AbstractBackend {
   constructor(args) {
     const { testing = false } = args || {}
     super()
@@ -186,7 +186,6 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async get(argMatchObject) {
-    console.debug(`get()`, argMatchObject)
     await this.waitForReady()
 
     const indexedArgs = Object.keys(argMatchObject).filter(key => {
@@ -235,6 +234,7 @@ export default class IndexedDBBackend extends AbstractBackend {
             const res = await this._eventStore
               .where(ARG_TO_INDEX_MAP[indexedArgs[i]])
               .equals(argMatchObject[indexedArgs[i]])
+              .sortBy()
               .toArray()
             indexedSet.push(res)
           } catch (err) {
@@ -271,31 +271,33 @@ export default class IndexedDBBackend extends AbstractBackend {
         })
       }
 
-      return matchedSet
+      return matchedSet.sort(compareEvents)
     } else {
       // What the hell, index your life
       debug('unindexed get(). This will be slow!', argMatchObject)
 
       const everything = await this._eventStore.toArray()
 
-      return everything.filter(el => {
-        const matches = Object.keys(unindexedArgs).filter(key => {
-          if (typeof argMatchObject[key] !== 'undefined') {
-            if (
-              (argMatchObject[key] instanceof Array &&
-                argMatchObject[key].indexOf(getFromObject(key, el)) > -1) ||
-              argMatchObject[key] == getFromObject(key, el)
-            ) {
-              return el
+      return everything
+        .filter(el => {
+          const matches = Object.keys(unindexedArgs).filter(key => {
+            if (typeof argMatchObject[key] !== 'undefined') {
+              if (
+                (argMatchObject[key] instanceof Array &&
+                  argMatchObject[key].indexOf(getFromObject(key, el)) > -1) ||
+                argMatchObject[key] == getFromObject(key, el)
+              ) {
+                return el
+              }
             }
+          })
+
+          // Make sure all provided keys were matched
+          if (matches.length === Object.keys(unindexedArgs).length) {
+            return el
           }
         })
-
-        // Make sure all provided keys were matched
-        if (matches.length === Object.keys(unindexedArgs).length) {
-          return el
-        }
-      })
+        .sort(compareEvents)
     }
   }
 
@@ -305,7 +307,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
-    return await this._eventStore.toArray()
+    return await this._eventStore.toArray().sort(compareEvents)
   }
 
   /**
@@ -317,6 +319,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    */
   async addEvent(eventObject) {
     await this.waitForReady()
+
     try {
       await this._eventStore.add(eventObject)
     } catch (err) {
@@ -328,4 +331,8 @@ export default class IndexedDBBackend extends AbstractBackend {
     }
     this.setLatestBlock(eventObject.blockNumber)
   }
+}
+
+module.exports = {
+  IndexedDBBackend
 }

@@ -6,10 +6,9 @@ import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
-import get from 'lodash/get'
-
 import { patchWeb3Contract } from '@origin/event-cache'
-import genericEventCache from './utils/genericEventCache'
+
+//import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
 
@@ -19,13 +18,14 @@ const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
-const HOST = process.env.HOST || 'localhost'
+//const HOST = process.env.HOST || 'localhost'
 // We need a separate LINKER_HOST for the mobile wallet, because cookie sharing
 // between http and ws only works when using non-localhost linker URLs. At the
 // same time, js-ipfs only works for non-secure http when the URL is localhost.
 // So, the hostname in the DApp URL can't be the same as the linker hostname
 // when testing locally.
-const LINKER_HOST = process.env.LINKER_HOST || HOST
+// Except it's unused?
+//const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
 let OriginMobileBridge
@@ -57,9 +57,6 @@ export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
-  // TODO
-  //context.marketplace.eventCache.updateBlock(blockHeaders.number)
-  //context.identityEvents.eventCache.updateBlock(blockHeaders.number)
   context.eventSource.resetCache()
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
@@ -83,7 +80,7 @@ export function setNetwork(net, customConfig) {
   if (!Configs[net]) {
     net = 'rinkeby'
   }
-  console.log('config', Configs[net])
+
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
     isBrowser &&
@@ -103,16 +100,16 @@ export function setNetwork(net, customConfig) {
   if (net === 'test') {
     config = { ...config, ...customConfig }
     if (typeof window !== 'undefined') {
-      config.OriginToken = window.localStorage.OGNContract
-      config.V00_Marketplace = window.localStorage.marketplaceContract
-      config.IdentityEvents = window.localStorage.identityEventsContract
-      config.DaiExchange = window.localStorage.uniswapDaiExchange
+      if (typeof window.localStorage.OGNContract !== 'undefined') config.OriginToken = window.localStorage.OGNContract
+      if (typeof window.localStorage.V00_Marketplace !== 'undefined') config.V00_Marketplace = window.localStorage.marketplaceContract
+      if (typeof window.localStorage.IdentityEvents !== 'undefined') config.IdentityEvents = window.localStorage.identityEventsContract
+      if (typeof window.localStorage.DaiExchange !== 'undefined') config.DaiExchange = window.localStorage.uniswapDaiExchange
     }
   } else if (net === 'localhost') {
-    config.OriginToken = window.localStorage.OGNContract
-    config.V00_Marketplace = window.localStorage.marketplaceContract
-    config.IdentityEvents = window.localStorage.identityEventsContract
-    config.DaiExchange = window.localStorage.uniswapDaiExchange
+    if (typeof window.localStorage.OGNContract !== 'undefined') config.OriginToken = window.localStorage.OGNContract
+    if (typeof window.localStorage.V00_Marketplace !== 'undefined') config.V00_Marketplace = window.localStorage.marketplaceContract
+    if (typeof window.localStorage.IdentityEvents !== 'undefined') config.IdentityEvents = window.localStorage.identityEventsContract
+    if (typeof window.localStorage.DaiExchange !== 'undefined') config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
 
   context.net = net
@@ -359,21 +356,14 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  /*context.marketplace.eventCache = eventCache(
-    context.marketplace,
-    epoch,
-    context.web3,
-    context.config
-  )*/
-  console.log('patching marketplace contract')
   patchWeb3Contract(context.marketplace,
     epoch,
     {
       ...context.config,
-      platform: 'browser'
+      platform: typeof window === 'undefined' ? 'memory' : 'browser'
     }
   )
-  console.log('done patching marketplace contract')
+
   if (address) {
     context.marketplaces = [context.marketplace]
   } else {
@@ -402,22 +392,14 @@ export function setIdentityEvents(address, epoch) {
     IdentityEventsContract.abi,
     address
   )
-  console.log('genericEventCache-----------------------------')
   patchWeb3Contract(context.identityEvents,
     epoch,
     {
       ...context.config,
       ipfsEventCache: context.config.IdentityEvents_EventCache,
-      platform: 'browser'
+      platform: typeof window === 'undefined' ? 'memory' : 'browser'
     }
   )
-  /*context.identityEvents.eventCache = genericEventCache(
-    context.identityEvents,
-    epoch,
-    context.web3,
-    context.config,
-    context.config.IdentityEvents_EventCache
-  )*/
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {

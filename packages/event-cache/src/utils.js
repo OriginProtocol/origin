@@ -1,6 +1,6 @@
-import createDebug from 'debug'
+const createDebug = require('debug')
 
-export const debug = createDebug('event-cache')
+const debug = createDebug('event-cache')
 
 /*
  * Pull a single Event definition from a contract ABI
@@ -48,20 +48,20 @@ function getInputsFromDef(abi) {
  * @param contract {web3.eth.Contract} The contrat being referenced
  * @param params {object} The params given to get()
  */
-export function validateParams(contract, params) {
+function validateParams(contract, params) {
   if (!params) return {}
 
   const availableEvents = Object.keys(contract.events)
 
   if (params.event) {
     if (params.event instanceof Array) {
-      if (!params.event.every(ev => availableEvents.includes)) {
+      if (!params.event.every(ev => availableEvents.includes(ev))) {
         console.warning('At least one event does not exist in contract')
         return false
       }
     } else if (!availableEvents.includes(params.event)) {
       console.warning(`event does not exist in contract`)
-      debug(`expected ${parmas.event}`)
+      debug(`expected ${params.event}`)
       return false
     }
   }
@@ -82,7 +82,9 @@ export function validateParams(contract, params) {
     } else {
       const eventDef = getEventDef(contract._jsonInterface, params.event)
       if (!eventDef) {
-        console.error(`Unable to find event definition in ABI, but it is defined in Contract object. This probably shouldln't happen.`)
+        console.error(
+          `Unable to find event definition in ABI, but it is defined in Contract object. This probably shouldln't happen.`
+        )
       } else {
         inputs = new Set(getInputsFromDef(eventDef))
       }
@@ -103,4 +105,26 @@ export function validateParams(contract, params) {
     debug('param does not match contract')
     return false
   })
+}
+
+/**
+ * Sorting for events
+ *
+ * @param key {string} key name, can include dot notation
+ * @returns {any} value
+ */
+function compareEvents(a, b) {
+  if (a.blockNumber < b.blockNumber) return -1
+  if (a.blockNumber > b.blockNumber) return 1
+  if (a.transactionIndex < b.transactionIndex) return -1
+  if (a.transactionIndex > b.transactionIndex) return 1
+  if (a.logIndex < b.logIndex) return -1
+  if (a.logIndex > b.logIndex) return 1
+  return 0
+}
+
+module.exports = {
+  debug,
+  validateParams,
+  compareEvents
 }

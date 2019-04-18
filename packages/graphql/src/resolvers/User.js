@@ -30,57 +30,28 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
   const offerEvents = await ec().getEvents({ event: 'OfferCreated', party: buyer.id })
   const offerIDs = offerEvents.map(e => e.returnValues.offerID)
-  //const listingIDs = events.map(e => e.returnValues.listingID)
-  //const allIDs = events.map(e => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
   const completedOfferEvents = await ec().getEvents({
     event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
     offerID: offerIDs
   })
-  completedIds = completedOfferEvents.map(ev => {
+  const completedIds = completedOfferEvents.map(ev => {
     return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
   })
 
   let allIds = []
   if (filter === 'complete') {
-    console.log('11111111111111111complete')
     allIds = offerEvents.filter(ev => {
       const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
       return completedIds.indexOf(id) > -1
     })
   } else if (filter === 'pending') {
-    console.log('22222222222222222pending')
     allIds = offerEvents.filter(ev => {
       const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
       return completedIds.indexOf(id) < 0
     })
   } else {
-    allIds = offer
+    allIds = offerEvents.map(ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
   }
-  console.log('allIds', allIds)
-
-  /*const offerIDs = events.map(e => e.returnValues.offerID)
-  const listingIDs = events.map(e => e.returnValues.listingID)
-  let allIds = events
-    .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
-    .reverse()
-  // TODO: This logic probably doesn't work
-  if (filter) {
-    const completedEvents = await ec().getEvents({
-      event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      offerID: offerIDs
-    })
-    const completedIds = uniq(
-      completedEvents.map(
-        e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-      )
-    )
-
-    if (filter === 'complete') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) >= 0)
-    } else if (filter === 'pending') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) < 0)
-    }
-  }*/
 
   return await resultsFromIds({ after, allIds, first, fields })
 }

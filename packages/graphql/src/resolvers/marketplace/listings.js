@@ -108,7 +108,6 @@ export async function listingsBySeller(
     event: 'ListingCreated',
     party: listingSeller.id
   })
-
   const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
   const totalCount = ids.length
 

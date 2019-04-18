@@ -1,15 +1,15 @@
-import chunk from 'lodash/chunk'
-import flattenDeep from 'lodash/flattenDeep'
-import Web3 from 'web3'
+const chunk = require('lodash/chunk')
+const flattenDeep = require('lodash/flattenDeep')
+const Web3 = require('web3')
 
-import { get, post } from '@origin/ipfs'
+const { get, post } = require('@origin/ipfs')
 
-import { debug, validateParams } from './utils'
-import {
+const { debug, validateParams } = require('./utils')
+const {
   InMemoryBackend,
   IndexedDBBackend,
   PostgreSQLBackend
-} from './backends'
+} = require('./backends')
 
 /**
  * @class
@@ -23,7 +23,7 @@ import {
  *    ipfsEventCache: 'QmBase64HashThisisTHISis...'
  * }
  */
-export default class EventCache {
+class EventCache {
   /**
    * constructor
    *
@@ -74,16 +74,14 @@ export default class EventCache {
     if (!platform) platform = this._detectPlatform()
 
     switch (platform) {
-      case 'mobile':
-        // TODO
-        throw new Error('mobile platform not yet implemented')
-
       case 'nodejs':
         return new PostgreSQLBackend()
 
       case 'browser':
         return new IndexedDBBackend()
 
+      case 'mobile':
+      case 'memory':
       default:
         return new InMemoryBackend()
     }
@@ -104,7 +102,7 @@ export default class EventCache {
 
     if (typeof conf.ipfsEventCache !== 'undefined') {
       debug(`loading event cache checkpoint ${conf.ipfsEventCache}`)
-      self.loadCheckpoint(conf.ipfsEventCache)
+      this.loadCheckpoint(conf.ipfsEventCache)
     }
   }
 
@@ -121,8 +119,12 @@ export default class EventCache {
       toBlock = await this.web3.eth.getBlockNumber()
     }
 
-    if (fromBlock >= toBlock) return []
-    
+    if (fromBlock > toBlock) {
+      debug('fromBlock > toBlock')
+      debug(`${fromBlock} > ${toBlock}`)
+      return []
+    }
+
     debug(`New block found: ${toBlock}`)
 
     const partitions = []
@@ -174,7 +176,6 @@ export default class EventCache {
    * @returns {Array} - An array of event objects
    */
   async getEvents(params) {
-    console.log('getEvents()', params)
     if (params && !validateParams(this.contract, params)) {
       debug(params)
       throw new TypeError('Invalid event parameters')
@@ -186,7 +187,6 @@ export default class EventCache {
     }
 
     const result = await this.backend.get(params)
-    console.log('getEvents result', result)
     return result
   }
 
@@ -225,6 +225,19 @@ export default class EventCache {
    */
   async loadCheckpoint(ipfsHash) {
     const serialized = await get(this.ipfsServer, ipfsHash)
-    return await this.backend.loadSerialized(serialized)
+    if (serialized instanceof Array) {
+      // backwards compat
+      return await this.backend.loadSerialized(serialized)
+    } else {
+      if (serialized.events instanceof Array) {
+        return await this.backend.loadSerialized(serialized.events)
+      } else {
+        console.log('loading serialized events checkpoints failed')
+      }
+    }
   }
+}
+
+module.exports = {
+  EventCache
 }

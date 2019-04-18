@@ -84,12 +84,9 @@ class OriginEventSource {
       return null
     }
 
-    console.log('this.contract.eventCache.getEvents////')
     const events = await this.contract.eventCache.getEvents({
-      event: ['ListingCreated', 'ListingUpdated', 'ListingWithdrawn'],
       listingID: listingId
     })
-    console.log('done this.contract.eventCache.getEvents')
 
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
@@ -389,11 +386,12 @@ class OriginEventSource {
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    console.log('this.contract.eventCache.getEvents')
+
     const events = await this.contract.eventCache.getEvents({
       listingID: listingId,
-      offerId: Number(offerId)
+      offerID: Number(offerId)
     })
+
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash

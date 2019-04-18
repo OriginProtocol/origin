@@ -1,12 +1,11 @@
-//import indexedDB from 'fake-indexeddb'
-import assert from 'assert'
+const assert = require('assert')
 
-import { IndexedDBBackend } from '../src/backends'
-import { EventCache } from '../src'
+const { IndexedDBBackend } = require('../src/backends')
+const { EventCache } = require('../src')
 
-import contracts, { web3 } from './_contracts'
-import ipfs from './_ipfs'
-import { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE } from './const'
+const contracts = require('./_contracts')
+const ipfs = require('./_ipfs')
+const { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE } = require('./const')
 
 describe('IndexedDB', function() {
   let IdentityEvents
@@ -18,7 +17,7 @@ describe('IndexedDB', function() {
       denise
 
   before(async function() {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await contracts.web3.eth.getAccounts()
     owner = accounts[0]
     alice = accounts[1]
     bob = accounts[2]
