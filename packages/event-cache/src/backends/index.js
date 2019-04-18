@@ -1,3 +1,3 @@
-export InMemoryBackend from './InMemoryBackend'
-export IndexedDBBackend from './IndexedDBBackend'
-export PostgreSQLBackend from './PostgreSQLBackend'
+export { default as InMemoryBackend } from './InMemoryBackend'
+export { default as IndexedDBBackend } from './IndexedDBBackend'
+export { default as PostgreSQLBackend } from './PostgreSQLBackend'

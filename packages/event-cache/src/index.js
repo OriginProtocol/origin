@@ -1,6 +1,6 @@
-import EventCache from './EventCache' // what the hell
+import { default as IntEventCache } from './EventCache' // what the hell
 
-export EventCache from './EventCache' //      is this babel?
+export { default as EventCache } from './EventCache' //      is this babel?
 
 /**
  * This function will patch a web3.eth.Contract with the eventCache method
@@ -13,6 +13,6 @@ export function patchWeb3Contract(contract, fromBlock = 0, config) {
   if (contract.hasOwnProperty('eventCache')) {
     throw new TypeError(`Contract already has eventCache property!`)
   }
-  contract.eventCache = new EventCache(contract, fromBlock, config)
+  contract.eventCache = new IntEventCache(contract, fromBlock, config)
   return contract
 }

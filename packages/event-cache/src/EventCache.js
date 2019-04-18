@@ -103,6 +103,7 @@ export default class EventCache {
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
     if (typeof conf.ipfsEventCache !== 'undefined') {
+      debug(`loading event cache checkpoint ${conf.ipfsEventCache}`)
       self.loadCheckpoint(conf.ipfsEventCache)
     }
   }
@@ -118,10 +119,11 @@ export default class EventCache {
     if (toBlock === 'latest') {
       // We need to be able to math it
       toBlock = await this.web3.eth.getBlockNumber()
-      debug(`New block found: ${toBlock}`)
     }
 
-    if (fromBlock > toBlock) return []
+    if (fromBlock >= toBlock) return []
+    
+    debug(`New block found: ${toBlock}`)
 
     const partitions = []
     const results = []
@@ -172,7 +174,8 @@ export default class EventCache {
    * @returns {Array} - An array of event objects
    */
   async getEvents(params) {
-    if (!validateParams(this.contract, params)) {
+    console.log('getEvents()', params)
+    if (params && !validateParams(this.contract, params)) {
       debug(params)
       throw new TypeError('Invalid event parameters')
     }
@@ -182,7 +185,29 @@ export default class EventCache {
       await this.backend.addEvents(newEvents)
     }
 
-    return await this.backend.get(params)
+    const result = await this.backend.get(params)
+    console.log('getEvents result', result)
+    return result
+  }
+
+  /**
+   * allEvents retrieves all events wihtout filter
+   * @returns {Array} - An array of event objects
+   */
+  async allEvents() {
+    const newEvents = await this._fetchEvents(this.fromBlock)
+    if (newEvents.length > 0) {
+      await this.backend.addEvents(newEvents)
+    }
+    return await this.backend.all()
+  }
+
+  /**
+   * Returns the latest block number known by the backend
+   * @returns {number} The latest known block number
+   */
+  getBlockNumber() {
+    return this.backend.getLatestBlock()
   }
 
   /**

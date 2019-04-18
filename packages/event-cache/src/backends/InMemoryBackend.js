@@ -83,6 +83,15 @@ export default class InMemoryBackend extends AbstractBackend {
   }
 
   /**
+   * Fetch all events from the store
+   *
+   * @returns {Array} An array of event objects
+   */
+  async all() {
+    return this._storage
+  }
+
+  /**
    * Stores a single event
    *
    * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return

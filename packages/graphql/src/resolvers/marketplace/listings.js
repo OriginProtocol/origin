@@ -104,10 +104,10 @@ export async function listingsBySeller(
   info
 ) {
   const fields = graphqlFields(info)
-  const events = await contracts.marketplace.eventCache.allEvents(
-    'ListingCreated',
-    listingSeller.id
-  )
+  const events = await contracts.marketplace.eventCache.getEvents({
+    event: 'ListingCreated',
+    party: listingSeller.id
+  })
 
   const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
   const totalCount = ids.length

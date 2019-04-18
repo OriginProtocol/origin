@@ -75,7 +75,9 @@ const INDEXES = [
   'transactionIndex',
   'address',
   'returnValues.account',
-  'returnValues.party'
+  'returnValues.party',
+  'returnValues.listingID',
+  'returnValues.offerID'
 ]
 const NORM_INDEXES = normalizedIndexes(INDEXES)
 const ARG_TO_INDEX_MAP = createIndexeMap(INDEXES)
@@ -85,7 +87,8 @@ const ARG_TO_INDEX_MAP = createIndexeMap(INDEXES)
  * @classdesc IndexedDBBackend for running in-browser storage
  */
 export default class IndexedDBBackend extends AbstractBackend {
-  constructor({ testing = false }) {
+  constructor(args) {
+    const { testing = false } = args || {}
     super()
 
     this.type = 'indexeddb'
@@ -123,7 +126,7 @@ export default class IndexedDBBackend extends AbstractBackend {
         .limit(1)
         .toArray()
         .then(res => {
-          that.setLatestBlock(res[0].blockNumber)
+          if (res && res.length > 0) that.setLatestBlock(res[0].blockNumber)
         })
     })
   }
@@ -183,6 +186,7 @@ export default class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async get(argMatchObject) {
+    console.debug(`get()`, argMatchObject)
     await this.waitForReady()
 
     const indexedArgs = Object.keys(argMatchObject).filter(key => {
@@ -296,6 +300,15 @@ export default class IndexedDBBackend extends AbstractBackend {
   }
 
   /**
+   * Fetch all events from the store
+   *
+   * @returns {Array} An array of event objects
+   */
+  async all() {
+    return await this._eventStore.toArray()
+  }
+
+  /**
    * Stores a single event
    *
    * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return
@@ -304,7 +317,15 @@ export default class IndexedDBBackend extends AbstractBackend {
    */
   async addEvent(eventObject) {
     await this.waitForReady()
-    this._eventStore.add(eventObject)
+    try {
+      await this._eventStore.add(eventObject)
+    } catch (err) {
+      if (String(err).includes('exists')) {
+        debug('duplicate event')
+      } else {
+        throw err
+      }
+    }
     this.setLatestBlock(eventObject.blockNumber)
   }
 }

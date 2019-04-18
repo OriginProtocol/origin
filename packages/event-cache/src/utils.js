@@ -13,8 +13,23 @@ function getEventDef(abi, eventName) {
   for (let i = 0; i < abi.length; i++) {
     if (!abi[i].type || abi[i].type !== 'event') continue
     if (abi[i].name === eventName) return abi[i]
-    return null
   }
+  return null
+}
+
+/*
+ * Pull all Event definitions from a contract ABI
+ *
+ * @param abi {Array} of objects, representing the ABI
+ * @returns {object} The event definition
+ */
+function getAllEventsDef(abi) {
+  const defs = new Set()
+  for (let i = 0; i < abi.length; i++) {
+    if (!abi[i].type || abi[i].type !== 'event') continue
+    defs.add(abi[i])
+  }
+  return defs
 }
 
 /*
@@ -38,8 +53,17 @@ export function validateParams(contract, params) {
 
   const availableEvents = Object.keys(contract.events)
 
-  if (params.event && !availableEvents.includes(params.event)) {
-    return false
+  if (params.event) {
+    if (params.event instanceof Array) {
+      if (!params.event.every(ev => availableEvents.includes)) {
+        console.warning('At least one event does not exist in contract')
+        return false
+      }
+    } else if (!availableEvents.includes(params.event)) {
+      console.warning(`event does not exist in contract`)
+      debug(`expected ${parmas.event}`)
+      return false
+    }
   }
 
   // According to the 1.0 docs jsonInterface is a thing, but... not in beta 34?
@@ -47,12 +71,36 @@ export function validateParams(contract, params) {
   // const inputs = eventDef.getInputs().map(inp => inp.name)
 
   // So instead, we're using an internal undocumented 'API' here, so beware
-  const eventDef = getEventDef(contract._jsonInterface, params.event)
-  const inputs = getInputsFromDef(eventDef)
-
+  let inputs = new Set()
+  if (params.event) {
+    if (params.event instanceof Array) {
+      params.event.map(ev => {
+        const eventDef = getEventDef(contract._jsonInterface, ev)
+        const foundInputs = getInputsFromDef(eventDef)
+        foundInputs.map(inp => inputs.add(inp))
+      })
+    } else {
+      const eventDef = getEventDef(contract._jsonInterface, params.event)
+      if (!eventDef) {
+        console.error(`Unable to find event definition in ABI, but it is defined in Contract object. This probably shouldln't happen.`)
+      } else {
+        inputs = new Set(getInputsFromDef(eventDef))
+      }
+    }
+  } else {
+    // No specific event(s), get all possible inputs
+    const defs = getAllEventsDef(contract._jsonInterface)
+    if (defs) {
+      defs.forEach(ev => {
+        const ins = getInputsFromDef(ev)
+        ins.map(_input => inputs.add(_input))
+      })
+    }
+  }
   return Object.keys(params).every(param => {
     if (param === 'event') return true
-    if (inputs.includes(param)) return true
+    if (inputs.has(param)) return true
+    debug('param does not match contract')
     return false
   })
 }

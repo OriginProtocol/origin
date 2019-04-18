@@ -194,6 +194,18 @@ export default class PostgreSQLBackend extends AbstractBackend {
   }
 
   /**
+   * Fetch all events from the store
+   *
+   * @returns {Array} An array of event objects
+   */
+  async all() {
+    const results = await this._models.Event.findAll()
+    return results.map(row => {
+      return DBToEvent(row.dataValues)
+    })
+  }
+
+  /**
    * Stores a single event
    *
    * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return

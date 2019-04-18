@@ -7,11 +7,11 @@ import { getIpfsHashFromBytes32 } from '@origin/ipfs'
 
 const _firstEventByType = async (offer, eventType) => {
   const { listingId, offerId } = parseId(offer.id)
-  const events = await offer.contract.eventCache.offers(
-    listingId,
-    offerId,
-    eventType
-  )
+  const events = await offer.contract.eventCache.getEvents({
+    listingID: listingId,
+    offerID: offerId,
+    event: eventType
+  })
   return events[0]
 }
 
@@ -23,12 +23,12 @@ export default {
 
   events: async offer => {
     const { listingId, offerId } = parseId(offer.id)
-    return await offer.contract.eventCache.offers(listingId, offerId)
+    return await offer.contract.eventCache.getEvents({ listingID: listingId, offerID: offerId})
   },
 
   history: async offer => {
     const { listingId, offerId } = parseId(offer.id)
-    const events = await offer.contract.eventCache.offers(listingId, offerId)
+    const events = await offer.contract.eventCache.getEvents({ listingID: listingId, offerID: offerId})
     return events.map(event => {
       const ipfsHash = getIpfsHashFromBytes32(event.returnValues.ipfsHash)
       return {

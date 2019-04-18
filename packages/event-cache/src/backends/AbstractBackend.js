@@ -46,6 +46,15 @@ export default class AbstractBackend {
   }
 
   /**
+   * Fetch all events from the store
+   *
+   * @returns {Array} An array of event objects
+   */
+  async all() {
+    throw new TypeError('all() must be ipmlemented')
+  }
+
+  /**
    * Stores a single event
    *
    * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return

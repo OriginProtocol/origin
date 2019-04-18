@@ -64,10 +64,9 @@ export function identity({ id, ipfsHash }) {
       return null
     }
     if (!ipfsHash) {
-      const events = await contracts.identityEvents.eventCache.allEvents(
-        undefined,
-        [null, contracts.web3.utils.padLeft(id.toLowerCase(), 64)]
-      )
+      const events = await contracts.identityEvents.eventCache.getEvents({
+        account: id.toLowerCase()
+      })
       events.forEach(event => {
         if (event.event === 'IdentityUpdated') {
           ipfsHash = event.returnValues.ipfsHash
