@@ -3,21 +3,23 @@ import get from 'lodash/get'
 
 import contracts from '../../contracts'
 
-async function verifyTwitter(_, { identity }) {
+async function verifyTwitter(_, { identity, authUrl }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
   }
-  const authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
-  const response = await fetch(authUrl, {
-    headers: { 'content-type': 'application/json' },
-    credentials: 'include'
-  })
 
-  const authData = await response.json()
+  if (!authUrl) {
+    const getAuthUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
+    const response = await fetch(getAuthUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    authUrl = authData.url
+  }
 
   return new Promise(resolve => {
-    const twWindow = window.open(authData.url, '', 'width=650,height=500')
+    const twWindow = window.open(authUrl, '', 'width=650,height=500')
 
     const finish = async e => {
       const iframeData = String(e.data)

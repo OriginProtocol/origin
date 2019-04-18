@@ -24,10 +24,9 @@ router.get('/auth-url', async (req, res) => {
 
   let oAuthToken, oAuthTokenSecret
   try {
-    // eslint-disable-next-line no-extra-semi
-    ;({ oAuthToken, oAuthTokenSecret } = await getTwitterOAuthRequestToken(
-      dappRedirectUrl
-    ))
+    const twitterResponse = await getTwitterOAuthRequestToken(dappRedirectUrl)
+    oAuthToken = twitterResponse.oAuthToken
+    oAuthTokenSecret = twitterResponse.oAuthTokenSecret
   } catch (error) {
     logger.error(error)
     return res.status(500).send({
@@ -38,11 +37,18 @@ router.get('/auth-url', async (req, res) => {
   req.session.oAuthToken = oAuthToken
   req.session.oAuthTokenSecret = oAuthTokenSecret
 
+  console.log(req.sessionID, await req.sessionStore.get(req.sessionID))
+
   const url =
     constants.TWITTER_BASE_AUTH_URL +
     querystring.stringify({ oauth_token: oAuthToken })
 
-  res.send({ url })
+  res.send({ url, sid: req.sessionID })
+})
+
+router.get('/check-session/:sid', async (req, res) => {
+  console.log(await req.sessionStore.get(req.params.sid))
+  res.send('OK')
 })
 
 /* Get an oAuth access token from Twitter using the `oauth-verifier` parameter

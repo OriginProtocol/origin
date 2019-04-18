@@ -12,7 +12,7 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  bridge: 'https://bridge.dev.originprotocol.com',
+  bridge: `http://${HOST}:5000`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 

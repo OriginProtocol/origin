@@ -42,14 +42,7 @@ class TwitterAttestation extends Component {
           this.props.onClose()
         }}
       >
-        <Query
-          query={query}
-          variables={{
-            redirect: encodeURIComponent(
-              'http://localhost:3000#/profile/twitter-attestation'
-            )
-          }}
-        >
+        <Query query={query} variables={{ redirect: window.location.href }}>
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.twitterAuthUrl')
             return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
@@ -78,10 +71,7 @@ class TwitterAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          <a href={authUrl} className="btn btn-outline-light">
-            {fbt('Continue', 'Continue')}
-          </a>
-          {/* }{this.renderVerifyButton()} */}
+          {this.renderVerifyButton({ authUrl })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}

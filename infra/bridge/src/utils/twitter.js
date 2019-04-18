@@ -4,6 +4,11 @@ const OAuth = require('oauth').OAuth
 const { getAbsoluteUrl } = require('./index.js')
 
 function twitterOAuth(dappRedirectUrl = null) {
+  console.log(
+    process.env.TWITTER_CONSUMER_KEY,
+    process.env.TWITTER_CONSUMER_SECRET,
+    dappRedirectUrl
+  )
   return new OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
