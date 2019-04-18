@@ -99,17 +99,6 @@ export function setNetwork(net, customConfig) {
   }
   if (net === 'test') {
     config = { ...config, ...customConfig }
-    if (typeof window !== 'undefined') {
-      if (typeof window.localStorage.OGNContract !== 'undefined') config.OriginToken = window.localStorage.OGNContract
-      if (typeof window.localStorage.V00_Marketplace !== 'undefined') config.V00_Marketplace = window.localStorage.marketplaceContract
-      if (typeof window.localStorage.IdentityEvents !== 'undefined') config.IdentityEvents = window.localStorage.identityEventsContract
-      if (typeof window.localStorage.DaiExchange !== 'undefined') config.DaiExchange = window.localStorage.uniswapDaiExchange
-    }
-  } else if (net === 'localhost') {
-    if (typeof window.localStorage.OGNContract !== 'undefined') config.OriginToken = window.localStorage.OGNContract
-    if (typeof window.localStorage.V00_Marketplace !== 'undefined') config.V00_Marketplace = window.localStorage.marketplaceContract
-    if (typeof window.localStorage.IdentityEvents !== 'undefined') config.IdentityEvents = window.localStorage.identityEventsContract
-    if (typeof window.localStorage.DaiExchange !== 'undefined') config.DaiExchange = window.localStorage.uniswapDaiExchange
   }
 
   context.net = net
