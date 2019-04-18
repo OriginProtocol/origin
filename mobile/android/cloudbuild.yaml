@@ -65,14 +65,14 @@ steps:
   - '-c'
   - |
     gcloud kms decrypt \
-      --ciphertext-file=mobile/android/signing/keystore.properties.enc \
-      --plaintext-file=mobile/android/signing/keystore.properties \
+      --ciphertext-file=mobile/android/keystores/keystore.properties.enc \
+      --plaintext-file=mobile/android/keystores/keystore.properties \
       --location=global \
       --keyring=origin \
       --key=cloudbuild
     gcloud kms decrypt \
-      --ciphertext-file=mobile/android/google-services.json.enc \
-      --plaintext-file=mobile/android/google-services.json \
+      --ciphertext-file=mobile/android/app/google-services.json.enc \
+      --plaintext-file=mobile/android/app/google-services.json \
       --location=global \
       --keyring=origin \
       --key=cloudbuild
