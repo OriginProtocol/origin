@@ -23,7 +23,6 @@ DerivedData
 project.xcworkspace
 
 # Android/IntelliJ
-#
 build/
 .idea
 .gradle
@@ -55,3 +54,5 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+android/signing/keystore.properties

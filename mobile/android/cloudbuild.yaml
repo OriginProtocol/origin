@@ -1,0 +1,141 @@
+---
+steps:
+
+# Get a build number for Google Cloud config bucket
+- name: 'gcr.io/cloud-builders/gsutil'
+  id: 'copy-config'
+  waitFor: ['-']  # The '-' indicates that this step begins immediately.
+  # we use rsync and not cp so that this step doesn't fail the first time it's run
+  args: ['rsync', 'gs://${_CONFIG_BUCKET}/', '/config']
+  volumes:
+  - name: 'config'
+    path: '/config'
+
+# Read and increment version number, writing it back to config for later use
+- name: 'gcr.io/$PROJECT_ID/tar'
+  id: setup-env
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    cat /config/buildnum | awk '{print $1"+1"}' | bc | tee /config/buildnum | awk '{print "BUILD_NUM="$1 }' | tee .buildnum
+  waitFor: ['copy-config']
+  volumes:
+  - name: 'config'
+    path: '/config'
+
+# Save the updated build number to cloud storage
+- name: 'gcr.io/cloud-builders/gsutil'
+  id: save-env
+  args: ['cp', '/config/buildnum', 'gs://${_CONFIG_BUCKET}/buildnum']
+  waitFor: ['setup-env']
+  volumes:
+  - name: 'config'
+    path: '/config'
+
+# Load Gradle build cache
+- name: 'gcr.io/cloud-builders/gsutil'
+  id: copy-build-cache
+  waitFor: ['-']  # The '-' indicates that this step begins immediately.
+  # we use rsync and not cp so that this step doesn't fail the first time it's run
+  args: ['rsync', 'gs://${_CACHE_BUCKET}/', '/build_cache']
+  volumes:
+  - name: 'build_cache'
+    path: '/build_cache'
+
+- name: 'gcr.io/$PROJECT_ID/tar'
+  id: extract-build-cache
+  waitFor: ['copy-build-cache']
+  # This might fail the first time, but that's okay
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    tar xpzf /build_cache/cache.tgz -C / || echo "No cache found."
+  volumes:
+  - name: 'build_cache'
+    path: '/build_cache'
+
+# Decrypt secrets for signing the build
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: decrypt-secrets
+  waitFor: ['-']  # The '-' indicates that this step begins immediately.
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud kms decrypt \
+      --ciphertext-file=mobile/android/signing/keystore.properties.enc \
+      --plaintext-file=mobile/android/signing/keystore.properties \
+      --location=global \
+      --keyring=origin \
+      --key=cloudbuild
+    gcloud kms decrypt \
+      --ciphertext-file=mobile/android/google-services.json.enc \
+      --plaintext-file=mobile/android/google-services.json \
+      --location=global \
+      --keyring=origin \
+      --key=cloudbuild
+
+# Build the project using the version number generated earlier
+- name: 'gcr.io/$PROJECT_ID/android:28'
+  id: build
+  args: ["./mobile/android/gradlew", ":app:assembleRelease", ":app:assembleDebug", "assembleAndroidTest"]
+  <<: &env
+    env:
+    - 'TERM=dumb'
+    - 'JAVA_TOOL_OPTIONS="-Xmx4g"'
+    - 'GRADLE_USER_HOME=/build_cache/.gradle'
+    - 'GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.workers.max=8 -Dkotlin.incremental=false"'
+    - 'BRANCH_NAME=$BRANCH_NAME'
+  waitFor:
+    - decrypt-secrets
+    - extract-build-cache
+  volumes:
+  - name: 'build_cache'
+    path: '/build_cache'
+
+# Save the APKs
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['-q', 'cp', '-r', 'app/build/outputs/apk', 'gs://${_ARTIFACT_BUCKET}/$BRANCH_NAME-$BUILD_ID/']
+  waitFor: ['build']
+
+# Deploy to Google Play if this is prod
+- name: 'gcr.io/$PROJECT_ID/android:28'
+  id: deploy-to-play
+  args: ["for_branch", "master", "./mobile/android/gradlew", ":app:publishReleaseApk"]
+  <<: *env
+  volumes:
+  - name: 'cache'
+    path: '/gradle_cache'
+
+# Deploy to Crashlytics Beta if this is any other branch.
+- name: 'gcr.io/$PROJECT_ID/android:28'
+  id: deploy_to_beta
+  args: ["for_branch", "develop", "./mobile/android/gradlew", ":app:crashlyticsUploadDistributionDebug"]
+  <<: *env
+  volumes:
+  - name: 'cache'
+    path: '/gradle_cache'
+
+# Compress the gradle build cache
+- name: 'gcr.io/$PROJECT_ID/tar'
+  id: compress-cache
+  args: ['cpvzf', '/build_cache/cache.tgz', '-C', '/build_cache', '/build_cache/.gradle']
+  waitFor: ['deploy-to-play', 'deploy_to_beta']
+  volumes:
+  - name: 'build_cache'
+    path: '/build_cache'
+
+# Store the build cache
+- name: gcr.io/cloud-builders/gsutil
+  args: ['cp', '/build_cache/cache.tgz', 'gs://${_CACHE_BUCKET}/cache.tgz']
+  waitFor: ['compress-cache']
+  volumes:
+  - name: 'build_cache'
+    path: '/build_cache'
+
+timeout: 1800s
+
+options:
+  machineType: 'N1_HIGHCPU_8'
