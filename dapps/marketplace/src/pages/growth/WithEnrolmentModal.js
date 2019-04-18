@@ -4,6 +4,7 @@ import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
+import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
@@ -51,7 +52,7 @@ function withEnrolmentModal(WrappedComponent) {
     handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
-      if (mobileDevice() !== null) {
+      if (mobileDevice() !== null && !rewardsOnMobileEnabled) {
         this.setState({
           open: true,
           stage: 'NotSupportedOnMobile'
@@ -576,5 +577,23 @@ require('react-styl')(`
         font-weight: normal
         text-decoration: underline
         color: white
-        margin-top: 20px
+        margin-top: 1.2rem
+  @media (max-width: 767.98px)
+    .growth-enrollment-modal.pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
+      font-size: 15px
+    .growth-enrollment-modal
+      .join-campaign
+        img
+          width: 8rem
+        .btn-no-outline
+          margin-top: 0.8rem
+      .btn
+        margin-top: 1.2rem
+      .title
+        font-size: 20px
+        line-height: 1.3
+      .terms
+        margin: 16px 0px
+      .checkbox-holder
+        font-size: 15px
 `)
