@@ -345,13 +345,10 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  patchWeb3Contract(context.marketplace,
-    epoch,
-    {
-      ...context.config,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser'
-    }
-  )
+  patchWeb3Contract(context.marketplace, epoch, {
+    ...context.config,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser'
+  })
 
   if (address) {
     context.marketplaces = [context.marketplace]
@@ -381,14 +378,11 @@ export function setIdentityEvents(address, epoch) {
     IdentityEventsContract.abi,
     address
   )
-  patchWeb3Contract(context.identityEvents,
-    epoch,
-    {
-      ...context.config,
-      ipfsEventCache: context.config.IdentityEvents_EventCache,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser'
-    }
-  )
+  patchWeb3Contract(context.identityEvents, epoch, {
+    ...context.config,
+    ipfsEventCache: context.config.IdentityEvents_EventCache,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser'
+  })
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {
