@@ -51,7 +51,7 @@ matrix:
         - lerna run migrate --scope @origin/event-cache
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/services --scope @origin/ipfs --scope @origin/event-cache --scope @origin/graphql
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/event-cache
       script:
         - npm run test --prefix packages/event-cache
 
