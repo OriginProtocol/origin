@@ -4,4 +4,4 @@ const Logger = require('logplease')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 
-module.exports = Logger.create('event-listener', { showTimestamp: false })
+module.exports = Logger.create('notifications', { showTimestamp: false })
