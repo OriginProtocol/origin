@@ -38,7 +38,7 @@
     "@babel/runtime": "^7.3.4",
     "@origin/contracts": "^0.8.6",
     "@origin/services": "^0.1.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.3",
     "fake-indexeddb": "^2.1.0",
     "lodash-es": "^4.17.11",
     "prettier": "^1.16.4",
