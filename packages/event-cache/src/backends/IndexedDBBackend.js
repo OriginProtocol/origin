@@ -234,11 +234,11 @@ class IndexedDBBackend extends AbstractBackend {
             const res = await this._eventStore
               .where(ARG_TO_INDEX_MAP[indexedArgs[i]])
               .equals(argMatchObject[indexedArgs[i]])
-              .sortBy()
               .toArray()
             indexedSet.push(res)
           } catch (err) {
             console.log('Error trying to do an index get')
+            console.log(err)
             throw err
           }
         }

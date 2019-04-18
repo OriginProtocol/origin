@@ -35,7 +35,7 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
   const offerIDs = offerEvents.map(e => e.returnValues.offerID)
   const completedOfferEvents = await ec().getEvents({
     event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-    offerID: offerIDs
+    offerID: offerIDs.map(id => String(id))
   })
   const completedIds = completedOfferEvents.map(ev => {
     return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`

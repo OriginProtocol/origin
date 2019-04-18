@@ -85,9 +85,8 @@ class OriginEventSource {
     }
 
     const events = await this.contract.eventCache.getEvents({
-      listingID: listingId
+      listingID: String(listingId)
     })
-
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -137,7 +136,6 @@ class OriginEventSource {
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
       }
-
       // TODO: Dapp1 fractional compat
       if (rawData.availability && !rawData.weekendPrice) {
         try {
@@ -388,8 +386,8 @@ class OriginEventSource {
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
 
     const events = await this.contract.eventCache.getEvents({
-      listingID: listingId,
-      offerID: Number(offerId)
+      listingID: String(listingId),
+      offerID: String(offerId)
     })
 
     events.forEach(e => {
