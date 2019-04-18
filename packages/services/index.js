@@ -19,7 +19,7 @@ const portInUse = port =>
 const startGanache = (opts = {}) =>
   new Promise((resolve, reject) => {
     const ganacheOpts = {
-      total_accounts: 5,
+      total_accounts: opts.total_accounts || 5,
       default_balance_ether: 100,
       db_path: `${__dirname}/data/db`,
       network_id: 999,
@@ -86,24 +86,68 @@ const populateIpfs = ({ logFiles } = {}) =>
     )
   })
 
-const deployContracts = () =>
+function writeTruffleAddress(contract, network, address) {
+  const filename = `${__dirname}/../contracts/build/contracts/${contract}.json`
+  const rawContract = fs.readFileSync(filename)
+  const Contract = JSON.parse(rawContract)
+  try {
+    Contract.networks[network].address = address
+    fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+  } catch (error) {
+    // Didn't copy contract build files into the build directory?
+    console.log('Could not write contract address to truffle file')
+  }
+}
+
+const contractsPath = `${__dirname}/../contracts/build`
+const writeTruffle = () =>
+  new Promise(resolve => {
+    console.log('Writing truffle...')
+    try {
+      const rawAddresses = fs.readFileSync(contractsPath + '/contracts.json')
+      const addresses = JSON.parse(rawAddresses)
+      if (addresses.Marketplace) {
+        writeTruffleAddress('V00_Marketplace', '999', addresses.Marketplace)
+      }
+      if (addresses.IdentityEvents) {
+        writeTruffleAddress('IdentityEvents', '999', addresses.IdentityEvents)
+      }
+      if (addresses.OGN) {
+        writeTruffleAddress('OriginToken', '999', addresses.OGN)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    resolve()
+  })
+
+const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
   new Promise((resolve, reject) => {
-    const originContractsPath = path.resolve(__dirname, '../contracts')
-    const truffleMigrate = spawn(
-      `./node_modules/.bin/truffle`,
-      ['migrate', '--reset'],
+    const filePath = `${contractsPath}/${filename}.json`
+    if (skipIfExists && fs.existsSync(filePath)) {
+      try {
+        const c = JSON.parse(fs.readFileSync(filePath))
+        if (Object.keys(c).length) return resolve()
+      } catch (e) {
+        /* Regenerate file */
+      }
+    }
+    const originContractsPath = path.resolve(__dirname, '../graphql')
+    const startServer = spawn(
+      `node`,
+      ['-r', '@babel/register', 'fixtures/populate-server.js', filename],
       {
         cwd: originContractsPath,
         stdio: 'inherit',
         env: process.env
       }
     )
-    truffleMigrate.on('exit', code => {
+    startServer.on('exit', code => {
       if (code === 0) {
-        console.log('Truffle migrate finished OK.')
+        console.log('Deploying contracts finished OK.')
         resolve()
       } else {
-        reject('Truffle migrate failed.')
+        reject('Deploying contracts failed.')
         reject()
       }
     })
@@ -122,10 +166,6 @@ module.exports = async function start(opts = {}) {
     }
   }
 
-  if (opts.deployContracts) {
-    await deployContracts()
-  }
-
   if (opts.ipfs && !started.ipfs) {
     if (await portInUse(5002)) {
       console.log('IPFS already started')
@@ -136,6 +176,24 @@ module.exports = async function start(opts = {}) {
       started.populate = true
       await populateIpfs()
     }
+  }
+
+  if (opts.deployContracts && !started.contracts) {
+    if (!fs.existsSync(`${contractsPath}/contracts.json`)) {
+      fs.writeFileSync(`${contractsPath}/contracts.json`, '{}')
+    }
+    if (!fs.existsSync(`${contractsPath}/tests.json`)) {
+      fs.writeFileSync(`${contractsPath}/tests.json`, '{}')
+    }
+    await deployContracts({
+      skipIfExists: opts.skipContractsIfExists,
+      filename: opts.contractsFile
+    })
+    started.contracts = true
+  }
+
+  if (opts.writeTruffle) {
+    await writeTruffle()
   }
 
   if (opts.extras && !started.extras) {

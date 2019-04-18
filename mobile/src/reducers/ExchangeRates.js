@@ -9,8 +9,8 @@ export default function ExchangeRates(state = initialState, action = {}) {
         ...state,
         [action.currencyPair]: {
           rate: action.rate,
-          timestamp: action.timestamp,
-        },
+          timestamp: action.timestamp
+        }
       }
   }
 

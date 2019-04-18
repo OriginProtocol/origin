@@ -99,7 +99,7 @@ class Currencies {
     // Start the background polling of exchange rates.
     this.polled = false
     if (process.env.NODE_ENV !== 'test') {
-      setInterval(async () => {
+      this.interval = setInterval(async () => {
         this._poll()
       }, EXCHANGE_RATES_POLL_INTERVAL)
     }
