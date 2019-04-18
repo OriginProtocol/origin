@@ -1,26 +1,30 @@
 import React, { Component } from 'react'
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { connect } from 'react-redux'
+import {
+  DeviceEventEmitter,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
-
-import originWallet from '../OriginWallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class ForkScreen extends Component {
   constructor(props) {
     super(props)
-
-    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
-      modalOpen: false,
+      modalOpen: false
     }
+    this.toggleModal = this.toggleModal.bind(this)
   }
 
   static navigationOptions = {
-    title: 'Get Started',
+    title: 'Get Started'
   }
 
   toggleModal() {
@@ -35,10 +39,16 @@ class ForkScreen extends Component {
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'wallet.png')}
-            style={[styles.image, this.props.screenProps.smallScreen ? { height: '33%' } : {}]}
+            style={[
+              styles.image,
+              this.props.screenProps.smallScreen ? { height: '33%' } : {}
+            ]}
           />
           <Text style={styles.title}>Create Or Import A Wallet</Text>
-          <Text style={styles.subtitle}>Create a new wallet and transder funds into it or import an existing wallet that you already use.</Text>
+          <Text style={styles.subtitle}>
+            Create a new wallet and transder funds into it or import an existing
+            wallet that you already use.
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -47,7 +57,7 @@ class ForkScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Create New Wallet'}
-            onPress={() => originWallet.createAccount()}
+            onPress={() => DeviceEventEmitter.emit('createAccount')}
           />
           <OriginButton
             size="large"
@@ -58,28 +68,30 @@ class ForkScreen extends Component {
             onPress={this.toggleModal}
           />
         </View>
-        <AccountModal dark={true} heading="Import Wallet" visible={this.state.modalOpen} onPress={this.toggleModal} onRequestClose={this.toggleModal} />
+        <AccountModal
+          dark={true}
+          heading="Import Wallet"
+          visible={this.state.modalOpen}
+          onPress={this.toggleModal}
+          onRequestClose={this.toggleModal}
+        />
       </SafeAreaView>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
+export default ForkScreen
 
-  }
-}
-
-export default connect(mapStateToProps)(ForkScreen)
+const { width, height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   button: {
     marginBottom: 20,
-    marginHorizontal: 50,
+    marginHorizontal: 50
   },
   buttonsContainer: {
     paddingTop: 10,
-    width: '100%',
+    width: '100%'
   },
   container: {
     alignItems: 'center',
@@ -87,31 +99,31 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingTop: 0,
+    paddingTop: 0
   },
   content: {
     alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   image: {
-    marginBottom: '10%',
+    marginBottom: '10%'
   },
   title: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '300',
     marginHorizontal: 50,
     paddingBottom: 15,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   subtitle: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '300',
     marginHorizontal: 50,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })

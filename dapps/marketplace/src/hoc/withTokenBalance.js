@@ -11,9 +11,9 @@ function withTokenBalance(WrappedComponent) {
       variables={{ account: wallet, token }}
       skip={!wallet}
     >
-      {({ data }) => (
-        <WrappedComponent {...props} tokenBalance={tokenBalance(data)} />
-      )}
+      {({ data }) => {
+        return <WrappedComponent {...props} {...tokenInfo(data)} />
+      }}
     </Query>
   )
   return WithTokenBalance
@@ -21,12 +21,15 @@ function withTokenBalance(WrappedComponent) {
 
 export default withTokenBalance
 
-function tokenBalance(data) {
+function tokenInfo(data) {
   const tokenHolder = get(data, 'web3.account.token')
   if (!tokenHolder || !tokenHolder.balance) return 0
   const decimals = get(tokenHolder, 'token.decimals')
 
   const supplyBN = web3.utils.toBN(tokenHolder.balance)
   const decimalsBN = web3.utils.toBN(web3.utils.padRight('1', decimals + 1))
-  return Number(supplyBN.div(decimalsBN))
+  return {
+    tokenBalance: Number(supplyBN.div(decimalsBN)),
+    tokenDecimals: decimals
+  }
 }

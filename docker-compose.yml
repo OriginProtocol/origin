@@ -50,7 +50,7 @@ services:
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
-      - ./packages/linker-client/:/app/packages/linker-client/
+      - ./packages/mobile-bridge/:/app/packages/mobile-bridge/
       - ./packages/validator:/app/packages/validator/
       - ./packages/token/:/app/packages/token/
       # Infrastructure packages
@@ -70,7 +70,7 @@ services:
       - /app/packages/eventsource/node_modules/
       - /app/packages/ipfs/node_modules/
       - /app/packages/messaging-client/node_modules/
-      - /app/packages/linker-client/node_modules/
+      - /app/packages/mobile-bridge/node_modules/
       - /app/packages/validator/node_modules/
       - /app/packages/token/node_modules/
       - /app/infra/bridge/node_modules/
@@ -90,7 +90,7 @@ services:
     environment:
       - DOCKER=true
       - DEPLOY_CONTRACTS=true
-    command: npm run start --prefix packages/services
+    command: npm run start --prefix packages/services -- -g -i -p -f -t
 
   messaging:
     container_name: messaging
@@ -139,7 +139,7 @@ services:
       - INDEX_GROWTH=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
-      - WEBHOOK=
+      - NOTIFICATIONS_WEBHOOK=
       - ENVKEY=
     depends_on:
       - postgres
@@ -238,26 +238,3 @@ services:
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/bridge &&
       npm run start --prefix infra/bridge"
-
-  linking:
-    container_name: linking
-    image: origin
-    volumes: *volumes
-    environment:
-      - HOT_WALLET_PK=C87509A1C067BBDE78BEB793E6FA76530B6382A4C0241E5E4A9EC0A0F44DC0D3
-      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-      - DAPP_URL=http://localhost:3000
-      - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - DISCOVERY_SERVER_URL=http://localhost:4000
-      - PROVIDER_URL=http://services:8545
-      - REDIS_URL=redis://redis-master:6379
-      - ENVKEY=
-    depends_on:
-      - postgres
-      - redis-master
-      - services
-    command:
-      >
-      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix infra/linking &&
-      npm run start --prefix infra/linking"

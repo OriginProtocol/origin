@@ -8,9 +8,11 @@ import validator from '@origin/validator'
 
 import Store from 'utils/store'
 import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
+import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -28,6 +30,7 @@ import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
+import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
@@ -45,6 +48,7 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'avatarUrl',
   'strength',
   'attestations',
   'facebookVerified',
@@ -83,27 +87,137 @@ class UserProfile extends Component {
         console.log('Invalid attestation', attestations[key])
       }
     })
-    this.state = { ...getState(profile), ...storedAttestations }
+    this.state = {
+      ...getState(profile),
+      ...storedAttestations
+    }
+    this.accountsSwitched = false
   }
 
-  componentDidUpdate(prevProps) {
+  changesPublishedToBlockchain(props, prevProps) {
+    const profile = get(props, 'identity') || {}
+    const prevProfile = get(prevProps, 'identity') || {}
+
+    return (
+      (profile.firstName !== prevProfile.firstName ||
+        profile.lastName !== prevProfile.lastName ||
+        profile.description !== prevProfile.description ||
+        profile.avatar !== prevProfile.avatar ||
+        profile.emailVerified !== prevProfile.emailVerified ||
+        profile.phoneVerified !== prevProfile.phoneVerified ||
+        profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.twitterVerified !== prevProfile.twitterVerified ||
+        profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+      profile.id === prevProfile.id &&
+      // initial profile data population
+      prevProfile.id !== undefined
+    )
+  }
+
+  profileDataUpdated(state, prevState) {
+    return (
+      (state.firstName !== prevState.firstName ||
+        state.lastName !== prevState.lastName ||
+        state.description !== prevState.description ||
+        state.avatar !== prevState.avatar) &&
+      !this.accountsSwitched
+    )
+  }
+
+  attestationUpdated(state, prevState, attestation) {
+    return (
+      state[attestation] !== prevState[attestation] && !this.accountsSwitched
+    )
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
+      this.accountsSwitched = true
+      /* Semi ugly hack - can not find a better solution to the problem.
+       *
+       * The problem: To show toast notification when a user changes profile or attestation
+       * data we are observing this component's state. False positive notifications
+       * need to be prevented to not falsely fire when state is initially populated or when user
+       * changes wallets.
+       *
+       * The biggest challenge is that wallet id prop changes immediately when the wallet
+       * changes and bit later identity information prop is populated (which can also be empty). It
+       * is hard to connect the wallet change to the identity change, to rule out profile switches.
+       *
+       * Current solution is just to disable any notifications firing 3 seconds after
+       * account switch.
+       */
+      setTimeout(() => {
+        this.accountsSwitched = false
+      }, 3000)
     }
+
+    if (this.changesPublishedToBlockchain(this.props, prevProps)) {
+      this.handleShowNotification(
+        fbt(
+          'Changes published to blockchain',
+          'profile.changesPublishedToBlockchain'
+        ),
+        'green'
+      )
+    }
+
+    if (this.profileDataUpdated(this.state, prevState)) {
+      this.handleShowNotification(
+        fbt('Profile updated', 'profile.profileUpdated'),
+        'blue'
+      )
+    }
+
+    const attestationNotificationConf = [
+      {
+        attestation: 'emailAttestation',
+        message: fbt('Email updated', 'profile.emailUpdated')
+      },
+      {
+        attestation: 'phoneAttestation',
+        message: fbt('Phone number updated', 'profile.phoneUpdated')
+      },
+      {
+        attestation: 'facebookAttestation',
+        message: fbt('Facebook updated', 'profile.facebookUpdated')
+      },
+      {
+        attestation: 'twitterAttestation',
+        message: fbt('Twitter updated', 'profile.twitterUpdated')
+      },
+      {
+        attestation: 'airbnbAttestation',
+        message: fbt('Airbnb updated', 'profile.airbnbUpdated')
+      }
+    ]
+
+    attestationNotificationConf.forEach(({ attestation, message }) => {
+      if (this.attestationUpdated(this.state, prevState, attestation)) {
+        this.handleShowNotification(message, 'blue')
+      }
+    })
   }
 
   render() {
     return (
       <Fragment>
+        <ToastNotification
+          setShowHandler={handler => (this.handleShowNotification = handler)}
+        />
         <DocumentTitle
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
         <Switch>
+          {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
+           * For that reason Origin wallet is disabled.
+           */}
           <Route
             path="/profile/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={true}
                 linkprefix="/profile"
                 redirectTo="/profile/continue"
               />
@@ -165,12 +279,10 @@ class UserProfile extends Component {
               </div>
             </div>
             <h3>
-              <fbt desc="Profile.verifyYourselfHeading">
-                Verify yourself on Origin
-              </fbt>
+              <fbt desc="Profile.originVerifications">Origin Verifications</fbt>
             </h3>
-            <div className="gray-box">
-              <label className="mb-3">
+            <div className="attestation-container">
+              <label className="mb-4">
                 <fbt desc="_Services.pleaseConnectAccounts">
                   Please connect your accounts below to strengthen your identity
                   on Origin.
@@ -178,16 +290,12 @@ class UserProfile extends Component {
               </label>
               <div className="profile-attestations">
                 {this.renderAtt(
-                  'phone',
-                  fbt('Phone', '_ProvisionedChanges.phone')
-                )}
-                {this.renderAtt(
                   'email',
                   fbt('Email', '_ProvisionedChanges.email')
                 )}
                 {this.renderAtt(
-                  'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                  'phone',
+                  fbt('Phone', '_ProvisionedChanges.phone')
                 )}
                 {this.renderAtt(
                   'facebook',
@@ -196,6 +304,10 @@ class UserProfile extends Component {
                 {this.renderAtt(
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
+                )}
+                {this.renderAtt(
+                  'airbnb',
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
                 )}
                 {this.renderAtt(
                   'google',
@@ -221,7 +333,8 @@ class UserProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar'
+                    'avatar',
+                    'avatarUrl'
                   ]),
                   attestations: [
                     ...(this.state.attestations || []),
@@ -268,7 +381,9 @@ class UserProfile extends Component {
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            onAvatarChange={avatar => this.setState({ avatar })}
+            onAvatarChange={(avatar, avatarUrl) =>
+              this.setState({ avatar, avatarUrl })
+            }
           />
         )}
       </div>
@@ -278,12 +393,16 @@ class UserProfile extends Component {
   renderAtt(type, text, soon) {
     const { wallet } = this.props
     const profile = get(this.props, 'identity') || {}
+    let attestationPublished = false
+    let attestationProvisional = false
 
     let status = ''
     if (profile[`${type}Verified`]) {
       status = ' published'
+      attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
+      attestationProvisional = true
     }
     if (soon) {
       status = ' soon'
@@ -307,6 +426,22 @@ class UserProfile extends Component {
       )
     }
 
+    let attestationReward = 0
+    if (
+      this.props.growthCampaigns &&
+      this.props.growthEnrollmentStatus === 'Enrolled'
+    ) {
+      const capitalize = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1)
+      }
+
+      attestationReward = getAttestationReward({
+        growthCampaigns: this.props.growthCampaigns,
+        attestation: capitalize(type),
+        tokenDecimals: this.props.tokenDecimals || 18
+      })
+    }
+
     return (
       <>
         <div
@@ -316,6 +451,19 @@ class UserProfile extends Component {
         >
           <i />
           {text}
+          {attestationPublished && (
+            <img className="ml-auto" src="images/identity/completed-tick.svg" />
+          )}
+          {attestationProvisional && <div className="indicator" />}
+          {!attestationPublished && attestationReward !== 0 && (
+            <div
+              className={`growth-reward ml-auto d-flex justify-content-center ${
+                attestationProvisional ? 'provisional' : ''
+              }`}
+            >
+              {attestationReward.toString()}
+            </div>
+          )}
         </div>
         {AttestationComponent}
       </>
@@ -344,16 +492,27 @@ class UserProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(UserProfile))
+export default withWallet(withIdentity(withGrowthCampaign(UserProfile)))
 
 require('react-styl')(`
   .profile-edit
     margin-top: 3rem
+    h3
+      font-size: 24px
+      font-weight: 300
+      color: var(--dark)
+    .attestation-container
+      padding-bottom: 1rem
+      margin-bottom: 2rem
+      label
+        font-family: Lato
+        font-size: 16px
+        font-weight: 300
+        color: var(--dark-blue-grey)
     .gray-box
       border: 1px solid var(--light)
       border-radius: var(--default-radius)
       padding: 1rem
-      margin-bottom: 2rem
     .avatar-wrap
       margin-right: 2rem
       width: 7.5rem
@@ -377,10 +536,34 @@ require('react-styl')(`
         display: block
         margin: 0.75rem 0 0 0.5rem
     .profile-help
-      font-size: 14px;
-      background: url(images/identity/identity.svg) no-repeat center 1.5rem;
-      background-size: 5rem;
-      padding-top: 8rem;
+      font-size: 14px
+      background: url(images/identity/identity.svg) no-repeat center 1.5rem
+      background-size: 5rem
+      padding-top: 8rem
+    .attestation-container
+      .growth-reward
+        font-family: Lato
+        font-size: 16px
+        font-weight: bold
+        color: var(--pale-grey-two)
+        img
+          width: 15px
+        &::before
+          display: block
+          position: relative
+          content: ""
+          background: url(images/ogn-icon-grayed-out.svg) no-repeat center
+          background-size: 1rem
+          width: 1rem
+          height: 1rem
+          margin-right: 0.25rem
+          margin-top: 0.25rem
+      .growth-reward.provisional
+        color: var(--clear-blue)
+        &::before
+          background: url(images/ogn-icon.svg) no-repeat center
+          background-size: 1rem
+
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem
