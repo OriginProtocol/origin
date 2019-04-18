@@ -6,11 +6,11 @@ import {
   Modal,
   Platform,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   View
 } from 'react-native'
 import { WebView } from 'react-native-webview'
+import { SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
 
 import { DEFAULT_NOTIFICATION_PERMISSIONS } from '../constants'

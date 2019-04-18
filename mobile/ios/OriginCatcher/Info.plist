@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7</string>
+	<string>10</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We will not be using the location</string>
 	<key>LSRequiresIPhoneOS</key>
