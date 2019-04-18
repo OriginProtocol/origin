@@ -33,7 +33,7 @@ matrix:
       node_js: 10
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/event-cache
       script:
         - npm run test --prefix packages/graphql
 
@@ -120,7 +120,7 @@ matrix:
         - lerna run migrate --scope @origin/identity
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/bridge --scope @origin/identity --scope @origin/token --scope @origin/growth
+        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/bridge --scope @origin/identity --scope @origin/token --scope @origin/growth --scope @origin/event-cache
       script:
         - npm run test --prefix infra/growth
 
