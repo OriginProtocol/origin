@@ -96,7 +96,7 @@ class OriginWallet extends Component {
   componentDidUpdate(prevProps) {
     // Reinit web3 if the network we are using changes, this will cause a change
     // of provider to match
-    if (prevProps.settings.network.id !== this.props.settings.network.id) {
+    if (prevProps.settings.network.name !== this.props.settings.network.name) {
       this.initWeb3()
       this.updateBalancesNow()
     }
@@ -171,7 +171,7 @@ class OriginWallet extends Component {
    */
   initWeb3() {
     // Verify that the saved network is valid
-    const networkExists = NETWORKS.find(n => n === this.props.settings.network)
+    const networkExists = NETWORKS.find(n => n.name === this.props.settings.network.name)
     if (!networkExists) {
       // Set to mainnet if for some reason the network doesn't exist
       this.props.setNetwork(NETWORKS.find(n => n.id === 1))
