@@ -10,10 +10,15 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-COPY ./infra/notifications /app
+COPY package*.json ./
+COPY lerna.json ./
+COPY ./infra/notifications ./infra/notifications
+# @origin/identity required for the db model
+COPY ./infra/identity ./infra/identity
+COPY ./scripts ./scripts
 
-RUN npm install --loglevel notice
+RUN npm install --unsafe-perm
 
 CMD eval $(envkey-source) && \
-	npm run migrate && \
-	npm run start
+	npm run migrate --prefix infra/notifications && \
+	npm run start --prefix infra/notifications
