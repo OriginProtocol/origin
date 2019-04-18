@@ -28,7 +28,10 @@ async function resultsFromIds({ after, allIds, first, fields }) {
 
 async function offers(buyer, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
-  const offerEvents = await ec().getEvents({ event: 'OfferCreated', party: buyer.id })
+  const offerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    party: buyer.id
+  })
   const offerIDs = offerEvents.map(e => e.returnValues.offerID)
   const completedOfferEvents = await ec().getEvents({
     event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
@@ -50,7 +53,9 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
       return completedIds.indexOf(id) < 0
     })
   } else {
-    allIds = offerEvents.map(ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
+    allIds = offerEvents.map(
+      ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+    )
   }
 
   return await resultsFromIds({ after, allIds, first, fields })

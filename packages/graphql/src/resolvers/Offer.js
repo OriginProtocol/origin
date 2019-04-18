@@ -23,12 +23,18 @@ export default {
 
   events: async offer => {
     const { listingId, offerId } = parseId(offer.id)
-    return await offer.contract.eventCache.getEvents({ listingID: listingId, offerID: offerId })
+    return await offer.contract.eventCache.getEvents({
+      listingID: listingId,
+      offerID: offerId
+    })
   },
 
   history: async offer => {
     const { listingId, offerId } = parseId(offer.id)
-    const events = await offer.contract.eventCache.getEvents({ listingID: listingId, offerID: offerId })
+    const events = await offer.contract.eventCache.getEvents({
+      listingID: listingId,
+      offerID: offerId
+    })
     return events.map(event => {
       const ipfsHash = getIpfsHashFromBytes32(event.returnValues.ipfsHash)
       return {

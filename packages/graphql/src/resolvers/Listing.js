@@ -15,7 +15,9 @@ export default {
   },
   totalEvents: async listing => {
     const { listingId } = parseId(listing.id)
-    return (await listing.contract.eventCache.getEvents({ listingID: listingId })).length
+    return (await listing.contract.eventCache.getEvents({
+      listingID: listingId
+    })).length
   },
   totalOffers: listing => {
     const { listingId } = parseId(listing.id)
