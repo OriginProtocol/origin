@@ -71,6 +71,12 @@ steps:
       --keyring=origin \
       --key=cloudbuild
     gcloud kms decrypt \
+      --ciphertext-file=mobile/android/keystores/origin.keystore.enc \
+      --plaintext-file=mobile/android/keystores/origin.keystore \
+      --location=global \
+      --keyring=origin \
+      --key=cloudbuild
+    gcloud kms decrypt \
       --ciphertext-file=mobile/android/app/google-services.json.enc \
       --plaintext-file=mobile/android/app/google-services.json \
       --location=global \
@@ -80,7 +86,8 @@ steps:
 # Build the project using the version number generated earlier
 - name: 'gcr.io/$PROJECT_ID/android:28'
   id: build
-  args: ["./mobile/android/gradlew", ":app:assembleRelease", ":app:assembleDebug", "assembleAndroidTest"]
+  dir: "/workspace/mobile/android"
+  args: ["./gradlew", ":app:assembleRelease", ":app:assembleDebug", "assembleAndroidTest"]
   <<: &env
     env:
     - 'TERM=dumb'
@@ -103,7 +110,8 @@ steps:
 # Deploy to Google Play if this is prod
 - name: 'gcr.io/$PROJECT_ID/android:28'
   id: deploy-to-play
-  args: ["for_branch", "master", "./mobile/android/gradlew", ":app:publishReleaseApk"]
+  dir: "/workspace/mobile/android"
+  args: ["for_branch", "master", "./gradlew", ":app:publishReleaseApk"]
   <<: *env
   volumes:
   - name: 'cache'
@@ -112,7 +120,8 @@ steps:
 # Deploy to Crashlytics Beta if this is any other branch.
 - name: 'gcr.io/$PROJECT_ID/android:28'
   id: deploy_to_beta
-  args: ["for_branch", "develop", "./mobile/android/gradlew", ":app:crashlyticsUploadDistributionDebug"]
+  dir: "/workspace/mobile/android"
+  args: ["for_branch", "develop", "./gradlew", ":app:crashlyticsUploadDistributionDebug"]
   <<: *env
   volumes:
   - name: 'cache'
