@@ -2,6 +2,7 @@ import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketpla
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
+import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
@@ -221,6 +222,11 @@ export function setNetwork(net, customConfig) {
       }
     }
   }
+
+  context.identityProxy = new context.web3Exec.eth.Contract(
+    IdentityProxyContract.abi
+  )
+  context.identityProxy.bytecode = IdentityProxyContract.bytecode
 
   context.transactions = {}
   try {

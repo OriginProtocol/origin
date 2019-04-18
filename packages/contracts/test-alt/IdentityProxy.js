@@ -13,13 +13,14 @@ const trackGas = id => receipt => gasUsed.push([id, receipt.cumulativeGasUsed])
 
 describe('Identity', async function() {
   let web3, accounts, deploy
-  let Marketplace, Forwarder, NewUserAccount, ProxyFactory, IdentityProxyImp
+  let Marketplace, Forwarder, NewUserAccount, ProxyFactory, IdentityProxyImp, Seller, DaiStableCoin
 
   before(async function() {
     ({ web3, deploy, accounts } = await helper(`${__dirname}/..`))
 
     // Address that pays for new user
     Forwarder = accounts[0]
+    Seller = accounts[1]
 
     // A dummy user address with zero ether
     NewUserAccount = web3.eth.accounts.create()
@@ -29,6 +30,13 @@ describe('Identity', async function() {
       path: `${contractPath}/marketplace/v00`,
       file: 'Marketplace.sol',
       args: [ZERO_ADDRESS]
+    })
+
+    DaiStableCoin = await deploy('Token', {
+      from: accounts[0],
+      path: `${__dirname}/contracts/`,
+      args: ['Dai', 'DAI', 2, 12000]
+      // args: [12000]
     })
 
     ProxyFactory = await deploy('ProxyFactory', {
@@ -102,6 +110,37 @@ describe('Identity', async function() {
 
       const listing = await Marketplace.methods.listings(0).call()
       assert.equal(listing.seller, IdentityProxy._address)
+
+
+
+      const Ipfs = '0x12345678901234567890123456789012'
+      // console.log(Seller, Marketplace._address, Ipfs)
+      const listingAbi = await Marketplace.methods.createListing(Ipfs, 0, Seller).encodeABI()
+
+
+      const execABI = await IdentityProxyImp.methods
+        .marketplaceExecute(Seller, Marketplace._address, listingAbi, DaiStableCoin._address, 100)
+        .encodeABI()
+
+      const SellerProxyRes = await ProxyFactory.methods.createProxy(
+        IdentityProxyImp._address,
+        execABI
+      ).send({
+        from: Forwarder,
+        gas: 4000000
+      }).once('receipt', trackGas('Deploy Proxy'))
+
+      const SellerProxy = SellerProxyRes.events.ProxyCreation.returnValues.proxy
+
+      const listing2 = await Marketplace.methods.listings(1).call()
+      console.log(Seller, listing2)
+
+      const allowance = await DaiStableCoin.methods.allowance(SellerProxy, Marketplace._address).call()
+      console.log('allowance', allowance)
+      // assert.equal(await Marketplace.methods.totalListings().call(), 2)
+
+
+
     })
   })
 

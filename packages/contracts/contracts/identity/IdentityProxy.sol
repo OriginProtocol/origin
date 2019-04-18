@@ -11,6 +11,10 @@ interface ERC725 {
     function execute(uint256 _operationType, address _to, uint256 _value, bytes _data) external;
 }
 
+interface ERC20 {
+    function approve(address _spender, uint256 _value);
+}
+
 contract IdentityProxy is ERC725 {
 
     uint256 constant OPERATION_CALL = 0;
@@ -158,5 +162,38 @@ contract IdentityProxy is ERC725 {
             // solium-disable-next-line arg-overflow
             return owner == ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash)), v, r, s);
         }
+    }
+
+    function swapAndMakeOffer(
+        address _owner,
+        address _marketplace,
+        bytes _offer,
+        address _exchange,
+        bytes _swap,
+        address _token,
+        uint _value
+    )
+        public
+        payable
+    {
+        owner = _owner;
+        executeCall(_exchange, msg.value, _swap);
+        ERC20(_token).approve(_marketplace, _value);
+        executeCall(_marketplace, 0, _offer);
+    }
+
+    function marketplaceExecute(
+        address _owner,
+        address _marketplace,
+        bytes _offer,
+        address _token,
+        uint _value
+    )
+        public
+        payable
+    {
+        owner = _owner;
+        executeCall(_marketplace, 0, _offer);
+        ERC20(_token).approve(_marketplace, _value);
     }
 }
