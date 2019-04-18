@@ -21,6 +21,8 @@ async function generateAttestation(
     attestation: attestationBody
   }
 
+  console.log(process.env.ATTESTATION_SIGNING_KEY)
+
   const signature = {
     bytes: generateAttestationSignature(
       process.env.ATTESTATION_SIGNING_KEY,

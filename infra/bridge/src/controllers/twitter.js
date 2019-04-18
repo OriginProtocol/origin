@@ -20,11 +20,13 @@ const logger = require('../logger')
  *
  */
 router.get('/auth-url', async (req, res) => {
-  const dappRedirectUrl = req.query.dappRedirectUrl || null
+  const redirect = req.query.redirect || null
 
   let oAuthToken, oAuthTokenSecret
   try {
-    const twitterResponse = await getTwitterOAuthRequestToken(dappRedirectUrl)
+    const twitterResponse = await getTwitterOAuthRequestToken(
+      redirect ? req.sessionID : null
+    )
     oAuthToken = twitterResponse.oAuthToken
     oAuthTokenSecret = twitterResponse.oAuthTokenSecret
   } catch (error) {
@@ -34,28 +36,31 @@ router.get('/auth-url', async (req, res) => {
     })
   }
 
+  if (redirect) {
+    req.session.redirect = redirect
+  }
   req.session.oAuthToken = oAuthToken
   req.session.oAuthTokenSecret = oAuthTokenSecret
-
-  console.log(req.sessionID, await req.sessionStore.get(req.sessionID))
 
   const url =
     constants.TWITTER_BASE_AUTH_URL +
     querystring.stringify({ oauth_token: oAuthToken })
 
-  res.send({ url, sid: req.sessionID })
-})
-
-router.get('/check-session/:sid', async (req, res) => {
-  console.log(await req.sessionStore.get(req.params.sid))
-  res.send('OK')
+  res.send({ url })
 })
 
 /* Get an oAuth access token from Twitter using the `oauth-verifier` parameter
  * obtained from the login flow.
  */
 router.post('/verify', twitterVerifyCode, async (req, res) => {
-  if (!req.session.oAuthToken || !req.session.oAuthTokenSecret) {
+  let session = req.session
+  let verifier = req.body['oauth-verifier']
+  if (req.body.sid) {
+    session = await req.sessionStore.get(req.body.sid)
+    verifier = session.code
+  }
+  console.log('session', session)
+  if (!session.oAuthToken || !session.oAuthTokenSecret) {
     return res.status(400).send({
       errors: ['Invalid Twitter oAuth session.']
     })
@@ -63,15 +68,14 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
 
   let oAuthAccessToken, oAuthAccessTokenSecret
   try {
-    // eslint-disable-next-line no-extra-semi
-    ;({
-      oAuthAccessToken,
-      oAuthAccessTokenSecret
-    } = await getTwitterOAuthAccessToken(
-      req.session.oAuthToken,
-      req.session.oAuthTokenSecret,
-      req.body['oauth-verifier']
-    ))
+    const accessToken = await getTwitterOAuthAccessToken(
+      session.oAuthToken,
+      session.oAuthTokenSecret,
+      verifier
+    )
+    oAuthAccessToken = accessToken.oAuthAccessToken
+    oAuthAccessTokenSecret = accessToken.oAuthAccessTokenSecret
+    console.log(oAuthAccessToken, oAuthAccessTokenSecret)
   } catch (error) {
     if (error.statusCode == 401) {
       return res.status(401).send({
@@ -109,15 +113,22 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     }
   }
 
-  const attestation = await generateAttestation(
-    AttestationTypes.TWITTER,
-    attestationBody,
-    screenName,
-    req.body.identity,
-    req.ip
-  )
+  try {
+    const attestation = await generateAttestation(
+      AttestationTypes.TWITTER,
+      attestationBody,
+      screenName,
+      req.body.identity,
+      req.ip
+    )
 
-  return res.send(attestation)
+    return res.send(attestation)
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not create attestation.']
+    })
+  }
 })
 
 module.exports = router

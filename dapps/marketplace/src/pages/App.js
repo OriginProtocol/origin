@@ -103,7 +103,7 @@ class App extends Component {
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route

@@ -26,6 +26,9 @@ class TwitterAttestation extends Component {
       return null
     }
 
+    const { origin, pathname } = window.location
+    const redirect = encodeURIComponent(`${origin}${pathname}#/profile/twitter`)
+
     return (
       <Modal
         className={`attestation-modal twitter${
@@ -42,17 +45,29 @@ class TwitterAttestation extends Component {
           this.props.onClose()
         }}
       >
-        <Query query={query} variables={{ redirect: window.location.href }}>
+        <Query
+          query={query}
+          variables={{ redirect }}
+          fetchPolicy="network-only"
+          skip={true}
+        >
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.twitterAuthUrl')
-            return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
+            return (
+              <div>
+                {this[`render${this.state.stage}`]({
+                  authUrl,
+                  redirect: redirect ? true : false
+                })}
+              </div>
+            )
           }}
         </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode({ authUrl }) {
+  renderGenerateCode({ authUrl, redirect }) {
     return (
       <>
         <h2>
@@ -71,7 +86,7 @@ class TwitterAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          {this.renderVerifyButton({ authUrl })}
+          {this.renderVerifyButton({ authUrl, redirect })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -82,7 +97,8 @@ class TwitterAttestation extends Component {
     )
   }
 
-  renderVerifyButton() {
+  renderVerifyButton({ authUrl, redirect }) {
+    const sid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     return (
       <Mutation
         mutation={VerifyTwitterMutation}
@@ -111,7 +127,10 @@ class TwitterAttestation extends Component {
               this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
-                  identity: this.props.wallet
+                  identity: this.props.wallet,
+                  redirect,
+                  authUrl,
+                  code: sid && sid[1] ? sid[1] : null
                 }
               })
             }}

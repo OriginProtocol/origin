@@ -15,10 +15,21 @@ router.get('/facebook', (req, res) => {
   }
 })
 
-router.get('/twitter', (req, res) => {
-  if (req.query.dappRedirectUrl) {
-    const dappRedirectUrl = req.query.dappRedirectUrl
-    res.redirect(`${dappRedirectUrl}?origin-code=${req.query.oauth_verifier}`)
+router.get('/twitter', async (req, res) => {
+  const sessionID = req.query.state
+
+  if (sessionID) {
+    const session = await req.sessionStore.get(sessionID)
+    if (!session) {
+      return res.send('Session not found')
+    }
+
+    session.code = req.query.oauth_verifier
+    await new Promise(resolve =>
+      req.sessionStore.set(sessionID, session, resolve)
+    )
+
+    res.redirect(`${session.redirect}?sid=${sessionID}`)
   } else {
     // res.sendFile requires absoluite paths and ../ is considered malicious
     // so resolve first

@@ -7,7 +7,7 @@ module.exports = `
     verifyEmailCode(email: String!, identity: String, code: String!): AttestationVerifyResult!
 
     verifyFacebook(identity: String!, authUrl: String): AttestationVerifyResult!
-    verifyTwitter(identity: String!, redirect: Boolean, authUrl: String): AttestationVerifyResult!
+    verifyTwitter(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
     verifyGoogle(identity: String!, authUrl: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
