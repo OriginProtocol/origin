@@ -54,9 +54,7 @@ export default RewardsBanner
 require('react-styl')(`
   .rewards-banner
     background-color: var(--clear-blue)
-    height: 85px
-    padding-top: 10px
-    padding-bottom: 5px
+    padding: 10px 0
     color: #fff
     font-size: 18px
     border-bottom: 1px solid var(--dark-two)
@@ -69,7 +67,7 @@ require('react-styl')(`
     .btn
       background-color: var(--dark-grey-blue)
       color: var(--white) !important
-      margin-top: 12px
+      margin: 12px 0 12px auto
       width: 96px
       color: var(--dark-grey-blue)
       border-radius: 2rem
