@@ -10,7 +10,7 @@ if [[ $(adb devices | grep -v List | grep device | wc -l) -lt 1 ]]; then
     exit 1
 fi
 
-ports_to_forward=(8081 8545 3008 8080 5002 3000 9999 4000 9012)
+ports_to_forward=(8081)
 
 for port in ${ports_to_forward[*]}
 do
