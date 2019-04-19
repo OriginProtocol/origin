@@ -134,7 +134,8 @@ class Listing {
         match: {
           all_text: {
             query,
-            fuzziness: 'AUTO'
+            fuzziness: 'AUTO',
+            minimum_should_match: '-20%' // most query tokens must be in the listing
           }
         }
       })
@@ -145,6 +146,15 @@ class Listing {
             query: query,
             boost: 2,
             fuzziness: 'AUTO'
+          }
+        }
+      })
+      // give extra score for search words being in proximity to each other
+      esQuery.bool.should.push({
+        match_phrase: {
+          all_text: {
+            query: query,
+            slop: 50
           }
         }
       })

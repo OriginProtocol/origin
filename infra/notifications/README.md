@@ -2,7 +2,21 @@
 
 Head to https://www.originprotocol.com/developers to learn more about what we're building and how to get involved.
 
-# Origin Notifications
+# Origin Notifications Server
+
+This service is capable of contacting users on various channels. Right now it supports email, browser push, and mobile push.
+
+Messages are normally triggered by a POST to the `/events` endpoint on this server. See the `test` directory for examples manually triggering messages for testing.
+
+Options
+
+ - `--override-email` or env var `OVERRIDE_EMAIL` : Email which will recieve **all** emails. This can be useful for testing on live data where you want to see what emails users would receive.
+ - `--fromEmail` or env var `SENDGRID_FROM_EMAIL` : Email from which messages are sent
+ - `--asmGroupId` or env var `ASM_GROUP_ID` : SendGrid ASM group for handling unsubscribes.
+ - `--email-file-out` or env var `EMAIL_FILE_OUT` : Write emails also to files, using this directory+prefix. e.g. "emails/finalized"
+
+
+## Browser Notifcations (Old)
 
 See https://github.com/OriginProtocol/origin/issues/806 👊
 
@@ -34,6 +48,8 @@ In origin-notifications...
   - Run `sequelize db:migrate`
   - Run `npm run start:development`
 
+NOTE: VAPID key is for web-push. More detail [here](https://stackoverflow.com/questions/40392257/what-is-vapid-and-why-is-it-useful).
+
 In origin-dapp...
 
   - Add public key and notifications url to origin-dapp/.env
@@ -42,7 +58,7 @@ In origin-dapp...
   NOTIFICATIONS_URL=http://localhost:3456/
   ```
   - Run `npm start`
-  
+
 In origin-discovery...
   - Add variables to origin-discovery/.env
   ```
@@ -55,9 +71,9 @@ In origin-discovery...
   WEB3_URL=http://localhost:8545/
   ```
   - Run `node src/listener/listener.js --continue-file=continue --webhook=http://localhost:3456/events`
-  
+
   (From time to time, you may need to `rm continue` in origin-discovery.)
-  
+
 To test in the DApp...
 
 1. Create a listing
@@ -65,3 +81,11 @@ To test in the DApp...
 1. Make an offer from a different account
 
 For more (outdated) information, see [the original pull request](https://github.com/OriginProtocol/origin/pull/795#issue-224602842).
+
+
+### Eventlistener
+
+For local testing, these options are usual for testing against `rinkeby` network.
+
+    npm run start:listener:development -- --identity --growth --marketplace --network=rinkeby --continue-file=../continue --webhook=http://localhost:3456/events --verbose --concurrency=4
+

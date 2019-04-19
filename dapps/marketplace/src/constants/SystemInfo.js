@@ -1,1 +1,1 @@
-export const rewardsOnMobileEnabled = true
+export const rewardsOnMobileEnabled = false

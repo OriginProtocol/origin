@@ -81,8 +81,11 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   walletType: () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return 'Web3 Wallet'
+    }
+    if (contracts.mobileBridge) {
+      return 'Mobile'
     }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
@@ -97,31 +100,21 @@ const web3Resolver = {
         return 'Parity'
       return 'Meta Mask'
     }
-    if (!contracts.linker) return null
-    return contracts.linker.session.linked && contracts.linker.session.accounts
-      ? 'mobile-linked'
-      : 'mobile-unlinked'
   },
   mobileWalletAccount: async () => {
-    if (
-      !contracts.linker ||
-      !contracts.linker.session.linked ||
-      contracts.linker.session.accounts.length == 0
-    ) {
-      return null
-    }
-    return {
-      id: contracts.linker.session.accounts[0]
-    }
+    if (!contracts.mobileBridge) return null
+    const accounts = await contracts.web3Exec.eth.getAccounts()
+    if (!accounts || !accounts.length) return null
+    return { id: accounts[0] }
   },
   primaryAccount: async () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return { id: localStorage.useWeb3Wallet }
     }
     if (contracts.metaMaskEnabled) {
       return web3Resolver.metaMaskAccount()
     }
-    if (contracts.linker) {
+    if (contracts.mobileBridge) {
       return web3Resolver.mobileWalletAccount()
     }
     return null

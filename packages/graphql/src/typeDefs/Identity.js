@@ -20,6 +20,7 @@ module.exports = `
     lastName: String
     description: String
     avatar: String
+    avatarUrl: String
   }
 
   type IdentityEvents {

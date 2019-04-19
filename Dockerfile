@@ -14,7 +14,7 @@ COPY ./packages/graphql/package.json ./packages/graphql/
 COPY ./packages/ipfs/package.json ./packages/ipfs/
 COPY ./packages/validator/package.json ./packages/validator/
 COPY ./packages/messaging-client/package.json ./packages/messaging-client/
-COPY ./packages/linker-client/package.json ./packages/linker-client/
+COPY ./packages/mobile-bridge/package.json ./packages/mobile-bridge/
 COPY ./packages/eventsource/package.json ./packages/eventsource/
 COPY ./packages/services/package.json ./packages/services/
 COPY ./packages/token/package.json ./packages/token/

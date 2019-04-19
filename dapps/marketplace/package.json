@@ -38,6 +38,7 @@
     "@babel/register": "^7.0.0",
     "@origin/contracts": "^0.8.6",
     "@origin/graphql": "^0.1.1",
+    "@origin/mobile-bridge": "^0.1.0",
     "@origin/services": "^0.1.0",
     "@origin/validator": "^0.1.0",
     "apollo-cache-persist": "^0.1.1",

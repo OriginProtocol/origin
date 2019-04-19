@@ -37,7 +37,7 @@ lerna run start:listener:development --scope origin-discovery --stream
 
 # Command line options
  - `--verbose` Output json for all event information to stdout.
- - `--webhook=<URL>` Post json for each event to the URL.
+ - `--webhook=<URL>` Post json for each event to the URL. E.g. `http://localhost:3456/events`
  - `--discord-webhook=<discord URL>` Post a short Discord notification for each marketplace event.
  - `--email-webhook=<Email URL>` For internal use only.
  - `--elasticsearch` Experimental support for recording listings directly into elastic search.
@@ -45,6 +45,8 @@ lerna run start:listener:development --scope origin-discovery --stream
  - `--identity` Index identity data.
  - `--growth` Index growth data.
  - `--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
+ - `--concurrency` Warning: only use concurrency > 1 for backfills. Not under normal operation.
+ - `--network` Possible values: origin, rinkeby, mainnet, ..
 
 # Env variables
 

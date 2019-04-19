@@ -12,9 +12,15 @@ const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')
 let shutdown
 
 before(async function() {
+  this.timeout(30000)
   // Start Ganache (in-memory) and IPFS
-  shutdown = await services({ ganache: { inMemory: true }, ipfs: true })
-  setNetwork('test')
+  shutdown = await services({
+    ganache: { inMemory: true },
+    ipfs: true,
+    deployContracts: true,
+    contractsFile: 'tests'
+  })
+  setNetwork('test', { automine: false })
 
   // Disable GraphQL response caching
   client.defaultOptions = {

@@ -5,7 +5,7 @@ import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 
 async function addFunds(_, data) {
-  const from = data.from || contracts.defaultLinkerAccount
+  const from = data.from || contracts.defaultMobileAccount
   await checkMetaMask(data.from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)

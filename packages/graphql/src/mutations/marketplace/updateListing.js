@@ -7,7 +7,7 @@ import { listingInputToIPFS } from './createListing'
 
 async function updateListing(_, args) {
   const { data, unitData, fractionalData, autoApprove } = args
-  const from = args.from || contracts.defaultLinkerAccount
+  const from = args.from || contracts.defaultMobileAccount
   const { listingId } = parseId(args.listingID)
   await checkMetaMask(from)
 

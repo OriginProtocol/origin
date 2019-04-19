@@ -5,8 +5,11 @@ import { fbt } from 'fbt-runtime'
 import Modal from 'components/Modal'
 import Avatar from 'components/Avatar'
 import ImageCropper from 'components/ImageCropper'
+import { uploadImages } from 'utils/uploadImages'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+
+import withConfig from 'hoc/withConfig'
 
 class EditProfileModal extends Component {
   constructor(props) {
@@ -14,7 +17,8 @@ class EditProfileModal extends Component {
     this.state = {
       ...pick(props, ['firstName', 'lastName', 'description']),
       imageCropperOpened: false,
-      avatar: this.props.avatar
+      avatar: this.props.avatar,
+      avatarUrl: this.props.avatarUrl
     }
   }
 
@@ -48,7 +52,15 @@ class EditProfileModal extends Component {
           <div className="row">
             <div className="col-6">
               <ImageCropper
-                onChange={avatar => this.setState({ avatar })}
+                onChange={async avatar => {
+                  const { ipfsRPC } = this.props.config
+                  const uploadedImages = await uploadImages(ipfsRPC, [avatar])
+                  const avatarImg = uploadedImages[0]
+                  if (avatarImg) {
+                    const avatarUrl = avatarImg.url
+                    this.setState({ avatar, avatarUrl })
+                  }
+                }}
                 openChange={open =>
                   this.setState({
                     imageCropperOpened: open
@@ -112,7 +124,10 @@ class EditProfileModal extends Component {
                     pick(this.state, ['firstName', 'lastName', 'description'])
                   )
                   if (this.state.avatar) {
-                    this.props.onAvatarChange(this.state.avatar)
+                    this.props.onAvatarChange(
+                      this.state.avatar,
+                      this.state.avatarUrl
+                    )
                   }
                   this.setState({ shouldClose: true })
                 }
@@ -146,7 +161,7 @@ class EditProfileModal extends Component {
   }
 }
 
-export default EditProfileModal
+export default withConfig(EditProfileModal)
 
 require('react-styl')(`
   .edit-profile-modal

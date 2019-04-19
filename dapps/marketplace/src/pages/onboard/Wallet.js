@@ -7,7 +7,6 @@ import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import QueryError from 'components/QueryError'
 import Steps from 'components/Steps'
-import LinkMobileWallet from 'components/LinkMobileWallet'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
@@ -39,9 +38,6 @@ const OriginWallet = () => (
         </div>
       </div>
     </div>
-    <LinkMobileWallet className="btn btn-outline-primary">
-      <fbt desc="onboard.Wallet.connect">Connect Origin Wallet</fbt>
-    </LinkMobileWallet>
   </div>
 )
 
@@ -76,7 +72,7 @@ const MetaMask = ({ linkPrefix }) => (
   </div>
 )
 
-const Step1 = ({ listing, showoriginwallet, linkPrefix }) => {
+const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
   const showMetaMask = isChrome || isFirefox
 
   return (
@@ -110,7 +106,7 @@ const Step1 = ({ listing, showoriginwallet, linkPrefix }) => {
 
               return (
                 <>
-                  {!showoriginwallet ? null : <OriginWallet />}
+                  {hideOriginWallet ? null : <OriginWallet />}
                   {!showMetaMask ? null : <MetaMask linkPrefix={linkPrefix} />}
                 </>
               )

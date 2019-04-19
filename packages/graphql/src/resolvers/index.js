@@ -12,7 +12,6 @@ import Token from './Token'
 import Conversation from './messaging/Conversation'
 import Messaging from './messaging/Messaging'
 import IdentityEvents from './IdentityEvents'
-import WalletLinker from './linker/WalletLinker'
 import Config from './Config'
 import Mutation from '../mutations/index'
 import CreatorConfig from './CreatorConfig'
@@ -52,6 +51,5 @@ export default {
   Messaging,
   IdentityEvents,
   Config,
-  WalletLinker,
   CreatorConfig
 }
