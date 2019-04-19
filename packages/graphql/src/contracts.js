@@ -8,7 +8,6 @@ import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 
-//import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
 
