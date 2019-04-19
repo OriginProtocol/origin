@@ -84,7 +84,7 @@ steps:
       --key=cloudbuild
 
 # Build the project using the version number generated earlier
-- name: 'gcr.io/$PROJECT_ID/android:28'
+- name: 'gcr.io/$PROJECT_ID/android:28-node'
   id: build
   dir: "/workspace/mobile/android"
   args: ["./gradlew", ":app:assembleRelease", ":app:assembleDebug", "assembleAndroidTest"]
@@ -108,7 +108,7 @@ steps:
   waitFor: ['build']
 
 # Deploy to Google Play if this is prod
-- name: 'gcr.io/$PROJECT_ID/android:28'
+- name: 'gcr.io/$PROJECT_ID/android:28-node'
   id: deploy-to-play
   dir: "/workspace/mobile/android"
   args: ["for_branch", "master", "./gradlew", ":app:publishReleaseApk"]
@@ -118,7 +118,7 @@ steps:
     path: '/gradle_cache'
 
 # Deploy to Crashlytics Beta if this is any other branch.
-- name: 'gcr.io/$PROJECT_ID/android:28'
+- name: 'gcr.io/$PROJECT_ID/android:28-node'
   id: deploy_to_beta
   dir: "/workspace/mobile/android"
   args: ["for_branch", "develop", "./gradlew", ":app:crashlyticsUploadDistributionDebug"]
