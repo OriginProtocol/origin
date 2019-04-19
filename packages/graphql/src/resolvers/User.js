@@ -65,19 +65,21 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
   const listings = await ec().allEvents('ListingCreated', seller.id)
-  const listingIds = listings.map(e => Number(e.returnValues.listingID))
-  const events = await ec().offers(listingIds, null, 'OfferCreated')
+  const listingIds = listings.map(e => String(e.returnValues.listingID))
+  const events = await ec().getEvents({
+    listingID: listingIds,
+    event: 'OfferCreated'
+  })
 
   let allIds = events
     .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
     .reverse()
 
   if (filter) {
-    const completedEvents = await ec().allEvents(
-      ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      undefined,
-      allIds
-    )
+    const completedEvents = await ec().getEvents({
+      event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+      offerID: events.map(e => String(e.returnValues.offerID))
+    })
     const completedIds = uniq(
       completedEvents.map(
         e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
@@ -95,9 +97,15 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
 }
 
 async function reviews(user) {
-  const listings = await ec().allEvents('ListingCreated', user.id)
-  const listingIds = listings.map(e => Number(e.returnValues.listingID))
-  const events = await ec().offers(listingIds, null, 'OfferFinalized')
+  const listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: user.id
+  })
+  const listingIds = listings.map(e => String(e.returnValues.listingID))
+  const events = await ec().getEvents({
+    listingID: listingIds,
+    event: 'OfferFinalized'
+  })
 
   let nodes = await Promise.all(
     events.map(event =>
