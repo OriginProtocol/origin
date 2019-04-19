@@ -20,8 +20,8 @@ class RewardsBanner extends Component {
                 </div>
                 <div className="text float-left">
                   <strong>
-                    <fbt desc="RewardBanner.earnFreeTokens">
-                      Earn Free Origin Tokens Today
+                    <fbt desc="RewardBanner.earnTokens">
+                      Earn Origin Tokens Today
                     </fbt>
                   </strong>
                   <br />
