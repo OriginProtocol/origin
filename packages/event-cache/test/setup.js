@@ -10,6 +10,7 @@ const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')
 let shutdown
 
 before(async function() {
+  this.timeout(30000)
   // Start Ganache (in-memory) and IPFS
   shutdown = await services({ ganache: { inMemory: true, total_accounts: 20 }, ipfs: true, deployContracts: true })
 })
