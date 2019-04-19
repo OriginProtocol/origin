@@ -1,5 +1,6 @@
 const chunk = require('lodash/chunk')
 const flattenDeep = require('lodash/flattenDeep')
+const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 
 const { get, post } = require('@origin/ipfs')
@@ -10,6 +11,49 @@ const {
   IndexedDBBackend,
   PostgreSQLBackend
 } = require('./backends')
+
+const getPastEvents = memoize(
+  async function(contract, fromBlock, toBlock) {
+    const partitions = []
+    const results = []
+
+    while (fromBlock <= toBlock) {
+      const uptoBlock = Math.min(fromBlock + 10000, toBlock)
+      partitions.push(
+        new Promise(async resolve => {
+          try {
+            const thisFromBlock = fromBlock,
+              thisToBlock = uptoBlock
+            console.log(`Requesting`, thisFromBlock, thisToBlock)
+            const result = await contract.getPastEvents('allEvents', {
+              fromBlock: thisFromBlock,
+              toBlock: thisToBlock
+            })
+            console.log(
+              `Got ${result.length} events`,
+              thisFromBlock,
+              thisToBlock
+            )
+            resolve(result)
+          } catch (e) {
+            console.log('Error retrieving', fromBlock, uptoBlock)
+            console.log(e)
+            resolve([])
+          }
+        })
+      )
+      fromBlock += 10000
+    }
+
+    const chunks = chunk(partitions, 7)
+    for (const chunklet of chunks) {
+      results.push(await Promise.all(chunklet))
+    }
+
+    return flattenDeep(results)
+  },
+  (...args) => `${args[0]._address}-${args[1]}-${args[2]}`
+)
 
 /**
  * @class
@@ -33,24 +77,15 @@ class EventCache {
    *    backend
    * @param config {object} A configuration JS object (See EventCache)
    */
-  constructor(contract, fromBlock = null, config) {
+  constructor(contract, originBlock = 0, config) {
     this._processConfig(config)
 
     this.contract = contract
     this.web3 = new Web3(contract.currentProvider)
 
-    // If the cache is populated, start from the latest known block
-    if (fromBlock === null) {
-      const latestKnown = this.backend.getLatestBlock()
-      if (latestKnown && latestKnown > 0) {
-        fromBlock = latestKnown
-      } else {
-        fromBlock = 0
-      }
-    }
-
-    this.originBlock = fromBlock
-    this.fromBlock = this.originBlock
+    this.originBlock = Number(originBlock)
+    const addr = this.contract._address.substr(0, 10)
+    console.log(`Initialized ${addr} with originBlock ${this.originBlock}`)
   }
 
   /**
@@ -123,14 +158,16 @@ class EventCache {
    * @param toBlock {T} The number to search to (or 'latest')
    * @returns {Array} An array of event objects
    */
-  async _fetchEvents(fromBlock, toBlock = 'latest') {
-    if (toBlock === 'latest') {
-      // We need to be able to math it
-      if (this.useLatestFromChain) {
-        toBlock = await this.web3.eth.getBlockNumber()
-      } else {
-        toBlock = this.backend.getLatestBlock()
-      }
+  async _fetchEvents() {
+    let fromBlock = this.originBlock
+    const latestKnown = await this.backend.getLatestBlock()
+    if (latestKnown >= fromBlock) {
+      fromBlock = latestKnown + 1
+    }
+
+    let toBlock = this.latestBlock
+    if (this.useLatestFromChain) {
+      toBlock = await this.web3.eth.getBlockNumber()
     }
 
     if (fromBlock > toBlock) {
@@ -141,25 +178,7 @@ class EventCache {
 
     debug(`New block found: ${toBlock}`)
 
-    const partitions = []
-    const results = []
-
-    while (fromBlock <= toBlock) {
-      toBlock = Math.min(fromBlock + 20000, toBlock)
-      partitions.push(
-        this.contract.getPastEvents('allEvents', { fromBlock, toBlock })
-      )
-      fromBlock = toBlock + 1
-    }
-
-    this.fromBlock = fromBlock
-
-    const chunks = chunk(partitions, 7)
-    for (const chunklet of chunks) {
-      results.push(await Promise.all(chunklet))
-    }
-
-    return flattenDeep(results)
+    return await getPastEvents(this.contract, fromBlock, toBlock)
   }
 
   /**
@@ -195,7 +214,7 @@ class EventCache {
       throw new TypeError('Invalid event parameters')
     }
 
-    const newEvents = await this._fetchEvents(this.fromBlock)
+    const newEvents = await this._fetchEvents()
     if (newEvents.length > 0) {
       await this.backend.addEvents(newEvents)
     }
@@ -209,7 +228,7 @@ class EventCache {
    * @returns {Array} - An array of event objects
    */
   async allEvents() {
-    const newEvents = await this._fetchEvents(this.fromBlock)
+    const newEvents = await this._fetchEvents()
     if (newEvents.length > 0) {
       await this.backend.addEvents(newEvents)
     }
@@ -229,7 +248,7 @@ class EventCache {
    * @param {number} The latest known block number
    */
   setLatestBlock(num) {
-    return this.backend.setLatestBlock(num)
+    this.latestBlock = num
   }
 
   /**

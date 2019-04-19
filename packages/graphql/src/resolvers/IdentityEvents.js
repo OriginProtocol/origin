@@ -65,7 +65,7 @@ export function identity({ id, ipfsHash }) {
     }
     if (!ipfsHash) {
       const events = await contracts.identityEvents.eventCache.getEvents({
-        account: id.toLowerCase()
+        account: id
       })
       events.forEach(event => {
         if (event.event === 'IdentityUpdated') {

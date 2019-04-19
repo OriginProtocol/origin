@@ -308,7 +308,8 @@ class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
-    return await this._eventStore.toArray().sort(compareEvents)
+    const items = await this._eventStore.toArray()
+    return items.sort(compareEvents)
   }
 
   /**
