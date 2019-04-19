@@ -16,12 +16,8 @@ const QueryError = props => {
       <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
       <div>
         <div>{props.error}</div>
-        {props.query && (
-          <div>{props.query.loc.source.body}</div>
-        )}
-        {props.vars && (
-          <pre>{props.vars}</pre>
-        )}
+        {props.query && <div>{props.query.loc.source.body}</div>}
+        {props.vars && <pre>{props.vars}</pre>}
       </div>
     </div>
   )
