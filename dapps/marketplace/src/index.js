@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
 import { HashRouter } from 'react-router-dom'
-
 import Styl from 'react-styl'
 import client from '@origin/graphql'
 
@@ -28,16 +27,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 } else {
   try {
-    const populate = require('@origin/graphql/fixtures/populate')
-    window.pop = populate
-    window.populate = (log, finished) => {
-      populate.default(
-        client,
-        '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
-        log,
-        finished
-      )
-    }
+    window.ognTools = require('@origin/graphql/fixtures/populate')
   } catch (e) {
     console.warn('No fixtures found')
   }
@@ -48,10 +38,6 @@ class AppWrapper extends Component {
 
   async componentDidMount() {
     try {
-      // await persistCache({
-      //   cache: client.cache,
-      //   storage: window.sessionStorage
-      // })
       const locale = await setLocale()
       this.setState({ ready: true, client, locale })
     } catch (error) {

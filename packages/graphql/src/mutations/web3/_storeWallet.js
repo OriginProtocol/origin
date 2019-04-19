@@ -1,6 +1,10 @@
 import contracts from '../../contracts'
+const isBrowser = typeof window !== 'undefined'
 
 function storeWallet({ id, name, role, privateKey }) {
+  if (!isBrowser) {
+    return
+  }
   let privateKeys = [],
     roles = {},
     names = {}

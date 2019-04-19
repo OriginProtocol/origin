@@ -110,11 +110,7 @@ const Accounts = () => (
           <Button
             style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
             intent="success"
-            onClick={() =>
-              populate(client, maxNodeAccount ? maxNodeAccount.id : null, msg =>
-                console.log(msg)
-              )
-            }
+            onClick={() => populate(client, console.log)}
             text="Populate"
           />
           <Button

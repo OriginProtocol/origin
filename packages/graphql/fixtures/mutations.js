@@ -7,7 +7,7 @@ export const RefetchMutation = gql`
 `
 
 export const AddAffiliateMutation = gql`
-  mutation AddAffiliate($affiliate: String, $from: String) {
+  mutation AddAffiliate($affiliate: String!, $from: String) {
     addAffiliate(affiliate: $affiliate, from: $from) {
       id
     }
@@ -36,16 +36,18 @@ export const ImportWalletMutation = gql`
 
 export const ImportWalletsMutation = gql`
   mutation ImportWallets($accounts: [WalletInput]!) {
-    importWallets(accounts: $accounts)
+    importWallets(accounts: $accounts) {
+      id
+    }
   }
 `
 
 export const DeployTokenMutation = gql`
   mutation DeployToken(
-    $name: String
-    $symbol: String
-    $decimals: String
-    $supply: String
+    $name: String!
+    $symbol: String!
+    $decimals: String!
+    $supply: String!
     $type: String
     $from: String
   ) {
@@ -63,7 +65,7 @@ export const DeployTokenMutation = gql`
 `
 
 export const SendFromNodeMutation = gql`
-  mutation SendFromNode($from: String, $to: String, $value: String) {
+  mutation SendFromNode($from: String!, $to: String!, $value: String!) {
     sendFromNode(from: $from, to: $to, value: $value) {
       id
     }
@@ -107,7 +109,7 @@ export const UpdateTokenAllowanceMutation = gql`
 export const DeployMarketplaceMutation = gql`
   mutation DeployMarketplace(
     $from: String
-    $token: String
+    $token: String!
     $version: String
     $autoWhitelist: Boolean
   ) {
@@ -362,16 +364,32 @@ export const UniswapDeployExchangeTemplate = gql`
 `
 
 export const UniswapInitFactory = gql`
-  mutation UniswapInitFactory($from: String!) {
-    uniswapInitializeFactory(from: $from) {
+  mutation UniswapInitFactory(
+    $from: String!
+    $exchange: String
+    $factory: String
+  ) {
+    uniswapInitializeFactory(
+      from: $from
+      exchange: $exchange
+      factory: $factory
+    ) {
       id
     }
   }
 `
 
 export const UniswapCreateExchange = gql`
-  mutation UniswapCreateExchange($from: String!, $tokenAddress: String!) {
-    uniswapCreateExchange(from: $from, tokenAddress: $tokenAddress) {
+  mutation UniswapCreateExchange(
+    $from: String!
+    $tokenAddress: String!
+    $factory: String
+  ) {
+    uniswapCreateExchange(
+      from: $from
+      tokenAddress: $tokenAddress
+      factory: $factory
+    ) {
       id
     }
   }

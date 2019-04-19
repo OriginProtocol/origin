@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
@@ -26,44 +26,6 @@ import { getFilters, getStateFromQuery } from './_filters'
 
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
-
-const Populate = () => {
-  const [state, setState] = useState('no-contract')
-  if (!window.populate) {
-    return <p className="p-3">No marketplace contract?</p>
-  } else {
-    return (
-      <div className="mt-5 text-center">
-        No marketplace found.
-        <br />
-        {state === 'loading' ? (
-          <button
-            className="btn btn-primary mt-3 disabled"
-            children="Populating..."
-          />
-        ) : state === 'populated' ? (
-          <button
-            className="btn btn-primary mt-3"
-            children="Refresh to continue"
-            onClick={() => location.reload()}
-          />
-        ) : (
-          <button
-            className="btn btn-primary mt-3"
-            onClick={() => {
-              setState('loading')
-              window.populate(
-                log => console.log(log),
-                () => setState('populated')
-              )
-            }}
-            children="Populate"
-          />
-        )}
-      </div>
-    )
-  }
-}
 
 class Listings extends Component {
   constructor(props) {
@@ -135,7 +97,7 @@ class Listings extends Component {
               } else if (error) {
                 return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {
-                return <Populate />
+                return <p className="p-3">No marketplace contract?</p>
               }
               const { nodes, pageInfo, totalCount } = data.marketplace.listings
               const { hasNextPage, endCursor: after } = pageInfo

@@ -8,7 +8,7 @@ import costs from '../_gasCost.js'
 
 async function deployIdentity(
   _,
-  { from = contracts.defaultLinkerAccount, profile = {}, attestations = [] }
+  { from = contracts.defaultMobileAccount, profile = {}, attestations = [] }
 ) {
   await checkMetaMask(from)
 

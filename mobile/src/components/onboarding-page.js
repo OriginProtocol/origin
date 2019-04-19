@@ -1,21 +1,13 @@
 import React from 'react'
-import { Dimensions, StyleSheet, Text, View, ViewPropTypes } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 
-const OnboardingPage = ({
-  image,
-  title,
-  subtitle,
-  width,
-  height,
-}) => {
+const OnboardingPage = ({ image, title, subtitle }) => {
   let titleElement = title
 
   if (typeof title === 'string' || title instanceof String) {
     titleElement = (
       <View style={styles.padding}>
-        <Text style={styles.title}>
-          {title}
-        </Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
     )
   }
@@ -25,9 +17,7 @@ const OnboardingPage = ({
   if (typeof subtitle === 'string' || subtitle instanceof String) {
     subtitleElement = (
       <View style={styles.padding}>
-        <Text style={styles.subtitle}>
-          {subtitle}
-        </Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
       </View>
     )
   }
@@ -46,29 +36,27 @@ const { width, height } = Dimensions.get('window')
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    paddingTop: 0,
+    marginTop: width / 6
   },
   padding: {
-    paddingHorizontal: 50,
+    paddingHorizontal: 50
   },
   title: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '300',
     paddingBottom: 15,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   subtitle: {
     color: 'white',
     fontFamily: 'Lato',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '300',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })
 
 export default OnboardingPage

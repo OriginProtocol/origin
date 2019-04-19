@@ -11,7 +11,7 @@ COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
 COPY ./packages/messaging-client ./packages/messaging-client
-COPY ./packages/linker-client ./packages/linker-client
+COPY ./packages/mobile-bridge ./packages/mobile-bridge
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/token ./packages/token

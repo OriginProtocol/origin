@@ -46,9 +46,6 @@ import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import verifyGoogle from './attestations/verifyGoogle'
 
-import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
-import linkMobileWallet from './walletLinker/linkMobileWallet'
-
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
 import uniswapDeployExchangeTemplate from './uniswap/uniswapDeployExchangeTemplate'
@@ -76,7 +73,6 @@ export default {
   generatePhoneCode,
   importWallet,
   importWallets,
-  linkMobileWallet,
   makeOffer,
   markConversationRead,
   removeWallet,
@@ -94,7 +90,6 @@ export default {
   uniswapDeployFactory,
   uniswapDeployExchangeTemplate,
   uniswapInitializeFactory,
-  unlinkMobileWallet,
   updateListing,
   updateRefund,
   updateTokenAllowance,

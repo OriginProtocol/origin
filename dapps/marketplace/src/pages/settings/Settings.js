@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
-import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
-import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
   'bridge',
@@ -175,53 +172,6 @@ class Settings extends Component {
                     </button>
                   </div>
                   */}
-
-                  <Query query={ProfileQuery}>
-                    {({ data }) => {
-                      const walletType = get(data.web3, 'walletType')
-                      const mobileWalletConnected =
-                        walletType && walletType.startsWith('mobile-')
-                      return (
-                        <div className="form-group">
-                          <label htmlFor="language">
-                            <fbt desc="settings.mobileLabel">Mobile Wallet</fbt>
-                          </label>
-                          {mobileWalletConnected ? (
-                            <>
-                              <div className="form-text form-text-muted">
-                                <small>
-                                  <fbt desc="settings.mobileHint">
-                                    Disconnect from your mobile wallet by
-                                    clicking the button below.
-                                  </fbt>
-                                </small>
-                              </div>
-                              <Mutation mutation={UnlinkMobileWallet}>
-                                <button className="btn btn-outline-danger">
-                                  <fbt desc="settings.mobileButton">
-                                    Disconnect
-                                  </fbt>
-                                </button>
-                              </Mutation>
-                            </>
-                          ) : (
-                            <div>
-                              <button
-                                className="btn btn-outline-secondary"
-                                disabled
-                              >
-                                <span>
-                                  <fbt desc="settings.mobileDisabled">
-                                    Not connected
-                                  </fbt>
-                                </span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    }}
-                  </Query>
                 </div>
               </div>
 

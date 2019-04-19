@@ -40,16 +40,16 @@ class User extends Component {
                         <h5>
                           <fbt desc="User.verifiedInfo">Verified Info</fbt>
                         </h5>
-                        {profile.phoneVerified && (
-                          <div>
-                            <div className="attestation phone" />
-                            <fbt desc="User.phone">Phone</fbt>
-                          </div>
-                        )}
                         {profile.emailVerified && (
                           <div>
                             <div className="attestation email" />
                             <fbt desc="User.email">Email</fbt>
+                          </div>
+                        )}
+                        {profile.phoneVerified && (
+                          <div>
+                            <div className="attestation phone" />
+                            <fbt desc="User.phone">Phone</fbt>
                           </div>
                         )}
                         {profile.facebookVerified && (
@@ -64,16 +64,16 @@ class User extends Component {
                             Twitter
                           </div>
                         )}
-                        {profile.googleVerified && (
-                          <div>
-                            <div className="attestation google" />
-                            Google
-                          </div>
-                        )}
                         {profile.airbnbVerified && (
                           <div>
                             <div className="attestation airbnb" />
                             AirBnb
+                          </div>
+                        )}
+                        {profile.googleVerified && (
+                          <div>
+                            <div className="attestation google" />
+                            Google
                           </div>
                         )}
                       </div>

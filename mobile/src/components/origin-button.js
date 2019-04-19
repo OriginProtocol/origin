@@ -9,11 +9,23 @@ export default class OriginButton extends Component {
   }
 
   render() {
-    const { deactivate, disabled, image, outline, size, style, textStyle, title, type, onDisabledPress, onPress } = this.props
+    const {
+      deactivate,
+      disabled,
+      image,
+      outline,
+      size,
+      style,
+      textStyle,
+      title,
+      type,
+      onDisabledPress,
+      onPress
+    } = this.props
     const { pressed } = this.state
     let backgroundColor, borderColor, color
-    
-    switch(type) {
+
+    switch (type) {
       case 'primary':
         backgroundColor = outline ? 'transparent' : '#1a82ff'
         borderColor = '#1a82ff'
@@ -31,32 +43,41 @@ export default class OriginButton extends Component {
     }
 
     return (
-      <TouchableOpacity activeOpacity={disabled || pressed ? 1 : 0.5} onPress={() => {
-        if (deactivate && pressed) {
-          return
-        }
-
-        if (deactivate) {
-          this.setState({ pressed: true })
-        }
-
-        if (disabled && onDisabledPress) {
-          onDisabledPress()
-        }
-
-        if (!disabled && onPress) {
-          onPress()
-        }
-      }} style={{ width: size === 'large' ? '100%' : undefined }}>
-        <View style={[ { backgroundColor, borderColor, opacity: disabled || pressed ? 0.2 : 1 }, (styles[size] || styles.small), styles.button, style]}>
-          <Text style={[ { color }, styles.buttonText, textStyle ]}>
-            {title}
-          </Text>
-          {image &&
-            <View style={styles.image}>
-              {image}
-            </View>
+      <TouchableOpacity
+        activeOpacity={disabled || pressed ? 1 : 0.5}
+        onPress={() => {
+          if (deactivate && pressed) {
+            return
           }
+
+          if (deactivate) {
+            this.setState({ pressed: true })
+          }
+
+          if (disabled && onDisabledPress) {
+            onDisabledPress()
+          }
+
+          if (!disabled && onPress) {
+            onPress()
+          }
+        }}
+        style={{ width: size === 'large' ? '100%' : undefined }}
+      >
+        <View
+          style={[
+            {
+              backgroundColor,
+              borderColor,
+              opacity: disabled || pressed ? 0.2 : 1
+            },
+            styles[size] || styles.small,
+            styles.button,
+            style
+          ]}
+        >
+          <Text style={[{ color }, styles.buttonText, textStyle]}>{title}</Text>
+          {image && <View style={styles.image}>{image}</View>}
         </View>
       </TouchableOpacity>
     )
@@ -70,23 +91,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingLeft: 30,
-    paddingRight: 30,
+    paddingRight: 30
   },
   buttonText: {
     fontFamily: 'Lato',
     fontSize: 13,
     fontWeight: '900',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   image: {
-    marginLeft: 10,
+    marginLeft: 10
   },
   large: {
     borderRadius: 25,
-    height: 50,
+    height: 50
   },
   small: {
     borderRadius: 15,
-    height: 30,
-  },
+    height: 30
+  }
 })

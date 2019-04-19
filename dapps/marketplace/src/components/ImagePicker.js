@@ -4,45 +4,9 @@ import { fbt } from 'fbt-runtime'
 import Tooltip from 'components/Tooltip'
 import ImageCropper from 'components/ImageCropperModal'
 
-import loadImage from 'utils/loadImage'
-
-import { fileSize, postFile } from 'utils/fileUtils'
-const acceptedFileTypes = [
-  'image/jpeg',
-  'image/pjpeg',
-  'image/png',
-  'image/webp'
-]
+import { uploadImages, acceptedFileTypes } from 'utils/uploadImages'
 
 import withConfig from 'hoc/withConfig'
-
-async function getImages(ipfsRPC, files) {
-  const newImages = []
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]
-
-    const newFile = await new Promise(resolve => {
-      loadImage(file, img => img.toBlob(blob => resolve(blob), 'image/jpeg'), {
-        orientation: true,
-        maxWidth: 2000,
-        maxHeight: 2000
-      })
-    })
-
-    if (acceptedFileTypes.indexOf(file.type) >= 0) {
-      const hash = await postFile(ipfsRPC, newFile, file.type)
-      newImages.push({
-        contentType: file.type,
-        size: fileSize(file.size),
-        name: file.name,
-        src: window.URL.createObjectURL(newFile),
-        urlExpanded: window.URL.createObjectURL(newFile),
-        hash
-      })
-    }
-  }
-  return newImages
-}
 
 class ImagePicker extends Component {
   constructor(props) {
@@ -87,7 +51,7 @@ class ImagePicker extends Component {
               multiple={true}
               onChange={async e => {
                 const { files } = e.currentTarget
-                const newImages = await getImages(ipfsRPC, files)
+                const newImages = await uploadImages(ipfsRPC, files)
                 this.onChange([...this.state.images, ...newImages].slice(0, 50))
                 this.uploadRef.value = ''
               }}
@@ -102,7 +66,7 @@ class ImagePicker extends Component {
             src={this.state.images[this.state.crop].src}
             onClose={() => this.setState({ crop: undefined })}
             onChange={async imageBlob => {
-              const [newImage] = await getImages(ipfsRPC, [imageBlob])
+              const [newImage] = await uploadImages(ipfsRPC, [imageBlob])
               const images = [...this.state.images]
               images[this.state.crop] = newImage
               this.onChange(images)

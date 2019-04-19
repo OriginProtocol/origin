@@ -1,58 +1,18 @@
-const sellerEventNotificationMap = {
-  OfferCreated: {
-    title: 'New Offer',
-    body: 'A buyer has made an offer on your listing.'
-  },
-  OfferWithdrawn: {
-    title: 'Offer Withdrawn',
-    body: 'An offer on your listing has been withdrawn.'
-  },
-  OfferDisputed: {
-    title: 'Dispute Initiated',
-    body: 'A problem has been reported with your transaction.'
-  },
-  OfferRuling: {
-    title: 'Dispute Resolved',
-    body: 'A ruling has been issued on your disputed transaction.'
-  },
-  OfferFinalized: {
-    title: 'Sale Completed',
-    body: 'Your transaction has been completed.'
-  }
-}
+const { messageTemplates } = require('../templates/messageTemplates')
+const logger = require('./logger')
 
-const buyerEventNotificationMap = {
-  OfferWithdrawn: {
-    title: 'Offer Rejected',
-    body: 'An offer you made has been rejected.'
-  },
-  OfferAccepted: {
-    title: 'Offer Accepted',
-    body: 'An offer you made has been accepted.'
-  },
-  OfferDisputed: {
-    title: 'Dispute Initiated',
-    body: 'A problem has been reported with your transaction.'
-  },
-  OfferRuling: {
-    title: 'Dispute Resolved',
-    body: 'A ruling has been issued on your disputed transaction.'
-  },
-  OfferData: {
-    title: 'New Review',
-    body: 'A review has been left on your transaction.'
-  }
+if (!messageTemplates) {
+  logger.error('error: messageTemplates not found.')
 }
-
 /**
  * Returns true if an event should be processed based on its event name.
  * @param {string} eventName - ex: OfferCreated
  * @return {boolean}
  */
-function processableEvent(eventName) {
+function processableEvent(eventName, channel) {
   return (
-    (buyerEventNotificationMap[eventName] ||
-      sellerEventNotificationMap[eventName]) !== undefined
+    (messageTemplates.buyer[channel][eventName] ||
+      messageTemplates.seller[channel][eventName]) !== undefined
   )
 }
 
@@ -71,7 +31,8 @@ function getNotificationMessage(
   eventName,
   initiator,
   recipient,
-  recipientRole
+  recipientRole,
+  channel
 ) {
   // No need to send a notification if recipient initiated the action.
   if (initiator === recipient) {
@@ -80,9 +41,9 @@ function getNotificationMessage(
 
   let message
   if (recipientRole === 'buyer') {
-    message = buyerEventNotificationMap[eventName]
+    message = messageTemplates.buyer[channel][eventName]
   } else {
-    message = sellerEventNotificationMap[eventName]
+    message = messageTemplates.seller[channel][eventName]
   }
   return message ? message : null
 }

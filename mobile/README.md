@@ -128,7 +128,6 @@ IPFS_GATEWAY_PROTOCOL=http
 MAINNET_API_SERVER=https://linking.originprotocol.com
 RINKEBY_API_SERVER=https://linking.staging.originprotocol.com
 PROVIDER_URL=http://localhost:8545/
-CB_BW_CODE=
 
 GCM_SENDER_ID=
 ```

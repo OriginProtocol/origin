@@ -1,0 +1,34 @@
+{
+  "name": "@origin/mobile-bridge",
+  "version": "0.1.0",
+  "description": "Bridge between mobile wallet and DApp",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OriginProtocol/origin.git"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "homepage": "https://github.com/OriginProtocol/origin#readme",
+  "dependencies": {
+    "uuid": "^3.3.2",
+    "web3-provider-engine": "^15.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "prettier": "^1.16.4"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

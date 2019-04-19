@@ -1,0 +1,152 @@
+{
+  "event": {
+    "blockHash": "0xfacf80923398593882b65da3afde7622a41c5e702fa987a7d7a8f9a59c7fd904",
+    "transactionHash": "0xe29295d1b91fc0012e0eb49b28bc8bb23777694e05d4df71f7a9ab1c1d4b0eec",
+    "blockNumber": 4181051,
+    "address": "0xe842831533c4bf4B0F71B4521C4320BDB669324E",
+    "logIndex": 3,
+    "removed": false,
+    "transactionIndex": 5,
+    "id": "log_1acbe2fb",
+    "returnValues": {
+      "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "1": "522",
+      "2": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+      "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "listingID": "522",
+      "ipfsHash": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d"
+    },
+    "event": "ListingCreated",
+    "signature": "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+    "raw": {
+      "data": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+      "topics": [
+        "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+        "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
+        "0x000000000000000000000000000000000000000000000000000000000000020a"
+      ]
+    },
+    "block": {
+      "id": 4181051
+    }
+  },
+  "related": {
+    "listing": {
+      "id": "4-000-522-4181051",
+      "valid": true,
+      "validationError": null,
+      "status": "active",
+      "totalEvents": 1,
+      "seller": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "identity": {
+          "firstName": "Tom",
+          "lastName": "Linton",
+          "fullName": "Tom Linton",
+          "__typename": "Identity"
+        },
+        "__typename": "Account"
+      },
+      "arbitrator": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "__typename": "Account"
+      },
+      "deposit": "0",
+      "depositAvailable": "0",
+      "createdEvent": {
+        "timestamp": 1554845133,
+        "__typename": "Event"
+      },
+      "category": "schema.forSale",
+      "categoryStr": "For Sale",
+      "subCategory": "schema.antiques",
+      "title": "Listener Test",
+      "description": "A listing to test event listener. ",
+      "currencyId": null,
+      "featured": false,
+      "hidden": false,
+      "price": {
+        "amount": "0.25",
+        "currency": {
+          "id": "fiat-USD",
+          "__typename": "FiatCurrency"
+        },
+        "__typename": "Price"
+      },
+      "acceptedTokens": [
+        {
+          "id": "token-DAI",
+          "__typename": "Token"
+        }
+      ],
+      "media": [
+          {
+            "url": "ipfs://QmfFFvvY2jUZaEsGyaxwtMEnsyVPpCHruLbQEkR8XhSpJq",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVC84UfjAZwwusJU2mC2Lq3VXcTVpJzCB7V9Rujz1jELr",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmNWWqDZWC9qzRaMDX7Gq61qxhdSymNsYFGXS1QjZo1fDe",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVdbpzoUjo3mV8QAFnh32dsDnrGVj6WnFNPsAu1JZh68X",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmW9iwKTq89kBrQx3io587QS8oUkg4H7bSzBS1oi8oa1aN",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmYAtgg2s6kHHurKneF95pyncrN8FKsDmU4tPhDDdQQAe4",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmRNa1GoiyQJeFcLXL38cLCpzJQjgyhTKnmp1Wfoo1Kgui",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://Qmb84TG5qWPY7nZXvzGnr3z9APB1t8aiPd8YeVooKg1mQc",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmbsGhwdba8s8FCJcvNbrPtVsigR4VoK1p65k1YgGgFT6m",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmUg8RS85PKGdgAVSDhoSRBfU19XeHaWdjEmGo7zS3McLW",
+            "contentType": "image/jpeg"
+          }
+        ],
+      "commission": "0",
+      "commissionPerUnit": "0",
+      "marketplacePublisher": null,
+      "unitsTotal": 1,
+      "unitsAvailable": 1,
+      "unitsSold": 0,
+      "unitsPending": 0,
+      "multiUnit": false,
+      "__typename": "UnitListing",
+      "events": [
+        {
+          "id": "log_1acbe2fb",
+          "event": "ListingCreated",
+          "blockNumber": 4181051,
+          "logIndex": 3,
+          "returnValues": {
+            "ipfsHash": "0x01c09dd52f4785b89305e28aed17079cc6638b7cc528bb6f054242e183c2153d",
+            "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+            "offerID": null,
+            "listingID": "522",
+            "__typename": "EventReturnValues"
+          },
+          "__typename": "Event"
+        }
+      ]
+    },
+    "__typename": "Marketplace"
+  }
+}
