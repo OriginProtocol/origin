@@ -113,6 +113,7 @@ class MarketplaceScreen extends Component {
   /* Handle a transaction hash event from the Origin Wallet
    */
   handleTransactionHash({ transaction, hash }) {
+    // Close matching modal
     const modal = this.state.modals.find(
       m => m.msgData && m.msgData.data === transaction
     )
@@ -123,7 +124,10 @@ class MarketplaceScreen extends Component {
   /* Handle a signed message event from the Origin Wallet
    */
   handleSignedMessage({ data, signedMessage }) {
-    const modal = this.state.modals.find(m => m.msgData.data === data)
+    // Close matching modal
+    const modal = this.state.modals.find(
+      m => m.msgData && m.msgData.data === data
+    )
     // Toggle the matching modal and return the hash
     this.toggleModal(modal, signedMessage.signature)
   }
