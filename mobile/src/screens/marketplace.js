@@ -149,11 +149,12 @@ class MarketplaceScreen extends Component {
 
   render() {
     const injectedJavaScript = `
-      if (!window.__mobileBridge || !window.__mobileBridgePlatform) {
-        window.__mobileBridge = true;
-        window.__mobileBridgePlatform = '${Platform.OS}';
-      }
-      true;
+      (function() {
+        if (!window.__mobileBridge || !window.__mobileBridgePlatform) {
+          window.__mobileBridge = true;
+          window.__mobileBridgePlatform = '${Platform.OS}';
+        }
+      })();
     `
 
     const { modals } = this.state
