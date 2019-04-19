@@ -349,7 +349,10 @@ export function setMarketplace(address, epoch) {
   patchWeb3Contract(context.marketplace, epoch, {
     ...context.config,
     useLatestFromChain: false,
-    prefix: `${address.slice(2, 8)}_`,
+    prefix:
+      typeof address === 'undefined'
+        ? 'Marketplace_'
+        : `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
 
@@ -385,7 +388,10 @@ export function setIdentityEvents(address, epoch) {
     ...context.config,
     ipfsEventCache: context.config.IdentityEvents_EventCache,
     useLatestFromChain: false,
-    prefix: `${address.slice(2, 8)}_`,
+    prefix:
+      typeof address === 'undefined'
+        ? 'IdentityEvents_'
+        : `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
   context.identityEventsExec = context.identityEvents
