@@ -56,6 +56,8 @@ export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
+  context.marketplace.eventCache.setLatestBlock(lastBlock)
+  context.identityEvents.eventCache.setLatestBlock(lastBlock)
   context.eventSource.resetCache()
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
@@ -346,6 +348,8 @@ export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
   patchWeb3Contract(context.marketplace, epoch, {
     ...context.config,
+    useLatestFromChain: false,
+    prefix: `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
 
@@ -380,6 +384,8 @@ export function setIdentityEvents(address, epoch) {
   patchWeb3Contract(context.identityEvents, epoch, {
     ...context.config,
     ipfsEventCache: context.config.IdentityEvents_EventCache,
+    useLatestFromChain: false,
+    prefix: `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
   context.identityEventsExec = context.identityEvents

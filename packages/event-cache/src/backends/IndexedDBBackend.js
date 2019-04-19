@@ -88,10 +88,11 @@ const ARG_TO_INDEX_MAP = createIndexeMap(INDEXES)
  */
 class IndexedDBBackend extends AbstractBackend {
   constructor(args) {
-    const { testing = false } = args || {}
+    const { testing = false, prefix = '' } = args || {}
     super()
 
     this.type = 'indexeddb'
+    this.dbName = `${prefix}${DB_NAME}`
     this.ready = false
     this._db = null
     this._eventStore = null
@@ -150,7 +151,7 @@ class IndexedDBBackend extends AbstractBackend {
     if (this.IndexedDB) opts['indexedDB'] = this.IndexedDB
     if (this.IndexedDB) opts['IDBKeyRange'] = this.IDBKeyRange
 
-    this._db = new Dexie(DB_NAME, opts)
+    this._db = new Dexie(this.dbName, opts)
     stores[EVENT_STORE] = INDEXES.join(', ')
     this._db.version(SCHEMA_VERSION).stores(stores)
     this._eventStore = this._db[EVENT_STORE]

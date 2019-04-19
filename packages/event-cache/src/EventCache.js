@@ -78,7 +78,7 @@ class EventCache {
         return new PostgreSQLBackend()
 
       case 'browser':
-        return new IndexedDBBackend()
+        return new IndexedDBBackend({ prefix: this.prefix })
 
       case 'mobile':
       case 'memory':
@@ -91,6 +91,7 @@ class EventCache {
    * _processConfig processes the provided configuration object
    */
   _processConfig(conf) {
+    this.prefix = conf.prefix || ''
     if (typeof conf.backend !== 'undefined') {
       this.backend = conf.backend
     } else {
@@ -99,6 +100,15 @@ class EventCache {
 
     this.ipfsServer =
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
+
+    /**
+     * Only reason to set this false is if something external will manage the
+     * latest block with setLatestBlock()
+     */
+    this.useLatestFromChain =
+      typeof conf.useLatestFromChain !== 'undefined'
+        ? conf.useLatestFromChain
+        : true
 
     if (typeof conf.ipfsEventCache !== 'undefined') {
       debug(`loading event cache checkpoint ${conf.ipfsEventCache}`)
@@ -116,7 +126,11 @@ class EventCache {
   async _fetchEvents(fromBlock, toBlock = 'latest') {
     if (toBlock === 'latest') {
       // We need to be able to math it
-      toBlock = await this.web3.eth.getBlockNumber()
+      if (this.useLatestFromChain) {
+        toBlock = await this.web3.eth.getBlockNumber()
+      } else {
+        toBlock = this.backend.getLatestBlock()
+      }
     }
 
     if (fromBlock > toBlock) {
@@ -208,6 +222,14 @@ class EventCache {
    */
   getBlockNumber() {
     return this.backend.getLatestBlock()
+  }
+
+  /**
+   * Set the latest known block number, if managing this externally
+   * @param {number} The latest known block number
+   */
+  setLatestBlock(num) {
+    return this.backend.setLatestBlock(num)
   }
 
   /**
