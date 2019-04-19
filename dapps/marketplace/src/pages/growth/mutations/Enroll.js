@@ -13,10 +13,7 @@ class Enroll extends Component {
   state = {
     error: null,
     // TODO: change version programatically
-    message: fbt(
-      'I accept the terms of growth campaign version: 1.0',
-      'growth.acceptTerms'
-    )
+    message: 'I accept the terms of growth campaign version: 1.0'
   }
 
   render() {
@@ -57,18 +54,21 @@ class Enroll extends Component {
                         agreementMessage: this.state.message,
                         signature: signMessage,
                         inviteCode: localStorage.getItem('growth_invite_code'),
-                        fingerprint: this.props.fingerprint
+                        fingerprint: this.props.fingerprintData
                       }
                     })
                   }}
                   onError={errorData =>
-                    this.setState({
-                      error: fbt(
-                        'Message signature unsuccessful',
-                        'growth.errorSignatureUnsuccesful'
-                      ),
-                      errorData
-                    })
+                {
+                  console.log("ERROR:", JSON.stringify(errorData))
+                  this.setState({
+                    error: fbt(
+                      'Message signature unsuccessful',
+                      'growth.errorSignatureUnsuccesful'
+                    ),
+                    errorData
+                  })
+                }
                   }
                 >
                   {signMessage => (
@@ -83,10 +83,7 @@ class Enroll extends Component {
                               variables: {
                                 address: accountId,
                                 // TODO: change version programatically
-                                message: fbt(
-                                  'I accept the terms of growth campaign version: 1.0',
-                                  'growth.acceptTerms'
-                                )
+                                message: 'I accept the terms of growth campaign version: 1.0',
                               }
                             })
                           }}
