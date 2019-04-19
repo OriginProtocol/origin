@@ -87,7 +87,15 @@ describe('Search', () => {
     )
 
     lastQuery.body.query.function_score.query.bool.must.should.include.something.that.deep.equals(
-      { match: { all_text: { fuzziness: 'AUTO', query: 'Taylor Swift' } } }
+      {
+        match: {
+          all_text: {
+            fuzziness: 'AUTO',
+            minimum_should_match: '-20%',
+            query: 'Taylor Swift'
+          }
+        }
+      }
     )
   })
 
