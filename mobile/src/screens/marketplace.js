@@ -6,12 +6,12 @@ import {
   Modal,
   Platform,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   View
 } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import { DEFAULT_NOTIFICATION_PERMISSIONS } from '../constants'
 import NotificationCard from 'components/notification-card'
@@ -113,6 +113,7 @@ class MarketplaceScreen extends Component {
   /* Handle a transaction hash event from the Origin Wallet
    */
   handleTransactionHash({ transaction, hash }) {
+    // Close matching modal
     const modal = this.state.modals.find(
       m => m.msgData && m.msgData.data === transaction
     )
@@ -123,7 +124,10 @@ class MarketplaceScreen extends Component {
   /* Handle a signed message event from the Origin Wallet
    */
   handleSignedMessage({ data, signedMessage }) {
-    const modal = this.state.modals.find(m => m.msgData.data === data)
+    // Close matching modal
+    const modal = this.state.modals.find(
+      m => m.msgData && m.msgData.data === data
+    )
     // Toggle the matching modal and return the hash
     this.toggleModal(modal, signedMessage.signature)
   }
@@ -157,7 +161,11 @@ class MarketplaceScreen extends Component {
     // Use key of network id on safeareaview to force a remount of component on
     // network changes
     return (
-      <SafeAreaView key={this.props.settings.network.id} style={styles.sav}>
+      <SafeAreaView
+        key={this.props.settings.network.id}
+        style={styles.sav}
+        forceInset={{ top: 'always' }}
+      >
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
           ref={webview => {
