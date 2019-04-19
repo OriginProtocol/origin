@@ -1,7 +1,8 @@
-const chunk = require('lodash/chunk')
 const flattenDeep = require('lodash/flattenDeep')
 const memoize = require('lodash/memoize')
+const range = require('lodash/range')
 const Web3 = require('web3')
+const Bottleneck = require('bottleneck')
 
 const { get, post } = require('@origin/ipfs')
 
@@ -10,49 +11,41 @@ const {
   InMemoryBackend,
   IndexedDBBackend,
   PostgreSQLBackend
-} = require('./backends')
+} = require('./backends/browser')
+
+const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 const getPastEvents = memoize(
-  async function(contract, fromBlock, toBlock) {
-    const partitions = []
-    const results = []
+  async function(instance, fromBlock, toBlock) {
+    // if (typeof instance.ipfsEventCache !== 'undefined') {
+    //   debug(`loading event cache checkpoint ${instance.ipfsEventCache}`)
+    //   instance.loadCheckpoint(instance.ipfsEventCache)
+    // }
 
-    while (fromBlock <= toBlock) {
-      const uptoBlock = Math.min(fromBlock + 10000, toBlock)
-      partitions.push(
-        new Promise(async resolve => {
-          try {
-            const thisFromBlock = fromBlock,
-              thisToBlock = uptoBlock
-            console.log(`Requesting`, thisFromBlock, thisToBlock)
-            const result = await contract.getPastEvents('allEvents', {
-              fromBlock: thisFromBlock,
-              toBlock: thisToBlock
-            })
-            console.log(
-              `Got ${result.length} events`,
-              thisFromBlock,
-              thisToBlock
-            )
-            resolve(result)
-          } catch (e) {
-            console.log('Error retrieving', fromBlock, uptoBlock)
-            console.log(e)
-            resolve([])
-          }
-        })
+    const batchSize = 10000
+    const requests = range(fromBlock, toBlock, batchSize).map(start =>
+      limiter.schedule(
+        args => instance.contract.getPastEvents('allEvents', args),
+        { fromBlock: start, toBlock: Math.min(start + batchSize - 1, toBlock) }
       )
-      fromBlock += 10000
+    )
+
+    const numBlocks = toBlock - fromBlock
+    debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
+
+    if (!numBlocks) return
+
+    const newEvents = flattenDeep(await Promise.all(requests))
+    debug(`Got ${newEvents.length} new events`)
+
+    if (newEvents.length > 0) {
+      await instance.backend.addEvents(newEvents)
+      debug(`Added all events to backend`)
     }
 
-    const chunks = chunk(partitions, 7)
-    for (const chunklet of chunks) {
-      results.push(await Promise.all(chunklet))
-    }
-
-    return flattenDeep(results)
+    instance.lastQueriedBlock = toBlock
   },
-  (...args) => `${args[0]._address}-${args[1]}-${args[2]}`
+  (...args) => `${args[0].contract._address}-${args[1]}-${args[2]}`
 )
 
 /**
@@ -81,11 +74,11 @@ class EventCache {
     this._processConfig(config)
 
     this.contract = contract
+    this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
 
-    this.originBlock = Number(originBlock)
     const addr = this.contract._address.substr(0, 10)
-    console.log(`Initialized ${addr} with originBlock ${this.originBlock}`)
+    debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
   }
 
   /**
@@ -144,11 +137,6 @@ class EventCache {
       typeof conf.useLatestFromChain !== 'undefined'
         ? conf.useLatestFromChain
         : true
-
-    if (typeof conf.ipfsEventCache !== 'undefined') {
-      debug(`loading event cache checkpoint ${conf.ipfsEventCache}`)
-      this.loadCheckpoint(conf.ipfsEventCache)
-    }
   }
 
   /**
@@ -159,7 +147,7 @@ class EventCache {
    * @returns {Array} An array of event objects
    */
   async _fetchEvents() {
-    let fromBlock = this.originBlock
+    let fromBlock = this.lastQueriedBlock || this.originBlock
     const latestKnown = await this.backend.getLatestBlock()
     if (latestKnown >= fromBlock) {
       fromBlock = latestKnown + 1
@@ -172,13 +160,10 @@ class EventCache {
 
     if (fromBlock > toBlock) {
       debug('fromBlock > toBlock')
-      debug(`${fromBlock} > ${toBlock}`)
-      return []
+      return
     }
 
-    debug(`New block found: ${toBlock}`)
-
-    return await getPastEvents(this.contract, fromBlock, toBlock)
+    await getPastEvents(this, fromBlock, toBlock)
   }
 
   /**
@@ -214,13 +199,8 @@ class EventCache {
       throw new TypeError('Invalid event parameters')
     }
 
-    const newEvents = await this._fetchEvents()
-    if (newEvents.length > 0) {
-      await this.backend.addEvents(newEvents)
-    }
-
-    const result = await this.backend.get(params)
-    return result
+    await this._fetchEvents()
+    return await this.backend.get(params)
   }
 
   /**
@@ -228,10 +208,7 @@ class EventCache {
    * @returns {Array} - An array of event objects
    */
   async allEvents() {
-    const newEvents = await this._fetchEvents()
-    if (newEvents.length > 0) {
-      await this.backend.addEvents(newEvents)
-    }
+    await this._fetchEvents()
     return await this.backend.all()
   }
 
@@ -248,6 +225,7 @@ class EventCache {
    * @param {number} The latest known block number
    */
   setLatestBlock(num) {
+    debug(`setLatestBlock to ${num}`)
     this.latestBlock = num
   }
 

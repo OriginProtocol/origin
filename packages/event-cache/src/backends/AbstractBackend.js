@@ -67,11 +67,9 @@ class AbstractBackend {
   }
 
   /**
-   * Stores a single event
+   * Stores multiple events
    *
-   * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return
-   *
-   * @param {object} A JS object representing the event
+   * @param {Array} An array of JS object representing the event
    */
   async addEvents(eventObjects) {
     for (let i = 0; i < eventObjects.length; i++) {

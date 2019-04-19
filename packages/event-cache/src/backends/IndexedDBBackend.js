@@ -313,6 +313,17 @@ class IndexedDBBackend extends AbstractBackend {
   }
 
   /**
+   * Stores multiple events
+   *
+   * @param {Array} An array of JS object representing the event
+   */
+  async addEvents(eventObjects) {
+    await this.waitForReady()
+    await this._eventStore.bulkAdd(eventObjects)
+    this.setLatestBlock(eventObjects[eventObjects.length - 1].blockNumber)
+  }
+
+  /**
    * Stores a single event
    *
    * For more info on the eventObject, see: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#contract-events-return
