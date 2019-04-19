@@ -171,7 +171,9 @@ class OriginWallet extends Component {
    */
   initWeb3() {
     // Verify that the saved network is valid
-    const networkExists = NETWORKS.find(n => n.name === this.props.settings.network.name)
+    const networkExists = NETWORKS.find(
+      n => n.name === this.props.settings.network.name
+    )
     if (!networkExists) {
       // Set to mainnet if for some reason the network doesn't exist
       this.props.setNetwork(NETWORKS.find(n => n.id === 1))
