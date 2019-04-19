@@ -313,14 +313,10 @@ describe('Marketplace Dapp', function() {
       ({ seller, buyer } = await reset())
     })
 
-    it('should open the profile quickview', async function() {
-      await changeAccount(page, buyer)
-      await clickBySelector(page, 'img[alt="Wallet icon"]')
-      await pic(page, 'profile-quickview')
-    })
-
     it('should go to the profile page', async function() {
-      await clickByText(page, 'Edit Profile')
+      await page.evaluate(() => {
+        window.location = '/#/profile'
+      })
       await pic(page, 'profile-page')
     })
 
