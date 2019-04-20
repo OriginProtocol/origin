@@ -1,4 +1,10 @@
-// One-off script to backfill the columns country of the identity table.
+// One-off script to backfill the country column of the identity table.
+//
+// Note: logically this script belongs more to the identity package
+// rather than growth package. But identity does not have all the dependencies
+// required (e.g. bridge, growth)... Since this is a one-off script that will
+// get deleted after it gets run in production, we made the decision
+// to put it in the growth package.
 
 const _identityModels = require('@origin/identity/src/models')
 const _bridgeModels = require('@origin/bridge/src/models')
