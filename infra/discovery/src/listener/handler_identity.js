@@ -105,7 +105,7 @@ class IdentityEventHandler {
   async _countryLookup(ethAddress) {
     // Load the most recent attestation.
     const attestation = await db.Attestation.findOne({
-      where: { ethAddress },
+      where: { ethAddress: ethAddress.toLowerCase() },
       order: [['createdAt', 'DESC']]
     })
     if (!attestation) {
