@@ -228,7 +228,9 @@ describe('Listener Handlers', () => {
       }
     }
 
-    handler._countryLookup = () => { return 'FR' }
+    handler._countryLookup = () => {
+      return 'FR'
+    }
 
     const result = await handler.process({ timestamp: 1 }, this.identityEvent)
 
