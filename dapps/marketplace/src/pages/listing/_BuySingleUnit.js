@@ -36,6 +36,7 @@ const SingleUnit = ({ listing, from, refetch }) => {
                 refetch={refetch}
                 listing={listing}
                 from={from}
+                totalPrice={listing.price}
                 value={get(prices, `${token}.amount`)}
                 quantity={1}
                 currency={token}

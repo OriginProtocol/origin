@@ -62,6 +62,7 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
                 refetch={refetch}
                 listing={listing}
                 from={from}
+                totalPrice={totalPrice}
                 value={get(prices, `${token}.amount`)}
                 quantity={quantity}
                 currency={token}

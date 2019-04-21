@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
+import ceil from 'lodash/round'
 import numberFormat from 'utils/numberFormat'
 import { withRouter } from 'react-router-dom'
 import store from 'utils/store'
@@ -14,6 +15,8 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+import Price from 'components/Price'
+import CoinPrice from 'components/CoinPrice'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -80,6 +83,7 @@ class Buy extends Component {
             {content}
           </Modal>
         )}
+        {this.state.confirmationModal && this.renderPurchaseConfirmationModal()}
       </>
     )
   }
@@ -113,6 +117,16 @@ class Buy extends Component {
   }
 
   renderSwapTokenMutation(buttonContent) {
+    let actionButton = (onClickCallback) => (
+      <button
+        className={buttonContent ? this.props.className : 'btn btn-clear'}
+        onClick={onClickCallback}
+        children={buttonContent || fbt('buy.DaiSwapNow', 'Swap Now')}
+      />
+    )
+
+    const { purchaseConfirmed } = this.state
+
     return (
       <Mutation
         mutation={SwapToTokenMutation}
@@ -120,16 +134,19 @@ class Buy extends Component {
           this.setState({ waitForSwap: swapToToken.id })
         }}
         onError={errorData =>
-          this.setState({ waitForSwap: false, error: 'mutation', errorData })
+          this.setState({ waitForSwap: false, error: 'mutation', errorData, purchaseConfirmed: false })
         }
       >
-        {swapToToken => (
-          <button
-            className={buttonContent ? this.props.className : 'btn btn-clear'}
-            onClick={() => this.onSwapToToken(swapToToken)}
-            children={buttonContent || fbt('buy.DaiSwapNow', 'Swap Now')}
-          />
-        )}
+        {swapToToken => {
+          if (!purchaseConfirmed) {
+            return actionButton(() => this.setState({
+              confirmationModal: true,
+              onConfirmCallback: () => this.onSwapToToken(swapToToken)
+            }))
+          }
+
+          return actionButton(() => this.onSwapToToken(swapToToken))
+        }}
       </Mutation>
     )
   }
@@ -213,6 +230,16 @@ class Buy extends Component {
   }
 
   renderAllowTokenMutation(buttonContent) {
+    let actionButton = (onClickCallback) => (
+      <button
+        className={buttonContent ? this.props.className : 'btn btn-clear'}
+        onClick={onClickCallback}
+        children={buttonContent || fbt('Approve', 'Approve')}
+      />
+    )
+
+    const { purchaseConfirmed } = this.state
+
     return (
       <Mutation
         mutation={AllowTokenMutation}
@@ -220,21 +247,34 @@ class Buy extends Component {
           this.setState({ waitForAllow: updateTokenAllowance.id })
         }}
         onError={errorData =>
-          this.setState({ waitForAllow: false, error: 'mutation', errorData })
+          this.setState({ waitForAllow: false, error: 'mutation', errorData, purchaseConfirmed: false })
         }
       >
-        {allowToken => (
-          <button
-            className={buttonContent ? this.props.className : 'btn btn-clear'}
-            onClick={() => this.onAllowToken(allowToken)}
-            children={buttonContent || fbt('Approve', 'Approve')}
-          />
-        )}
+        {allowToken => {
+          if (!purchaseConfirmed) {
+            return actionButton(() => this.setState({
+              confirmationModal: true,
+              onConfirmCallback: () => this.onAllowToken(allowToken)
+            }))
+          }
+
+          return actionButton(() => this.onAllowToken(allowToken))
+        }}
       </Mutation>
     )
   }
 
-  renderMakeOfferMutation(btnContent) {
+  renderMakeOfferMutation(buttonContent) {
+    let actionButton = (onClickCallback) => (
+      <button
+        className={buttonContent ? 'btn btn-clear' : this.props.className}
+        onClick={onClickCallback}
+        children={buttonContent || this.props.children}
+      />
+    )
+
+    const { purchaseConfirmed } = this.state
+
     return (
       <Mutation
         mutation={MakeOfferMutation}
@@ -242,17 +282,76 @@ class Buy extends Component {
           this.setState({ waitFor: makeOffer.id })
         }}
         onError={errorData =>
-          this.setState({ waitFor: false, error: 'mutation', errorData })
+          this.setState({ waitFor: false, error: 'mutation', errorData, purchaseConfirmed: false })
         }
       >
-        {makeOffer => (
-          <button
-            className={btnContent ? 'btn btn-clear' : this.props.className}
-            onClick={() => this.onClick(makeOffer)}
-            children={btnContent || this.props.children}
-          />
-        )}
+        {makeOffer => {
+          if (!purchaseConfirmed) {
+            return actionButton(() => this.setState({
+              confirmationModal: true,
+              onConfirmCallback: () => this.onClick(makeOffer)
+            }))
+          }
+
+          return actionButton(() => this.onClick(makeOffer))
+        }}
       </Mutation>
+    )
+  }
+
+  renderPurchaseConfirmationModal() {
+    let currency = 'eth'
+    if (this.props.currency === 'token-DAI') {
+      currency = 'dai'
+    }
+
+    const { onConfirmCallback } = this.state
+
+    return (
+      <Modal
+        onClose={() =>
+          this.setState({ error: false, confirmationModal: false, shouldCloseConfirmationModal: false, onConfirmCallback: null })
+        }
+        shouldClose={this.state.shouldCloseConfirmationModal}
+      >
+        <div className="make-offer-modal">
+          <h5>
+            <fbt desc="success">Purchase</fbt>
+          </h5>
+          <h4 className="confirm-listing-title">{this.props.listing.title}</h4>
+          <div className="confirm-offer-detail">
+            <div className="offer-detail-header">
+              <fbt desc="buy.totalPrice">Total price</fbt>
+            </div>
+            <div className="offer-detail-value">
+              { `${ceil(this.props.totalPrice.amount, 2)} USD` }
+            </div>
+          </div>
+          <div className="confirm-offer-detail">
+            <div className="offer-detail-header">
+              <fbt desc="buy.payment">Payment</fbt>
+            </div>
+            <div className="offer-detail-value">
+              <CoinPrice price={ceil(this.props.value, 5)} coin={currency} />
+            </div>
+          </div>
+          <button
+            href="#"
+            className="btn btn-primary"
+            onClick={() => {
+              if (onConfirmCallback) {
+                onConfirmCallback()
+              }
+              this.setState({ confirmationModal: false, purchaseConfirmed: true, modal: true })
+            }}
+            children={
+              this.state.loading
+                ? fbt('Loading...', 'Loading...')
+                : fbt('Confirm Purchase', 'Confirm Purchase')
+            }
+          />
+        </div>
+      </Modal>
     )
   }
 
@@ -303,7 +402,8 @@ class Buy extends Component {
       this.setState({
         modal: true,
         error: this.props.cannotTransact,
-        errorData: this.props.cannotTransactData
+        errorData: this.props.cannotTransactData,
+        purchaseConfirmed: false
       })
       return false
     }
@@ -464,6 +564,14 @@ require('react-styl')(`
           margin-bottom: 0.5rem
     .metamask-video
       margin-bottom: 1rem
+    .confirm-listing-title
+      margin: 0.75rem 0
+      color: var(--white)
+      font-size: 26px
+    .confirm-offer-detail
+      margin: 0.75rem 0
+    .offer-detail-value
+      font-weight: 700
 
   @media (max-width: 767.98px)
     .make-offer-modal

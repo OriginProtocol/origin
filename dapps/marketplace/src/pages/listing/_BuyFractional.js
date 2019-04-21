@@ -115,6 +115,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
                     refetch={refetch}
                     listing={listing}
                     from={from}
+                    totalPrice={totalPrice}
                     value={get(prices, `['${token}'].amount`)}
                     quantity={1}
                     disabled={available ? false : true}
