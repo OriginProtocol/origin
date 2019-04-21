@@ -97,7 +97,7 @@ class AccountScreen extends Component {
 
   handleSetAccountName(event) {
     const { address } = this.props.navigation.getParam('account')
-    const nameValue = event.nativeEvent.text.trim()
+    const nameValue = event.nativeEvent.text
     DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
   }
 

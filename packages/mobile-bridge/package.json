@@ -4,7 +4,10 @@
   "description": "Bridge between mobile wallet and DApp",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -19,5 +22,13 @@
   "dependencies": {
     "uuid": "^3.3.2",
     "web3-provider-engine": "^15.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "prettier": "^1.16.4"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

@@ -22,11 +22,10 @@ class TransactionCard extends Component {
     const { functionName, parameters } = decodeTransaction(msgData.data.data)
     const { _commission, _currency, _value } = parameters
     const balances = wallet.accountBalance
-    const gas = web3.utils.fromWei(
-      web3.utils
-        .toBN(msgData.data.gasPrice)
-        .mul(web3.utils.toBN(msgData.data.gasLimit))
-    )
+    const gasWei = web3.utils
+      .toBN(msgData.data.gasPrice)
+      .mul(web3.utils.toBN(msgData.data.gasLimit))
+    const gas = web3.utils.fromWei(gasWei.toString(), 'ether')
 
     let boost,
       heading,
