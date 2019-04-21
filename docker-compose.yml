@@ -140,6 +140,9 @@ services:
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
+      - PROVIDER_URL=http://services:8545
+      - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
+      - IPFS_API_URL=http://ipfs-proxy:9999
       - ENVKEY=
     depends_on:
       - postgres

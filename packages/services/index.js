@@ -71,7 +71,7 @@ const populateIpfs = ({ logFiles } = {}) =>
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populating IPFS...')
     ipfs.util.addFromFs(
-      path.resolve(__dirname, '../origin-js/test/fixtures'),
+      path.resolve(__dirname, './fixtures'),
       { recursive: true },
       (err, result) => {
         if (err) {
