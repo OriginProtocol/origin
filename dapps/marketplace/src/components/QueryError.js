@@ -17,7 +17,7 @@ const QueryError = props => {
       <div>
         <div>{props.error}</div>
         {props.query && <div>{props.query.loc.source.body}</div>}
-        {props.vars && <pre>{props.vars}</pre>}
+        {props.vars && <pre>{JSON.stringify(props.vars)}</pre>}
       </div>
     </div>
   )

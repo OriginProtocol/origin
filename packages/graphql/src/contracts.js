@@ -58,13 +58,17 @@ export function newBlock(blockHeaders) {
 }
 
 function pollForBlocks() {
-  blockInterval = setInterval(() => {
-    web3.eth.getBlockNumber().then(block => {
-      if (block > lastBlock) {
-        web3.eth.getBlock(block).then(newBlock)
-      }
-    })
-  }, 5000)
+  try {
+    blockInterval = setInterval(() => {
+      web3.eth.getBlockNumber().then(block => {
+        if (block > lastBlock) {
+          web3.eth.getBlock(block).then(newBlock)
+        }
+      })
+    }, 5000)
+  } catch (error) {
+    console.log(`Polling for new blocks failed: ${error}`)
+  }
 }
 
 export function setNetwork(net, customConfig) {
@@ -164,9 +168,13 @@ export function setNetwork(net, customConfig) {
   } else {
     pollForBlocks()
   }
-  web3.eth.getBlockNumber().then(block => {
-    web3.eth.getBlock(block).then(newBlock)
-  })
+  try {
+    web3.eth.getBlockNumber().then(block => {
+      web3.eth.getBlock(block).then(newBlock)
+    })
+  } catch (error) {
+    console.log(`Could not retrieve block: ${error}`)
+  }
   context.pubsub = pubsub
 
   context.tokens = config.tokens || []
