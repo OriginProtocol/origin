@@ -18,17 +18,22 @@ const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
-    // if (typeof instance.ipfsEventCache !== 'undefined') {
-    //   debug(`loading event cache checkpoint ${instance.ipfsEventCache}`)
-    //   instance.loadCheckpoint(instance.ipfsEventCache)
-    // }
     if (!instance.loadedCache && instance.ipfsEventCache) {
-      debug('Loading event cache from IPFS')
-      const cachedEvents = await Promise.all(
-        instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
-      )
+      try {
+        debug('Loading event cache from IPFS', instance.ipfsEventCache)
+        const cachedEvents = flattenDeep(
+          await Promise.all(
+            instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
+          )
+        )
+        fromBlock = cachedEvents[cachedEvents.length - 1].blockNumber + 1
+        debug(`Last cached blockNumber: ${fromBlock}`)
+        debug(`Loaded ${cachedEvents.length} events from IPFS cache`)
+        await instance.backend.addEvents(cachedEvents)
+      } catch (e) {
+        debug(`Error loading IPFS events`, e)
+      }
 
-      debug('Loaded event cache', flattenDeep(cachedEvents))
       instance.loadedCache = true
     }
 
@@ -48,8 +53,12 @@ const getPastEvents = memoize(
     debug(`Got ${newEvents.length} new events`)
 
     if (newEvents.length > 0) {
-      await instance.backend.addEvents(newEvents)
-      debug(`Added all events to backend`)
+      try {
+        await instance.backend.addEvents(newEvents)
+        debug(`Added all new events to backend`)
+      } catch (e) {
+        debug('Error adding new events to backend', e)
+      }
     }
 
     instance.lastQueriedBlock = toBlock
