@@ -1,1 +1,5 @@
-Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.
+Congratulations!
+
+Your transaction for <%= listing.title %> has been completed and funds are now in your account.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>

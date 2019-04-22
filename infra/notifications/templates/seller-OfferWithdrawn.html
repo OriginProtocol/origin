@@ -1,5 +1,40 @@
-The buyer <em><%- offer.buyer.identity.fullName %></em> has withdrawn their offer on your listing <em><%= listing.title %></em>.
+<table>
+    <tr>
+        <td style="font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; width:357px; vertical-align:top;" valign="top">
+            <div style="font-size: 28px; font-weight: bold;" valign="top">
+            The buyer has withdrawn their offer on your listing <%= listing.title %>.
+            </div>
+        </td>
+        <td style="width:193px;  vertical-align:top;"  valign="top">
+            <% if (listing.media[0]) { %>
+                <img class="listing-img" style="max-width:100%; height: auto;" src="<%= ipfsGatewayUrl %>/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+            <% } %>
+        </td>
+    </tr>
+</table>
 
-<% if (listing.media[0]) { %>
-<img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-<% } %>
+<br/>
+
+<!-- button -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+  <td>
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td
+          align="center"
+          style="border-radius: 43px;"
+          bgcolor="#1a82ff"
+        >
+          <a
+            href="<%= dappUrl %>/#/purchases/<%- offer.id %>"
+            target="_blank"
+            style="font-size: 16px; font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; color: #ffffff; text-decoration: none; text-decoration: none;border-radius: 43px; padding: 10px 36px; border: 1px solid #1a82ff; display: inline-block;"
+            >View Transaction</a
+          >
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
