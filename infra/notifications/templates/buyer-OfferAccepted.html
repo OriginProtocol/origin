@@ -1,0 +1,25 @@
+<table>
+	<tr>
+		<td style="width:357px">
+			<div style="big-highlight">
+			Congratulations!
+			</div>
+
+			<div style="big">
+			Your offer for <%= listing.title %> has been accepted.
+			</div>
+		</td>
+		<td style="width:193px;">
+			<% if (listing.media[0]) { %>
+				<img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+			<% } %>
+		</td>
+	</tr>
+</table>
+
+Next steps:<br/>
+
+<ul>
+	<li>Send a message to the seller so they know where to send your item.</li>
+	<li>After you receive your item, please return to Origin to release the funds to the seller and leave a review.</li>
+</ul>

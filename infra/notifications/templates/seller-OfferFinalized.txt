@@ -1,0 +1,1 @@
+Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.

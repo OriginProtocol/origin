@@ -1,0 +1,5 @@
+A buyer (<em><%- offer.buyer.identity.fullName %></em>) has made an offer on your listing <em><%= listing.title %></em>.
+
+<% if (listing.media[0]) { %>
+<img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+<% } %>
