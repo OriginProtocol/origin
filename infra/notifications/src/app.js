@@ -62,18 +62,18 @@ const config = {
   verbose: args['--verbose'] || false
 }
 
+logger.log('Configuration:')
 logger.log(config)
 
 // ------------------------------------------------------------------
 
-// should be tightened up for security
+// TODO: Should be tightened up for security
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
   )
-
   next()
 })
 
@@ -227,10 +227,10 @@ app.post('/events', async (req, res) => {
   res.status(200).send({ status: 'ok' })
 
   // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+  // mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
+  // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Email notifications
   emailSend(

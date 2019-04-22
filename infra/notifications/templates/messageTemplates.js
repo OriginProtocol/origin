@@ -34,18 +34,28 @@ const messageTemplates = {
         html: _.template(
           `
           A buyer has made an offer on your listing <em><%= listing.title %></em>.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
           `
         ),
-        text: _.template('A buyer has made an offer on your listing.')
+        text: _.template(`
+          A buyer has made an offer on your listing.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `)
       },
       OfferWithdrawn: {
         subject: 'Offer Withdrawn',
         html: _.template(
           `
           The buyer has withdrawn their offer on your listing <em><%= listing.title %></em>.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
           `
         ),
-        text: _.template('An offer on your listing has been withdrawn.')
+        text: _.template(
+          `
+          An offer on your listing has been withdrawn.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `
+        )
       },
       OfferDisputed: {
         subject: 'Dispute Initiated',
@@ -67,10 +77,14 @@ const messageTemplates = {
           `
           Your transaction with the buyer for
           <em><%= listing.title %></em> has been completed.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
           `
         ),
         text: _.template(
-          'Your transaction with the buyer for "<%= listing.title %>" has been completed.'
+          `
+          Your transaction with the buyer for "<%= listing.title %>" has been completed.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `
         )
       }
     }
@@ -101,13 +115,33 @@ const messageTemplates = {
     email: {
       OfferWithdrawn: {
         subject: 'Offer Rejected',
-        html: _.template('An offer you made has been rejected.'),
-        text: _.template('An offer you made has been rejected.')
+        html: _.template(
+          `
+          An offer you made has been rejected.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
+          `
+        ),
+        text: _.template(
+          `
+          An offer you made has been rejected.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `
+        )
       },
       OfferAccepted: {
         subject: 'Offer Accepted',
-        html: _.template('An offer you made has been accepted.'),
-        text: _.template('An offer you made has been accepted.')
+        html: _.template(
+          `
+          An offer you made has been accepted.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
+          `
+        ),
+        text: _.template(
+          `
+          An offer you made has been accepted.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `
+        )
       },
       OfferDisputed: {
         subject: 'Dispute Initiated',
@@ -125,8 +159,18 @@ const messageTemplates = {
       },
       OfferData: {
         subject: 'New Review',
-        html: _.template('A review has been left on your transaction.'),
-        text: _.template('A review has been left on your transaction.')
+        html: _.template(
+          `
+          A review has been left on your transaction.
+          <br/><a href="<%= dappUrl %>/#/purchases/<%- offer.id %>">View Transaction</a>
+          `
+        ),
+        text: _.template(
+          `
+          A review has been left on your transaction.
+          <%= dappUrl %>/#/purchases/<%- offer.id %>
+          `
+        )
       }
     }
   }

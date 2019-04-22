@@ -85,6 +85,16 @@ async function emailSend(
           logger.info(`No message found`)
         }
       } else {
+        const vars = {
+          dappUrl:
+            listing.id[0] === '4'
+              ? 'https://dapp.staging.originprotocol.com'
+              : 'https://dapp.originprotocol.com',
+          ipfsGatewayUrl:
+            listing.id[0] === '4'
+              ? 'https://gateway.staging.originprotocol.com'
+              : 'https://gateway.originprotocol.com'
+        }
         const email = {
           to: config.overrideEmail || s.email,
           from: config.fromEmail,
@@ -93,14 +103,16 @@ async function emailSend(
             message: message.text({
               listing: listing,
               offer: offer,
-              config: config
+              config: config,
+              ...vars
             })
           }),
           html: emailTemplateHtml({
             message: message.html({
               listing: listing,
               offer: offer,
-              config: config
+              config: config,
+              ...vars
             })
           }),
           asm: {
