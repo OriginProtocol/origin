@@ -84,17 +84,20 @@ async function emailSend(
         if (config.verbose) {
           logger.info(`No message found`)
         }
-      } else {
+      } else {        
+        const networkSubDomains = {
+          1: '',
+          4: 'staging.',
+          999: 'localhost.',
+          2222: 'dev.'
+        }
+        const listingNetwork = listing.id.split('-')[0] // First section of id is the network num
         const vars = {
           dappUrl:
-            listing.id[0] === '4'
-              ? 'https://dapp.staging.originprotocol.com'
-              : 'https://dapp.originprotocol.com',
+            `https://dapp.${networkSubDomains[listingNetwork]}originprotocol.com`,
           ipfsGatewayUrl:
-            listing.id[0] === '4'
-              ? 'https://gateway.staging.originprotocol.com'
-              : 'https://gateway.originprotocol.com'
-        }
+            `https://gateway.${networkSubDomains[listingNetwork]}originprotocol.com`
+        }        
         const email = {
           to: config.overrideEmail || s.email,
           from: config.fromEmail,
