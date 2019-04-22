@@ -31,7 +31,7 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     endDate = split[1]
     startDateDisplay = dayjs(startDate).format('ddd, MMM D') // Needs l10n
     endDateDisplay = dayjs(endDate).format('ddd, MMM D') // Needs l10n
-    const priceEstimate = availability.estimatePrice(range)
+    const priceEstimate = availability.estimateNightlyPrice(range)
     available = priceEstimate.available
     if (available) {
       totalPrice = {
