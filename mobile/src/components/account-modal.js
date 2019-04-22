@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import OriginButton from 'components/origin-button'
 
