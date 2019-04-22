@@ -12,8 +12,8 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { mobilePush } = require('./mobilePush')
-const { browserPush } = require('./browserPush')
+// const { mobilePush } = require('./mobilePush')
+// const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
 
 const app = express()
