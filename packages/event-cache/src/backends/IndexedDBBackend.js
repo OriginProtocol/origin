@@ -1,5 +1,6 @@
 const Dexie = require('dexie').default
 const uniq = require('lodash/uniq')
+const memoize = require('lodash/memoize')
 const intersectionBy = require('lodash/intersectionBy')
 
 const { AbstractBackend } = require('./AbstractBackend')
@@ -30,6 +31,43 @@ function normalizedIndexes(indexes) {
     })
   )
 }
+
+/**
+ * Initialize the IndexedDB, object store, and indexes
+ */
+const initDB = memoize(async function({ IndexedDB, IDBKeyRange, dbName }) {
+  debug(`initDB ${dbName}`)
+  const opts = {}
+  const stores = {}
+
+  if (IndexedDB) opts['indexedDB'] = IndexedDB
+  if (IndexedDB) opts['IDBKeyRange'] = IDBKeyRange
+
+  const db = new Dexie(dbName, opts)
+  stores[EVENT_STORE] = INDEXES.join(', ')
+  db.version(SCHEMA_VERSION).stores(stores)
+  const eventStore = db[EVENT_STORE]
+
+  /**
+   * Get the known block number from cache. Can be a little slow, but should
+   * be non-blocking(I think)
+   */
+  const lastIndexedBlock = await new Promise(resolve => {
+    db[EVENT_STORE].orderBy('blockNumber')
+      .reverse()
+      .limit(1)
+      .toArray()
+      .then(res => {
+        if (res && res.length > 0) {
+          debug(`lastIndexedBlock`, res[0].blockNumber)
+          resolve(res[0].blockNumber)
+        }
+        resolve(null)
+      })
+  })
+
+  return { db, eventStore, lastIndexedBlock }
+})
 
 /**
  * Create a map of arg names to fully qualified index names
@@ -113,49 +151,26 @@ class IndexedDBBackend extends AbstractBackend {
     } else {
       checkForIndexedDB()
     }
-
-    const that = this
-    this.initDB().then(db => {
-      that.ready = true
-
-      /**
-       * Get the known block number from cache. Can be a little slow, but should
-       * be non-blocking(I think)
-       */
-      db[EVENT_STORE].orderBy('blockNumber')
-        .reverse()
-        .limit(1)
-        .toArray()
-        .then(res => {
-          if (res && res.length > 0) that.setLatestBlock(res[0].blockNumber)
-        })
-    })
   }
 
   /**
    * Idle until the DB initialization is done
    */
   async waitForReady() {
-    // eslint-disable-next-line no-empty
-    while (!this.ready) {}
-    return this.ready
-  }
+    if (this.ready) {
+      return
+    }
 
-  /**
-   * Initialize the IndexedDB, object store, and indexes
-   */
-  async initDB() {
-    const opts = {}
-    const stores = {}
+    const { db, eventStore, lastIndexedBlock } = await initDB({
+      IndexedDB: this.IndexedDB,
+      IDBKeyRange: this.IDBKeyRange,
+      dbName: this.dbName
+    })
 
-    if (this.IndexedDB) opts['indexedDB'] = this.IndexedDB
-    if (this.IndexedDB) opts['IDBKeyRange'] = this.IDBKeyRange
-
-    this._db = new Dexie(this.dbName, opts)
-    stores[EVENT_STORE] = INDEXES.join(', ')
-    this._db.version(SCHEMA_VERSION).stores(stores)
-    this._eventStore = this._db[EVENT_STORE]
-    return this._db
+    this.latestBlock = lastIndexedBlock
+    this._db = db
+    this._eventStore = eventStore
+    this.ready = true
   }
 
   /**
@@ -164,6 +179,7 @@ class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} of events
    */
   async serialize() {
+    await this.waitForReady()
     return await this._eventStore.getAll(EVENT_STORE)
   }
 
@@ -173,6 +189,8 @@ class IndexedDBBackend extends AbstractBackend {
    * @param ipfsData {Array} An array of events to load
    */
   async loadSerialized(ipfsData) {
+    await this.waitForReady()
+
     if (!(ipfsData instanceof Array)) {
       throw new TypeError('Serialized data should be an Array of objects')
     }
@@ -308,6 +326,8 @@ class IndexedDBBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
+    await this.waitForReady()
+
     const items = await this._eventStore.toArray()
     return items.sort(compareEvents)
   }
@@ -319,8 +339,18 @@ class IndexedDBBackend extends AbstractBackend {
    */
   async addEvents(eventObjects) {
     await this.waitForReady()
+    
     await this._eventStore.bulkAdd(eventObjects)
     this.setLatestBlock(eventObjects[eventObjects.length - 1].blockNumber)
+  }
+
+  /**
+   * Returns the latest block number known by the backend
+   * @returns {number} The latest known block number
+   */
+  async getLatestBlock() {
+    await this.waitForReady()
+    return this.latestBlock
   }
 
   /**

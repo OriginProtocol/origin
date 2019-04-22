@@ -1,6 +1,7 @@
 const flattenDeep = require('lodash/flattenDeep')
 const memoize = require('lodash/memoize')
 const range = require('lodash/range')
+const chunk = require('lodash/chunk')
 const Web3 = require('web3')
 const Bottleneck = require('bottleneck')
 
@@ -16,13 +17,21 @@ const {
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 const getPastEvents = memoize(
-  async function(instance, fromBlock, toBlock) {
+  async function(instance, fromBlock, toBlock, batchSize = 10000) {
     // if (typeof instance.ipfsEventCache !== 'undefined') {
     //   debug(`loading event cache checkpoint ${instance.ipfsEventCache}`)
     //   instance.loadCheckpoint(instance.ipfsEventCache)
     // }
+    if (!instance.loadedCache && instance.ipfsEventCache) {
+      debug('Loading event cache from IPFS')
+      const cachedEvents = await Promise.all(
+        instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
+      )
 
-    const batchSize = 10000
+      debug('Loaded event cache', flattenDeep(cachedEvents))
+      instance.loadedCache = true
+    }
+
     const requests = range(fromBlock, toBlock, batchSize).map(start =>
       limiter.schedule(
         args => instance.contract.getPastEvents('allEvents', args),
@@ -129,6 +138,12 @@ class EventCache {
     this.ipfsServer =
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
+    this.batchSize = conf.batchSize || 10000
+    this.ipfsEventCache =
+      conf.ipfsEventCache && conf.ipfsEventCache.length
+        ? conf.ipfsEventCache
+        : null
+
     /**
      * Only reason to set this false is if something external will manage the
      * latest block with setLatestBlock()
@@ -149,13 +164,14 @@ class EventCache {
   async _fetchEvents() {
     let fromBlock = this.lastQueriedBlock || this.originBlock
     const latestKnown = await this.backend.getLatestBlock()
+    // if (!latestKnown && this.ipfsEventCache) {
     if (latestKnown >= fromBlock) {
       fromBlock = latestKnown + 1
     }
 
     let toBlock = this.latestBlock
-    if (this.useLatestFromChain) {
-      toBlock = await this.web3.eth.getBlockNumber()
+    if (this.useLatestFromChain || !toBlock) {
+      toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
     }
 
     if (fromBlock > toBlock) {
@@ -163,7 +179,7 @@ class EventCache {
       return
     }
 
-    await getPastEvents(this, fromBlock, toBlock)
+    await getPastEvents(this, fromBlock, toBlock, this.batchSize)
   }
 
   /**
@@ -235,25 +251,20 @@ class EventCache {
    * @returns {string} - The IPFS hash of the checkpoint
    */
   async saveCheckpoint() {
-    const serialized = await this.backend.serialize()
-    return await post(this.ipfsServer, serialized)
+    const serialized = await this.allEvents()
+    return await Promise.all(
+      chunk(serialized, 1500).map(events => post(this.ipfsServer, events, true))
+    )
   }
 
   /**
    * loadCheckpoint loads events from an IPFS hash
    */
-  async loadCheckpoint(ipfsHash) {
-    const serialized = await get(this.ipfsServer, ipfsHash)
-    if (serialized instanceof Array) {
-      // backwards compat
-      return await this.backend.loadSerialized(serialized)
-    } else {
-      if (serialized.events instanceof Array) {
-        return await this.backend.loadSerialized(serialized.events)
-      } else {
-        console.log('loading serialized events checkpoints failed')
-      }
-    }
+  async loadCheckpoint(ipfsHashes) {
+    const events = await Promise.all(
+      ipfsHashes.map(hash => get(this.ipfsServer, hash))
+    )
+    return flattenDeep(events)
   }
 }
 
