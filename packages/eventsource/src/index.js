@@ -298,7 +298,7 @@ class OriginEventSource {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
         } else if (offer.startDate && offer.endDate) {
-          booked.push(`${offer.startDate}-${offer.endDate}`)
+          booked.push(`${offer.startDate}/${offer.endDate}`)
         }
       })
     } else if (listing.__typename !== 'AnnouncementListing') {
