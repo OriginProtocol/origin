@@ -26,7 +26,6 @@ const pastEventBatcher = async (contract, fromBlock, uptoBlock) => {
   return flattenDeep(results)
 }
 
-
 export default function eventCache(
   contract,
   fromBlock = 0,
