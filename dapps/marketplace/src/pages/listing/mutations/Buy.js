@@ -297,7 +297,7 @@ class Buy extends Component {
         // Exclude checkout slot prices
         _endDate = _endDate.subtract(1, 'day')
       }
-      
+
       variables.fractionalData = {
         startDate: _startDate.format('YYYY-MM-DD'),
         endDate: _endDate.format('YYYY-MM-DD')
