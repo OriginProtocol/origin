@@ -101,6 +101,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping notifications webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -113,6 +114,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping email webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -125,6 +127,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping discord webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -143,6 +146,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping Google Cloud Pub/Sub for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
