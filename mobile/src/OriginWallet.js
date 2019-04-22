@@ -171,7 +171,9 @@ class OriginWallet extends Component {
    */
   initWeb3() {
     // Verify that the saved network is valid
-    const networkExists = NETWORKS.find(n => n.name === this.props.settings.network.name)
+    const networkExists = NETWORKS.find(
+      n => n.name === this.props.settings.network.name
+    )
     if (!networkExists) {
       // Set to mainnet if for some reason the network doesn't exist
       this.props.setNetwork(NETWORKS.find(n => n.id === 1))
@@ -407,14 +409,18 @@ class OriginWallet extends Component {
       return
     }
     const notificationType = this.getNotificationType()
-    return fetch(process.env.NOTIFICATION_SERVER_URL, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ activeAddress, deviceToken, notificationType })
-    }).catch(error => {
+    return fetch(
+      process.env.NOTIFICATION_REGISTER_ENDPOINT ||
+        'https://notifications.originprotocol.com/mobile/register',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ activeAddress, deviceToken, notificationType })
+      }
+    ).catch(error => {
       console.debug(
         'Failed to register notification address with notifications server',
         error
