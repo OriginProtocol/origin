@@ -33,11 +33,7 @@ const messageTemplates = {
         subject: 'New Offer',
         html: _.template(
           `
-          A buyer (<em><%- offer.buyer.identity.fullName %></em>) has made an offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
+          A buyer has made an offer on your listing <em><%= listing.title %></em>.
           `
         ),
         text: _.template('A buyer has made an offer on your listing.')
@@ -46,11 +42,7 @@ const messageTemplates = {
         subject: 'Offer Withdrawn',
         html: _.template(
           `
-          The buyer <em><%- offer.buyer.identity.fullName %></em> has withdrawn their offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
+          The buyer has withdrawn their offer on your listing <em><%= listing.title %></em>.
           `
         ),
         text: _.template('An offer on your listing has been withdrawn.')
@@ -73,17 +65,12 @@ const messageTemplates = {
         subject: 'Sale Completed',
         html: _.template(
           `
-          Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
+          Your transaction with the buyer for
           <em><%= listing.title %></em> has been completed.
-
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
           `
         ),
         text: _.template(
-          'Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.'
+          'Your transaction with the buyer for "<%= listing.title %>" has been completed.'
         )
       }
     }
