@@ -70,6 +70,7 @@ class Settings extends Component {
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const { locale, onLocale, currency, onCurrency } = this.props
+    const notificationsSupported = !!window.Notification
 
     return (
       <Mutation
@@ -130,36 +131,38 @@ class Settings extends Component {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label htmlFor="notifications">
-                      <fbt desc="settings.notificationsLabel">
-                        Notifications
-                      </fbt>
-                    </label>
-                    {Notification.permission !== 'granted' ? (
-                      <>
-                        <div className="form-text form-text-muted">
-                          <small>
-                            <fbt desc="settings.notificationsHint">
-                              Enable browser notifications below.
-                            </fbt>
-                          </small>
-                        </div>
-                        <button
-                          className="btn btn-success"
-                          onClick={() => this.requestNotificationPermission()}
-                        >
-                          <fbt desc="settings.notificationsButton">Enable</fbt>
-                        </button>
-                      </>
-                    ) : (
-                      <div>
-                        <fbt desc="settings.notificationsSuccess">
-                          Browser notifications are enabled.
+                  {notificationsSupported &&
+                    <div className="form-group">
+                      <label htmlFor="notifications">
+                        <fbt desc="settings.notificationsLabel">
+                          Browser Notifications
                         </fbt>
-                      </div>
-                    )}
-                  </div>
+                      </label>
+                      {Notification.permission !== 'granted' ? (
+                        <>
+                          <div className="form-text form-text-muted">
+                            <small>
+                              <fbt desc="settings.notificationsHint">
+                                Enable browser notifications below.
+                              </fbt>
+                            </small>
+                          </div>
+                          <button
+                            className="btn btn-success"
+                            onClick={() => this.requestNotificationPermission()}
+                          >
+                            <fbt desc="settings.notificationsButton">Enable</fbt>
+                          </button>
+                        </>
+                      ) : (
+                        <div>
+                          <fbt desc="settings.notificationsSuccess">
+                            Browser notifications are enabled.
+                          </fbt>
+                        </div>
+                      )}
+                    </div>
+                  }
 
                   {/*
                   <div className="form-group">
