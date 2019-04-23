@@ -6,10 +6,10 @@ import {
   Dimensions,
   FlatList,
   Image,
-  SafeAreaView,
   StatusBar,
   StyleSheet
 } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import OnboardingPage from 'components/onboarding-page'
 import OnboardingPagination from 'components/onboarding-pagination'

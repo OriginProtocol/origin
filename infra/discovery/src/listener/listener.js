@@ -189,7 +189,7 @@ async function main() {
         // In case all retries fails, it indicates something is wrong at the system
         // level and a process restart may fix it.
         await withRetrys(async () => {
-          handleEvent(event, context)
+          return handleEvent(event, context)
         })
       }
     }
