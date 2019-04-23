@@ -95,7 +95,7 @@ class EventCache {
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
 
-    const addr = this.contract._address.substr(0, 10)
+    const addr = (this.contract._address || 'no-contract').substr(0, 10)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
   }
 
