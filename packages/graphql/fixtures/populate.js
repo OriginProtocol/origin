@@ -128,8 +128,7 @@ export default async function populate(gqlClient, log, done) {
     const key = Object.keys(result.data)[0]
     const hash = result.data[key].id
     if (hash) {
-      const transaction = await transactionConfirmed(hash, gqlClient)
-      return transaction.contractAddress || transaction
+      return await transactionConfirmed(hash, gqlClient)
     }
     return result.data[key]
   }
@@ -154,7 +153,7 @@ export default async function populate(gqlClient, log, done) {
     decimals: '18',
     supply: '1000000000'
   })
-  log(`Deployed Origin token to ${OGN}`)
+  log(`Deployed Origin token to ${OGN.contractAddress}`)
 
   const DAI = await mutate(DeployTokenMutation, Admin, {
     type: 'Standard',
@@ -163,28 +162,28 @@ export default async function populate(gqlClient, log, done) {
     decimals: '18',
     supply: '1000000000'
   })
-  log(`Deployed DAI stablecoin to ${DAI}`)
+  log(`Deployed DAI stablecoin to ${DAI.contractAddress}`)
 
   const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
-    token: OGN,
+    token: OGN.contractAddress,
     version: '001',
     autoWhitelist: true
   })
-  log(`Deployed marketplace to ${Marketplace}`)
+  log(`Deployed marketplace to ${Marketplace.contractAddress}`)
 
   await mutate(SendFromNodeMutation, NodeAccount, { to: Seller, value: '0.5' })
   log('Sent eth to seller')
 
   await mutate(TransferTokenMutation, Admin, {
     to: Seller,
-    token: OGN,
+    token: OGN.contractAddress,
     value: '500'
   })
   log('Sent ogn to seller')
 
   await mutate(UpdateTokenAllowanceMutation, Seller, {
-    token: OGN,
-    to: Marketplace,
+    token: OGN.contractAddress,
+    to: Marketplace.contractAddress,
     value: '500'
   })
   log('Set seller token allowance')
@@ -194,14 +193,14 @@ export default async function populate(gqlClient, log, done) {
 
   await mutate(TransferTokenMutation, Admin, {
     to: Buyer,
-    token: DAI,
+    token: DAI.contractAddress,
     value: '500'
   })
   log('Sent DAI to buyer')
 
   await mutate(UpdateTokenAllowanceMutation, Buyer, {
-    to: Marketplace,
-    token: DAI,
+    to: Marketplace.contractAddress,
+    token: DAI.contractAddress,
     value: '500'
   })
   log('Set buyer dai token allowance')
@@ -225,7 +224,7 @@ export default async function populate(gqlClient, log, done) {
     DeployIdentityEventsContractMutation,
     Admin
   )
-  log(`Deployed Identity Events contract to ${IdentityEvents}`)
+  log(`Deployed Identity Events contract to ${IdentityEvents.contractAddress}`)
 
   await mutate(DeployIdentityMutation, Seller, {
     profile: {
@@ -239,20 +238,20 @@ export default async function populate(gqlClient, log, done) {
   log('Deployed Seller Identity')
 
   const UniswapFactory = await mutate(UniswapDeployFactory, Admin)
-  log('Deployed Uniswap Factory to', UniswapFactory)
+  log('Deployed Uniswap Factory to', UniswapFactory.contractAddress)
 
   const UniswapExchTpl = await mutate(UniswapDeployExchangeTemplate, Admin)
-  log('Deployed Uniswap Exchange Template to', UniswapExchTpl)
+  log('Deployed Uniswap Exchange Template to', UniswapExchTpl.contractAddress)
 
   await mutate(UniswapInitFactory, Admin, {
-    factory: UniswapFactory,
-    exchange: UniswapExchTpl
+    factory: UniswapFactory.contractAddress,
+    exchange: UniswapExchTpl.contractAddress
   })
   log('Initialized Uniswap Factory')
 
   const UniswapDaiExchangeResult = await mutate(UniswapCreateExchange, Admin, {
-    tokenAddress: DAI,
-    factory: UniswapFactory
+    tokenAddress: DAI.contractAddress,
+    factory: UniswapFactory.contractAddress
   })
   const NewExchangeEvent = UniswapDaiExchangeResult.events.find(
     e => e.event === 'NewExchange'
@@ -263,7 +262,7 @@ export default async function populate(gqlClient, log, done) {
   log(`Created Uniswap Dai Exchange ${UniswapDaiExchange}`)
 
   await mutate(UpdateTokenAllowanceMutation, Admin, {
-    token: DAI,
+    token: DAI.contractAddress,
     to: UniswapDaiExchange,
     value: '100000'
   })
@@ -292,12 +291,14 @@ export default async function populate(gqlClient, log, done) {
       Buyer,
       Arbitrator,
       Affiliate,
-      OGN,
-      DAI,
-      Marketplace,
-      IdentityEvents,
-      UniswapFactory,
-      UniswapExchTpl,
+      OGN: OGN.contractAddress,
+      DAI: DAI.contractAddress,
+      Marketplace: Marketplace.contractAddress,
+      MarketplaceEpoch: Marketplace.blockNumber,
+      IdentityEvents: IdentityEvents.contractAddress,
+      IdentityEventsEpoch: IdentityEvents.blockNumber,
+      UniswapFactory: UniswapFactory.contractAddress,
+      UniswapExchTpl: UniswapExchTpl.contractAddress,
       UniswapDaiExchange
     })
   }
