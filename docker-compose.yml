@@ -188,7 +188,13 @@ services:
     depends_on:
       - postgres
     environment:
+      - APNS_BUNDLE_ID=com.originprotocol.catcher
+      - APNS_KEY_FILE=
+      - APNS_KEY_ID=
+      - APNS_PRODUCTION=false
+      - APNS_TEAM_ID=
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - FIREBASE_SERVICE_JSON=/app/infra/notifications/firebase-service.json
     ports:
       - "3456:3456"
     command:
