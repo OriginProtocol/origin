@@ -1,0 +1,57 @@
+{
+  "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
+  "dappSchemaId": "https://dapp.originprotocol.com/schemas/forRent-housing_1.0.0.json",
+  "listingType": "unit",
+  "category": "schema.forRent",
+  "subCategory": "schema.housing",
+  "language": "en-US",
+  "title": "Zinc House",
+  "description": "Overlooking Lake Llanquihue, Casa Wulf is inspired by the terrain. The home sits on a steep slope. This lead to its three-story design, creating a natural balcony facing the water. Among the levels, the main living area is at the center, with the bedrooms above and a basement workshop below. Each floor was constructed using a different system, resulting in a range of facades. Their orientation takes advantage of the incoming sunlight and while also exposing the interiors to the surrounding landscape.",
+  "unitsTotal": 1,
+  "price": {
+    "currency": "ETH",
+    "amount": "3.999"
+  },
+  "commission": {
+    "currency": "OGN",
+    "amount": "10"
+  },
+  "media": [
+    {
+      "url": "ipfs://QmQyKBQtqH5yDd4nrksUANyrBDFJdcF8TdAcaY6cNnSNu1",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmfBmhBN1CXkbJ6Fp5ZFnwV5G7DgasaXaxmqrtjiaLJVb9",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmaD8rxktZRTt9pLyRbrprd5V7Xj1nZA4HVriREoGFCgbk",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmWPa92BRqyPuJf3c6SzSkFNUkjQEdPsasxzLddbjq6ZfW",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmPkHiyUHmdbjaew895fKXirrh5LckH3yMwQ33ehgoRm7F",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmRqE53MUnhHyVE7MNMwf7nuxwcAKAiMgLQ3QXu34EExSm",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmSZ9MQMfqS4oPeCAhZCtYch8hpjHnbvtbVXtYju6WtPh3",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmTxqZmLCEeAeEAzoVjBdYtSxAvBwbtUFDPGxSMVNVRQFV",
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "ipfs://QmPwHv9RfvFy6ZyqTv5zoAGeGzmk6emXbhoY2Bpob2yDKY",
+      "contentType": "image/jpeg"
+    }
+  ]
+}

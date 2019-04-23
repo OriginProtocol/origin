@@ -61,6 +61,12 @@ body {
   background-color: rgba(255, 255, 255, 0.95);
 }
 
+@media only screen and (max-width: 600px) {
+  .card {
+    top: 10%;
+  }
+}
+
 .card-title {
   line-height: 2.25rem;
   font-weight: 400;
