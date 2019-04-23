@@ -8,7 +8,6 @@ const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
 const MobileRegistry = require('./models').MobileRegistry
 
-
 // Configure the APN provider
 let apnProvider, apnBundle
 if (process.env.APNS_KEY_FILE) {
@@ -69,7 +68,8 @@ async function mobilePush(
     'seller',
     'mobile'
   )
-  const dappOfferUrl = process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com'
+  const dappOfferUrl =
+    process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com/#/purchases/'
   const eventData = {
     url: offer && path.join(dappOfferUrl, offer.id),
     toDapp: true
@@ -91,8 +91,6 @@ async function mobilePush(
 
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
-      console.log('Notifying: ', ethAddress)
-      console.debug('Notification object: ', notificationObj)
       const mobileRegister = await MobileRegistry.findOne({
         where: { ethAddress }
       })
