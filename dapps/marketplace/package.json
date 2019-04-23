@@ -151,10 +151,10 @@
     "typeface-lato": "0.0.54",
     "typeface-poppins": "0.0.72",
     "url-loader": "^1.1.2",
-    "webpack": "4.30.0",
-    "webpack-cli": "3.3.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "3.3.0",
     "webpack-dev-middleware": "3.6.1",
-    "webpack-dev-server": "3.3.1"
+    "webpack-dev-server": "3.2.1"
   },
   "eslintIgnore": [
     "node_modules",
