@@ -1,0 +1,3 @@
+A ruling has been made on your transaction for <%= listing.title %>.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>
