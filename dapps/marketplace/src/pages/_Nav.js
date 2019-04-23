@@ -11,7 +11,6 @@ import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
 import Confirmations from './nav/Confirmations'
 import Mobile from './nav/Mobile'
-import Sell from './nav/Sell'
 import GetStarted from './nav/GetStarted'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
@@ -19,7 +18,7 @@ class Nav extends Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.EarnTokens = withEnrolmentModal('button')
+    this.EarnTokens = withEnrolmentModal('a')
   }
 
   render() {
@@ -52,25 +51,53 @@ class Nav extends Component {
               <ul className="navbar-nav">
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-purchases" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.buying">Buy</fbt>
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.myPurchases">My Purchases</fbt>
+                    </span>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.purchases">Purchases</fbt>
                     </span>
                   </NavLink>
                 </li>
-                <Sell {...navProps('sell')} />
                 <li className="nav-item d-none d-md-flex">
-                  <this.EarnTokens className="nav-link earn-tokens text">
-                    <span>
-                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                  <NavLink to="/my-listings" className="nav-link text">
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.myListings">My Listings</fbt>
                     </span>
-                  </this.EarnTokens>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.listings">Listings</fbt>
+                    </span>
+                  </NavLink>
                 </li>
                 <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/create" className="nav-link add-listing text">
+                  <NavLink to="/my-sales" className="nav-link text">
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.mySales">My Sales</fbt>
+                    </span>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.sales">Sales</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="nav-item d-none d-lg-flex">
+                  <NavLink
+                    to="/create"
+                    className="nav-link icon-padding add-listing text"
+                  >
                     <span>
                       <fbt desc="navbar.addListing">Add Listing</fbt>
                     </span>
                   </NavLink>
+                </li>
+                <li className="nav-item d-none d-lg-flex">
+                  <this.EarnTokens className="nav-link icon-padding earn-tokens text">
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                    </span>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.tokens">Tokens</fbt>
+                    </span>
+                  </this.EarnTokens>
                 </li>
                 <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />
@@ -127,16 +154,19 @@ require('react-styl')(`
               background-color: var(--dark-grey-blue)
           &.active span
             background-color: var(--dark-grey-blue)
+        &.icon-padding span
+          padding-left: 2rem
         span
           display: inline-block
-          padding-left: 2rem !important
 
         &.add-listing span
           background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
           background-size: 1rem
-        &.earn-tokens span
-          background: url(images/ogn-icon-nav.svg) no-repeat 0.5rem center
-          background-size: 1rem
+        &.earn-tokens
+          cursor: pointer
+          span
+            background: url(images/ogn-icon-nav.svg) no-repeat 0.5rem center
+            background-size: 1rem
 
       .dropdown-menu
         padding: 0

@@ -1,9 +1,30 @@
 import { get } from '@origin/ipfs'
 // import { post } from '@origin/ipfs'
 import uniqBy from 'lodash/uniqBy'
+import chunk from 'lodash/chunk'
+import flattenDeep from 'lodash/flattenDeep'
 import createDebug from 'debug'
+import LZString from 'lz-string'
 
 const debug = createDebug('generic-event-cache:')
+
+const pastEventBatcher = async (contract, fromBlock, uptoBlock) => {
+  // const start = +new Date() // Uncomment for benchmarking
+  if (fromBlock > uptoBlock) throw new Error('fromBlock > toBlock')
+  const partitions = []
+  while (fromBlock <= uptoBlock) {
+    const toBlock = Math.min(fromBlock + 3000, uptoBlock)
+    partitions.push(contract.getPastEvents('allEvents', { fromBlock, toBlock }))
+    fromBlock += 3000
+  }
+  const results = []
+  const chunks = chunk(partitions, 7)
+  for (const chunklet of chunks) {
+    results.push(await Promise.all(chunklet))
+  }
+  // debug('Got events in ', +new Date() - start) // Uncomment for benchmarking
+  return flattenDeep(results)
+}
 
 export default function eventCache(
   contract,
@@ -40,8 +61,13 @@ export default function eventCache(
 
   try {
     if (window.localStorage[cacheStr]) {
-      ;({ events, lastLookup } = JSON.parse(window.localStorage[cacheStr])) // eslint-disable-line
-      fromBlock = lastLookup
+      let str = window.localStorage[cacheStr]
+      if (str[0] !== '{') {
+        str = LZString.decompress(str)
+      }
+      const parsed = JSON.parse(str)
+      events = parsed.events
+      lastLookup = fromBlock = parsed.lastLookup
       triedIpfs = true
     }
   } catch (e) {
@@ -60,6 +86,10 @@ export default function eventCache(
       let ipfsData
       try {
         ipfsData = await get(config.ipfsGateway, ipfsEventCache)
+        if (ipfsData.compressed) {
+          const decompressed = LZString.decompress(ipfsData.compressed)
+          ipfsData = JSON.parse(decompressed)
+        }
       } catch (e) {
         /* Ignore */
       }
@@ -88,10 +118,7 @@ export default function eventCache(
     )
     lastLookup = toBlock
 
-    const newEvents = await contract.getPastEvents('allEvents', {
-      fromBlock,
-      toBlock
-    })
+    const newEvents = await pastEventBatcher(contract, fromBlock, toBlock)
 
     events = uniqBy(
       [
@@ -110,12 +137,15 @@ export default function eventCache(
     }
 
     if (typeof window !== 'undefined') {
-      window.localStorage[cacheStr] = JSON.stringify({
-        lastLookup,
-        events
-      })
+      const compressed = LZString.compress(
+        JSON.stringify({
+          lastLookup,
+          events
+        })
+      )
+      window.localStorage[cacheStr] = compressed
 
-      // const hash = await post(config.ipfsRPC, { events, lastLookup }, true)
+      // const hash = await post(config.ipfsRPC, { compressed }, true)
       // console.log('IPFS Hash', hash)
     }
   }

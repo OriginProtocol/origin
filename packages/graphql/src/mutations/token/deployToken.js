@@ -55,6 +55,7 @@ async function deployToken(_, args) {
         contract: Contract,
         contractExec: Contract
       })
+      contracts[receipt.contractAddress] = Contract
 
       if (args.type === 'OriginToken') {
         if (typeof window !== 'undefined') {
@@ -63,7 +64,6 @@ async function deployToken(_, args) {
         }
         contracts.ogn = Contract
         contracts.ognExec = Contract
-        contracts[receipt.contractAddress] = contracts.ogn
       }
     }
   })

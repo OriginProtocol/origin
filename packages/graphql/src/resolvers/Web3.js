@@ -1,6 +1,10 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../contracts'
 import get from 'lodash/get'
+import memoize from 'lodash/memoize'
+
+const netId = memoize(async () => await contracts.web3.eth.net.getId())
+const mmNetId = memoize(async () => await contracts.metaMask.eth.net.getId())
 
 import { getTransaction, getTransactionReceipt } from './web3/transactions'
 
@@ -14,10 +18,10 @@ function networkName(netId) {
 }
 
 const web3Resolver = {
-  networkId: () => contracts.web3.eth.net.getId(),
+  networkId: async () => await netId(contracts.net),
   networkName: async () => {
-    const netId = await contracts.web3.eth.net.getId()
-    return networkName(netId)
+    const id = await netId(contracts.net)
+    return networkName(id)
   },
   blockNumber: () => contracts.marketplace.eventCache.getBlockNumber(),
   nodeAccounts: () =>
@@ -47,17 +51,12 @@ const web3Resolver = {
   metaMaskAvailable: () => (contracts.metaMask ? true : false),
   metaMaskNetworkId: async () => {
     if (!contracts.metaMask) return null
-    return new Promise(resolve => {
-      contracts.metaMask.eth.net
-        .getId()
-        .then(id => resolve(id))
-        .catch(() => resolve(null))
-    })
+    return await mmNetId(contracts.net)
   },
   metaMaskNetworkName: async () => {
     if (!contracts.metaMask) return null
-    const netId = await contracts.metaMask.eth.net.getId()
-    return networkName(netId)
+    const id = await mmNetId(contracts.net)
+    return networkName(id)
   },
   useMetaMask: () => (contracts.metaMaskEnabled ? true : false),
   metaMaskEnabled: async () => {
@@ -82,8 +81,11 @@ const web3Resolver = {
     return { id: accounts[0] }
   },
   walletType: () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return 'Web3 Wallet'
+    }
+    if (contracts.mobileBridge) {
+      return 'Mobile'
     }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
@@ -98,31 +100,21 @@ const web3Resolver = {
         return 'Parity'
       return 'Meta Mask'
     }
-    if (!contracts.linker) return null
-    return contracts.linker.session.linked && contracts.linker.session.accounts
-      ? 'mobile-linked'
-      : 'mobile-unlinked'
   },
   mobileWalletAccount: async () => {
-    if (
-      !contracts.linker ||
-      !contracts.linker.session.linked ||
-      contracts.linker.session.accounts.length == 0
-    ) {
-      return null
-    }
-    return {
-      id: contracts.linker.session.accounts[0]
-    }
+    if (!contracts.mobileBridge) return null
+    const accounts = await contracts.web3Exec.eth.getAccounts()
+    if (!accounts || !accounts.length) return null
+    return { id: accounts[0] }
   },
   primaryAccount: async () => {
-    if (localStorage.useWeb3Wallet) {
+    if (typeof localStorage !== 'undefined' && localStorage.useWeb3Wallet) {
       return { id: localStorage.useWeb3Wallet }
     }
     if (contracts.metaMaskEnabled) {
       return web3Resolver.metaMaskAccount()
     }
-    if (contracts.linker) {
+    if (contracts.mobileBridge) {
       return web3Resolver.mobileWalletAccount()
     }
     return null

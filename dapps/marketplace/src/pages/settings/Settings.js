@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
-import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
+import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
-import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
   'bridge',
@@ -71,7 +69,7 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const { locale, onLocale } = this.props
+    const { locale, onLocale, currency, onCurrency } = this.props
 
     return (
       <Mutation
@@ -96,7 +94,9 @@ class Settings extends Component {
               <div className="col-lg-6 col-md-12">
                 <div className="settings-box">
                   <div className="form-group">
-                    <label htmlFor="language">Language</label>
+                    <label htmlFor="language">
+                      <fbt desc="settings.languageLabel">Language</fbt>
+                    </label>
                     <div className="form-text form-text-muted">
                       <small>
                         <fbt desc="settings.language">
@@ -109,6 +109,24 @@ class Settings extends Component {
                       onLocale={onLocale}
                       className="btn btn-secondary"
                       dropdown={true}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="language">
+                      <fbt desc="settings.currencyLabel">Currency</fbt>
+                    </label>
+                    <div className="form-text form-text-muted">
+                      <small>
+                        <fbt desc="settings.currency">
+                          Please make a selection from the list below.
+                        </fbt>
+                      </small>
+                    </div>
+                    <CurrencyDropdown
+                      value={currency}
+                      onChange={onCurrency}
+                      className="btn btn-secondary"
                     />
                   </div>
 
@@ -154,53 +172,6 @@ class Settings extends Component {
                     </button>
                   </div>
                   */}
-
-                  <Query query={ProfileQuery}>
-                    {({ data }) => {
-                      const walletType = get(data.web3, 'walletType')
-                      const mobileWalletConnected =
-                        walletType && walletType.startsWith('mobile-')
-                      return (
-                        <div className="form-group">
-                          <label htmlFor="language">
-                            <fbt desc="settings.mobileLabel">Mobile Wallet</fbt>
-                          </label>
-                          {mobileWalletConnected ? (
-                            <>
-                              <div className="form-text form-text-muted">
-                                <small>
-                                  <fbt desc="settings.mobileHint">
-                                    Disconnect from your mobile wallet by
-                                    clicking the button below.
-                                  </fbt>
-                                </small>
-                              </div>
-                              <Mutation mutation={UnlinkMobileWallet}>
-                                <button className="btn btn-outline-danger">
-                                  <fbt desc="settings.mobileButton">
-                                    Disconnect
-                                  </fbt>
-                                </button>
-                              </Mutation>
-                            </>
-                          ) : (
-                            <div>
-                              <button
-                                className="btn btn-outline-secondary"
-                                disabled
-                              >
-                                <span>
-                                  <fbt desc="settings.mobileDisabled">
-                                    Not connected
-                                  </fbt>
-                                </span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    }}
-                  </Query>
                 </div>
               </div>
 

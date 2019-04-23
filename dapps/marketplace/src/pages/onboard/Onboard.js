@@ -16,7 +16,7 @@ const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
   render() {
-    const { listing, showoriginwallet, linkprefix, redirectTo } = this.props
+    const { listing, hideOriginWallet, linkprefix, redirectTo } = this.props
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
     const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')
 
@@ -64,7 +64,7 @@ class Onboard extends Component {
                 listing={listing}
                 linkPrefix={linkPrefix}
                 // Growth engine does not support Origin Wallet for now
-                showoriginwallet={showoriginwallet}
+                hideOriginWallet={hideOriginWallet}
               />
             )}
           />

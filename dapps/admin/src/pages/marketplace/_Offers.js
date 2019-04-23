@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 
 import { AnchorButton, Tooltip, Tag, Icon } from '@blueprintjs/core'
 
+import Price from 'components/Price2'
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
 
@@ -160,7 +161,9 @@ class OfferRow extends Component {
       <tr className="vm">
         <td>{offer.offerId}</td>
         <td>{status(offer)}</td>
-        <td>{price(offer)}</td>
+        <td>
+          <Price price={offer.totalPrice} />
+        </td>
         <td>{offer.quantity}</td>
         <td>{price(offer, 'refund')}</td>
         <td>

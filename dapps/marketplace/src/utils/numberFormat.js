@@ -1,4 +1,5 @@
 export default function numberFormat(number, dec, dsep, tsep) {
+  if (typeof number !== 'number') number = Number(number)
   if (isNaN(number) || number == null) return ''
 
   number = number.toFixed(~~dec)

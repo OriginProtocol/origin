@@ -73,6 +73,11 @@ class TransactionDescription extends Component {
         'You updated your profile',
         'TransactionDescription.identityUpdated'
       )
+    } else if (name === 'Transfer') {
+      description = fbt(
+        'You converted some ETH',
+        'TransactionDescription.ethConverted'
+      )
     }
 
     return <div>{description}</div>

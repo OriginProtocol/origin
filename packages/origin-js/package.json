@@ -61,7 +61,7 @@
     "url-parse": "^1.4.4",
     "uuid": "^3.3.2",
     "web3": "1.0.0-beta.34",
-    "webpack-cli": "^3.2.3",
+    "webpack-cli": "^3.3.0",
     "webpack-node-externals": "^1.7.2",
     "webrtcsupport": "^2.2.0",
     "websocket": "^1.0.28"
@@ -71,7 +71,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
     "chai-string": "1.5.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.15.3",
     "eth-gas-reporter": "^0.1.12",
     "fetch-mock": "^7.2.5",
     "ganache-core": "2.4.0",

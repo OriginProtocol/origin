@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import inviteInfoQuery from 'queries/InviteInfo'
 import DocumentTitle from 'components/DocumentTitle'
@@ -76,7 +77,7 @@ class GrowthWelcome extends Component {
             path="/welcome/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={!rewardsOnMobileEnabled}
                 linkprefix="/welcome"
                 redirectTo="/welcome/continue"
               />
@@ -96,7 +97,7 @@ class GrowthWelcome extends Component {
             path="/welcome/onboard/:inviteCode?"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={!rewardsOnMobileEnabled}
                 linkprefix="/welcome"
                 redirectTo={`/welcome/continue/${this.state.inviteCode}`}
               />

@@ -9,7 +9,7 @@ function isWhiteLabelHostname() {
   const exceptionNeedles = [
     /dapp?\.((staging|dev)\.)?originprotocol\.com/,
     /localhost/,
-    /127.0.0.1/
+    /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/ // IP addresses
   ]
   return !exceptionNeedles.some(needle => hostname.match(needle))
 }
@@ -31,6 +31,10 @@ function applyConfiguration(config) {
   // Set the page title
   if (config.title) {
     document.title = config.title
+    const metaTitleElement = document.querySelector('meta[name="title"]')
+    if (metaTitleElement) {
+      metaTitleElement.setAttribute('content', config.title)
+    }
   }
 
   // Set the language code

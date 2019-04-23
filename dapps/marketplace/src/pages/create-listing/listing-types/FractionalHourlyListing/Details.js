@@ -7,9 +7,10 @@ import IannaTimeZones from '@origin/graphql/src/constants/IannaTimeZones'
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-import Price from 'components/Price'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import PricingChooser from '../_PricingChooser'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -127,35 +128,32 @@ class Details extends Component {
 
                 {/* BEGIN Hourly specific code */}
 
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.hourly.price">Default Price per Hour</fbt>
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>
+                      <fbt desc="create.hourly.price">
+                        Default Price per Hour
+                      </fbt>
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      <fbt desc="create.price.help">
+                        Price is an approximation of what you will receive.
+                      </fbt>
+                      <a
+                        href="#/about/payments"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        &nbsp;<fbt desc="create.price.more">Learn More</fbt>
+                      </a>
                     </div>
                   </div>
-                  {Feedback('price')}
-                  <div className="help-text price">
-                    <fbt desc="create.price.help">
-                      Price is always in ETH, USD is an estimate.
-                    </fbt>
-                  </div>
-                </div>
+                </PricingChooser>
 
                 <div className="form-group">
                   <label>
@@ -491,12 +489,15 @@ require('react-styl')(`
 
   .with-symbol
     position: relative
+`)
+
+/*
+  .with-symbol
     &.corner::before
       content: '';
       position: absolute;
       left: -8px;
       top: 50%;
-      transform: translateY(-50%);
       width: 0;
       height: 0;
       border-top: 9px solid transparent;
@@ -507,25 +508,41 @@ require('react-styl')(`
       position: absolute;
       left: -6px;
       top: 50%;
-      transform: translateY(-50%);
       width: 0;
       height: 0;
       border-top: 7px solid transparent;
       border-right: 7px solid #e9ecef;
       border-bottom: 7px solid transparent;
     > span
-      position: absolute
-      right: 10px
-      top: 50%
-      transform: translateY(-50%)
-      padding: 2px 9px 2px 9px
-      border-radius: 12px
-      background: var(--pale-grey)
-      background-repeat: no-repeat
-      background-position: 6px center
-      background-size: 17px
-      font-weight: bold
-      font-size: 14px
+      cursor: pointer
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      padding: 4px 12px 4px 12px;
+      border-radius: 16px;
+      background: var(--pale-grey);
+      background-repeat: no-repeat;
+      background-position: 6px center;
+      background-size: 17px;
+      font-weight: bold;
+      font-size: 14px;
+      > i
+        position: relative
+        display: inline-block
+        // height should be double border
+        height: 12px
+        vertical-align: -4px
+        margin: 0 8px 0 2px
+        &:before,&:after
+          position: absolute
+          display: block
+          content: ""
+          // adjust size
+          border: 6px solid transparent;
+        &:before
+          top: 0
+          // color
+          border-top-color: var(--steel)
       &.eth
         padding-left: 1.75rem
         color: var(--bluish-purple)
@@ -538,4 +555,4 @@ require('react-styl')(`
         &::before
           content: "$"
           margin-right: 0.25rem
-`)
+*/

@@ -36,7 +36,8 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
-      this.goToWelcomeWhenNotEnrolled = !!props.goToWelcomeWhenNotEnrolled
+      this.goToWelcomeWhenNotEnrolled =
+        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -163,8 +164,7 @@ function withEnrolmentModal(WrappedComponent) {
                     and sharing Origin with your friends. OGN can be used in a
                     variety of ways. Earned OGN will be transferred after the
                     end of the
-                    <fbt:param name="campaignName">{campaignName}</fbt:param>
-                    to earn tokens
+                    <fbt:param name="campaignName">{campaignName}</fbt:param>.
                   </fbt>
                 </div>
                 <div className="d-flex align-items-center flex-column">
@@ -471,7 +471,7 @@ function withEnrolmentModal(WrappedComponent) {
 
   // do not pass staticContext prop to component to prevent react errors in browser console
   // eslint-disable-next-line no-unused-vars
-  return withRouter(({ staticContext, ...props }) => (
+  return withRouter(({ staticContext, location, match, ...props }) => (
     <WithEnrolmentModal {...props} />
   ))
 }
@@ -479,11 +479,13 @@ function withEnrolmentModal(WrappedComponent) {
 export default withEnrolmentModal
 
 require('react-styl')(`
+  .pl-modal-table
+    .growth-enrollment-modal
+      padding-top: 20px
+      max-width: 620px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
-    padding-top: 20px
-    max-width: 620px !important
     .normal-line-height
       line-height: normal
     .title

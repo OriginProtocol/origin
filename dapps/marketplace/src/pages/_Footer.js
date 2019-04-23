@@ -4,7 +4,6 @@ import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 
 import NetworkQuery from 'queries/Network'
-import LocaleDropdown from 'components/LocaleDropdown'
 import BetaModal from './_BetaModal'
 
 const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
@@ -15,7 +14,7 @@ class Footer extends Component {
     reminders: false
   }
   render() {
-    const { locale, onLocale, creatorConfig } = this.props
+    const { creatorConfig } = this.props
     return (
       <Query query={NetworkQuery}>
         {({ data }) => {
@@ -74,46 +73,50 @@ class Footer extends Component {
                       </div>
                       <br />
                       <div>
-                        Found a bug or have feedback? Send an email to
-                        <a href={`mailto:${SupportEmail}`}>{SupportEmail}</a> ,
-                        open an issue on
-                        <a
-                          href={GitHubLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          GitHub
-                        </a>
-                        or post in our #bug-reports channel on
-                        <a
-                          href="https://discord.gg/jyxpUSe"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Discord
-                        </a>
-                        .
+                        <fbt desc="footer.foundABug">
+                          Found a bug or have feedback? Send an email to
+                          <a href={`mailto:${SupportEmail}`}>
+                            <fbt:param name="SupportEmail">
+                              {SupportEmail}
+                            </fbt:param>
+                          </a>, open an issue on
+                          <a
+                            href={GitHubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            GitHub
+                          </a>
+                          or post in our #bug-reports channel on
+                          <a
+                            href="https://discord.gg/jyxpUSe"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Discord
+                          </a>.
+                        </fbt>
                       </div>
                       <br />
                       <div className="copyright">
                         © {new Date().getFullYear()} Origin Protocol, Inc.{' '}
-                        <span>&bull;</span>{' '}
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/tos"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
-                        </a>{' '}
-                        <span>&bull;</span>{' '}
+                        </a>
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/privacy"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <fbt desc="footer.privacy">Privacy</fbt>
-                        </a>{' '}
-                        <span>&bull;</span>{' '}
+                        </a>
+                        <span>&bull;</span>
                         <a
                           href="https://www.originprotocol.com/aup"
                           target="_blank"
@@ -128,13 +131,6 @@ class Footer extends Component {
                   )}
                 </div>
                 <div className="links">
-                  <LocaleDropdown
-                    locale={locale}
-                    onLocale={onLocale}
-                    dropup={true}
-                    className={'dropdown-toggle'}
-                  />
-
                   <a
                     href="https://www.originprotocol.com/"
                     target="_blank"
@@ -199,9 +195,8 @@ require('react-styl')(`
       flex-wrap: wrap
       display: flex
       align-items: flex-start
-      justify-content: space-between
       a
-        margin-right: 1rem
+        margin-left: auto
     .about
       font-size: 12px
       a
@@ -211,7 +206,16 @@ require('react-styl')(`
       font-size: 10px
       span
         color: var(--pale-grey-two-darker)
+        padding: 0 0.125rem
 
+  @media (max-width: 1200px)
+    footer
+      .container
+        .links
+          flex-direction: column
+          align-items: left
+          a
+            margin: 0 0 1rem
 
   @media (max-width: 767.98px)
     footer
@@ -228,14 +232,5 @@ require('react-styl')(`
           margin-bottom: 1rem
         .links
           align-items: center
-
-  @media (max-width: 1200px)
-    footer
-      .container
-        .links
-          flex-direction: column
-          align-items: left
           margin-top: 1rem
-          a
-            margin: 0
 `)

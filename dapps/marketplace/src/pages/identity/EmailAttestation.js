@@ -126,6 +126,7 @@ class EmailAttestation extends Component {
               />
               <button
                 className="btn btn-link"
+                type="button"
                 onClick={() => this.setState({ shouldClose: true })}
                 children={fbt('Cancel', 'Cancel')}
               />

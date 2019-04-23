@@ -19,7 +19,7 @@ Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of `
 
 ```
 git clone https://github.com/OriginProtocol/origin
-cd origin && npm install
+cd origin && npm install --python=python2.7
 ```
 
 2. Configure the DApp with default environment variables:

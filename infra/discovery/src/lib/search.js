@@ -48,24 +48,14 @@ class Listing {
    * @returns The listingId indexed.
    */
   static async index(listingId, buyerAddress, ipfsHash, listing) {
-    /* When serialising to JSON, getters of an object do not get serialized and indexed. For that reason
-     * we call all the getters and store them before indexing.
-     */
+    // Create a copy of the listing object
     const listingToIndex = JSON.parse(JSON.stringify(listing))
-    const gettersToIndex = [
-      'unitsPending',
-      'unitsSold',
-      'unitsRemaining',
-      'commissionRemaining',
-      'boostCommission'
-    ]
-    gettersToIndex.forEach(getter => (listingToIndex[getter] = listing[getter]))
 
-    // boostCommission is critical for calculating scoring.
+    // commissionPerUnit is critical for calculating scoring.
     // Log a warning if that field is not populated - it is likely a bug.
-    if (!listingToIndex.boostCommission) {
+    if (!listingToIndex.commissionPerUnit) {
       console.log(
-        `WARNING: missing field boostCommission on listing ${listingId}`
+        `WARNING: missing field commissionPerUnit on listing ${listingId}`
       )
     }
 
@@ -112,18 +102,23 @@ class Listing {
   ) {
     const esQuery = {
       bool: {
-        must: [
+        must: [],
+        must_not: [
           {
             match: {
-              status: 'active'
+              status: 'withdrawn'
             }
           }
         ],
         should: [],
-        filter: [],
-        must_not: []
+        filter: []
       }
     }
+
+    // Never return any invalid listings
+    esQuery.bool.must_not.push({
+      term: { valid: false }
+    })
 
     if (hiddenIds.length > 0) {
       esQuery.bool.must_not.push({
@@ -139,7 +134,8 @@ class Listing {
         match: {
           all_text: {
             query,
-            fuzziness: 'AUTO'
+            fuzziness: 'AUTO',
+            minimum_should_match: '-20%' // most query tokens must be in the listing
           }
         }
       })
@@ -150,6 +146,15 @@ class Listing {
             query: query,
             boost: 2,
             fuzziness: 'AUTO'
+          }
+        }
+      })
+      // give extra score for search words being in proximity to each other
+      esQuery.bool.should.push({
+        match_phrase: {
+          all_text: {
+            query: query,
+            slop: 50
           }
         }
       })
@@ -224,8 +229,8 @@ class Listing {
       function_score: {
         query: esQuery,
         field_value_factor: {
-          field: 'boostCommission.amount',
-          factor: 0.05, // the same as delimited by 20
+          field: 'commissionPerUnit',
+          factor: 0.0000000000000000005, // the same as delimited by 20
           missing: 0
         },
         boost_mode: 'sum'

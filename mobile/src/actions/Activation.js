@@ -1,13 +1,13 @@
-import keyMirror from 'utils/keyMirror'
+'use strict'
 
-import { storeData } from '../tools'
+import keyMirror from 'utils/keyMirror'
 
 export const ActivationConstants = keyMirror(
   {
     PROMPT_FOR_NOTIFICATIONS: null,
-    STORE_NOTIFICATIONS_PERMISSIONS: null,
-    UPDATE_BACKUP_WARNING_STATUS: null,
-    UPDATE_CAROUSEL_STATUS: null,
+    SET_NOTIFICATIONS_PERMISSIONS: null,
+    SET_BACKUP_WARNING_STATUS: null,
+    SET_CAROUSEL_STATUS: null
   },
   'App'
 )
@@ -15,31 +15,27 @@ export const ActivationConstants = keyMirror(
 export function promptForNotifications(prompt) {
   return {
     type: ActivationConstants.PROMPT_FOR_NOTIFICATIONS,
-    prompt,
+    prompt
   }
 }
 
-export function storeNotificationsPermissions(permissions) {
+export function setNotificationsPermissions(permissions) {
   return {
-    type: ActivationConstants.STORE_NOTIFICATIONS_PERMISSIONS,
-    permissions,
+    type: ActivationConstants.SET_NOTIFICATIONS_PERMISSIONS,
+    permissions
   }
 }
 
-export function updateBackupWarningStatus(dismissed, hidden) {
-  hidden && storeData('backupWarningDismissed', hidden)
-
+export function setBackupWarningStatus(dismissed) {
   return {
-    type: ActivationConstants.UPDATE_BACKUP_WARNING_STATUS,
-    dismissed,
+    type: ActivationConstants.SET_BACKUP_WARNING_STATUS,
+    dismissed
   }
 }
 
-export function updateCarouselStatus(completed) {
-  storeData('carouselCompleted', completed)
-
+export function setCarouselStatus(completed) {
   return {
-    type: ActivationConstants.UPDATE_CAROUSEL_STATUS,
-    completed,
+    type: ActivationConstants.SET_CAROUSEL_STATUS,
+    completed
   }
 }

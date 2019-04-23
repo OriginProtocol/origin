@@ -44,9 +44,14 @@ import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
+import verifyGoogle from './attestations/verifyGoogle'
 
-import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
-import linkMobileWallet from './walletLinker/linkMobileWallet'
+import swapToToken from './uniswap/swapToToken'
+import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
+import uniswapDeployExchangeTemplate from './uniswap/uniswapDeployExchangeTemplate'
+import uniswapInitializeFactory from './uniswap/uniswapInitializeFactory'
+import uniswapCreateExchange from './uniswap/uniswapCreateExchange'
+import uniswapAddLiquidity from './uniswap/uniswapAddLiquidity'
 
 export default {
   acceptOffer,
@@ -68,7 +73,6 @@ export default {
   generatePhoneCode,
   importWallet,
   importWallets,
-  linkMobileWallet,
   makeOffer,
   markConversationRead,
   removeWallet,
@@ -78,9 +82,14 @@ export default {
   setActiveWallet,
   setNetwork,
   signMessage,
+  swapToToken,
   toggleMetaMask,
   transferToken,
-  unlinkMobileWallet,
+  uniswapAddLiquidity,
+  uniswapCreateExchange,
+  uniswapDeployFactory,
+  uniswapDeployExchangeTemplate,
+  uniswapInitializeFactory,
   updateListing,
   updateRefund,
   updateTokenAllowance,
@@ -88,6 +97,7 @@ export default {
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
   withdrawListing,

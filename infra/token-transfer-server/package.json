@@ -36,7 +36,6 @@
     "express-validator": "^5.3.1",
     "ip": "^1.1.5",
     "moment": "^2.22.2",
-    "momentjs": "^2.0.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
     "per-env": "^1.0.2",

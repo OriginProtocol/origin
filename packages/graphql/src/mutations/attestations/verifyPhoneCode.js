@@ -1,5 +1,7 @@
-import contracts from '../../contracts'
+import validator from '@origin/validator'
 import get from 'lodash/get'
+
+import contracts from '../../contracts'
 
 async function verifyPhoneCode(_, { identity, prefix, phone, code }) {
   const bridgeServer = contracts.config.bridge
@@ -23,8 +25,17 @@ async function verifyPhoneCode(_, { identity, prefix, phone, code }) {
   const data = await response.json()
 
   if (!response.ok) {
-    const reason = get(data, 'errors._schema[0]')
+    const reason = get(data, 'errors[0]')
     return { success: false, reason }
+  }
+
+  try {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+      ...data,
+      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    })
+  } catch (e) {
+    return { success: false, reason: 'Invalid attestation' }
   }
 
   return {

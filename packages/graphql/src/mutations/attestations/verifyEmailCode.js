@@ -1,5 +1,7 @@
-import contracts from '../../contracts'
+import validator from '@origin/validator'
 import get from 'lodash/get'
+
+import contracts from '../../contracts'
 
 async function verifyEmailCode(_, { identity, email, code }) {
   const bridgeServer = contracts.config.bridge
@@ -24,6 +26,15 @@ async function verifyEmailCode(_, { identity, email, code }) {
   if (!response.ok) {
     const reason = get(data, 'errors[0]')
     return { success: false, reason }
+  }
+
+  try {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+      ...data,
+      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+    })
+  } catch (e) {
+    return { success: false, reason: 'Invalid attestation' }
   }
 
   return {

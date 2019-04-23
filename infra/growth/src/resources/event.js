@@ -54,7 +54,7 @@ class GrowthEvent {
     )
     if (pastEvents.length > 0) {
       logger.debug(
-        `Skipped insert: found past growth event ${eventType} for account  ${ethAddress}`
+        `Skipped insert: found past growth event ${eventType} for account ${ethAddress}`
       )
       return
     }
@@ -69,7 +69,7 @@ class GrowthEvent {
       createdAt
     }
     await db.GrowthEvent.create(eventData)
-    logger.info(`Inserted growth event ${eventType} for account  ${ethAddress}`)
+    logger.info(`Inserted growth event ${eventType} for account ${ethAddress}`)
   }
 
   /**

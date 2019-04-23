@@ -1,3 +1,5 @@
+'use strict'
+
 import secp256k1 from 'secp256k1'
 import CryptoJS from 'crypto-js'
 import cryptoRandomString from 'crypto-random-string'
@@ -5,6 +7,7 @@ import EventEmitter from 'events'
 import Ajv from 'ajv'
 import cookieStorage from './cookieStorage'
 import createDebug from 'debug'
+import Bottleneck from 'bottleneck'
 
 import stringify from 'json-stable-stringify'
 
@@ -46,8 +49,7 @@ const MESSAGE_FORMAT = {
 }
 const validator = new Ajv()
 const validateMessage = validator.compile(MESSAGE_FORMAT)
-
-const DEFAULT_ORBIT_OPTIONS = { referenceCount: 0 }
+const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 class Messaging {
   constructor({
@@ -55,8 +57,7 @@ class Messaging {
     ecies,
     messagingNamespace,
     globalKeyServer,
-    personalSign = true,
-    walletLinker
+    personalSign = true
   }) {
     this.contractService = contractService
     this.web3 = this.contractService.web3
@@ -67,28 +68,15 @@ class Messaging {
     this.globalKeyServer = globalKeyServer
     this.personalSign = personalSign
     this.messagingNamespace = messagingNamespace
-
     this.cookieStorage = new cookieStorage({
       path:
         typeof location === 'object' && location.pathname
           ? location.pathname
           : '/'
     })
-
-    //default to cookieStorage
+    // Use cookie storage
     this.currentStorage = this.cookieStorage
-
-    this.walletLinker = walletLinker
-    this.registerWalletLinker()
-
     this._registryCache = {}
-  }
-
-  registerWalletLinker() {
-    const walletLinker = this.linker || this.contractService.walletLinker
-    if (walletLinker) {
-      walletLinker.registerCallback('messaging', this.onPreGenKeys.bind(this))
-    }
   }
 
   onAccount(accountKey) {
@@ -106,7 +94,7 @@ class Messaging {
     }
   }
 
-  //helper function for use by outside services
+  // Helper function for use by outside services
   preGenKeys(web3Account) {
     const sigPhrase = PROMPT_MESSAGE
     const signature = web3Account.sign(sigPhrase).signature
@@ -177,10 +165,10 @@ class Messaging {
   startConversing() {
     debug('startConversing')
     if (!this.account) {
-      // remote has been initialized
+      // Remote has been initialized
       this.initKeys()
     } else {
-      this.convs_enabled = true
+      this.convsEnabled = true
     }
   }
 
@@ -189,7 +177,7 @@ class Messaging {
 
     // Reset state...
     this.convs = {}
-    this.convs_enabled = false
+    this.convsEnabled = false
     clearInterval(this.refreshIntervalId)
 
     this.account_key = key
@@ -201,7 +189,7 @@ class Messaging {
       this.pub_msg = this.getKeyItem(`${PUB_MESSAGING}:${this.account_key}`)
 
       this.events.emit('initialized', this.account_key)
-      if (this.convs_enabled || this.getMessagingKey()) {
+      if (this.convsEnabled || this.getMessagingKey()) {
         this.initKeys()
       }
     }
@@ -218,10 +206,6 @@ class Messaging {
     if (!localStorage.getItem(scopedStatusesKeyName)) {
       localStorage.setItem(scopedStatusesKeyName, JSON.stringify({}))
     }
-  }
-
-  orbitStoreOptions(options) {
-    return Object.assign(Object.assign({}, DEFAULT_ORBIT_OPTIONS), options)
   }
 
   async initRemote() {
@@ -529,10 +513,12 @@ class Messaging {
     const convObj = { keys: [], messages: [] }
     this.convs[roomId] = convObj
 
-    const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
-      headers: { 'content-type': 'application/json' }
+    const messages = await limiter.schedule(async () => {
+      const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
+        headers: { 'content-type': 'application/json' }
+      })
+      return await res.json()
     })
-    const messages = await res.json()
 
     messages.forEach(entry => {
       this.processContent(

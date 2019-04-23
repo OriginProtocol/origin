@@ -6,7 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
@@ -122,7 +122,7 @@ class Purchases extends Component {
                                 .format('MMMM D, YYYY')}`}
                             </div>
                             <div className="price">
-                              <TokenPrice {...offer} />
+                              <Price price={offer.totalPrice} />
                             </div>
                             <Stages offer={offer} />
                           </div>
@@ -232,6 +232,12 @@ require('react-styl')(`
       .price
         font-weight: normal
         margin-top: 0.5rem
+        flex: 1
+        span.desc
+          color: var(--steel)
+          font-size: 14px
+          font-weight: normal
+          margin-left: 0.25rem
       .stages
         margin: 1rem 0
         flex: 1

@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
-import { Mutation, Query } from 'react-apollo'
+import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
-import UnlinkMobileWalletMutation from 'mutations/UnlinkMobileWallet'
 
 import Link from 'components/Link'
 import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
+import Attestations from 'components/Attestations'
 
 class ProfileNav extends Component {
   constructor() {
@@ -21,8 +21,9 @@ class ProfileNav extends Component {
   }
 
   render() {
+    const poll = window.transactionPoll || 1000
     return (
-      <Query query={ProfileQuery} pollInterval={1000}>
+      <Query query={ProfileQuery} pollInterval={poll}>
         {({ data, error }) => {
           if (error) {
             console.error(error)
@@ -76,42 +77,29 @@ const Network = withNetwork(({ networkName }) => (
 
 const ProfileDropdown = ({ data, onClose }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
-  const mobileWallet = data.web3.walletType.startsWith('mobile-')
   return (
-    <Mutation mutation={UnlinkMobileWalletMutation}>
-      {unlinkMutation => (
-        <div className="dropdown-menu dark dropdown-menu-right show profile">
-          <Network />
-          <div className="wallet-info">
-            <div>
-              <h5>
-                <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
-              </h5>
-              <div className="wallet-address">{checksumAddress}</div>
-            </div>
-            <div className="identicon">
-              <Identicon size={50} address={checksumAddress} />
-            </div>
-          </div>
-          <Balances account={id} />
-          <Identity id={id} />
-          {mobileWallet && (
-            <a
-              className="unlink-wallet"
-              onClick={e => {
-                e.preventDefault()
-                unlinkMutation()
-              }}
-              href="#"
-              children={fbt('Unlink Mobile', 'nav.profile.unlinkMobile')}
-            />
-          )}
-          <Link onClick={() => onClose()} to="/profile">
-            <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
-          </Link>
+    <div className="dropdown-menu dark dropdown-menu-right show profile">
+      <Network />
+      <div className="wallet-info">
+        <div>
+          <h5>
+            <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
+          </h5>
+          <div className="wallet-address">{checksumAddress}</div>
         </div>
-      )}
-    </Mutation>
+        <div className="identicon">
+          <Identicon size={50} address={checksumAddress} />
+        </div>
+      </div>
+      <Balances account={id} />
+      <Identity id={id} />
+      <Link onClick={() => onClose()} to="/profile">
+        <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
+      </Link>
+      <Link onClick={() => onClose()} to="/settings">
+        <fbt desc="nav.profile.settings">Settings</fbt>
+      </Link>
+    </div>
   )
 }
 
@@ -133,22 +121,7 @@ const Identity = ({ id }) => (
                 {profile.fullName ||
                   fbt('Unnamed User', 'nav.profile.unnamedUser')}
               </div>
-              <div className="attestations">
-                {profile.twitterVerified && (
-                  <div className="attestation twitter" />
-                )}
-                {profile.googleVerified && (
-                  <div className="attestation google" />
-                )}
-                {profile.phoneVerified && <div className="attestation phone" />}
-                {profile.emailVerified && <div className="attestation email" />}
-                {profile.facebookVerified && (
-                  <div className="attestation facebook" />
-                )}
-                {profile.airbnbVerified && (
-                  <div className="attestation airbnb" />
-                )}
-              </div>
+              <Attestations profile={profile} />
             </div>
           </div>
           <div className="strength">
@@ -239,12 +212,14 @@ require('react-styl')(`
       background: var(--dark-grey-blue)
       color: var(--white)
       text-align: center
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-      border-radius: 0 0 5px 5px;
-      &.unlink-wallet
-        border-bottom: 1px solid black
-        border-radius: 0
+      padding: 0.75rem 1rem
+      font-weight: bold
+      border-bottom: 1px solid black
+      &:hover
+        background: var(--dusk)
+      &:last-child
+        border: 0
+        border-radius: 0 0 5px 5px
 
   .attestations
     display: flex

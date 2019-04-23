@@ -114,7 +114,7 @@ class WithdrawOffer extends Component {
           <div className="make-offer-modal">
             <div className="success-icon" />
             <div>
-              <fbt desc="WithdrawOffers.success">Success!</fbt>
+              <fbt desc="success">Success!</fbt>
             </div>
             <button
               href="#"

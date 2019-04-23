@@ -54,7 +54,6 @@ class AcceptOffer extends Component {
   getVars() {
     return {
       variables: {
-        listingID: String(this.props.listing.id),
         offerID: String(this.props.offer.id),
         from: this.props.listing.seller.id
       }

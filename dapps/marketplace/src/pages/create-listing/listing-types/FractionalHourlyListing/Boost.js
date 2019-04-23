@@ -23,53 +23,13 @@ const NoOgn = () => (
         Once you acquire some OGN you will be able to boost your listing.
       </div>
       <div>
-        <Link to="/about/tokens">Learn More</Link>
+        <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
+          Learn More
+        </a>
       </div>
     </fbt>
   </div>
 )
-
-const BoostLevels = [
-  [
-    76,
-    'premium',
-    fbt('Premium', 'create.boost.Premium'),
-    fbt(
-      'Your listing will get the best visibility.',
-      'create.boost.best visibility.'
-    )
-  ],
-  [
-    51,
-    'high',
-    fbt('High', 'create.boost.High'),
-    fbt(
-      'Your listing will get above-average visibility.',
-      'create.boost.above-average.'
-    )
-  ],
-  [
-    26,
-    'med',
-    fbt('Medium (recommended)', 'create.boost.Medium'),
-    fbt('Your listing will get average visibility.', 'create.boost.average.')
-  ],
-  [
-    1,
-    'low',
-    fbt('Low', 'create.boost.Low'),
-    fbt(
-      'Your listing will get below-average visibility.',
-      'create.boost.below-average'
-    )
-  ],
-  [
-    0,
-    'none',
-    fbt('None', 'create.boost.None'),
-    fbt('Your listing will get very low visibility.', 'create.boost.very-low')
-  ]
-]
 
 class Boost extends Component {
   constructor(props) {
@@ -148,7 +108,13 @@ class Boost extends Component {
               referral rewards, reputation incentives, spam prevention,
               developer rewards, and platform governance.
               <div className="mt-3">
-                <Link to="/about-tokens">Learn More</Link>
+                <a
+                  href="#/about/tokens"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn More
+                </a>
               </div>
             </fbt>
           </div>
@@ -158,6 +124,51 @@ class Boost extends Component {
   }
 
   renderBoostSlider() {
+    const BoostLevels = [
+      [
+        76,
+        'premium',
+        fbt('Premium', 'create.boost.Premium'),
+        fbt(
+          'Your listing will get the best visibility.',
+          'create.boost.best visibility.'
+        )
+      ],
+      [
+        51,
+        'high',
+        fbt('High', 'create.boost.High'),
+        fbt(
+          'Your listing will get above-average visibility.',
+          'create.boost.above-average.'
+        )
+      ],
+      [
+        26,
+        'med',
+        fbt('Medium (recommended)', 'create.boost.Medium'),
+        fbt('Your listing will get average visibility.', 'create.boost.average')
+      ],
+      [
+        1,
+        'low',
+        fbt('Low', 'create.boost.Low'),
+        fbt(
+          'Your listing will get below-average visibility.',
+          'create.boost.below-average'
+        )
+      ],
+      [
+        0,
+        'none',
+        fbt('None', 'create.boost.None'),
+        fbt(
+          'Your listing will get very low visibility.',
+          'create.boost.very-low'
+        )
+      ]
+    ]
+
     const level = BoostLevels.find(l => l[0] <= Number(this.state.boost))
 
     const input = formInput(this.state, state => this.setState(state))
@@ -193,12 +204,16 @@ class Boost extends Component {
         <div className="info">
           <fbt desc="create.boost.info">
             Boosts are always calculated and charged in OGN.
-            <Link to="/about-tokens">Learn more</Link>
           </fbt>
+          <a href="#/about/tokens" target="_blank" rel="noopener noreferrer">
+            &nbsp;<fbt desc="create.boost.more">Learn More</fbt>
+          </a>
         </div>
 
         <div className="form-group boost-limit">
-          <label>Boost Limit</label>
+          <label>
+            <fbt desc="create.boost-limit">Boost Limit</fbt>
+          </label>
           <div className="d-flex">
             <div style={{ flex: 1, marginRight: '1rem' }}>
               <div className="with-symbol">

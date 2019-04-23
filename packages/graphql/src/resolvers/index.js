@@ -12,7 +12,6 @@ import Token from './Token'
 import Conversation from './messaging/Conversation'
 import Messaging from './messaging/Messaging'
 import IdentityEvents from './IdentityEvents'
-import WalletLinker from './linker/WalletLinker'
 import Config from './Config'
 import Mutation from '../mutations/index'
 import CreatorConfig from './CreatorConfig'
@@ -34,6 +33,16 @@ export default {
       return obj.__typename
     }
   },
+  CurrencyResult: {
+    __resolveType(obj) {
+      return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
+    }
+  },
+  Currency: {
+    __resolveType(obj) {
+      return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
+    }
+  },
   User,
   Offer,
   Token,
@@ -42,6 +51,5 @@ export default {
   Messaging,
   IdentityEvents,
   Config,
-  WalletLinker,
   CreatorConfig
 }

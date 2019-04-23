@@ -4,13 +4,14 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
+import currencies from '../../utils/currencies'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
   await checkMetaMask(data.from)
 
-  const buyer = data.from || contracts.defaultLinkerAccount
+  const buyer = data.from || contracts.defaultMobileAccount
   const marketplace = contracts.marketplaceExec
   const ipfsData = await toIpfsData(data)
 
@@ -39,6 +40,18 @@ async function makeOffer(_, data) {
   )
   const value = contracts.web3.utils.toWei(data.value, 'ether')
   const arbitrator = data.arbitrator || contracts.config.arbitrator
+  const currency = await currencies.get(data.currency)
+
+  let currencyAddress = currency.address
+  if (!currencyAddress) {
+    const contractToken = contracts.tokens.find(t => t.symbol === currency.code)
+    if (contractToken) {
+      currencyAddress = contractToken.id
+    }
+  }
+  if (!currencyAddress) {
+    throw new Error(`Could not find token address for ${data.currency}`)
+  }
 
   const { listingId } = parseId(data.listingID)
   const args = [
@@ -48,7 +61,7 @@ async function makeOffer(_, data) {
     affiliate,
     commission,
     value,
-    data.currency || ZeroAddress,
+    currencyAddress || ZeroAddress,
     arbitrator
   ]
   if (data.withdraw) {
@@ -56,10 +69,12 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
+  // console.log(args)
+
   const tx = marketplace.methods.makeOffer(...args).send({
     gas: cost.makeOffer,
     from: buyer,
-    value
+    value: currencyAddress === ZeroAddress ? value : 0
   })
   return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
@@ -95,20 +110,20 @@ async function toIpfsData(data) {
   }
 
   const ipfsData = {
-    schemaId: 'https://schema.originprotocol.com/offer_1.0.0.json',
+    schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
     listingId: data.listingID,
     listingType: 'unit',
     unitsPurchased: Number.parseInt(data.quantity),
     totalPrice: {
       amount: data.value,
-      currency: 'ETH'
+      currency: data.currency
     },
     commission,
     finalizes: data.finalizes || 60 * 60 * 24 * 14,
     ...(data.fractionalData || {})
   }
 
-  validator('https://schema.originprotocol.com/offer_1.0.0.json', ipfsData)
+  validator('https://schema.originprotocol.com/offer_2.0.0.json', ipfsData)
 
   return ipfsData
 }

@@ -9,7 +9,8 @@ class ImageCropper extends Component {
   state = {
     src: null,
     didCrop: false,
-    crop: { aspect: 1, width: 100, height: 100 }
+    crop: { aspect: 1, width: 100, height: 100 },
+    open: false
   }
 
   onSelectFile(e) {
@@ -46,6 +47,15 @@ class ImageCropper extends Component {
     )
 
     return canvas.toDataURL('image/jpeg')
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (
+      prevState.open !== this.state.open &&
+      this.props.openChange !== undefined
+    ) {
+      this.props.openChange(this.state.open)
+    }
   }
 
   render() {

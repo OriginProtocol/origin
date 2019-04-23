@@ -60,7 +60,7 @@ class Contracts extends Component {
                 <tbody>
                   {tokens.map(m => (
                     <tr key={m.id}>
-                      <td>{m.symbol}</td>
+                      <td>{m.code}</td>
                       <td>{m.name}</td>
                       <td>
                         <Address address={m.address} />

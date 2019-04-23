@@ -5,7 +5,7 @@ import { getIpfsGateway } from 'utils/config'
 
 import { Icon, Card, Spinner } from '@blueprintjs/core'
 
-import Price from 'components/Price'
+import Price from 'components/Price2'
 import Identity from 'components/Identity'
 
 function status(listing) {
@@ -46,7 +46,9 @@ const Listings = ({ listings, history, hasNextPage }) => {
             />
           ) : null}
           <div className="price">
-            <Price amount={a.price ? a.price.amount : 0} />
+            <span>
+              <Price listing={a} descriptor />
+            </span>
             {a.seller ? <Identity account={a.seller.id} /> : ''}
           </div>
           <div className="info">

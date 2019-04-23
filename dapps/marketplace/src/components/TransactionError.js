@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 import Modal from 'components/Modal'
 
 const UserDenied = /denied transaction signature/
+const IncorrectNonce = /tx doesn't have the correct nonce/
 
 class CannotTransact extends Component {
   state = {}
@@ -36,6 +37,11 @@ class CannotTransact extends Component {
           'You declined to sign the transaction',
           'TransactionError.declinedSigning'
         )
+      } else if (get(this.props, 'data.message', '').match(IncorrectNonce)) {
+        reason = fbt(
+          'Incorrect nonce. Try resetting MetaMask.',
+          'TransactionError.incorrectNonce'
+        )
       } else {
         reason = (
           <div onClick={() => alert(this.props.data)}>
@@ -48,20 +54,26 @@ class CannotTransact extends Component {
       }
     }
 
-    return (
-      <Modal {...modalProps}>
-        <div className="make-offer-modal">
-          <div className="error-icon" />
-          <div>{reason}</div>
-          <button
-            href="#"
-            className="btn btn-outline-light"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('OK', 'OK')}
-          />
-        </div>
-      </Modal>
+    const content = (
+      <div className="make-offer-modal">
+        <div className="error-icon" />
+        <div>{reason}</div>
+        <button
+          href="#"
+          className="btn btn-outline-light"
+          onClick={() =>
+            this.props.contentOnly && this.props.onClose
+              ? this.props.onClose()
+              : this.setState({ shouldClose: true })
+          }
+          children={fbt('OK', 'OK')}
+        />
+      </div>
     )
+
+    if (this.props.contentOnly) return content
+
+    return <Modal {...modalProps}>{content}</Modal>
   }
 }
 

@@ -30,6 +30,7 @@ const ListingInterface = `
   description: String
   currencyId: String
   price: Price
+  acceptedTokens: [Token]
   category: String
   subCategory: String
   categoryStr: String
@@ -38,6 +39,7 @@ const ListingInterface = `
   commission: String
   "IPFS: commission, in natural units, to be paid for each unit sold"
   commissionPerUnit: String
+  marketplacePublisher: String
 `
 
 module.exports = `
@@ -172,6 +174,7 @@ module.exports = `
     listings(first: Int, after: String, filter: String): ListingConnection!
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
+    counterparty(first: Int, after: String, id: String!): UserNotificationConnection!
     reviews(first: Int, after: String): ReviewConnection!
     notifications(first: Int, after: String, filter: String): UserNotificationConnection!
     transactions(first: Int, after: String): UserTransactionConnection!
@@ -328,6 +331,7 @@ module.exports = `
 
     # IPFS
     quantity: Int
+    totalPrice: Price
     startDate: String
     endDate: String
   }
@@ -370,6 +374,7 @@ module.exports = `
     category: String
     subCategory: String
     currency: String
+    acceptedTokens: [String]
     media: [MediaInput]
     price: PriceInput
 

@@ -7,7 +7,7 @@ import { fbt } from 'fbt-runtime'
 import withWallet from 'hoc/withWallet'
 
 import QueryError from 'components/QueryError'
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price'
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
 import NavLink from 'components/NavLink'
@@ -118,7 +118,7 @@ class Sales extends Component {
                                 .format('MMMM D, YYYY')}`}
                             </div>
                             <div className="price">
-                              <TokenPrice {...offer} />
+                              <Price price={offer.totalPrice} />
                             </div>
                             <Stages offer={offer} />
                           </div>

@@ -24,6 +24,7 @@
     "start:production": "node src/app.js"
   },
   "dependencies": {
+    "@origin/bridge": "^0.1.0",
     "@origin/token": "^0.1.0",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",

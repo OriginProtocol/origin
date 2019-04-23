@@ -1,13 +1,12 @@
-const featured = {},
-  hidden = {}
+import fetch from 'cross-fetch'
+const memoize = require('lodash/memoize')
 
-export async function getFeatured(net) {
+async function getFeaturedFn(net) {
   if (net === 'localhost') return [1]
   let netId
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
-  if (featured[netId]) return featured[netId]
 
   return await new Promise(resolve => {
     fetch(
@@ -18,19 +17,18 @@ export async function getFeatured(net) {
         const ids = response
           .split(',')
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
-        featured[netId] = ids
+
         resolve(ids)
       })
       .catch(() => resolve([]))
   })
 }
 
-export async function getHidden(net) {
+async function getHiddenFn(net) {
   let netId
   if (net === 'mainnet') netId = 1
   if (net === 'rinkeby') netId = 4
   if (!netId) return []
-  if (hidden[netId]) return hidden[netId]
 
   return await new Promise(resolve => {
     fetch(
@@ -41,9 +39,12 @@ export async function getHidden(net) {
         const ids = response
           .split(',')
           .map(i => Number(i.split('-')[2].replace(/[^0-9]/g, '')))
-        hidden[netId] = ids
+
         resolve(ids)
       })
       .catch(() => resolve([]))
   })
 }
+
+export const getFeatured = memoize(getFeaturedFn)
+export const getHidden = memoize(getHiddenFn)

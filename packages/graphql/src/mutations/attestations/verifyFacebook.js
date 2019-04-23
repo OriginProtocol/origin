@@ -1,5 +1,7 @@
-import contracts from '../../contracts'
+import validator from '@origin/validator'
 import get from 'lodash/get'
+
+import contracts from '../../contracts'
 
 async function verifyFacebook(_, { identity, authUrl }) {
   const bridgeServer = contracts.config.bridge
@@ -46,6 +48,15 @@ async function verifyFacebook(_, { identity, authUrl }) {
       if (!response.ok) {
         const reason = get(data, 'errors.code[0]', get(data, 'errors[0]'))
         resolve({ success: false, reason })
+      }
+
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...data,
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+      } catch (e) {
+        return { success: false, reason: 'Invalid attestation' }
       }
 
       resolve({

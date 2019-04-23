@@ -34,7 +34,7 @@ Output:
 
 `--verbose` Optional. Output json for all event information to stdout.
 
-`--webhook=yoururl` Optional. Post json for each event to the URL.
+`--notifications-webhook=yoururl` Optional. Post json for each event to the URL.
 
 `--discord-webhook=discordurl` Optional. Post a short Discord notification for each marketplace event.
 

@@ -7,7 +7,7 @@ import { fbt } from 'fbt-runtime'
 import withWallet from 'hoc/withWallet'
 
 import QueryError from 'components/QueryError'
-import TokenPrice from 'components/TokenPrice'
+import Price from 'components/Price'
 import Link from 'components/Link'
 import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
@@ -25,7 +25,7 @@ const nextPage = nextPageFactory('marketplace.user.listings')
 class Listings extends Component {
   render() {
     const vars = { first: 5, id: this.props.wallet }
-    const filter = get(this.props, 'match.params.filter', 'pending')
+    const filter = get(this.props, 'match.params.filter', 'all')
     if (filter !== 'all') {
       vars.filter = filter
     }
@@ -94,7 +94,7 @@ class Listings extends Component {
                     onBottom={() => nextPage(fetchMore, { ...vars, after })}
                   >
                     <>
-                      {totalCount > 0 ? null : <NoListings />}
+                      {totalCount > 0 ? null : <NoListings filter={filter} />}
                       {nodes.map(listing => (
                         <div className="purchase" key={`${listing.id}`}>
                           <Pic listing={listing} />
@@ -121,7 +121,7 @@ class Listings extends Component {
                                     .format('MMMM D, YYYY')}`}
                             </div>
                             <div className="price">
-                              <TokenPrice {...listing.price} />
+                              <Price listing={listing} descriptor />
                             </div>
                             {listing.status !== 'active' ? null : (
                               <div className="actions">
@@ -163,16 +163,49 @@ class Listings extends Component {
   }
 }
 
-const NoListings = () => (
+const NoListings = ({ filter }) => (
   <div className="row">
     <div className="col-12 text-center">
       <img src="images/empty-listings-graphic.svg" />
-      <h1>You don&apos;t have any listings yet.</h1>
-      <p>Follow the steps below to create your first listing!</p>
-      <br />
-      <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
-        Create Your First Listing
-      </Link>
+      {filter === 'all' && (
+        <>
+          <h1>
+            <fbt desc="Listings.none">
+              You don&apos;t have any listings yet.
+            </fbt>
+          </h1>
+          <br />
+          <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
+            Create Your First Listing
+          </Link>
+        </>
+      )}
+      {filter === 'active' && (
+        <>
+          <h1>
+            <fbt desc="Listings.noActive">
+              You don&apos;t have any active listings.
+            </fbt>
+          </h1>
+          <br />
+          <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
+            <fbt desc="Listings.create">Create A Listing</fbt>
+          </Link>
+        </>
+      )}
+      {filter === 'inactive' && (
+        <>
+          <h1>
+            <fbt desc="Listings.noInactive">
+              You don&apos;t have any inactive listings.
+            </fbt>
+          </h1>
+          <br />
+          <Link to="/create" className="btn btn-lg btn-primary btn-rounded">
+            <fbt desc="Listings.create">Create A Listing</fbt>
+          </Link>
+        </>
+      )}
     </div>
   </div>
 )

@@ -5,9 +5,10 @@ import omit from 'lodash/omit'
 import Steps from 'components/Steps'
 import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
-import Price from 'components/Price'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
+import PricingChooser from '../_PricingChooser'
+import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -42,7 +43,9 @@ class Details extends Component {
                   <fbt:param name="step">{this.props.step}</fbt:param>
                 </fbt>
               </div>
-              <fbt desc="create.details.title">Provide listing details</fbt>
+              <div className="step-description">
+                <fbt desc="create.details.title">Provide listing details</fbt>
+              </div>
               <Steps steps={this.props.steps} step={this.props.step} />
 
               <form
@@ -67,72 +70,57 @@ class Details extends Component {
                   <label className="mb-0">
                     <fbt desc="create.details.description">Description</fbt>
                   </label>
-                  <fbt desc="create.description.hourly">
-                    Make sure to include special conditions of your rental here.
-                  </fbt>
+                  <div className="help-text">
+                    <fbt desc="create.description.hourly">
+                      Make sure to include special conditions of your rental
+                      here.
+                    </fbt>
+                  </div>
                   <textarea {...input('description')} />
                   {Feedback('description')}
                 </div>
 
                 {/* BEGIN Homeshare specific code */}
 
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.fractional.weekday-price">
-                      Default Weekday Pricing (Sunday - Thursday nights)
-                    </fbt>
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('price')} />
-                        <span className="eth">ETH</span>
-                      </div>
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>
+                      <fbt desc="create.fractional.weekday-price">
+                        Default Weekday Pricing (Sunday - Thursday nights)
+                      </fbt>
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.price}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
-                    </div>
-                  </div>
-                  {Feedback('price')}
-                  <div className="create.details.help-text.price">
-                    <fbt desc="create.price.help">
-                      Price is always in ETH, USD is an estimate.
-                    </fbt>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.fractional.weekend-price">
-                      Default Weekend Pricing (Friday &amp; Saturday nights)
-                    </fbt>
-                  </label>
-                  <div className="d-flex">
-                    <div style={{ flex: 1, marginRight: '1rem' }}>
-                      <div className="with-symbol">
-                        <input {...input('weekendPrice')} />
-                        <span className="eth">ETH</span>
-                      </div>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="with-symbol corner">
-                        <Price
-                          el="input"
-                          amount={this.state.weekendPrice}
-                          className="form-control form-control-lg"
-                        />
-                        <span className="usd">USD</span>
-                      </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      <fbt desc="create.fractional.price.help">
+                        Price is an approximation of what you will receive.
+                      </fbt>
+                      <a
+                        href="#/about/payments"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        &nbsp;
+                        <fbt desc="create.price.help.more">Learn More</fbt>
+                      </a>
                     </div>
                   </div>
-                  {Feedback('weekendPrice')}
-                </div>
+                  <div className="form-group">
+                    <label>
+                      <fbt desc="create.fractional.weekend-price">
+                        Default Weekend Pricing (Friday &amp; Saturday nights)
+                      </fbt>
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('weekendPrice')} />
+                      <CurrencySelect value={this.state.currency} />
+                    </div>
+                    {Feedback('weekendPrice')}
+                  </div>
+                </PricingChooser>
 
                 {/* END Homeshare specific code */}
 

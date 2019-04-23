@@ -46,7 +46,14 @@ export default {
         hidden
         price {
           amount
-          currency
+          currency {
+            ... on Currency {
+              id
+            }
+          }
+        }
+        acceptedTokens {
+          id
         }
         media {
           url
@@ -59,12 +66,25 @@ export default {
           unitsTotal
           unitsAvailable
           unitsSold
+          unitsPending
+          multiUnit
         }
         ... on FractionalListing {
           weekendPrice {
             amount
-            currency
+            currency {
+              ... on Currency {
+                id
+              }
+            }
           }
+          timeZone
+          workingHours
+          booked
+          customPricing
+          unavailable
+        }
+        ... on FractionalHourlyListing {
           timeZone
           workingHours
           booked
@@ -100,6 +120,15 @@ export default {
         }
         withdrawnBy {
           id
+        }
+        totalPrice {
+          amount
+          currency {
+            ... on Currency {
+              id
+              code
+            }
+          }
         }
       }
     `

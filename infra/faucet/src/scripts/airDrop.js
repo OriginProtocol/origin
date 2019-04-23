@@ -77,7 +77,8 @@ class AirDrop {
     const medianGasPrice = await web3.eth.getGasPrice()
 
     // Apply our ratio.
-    return BigNumber(medianGasPrice).times(gasPriceMultiplier)
+    const gasPrice = BigNumber(medianGasPrice).times(gasPriceMultiplier)
+    return gasPrice.integerValue()
   }
 
   /**
@@ -215,7 +216,7 @@ class AirDrop {
     }
 
     logger.info('Sender balances:')
-    logger.info('  OGN: ', ognBalance)
+    logger.info('  OGN: ', ognBalance.toFixed())
     logger.info('  ETH: ', ethBalance)
   }
 
@@ -270,7 +271,10 @@ if (require.main === module) {
     .then(() => {
       logger.info('AirDrop stats:')
       logger.info('  Number of txns:      ', job.stats.numTxns)
-      logger.info('  Total distributed (wei):', job.stats.totalAmountWei)
+      logger.info(
+        '  Total distributed (wei):',
+        job.stats.totalAmountWei.toFixed()
+      )
       logger.info('  Total distributed (OGN):', job.stats.totalAmountOgn)
       logger.info('Finished')
       process.exit()

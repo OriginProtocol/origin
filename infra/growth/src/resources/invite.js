@@ -56,7 +56,7 @@ class GrowthInvite {
 
     return referrals.map(r => {
       return {
-        id: r.id,
+        pendingId: r.id,
         contact: r.refereeContact,
         status: DBToSchemaStatus[r.status],
         reward: rewardValue

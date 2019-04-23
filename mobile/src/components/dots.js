@@ -11,7 +11,7 @@ const Dots = ({ currentPage, pagesCount }) => (
           key={index}
           style={{
             ...styles.dot,
-            backgroundColor: active ? '#eaf0f3' : '#0b1823',
+            backgroundColor: active ? '#eaf0f3' : '#0b1823'
           }}
         />
       )
@@ -24,14 +24,14 @@ const styles = {
     alignItems: 'center',
     flex: 0,
     flexDirection: 'row',
-    marginBottom: '10%',
+    marginBottom: '10%'
   },
   dot: {
     borderRadius: 4,
     height: 8,
     marginHorizontal: 4,
-    width: 8,
-  },
+    width: 8
+  }
 }
 
 export default Dots

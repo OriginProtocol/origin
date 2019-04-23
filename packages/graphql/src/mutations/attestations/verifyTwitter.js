@@ -1,5 +1,7 @@
-import contracts from '../../contracts'
+import validator from '@origin/validator'
 import get from 'lodash/get'
+
+import contracts from '../../contracts'
 
 async function verifyTwitter(_, { identity }) {
   const bridgeServer = contracts.config.bridge
@@ -45,6 +47,15 @@ async function verifyTwitter(_, { identity }) {
         const reason = get(data, 'errors.code[0]', get(data, 'errors[0]'))
         resolve({ success: false, reason })
         return
+      }
+
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...data,
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+      } catch (e) {
+        return { success: false, reason: 'Invalid attestation' }
       }
 
       resolve({

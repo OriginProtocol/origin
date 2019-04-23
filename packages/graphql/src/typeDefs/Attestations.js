@@ -1,6 +1,7 @@
 module.exports = `
   extend type Query {
     facebookAuthURL: String
+    googleAuthURL: String
   }
 
   extend type Mutation {
@@ -12,6 +13,7 @@ module.exports = `
 
     verifyFacebook(identity: String!, authUrl: String): AttestationVerifyResult!
     verifyTwitter(identity: String!, authUrl: String): AttestationVerifyResult!
+    verifyGoogle(identity: String!, authUrl: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!

@@ -26,8 +26,14 @@ class DeployIdentity extends Component {
         {upsertIdentity => (
           <>
             <button
-              className={this.props.className}
+              className={`${this.props.className} ${
+                this.props.disabled ? 'disabled' : ''
+              }`}
               onClick={() => {
+                if (this.props.disabled) {
+                  return
+                }
+
                 let canDeploy = true
                 if (this.props.validate) {
                   canDeploy = this.props.validate()
@@ -95,7 +101,9 @@ class DeployIdentity extends Component {
           return (
             <div className="make-offer-modal">
               <div className="success-icon" />
-              <div>Success!</div>
+              <div>
+                <fbt desc="success">Success!</fbt>
+              </div>
               <button
                 className="btn btn-outline-light"
                 onClick={async () => {

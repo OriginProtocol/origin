@@ -4,29 +4,33 @@ import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 import { Switch, Route } from 'react-router-dom'
+import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import unpublishedProfileStrength from 'utils/unpublishedProfileStrength'
+import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
+import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
-import ImageCropper from 'components/ImageCropper'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 import FacebookAttestation from 'pages/identity/FacebookAttestation'
+import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
+import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
@@ -35,7 +39,8 @@ const AttestationComponents = {
   email: EmailAttestation,
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
-  airbnb: AirbnbAttestation
+  airbnb: AirbnbAttestation,
+  google: GoogleAttestation
 }
 
 const ProfileFields = [
@@ -43,13 +48,15 @@ const ProfileFields = [
   'lastName',
   'description',
   'avatar',
+  'avatarUrl',
   'strength',
   'attestations',
   'facebookVerified',
   'twitterVerified',
   'airbnbVerified',
   'phoneVerified',
-  'emailVerified'
+  'emailVerified',
+  'googleVerified'
 ]
 
 function getState(profile) {
@@ -66,28 +73,162 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const storedAttestations = store.get(`attestations-${props.wallet}`, {})
-    this.state = { ...getState(profile), ...storedAttestations }
+    const attestations = store.get(`attestations-${props.wallet}`, {})
+    const storedAttestations = {}
+    Object.keys(attestations).forEach(key => {
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...JSON.parse(attestations[key]),
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+        storedAttestations[key] = attestations[key]
+      } catch (e) {
+        // Invalid attestation
+        console.log('Invalid attestation', attestations[key])
+      }
+    })
+    this.state = {
+      ...getState(profile),
+      ...storedAttestations
+    }
+    this.accountsSwitched = false
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    document.body.style.backgroundColor = 'var(--pale-grey-four)'
+  }
+
+  componentWillUnmount() {
+    /* unfortunately this needs to be hardcoded and can not be read from document.body.style.backgroundColor
+     * since it initially returns an empty string
+     */
+    document.body.style.backgroundColor = 'white'
+  }
+
+  changesPublishedToBlockchain(props, prevProps) {
+    const profile = get(props, 'identity') || {}
+    const prevProfile = get(prevProps, 'identity') || {}
+
+    return (
+      (profile.firstName !== prevProfile.firstName ||
+        profile.lastName !== prevProfile.lastName ||
+        profile.description !== prevProfile.description ||
+        profile.avatar !== prevProfile.avatar ||
+        profile.emailVerified !== prevProfile.emailVerified ||
+        profile.phoneVerified !== prevProfile.phoneVerified ||
+        profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.twitterVerified !== prevProfile.twitterVerified ||
+        profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+      profile.id === prevProfile.id &&
+      // initial profile data population
+      prevProfile.id !== undefined
+    )
+  }
+
+  profileDataUpdated(state, prevState) {
+    return (
+      (state.firstName !== prevState.firstName ||
+        state.lastName !== prevState.lastName ||
+        state.description !== prevState.description ||
+        state.avatar !== prevState.avatar) &&
+      !this.accountsSwitched
+    )
+  }
+
+  attestationUpdated(state, prevState, attestation) {
+    return (
+      state[attestation] !== prevState[attestation] && !this.accountsSwitched
+    )
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
+      this.accountsSwitched = true
+      /* Semi ugly hack - can not find a better solution to the problem.
+       *
+       * The problem: To show toast notification when a user changes profile or attestation
+       * data we are observing this component's state. False positive notifications
+       * need to be prevented to not falsely fire when state is initially populated or when user
+       * changes wallets.
+       *
+       * The biggest challenge is that wallet id prop changes immediately when the wallet
+       * changes and bit later identity information prop is populated (which can also be empty). It
+       * is hard to connect the wallet change to the identity change, to rule out profile switches.
+       *
+       * Current solution is just to disable any notifications firing 3 seconds after
+       * account switch.
+       */
+      setTimeout(() => {
+        this.accountsSwitched = false
+      }, 3000)
     }
+
+    if (this.changesPublishedToBlockchain(this.props, prevProps)) {
+      this.handleShowNotification(
+        fbt(
+          'Changes published to blockchain',
+          'profile.changesPublishedToBlockchain'
+        ),
+        'green'
+      )
+    }
+
+    if (this.profileDataUpdated(this.state, prevState)) {
+      this.handleShowNotification(
+        fbt('Profile updated', 'profile.profileUpdated'),
+        'blue'
+      )
+    }
+
+    const attestationNotificationConf = [
+      {
+        attestation: 'emailAttestation',
+        message: fbt('Email updated', 'profile.emailUpdated')
+      },
+      {
+        attestation: 'phoneAttestation',
+        message: fbt('Phone number updated', 'profile.phoneUpdated')
+      },
+      {
+        attestation: 'facebookAttestation',
+        message: fbt('Facebook updated', 'profile.facebookUpdated')
+      },
+      {
+        attestation: 'twitterAttestation',
+        message: fbt('Twitter updated', 'profile.twitterUpdated')
+      },
+      {
+        attestation: 'airbnbAttestation',
+        message: fbt('Airbnb updated', 'profile.airbnbUpdated')
+      }
+    ]
+
+    attestationNotificationConf.forEach(({ attestation, message }) => {
+      if (this.attestationUpdated(this.state, prevState, attestation)) {
+        this.handleShowNotification(message, 'blue')
+      }
+    })
   }
 
   render() {
     return (
       <Fragment>
+        <ToastNotification
+          setShowHandler={handler => (this.handleShowNotification = handler)}
+        />
         <DocumentTitle
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
         <Switch>
+          {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
+           * For that reason Origin wallet is disabled.
+           */}
           <Route
             path="/profile/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={true}
                 linkprefix="/profile"
                 redirectTo="/profile/continue"
               />
@@ -101,6 +242,11 @@ class UserProfile extends Component {
         </Switch>
       </Fragment>
     )
+  }
+
+  openEditProfile(e) {
+    e.preventDefault()
+    this.setState({ editProfile: true })
   }
 
   renderProfile(arrivedFromOnboarding) {
@@ -125,18 +271,13 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <ImageCropper onChange={avatar => this.setState({ avatar })}>
-                  <Avatar className="with-cam" avatar={this.state.avatar} />
-                </ImageCropper>
+                <Avatar avatar={this.state.avatar} />
               </div>
               <div className="info">
                 <a
                   className="edit"
                   href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.setState({ editProfile: true })
-                  }}
+                  onClick={e => this.openEditProfile(e)}
                 />
                 <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
                 <div className="description">
@@ -149,12 +290,10 @@ class UserProfile extends Component {
               </div>
             </div>
             <h3>
-              <fbt desc="Profile.verifyYourselfHeading">
-                Verify yourself on Origin
-              </fbt>
+              <fbt desc="Profile.originVerifications">Origin Verifications</fbt>
             </h3>
-            <div className="gray-box">
-              <label className="mb-3">
+            <div className="attestation-container">
+              <label className="mb-4">
                 <fbt desc="_Services.pleaseConnectAccounts">
                   Please connect your accounts below to strengthen your identity
                   on Origin.
@@ -162,16 +301,12 @@ class UserProfile extends Component {
               </label>
               <div className="profile-attestations">
                 {this.renderAtt(
-                  'phone',
-                  fbt('Phone Number', '_ProvisionedChanges.phoneNumber')
-                )}
-                {this.renderAtt(
                   'email',
                   fbt('Email', '_ProvisionedChanges.email')
                 )}
                 {this.renderAtt(
-                  'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                  'phone',
+                  fbt('Phone', '_ProvisionedChanges.phone')
                 )}
                 {this.renderAtt(
                   'facebook',
@@ -181,36 +316,51 @@ class UserProfile extends Component {
                   'twitter',
                   fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
-                {this.renderAtt('google', 'Google', true)}
+                {this.renderAtt(
+                  'airbnb',
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                )}
+                {this.renderAtt(
+                  'google',
+                  fbt('Google', '_ProvisionedChanges.google'),
+                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                )}
               </div>
             </div>
 
             <ProfileStrength
               large={true}
               published={get(this.props, 'identity.strength') || 0}
-              unpublished={unpublishedProfileStrength(this)}
+              unpublished={unpublishedStrength(this)}
             />
 
             <div className="actions">
-              <DeployIdentity
-                className={`btn btn-primary btn-rounded btn-lg`}
-                identity={get(this.props, 'identity.id')}
-                refetch={this.props.identityRefetch}
-                profile={pick(this.state, [
-                  'firstName',
-                  'lastName',
-                  'description',
-                  'avatar'
-                ])}
-                attestations={[
-                  ...(this.state.attestations || []),
-                  ...attestations
-                ]}
-                validate={() => this.validate()}
-                onComplete={() =>
-                  store.set(`attestations-${this.props.wallet}`, undefined)
-                }
-                children={fbt('Publish Now', 'Profile.publishNow')}
+              <ProfileWizard
+                deployIdentityProps={{
+                  className: `btn btn-primary btn-rounded btn-lg`,
+                  identity: get(this.props, 'identity.id'),
+                  refetch: this.props.identityRefetch,
+                  profile: pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatar',
+                    'avatarUrl'
+                  ]),
+                  attestations: [
+                    ...(this.state.attestations || []),
+                    ...attestations
+                  ],
+                  validate: () => this.validate(),
+                  onComplete: () =>
+                    store.set(`attestations-${this.props.wallet}`, undefined),
+                  children: fbt('Publish Now', 'Profile.publishNow')
+                }}
+                publishedProfile={this.props.identity || {}}
+                currentProfile={this.state}
+                changesToPublishExist={changesToPublishExist(this)}
+                publishedStrength={get(this.props, 'identity.strength') || 0}
+                openEditProfile={e => this.openEditProfile(e)}
               />
             </div>
           </div>
@@ -237,9 +387,13 @@ class UserProfile extends Component {
               'description',
               'avatar'
             ])}
+            avatar={this.state.avatar}
             onClose={() => this.setState({ editProfile: false })}
             onChange={newState =>
               this.setState(newState, () => this.validate())
+            }
+            onAvatarChange={(avatar, avatarUrl) =>
+              this.setState({ avatar, avatarUrl })
             }
           />
         )}
@@ -250,12 +404,16 @@ class UserProfile extends Component {
   renderAtt(type, text, soon) {
     const { wallet } = this.props
     const profile = get(this.props, 'identity') || {}
+    let attestationPublished = false
+    let attestationProvisional = false
 
     let status = ''
     if (profile[`${type}Verified`]) {
       status = ' published'
+      attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
       status = ' provisional'
+      attestationProvisional = true
     }
     if (soon) {
       status = ' soon'
@@ -268,7 +426,7 @@ class UserProfile extends Component {
       AttestationComponent = (
         <AttestationComponent
           wallet={wallet}
-          open={this.state[type]}
+          open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
             this.setState({ [`${type}Attestation`]: att }, () => {
@@ -279,14 +437,44 @@ class UserProfile extends Component {
       )
     }
 
+    let attestationReward = 0
+    if (
+      this.props.growthCampaigns &&
+      this.props.growthEnrollmentStatus === 'Enrolled'
+    ) {
+      const capitalize = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1)
+      }
+
+      attestationReward = getAttestationReward({
+        growthCampaigns: this.props.growthCampaigns,
+        attestation: capitalize(type),
+        tokenDecimals: this.props.tokenDecimals || 18
+      })
+    }
+
     return (
       <>
         <div
+          id={`attestation-component-${type}`}
           className={`profile-attestation ${type}${status}`}
           onClick={() => this.setState({ [type]: true })}
         >
           <i />
           {text}
+          {attestationPublished && (
+            <img className="ml-auto" src="images/identity/completed-tick.svg" />
+          )}
+          {attestationProvisional && <div className="indicator" />}
+          {!attestationPublished && attestationReward !== 0 && (
+            <div
+              className={`growth-reward ml-auto d-flex justify-content-center ${
+                attestationProvisional ? 'provisional' : ''
+              }`}
+            >
+              {attestationReward.toString()}
+            </div>
+          )}
         </div>
         {AttestationComponent}
       </>
@@ -315,19 +503,30 @@ class UserProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(UserProfile))
+export default withWallet(withIdentity(withGrowthCampaign(UserProfile)))
 
 require('react-styl')(`
   .profile-edit
     margin-top: 3rem
+    h3
+      font-size: 24px
+      font-weight: 300
+      color: var(--dark)
+    .attestation-container
+      padding-bottom: 1rem
+      margin-bottom: 2rem
+      label
+        font-family: Lato
+        font-size: 16px
+        font-weight: 300
+        color: var(--dark-blue-grey)
     .gray-box
       border: 1px solid var(--light)
       border-radius: var(--default-radius)
       padding: 1rem
-      margin-bottom: 2rem
     .avatar-wrap
       margin-right: 2rem
-      width: 10rem
+      width: 7.5rem
       .avatar
         border-radius: 1rem
     .actions
@@ -348,10 +547,34 @@ require('react-styl')(`
         display: block
         margin: 0.75rem 0 0 0.5rem
     .profile-help
-      font-size: 14px;
-      background: url(images/identity/identity.svg) no-repeat center 1.5rem;
-      background-size: 5rem;
-      padding-top: 8rem;
+      font-size: 14px
+      background: url(images/identity/identity.svg) no-repeat center 1.5rem
+      background-size: 5rem
+      padding-top: 8rem
+    .attestation-container
+      .growth-reward
+        font-family: Lato
+        font-size: 16px
+        font-weight: bold
+        color: var(--pale-grey-two)
+        img
+          width: 15px
+        &::before
+          display: block
+          position: relative
+          content: ""
+          background: url(images/ogn-icon-grayed-out.svg) no-repeat center
+          background-size: 1rem
+          width: 1rem
+          height: 1rem
+          margin-right: 0.25rem
+          margin-top: 0.25rem
+      .growth-reward.provisional
+        color: var(--clear-blue)
+        &::before
+          background: url(images/ogn-icon.svg) no-repeat center
+          background-size: 1rem
+
   @media (max-width: 767.98px)
     .profile-edit
       margin-top: 1rem

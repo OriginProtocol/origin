@@ -41,6 +41,6 @@ require('react-styl')(`
       .progress-bar
         background-color: var(--greenblue)
         &.unpublished
-          background-color: var(--clear-blue)
+          background-color: rgba(38, 209, 152, 0.5)
 
 `)

@@ -75,7 +75,7 @@ const DappInfo = () => {
           <table className="config-table">
             {sectionThead({ title: 'DApp' })}
             <tbody>
-              {dataTr({ key: 'DAPP Version', value: DAPP_VERSION })}
+              {dataTr({ key: 'DApp Version', value: DAPP_VERSION })}
               {buildTimestamp
                 ? dataTr({
                     key: 'Build time',
@@ -243,10 +243,6 @@ const DappInfo = () => {
                     <tr>
                       <th>HOST</th>
                       <td>{process.env.HOST}</td>
-                    </tr>
-                    <tr>
-                      <th>IPFS_SWARM</th>
-                      <td>{process.env.IPFS_SWARM}</td>
                     </tr>
                     <tr>
                       <th>ORIGIN_LINKING</th>

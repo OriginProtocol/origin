@@ -120,6 +120,8 @@ require('react-styl')(`
     margin-right: 1rem
   .mb-3
     margin-bottom: 1rem
+  .w-100
+    width: 100%
   .vm > td
     vertical-align: middle !important
   .ellip

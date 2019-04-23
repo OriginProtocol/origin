@@ -346,6 +346,58 @@ export const DeployIdentityMutation = gql`
   }
 `
 
+export const UniswapDeployFactory = gql`
+  mutation UniswapDeployFactory($from: String!) {
+    uniswapDeployFactory(from: $from) {
+      id
+    }
+  }
+`
+
+export const UniswapDeployExchangeTemplate = gql`
+  mutation UniswapExchangeTemplate($from: String!) {
+    uniswapDeployExchangeTemplate(from: $from) {
+      id
+    }
+  }
+`
+
+export const UniswapInitFactory = gql`
+  mutation UniswapInitFactory($from: String!) {
+    uniswapInitializeFactory(from: $from) {
+      id
+    }
+  }
+`
+
+export const UniswapCreateExchange = gql`
+  mutation UniswapCreateExchange($from: String!, $tokenAddress: String!) {
+    uniswapCreateExchange(from: $from, tokenAddress: $tokenAddress) {
+      id
+    }
+  }
+`
+
+export const UniswapAddLiquidity = gql`
+  mutation UniswapAddLiquidity(
+    $from: String!
+    $exchange: String!
+    $value: String!
+    $tokens: String!
+    $liquidity: String!
+  ) {
+    uniswapAddLiquidity(
+      from: $from
+      exchange: $exchange
+      value: $value
+      tokens: $tokens
+      liquidity: $liquidity
+    ) {
+      id
+    }
+  }
+`
+
 // await originJS.createListing({
 //   deposit: '2',
 //   arbitrator: '0x9d42726D0Aa33984c55a1076DBc68a42f2509684',
