@@ -409,18 +409,18 @@ class OriginWallet extends Component {
       return
     }
     const notificationType = this.getNotificationType()
-    return fetch(
-      process.env.NOTIFICATION_REGISTER_ENDPOINT ||
-        'https://notifications.originprotocol.com/mobile/register',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ activeAddress, deviceToken, notificationType })
-      }
-    ).catch(error => {
+    const notificationServer =
+      graphqlContext.config.notifications ||
+      'https://notifications.originprotocol.com'
+    const notificationRegisterEndpoint = `${notificationServer}/mobile/register`
+    return fetch(notificationRegisterEndpoint, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ activeAddress, deviceToken, notificationType })
+    }).catch(error => {
       console.debug(
         'Failed to register notification address with notifications server',
         error
