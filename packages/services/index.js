@@ -71,7 +71,7 @@ const populateIpfs = ({ logFiles } = {}) =>
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populating IPFS...')
     ipfs.util.addFromFs(
-      path.resolve(__dirname, '../origin-js/test/fixtures'),
+      path.resolve(__dirname, './fixtures'),
       { recursive: true },
       (err, result) => {
         if (err) {
@@ -199,6 +199,12 @@ module.exports = async function start(opts = {}) {
   if (opts.extras && !started.extras) {
     extrasResult = await opts.extras()
     started.extras = true
+  }
+
+  if (process.env.DOCKER) {
+    // Used to indicate to other services in Docker that the services package
+    // is complete via wait-for.sh
+    net.createServer().listen(1111, '0.0.0.0')
   }
 
   const shutdownFn = async function shutdown() {
