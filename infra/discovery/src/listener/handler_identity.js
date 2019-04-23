@@ -14,6 +14,7 @@ const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
+const { ip2geo } = require('@origin/growth/src/util/ip2geo')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
@@ -47,7 +48,8 @@ class IdentityEventHandler {
     }
   }
 
-  /* Get details about an account from @origin/graphql
+  /**
+   * Get details about an account from @origin/graphql
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query
    * @private
@@ -95,6 +97,30 @@ class IdentityEventHandler {
   }
 
   /**
+   * Returns the country of the identity based on IP from the most recent attestation.
+   * @param {string} ethAddress
+   * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
+   * @private
+   */
+  async _countryLookup(ethAddress) {
+    // Load the most recent attestation.
+    const attestation = await db.Attestation.findOne({
+      where: { ethAddress: ethAddress.toLowerCase() },
+      order: [['createdAt', 'DESC']]
+    })
+    if (!attestation) {
+      return null
+    }
+
+    // Do the IP to geo lookup.
+    const geo = await ip2geo(attestation.remoteIpAddress)
+    if (!geo) {
+      return null
+    }
+    return geo.countryCode
+  }
+
+  /**
    * Decorates an identity object with attestation data.
    * @param {{}} identity - result of identityQuery
    * @returns {Promise<void>}
@@ -102,6 +128,8 @@ class IdentityEventHandler {
    */
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
+
+    // Load attestation data.
     await Promise.all(
       decoratedIdentity.attestations.map(async attestationJson => {
         const attestation = JSON.parse(attestationJson)
@@ -142,6 +170,10 @@ class IdentityEventHandler {
         }
       })
     )
+
+    // Add country of origin information based on IP.
+    decoratedIdentity.country = await this._countryLookup(identity.id)
+
     return decoratedIdentity
   }
 
@@ -153,7 +185,7 @@ class IdentityEventHandler {
    * @private
    */
   async _indexIdentity(identity, blockInfo) {
-    // Decorate the user object with extra attestation related info.
+    // Decorate the identity object with extra attestation related info.
     const decoratedIdentity = await this._decorateIdentity(identity)
 
     logger.info(`Indexing identity ${decoratedIdentity.id} in DB`)
@@ -162,7 +194,7 @@ class IdentityEventHandler {
       throw new Error(`Invalid eth address: ${decoratedIdentity.id}`)
     }
 
-    // Construct an decoratedIdentity object based on the user's profile
+    // Construct a decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
     const identityRow = {
       ethAddress: decoratedIdentity.id.toLowerCase(),
@@ -173,7 +205,9 @@ class IdentityEventHandler {
       airbnb: decoratedIdentity.airbnb,
       twitter: decoratedIdentity.twitter,
       facebookVerified: decoratedIdentity.facebookVerified || false,
-      data: { blockInfo }
+      googleVerified: decoratedIdentity.googleVerified || false,
+      data: { blockInfo },
+      country: decoratedIdentity.country
     }
 
     logger.debug('Identity=', identityRow)
@@ -212,7 +246,7 @@ class IdentityEventHandler {
 
   /**
    * Records AttestationPublished events in the growth_event table.
-   * @param {Object} user - Origin js user model object.
+   * @param {Object} identity
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @param {Date} Event date.
    * @returns {Promise<void>}
