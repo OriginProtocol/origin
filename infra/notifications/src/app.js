@@ -158,6 +158,39 @@ app.post('/', async (req, res) => {
 })
 
 /**
+ * Endpoint called from the mobile marketplace app to register a device token
+ * and Ethereum address.
+ */
+app.post('/mobile/register', async (req, res) => {
+  const { ethAddress, deviceType, deviceToken, permissions } = req.body
+
+  const mobileRegister = {
+    ethAddress: ethAddress,
+    deviceType: deviceType,
+    deviceToken: deviceToken,
+    permissions: permissions
+  }
+
+  // See if a row already exists for this device/address
+  let registryRow = db.MobileRegistry.findOne({
+    where: {
+      ethAddress: mobileRegister.ethAddress,
+      deviceToken: mobileRegister.deviceToken
+    }
+  })
+
+  if (!registryRow) {
+    // Nothing exists, create a new row
+    mobileRegisterRow = db.MobileRegistry.create(mobileRegister)
+  } else {
+    // Row exists, permissions might have changed, update if required
+    db.MobileRegistry.upsert(mobileRegister)
+  }
+
+  return registryRow
+})
+
+/**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
  * Sample json payloads in test/fixtures

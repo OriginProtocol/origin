@@ -1,13 +1,40 @@
-const linkingNotifyEndpoint = process.env.LINKING_NOTIFY_ENDPOINT
-const linkingNotifyToken = process.env.LINKING_NOTIFY_TOKEN
 const { getNotificationMessage } = require('./notification')
 const dappOfferUrl = process.env.DAPP_OFFER_URL
 const fetch = require('cross-fetch')
 const path = require('path')
 const logger = require('./logger')
 
+// Configure the APN provider
+let apnProvider, apnBundle
+if (process.env.APNS_KEY_FILE) {
+  apnProvider = new apn.Provider({
+    token: {
+      key: process.env.APNS_KEY_FILE,
+      keyId: process.env.APNS_KEY_ID,
+      teamId: process.env.APNS_TEAM_ID
+    },
+    production: process.env.APNS_PRODUCTION ? true : false
+  })
+  apnBundle = process.env.APNS_BUNDLE_ID
+}
+
+// Firebase Admin SDK
+// ref: https://firebase.google.com/docs/reference/admin/node/admin.messaging
+let firebaseServiceJson, firebaseMessaging
+if (process.env.FIREBASE_SERVICE_JSON) {
+  const firebaseServiceJson = require(process.env.FIREBASE_SERVICE_JSON)
+
+  firebase.initializeApp({
+    credential: firebase.credential.cert(firebaseServiceJson),
+    databaseURL: process.env.FIREBASE_DB_URL
+  })
+
+  firebaseMessaging = firebase.messaging()
+}
+
 //
-// Mobile Push (linker) notifications
+//
+// Mobile Push notifications
 //
 async function mobilePush(
   eventName,
@@ -22,53 +49,99 @@ async function mobilePush(
   if (!sellerAddress) throw 'sellerAddress not defined'
   if (!offer) throw 'offer not defined'
 
-  if (linkingNotifyEndpoint) {
-    const receivers = {}
-    const buyerMessage = getNotificationMessage(
-      eventName,
-      party,
-      buyerAddress,
-      'buyer',
-      'mobile'
-    )
-    const sellerMessage = getNotificationMessage(
-      eventName,
-      party,
-      sellerAddress,
-      'seller',
-      'mobile'
-    )
-    const eventData = {
-      url: offer && path.join(dappOfferUrl, offer.id),
-      to_dapp: true
+  const receivers = {}
+  const buyerMessage = getNotificationMessage(
+    eventName,
+    party,
+    buyerAddress,
+    'buyer',
+    'mobile'
+  )
+  const sellerMessage = getNotificationMessage(
+    eventName,
+    party,
+    sellerAddress,
+    'seller',
+    'mobile'
+  )
+  const eventData = {
+    url: offer && path.join(dappOfferUrl, offer.id),
+    toDapp: true
+  }
+
+  if (buyerMessage || sellerMessage) {
+    if (buyerMessage) {
+      receivers[buyerAddress] = Object.assign(
+        { message: buyerMessage },
+        eventData
+      )
+    }
+    if (sellerMessage) {
+      receivers[sellerAddress] = Object.assign(
+        { message: sellerMessage },
+        eventData
+      )
     }
 
-    if (buyerMessage || sellerMessage) {
-      if (buyerMessage) {
-        receivers[buyerAddress] = Object.assign(
-          { msg: buyerMessage },
-          eventData
-        )
+    for (const [_ethAddress, notification] of Object.entries(receivers)) {
+      const ethAddress = web3.utils.toChecksumAddress(_ethAddress)
+      console.log('Notifying: ', ethAddress)
+      console.debug('Notification object: ', notification)
+      const mobileRegister = await db.MobileRegistry.findOne({
+        where: { ethAddress }
+      })
+      await sendNotification(
+        mobileRegister.deviceToken,
+        mobileRegister.deviceType,
+        notificationObj
+      )
+    }
+  }
+}
+
+/* Send the notification depending on the type of notification (FCM or APN)
+ *
+ */
+async function sendNotififcation(deviceToken, deviceType, notificationObj) {
+  if (notificationObj) {
+    if (deviceType === 'APN' && apnProvider) {
+      // iOS notifications
+      const notification = new apn.Notification({
+        alert: notificationObj.message,
+        sound: 'default',
+        payload: notificationObj.data,
+        topic: apnBundle
+      })
+      await apnProvider.send(notification, deviceToken).then(result => {
+        logger.debug('APNS sent: ', result.sent.length)
+        logger.error('APNS failed: ', result.failed)
+      })
+    } else if (deviceType === 'FCM' && firebaseMessaging) {
+      // FCM notifications
+      // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
+      const message = {
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'Dapp'
+          }
+        },
+        notification: {
+          title: 'Origin Marketplace Notification',
+          body: notificationObj.message
+        },
+        data: notificationObj.data,
+        token: deviceToken
       }
-      if (sellerMessage) {
-        receivers[sellerAddress] = Object.assign(
-          { msg: sellerMessage },
-          eventData
-        )
-      }
-      try {
-        // POST to linking server
-        fetch(linkingNotifyEndpoint, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ receivers, token: linkingNotifyToken })
+
+      await firebaseMessaging
+        .send(message)
+        .then(response => {
+          logger.debug('FCM message sent:', response)
         })
-      } catch (error) {
-        logger.error('Error notifying linking api ', error)
-      }
+        .catch(error => {
+          logger.error('FCM message failed to send: ', error)
+        })
     }
   }
 }
