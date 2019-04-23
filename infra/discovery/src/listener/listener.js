@@ -145,14 +145,13 @@ async function main() {
     }
     logger.info(`Querying events from ${processedToBlock} up to ${toBlock}`)
 
+    contractsContext.marketplace.eventCache.setLatestBlock(toBlock)
+    contractsContext.identityEvents.eventCache.setLatestBlock(toBlock)
+
     // Retrieve all events for the relevant contracts
     const eventArrays = await Promise.all([
-      withRetrys(async () => {
-        return contractsContext.marketplace.eventCache.allEvents()
-      }),
-      withRetrys(async () => {
-        return contractsContext.identityEvents.eventCache.allEvents()
-      })
+      withRetrys(() => contractsContext.marketplace.eventCache.allEvents()),
+      withRetrys(() => contractsContext.identityEvents.eventCache.allEvents())
     ])
 
     // Flatten array of arrays filtering out anything undefined
