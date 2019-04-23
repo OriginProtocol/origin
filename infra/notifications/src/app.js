@@ -281,3 +281,5 @@ app.post('/events', async (req, res) => {
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
+
+module.exports = app
