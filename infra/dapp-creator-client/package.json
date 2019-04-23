@@ -16,7 +16,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"clean-webpack-plugin": "^2.0.1",
-		"webpack-cli": "^3.3.0"
+		"webpack-cli": "3.3.0"
 	},
 	"babel": {
 		"presets": [
