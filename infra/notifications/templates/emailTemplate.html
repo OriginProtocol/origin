@@ -22,6 +22,7 @@
         height: 100% !important;
         width: 100% !important;
         font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+        color: #000000;
       }
 
       * {
@@ -55,8 +56,8 @@
       }
 
       .listing-img {
-        max-width: 380px;
-        margin: 10px;
+        max-width:100%;
+        height: auto;
       }
 
       *[x-apple-data-detectors] {
@@ -81,6 +82,7 @@
           min-width: 375px !important;
         }
       }
+
     </style>
 
     <style>
@@ -148,7 +150,7 @@
               <br /><br />
 
               <div
-                style="max-width: 400px; margin: auto;"
+                style="max-width: 550px; margin: auto; border-radius: 10px;"
                 class="email-container"
               >
 
@@ -181,8 +183,13 @@
               style="padding: 20px 10px 40px 10px;width: 100%;font-size: 10px; font-family: 'Lato', sans-serif; line-height:18px; text-align: center; color: #666666;"
               class="x-gmail-data-detectors"
             >
-              <br />845 Market Street, Suite 450A, San Francisco, CA, 94103<br />
-              If you no longer want to hear from us, you can
+              <a
+                href="https://www.originprotocol.com"
+                style="color:#666666;text-decoration:none"
+                >originprotocol.com</a
+              >
+              <br />
+              <br />
               <a
                 href="<%= "\<%asm_group_unsubscribe_raw_url%\>" %>"
                   <% { /*
@@ -190,17 +197,8 @@
                     tag so it is ignored and passed through to Sendgrid.
                   */ } %>
                 style="color: #666666;"
-                >unsubscribe</a
-              >.<br /><br />
-              <a
-                href="https://www.originprotocol.com"
-                style="color:#666666;text-decoration:none"
-                >originprotocol.com</a
+                >Unsubscribe</a
               >
-
-              <hr/>
-
-
             </td>
           </tr>
         </table>
