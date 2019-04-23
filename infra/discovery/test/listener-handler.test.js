@@ -36,7 +36,7 @@ const mockIdentity = {
       data: {
         attestation: {
           verificationMethod: {
-            email: true
+            phone: true
           },
           phone: '+00 00000000'
         }
@@ -46,7 +46,7 @@ const mockIdentity = {
       data: {
         attestation: {
           verificationMethod: {
-            phone: true
+            email: true
           },
           email: 'test@originprotocol.com'
         }
@@ -228,6 +228,10 @@ describe('Listener Handlers', () => {
       }
     }
 
+    handler._countryLookup = () => {
+      return 'FR'
+    }
+
     const result = await handler.process({ timestamp: 1 }, this.identityEvent)
 
     // Check output.
@@ -244,7 +248,8 @@ describe('Listener Handlers', () => {
         firstName: 'Origin',
         lastName: 'Protocol',
         email: 'test@originprotocol.com',
-        phone: '+00 00000000'
+        phone: '+00 00000000',
+        country: 'FR'
       }
     })
     expect(identityRow.length).to.equal(1)
