@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       twitter: DataTypes.STRING,
       facebookVerified: DataTypes.BOOLEAN,
       googleVerified: DataTypes.BOOLEAN,
-      data: DataTypes.JSONB
+      data: DataTypes.JSONB,
+      country: DataTypes.CHAR(2)
     },
     {
       tableName: 'identity'
