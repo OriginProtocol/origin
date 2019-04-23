@@ -25,7 +25,7 @@ async function verifyPhoneCode(_, { identity, prefix, phone, code }) {
   const data = await response.json()
 
   if (!response.ok) {
-    const reason = get(data, 'errors._schema[0]')
+    const reason = get(data, 'errors[0]')
     return { success: false, reason }
   }
 

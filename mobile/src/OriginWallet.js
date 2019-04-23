@@ -18,10 +18,12 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 
-import graphqlContext, { setNetwork } from '@origin/graphql/src/contracts'
+import graphqlContext, {
+  setNetwork as setGraphqlNetwork
+} from '@origin/graphql/src/contracts'
 
 import { addNotification } from 'actions/Notification'
-import { setDeviceToken } from 'actions/Settings'
+import { setDeviceToken, setNetwork } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
@@ -32,7 +34,8 @@ import {
 import {
   BALANCE_POLL_INTERVAL,
   DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES
+  ETH_NOTIFICATION_TYPES,
+  NETWORKS
 } from './constants'
 import { loadData, deleteData } from './tools'
 
@@ -93,7 +96,7 @@ class OriginWallet extends Component {
   componentDidUpdate(prevProps) {
     // Reinit web3 if the network we are using changes, this will cause a change
     // of provider to match
-    if (prevProps.settings.network.id !== this.props.settings.network.id) {
+    if (prevProps.settings.network.name !== this.props.settings.network.name) {
       this.initWeb3()
       this.updateBalancesNow()
     }
@@ -146,10 +149,10 @@ class OriginWallet extends Component {
             }
             if (privateKey) {
               this.addAccount(privateKey)
+              console.debug('Migrated legacy account')
             }
           }
         }
-        await deleteData('WALLET_STORE')
       }
     })
   }
@@ -157,17 +160,25 @@ class OriginWallet extends Component {
   async _migrateLegacyDeviceTokens() {
     loadData('WALLET_INFO').then(async walletInfo => {
       if (walletInfo && walletInfo.deviceToken) {
-        this.setDeviceToken(walletInfo.deviceToken)
+        this.props.setDeviceToken(walletInfo.deviceToken)
+        console.debug('Migrated legacy device token')
       }
     })
-    await deleteData('WALLET_INFO')
   }
 
   /* Set the provider for web3 to the provider for the current network in the
    * graphql configuration for the current network
    */
   initWeb3() {
-    setNetwork(this.props.settings.network.name.toLowerCase())
+    // Verify that the saved network is valid
+    const networkExists = NETWORKS.find(
+      n => n.name === this.props.settings.network.name
+    )
+    if (!networkExists) {
+      // Set to mainnet if for some reason the network doesn't exist
+      this.props.setNetwork(NETWORKS.find(n => n.id === 1))
+    }
+    setGraphqlNetwork(this.props.settings.network.name.toLowerCase())
     const provider = graphqlContext.config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
@@ -220,7 +231,6 @@ class OriginWallet extends Component {
       privateKey = '0x' + privateKey
     }
     const account = this.web3.eth.accounts.wallet.add(privateKey)
-    // TODO: verify that this won't add multiples of the same account
     this.props.addAccount(account)
     this.props.setAccountActive(account)
     return account.address
@@ -359,7 +369,7 @@ class OriginWallet extends Component {
         if (wallet.activeAccount && wallet.activeAccount.address) {
           this.registerDeviceToken(deviceToken['token'])
           // Save the device token into redux for later use with other accounts
-          this.setDeviceToken(deviceToken['token'])
+          this.props.setDeviceToken(deviceToken['token'])
         }
       }.bind(this),
       // Called when a remote or local notification is opened or received
@@ -399,14 +409,18 @@ class OriginWallet extends Component {
       return
     }
     const notificationType = this.getNotificationType()
-    return fetch(process.env.NOTIFICATION_SERVER_URL, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ activeAddress, deviceToken, notificationType })
-    }).catch(error => {
+    return fetch(
+      process.env.NOTIFICATION_REGISTER_ENDPOINT ||
+        'https://notifications.originprotocol.com/mobile/register',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ activeAddress, deviceToken, notificationType })
+      }
+    ).catch(error => {
       console.debug(
         'Failed to register notification address with notifications server',
         error
@@ -463,6 +477,7 @@ const mapDispatchToProps = dispatch => ({
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
+  setNetwork: network => dispatch(setNetwork(network)),
   addNotification: notification => dispatch(addNotification(notification))
 })
 

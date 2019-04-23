@@ -3,11 +3,11 @@ import {
   DeviceEventEmitter,
   Dimensions,
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   View
 } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
