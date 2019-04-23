@@ -120,8 +120,8 @@ class EventCache {
     if (!platform) platform = this._detectPlatform()
 
     switch (platform) {
-      // case 'nodejs':
-      //   return new PostgreSQLBackend()
+      case 'nodejs':
+        return new PostgreSQLBackend()
 
       case 'browser':
         return new IndexedDBBackend({ prefix: this.prefix })
