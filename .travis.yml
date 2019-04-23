@@ -96,6 +96,7 @@ matrix:
         - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope @origin/bridge
         - lerna run migrate --scope @origin/discovery
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
