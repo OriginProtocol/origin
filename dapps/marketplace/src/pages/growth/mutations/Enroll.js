@@ -57,22 +57,19 @@ class Enroll extends Component {
                         agreementMessage: this.state.message,
                         signature: signMessage,
                         inviteCode: localStorage.getItem('growth_invite_code'),
-                        fingerprint: this.props.fingerprintData
+                        fingerprintData: this.props.fingerprintData
                       }
                     })
                   }}
-                  onError={errorData =>
-                {
-                  console.log("ERROR:", JSON.stringify(errorData))
-                  this.setState({
-                    error: fbt(
-                      'Message signature unsuccessful',
-                      'growth.errorSignatureUnsuccesful'
-                    ),
-                    errorData
-                  })
-                }
-                  }
+                  onError={errorData => {
+                    this.setState({
+                      error: fbt(
+                        'Message signature unsuccessful',
+                        'growth.errorSignatureUnsuccesful'
+                      ),
+                      errorData
+                    })
+                  }}
                 >
                   {signMessage => (
                     <Fragment>

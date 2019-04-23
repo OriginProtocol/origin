@@ -4,19 +4,25 @@ import memoize from 'lodash/memoize'
 
 let cachedFingerprintData
 
+const browserPropsWhitelist = [
+  'language',
+  'platform',
+  'screenResolution',
+  'userAgent'
+]
+
 async function getFingerprintFn() {
   return await new Promise(resolve => {
     Fingerprint2.get({}, components => {
       const values = components.map(component => component.value)
       const hash = `V1-${Fingerprint2.x64hash128(values.join(''), 31)}`
 
-      // Pick a few browser properties to export along with the fingerprint.
+      // Select the browser properties to export along with the fingerprint.
       const browserProps = {}
       components
-        .filter(x => ['userAgent', 'language'].includes(x.key))
-        .forEach(x => browserProps[x.key] = x.value)
+        .filter(x => browserPropsWhitelist.includes(x.key))
+        .forEach(x => (browserProps[x.key] = x.value))
       cachedFingerprintData = { fingerprint: hash, ...browserProps }
-      console.log("cachedFingerprintData", JSON.stringify(cachedFingerprintData))
 
       resolve(cachedFingerprintData)
     })
@@ -26,7 +32,9 @@ const getFingerprint = memoize(getFingerprintFn)
 
 function withFingerprint(WrappedComponent) {
   const WithFingerprint = props => {
-    const [fingerprintData, setFingerprintData] = useState(cachedFingerprintData)
+    const [fingerprintData, setFingerprintData] = useState(
+      cachedFingerprintData
+    )
 
     useEffect(() => {
       let timeout, idleCallback
