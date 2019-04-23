@@ -123,8 +123,8 @@ class EventCache {
       case 'nodejs':
         return new PostgreSQLBackend()
 
-        // return new IndexedDBBackend({ prefix: this.prefix })
       case 'browser':
+        return new IndexedDBBackend({ prefix: this.prefix })
       case 'mobile':
       case 'memory':
       default:
