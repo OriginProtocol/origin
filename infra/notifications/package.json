@@ -26,20 +26,22 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
+    "apn": "^2.2.0",
     "cross-fetch": "^3.0.1",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",
     "express": "^4.16.4",
+    "firebase-admin": "^7.3.0",
+    "lodash-es": "^4.17.11",
+    "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
     "rate-limiter-flexible": "^0.19.4",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
-    "web-push": "^3.3.3",
-    "@sendgrid/mail": "^6.3.1",
-    "lodash-es": "^4.17.11",
-    "logplease": "^1.2.15"
+    "web-push": "^3.3.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

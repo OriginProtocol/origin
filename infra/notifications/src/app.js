@@ -13,6 +13,7 @@ const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 const { mobilePush } = require('./mobilePush')
+const MobileRegistry = require('./models').MobileRegistry
 const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
 
@@ -162,17 +163,17 @@ app.post('/', async (req, res) => {
  * and Ethereum address.
  */
 app.post('/mobile/register', async (req, res) => {
-  const { ethAddress, deviceType, deviceToken, permissions } = req.body
+  logger.debug('Call to mobile device registry endpoint')
 
   const mobileRegister = {
-    ethAddress: ethAddress,
-    deviceType: deviceType,
-    deviceToken: deviceToken,
-    permissions: permissions
+    ethAddress: req.body.eth_address,
+    deviceType: req.body.device_type,
+    deviceToken: req.body.device_token,
+    permissions: req.body.permissions
   }
 
   // See if a row already exists for this device/address
-  let registryRow = db.MobileRegistry.findOne({
+  let registryRow = await MobileRegistry.findOne({
     where: {
       ethAddress: mobileRegister.ethAddress,
       deviceToken: mobileRegister.deviceToken
@@ -181,10 +182,12 @@ app.post('/mobile/register', async (req, res) => {
 
   if (!registryRow) {
     // Nothing exists, create a new row
-    mobileRegisterRow = db.MobileRegistry.create(mobileRegister)
+    logger.debug('Adding new mobile device to registry: ', req.body)
+    registryRow = await MobileRegistry.create(mobileRegister)
   } else {
     // Row exists, permissions might have changed, update if required
-    db.MobileRegistry.upsert(mobileRegister)
+    logger.debug('Updating mobile device registry: ', req.body)
+    registryRow = await MobileRegistry.upsert(mobileRegister)
   }
 
   return registryRow

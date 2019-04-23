@@ -17,9 +17,9 @@ export function setNetwork(network) {
   }
 }
 
-export function setDeviceToken(payload) {
+export function setDeviceToken(deviceToken) {
   return {
     type: SettingsConstants.SET_DEVICE_TOKEN,
-    payload
+    deviceToken
   }
 }

@@ -1,8 +1,13 @@
-const { getNotificationMessage } = require('./notification')
-const dappOfferUrl = process.env.DAPP_OFFER_URL
+const apn = require('apn')
 const fetch = require('cross-fetch')
+const firebase = require('firebase-admin')
 const path = require('path')
+const web3Utils = require('web3-utils')
+
+const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
+const MobileRegistry = require('./models').MobileRegistry
+
 
 // Configure the APN provider
 let apnProvider, apnBundle
@@ -64,6 +69,7 @@ async function mobilePush(
     'seller',
     'mobile'
   )
+  const dappOfferUrl = process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com'
   const eventData = {
     url: offer && path.join(dappOfferUrl, offer.id),
     toDapp: true
@@ -83,11 +89,11 @@ async function mobilePush(
       )
     }
 
-    for (const [_ethAddress, notification] of Object.entries(receivers)) {
-      const ethAddress = web3.utils.toChecksumAddress(_ethAddress)
+    for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
+      const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
       console.log('Notifying: ', ethAddress)
-      console.debug('Notification object: ', notification)
-      const mobileRegister = await db.MobileRegistry.findOne({
+      console.debug('Notification object: ', notificationObj)
+      const mobileRegister = await MobileRegistry.findOne({
         where: { ethAddress }
       })
       await sendNotification(
@@ -102,7 +108,7 @@ async function mobilePush(
 /* Send the notification depending on the type of notification (FCM or APN)
  *
  */
-async function sendNotififcation(deviceToken, deviceType, notificationObj) {
+async function sendNotification(deviceToken, deviceType, notificationObj) {
   if (notificationObj) {
     if (deviceType === 'APN' && apnProvider) {
       // iOS notifications

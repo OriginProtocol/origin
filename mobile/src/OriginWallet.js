@@ -12,7 +12,7 @@
  */
 
 import { Component } from 'react'
-import { DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
+import { Alert, DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
@@ -107,9 +107,7 @@ class OriginWallet extends Component {
         this.props.wallet.activeAccount.address
     ) {
       this.updateBalancesNow()
-      // Make sure device token is registered with server
-      const { settings } = this.props
-      this.registerDeviceToken(settings.deviceToken)
+      this.registerDeviceToken()
     }
   }
 
@@ -207,10 +205,6 @@ class OriginWallet extends Component {
     if (length && !hasValidActiveAccount) {
       // Set the first account active if none are active
       this.props.setAccountActive(wallet.accounts[0])
-    } else if (settings.deviceToken) {
-      // Make sure the active account is registered with the notifications
-      // server
-      this.registerDeviceToken(settings.deviceToken)
     }
   }
 
@@ -227,6 +221,7 @@ class OriginWallet extends Component {
   /* Add a new account from a private key
    */
   async addAccount(privateKey) {
+    // Prefix with 0x if necessary
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
       privateKey = '0x' + privateKey
     }
@@ -363,13 +358,22 @@ class OriginWallet extends Component {
    */
   initNotifications() {
     const { wallet } = this.props
+
+    // Add an event listener to log registration errors in development
+    if (__DEV__) {
+      PushNotificationIOS.addEventListener('registrationError', error =>
+        console.log(error)
+      )
+    }
+
     PushNotification.configure({
       // Called when Token is generated (iOS and Android) (optional)
       onRegister: function(deviceToken) {
         if (wallet.activeAccount && wallet.activeAccount.address) {
-          this.registerDeviceToken(deviceToken['token'])
           // Save the device token into redux for later use with other accounts
           this.props.setDeviceToken(deviceToken['token'])
+          // Make sure the device token is registered with the server
+          this.registerDeviceToken()
         }
       }.bind(this),
       // Called when a remote or local notification is opened or received
@@ -381,7 +385,7 @@ class OriginWallet extends Component {
         }
       }.bind(this),
       // Android only
-      senderID: process.env.GCM_SENDER_ID,
+      senderID: process.env.GCM_SENDER_ID || '1234567',
       // iOS only
       permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
       // Should the initial notification be popped automatically
@@ -390,24 +394,33 @@ class OriginWallet extends Component {
     })
   }
 
-  /*
+  /* Handles a notification by displaying an alert and saving it to redux
    */
   onNotification(notification) {
-    this.props.addNotification({
-      id: notification.data.notificationId,
-      message: notification.message.body,
-      url: notification.data.url
-    })
+    Alert.alert(notification.title, notification.message)
+    this.props.addNotification(notification)
   }
 
   /* Register the Ethereum address and device token for notifications with the
    * notification server
    */
-  registerDeviceToken(deviceToken) {
+  async registerDeviceToken() {
+    const permissions =
+      Platform.OS === 'ios'
+        ? await PushNotificationIOS.requestPermissions()
+        : DEFAULT_NOTIFICATION_PERMISSIONS
+
     const activeAddress = this.props.wallet.activeAccount.address
+    const deviceToken = this.props.settings.deviceToken
     if (!activeAddress) {
+      console.debug('No active address')
       return
     }
+    if (!deviceToken) {
+      console.debug('No device token')
+      return
+    }
+
     const notificationType = this.getNotificationType()
     const notificationServer =
       graphqlContext.config.notifications ||
@@ -419,15 +432,19 @@ class OriginWallet extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ activeAddress, deviceToken, notificationType })
-    }).catch(error => {
-      console.debug(
-        'Failed to register notification address with notifications server',
-        error
-      )
-      // Don't hard fail because this maybe deployed in advance of the
-      // notificationn server being completed
+      body: JSON.stringify({
+        eth_address: activeAddress,
+        device_token: deviceToken,
+        device_type: notificationType,
+        permissions: permissions
+      })
     })
+      .catch(error => {
+        console.error(
+          'Failed to register notification address with notifications server',
+          error
+        )
+      })
   }
 
   /* Return the notification type that should be used for the platform
