@@ -131,7 +131,7 @@ class Settings extends Component {
                     />
                   </div>
 
-                  {notificationsSupported &&
+                  {notificationsSupported && (
                     <div className="form-group">
                       <label htmlFor="notifications">
                         <fbt desc="settings.notificationsLabel">
@@ -151,7 +151,9 @@ class Settings extends Component {
                             className="btn btn-success"
                             onClick={() => this.requestNotificationPermission()}
                           >
-                            <fbt desc="settings.notificationsButton">Enable</fbt>
+                            <fbt desc="settings.notificationsButton">
+                              Enable
+                            </fbt>
                           </button>
                         </>
                       ) : (
@@ -162,7 +164,7 @@ class Settings extends Component {
                         </div>
                       )}
                     </div>
-                  }
+                  )}
 
                   {/*
                   <div className="form-group">
