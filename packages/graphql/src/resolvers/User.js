@@ -41,22 +41,21 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
     return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
   })
 
-  let allIds = []
+  let filteredEvents = offerEvents
   if (filter === 'complete') {
-    allIds = offerEvents.filter(ev => {
+    filteredEvents = offerEvents.filter(ev => {
       const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
       return completedIds.indexOf(id) > -1
     })
   } else if (filter === 'pending') {
-    allIds = offerEvents.filter(ev => {
+    filteredEvents = offerEvents.filter(ev => {
       const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
       return completedIds.indexOf(id) < 0
     })
-  } else {
-    allIds = offerEvents.map(
-      ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
-    )
   }
+  const allIds = filteredEvents
+    .map(ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
+    .reverse()
 
   return await resultsFromIds({ after, allIds, first, fields })
 }
@@ -64,8 +63,11 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
 async function sales(seller, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
-  const listings = await ec().allEvents('ListingCreated', seller.id)
-  const listingIds = listings.map(e => String(e.returnValues.listingID))
+  const listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: seller.id
+  })
+  const listingIds = listings.map(e => e.returnValues.listingID)
   const events = await ec().getEvents({
     listingID: listingIds,
     event: 'OfferCreated'
@@ -78,7 +80,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   if (filter) {
     const completedEvents = await ec().getEvents({
       event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      offerID: events.map(e => String(e.returnValues.offerID))
+      offerID: events.map(e => e.returnValues.offerID)
     })
     const completedIds = uniq(
       completedEvents.map(
@@ -137,16 +139,15 @@ async function reviews(user) {
 async function notifications(user, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
-  const sellerListings = await ec().allEvents('ListingCreated', user.id)
+  const sellerListings = await ec().getEvents({
+    party: user.id,
+    event: 'ListingCreated'
+  })
 
-  const sellerListingIds = sellerListings.map(e =>
-    Number(e.returnValues.listingID)
-  )
+  const sellerListingIds = sellerListings.map(e => e.returnValues.listingID)
 
-  const sellerEvents = await ec().offers(
-    sellerListingIds,
-    null,
-    [
+  const unfilteredSellerEvents = await ec().getEvents({
+    event: [
       'OfferCreated',
       'OfferFinalized',
       'OfferWithdrawn',
@@ -154,20 +155,25 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
       'OfferDisputed',
       'OfferRuling'
     ],
-    user.id
+    listingID: sellerListingIds
+  })
+  const sellerEvents = unfilteredSellerEvents.filter(
+    e => e.returnValues.party !== user.id
   )
 
-  const buyerListings = await ec().allEvents('OfferCreated', user.id)
+  const buyerListings = await ec().getEvents({
+    event: 'OfferCreated',
+    party: user.id
+  })
 
-  const buyerListingIds = buyerListings.map(e =>
-    Number(e.returnValues.listingID)
-  )
+  const buyerListingIds = buyerListings.map(e => e.returnValues.listingID)
 
-  const buyerEvents = await ec().offers(
-    buyerListingIds,
-    null,
-    ['OfferAccepted', 'OfferRuling'],
-    user.id
+  const unfilteredBuyerEvents = await ec().getEvents({
+    listingID: buyerListingIds,
+    event: ['OfferAccepted', 'OfferRuling']
+  })
+  const buyerEvents = unfilteredBuyerEvents.filter(
+    e => e.returnValues.party !== user.id
   )
 
   let allEvents = sortBy([...sellerEvents, ...buyerEvents], e => -e.blockNumber)

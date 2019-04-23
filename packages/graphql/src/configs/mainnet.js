@@ -10,7 +10,7 @@ export default {
   bridge: 'https://bridge.originprotocol.com',
   IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
   IdentityEvents_Epoch: '7046530',
-  IdentityEvents_Cache: [
+  IdentityEvents_EventCache: [
     'QmRHLLD86gf7YVUqWSpvsjZNndK8U3n6EMBowLgmYpZRgk',
     'QmPoeDDD8HNptqmzrAHcHc9UTh62aAjJbJ6Nqej9pAyZtH',
     'Qmdm23cmBMNv1hz7gYnmEyuVYsHJVRXQm2YfB4oM86cAwe'
@@ -19,7 +19,7 @@ export default {
   OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
   V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
   V00_Marketplace_Epoch: '6436157',
-  V00_Marketplace_Cache: [
+  V00_Marketplace_EventCache: [
     'QmbViWEBRQmjmxC5VyELJDeW1auSxgRgjWpw5djcCctPMC',
     'QmaMSwML8H1ZREYFKGcdXXRP96JbGA4EShY9DcNmCH5FKD',
     'QmTKCVgs9xuzqH3D86eDF7G2kxmyW1LLmAv4BN3p1evCgD',

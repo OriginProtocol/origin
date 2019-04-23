@@ -90,7 +90,7 @@ describe('EventCache', function() {
     const receipt = await IdentityEvents.methods.emitIdentityUpdated(testObjectHash).send(tx)
     assert(receipt.status == 1, 'emitIdentityUpdated() transaction failed')
     expectedEvents += 1
-    
+
     const initialEvents = await eventCacheMemory.getPastEvents('IdentityUpdated', {
       filter: { account: alice }
     })

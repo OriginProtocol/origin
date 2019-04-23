@@ -357,7 +357,7 @@ export function setMarketplace(address, epoch) {
   patchWeb3Contract(context.marketplace, epoch, {
     ...context.config,
     useLatestFromChain: false,
-    ipfsEventCache: context.config.V00_Marketplace_Cache,
+    ipfsEventCache: context.config.V00_Marketplace_EventCache,
     prefix:
       typeof address === 'undefined'
         ? 'Marketplace_'
