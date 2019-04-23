@@ -54,22 +54,6 @@ async function handleEvent(event, context) {
     eventName=${event.event}`
   logger.info(`Processing event: ${eventDetails}`)
 
-  // Record the event in the DB.
-  await withRetrys(async () => {
-    return db.Event.upsert({
-      blockNumber: event.blockNumber,
-      logIndex: event.logIndex,
-      contractAddress: event.address,
-      transactionHash: event.transactionHash,
-      topic0: event.raw.topics[0],
-      topic1: event.raw.topics[1],
-      topic2: event.raw.topics[2],
-      topic3: event.raw.topics[3],
-      data: event,
-      createdAt: blockDate
-    })
-  })
-
   // Call the event handler.
   //
   // Note: we run the handler with a retry since we've seen in production cases where we fail loading
