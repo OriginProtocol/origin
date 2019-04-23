@@ -17,14 +17,6 @@ const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
-//const HOST = process.env.HOST || 'localhost'
-// We need a separate LINKER_HOST for the mobile wallet, because cookie sharing
-// between http and ws only works when using non-localhost linker URLs. At the
-// same time, js-ipfs only works for non-secure http when the URL is localhost.
-// So, the hostname in the DApp URL can't be the same as the linker hostname
-// when testing locally.
-// Except it's unused?
-//const LINKER_HOST = process.env.LINKER_HOST || HOST
 
 let OriginMessaging
 let OriginMobileBridge

@@ -58,7 +58,7 @@ class OriginEventSource {
   async getListing(listingId, blockNumber) {
     const cacheBlockNumber = blockNumber
       ? blockNumber
-      : this.contract.eventCache.getBlockNumber()
+      : this.contract.eventCache.latestBlock
     const cacheKey = `${listingId}-${cacheBlockNumber}`
     const networkId = await this.getNetworkId()
     if (this.listingCache[cacheKey]) {

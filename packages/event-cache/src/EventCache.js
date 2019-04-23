@@ -173,7 +173,8 @@ class EventCache {
     let fromBlock = this.lastQueriedBlock || this.originBlock
     const latestKnown = await this.backend.getLatestBlock()
     // if (!latestKnown && this.ipfsEventCache) {
-    if (latestKnown >= fromBlock) {
+    if (latestKnown > fromBlock) {
+      debug(`Set fromBlock to latestKnown (${latestKnown}) + 1`)
       fromBlock = latestKnown + 1
     }
 
@@ -183,7 +184,7 @@ class EventCache {
     }
 
     if (fromBlock > toBlock) {
-      debug('fromBlock > toBlock')
+      debug(`fromBlock > toBlock (${fromBlock} > ${toBlock})`)
       return
     }
 
