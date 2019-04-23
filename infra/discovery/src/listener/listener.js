@@ -66,8 +66,9 @@ const config = {
   // Unique id. Used to differentiate between the several listeners instances
   // that may run concurrently (ex: main vs webhook vs re-indexing).
   listenerId: args['--listener-id'] || process.env.LISTENER_ID || 'main',
-  // Notification web hook URL.
-  webhook: args['--webhook'] || process.env.WEBHOOK,
+  // Notification web hook URL. e.g. http://localhost:3456/events
+  notificationsWebhook:
+    args['--notifications-webhook'] || process.env.NOTIFICATIONS_WEBHOOK,
   // Discord webhook URL.
   discordWebhook: args['--discord-webhook'] || process.env.DISCORD_WEBHOOK,
   // Mailing list webhook URL.
@@ -188,7 +189,7 @@ async function main() {
         // In case all retries fails, it indicates something is wrong at the system
         // level and a process restart may fix it.
         await withRetrys(async () => {
-          handleEvent(event, context)
+          return handleEvent(event, context)
         })
       }
     }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import dayjs from 'dayjs'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
@@ -56,7 +57,9 @@ class Buy extends Component {
     } else if (this.state.allow) {
       content = this.renderAllowTokenModal()
     } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation('Purchase')
+      action = this.renderSwapTokenMutation(
+        this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+      )
       content = this.renderSwapTokenModal()
     } else if (!this.hasAllowance()) {
       action = this.renderAllowTokenMutation('Purchase')
@@ -279,12 +282,30 @@ class Buy extends Component {
       quantity: Number(quantity)
     }
 
-    if (
-      listing.__typename === 'FractionalListing' ||
-      listing.__typename === 'FractionalHourlyListing'
-    ) {
+    if (listing.__typename === 'FractionalListing') {
+      let _startDate = dayjs(startDate)
+      let _endDate = dayjs(endDate)
+
+      if (_startDate.isAfter(_endDate)) {
+        // Swap start and end dates, if startDate > endDate
+        const t = _startDate
+        _startDate = _endDate
+        _endDate = t
+      }
+
+      if (!_startDate.isSame(_endDate)) {
+        // Exclude checkout slot prices
+        _endDate = _endDate.subtract(1, 'day')
+      }
+
+      variables.fractionalData = {
+        startDate: _startDate.format('YYYY-MM-DD'),
+        endDate: _endDate.format('YYYY-MM-DD')
+      }
+    } else if (listing.__typename === 'FractionalHourlyListing') {
       variables.fractionalData = { startDate, endDate }
     }
+
     makeOffer({ variables })
   }
 
@@ -336,7 +357,7 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.from,
       to: 'marketplace',
-      value: '50000'
+      value: this.props.value
     }
 
     allowToken({ variables })
@@ -359,20 +380,7 @@ class Buy extends Component {
               <fbt desc="buy.successOffer">
                 You have made an offer on this listing. Your offer will be
                 visible within a few seconds. Your ETH payment has been
-                transferred to an escrow contract. Here&apos;s what happens
-                next:
-                <ul>
-                  <li>The seller can choose to accept or reject your offer.</li>
-                  <li>
-                    If the offer is accepted and fulfilled, you will be able to
-                    confirm that the sale is complete. Your escrowed payment
-                    will be sent to the seller.
-                  </li>
-                  <li>
-                    If the offer is rejected, the escrowed payment will be
-                    immediately returned to your wallet.
-                  </li>
-                </ul>
+                transferred to an escrow contract.
               </fbt>
             </div>
             <button
@@ -392,7 +400,7 @@ class Buy extends Component {
               children={
                 this.state.loading
                   ? fbt('Loading...', 'Loading...')
-                  : fbt('View Purchase', 'View Purchase')
+                  : fbt('View Purchase Details', 'View Purchase Details')
               }
             />
           </div>

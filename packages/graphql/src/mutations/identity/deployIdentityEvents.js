@@ -18,9 +18,6 @@ async function deployIdentityEvents(_, { from }) {
     mutation: 'deployIdentityEvents',
     onReceipt: receipt => {
       Contract.options.address = receipt.contractAddress
-      if (contracts.net === 'localhost') {
-        window.localStorage.identityEventsContract = receipt.contractAddress
-      }
       setIdentityEvents(receipt.contractAddress, receipt.blockNumber)
     }
   })

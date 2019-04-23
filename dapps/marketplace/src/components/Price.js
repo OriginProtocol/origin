@@ -27,7 +27,7 @@ const Price = ({ className, target, currencies, descriptor, ...props }) => {
   const isFiat = targetCurrency.id.indexOf('fiat-') === 0
   const amountUSD = amount * foundCurrency.priceInUSD
   amount = amountUSD / targetCurrency.priceInUSD
-  amount = ceil(amount, 5)
+  amount = ceil(amount, props.decimals || 5)
 
   const showCode = !targetCurrency.code.match(/^(USD|EUR|GBP)$/)
   const formatted = isFiat ? numberFormat(amount, 2).replace('.00', '') : amount

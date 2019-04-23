@@ -12,7 +12,10 @@ import GrowthEnroll from 'mutations/GrowthEnroll'
 class Enroll extends Component {
   state = {
     error: null,
-    // TODO: change version programatically
+    /* TODO: change version programatically
+     * (!)important do not translate this message or the enrollment
+     * on the growth server will fail
+     */
     message: 'I accept the terms of growth campaign version: 1.0'
   }
 
@@ -82,8 +85,11 @@ class Enroll extends Component {
                             signMessage({
                               variables: {
                                 address: accountId,
-                                // TODO: change version programatically
-                                message: 'I accept the terms of growth campaign version: 1.0',
+                                /* TODO: change version programatically
+                                 * (!)important do not translate this message or the enrollment
+                                 * on the growth server will fail
+                                 */
+                                message: this.state.message
                               }
                             })
                           }}

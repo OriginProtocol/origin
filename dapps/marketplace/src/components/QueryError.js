@@ -14,6 +14,11 @@ const QueryError = props => {
   return (
     <div>
       <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
+      <div>
+        <div>{props.error}</div>
+        {props.query && <div>{props.query.loc.source.body}</div>}
+        {props.vars && <pre>{JSON.stringify(props.vars)}</pre>}
+      </div>
     </div>
   )
 }

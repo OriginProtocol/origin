@@ -1,5 +1,13 @@
-import React, { Component, Fragment } from 'react'
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+'use strict'
+
+import React, { Component } from 'react'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import AccountItem from 'components/account-item'
@@ -11,10 +19,11 @@ class AccountsScreen extends Component {
   constructor(props) {
     super(props)
 
-    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
-      modalOpen: false,
+      modalOpen: false
     }
+
+    this.toggleModal = this.toggleModal.bind(this)
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -23,18 +32,20 @@ class AccountsScreen extends Component {
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,
-        fontWeight: 'normal',
+        fontWeight: 'normal'
       },
       headerRight: (
-        <TouchableOpacity onPress={() => {
-          navigation.state.params.toggleModal()
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.state.params.toggleModal()
+          }}
+        >
           <Image
             source={require(`${IMAGES_PATH}add.png`)}
             style={{ marginRight: 15 }}
           />
         </TouchableOpacity>
-      ),
+      )
     }
   }
 
@@ -50,47 +61,47 @@ class AccountsScreen extends Component {
     const { navigation, wallet } = this.props
 
     return (
-      <Fragment>
+      <>
         <FlatList
-          data={wallet.accounts}
+          data={wallet.accounts.sort((a, b) => a.address > b.address)}
           renderItem={({ item }) => (
-            <AccountItem item={item} navigation={navigation} wallet={wallet} />
+            <AccountItem item={item} wallet={wallet} navigation={navigation} />
           )}
-          keyExtractor={({ address }) => address}
-          ItemSeparatorComponent={({ highlighted }) => (
-            <View style={styles.separator} />
-          )}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}
+          keyExtractor={item => item.address}
         />
-        <AccountModal visible={this.state.modalOpen} onPress={this.toggleModal} onRequestClose={this.toggleModal} />
-      </Fragment>
+        <AccountModal
+          visible={this.state.modalOpen}
+          onPress={this.toggleModal}
+          onRequestClose={this.toggleModal}
+        />
+      </>
     )
   }
 }
-
-const mapStateToProps = ({ wallet }) => {
-  return {
-    wallet,
-  }
-}
-
-export default connect(mapStateToProps)(AccountsScreen)
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f7f8f8',
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 20
   },
   list: {
     backgroundColor: '#f7f8f8',
-    height: '100%',
+    height: '100%'
   },
   separator: {
     backgroundColor: 'white',
     height: 1,
     marginRight: 'auto',
-    width: '5%',
-  },
+    width: '5%'
+  }
 })
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountsScreen)

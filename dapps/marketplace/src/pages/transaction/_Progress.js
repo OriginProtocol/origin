@@ -111,8 +111,8 @@ class ReviewAndFinalize extends Component {
               onChange={rating => this.setState({ rating })}
             />
             <div>
-              <fbt desc="Progress.anythingComment">
-                Anything you&apos;d like to comment on?
+              <fbt desc="Progress.reviewYourExperience">
+                Describe your experience transacting with this seller.
               </fbt>
             </div>
             <textarea
@@ -158,7 +158,7 @@ const MessageSeller = ({ offer, refetch, loading }) => (
       </div>
       <div className="help">
         <fbt desc="Progress.clickButton">
-          Click the button to open messaging
+          Click the link below to open messaging
         </fbt>
       </div>
       <SendMessage to={offer.listing.seller.id} className="btn btn-link">

@@ -15,6 +15,8 @@ export default async function() {
     ganache: { inMemory: true },
     ipfs: true,
     populate: true,
+    deployContracts: true,
+    contractsFile: 'tests',
     extras: async () => {
       const webpackProcess = spawn(
         './node_modules/.bin/webpack-dev-server',
@@ -41,24 +43,14 @@ export default async function() {
       const page = pages[0]
 
       await page.goto('http://localhost:8083')
-      // await page.evaluate(() => {
-      //   window.localStorage.clear()
-      //   window.sessionStorage.clear()
-      // })
-      //
-      // await page.reload({ waitUntil: 'networkidle0' })
       await page.evaluate(
         () =>
           new Promise(resolve => {
-            window.populate(log => console.log(log), resolve)
-            window.localStorage.useWeb3Wallet =
-              '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
+            window.transactionPoll = 100
             // window.localStorage.locale = 'zh_CN'
+            resolve()
           })
       )
-
-      await page.reload({ waitUntil: 'networkidle0' })
-      await page.evaluate(() => (window.transactionPoll = 100))
 
       return { page, browser, webpackProcess }
     }

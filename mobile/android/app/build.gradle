@@ -77,6 +77,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -117,12 +118,12 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty('ORIGIN_RELEASE_STORE_PASSWORD')) {
-                storeFile file(ORIGIN_RELEASE_STORE_FILE)
-                storePassword ORIGIN_RELEASE_STORE_PASSWORD
-                keyAlias ORIGIN_RELEASE_KEY_ALIAS
-                keyPassword ORIGIN_RELEASE_KEY_PASSWORD
-            }
+            def Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file('../keystores/keystore.properties')))
+            storeFile file(keyProps["RELEASE_STORE_FILE"])
+            keyAlias keyProps["RELEASE_KEY_ALIAS"]
+            storePassword keyProps["RELEASE_STORE_PASSWORD"]
+            keyPassword keyProps["RELEASE_KEY_PASSWORD"]
         }
     }
     splits {
@@ -156,10 +157,10 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-push-notification')
-    implementation project(':react-native-uuid-generator')
-    implementation project(':react-native-webview')
+    implementation project(':react-native-sentry')
     implementation project(':react-native-randombytes')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-webview')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
@@ -167,7 +168,6 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.google.android.gms:play-services-gcm:15.0.1"
-    implementation project(':react-native-camera')
 }
 
 // Run this once to be able to run the application with BUCK

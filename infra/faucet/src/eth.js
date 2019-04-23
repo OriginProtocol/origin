@@ -281,7 +281,7 @@ class EthDistributor {
       const now = new Date()
       const campaign = await db.FaucetCampaign.findOne({
         where: {
-          inviteCode: code,
+          inviteCode: code.toLowerCase(),
           startDate: { [Sequelize.Op.lt]: now },
           endDate: { [Sequelize.Op.gt]: now }
         }
@@ -342,7 +342,10 @@ class EthDistributor {
             method: 'PHONE'
           }
         })
-        if (!phoneAttestation) {
+        if (
+          process.env.REQUIRE_PHONE_ATTESTATION === 'true' &&
+          !phoneAttestation
+        ) {
           return this._error(
             res,
             `Please verify your phone number on the DApp profile page before using the ETH faucet.`

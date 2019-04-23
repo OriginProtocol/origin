@@ -50,7 +50,7 @@ export const clickByText = async (page, text, path) => {
 }
 
 export const changeAccount = async (page, account) => {
-  await page.evaluate((account) => {
+  await page.evaluate(account => {
     window.localStorage.useWeb3Wallet = account
   }, account)
 }
@@ -58,11 +58,9 @@ export const changeAccount = async (page, account) => {
 export const createAccount = async page => {
   return await page.evaluate(
     () =>
-      new Promise(resolve => {
-        window.pop
-          .createUser(window.gql, '0x627306090abaB3A6e1400e9345bC60c78a8BEf57')
-          .then(resolve)
-      })
+      new Promise(resolve =>
+        window.ognTools.createAccount(window.gql).then(resolve)
+      )
   )
 }
 

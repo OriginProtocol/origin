@@ -164,8 +164,7 @@ function withEnrolmentModal(WrappedComponent) {
                     and sharing Origin with your friends. OGN can be used in a
                     variety of ways. Earned OGN will be transferred after the
                     end of the
-                    <fbt:param name="campaignName">{campaignName}</fbt:param>
-                    to earn tokens
+                    <fbt:param name="campaignName">{campaignName}</fbt:param>.
                   </fbt>
                 </div>
                 <div className="d-flex align-items-center flex-column">

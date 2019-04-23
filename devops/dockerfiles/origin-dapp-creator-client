@@ -20,7 +20,7 @@ COPY lerna.json ./
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/ipfs ./packages/ipfs
-COPY ./packages/linker-client ./packages/linker-client
+COPY ./packages/mobile-bridge ./packages/mobile-bridge
 COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator

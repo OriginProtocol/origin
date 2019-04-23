@@ -77,7 +77,7 @@ class GrowthWelcome extends Component {
             path="/welcome/onboard"
             render={() => (
               <Onboard
-                showoriginwallet={rewardsOnMobileEnabled}
+                hideOriginWallet={!rewardsOnMobileEnabled}
                 linkprefix="/welcome"
                 redirectTo="/welcome/continue"
               />
@@ -97,7 +97,7 @@ class GrowthWelcome extends Component {
             path="/welcome/onboard/:inviteCode?"
             render={() => (
               <Onboard
-                showoriginwallet={false}
+                hideOriginWallet={!rewardsOnMobileEnabled}
                 linkprefix="/welcome"
                 redirectTo={`/welcome/continue/${this.state.inviteCode}`}
               />

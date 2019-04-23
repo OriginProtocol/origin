@@ -14,16 +14,6 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself. An alternative would be to connect the App Store or TestFlight version of the application to a local blockchain running on your machine, which would be a simpler way to test with Origin Wallet.
 
-### Dependencies
-
-You should be familiar with running Origin.js and the DApp outside of Origin Box as described [here](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-npm--lerna).
-
-Install the following:
-
-- [Watchman](https://facebook.github.io/watchman/): `brew install watchman`
-
-- [React Native CLI](https://facebook.github.io/react-native/docs/understanding-cli): `npm install -g react-native-cli`
-
 #### iOS Development
 
 - [Xcode](https://developer.apple.com/xcode/)
@@ -38,129 +28,7 @@ Install the following:
 
 ### Backend Services
 
-You can run the backend services required by Origin Wallet using Docker Compose. Please refer to the instructions in our [development documentation](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md). You can also run each service manually using the instructions below.
-
-#### Manual Setup
-
-##### Environment Variables
-
-You will need to create five `.env` files to hold the environment variables that are required by [origin-dapp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp), [origin-discovery](https://github.com/OriginProtocol/origin/tree/master/origin-discovery), [origin-linking](https://github.com/OriginProtocol/origin/tree/master/origin-linking), [origin-mobile](https://github.com/OriginProtocol/origin/tree/master/origin-mobile), and [origin-notifications](https://github.com/OriginProtocol/origin/tree/master/origin-notifications). Here are examples with suggested values:
-
-**origin-dapp/.env**
-```
-BRIDGE_SERVER_DOMAIN=bridge.staging.originprotocol.com
-BRIDGE_SERVER_PROTOCOL=https
-
-ETH_NETWORK_ID=999
-MAINNET_DAPP_BASEURL="https://dapp.originprotocol.com"
-RINKEBY_DAPP_BASEURL="https://demo.staging.originprotocol.com"
-
-PROVIDER_URL=http://localhost:8545
-
-BLOCK_EPOCH=0
-
-# MetaMask account 4 (default local blockchain)
-AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
-# MetaMask account 5 (default local blockchain)
-ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
-# MetaMask account 6 (default local blockchain)
-MESSAGING_ACCOUNT=0x2932b7a2355d6fecc4b5c0b6bd44cc31df247a2e
-
-IPFS_API_PORT=5002
-IPFS_DOMAIN=localhost
-IPFS_GATEWAY_PORT=8080
-IPFS_GATEWAY_PROTOCOL=http
-
-MOBILE_LOCALHOST_IP=YOUR-WIFI-IP-ADDRESS
-SHOW_WALLET_LINKER=true
-WALLET_LANDING_URL=https://www.originprotocol.com/mobile
-WALLET_LINKER_URL=http://localhost:3008
-```
-
-**origin-discovery/.env**
-```
-AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
-ARBITRATOR_ACCOUNT=0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
-ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-BLOCK_EPOCH=0
-DATABASE_URL=postgresql://localhost/discovery
-NETWORK_ID=999
-IPFS_URL=http://localhost:8080/
-WEB3_URL=http://localhost:8545/
-```
-
-**origin-linking/.env**
-```
-ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
-
-APNS_BUNDLE_ID=com.originprotocol.catcher
-APNS_KEY_FILE=
-APNS_KEY_ID=
-APNS_TEAM_ID=
-
-DAPP_URL=http://localhost:3000/
-DATABASE_URL=postgresql://localhost/origin
-PROVIDER_URL=http://localhost:8545/
-REDIS_URL=redis://127.0.0.1:6379
-
-IPFS_API_PORT=5002
-IPFS_DOMAIN=localhost
-IPFS_GATEWAY_PORT=8080
-IPFS_GATEWAY_PROTOCOL=http
-
-NOTIFY_TOKEN=
-
-HOT_WALLET_PK=0x82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8
-```
-
-**origin-mobile/.env**
-```
-API_SERVER_PROTOCOL=http
-API_SERVER_DOMAIN=localhost
-API_SERVER_PORT=3008
-DEFAULT_API_SERVER_DOMAIN=
-
-IPFS_API_PORT=5002
-IPFS_DOMAIN=localhost
-IPFS_GATEWAY_PORT=8080
-IPFS_GATEWAY_PROTOCOL=http
-
-MAINNET_API_SERVER=https://linking.originprotocol.com
-RINKEBY_API_SERVER=https://linking.staging.originprotocol.com
-PROVIDER_URL=http://localhost:8545/
-CB_BW_CODE=
-
-GCM_SENDER_ID=
-```
-
-**origin-notifications/.env**
-```
-DAPP_OFFER_URL=http://localhost:3000/#/purchases/
-DATABASE_URL=postgresql://localhost/notification
-LINKING_NOTIFY_ENDPOINT=http://localhost:3008/api/wallet-linker/eth-notify
-LINKING_NOTIFY_TOKEN=
-VAPID_EMAIL_ADDRESS=
-VAPID_PRIVATE_KEY=
-VAPID_PUBLIC_KEY=
-```
-
-In the origin-linking and origin-notifications `.env` files, two of the values will need to match. Add any string of your choice to both the `NOTIFY_TOKEN` and `LINKING_NOTIFY_TOKEN` values.
-
-If you want to test with mobile Safari on the same device as the application, find your computer's [internal WiFi network IP address](https://www.wikihow.com/Find-Your-IP-Address-on-a-Mac#Finding_Your_Internal_IP_.28OS_X_10.4.29_sub) and add it to the `MOBILE_LOCALHOST_IP` value for origin-dapp.
-
-##### Setup
-- Start PostgreSQL
-- Start Redis: `redis-server`
-- `createdb origin`
-- origin/mobile $ `npm install`
-- origin/infra/linking $ `npm run migrate`
-
-#### Startup
-- origin/infra/linking $ `npm run start`
-- origin/dapps/marketplace $ `ORIGIN_LINKING=1 LINKER_HOST=(your_ip_address) npm run start`
-- origin/origin-mobile $ `npm run start -- --reset-cache`
-
-- Open Xcode and build for your desired device
+You can run the backend services required by Origin Wallet using Docker Compose. Please refer to the instructions in our [development documentation](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md). It is not necessary to run the backend services as you can also use Origin's deployed services by changing the network from the Settings tab.
 
 ### Android Device Configuration
 
@@ -182,6 +50,10 @@ To run the mobile app on your phone, you need to both start the Metro builder se
 - Run Metro builder with `npm run start`
 - Compile and build your app with `react-native run-android` or `react-native run-ios`
 
+Be aware that the mobile install process uses `install-local` to copy certain packages into the `node_modules` directory. If you modify any dependencies (e.g. `@origin/graphql`) you will need to run the install process again. It may be helpful to directly modify the package in the `node_modules` (e.g. `mobile/node_modules/@origin/graphql`) directory first to avoid this.
+
+If you want to use a physical device in combination with the marketplace DApp running on your local machine (i.e. `Localhost` setting in network selection) make sure you set the `HOST` environment variable to your internal network IP address (e.g. 10.10.10.1). You will also need to run the marketplace DApp first and then use the `copy_contract_config.sh` and reload the mobile app if you've already started it.
+
 ### Tips
 
 > Is there a way to remotely debug the app?
@@ -190,11 +62,15 @@ You can access the React-Native remote debugger at http://localhost:8081/debugge
 
 > How do I access the developer menu in the app?
 
-Shake you phone.  Or pretend you did by sending this keycode: `adb shell input keyevent 82`
+Shake your phone. Or pretend you did by sending this keycode: `adb shell input keyevent 82`
 
 > Is there a way to trigger a reload on Android?
 
 You can do this from the developer menu, or by running this in your terminal: `adb shell input text "RR"`
+
+> How can I debug the marketplace DApp running in the webview?
+
+On Android you can run developer tools for the page running in the WebView using `chrome://inspect`. On iOS you can use the [Safari develop menu](https://github.com/react-native-community/react-native-webview/issues/69).
 
 ### Troubleshooting
 
@@ -207,12 +83,6 @@ You can do this from the developer menu, or by running this in your terminal: `a
 
 -----------
 
-> error: bundling failed: Error: Unable to resolve module @origin/js/common/enums...
-
-This can be caused by not running `npm run install-local` or not _rerunning_ it after doing a root-level `npm install` (which deletes various things from origin/origin-mobile/node_modules).
-
------------
-
 Check [the React Native docs](https://facebook.github.io/react-native/docs/troubleshooting).
 
 -----------
@@ -222,7 +92,6 @@ Check [the React Native docs](https://facebook.github.io/react-native/docs/troub
 -----------
 
 > unable to load script from assets index.android.bundle
-https://github.com/OriginProtocol/origin/tree/mikeshultz/android/origin-mobile
 This is likely a network error because your tunnels are not setup.  See [Android Device Configuration](#android-device-configuration).
 
 -----------

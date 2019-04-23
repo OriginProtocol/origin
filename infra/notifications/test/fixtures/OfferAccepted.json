@@ -1,0 +1,281 @@
+{
+  "event": {
+    "blockHash": "0x887185ba7687ac7b960e2bf7fcc8405cf02fefa10aa439e980511eb36467f925",
+    "transactionHash": "0xd6cf37e2ec095b9634d1d81a85e98637ed3a9bd0db071ac01dc94b86852650ca",
+    "blockNumber": 4181146,
+    "address": "0xe842831533c4bf4B0F71B4521C4320BDB669324E",
+    "logIndex": 1,
+    "removed": false,
+    "transactionIndex": 2,
+    "id": "log_59db736d",
+    "returnValues": {
+      "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "1": "522",
+      "2": "2",
+      "3": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4",
+      "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+      "listingID": "522",
+      "offerID": "2",
+      "ipfsHash": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4"
+    },
+    "event": "OfferAccepted",
+    "signature": "0x449224201a35688b74a38ff24770e8b2a326ebf42357bf19a36f5fedbbe552a0",
+    "raw": {
+      "data": "0x2a04a48aed33c6ce4b1331256e04185a4b1dc956c971b75b12f72df69a68fab4",
+      "topics": [
+        "0x449224201a35688b74a38ff24770e8b2a326ebf42357bf19a36f5fedbbe552a0",
+        "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
+        "0x000000000000000000000000000000000000000000000000000000000000020a",
+        "0x0000000000000000000000000000000000000000000000000000000000000002"
+      ]
+    },
+    "block": {
+      "id": 4181146
+    }
+  },
+  "related": {
+    "offer": {
+      "listing": {
+        "id": "4-000-522-4181140",
+        "valid": true,
+        "validationError": null,
+        "status": "pending",
+        "totalEvents": 8,
+        "seller": {
+          "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+          "identity": {
+            "firstName": "Tom",
+            "lastName": "Linton",
+            "fullName": "Tom Linton",
+            "__typename": "Identity"
+          },
+          "__typename": "Account"
+        },
+        "arbitrator": {
+          "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+          "__typename": "Account"
+        },
+        "deposit": "0",
+        "depositAvailable": "0",
+        "createdEvent": {
+          "timestamp": 1554845133,
+          "__typename": "Event"
+        },
+        "category": "schema.forSale",
+        "categoryStr": "For Sale",
+        "subCategory": "schema.antiques",
+        "title": "Listener Test",
+        "description": "A listing to test event listener. ",
+        "currencyId": null,
+        "featured": false,
+        "hidden": false,
+        "price": {
+          "amount": "0.25",
+          "currency": {
+            "id": "fiat-USD",
+            "__typename": "FiatCurrency"
+          },
+          "__typename": "Price"
+        },
+        "acceptedTokens": [
+          {
+            "id": "token-DAI",
+            "__typename": "Token"
+          },
+          {
+            "id": "token-ETH",
+            "__typename": "Token"
+          }
+        ],
+      "media": [
+          {
+            "url": "ipfs://QmfFFvvY2jUZaEsGyaxwtMEnsyVPpCHruLbQEkR8XhSpJq",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVC84UfjAZwwusJU2mC2Lq3VXcTVpJzCB7V9Rujz1jELr",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmNWWqDZWC9qzRaMDX7Gq61qxhdSymNsYFGXS1QjZo1fDe",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVdbpzoUjo3mV8QAFnh32dsDnrGVj6WnFNPsAu1JZh68X",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmW9iwKTq89kBrQx3io587QS8oUkg4H7bSzBS1oi8oa1aN",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmYAtgg2s6kHHurKneF95pyncrN8FKsDmU4tPhDDdQQAe4",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmRNa1GoiyQJeFcLXL38cLCpzJQjgyhTKnmp1Wfoo1Kgui",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://Qmb84TG5qWPY7nZXvzGnr3z9APB1t8aiPd8YeVooKg1mQc",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmbsGhwdba8s8FCJcvNbrPtVsigR4VoK1p65k1YgGgFT6m",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmUg8RS85PKGdgAVSDhoSRBfU19XeHaWdjEmGo7zS3McLW",
+            "contentType": "image/jpeg"
+          }
+        ],
+        "commission": "0",
+        "commissionPerUnit": "0",
+        "marketplacePublisher": null,
+        "unitsTotal": 1,
+        "unitsAvailable": 0,
+        "unitsSold": 0,
+        "unitsPending": 1,
+        "multiUnit": false,
+        "__typename": "UnitListing"
+      },
+      "id": "4-000-522-2",
+      "listingId": "4-000-522",
+      "offerId": "2",
+      "value": "257500000000000000",
+      "currency": "0x2448eE2641d78CC42D7AD76498917359D961A783",
+      "refund": "0",
+      "commission": "0",
+      "status": 2,
+      "statusStr": "Accepted",
+      "finalizes": 1556056158,
+      "quantity": 1,
+      "valid": true,
+      "validationError": null,
+      "arbitrator": {
+        "id": "0xc9C1a92ba54C61045Ebf566B154dfD6AfeDEA992",
+        "__typename": "Account"
+      },
+      "affiliate": {
+        "id": "0xC1A33cdA27c68E47e370FF31CdAd7D6522Ea93d5",
+        "__typename": "Account"
+      },
+      "buyer": {
+        "id": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+        "identity": {
+          "firstName": "Franck",
+          "lastName": "Test",
+          "fullName": "Franck Test",
+          "__typename": "Identity"
+        },
+        "__typename": "Account"
+      },
+      "withdrawnBy": null,
+      "__typename": "Offer"
+    },
+    "listing": {
+      "id": "4-000-522-4181140",
+      "valid": true,
+      "validationError": null,
+      "status": "pending",
+      "totalEvents": 8,
+      "seller": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "identity": {
+          "firstName": "Tom",
+          "lastName": "Linton",
+          "fullName": "Tom Linton",
+          "__typename": "Identity"
+        },
+        "__typename": "Account"
+      },
+      "arbitrator": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "__typename": "Account"
+      },
+      "deposit": "0",
+      "depositAvailable": "0",
+      "createdEvent": {
+        "timestamp": 1554845133,
+        "__typename": "Event"
+      },
+      "category": "schema.forSale",
+      "categoryStr": "For Sale",
+      "subCategory": "schema.antiques",
+      "title": "Listener Test",
+      "description": "A listing to test event listener. ",
+      "currencyId": null,
+      "featured": false,
+      "hidden": false,
+      "price": {
+        "amount": "0.25",
+        "currency": {
+          "id": "fiat-USD",
+          "__typename": "FiatCurrency"
+        },
+        "__typename": "Price"
+      },
+      "acceptedTokens": [
+        {
+          "id": "token-DAI",
+          "__typename": "Token"
+        },
+        {
+          "id": "token-ETH",
+          "__typename": "Token"
+        }
+      ],
+      "media": [
+          {
+            "url": "ipfs://QmfFFvvY2jUZaEsGyaxwtMEnsyVPpCHruLbQEkR8XhSpJq",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVC84UfjAZwwusJU2mC2Lq3VXcTVpJzCB7V9Rujz1jELr",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmNWWqDZWC9qzRaMDX7Gq61qxhdSymNsYFGXS1QjZo1fDe",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmVdbpzoUjo3mV8QAFnh32dsDnrGVj6WnFNPsAu1JZh68X",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmW9iwKTq89kBrQx3io587QS8oUkg4H7bSzBS1oi8oa1aN",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmYAtgg2s6kHHurKneF95pyncrN8FKsDmU4tPhDDdQQAe4",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmRNa1GoiyQJeFcLXL38cLCpzJQjgyhTKnmp1Wfoo1Kgui",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://Qmb84TG5qWPY7nZXvzGnr3z9APB1t8aiPd8YeVooKg1mQc",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmbsGhwdba8s8FCJcvNbrPtVsigR4VoK1p65k1YgGgFT6m",
+            "contentType": "image/jpeg"
+          },
+          {
+            "url": "ipfs://QmUg8RS85PKGdgAVSDhoSRBfU19XeHaWdjEmGo7zS3McLW",
+            "contentType": "image/jpeg"
+          }
+        ],
+      "commission": "0",
+      "commissionPerUnit": "0",
+      "marketplacePublisher": null,
+      "unitsTotal": 1,
+      "unitsAvailable": 0,
+      "unitsSold": 0,
+      "unitsPending": 1,
+      "multiUnit": false,
+      "__typename": "UnitListing"
+    }
+  }
+}

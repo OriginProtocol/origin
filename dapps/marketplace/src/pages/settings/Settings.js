@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
-import ProfileQuery from 'queries/Profile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
-import UnlinkMobileWallet from 'mutations/UnlinkMobileWallet'
 
 const configurableFields = [
   'bridge',
@@ -73,6 +70,7 @@ class Settings extends Component {
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const { locale, onLocale, currency, onCurrency } = this.props
+    const notificationsSupported = !!window.Notification
 
     return (
       <Mutation
@@ -133,36 +131,40 @@ class Settings extends Component {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label htmlFor="notifications">
-                      <fbt desc="settings.notificationsLabel">
-                        Notifications
-                      </fbt>
-                    </label>
-                    {Notification.permission !== 'granted' ? (
-                      <>
-                        <div className="form-text form-text-muted">
-                          <small>
-                            <fbt desc="settings.notificationsHint">
-                              Enable browser notifications below.
-                            </fbt>
-                          </small>
-                        </div>
-                        <button
-                          className="btn btn-success"
-                          onClick={() => this.requestNotificationPermission()}
-                        >
-                          <fbt desc="settings.notificationsButton">Enable</fbt>
-                        </button>
-                      </>
-                    ) : (
-                      <div>
-                        <fbt desc="settings.notificationsSuccess">
-                          Browser notifications are enabled.
+                  {notificationsSupported && (
+                    <div className="form-group">
+                      <label htmlFor="notifications">
+                        <fbt desc="settings.notificationsLabel">
+                          Browser Notifications
                         </fbt>
-                      </div>
-                    )}
-                  </div>
+                      </label>
+                      {Notification.permission !== 'granted' ? (
+                        <>
+                          <div className="form-text form-text-muted">
+                            <small>
+                              <fbt desc="settings.notificationsHint">
+                                Enable browser notifications below.
+                              </fbt>
+                            </small>
+                          </div>
+                          <button
+                            className="btn btn-success"
+                            onClick={() => this.requestNotificationPermission()}
+                          >
+                            <fbt desc="settings.notificationsButton">
+                              Enable
+                            </fbt>
+                          </button>
+                        </>
+                      ) : (
+                        <div>
+                          <fbt desc="settings.notificationsSuccess">
+                            Browser notifications are enabled.
+                          </fbt>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/*
                   <div className="form-group">
@@ -175,53 +177,6 @@ class Settings extends Component {
                     </button>
                   </div>
                   */}
-
-                  <Query query={ProfileQuery}>
-                    {({ data }) => {
-                      const walletType = get(data.web3, 'walletType')
-                      const mobileWalletConnected =
-                        walletType && walletType.startsWith('mobile-')
-                      return (
-                        <div className="form-group">
-                          <label htmlFor="language">
-                            <fbt desc="settings.mobileLabel">Mobile Wallet</fbt>
-                          </label>
-                          {mobileWalletConnected ? (
-                            <>
-                              <div className="form-text form-text-muted">
-                                <small>
-                                  <fbt desc="settings.mobileHint">
-                                    Disconnect from your mobile wallet by
-                                    clicking the button below.
-                                  </fbt>
-                                </small>
-                              </div>
-                              <Mutation mutation={UnlinkMobileWallet}>
-                                <button className="btn btn-outline-danger">
-                                  <fbt desc="settings.mobileButton">
-                                    Disconnect
-                                  </fbt>
-                                </button>
-                              </Mutation>
-                            </>
-                          ) : (
-                            <div>
-                              <button
-                                className="btn btn-outline-secondary"
-                                disabled
-                              >
-                                <span>
-                                  <fbt desc="settings.mobileDisabled">
-                                    Not connected
-                                  </fbt>
-                                </span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    }}
-                  </Query>
                 </div>
               </div>
 

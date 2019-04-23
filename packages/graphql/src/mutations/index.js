@@ -44,9 +44,7 @@ import verifyFacebook from './attestations/verifyFacebook'
 import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
-
-import unlinkMobileWallet from './walletLinker/unlinkMobileWallet'
-import linkMobileWallet from './walletLinker/linkMobileWallet'
+import verifyGoogle from './attestations/verifyGoogle'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -75,7 +73,6 @@ export default {
   generatePhoneCode,
   importWallet,
   importWallets,
-  linkMobileWallet,
   makeOffer,
   markConversationRead,
   removeWallet,
@@ -93,7 +90,6 @@ export default {
   uniswapDeployFactory,
   uniswapDeployExchangeTemplate,
   uniswapInitializeFactory,
-  unlinkMobileWallet,
   updateListing,
   updateRefund,
   updateTokenAllowance,
@@ -101,6 +97,7 @@ export default {
   verifyAirbnbCode,
   verifyEmailCode,
   verifyFacebook,
+  verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
   withdrawListing,

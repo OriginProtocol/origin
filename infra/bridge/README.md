@@ -53,6 +53,9 @@ bridge server deployment as an endpoint for the DApp identity attestation functi
 - [Twitter](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens)
   - TWITTER_CONSUMER_KEY
   - TWITTER_CONSUMER_SECRET
+- [Google](https://developers.google.com/identity/protocols/OAuth2WebServer)
+  - GOOGLE_CLIENT_ID
+  - GOOGLE_CLIENT_SECRET
 
 ### Set Up Your Database
 

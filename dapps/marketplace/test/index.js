@@ -192,7 +192,7 @@ describe('Marketplace Dapp', function() {
 
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
-      await clickByText(page, 'Purchase', 'button')
+      await clickByText(page, 'Swap Now', 'button')
     })
 
     it('should prompt the user to approve their Dai', async function() {

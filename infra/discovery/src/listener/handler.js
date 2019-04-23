@@ -104,14 +104,22 @@ async function handleEvent(event, context) {
   const json = JSON.stringify(output, null, 2)
   logger.debug(`Handler result: ${json}`)
 
-  if (handler.webhookEnabled() && context.config.webhook) {
-    logger.info(`Webhook to ${context.config.webhook}`)
+  if (context.config.webhook) {
+    logger.warn(`'webhook' is deprecated. Use 'notifications-webhook' instead.`)
+  }
+
+  // Call the notifications server webhook
+  if (handler.webhookEnabled() && context.config.notificationsWebhook) {
+    logger.info(
+      `Notifications Webhook to ${context.config.notificationsWebhook}`
+    )
     try {
       await withRetrys(async () => {
-        return postToWebhook(context.config.webhook, json)
+        return postToWebhook(context.config.notificationsWebhook, json)
       }, false)
     } catch (e) {
-      logger.error(`Skipping webhook for ${eventDetails}`)
+      logger.error(`Skipping notifications webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -124,6 +132,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping email webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -136,6 +145,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping discord webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -154,6 +164,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping Google Cloud Pub/Sub for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
