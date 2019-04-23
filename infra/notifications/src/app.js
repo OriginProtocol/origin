@@ -184,13 +184,13 @@ app.post('/mobile/register', async (req, res) => {
     // Nothing exists, create a new row
     logger.debug('Adding new mobile device to registry: ', req.body)
     registryRow = await MobileRegistry.create(mobileRegister)
+    res.sendStatus(201)
   } else {
     // Row exists, permissions might have changed, update if required
     logger.debug('Updating mobile device registry: ', req.body)
     registryRow = await MobileRegistry.upsert(mobileRegister)
+    res.sendStatus(200)
   }
-
-  return registryRow
 })
 
 /**

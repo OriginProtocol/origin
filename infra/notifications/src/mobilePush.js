@@ -1,5 +1,4 @@
 const apn = require('apn')
-const fetch = require('cross-fetch')
 const firebase = require('firebase-admin')
 const path = require('path')
 const web3Utils = require('web3-utils')
@@ -24,7 +23,7 @@ if (process.env.APNS_KEY_FILE) {
 
 // Firebase Admin SDK
 // ref: https://firebase.google.com/docs/reference/admin/node/admin.messaging
-let firebaseServiceJson, firebaseMessaging
+let firebaseMessaging
 if (process.env.FIREBASE_SERVICE_JSON) {
   const firebaseServiceJson = require(process.env.FIREBASE_SERVICE_JSON)
 
