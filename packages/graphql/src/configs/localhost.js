@@ -13,6 +13,7 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
+  notifications: `http://${HOST}:3456`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 
