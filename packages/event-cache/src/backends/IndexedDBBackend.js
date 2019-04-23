@@ -339,7 +339,7 @@ class IndexedDBBackend extends AbstractBackend {
    */
   async addEvents(eventObjects) {
     await this.waitForReady()
-    
+
     await this._eventStore.bulkAdd(eventObjects)
     this.setLatestBlock(eventObjects[eventObjects.length - 1].blockNumber)
   }
