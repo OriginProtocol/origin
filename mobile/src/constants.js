@@ -46,7 +46,7 @@ if (__DEV__) {
   NETWORKS.push({
     id: 999,
     name: 'Docker',
-    dappUrl: `http://${process.env.HOST}:3000`
+    dappUrl: `http://${process.env.HOST}:3000/docker#/`
   })
 }
 
