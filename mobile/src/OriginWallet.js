@@ -224,16 +224,21 @@ class OriginWallet extends Component {
   */
   async generateMessagingKeys() {
     const { wallet } = this.props
+    const privateKey = wallet.activeAccount.privateKey
+    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+      privateKey = '0x' + privateKey
+    }
 
     const signatureKey = await this.web3.eth.accounts.sign(
       PROMPT_MESSAGE,
-      wallet.activeAccount.privateKey
+      privateKey
     ).signature.substring(0, 66)
 
-    const pubMessage = PROMPT_PUB_KEY + wallet.activeAccount.address
+    const msgAccount = this.web3.eth.accounts.privateKeyToAccount(signatureKey)
+    const pubMessage = PROMPT_PUB_KEY + msgAccount.address
     const pubSignature = await this.web3.eth.accounts.sign(
       pubMessage,
-      wallet.activeAccount.privateKey
+      privateKey
     ).signature
 
     this.props.setMessagingKeys({
