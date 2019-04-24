@@ -11,14 +11,23 @@ const QueryError = props => {
     console.log(JSON.stringify(props.vars, null, 4))
   }
 
+  // Display a different error depending on the __mobileBridge window attribute
+  // If it exists, the DApp is being displayed inside a WebView so the user will
+  // not have access to the console
   return (
     <div>
-      <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
-      <div>
-        <div>{props.error}</div>
-        {props.query && <div>{props.query.loc.source.body}</div>}
-        {props.vars && <pre>{JSON.stringify(props.vars)}</pre>}
-      </div>
+      {window.__mobileBridge ? (
+        <div>
+          <fbt desc="QueryError.error">Error:</fbt>
+          <div>
+            <div>{JSON.stringify(props.error)}</div>
+            {props.query && <div>{props.query.loc.source.body}</div>}
+            {props.vars && <div>{JSON.stringify(props.vars)}</div>}
+          </div>
+        </div>
+      ) : (
+        <fbt desc="QueryError.seeConsole">Error: See console for details</fbt>
+      )}
     </div>
   )
 }
