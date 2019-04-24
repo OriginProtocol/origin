@@ -37,15 +37,17 @@ const getPastEvents = memoize(
       instance.loadedCache = true
     }
 
-    const requests = range(fromBlock, toBlock, batchSize).map(start =>
+    const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
       limiter.schedule(
         args => instance.contract.getPastEvents('allEvents', args),
         { fromBlock: start, toBlock: Math.min(start + batchSize - 1, toBlock) }
       )
     )
 
-    const numBlocks = toBlock - fromBlock
+    const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
+
+    instance.lastQueriedBlock = toBlock + 1
 
     if (!numBlocks) return
 
@@ -60,8 +62,6 @@ const getPastEvents = memoize(
         debug('Error adding new events to backend', e)
       }
     }
-
-    instance.lastQueriedBlock = toBlock
   },
   (...args) => `${args[0].contract._address}-${args[1]}-${args[2]}`
 )
@@ -172,7 +172,7 @@ class EventCache {
   async _fetchEvents() {
     let fromBlock = this.lastQueriedBlock || this.originBlock
     const latestKnown = await this.backend.getLatestBlock()
-    // if (!latestKnown && this.ipfsEventCache) {
+
     if (latestKnown > fromBlock) {
       debug(`Set fromBlock to latestKnown (${latestKnown}) + 1`)
       fromBlock = latestKnown + 1
