@@ -83,7 +83,6 @@ const rateLimiterOptions = {
   duration: 60
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-// use rate limiter on all root path methods
 app.all((req, res, next) => {
   if (!req.url.startsWith('/events')) {
     rateLimiter
