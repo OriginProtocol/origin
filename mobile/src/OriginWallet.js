@@ -188,6 +188,10 @@ class OriginWallet extends Component {
     const provider = graphqlContext.config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
+    // Make sure device token is registered with server
+    this.registerDeviceToken()
+    // Generate messaging keys
+    this.generateMessagingKeys()
   }
 
   /* Configure web3 using the accounts persisted in redux
@@ -224,29 +228,33 @@ class OriginWallet extends Component {
   */
   async generateMessagingKeys() {
     const { wallet } = this.props
-    const privateKey = wallet.activeAccount.privateKey
-    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
-      privateKey = '0x' + privateKey
+    // Check if messaging keys need updaitng
+    if (wallet.messagingKeys.address !== wallet.activeAccount.address) {
+      // Messaging keys address is different to the active account address,
+      // update messaging keys
+      const privateKey = wallet.activeAccount.privateKey
+      if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+        privateKey = '0x' + privateKey
+      }
+      const signatureKey = await this.web3.eth.accounts.sign(
+        PROMPT_MESSAGE,
+        privateKey
+      ).signature.substring(0, 66)
+      const msgAccount = this.web3.eth.accounts.privateKeyToAccount(signatureKey)
+      const pubMessage = PROMPT_PUB_KEY + msgAccount.address
+      const pubSignature = await this.web3.eth.accounts.sign(
+        pubMessage,
+        privateKey
+      ).signature
+      const messagingKeys = {
+        address: wallet.activeAccount.address,
+        signatureKey,
+        pubMessage,
+        pubSignature
+      }
+      this.props.setMessagingKeys(messagingKeys)
+      DeviceEventEmitter.emit('messagingKeys', messagingKeys)
     }
-
-    const signatureKey = await this.web3.eth.accounts.sign(
-      PROMPT_MESSAGE,
-      privateKey
-    ).signature.substring(0, 66)
-
-    const msgAccount = this.web3.eth.accounts.privateKeyToAccount(signatureKey)
-    const pubMessage = PROMPT_PUB_KEY + msgAccount.address
-    const pubSignature = await this.web3.eth.accounts.sign(
-      pubMessage,
-      privateKey
-    ).signature
-
-    this.props.setMessagingKeys({
-      address: wallet.activeAccount.address,
-      signatureKey,
-      pubMessage,
-      pubSignature
-    })
   }
 
   /* Create new account
