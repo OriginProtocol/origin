@@ -46,7 +46,7 @@ class ForkScreen extends Component {
           />
           <Text style={styles.title}>Create Or Import A Wallet</Text>
           <Text style={styles.subtitle}>
-            Create a new wallet and transder funds into it or import an existing
+            Create a new wallet and transfer funds into it or import an existing
             wallet that you already use.
           </Text>
         </View>
