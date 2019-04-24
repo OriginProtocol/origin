@@ -93,8 +93,7 @@ const rateLimiterMiddleware = (req, res, next) => {
         logger.error(`Rejecting request due to rate limiting.`)
         res.status(429).send('<h2>Too Many Requests</h2>')
       })
-  }
-  else {
+  } else {
     next()
   }
 }
@@ -249,7 +248,6 @@ app.post('/events', async (req, res) => {
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
-
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
