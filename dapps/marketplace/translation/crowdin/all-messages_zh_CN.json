@@ -866,7 +866,7 @@
   "Da38AMJbLvBFbijuOHF6Xg==": "出价详情",
   "WGE6H9mLnHqswL3WXZ3UgA==": "This includes the price at the time that the offer was made. The current value of the escrowed cryptocurrency may have changed due to market fluctuations.",
   "oO1rfgbWhgj1iO18/9qtiQ==": "资金托管详情",
-  "wCmKbqVcfhaeB4AO/Xvscw==": "Cryptocurrency is held in a smart contract until the offer is withdrawn, rejected, or the transaction is completed.",
+  "wCmKbqVcfhaeB4AO/Xvscw==": "加密货币将存放在智能合约中受托管，直到买家的出价被取消，拒绝或交易完成。",
   "ErUqOhnKC3V7GzECNCCHMQ==": "关于 {VAR_SELLERORBUYER_B64_c2VsbGVyT3JCdXllcg}。",
   "MSS8kemsC1gNq34uoD4fKg==": "买方",
   "jKHS7SWemBx920wc9baQDQ==": "卖方",
