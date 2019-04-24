@@ -15,6 +15,16 @@ Options
  - `--asmGroupId` or env var `ASM_GROUP_ID` : SendGrid ASM group for handling unsubscribes.
  - `--email-file-out` or env var `EMAIL_FILE_OUT` : Write emails also to files, using this directory+prefix. e.g. "emails/finalized"
 
+## Typical debug invocation
+
+```
+export LOG_LEVEL=DEBUG
+
+./node_modules/.bin/nodemon src/app.js \
+  --override-email=stan@originprotocol.com \
+  --verbose=true
+```
+
 
 ## Browser Notifcations (Old)
 
@@ -70,7 +80,7 @@ In origin-discovery...
   IPFS_URL=http://localhost:8080/
   WEB3_URL=http://localhost:8545/
   ```
-  - Run `node src/listener/listener.js --continue-file=continue --webhook=http://localhost:3456/events`
+  - Run `node src/listener/listener.js --continue-file=continue --notifications-webhook=http://localhost:3456/events`
 
   (From time to time, you may need to `rm continue` in origin-discovery.)
 
@@ -87,5 +97,13 @@ For more (outdated) information, see [the original pull request](https://github.
 
 For local testing, these options are usual for testing against `rinkeby` network.
 
-    npm run start:listener:development -- --identity --growth --marketplace --network=rinkeby --continue-file=../continue --webhook=http://localhost:3456/events --verbose --concurrency=4
+````
+export DATABASE_URL=postgresql://origin@localhost/origin
 
+npm run start:listener:development -- --identity --growth --marketplace \
+  --network=rinkeby \
+  --continue-file=../continue \
+  --notifications-webhook=http://localhost:3456/events \
+  --verbose \
+  --concurrency=4
+```
