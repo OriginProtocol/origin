@@ -104,15 +104,18 @@ class OriginWallet extends Component {
       this.updateBalancesNow()
     }
 
+    // Detect change of active account
     if (
       prevProps.wallet.activeAccount &&
       prevProps.wallet.activeAccount.address !==
         this.props.wallet.activeAccount.address
     ) {
+      // Force update of balance
       this.updateBalancesNow()
       // Make sure device token is registered with server
-      const { settings } = this.props
-      this.registerDeviceToken(settings.deviceToken)
+      this.registerDeviceToken()
+      // Generate messaging keys
+      this.generateMessagingKeys()
     }
   }
 
@@ -289,7 +292,6 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     this.props.setAccountActive(account)
-    await this.generateMessagingKeys()
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql

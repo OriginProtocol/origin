@@ -13,7 +13,7 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import { DEFAULT_NOTIFICATION_PERMISSIONS } from '../constants'
+import { DEFAULT_NOTIFICATION_PERMISSIONS, PROMPT_MESSAGE } from '../constants'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -34,6 +34,11 @@ class MarketplaceScreen extends Component {
     DeviceEventEmitter.addListener(
       'messageSigned',
       this.handleSignedMessage.bind(this)
+    )
+
+    DeviceEventEmitter.addListener(
+      'messagingKeys',
+      this.injectMessagingKeys.bind(this)
     )
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
@@ -100,6 +105,24 @@ class MarketplaceScreen extends Component {
       ...filteredAccounts.map(a => a.address)
     ]
     return accounts
+  }
+
+  /* Inject the cookies required for messaging to allow preenabling of messaging
+   * for accounts
+   */
+  injectMessagingKeys() {
+    const { wallet } = this.props
+    const keys = wallet.messagingKeys
+    const keyInjection = `
+      window.context.messaging.onPreGenKeys({
+        address: '${keys.address}',
+        signatureKey: '${keys.signatureKey}',
+        pubMessage: '${keys.pubMessage}',
+        pubSignature: '${keys.pubSignature}'
+      });
+      true;
+    `
+    //this.dappWebView.injectJavaScript(keyInjection)
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -176,6 +199,9 @@ class MarketplaceScreen extends Component {
           onMessage={this.onWebViewMessage}
           onLoadProgress={() => {
             this.dappWebView.injectJavaScript(injectedJavaScript)
+          }}
+          onLoad={() => {
+            this.injectMessagingKeys()
           }}
           allowsBackForwardNavigationGestures
         />
