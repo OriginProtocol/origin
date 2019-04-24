@@ -23,7 +23,7 @@ export const WALLET_STORE = 'WALLET_STORE'
 
 export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM', 'Email')
 
-export const BALANCE_POLL_INTERVAL = 10000
+export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
   { id: 1, name: 'Mainnet', dappUrl: 'https://dapp.originprotocol.com' },

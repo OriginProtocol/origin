@@ -1,0 +1,3 @@
+The buyer has withdrawn their offer on your listing <%= listing.title %>.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>

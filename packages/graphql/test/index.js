@@ -400,6 +400,7 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
 
       const offer = await getOffer('999-000-2', 0)
+      assert(offer.id === '999-000-2-0')
       assert(offer.status === 1)
       assert(offer.commission === '2000000000000000000')
     })
@@ -422,6 +423,7 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
 
       const offer = await getOffer('999-000-2', 1)
+      assert.strictEqual(offer.id, '999-000-2-1')
       assert.strictEqual(offer.status, 1)
       assert.strictEqual(offer.commission, '1000000000000000000')
     })
@@ -572,7 +574,6 @@ describe('Marketplace', function() {
         query: queries.GetListing,
         variables: { id: '999-000-2' }
       })
-
       const listing = get(res, 'data.marketplace.listing', {})
       assert.strictEqual(listing.unitsPending, 0)
       assert.strictEqual(listing.unitsSold, 1)
