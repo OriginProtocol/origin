@@ -122,7 +122,7 @@ class MarketplaceScreen extends Component {
       });
       true;
     `
-    //this.dappWebView.injectJavaScript(keyInjection)
+    this.dappWebView.injectJavaScript(keyInjection)
   }
 
   /* Send a response back to the DApp using postMessage in the webview
