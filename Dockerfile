@@ -15,6 +15,7 @@ COPY ./packages/validator/package.json ./packages/validator/
 COPY ./packages/messaging-client/package.json ./packages/messaging-client/
 COPY ./packages/mobile-bridge/package.json ./packages/mobile-bridge/
 COPY ./packages/eventsource/package.json ./packages/eventsource/
+COPY ./packages/event-cache/package.json ./packages/event-cache/
 COPY ./packages/services/package.json ./packages/services/
 COPY ./packages/token/package.json ./packages/token/
 COPY ./infra/discovery/package.json ./infra/discovery/

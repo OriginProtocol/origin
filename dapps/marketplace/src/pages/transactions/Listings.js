@@ -110,7 +110,7 @@ class Listings extends Component {
                             </div>
                             <div className="title">
                               <Link to={`/listing/${listing.id}`}>
-                                {listing.title}
+                                {listing.title || <i>Untitled Listing</i>}
                               </Link>
                             </div>
                             <div className="date">

@@ -11,11 +11,15 @@ export default {
   },
   events: async listing => {
     const { listingId } = parseId(listing.id)
-    return await listing.contract.eventCache.listings(listingId)
+    return await listing.contract.eventCache.getEvents({
+      listingID: String(listingId)
+    })
   },
   totalEvents: async listing => {
     const { listingId } = parseId(listing.id)
-    return (await listing.contract.eventCache.listings(listingId)).length
+    return (await listing.contract.eventCache.getEvents({
+      listingID: String(listingId)
+    })).length
   },
   totalOffers: listing => {
     const { listingId } = parseId(listing.id)
@@ -28,10 +32,10 @@ export default {
   offers: async listing => listing.allOffers.filter(o => o.valid),
   createdEvent: async listing => {
     const { listingId } = parseId(listing.id)
-    const events = await listing.contract.eventCache.listings(
-      listingId,
-      'ListingCreated'
-    )
+    const events = await listing.contract.eventCache.getEvents({
+      listingID: String(listingId),
+      event: 'ListingCreated'
+    })
     return events[0]
   },
   featured: async listing => {
