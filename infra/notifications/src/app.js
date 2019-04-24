@@ -83,16 +83,18 @@ const rateLimiterOptions = {
   duration: 60
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-// use rate limiter on all root path methods
 app.all((req, res, next) => {
-  rateLimiter
-    .consume(req.connection.remoteAddress)
-    .then(() => {
-      next()
-    })
-    .catch(() => {
-      res.status(429).send('<h1>Too Many Requests</h1>')
-    })
+  if (!req.url.startsWith('/events')) {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        logger.error(`Rejecting request due to rate limiting.`)
+        res.status(429).send('<h2>Too Many Requests</h2>')
+      })
+  }
 })
 
 // Note: bump up default payload max size since the event-listener posts
