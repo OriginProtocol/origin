@@ -12,6 +12,7 @@ import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
+import withIsMobile from 'hoc/withIsMobile'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -114,6 +115,33 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
+    // Renders mobile header with close button when on mobile device
+    renderMobileHeaderOption(title) {
+      if (this.props.ismobile === 'false')
+        return ''
+
+      return (
+        <div className="header d-flex mb-4">
+          <div
+            className="col-2 d-flex justify-content-center align-items-center back"
+            onClick={() => {
+              this.setState({
+                open: false
+              })
+            }}
+          >
+            <img className="caret left" src="images/caret-white.svg" />
+            <img className="caret right" src="images/caret-white.svg" />
+          </div>
+          <div className="container d-flex justify-content-center align-items-center col-8">
+            {title}
+          </div>
+          <div className="col-2"></div>
+        </div>
+      )
+
+    }
+
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
       return (
@@ -146,39 +174,42 @@ function withEnrolmentModal(WrappedComponent) {
 
             return (
               <div className="join-campaign">
-                <div>
-                  <img
-                    className="mr-auto ml-auto"
-                    src="images/growth/campaign-graphic.svg"
-                  />
-                </div>
-                <div className="title title-light mt-4 ml-5 mr-5">
-                  <fbt desc="GrowthEnrollment.joinOurCampaignTitle">
-                    Join our
-                    <fbt:param name="campaignName">{campaignName}</fbt:param>
-                    to earn tokens
-                  </fbt>
-                </div>
-                <div className="mt-3 normal-line-height ml-4 mr-4">
-                  <fbt desc="GrowthEnrollment.joinOurCampaignExplanation">
-                    Earn OGN by completing tasks like verifying your identity
-                    and sharing Origin with your friends. OGN can be used in a
-                    variety of ways. Earned OGN will be transferred after the
-                    end of the
-                    <fbt:param name="campaignName">{campaignName}</fbt:param>.
-                  </fbt>
-                </div>
-                <div className="d-flex align-items-center flex-column">
-                  <button
-                    className="btn btn-outline-light"
-                    onClick={() => this.handleJoinCampaignContinue()}
-                    children={fbt('Get Started', 'Get Started')}
-                  />
-                  <button
-                    className="btn btn-no-outline"
-                    onClick={() => this.handleCloseModal()}
-                    children={fbt('Dismiss', 'Dismiss')}
-                  />
+                {this.renderMobileHeaderOption(fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign'))}
+                <div className="internal-modal-content"> 
+                  <div>
+                    <img
+                      className="mr-auto ml-auto"
+                      src="images/growth/campaign-graphic.svg"
+                    />
+                  </div>
+                  <div className="title title-light mt-4 ml-5 mr-5">
+                    <fbt desc="GrowthEnrollment.joinOurCampaignTitle">
+                      Join our
+                      <fbt:param name="campaignName">{campaignName}</fbt:param>
+                      to earn tokens
+                    </fbt>
+                  </div>
+                  <div className="mt-3 normal-line-height ml-4 mr-4">
+                    <fbt desc="GrowthEnrollment.joinOurCampaignExplanation">
+                      Earn OGN by completing tasks like verifying your identity
+                      and sharing Origin with your friends. OGN can be used in a
+                      variety of ways. Earned OGN will be transferred after the
+                      end of the
+                      <fbt:param name="campaignName">{campaignName}</fbt:param>.
+                    </fbt>
+                  </div>
+                  <div className="d-flex align-items-center flex-column">
+                    <button
+                      className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'}`}
+                      onClick={() => this.handleJoinCampaignContinue()}
+                      children={fbt('Get Started', 'Get Started')}
+                    />
+                    <button
+                      className="btn btn-no-outline"
+                      onClick={() => this.handleCloseModal()}
+                      children={fbt('Dismiss', 'Dismiss')}
+                    />
+                  </div>
                 </div>
               </div>
             )
@@ -189,74 +220,78 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderTermsModal() {
       const { termsAccepted } = this.state
+      const isMobile = this.props.ismobile === 'true'
       return (
         <div>
-          <div className="title title-light mt-2">
-            <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
-          </div>
-          <div className="pl-5 pr-5 mt-3 normal-line-height pale-grey">
-            {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
-            Join Origin’s reward program to earn Origin tokens (OGN). Terms and
-            conditions apply.
-            {/*</fbt>*/}
-          </div>
-          <div className="pt-1 mt-4 normal-line-height pale-grey explanation">
-            {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
-            Earned OGN will be distributed at the end of each campaign. OGN is
-            currently locked for usage on the Origin platform and cannot be
-            transferred. It is expected that OGN will be unlocked and
-            transferrable in the future.
-            {/*</fbt>*/}
-          </div>
-          <div className="mt-3 normal-line-height pale-grey explanation">
-            {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
-            By joining the Origin rewards program, you agree that you will not
-            transfer or sell future earned Origin tokens to other for at least 1
-            year from the date of earning your tokens.
-            {/*</fbt>*/}
-          </div>
-          <div className="terms pale-grey">
-            {/*<fbt desc="EnrollmentModal.termsBody">*/}
-            OGN are being issued in a transaction originally exempt from
-            registration under the U.S. Securities Act of 1933, as amended (the
-            “Securities Act”), and may not be transferred in the United States
-            to, or for the account or benefit of, any U.S. person except
-            pursuant to an available exemption from the registration
-            requirements of the Securities Act and all applicable state
-            securities laws. Terms used above have the meanings given to them in
-            Regulation S under the Securities Act and all applicable laws and
-            regulations.
-            {/*</fbt>*/}
-          </div>
-          <div className="mt-1 d-flex country-check-label justify-content-center">
-            <label className="checkbox-holder">
-              <input
-                type="checkbox"
-                className="country-check"
-                onChange={e => this.handleAcceptTermsCheck(e)}
-                value="cofirm-citizenship"
+          {this.renderMobileHeaderOption(fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin'))}
+          <div className="internal-modal-content">
+            {!isMobile && <div className="title title-light mt-2">
+              <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
+            </div>}
+            <div className="pl-5 pr-5 mt-3 normal-line-height pale-grey">
+              {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
+              Join Origin’s reward program to earn Origin tokens (OGN). Terms and
+              conditions apply.
+              {/*</fbt>*/}
+            </div>
+            <div className="pt-1 mt-4 normal-line-height pale-grey explanation">
+              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
+              Earned OGN will be distributed at the end of each campaign. OGN is
+              currently locked for usage on the Origin platform and cannot be
+              transferred. It is expected that OGN will be unlocked and
+              transferrable in the future.
+              {/*</fbt>*/}
+            </div>
+            <div className="mt-3 normal-line-height pale-grey explanation">
+              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
+              By joining the Origin rewards program, you agree that you will not
+              transfer or sell future earned Origin tokens to other for at least 1
+              year from the date of earning your tokens.
+              {/*</fbt>*/}
+            </div>
+            <div className="terms pale-grey">
+              {/*<fbt desc="EnrollmentModal.termsBody">*/}
+              OGN are being issued in a transaction originally exempt from
+              registration under the U.S. Securities Act of 1933, as amended (the
+              “Securities Act”), and may not be transferred in the United States
+              to, or for the account or benefit of, any U.S. person except
+              pursuant to an available exemption from the registration
+              requirements of the Securities Act and all applicable state
+              securities laws. Terms used above have the meanings given to them in
+              Regulation S under the Securities Act and all applicable laws and
+              regulations.
+              {/*</fbt>*/}
+            </div>
+            <div className="mt-1 d-flex country-check-label justify-content-center">
+              <label className="checkbox-holder">
+                <input
+                  type="checkbox"
+                  className="country-check"
+                  onChange={e => this.handleAcceptTermsCheck(e)}
+                  value="cofirm-citizenship"
+                />
+                <span className="checkmark" />
+                &nbsp;
+                <fbt desc="EnrollmentModal.termAccept">
+                  I accept the terms and conditions
+                </fbt>
+              </label>
+            </div>
+            <div className="d-flex justify-content-center">
+              <button
+                className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'} mr-2`}
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Cancel', 'Cancel')}
               />
-              <span className="checkmark" />
-              &nbsp;
-              <fbt desc="EnrollmentModal.termAccept">
-                I accept the terms and conditions
-              </fbt>
-            </label>
-          </div>
-          <div className="d-flex justify-content-center">
-            <button
-              className="btn btn-outline-light mr-2"
-              onClick={() => this.handleCloseModal()}
-              children={fbt('Cancel', 'Cancel')}
-            />
-            <button
-              className={`btn btn-lg ml-2 ${
-                termsAccepted ? 'btn-primary btn-rounded' : 'btn-outline-light'
-              }`}
-              onClick={() => this.handleTermsContinue()}
-              disabled={termsAccepted ? undefined : 'disabled'}
-              children={fbt('Accept Terms', 'Accept Terms')}
-            />
+              <button
+                className={`btn btn-lg ml-2 ${
+                  termsAccepted ? 'btn-primary btn-rounded' : (this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light')
+                }`}
+                onClick={() => this.handleTermsContinue()}
+                disabled={termsAccepted ? undefined : 'disabled'}
+                children={fbt('Accept Terms', 'Accept Terms')}
+              />
+            </div>
           </div>
         </div>
       )
@@ -318,7 +353,7 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
-              className="btn btn-outline-light"
+              className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'}`}
               onClick={() => this.handleCloseModal()}
               children={fbt('Done', 'Done')}
             />
@@ -449,7 +484,7 @@ function withEnrolmentModal(WrappedComponent) {
                       />
                       {open && (
                         <Modal
-                          className="growth-enrollment-modal"
+                          className={`growth-enrollment-modal ${this.props.ismobile === 'true' ? 'mobile' : ''}`}
                           onClose={() => {
                             this.setState({
                               open: false
@@ -470,11 +505,13 @@ function withEnrolmentModal(WrappedComponent) {
     }
   }
 
-  // do not pass staticContext prop to component to prevent react errors in browser console
-  // eslint-disable-next-line no-unused-vars
-  return withRouter(({ staticContext, location, match, ...props }) => (
-    <WithEnrolmentModal {...props} />
-  ))
+  return withIsMobile(
+    // do not pass staticContext prop to component to prevent react errors in browser console
+    // eslint-disable-next-line no-unused-vars
+    withRouter(({ staticContext, location, match, ...props }) => (
+      <WithEnrolmentModal {...props} />
+    ))
+  )
 }
 
 export default withEnrolmentModal
@@ -487,6 +524,24 @@ require('react-styl')(`
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
+    .header
+      background-color: var(--dusk)
+      height: 3.75rem
+      .back
+        cursor: pointer
+        .caret
+          height: 1.31rem
+        .caret.left
+          transform: rotate(90deg)
+        .caret.right
+          margin-left: -3.425rem
+          transform: rotate(270deg)
+      .container
+        height: 100%
+        font-family: Lato
+        font-size: 1.375rem
+        font-weight: bold
+        color: white
     .normal-line-height
       line-height: normal
     .title
@@ -578,6 +633,26 @@ require('react-styl')(`
         text-decoration: underline
         color: white
         margin-top: 1.2rem
+  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .growth-enrollment-modal.mobile
+    max-width: 767px !important
+    color: var(--dark)
+    .internal-modal-content
+      max-width: 520px
+      margin-left: auto
+      margin-right: auto
+    .join-campaign
+      .btn-no-outline
+        color: var(--clear-blue)
+    .checkbox-holder
+      color: var(--steel)
+  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
+    padding: 0px
+  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
+    background-color: var(--pale-grey-four)
+    padding: 0px
+    border-radius: 0px
+    height: 100%
+    width: 100%
   @media (max-width: 767.98px)
     .growth-enrollment-modal.pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
       font-size: 15px

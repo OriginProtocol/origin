@@ -12,11 +12,11 @@ class ActionList extends Component {
     this.animationLock = false
   }
 
-  renderFilter(filterText, filterName) {
+  renderFilter(filterText, filterName, isMobile) {
     const currentFilter = this.state.filter
     return (
       <button
-        className={`ml-3 filter ${
+        className={`${isMobile ? '' : 'ml-3'} filter ${
           currentFilter === filterName ? 'selected' : ''
         }`}
         onClick={async () => await this.handleFilterClick(filterName)}
@@ -76,28 +76,31 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, handleNavigationChange } = this.props
+    const { title, decimalDivision, handleNavigationChange, isMobile } = this.props
 
     const { actionsToDisplay } = this.state
 
     return (
-      <div className="action-list">
+      <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
         <div className="filters d-flex">
-          <div className="show">
+          {!isMobile && <div className="show">
             <fbt desc="growth.action-list.show">Show</fbt>
-          </div>
-          {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all')}
+          </div>}
+          {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all', isMobile)}
           {this.renderFilter(
             fbt('Unlocked', 'growth.action-list.unlocked'),
-            'unlocked'
+            'unlocked',
+            isMobile
           )}
           {this.renderFilter(
             fbt('Locked', 'growth.action-list.locked'),
-            'locked'
+            'locked',
+            isMobile
           )}
           {this.renderFilter(
             fbt('Completed', 'growth.action-list.completed'),
-            'completed'
+            'completed',
+            isMobile
           )}
         </div>
         <div className="d-flex flex-column">
@@ -109,6 +112,7 @@ class ActionList extends Component {
                 decimalDivision={decimalDivision}
                 key={`${action.type}:${action.status}`}
                 handleNavigationChange={handleNavigationChange}
+                isMobile={isMobile}
               />
             )
           })}
@@ -136,10 +140,15 @@ require('react-styl')(`
         border-radius: 15px
         background-color: white
         border: 0px
-        min-width: 110px
+        min-width: 6.875rem
         &:hover
           background-color: var(--pale-grey-four)
       .filter.selected
         background-color: var(--pale-grey)
         color: var(--dusk)
+  .action-list.mobile
+    margin-top: 2.2rem
+    .filters
+      .filter
+        min-width: 5.31rem
 `)

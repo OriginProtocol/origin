@@ -11,8 +11,9 @@ function Action(props) {
     reward,
     rewardEarned,
     rewardPending,
-    unlockConditions
+    unlockConditions,
   } = props.action
+  const isMobile = props.isMobile
 
   const actionLocked = status === 'Inactive'
 
@@ -128,7 +129,7 @@ function Action(props) {
   }
 
   return wrapIntoInteraction(
-    <div className={`d-flex action ${isInteractable && 'active'}`}>
+    <div className={`d-flex action ${isInteractable && 'active'} ${isMobile ? 'mobile' : ''}`}>
       <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
           {
@@ -141,7 +142,7 @@ function Action(props) {
       </div>
       <div className={`d-flex flex-column justify-content-center col-6`}>
         <div className="title">{title}</div>
-        {actionLocked && unlockConditions.length > 0 && (
+        {actionLocked && !isMobile && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
               <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
@@ -209,7 +210,7 @@ function Action(props) {
         )}
         {/* Just a padding placeholder*/}
         {actionCompleted && (
-          <div className="ml-3">
+          <div className={`${isMobile ? 'ml-1' : 'ml-3'}`}>
             <div className="placeholder ml-2" />
           </div>
         )}
@@ -280,7 +281,7 @@ require('react-styl')(`
         top: 16px
         width: 29px
       .lock
-        width: 40px
+        width: 2.5rem
       .image-holder
         position: relative
       .title
@@ -322,4 +323,61 @@ require('react-styl')(`
         padding-left: 0px
       .placeholder
         width: 40px
+  .growth-campaigns.container.mobile
+    .action
+      height: 80px
+      margin-top: 10px
+      padding: 10px 0px 10px 20px
+      .background
+        width: 2.5rem
+      .profile
+        left: 11.5px
+        top: 12px
+        width: 18px
+      .email
+        left: 12px
+        top: 15px
+        width: 18px
+      .phone
+        left: 15px
+        top: 12px
+        width: 11.5px
+      .facebook
+        left: 14px
+        top: 12px
+        width: 10px
+      .airbnb
+        left: 9px
+        top: 11px
+        width: 22.5px
+      .twitter
+        left: 11px
+        top: 13px
+        width: 20px
+      .listingsold
+        left: 9px
+        top: 10px
+        width: 24.5px
+      .listingpurchased
+        left: 9px
+        top: 11px
+        width: 23px
+      .referral
+        left: 10px
+        top: 11px
+        width: 20px
+      .title
+        font-size: 16px
+        line-height: 1.2
+      .btn
+        border-radius: 7rem
+        width: 1.65rem
+        height: 1.65rem
+        padding-left: 0.6rem
+      .button-caret
+        width: 16px
+        margin-bottom: 15px
+        margin-left: -4px
+      .lock
+        width: 1.56rem
 `)
