@@ -29,13 +29,16 @@ import {
   removeAccount,
   setAccountActive,
   setAccountBalances,
-  setAccountName
+  setAccountName,
+  setMessagingKeys
 } from 'actions/Wallet'
 import {
   BALANCE_POLL_INTERVAL,
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES,
-  NETWORKS
+  NETWORKS,
+  PROMPT_MESSAGE,
+  PROMPT_PUB_KEY
 } from './constants'
 import { loadData, deleteData } from './tools'
 
@@ -214,6 +217,30 @@ class OriginWallet extends Component {
     }
   }
 
+  /* Generate the signatures required for activating messaging
+  */
+  async generateMessagingKeys() {
+    const { wallet } = this.props
+
+    const signatureKey = await this.web3.eth.accounts.sign(
+      PROMPT_MESSAGE,
+      wallet.activeAccount.privateKey
+    ).signature.substring(0, 66)
+
+    const pubMessage = PROMPT_PUB_KEY + wallet.activeAccount.address
+    const pubSignature = await this.web3.eth.accounts.sign(
+      pubMessage,
+      wallet.activeAccount.privateKey
+    ).signature
+
+    this.props.setMessagingKeys({
+      address: wallet.activeAccount.address,
+      signatureKey,
+      pubMessage,
+      pubSignature
+    })
+  }
+
   /* Create new account
    */
   async createAccount() {
@@ -262,6 +289,7 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     this.props.setAccountActive(account)
+    await this.generateMessagingKeys()
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
@@ -476,6 +504,7 @@ const mapDispatchToProps = dispatch => ({
   setAccountBalances: balances => dispatch(setAccountBalances(balances)),
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
+  setMessagingKeys: payload => dispatch(setMessagingKeys(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
   setNetwork: network => dispatch(setNetwork(network)),
   addNotification: notification => dispatch(addNotification(notification))
