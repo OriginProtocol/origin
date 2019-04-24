@@ -45,10 +45,6 @@ describe('EventCache', function() {
 
   })
 
-  after(async function() {
-    console.debug('AFTER')
-  })
-
   it('should initialize the proper backend', async () => {
     // Memory
     const memoryBackend = new InMemoryBackend()
