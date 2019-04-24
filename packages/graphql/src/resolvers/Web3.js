@@ -23,7 +23,7 @@ const web3Resolver = {
     const id = await netId(contracts.net)
     return networkName(id)
   },
-  blockNumber: () => contracts.marketplace.eventCache.getBlockNumber(),
+  blockNumber: () => contracts.marketplace.eventCache.latestBlock,
   nodeAccounts: () =>
     new Promise(resolve => {
       contracts.web3.eth
