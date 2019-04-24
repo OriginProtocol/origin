@@ -96,8 +96,8 @@ export default {
       }
       id = accounts[0]
     } else if (id === 'currentAccount') {
-      if (contracts.messaging.accountKey) {
-        id = contracts.messaging.accountKey
+      if (contracts.messaging.account_key) {
+        id = contracts.messaging.account_key
       }
     }
     id = contracts.web3.utils.toChecksumAddress(id)

@@ -3,7 +3,7 @@ import contracts from '../../contracts'
 import { totalUnread } from './Conversation'
 
 function isEnabled() {
-  return contracts.messaging.pubSignature &&
+  return contracts.messaging.pub_sig &&
     contracts.messaging.account &&
     contracts.messaging.account.publicKey
     ? true
