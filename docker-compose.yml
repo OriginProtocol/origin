@@ -105,8 +105,8 @@ services:
       - postgres
       - redis-master
     ports:
-      - "9012:9012"
       - "6647:6647"
+      - "9012:9012"
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
