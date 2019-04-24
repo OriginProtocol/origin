@@ -228,12 +228,6 @@ app.post('/events', async (req, res) => {
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
 
-  // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
-
-  // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
-
   // Email notifications
   emailSend(
     eventName,
@@ -244,6 +238,13 @@ app.post('/events', async (req, res) => {
     listing,
     config
   )
+
+  // Mobile Push (linker) notifications
+  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+
+  // Browser push subscripttions
+  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
+
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
