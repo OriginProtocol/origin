@@ -18,7 +18,12 @@ const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
-    if (!instance.loadedCache && instance.ipfsEventCache) {
+    if (
+      instance.ipfsEventCache &&
+      !instance.loadedCache &&
+      (!instance.cacheMaxBlock ||
+        instance.latestIndexedBlock < instance.cacheMaxBlock)
+    ) {
       try {
         debug('Loading event cache from IPFS', instance.ipfsEventCache)
         const cachedEvents = flattenDeep(
@@ -30,7 +35,7 @@ const getPastEvents = memoize(
         debug(`Loaded ${cachedEvents.length} events from IPFS cache`)
         debug(`Last cached blockNumber: ${fromBlock}`)
         debug(`Latest indexed block: ${instance.latestIndexedBlock}`)
-        if (Number(lastCached) > Number(instance.latestIndexedBlock)) {
+        if (Number(lastCached) - 1 > Number(instance.latestIndexedBlock)) {
           debug(`Adding IPFS events to backend`)
           await instance.backend.addEvents(cachedEvents)
           fromBlock = lastCached
@@ -156,6 +161,7 @@ class EventCache {
       conf.ipfsEventCache && conf.ipfsEventCache.length
         ? conf.ipfsEventCache
         : null
+    this.cacheMaxBlock = conf.cacheMaxBlock
 
     /**
      * Only reason to set this false is if something external will manage the
