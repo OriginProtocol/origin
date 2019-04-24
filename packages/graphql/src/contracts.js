@@ -7,9 +7,8 @@ import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
+import { patchWeb3Contract } from '@origin/event-cache'
 
-import eventCache from './utils/eventCache'
-import genericEventCache from './utils/genericEventCache'
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
 
@@ -50,8 +49,8 @@ export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
-  context.marketplace.eventCache.updateBlock(blockHeaders.number)
-  context.identityEvents.eventCache.updateBlock(blockHeaders.number)
+  context.marketplace.eventCache.setLatestBlock(lastBlock)
+  context.identityEvents.eventCache.setLatestBlock(lastBlock)
   context.eventSource.resetCache()
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
@@ -353,12 +352,17 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  context.marketplace.eventCache = eventCache(
-    context.marketplace,
-    epoch,
-    context.web3,
-    context.config
-  )
+  patchWeb3Contract(context.marketplace, epoch, {
+    ...context.config,
+    useLatestFromChain: false,
+    ipfsEventCache: context.config.V00_Marketplace_EventCache,
+    prefix:
+      typeof address === 'undefined'
+        ? 'Marketplace_'
+        : `${address.slice(2, 8)}_`,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser'
+  })
+
   if (address) {
     context.marketplaces = [context.marketplace]
   } else {
@@ -387,13 +391,17 @@ export function setIdentityEvents(address, epoch) {
     IdentityEventsContract.abi,
     address
   )
-  context.identityEvents.eventCache = genericEventCache(
-    context.identityEvents,
-    epoch,
-    context.web3,
-    context.config,
-    context.config.IdentityEvents_EventCache
-  )
+  patchWeb3Contract(context.identityEvents, epoch, {
+    ...context.config,
+    ipfsEventCache: context.config.IdentityEvents_EventCache,
+    useLatestFromChain: false,
+    prefix:
+      typeof address === 'undefined'
+        ? 'IdentityEvents_'
+        : `${address.slice(2, 8)}_`,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
+    batchSize: 2500
+  })
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {
@@ -424,6 +432,7 @@ if (isBrowser) {
     metaMask = applyWeb3Hack(new Web3(window.web3.currentProvider))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   }
+
   setNetwork(window.localStorage.ognNetwork || 'mainnet')
 }
 

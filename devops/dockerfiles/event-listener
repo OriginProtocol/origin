@@ -16,6 +16,7 @@ COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
 COPY ./packages/messaging-client ./packages/messaging-client
@@ -35,6 +36,7 @@ RUN npm install --unsafe-perm
 COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
 
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix infra/discovery && \
+    npm run migrate --prefix infra/discovery && \
+	npm run migrate --prefix packages/event-cache && \
 	npm run migrate --prefix infra/identity && \
 	npm run start:listener --prefix infra/discovery
