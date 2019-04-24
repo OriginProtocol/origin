@@ -13,6 +13,7 @@ RUN mv envkey-source /usr/local/bin
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
 COPY ./packages/mobile-bridge ./packages/mobile-bridge
