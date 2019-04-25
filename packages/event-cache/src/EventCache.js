@@ -18,7 +18,12 @@ const limiter = new Bottleneck({ maxConcurrent: 25 })
 
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
-    if (!instance.loadedCache && instance.ipfsEventCache) {
+    if (
+      instance.ipfsEventCache &&
+      !instance.loadedCache &&
+      (!instance.cacheMaxBlock ||
+        instance.latestIndexedBlock < instance.cacheMaxBlock)
+    ) {
       try {
         debug('Loading event cache from IPFS', instance.ipfsEventCache)
         const cachedEvents = flattenDeep(
@@ -26,10 +31,15 @@ const getPastEvents = memoize(
             instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
           )
         )
-        fromBlock = cachedEvents[cachedEvents.length - 1].blockNumber + 1
-        debug(`Last cached blockNumber: ${fromBlock}`)
+        const lastCached = cachedEvents[cachedEvents.length - 1].blockNumber + 1
         debug(`Loaded ${cachedEvents.length} events from IPFS cache`)
-        await instance.backend.addEvents(cachedEvents)
+        debug(`Last cached blockNumber: ${fromBlock}`)
+        debug(`Latest indexed block: ${instance.latestIndexedBlock}`)
+        if (Number(lastCached) - 1 > Number(instance.latestIndexedBlock)) {
+          debug(`Adding IPFS events to backend`)
+          await instance.backend.addEvents(cachedEvents)
+          fromBlock = lastCached
+        }
       } catch (e) {
         debug(`Error loading IPFS events`, e)
       }
@@ -47,7 +57,7 @@ const getPastEvents = memoize(
     const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
 
-    instance.lastQueriedBlock = toBlock + 1
+    instance.lastQueriedBlock = toBlock
 
     if (!numBlocks) return
 
@@ -151,6 +161,7 @@ class EventCache {
       conf.ipfsEventCache && conf.ipfsEventCache.length
         ? conf.ipfsEventCache
         : null
+    this.cacheMaxBlock = conf.cacheMaxBlock
 
     /**
      * Only reason to set this false is if something external will manage the
@@ -170,17 +181,22 @@ class EventCache {
    * @returns {Array} An array of event objects
    */
   async _fetchEvents() {
-    let fromBlock = this.lastQueriedBlock || this.originBlock
-    const latestKnown = await this.backend.getLatestBlock()
-
-    if (latestKnown > fromBlock) {
-      debug(`Set fromBlock to latestKnown (${latestKnown}) + 1`)
-      fromBlock = latestKnown + 1
-    }
-
     let toBlock = this.latestBlock
     if (this.useLatestFromChain || !toBlock) {
       toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
+    }
+
+    if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
+      return
+    }
+
+    let fromBlock = this.lastQueriedBlock
+      ? this.lastQueriedBlock + 1
+      : this.originBlock
+    this.latestIndexedBlock = await this.backend.getLatestBlock()
+
+    if (this.latestIndexedBlock > fromBlock) {
+      fromBlock = this.latestIndexedBlock + 1
     }
 
     if (fromBlock > toBlock) {

@@ -10,22 +10,26 @@ export default {
   bridge: 'https://bridge.originprotocol.com',
   notifications: 'https://notifications.originprotocol.com',
   IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
-  IdentityEvents_Epoch: '7046530',
+  IdentityEvents_Epoch: 7046530,
+  IdentityEvents_EventCacheMaxBlock: 7631468,
   IdentityEvents_EventCache: [
-    'QmRHLLD86gf7YVUqWSpvsjZNndK8U3n6EMBowLgmYpZRgk',
-    'QmPoeDDD8HNptqmzrAHcHc9UTh62aAjJbJ6Nqej9pAyZtH',
-    'Qmdm23cmBMNv1hz7gYnmEyuVYsHJVRXQm2YfB4oM86cAwe'
+    'QmVTuRC16Pw2iwEsmAaaLUMVY3PKa3VQ2DzyUdTYwiFJUf',
+    'QmQDFYHXVKkwhEF7jgB4twnXcgDH7NQPDWayCGFasJKaok',
+    'QmbKmUHJ2JJ1ZuoHtrDtD615mQKu91DXepGB75AwyRxy6d',
+    'QmNQuZynZNNepPR4ntZYoGDa9JUKBwApXvLQHM9chBXKWo',
+    'QmZ9ANQNA1r3cbPSMNc9YFyAEijXif2j9m6SyaKDMJ8RsL'
   ],
   attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
   OriginToken: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
   V00_Marketplace: '0x819bb9964b6ebf52361f1ae42cf4831b921510f9',
-  V00_Marketplace_Epoch: '6436157',
+  V00_Marketplace_Epoch: 6436157,
+  V00_Marketplace_EventCacheMaxBlock: 7631592,
   V00_Marketplace_EventCache: [
     'QmbViWEBRQmjmxC5VyELJDeW1auSxgRgjWpw5djcCctPMC',
     'QmaMSwML8H1ZREYFKGcdXXRP96JbGA4EShY9DcNmCH5FKD',
     'QmTKCVgs9xuzqH3D86eDF7G2kxmyW1LLmAv4BN3p1evCgD',
     'QmRhtc4tksc9BAwjzw2GJ1D9Hvf1KXyYcEtoEUSeqBjXCX',
-    'QmY6noUzQEo9SUy4Mk1RpshHb7Qwn9sZqwa5PvxAYZyJpz'
+    'QmS1ZX41WcG4egabpC3BThC5WNUaRvJYm3urBuCXsxgtbb'
   ],
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
   messaging: {
