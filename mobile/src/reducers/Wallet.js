@@ -11,7 +11,13 @@ const initialState = {
     ogn: 0
   },
   activeAccount: null,
-  accountServerNotifications: {}
+  accountServerNotifications: {},
+  messagingKeys: {
+    address: null,
+    signattureKey: null,
+    pubMessage: null,
+    pubSignature: null
+  }
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -60,6 +66,12 @@ export default function Wallet(state = initialState, action = {}) {
           ...state.accountNameMapping,
           [action.payload.address]: action.payload.name
         }
+      }
+
+    case WalletConstants.SET_MESSAGING_KEYS:
+      return {
+        ...state,
+        messagingKeys: action.payload
       }
   }
 

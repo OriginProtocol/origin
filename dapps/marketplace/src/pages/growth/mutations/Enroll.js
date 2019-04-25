@@ -57,11 +57,11 @@ class Enroll extends Component {
                         agreementMessage: this.state.message,
                         signature: signMessage,
                         inviteCode: localStorage.getItem('growth_invite_code'),
-                        fingerprint: this.props.fingerprint
+                        fingerprintData: this.props.fingerprintData
                       }
                     })
                   }}
-                  onError={errorData =>
+                  onError={errorData => {
                     this.setState({
                       error: fbt(
                         'Message signature unsuccessful',
@@ -69,7 +69,7 @@ class Enroll extends Component {
                       ),
                       errorData
                     })
-                  }
+                  }}
                 >
                   {signMessage => (
                     <Fragment>
