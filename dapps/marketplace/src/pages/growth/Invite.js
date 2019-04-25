@@ -687,4 +687,10 @@ require('react-styl')(`
     .track-invites
       .reward-holder
         margin-top: 0.625rem
+      .reward.big
+        font-size: 1.125rem
+        height: 2rem
+        padding-right: 0.75rem
+        img
+          width: 1.25rem
 `)
