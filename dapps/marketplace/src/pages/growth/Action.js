@@ -105,7 +105,7 @@ function Action(props) {
     showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
     showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
 
-    // only mobile layout show only 1 reward at a time
+    // when on mobile layout show only 1 reward type at a time
     showReferralPending = isMobile
       ? showReferralPending && !showReferralEarned
       : showReferralPending

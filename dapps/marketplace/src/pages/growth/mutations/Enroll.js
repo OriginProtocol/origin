@@ -129,7 +129,7 @@ class Enroll extends Component {
                               className="metamask-video"
                               width="320"
                               heigh="240"
-                              onLoadStart={() => signMessageWithArgs}
+                              onLoadStart={() => signMessageWithArgs()}
                               autoPlay
                               loop
                             >
