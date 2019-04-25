@@ -16,7 +16,7 @@ const currentAgreementMessage =
  * @param {string} accountId - Eth address of the user.
  * @param {string} agreementMessage - Message presented to user to sign.
  * @param {string} signature - Signed message.
- * @param {string} fingerprint - Browser fingerprint
+ * @param {Object} fingerprintData - Browser fingerprint data.
  * @param {string} ip - IP address the request was initiated from.
  * @param {string} country - 2 letters country code.
  * @returns {Promise<any>}
@@ -25,7 +25,7 @@ async function authenticateEnrollment(
   accountId,
   agreementMessage,
   signature,
-  fingerprint,
+  fingerprintData,
   ip,
   country
 ) {
@@ -71,7 +71,7 @@ async function authenticateEnrollment(
     status: enums.GrowthParticipantStatuses.Active,
     agreementId: agreementMessage,
     authToken: authToken,
-    data: { fingerprint },
+    data: fingerprintData,
     ip,
     country
   }
