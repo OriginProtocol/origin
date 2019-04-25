@@ -12,8 +12,7 @@
  */
 
 import { Component } from 'react'
-import { Alert, DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
-import PushNotification from 'react-native-push-notification'
+import { DeviceEventEmitter } from 'react-native'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
@@ -22,8 +21,7 @@ import graphqlContext, {
   setNetwork as setGraphqlNetwork
 } from '@origin/graphql/src/contracts'
 
-import { addNotification } from 'actions/Notification'
-import { setDeviceToken, setNetwork } from 'actions/Settings'
+import { setNetwork } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
@@ -34,13 +32,11 @@ import {
 } from 'actions/Wallet'
 import {
   BALANCE_POLL_INTERVAL,
-  DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES,
   NETWORKS,
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
 } from './constants'
-import { loadData, deleteData } from './tools'
+import { loadData } from './tools'
 
 class OriginWallet extends Component {
   constructor(props) {
@@ -75,10 +71,6 @@ class OriginWallet extends Component {
     )
     DeviceEventEmitter.addListener('signMessage', this.signMessage.bind(this))
     DeviceEventEmitter.addListener('getBalances', this.getBalances.bind(this))
-    DeviceEventEmitter.addListener(
-      'requestNotificationPermissions',
-      this.requestNotificationPermissions.bind(this)
-    )
   }
 
   async componentDidMount() {
@@ -179,7 +171,7 @@ class OriginWallet extends Component {
   /* Configure web3 using the accounts persisted in redux
    */
   initAccounts() {
-    const { wallet, settings } = this.props
+    const { wallet } = this.props
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from the data store
     this.web3.eth.accounts.wallet.clear()
@@ -217,7 +209,7 @@ class OriginWallet extends Component {
     ) {
       // Messaging keys address is different to the active account address,
       // update messaging keys
-      const privateKey = wallet.activeAccount.privateKey
+      let privateKey = wallet.activeAccount.privateKey
       if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
         privateKey = '0x' + privateKey
       }
@@ -388,126 +380,6 @@ class OriginWallet extends Component {
       })
   }
 
-  /* Configure push notifications
-   */
-  initNotifications() {
-    const { wallet } = this.props
-
-    // Add an event listener to log registration errors in development
-    if (__DEV__) {
-      PushNotificationIOS.addEventListener('registrationError', error =>
-        console.log(error)
-      )
-    }
-
-    PushNotification.configure({
-      // Called when Token is generated (iOS and Android) (optional)
-      onRegister: function(deviceToken) {
-        if (wallet.activeAccount && wallet.activeAccount.address) {
-          // Save the device token into redux for later use with other accounts
-          this.props.setDeviceToken(deviceToken['token'])
-          // Make sure the device token is registered with the server
-          this.registerDeviceToken()
-        }
-      }.bind(this),
-      // Called when a remote or local notification is opened or received
-      onNotification: function(notification) {
-        this.onNotification(notification)
-        // https://facebook.github.io/react-native/docs/pushnotificationios.html
-        if (Platform.OS === 'ios') {
-          notification.finish(PushNotificationIOS.FetchResult.NoData)
-        }
-      }.bind(this),
-      // Android only
-      senderID: process.env.GCM_SENDER_ID || '1234567',
-      // iOS only
-      permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
-      // Should the initial notification be popped automatically
-      popInitialNotification: true,
-      requestPermissions: Platform.OS !== 'ios'
-    })
-  }
-
-  /* Handles a notification by displaying an alert and saving it to redux
-   */
-  onNotification(notification) {
-    Alert.alert(notification.title, notification.message)
-    this.props.addNotification(notification)
-  }
-
-  /* Register the Ethereum address and device token for notifications with the
-   * notification server
-   */
-  async registerDeviceToken() {
-    const permissions =
-      Platform.OS === 'ios'
-        ? await PushNotificationIOS.requestPermissions()
-        : DEFAULT_NOTIFICATION_PERMISSIONS
-
-    const activeAddress = this.props.wallet.activeAccount.address
-    const deviceToken = this.props.settings.deviceToken
-    if (!activeAddress) {
-      console.debug('No active address')
-      return
-    }
-    if (!deviceToken) {
-      console.debug('No device token')
-      return
-    }
-
-    const notificationType = this.getNotificationType()
-    const notificationServer =
-      graphqlContext.config.notifications ||
-      'https://notifications.originprotocol.com'
-    const notificationRegisterEndpoint = `${notificationServer}/mobile/register`
-    return fetch(notificationRegisterEndpoint, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        eth_address: activeAddress,
-        device_token: deviceToken,
-        device_type: notificationType,
-        permissions: permissions
-      })
-    })
-      .catch(error => {
-        console.error(
-          'Failed to register notification address with notifications server',
-          error
-        )
-      })
-  }
-
-  /* Return the notification type that should be used for the platform
-   */
-  getNotificationType() {
-    if (Platform.OS === 'ios') {
-      return ETH_NOTIFICATION_TYPES.APN
-    } else if (Platform.OS === 'android') {
-      return ETH_NOTIFICATION_TYPES.FCM
-    }
-  }
-
-  /* Request permissions to send push notifications
-   */
-  async requestNotificationPermissions() {
-    console.debug('Requesting notification permissions')
-    if (Platform.OS === 'ios') {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        await PushNotificationIOS.requestPermissions()
-      )
-    } else {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        DEFAULT_NOTIFICATION_PERMISSIONS
-      )
-    }
-  }
-
   /* This is a renderless component
    */
   render() {
@@ -525,12 +397,8 @@ const mapDispatchToProps = dispatch => ({
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
   setAccountBalances: balances => dispatch(setAccountBalances(balances)),
-  setAccountServerNotifications: payload =>
-    dispatch(setAccountServerNotifications(payload)),
   setMessagingKeys: payload => dispatch(setMessagingKeys(payload)),
-  setDeviceToken: payload => dispatch(setDeviceToken(payload)),
-  setNetwork: network => dispatch(setNetwork(network)),
-  addNotification: notification => dispatch(addNotification(notification))
+  setNetwork: network => dispatch(setNetwork(network))
 })
 
 export default connect(

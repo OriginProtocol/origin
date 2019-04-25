@@ -22,7 +22,7 @@
     "android": "react-native run-android",
     "clean": "git clean -fdX .",
     "ios": "react-native run-ios",
-    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "lint": "eslint -c ./.eslintrc.js '**/*.js' && npm run prettier:check",
     "postinstall": "./postinstall.sh",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"**/*.js\"",
