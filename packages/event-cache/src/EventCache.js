@@ -34,7 +34,7 @@ const getPastEvents = memoize(
       instance.ipfsEventCache && // IPFS cache configured.
       !instance.loadedCache && // IPFS cache hasn't been loaded yet.
       (!instance.latestIndexedBlock || // Back-end does not support persistent storage. Always load cache at startup.
-        instance.latestIndexedBlock < instance.cacheMaxBlock) // Back-end supports indexing but indexed data is not as fresh as cache.
+        instance.latestIndexedBlock < instance.cacheMaxBlock) // Data indexed in back-end is not as fresh as cache.
     ) {
       try {
         debug('Loading event cache from IPFS', instance.ipfsEventCache)
