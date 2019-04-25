@@ -10,6 +10,7 @@ import ActionList from 'pages/growth/ActionList'
 import GrowthInvite from 'pages/growth/Invite'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withIsMobile from 'hoc/withIsMobile'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -42,9 +43,13 @@ function NavigationItem(props) {
 }
 
 function CampaignNavList(props) {
-  const { onNavigationClick, navigation } = props
+  const { onNavigationClick, navigation, isMobile } = props
   return (
-    <div className="campaign-list d-flex justify-content-left mt-4">
+    <div
+      className={`campaign-list d-flex justify-content-left ${
+        !isMobile ? 'mt-4' : ''
+      }`}
+    >
       <NavigationItem
         selected={navigation === 'currentCampaign'}
         onClick={() => onNavigationClick('currentCampaign')}
@@ -60,7 +65,7 @@ function CampaignNavList(props) {
 }
 
 function Campaign(props) {
-  const { campaign, handleNavigationChange, decimalDivision } = props
+  const { campaign, handleNavigationChange, decimalDivision, isMobile } = props
 
   const {
     startDate,
@@ -119,7 +124,7 @@ function Campaign(props) {
           )}
         </h1>
       </div>
-      <div>{subTitleText}</div>
+      <div className="subtitle">{subTitleText}</div>
       <div className="d-flex justify-content-between campaign-info">
         <div>
           {status !== 'Pending' && (
@@ -139,12 +144,13 @@ function Campaign(props) {
       <ProgressBar
         maxValue={maxProgressBarTokens}
         progress={tokenEarnProgress}
-        showIndicators={true}
+        showIndicators={!isMobile}
       />
       <ActionList
         actions={actions}
         decimalDivision={decimalDivision}
         handleNavigationChange={handleNavigationChange}
+        isMobile={isMobile}
       />
     </Fragment>
   )
@@ -237,7 +243,8 @@ class GrowthCampaign extends Component {
       handleNavigationChange,
       campaigns,
       accountId,
-      decimalDivision
+      decimalDivision,
+      isMobile
     } = this.props
 
     const activeCampaign = campaigns.find(
@@ -252,6 +259,7 @@ class GrowthCampaign extends Component {
           onNavigationClick={navigation => {
             this.setState({ navigation })
           }}
+          isMobile={isMobile}
         />
         {navigation === 'currentCampaign' && (
           <Campaign
@@ -261,6 +269,7 @@ class GrowthCampaign extends Component {
               handleNavigationChange(navigation)
             }
             decimalDivision={decimalDivision}
+            isMobile={isMobile}
           />
         )}
         {navigation === 'pastCampaigns' && (
@@ -295,9 +304,10 @@ class GrowthCampaigns extends Component {
 
   render() {
     const { navigation } = this.state
+    const isMobile = this.props.ismobile === 'true'
 
     return (
-      <div className="container growth-campaigns">
+      <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
@@ -308,6 +318,10 @@ class GrowthCampaigns extends Component {
               )
             } else if (error) {
               return <QueryError error={error} query={profileQuery} />
+            }
+
+            if (!data.web3.primaryAccount) {
+              return ''
             }
 
             const accountId = data.web3.primaryAccount.id
@@ -364,6 +378,7 @@ class GrowthCampaigns extends Component {
                           handleNavigationChange={navigation =>
                             this.handleNavigationChange(navigation)
                           }
+                          isMobile={isMobile}
                         />
                       )}
                       {navigation === 'Invite' && (
@@ -373,6 +388,7 @@ class GrowthCampaigns extends Component {
                           }
                           activeCampaign={activeCampaign}
                           decimalDivision={decimalDivision}
+                          isMobile={isMobile}
                         />
                       )}
                     </Fragment>
@@ -387,7 +403,7 @@ class GrowthCampaigns extends Component {
   }
 }
 
-export default withApollo(withGrowthCampaign(GrowthCampaigns))
+export default withIsMobile(withApollo(withGrowthCampaign(GrowthCampaigns)))
 
 require('react-styl')(`
   .growth-campaigns.container
@@ -426,10 +442,10 @@ require('react-styl')(`
         color: var(--dark)
     .past-campaigns
       .title
-        font-size: 21px
+        font-size: 1.31rem
         font-weight: bold
         font-style: normal
-        padding-top: 30px
+        padding-top: 1.875rem
       .total-earned
         font-size: 38px
         font-weight: bold
@@ -459,5 +475,38 @@ require('react-styl')(`
         .total-earned img
           width: 20px
           height: 20px
+  .growth-campaigns.mobile
+    h1
+      font-size: 2rem
+    .subtitle
+      font-size: 1rem
+    .campaign-info
+      font-size: 1rem
+      padding-top: 1.875rem
+      .ogn-icon
+        width: 1.875rem
+    .past-campaigns
+      .title
+        font-size: 1.12rem
+        padding-top: 0.8rem
+      .total-earned
+        font-size: 1.6rem
+      .total-earned img
+        width: 1.6rem
+        height: 1.6rem
+      .past-campaign
+        margin-top: 2rem
+        .campaign-title
+          font-size: 1.3rem
+        .tokens-earned-holder
+          margin-top: 0.6rem
+          .tokens-earned
+            font-size: 1.1rem
+        .total-earned
+          font-size: 1rem
+          line-height: 1.3
+        .total-earned img
+          width: 1rem
+          height: 1rem
 
 `)
