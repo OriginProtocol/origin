@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 import OriginWallet from './OriginWallet'
 import OriginWrapper from './Wrapper'
+import PushNotifications from './PushNotifications'
 import Store, { persistor } from './Store'
 import Loading from 'components/loading'
 
@@ -26,6 +27,7 @@ class OriginApp extends Component {
       <ReduxProvider store={Store}>
         <PersistGate loading={<Loading />} persistor={persistor}>
           <OriginWallet />
+          <PushNotifications />
           <OriginWrapper smallScreen={smallScreen} />
         </PersistGate>
       </ReduxProvider>

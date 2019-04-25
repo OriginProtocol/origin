@@ -279,10 +279,9 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     await this.props.setAccountActive(account)
-    // Make sure device token is registered with server for this eth address
-    this.registerDeviceToken()
     // Generate messaging keys
     this.generateMessagingKeys()
+    // TODO: make sure device is registered with notifications server
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql

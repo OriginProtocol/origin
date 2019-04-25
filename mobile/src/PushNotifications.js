@@ -29,7 +29,7 @@ class PushNotifications extends Component {
     )
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Initialise
     const { wallet } = this.props
 
@@ -45,9 +45,9 @@ class PushNotifications extends Component {
       onRegister: function(deviceToken) {
         if (wallet.activeAccount && wallet.activeAccount.address) {
           // Save the device token into redux for later use with other accounts
-          this.props.setDeviceToken(deviceToken['token'])
+          await this.props.setDeviceToken(deviceToken['token'])
           // Make sure the device token is registered with the server
-          this.registerDeviceToken()
+          this.registerDevice()
         }
       }.bind(this),
       // Called when a remote or local notification is opened or received
