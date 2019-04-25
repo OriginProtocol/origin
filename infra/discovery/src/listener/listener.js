@@ -104,6 +104,9 @@ const config = {
     args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
 }
 
+logger.info('Starting with configuration:')
+logger.info(config)
+
 /**
  * Creates runtime context and starts the tracking loop
  * @return {Promise<void>}
