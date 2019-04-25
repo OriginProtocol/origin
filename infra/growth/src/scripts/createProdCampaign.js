@@ -508,12 +508,21 @@ async function createMayProdCampaign() {
   })
 }
 
-//createAprilProdCampaign().then(() => {
-//  console.log('Done')
-//  process.exit()
-//})
-
-createMayProdCampaign().then(() => {
-  console.log('Done')
-  process.exit()
+const args = {}
+process.argv.forEach(arg => {
+  const t = arg.split('=')
+  const argVal = t.length > 1 ? t[1] : true
+  args[t[0]] = argVal
 })
+
+if (args['--month'] === 'april') {
+  createAprilProdCampaign().then(() => {
+    console.log('Done')
+    process.exit()
+  })
+} else if (args['--month' === 'may']) {
+  createMayProdCampaign().then(() => {
+    console.log('Done')
+    process.exit()
+  })
+}

@@ -398,7 +398,7 @@ class BaseRule {
    * @param {string} customId - Optional Id to use as filter for the events.
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
    */
-  _tallyEvents(ethAddress, eventTypes, events, customId=null) {
+  _tallyEvents(ethAddress, eventTypes, events, customId = null) {
     const tally = {}
     events
       .filter(event => {
@@ -595,7 +595,12 @@ class ListingPurchaseRule extends BaseRule {
    */
   _numRewards(ethAddress, events) {
     // Note: we pass listingId as the customId param to _tallyEvents.
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events, this.listingId)
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      this.listingId
+    )
     return Object.keys(tally).length > 0
       ? Math.min(Object.values(tally)[0], this.limit)
       : 0
@@ -609,7 +614,12 @@ class ListingPurchaseRule extends BaseRule {
    */
   async _evaluate(ethAddress, events) {
     // Note: we pass listingId as the customId param to _tallyEvents.
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events, this.listingId)
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      this.listingId
+    )
 
     return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
   }

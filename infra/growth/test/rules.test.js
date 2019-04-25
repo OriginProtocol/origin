@@ -1,15 +1,9 @@
-const BigNumber = require('bignumber.js')
 const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
 
-function tokenNaturalUnits(x) {
-  return BigNumber(x)
-    .times(BigNumber(10).pow(18))
-    .toFixed()
-}
 
 describe('Growth Engine rules', () => {
 
