@@ -21,7 +21,9 @@ const config = {
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
+  V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
   IdentityEvents: addresses.IdentityEvents,
+  IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
   tokens: []
 }

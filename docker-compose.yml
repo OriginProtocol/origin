@@ -48,6 +48,7 @@ services:
       - ./packages/services/:/app/packages/services/
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
+      - ./packages/event-cache/:/app/packages/event-cache/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
       - ./packages/mobile-bridge/:/app/packages/mobile-bridge/
@@ -68,6 +69,7 @@ services:
       - /app/packages/services/node_modules/
       - /app/packages/graphql/node_modules/
       - /app/packages/eventsource/node_modules/
+      - /app/packages/event-cache/node_modules/
       - /app/packages/ipfs/node_modules/
       - /app/packages/messaging-client/node_modules/
       - /app/packages/mobile-bridge/node_modules/
@@ -103,11 +105,11 @@ services:
       - postgres
       - redis-master
     ports:
-      - "9012:9012"
       - "6647:6647"
+      - "9012:9012"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/messaging &&
       npm run start --prefix infra/messaging"
 

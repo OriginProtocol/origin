@@ -1,0 +1,3 @@
+An offer you made has been accepted.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>
