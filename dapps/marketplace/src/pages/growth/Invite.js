@@ -365,7 +365,7 @@ class GrowthInvite extends Component {
     )
   }
 
-  renderTrackInvites(referralAction) {
+  renderTrackInvites(referralAction, isMobile) {
     const formatTokens = tokenAmount => {
       return web3.utils
         .toBN(tokenAmount)
@@ -400,25 +400,25 @@ class GrowthInvite extends Component {
     ) => {
       return (
         <div className="track-invites">
-          <div className="pt-2 d-flex justify-content-between">
+          <div className={`pt-2 d-flex justify-content-between ${isMobile ? 'flex-column' : ''}`}>
             <div>
               <div className="emphasis">{title}</div>
               <div>{subTitle}</div>
             </div>
-            <div className="reward-holder d-flex flex-column align-items-center">
+            <div className={`reward-holder d-flex flex-column ${isMobile ? 'align-items-start': 'align-items-center'} `}>
               <div>{rewardTitle}</div>
               {renderReward(reward, true, true)}
             </div>
           </div>
           <div className="mt-3">
             <div className="emphasis d-flex pb-2">
-              <div className="col-4 p-0">
+              <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
                 <fbt desc="RewardInvite.contact">Contact</fbt>
               </div>
               <div className="col-2 p-0">
                 <fbt desc="RewardInvite.invite">Reward</fbt>
               </div>
-              <div className="col-6 p-0">
+              <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
                 {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
               </div>
             </div>
@@ -431,13 +431,13 @@ class GrowthInvite extends Component {
                   className="invite-row d-flex pt-2 pb-2"
                   key={invite.pendingId}
                 >
-                  <div className="col-4 p-0 d-flex align-items-center">
+                  <div className={`${isMobile ? 'col-6' : 'col-4'} p-0 d-flex align-items-center`}>
                     <div className="name">{name}</div>
                   </div>
                   <div className="col-2 p-0 d-flex">
                     {renderReward(invite.reward.amount, true, false)}
                   </div>
-                  <div className="col-6 p-0 d-flex justify-content-between align-items-center">
+                  <div className={`${isMobile ? 'col-4' : 'col-6'} p-0 d-flex justify-content-between align-items-center`}>
                     <div>
                       {showStatus
                         ? fbt(
@@ -479,7 +479,7 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardPending.amount,
           fbt('Pending', 'RewardInvite.pendingTitle'),
-          true,
+          !isMobile,
           true
         )}
         <div className="mt-5" />
@@ -544,7 +544,7 @@ class GrowthInvite extends Component {
           />
         </div>
         {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction)}
+        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction, isMobile)}
       </div>
     )
   }
@@ -672,6 +672,7 @@ require('react-styl')(`
       .remind-button
         border: 0px
         color: var(--clear-blue)
+        background-color: white
   .growth-invite.mobile
     font-size: 1rem
     margin-top: 1.5rem
@@ -683,4 +684,7 @@ require('react-styl')(`
         font-size: 1rem
     .btn-primary
       width: 100%
+    .track-invites
+      .reward-holder
+        margin-top: 0.625rem
 `)
