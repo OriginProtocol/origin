@@ -21,6 +21,7 @@ class ApolloAdapter {
       AirbnbAttestationPublished: 'Airbnb',
       TwitterAttestationPublished: 'Twitter',
       PhoneAttestationPublished: 'Phone',
+      GoogleAttestationPublished: 'Google',
       Referral: 'Referral',
       ListingCreated: 'ListingCreated',
       ListingSold: 'ListingSold',

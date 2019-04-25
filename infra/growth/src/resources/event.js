@@ -7,7 +7,8 @@ const AttestationServiceToEventType = {
   email: GrowthEventTypes.EmailAttestationPublished,
   facebook: GrowthEventTypes.FacebookAttestationPublished,
   phone: GrowthEventTypes.PhoneAttestationPublished,
-  twitter: GrowthEventTypes.TwitterAttestationPublished
+  twitter: GrowthEventTypes.TwitterAttestationPublished,
+  google: GrowthEventTypes.GoogleAttestationPublished,
 }
 
 class GrowthEvent {

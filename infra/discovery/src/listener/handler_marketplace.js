@@ -234,6 +234,7 @@ class MarketplaceEventHandler {
       case 'OfferFinalized':
         // Insert a ListingPurchased event on the buyer side and
         // a ListingSold event on the seller side.
+        // TODO(franck): insert as many rows as unit purchased.
         await GrowthEvent.insert(
           logger,
           details.offer.buyer.id.toLowerCase(),

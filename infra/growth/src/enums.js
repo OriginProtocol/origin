@@ -55,6 +55,7 @@ const GrowthEventTypes = new Enum(
   'AirbnbAttestationPublished',
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
+  'GoogleAttestationPublished',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold' // Seller side event.

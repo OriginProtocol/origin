@@ -293,6 +293,9 @@ function ruleFactory(crules, levelId, config) {
     case 'Referral':
       rule = new ReferralRule(crules, levelId, config)
       break
+    case 'ListingPurchase':
+      rule = new ListingPurchaseRule(crules, levelId, config)
+      break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
   }
@@ -392,15 +395,17 @@ class BaseRule {
    * Counts events, grouped by types.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
+   * @param {string} customId - Optional Id to use as filter for the events.
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
    */
-  _tallyEvents(ethAddress, eventTypes, events) {
+  _tallyEvents(ethAddress, eventTypes, events, customId=null) {
     const tally = {}
     events
       .filter(event => {
         return (
           event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
+          (!customId || event.customId === customId) &&
           (event.status === GrowthEventStatuses.Logged ||
             event.status === GrowthEventStatuses.Verified)
         )
@@ -544,6 +549,7 @@ class SingleEventRule extends BaseRule {
    */
   _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
+
     // SingleEventRule has at most 1 event in tally count.
     return Object.keys(tally).length === 1
       ? Math.min(Object.values(tally)[0], this.limit)
@@ -558,8 +564,54 @@ class SingleEventRule extends BaseRule {
    */
   async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+  }
+}
+
+/**
+ * A rule that requires the purchase of a specific listing.
+ */
+class ListingPurchaseRule extends BaseRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+    if (!this.config.listingId) {
+      throw new Error(`${this.str()}: missing listingId field`)
+    }
+    this.listingId = this.config.listingId
+
+    const eventType = 'ListingPurchased'
+    if (!GrowthEventTypes.includes(eventType)) {
+      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    }
+    this.eventTypes = [eventType]
+  }
+
+  /**
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
+  _numRewards(ethAddress, events) {
+    // Note: we pass listingId as the customId param to _tallyEvents.
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events, this.listingId)
+    return Object.keys(tally).length > 0
+      ? Math.min(Object.values(tally)[0], this.limit)
+      : 0
+  }
+
+  /**
+   * Returns true if the rule passes, false otherwise.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
+  async _evaluate(ethAddress, events) {
+    // Note: we pass listingId as the customId param to _tallyEvents.
+    const tally = this._tallyEvents(ethAddress, this.eventTypes, events, this.listingId)
+
+    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
   }
 }
 

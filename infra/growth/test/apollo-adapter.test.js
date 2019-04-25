@@ -18,7 +18,7 @@ function tokenNaturalUnits(x) {
 describe('Apollo adapter', () => {
 
 
-  describe('March campaign rules', () => {
+  describe('April campaign rules', () => {
 
     before(async () => {
       const config = {
