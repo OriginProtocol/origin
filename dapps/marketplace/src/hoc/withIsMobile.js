@@ -31,7 +31,7 @@ function withIsMobile(WrappedComponent) {
       return (
         <WrappedComponent
           {...this.props}
-          ismobile={this.state.isMobile ? 'true' : 'false' }
+          ismobile={this.state.isMobile ? 'true' : 'false'}
         />
       )
     }

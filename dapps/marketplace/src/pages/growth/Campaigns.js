@@ -45,7 +45,11 @@ function NavigationItem(props) {
 function CampaignNavList(props) {
   const { onNavigationClick, navigation, isMobile } = props
   return (
-    <div className={`campaign-list d-flex justify-content-left ${!isMobile ? 'mt-4' : '' }`}>
+    <div
+      className={`campaign-list d-flex justify-content-left ${
+        !isMobile ? 'mt-4' : ''
+      }`}
+    >
       <NavigationItem
         selected={navigation === 'currentCampaign'}
         onClick={() => onNavigationClick('currentCampaign')}
@@ -61,12 +65,7 @@ function CampaignNavList(props) {
 }
 
 function Campaign(props) {
-  const {
-    campaign,
-    handleNavigationChange,
-    decimalDivision,
-    isMobile
-  } = props
+  const { campaign, handleNavigationChange, decimalDivision, isMobile } = props
 
   const {
     startDate,

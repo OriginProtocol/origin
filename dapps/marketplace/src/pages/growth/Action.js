@@ -11,7 +11,7 @@ function Action(props) {
     reward,
     rewardEarned,
     rewardPending,
-    unlockConditions,
+    unlockConditions
   } = props.action
 
   const { isMobile, onMobileLockClick } = props
@@ -94,20 +94,23 @@ function Action(props) {
 
   let showPossibleRewardAmount = !actionCompleted && reward !== null
   const isInteractable = !actionCompleted && !actionLocked
-  const showUnlockModalOnClick = actionLocked && isMobile && unlockConditions.length > 0
+  const showUnlockModalOnClick =
+    actionLocked && isMobile && unlockConditions.length > 0
 
-  let showReferralPending, showReferralEarned = false
+  let showReferralPending,
+    showReferralEarned = false
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
   if (type === 'Referral') {
     showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
     showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
-    
-    // only mobile layout show only 1 reward at a time
-    showReferralPending = isMobile ? (showReferralPending && !showReferralEarned) : showReferralPending
 
-    showPossibleRewardAmount =
-      !showReferralPending && !showReferralEarned
+    // only mobile layout show only 1 reward at a time
+    showReferralPending = isMobile
+      ? showReferralPending && !showReferralEarned
+      : showReferralPending
+
+    showPossibleRewardAmount = !showReferralPending && !showReferralEarned
   }
 
   const unlockConditionText = (
@@ -153,7 +156,10 @@ function Action(props) {
         )}
         {!isInteractable && !showUnlockModalOnClick && actionComponent}
         {showUnlockModalOnClick && (
-          <div className="mt-auto mb-auto" onClick={() => onMobileLockClick(unlockConditionText)}>
+          <div
+            className="mt-auto mb-auto"
+            onClick={() => onMobileLockClick(unlockConditionText)}
+          >
             {actionComponent}
           </div>
         )}
@@ -162,7 +168,11 @@ function Action(props) {
   }
 
   return wrapIntoInteraction(
-    <div className={`d-flex action ${isInteractable && 'active'} ${isMobile ? 'mobile' : ''}`}>
+    <div
+      className={`d-flex action ${isInteractable && 'active'} ${
+        isMobile ? 'mobile' : ''
+      }`}
+    >
       <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
           {
@@ -185,21 +195,21 @@ function Action(props) {
       </div>
       <div className="col-5 d-flex align-items-center justify-content-end">
         {showReferralPending && (
-            <div className="d-flex flex-column">
-              {renderReward(rewardPending.amount)}
-              <div className="sub-text ml-4">
-                <fbt desc="RewardActions.pending">Pending</fbt>
-              </div>
+          <div className="d-flex flex-column">
+            {renderReward(rewardPending.amount)}
+            <div className="sub-text ml-4">
+              <fbt desc="RewardActions.pending">Pending</fbt>
             </div>
-          )}
+          </div>
+        )}
         {showReferralEarned && (
-            <div className="d-flex flex-column">
-              {renderReward(rewardEarned.amount)}
-              <div className="d-center sub-text ml-4">
-                <fbt desc="RewardActions.earned">Earned</fbt>
-              </div>
+          <div className="d-flex flex-column">
+            {renderReward(rewardEarned.amount)}
+            <div className="d-center sub-text ml-4">
+              <fbt desc="RewardActions.earned">Earned</fbt>
             </div>
-          )}
+          </div>
+        )}
         {actionCompleted &&
           rewardEarned !== null &&
           rewardEarned.amount !== '0' && (

@@ -79,7 +79,12 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, handleNavigationChange, isMobile } = this.props
+    const {
+      title,
+      decimalDivision,
+      handleNavigationChange,
+      isMobile
+    } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 
@@ -95,9 +100,7 @@ class ActionList extends Component {
             }}
           >
             <Fragment>
-              <div>
-                {modalText}
-              </div>
+              <div>{modalText}</div>
               <button
                 className="btn btn-outline-light mt-3 mb-2"
                 onClick={() => {
@@ -112,10 +115,16 @@ class ActionList extends Component {
         )}
         <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
           <div className="filters d-flex justify-content-between">
-            {!isMobile && <div className="show">
-              <fbt desc="growth.action-list.show">Show</fbt>
-            </div>}
-            {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all', isMobile)}
+            {!isMobile && (
+              <div className="show">
+                <fbt desc="growth.action-list.show">Show</fbt>
+              </div>
+            )}
+            {this.renderFilter(
+              fbt('All', 'growth.action-list.all'),
+              'all',
+              isMobile
+            )}
             {this.renderFilter(
               fbt('Unlocked', 'growth.action-list.unlocked'),
               'unlocked',

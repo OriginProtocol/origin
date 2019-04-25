@@ -117,8 +117,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     // Renders mobile header with close button when on mobile device
     renderMobileHeaderOption(title) {
-      if (this.props.ismobile === 'false')
-        return ''
+      if (this.props.ismobile === 'false') return ''
 
       return (
         <div className="header d-flex mb-4">
@@ -135,10 +134,9 @@ function withEnrolmentModal(WrappedComponent) {
           <div className="container d-flex justify-content-center align-items-center col-8">
             {title}
           </div>
-          <div className="col-2"></div>
+          <div className="col-2" />
         </div>
       )
-
     }
 
     renderJoinActiveCampaign() {
@@ -173,8 +171,10 @@ function withEnrolmentModal(WrappedComponent) {
 
             return (
               <div className="join-campaign">
-                {this.renderMobileHeaderOption(fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign'))}
-                <div className="internal-modal-content"> 
+                {this.renderMobileHeaderOption(
+                  fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+                )}
+                <div className="internal-modal-content">
                   <div>
                     <img
                       className="mr-auto ml-auto"
@@ -199,7 +199,11 @@ function withEnrolmentModal(WrappedComponent) {
                   </div>
                   <div className="d-flex align-items-center flex-column">
                     <button
-                      className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'}`}
+                      className={`btn ${
+                        this.props.ismobile === 'true'
+                          ? 'btn-primary'
+                          : 'btn-outline-light'
+                      }`}
                       onClick={() => this.handleJoinCampaignContinue()}
                       children={fbt('Get Started', 'Get Started')}
                     />
@@ -221,32 +225,46 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
 
-      const cancelButton = <button
-        className={`btn ${isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'}`}
-        onClick={() => this.handleCloseModal()}
-        children={fbt('Cancel', 'Cancel')}
-      />
+      const cancelButton = (
+        <button
+          className={`btn ${
+            isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'
+          }`}
+          onClick={() => this.handleCloseModal()}
+          children={fbt('Cancel', 'Cancel')}
+        />
+      )
 
-      const acceptTermsButton = <button
-        className={`btn btn-lg ${
-          termsAccepted ? 'btn-primary btn-rounded' : (isMobile ? 'btn-primary' : 'ml-2 btn-outline-light')
-        }`}
-        onClick={() => this.handleTermsContinue()}
-        disabled={termsAccepted ? undefined : 'disabled'}
-        children={fbt('Accept Terms', 'Accept Terms')}
-      />
+      const acceptTermsButton = (
+        <button
+          className={`btn btn-lg ${
+            termsAccepted
+              ? 'btn-primary btn-rounded'
+              : isMobile
+              ? 'btn-primary'
+              : 'ml-2 btn-outline-light'
+          }`}
+          onClick={() => this.handleTermsContinue()}
+          disabled={termsAccepted ? undefined : 'disabled'}
+          children={fbt('Accept Terms', 'Accept Terms')}
+        />
+      )
 
       return (
         <div>
-          {this.renderMobileHeaderOption(fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin'))}
+          {this.renderMobileHeaderOption(
+            fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin')
+          )}
           <div className="internal-modal-content">
-            {!isMobile && <div className="title title-light mt-2">
-              <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
-            </div>}
+            {!isMobile && (
+              <div className="title title-light mt-2">
+                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
+              </div>
+            )}
             <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
               {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
-              Join Origin’s reward program to earn Origin tokens (OGN). Terms and
-              conditions apply.
+              Join Origin’s reward program to earn Origin tokens (OGN). Terms
+              and conditions apply.
               {/*</fbt>*/}
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
@@ -260,21 +278,21 @@ function withEnrolmentModal(WrappedComponent) {
             <div className="mt-3 normal-line-height terms-body explanation">
               {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
               By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least 1
-              year from the date of earning your tokens.
+              transfer or sell future earned Origin tokens to other for at least
+              1 year from the date of earning your tokens.
               {/*</fbt>*/}
             </div>
             <div className="terms">
               {/*<fbt desc="EnrollmentModal.termsBody">*/}
               OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended (the
-              “Securities Act”), and may not be transferred in the United States
-              to, or for the account or benefit of, any U.S. person except
-              pursuant to an available exemption from the registration
+              registration under the U.S. Securities Act of 1933, as amended
+              (the “Securities Act”), and may not be transferred in the United
+              States to, or for the account or benefit of, any U.S. person
+              except pursuant to an available exemption from the registration
               requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them in
-              Regulation S under the Securities Act and all applicable laws and
-              regulations.
+              securities laws. Terms used above have the meanings given to them
+              in Regulation S under the Securities Act and all applicable laws
+              and regulations.
               {/*</fbt>*/}
             </div>
             <div className="mt-1 d-flex country-check-label justify-content-center">
@@ -292,15 +310,23 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </label>
             </div>
-            <div className={`d-flex justify-content-center ${isMobile ? 'flex-column' : ''}`}>
-              {!isMobile && (<Fragment>
-                {cancelButton}
-                {acceptTermsButton}
-              </Fragment>)}
-              {isMobile && (<Fragment>
-                {acceptTermsButton}
-                {cancelButton}
-              </Fragment>)}
+            <div
+              className={`d-flex justify-content-center ${
+                isMobile ? 'flex-column' : ''
+              }`}
+            >
+              {!isMobile && (
+                <Fragment>
+                  {cancelButton}
+                  {acceptTermsButton}
+                </Fragment>
+              )}
+              {isMobile && (
+                <Fragment>
+                  {acceptTermsButton}
+                  {cancelButton}
+                </Fragment>
+              )}
             </div>
           </div>
         </div>
@@ -313,7 +339,9 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <div>
-          {this.renderMobileHeaderOption(fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible'))}
+          {this.renderMobileHeaderOption(
+            fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
+          )}
           <div>
             <div className="image-holder mr-auto ml-auto">
               <img src="images/growth/earth-graphic.svg" />
@@ -364,7 +392,11 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
-              className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'}`}
+              className={`btn ${
+                this.props.ismobile === 'true'
+                  ? 'btn-primary'
+                  : 'btn-outline-light'
+              }`}
               onClick={() => this.handleCloseModal()}
               children={fbt('Done', 'Done')}
             />
@@ -430,11 +462,7 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return (
-        <Enroll
-          isMobile={this.props.ismobile === 'true'}
-        />
-      )
+      return <Enroll isMobile={this.props.ismobile === 'true'} />
     }
 
     renderNotSupportedOnMobile() {
@@ -486,8 +514,10 @@ function withEnrolmentModal(WrappedComponent) {
                   }
 
                   const isMobile = this.props.ismobile === 'true'
-                  const displayMobileModal = isMobile && this.state.stage !== 'MetamaskSignature'
-                  const snowSmallerModal = isMobile && this.state.stage === 'MetamaskSignature'
+                  const displayMobileModal =
+                    isMobile && this.state.stage !== 'MetamaskSignature'
+                  const snowSmallerModal =
+                    isMobile && this.state.stage === 'MetamaskSignature'
 
                   return (
                     <Fragment>
@@ -503,7 +533,9 @@ function withEnrolmentModal(WrappedComponent) {
                       />
                       {open && (
                         <Modal
-                          className={`growth-enrollment-modal ${snowSmallerModal ? 'small' : ''} ${displayMobileModal ? 'mobile' : ''}`}
+                          className={`growth-enrollment-modal ${
+                            snowSmallerModal ? 'small' : ''
+                          } ${displayMobileModal ? 'mobile' : ''}`}
                           onClose={() => {
                             this.setState({
                               open: false

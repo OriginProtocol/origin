@@ -400,12 +400,20 @@ class GrowthInvite extends Component {
     ) => {
       return (
         <div className="track-invites">
-          <div className={`pt-2 d-flex justify-content-between ${isMobile ? 'flex-column' : ''}`}>
+          <div
+            className={`pt-2 d-flex justify-content-between ${
+              isMobile ? 'flex-column' : ''
+            }`}
+          >
             <div>
               <div className="emphasis">{title}</div>
               <div>{subTitle}</div>
             </div>
-            <div className={`reward-holder d-flex flex-column ${isMobile ? 'align-items-start': 'align-items-center'} `}>
+            <div
+              className={`reward-holder d-flex flex-column ${
+                isMobile ? 'align-items-start' : 'align-items-center'
+              } `}
+            >
               <div>{rewardTitle}</div>
               {renderReward(reward, true, true)}
             </div>
@@ -431,13 +439,21 @@ class GrowthInvite extends Component {
                   className="invite-row d-flex pt-2 pb-2"
                   key={invite.pendingId}
                 >
-                  <div className={`${isMobile ? 'col-6' : 'col-4'} p-0 d-flex align-items-center`}>
+                  <div
+                    className={`${
+                      isMobile ? 'col-6' : 'col-4'
+                    } p-0 d-flex align-items-center`}
+                  >
                     <div className="name">{name}</div>
                   </div>
                   <div className="col-2 p-0 d-flex">
                     {renderReward(invite.reward.amount, true, false)}
                   </div>
-                  <div className={`${isMobile ? 'col-4' : 'col-6'} p-0 d-flex justify-content-between align-items-center`}>
+                  <div
+                    className={`${
+                      isMobile ? 'col-4' : 'col-6'
+                    } p-0 d-flex justify-content-between align-items-center`}
+                  >
                     <div>
                       {showStatus
                         ? fbt(
@@ -544,7 +560,8 @@ class GrowthInvite extends Component {
           />
         </div>
         {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction, isMobile)}
+        {subPage === 'trackInvites' &&
+          this.renderTrackInvites(referralAction, isMobile)}
       </div>
     )
   }

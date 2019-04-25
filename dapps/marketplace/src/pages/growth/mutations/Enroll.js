@@ -9,13 +9,11 @@ import profileQuery from 'queries/Profile'
 import SignMessageMutation from 'mutations/SignMessage'
 import GrowthEnroll from 'mutations/GrowthEnroll'
 
-const Error = (props) => (
+const Error = props => (
   <div className="p-3">
     <div className="error-icon mb-3" />
     <div>
-      <b>
-        {props.error}
-      </b>
+      <b>{props.error}</b>
     </div>
   </div>
 )
@@ -26,12 +24,13 @@ class WaitForSignature extends Component {
   }
 
   render() {
-    return (<div className="p-3">
-      <div className="spinner light mr-auto ml-auto" />
-    </div>)
+    return (
+      <div className="p-3">
+        <div className="spinner light mr-auto ml-auto" />
+      </div>
+    )
   }
 }
-
 
 class Enroll extends Component {
   state = {
@@ -112,47 +111,59 @@ class Enroll extends Component {
                     }
                     return (
                       <Fragment>
-                        {isMobile && <Fragment>
-                          {this.state.error && <Error error={this.state.error} />}
-                          {!this.state.error && <WaitForSignature signMessage={signMessageWithArgs}/>}
-                        </Fragment>}
-                        {!isMobile && <div className="growth-enrollment">
-                          <video
-                            className="metamask-video"
-                            width="320"
-                            heigh="240"
-                            onLoadStart={() => signMessageWithArgs}
-                            autoPlay
-                            loop
-                          >
-                            <source
-                              src="images/growth/metamask_in_browser_dark_bg.mp4"
-                              type="video/mp4"
-                            />
-                            <fbt desc="growth.errorVideoTag">
-                              Your browser does not support the video tag.
-                            </fbt>
-                          </video>
-                          <div className="title">
-                            <fbt desc="growth.confirmMetaMask">
-                              Confirm Metamask Signature
-                            </fbt>
-                          </div>
-                          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
-                            {/* TODO: Wallet provider should be set dynamicly in here */
-                            !this.state.error && (
-                              <span>
-                                <fbt desc="groth.openMetaMask">
-                                  Open your Metamask browser extension and confirm
-                                  your signature.
-                                </fbt>
-                              </span>
+                        {isMobile && (
+                          <Fragment>
+                            {this.state.error && (
+                              <Error error={this.state.error} />
                             )}
-                            {this.state.error &&!isMobile && (
-                              <span className="error">{this.state.error}</span>
+                            {!this.state.error && (
+                              <WaitForSignature
+                                signMessage={signMessageWithArgs}
+                              />
                             )}
+                          </Fragment>
+                        )}
+                        {!isMobile && (
+                          <div className="growth-enrollment">
+                            <video
+                              className="metamask-video"
+                              width="320"
+                              heigh="240"
+                              onLoadStart={() => signMessageWithArgs}
+                              autoPlay
+                              loop
+                            >
+                              <source
+                                src="images/growth/metamask_in_browser_dark_bg.mp4"
+                                type="video/mp4"
+                              />
+                              <fbt desc="growth.errorVideoTag">
+                                Your browser does not support the video tag.
+                              </fbt>
+                            </video>
+                            <div className="title">
+                              <fbt desc="growth.confirmMetaMask">
+                                Confirm Metamask Signature
+                              </fbt>
+                            </div>
+                            <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+                              {/* TODO: Wallet provider should be set dynamicly in here */
+                              !this.state.error && (
+                                <span>
+                                  <fbt desc="groth.openMetaMask">
+                                    Open your Metamask browser extension and
+                                    confirm your signature.
+                                  </fbt>
+                                </span>
+                              )}
+                              {this.state.error && !isMobile && (
+                                <span className="error">
+                                  {this.state.error}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>}
+                        )}
                       </Fragment>
                     )
                   }}
