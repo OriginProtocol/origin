@@ -199,7 +199,9 @@ class OriginWallet extends Component {
 
     // Setup the active account
     if (length) {
-      const activeAccount = hasValidActiveAccount ? wallet.activeAccount : wallet.accounts[0]
+      const activeAccount = hasValidActiveAccount
+        ? wallet.activeAccount
+        : wallet.accounts[0]
       this.setAccountActive(activeAccount)
     }
   }
