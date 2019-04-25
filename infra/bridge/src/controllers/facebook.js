@@ -20,11 +20,18 @@ const constants = require('../constants')
  *
  */
 router.get('/auth-url', (req, res) => {
-  const dappRedirectUrl = req.query.dappRedirectUrl || null
+  const redirect = req.query.redirect || null
+
   const params = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
-    redirect_uri: getAbsoluteUrl('/redirects/facebook/', dappRedirectUrl)
+    state: redirect ? req.sessionID : null,
+    redirect_uri: getAbsoluteUrl('/redirects/facebook/')
   }
+
+  if (redirect) {
+    req.session.redirect = redirect
+  }
+
   const url = constants.FACEBOOK_BASE_AUTH_URL + querystring.stringify(params)
   res.send({ url: url })
 })
@@ -33,11 +40,19 @@ router.get('/auth-url', (req, res) => {
  * from the user data.
  */
 router.post('/verify', facebookVerify, async (req, res) => {
+  let code = req.body.code
+
+  if (req.body.sid) {
+    const session = await req.sessionStore.get(req.body.sid)
+    code = session.code
+  }
+
   const params = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
     client_secret: process.env.FACEBOOK_CLIENT_SECRET,
     redirect_uri: getAbsoluteUrl('/redirects/facebook/'),
-    code: req.body.code
+    code: code,
+    state: req.body.sid
   }
 
   // Exchange code for an access token
@@ -88,15 +103,22 @@ router.post('/verify', facebookVerify, async (req, res) => {
     }
   }
 
-  const attestation = await generateAttestation(
-    AttestationTypes.FACEBOOK,
-    attestationBody,
-    userDataResponse.body.name,
-    req.body.identity,
-    req.ip
-  )
+  try {
+    const attestation = await generateAttestation(
+      AttestationTypes.FACEBOOK,
+      attestationBody,
+      userDataResponse.body.name,
+      req.body.identity,
+      req.ip
+    )
 
-  return res.send(attestation)
+    return res.send(attestation)
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not create attestation.']
+    })
+  }
 })
 
 module.exports = router

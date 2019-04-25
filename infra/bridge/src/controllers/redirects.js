@@ -4,10 +4,21 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 
-router.get('/facebook', (req, res) => {
-  if (req.query.dappRedirectUrl) {
-    const dappRedirectUrl = req.query.dappRedirectUrl
-    res.redirect(`${dappRedirectUrl}?origin-code=${req.query.code}`)
+router.get('/facebook', async (req, res) => {
+  const sessionID = req.query.state
+
+  if (sessionID) {
+    const session = await req.sessionStore.get(sessionID)
+    if (!session) {
+      return res.status(400).send('Session not found')
+    }
+
+    session.code = req.query.code
+    await new Promise(resolve =>
+      req.sessionStore.set(sessionID, session, resolve)
+    )
+
+    res.redirect(`${session.redirect}?sid=${sessionID}`)
   } else {
     // res.sendFile requires absoluite paths and ../ is considered malicious
     // so resolve first
@@ -21,7 +32,7 @@ router.get('/twitter', async (req, res) => {
   if (sessionID) {
     const session = await req.sessionStore.get(sessionID)
     if (!session) {
-      return res.send('Session not found')
+      return res.status(400).send('Session not found')
     }
 
     session.code = req.query.oauth_verifier
@@ -37,10 +48,21 @@ router.get('/twitter', async (req, res) => {
   }
 })
 
-router.get('/google', (req, res) => {
-  if (req.query.dappRedirectUrl) {
-    const dappRedirectUrl = req.query.dappRedirectUrl
-    res.redirect(`${dappRedirectUrl}?origin-code=${req.query.code}`)
+router.get('/google', async (req, res) => {
+  const sessionID = req.query.state
+
+  if (sessionID) {
+    const session = await req.sessionStore.get(sessionID)
+    if (!session) {
+      return res.status(400).send('Session not found')
+    }
+
+    session.code = req.query.code
+    await new Promise(resolve =>
+      req.sessionStore.set(sessionID, session, resolve)
+    )
+
+    res.redirect(`${session.redirect}?sid=${sessionID}`)
   } else {
     // res.sendFile requires absoluite paths and ../ is considered malicious
     // so resolve first

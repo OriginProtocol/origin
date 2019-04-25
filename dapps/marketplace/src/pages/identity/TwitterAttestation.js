@@ -9,8 +9,21 @@ import VerifyTwitterMutation from 'mutations/VerifyTwitter'
 import query from 'queries/TwitterAuthUrl'
 
 class TwitterAttestation extends Component {
-  state = {
-    stage: 'GenerateCode'
+  constructor(props) {
+    super(props)
+    this.state = {
+      stage: 'GenerateCode',
+      mobile: window.innerWidth < 767
+    }
+    this.onResize = this.onResize.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,13 +34,25 @@ class TwitterAttestation extends Component {
     }
   }
 
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.mobile) {
+      this.setState({ mobile: true })
+    } else if (window.innerWidth >= 767 && this.state.mobile) {
+      this.setState({ mobile: false })
+    }
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const isMobile = this.state.mobile
+
     const { origin, pathname } = window.location
-    const redirect = encodeURIComponent(`${origin}${pathname}#/profile/twitter`)
+    const redirect = isMobile
+      ? encodeURIComponent(`${origin}${pathname}#/profile/twitter`)
+      : null
 
     return (
       <Modal
@@ -57,7 +82,7 @@ class TwitterAttestation extends Component {
               <div>
                 {this[`render${this.state.stage}`]({
                   authUrl,
-                  redirect: redirect ? true : false
+                  redirect: isMobile
                 })}
               </div>
             )
@@ -110,6 +135,12 @@ class TwitterAttestation extends Component {
               data: result.data,
               loading: false
             })
+
+            // Remove session id from URL
+            window.location.hash = window.location.hash.replace(
+              /[?&]sid=([a-zA-Z0-9_-]+)/i,
+              ''
+            )
           } else {
             this.setState({ error: result.reason, loading: false })
           }

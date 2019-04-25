@@ -62,11 +62,11 @@ const emailVerifyCode = [
 
 const facebookVerify = [
   identityValidation,
-  check('code')
-    .not()
-    .isEmpty()
-    .withMessage('Field code must not be empty.')
-    .trim(),
+  // check('code')
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage('Field code must not be empty.')
+  //   .trim(),
   handleValidationError
 ]
 
@@ -117,11 +117,11 @@ const twitterVerifyCode = [
 
 const googleVerify = [
   identityValidation,
-  check('code')
-    .not()
-    .isEmpty()
-    .withMessage('Field code must not be empty.')
-    .trim(),
+  // check('code')
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage('Field code must not be empty.')
+  //   .trim(),
   handleValidationError
 ]
 

@@ -19,13 +19,20 @@ const constants = require('../constants')
  *
  */
 router.get('/auth-url', (req, res) => {
-  const dappRedirectUrl = req.query.dappRedirectUrl || null
+  const redirect = req.query.redirect || null
+
   const params = {
     client_id: process.env.GOOGLE_CLIENT_ID,
     scope: 'email',
     response_type: 'code',
-    redirect_uri: getAbsoluteUrl('/redirects/google/', dappRedirectUrl)
+    state: redirect ? req.sessionID : null,
+    redirect_uri: getAbsoluteUrl('/redirects/google/')
   }
+
+  if (redirect) {
+    req.session.redirect = redirect
+  }
+
   const url = constants.GOOGLE_BASE_AUTH_URL + querystring.stringify(params)
   res.send({ url: url })
 })
@@ -34,11 +41,19 @@ router.get('/auth-url', (req, res) => {
  * from the user data.
  */
 router.post('/verify', googleVerify, async (req, res) => {
+  let code = req.body.code
+
+  if (req.body.sid) {
+    const session = await req.sessionStore.get(req.body.sid)
+    code = session.code
+  }
+
   const params = {
     client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: getAbsoluteUrl('/redirects/google/'),
-    code: req.body.code,
+    code: code,
+    state: req.body.sid,
     grant_type: 'authorization_code'
   }
 
@@ -84,15 +99,22 @@ router.post('/verify', googleVerify, async (req, res) => {
     }
   }
 
-  const attestation = await generateAttestation(
-    AttestationTypes.GOOGLE,
-    attestationBody,
-    userDataResponse.body.email,
-    req.body.identity,
-    req.ip
-  )
+  try {
+    const attestation = await generateAttestation(
+      AttestationTypes.GOOGLE,
+      attestationBody,
+      userDataResponse.body.email,
+      req.body.identity,
+      req.ip
+    )
 
-  return res.send(attestation)
+    return res.send(attestation)
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not create attestation.']
+    })
+  }
 })
 
 module.exports = router

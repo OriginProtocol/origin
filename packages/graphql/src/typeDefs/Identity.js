@@ -32,9 +32,9 @@ module.exports = `
       after: String
       sort: String
     ): IdentityConnection
-    facebookAuthUrl: String
+    facebookAuthUrl(redirect: String): String
     twitterAuthUrl(redirect: String): String
-    googleAuthUrl: String
+    googleAuthUrl(redirect: String): String
   }
 
   type IdentityConnection {

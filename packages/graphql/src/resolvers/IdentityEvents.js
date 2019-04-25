@@ -159,12 +159,15 @@ export async function identities(
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: async () => {
+  facebookAuthUrl: async (_, args) => {
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {
       return null
     }
-    const authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    let authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
     const response = await fetch(authUrl, {
       headers: { 'content-type': 'application/json' }
     })
@@ -186,12 +189,15 @@ export default {
     const authData = await response.json()
     return authData.url
   },
-  googleAuthUrl: async () => {
+  googleAuthUrl: async (_, args) => {
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {
       return null
     }
-    const authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
     const response = await fetch(authUrl, {
       headers: { 'content-type': 'application/json' }
     })
