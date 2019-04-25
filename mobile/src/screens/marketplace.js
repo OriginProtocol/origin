@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import {
+  ActivityIndicator,
   DeviceEventEmitter,
   Modal,
   Platform,
@@ -209,6 +210,14 @@ class MarketplaceScreen extends Component {
             this.injectMessagingKeys()
           }}
           allowsBackForwardNavigationGestures
+          startInLoadingState={true}
+          renderLoading={() => {
+            return (
+              <View style={styles.loading}>
+                <ActivityIndicator size="large" color="black" />
+              </View>
+            )
+          A}}
         />
         {modals.map((modal, index) => {
           let card
@@ -287,6 +296,10 @@ const styles = StyleSheet.create({
   },
   transparent: {
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'space-around'
   }
 })
 
