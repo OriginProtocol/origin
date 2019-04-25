@@ -31,10 +31,10 @@ limiter.on('failed', async (err, jobInfo) => {
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
     if (
-      instance.ipfsEventCache &&
-      !instance.loadedCache &&
-      (!instance.cacheMaxBlock ||
-        instance.latestIndexedBlock < instance.cacheMaxBlock)
+      instance.ipfsEventCache && // IPFS cache configured.
+      !instance.loadedCache && // IPFS cache hasn't been loaded yet.
+      (!instance.latestIndexedBlock || // Back-end does not support indexing. Always load cache.
+        instance.latestIndexedBlock < instance.cacheMaxBlock) // Back-end supports indexing but indexed data is not as fresh as cache.
     ) {
       try {
         debug('Loading event cache from IPFS', instance.ipfsEventCache)
@@ -43,20 +43,25 @@ const getPastEvents = memoize(
             instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
           )
         )
-        const lastCached = cachedEvents[cachedEvents.length - 1].blockNumber + 1
+        const lastCached = cachedEvents[cachedEvents.length - 1].blockNumber
         debug(`Loaded ${cachedEvents.length} events from IPFS cache`)
-        debug(`Last cached blockNumber: ${fromBlock}`)
+        debug(`Last cached blockNumber: ${lastCached}`)
         debug(`Latest indexed block: ${instance.latestIndexedBlock}`)
-        if (Number(lastCached) - 1 > Number(instance.latestIndexedBlock)) {
+        if (
+          !instance.latestIndexedBlock ||
+          lastCached > instance.latestIndexedBlock
+        ) {
           debug(`Adding IPFS events to backend`)
           await instance.backend.addEvents(cachedEvents)
-          fromBlock = lastCached
+          fromBlock = lastCached + 1
         }
       } catch (e) {
         debug(`Error loading IPFS events`, e)
       }
 
       instance.loadedCache = true
+    } else {
+      debug('Skipped loading event from IPFS cache.')
     }
 
     const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
@@ -169,6 +174,16 @@ class EventCache {
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
     this.batchSize = conf.batchSize || 10000
+
+    // If config specifies a cache, it should also have cacheMaxBlock.
+    if (
+      conf.ipfsEventCache &&
+      conf.ipfsEventCache.length &&
+      !conf.cacheMaxBlock
+    ) {
+      throw new Error('cacheMaxBlock missing from config.')
+    }
+
     this.ipfsEventCache =
       conf.ipfsEventCache && conf.ipfsEventCache.length
         ? conf.ipfsEventCache
