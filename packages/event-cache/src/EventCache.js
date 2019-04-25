@@ -15,6 +15,18 @@ const {
 } = require('./backends/browser')
 
 const limiter = new Bottleneck({ maxConcurrent: 25 })
+limiter.on('error', err => {
+  debug('Error occurred within rate limiter', err)
+})
+limiter.on('failed', async (err, jobInfo) => {
+  debug(`Job ${jobInfo.options.id} failed`, err)
+  // Retry 3 times
+  if (jobInfo.retryCount < 4) {
+    // 250ms wait for retry
+    debug('Retrying job...')
+    return 250
+  }
+})
 
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
