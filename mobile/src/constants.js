@@ -46,6 +46,9 @@ if (__DEV__) {
   NETWORKS.push({
     id: 999,
     name: 'Docker',
-    dappUrl: `http://${process.env.HOST}:3000`
+    dappUrl: `http://${process.env.HOST}:3000/docker#/`
   })
 }
+
+export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
+export const PROMPT_PUB_KEY = 'My public messaging key is: '
