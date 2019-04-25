@@ -64,6 +64,10 @@ require('react-styl')(`
       top: 5px
     .text
       margin-top: 5px
+      max-width: 60%
+      white-space: nowrap
+      overflow: auto
+      text-overflow: ellipsis
     .btn
       background-color: var(--dark-grey-blue)
       color: var(--white) !important
