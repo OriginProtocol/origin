@@ -109,6 +109,8 @@ class GrowthInvite extends Component {
       inviteEmailsMutationError
     } = this.state
 
+    const isMobile = this.props.isMobile
+
     return (
       <Query
         query={inviteCodeQuery}
@@ -146,7 +148,7 @@ class GrowthInvite extends Component {
                 </fbt>
               </div>
 
-              <div className="d-flex pt-3">
+              <div className={`d-flex pt-3 ${isMobile ? 'flex-column' : ''}`}>
                 <div className="col-8 pl-0 pr-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.copyCode">Copy code</fbt>
@@ -179,7 +181,7 @@ class GrowthInvite extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-4 pl-4 pr-0">
+                <div className="col-4 pl-0 pl-md-4 pr-0 mt-3 mt-md-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.shareOrTweet">Share or Tweet</fbt>
                   </div>
@@ -242,7 +244,7 @@ class GrowthInvite extends Component {
                       this.validateEmailsInput(invite)
                     }}
                   >
-                    <div className="emphasis mt-5">
+                    <div className="emphasis mt-md-5 mt-4">
                       <fbt desc="RewardInvite.inviteViaEmail">
                         Invite via Email
                       </fbt>
@@ -363,7 +365,7 @@ class GrowthInvite extends Component {
     )
   }
 
-  renderTrackInvites(referralAction) {
+  renderTrackInvites(referralAction, isMobile) {
     const formatTokens = tokenAmount => {
       return web3.utils
         .toBN(tokenAmount)
@@ -398,25 +400,33 @@ class GrowthInvite extends Component {
     ) => {
       return (
         <div className="track-invites">
-          <div className="pt-2 d-flex justify-content-between">
+          <div
+            className={`pt-2 d-flex justify-content-between ${
+              isMobile ? 'flex-column' : ''
+            }`}
+          >
             <div>
               <div className="emphasis">{title}</div>
               <div>{subTitle}</div>
             </div>
-            <div className="reward-holder d-flex flex-column align-items-center">
+            <div
+              className={`reward-holder d-flex flex-column ${
+                isMobile ? 'align-items-start' : 'align-items-center'
+              } `}
+            >
               <div>{rewardTitle}</div>
               {renderReward(reward, true, true)}
             </div>
           </div>
           <div className="mt-3">
             <div className="emphasis d-flex pb-2">
-              <div className="col-4 p-0">
+              <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
                 <fbt desc="RewardInvite.contact">Contact</fbt>
               </div>
               <div className="col-2 p-0">
                 <fbt desc="RewardInvite.invite">Reward</fbt>
               </div>
-              <div className="col-6 p-0">
+              <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
                 {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
               </div>
             </div>
@@ -429,13 +439,21 @@ class GrowthInvite extends Component {
                   className="invite-row d-flex pt-2 pb-2"
                   key={invite.pendingId}
                 >
-                  <div className="col-4 p-0 d-flex align-items-center">
+                  <div
+                    className={`${
+                      isMobile ? 'col-6' : 'col-4'
+                    } p-0 d-flex align-items-center`}
+                  >
                     <div className="name">{name}</div>
                   </div>
                   <div className="col-2 p-0 d-flex">
                     {renderReward(invite.reward.amount, true, false)}
                   </div>
-                  <div className="col-6 p-0 d-flex justify-content-between align-items-center">
+                  <div
+                    className={`${
+                      isMobile ? 'col-4' : 'col-6'
+                    } p-0 d-flex justify-content-between align-items-center`}
+                  >
                     <div>
                       {showStatus
                         ? fbt(
@@ -477,7 +495,7 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardPending.amount,
           fbt('Pending', 'RewardInvite.pendingTitle'),
-          true,
+          !isMobile,
           true
         )}
         <div className="mt-5" />
@@ -501,14 +519,14 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { activeCampaign, handleNavigationChange } = this.props
+    const { activeCampaign, handleNavigationChange, isMobile } = this.props
 
     const referralAction = activeCampaign.actions.filter(
       action => action.type === 'Referral'
     )[0]
 
     return (
-      <div className="container growth-invite">
+      <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
         <div>
           <div
             className="back d-flex mr-auto"
@@ -519,19 +537,17 @@ class GrowthInvite extends Component {
               <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
             </div>
           </div>
-          <h1 className="mb-2 pt-3 mt-3">
+          <h1 className={`mb-2 pt-md-3 mt-3`}>
             <fbt desc="RewardInvite.inviteYourFriends">
               Invite your friends to Origin
             </fbt>
           </h1>
-          <div>
-            <fbt desc="RewardInvite.getOgnByCompletingTasks">
-              Get Origin Tokens by completing the tasks below.
-            </fbt>
-          </div>
+          <fbt desc="RewardInvite.getOgnByCompletingTasks">
+            Get Origin Tokens by completing the tasks below.
+          </fbt>
         </div>
 
-        <div className="navigation-list d-flex justify-content-left mt-4">
+        <div className="navigation-list d-flex justify-content-left mt-2 mt-md-4">
           <NavigationItem
             selected={subPage === 'sendInvites'}
             onClick={() => this.handleNavigationClick('sendInvites')}
@@ -544,7 +560,8 @@ class GrowthInvite extends Component {
           />
         </div>
         {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' && this.renderTrackInvites(referralAction)}
+        {subPage === 'trackInvites' &&
+          this.renderTrackInvites(referralAction, isMobile)}
       </div>
     )
   }
@@ -619,6 +636,7 @@ require('react-styl')(`
         border: 1px solid var(--light)
         height: 50px
         width: 50%
+        background-color: white
       .social-btn.fb
         margin-right: 5px
       .social-btn.tw
@@ -630,7 +648,7 @@ require('react-styl')(`
       .invalid-feedback
         font-size: 18px
       .invite-error
-        font-size: 18px
+        font-size: 1.125rem
         color: var(--red)
     .track-invites
       margin-top: 30px
@@ -671,4 +689,25 @@ require('react-styl')(`
       .remind-button
         border: 0px
         color: var(--clear-blue)
+        background-color: white
+  .growth-invite.mobile
+    font-size: 1rem
+    margin-top: 1.5rem
+    h1
+      font-size: 1.6rem !important
+    .back
+      font-size: 0.875rem
+    .invite-error
+        font-size: 1rem
+    .btn-primary
+      width: 100%
+    .track-invites
+      .reward-holder
+        margin-top: 0.625rem
+      .reward.big
+        font-size: 1.125rem
+        height: 2rem
+        padding-right: 0.75rem
+        img
+          width: 1.25rem
 `)
