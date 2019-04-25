@@ -113,16 +113,18 @@ class MarketplaceScreen extends Component {
   injectMessagingKeys() {
     const { wallet } = this.props
     const keys = wallet.messagingKeys
-    const keyInjection = `
-      window.context.messaging.onPreGenKeys({
-        address: '${keys.address}',
-        signatureKey: '${keys.signatureKey}',
-        pubMessage: '${keys.pubMessage}',
-        pubSignature: '${keys.pubSignature}'
-      });
-      true;
-    `
-    this.dappWebView.injectJavaScript(keyInjection)
+    if (keys) {
+      const keyInjection = `
+        window.context.messaging.onPreGenKeys({
+          address: '${keys.address}',
+          signatureKey: '${keys.signatureKey}',
+          pubMessage: '${keys.pubMessage}',
+          pubSignature: '${keys.pubSignature}'
+        });
+        true;
+      `
+      this.dappWebView.injectJavaScript(keyInjection)
+    }
   }
 
   /* Send a response back to the DApp using postMessage in the webview
