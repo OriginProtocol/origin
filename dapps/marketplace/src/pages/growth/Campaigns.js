@@ -321,6 +321,10 @@ class GrowthCampaigns extends Component {
               return <QueryError error={error} query={profileQuery} />
             }
 
+            if (!data.web3.primaryAccount) {
+              return ''
+            }
+
             const accountId = data.web3.primaryAccount.id
 
             if (!this.props.growthCampaigns) {

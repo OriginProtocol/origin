@@ -130,8 +130,7 @@ function withEnrolmentModal(WrappedComponent) {
               })
             }}
           >
-            <img className="caret left" src="images/caret-white.svg" />
-            <img className="caret right" src="images/caret-white.svg" />
+            <img src="images/close-button.svg" />
           </div>
           <div className="container d-flex justify-content-center align-items-center col-8">
             {title}
@@ -221,6 +220,22 @@ function withEnrolmentModal(WrappedComponent) {
     renderTermsModal() {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
+
+      const cancelButton = <button
+        className={`btn ${isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'}`}
+        onClick={() => this.handleCloseModal()}
+        children={fbt('Cancel', 'Cancel')}
+      />
+
+      const acceptTermsButton = <button
+        className={`btn btn-lg ${
+          termsAccepted ? 'btn-primary btn-rounded' : (isMobile ? 'btn-primary' : 'ml-2 btn-outline-light')
+        }`}
+        onClick={() => this.handleTermsContinue()}
+        disabled={termsAccepted ? undefined : 'disabled'}
+        children={fbt('Accept Terms', 'Accept Terms')}
+      />
+
       return (
         <div>
           {this.renderMobileHeaderOption(fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin'))}
@@ -228,13 +243,13 @@ function withEnrolmentModal(WrappedComponent) {
             {!isMobile && <div className="title title-light mt-2">
               <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
             </div>}
-            <div className="pl-5 pr-5 mt-3 normal-line-height pale-grey">
+            <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
               {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
               Join Origin’s reward program to earn Origin tokens (OGN). Terms and
               conditions apply.
               {/*</fbt>*/}
             </div>
-            <div className="pt-1 mt-4 normal-line-height pale-grey explanation">
+            <div className="pt-1 mt-4 normal-line-height terms-body explanation">
               {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
               Earned OGN will be distributed at the end of each campaign. OGN is
               currently locked for usage on the Origin platform and cannot be
@@ -242,14 +257,14 @@ function withEnrolmentModal(WrappedComponent) {
               transferrable in the future.
               {/*</fbt>*/}
             </div>
-            <div className="mt-3 normal-line-height pale-grey explanation">
+            <div className="mt-3 normal-line-height terms-body explanation">
               {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
               By joining the Origin rewards program, you agree that you will not
               transfer or sell future earned Origin tokens to other for at least 1
               year from the date of earning your tokens.
               {/*</fbt>*/}
             </div>
-            <div className="terms pale-grey">
+            <div className="terms">
               {/*<fbt desc="EnrollmentModal.termsBody">*/}
               OGN are being issued in a transaction originally exempt from
               registration under the U.S. Securities Act of 1933, as amended (the
@@ -277,20 +292,15 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </label>
             </div>
-            <div className="d-flex justify-content-center">
-              <button
-                className={`btn ${this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light'} mr-2`}
-                onClick={() => this.handleCloseModal()}
-                children={fbt('Cancel', 'Cancel')}
-              />
-              <button
-                className={`btn btn-lg ml-2 ${
-                  termsAccepted ? 'btn-primary btn-rounded' : (this.props.ismobile === 'true' ? 'btn-primary' : 'btn-outline-light')
-                }`}
-                onClick={() => this.handleTermsContinue()}
-                disabled={termsAccepted ? undefined : 'disabled'}
-                children={fbt('Accept Terms', 'Accept Terms')}
-              />
+            <div className={`d-flex justify-content-center ${isMobile ? 'flex-column' : ''}`}>
+              {!isMobile && (<Fragment>
+                {cancelButton}
+                {acceptTermsButton}
+              </Fragment>)}
+              {isMobile && (<Fragment>
+                {acceptTermsButton}
+                {cancelButton}
+              </Fragment>)}
             </div>
           </div>
         </div>
@@ -303,6 +313,7 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <div>
+          {this.renderMobileHeaderOption(fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible'))}
           <div>
             <div className="image-holder mr-auto ml-auto">
               <img src="images/growth/earth-graphic.svg" />
@@ -419,7 +430,11 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      return <Enroll />
+      return (
+        <Enroll
+          isMobile={this.props.ismobile === 'true'}
+        />
+      )
     }
 
     renderNotSupportedOnMobile() {
@@ -470,6 +485,10 @@ function withEnrolmentModal(WrappedComponent) {
                     )
                   }
 
+                  const isMobile = this.props.ismobile === 'true'
+                  const displayMobileModal = isMobile && this.state.stage !== 'MetamaskSignature'
+                  const snowSmallerModal = isMobile && this.state.stage === 'MetamaskSignature'
+
                   return (
                     <Fragment>
                       <WrappedComponent
@@ -484,7 +503,7 @@ function withEnrolmentModal(WrappedComponent) {
                       />
                       {open && (
                         <Modal
-                          className={`growth-enrollment-modal ${this.props.ismobile === 'true' ? 'mobile' : ''}`}
+                          className={`growth-enrollment-modal ${snowSmallerModal ? 'small' : ''} ${displayMobileModal ? 'mobile' : ''}`}
                           onClose={() => {
                             this.setState({
                               open: false
@@ -521,6 +540,8 @@ require('react-styl')(`
     .growth-enrollment-modal
       padding-top: 20px
       max-width: 620px !important
+    .growth-enrollment-modal.small
+      max-width: 300px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
@@ -529,13 +550,6 @@ require('react-styl')(`
       height: 3.75rem
       .back
         cursor: pointer
-        .caret
-          height: 1.31rem
-        .caret.left
-          transform: rotate(90deg)
-        .caret.right
-          margin-left: -3.425rem
-          transform: rotate(270deg)
       .container
         height: 100%
         font-family: Lato
@@ -607,7 +621,9 @@ require('react-styl')(`
         transform: rotate(45deg)
     .country-check-label
       font-weight: 300
-    .pale-grey
+    .terms-title
+      color: var(--pale-grey)
+    .terms-body
       color: var(--pale-grey)
     .explanation
       font-size: 12px
@@ -616,14 +632,15 @@ require('react-styl')(`
       padding-right: 25px
       line-height: 1.58
     .terms
-      font-size: 12px
+      font-size: 0.75rem
       overflow-y: scroll
-      height: 150px
+      height: 9.375rem
       background-color: var(--dark-two)
-      margin: 24px 0px
+      margin: 1.5rem 0px
       text-align: left
-      padding: 18px 25px 18px 25px
+      padding: 1.125rem 1.56rem
       font-weight: 300
+      color: var(--pale-grey)
     .join-campaign
       .btn
         padding: 0.7rem 2rem
@@ -664,6 +681,8 @@ require('react-styl')(`
           margin-top: 0.8rem
       .btn
         margin-top: 1.2rem
+        margin-left: 1.5rem
+        margin-right: 1.5rem
       .title
         font-size: 20px
         line-height: 1.3
@@ -671,4 +690,25 @@ require('react-styl')(`
         margin: 16px 0px
       .checkbox-holder
         font-size: 15px
+      .terms
+        background-color: var(--pale-grey-four)
+        color: var(--steel)
+        margin-left: 1.5rem
+        margin-right: 1.5rem
+        padding: 0.625rem 1rem
+        border-radius: 0.312rem
+        border: solid 1px var(--light)
+      .terms-title
+        color: black
+        font-size: 1.125rem
+      .terms-body
+        color: var(--dark)
+        font-size: 0.875rem
+        font-weight: 300
+        line-height: 1.4
+      .btn-no-outline-link
+        font-size: 0.875rem
+        color: var(--clear-blue)
+        font-weight: normal
+        margin-top: 0.8rem
 `)

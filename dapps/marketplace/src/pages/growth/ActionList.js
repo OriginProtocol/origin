@@ -82,7 +82,7 @@ class ActionList extends Component {
 
     return (
       <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
-        <div className="filters d-flex">
+        <div className="filters d-flex justify-content-between">
           {!isMobile && <div className="show">
             <fbt desc="growth.action-list.show">Show</fbt>
           </div>}
