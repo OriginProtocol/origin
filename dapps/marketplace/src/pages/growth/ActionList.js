@@ -1,13 +1,16 @@
-import React, { Component } from 'react'
-import Action from 'pages/growth/Action'
+import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
+
+import Action from 'pages/growth/Action'
+import Modal from 'components/Modal'
 
 class ActionList extends Component {
   constructor(props) {
     super(props)
     this.state = {
       filter: 'all',
-      actionsToDisplay: props.actions
+      actionsToDisplay: props.actions,
+      modalOpen: false
     }
     this.animationLock = false
   }
@@ -78,46 +81,79 @@ class ActionList extends Component {
   render() {
     const { title, decimalDivision, handleNavigationChange, isMobile } = this.props
 
-    const { actionsToDisplay } = this.state
+    const { actionsToDisplay, modalOpen, modalText } = this.state
 
     return (
-      <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
-        <div className="filters d-flex justify-content-between">
-          {!isMobile && <div className="show">
-            <fbt desc="growth.action-list.show">Show</fbt>
-          </div>}
-          {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all', isMobile)}
-          {this.renderFilter(
-            fbt('Unlocked', 'growth.action-list.unlocked'),
-            'unlocked',
-            isMobile
-          )}
-          {this.renderFilter(
-            fbt('Locked', 'growth.action-list.locked'),
-            'locked',
-            isMobile
-          )}
-          {this.renderFilter(
-            fbt('Completed', 'growth.action-list.completed'),
-            'completed',
-            isMobile
-          )}
-        </div>
-        <div className="d-flex flex-column">
-          {title !== undefined && <div className="action-title">{title}</div>}
-          {actionsToDisplay.map(action => {
-            return (
-              <Action
-                action={action}
-                decimalDivision={decimalDivision}
-                key={`${action.type}:${action.status}`}
-                handleNavigationChange={handleNavigationChange}
-                isMobile={isMobile}
+      <Fragment>
+        {modalOpen && (
+          <Modal
+            className={`action-list-modal`}
+            onClose={() => {
+              this.setState({
+                modalOpen: false
+              })
+            }}
+          >
+            <Fragment>
+              <div>
+                {modalText}
+              </div>
+              <button
+                className="btn btn-outline-light mt-3 mb-2"
+                onClick={() => {
+                  this.setState({
+                    modalOpen: false
+                  })
+                }}
+                children={fbt('Ok', 'Ok')}
               />
-            )
-          })}
+            </Fragment>
+          </Modal>
+        )}
+        <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
+          <div className="filters d-flex justify-content-between">
+            {!isMobile && <div className="show">
+              <fbt desc="growth.action-list.show">Show</fbt>
+            </div>}
+            {this.renderFilter(fbt('All', 'growth.action-list.all'), 'all', isMobile)}
+            {this.renderFilter(
+              fbt('Unlocked', 'growth.action-list.unlocked'),
+              'unlocked',
+              isMobile
+            )}
+            {this.renderFilter(
+              fbt('Locked', 'growth.action-list.locked'),
+              'locked',
+              isMobile
+            )}
+            {this.renderFilter(
+              fbt('Completed', 'growth.action-list.completed'),
+              'completed',
+              isMobile
+            )}
+          </div>
+          <div className="d-flex flex-column">
+            {title !== undefined && <div className="action-title">{title}</div>}
+            {actionsToDisplay.map(action => {
+              return (
+                <Action
+                  action={action}
+                  decimalDivision={decimalDivision}
+                  key={`${action.type}:${action.status}`}
+                  handleNavigationChange={handleNavigationChange}
+                  isMobile={isMobile}
+                  onMobileLockClick={requirementText => {
+                    this.setState({
+                      modalOpen: true,
+                      modalText: requirementText
+                    })
+                  }}
+                />
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </Fragment>
     )
   }
 }
@@ -125,6 +161,8 @@ class ActionList extends Component {
 export default ActionList
 
 require('react-styl')(`
+  .action-list-modal.pl-modal .pl-modal-table .pl-modal-cell .action-list-modal
+    max-width: 25rem
   .action-list
     margin-top: 50px
     .filters

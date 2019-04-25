@@ -14,7 +14,7 @@ function Action(props) {
     unlockConditions,
   } = props.action
 
-  const isMobile = props.isMobile
+  const { isMobile, onMobileLockClick } = props
 
   const actionLocked = status === 'Inactive'
 
@@ -94,6 +94,7 @@ function Action(props) {
 
   let showPossibleRewardAmount = !actionCompleted && reward !== null
   const isInteractable = !actionCompleted && !actionLocked
+  const showUnlockModalOnClick = actionLocked && isMobile && unlockConditions.length > 0
 
   let showReferralPending, showReferralEarned = false
   // with Invite Friends reward show how much of a reward a
@@ -108,6 +109,26 @@ function Action(props) {
     showPossibleRewardAmount =
       !showReferralPending && !showReferralEarned
   }
+
+  const unlockConditionText = (
+    <Fragment>
+      <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
+      {unlockConditions
+        .map(unlockCondition => {
+          return GrowthEnum[unlockCondition.messageKey] ? (
+            <fbt desc="growth">
+              <fbt:enum
+                enum-range={GrowthEnum}
+                value={unlockCondition.messageKey}
+              />
+            </fbt>
+          ) : (
+            'Missing translation'
+          )
+        })
+        .join(', ')}
+    </Fragment>
+  )
 
   const wrapIntoInteraction = actionComponent => {
     return (
@@ -130,7 +151,12 @@ function Action(props) {
             )}
           </div>
         )}
-        {!isInteractable && actionComponent}
+        {!isInteractable && !showUnlockModalOnClick && actionComponent}
+        {showUnlockModalOnClick && (
+          <div className="mt-auto mb-auto" onClick={() => onMobileLockClick(unlockConditionText)}>
+            {actionComponent}
+          </div>
+        )}
       </Fragment>
     )
   }
@@ -152,21 +178,7 @@ function Action(props) {
         {actionLocked && !isMobile && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
-              <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
-              {unlockConditions
-                .map(unlockCondition => {
-                  return GrowthEnum[unlockCondition.messageKey] ? (
-                    <fbt desc="growth">
-                      <fbt:enum
-                        enum-range={GrowthEnum}
-                        value={unlockCondition.messageKey}
-                      />
-                    </fbt>
-                  ) : (
-                    'Missing translation'
-                  )
-                })
-                .join(', ')}
+              {unlockConditionText}
             </div>
           </Fragment>
         )}
