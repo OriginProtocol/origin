@@ -28,6 +28,15 @@ matrix:
       script:
         - npm run lint
 
+    - name: "@origin/marketplace integration tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- --scope @origin/marketplace --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/event-cache
+      script:
+        - npm run test --prefix dapps/marketplace
+
     - name: "@origin/graphql unit tests"
       language: node_js
       node_js: 10

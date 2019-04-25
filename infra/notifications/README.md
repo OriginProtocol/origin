@@ -104,6 +104,5 @@ npm run start:listener:development -- --identity --growth --marketplace \
   --network=rinkeby \
   --continue-file=../continue \
   --notifications-webhook=http://localhost:3456/events \
-  --verbose \
-  --concurrency=4
+  --verbose
 ```
