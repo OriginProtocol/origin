@@ -104,6 +104,9 @@ const config = {
     args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
 }
 
+logger.info('Starting with configuration:')
+logger.info(config)
+
 /**
  * Creates runtime context and starts the tracking loop
  * @return {Promise<void>}
@@ -144,10 +147,6 @@ async function main() {
       continue
     }
     logger.info(`Querying events from ${processedToBlock} up to ${toBlock}`)
-
-    // Update the event caches to set their max block number.
-    contractsContext.marketplace.eventCache.updateBlock(toBlock)
-    contractsContext.identityEvents.eventCache.updateBlock(toBlock)
 
     // Retrieve all events for the relevant contracts
     const eventArrays = await Promise.all([

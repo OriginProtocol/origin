@@ -1,0 +1,5 @@
+Congratulations!
+
+A buyer has made an offer on your listing <%= listing.title %>.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>

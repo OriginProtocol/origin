@@ -113,23 +113,18 @@ class Messaging {
     }
   }
 
-  async onPreGenKeys(data) {
+  async onPreGenKeys({ address, signatureKey, pubMessage, pubSignature }) {
     debug('onPreGenKeys')
-    const accountId = data.account
-    const sigKey = data.sig_key
-    const sigPhrase = data.sig_phrase
-    const pubMsg = data.pub_msg
-    const pubSig = data.pub_sig
     const accounts = await this.web3.eth.getAccounts()
-    if (accountId === accounts[0]) {
+    if (address === accounts[0]) {
       this.currentStorage = sessionStorage
-      this.setKeyItem(`${MESSAGING_KEY}:${accountId}`, sigKey)
-      this.setKeyItem(`${MESSAGING_PHRASE}:${accountId}`, sigPhrase)
-      this.setKeyItem(`${PUB_MESSAGING}:${accountId}`, pubMsg)
-      this.setKeyItem(`${PUB_MESSAGING_SIG}:${accountId}`, pubSig)
-      this.pub_sig = pubSig
-      this.pub_msg = pubMsg
-      if (accountId == this.account_key) {
+      this.setKeyItem(`${MESSAGING_KEY}:${address}`, signatureKey)
+      this.setKeyItem(`${MESSAGING_PHRASE}:${address}`, PROMPT_MESSAGE)
+      this.setKeyItem(`${PUB_MESSAGING}:${address}`, pubMessage)
+      this.setKeyItem(`${PUB_MESSAGING_SIG}:${address}`, pubSignature)
+      this.pub_sig = pubSignature
+      this.pub_msg = pubMessage
+      if (address == this.account_key) {
         this.startConversing()
       }
     }
