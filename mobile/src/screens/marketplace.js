@@ -115,13 +115,16 @@ class MarketplaceScreen extends Component {
     const keys = wallet.messagingKeys
     if (keys) {
       const keyInjection = `
-        window.context.messaging.onPreGenKeys({
-          address: '${keys.address}',
-          signatureKey: '${keys.signatureKey}',
-          pubMessage: '${keys.pubMessage}',
-          pubSignature: '${keys.pubSignature}'
-        });
-        true;
+        (function() {
+          if (window && window.context && window.context.messaging) {
+            window.context.messaging.onPreGenKeys({
+              address: '${keys.address}',
+              signatureKey: '${keys.signatureKey}',
+              pubMessage: '${keys.pubMessage}',
+              pubSignature: '${keys.pubSignature}'
+            });
+          }
+        })()
       `
       this.dappWebView.injectJavaScript(keyInjection)
     }
