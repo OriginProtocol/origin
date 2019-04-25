@@ -29,19 +29,22 @@ import {
   removeAccount,
   setAccountActive,
   setAccountBalances,
-  setAccountName
+  setAccountName,
+  setMessagingKeys
 } from 'actions/Wallet'
 import {
   BALANCE_POLL_INTERVAL,
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES,
-  NETWORKS
+  NETWORKS,
+  PROMPT_MESSAGE,
+  PROMPT_PUB_KEY
 } from './constants'
 import { loadData, deleteData } from './tools'
 
 class OriginWallet extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.web3 = new Web3()
 
@@ -52,7 +55,7 @@ class OriginWallet extends Component {
     )
     DeviceEventEmitter.addListener(
       'setAccountName',
-      this.setAccountName.bind(this)
+      this.props.setAccountName.bind(this)
     )
     DeviceEventEmitter.addListener(
       'setAccountActive',
@@ -99,17 +102,6 @@ class OriginWallet extends Component {
     if (prevProps.settings.network.name !== this.props.settings.network.name) {
       this.initWeb3()
       this.updateBalancesNow()
-    }
-
-    if (
-      prevProps.wallet.activeAccount &&
-      prevProps.wallet.activeAccount.address !==
-        this.props.wallet.activeAccount.address
-    ) {
-      this.updateBalancesNow()
-      // Make sure device token is registered with server
-      const { settings } = this.props
-      this.registerDeviceToken(settings.deviceToken)
     }
   }
 
@@ -204,13 +196,50 @@ class OriginWallet extends Component {
         a => a.address === wallet.activeAccount.address
       )
     }
-    if (length && !hasValidActiveAccount) {
-      // Set the first account active if none are active
-      this.props.setAccountActive(wallet.accounts[0])
-    } else if (settings.deviceToken) {
-      // Make sure the active account is registered with the notifications
-      // server
-      this.registerDeviceToken(settings.deviceToken)
+
+    // Setup the active account
+    if (length) {
+      const activeAccount = hasValidActiveAccount
+        ? wallet.activeAccount
+        : wallet.accounts[0]
+      this.setAccountActive(activeAccount)
+    }
+  }
+
+  /* Generate the signatures required for activating messaging
+   */
+  async generateMessagingKeys() {
+    const { wallet } = this.props
+    // Check if messaging keys need updaitng
+    if (
+      !wallet.messagingKeys ||
+      wallet.messagingKeys.address !== wallet.activeAccount.address
+    ) {
+      // Messaging keys address is different to the active account address,
+      // update messaging keys
+      const privateKey = wallet.activeAccount.privateKey
+      if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+        privateKey = '0x' + privateKey
+      }
+      const signatureKey = await this.web3.eth.accounts
+        .sign(PROMPT_MESSAGE, privateKey)
+        .signature.substring(0, 66)
+      const msgAccount = this.web3.eth.accounts.privateKeyToAccount(
+        signatureKey
+      )
+      const pubMessage = PROMPT_PUB_KEY + msgAccount.address
+      const pubSignature = await this.web3.eth.accounts.sign(
+        pubMessage,
+        privateKey
+      ).signature
+      const messagingKeys = {
+        address: wallet.activeAccount.address,
+        signatureKey,
+        pubMessage,
+        pubSignature
+      }
+      this.props.setMessagingKeys(messagingKeys)
+      DeviceEventEmitter.emit('messagingKeys', messagingKeys)
     }
   }
 
@@ -220,7 +249,7 @@ class OriginWallet extends Component {
     const wallet = this.web3.eth.accounts.wallet.create(1)
     const account = wallet[wallet.length - 1]
     this.props.addAccount(account)
-    this.props.setAccountActive(account)
+    this.setAccountActive(account)
     return account.address
   }
 
@@ -232,7 +261,7 @@ class OriginWallet extends Component {
     }
     const account = this.web3.eth.accounts.wallet.add(privateKey)
     this.props.addAccount(account)
-    this.props.setAccountActive(account)
+    this.setAccountActive(account)
     return account.address
   }
 
@@ -247,21 +276,20 @@ class OriginWallet extends Component {
       // to the first account found that is not the removed account
       const newActiveAccount =
         wallet.accounts.find(a => a.address !== account.address) || null
-      this.props.setAccountActive(newActiveAccount)
+      this.setAccountActive(newActiveAccount)
     }
     return result
   }
 
-  /* Record a name for an address in the account mapping
-   */
-  async setAccountName(name, address) {
-    this.props.setAccountName(name, address)
-  }
-
-  /* Set the account that should be used for sending/signing transactions
+  /* Set the account that should be used for web3 interactions and ensure it is
+   * configured for messaging and notifications
    */
   async setAccountActive(account) {
-    this.props.setAccountActive(account)
+    await this.props.setAccountActive(account)
+    // Make sure device token is registered with server for this eth address
+    this.registerDeviceToken()
+    // Generate messaging keys
+    this.generateMessagingKeys()
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
@@ -476,6 +504,7 @@ const mapDispatchToProps = dispatch => ({
   setAccountBalances: balances => dispatch(setAccountBalances(balances)),
   setAccountServerNotifications: payload =>
     dispatch(setAccountServerNotifications(payload)),
+  setMessagingKeys: payload => dispatch(setMessagingKeys(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
   setNetwork: network => dispatch(setNetwork(network)),
   addNotification: notification => dispatch(addNotification(notification))
