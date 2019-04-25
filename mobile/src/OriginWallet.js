@@ -103,18 +103,6 @@ class OriginWallet extends Component {
       this.initWeb3()
       this.updateBalancesNow()
     }
-<<<<<<< HEAD
-
-    if (
-      prevProps.wallet.activeAccount &&
-      prevProps.wallet.activeAccount.address !==
-        this.props.wallet.activeAccount.address
-    ) {
-      this.updateBalancesNow()
-      this.registerDeviceToken()
-    }
-=======
->>>>>>> tomlinton/pre-enable-messaging
   }
 
   /* Update balances now annd restart the balance poller in BALANCE_POLL_INTERVAL
@@ -208,11 +196,6 @@ class OriginWallet extends Component {
         a => a.address === wallet.activeAccount.address
       )
     }
-<<<<<<< HEAD
-    if (length && !hasValidActiveAccount) {
-      // Set the first account active if none are active
-      this.props.setAccountActive(wallet.accounts[0])
-=======
 
     // Setup the active account
     if (length) {
@@ -257,7 +240,6 @@ class OriginWallet extends Component {
       }
       this.props.setMessagingKeys(messagingKeys)
       DeviceEventEmitter.emit('messagingKeys', messagingKeys)
->>>>>>> tomlinton/pre-enable-messaging
     }
   }
 
