@@ -109,6 +109,8 @@ class GrowthInvite extends Component {
       inviteEmailsMutationError
     } = this.state
 
+    const isMobile = this.props.isMobile
+
     return (
       <Query
         query={inviteCodeQuery}
@@ -146,7 +148,7 @@ class GrowthInvite extends Component {
                 </fbt>
               </div>
 
-              <div className="d-flex pt-3">
+              <div className={`d-flex pt-3 ${isMobile ? 'flex-column' : ''}`}>
                 <div className="col-8 pl-0 pr-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.copyCode">Copy code</fbt>
@@ -179,7 +181,7 @@ class GrowthInvite extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-4 pl-4 pr-0">
+                <div className="col-4 pl-0 pl-md-4 pr-0 mt-3 mt-md-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.shareOrTweet">Share or Tweet</fbt>
                   </div>
@@ -242,7 +244,7 @@ class GrowthInvite extends Component {
                       this.validateEmailsInput(invite)
                     }}
                   >
-                    <div className="emphasis mt-5">
+                    <div className="emphasis mt-md-5 mt-4">
                       <fbt desc="RewardInvite.inviteViaEmail">
                         Invite via Email
                       </fbt>
@@ -501,14 +503,14 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { activeCampaign, handleNavigationChange } = this.props
+    const { activeCampaign, handleNavigationChange, isMobile } = this.props
 
     const referralAction = activeCampaign.actions.filter(
       action => action.type === 'Referral'
     )[0]
 
     return (
-      <div className="container growth-invite">
+      <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
         <div>
           <div
             className="back d-flex mr-auto"
@@ -519,19 +521,17 @@ class GrowthInvite extends Component {
               <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
             </div>
           </div>
-          <h1 className="mb-2 pt-3 mt-3">
+          <h1 className={`mb-2 pt-md-3 mt-3`}>
             <fbt desc="RewardInvite.inviteYourFriends">
               Invite your friends to Origin
             </fbt>
           </h1>
-          <div>
-            <fbt desc="RewardInvite.getOgnByCompletingTasks">
-              Get Origin Tokens by completing the tasks below.
-            </fbt>
-          </div>
+          <fbt desc="RewardInvite.getOgnByCompletingTasks">
+            Get Origin Tokens by completing the tasks below.
+          </fbt>
         </div>
 
-        <div className="navigation-list d-flex justify-content-left mt-4">
+        <div className="navigation-list d-flex justify-content-left mt-2 mt-md-4">
           <NavigationItem
             selected={subPage === 'sendInvites'}
             onClick={() => this.handleNavigationClick('sendInvites')}
@@ -619,6 +619,7 @@ require('react-styl')(`
         border: 1px solid var(--light)
         height: 50px
         width: 50%
+        background-color: white
       .social-btn.fb
         margin-right: 5px
       .social-btn.tw
@@ -630,7 +631,7 @@ require('react-styl')(`
       .invalid-feedback
         font-size: 18px
       .invite-error
-        font-size: 18px
+        font-size: 1.125rem
         color: var(--red)
     .track-invites
       margin-top: 30px
@@ -671,4 +672,15 @@ require('react-styl')(`
       .remind-button
         border: 0px
         color: var(--clear-blue)
+  .growth-invite.mobile
+    font-size: 1rem
+    margin-top: 1.5rem
+    h1
+      font-size: 1.6rem !important
+    .back
+      font-size: 0.875rem
+    .invite-error
+        font-size: 1rem
+    .btn-primary
+      width: 100%
 `)

@@ -389,6 +389,7 @@ class GrowthCampaigns extends Component {
                           }
                           activeCampaign={activeCampaign}
                           decimalDivision={decimalDivision}
+                          isMobile={isMobile}
                         />
                       )}
                     </Fragment>
