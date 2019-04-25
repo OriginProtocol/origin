@@ -13,6 +13,7 @@ function Action(props) {
     rewardPending,
     unlockConditions,
   } = props.action
+
   const isMobile = props.isMobile
 
   const actionLocked = status === 'Inactive'
@@ -94,12 +95,18 @@ function Action(props) {
   let showPossibleRewardAmount = !actionCompleted && reward !== null
   const isInteractable = !actionCompleted && !actionLocked
 
+  let showReferralPending, showReferralEarned = false
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
   if (type === 'Referral') {
+    showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
+    showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
+    
+    // only mobile layout show only 1 reward at a time
+    showReferralPending = isMobile ? (showReferralPending && !showReferralEarned) : showReferralPending
+
     showPossibleRewardAmount =
-      (rewardPending === null || rewardPending.amount === '0') &&
-      (rewardEarned === null || rewardEarned.amount === '0')
+      !showReferralPending && !showReferralEarned
   }
 
   const wrapIntoInteraction = actionComponent => {
@@ -165,9 +172,7 @@ function Action(props) {
         )}
       </div>
       <div className="col-5 d-flex align-items-center justify-content-end">
-        {type === 'Referral' &&
-          rewardPending !== null &&
-          rewardPending.amount !== '0' && (
+        {showReferralPending && (
             <div className="d-flex flex-column">
               {renderReward(rewardPending.amount)}
               <div className="sub-text ml-4">
@@ -175,9 +180,7 @@ function Action(props) {
               </div>
             </div>
           )}
-        {type === 'Referral' &&
-          rewardEarned !== null &&
-          rewardEarned.amount !== '0' && (
+        {showReferralEarned && (
             <div className="d-flex flex-column">
               {renderReward(rewardEarned.amount)}
               <div className="d-center sub-text ml-4">
