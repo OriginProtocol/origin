@@ -125,7 +125,7 @@ const config = {
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
       ORIGIN_LINKING: null,
-      ENABLE_GOOGLE_ATTESTATION: process.env.ENABLE_GOOGLE_ATTESTATION
+      ENABLE_GOOGLE_ATTESTATION: false
     })
   ],
 
