@@ -18,6 +18,7 @@ import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES
 } from './constants'
+import { get } from 'utils'
 
 class PushNotifications extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class PushNotifications extends Component {
   }
 
   componentDidMount() {
-    // Initialise
+    // Initialise push notifications
     const { wallet } = this.props
 
     // Add an event listener to log registration errors in development
@@ -43,10 +44,8 @@ class PushNotifications extends Component {
     PushNotification.configure({
       // Called when Token is generated (iOS and Android) (optional)
       onRegister: function(deviceToken) {
-        if (wallet.activeAccount && wallet.activeAccount.address) {
-          // Save the device token into redux for later use with other accounts
-          this.props.setDeviceToken(deviceToken['token'])
-        }
+        // Save the device token into redux for later use with other accounts
+        this.props.setDeviceToken(deviceToken['token'])
       }.bind(this),
       // Called when a remote or local notification is opened or received
       onNotification: function(notification) {
@@ -64,23 +63,36 @@ class PushNotifications extends Component {
       popInitialNotification: true,
       requestPermissions: Platform.OS !== 'ios'
     })
+
+    // Make sure current active account is registered on mount
+    this.register()
   }
 
   componentDidUpdate(prevProps) {
-    // Detect change of active account
-    if (
-      prevProps.wallet.activeAccount &&
-      prevProps.wallet.activeAccount.address !==
-        this.props.wallet.activeAccount.address
-    ) {
-      this.register()
-    }
+    // The following circumstances need to trigger the register function to
+    // save the device token and Ethereum address of the active account to
+    // the notifications server:
+    //  - Change of active account
+    //  - Change of device token
+    //  - Change of network (due to different notifications server)
 
-    // Change of device token
-    if (
-      prevProps.settings.deviceToken &&
-      prevProps.settings.deviceToken !== this.props.settings.deviceToken
-    ) {
+    const registerConditions = [
+      // Change of active account
+      get(prevProps.wallet.activeAccount, 'address') !==
+        get(this.props.wallet.activeAccount, 'address'),
+      // Change of device token
+      get(prevProps.settings, 'deviceToken') !==
+        get(this.props.settings, 'deviceToken'),
+      // Change of network
+      /* TODO: Fix register call before server changes
+      get(prevProps.settings.network, 'name') !==
+        get(this.props.settings.network, 'name')
+      */
+    ]
+
+    // Trigger a register query to notifications server if any of the above
+    // conditions are true
+    if (registerConditions.includes(true)) {
       this.register()
     }
   }
@@ -88,7 +100,19 @@ class PushNotifications extends Component {
   /* Handles a notification by displaying an alert and saving it to redux
    */
   onNotification(notification) {
-    Alert.alert(notification.title, notification.message)
+    // Popup notification in an alert
+    Alert.alert(
+      notification.alert.title,
+      notification.alert.body,
+      [
+        { text: 'Close' },
+        {
+          text: 'View',
+          onPress: () => console.log('OK')
+        },
+       ],
+    )
+    // Save notification to redux in case we want to display them later
     this.props.addNotification(notification)
   }
 
@@ -96,21 +120,34 @@ class PushNotifications extends Component {
    * notification server
    */
   async register() {
-    const permissions =
-      Platform.OS === 'ios'
-        ? await PushNotificationIOS.requestPermissions()
-        : DEFAULT_NOTIFICATION_PERMISSIONS
+    let activeAddress
+    if (
+      this.props.wallet.activeAccount &&
+      this.props.wallet.activeAccount.address
+    ) {
+      activeAddress = this.props.wallet.activeAccount.address
+    }
 
-    const activeAddress = this.props.wallet.activeAccount.address
     const deviceToken = this.props.settings.deviceToken
+
     if (!activeAddress) {
       console.debug('No active address')
       return
     }
+
     if (!deviceToken) {
       console.debug('No device token')
       return
     }
+
+    console.debug(
+      `Registering ${activeAddress} and device token ${deviceToken}`
+    )
+
+    const permissions =
+      Platform.OS === 'ios'
+        ? await PushNotificationIOS.requestPermissions()
+        : DEFAULT_NOTIFICATION_PERMISSIONS
 
     const notificationType = this.getNotificationType()
     const notificationServer =
@@ -130,7 +167,7 @@ class PushNotifications extends Component {
         permissions: permissions
       })
     }).catch(error => {
-      console.error(
+      console.warning(
         'Failed to register notification address with notifications server',
         error
       )
@@ -139,7 +176,9 @@ class PushNotifications extends Component {
 
   /* Unregister for notifications for deleted accounts
    */
-  async unregister() {}
+  async unregister() {
+    console.debug(`Unregistering ${address}`)
+  }
 
   /* Return the notification type that should be used for the platform
    */

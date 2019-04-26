@@ -19,6 +19,8 @@ if (process.env.APNS_KEY_FILE) {
     production: process.env.APNS_PRODUCTION ? true : false
   })
   apnBundle = process.env.APNS_BUNDLE_ID
+} else {
+  logger.warn('APN provider not configured, no key file found')
 }
 
 // Firebase Admin SDK
@@ -33,6 +35,8 @@ if (process.env.FIREBASE_SERVICE_JSON) {
   })
 
   firebaseMessaging = firebase.messaging()
+} else {
+  logger.warn('Firebase messaging not configured, no service JSON found')
 }
 
 //
@@ -93,11 +97,16 @@ async function mobilePush(
       const mobileRegister = await MobileRegistry.findOne({
         where: { ethAddress }
       })
-      await sendNotification(
-        mobileRegister.deviceToken,
-        mobileRegister.deviceType,
-        notificationObj
-      )
+      if (mobileRegister) {
+        logger.info(`Sending notification to ${ethAddress}`)
+        await sendNotification(
+          mobileRegister.deviceToken,
+          mobileRegister.deviceType,
+          notificationObj
+        )
+      } else {
+        logger.info(`No device registered for notifications for ${ethAddress}`)
+      }
     }
   }
 }
@@ -107,7 +116,11 @@ async function mobilePush(
  */
 async function sendNotification(deviceToken, deviceType, notificationObj) {
   if (notificationObj) {
-    if (deviceType === 'APN' && apnProvider) {
+    if (deviceType === 'APN') {
+      if (!apnProvider) {
+        logger.error('APN provider not configured, notification failed')
+        return
+      }
       // iOS notifications
       const notification = new apn.Notification({
         alert: notificationObj.message,
@@ -119,7 +132,11 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
         logger.debug('APNS sent: ', result.sent.length)
         logger.error('APNS failed: ', result.failed)
       })
-    } else if (deviceType === 'FCM' && firebaseMessaging) {
+    } else if (deviceType === 'FCM') {
+      if (!firebaseMessaging) {
+        logger.error('Firebase messaging not configured, notification failed')
+        return
+      }
       // FCM notifications
       // Message: https://firebase.google.com/docs/reference/admin/node/admin.messaging.Message
       const message = {

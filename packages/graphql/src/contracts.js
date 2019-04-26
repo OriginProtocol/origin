@@ -15,7 +15,8 @@ import Configs from './configs'
 
 const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
-const isWebView = typeof window.ReactNativeWebView !== 'undefined'
+const isWebView = typeof window !== 'undefined' &&
+  typeof window.ReactNativeWebView !== 'undefined'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 

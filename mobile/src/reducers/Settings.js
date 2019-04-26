@@ -4,11 +4,11 @@ import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
 const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const localhost = NETWORKS.find(n => n.name === 'Localhost')
+const docker = NETWORKS.find(n => n.name === 'Docker')
 
 const initialState = {
   // eslint-disable-next-line no-undef
-  network: __DEV__ ? localhost : mainnet,
+  network: __DEV__ ? docker : mainnet,
   deviceToken: null
 }
 

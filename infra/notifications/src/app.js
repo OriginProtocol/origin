@@ -84,7 +84,7 @@ const rateLimiterOptions = {
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 const rateLimiterMiddleware = (req, res, next) => {
-  if (!req.url.startsWith('/events')) {
+  if (!req.url.startsWith('/events') && !req.url.startsWith('/mobile')) {
     rateLimiter
       .consume(req.connection.remoteAddress)
       .then(() => {
@@ -169,7 +169,7 @@ app.post('/', async (req, res) => {
  * and Ethereum address.
  */
 app.post('/mobile/register', async (req, res) => {
-  logger.debug('Call to mobile device registry endpoint')
+  logger.info('Call to mobile device registry endpoint')
 
   const mobileRegister = {
     ethAddress: req.body.eth_address,
@@ -279,8 +279,8 @@ app.post('/events', async (req, res) => {
     config
   )
 
-  // Mobile Push (linker) notifications
-  // mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+  // Mobile Push notifications
+  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
