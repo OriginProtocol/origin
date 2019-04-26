@@ -15,6 +15,7 @@ import Configs from './configs'
 
 const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
+const isWebView = typeof window.ReactNativeWebView !== 'undefined'
 
 let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 
@@ -132,7 +133,7 @@ export function setNetwork(net, customConfig) {
   if (isBrowser) {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    if (window.__mobileBridge) {
+    if (isWebView) {
       context.mobileBridge = OriginMobileBridge({ web3 })
     }
     context.messaging = OriginMessaging({
@@ -251,7 +252,7 @@ export function setNetwork(net, customConfig) {
   }
   setMetaMask()
 
-  if (isBrowser && window.__mobileBridge) {
+  if (isWebView) {
     setMobileBridge()
   }
 }
