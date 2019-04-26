@@ -28,6 +28,7 @@ async function getFingerprintFn() {
     })
   })
 }
+
 const getFingerprint = memoize(getFingerprintFn)
 
 function withFingerprint(WrappedComponent) {
@@ -40,7 +41,7 @@ function withFingerprint(WrappedComponent) {
       let timeout, idleCallback
       if (cachedFingerprintData) {
         return
-      } else if (window.requestIdleCallback) {
+      } else if (typeof requestIdleCallback === 'function') {
         idleCallback = requestIdleCallback(async () =>
           setFingerprintData(await getFingerprint())
         )
@@ -52,7 +53,9 @@ function withFingerprint(WrappedComponent) {
       }
       return function cleanup() {
         clearTimeout(timeout)
-        cancelIdleCallback(idleCallback)
+        if (typeof cancelIdleCallback === 'function') {
+          cancelIdleCallback(idleCallback)
+        }
       }
     })
 

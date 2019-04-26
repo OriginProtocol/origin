@@ -15,10 +15,27 @@ const {
 } = require('./backends/browser')
 
 const limiter = new Bottleneck({ maxConcurrent: 25 })
+limiter.on('error', err => {
+  debug('Error occurred within rate limiter', err)
+})
+limiter.on('failed', async (err, jobInfo) => {
+  debug(`Job ${jobInfo.options.id} failed`, err)
+  // Retry 3 times
+  if (jobInfo.retryCount < 4) {
+    // 250ms wait for retry
+    debug('Retrying job...')
+    return 250
+  }
+})
 
 const getPastEvents = memoize(
   async function(instance, fromBlock, toBlock, batchSize = 10000) {
-    if (!instance.loadedCache && instance.ipfsEventCache) {
+    if (
+      instance.ipfsEventCache && // IPFS cache configured.
+      !instance.loadedCache && // IPFS cache hasn't been loaded yet.
+      (!instance.latestIndexedBlock || // Back-end does not support persistent storage. Always load cache at startup.
+        instance.latestIndexedBlock < instance.cacheMaxBlock) // Data indexed in back-end is not as fresh as cache.
+    ) {
       try {
         debug('Loading event cache from IPFS', instance.ipfsEventCache)
         const cachedEvents = flattenDeep(
@@ -26,15 +43,25 @@ const getPastEvents = memoize(
             instance.ipfsEventCache.map(hash => get(instance.ipfsServer, hash))
           )
         )
-        fromBlock = cachedEvents[cachedEvents.length - 1].blockNumber + 1
-        debug(`Last cached blockNumber: ${fromBlock}`)
+        const lastCached = cachedEvents[cachedEvents.length - 1].blockNumber
         debug(`Loaded ${cachedEvents.length} events from IPFS cache`)
-        await instance.backend.addEvents(cachedEvents)
+        debug(`Last cached blockNumber: ${lastCached}`)
+        debug(`Latest indexed block: ${instance.latestIndexedBlock}`)
+        if (
+          !instance.latestIndexedBlock ||
+          lastCached > instance.latestIndexedBlock
+        ) {
+          debug(`Adding IPFS events to backend`)
+          await instance.backend.addEvents(cachedEvents)
+          fromBlock = lastCached + 1
+        }
       } catch (e) {
         debug(`Error loading IPFS events`, e)
       }
 
       instance.loadedCache = true
+    } else {
+      debug('Skipped loading event from IPFS cache.')
     }
 
     const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
@@ -47,7 +74,7 @@ const getPastEvents = memoize(
     const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
 
-    instance.lastQueriedBlock = toBlock + 1
+    instance.lastQueriedBlock = toBlock
 
     if (!numBlocks) return
 
@@ -147,10 +174,21 @@ class EventCache {
       conf.ipfsGateway || conf.ipfsServer || 'https://ipfs.originprotocol.com'
 
     this.batchSize = conf.batchSize || 10000
+
+    // If config specifies a cache, it should also have cacheMaxBlock.
+    if (
+      conf.ipfsEventCache &&
+      conf.ipfsEventCache.length &&
+      !conf.cacheMaxBlock
+    ) {
+      throw new Error('cacheMaxBlock missing from config.')
+    }
+
     this.ipfsEventCache =
       conf.ipfsEventCache && conf.ipfsEventCache.length
         ? conf.ipfsEventCache
         : null
+    this.cacheMaxBlock = conf.cacheMaxBlock
 
     /**
      * Only reason to set this false is if something external will manage the
@@ -170,17 +208,22 @@ class EventCache {
    * @returns {Array} An array of event objects
    */
   async _fetchEvents() {
-    let fromBlock = this.lastQueriedBlock || this.originBlock
-    const latestKnown = await this.backend.getLatestBlock()
-
-    if (latestKnown > fromBlock) {
-      debug(`Set fromBlock to latestKnown (${latestKnown}) + 1`)
-      fromBlock = latestKnown + 1
-    }
-
     let toBlock = this.latestBlock
     if (this.useLatestFromChain || !toBlock) {
       toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
+    }
+
+    if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
+      return
+    }
+
+    let fromBlock = this.lastQueriedBlock
+      ? this.lastQueriedBlock + 1
+      : this.originBlock
+    this.latestIndexedBlock = await this.backend.getLatestBlock()
+
+    if (this.latestIndexedBlock > fromBlock) {
+      fromBlock = this.latestIndexedBlock + 1
     }
 
     if (fromBlock > toBlock) {

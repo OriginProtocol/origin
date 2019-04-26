@@ -14,6 +14,8 @@ function Action(props) {
     unlockConditions
   } = props.action
 
+  const { isMobile, onMobileLockClick } = props
+
   const actionLocked = status === 'Inactive'
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
@@ -92,14 +94,44 @@ function Action(props) {
 
   let showPossibleRewardAmount = !actionCompleted && reward !== null
   const isInteractable = !actionCompleted && !actionLocked
+  const showUnlockModalOnClick =
+    actionLocked && isMobile && unlockConditions.length > 0
 
+  let showReferralPending,
+    showReferralEarned = false
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
   if (type === 'Referral') {
-    showPossibleRewardAmount =
-      (rewardPending === null || rewardPending.amount === '0') &&
-      (rewardEarned === null || rewardEarned.amount === '0')
+    showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
+    showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
+
+    // when on mobile layout show only 1 reward type at a time
+    showReferralPending = isMobile
+      ? showReferralPending && !showReferralEarned
+      : showReferralPending
+
+    showPossibleRewardAmount = !showReferralPending && !showReferralEarned
   }
+
+  const unlockConditionText = (
+    <Fragment>
+      <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
+      {unlockConditions
+        .map(unlockCondition => {
+          return GrowthEnum[unlockCondition.messageKey] ? (
+            <fbt desc="growth">
+              <fbt:enum
+                enum-range={GrowthEnum}
+                value={unlockCondition.messageKey}
+              />
+            </fbt>
+          ) : (
+            'Missing translation'
+          )
+        })
+        .join(', ')}
+    </Fragment>
+  )
 
   const wrapIntoInteraction = actionComponent => {
     return (
@@ -122,13 +154,25 @@ function Action(props) {
             )}
           </div>
         )}
-        {!isInteractable && actionComponent}
+        {!isInteractable && !showUnlockModalOnClick && actionComponent}
+        {showUnlockModalOnClick && (
+          <div
+            className="mt-auto mb-auto"
+            onClick={() => onMobileLockClick(unlockConditionText)}
+          >
+            {actionComponent}
+          </div>
+        )}
       </Fragment>
     )
   }
 
   return wrapIntoInteraction(
-    <div className={`d-flex action ${isInteractable && 'active'}`}>
+    <div
+      className={`d-flex action ${isInteractable && 'active'} ${
+        isMobile ? 'mobile' : ''
+      }`}
+    >
       <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
           {
@@ -141,49 +185,31 @@ function Action(props) {
       </div>
       <div className={`d-flex flex-column justify-content-center col-6`}>
         <div className="title">{title}</div>
-        {actionLocked && unlockConditions.length > 0 && (
+        {actionLocked && !isMobile && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
-              <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
-              {unlockConditions
-                .map(unlockCondition => {
-                  return GrowthEnum[unlockCondition.messageKey] ? (
-                    <fbt desc="growth">
-                      <fbt:enum
-                        enum-range={GrowthEnum}
-                        value={unlockCondition.messageKey}
-                      />
-                    </fbt>
-                  ) : (
-                    'Missing translation'
-                  )
-                })
-                .join(', ')}
+              {unlockConditionText}
             </div>
           </Fragment>
         )}
       </div>
       <div className="col-5 d-flex align-items-center justify-content-end">
-        {type === 'Referral' &&
-          rewardPending !== null &&
-          rewardPending.amount !== '0' && (
-            <div className="d-flex flex-column">
-              {renderReward(rewardPending.amount)}
-              <div className="sub-text ml-4">
-                <fbt desc="RewardActions.pending">Pending</fbt>
-              </div>
+        {showReferralPending && (
+          <div className="d-flex flex-column">
+            {renderReward(rewardPending.amount)}
+            <div className="sub-text ml-4">
+              <fbt desc="RewardActions.pending">Pending</fbt>
             </div>
-          )}
-        {type === 'Referral' &&
-          rewardEarned !== null &&
-          rewardEarned.amount !== '0' && (
-            <div className="d-flex flex-column">
-              {renderReward(rewardEarned.amount)}
-              <div className="d-center sub-text ml-4">
-                <fbt desc="RewardActions.earned">Earned</fbt>
-              </div>
+          </div>
+        )}
+        {showReferralEarned && (
+          <div className="d-flex flex-column">
+            {renderReward(rewardEarned.amount)}
+            <div className="d-center sub-text ml-4">
+              <fbt desc="RewardActions.earned">Earned</fbt>
             </div>
-          )}
+          </div>
+        )}
         {actionCompleted &&
           rewardEarned !== null &&
           rewardEarned.amount !== '0' && (
@@ -209,7 +235,7 @@ function Action(props) {
         )}
         {/* Just a padding placeholder*/}
         {actionCompleted && (
-          <div className="ml-3">
+          <div className={`${isMobile ? 'ml-1' : 'ml-3'}`}>
             <div className="placeholder ml-2" />
           </div>
         )}
@@ -280,7 +306,7 @@ require('react-styl')(`
         top: 16px
         width: 29px
       .lock
-        width: 40px
+        width: 2.5rem
       .image-holder
         position: relative
       .title
@@ -322,4 +348,61 @@ require('react-styl')(`
         padding-left: 0px
       .placeholder
         width: 40px
+  .growth-campaigns.container.mobile
+    .action
+      height: 80px
+      margin-top: 10px
+      padding: 10px 0px 10px 20px
+      .background
+        width: 2.5rem
+      .profile
+        left: 11.5px
+        top: 12px
+        width: 18px
+      .email
+        left: 12px
+        top: 15px
+        width: 18px
+      .phone
+        left: 15px
+        top: 12px
+        width: 11.5px
+      .facebook
+        left: 14px
+        top: 12px
+        width: 10px
+      .airbnb
+        left: 9px
+        top: 11px
+        width: 22.5px
+      .twitter
+        left: 11px
+        top: 13px
+        width: 20px
+      .listingsold
+        left: 9px
+        top: 10px
+        width: 24.5px
+      .listingpurchased
+        left: 9px
+        top: 11px
+        width: 23px
+      .referral
+        left: 10px
+        top: 11px
+        width: 20px
+      .title
+        font-size: 16px
+        line-height: 1.2
+      .btn
+        border-radius: 7rem
+        width: 1.65rem
+        height: 1.65rem
+        padding-left: 0.6rem
+      .button-caret
+        width: 16px
+        margin-bottom: 15px
+        margin-left: -4px
+      .lock
+        width: 1.56rem
 `)
