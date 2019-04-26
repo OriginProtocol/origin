@@ -62,7 +62,6 @@ services:
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
-      - ./infra/linking/:/app/infra/linking/
       # Exclude IPFS and blockchain data from @origin/services
       - /app/packages/services/data
       # Exclude all node_modules from the host
@@ -82,7 +81,6 @@ services:
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
-      - /app/infra/linking/node_modules/
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
       # interacted with via ipfs-proxy
