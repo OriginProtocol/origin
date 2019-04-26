@@ -73,23 +73,22 @@ async function mobilePush(
   )
   const dappOfferUrl =
     process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com/#/purchases/'
-  const eventData = {
-    url: offer && path.join(dappOfferUrl, offer.id),
-    toDapp: true
+  const payload = {
+    url: offer && `${dappOfferUrl}${offer.id}`
   }
 
   if (buyerMessage || sellerMessage) {
     if (buyerMessage) {
-      receivers[buyerAddress] = Object.assign(
-        { message: buyerMessage },
-        eventData
-      )
+      receivers[buyerAddress] = {
+        message: buyerMessage,
+        payload
+      }
     }
     if (sellerMessage) {
-      receivers[sellerAddress] = Object.assign(
-        { message: sellerMessage },
-        eventData
-      )
+      receivers[sellerAddress] = {
+        message: sellerMessage,
+        payload
+      }
     }
 
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
@@ -125,7 +124,7 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
       const notification = new apn.Notification({
         alert: notificationObj.message,
         sound: 'default',
-        payload: notificationObj.data,
+        payload: notificationObj.payload,
         topic: apnBundle
       })
       await apnProvider.send(notification, deviceToken).then(result => {
@@ -150,7 +149,7 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
           title: 'Origin Marketplace Notification',
           body: notificationObj.message
         },
-        data: notificationObj.data,
+        data: notificationObj.payload,
         token: deviceToken
       }
 

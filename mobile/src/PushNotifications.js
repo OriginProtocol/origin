@@ -19,6 +19,7 @@ import {
   ETH_NOTIFICATION_TYPES
 } from './constants'
 import { get } from 'utils'
+import NavigationService from './NavigationService'
 
 class PushNotifications extends Component {
   constructor(props) {
@@ -28,6 +29,10 @@ class PushNotifications extends Component {
       'requestNotificationPermissions',
       this.requestNotificationPermissions.bind(this)
     )
+
+    PushNotificationIOS.getInitialNotification().then(function (notification) {
+      console.log(notification)
+    })
   }
 
   componentDidMount() {
@@ -108,7 +113,11 @@ class PushNotifications extends Component {
         { text: 'Close' },
         {
           text: 'View',
-          onPress: () => console.log('OK')
+          onPress: () => {
+            NavigationService.navigate('Marketplace', {
+              marketplaceUrl: notification.data.url
+            })
+          }
         },
        ],
     )
