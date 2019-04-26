@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+import withIsMobile from 'hoc/withIsMobile'
 import inviteInfoQuery from 'queries/InviteInfo'
 import DocumentTitle from 'components/DocumentTitle'
 import Onboard from 'pages/onboard/Onboard'
@@ -15,17 +16,13 @@ class GrowthWelcome extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inviteCode: null,
-      isMobile: false
+      inviteCode: null
     }
 
     this.EnrollButton = withEnrolmentModal('button')
-    this.onResize = this.onResize.bind(this)
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.onResize)
-    this.onResize()
     let inviteCode = get(this.props, 'match.params.inviteCode')
     // onboarding url is also going to match the path. Not a valid invite
     // code so ignore it.
@@ -40,18 +37,6 @@ class GrowthWelcome extends Component {
     })
     if (storedInviteCode === null && inviteCode !== undefined) {
       localStorage.setItem(localStorageKey, inviteCode)
-    }
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize)
-  }
-
-  onResize() {
-    if (window.innerWidth < 767 && !this.state.isMobile) {
-      this.setState({ isMobile: true })
-    } else if (window.innerWidth >= 767 && this.state.isMobile) {
-      this.setState({ isMobile: false })
     }
   }
 
@@ -114,7 +99,7 @@ class GrowthWelcome extends Component {
     urlForOnboarding,
     arrivedFromOnboarding
   ) {
-    const isMobile = this.state.isMobile
+    const isMobile = this.props.ismobile === 'true'
 
     return (
       <div className="container d-flex">
@@ -203,7 +188,7 @@ class GrowthWelcome extends Component {
   }
 
   renderWhatIsOriginFold() {
-    const isMobile = this.state.isMobile
+    const isMobile = this.props.ismobile === 'true'
 
     return (
       <div className="second-fold-holder">
@@ -288,7 +273,7 @@ class GrowthWelcome extends Component {
   }
 
   renderBoostingAndRewardsFold() {
-    const isMobile = this.state.isMobile
+    const isMobile = this.props.ismobile === 'true'
 
     return (
       <div className="d-flex fourth-fold-holder">
@@ -457,7 +442,7 @@ class GrowthWelcome extends Component {
   }
 }
 
-export default GrowthWelcome
+export default withIsMobile(GrowthWelcome)
 
 require('react-styl')(`
   .growth-welcome
