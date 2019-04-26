@@ -55,8 +55,10 @@ async function getFingerprintFn(walletId) {
 
   cachedUUID = cachedUUID === undefined ? walletId : cachedUUID
 
-  cachedFingerprintData.uuid = cachedUUID
-  storeUUID(cachedUUID)
+  if (cachedUUID) {
+    cachedFingerprintData.uuid = cachedUUID
+    storeUUID(cachedUUID)
+  }
   return cachedFingerprintData
 }
 
@@ -64,10 +66,6 @@ const getFingerprint = memoize(getFingerprintFn)
 
 function withFingerprint(WrappedComponent) {
   const WithFingerprint = props => {
-    if (!props.wallet) {
-      return ''
-    }
-
     const [fingerprintData, setFingerprintData] = useState(
       cachedFingerprintData
     )
