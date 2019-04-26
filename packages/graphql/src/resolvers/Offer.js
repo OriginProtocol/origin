@@ -33,7 +33,7 @@ export default {
     const { listingId, offerId } = parseId(offer.id)
     const events = await offer.contract.eventCache.getEvents({
       listingID: String(listingId),
-      offerID: offerId
+      offerID: String(offerId)
     })
     return events.map(event => {
       const ipfsHash = getIpfsHashFromBytes32(event.returnValues.ipfsHash)
