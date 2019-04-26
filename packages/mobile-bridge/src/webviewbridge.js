@@ -73,6 +73,7 @@ export default function() {
 
   // iOS receives mesesage events on window
   window.addEventListener('message', handleMessage)
+
   // Android receives message events on document
   document.addEventListener('message', handleMessage)
 }
