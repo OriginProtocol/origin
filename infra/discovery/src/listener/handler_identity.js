@@ -207,7 +207,8 @@ class IdentityEventHandler {
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
-      country: decoratedIdentity.country
+      country: decoratedIdentity.country,
+      avatarUrl: decoratedIdentity.avatarUrl
     }
 
     logger.debug('Identity=', identityRow)
