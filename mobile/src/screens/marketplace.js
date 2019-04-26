@@ -216,7 +216,7 @@ class MarketplaceScreen extends Component {
                 <ActivityIndicator size="large" color="black" />
               </View>
             )
-          A}}
+          }}
         />
         {modals.map((modal, index) => {
           let card
