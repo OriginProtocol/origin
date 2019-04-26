@@ -12,10 +12,10 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-// const { mobilePush } = require('./mobilePush')
-// const MobileRegistry = require('./models').MobileRegistry
-// const { browserPush } = require('./browserPush')
+const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
+const { mobilePush } = require('./mobilePush')
+const MobileRegistry = require('./models').MobileRegistry
 
 const app = express()
 const port = 3456
