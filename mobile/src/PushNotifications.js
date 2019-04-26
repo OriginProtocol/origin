@@ -29,7 +29,7 @@ class PushNotifications extends Component {
     )
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     // Initialise
     const { wallet } = this.props
 
@@ -45,9 +45,7 @@ class PushNotifications extends Component {
       onRegister: function(deviceToken) {
         if (wallet.activeAccount && wallet.activeAccount.address) {
           // Save the device token into redux for later use with other accounts
-          await this.props.setDeviceToken(deviceToken['token'])
-          // Make sure the device token is registered with the server
-          this.registerDevice()
+          this.props.setDeviceToken(deviceToken['token'])
         }
       }.bind(this),
       // Called when a remote or local notification is opened or received
@@ -68,6 +66,25 @@ class PushNotifications extends Component {
     })
   }
 
+  componentDidUpdate(prevProps) {
+    // Detect change of active account
+    if (
+      prevProps.wallet.activeAccount &&
+      prevProps.wallet.activeAccount.address !==
+        this.props.wallet.activeAccount.address
+    ) {
+      this.register()
+    }
+
+    // Change of device token
+    if (
+      prevProps.settings.deviceToken &&
+      prevProps.settings.deviceToken !== this.props.settings.deviceToken
+    ) {
+      this.register()
+    }
+  }
+
   /* Handles a notification by displaying an alert and saving it to redux
    */
   onNotification(notification) {
@@ -78,7 +95,7 @@ class PushNotifications extends Component {
   /* Register the Ethereum address and device token for notifications with the
    * notification server
    */
-  async registerDevice() {
+  async register() {
     const permissions =
       Platform.OS === 'ios'
         ? await PushNotificationIOS.requestPermissions()
@@ -122,7 +139,7 @@ class PushNotifications extends Component {
 
   /* Unregister for notifications for deleted accounts
    */
-  async unregisterDevice() {}
+  async unregister() {}
 
   /* Return the notification type that should be used for the platform
    */

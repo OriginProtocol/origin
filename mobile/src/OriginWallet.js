@@ -77,7 +77,6 @@ class OriginWallet extends Component {
     this._migrateLegacyAccounts()
     this.initWeb3()
     this.initAccounts()
-    this.initNotifications()
     this.balancePoller = setInterval(
       () => this.getBalances(),
       BALANCE_POLL_INTERVAL
