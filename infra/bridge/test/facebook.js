@@ -127,7 +127,6 @@ describe('facebook attestations', () => {
       })
       .reply(200, { name: 'Origin Protocol' })
 
-
     // Fake session
     const parentApp = express()
     parentApp.use((req, res, next) => {
@@ -211,6 +210,8 @@ describe('facebook attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Field `code` or `sid` must be specified.')
+    expect(response.body.errors[0]).to.equal(
+      'Field `code` or `sid` must be specified.'
+    )
   })
 })

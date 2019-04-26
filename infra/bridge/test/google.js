@@ -199,6 +199,8 @@ describe('google attestations', () => {
       })
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Field `code` or `sid` must be specified.')
+    expect(response.body.errors[0]).to.equal(
+      'Field `code` or `sid` must be specified.'
+    )
   })
 })
