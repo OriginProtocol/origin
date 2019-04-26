@@ -1,13 +1,42 @@
 const chai = require('chai')
 const expect = chai.expect
 
-//const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
+const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
 const { ApolloAdapter, campaignToApolloObject } = require('../src/apollo/adapter')
 const enums = require('../src/enums')
 const db = require('../src/models')
 const tokenNaturalUnits = require('../src/util/token')
 
+function checkExpectedState(state, expectedState) {
+
+  expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
+  expect(state.actions.length).to.equal(14)
+
+  const actionByRuleId = {}
+  for(const action of state.actions) {
+    actionByRuleId[action.ruleId] = action
+  }
+
+  for (const [key, val] of Object.entries(expectedState)) {
+    if (key === 'rewardEarned') {
+      continue
+    }
+    const ruleId = key
+    const expectedAction = val
+    const action = actionByRuleId[ruleId]
+    expect(action.type).to.equal(expectedAction.type)
+    expect(action.status).to.deep.equal(expectedAction.status)
+    expect(action.rewardEarned).to.deep.equal(expectedAction.rewardEarned)
+    expect(action.reward).to.deep.equal(expectedAction.reward)
+    if (action.type === 'ListingIdPurchased') {
+      expect(action.listingId).to.be.a('string')
+      expect(action.iconSrc).to.be.a('string')
+      expect(action.titleText.default).to.be.a('string')
+      expect(action.titleText.key).to.be.a('string')
+    }
+  }
+}
 
 describe('Apollo adapter', () => {
 
@@ -72,88 +101,112 @@ describe('Apollo adapter', () => {
       this.mockAdapter._getReferralsActionData = async () => { return {} }
 
       this.events = []
+
+      this.expectedState = {
+        rewardEarned: {
+          amount: '0',currency: 'OGN'
+        },
+        ProfilePublished: {
+          type: 'Profile',
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: null
+        },
+        EmailAttestation: {
+          type: 'Email',
+          status: 'Active',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: null
+        },
+        PhoneAttestation: {
+          type: 'Phone',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        AirbnbAttestation: {
+          type: 'Airbnb',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        FacebookAttestation: {
+          type: 'Facebook',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        TwitterAttestation: {
+          type: 'Twitter',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        GoogleAttestation: {
+          type: 'Google',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        Referral: {
+          type: 'Referral',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
+        },
+        ListingPurchaseTShirt: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        },
+        ListingPurchaseGC: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
+        },
+        ListingPurchaseDonation: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(500), currency: 'OGN' }
+        },
+        ListingPurchaseHousing: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        },
+        ListingPurchaseInfluencer: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        },
+        ListingPurchaseArt: {
+          type: 'ListingIdPurchased',
+          status: 'Inactive',
+          rewardEarned: { amount: '0', currency: 'OGN' },
+          reward: { amount: tokenNaturalUnits(1000), currency: 'OGN' }
+        },
+      }
     })
 
 
     it(`Adapter at level 0`, async () => {
-      const out = await campaignToApolloObject(
+      const state = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.userA,
         this.mockAdapter
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
-      expect(out.actions.length).to.equal(14)
-
-      console.log('campaignToApolloObject out=', JSON.stringify(out, null, 2))
-
-      const actionByType = {}
-      for(const action of out.actions) {
-        actionByType[action.type] = action
-      }
-
-      const expectedActionStates = {
-        Profile: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: null
-        },
-        Email: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: null
-        },
-        Phone: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
-        },
-        Airbnb: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
-        },
-        Facebook: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
-        },
-        Twitter: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
-        },
-        Google: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
-        },
-        ListingPurchased: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
-        },
-        Referral: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' },
-          reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
-        },
-      }
-
-      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
-        const action = actionByType[actionType]
-        expect(action.status).to.deep.equal(expectedState.status)
-        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-        expect(action.reward).to.deep.equal(expectedState.reward)
-      }
+      checkExpectedState(state, this.expectedState)
     })
 
-    /*
     it(`Adapter completed level 0`, async () => {
       this.events.push(...[
-        // Published before campaign. Event should still be considered
-        // when computing next level.
         {
           id: 1,
           type: GrowthEventTypes.ProfilePublished,
@@ -170,71 +223,28 @@ describe('Apollo adapter', () => {
         }
       ])
 
-      const out = await campaignToApolloObject(
+      const state = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.userA,
         this.mockAdapter
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '0', currency: 'OGN' })
-      expect(out.actions.length).to.equal(9)
+      // Profile and Email status should have changed to Completed.
+      // All rules in Level 1 should now be Active.
+      this.expectedState.ProfilePublished.status = 'Completed'
+      this.expectedState.EmailAttestation.status = 'Completed'
+      this.expectedState.PhoneAttestation.status = 'Active'
+      this.expectedState.FacebookAttestation.status = 'Active'
+      this.expectedState.AirbnbAttestation.status = 'Active'
+      this.expectedState.TwitterAttestation.status = 'Active'
+      this.expectedState.GoogleAttestation.status = 'Active'
 
-      const actionByType = {}
-      for(const action of out.actions) {
-        actionByType[action.type] = action
-      }
-
-      const expectedActionStates = {
-        Profile: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Email: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Phone: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Airbnb: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Facebook: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Twitter: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        ListingPurchased: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        ListingSold: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Referral: {
-          status: 'Inactive',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-      }
-
-      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
-        const action = actionByType[actionType]
-        expect(action.status).to.be.equal(expectedState.status)
-        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-      }
+      checkExpectedState(state, this.expectedState)
     })
 
     it(`Adapter completed level 1`, async () => {
       this.events.push(...[
-        // Attestation completed prior to campaign.
-        // Should still qualify to earn reward.
         {
           id: 3,
           type: GrowthEventTypes.TwitterAttestationPublished,
@@ -251,74 +261,38 @@ describe('Apollo adapter', () => {
         },
       ])
 
-      const out = await campaignToApolloObject(
+      const state = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.userA,
         this.mockAdapter
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '50000000000000000000', currency: 'OGN' })
-      expect(out.actions.length).to.equal(9)
+      this.expectedState.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+      // Twitter attestation completed before campaign. Shows as Completed but no rewards.
+      this.expectedState.TwitterAttestation.status = 'Completed'
+      // User should earn rewards for FBook attestations.
+      this.expectedState.FacebookAttestation.status = 'Completed'
+      this.expectedState.FacebookAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+      // Level 2 should be unlocked.
+      this.expectedState.Referral.status = 'Active'
+      this.expectedState.ListingPurchaseTShirt.status = 'Active'
+      this.expectedState.ListingPurchaseGC.status = 'Active'
+      this.expectedState.ListingPurchaseDonation.status = 'Active'
+      this.expectedState.ListingPurchaseHousing.status = 'Active'
+      this.expectedState.ListingPurchaseInfluencer.status = 'Active'
+      this.expectedState.ListingPurchaseArt.status = 'Active'
 
-      const actionByType = {}
-      for(const action of out.actions) {
-        actionByType[action.type] = action
-      }
-
-      const expectedActionStates = {
-        Profile: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Email: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Phone: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Airbnb: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Facebook: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        Twitter: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        ListingPurchased: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        ListingSold: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Referral: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-      }
-
-      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
-        const action = actionByType[actionType]
-        expect(action.status).to.be.equal(expectedState.status)
-        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-      }
+      checkExpectedState(state, this.expectedState)
     })
 
     it(`Adapter at level 2`, async () => {
       this.events.push(...[
-        // Listing sold prior to the campaign.
-        // Should not earn reward.
+        // Listing purchase prior to campaign. Does not qualify for reward.
         {
           id: 5,
-          type: GrowthEventTypes.ListingSold,
+          type: GrowthEventTypes.ListingPurchased,
+          customId: '1-000-1',
           status: GrowthEventStatuses.Logged,
           ethAddress: this.userA,
           createdAt: this.beforeCampaign
@@ -327,6 +301,7 @@ describe('Apollo adapter', () => {
         {
           id: 6,
           type: GrowthEventTypes.ListingPurchased,
+          customId: '1-000-1',
           status: GrowthEventStatuses.Logged,
           ethAddress: this.userA,
           createdAt: this.duringCampaign
@@ -340,64 +315,23 @@ describe('Apollo adapter', () => {
         }
       ])
 
-      const out = await campaignToApolloObject(
+      const state = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.userA,
         this.mockAdapter
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '175000000000000000000', currency: 'OGN' })
-      expect(out.actions.length).to.equal(9)
+      this.expectedState.rewardEarned = { amount: '75000000000000000000', currency: 'OGN' }
+      // Twitter attestation completed before campaign. Shows as Completed but no rewards.
+      this.expectedState.TwitterAttestation.status = 'Completed'
+      // User should earn rewards for FBook attestations.
+      this.expectedState.AirbnbAttestation.status = 'Completed'
+      this.expectedState.AirbnbAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+      // User should earn reward for TShirt purchase. There is no limit so status should still be Active.
+      this.expectedState.ListingPurchaseTShirt.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
 
-      const actionByType = {}
-      for(const action of out.actions) {
-        actionByType[action.type] = action
-      }
-
-      const expectedActionStates = {
-        Profile: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Email: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Phone: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Airbnb: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        Facebook: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        Twitter: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        ListingPurchased: {
-          status: 'Completed',
-          rewardEarned: { amount: '100000000000000000000', currency: 'OGN' }
-        },
-        ListingSold: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Referral: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-      }
-      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
-        const action = actionByType[actionType]
-        expect(action.status).to.be.equal(expectedState.status)
-        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-      }
+      checkExpectedState(state, this.expectedState)
     })
 
     it(`Adapter at level 2 with a referral`, async () => {
@@ -433,65 +367,18 @@ describe('Apollo adapter', () => {
         },
       ])
 
-      const out = await campaignToApolloObject(
+      const state = await campaignToApolloObject(
         this.crules,
         enums.GrowthParticipantAuthenticationStatus.Enrolled,
         this.userA,
         this.mockAdapter
       )
 
-      expect(out.rewardEarned).to.deep.equal({ amount: '225000000000000000000', currency: 'OGN' })
-      expect(out.actions.length).to.equal(9)
+      this.expectedState.rewardEarned = { amount: '125000000000000000000', currency: 'OGN' }
+      // User should earn a referral reward.
+      this.expectedState.Referral.rewardEarned = { amount: '50000000000000000000', currency: 'OGN' }
 
-      const actionByType = {}
-      for(const action of out.actions) {
-        actionByType[action.type] = action
-      }
-
-      const expectedActionStates = {
-        Profile: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Email: {
-          status: 'Completed',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Phone: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Airbnb: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        Facebook: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        Twitter: {
-          status: 'Completed',
-          rewardEarned: { amount: '25000000000000000000', currency: 'OGN' }
-        },
-        ListingPurchased: {
-          status: 'Completed',
-          rewardEarned: { amount: '100000000000000000000', currency: 'OGN' }
-        },
-        ListingSold: {
-          status: 'Active',
-          rewardEarned: { amount: '0', currency: 'OGN' }
-        },
-        Referral: {
-          status: 'Active',
-          rewardEarned: { amount: '50000000000000000000', currency: 'OGN' }
-        },
-      }
-      for (const [actionType, expectedState] of Object.entries(expectedActionStates)) {
-        const action = actionByType[actionType]
-        expect(action.status).to.be.equal(expectedState.status)
-        expect(action.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-      }
+      checkExpectedState(state, this.expectedState)
     })
-    */
   })
 })

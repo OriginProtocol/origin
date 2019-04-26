@@ -14,7 +14,7 @@ const mayConfig = {
             reward: null,
             nextLevelCondition: false,
             visible: true,
-            scope: 'campaign'
+            scope: 'user'
           }
         },
         {
@@ -25,7 +25,7 @@ const mayConfig = {
             reward: null,
             visible: true,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'user'
           }
         },
         {
@@ -66,7 +66,8 @@ const mayConfig = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            statusScope: 'user'
           }
         },
         {
@@ -81,7 +82,8 @@ const mayConfig = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            statusScope: 'user'
           }
         },
         {
@@ -96,7 +98,8 @@ const mayConfig = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            statusScope: 'user'
           }
         },
         {
@@ -111,7 +114,8 @@ const mayConfig = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            statusScope: 'user'
           }
         },
         {
@@ -126,7 +130,8 @@ const mayConfig = {
             visible: true,
             limit: 1,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            statusScope: 'user'
           }
         },
         {

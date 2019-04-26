@@ -425,7 +425,7 @@ class BaseRule {
       return []
     }
 
-    const numRewards = this._numRewards(ethAddress, this._inScope(events))
+    const numRewards = await this._numRewards(ethAddress, this._inScope(events))
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -463,14 +463,23 @@ class BaseRule {
       return GrowthActionStatus.Inactive
     }
 
+    // Note:
     if (this.reward) {
       // Reward rule. Determine if the rule is Completed by calculating
       // if all rewards have been earned.
-      const numRewards = await this.getRewards(
+      // For some rules, there are 2 scopes defined:
+      //  1. config.scope should be used for computing earned rewards.
+      //  2. config.statusScope should be used for computing the status.
+      // This is for the case where if he rule was completed in a prior campaign,
+      // then we want to show it as Complete.
+      // For example Attestation rules can only be completed once during a campaign and
+      // later campaigns should show them as Completed. We can achieve this behavior
+      // by setting scope to "campaign" and statusScope to "user".
+      const numRewards = await this._numRewards(
         ethAddress,
-        this._inScope(events)
+        this.config.statusScope === 'user' ? events : this._inScope(events)
       )
-      return numRewards.length < this.limit
+      return numRewards < this.limit
         ? GrowthActionStatus.Active
         : GrowthActionStatus.Completed
     } else {
@@ -552,7 +561,7 @@ class SingleEventRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  _numRewards(ethAddress, events) {
+  async _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
 
     // SingleEventRule has at most 1 event in tally count.
@@ -610,7 +619,7 @@ class ListingIdPurchaseRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  _numRewards(ethAddress, events) {
+  async _numRewards(ethAddress, events) {
     // Note: we pass listingId as the customId param to _tallyEvents.
     const tally = this._tallyEvents(
       ethAddress,
@@ -677,7 +686,7 @@ class MultiEventsRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  _numRewards(ethAddress, events) {
+  async _numRewards(ethAddress, events) {
     // Attempts to picks N different events from the tally.
     // Returns true if success, false otherwise.
     function pickN(tally, n) {
@@ -815,6 +824,10 @@ class ReferralRule extends BaseRule {
     }
 
     return rewards
+  }
+
+  async _numRewards(ethAddress) {
+    return (await this.getRewards(ethAddress)).length
   }
 }
 

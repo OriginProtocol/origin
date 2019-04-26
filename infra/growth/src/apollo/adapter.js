@@ -77,6 +77,7 @@ class ApolloAdapter {
 
     // Fetch common data across all action types.
     let action = {
+      ruleId: data.ruleId,
       type: this._ruleIdToActionType(data.ruleId),
       status: data.status,
       rewardEarned: Money.sum(

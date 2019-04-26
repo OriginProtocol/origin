@@ -431,12 +431,12 @@ describe('Growth Engine rules', () => {
       }
     })
 
-    it(`Should use events from inception to cal. level`, async () => {
+    it(`Should use events from inception to calculate level`, async () => {
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(1)
     })
 
-    it(`Should only use events from campaign period to calc. rewards`, async () => {
+    it(`Should only use events from campaign period to calculate rewards`, async () => {
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
