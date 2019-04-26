@@ -293,8 +293,8 @@ function ruleFactory(crules, levelId, config) {
     case 'Referral':
       rule = new ReferralRule(crules, levelId, config)
       break
-    case 'ListingPurchase':
-      rule = new ListingPurchaseRule(crules, levelId, config)
+    case 'ListingIdPurchase':
+      rule = new ListingIdPurchaseRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
@@ -511,16 +511,21 @@ class BaseRule {
    * @returns {Promise<Array<Object>>}
    */
   async export(adapter, ethAddress, events, level) {
-    return adapter.process({
+    const data = {
+      ruleId: this.id,
       ethAddress,
       visible: this.config.visible,
       campaign: this.campaign,
-      eventTypes: this.eventTypes,
       status: await this.getStatus(ethAddress, events, level),
       reward: this.reward,
       rewards: await this.getRewards(ethAddress, events),
-      unlockConditions: this.conditionsToUnlock()
-    })
+      unlockConditions: this.conditionsToUnlock(),
+      // Fields specific to the ListingIdPurchased rule.
+      listingId: this.listingId,
+      iconSrc: this.iconSrc,
+      titleText: this.titleText
+    }
+    return adapter.process(data)
   }
 }
 
@@ -571,13 +576,25 @@ class SingleEventRule extends BaseRule {
 /**
  * A rule that requires the purchase of a specific listing.
  */
-class ListingPurchaseRule extends BaseRule {
+class ListingIdPurchaseRule extends BaseRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
     if (!this.config.listingId) {
       throw new Error(`${this.str()}: missing listingId field`)
     }
     this.listingId = this.config.listingId
+    if (!this.config.iconSrc) {
+      throw new Error(`${this.str()}: missing iconSrc field`)
+    }
+    this.iconSrc = this.config.iconSrc
+    if (
+      !this.config.titleText ||
+      !this.config.titleText.default ||
+      !this.config.titleText.key
+    ) {
+      throw new Error(`${this.str()}: missing or invalid titleText field`)
+    }
+    this.titleText = this.config.titleText
 
     const eventType = 'ListingPurchased'
     if (!GrowthEventTypes.includes(eventType)) {
@@ -712,10 +729,6 @@ class ReferralRule extends BaseRule {
       throw new Error(`${this.str()}: missing levelRequired field`)
     }
     this.levelRequired = this.config.levelRequired
-
-    // Note: 'Referral' is not an actual GrowthEventType.
-    // This is used by the export method.
-    this.eventTypes = ['Referral']
   }
 
   /**

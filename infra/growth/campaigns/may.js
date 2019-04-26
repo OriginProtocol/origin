@@ -174,7 +174,7 @@ const mayConfig = {
         },
         {
           id: 'ListingPurchaseTShirt',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
             listingId: '1-000-1',
@@ -185,12 +185,17 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-tshirt-icon.svg',
+            titleText: {
+              default: 'Purchase an Origin HOLD t-shirt',
+              key: 'growth.purchase.tshirt'
+            }
           }
         },
         {
           id: 'ListingPurchaseGC',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-2',
             reward: {
@@ -200,12 +205,17 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-gc-icon.svg',
+            titleText: {
+              default: 'Purchase a Gift Card',
+              key: 'growth.purchase.gc'
+            }
           }
         },
         {
           id: 'ListingPurchaseDonation',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-3',
             reward: {
@@ -215,12 +225,17 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-donation-icon.svg',
+            titleText: {
+              default: 'Make a donation',
+              key: 'growth.purchase.donation'
+            }
           }
         },
         {
           id: 'ListingPurchaseHousing',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-4',
             reward: {
@@ -230,12 +245,17 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-housing-icon.svg',
+            titleText: {
+              default: 'Rent an appartment',
+              key: 'growth.purchase.housing'
+            }
           }
         },
         {
           id: 'ListingPurchaseInfluencer',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-5',
             reward: {
@@ -245,12 +265,17 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-influencer-icon.svg',
+            titleText: {
+              default: 'Purchase time with an influencer',
+              key: 'growth.purchase.influencer'
+            }
           }
         },
         {
           id: 'ListingPurchaseArt',
-          class: 'ListingPurchase',
+          class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-6',
             reward: {
@@ -260,7 +285,12 @@ const mayConfig = {
             visible: true,
             limit: 100,
             nextLevelCondition: false,
-            scope: 'campaign'
+            scope: 'campaign',
+            iconSrc: 'images/growth/purchase-art-icon.svg',
+            titleText: {
+              default: 'Purchase a piece of art',
+              key: 'growth.purchase.art'
+            }
           }
         }
       ]

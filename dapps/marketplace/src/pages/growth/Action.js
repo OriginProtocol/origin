@@ -11,7 +11,10 @@ function Action(props) {
     reward,
     rewardEarned,
     rewardPending,
-    unlockConditions
+    unlockConditions,
+    listingId,
+    titleText,
+    iconSrc
   } = props.action
 
   const actionLocked = status === 'Inactive'
@@ -65,6 +68,12 @@ function Action(props) {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
     title = fbt('Purchase a Listing', 'RewardActions.listingPurchasedTitle')
     buttonLink = '/'
+  } else if (type === 'ListingIdPurchased') {
+    foregroundImgSrc = iconSrc
+    // FIXME: Reference somewhere (maybe in Growth$FbtEnum ?) those
+    // translation strings statically so that they get picked up by Crowdin.
+    title = fbt(titleText.default, titleText.key)
+    buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')

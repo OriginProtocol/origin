@@ -3,10 +3,8 @@ const db = require('../models')
 const enums = require('../enums')
 const tokenNaturalUnits = require('../src/util/token')
 
-
 const aprilConfig = require('../campaigns/april.js')
 const mayConfig = require('../campaigns/may.js')
-
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
