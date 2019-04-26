@@ -28,7 +28,7 @@ async function backfillAvatarToIpfs() {
 
   events.forEach(event => {
     const account = event.returnValues.account
-    if (accountIpfs[account] == undefined) {
+    if (accountIpfs[account] === undefined) {
       accountIpfs[account] = []
     }
     if (event.event === 'IdentityUpdated') {

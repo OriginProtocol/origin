@@ -113,7 +113,7 @@ export function identity({ id, ipfsHash }) {
       .join(' ')
 
     // Make old style embedded avatars access by their IPFS hash.
-    if (identity.avatarUrl == undefined && identity.avatar != 'undefined') {
+    if (identity.avatarUrl === undefined && identity.avatar !== undefined) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
         identity.avatarUrl = await IpfsHash.of(Buffer.from(avatarBinary.buffer))
