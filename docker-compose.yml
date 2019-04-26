@@ -46,7 +46,6 @@ services:
       - ./packages/contracts/migrations:/app/packages/contracts/migrations
       # Core packages
       - ./packages/services/:/app/packages/services/
-      - ./packages/origin-js/:/app/packages/origin-js/
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/event-cache/:/app/packages/event-cache/
