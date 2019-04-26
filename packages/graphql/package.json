@@ -19,7 +19,8 @@
     "test:watch": "NODE_ENV=test mocha -r @babel/register --file test/setup test -w",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
-    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "backfill_avatar": "node -r @babel/register src/scripts/201904_backfill_avatar.js"
   },
   "dependencies": {
     "@babel/core": "^7.3.4",
@@ -47,6 +48,7 @@
     "graphql-subscriptions": "^1.0.0",
     "graphql-tag": "^2.10.1",
     "graphql-tools": "^4.0.4",
+    "ipfs-only-hash": "^1.0.2",
     "json-stable-stringify": "^1.0.1",
     "lodash-es": "^4.17.11",
     "lz-string": "^1.4.4",

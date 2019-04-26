@@ -1,5 +1,6 @@
 import graphqlFields from 'graphql-fields'
 import originIpfs from '@origin/ipfs'
+import IpfsHash from 'ipfs-only-hash'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import contracts from '../contracts'
@@ -88,7 +89,13 @@ export function identity({ id, ipfsHash }) {
     const identity = {
       id,
       attestations: attestations.map(a => JSON.stringify(a)),
-      ...pick(profile, ['firstName', 'lastName', 'avatar', 'description']),
+      ...pick(profile, [
+        'firstName',
+        'lastName',
+        'avatar',
+        'avatarUrl',
+        'description'
+      ]),
       ...getAttestations(id, data.attestations || []),
       strength: 0,
       ipfsHash
@@ -105,6 +112,18 @@ export function identity({ id, ipfsHash }) {
       .filter(n => n)
       .join(' ')
 
+    // Make old style embedded avatars access by their IPFS hash.
+    if (identity.avatarUrl == undefined && identity.avatar != 'undefined') {
+      try {
+        const avatarBinary = dataURItoBinary(identity.avatar)
+        identity.avatarUrl = await IpfsHash.of(Buffer.from(avatarBinary.buffer))
+      } catch {
+        // If we can't translate an old avatar for any reason, don't worry about it.
+        // We've already tested the backfill script, and not seen a problem
+        // for all valid avatar images.
+      }
+    }
+
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
         identity.strength += progressPct[key]
@@ -113,6 +132,20 @@ export function identity({ id, ipfsHash }) {
 
     resolve(identity)
   })
+}
+
+function dataURItoBinary(dataURI) {
+  // From https://stackoverflow.com/questions/12168909/blob-from-dataurl
+  const parts = dataURI.split(',')
+  const byteString = atob(parts[1])
+  const mimeString = parts[0].split(':')[1].split(';')[0]
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  const blob = new Blob([ab], { type: mimeString })
+  return { blob, buffer: ab }
 }
 
 export async function identities(
