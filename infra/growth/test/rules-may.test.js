@@ -306,8 +306,6 @@ describe('May campaign rules', () => {
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
     this.userC = '0x789' // User C has legacy event from prior the start of May campaign.
-    
-    this.expectedRewards = []
 
     // Mock the rule's getEvent method.
     this.events = []

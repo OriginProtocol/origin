@@ -227,15 +227,15 @@ describe('April campaign rules', () => {
     this.referee = '0x456'
     this.expectedRewards = []
 
+    // Mock the rule's getEvent method.
+    this.events = []
+    this.crules.getEvents = () => { return this.events }
+
     // Mock the _getReferees method of the Referral rule.
     this.crules.levels[2].rules[0]._getReferees = () => { return [] }
   })
 
   it(`Should start at level 0`, async () => {
-    const events = []
-    this.crules.getEvents = () => {
-      return events
-    }
     const level = await this.crules.getCurrentLevel(this.ethAddress)
     expect(level).to.equal(0)
   })
@@ -257,9 +257,6 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       }
     ]
-    this.crules.getEvents = () => {
-      return this.events
-    }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
     expect(rewards).to.deep.equal([])
@@ -285,10 +282,9 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       }
     )
-    this.crules.getEvents = () => { return this.events }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
-    this.expectedRewards.push(
+    this.expectedRewards = [
       {
         campaignId: 1,
         levelId: 1,
@@ -307,7 +303,7 @@ describe('April campaign rules', () => {
           amount: tokenNaturalUnits(25)
         }
       }
-    )
+    ]
     expect(rewards).to.deep.equal(this.expectedRewards)
 
     const level = await this.crules.getCurrentLevel(this.ethAddress)
@@ -347,7 +343,6 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       }
     )
-    this.crules.getEvents = () => { return this.events }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
     this.expectedRewards.push({
@@ -376,7 +371,6 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       }
     )
-    this.crules.getEvents = () => { return this.events }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
     this.expectedRewards.push({
@@ -404,7 +398,6 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       }
     )
-    this.crules.getEvents = () => { return this.events }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
     this.expectedRewards.push({
@@ -439,7 +432,6 @@ describe('April campaign rules', () => {
         createdAt: this.duringCampaign
       })
     )
-    this.crules.getEvents = () => { return this.events }
 
     const rewards = await this.crules.getRewards(this.ethAddress)
     this.expectedRewards = [
