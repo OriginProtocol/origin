@@ -24,11 +24,11 @@ router.get('/auth-url', (req, res) => {
 
   const params = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
-    state: redirect ? req.sessionID : null,
     redirect_uri: getAbsoluteUrl('/redirects/facebook/')
   }
 
   if (redirect) {
+    params.state = req.sessionID
     req.session.redirect = redirect
   }
 
@@ -40,19 +40,23 @@ router.get('/auth-url', (req, res) => {
  * from the user data.
  */
 router.post('/verify', facebookVerify, async (req, res) => {
-  let code = req.body.code
-
-  if (req.body.sid) {
-    const session = await req.sessionStore.get(req.body.sid)
-    code = session.code
-  }
-
   const params = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
     client_secret: process.env.FACEBOOK_CLIENT_SECRET,
     redirect_uri: getAbsoluteUrl('/redirects/facebook/'),
-    code: code,
-    state: req.body.sid
+    code: req.body.code
+  }
+
+  if (req.body.sid) {
+    try {
+      const session = await req.sessionStore.get(req.body.sid)
+      params.code = session.code
+      params.state = req.body.sid
+    } catch (e) {
+      return res.status(400).send({
+        errors: ['Invalid session']
+      })
+    }
   }
 
   // Exchange code for an access token

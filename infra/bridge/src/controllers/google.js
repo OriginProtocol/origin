@@ -25,11 +25,11 @@ router.get('/auth-url', (req, res) => {
     client_id: process.env.GOOGLE_CLIENT_ID,
     scope: 'email',
     response_type: 'code',
-    state: redirect ? req.sessionID : null,
     redirect_uri: getAbsoluteUrl('/redirects/google/')
   }
 
   if (redirect) {
+    params.state = req.sessionID
     req.session.redirect = redirect
   }
 
@@ -41,20 +41,24 @@ router.get('/auth-url', (req, res) => {
  * from the user data.
  */
 router.post('/verify', googleVerify, async (req, res) => {
-  let code = req.body.code
-
-  if (req.body.sid) {
-    const session = await req.sessionStore.get(req.body.sid)
-    code = session.code
-  }
-
   const params = {
     client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: getAbsoluteUrl('/redirects/google/'),
-    code: code,
-    state: req.body.sid,
+    code: req.body.code,
     grant_type: 'authorization_code'
+  }
+
+  if (req.body.sid) {
+    try {
+      const session = await req.sessionStore.get(req.body.sid)
+      params.code = session.code
+      params.state = req.body.sid
+    } catch (e) {
+      return res.status(400).send({
+        errors: ['Invalid session']
+      })
+    }
   }
 
   // Exchange code for an access token

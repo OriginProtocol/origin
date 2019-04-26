@@ -19,6 +19,14 @@ const identityValidation = check('identity')
   .withMessage('Field identity must not be empty.')
   .trim()
 
+const codeValidation = (_, { req }) => {
+  if (!req.body.code && !req.body.sid) {
+    throw new Error('Field `code` or `sid` must be specified.')
+  }
+
+  return true
+}
+
 const airbnbGenerateCode = [
   identityValidation,
   check('airbnbUserId')
@@ -62,11 +70,7 @@ const emailVerifyCode = [
 
 const facebookVerify = [
   identityValidation,
-  // check('code')
-  //   .not()
-  //   .isEmpty()
-  //   .withMessage('Field code must not be empty.')
-  //   .trim(),
+  check('code').custom(codeValidation),
   handleValidationError
 ]
 
@@ -117,11 +121,7 @@ const twitterVerifyCode = [
 
 const googleVerify = [
   identityValidation,
-  // check('code')
-  //   .not()
-  //   .isEmpty()
-  //   .withMessage('Field code must not be empty.')
-  //   .trim(),
+  check('code').custom(codeValidation),
   handleValidationError
 ]
 
