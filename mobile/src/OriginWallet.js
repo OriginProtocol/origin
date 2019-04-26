@@ -242,20 +242,13 @@ class OriginWallet extends Component {
     const account = wallet[wallet.length - 1]
     this.props.addAccount(account)
     this.setAccountActive(account)
-    return account.address
   }
 
-  /* Add a new account from a private key
+  /* Add a new account
    */
-  async addAccount(privateKey) {
-    // Prefix with 0x if necessary
-    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
-      privateKey = '0x' + privateKey
-    }
-    const account = this.web3.eth.accounts.wallet.add(privateKey)
+  async addAccount(account) {
     this.props.addAccount(account)
     this.setAccountActive(account)
-    return account.address
   }
 
   /* Remove an account
