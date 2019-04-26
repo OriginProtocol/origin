@@ -1,205 +1,16 @@
-const BigNumber = require('bignumber.js')
 const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
+const tokenNaturalUnits = require('../src/util/token')
 
-function tokenNaturalUnits(x) {
-  return BigNumber(x)
-    .times(BigNumber(10).pow(18))
-    .toFixed()
-}
 
 describe('April campaign rules', () => {
 
   before(() => {
-    const config = {
-      numLevels: 3,
-      levels: {
-        0: {
-          rules: [
-            {
-              id: 'ProfilePublished',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'ProfilePublished',
-                reward: null,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'EmailAttestation',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'EmailAttestationPublished',
-                reward: null,
-                visible: true,
-                limit: 1,
-                nextLevelCondition: false,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'BasicProfile',
-              class: 'MultiEvents',
-              config: {
-                eventTypes: ['ProfilePublished', 'EmailAttestationPublished'],
-                visible: false,
-                scope: 'user',
-                numEventsRequired: 2,
-                reward: null,
-                nextLevelCondition: true,
-                unlockConditionMsg: [
-                  {
-                    conditionTranslateKey: 'growth.profile.and.email.requirement',
-                    conditionIcon: 'images/growth/email-icon-small.svg'
-                  }
-                ],
-              }
-            }
-          ],
-        },
-        1: {
-          rules: [
-            {
-              id: 'PhoneAttestation',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'PhoneAttestationPublished',
-                reward: {
-                  amount: tokenNaturalUnits(25),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'FacebookAttestation',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'FacebookAttestationPublished',
-                reward: {
-                  amount: tokenNaturalUnits(25),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'AirbnbAttestation',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'AirbnbAttestationPublished',
-                reward: {
-                  amount: tokenNaturalUnits(25),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'TwitterAttestation',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'TwitterAttestationPublished',
-                reward: {
-                  amount: tokenNaturalUnits(25),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'user'
-              }
-            },
-            {
-              id: 'TwoAttestations',
-              class: 'MultiEvents',
-              config: {
-                eventTypes: [
-                  'PhoneAttestationPublished',
-                  'FacebookAttestationPublished',
-                  'AirbnbAttestationPublished',
-                  'TwitterAttestationPublished'
-                ],
-                numEventsRequired: 2,
-                reward: null,
-                nextLevelCondition: true,
-                unlockConditionMsg: [
-                  {
-                    conditionTranslateKey: 'growth.profile.and.email.requirement',
-                    conditionIcon: 'images/growth/email-icon-small.svg',
-                  }
-                ],
-                visible: false,
-                scope: 'user'
-              }
-            }
-          ],
-        },
-        2: {
-          rules: [
-            {
-              id: 'Referral',
-              class: 'Referral',
-              config: {
-                levelRequired: 1,
-                reward: {
-                  amount: tokenNaturalUnits(50),
-                  currency: 'OGN'
-                },
-                limit: 25,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'campaign'
-              }
-            },
-            {
-              id: 'ListingPurchase',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'ListingPurchased',
-                reward: {
-                  amount: tokenNaturalUnits(100),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'campaign'
-              }
-            },
-            {
-              id: 'ListingSold',
-              class: 'SingleEvent',
-              config: {
-                eventType: 'ListingSold',
-                reward: {
-                  amount: tokenNaturalUnits(100),
-                  currency: 'OGN'
-                },
-                limit: 1,
-                nextLevelCondition: false,
-                visible: true,
-                scope: 'campaign'
-              }
-            }
-          ],
-        }
-      }
-    }
+    const aprilConfig = require('../campaigns/april.js')
+
     this.campaignStart = new Date()
     this.campaignEnd = new Date(this.campaignStart.getTime()+100000)
     this.duringCampaign = new Date(this.campaignStart.getTime()+100)
@@ -208,12 +19,12 @@ describe('April campaign rules', () => {
 
     const row = {
       id: 1,
-      rules: JSON.stringify(config),
+      rules: JSON.stringify(aprilConfig),
       startDate: this.campaignStart,
       endDate: this.campaignEnd,
       currency: 'OGN'
     }
-    this.crules = new CampaignRules(row, config)
+    this.crules = new CampaignRules(row, aprilConfig)
     expect(this.crules).to.be.an('object')
     expect(this.crules.numLevels).to.equal(3)
     expect(this.crules.levels[0]).to.be.an('object')
@@ -361,33 +172,6 @@ describe('April campaign rules', () => {
     expect(level).to.equal(2)
   })
 
-  it(`Should remain on level 2 when a listing is purchased`, async () => {
-    this.events.push(
-      {
-        id: 11,
-        type: GrowthEventTypes.ListingPurchased,
-        status: GrowthEventStatuses.Logged,
-        ethAddress: this.ethAddress,
-        createdAt: this.duringCampaign
-      }
-    )
-
-    const rewards = await this.crules.getRewards(this.ethAddress)
-    this.expectedRewards.push({
-      campaignId: 1,
-      levelId: 2,
-      ruleId: 'ListingPurchase',
-      value: {
-        currency: 'OGN',
-        amount: tokenNaturalUnits(100)
-      }
-    })
-    expect(rewards).to.deep.equal(this.expectedRewards)
-
-    const level = await this.crules.getCurrentLevel(this.ethAddress)
-    expect(level).to.equal(2)
-  })
-
   it(`Should remain on level 2 when a listing is sold`, async () => {
     this.events.push(
       {
@@ -404,6 +188,33 @@ describe('April campaign rules', () => {
       campaignId: 1,
       levelId: 2,
       ruleId: 'ListingSold',
+      value: {
+        currency: 'OGN',
+        amount: tokenNaturalUnits(100)
+      }
+    })
+    expect(rewards).to.deep.equal(this.expectedRewards)
+
+    const level = await this.crules.getCurrentLevel(this.ethAddress)
+    expect(level).to.equal(2)
+  })
+
+  it(`Should remain on level 2 when a listing is purchased`, async () => {
+    this.events.push(
+      {
+        id: 11,
+        type: GrowthEventTypes.ListingPurchased,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.ethAddress,
+        createdAt: this.duringCampaign
+      }
+    )
+
+    const rewards = await this.crules.getRewards(this.ethAddress)
+    this.expectedRewards.push({
+      campaignId: 1,
+      levelId: 2,
+      ruleId: 'ListingPurchase',
       value: {
         currency: 'OGN',
         amount: tokenNaturalUnits(100)
@@ -460,7 +271,7 @@ describe('April campaign rules', () => {
       {
         campaignId: 1,
         levelId: 2,
-        ruleId: 'ListingPurchase',
+        ruleId: 'ListingSold',
         value: {
           currency: 'OGN',
           amount: tokenNaturalUnits(100)
@@ -469,7 +280,7 @@ describe('April campaign rules', () => {
       {
         campaignId: 1,
         levelId: 2,
-        ruleId: 'ListingSold',
+        ruleId: 'ListingPurchase',
         value: {
           currency: 'OGN',
           amount: tokenNaturalUnits(100)
