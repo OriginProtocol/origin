@@ -2,37 +2,34 @@
 
 import Web3 from 'web3'
 
-import graphqlContext from '@origin/graphql/src/contracts'
+import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
+import { exchangeAbi } from '@origin/graphql/src/contracts/UniswapExchange'
+import Configs from '@origin/graphql/src/configs'
 
 const web3 = new Web3()
 
 export function decodeTransaction(data) {
-  const functionSignature = data.substr(0, 10)
-
-  const interfaces = [
-    ...graphqlContext.marketplace._jsonInterface,
-    ...graphqlContext.identityEvents._jsonInterface
+  const possibleFunctions = [
+    ...MarketplaceContract.abi,
+    ...OriginTokenContract.abi,
+    ...exchangeAbi
   ]
 
-  if (graphqlContext.daiExchange) {
-    interfaces.push(...graphqlContext.daiExchange._jsonInterface)
-  }
+  const functionAbiMatch = possibleFunctions.find(functionAbi => {
+    const sig = web3.eth.abi.encodeFunctionSignature(functionAbi)
+    // First 4 bytes of data is the function signature
+    return data.substr(0, 10) === sig
+  })
 
-  let functionInterface
-  for (const iface of interfaces) {
-    if (iface.signature === functionSignature) {
-      functionInterface = iface
-    }
-  }
-
-  if (!functionInterface) {
+  if (!functionAbiMatch) {
     return false
   }
 
   return {
-    functionName: functionInterface.name,
+    functionName: functionAbiMatch.name,
     parameters: web3.eth.abi.decodeLog(
-      functionInterface.inputs,
+      functionAbiMatch.inputs,
       '0x' + data.substr(10)
     )
   }
