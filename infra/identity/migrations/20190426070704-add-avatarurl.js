@@ -6,14 +6,14 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn(
       tableName,
-      'avatarUrl',
+      'avatar_url',
       Sequelize.STRING
     )
   },
   down: (queryInterface) => {
     return queryInterface.removeColumn(
       tableName,
-      'avatarUrl'
+      'avatar_url'
     )
   }
 }
