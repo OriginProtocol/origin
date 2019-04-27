@@ -29,7 +29,7 @@ COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 CMD eval $(envkey-source) && \
     npm run migrate --prefix infra/discovery && \

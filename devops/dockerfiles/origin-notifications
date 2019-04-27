@@ -16,7 +16,7 @@ COPY ./infra/notifications ./infra/notifications
 # @origin/identity required for the db model
 COPY ./infra/identity ./infra/identity
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/notifications && \

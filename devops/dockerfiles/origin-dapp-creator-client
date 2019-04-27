@@ -25,7 +25,7 @@ COPY ./packages/validator ./packages/validator
 COPY ./packages/contracts ./packages/contracts
 COPY ./infra/dapp-creator-client ./infra/dapp-creator-client
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 # Use EnvKey so that environment variables are available to webpack at build time
 RUN eval $(envkey-source) && npm run build --prefix infra/dapp-creator-client

@@ -30,9 +30,8 @@ COPY ./packages/services/ ./packages/services
 COPY ./packages/validator ./packages/validator
 
 COPY ./dapps/marketplace ./dapps/marketplace
-COPY ./scripts ./scripts
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 RUN eval $(envkey-source) && npm run build --prefix dapps/marketplace
 

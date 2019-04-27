@@ -17,7 +17,7 @@ COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/faucet ./infra/faucet
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/faucet && \

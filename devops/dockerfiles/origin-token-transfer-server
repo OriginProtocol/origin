@@ -10,7 +10,7 @@ COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/token-transfer-server ./infra/token-transfer-server
 
-RUN npm install
+RUN npm install --unsafe-perm
 
 COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
 

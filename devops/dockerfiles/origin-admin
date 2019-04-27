@@ -15,7 +15,7 @@ COPY ./packages/services/ ./packages/services/
 COPY ./packages/validator/ ./packages/validator/
 COPY ./dapps/admin/ ./dapps/admin/
 
-RUN npm install
+RUN npm install --unsafe-perm
 RUN npm run build --prefix dapps/admin
 
 # Copy built static files to nginx for serving
