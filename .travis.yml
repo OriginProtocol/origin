@@ -134,15 +134,6 @@ matrix:
       script:
         - npm run test --prefix infra/growth
 
-    - name: "@origin/js unit tests"
-      language: node_js
-      node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/js
-      script:
-        - npm run test --prefix packages/origin-js
-
     - name: "@origin/notifications unit tests"
       language: node_js
       node_js: 10
