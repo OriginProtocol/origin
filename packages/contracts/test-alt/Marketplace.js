@@ -37,11 +37,9 @@ describe('Marketplace.sol', async function() {
     OriginToken,
     DaiStableCoin,
     Buyer,
-    // BuyerIdentity,
     Owner,
     Seller,
     Seller2,
-    SellerIdentity,
     Affiliate,
     Arbitrator,
     MarketArbitrator,
@@ -106,20 +104,9 @@ describe('Marketplace.sol', async function() {
       args: [OriginToken._address]
     })
 
-    SellerIdentity = await deploy('ClaimHolder', {
-      from: Seller,
-      path: `${contractPath}/identity/`
-    })
-
-    // BuyerIdentity = await deploy('ClaimHolder', {
-    //   from: Buyer,
-    //   path: `${contractPath}/identity`
-    // })
-
     await Marketplace.methods.addAffiliate(Affiliate, IpfsHash).send()
     await OriginToken.methods.transfer(Seller, 400).send()
     await OriginToken.methods.transfer(Seller2, 400).send()
-    await OriginToken.methods.transfer(SellerIdentity._address, 400).send()
     await DaiStableCoin.methods.transfer(Buyer, 400).send()
     await OriginToken.methods
       .addCallSpenderWhitelist(Marketplace._address)
@@ -519,80 +506,6 @@ describe('Marketplace.sol', async function() {
 
       assert(result)
     })
-  })
-
-  describe('A listing in ETH from an identity', function() {
-    let listingID
-    it('should allow a new listing to be added', async function() {
-      const result = await helpers.createListing({ Identity: SellerIdentity })
-      assert(result)
-      listingID = web3.utils.hexToNumber(result.events['1'].raw.topics[2])
-
-      const listing = await Marketplace.methods.listings(listingID).call()
-      assert.equal(listing.seller, SellerIdentity._address)
-    })
-
-    // it('should allow the listing to be updated', async function() {
-    //   await OriginToken.methods
-    //     .transfer(SellerIdentity._address, 10)
-    //     .send({ from: Seller })
-    //
-    //   var approveAbi = await OriginToken.methods
-    //     .approve(Marketplace._address, 10)
-    //     .encodeABI()
-    //
-    //   await SellerIdentity.methods
-    //     .execute(OriginToken._address, 0, approveAbi)
-    //     .send({ from: Seller })
-    //
-    //   var updateAbi = await Marketplace.methods
-    //     .updateListing(
-    //       listingID,
-    //       '0x98765432109876543210987654321098',
-    //       10,
-    //       false
-    //     )
-    //     .encodeABI()
-    //
-    //   var result = await SellerIdentity.methods
-    //     .execute(Marketplace._address, 0, updateAbi)
-    //     .send({ from: Seller })
-    //
-    //   console.log(result)
-    //
-    //   assert(result)
-    // })
-
-    // it('should allow an offer to be made', async function() {
-    //   var result = await helpers.makeOffer({})
-    //
-    //   assert(result.events.OfferCreated)
-    //
-    //   var offer = await Marketplace.methods.offers(0, 0).call()
-    //   assert.equal(offer.buyer, Buyer)
-    // })
-    //
-    // it('should allow an offer to be accepted', async function() {
-    //   var result = await Marketplace.methods
-    //     .acceptOffer(0, 0, IpfsHash)
-    //     .send({ from: Seller })
-    //   assert(result.events.OfferAccepted)
-    // })
-    //
-    // it('should allow an offer to be finalized by buyer', async function() {
-    //   var balanceBefore = await web3.eth.getBalance(Seller)
-    //
-    //   var result = await Marketplace.methods.finalize(0, 0, IpfsHash).send({
-    //     from: Buyer
-    //   })
-    //   assert(result.events.OfferFinalized)
-    //
-    //   var balanceAfter = await web3.eth.getBalance(Seller)
-    //   assert.equal(
-    //     Number(balanceAfter),
-    //     Number(balanceBefore) + Number(web3.utils.toWei('0.1', 'ether'))
-    //   )
-    // })
   })
 
   describe('Approve and Call', function() {
