@@ -25,6 +25,5 @@ COPY ./infra/notifications/package.json ./infra/notifications/
 COPY ./infra/growth/package.json ./infra/growth/
 COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
-COPY ./scripts/ ./scripts/
 
 RUN npm install --unsafe-perm
