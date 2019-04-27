@@ -16,38 +16,27 @@ class FinalizeOffer extends Component {
 
   render() {
     return (
-      <Mutation
-        mutation={FinalizeOfferMutation}
-        onCompleted={({ finalizeOffer }) => {
-          this.setState({ waitFor: finalizeOffer.id })
-        }}
-        onError={errorData =>
-          this.setState({ waitFor: false, error: 'mutation', errorData })
-        }
-      >
-        {finalizeOffer => (
-          <>
-            <button
-              className={this.props.className}
-              onClick={() =>
-                this.setState({
-                  confirmationModal: true
-                })
-              }
-              children={this.props.children}
-            />
-            {this.renderConfirmationModal(finalizeOffer)}
-            {this.renderWaitModal()}
-            {this.state.error && (
-              <TransactionError
-                reason={this.state.error}
-                data={this.state.errorData}
-                onClose={() => this.setState({ error: false })}
-              />
-            )}
-          </>
+      <>
+        <button
+          className={this.props.className}
+          disabled={this.props.disabled}
+          onClick={() =>
+            this.setState({
+              confirmationModal: true
+            })
+          }
+          children={this.props.children}
+        />
+        {this.renderConfirmationModal()}
+        {this.renderWaitModal()}
+        {this.state.error && (
+          <TransactionError
+            reason={this.state.error}
+            data={this.state.errorData}
+            onClose={() => this.setState({ error: false })}
+          />
         )}
-      </Mutation>
+      </>
     )
   }
 
@@ -106,7 +95,7 @@ class FinalizeOffer extends Component {
     )
   }
 
-  renderConfirmationModal(finalizeOffer) {
+  renderConfirmationModal() {
     if (!this.state.confirmationModal) {
       return null
     }
@@ -119,38 +108,48 @@ class FinalizeOffer extends Component {
           })
         }}
       >
-        <div className="finalize-offer-modal">
-          <h2>
-            <fbt desc="finalizeOffer.wantToReleaseFunds">
-              Are you sure you want to release the funds?
-            </fbt>
-          </h2>
-          <div>
-            <fbt desc="finalizeOffer.cancelOrReport">
-              If you don&#39;t want to do this, cancel and either report a
-              problem or contact the seller with your concerns.
-            </fbt>
-          </div>
-          <div className="actions">
-            <button
-              className="btn btn-outline-light"
-              onClick={() => this.setState({ confirmationModal: false })}
-              children={<fbt desc="finalizeOffer.noWait">No, wait...</fbt>}
-            />
-            <button
-              className={this.props.className}
-              onClick={() => this.onClick(finalizeOffer)}
-              children={<fbt desc="finalizeOffer.yesPlease">Yes, please</fbt>}
-            />
-          </div>
-        </div>
+        <Mutation
+          mutation={FinalizeOfferMutation}
+          onCompleted={({ finalizeOffer }) => {
+            this.setState({ waitFor: finalizeOffer.id })
+          }}
+          onError={errorData =>
+            this.setState({ waitFor: false, error: 'mutation', errorData })
+          }
+        >
+          {finalizeOffer => (
+            <div className="finalize-offer-modal">
+              <h2>
+                <fbt desc="finalizeOffer.wantToReleaseFunds">
+                  Are you sure you want to release the funds?
+                </fbt>
+              </h2>
+              <div>
+                <fbt desc="finalizeOffer.cancelOrReport">
+                  If you don&#39;t want to do this, cancel and either report a
+                  problem or contact the seller with your concerns.
+                </fbt>
+              </div>
+              <div className="actions">
+                <button
+                  className="btn btn-outline-light"
+                  onClick={() => this.setState({ confirmationModal: false })}
+                  children={<fbt desc="finalizeOffer.noWait">No, wait...</fbt>}
+                />
+                <button
+                  className={this.props.className}
+                  onClick={() => this.onClick(finalizeOffer)}
+                  children={
+                    <fbt desc="finalizeOffer.yesPlease">Yes, please</fbt>
+                  }
+                />
+              </div>
+            </div>
+          )}
+        </Mutation>
       </Modal>
     )
   }
 }
 
 export default withCanTransact(FinalizeOffer)
-
-// require('react-styl')(`
-//   .finalize-offer-modal
-// `)

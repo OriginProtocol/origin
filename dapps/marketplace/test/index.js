@@ -3,7 +3,8 @@ import {
   waitForText,
   clickByText,
   pic,
-  createAccount
+  createAccount,
+  giveRating
 } from './_helpers'
 import services from './_services'
 
@@ -52,6 +53,8 @@ const finalizeOffer = async ({ buyer }) => {
   await changeAccount(page, buyer)
   await waitForText(page, 'Finalize', 'button')
   await pic(page, 'transaction-finalize')
+  await giveRating(page, 3)
+  await pic(page, 'transaction-finalize-rated')
   await clickByText(page, 'Finalize', 'button')
   await pic(page, 'transaction-finalize-confirmation')
   await clickByText(page, 'Yes, please', 'button')
