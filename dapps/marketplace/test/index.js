@@ -53,6 +53,8 @@ const finalizeOffer = async ({ buyer }) => {
   await waitForText(page, 'Finalize', 'button')
   await pic(page, 'transaction-finalize')
   await clickByText(page, 'Finalize', 'button')
+  await pic(page, 'transaction-finalize-confirmation')
+  await clickByText(page, 'Yes, please', 'button')
   await clickByText(page, 'OK', 'button')
   await waitForText(page, 'Transaction Finalized')
   await pic(page, 'transaction-finalized')
