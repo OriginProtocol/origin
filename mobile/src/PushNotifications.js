@@ -11,7 +11,7 @@ import {
 import PushNotification from 'react-native-push-notification'
 import { connect } from 'react-redux'
 
-import graphqlContext from '@origin/graphql/src/contracts'
+import Configs from '@origin/graphql/src/configs'
 
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken } from 'actions/Settings'
@@ -241,9 +241,8 @@ class PushNotifications extends Component {
   }
 
   getNotificationServerUrl() {
-    const notificationServer =
-      graphqlContext.config.notifications ||
-      'https://notifications.originprotocol.com'
+    const config = Configs[this.props.settings.network.name.toLowerCase()]
+    const notificationServer = config.notifications || 'https://notifications.originprotocol.com'
     return `${notificationServer}/mobile/register`
   }
 

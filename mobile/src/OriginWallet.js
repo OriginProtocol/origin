@@ -17,9 +17,9 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 
-import graphqlContext, {
-  setNetwork as setGraphqlNetwork
-} from '@origin/graphql/src/contracts'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
+import TokenContract from '@origin/contracts/build/contracts/TestToken'
+import Configs from '@origin/graphql/src/configs'
 
 import { setNetwork } from 'actions/Settings'
 import {
@@ -152,17 +152,18 @@ class OriginWallet extends Component {
   /* Set the provider for web3 to the provider for the current network in the
    * graphql configuration for the current network
    */
-  initWeb3() {
+  async initWeb3() {
     // Verify that the saved network is valid
     const networkExists = NETWORKS.find(
       n => n.name === this.props.settings.network.name
     )
     if (!networkExists) {
       // Set to mainnet if for some reason the network doesn't exist
-      this.props.setNetwork(NETWORKS.find(n => n.id === 1))
+      await this.props.setNetwork(NETWORKS.find(n => n.id === 1))
     }
-    setGraphqlNetwork(this.props.settings.network.name.toLowerCase())
-    const provider = graphqlContext.config.provider
+    // GraphQL config
+    const config = Configs[this.props.settings.network.name.toLowerCase()]
+    const provider = config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
   }
@@ -281,6 +282,8 @@ class OriginWallet extends Component {
    */
   async getBalances() {
     const { wallet } = this.props
+    // GraphQL config
+    const config = Configs[this.props.settings.network.name.toLowerCase()]
 
     if (wallet.accounts.length && wallet.activeAccount) {
       let ethBalance
@@ -293,20 +296,33 @@ class OriginWallet extends Component {
         return
       }
 
+      const tokens = [
+        {
+          id: config.OriginToken,
+          type: 'OriginToken',
+          name: 'Origin Token',
+          symbol: 'OGN',
+          decimals: '18',
+          supply: '1000000000'
+        },
+        ...config.tokens
+      ]
+
       const tokenBalances = {}
-      if (graphqlContext.config.tokens) {
-        for (const token of graphqlContext.config.tokens) {
-          let balance = await token.contractExec.methods
-            .balanceOf(wallet.activeAccount.address)
-            .call()
-          // Divide by number of decimals for token
-          balance = Number(
-            this.web3.utils
-              .toBN(balance)
-              .div(this.web3.utils.toBN(10 ** token.decimals))
-          )
-          tokenBalances[token.symbol.toLowerCase()] = balance
-        }
+      for (const token of tokens) {
+        const contractDef =
+          token.type === 'OriginToken' ? OriginTokenContract : TokenContract
+        const contract = new this.web3.eth.Contract(contractDef.abi, token.id)
+        let balance = await contract.methods
+          .balanceOf(wallet.activeAccount.address)
+          .call()
+        // Divide by number of decimals for token
+        balance = Number(
+          this.web3.utils
+            .toBN(balance)
+            .div(this.web3.utils.toBN(10 ** token.decimals))
+        )
+        tokenBalances[token.symbol.toLowerCase()] = balance
       }
 
       this.props.setAccountBalances({
