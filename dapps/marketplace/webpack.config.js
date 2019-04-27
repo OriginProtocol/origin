@@ -124,7 +124,8 @@ const config = {
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
-      ORIGIN_LINKING: null
+      ORIGIN_LINKING: null,
+      ENABLE_GOOGLE_ATTESTATION: false
     })
   ],
 
