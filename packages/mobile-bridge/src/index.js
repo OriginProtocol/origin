@@ -7,7 +7,7 @@ import initBridge from './webviewbridge'
 class MobileBridge {
   constructor({ web3 }) {
     this.web3 = web3
-    if (window.__mobileBridge) {
+    if (window.ReactNativeWebView) {
       initBridge()
     }
   }
