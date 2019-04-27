@@ -9,9 +9,8 @@ COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/token-transfer-server ./infra/token-transfer-server
-COPY ./scripts ./scripts
 
-RUN npm install --unsafe-perm
+RUN npm install
 
 COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
 

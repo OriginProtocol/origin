@@ -27,7 +27,7 @@ COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
 COPY ./scripts ./scripts
 
-RUN npm install --unsafe-perm
+RUN npm install
 
 # Run migrations then start the growth server.
 CMD eval $(envkey-source) && \

@@ -27,6 +27,6 @@ COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
 COPY ./scripts ./scripts
 
-RUN npm install --unsafe-perm
+RUN npm install
 
 CMD eval $(envkey-source) && npm run start --prefix infra/cron
