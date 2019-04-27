@@ -111,7 +111,7 @@ app.post('/accounts/:address', async (req, res) => {
     }
     return res.status(200).send(address)
   }
-  res.statusMessage = 'Cannot verify signature of registery'
+  res.statusMessage = 'Cannot verify signature of registry'
   return res.status(400).end()
 })
 
