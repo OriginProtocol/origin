@@ -40,7 +40,7 @@
     "passport-google-token": "^0.1.2",
     "per-env": "^1.0.2",
     "react-redux": "^5.0.7",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.0.0",
     "react-thunk": "^1.0.0",
     "react-validation": "^3.0.7",
     "redux": "^4.0.1",
