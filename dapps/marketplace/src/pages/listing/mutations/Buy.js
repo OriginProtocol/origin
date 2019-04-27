@@ -282,27 +282,10 @@ class Buy extends Component {
       quantity: Number(quantity)
     }
 
-    if (listing.__typename === 'FractionalListing') {
-      let _startDate = dayjs(startDate)
-      let _endDate = dayjs(endDate)
-
-      if (_startDate.isAfter(_endDate)) {
-        // Swap start and end dates, if startDate > endDate
-        const t = _startDate
-        _startDate = _endDate
-        _endDate = t
-      }
-
-      if (!_startDate.isSame(_endDate)) {
-        // Exclude checkout slot prices
-        _endDate = _endDate.subtract(1, 'day')
-      }
-
-      variables.fractionalData = {
-        startDate: _startDate.format('YYYY-MM-DD'),
-        endDate: _endDate.format('YYYY-MM-DD')
-      }
-    } else if (listing.__typename === 'FractionalHourlyListing') {
+    if (
+      listing.__typename === 'FractionalListing' ||
+      listing.__typename === 'FractionalHourlyListing'
+    ) {
       variables.fractionalData = { startDate, endDate }
     }
 
