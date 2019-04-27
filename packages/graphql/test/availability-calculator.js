@@ -84,7 +84,11 @@ describe('Availability Calculator', function() {
   })
 
   it('should allow a custom price to be set to a range of dates', function() {
-    const dates = instance.update(`${year}-02-01/${year}-02-04`, 'available', '1.5')
+    const dates = instance.update(
+      `${year}-02-01/${year}-02-04`,
+      'available',
+      '1.5'
+    )
     assert.deepEqual(dates, [
       {
         date: `${year}-02-01`,
@@ -118,7 +122,11 @@ describe('Availability Calculator', function() {
   })
 
   it('should allow different custom prices to be set over multiple range of dates', function() {
-    const customPriceRange1 = instance.update(`${year}-02-02/${year}-02-04`, 'available', '1')
+    const customPriceRange1 = instance.update(
+      `${year}-02-02/${year}-02-04`,
+      'available',
+      '1'
+    )
     assert.deepEqual(customPriceRange1, [
       {
         date: `${year}-02-02`,
@@ -143,7 +151,11 @@ describe('Availability Calculator', function() {
       }
     ])
 
-    const customPriceRange2 = instance.update(`${year}-02-01/${year}-02-02`, 'available', '0.85')
+    const customPriceRange2 = instance.update(
+      `${year}-02-01/${year}-02-02`,
+      'available',
+      '0.85'
+    )
     assert.deepEqual(customPriceRange2, [
       {
         date: `${year}-02-01`,
@@ -161,7 +173,11 @@ describe('Availability Calculator', function() {
       }
     ])
 
-    const customPriceRange3 = instance.update(`${year}-02-04/${year}-02-05`, 'available', '1.25')
+    const customPriceRange3 = instance.update(
+      `${year}-02-04/${year}-02-05`,
+      'available',
+      '1.25'
+    )
     assert.deepEqual(customPriceRange3, [
       {
         date: `${year}-02-04`,
