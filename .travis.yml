@@ -111,7 +111,6 @@ matrix:
         - lerna run migrate --scope @origin/identity
       install:
         - npm install
-        - lerna run build --scope @origin/js
       script:
         - npm run test --prefix infra/discovery
 
