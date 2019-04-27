@@ -43,7 +43,7 @@ class AvailabilityCalculator {
     }
 
     const modifiedSlots = []
-    let bookedRange, unavailableRange, customPriceRange
+    let bookedRange, unavailableRange
     const newBooked = [],
       newUnavailable = [],
       newCustomPrice = []
