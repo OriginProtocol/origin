@@ -3,6 +3,7 @@
 import { Component } from 'react'
 import {
   Alert,
+  AppState,
   DeviceEventEmitter,
   Platform,
   PushNotificationIOS
@@ -25,6 +26,10 @@ class PushNotifications extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      backgroundNotification: null
+    }
+
     DeviceEventEmitter.addListener(
       'requestNotificationPermissions',
       this.requestNotificationPermissions.bind(this)
@@ -32,9 +37,6 @@ class PushNotifications extends Component {
 
     DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
 
-    PushNotificationIOS.getInitialNotification().then(function(notification) {
-      console.log(notification)
-    })
   }
 
   componentDidMount() {
@@ -71,8 +73,37 @@ class PushNotifications extends Component {
       requestPermissions: Platform.OS !== 'ios'
     })
 
+    // Get notifications that triggered an open of the app when the app was
+    // completely closed
+    PushNotificationIOS.getInitialNotification().then(notification => {
+      if (notification) {
+        // TODO redirect user to relevant page in marketplace
+        console.log(notification)
+      }
+    })
+
+    // Get notifications that were triggered when the app was backgrounded
+    PushNotificationIOS.addEventListener('notification', notification => {
+      if (AppState.currentState === 'background') {
+        // Save notification to state so it can be dealt with when the user
+        // foregrounds the app
+        this.setState({ 'backgroundNotification': notification })
+      }
+    })
+
+    AppState.addEventListener('change', newState => {
+      if (newState === 'active' && this.state.backgroundNotification !== null) {
+        // TODO redirect user to relevant page in marketplace
+        this.setState({ 'backgroundNotification': null })
+      }
+    })
+
     // Make sure current active account is registered on mount
     this.register()
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change')
   }
 
   componentDidUpdate(prevProps) {
@@ -170,7 +201,7 @@ class PushNotifications extends Component {
         permissions: permissions
       })
     }).catch(error => {
-      console.warning(
+      console.warn(
         'Failed to register notification address with notifications server',
         error
       )
@@ -202,7 +233,7 @@ class PushNotifications extends Component {
         device_token: deviceToken
       })
     }).catch(error => {
-      console.warning(
+      console.warn(
         'Failed to unregister notification address with notifications server',
         error
       )
