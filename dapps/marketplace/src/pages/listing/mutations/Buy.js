@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import dayjs from 'dayjs'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
