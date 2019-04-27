@@ -92,16 +92,7 @@ class AvailabilityCalculator {
       }
 
       if (slot.customPrice) {
-        if (customPriceRange) {
-          customPriceRange = `${customPriceRange.split('/')[0]}/${slot.date}:${
-            slot.price
-          }`
-        } else {
-          customPriceRange = `${slot.date}/${slot.date}:${slot.price}`
-        }
-      } else if (customPriceRange) {
-        newCustomPrice.push(customPriceRange)
-        customPriceRange = ''
+        newCustomPrice.push(`${slot.date}/${slot.date}:${slot.price}`)
       }
 
       return slot
