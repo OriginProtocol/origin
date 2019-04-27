@@ -30,7 +30,9 @@ class PushNotifications extends Component {
       this.requestNotificationPermissions.bind(this)
     )
 
-    PushNotificationIOS.getInitialNotification().then(function (notification) {
+    DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
+
+    PushNotificationIOS.getInitialNotification().then(function(notification) {
       console.log(notification)
     })
   }
@@ -87,7 +89,7 @@ class PushNotifications extends Component {
         get(this.props.wallet.activeAccount, 'address'),
       // Change of device token
       get(prevProps.settings, 'deviceToken') !==
-        get(this.props.settings, 'deviceToken'),
+        get(this.props.settings, 'deviceToken')
       // Change of network
       /* TODO: Fix register call before server changes
       get(prevProps.settings.network, 'name') !==
@@ -106,21 +108,17 @@ class PushNotifications extends Component {
    */
   onNotification(notification) {
     // Popup notification in an alert
-    Alert.alert(
-      notification.alert.title,
-      notification.alert.body,
-      [
-        { text: 'Close' },
-        {
-          text: 'View',
-          onPress: () => {
-            NavigationService.navigate('Marketplace', {
-              marketplaceUrl: notification.data.url
-            })
-          }
-        },
-       ],
-    )
+    Alert.alert(notification.alert.title, notification.alert.body, [
+      { text: 'Close' },
+      {
+        text: 'View',
+        onPress: () => {
+          NavigationService.navigate('Marketplace', {
+            marketplaceUrl: notification.data.url
+          })
+        }
+      }
+    ])
     // Save notification to redux in case we want to display them later
     this.props.addNotification(notification)
   }
@@ -159,11 +157,7 @@ class PushNotifications extends Component {
         : DEFAULT_NOTIFICATION_PERMISSIONS
 
     const notificationType = this.getNotificationType()
-    const notificationServer =
-      graphqlContext.config.notifications ||
-      'https://notifications.originprotocol.com'
-    const notificationRegisterEndpoint = `${notificationServer}/mobile/register`
-    return fetch(notificationRegisterEndpoint, {
+    return fetch(this.getNotificationServerUrl(), {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -185,8 +179,41 @@ class PushNotifications extends Component {
 
   /* Unregister for notifications for deleted accounts
    */
-  async unregister() {
-    console.debug(`Unregistering ${address}`)
+  async unregister(account) {
+    const deviceToken = this.props.settings.deviceToken
+
+    if (!deviceToken) {
+      console.debug('No device token')
+      return
+    }
+
+    console.debug(
+      `Unregistering ${account.address} and device token ${deviceToken}`
+    )
+
+    return fetch(this.getNotificationServerUrl(), {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eth_address: account.address,
+        device_token: deviceToken
+      })
+    }).catch(error => {
+      console.warning(
+        'Failed to unregister notification address with notifications server',
+        error
+      )
+    })
+  }
+
+  getNotificationServerUrl() {
+    const notificationServer =
+      graphqlContext.config.notifications ||
+      'https://notifications.originprotocol.com'
+    return `${notificationServer}/mobile/register`
   }
 
   /* Return the notification type that should be used for the platform
