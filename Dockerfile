@@ -9,6 +9,7 @@ COPY ./scripts/wait-for.sh /usr/local/bin/
 # Docker to cache the npm install steps if none of the dependencies have changed
 COPY ./lerna.json ./
 COPY ./package.json ./
+COPY ./packages/contracts/package.json ./packages/contracts/
 COPY ./packages/graphql/package.json ./packages/graphql/
 COPY ./packages/ipfs/package.json ./packages/ipfs/
 COPY ./packages/validator/package.json ./packages/validator/
