@@ -36,7 +36,6 @@ class PushNotifications extends Component {
     )
 
     DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
-
   }
 
   componentDidMount() {
@@ -87,14 +86,14 @@ class PushNotifications extends Component {
       if (AppState.currentState === 'background') {
         // Save notification to state so it can be dealt with when the user
         // foregrounds the app
-        this.setState({ 'backgroundNotification': notification })
+        this.setState({ backgroundNotification: notification })
       }
     })
 
     AppState.addEventListener('change', newState => {
       if (newState === 'active' && this.state.backgroundNotification !== null) {
         // TODO redirect user to relevant page in marketplace
-        this.setState({ 'backgroundNotification': null })
+        this.setState({ backgroundNotification: null })
       }
     })
 
@@ -242,7 +241,8 @@ class PushNotifications extends Component {
 
   getNotificationServerUrl() {
     const config = Configs[this.props.settings.network.name.toLowerCase()]
-    const notificationServer = config.notifications || 'https://notifications.originprotocol.com'
+    const notificationServer =
+      config.notifications || 'https://notifications.originprotocol.com'
     return `${notificationServer}/mobile/register`
   }
 
