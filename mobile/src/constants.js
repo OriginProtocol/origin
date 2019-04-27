@@ -1,7 +1,5 @@
 'use strict'
 
-import { NativeModules } from 'react-native'
-
 class Enum extends Array {
   constructor(...args) {
     super(...args)

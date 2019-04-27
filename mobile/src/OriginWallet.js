@@ -40,7 +40,7 @@ import {
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
 } from './constants'
-import { loadData, deleteData } from './tools'
+import { loadData } from './tools'
 
 class OriginWallet extends Component {
   constructor(props) {
@@ -179,7 +179,7 @@ class OriginWallet extends Component {
   /* Configure web3 using the accounts persisted in redux
    */
   initAccounts() {
-    const { wallet, settings } = this.props
+    const { wallet } = this.props
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from the data store
     this.web3.eth.accounts.wallet.clear()
@@ -217,7 +217,7 @@ class OriginWallet extends Component {
     ) {
       // Messaging keys address is different to the active account address,
       // update messaging keys
-      const privateKey = wallet.activeAccount.privateKey
+      let privateKey = wallet.activeAccount.privateKey
       if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
         privateKey = '0x' + privateKey
       }
@@ -496,8 +496,6 @@ const mapDispatchToProps = dispatch => ({
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
   setAccountBalances: balances => dispatch(setAccountBalances(balances)),
-  setAccountServerNotifications: payload =>
-    dispatch(setAccountServerNotifications(payload)),
   setMessagingKeys: payload => dispatch(setMessagingKeys(payload)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
   setNetwork: network => dispatch(setNetwork(network)),
