@@ -100,12 +100,7 @@ const config = {
     contentBase: path.join(__dirname, 'public')
   },
   watchOptions: {
-    poll: 2000,
-    ignored: [
-      // Ignore node_modules in watch except for the origin-js directory
-      /node_modules([\\]+|\/)+(?!origin)/,
-      /\origin([\\]+|\/)node_modules/ // eslint-disable-line no-useless-escape
-    ]
+    poll: 2000
   },
   mode: isProduction ? 'production' : 'development',
   plugins: [
