@@ -27,9 +27,4 @@ COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
 COPY ./scripts/ ./scripts/
 
-# Complete contracts source needs to be available so that `truffle compile contracts`
-# which is calleed by the prepare script can succeed
-COPY ./packages/contracts ./packages/contracts
-
-# Running of postinstall script requires --unsafe-perm
-RUN npm install --unsafe-perm
+RUN npm install
