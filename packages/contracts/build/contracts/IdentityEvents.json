@@ -56,22 +56,22 @@
   ],
   "bytecode": "0x608060405234801561001057600080fd5b50610108806100206000396000f30060806040526004361060485763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663a30749df8114604d578063a3ded896146064575b600080fd5b348015605857600080fd5b5060626004356076565b005b348015606f57600080fd5b50606260af565b60408051828152905133917f8a49a94a170e0377e29de8e4b741993bed3dc902443fdc59d79e455137ecab18919081900360200190a250565b60405133907fc24bb9f4ebb7a8b8d37e375af6ac3f7e39d0218d2042bbd057d783048a904cd890600090a25600a165627a7a723058204d6dd6e5b330b52bfb57de6c3e36159ec823fc2ae92ea36eb490486af94a5fb80029",
   "deployedBytecode": "0x60806040526004361060485763ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663a30749df8114604d578063a3ded896146064575b600080fd5b348015605857600080fd5b5060626004356076565b005b348015606f57600080fd5b50606260af565b60408051828152905133917f8a49a94a170e0377e29de8e4b741993bed3dc902443fdc59d79e455137ecab18919081900360200190a250565b60405133907fc24bb9f4ebb7a8b8d37e375af6ac3f7e39d0218d2042bbd057d783048a904cd890600090a25600a165627a7a723058204d6dd6e5b330b52bfb57de6c3e36159ec823fc2ae92ea36eb490486af94a5fb80029",
-  "sourceMap": "118:419:8:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;118:419:8;;;;;;;",
-  "deployedSourceMap": "118:419:8:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;329:113;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;329:113:8;;;;;;;448:87;;8:9:-1;5:2;;;30:1;27;20:12;5:2;448:87:8;;;;329:113;398:37;;;;;;;;414:10;;398:37;;;;;;;;;;329:113;:::o;448:87::-;501:27;;517:10;;501:27;;;;;448:87::o",
+  "sourceMap": "118:419:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;118:419:1;;;;;;;",
+  "deployedSourceMap": "118:419:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;329:113;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;329:113:1;;;;;;;448:87;;8:9:-1;5:2;;;30:1;27;20:12;5:2;448:87:1;;;;329:113;398:37;;;;;;;;414:10;;398:37;;;;;;;;;;329:113;:::o;448:87::-;501:27;;517:10;;501:27;;;;;448:87::o",
   "source": "pragma solidity ^0.4.24;\n\n//\n// A contract to emit events to track changes of users identity data stored in IPFS.\n//\n\ncontract IdentityEvents {\n    event IdentityUpdated(address indexed account, bytes32 ipfsHash);\n    event IdentityDeleted(address indexed account);\n\n    // @param ipfsHash IPFS hash of the updated identity.\n    function emitIdentityUpdated(bytes32 ipfsHash) public {\n        emit IdentityUpdated(msg.sender, ipfsHash);\n    }\n\n    function emitIdentityDeleted() public {\n        emit IdentityDeleted(msg.sender);\n    }\n}",
   "sourcePath": "/Users/tom/Code/origin/packages/contracts/contracts/identity/IdentityEvents.sol",
   "ast": {
     "absolutePath": "/Users/tom/Code/origin/packages/contracts/contracts/identity/IdentityEvents.sol",
     "exportedSymbols": {
       "IdentityEvents": [
-        1185
+        90
       ]
     },
-    "id": 1186,
+    "id": 91,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1153,
+        "id": 58,
         "literals": [
           "solidity",
           "^",
@@ -79,7 +79,7 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:8"
+        "src": "0:24:1"
       },
       {
         "baseContracts": [],
@@ -87,9 +87,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1185,
+        "id": 90,
         "linearizedBaseContracts": [
-          1185
+          90
         ],
         "name": "IdentityEvents",
         "nodeType": "ContractDefinition",
@@ -97,21 +97,21 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1159,
+            "id": 64,
             "name": "IdentityUpdated",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1158,
+              "id": 63,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1155,
+                  "id": 60,
                   "indexed": true,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1159,
-                  "src": "170:23:8",
+                  "scope": 64,
+                  "src": "170:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -119,10 +119,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1154,
+                    "id": 59,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "170:7:8",
+                    "src": "170:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -133,12 +133,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 1157,
+                  "id": 62,
                   "indexed": false,
                   "name": "ipfsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1159,
-                  "src": "195:16:8",
+                  "scope": 64,
+                  "src": "195:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -146,10 +146,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1156,
+                    "id": 61,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "195:7:8",
+                    "src": "195:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -159,28 +159,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "169:43:8"
+              "src": "169:43:1"
             },
-            "src": "148:65:8"
+            "src": "148:65:1"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1163,
+            "id": 68,
             "name": "IdentityDeleted",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1162,
+              "id": 67,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1161,
+                  "id": 66,
                   "indexed": true,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1163,
-                  "src": "240:23:8",
+                  "scope": 68,
+                  "src": "240:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -188,10 +188,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1160,
+                    "id": 65,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "240:7:8",
+                    "src": "240:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -201,15 +201,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "239:25:8"
+              "src": "239:25:1"
             },
-            "src": "218:47:8"
+            "src": "218:47:1"
           },
           {
             "body": {
-              "id": 1174,
+              "id": 79,
               "nodeType": "Block",
-              "src": "383:59:8",
+              "src": "383:59:1",
               "statements": [
                 {
                   "eventCall": {
@@ -219,18 +219,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 1169,
+                          "id": 74,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7446,
-                          "src": "414:3:8",
+                          "referencedDeclaration": 5350,
+                          "src": "414:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 1170,
+                        "id": 75,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -238,7 +238,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "414:10:8",
+                        "src": "414:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -246,12 +246,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 1171,
+                        "id": 76,
                         "name": "ipfsHash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1165,
-                        "src": "426:8:8",
+                        "referencedDeclaration": 70,
+                        "src": "426:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -269,18 +269,18 @@
                           "typeString": "bytes32"
                         }
                       ],
-                      "id": 1168,
+                      "id": 73,
                       "name": "IdentityUpdated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1159,
-                      "src": "398:15:8",
+                      "referencedDeclaration": 64,
+                      "src": "398:15:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_bytes32_$returns$__$",
                         "typeString": "function (address,bytes32)"
                       }
                     },
-                    "id": 1172,
+                    "id": 77,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -288,20 +288,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "398:37:8",
+                    "src": "398:37:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1173,
+                  "id": 78,
                   "nodeType": "EmitStatement",
-                  "src": "393:42:8"
+                  "src": "393:42:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 1175,
+            "id": 80,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -309,16 +309,16 @@
             "name": "emitIdentityUpdated",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1166,
+              "id": 71,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1165,
+                  "id": 70,
                   "name": "ipfsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1175,
-                  "src": "358:16:8",
+                  "scope": 80,
+                  "src": "358:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -326,10 +326,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1164,
+                    "id": 69,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "358:7:8",
+                    "src": "358:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -339,26 +339,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "357:18:8"
+              "src": "357:18:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1167,
+              "id": 72,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "383:0:8"
+              "src": "383:0:1"
             },
-            "scope": 1185,
-            "src": "329:113:8",
+            "scope": 90,
+            "src": "329:113:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 1183,
+              "id": 88,
               "nodeType": "Block",
-              "src": "486:49:8",
+              "src": "486:49:1",
               "statements": [
                 {
                   "eventCall": {
@@ -368,18 +368,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 1179,
+                          "id": 84,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7446,
-                          "src": "517:3:8",
+                          "referencedDeclaration": 5350,
+                          "src": "517:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 1180,
+                        "id": 85,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -387,7 +387,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "517:10:8",
+                        "src": "517:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -401,18 +401,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1178,
+                      "id": 83,
                       "name": "IdentityDeleted",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1163,
-                      "src": "501:15:8",
+                      "referencedDeclaration": 68,
+                      "src": "501:15:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1181,
+                    "id": 86,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -420,20 +420,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "501:27:8",
+                    "src": "501:27:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1182,
+                  "id": 87,
                   "nodeType": "EmitStatement",
-                  "src": "496:32:8"
+                  "src": "496:32:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 1184,
+            "id": 89,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -441,43 +441,43 @@
             "name": "emitIdentityDeleted",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1176,
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "476:2:8"
+              "src": "476:2:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1177,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "486:0:8"
+              "src": "486:0:1"
             },
-            "scope": 1185,
-            "src": "448:87:8",
+            "scope": 90,
+            "src": "448:87:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1186,
-        "src": "118:419:8"
+        "scope": 91,
+        "src": "118:419:1"
       }
     ],
-    "src": "0:537:8"
+    "src": "0:537:1"
   },
   "legacyAST": {
     "absolutePath": "/Users/tom/Code/origin/packages/contracts/contracts/identity/IdentityEvents.sol",
     "exportedSymbols": {
       "IdentityEvents": [
-        1185
+        90
       ]
     },
-    "id": 1186,
+    "id": 91,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1153,
+        "id": 58,
         "literals": [
           "solidity",
           "^",
@@ -485,7 +485,7 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:8"
+        "src": "0:24:1"
       },
       {
         "baseContracts": [],
@@ -493,9 +493,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1185,
+        "id": 90,
         "linearizedBaseContracts": [
-          1185
+          90
         ],
         "name": "IdentityEvents",
         "nodeType": "ContractDefinition",
@@ -503,21 +503,21 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1159,
+            "id": 64,
             "name": "IdentityUpdated",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1158,
+              "id": 63,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1155,
+                  "id": 60,
                   "indexed": true,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1159,
-                  "src": "170:23:8",
+                  "scope": 64,
+                  "src": "170:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -525,10 +525,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1154,
+                    "id": 59,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "170:7:8",
+                    "src": "170:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -539,12 +539,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 1157,
+                  "id": 62,
                   "indexed": false,
                   "name": "ipfsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1159,
-                  "src": "195:16:8",
+                  "scope": 64,
+                  "src": "195:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -552,10 +552,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1156,
+                    "id": 61,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "195:7:8",
+                    "src": "195:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -565,28 +565,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "169:43:8"
+              "src": "169:43:1"
             },
-            "src": "148:65:8"
+            "src": "148:65:1"
           },
           {
             "anonymous": false,
             "documentation": null,
-            "id": 1163,
+            "id": 68,
             "name": "IdentityDeleted",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 1162,
+              "id": 67,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1161,
+                  "id": 66,
                   "indexed": true,
                   "name": "account",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1163,
-                  "src": "240:23:8",
+                  "scope": 68,
+                  "src": "240:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -594,10 +594,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1160,
+                    "id": 65,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "240:7:8",
+                    "src": "240:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -607,15 +607,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "239:25:8"
+              "src": "239:25:1"
             },
-            "src": "218:47:8"
+            "src": "218:47:1"
           },
           {
             "body": {
-              "id": 1174,
+              "id": 79,
               "nodeType": "Block",
-              "src": "383:59:8",
+              "src": "383:59:1",
               "statements": [
                 {
                   "eventCall": {
@@ -625,18 +625,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 1169,
+                          "id": 74,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7446,
-                          "src": "414:3:8",
+                          "referencedDeclaration": 5350,
+                          "src": "414:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 1170,
+                        "id": 75,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -644,7 +644,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "414:10:8",
+                        "src": "414:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -652,12 +652,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 1171,
+                        "id": 76,
                         "name": "ipfsHash",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1165,
-                        "src": "426:8:8",
+                        "referencedDeclaration": 70,
+                        "src": "426:8:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -675,18 +675,18 @@
                           "typeString": "bytes32"
                         }
                       ],
-                      "id": 1168,
+                      "id": 73,
                       "name": "IdentityUpdated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1159,
-                      "src": "398:15:8",
+                      "referencedDeclaration": 64,
+                      "src": "398:15:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_bytes32_$returns$__$",
                         "typeString": "function (address,bytes32)"
                       }
                     },
-                    "id": 1172,
+                    "id": 77,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -694,20 +694,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "398:37:8",
+                    "src": "398:37:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1173,
+                  "id": 78,
                   "nodeType": "EmitStatement",
-                  "src": "393:42:8"
+                  "src": "393:42:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 1175,
+            "id": 80,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -715,16 +715,16 @@
             "name": "emitIdentityUpdated",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1166,
+              "id": 71,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1165,
+                  "id": 70,
                   "name": "ipfsHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1175,
-                  "src": "358:16:8",
+                  "scope": 80,
+                  "src": "358:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -732,10 +732,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1164,
+                    "id": 69,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "358:7:8",
+                    "src": "358:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -745,26 +745,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "357:18:8"
+              "src": "357:18:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1167,
+              "id": 72,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "383:0:8"
+              "src": "383:0:1"
             },
-            "scope": 1185,
-            "src": "329:113:8",
+            "scope": 90,
+            "src": "329:113:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 1183,
+              "id": 88,
               "nodeType": "Block",
-              "src": "486:49:8",
+              "src": "486:49:1",
               "statements": [
                 {
                   "eventCall": {
@@ -774,18 +774,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 1179,
+                          "id": 84,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7446,
-                          "src": "517:3:8",
+                          "referencedDeclaration": 5350,
+                          "src": "517:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 1180,
+                        "id": 85,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -793,7 +793,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "517:10:8",
+                        "src": "517:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -807,18 +807,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1178,
+                      "id": 83,
                       "name": "IdentityDeleted",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1163,
-                      "src": "501:15:8",
+                      "referencedDeclaration": 68,
+                      "src": "501:15:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1181,
+                    "id": 86,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -826,20 +826,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "501:27:8",
+                    "src": "501:27:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1182,
+                  "id": 87,
                   "nodeType": "EmitStatement",
-                  "src": "496:32:8"
+                  "src": "496:32:1"
                 }
               ]
             },
             "documentation": null,
-            "id": 1184,
+            "id": 89,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -847,40 +847,36 @@
             "name": "emitIdentityDeleted",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1176,
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "476:2:8"
+              "src": "476:2:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 1177,
+              "id": 82,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "486:0:8"
+              "src": "486:0:1"
             },
-            "scope": 1185,
-            "src": "448:87:8",
+            "scope": 90,
+            "src": "448:87:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1186,
-        "src": "118:419:8"
+        "scope": 91,
+        "src": "118:419:1"
       }
     ],
-    "src": "0:537:8"
+    "src": "0:537:1"
   },
   "compiler": {
     "name": "solc",
     "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
   },
-  "networks": {
-    "999": {
-      "address": "0x82D50AD3C1091866E258Fd0f1a7cC9674609D254"
-    }
-  },
+  "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-04-27T05:48:32.924Z"
+  "updatedAt": "2019-04-27T07:02:41.156Z"
 }
