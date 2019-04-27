@@ -199,6 +199,26 @@ app.post('/mobile/register', async (req, res) => {
   }
 })
 
+app.delete('/mobile/register', async(req, res) => {
+  logger.info('Call to delete mobile registry endpoint')
+
+  // See if a row already exists for this device/address
+  let registryRow = await MobileRegistry.findOne({
+    where: {
+      ethAddress: req.body.eth_address,
+      deviceToken: req.body.device_token
+    }
+  })
+
+  if (!registryRow) {
+    res.sendStatus(204)
+  } else {
+    // Update the soft delete column
+    await registryRow.update({ deleted: true })
+    res.sendStatus(200)
+  }
+})
+
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.

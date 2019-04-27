@@ -94,7 +94,7 @@ async function mobilePush(
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
       const mobileRegister = await MobileRegistry.findOne({
-        where: { ethAddress }
+        where: { ethAddress, deleted: false, 'permissions.alert': 1 }
       })
       if (mobileRegister) {
         logger.info(`Sending notification to ${ethAddress}`)

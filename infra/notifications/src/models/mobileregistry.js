@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       ethAddress: { type: DataTypes.STRING(255), primaryKey: true },
       deviceToken: { type: DataTypes.STRING(255), primaryKey: true },
       deviceType: DataTypes.ENUM('APN', 'FCM'),
-      permissions: DataTypes.JSONB
+      permissions: DataTypes.JSONB,
+      deleted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {
       tableName: 'mobile_registry'

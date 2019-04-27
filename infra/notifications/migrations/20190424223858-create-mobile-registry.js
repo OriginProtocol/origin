@@ -24,6 +24,10 @@ module.exports = {
           type: Sequelize.JSONB,
           allowNull: true
         },
+        deleted: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false
+        },
         created_at: {
           allowNull: false,
           type: Sequelize.DATE
