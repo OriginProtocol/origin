@@ -19,7 +19,6 @@ import CryptoJS from 'crypto-js'
 
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
-import Configs from '@origin/graphql/src/configs'
 
 import { setNetwork } from 'actions/Settings'
 import {
@@ -37,6 +36,7 @@ import {
   PROMPT_PUB_KEY
 } from './constants'
 import { loadData } from './tools'
+import withConfig from 'hoc/withConfig'
 
 class OriginWallet extends Component {
   constructor(props) {
@@ -161,9 +161,7 @@ class OriginWallet extends Component {
       // Set to mainnet if for some reason the network doesn't exist
       await this.props.setNetwork(NETWORKS.find(n => n.id === 1))
     }
-    // GraphQL config
-    const config = Configs[this.props.settings.network.name.toLowerCase()]
-    const provider = config.provider
+    const provider = this.props.config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
   }
@@ -282,8 +280,6 @@ class OriginWallet extends Component {
    */
   async getBalances() {
     const { wallet } = this.props
-    // GraphQL config
-    const config = Configs[this.props.settings.network.name.toLowerCase()]
 
     if (wallet.accounts.length && wallet.activeAccount) {
       let ethBalance
@@ -298,14 +294,14 @@ class OriginWallet extends Component {
 
       const tokens = [
         {
-          id: config.OriginToken,
+          id: this.props.config.OriginToken,
           type: 'OriginToken',
           name: 'Origin Token',
           symbol: 'OGN',
           decimals: '18',
           supply: '1000000000'
         },
-        ...config.tokens
+        ...this.props.config.tokens
       ]
 
       const tokenBalances = {}
@@ -408,7 +404,9 @@ const mapDispatchToProps = dispatch => ({
   setNetwork: network => dispatch(setNetwork(network))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OriginWallet)
+export default withConfig(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(OriginWallet)
+)

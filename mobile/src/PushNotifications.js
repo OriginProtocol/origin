@@ -22,6 +22,7 @@ import {
 } from './constants'
 import { get } from 'utils'
 import NavigationService from './NavigationService'
+import withConfig from 'hoc/withConfig'
 
 class PushNotifications extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class PushNotifications extends Component {
     DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Initialise push notifications
     const { wallet } = this.props
 
@@ -114,14 +115,14 @@ class PushNotifications extends Component {
     })
 
     // Make sure current active account is registered on mount
-    this.register()
+    await this.register()
   }
 
   componentWillUnmount() {
     AppState.removeEventListener('change')
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     // The following circumstances need to trigger the register function to
     // save the device token and Ethereum address of the active account to
     // the notifications server:
@@ -135,18 +136,16 @@ class PushNotifications extends Component {
         get(this.props.wallet.activeAccount, 'address'),
       // Change of device token
       get(prevProps.settings, 'deviceToken') !==
-        get(this.props.settings, 'deviceToken')
+        get(this.props.settings, 'deviceToken'),
       // Change of network
-      /* TODO: Fix register call before server changes
-      get(prevProps.settings.network, 'name') !==
-        get(this.props.settings.network, 'name')
-      */
+      get(prevProps.config, 'notifications') !==
+        get(this.props.config, 'notifications')
     ]
 
     // Trigger a register query to notifications server if any of the above
     // conditions are true
     if (registerConditions.includes(true)) {
-      this.register()
+      await this.register()
     }
   }
 
@@ -163,9 +162,13 @@ class PushNotifications extends Component {
           // Check that we are on the right network
           const url = new URL(notification.data.url)
           // Find network, default to Docker if network could not be found
-          const network = NETWORKS.find(n => {
-            return n.dappUrl === url.origin
-          }) || NETWORKS.find(n => { return n.name === 'Docker' })
+          const network =
+            NETWORKS.find(n => {
+              return n.dappUrl === url.origin
+            }) ||
+            NETWORKS.find(n => {
+              return n.name === 'Docker'
+            })
           if (this.props.settings.network.name !== network.name) {
             console.debug('Change network for notification to: ', network)
             this.props.setNetwork(network)
@@ -259,9 +262,9 @@ class PushNotifications extends Component {
   }
 
   getNotificationServerUrl() {
-    const config = Configs[this.props.settings.network.name.toLowerCase()]
     const notificationServer =
-      config.notifications || 'https://notifications.originprotocol.com'
+      this.props.config.notifications ||
+      'https://notifications.originprotocol.com'
     return `${notificationServer}/mobile/register`
   }
 
@@ -309,7 +312,9 @@ const mapDispatchToProps = dispatch => ({
   addNotification: notification => dispatch(addNotification(notification))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PushNotifications)
+export default withConfig(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PushNotifications)
+)
