@@ -288,6 +288,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         })
       )
     }
+    // TODO: Remove. Linker not used anymore
     if (config.LINKING_NOTIFY_ENDPOINT) {
       const recievers = conv_addresses.filter(a => a != address)
       fetch(config.LINKING_NOTIFY_ENDPOINT, {

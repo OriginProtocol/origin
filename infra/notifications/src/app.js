@@ -90,7 +90,7 @@ const rateLimiterMiddleware = (req, res, next) => {
         next()
       })
       .catch(() => {
-        logger.error(`Rejecting request due to rate limiting.`)
+        logger.error(`Rejecting request due to rate limiting: ${req.url}`)
         res.status(429).send('<h2>Too Many Requests</h2>')
       })
   } else {
