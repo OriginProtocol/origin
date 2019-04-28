@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import {
+  ActivityIndicator,
   DeviceEventEmitter,
   Modal,
   Platform,
@@ -115,13 +116,16 @@ class MarketplaceScreen extends Component {
     const keys = wallet.messagingKeys
     if (keys) {
       const keyInjection = `
-        window.context.messaging.onPreGenKeys({
-          address: '${keys.address}',
-          signatureKey: '${keys.signatureKey}',
-          pubMessage: '${keys.pubMessage}',
-          pubSignature: '${keys.pubSignature}'
-        });
-        true;
+        (function() {
+          if (window && window.context && window.context.messaging) {
+            window.context.messaging.onPreGenKeys({
+              address: '${keys.address}',
+              signatureKey: '${keys.signatureKey}',
+              pubMessage: '${keys.pubMessage}',
+              pubSignature: '${keys.pubSignature}'
+            });
+          }
+        })()
       `
       this.dappWebView.injectJavaScript(keyInjection)
     }
@@ -173,15 +177,6 @@ class MarketplaceScreen extends Component {
   }
 
   render() {
-    const injectedJavaScript = `
-      (function() {
-        if (!window.__mobileBridge || !window.__mobileBridgePlatform) {
-          window.__mobileBridge = true;
-          window.__mobileBridgePlatform = '${Platform.OS}';
-        }
-      })();
-    `
-
     const { modals } = this.state
 
     // Use key of network id on safeareaview to force a remount of component on
@@ -199,13 +194,18 @@ class MarketplaceScreen extends Component {
           }}
           source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
-          onLoadProgress={() => {
-            this.dappWebView.injectJavaScript(injectedJavaScript)
-          }}
           onLoad={() => {
             this.injectMessagingKeys()
           }}
           allowsBackForwardNavigationGestures
+          startInLoadingState={true}
+          renderLoading={() => {
+            return (
+              <View style={styles.loading}>
+                <ActivityIndicator size="large" color="black" />
+              </View>
+            )
+          A}}
         />
         {modals.map((modal, index) => {
           let card
@@ -284,6 +284,10 @@ const styles = StyleSheet.create({
   },
   transparent: {
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'space-around'
   }
 })
 
