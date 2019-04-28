@@ -177,15 +177,6 @@ class MarketplaceScreen extends Component {
   }
 
   render() {
-    const injectedJavaScript = `
-      (function() {
-        if (!window.__mobileBridge || !window.__mobileBridgePlatform) {
-          window.__mobileBridge = true;
-          window.__mobileBridgePlatform = '${Platform.OS}';
-        }
-      })();
-    `
-
     const { modals } = this.state
 
     // Use key of network id on safeareaview to force a remount of component on
@@ -203,9 +194,6 @@ class MarketplaceScreen extends Component {
           }}
           source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
-          onLoadProgress={() => {
-            this.dappWebView.injectJavaScript(injectedJavaScript)
-          }}
           onLoad={() => {
             this.injectMessagingKeys()
           }}
