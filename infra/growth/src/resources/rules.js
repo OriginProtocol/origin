@@ -395,17 +395,17 @@ class BaseRule {
    * Counts events, grouped by types.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
-   * @param {string} customId - Optional Id to use as filter for the events.
+   * @param {function} customIdFn - Optional. Custom id filter function.
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
    */
-  _tallyEvents(ethAddress, eventTypes, events, customId = null) {
+  _tallyEvents(ethAddress, eventTypes, events, customIdFn = null) {
     const tally = {}
     events
       .filter(event => {
         return (
           event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
-          (!customId || event.customId === customId) &&
+          (!customIdFn || customIdFn(event.customId)) &&
           (event.status === GrowthEventStatuses.Logged ||
             event.status === GrowthEventStatuses.Verified)
         )
@@ -613,6 +613,25 @@ class ListingIdPurchaseRule extends BaseRule {
   }
 
   /**
+   * Filter function to use when calling _tallyEvent.
+   * Filters out events that are not for an offer on the listingId of the rule.
+   * For ListingPurchased events, customId is the offerId with
+   * format <network>-<contract_version>-<listingSeq>-<offerSeq>
+   * @param {string} customId
+   * @returns {boolean}
+   */
+  customIdFilter(customId) {
+    // Trim the offerId from customId to get the listingId.
+    return (
+      this.listingId ===
+      customId
+        .split('-')
+        .slice(0, 3)
+        .join('-')
+    )
+  }
+
+  /**
    * Returns number of rewards the user qualifies for, taking into account the rule's limit.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
@@ -620,12 +639,12 @@ class ListingIdPurchaseRule extends BaseRule {
    * @private
    */
   async _numRewards(ethAddress, events) {
-    // Note: we pass listingId as the customId param to _tallyEvents.
+    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
     const tally = this._tallyEvents(
       ethAddress,
       this.eventTypes,
       events,
-      this.listingId
+      customId => this.customIdFilter(customId)
     )
     return Object.keys(tally).length > 0
       ? Math.min(Object.values(tally)[0], this.limit)
@@ -639,12 +658,12 @@ class ListingIdPurchaseRule extends BaseRule {
    * @returns {boolean}
    */
   async _evaluate(ethAddress, events) {
-    // Note: we pass listingId as the customId param to _tallyEvents.
+    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
     const tally = this._tallyEvents(
       ethAddress,
       this.eventTypes,
       events,
-      this.listingId
+      customId => this.customIdFilter(customId)
     )
 
     return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0

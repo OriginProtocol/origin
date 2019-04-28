@@ -224,6 +224,7 @@ class MarketplaceEventHandler {
       case 'ListingCreated':
         await GrowthEvent.insert(
           logger,
+          1,
           details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingCreated,
           removeListingIdBlockNumber(details.listing.id),
@@ -232,11 +233,12 @@ class MarketplaceEventHandler {
         )
         break
       case 'OfferFinalized':
-        // Insert a ListingPurchased event on the buyer side and
-        // a ListingSold event on the seller side.
-        // TODO(franck): insert as many rows as unit purchased.
+        // For each unit purchased, insert a ListingPurchased event on
+        // the buyer side and a ListingSold event on the seller side.
+        const numPurchased = details.offer.quantity || 1
         await GrowthEvent.insert(
           logger,
+          numPurchased,
           details.offer.buyer.id.toLowerCase(),
           GrowthEventTypes.ListingPurchased,
           details.offer.id,
@@ -245,6 +247,7 @@ class MarketplaceEventHandler {
         )
         await GrowthEvent.insert(
           logger,
+          numPurchased,
           details.listing.seller.id.toLowerCase(),
           GrowthEventTypes.ListingSold,
           details.offer.id,
