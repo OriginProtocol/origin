@@ -1,9 +1,5 @@
 // Safe get method
-export const get = (obj, path, defaultValue = null) =>
-  String.prototype.split
-    .call(path, /[,[\].]+?/)
-    .filter(Boolean)
-    .reduce(
-      (a, c) => (Object.hasOwnProperty.call(a, c) ? a[c] : defaultValue),
-      obj
-    )
+export function get(object, path, defval = null) {
+  if (typeof path === "string") path = path.split(".");
+  return path.reduce((xs, x) => (xs && xs[x] ? xs[x] : defval), object);
+}
