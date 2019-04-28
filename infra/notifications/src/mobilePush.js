@@ -16,7 +16,7 @@ if (process.env.APNS_KEY_FILE) {
       keyId: process.env.APNS_KEY_ID,
       teamId: process.env.APNS_TEAM_ID
     },
-    production: process.env.APNS_PRODUCTION ? true : false
+    production: process.env.APNS_PRODUCTION === 'true' ? true : false
   })
   apnBundle = process.env.APNS_BUNDLE_ID
 } else {
