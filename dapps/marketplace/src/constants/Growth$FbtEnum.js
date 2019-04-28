@@ -12,7 +12,13 @@ const Growth$FbtEnum = {
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   'growth.two.attestations.requirement': 'Two profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
-  'growth.email.requirement': 'Verified email'
+  'growth.email.requirement': 'Verified email',
+  'growth.purchase.tshirt': 'Purchase an Origin HOLD t-shirt',
+  'growth.purchase.gc': 'Purchase a Gift Card',
+  'growth.purchase.donation': 'Make a donation',
+  'growth.purchase.housing': 'Rent an apartment',
+  'growth.purchase.influencer': 'Purchase time with an influencer',
+  'growth.purchase.art': 'Purchase a piece of art'
 }
 
 module.exports = Growth$FbtEnum

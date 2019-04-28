@@ -98,7 +98,7 @@ class ApolloAdapter {
         const listingInfo = {
           listingId: data.listingId,
           iconSrc: data.iconSrc,
-          titleText: data.titleText
+          titleKey: data.titleKey
         }
         action = { ...action, ...listingInfo }
         break

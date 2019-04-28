@@ -192,10 +192,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-tshirt-icon.svg',
-            titleText: {
-              default: 'Purchase an Origin HOLD t-shirt',
-              key: 'growth.purchase.tshirt'
-            }
+            titleKey: 'growth.purchase.tshirt'
           }
         },
         {
@@ -212,10 +209,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-gc-icon.svg',
-            titleText: {
-              default: 'Purchase a Gift Card',
-              key: 'growth.purchase.gc'
-            }
+            titleKey: 'growth.purchase.gc'
           }
         },
         {
@@ -232,10 +226,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-donation-icon.svg',
-            titleText: {
-              default: 'Make a donation',
-              key: 'growth.purchase.donation'
-            }
+            titleKey: 'growth.purchase.donation'
           }
         },
         {
@@ -252,10 +243,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-housing-icon.svg',
-            titleText: {
-              default: 'Rent an appartment',
-              key: 'growth.purchase.housing'
-            }
+            titleKey: 'growth.purchase.housing'
           }
         },
         {
@@ -272,10 +260,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-influencer-icon.svg',
-            titleText: {
-              default: 'Purchase time with an influencer',
-              key: 'growth.purchase.influencer'
-            }
+            titleKey: 'growth.purchase.influencer'
           }
         },
         {
@@ -292,10 +277,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-art-icon.svg',
-            titleText: {
-              default: 'Purchase a piece of art',
-              key: 'growth.purchase.art'
-            }
+            titleKey: 'growth.purchase.art'
           }
         }
       ]

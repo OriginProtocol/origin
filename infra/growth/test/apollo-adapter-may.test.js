@@ -31,8 +31,7 @@ function checkExpectedState(state, expectedState) {
     if (action.type === 'ListingIdPurchased') {
       expect(action.listingId).to.be.a('string')
       expect(action.iconSrc).to.be.a('string')
-      expect(action.titleText.default).to.be.a('string')
-      expect(action.titleText.key).to.be.a('string')
+      expect(action.titleKey).to.be.a('string')
     }
   }
 }
