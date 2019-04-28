@@ -14,10 +14,11 @@ import { connect } from 'react-redux'
 import Configs from '@origin/graphql/src/configs'
 
 import { addNotification } from 'actions/Notification'
-import { setDeviceToken } from 'actions/Settings'
+import { setDeviceToken, setNetwork } from 'actions/Settings'
 import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES
+  ETH_NOTIFICATION_TYPES,
+  NETWORKS
 } from './constants'
 import { get } from 'utils'
 import NavigationService from './NavigationService'
@@ -76,23 +77,38 @@ class PushNotifications extends Component {
     // completely closed
     PushNotificationIOS.getInitialNotification().then(notification => {
       if (notification) {
-        // TODO redirect user to relevant page in marketplace
-        console.log(notification)
+        // backgroundNotification is an instance of PushNotificationIOS, create
+        // a notification object from it
+        const notificationObj = {
+          alert: this.state.backgroundNotification.getAlert(),
+          data: this.state.backgroundNotification.getData()
+        }
+        // Pop the alert with option to redirect to WebView
+        this.onNotification(notification)
       }
     })
 
     // Get notifications that were triggered when the app was backgrounded
     PushNotificationIOS.addEventListener('notification', notification => {
+      console.debug(AppState.currentState)
       if (AppState.currentState === 'background') {
         // Save notification to state so it can be dealt with when the user
         // foregrounds the app
+        console.debug('Setting background notification')
         this.setState({ backgroundNotification: notification })
       }
     })
 
     AppState.addEventListener('change', newState => {
       if (newState === 'active' && this.state.backgroundNotification !== null) {
-        // TODO redirect user to relevant page in marketplace
+        // backgroundNotification is an instance of PushNotificationIOS, create
+        // a notification object from it
+        const notification = {
+          alert: this.state.backgroundNotification.getAlert(),
+          data: this.state.backgroundNotification.getData()
+        }
+        // Pop the alert with option to redirect to WebView
+        this.onNotification(notification)
         this.setState({ backgroundNotification: null })
       }
     })
@@ -137,12 +153,23 @@ class PushNotifications extends Component {
   /* Handles a notification by displaying an alert and saving it to redux
    */
   onNotification(notification) {
+    console.debug('Handling notification: ', notification)
     // Popup notification in an alert
     Alert.alert(notification.alert.title, notification.alert.body, [
       { text: 'Close' },
       {
         text: 'View',
         onPress: () => {
+          // Check that we are on the right network
+          const url = new URL(notification.data.url)
+          // Find network, default to Docker if network could not be found
+          const network = NETWORKS.find(n => {
+            return n.dappUrl === url.origin
+          }) || NETWORKS.find(n => { return n.name === 'Docker' })
+          if (this.props.settings.network.name !== network.name) {
+            console.debug('Change network for notification to: ', network)
+            this.props.setNetwork(network)
+          }
           NavigationService.navigate('Marketplace', {
             marketplaceUrl: notification.data.url
           })
@@ -157,21 +184,13 @@ class PushNotifications extends Component {
    * notification server
    */
   async register() {
-    let activeAddress
-    if (
-      this.props.wallet.activeAccount &&
-      this.props.wallet.activeAccount.address
-    ) {
-      activeAddress = this.props.wallet.activeAccount.address
-    }
-
-    const deviceToken = this.props.settings.deviceToken
-
+    const activeAddress = get(this.props, 'wallet.activeAccount.address')
     if (!activeAddress) {
       console.debug('No active address')
       return
     }
 
+    const deviceToken = get(this.props, 'settings.deviceToken')
     if (!deviceToken) {
       console.debug('No device token')
       return
@@ -285,6 +304,7 @@ const mapStateToProps = ({ settings, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  setNetwork: network => dispatch(setNetwork(network)),
   setDeviceToken: payload => dispatch(setDeviceToken(payload)),
   addNotification: notification => dispatch(addNotification(notification))
 })
