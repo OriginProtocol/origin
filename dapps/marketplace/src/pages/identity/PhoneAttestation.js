@@ -339,6 +339,9 @@ require('react-styl')(`
     &.airbnb > div h2::before
       background-image: url(images/identity/airbnb-icon-dark.svg);
       background-size: 4rem
+    &.google > div h2::before
+      background-image: url(images/identity/google-icon-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

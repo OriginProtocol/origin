@@ -52,10 +52,8 @@ router.get('/google', async (req, res) => {
       return res.status(400).send('Session not found')
     }
 
-    session.code = req.query.code
-    await new Promise(resolve =>
-      req.sessionStore.set(sessionID, session, resolve)
-    )
+    req.session.code = session.code = req.query.code
+    await req.sessionStore.set(sessionID, session)
 
     res.redirect(`${session.redirect}?sid=${sessionID}`)
   } else {

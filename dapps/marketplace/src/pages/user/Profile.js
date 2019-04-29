@@ -121,6 +121,7 @@ class UserProfile extends Component {
         profile.emailVerified !== prevProfile.emailVerified ||
         profile.phoneVerified !== prevProfile.phoneVerified ||
         profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
         profile.airbnbVerified !== prevProfile.airbnbVerified) &&
       profile.id === prevProfile.id &&
@@ -197,6 +198,10 @@ class UserProfile extends Component {
       {
         attestation: 'facebookAttestation',
         message: fbt('Facebook updated', 'profile.facebookUpdated')
+      },
+      {
+        attestation: 'googleAttestation',
+        message: fbt('Google updated', 'profile.googleUpdated')
       },
       {
         attestation: 'twitterAttestation',
