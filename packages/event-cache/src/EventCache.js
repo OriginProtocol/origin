@@ -82,6 +82,11 @@ const getPastEvents = memoize(
     debug(`Got ${newEvents.length} new events`)
 
     if (newEvents.length > 0) {
+      // Set the latest event's block number
+      instance.lastEventBlock = newEvents.reduce((acc, ev) => {
+        if (ev.blockNumber > acc) acc = ev.blockNumber
+      }, instance.lastEventBlock)
+
       try {
         await instance.backend.addEvents(newEvents)
         debug(`Added all new events to backend`)
@@ -121,6 +126,8 @@ class EventCache {
     this.contract = contract
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
+    this.lastQueriedBlock = 0
+    this.lastEventBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
@@ -198,6 +205,14 @@ class EventCache {
       typeof conf.useLatestFromChain !== 'undefined'
         ? conf.useLatestFromChain
         : true
+
+    /**
+     * Use the latest event block number as fromBlock for future requests
+     */
+    this.useEventAsLatestBlock =
+      typeof conf.useEventAsLatestBlock !== 'undefined'
+        ? conf.useEventAsLatestBlock
+        : false
   }
 
   /**
@@ -235,13 +250,20 @@ class EventCache {
       return
     }
 
-    let fromBlock = this.lastQueriedBlock
-      ? this.lastQueriedBlock + 1
-      : this.originBlock
-    this.latestIndexedBlock = await this.backend.getLatestBlock()
+    let fromBlock = this.originBlock
 
-    if (this.latestIndexedBlock > fromBlock) {
-      fromBlock = this.latestIndexedBlock + 1
+    if (this.useEventAsLatestBlock && this.lastEventBlock) {
+      fromBlock = this.lastEventBlock
+    } else if (this.lastQueriedBlock) {
+      fromBlock = this.lastQueriedBlock + 1
+    }
+
+    if (!this.useEventAsLatestBlock) {
+      this.latestIndexedBlock = await this.backend.getLatestBlock()
+
+      if (this.latestIndexedBlock > fromBlock) {
+        fromBlock = this.latestIndexedBlock + 1
+      }
     }
 
     if (fromBlock > toBlock) {
