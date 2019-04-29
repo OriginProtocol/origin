@@ -28,14 +28,69 @@ matrix:
       script:
         - npm run lint
 
+    - name: "@origin/marketplace integration tests"
+      language: node_js
+      node_js: 10
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- \
+          --scope @origin/marketplace \
+          --scope @origin/contracts \
+          --scope @origin/eventsource \
+          --scope @origin/ipfs \
+          --scope @origin/messaging-client \
+          --scope @origin/services \
+          --scope @origin/validator \
+          --scope @origin/mobile-bridge \
+          --scope @origin/graphql \
+          --scope @origin/event-cache
+      script:
+        - npm run test --prefix dapps/marketplace
+
     - name: "@origin/graphql unit tests"
       language: node_js
       node_js: 10
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql
+        - npm run bootstrap -- \
+          --scope @origin/contracts \
+          --scope @origin/eventsource \
+          --scope @origin/ipfs \
+          --scope @origin/messaging-client \
+          --scope @origin/services \
+          --scope @origin/validator \
+          --scope @origin/mobile-bridge \
+          --scope @origin/graphql \
+          --scope @origin/event-cache
       script:
         - npm run test --prefix packages/graphql
+
+    - name: "@origin/event-cache unit tests"
+      language: node_js
+      node_js: 10
+      addons:
+        postgresql: 9.6
+      services:
+        - postgresql
+      env:
+        - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope @origin/event-cache
+      install:
+        - npm install --ignore-scripts
+        - npm run bootstrap -- \
+          --scope @origin/contracts \
+          --scope @origin/eventsource \
+          --scope @origin/ipfs \
+          --scope @origin/messaging-client \
+          --scope @origin/services \
+          --scope @origin/validator \
+          --scope @origin/mobile-bridge \
+          --scope @origin/graphql \
+          --scope @origin/event-cache
+      script:
+        - npm run test --prefix packages/event-cache
 
     - name: "@origin/bridge unit tests"
       language: node_js
@@ -78,12 +133,12 @@ matrix:
         - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope @origin/bridge
         - lerna run migrate --scope @origin/discovery
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
       install:
         - npm install
-        - lerna run build --scope @origin/js
       script:
         - npm run test --prefix infra/discovery
 
@@ -102,18 +157,22 @@ matrix:
         - lerna run migrate --scope @origin/identity
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/eventsource --scope @origin/ipfs --scope @origin/messaging-client --scope @origin/services --scope @origin/validator --scope @origin/mobile-bridge --scope @origin/graphql --scope @origin/bridge --scope @origin/identity --scope @origin/token --scope @origin/growth
+        - npm run bootstrap -- \
+          --scope @origin/contracts \
+          --scope @origin/eventsource \
+          --scope @origin/ipfs \
+          --scope @origin/messaging-client \
+          --scope @origin/services \
+          --scope @origin/validator \
+          --scope @origin/mobile-bridge \
+          --scope @origin/graphql \
+          --scope @origin/bridge \
+          --scope @origin/identity \
+          --scope @origin/token \
+          --scope @origin/growth \
+          --scope @origin/event-cache
       script:
         - npm run test --prefix infra/growth
-
-    - name: "@origin/js unit tests"
-      language: node_js
-      node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts --scope @origin/js
-      script:
-        - npm run test --prefix packages/origin-js
 
     - name: "@origin/notifications unit tests"
       language: node_js

@@ -287,6 +287,7 @@ class Buy extends Component {
     ) {
       variables.fractionalData = { startDate, endDate }
     }
+
     makeOffer({ variables })
   }
 

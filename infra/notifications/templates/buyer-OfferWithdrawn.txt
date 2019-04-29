@@ -1,0 +1,3 @@
+The offer you made for <%= listing.title %> has been rejected.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>

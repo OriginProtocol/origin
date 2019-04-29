@@ -85,6 +85,23 @@ async function emailSend(
           logger.info(`No message found`)
         }
       } else {
+        const listingNetwork = listing.id.split('-')[0] // First section of id is the network num
+        const networkDappDomains = {
+          1: 'https://dapp.originprotocol.com',
+          4: 'https://dapp.staging.originprotocol.com',
+          2222: 'https://dapp.dev.originprotocol.com',
+          999: 'http://localhost:3000'
+        }
+        const networkGatewayDomains = {
+          1: 'https://ipfs.originprotocol.com',
+          4: 'https://ipfs.staging.originprotocol.com',
+          2222: 'https://ipfs.dev.originprotocol.com',
+          999: 'http://localhost:8080'
+        }
+        const vars = {
+          dappUrl: networkDappDomains[listingNetwork],
+          ipfsGatewayUrl: networkGatewayDomains[listingNetwork]
+        }
         const email = {
           to: config.overrideEmail || s.email,
           from: config.fromEmail,
@@ -93,14 +110,16 @@ async function emailSend(
             message: message.text({
               listing: listing,
               offer: offer,
-              config: config
+              config: config,
+              ...vars
             })
           }),
           html: emailTemplateHtml({
             message: message.html({
               listing: listing,
               offer: offer,
-              config: config
+              config: config,
+              ...vars
             })
           }),
           asm: {

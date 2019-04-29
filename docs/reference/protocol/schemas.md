@@ -160,7 +160,7 @@ A profile allows a user to let the world know a little more about them.
     schemaId: "https://schema.originprotocol.com/profile_1.0.0.json",
     firstName: "Jake",
     lastName: "Lewis",
-    avatar: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
+    avatarUrl: "ipfs://QmekiXtSBWzthAu2uhbT2oST4h9CJuxvpYKCZEayVYc1LQ",
     description: "Marketing Executive in Belfast."
 }
 ```
@@ -177,7 +177,7 @@ A profile allows a user to let the world know a little more about them.
 
 | | |
 |----|-----|
-|**avatar** | A [data url](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) image for the user's profile image.|
+|**avatarUrl** | An IPFS link to the avatar image for the user's profile.|
 |**description** | A textual description by the user about themselves. |
 
 

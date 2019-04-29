@@ -114,11 +114,13 @@ class AvailabilityCalculator {
     return modifiedSlots
   }
 
-  estimatePrice(range) {
+  estimateNightlyPrice(range) {
     const [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
+
     const available = availability.every(slot => slot.unavailable === false)
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
+
     return { available, price: Math.round(price * 100000) / 100000 }
   }
 

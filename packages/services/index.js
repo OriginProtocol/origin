@@ -71,7 +71,7 @@ const populateIpfs = ({ logFiles } = {}) =>
     const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
     console.log('Populating IPFS...')
     ipfs.util.addFromFs(
-      path.resolve(__dirname, '../origin-js/test/fixtures'),
+      path.resolve(__dirname, './fixtures'),
       { recursive: true },
       (err, result) => {
         if (err) {
@@ -91,8 +91,9 @@ function writeTruffleAddress(contract, network, address) {
   const rawContract = fs.readFileSync(filename)
   const Contract = JSON.parse(rawContract)
   try {
+    Contract.networks[network] = Contract.networks[network] || {}
     Contract.networks[network].address = address
-    fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+    fs.writeFileSync(filename, JSON.stringify(Contract, null, 2))
   } catch (error) {
     // Didn't copy contract build files into the build directory?
     console.log('Could not write contract address to truffle file')
@@ -199,6 +200,12 @@ module.exports = async function start(opts = {}) {
   if (opts.extras && !started.extras) {
     extrasResult = await opts.extras()
     started.extras = true
+  }
+
+  if (process.env.DOCKER) {
+    // Used to indicate to other services in Docker that the services package
+    // is complete via wait-for.sh
+    net.createServer().listen(1111, '0.0.0.0')
   }
 
   const shutdownFn = async function shutdown() {

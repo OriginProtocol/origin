@@ -12,8 +12,8 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { mobilePush } = require('./mobilePush')
-const { browserPush } = require('./browserPush')
+// const { mobilePush } = require('./mobilePush')
+// const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
 
 const app = express()
@@ -61,7 +61,6 @@ const config = {
   // Output debugging and other info. Boolean.
   verbose: args['--verbose'] || false
 }
-
 logger.log(config)
 
 // ------------------------------------------------------------------
@@ -83,17 +82,24 @@ const rateLimiterOptions = {
   duration: 60
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-// use rate limiter on all root path methods
-app.all((req, res, next) => {
-  rateLimiter
-    .consume(req.connection.remoteAddress)
-    .then(() => {
-      next()
-    })
-    .catch(() => {
-      res.status(429).send('<h1>Too Many Requests</h1>')
-    })
-})
+const rateLimiterMiddleware = (req, res, next) => {
+  if (!req.url.startsWith('/events')) {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        logger.error(`Rejecting request due to rate limiting.`)
+        res.status(429).send('<h2>Too Many Requests</h2>')
+      })
+  } else {
+    next()
+  }
+}
+// Note: register rate limiting middleware *before* all routes
+// so that it gets executed first.
+app.use(rateLimiterMiddleware)
 
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
@@ -176,6 +182,9 @@ app.post('/events', async (req, res) => {
     event.blockNumber
   } logIndex=${event.logIndex}`
 
+  // Return 200 to the event-listener without waiting for processing of the event.
+  res.status(200).send({ status: 'ok' })
+
   // TODO: Temp hack for now that we only test for mobile messages.
   // Thats how the old listener decided if there was a message. Will do
   // now until we get real pipeline built.
@@ -223,15 +232,6 @@ app.post('/events', async (req, res) => {
     logger.log(listing)
   }
 
-  // Return 200 to the event-listener without waiting for processing of the event.
-  res.status(200).send({ status: 'ok' })
-
-  // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
-
-  // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
-
   // Email notifications
   emailSend(
     eventName,
@@ -242,6 +242,12 @@ app.post('/events', async (req, res) => {
     listing,
     config
   )
+
+  // Mobile Push (linker) notifications
+  // mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+
+  // Browser push subscripttions
+  // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
