@@ -194,7 +194,9 @@ services:
       - APNS_PRODUCTION=false
       - APNS_TEAM_ID=
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - FIREBASE_SERVICE_JSON=/app/infra/notifications/firebase-service.json
+        # Service account for Firebase
+      - FIREBASE_SERVICE_JSON=
+      - FIREBASE_DB_URL=
     ports:
       - "3456:3456"
     command:
