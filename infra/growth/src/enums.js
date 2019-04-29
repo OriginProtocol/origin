@@ -41,6 +41,7 @@ const GrowthActionType = new Enum(
   'Twitter',
   'Airbnb',
   'Facebook',
+  'Google',
   'Referral',
   'ListingCreated',
   'ListingPurchased'

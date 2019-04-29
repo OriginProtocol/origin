@@ -64,6 +64,9 @@ function Action(props) {
   } else if (type === 'Facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
+  } else if (type === 'Google') {
+    foregroundImgSrc = '/images/identity/goole-icon-light.svg'
+    title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
@@ -74,12 +77,13 @@ function Action(props) {
     buttonLink = '/'
   } else if (type === 'ListingIdPurchased') {
     foregroundImgSrc = iconSrc
-    title = fbt.enum(titleKey, GrowthEnum)
+    //title = fbt.enum(titleKey, GrowthEnum)
+    title = fbt('Purchase a specific listing', 'some.key')
     //details = fbt.enum(detailsKey, GrowthEnum)
     buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
-    title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
+    title = 'Buy a listing'
     buttonLink = '/create'
   } else if (type === 'Referral') {
     foregroundImgSrc = '/images/growth/invite-icon.svg'

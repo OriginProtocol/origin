@@ -168,7 +168,7 @@ describe('Apollo adapter - May campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
       },
-      ListingPurchaseDonation: {
+      ListingPurchaseCharity: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -280,7 +280,7 @@ describe('Apollo adapter - May campaign', () => {
     this.expectedState.Referral.status = 'Active'
     this.expectedState.ListingPurchaseTShirt.status = 'Active'
     this.expectedState.ListingPurchaseGC.status = 'Active'
-    this.expectedState.ListingPurchaseDonation.status = 'Active'
+    this.expectedState.ListingPurchaseCharity.status = 'Active'
     this.expectedState.ListingPurchaseHousing.status = 'Active'
     this.expectedState.ListingPurchaseInfluencer.status = 'Active'
     this.expectedState.ListingPurchaseArt.status = 'Active'

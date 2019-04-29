@@ -1,10 +1,10 @@
 // Script to create campaigns in production.
 const db = require('../models')
 const enums = require('../enums')
-const tokenNaturalUnits = require('../src/util/token')
+const tokenNaturalUnits = require('../../src/util/token')
 
-const aprilConfig = require('../campaigns/april.js')
-const mayConfig = require('../campaigns/may.js')
+const aprilConfig = require('../../campaigns/april.js')
+const mayConfig = require('../../campaigns/may.js')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -58,7 +58,7 @@ if (args['--month'] === 'april') {
     console.log('Done')
     process.exit()
   })
-} else if (args['--month' === 'may']) {
+} else if (args['--month'] === 'may') {
   createMayProdCampaign().then(() => {
     console.log('Done')
     process.exit()

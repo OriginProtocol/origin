@@ -21,7 +21,7 @@ const ruleIdToActionType = {
   // Specific listing purchased.
   ListingPurchaseTShirt: 'ListingIdPurchased',
   ListingPurchaseGC: 'ListingIdPurchased',
-  ListingPurchaseDonation: 'ListingIdPurchased',
+  ListingPurchaseCharity: 'ListingIdPurchased',
   ListingPurchaseHousing: 'ListingIdPurchased',
   ListingPurchaseInfluencer: 'ListingIdPurchased',
   ListingPurchaseArt: 'ListingIdPurchased'

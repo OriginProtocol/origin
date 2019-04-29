@@ -215,12 +215,12 @@ const mayConfig = {
           }
         },
         {
-          id: 'ListingPurchaseDonation',
+          id: 'ListingPurchaseCharity',
           class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-3',
             reward: {
-              amount: tokenNaturalUnits(500),
+              amount: tokenNaturalUnits(300),
               currency: 'OGN'
             },
             visible: true,
@@ -238,7 +238,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-4',
             reward: {
-              amount: tokenNaturalUnits(100),
+              amount: tokenNaturalUnits(750),
               currency: 'OGN'
             },
             visible: true,
@@ -246,8 +246,8 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-housing-icon.svg',
-            titleKey: 'growth.purchase.housing.title',
-            detailsKey: 'growth.purchase.housing.details'
+            titleKey: 'growth.purchase.homerental.title',
+            detailsKey: 'growth.purchase.homerental.details'
           }
         },
         {
