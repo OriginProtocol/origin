@@ -199,12 +199,11 @@ app.post('/mobile/register', async (req, res) => {
   }
 })
 
-app.delete('/mobile/register', async(req, res) => {
+app.delete('/mobile/register', async (req, res) => {
   logger.info('Call to delete mobile registry endpoint')
 
   // See if a row already exists for this device/address
   const registryRow = await MobileRegistry.findOne({
-
     where: {
       ethAddress: req.body.eth_address,
       deviceToken: req.body.device_token

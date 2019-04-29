@@ -75,7 +75,7 @@ describe('register device token endpoint', () => {
       .delete('/mobile/register')
       .send({
         eth_address: '1234',
-        device_token: '5678',
+        device_token: '5678'
       })
       .expect(200)
 
