@@ -160,8 +160,11 @@ async function main() {
 
     // Flatten array of arrays filtering out anything undefined
     const events = [].concat(...eventArrays.filter(x => x))
-    // Filter to only new events
-    let newEvents = events.filter(event => event.blockNumber > processedToBlock)
+    // Filter to events from processedToBlock + 1 to toBlock.
+    let newEvents = events.filter(
+      event =>
+        event.blockNumber > processedToBlock && event.blockNumber <= toBlock
+    )
     logger.debug(`Got ${newEvents.length} new events`)
 
     if (context.config.concurrency > 1) {
