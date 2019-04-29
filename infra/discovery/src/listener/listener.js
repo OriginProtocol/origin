@@ -146,7 +146,7 @@ async function main() {
       logger.debug('No new blocks to process')
       continue
     }
-    logger.info(`Querying events from ${processedToBlock} up to ${toBlock}`)
+    logger.info(`Querying events from interval (${processedToBlock}, ${toBlock}]`)
 
     // Retrieve all events for the relevant contracts
     const eventArrays = await Promise.all([
