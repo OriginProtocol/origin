@@ -167,31 +167,38 @@ class PushNotifications extends Component {
     }
 
     // Popup notification in an alert
-    Alert.alert(notificationObj.title, notificationObj.body, [
-      { text: 'Close' },
-      {
-        text: 'View',
-        onPress: () => {
-          // Check that we are on the right network
-          const url = new URL(notificationObj.url)
-          // Find network, default to Docker if network could not be found
-          const network =
-            NETWORKS.find(n => {
-              return n.dappUrl === url.origin
-            }) ||
-            NETWORKS.find(n => {
-              return n.name === 'Docker'
+    if (notificationObj.title && notificationObj.body) {
+      Alert.alert(notificationObj.title, notificationObj.body, [
+        { text: 'Close' },
+        {
+          text: 'View',
+          onPress: () => {
+            // Check that we are on the right network
+            const url = new URL(notificationObj.url)
+            // Find network, default to Docker if network could not be found
+            const network =
+              NETWORKS.find(n => {
+                return n.dappUrl === url.origin
+              }) ||
+              NETWORKS.find(n => {
+                return n.name === 'Docker'
+              })
+            if (this.props.settings.network.name !== network.name) {
+              console.debug('Change network for notification to: ', network)
+              this.props.setNetwork(network)
+            }
+            NavigationService.navigate('Marketplace', {
+              marketplaceUrl: notificationObj.url
             })
-          if (this.props.settings.network.name !== network.name) {
-            console.debug('Change network for notification to: ', network)
-            this.props.setNetwork(network)
           }
-          NavigationService.navigate('Marketplace', {
-            marketplaceUrl: notificationObj.url
-          })
         }
-      }
-    ])
+      ])
+    } else if (notificationObj.url) {
+      // FCM notification received may only have the URL
+      NavigationService.navigate('Marketplace', {
+        marketplaceUrl: notificationObj.url
+      })
+    }
     // Save notification to redux in case we want to display them later
     this.props.addNotification(notificationObj)
   }
