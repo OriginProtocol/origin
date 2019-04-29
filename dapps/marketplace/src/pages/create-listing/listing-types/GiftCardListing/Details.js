@@ -10,6 +10,9 @@ import Link from 'components/Link'
 import CurrencySelect from 'components/CurrencySelect'
 import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
 
+import { Currencies, CurrenciesByCountryCode } from 'constants/Currencies'
+
+
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import PricingChooser from '../_PricingChooser'
@@ -35,25 +38,7 @@ class Details extends Component {
     const Feedback = formFeedback(this.state)
     const isMulti = Number(this.state.quantity || 0) > 1
 
-    // TODO l10n: We need a global list of translated country names
-    const issuingCountrySelect = [
-      'US',
-      'AU',
-      'BR',
-      'CA',
-      'CN',
-      'FR',
-      'DE',
-      'HK',
-      'IN',
-      'IE',
-      'IT',
-      'JP',
-      'MX',
-      'NL',
-      'ES',
-      'GB',
-    ]
+    const issuingCountrySelect = Object.keys(CurrenciesByCountryCode)
 
     const retailerSelect = [
       'Topshop',
@@ -479,14 +464,6 @@ class Details extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label className="mb-0">
-                    <fbt desc="create.details.cardAmount">Amount on Card</fbt>
-                  </label>
-                  <input {...input('cardAmount')} />
-                  {Feedback('cardAmount')}
-                </div>
-
-                <div className="form-group">
                   <label>
                     <fbt desc="create.details.issuingCountry">Issuing Country</fbt>
                   </label>
@@ -508,6 +485,23 @@ class Details extends Component {
                   </select>
                 </div>
 
+                <div className="form-group">
+                  <label className="mb-0">
+                    <fbt desc="create.details.cardAmount">Amount on Card</fbt>
+                  </label>
+                  <div className="with-symbol" style={{ maxWidth: 270 }}>
+                    <input {...input('cardAmount')} />
+                    <div class="dropdown currency-select-dropdown">
+                      <span class="hover" data-content={CurrenciesByCountryCode[this.state.issuingCountry][2]}>
+                        {CurrenciesByCountryCode[this.state.issuingCountry][1]}
+                      </span>
+                    </div>
+                  </div>
+
+
+
+                  {Feedback('cardAmount')}
+                </div>
 
                 <PricingChooser {...input('acceptedTokens', true)}>
                   <div className="form-group">
