@@ -126,8 +126,8 @@ async function main() {
   let start
 
   /**
-   * Make sure we're using the latest from chain.  This is set to false in the
-   * graphql contracts initialization that's being used here.
+   * Make sure we're using the block number from the latest retrieved event.  This is set to false
+   * in the graphql contracts initialization that's being used here.
    */
   contractsContext.marketplace.eventCache.useEventAsLatestBlock = true
   contractsContext.identityEvents.eventCache.useEventAsLatestBlock = true
