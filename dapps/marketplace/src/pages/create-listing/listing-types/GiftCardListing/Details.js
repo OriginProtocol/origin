@@ -12,7 +12,6 @@ import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
 
 import { Currencies, CurrenciesByCountryCode } from 'constants/Currencies'
 
-
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import PricingChooser from '../_PricingChooser'
@@ -42,14 +41,14 @@ class Details extends Component {
 
     const retailerSelect = [
       'Topshop',
-      'Grinder\'s Above & Beyond',
-      'Kiehl\'s',
+      "Grinder's Above & Beyond",
+      "Kiehl's",
       'Club Monaco',
       'Staples',
       'Sun and Ski Sports',
-      'Einstein Bros & Noah\'s Bagels',
+      "Einstein Bros & Noah's Bagels",
       'Regal Entertainment Group',
-      'O\'Charley\'s',
+      "O'Charley's",
       'Burke Williams Spa',
       'Calvin Klein',
       'Johnston and Murphy',
@@ -81,11 +80,11 @@ class Details extends Component {
       'Stubhub',
       'Mission Inn',
       'Valentinos Restaurants',
-      'Roy\'s Hawaiian Fusion',
+      "Roy's Hawaiian Fusion",
       'Athleta',
       'Lululemon Athletica',
       'Splendid',
-      'Domino\'s Pizza',
+      "Domino's Pizza",
       'JCPenney',
       'Yard House',
       '1-800-Flowers.com',
@@ -120,7 +119,7 @@ class Details extends Component {
       'True Religion Brand Jeans',
       'Raymour and Flanigan',
       'Pappas Restaurants',
-      'Landry\'s',
+      "Landry's",
       'Elephant Bar Restaurant',
       'Subway',
       'Microsoft Xbox',
@@ -132,39 +131,39 @@ class Details extends Component {
       'Pier 1 Imports',
       'Belk',
       'Alamo Drafthouse Cinema',
-      'Kohl\'s',
+      "Kohl's",
       'Saltgrass Steak House',
       'Dean & DeLuca',
       'Cold Stone Creamery',
       'Active',
       'Fuddruckers',
       'Fandango',
-      'Noah\'s Bagels',
+      "Noah's Bagels",
       'Pei Wei Asian Diner',
       'Sur La Table',
       'Restaurants Unlimited',
       'Sephora',
       'BedandBreakfast.com',
-      'Chili\'s',
+      "Chili's",
       'Worldwide Golf Shops',
       'Olive Garden',
       'Bed Bath and Beyond',
       'Bliss Spa',
-      'Barney\'s New York',
+      "Barney's New York",
       'All Saints',
       'Petco',
       'BOSE',
       'Tommy Bahama',
       'California Pizza Kitchen',
       'Seasons 52',
-      'P.F. Chang\'s',
+      "P.F. Chang's",
       'Performance Bicycle',
       'Gap Options',
-      'Fleming\'s Steakhouse',
-      'Logan\'s Roadhouse',
+      "Fleming's Steakhouse",
+      "Logan's Roadhouse",
       'Scrubs & Beyond',
       'AirBnB',
-      'Menchie\'s Frozen Yogurt',
+      "Menchie's Frozen Yogurt",
       'Aeropostale',
       'Alex and Ani',
       'Rooms To Go',
@@ -173,62 +172,62 @@ class Details extends Component {
       'Busken Bakery',
       'Soma',
       'MLB.com',
-      'Chico\'s',
+      "Chico's",
       'SpaFinder',
-      'Carrabba\'s Italian Grill',
+      "Carrabba's Italian Grill",
       'ULTA',
       'World of Beer',
       'Don Pablos',
       'Google Play',
       'The Company Store',
-      'TGI Friday\'s',
+      "TGI Friday's",
       'Oceanaire Restaurants',
-      'Damon\'s Grill',
+      "Damon's Grill",
       'Pinstripes',
       'Texas de Brazil',
-      'Macy\'s',
+      "Macy's",
       'Big Lots',
       'Omaha Steaks',
-      'Cavender\'s',
-      'Atria\'s Restaurant',
+      "Cavender's",
+      "Atria's Restaurant",
       'Columbia Sportswear',
       'Caribou Coffee',
       'Old Chicago',
-      'Boscov\'s',
+      "Boscov's",
       'Jos. A. Bank',
       'Old Country Buffet',
       'Academy Sports & Outdoors',
       'West Elm',
       'REI',
       'Justice',
-      'Maggiano\'s Little Italy',
+      "Maggiano's Little Italy",
       'Coach',
       'MAC Cosmetics',
       'Marriott',
       'Blick Art Materials',
-      'Willie G\'s',
-      'Delia\'s',
+      "Willie G's",
+      "Delia's",
       'NBA Store',
       'PGA Tour Superstore',
       'Charming Charlie',
       'Orchard Supply Hardware',
       'Bonanza Steakhouse',
-      'Land\'s End',
+      "Land's End",
       'Marcus Theatres',
       'Grotto/La Griglia',
-      'Cabela\'s',
+      "Cabela's",
       'Think Geek',
       'Burger King',
       'Bath & Body Works',
-      'Eddie V\'s Prime Seafood',
+      "Eddie V's Prime Seafood",
       'Dell',
       'First Watch Cafe',
-      'Carter\'s',
+      "Carter's",
       'Callaway Golf',
       'Honey Baked Ham',
-      'Modell\'s Sporting Goods',
+      "Modell's Sporting Goods",
       'Pandora',
-      'Children\'s Place',
+      "Children's Place",
       'Claim Jumper Restaurants',
       'Chipotle',
       'Harry and David Gifts',
@@ -237,8 +236,8 @@ class Details extends Component {
       'Piada Italian Street Food',
       'Williams-Sonoma',
       'Ralph Lauren',
-      'See\'s Candies',
-      'Dillard\'s',
+      "See's Candies",
+      "Dillard's",
       'Cheesecake Factory',
       'Capital Grille',
       'Yogurtland',
@@ -250,27 +249,27 @@ class Details extends Component {
       'Brooks Brothers',
       'Red Door Spa',
       'The Walking Company',
-      'BJ\'s Restaurant and Brewhouse',
+      "BJ's Restaurant and Brewhouse",
       'Quaker Steak & Lube Restaurant',
       'Michaels',
       'Abercrombie Kids',
       'Cole Haan',
       'Vineyard Vines',
       'RVCA',
-      'Lucille\'s BBQ',
+      "Lucille's BBQ",
       'Spaghetti Works',
       'Elie Tahari',
       'Macaroni Grill',
       'Brookstone',
       'Lucky Brand Jeans',
-      'Kirkland\'s',
+      "Kirkland's",
       'Nine West',
       'Spaghetti Warehouse',
       'DSW',
       'Bass Pro Shops',
-      'Sam\'s Club',
+      "Sam's Club",
       'Torrid',
-      'Olga\'s Kitchen',
+      "Olga's Kitchen",
       'Express',
       'Bow Tie Cinemas',
       'Buckhead Mountain Grill Restaurant',
@@ -278,19 +277,19 @@ class Details extends Component {
       'Pottery Barn',
       'Pizzeria Uno',
       'Pottery Barn Kids',
-      'Altar\'d State',
+      "Altar'd State",
       'Vera Bradley',
       'Design Within Reach',
       'AMC Theatres',
-      'Francesca\'s',
-      'Kincaid\'s Restaurants',
+      "Francesca's",
+      "Kincaid's Restaurants",
       'Best Buy',
       'Aerosoles',
       'Advance Auto Parts',
       'Supercuts',
       'Vanity',
       'Picture People',
-      'Tully\'s Coffee',
+      "Tully's Coffee",
       'Mandee',
       'Kings Isle Pirate',
       'Burberry',
@@ -305,14 +304,14 @@ class Details extends Component {
       'Aquarium Restaurants',
       'Rock Bottom Restaurant Brewery',
       'White House Black Market',
-      'Men\'s Wearhouse',
+      "Men's Wearhouse",
       'Tommy Hilfiger (Online only)',
       'Netflix',
       'Outback Steakhouse',
       'CB2',
-      'Miguel\'s Jr.',
+      "Miguel's Jr.",
       'LongHorn Steakhouse',
-      'Tilly\'s',
+      "Tilly's",
       'Walmart',
       'Taco Bell',
       'Pac Sun',
@@ -321,19 +320,19 @@ class Details extends Component {
       'Sperry',
       'Yogurt Mountain',
       'Destination XL',
-      'Max & Erma\'s Restaurant',
+      "Max & Erma's Restaurant",
       'Uber',
       'Steve Madden Shoes',
       'Legal Sea Foods',
       'Cato',
       'CraftWorks Restaurants & Breweries',
       'The North Face',
-      'Applebee\'s',
+      "Applebee's",
       'Filson',
       'Forever 21',
       'Nike',
       'Lane Bryant',
-      'Beau Jo\'s',
+      "Beau Jo's",
       'Pinkberry',
       'Barnes & Noble',
       'Blair',
@@ -347,7 +346,7 @@ class Details extends Component {
       'Buca di Beppo',
       'Cameron Mitchell Restaurants',
       'Texas Corral',
-      'Victoria\'s Secret',
+      "Victoria's Secret",
       'Scene 75 Entertainment Center',
       'Carson Pirie Scott',
       'Pet Supermarket',
@@ -362,11 +361,11 @@ class Details extends Component {
       'On the Border',
       'BevMo',
       'Guitar Center',
-      'Levi\'s',
+      "Levi's",
       'iPic Theaters',
-      'Bob\'s Discount Furniture',
+      "Bob's Discount Furniture",
       'NFLShop',
-      'Morton\'s the Steakhouse',
+      "Morton's the Steakhouse",
       'Aerie',
       'Toms',
       'Rainforest Cafe',
@@ -377,11 +376,11 @@ class Details extends Component {
       'PotBelly Sandwich Shop',
       'Darden Restaurants',
       'Safeway',
-      'Bloomin\' Brands',
-      'Clark\'s Shoes',
-      'Wilson\'s Leather',
+      "Bloomin' Brands",
+      "Clark's Shoes",
+      "Wilson's Leather",
       'Janie and Jack',
-      'Motherhood Maternity',
+      'Motherhood Maternity'
     ]
 
     return (
@@ -412,7 +411,7 @@ class Details extends Component {
                   </div>
                 )}
 
-{/* TODO: auto-gen title
+                {/* TODO: auto-gen title
 
                 <div className="form-group">
                   <label>
@@ -421,7 +420,7 @@ class Details extends Component {
                   <input {...input('title')} ref={r => (this.titleInput = r)} />
                   {Feedback('title')}
                 </div>
-*/ }
+*/}
 
                 <div className="form-group">
                   <label className="mb-0">
@@ -447,16 +446,13 @@ class Details extends Component {
                   </label>
                   <select
                     className="form-control form-control-lg"
-                    value={ this.state.retailer }
+                    value={this.state.retailer}
                     onChange={e => {
                       this.setState({ retailer: e.target.value })
                     }}
                   >
-                    {retailerSelect.map((name) => (
-                      <option
-                        key={name}
-                        value={name}
-                      >
+                    {retailerSelect.map(name => (
+                      <option key={name} value={name}>
                         {name}
                       </option>
                     ))}
@@ -465,20 +461,19 @@ class Details extends Component {
 
                 <div className="form-group">
                   <label>
-                    <fbt desc="create.details.issuingCountry">Issuing Country</fbt>
+                    <fbt desc="create.details.issuingCountry">
+                      Issuing Country
+                    </fbt>
                   </label>
                   <select
                     className="form-control form-control-lg"
-                    value={ this.state.issuingCountry }
+                    value={this.state.issuingCountry}
                     onChange={e => {
                       this.setState({ issuingCountry: e.target.value })
                     }}
                   >
-                    {issuingCountrySelect.map((countryCode) => (
-                      <option
-                        key={countryCode}
-                        value={countryCode}
-                      >
+                    {issuingCountrySelect.map(countryCode => (
+                      <option key={countryCode} value={countryCode}>
                         {countryCodeMapping['en'][countryCode]}
                       </option>
                     ))}
@@ -492,13 +487,16 @@ class Details extends Component {
                   <div className="with-symbol" style={{ maxWidth: 270 }}>
                     <input {...input('cardAmount')} />
                     <div class="dropdown currency-select-dropdown">
-                      <span class="hover" data-content={CurrenciesByCountryCode[this.state.issuingCountry][2]}>
+                      <span
+                        class="hover"
+                        data-content={
+                          CurrenciesByCountryCode[this.state.issuingCountry][2]
+                        }
+                      >
                         {CurrenciesByCountryCode[this.state.issuingCountry][1]}
                       </span>
                     </div>
                   </div>
-
-
 
                   {Feedback('cardAmount')}
                 </div>
@@ -589,7 +587,7 @@ class Details extends Component {
   validate() {
     const newState = {}
 
-// not working
+    // not working
     // this.setState({ title: `CURRENCY ${this.state.cardAmount} ${this.state.retailer} Gift Card` })
 
     // if (!this.state.title) {

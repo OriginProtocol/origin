@@ -15,7 +15,6 @@ import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
 
 class Review extends Component {
-
   state = {}
   render() {
     console.log(countryCodeMapping)
@@ -71,13 +70,19 @@ class Review extends Component {
 
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.review.giftcard.cardAmount">Issuing Country</fbt>
+                <fbt desc="create.review.giftcard.cardAmount">
+                  Issuing Country
+                </fbt>
               </div>
-              <div className="col-9">{countryCodeMapping['en'][listing.issuingCountry]}</div>
+              <div className="col-9">
+                {countryCodeMapping['en'][listing.issuingCountry]}
+              </div>
             </div>
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.review.giftcard.cardAmount">Amount on Card</fbt>
+                <fbt desc="create.review.giftcard.cardAmount">
+                  Amount on Card
+                </fbt>
               </div>
               <div className="col-9">{listing.cardAmount}</div>
             </div>
@@ -87,9 +92,6 @@ class Review extends Component {
               </div>
               <div className="col-9">{listing.retailer}</div>
             </div>
-
-
-
 
             {quantity <= 1 ? null : (
               <div className="row">
