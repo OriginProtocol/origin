@@ -93,7 +93,7 @@ async function mobilePush(
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
       const mobileRegister = await MobileRegistry.findOne({
-        where: { ethAddress, deleted: false, 'permissions.alert': 1 }
+        where: { ethAddress, deleted: false, 'permissions.alert': true }
       })
       if (mobileRegister) {
         logger.info(`Sending notification to ${ethAddress}`)
@@ -145,8 +145,7 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
           }
         },
         notification: {
-          title: 'Origin Marketplace Notification',
-          body: notificationObj.message
+          ...notificationObj.message
         },
         data: notificationObj.payload,
         token: deviceToken
