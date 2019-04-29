@@ -14,7 +14,6 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import { DEFAULT_NOTIFICATION_PERMISSIONS, PROMPT_MESSAGE } from '../constants'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -205,7 +204,7 @@ class MarketplaceScreen extends Component {
                 <ActivityIndicator size="large" color="black" />
               </View>
             )
-          A}}
+          }}
         />
         {modals.map((modal, index) => {
           let card

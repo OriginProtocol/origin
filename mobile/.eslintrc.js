@@ -1,5 +1,9 @@
 const baseConfig = require('../.eslintrc.react.js')
 
 module.exports = {
-  ...baseConfig
+  ...baseConfig,
+  globals: {
+    ...baseConfig.globals,
+    __DEV__: 'readonly'
+  }
 }

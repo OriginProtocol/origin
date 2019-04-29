@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { DeviceEventEmitter, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import AccountModal from 'components/account-modal'
@@ -81,8 +74,6 @@ class ForkScreen extends Component {
 }
 
 export default ForkScreen
-
-const { width, height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   button: {
