@@ -1,7 +1,7 @@
 ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff)
-[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/origin-js/LICENSE)
+[![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/LICENSE)
 [![origin_travis_banner](https://img.shields.io/travis/OriginProtocol/origin/master.svg?style=flat-square&colorA=111d28)](https://travis-ci.org/OriginProtocol/origin/branches)
 
 Origin is empowering developers to build decentralized marketplaces on the blockchain!
@@ -28,9 +28,7 @@ These packages are used to build DApps on Origin.
 | [`@origin/eventsource`](/packages/eventsource) | Derives current state of listings and offers from contract events |
 | [`@origin/graphql`](/packages/graphql) | GraphQL interface to Origin Protocol |
 | [`@origin/ipfs`](/packages/ipfs) | Convenience methods for getting and setting data in IPFS |
-| [`@origin/linker-client`](/packages/linker-client) | Client for mobile linking |
 | [`@origin/messaging-client`](/packages/messaging-client) | Client for Origin messaging|
-| [`@origin/origin-js`](/packages/origin-js) | (DEPRECATED) Library for interacting with smart contracts |
 | [`@origin/services`](/packages/services) | Utility package for running Ganache and IPFS |
 | [`@origin/token`](/packages/token) | Package for manipulating Origin Tokens (OGN)|
 | [`@origin/validator`](/packages/validator) | JSON Schema validation |
@@ -60,7 +58,6 @@ Servers and packages that provide extra functionality to DApps (e.g. search or a
 | [`@origin/growth`](/infra/growth) | Growth engine |
 | [`@origin/identity`](/infra/identity) | Database models for storing identity |
 | [`@origin/ipfs-proxy`](/infra/ipfs-proxy) | Layer between IPFS and clients to prevent malicious use |
-| [`@origin/linking`](/infra/linking) | Linking server for mobile integration|
 | [`@origin/messaging`](/infra/messaging) | Messaging server |
 | [`@origin/notifications`](/infra/notifications) | Delivers in browser notifications |
 | [`@origin/tests`](/infra/tests) | Runs integration tests in Docker Compose |
