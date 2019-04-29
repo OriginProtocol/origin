@@ -11,8 +11,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
+import SafeAreaView from 'react-native-safe-area-view'
+import Web3 from 'web3'
+const web3 = new Web3()
 
 import OriginButton from 'components/origin-button'
 
@@ -43,12 +45,20 @@ class AccountModal extends Component {
   }
 
   async handleSubmit() {
+    let account
     try {
-      DeviceEventEmitter.emit('addAccount', this.state.keyValue)
-      this.setState({ keyValue: '' })
-      this.props.onRequestClose()
+      let privateKey = this.state.keyValue
+      if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+        privateKey = '0x' + privateKey
+      }
+      account = web3.eth.accounts.privateKeyToAccount(privateKey)
     } catch (error) {
       this.setState({ keyError: error.message })
+    }
+    if (account) {
+      DeviceEventEmitter.emit('addAccount', account)
+      this.setState({ keyValue: '' })
+      this.props.onRequestClose()
     }
   }
 

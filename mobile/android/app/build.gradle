@@ -77,7 +77,9 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+if (!getGradle().getStartParameter().getTaskRequests().toString().contains("Debug")) {
+    apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+}
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -118,11 +120,14 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty('ORIGIN_RELEASE_STORE_PASSWORD')) {
-                storeFile file(ORIGIN_RELEASE_STORE_FILE)
-                storePassword ORIGIN_RELEASE_STORE_PASSWORD
-                keyAlias ORIGIN_RELEASE_KEY_ALIAS
-                keyPassword ORIGIN_RELEASE_KEY_PASSWORD
+            def Properties keyProps = new Properties()
+            File keystoreFile = file('../keystores/keystore.properties')
+            if (keystoreFile.exists()) {
+                keyProps.load(new FileInputStream(keystoreFile))
+                storeFile file(keyProps["RELEASE_STORE_FILE"])
+                keyAlias keyProps["RELEASE_KEY_ALIAS"]
+                storePassword keyProps["RELEASE_STORE_PASSWORD"]
+                keyPassword keyProps["RELEASE_KEY_PASSWORD"]
             }
         }
     }

@@ -8,6 +8,7 @@ COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
 COPY ./packages/messaging-client ./packages/messaging-client
@@ -19,7 +20,6 @@ COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 

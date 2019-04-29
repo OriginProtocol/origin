@@ -91,7 +91,22 @@ class UserProfile extends Component {
       ...getState(profile),
       ...storedAttestations
     }
+    const activeAttestation = get(props, 'match.params.attestation')
+    if (activeAttestation) {
+      this.state[activeAttestation] = true
+    }
     this.accountsSwitched = false
+  }
+
+  componentDidMount() {
+    document.body.style.backgroundColor = 'var(--pale-grey-four)'
+  }
+
+  componentWillUnmount() {
+    /* unfortunately this needs to be hardcoded and can not be read from document.body.style.backgroundColor
+     * since it initially returns an empty string
+     */
+    document.body.style.backgroundColor = 'white'
   }
 
   changesPublishedToBlockchain(props, prevProps) {

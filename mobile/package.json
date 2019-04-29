@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.1.12",
+  "version": "0.4.13",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-transform-new-target": "^7.0.0",
@@ -42,8 +42,9 @@
     "react-native": "^0.59.4",
     "react-native-camera": "^2.3.0",
     "react-native-permissions": "^1.1.1",
-    "react-native-push-notification": "^3.1.2",
+    "react-native-push-notification": "^3.0.2",
     "react-native-randombytes": "^3.5.2",
+    "react-native-safe-area-view": "^0.13.1",
     "react-native-sentry": "^0.42.0",
     "react-native-webview": "^5.7.0",
     "react-navigation": "^2.2.5",
@@ -64,6 +65,7 @@
   "localDependencies": {
     "@origin/contracts": "../packages/contracts",
     "@origin/eventsource": "../packages/eventsource",
+    "@origin/event-cache": "../packages/event-cache",
     "@origin/graphql": "../packages/graphql",
     "@origin/ipfs": "../packages/ipfs",
     "@origin/messaging-client": "../packages/messaging-client",

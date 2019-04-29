@@ -1,13 +1,6 @@
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { DeviceEventEmitter, Image, StyleSheet, Text, View } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
@@ -46,7 +39,7 @@ class ForkScreen extends Component {
           />
           <Text style={styles.title}>Create Or Import A Wallet</Text>
           <Text style={styles.subtitle}>
-            Create a new wallet and transder funds into it or import an existing
+            Create a new wallet and transfer funds into it or import an existing
             wallet that you already use.
           </Text>
         </View>
@@ -81,8 +74,6 @@ class ForkScreen extends Component {
 }
 
 export default ForkScreen
-
-const { width, height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   button: {

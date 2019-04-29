@@ -139,7 +139,7 @@ const resolvers = {
           args.accountId,
           args.agreementMessage,
           args.signature,
-          args.fingerprint,
+          args.fingerprintData,
           ip,
           countryCode
         )
@@ -157,7 +157,7 @@ const resolvers = {
          * as the above approach happens before a user is authenticated and this leaves us exposed
          * to situations where bad actors could make false referral connections to their own campaigns.
          */
-        if (args.inviteCode !== undefined) {
+        if (args.inviteCode) {
           await GrowthInvite.makeReferralConnection(
             args.inviteCode,
             args.accountId

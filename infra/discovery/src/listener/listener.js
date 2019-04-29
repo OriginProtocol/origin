@@ -104,6 +104,9 @@ const config = {
     args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
 }
 
+logger.info('Starting with configuration:')
+logger.info(config)
+
 /**
  * Creates runtime context and starts the tracking loop
  * @return {Promise<void>}
@@ -143,11 +146,9 @@ async function main() {
       logger.debug('No new blocks to process')
       continue
     }
-    logger.info(`Querying events from ${processedToBlock} up to ${toBlock}`)
-
-    // Update the event caches to set their max block number.
-    contractsContext.marketplace.eventCache.updateBlock(toBlock)
-    contractsContext.identityEvents.eventCache.updateBlock(toBlock)
+    logger.info(
+      `Querying events within interval (${processedToBlock}, ${toBlock}]`
+    )
 
     // Retrieve all events for the relevant contracts
     const eventArrays = await Promise.all([
@@ -161,8 +162,12 @@ async function main() {
 
     // Flatten array of arrays filtering out anything undefined
     const events = [].concat(...eventArrays.filter(x => x))
-    // Filter to only new events
-    let newEvents = events.filter(event => event.blockNumber > processedToBlock)
+
+    // Filter out events outside of interval (processedToBlock, toBlock].
+    let newEvents = events.filter(
+      event =>
+        event.blockNumber > processedToBlock && event.blockNumber <= toBlock
+    )
     logger.debug(`Got ${newEvents.length} new events`)
 
     if (context.config.concurrency > 1) {
@@ -189,17 +194,24 @@ async function main() {
         // In case all retries fails, it indicates something is wrong at the system
         // level and a process restart may fix it.
         await withRetrys(async () => {
-          handleEvent(event, context)
+          return handleEvent(event, context)
         })
       }
     }
 
     // Record state of processing
     logger.debug(`Updating last processed block to ${toBlock}`)
-    await setLastBlock(context.config, toBlock)
-    processedToBlock = toBlock
+    /**
+     * Don't assume it's the latest block known above, but use the one from
+     * event-cache
+     */
+    processedToBlock = Math.min(
+      contractsContext.marketplace.eventCache.lastQueriedBlock,
+      contractsContext.identityEvents.eventCache.lastQueriedBlock
+    )
+    await setLastBlock(context.config, processedToBlock)
     if (context.config.enableMetrics) {
-      blockGauge.set(toBlock)
+      blockGauge.set(processedToBlock)
     }
   } while (await nextTick())
 }

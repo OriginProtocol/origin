@@ -78,10 +78,12 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    // hide the rewards bar if you're on any of the rewards pages
+    // hide the rewards bar if you're on any of the rewards pages or using
+    // the DApp via the webview in the mobile app
     const hideRewardsBar =
       this.props.location.pathname.match(/^\/welcome$/g) ||
-      this.props.location.pathname.match(/^\/campaigns$/g)
+      this.props.location.pathname.match(/^\/campaigns$/g) ||
+      window.__mobileBridge
 
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
@@ -103,7 +105,7 @@ class App extends Component {
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route

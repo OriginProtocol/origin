@@ -58,7 +58,7 @@ class OriginEventSource {
   async getListing(listingId, blockNumber) {
     const cacheBlockNumber = blockNumber
       ? blockNumber
-      : this.contract.eventCache.getBlockNumber()
+      : this.contract.eventCache.latestBlock
     const cacheKey = `${listingId}-${cacheBlockNumber}`
     const networkId = await this.getNetworkId()
     if (this.listingCache[cacheKey]) {
@@ -84,8 +84,9 @@ class OriginEventSource {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(listingId)
-
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId)
+    })
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -135,7 +136,6 @@ class OriginEventSource {
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
       }
-
       // TODO: Dapp1 fractional compat
       if (rawData.availability && !rawData.weekendPrice) {
         try {
@@ -298,7 +298,7 @@ class OriginEventSource {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
         } else if (offer.startDate && offer.endDate) {
-          booked.push(`${offer.startDate}-${offer.endDate}`)
+          booked.push(`${offer.startDate}/${offer.endDate}`)
         }
       })
     } else if (listing.__typename !== 'AnnouncementListing') {
@@ -384,10 +384,12 @@ class OriginEventSource {
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    const events = await this.contract.eventCache.offers(
-      listingId,
-      Number(offerId)
-    )
+
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId),
+      offerID: String(offerId)
+    })
+
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash

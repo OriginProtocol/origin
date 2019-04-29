@@ -1,16 +1,30 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
+import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 
 import VerifyTwitterMutation from 'mutations/VerifyTwitter'
+import query from 'queries/TwitterAuthUrl'
 
 class TwitterAttestation extends Component {
-  state = {
-    stage: 'GenerateCode',
-    email: '',
-    code: ''
+  constructor(props) {
+    super(props)
+    this.state = {
+      stage: 'GenerateCode',
+      mobile: window.innerWidth < 767
+    }
+    this.onResize = this.onResize.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,10 +35,25 @@ class TwitterAttestation extends Component {
     }
   }
 
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.mobile) {
+      this.setState({ mobile: true })
+    } else if (window.innerWidth >= 767 && this.state.mobile) {
+      this.setState({ mobile: false })
+    }
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
+
+    const isMobile = this.state.mobile
+
+    const { origin, pathname } = window.location
+    const redirect = isMobile
+      ? encodeURIComponent(`${origin}${pathname}#/profile/twitter`)
+      : null
 
     return (
       <Modal
@@ -39,15 +68,33 @@ class TwitterAttestation extends Component {
             stage: 'GenerateCode',
             loading: false
           })
+          this.props.history.replace('/profile')
           this.props.onClose()
         }}
       >
-        <div>{this[`render${this.state.stage}`]()}</div>
+        <Query
+          query={query}
+          variables={{ redirect }}
+          fetchPolicy="network-only"
+          skip={get(this.props, 'match.params.attestation') ? true : false}
+        >
+          {({ data }) => {
+            const authUrl = get(data, 'identityEvents.twitterAuthUrl')
+            return (
+              <div>
+                {this[`render${this.state.stage}`]({
+                  authUrl,
+                  redirect: isMobile
+                })}
+              </div>
+            )
+          }}
+        </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode() {
+  renderGenerateCode({ authUrl, redirect }) {
     return (
       <>
         <h2>
@@ -58,11 +105,6 @@ class TwitterAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verfify.warning">
-            <b>Warning:</b> Currently unavailable on mobile devices
-          </fbt>
-        </div>
         <div className="help">
           <fbt desc="TwitterAttestation.description">
             Other users will know that you have a verified Twitter account, but
@@ -71,7 +113,7 @@ class TwitterAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          {this.renderVerifyButton()}
+          {this.renderVerifyButton({ authUrl, redirect })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -82,7 +124,8 @@ class TwitterAttestation extends Component {
     )
   }
 
-  renderVerifyButton() {
+  renderVerifyButton({ authUrl, redirect }) {
+    const sid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     return (
       <Mutation
         mutation={VerifyTwitterMutation}
@@ -94,6 +137,7 @@ class TwitterAttestation extends Component {
               data: result.data,
               loading: false
             })
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -105,15 +149,16 @@ class TwitterAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light d-none d-sm-block"
+            className="btn btn-outline-light"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  email: this.state.email,
-                  code: this.state.code
+                  redirect,
+                  authUrl,
+                  code: sid && sid[1] ? sid[1] : null
                 }
               })
             }}
@@ -162,7 +207,7 @@ class TwitterAttestation extends Component {
   }
 }
 
-export default TwitterAttestation
+export default withRouter(TwitterAttestation)
 
 require('react-styl')(`
 `)
