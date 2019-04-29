@@ -9,13 +9,16 @@ import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
 import Link from 'components/Link'
 import FormattedDescription from 'components/FormattedDescription'
+import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
 
 class Review extends Component {
+
   state = {}
   render() {
+    console.log(countryCodeMapping)
     const { listing, tokenBalance } = this.props
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
@@ -65,6 +68,29 @@ class Review extends Component {
                 />
               </div>
             </div>
+
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.review.giftcard.cardAmount">Issuing Country</fbt>
+              </div>
+              <div className="col-9">{countryCodeMapping['en'][listing.issuingCountry]}</div>
+            </div>
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.review.giftcard.cardAmount">Amount on Card</fbt>
+              </div>
+              <div className="col-9">{listing.cardAmount}</div>
+            </div>
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
+              </div>
+              <div className="col-9">{listing.retailer}</div>
+            </div>
+
+
+
+
             {quantity <= 1 ? null : (
               <div className="row">
                 <div className="col-3 label">

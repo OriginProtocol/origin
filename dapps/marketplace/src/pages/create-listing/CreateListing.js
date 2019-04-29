@@ -55,7 +55,7 @@ class CreateListing extends Component {
         // Gift Card fields:
         retailer: '',
         cardAmount: '',
-        issuingCountry: '',
+        issuingCountry: 'US',
         isDigital: false,
         isCashPurchase: false,
         receiptAvailable: false,
