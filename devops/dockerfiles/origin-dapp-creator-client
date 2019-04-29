@@ -12,11 +12,8 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-# Copy the necessary files for building dapp
 COPY package*.json ./
 COPY lerna.json ./
-
-# graphql and its dependencies
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
@@ -26,9 +23,7 @@ COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/contracts ./packages/contracts
-
 COPY ./infra/dapp-creator-client ./infra/dapp-creator-client
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 

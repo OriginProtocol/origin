@@ -12,16 +12,12 @@ RUN mv envkey-source /usr/local/bin
 
 COPY package*.json ./
 COPY lerna.json ./
-COPY ./packages/origin-js ./packages/origin-js
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/faucet ./infra/faucet
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
-
-COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/faucet && \
