@@ -33,7 +33,7 @@ router.get('/auth-url', (req, res) => {
   }
 
   const url = constants.FACEBOOK_BASE_AUTH_URL + querystring.stringify(params)
-  res.send({ url: url })
+  res.send({ url })
 })
 
 /* Exchange code from login dialog for an access token and generate attestation

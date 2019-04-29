@@ -11,10 +11,8 @@ function withGrowthCampaign(WrappedComponent) {
   const WithGrowthCampaign = props => {
     return (
       <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-        {({ error, data, networkStatus, loading }) => {
-          if (networkStatus === 1 || loading || !data.web3) {
-            return <WrappedComponent {...props} />
-          } else if (error) {
+        {({ data, error }) => {
+          if (error) {
             return <QueryError error={error} query={profileQuery} />
           }
 
@@ -23,43 +21,30 @@ function withGrowthCampaign(WrappedComponent) {
           return (
             <Query
               query={enrollmentStatusQuery}
-              variables={{
-                walletAddress: walletAddress ? walletAddress : '0xdummyAddress'
-              }}
+              variables={{ walletAddress }}
+              skip={!walletAddress}
               // enrollment info can change, do not cache it
               fetchPolicy="network-only"
             >
-              {({ networkStatus, error, loading, data }) => {
-                if (networkStatus === 1 || loading) {
-                  return <WrappedComponent {...props} />
-                } else if (error) {
+              {({ data, error }) => {
+                if (error) {
                   return (
                     <QueryError error={error} query={enrollmentStatusQuery} />
                   )
                 }
 
-                const enrollmentStatus = data.enrollmentStatus
-                if (enrollmentStatus !== 'Enrolled') {
-                  return (
-                    <WrappedComponent
-                      {...props}
-                      growthEnrollmentStatus={enrollmentStatus}
-                    />
-                  )
-                }
-
+                const enrollmentStatus = get(data, 'enrollmentStatus')
                 return (
                   <Query
                     query={allCampaignsQuery}
                     notifyOnNetworkStatusChange={true}
+                    skip={enrollmentStatus !== 'Enrolled'}
                     // do not cache, so user does not need to refresh page when an
                     // action is completed
                     fetchPolicy="network-only"
                   >
-                    {({ networkStatus, error, loading, data }) => {
-                      if (networkStatus === 1 || loading) {
-                        return <WrappedComponent {...props} />
-                      } else if (error) {
+                    {({ data, error }) => {
+                      if (error) {
                         return (
                           <QueryError error={error} query={allCampaignsQuery} />
                         )
@@ -69,7 +54,7 @@ function withGrowthCampaign(WrappedComponent) {
                         <WrappedComponent
                           {...props}
                           growthEnrollmentStatus={enrollmentStatus}
-                          growthCampaigns={data.campaigns.nodes}
+                          growthCampaigns={get(data, 'campaigns.nodes')}
                         />
                       )
                     }}

@@ -201,7 +201,8 @@ export default {
       authUrl += `?redirect=${args.redirect}`
     }
     const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
     })
     const authData = await response.json()
     return authData.url
@@ -216,7 +217,8 @@ export default {
       authUrl += `?redirect=${args.redirect}`
     }
     const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
     })
     const authData = await response.json()
     return authData.url
@@ -231,7 +233,8 @@ export default {
       authUrl += `?redirect=${args.redirect}`
     }
     const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
     })
     const authData = await response.json()
     return authData.url

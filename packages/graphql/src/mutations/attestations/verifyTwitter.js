@@ -9,14 +9,15 @@ async function verifyTwitter(_, { identity, authUrl, redirect, code }) {
     return { success: false, reason: 'No bridge server configured' }
   }
 
-  // if (!authUrl) {
-  const getAuthUrl = `${bridgeServer}/api/attestations/twitter/auth-url?redirect=http%3A%2F%2F172.22.95.23%3A3000%2F%23%2Fprofile%2Ftwitter`
-  const response = await fetch(getAuthUrl, {
-    headers: { 'content-type': 'application/json' }
-  })
-  const authData = await response.json()
-  authUrl = authData.url
-  // }
+  if (!authUrl) {
+    const getAuthUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
+    console.log(redirect)
+    const response = await fetch(getAuthUrl, {
+      headers: { 'content-type': 'application/json' }
+    })
+    const authData = await response.json()
+    authUrl = authData.url
+  }
 
   if (code) {
     return new Promise(async resolve => {

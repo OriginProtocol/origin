@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 
@@ -67,6 +68,7 @@ class TwitterAttestation extends Component {
             stage: 'GenerateCode',
             loading: false
           })
+          this.props.history.replace('/profile')
           this.props.onClose()
         }}
       >
@@ -74,7 +76,7 @@ class TwitterAttestation extends Component {
           query={query}
           variables={{ redirect }}
           fetchPolicy="network-only"
-          skip={true}
+          skip={get(this.props, 'match.params.attestation') ? true : false}
         >
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.twitterAuthUrl')
@@ -135,12 +137,7 @@ class TwitterAttestation extends Component {
               data: result.data,
               loading: false
             })
-
-            // Remove session id from URL
-            window.location.hash = window.location.hash.replace(
-              /[?&]sid=([a-zA-Z0-9_-]+)/i,
-              ''
-            )
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -210,7 +207,7 @@ class TwitterAttestation extends Component {
   }
 }
 
-export default TwitterAttestation
+export default withRouter(TwitterAttestation)
 
 require('react-styl')(`
 `)

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 
@@ -66,6 +67,7 @@ class FacebookAttestation extends Component {
             error: false,
             stage: 'GenerateCode'
           })
+          this.props.history.replace('/profile')
           this.props.onClose()
         }}
       >
@@ -129,12 +131,7 @@ class FacebookAttestation extends Component {
               data: result.data,
               loading: false
             })
-
-            // Remove session id from URL
-            window.location.hash = window.location.hash.replace(
-              /[?&]sid=([a-zA-Z0-9_-]+)/i,
-              ''
-            )
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -204,7 +201,7 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default FacebookAttestation
+export default withRouter(FacebookAttestation)
 
 require('react-styl')(`
 `)

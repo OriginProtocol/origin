@@ -59,7 +59,6 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     session = await req.sessionStore.get(req.body.sid)
     verifier = session.code
   }
-
   if (!session.oAuthToken || !session.oAuthTokenSecret) {
     return res.status(400).send({
       errors: ['Invalid Twitter oAuth session.']

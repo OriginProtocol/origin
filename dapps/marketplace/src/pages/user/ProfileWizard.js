@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withApollo } from 'react-apollo'
-import get from 'lodash/get'
 
 import Enum from 'utils/enum'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
@@ -10,9 +9,6 @@ import { getAttestationReward } from 'utils/growthTools'
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
-
-import enrollmentStatusQuery from 'queries/EnrollmentStatus'
-import profileQuery from 'queries/Profile'
 
 const WizardStep = new Enum(
   'Publish',
@@ -35,49 +31,27 @@ class ProfileWizard extends Component {
     }
 
     this.EnrollButton = withEnrolmentModal('button')
-    setTimeout(() => this.calculateUIStep(), 1)
-  }
-
-  async componentDidMount() {
-    const profileResult = await this.props.client.query({
-      query: profileQuery
-    })
-    const accountId = get(profileResult, 'data.web3.primaryAccount.id')
-    if (!accountId) return
-
-    const enrolmentResult = await this.props.client.query({
-      query: enrollmentStatusQuery,
-      variables: {
-        walletAddress: accountId
-      }
-    })
-
-    const enrolmentStatus = get(enrolmentResult, 'data.enrollmentStatus')
-
-    if (enrolmentStatus === 'Enrolled') {
-      this.setState({
-        userEnroledIntoRewards: true
-      })
-    }
+    this.timeout = setTimeout(() => this.calculateUIStep(), 1)
   }
 
   componentDidUpdate() {
     this.calculateUIStep()
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout)
+  }
+
   calculateUIStep() {
     const {
       publishedProfile,
       currentProfile,
-      changesToPublishExist
+      changesToPublishExist,
+      growthEnrollmentStatus
     } = this.props
 
-    const {
-      skipRewardsEnroll,
-      skipVerifyOtherProfiles,
-      userEnroledIntoRewards
-    } = this.state
-
+    const { skipRewardsEnroll, skipVerifyOtherProfiles } = this.state
+    const userEnroledIntoRewards = growthEnrollmentStatus === 'Enrolled'
     const isMobile = window.innerWidth < 767
 
     const meetsCritria = ({
