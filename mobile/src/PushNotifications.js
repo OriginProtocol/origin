@@ -47,7 +47,7 @@ class PushNotifications extends Component {
     // Add an event listener to log registration errors in development
     if (__DEV__) {
       PushNotificationIOS.addEventListener('registrationError', error =>
-        console.log(error)
+        console.warn(error)
       )
     }
 
@@ -66,7 +66,7 @@ class PushNotifications extends Component {
         }
       }.bind(this),
       // Android only
-      senderID: process.env.GCM_SENDER_ID || '1234567',
+      senderID: '162663374736',
       // iOS only
       permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
       // Should the initial notification be popped automatically
@@ -74,45 +74,46 @@ class PushNotifications extends Component {
       requestPermissions: Platform.OS !== 'ios'
     })
 
-    // Get notifications that triggered an open of the app when the app was
-    // completely closed
-    PushNotificationIOS.getInitialNotification().then(notification => {
-      if (notification) {
-        // backgroundNotification is an instance of PushNotificationIOS, create
-        // a notification object from it
-        const notificationObj = {
-          alert: this.state.backgroundNotification.getAlert(),
-          data: this.state.backgroundNotification.getData()
+    if (Platform.os === 'ios') {
+      // Get notifications that triggered an open of the app when the app was
+      // completely closed
+      PushNotificationIOS.getInitialNotification().then(notification => {
+        if (notification) {
+          // backgroundNotification is an instance of PushNotificationIOS, create
+          // a notification object from it
+          const notificationObj = {
+            alert: this.state.backgroundNotification.getAlert(),
+            data: this.state.backgroundNotification.getData()
+          }
+          // Pop the alert with option to redirect to WebView
+          this.onNotification(notification)
         }
-        // Pop the alert with option to redirect to WebView
-        this.onNotification(notification)
-      }
-    })
+      })
 
-    // Get notifications that were triggered when the app was backgrounded
-    PushNotificationIOS.addEventListener('notification', notification => {
-      console.debug(AppState.currentState)
-      if (AppState.currentState === 'background') {
-        // Save notification to state so it can be dealt with when the user
-        // foregrounds the app
-        console.debug('Setting background notification')
-        this.setState({ backgroundNotification: notification })
-      }
-    })
-
-    AppState.addEventListener('change', newState => {
-      if (newState === 'active' && this.state.backgroundNotification !== null) {
-        // backgroundNotification is an instance of PushNotificationIOS, create
-        // a notification object from it
-        const notification = {
-          alert: this.state.backgroundNotification.getAlert(),
-          data: this.state.backgroundNotification.getData()
+      // Get notifications that were triggered when the app was backgrounded
+      PushNotificationIOS.addEventListener('notification', notification => {
+        if (AppState.currentState === 'background') {
+          // Save notification to state so it can be dealt with when the user
+          // foregrounds the app
+          console.debug('Setting background notification')
+          this.setState({ backgroundNotification: notification })
         }
-        // Pop the alert with option to redirect to WebView
-        this.onNotification(notification)
-        this.setState({ backgroundNotification: null })
-      }
-    })
+      })
+
+      AppState.addEventListener('change', newState => {
+        if (newState === 'active' && this.state.backgroundNotification !== null) {
+          // backgroundNotification is an instance of PushNotificationIOS, create
+          // a notification object from it
+          const notification = {
+            alert: this.state.backgroundNotification.getAlert(),
+            data: this.state.backgroundNotification.getData()
+          }
+          // Pop the alert with option to redirect to WebView
+          this.onNotification(notification)
+          this.setState({ backgroundNotification: null })
+        }
+      })
+    }
 
     // Make sure current active account is registered on mount
     await this.register()
@@ -153,14 +154,26 @@ class PushNotifications extends Component {
    */
   onNotification(notification) {
     console.debug('Handling notification: ', notification)
+
+    let notificationObj = {}
+    if (Platform.OS === 'ios') {
+      notificationObj.title = notification.alert.title
+      notificationObj.body = notification.alert.body
+      notificationObj.url = notification.data.url
+    } else {
+      notificationObj.title = notification.title
+      notificationObj.body = notification.message
+      notificationObj.url = notification.url
+    }
+
     // Popup notification in an alert
-    Alert.alert(notification.alert.title, notification.alert.body, [
+    Alert.alert(notificationObj.title, notificationObj.body, [
       { text: 'Close' },
       {
         text: 'View',
         onPress: () => {
           // Check that we are on the right network
-          const url = new URL(notification.data.url)
+          const url = new URL(notificationObj.url)
           // Find network, default to Docker if network could not be found
           const network =
             NETWORKS.find(n => {
@@ -174,13 +187,13 @@ class PushNotifications extends Component {
             this.props.setNetwork(network)
           }
           NavigationService.navigate('Marketplace', {
-            marketplaceUrl: notification.data.url
+            marketplaceUrl: notificationObj.url
           })
         }
       }
     ])
     // Save notification to redux in case we want to display them later
-    this.props.addNotification(notification)
+    this.props.addNotification(notificationObj)
   }
 
   /* Register the Ethereum address and device token for notifications with the
@@ -203,29 +216,25 @@ class PushNotifications extends Component {
       `Registering ${activeAddress} and device token ${deviceToken}`
     )
 
-    const permissions =
-      Platform.OS === 'ios'
-        ? await PushNotificationIOS.requestPermissions()
-        : DEFAULT_NOTIFICATION_PERMISSIONS
-
-    const notificationType = this.getNotificationType()
-    return fetch(this.getNotificationServerUrl(), {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        eth_address: activeAddress,
-        device_token: deviceToken,
-        device_type: notificationType,
-        permissions: permissions
+    PushNotification.checkPermissions(permissions => {
+      fetch(this.getNotificationServerUrl(), {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          eth_address: activeAddress,
+          device_token: deviceToken,
+          device_type: this.getNotificationType(),
+          permissions: permissions
+        })
+      }).catch(error => {
+        console.warn(
+          'Failed to register notification address with notifications server',
+          error
+        )
       })
-    }).catch(error => {
-      console.warn(
-        'Failed to register notification address with notifications server',
-        error
-      )
     })
   }
 
