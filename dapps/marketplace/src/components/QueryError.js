@@ -11,12 +11,11 @@ const QueryError = props => {
     console.log(JSON.stringify(props.vars, null, 4))
   }
 
-  // Display a different error depending on the __mobileBridge window attribute
-  // If it exists, the DApp is being displayed inside a WebView so the user will
-  // not have access to the console
+  // Display a different error depending if the DApp is running inside a WebView
+  // in which case the user will not have console access
   return (
     <div>
-      {window.__mobileBridge ? (
+      {window.ReactNativeWebView ? (
         <div>
           <fbt desc="QueryError.error">Error:</fbt>
           <div>
