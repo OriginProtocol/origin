@@ -5,6 +5,7 @@
 class AbstractBackend {
   constructor() {
     this.type = null
+    this.latestBlock = 0
 
     if (new.target === AbstractBackend) {
       throw new TypeError('AbstractBackend cannot be used directly')

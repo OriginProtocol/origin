@@ -125,13 +125,6 @@ async function main() {
   const tickIntervalSeconds = 5
   let start
 
-  /**
-   * Make sure we're using the block number from the latest retrieved event.  This is set to false
-   * in the graphql contracts initialization that's being used here.
-   */
-  contractsContext.marketplace.eventCache.useEventAsLatestBlock = true
-  contractsContext.identityEvents.eventCache.useEventAsLatestBlock = true
-
   async function nextTick() {
     const elapsed = new Date() - start
     const delay = Math.max(tickIntervalSeconds * 1000 - elapsed, 1)
