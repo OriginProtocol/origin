@@ -127,8 +127,12 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
         topic: apnBundle
       })
       await apnProvider.send(notification, deviceToken).then(result => {
-        logger.debug('APNS sent: ', result.sent.length)
-        logger.error('APNS failed: ', result.failed)
+        if (result.sent.length) {
+          logger.debug('APN sent: ', result.sent.length)
+        }
+        if (result.failed) {
+          logger.error('APN failed: ', result.failed)
+        }
       })
     } else if (deviceType === 'FCM') {
       if (!firebaseMessaging) {
