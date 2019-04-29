@@ -28,7 +28,7 @@
     "start": "npm run start --prefix dapps/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
-    "postinstall": "npm run bootstrap && node scripts/symlink-packages.js",
+    "postinstall": "npm run bootstrap",
     "test": "node scripts/test.js"
   },
   "husky": {
