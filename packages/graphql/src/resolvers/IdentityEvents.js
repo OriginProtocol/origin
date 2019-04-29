@@ -60,6 +60,8 @@ function getAttestations(account, attestations) {
 }
 
 export function identity({ id, ipfsHash }) {
+  const [account, blockNumber] = id.split('-')
+  id = account
   return new Promise(async resolve => {
     if (!contracts.identityEvents.options.address || !id) {
       return null
@@ -69,6 +71,9 @@ export function identity({ id, ipfsHash }) {
         account: id
       })
       events.forEach(event => {
+        if(blockNumber < event.blockNumber){
+          return
+        }
         if (event.event === 'IdentityUpdated') {
           ipfsHash = event.returnValues.ipfsHash
         } else if (event.event === 'IdentityDeleted') {
