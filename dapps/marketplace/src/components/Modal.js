@@ -25,7 +25,7 @@ export default class Modal extends Component {
     this.doClose = this.doClose.bind(this)
 
     window.addEventListener('keydown', this.onKeyDown)
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       if (this.props.onOpen) {
         this.props.onOpen()
       }
@@ -41,6 +41,7 @@ export default class Modal extends Component {
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
     document.body.removeChild(this.portal)
+    clearTimeout(this.timeout)
   }
 
   render() {

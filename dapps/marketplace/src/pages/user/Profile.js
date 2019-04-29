@@ -91,6 +91,10 @@ class UserProfile extends Component {
       ...getState(profile),
       ...storedAttestations
     }
+    const activeAttestation = get(props, 'match.params.attestation')
+    if (activeAttestation) {
+      this.state[activeAttestation] = true
+    }
     this.accountsSwitched = false
   }
 

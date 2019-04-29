@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query GoogleAuthUrl {
+  query GoogleAuthUrl($redirect: String) {
     identityEvents {
-      googleAuthUrl
+      googleAuthUrl(redirect: $redirect)
     }
   }
 `
