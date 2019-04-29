@@ -10,16 +10,6 @@ Our Origin testnet faucet provides OGN for developers on TestNets. The faucet is
 
 You can start the faucet using either docker or lerna.
 
-### Docker
-
- Use origin-box to start an origin-js container.
-
-      docker-compose up origin-js
-
- Start the server in the origin-js container
-
-     docker exec -w /app/token origin-js node src/app.js --network_ids=999
-
 ### Lerna
 
   Make sure to have Postgres installed and running locally.

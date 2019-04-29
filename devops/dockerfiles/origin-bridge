@@ -12,7 +12,7 @@ RUN mv envkey-source /usr/local/bin
 
 COPY ./infra/bridge /app
 
-RUN npm install --loglevel notice
+RUN npm install
 
 CMD eval $(envkey-source) && \
 	npm run migrate && \

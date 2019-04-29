@@ -30,7 +30,6 @@ COPY ./packages/services/ ./packages/services
 COPY ./packages/validator ./packages/validator
 
 COPY ./dapps/marketplace ./dapps/marketplace
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 
