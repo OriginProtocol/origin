@@ -160,7 +160,8 @@ async function main() {
 
     // Flatten array of arrays filtering out anything undefined
     const events = [].concat(...eventArrays.filter(x => x))
-    // Filter to events from processedToBlock + 1 to toBlock.
+
+    // Filter out events outside of interval (processedToBlock, toBlock].
     let newEvents = events.filter(
       event =>
         event.blockNumber > processedToBlock && event.blockNumber <= toBlock
