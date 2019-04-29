@@ -201,10 +201,17 @@ async function main() {
 
     // Record state of processing
     logger.debug(`Updating last processed block to ${toBlock}`)
-    await setLastBlock(context.config, toBlock)
-    processedToBlock = toBlock
+    /**
+     * Don't assume it's the latest block known above, but use the one from
+     * event-cache
+     */
+    processedToBlock = Math.min(
+      contractsContext.marketplace.eventCache.lastQueriedBlock,
+      contractsContext.identityEvents.eventCache.lastQueriedBlock
+    )
+    await setLastBlock(context.config, processedToBlock)
     if (context.config.enableMetrics) {
-      blockGauge.set(toBlock)
+      blockGauge.set(processedToBlock)
     }
   } while (await nextTick())
 }
