@@ -11,7 +11,6 @@ async function verifyTwitter(_, { identity, authUrl, redirect, code }) {
 
   if (!authUrl) {
     const getAuthUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
-    console.log(redirect)
     const response = await fetch(getAuthUrl, {
       headers: { 'content-type': 'application/json' }
     })
