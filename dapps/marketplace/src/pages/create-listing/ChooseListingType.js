@@ -175,7 +175,13 @@ class ChooseListingType extends Component {
 
     // Derive ListingType from category+subcategory
     let __typename = 'UnitListing'
-    if (category === 'schema.announcements') {
+    if (
+      category === 'schema.forSale' &&
+      subCategory === 'schema.giftCards'
+    ) {
+      __typename = 'GiftCardListing'
+    }
+    else if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
     } else if (localStorage.getItem('enableAllFractional')) {
       // TODO (Stan): Temporary hack to prevent hourly fractional being used
