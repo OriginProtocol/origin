@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-transform-new-target": "^7.0.0",
