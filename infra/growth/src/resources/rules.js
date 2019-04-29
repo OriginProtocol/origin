@@ -532,7 +532,8 @@ class BaseRule {
       // Fields specific to the ListingIdPurchased rule.
       listingId: this.listingId,
       iconSrc: this.iconSrc,
-      titleKey: this.titleKey
+      titleKey: this.titleKey,
+      detailsKey: this.detailsKey
     }
     return adapter.process(data)
   }
@@ -600,6 +601,10 @@ class ListingIdPurchaseRule extends BaseRule {
       throw new Error(`${this.str()}: missing titleKey field`)
     }
     this.titleKey = this.config.titleKey
+    if (!this.config.detailsKey) {
+      throw new Error(`${this.str()}: missing detailsKey field`)
+    }
+    this.detailsKey = this.config.detailsKey
 
     const eventType = 'ListingPurchased'
     if (!GrowthEventTypes.includes(eventType)) {

@@ -192,7 +192,8 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-tshirt-icon.svg',
-            titleKey: 'growth.purchase.tshirt'
+            titleKey: 'growth.purchase.tshirt.title',
+            detailsKey: 'growth.purchase.tshirt.details'
           }
         },
         {
@@ -209,7 +210,8 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-gc-icon.svg',
-            titleKey: 'growth.purchase.gc'
+            titleKey: 'growth.purchase.gc.title',
+            detailsKey: 'growth.purchase.gc.details'
           }
         },
         {
@@ -225,8 +227,9 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-donation-icon.svg',
-            titleKey: 'growth.purchase.donation'
+            iconSrc: 'images/growth/purchase-charity-icon.svg',
+            titleKey: 'growth.purchase.charity.title',
+            detailsKey: 'growth.purchase.charity.details'
           }
         },
         {
@@ -243,7 +246,8 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-housing-icon.svg',
-            titleKey: 'growth.purchase.housing'
+            titleKey: 'growth.purchase.housing.title',
+            detailsKey: 'growth.purchase.housing.details'
           }
         },
         {
@@ -259,8 +263,9 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-influencer-icon.svg',
-            titleKey: 'growth.purchase.influencer'
+            iconSrc: 'images/growth/purchase-experience-icon.svg',
+            titleKey: 'growth.purchase.experience.title',
+            detailsKey: 'growth.purchase.experience.details'
           }
         },
         {
@@ -277,7 +282,8 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-art-icon.svg',
-            titleKey: 'growth.purchase.art'
+            titleKey: 'growth.purchase.art.key',
+            detailsKey: 'growth.purchase.art.details'
           }
         }
       ]

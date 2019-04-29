@@ -32,6 +32,7 @@ function checkExpectedState(state, expectedState) {
       expect(action.listingId).to.be.a('string')
       expect(action.iconSrc).to.be.a('string')
       expect(action.titleKey).to.be.a('string')
+      expect(action.detailsKey).to.be.a('string')
     }
   }
 }

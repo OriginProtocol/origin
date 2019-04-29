@@ -14,6 +14,7 @@ function Action(props) {
     unlockConditions,
     listingId,
     titleKey,
+    detailsKey,
     iconSrc
   } = props.action
 
@@ -39,6 +40,7 @@ function Action(props) {
 
   let foregroundImgSrc
   let title
+  let details
   let buttonLink = '/profile'
   let buttonOnClick = () => {
     window.scrollTo(0, 0)
@@ -73,6 +75,7 @@ function Action(props) {
   } else if (type === 'ListingIdPurchased') {
     foregroundImgSrc = iconSrc
     title = fbt.enum(titleKey, GrowthEnum)
+    details = fbt.enum(detailsKey, GrowthEnum)
     buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'

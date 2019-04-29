@@ -13,12 +13,18 @@ const Growth$FbtEnum = {
   'growth.two.attestations.requirement': 'Two profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email',
-  'growth.purchase.tshirt': 'Purchase an Origin HOLD t-shirt',
-  'growth.purchase.gc': 'Purchase a Gift Card',
-  'growth.purchase.donation': 'Make a donation',
-  'growth.purchase.housing': 'Rent an apartment',
-  'growth.purchase.influencer': 'Purchase time with an influencer',
-  'growth.purchase.art': 'Purchase a piece of art'
+  'growth.purchase.tshirt.title': 'Purchase an Origin HODL T-shirt',
+  'growth.purchase.tshirt.details': 'Earn 25 OGN per t-shirt purchased.',
+  'growth.purchase.gc.title': 'Purchase a $25 Amazon gift card',
+  'growth.purchase.gc.details': 'Earn 50 OGN per gift card purchased. Must be redeemed on Amazon US site.',
+  'growth.purchase.charity.title': 'Donate $100 to the GiveDirectly charity',
+  'growth.purchase.charity.details': 'Donation will be made by Origin on your behalf.',
+  'growth.purchase.housing.title': 'Book a home rental',
+  'growth.purchase.housing.details': 'Booking and stay must happen in the month of May.',
+  'growth.purchase.experience.title': 'TBD',
+  'growth.purchase.experience.details': 'TBD',
+  'growth.purchase.art.title': 'Purchase the XX by Trevor Jones',
+  'growth.purchase.art.details': 'Limited to 1st buyer only.'
 }
 
 module.exports = Growth$FbtEnum
