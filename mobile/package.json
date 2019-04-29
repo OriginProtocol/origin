@@ -65,6 +65,7 @@
   "localDependencies": {
     "@origin/contracts": "../packages/contracts",
     "@origin/eventsource": "../packages/eventsource",
+    "@origin/event-cache": "../packages/event-cache",
     "@origin/graphql": "../packages/graphql",
     "@origin/ipfs": "../packages/ipfs",
     "@origin/messaging-client": "../packages/messaging-client",
