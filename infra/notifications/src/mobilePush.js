@@ -1,6 +1,5 @@
 const apn = require('apn')
 const firebase = require('firebase-admin')
-const path = require('path')
 const web3Utils = require('web3-utils')
 
 const { getNotificationMessage } = require('./notification')

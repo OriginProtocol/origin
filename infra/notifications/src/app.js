@@ -12,7 +12,7 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { browserPush } = require('./browserPush')
+// const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
 const { mobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
@@ -203,7 +203,8 @@ app.delete('/mobile/register', async(req, res) => {
   logger.info('Call to delete mobile registry endpoint')
 
   // See if a row already exists for this device/address
-  let registryRow = await MobileRegistry.findOne({
+  const registryRow = await MobileRegistry.findOne({
+
     where: {
       ethAddress: req.body.eth_address,
       deviceToken: req.body.device_token
