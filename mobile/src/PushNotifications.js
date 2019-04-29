@@ -101,7 +101,10 @@ class PushNotifications extends Component {
       })
 
       AppState.addEventListener('change', newState => {
-        if (newState === 'active' && this.state.backgroundNotification !== null) {
+        if (
+          newState === 'active' &&
+          this.state.backgroundNotification !== null
+        ) {
           // backgroundNotification is an instance of PushNotificationIOS, create
           // a notification object from it
           const notification = {

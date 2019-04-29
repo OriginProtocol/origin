@@ -35,6 +35,7 @@ import {
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
 } from './constants'
+import { get } from 'utils'
 import { loadData } from './tools'
 import withConfig from 'hoc/withConfig'
 
@@ -309,9 +310,22 @@ class OriginWallet extends Component {
         const contractDef =
           token.type === 'OriginToken' ? OriginTokenContract : TokenContract
         const contract = new this.web3.eth.Contract(contractDef.abi, token.id)
-        let balance = await contract.methods
-          .balanceOf(wallet.activeAccount.address)
-          .call()
+        let balance
+        // Contract call has been observed to fail when rapidly switching networks
+        // so wrap it in a try/catch
+        try {
+          balance = await contract.methods
+            .balanceOf(wallet.activeAccount.address)
+            .call()
+        } catch (error) {
+          console.warn(`Could not get token balance: , ${error}`)
+          // Use the previous balance if one exists so it doesn't get overwritten
+          tokenBalances[token.symbol.toLowerCase()] = get(
+            wallet.accountBalance,
+            token.symbol.toLowerCase()
+          )
+          continue
+        }
         // Divide by number of decimals for token
         balance = Number(
           this.web3.utils
