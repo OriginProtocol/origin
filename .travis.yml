@@ -146,6 +146,9 @@ matrix:
     - name: "@origin/notifications unit tests"
       language: node_js
       node_js: 10
+      before_script:
+        - psql -c 'create database travis_ci_test;' -U postgres
+        - lerna run migrate --scope @origin/notifications
       install:
         - npm install --ignore-scripts
         - npm run bootstrap -- --scope @origin/notifications
