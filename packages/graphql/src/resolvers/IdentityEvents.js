@@ -71,7 +71,7 @@ export function identity({ id, ipfsHash }) {
         account: id
       })
       events.forEach(event => {
-        if(blockNumber < event.blockNumber){
+        if (blockNumber < event.blockNumber) {
           return
         }
         if (event.event === 'IdentityUpdated') {
