@@ -253,7 +253,7 @@ class EventCache {
     let fromBlock = this.originBlock
 
     if (this.useEventAsLatestBlock && this.lastEventBlock) {
-      fromBlock = this.lastEventBlock
+      fromBlock = this.lastEventBlock + 1
     } else if (this.lastQueriedBlock) {
       fromBlock = this.lastQueriedBlock + 1
     }
