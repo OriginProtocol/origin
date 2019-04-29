@@ -2,7 +2,6 @@ FROM node:10 as build
 
 WORKDIR /app
 
-# Copy the necessary files for building origin-dapp
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
@@ -15,7 +14,6 @@ COPY ./packages/messaging-client/ ./packages/messaging-client/
 COPY ./packages/services/ ./packages/services/
 COPY ./packages/validator/ ./packages/validator/
 COPY ./dapps/admin/ ./dapps/admin/
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 RUN npm run build --prefix dapps/admin
