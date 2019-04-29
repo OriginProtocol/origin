@@ -209,8 +209,26 @@ class EventCache {
    */
   async _fetchEvents() {
     let toBlock = this.latestBlock
+
+    // Debug sanity check
+    const nodeBlock = await this.web3.eth.getBlockNumber()
+    if (toBlock > nodeBlock) {
+      debug(
+        `Block on JSON-RPC node is less than what we're expecting.  This is an error!  ${
+          this.latestBlock
+        } > ${nodeBlock}`
+      )
+      // TODO, set latestBlock back to nodeBlock?
+    } else if (toBlock < nodeBlock) {
+      debug(
+        `Node block is greater than what we're expecting.  This is OK  ${
+          this.latestBlock
+        } < ${nodeBlock}`
+      )
+    }
+
     if (this.useLatestFromChain || !toBlock) {
-      toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
+      toBlock = this.latestBlock = nodeBlock
     }
 
     if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
