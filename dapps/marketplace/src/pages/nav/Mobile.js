@@ -27,6 +27,12 @@ class MobileNav extends Component {
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
+            <Link
+              onClick={() => onClose()}
+              to="/create"
+              className="dropdown-item earn"
+              children={fbt('Earn Tokens', 'navigation.EarnTokens')}
+            />
             <div className="dropdown-divider" />
             <h6 className="dropdown-header">My Items</h6>
             <Link
@@ -142,6 +148,8 @@ require('react-styl')(`
           background-size: 26px
         &.add::before
           background-image: url(images/nav/add-listing-icon.svg)
+        &.earn::before
+          background-image: url(images/nav/earn-tokens-icon.svg)
         &.purchases::before
           background-image: url(images/nav/purchases-icon.svg)
         &.listings::before
