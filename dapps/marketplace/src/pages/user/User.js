@@ -33,7 +33,7 @@ class User extends Component {
                 <div className="row">
                   <div className="col-lg-2 col-md-3">
                     <div className="avatar-wrap">
-                      <Avatar avatar={profile.avatar} className="main-avatar" />
+                      <Avatar profile={profile} className="main-avatar" />
                     </div>
                     {noVerifications ? null : (
                       <div className="verified-info">

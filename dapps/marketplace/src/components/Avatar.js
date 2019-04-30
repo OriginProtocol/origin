@@ -1,15 +1,23 @@
 import React from 'react'
 
-const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
+const Avatar = ({ size, avatar, profile, className, emptyClass = 'empty' }) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }
   }
 
-  if (!avatar) {
+  let avatarUrl = undefined
+
+  if (profile && profile.avatarUrlExpanded) {
+    avatarUrl = profile.avatarUrlExpanded
+  } else if (!avatar) {
+    avatarUrl = avatar
+  }
+
+  if (!avatarUrl) {
     props.className += ` ${emptyClass}`
   } else {
-    props.style.backgroundImage = `url(${avatar})`
+    props.style.backgroundImage = `url(${avatarUrl})`
   }
 
   if (className) {
