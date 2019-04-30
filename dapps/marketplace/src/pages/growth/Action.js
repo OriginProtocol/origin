@@ -11,7 +11,11 @@ function Action(props) {
     reward,
     rewardEarned,
     rewardPending,
-    unlockConditions
+    unlockConditions,
+    listingId,
+    titleKey,
+    detailsKey,
+    iconSrc
   } = props.action
 
   const { isMobile, onMobileLockClick } = props
@@ -59,6 +63,9 @@ function Action(props) {
   } else if (type === 'Facebook') {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
+  } else if (type === 'Google') {
+    foregroundImgSrc = '/images/identity/goole-icon-light.svg'
+    title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
@@ -67,6 +74,16 @@ function Action(props) {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
     title = fbt('Purchase a Listing', 'RewardActions.listingPurchasedTitle')
     buttonLink = '/'
+  } else if (type === 'ListingIdPurchased') {
+    foregroundImgSrc = iconSrc
+    title = (
+      <Fragment>
+        <fbt desc="growth">
+          <fbt:enum enum-range={GrowthEnum} value={titleKey} />
+        </fbt>
+      </Fragment>
+    )
+    buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
@@ -185,6 +202,15 @@ function Action(props) {
       </div>
       <div className={`d-flex flex-column justify-content-center col-6`}>
         <div className="title">{title}</div>
+        <div className="details">
+          {detailsKey && (
+            <Fragment>
+              <fbt desc="growth">
+                <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
+              </fbt>
+            </Fragment>
+          )}
+        </div>
         {actionLocked && !isMobile && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
@@ -334,6 +360,10 @@ require('react-styl')(`
       .requirement
         color: var(--dusk)
         font-size: 14px
+        font-weight: normal
+      .details
+        color: var(--dusk)
+        font-size: 12px
         font-weight: normal
       .btn
         border-radius: 15rem

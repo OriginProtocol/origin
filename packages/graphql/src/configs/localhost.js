@@ -12,10 +12,10 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  bridge: `http://${HOST}:5000`,
+  bridge: 'https://bridge.dev.originprotocol.com',
+  notifications: `http://${HOST}:3456`,
   automine: 2000,
   attestationIssuer: '0x02c14Ee67799e1dFac9f776F2f4D5dC69Ab3Ee23',
-
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,

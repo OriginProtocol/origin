@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 
@@ -67,9 +68,15 @@ class GoogleAttestation extends Component {
             stage: 'GenerateCode'
           })
           this.props.onClose()
+          this.props.history.replace('/profile')
         }}
       >
-        <Query query={query} variables={{ redirect }}>
+        <Query
+          query={query}
+          variables={{ redirect }}
+          fetchPolicy="network-only"
+          skip={get(this.props, 'match.params.attestation') ? true : false}
+        >
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.googleAuthUrl')
             return (
@@ -128,12 +135,7 @@ class GoogleAttestation extends Component {
               data: result.data,
               loading: false
             })
-
-            // Remove session id from URL
-            window.location.hash = window.location.hash.replace(
-              /[?&]sid=([a-zA-Z0-9_-]+)/i,
-              ''
-            )
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -201,7 +203,7 @@ class GoogleAttestation extends Component {
   }
 }
 
-export default GoogleAttestation
+export default withRouter(GoogleAttestation)
 
 require('react-styl')(`
 `)

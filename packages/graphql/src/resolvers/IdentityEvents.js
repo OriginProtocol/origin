@@ -13,10 +13,11 @@ const progressPct = {
   description: 10,
   avatar: 10,
 
-  emailVerified: 15,
-  phoneVerified: 15,
+  emailVerified: 10,
+  phoneVerified: 10,
   facebookVerified: 10,
   twitterVerified: 10,
+  googleVerified: 10,
   airbnbVerified: 10
 }
 

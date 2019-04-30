@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   DeviceEventEmitter,
   Modal,
-  Platform,
   StyleSheet,
   StatusBar,
   View
@@ -177,6 +176,11 @@ class MarketplaceScreen extends Component {
 
   render() {
     const { modals } = this.state
+    const { navigation } = this.props
+    const marketplaceUrl = navigation.getParam(
+      'marketplaceUrl',
+      this.props.settings.network.dappUrl
+    )
 
     // Use key of network id on safeareaview to force a remount of component on
     // network changes
@@ -191,7 +195,7 @@ class MarketplaceScreen extends Component {
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: this.props.settings.network.dappUrl }}
+          source={{ uri: marketplaceUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectMessagingKeys()
