@@ -248,7 +248,17 @@ class Details extends Component {
   validate() {
     const newState = {}
 
-    if (this.state.description.length > 1024) {
+    if (!this.state.description) {
+      newState.descriptionError = fbt(
+        'Description is required',
+        'create.error.Description is required'
+      )
+    } else if (this.state.description.length < 10) {
+      newState.descriptionError = fbt(
+        'Description is too short',
+        'create.error.Description is too short'
+      )
+    } else if (this.state.description.length > 1024) {
       // Limit from origin-validator/src/schemas/listing.json
       newState.descriptionError = fbt(
         'Description is too long',
