@@ -22,6 +22,7 @@ class Review extends Component {
   state = {}
   listing = {}
 
+  // Add properties that are wholely derived from others
   addDerivedProps(listing) {
     const currencySymbol =
       CurrenciesByCountryCode[this.props.listing.issuingCountry][2]
@@ -48,8 +49,9 @@ class Review extends Component {
   }
 
   render() {
-    console.log(this.props.config)
     if (!this.props.config) return null
+
+    const { ipfsGateway } = this.props.config
 
     const listing = this.addDerivedProps(this.props.listing)
     const tokenBalance = this.props.tokenBalance
@@ -63,14 +65,9 @@ class Review extends Component {
           <h2>
             <fbt desc="creation.review.main-title">Review your listing</fbt>
           </h2>
-
           <div className="detail">
-            <div className="row">
-              <div className="col-3 label">
-                <fbt desc="create.review.title">Title</fbt>
-              </div>
-              <div className="col-9">{listing.title}</div>
-            </div>
+
+
             <div className="row">
               <div className="col-3 label">
                 <fbt desc="create.review.category">Category</fbt>
@@ -79,6 +76,26 @@ class Review extends Component {
                 <Category listing={listing} />
               </div>
             </div>
+
+            <div className="giftcard-image">
+              <img
+                src={
+                  listing.retailer
+                    ? `${ipfsGateway}/ipfs/${
+                        GiftCardRetailers[listing.retailer]
+                      }`
+                    : `${ipfsGateway}/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`
+                }
+              />
+            </div>
+
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
+              </div>
+              <div className="col-9">{listing.retailer}</div>
+            </div>
+
             <div className="row">
               <div className="col-3 label">
                 <fbt desc="create.review.giftcards.notes">Notes</fbt>
@@ -124,12 +141,6 @@ class Review extends Component {
               </div>
 
             </div>
-            <div className="row">
-              <div className="col-3 label">
-                <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
-              </div>
-              <div className="col-9">{listing.retailer}</div>
-            </div>
 
             {quantity <= 1 ? null : (
               <div className="row">
@@ -165,7 +176,7 @@ class Review extends Component {
               <div className="col-9">
                 {listing.media.length ? (
                   <div className="photos">
-                    {listing.media.map((image, idx) => (
+                    {listing.media.slice(1).map((image, idx) => (
                       <div
                         key={idx}
                         className="photo-row"
