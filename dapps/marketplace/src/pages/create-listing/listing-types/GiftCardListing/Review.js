@@ -23,8 +23,11 @@ class Review extends Component {
   listing = {}
 
   addDerivedProps(listing) {
-    const currencySymbol = CurrenciesByCountryCode[this.props.listing.issuingCountry][2]
-    listing.title = `${currencySymbol}${this.props.listing.cardAmount} ${this.props.listing.retailer} Gift Card `
+    const currencySymbol =
+      CurrenciesByCountryCode[this.props.listing.issuingCountry][2]
+    listing.title = `${currencySymbol}${this.props.listing.cardAmount} ${
+      this.props.listing.retailer
+    } Gift Card `
     // Construct gift card image entry
     const { ipfsGateway } = this.props.config
     console.log(this.props)
@@ -35,7 +38,7 @@ class Review extends Component {
     const giftCardEntry = {
       url: giftCardImageIpfsUri,
       urlExpanded: giftCardImageExpandededUri,
-      contentType: "image/jpeg"
+      contentType: 'image/jpeg'
     }
     // Remove existing gift card image if it's there
     listing.media.filter(e => e.url !== giftCardImageIpfsUri)
