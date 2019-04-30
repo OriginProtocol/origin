@@ -128,9 +128,7 @@ class ListingDetail extends Component {
         {!isGiftCard ? null : (
           <>
             <hr />
-            <div>
-              Hello.
-            </div>
+            <div>Hello.</div>
           </>
         )}
         {!isFractional ? null : (
