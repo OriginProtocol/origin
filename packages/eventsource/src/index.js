@@ -228,7 +228,8 @@ class OriginEventSource {
         'UnitListing',
         'FractionalListing',
         'FractionalHourlyListing',
-        'AnnouncementListing'
+        'AnnouncementListing',
+        'GiftCardListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
