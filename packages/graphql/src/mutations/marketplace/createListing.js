@@ -5,8 +5,17 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 
-export function listingInputToIPFS(data, unitData, fractionalData, giftCardData) {
-  const listingType = fractionalData ? 'fractional' : (giftCardData ? 'giftcard' : 'unit')
+export function listingInputToIPFS(
+  data,
+  unitData,
+  fractionalData,
+  giftCardData
+) {
+  const listingType = fractionalData
+    ? 'fractional'
+    : giftCardData
+    ? 'giftcard'
+    : 'unit'
   const ipfsData = {
     __typename: data.typename || 'UnitListing',
     schemaId: 'https://schema.originprotocol.com/listing_2.0.0.json',
@@ -58,7 +67,14 @@ export function listingInputToIPFS(data, unitData, fractionalData, giftCardData)
 }
 
 async function createListing(_, input) {
-  const { depositManager, data, unitData, fractionalData, autoApprove } = input
+  const {
+    depositManager,
+    data,
+    unitData,
+    fractionalData,
+    giftCardData,
+    autoApprove
+  } = input
   const from = input.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 

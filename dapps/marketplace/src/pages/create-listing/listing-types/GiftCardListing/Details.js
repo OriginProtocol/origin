@@ -82,7 +82,7 @@ class Details extends Component {
                       this.setState({ retailer: e.target.value })
                     }}
                   >
-                    <option key='none' value=''>
+                    <option key="none" value="">
                       <fbt desc="select">Select</fbt>
                     </option>
                     {retailerSelect.map(name => (
@@ -95,10 +95,13 @@ class Details extends Component {
 
                   <div className="giftcard-image">
                     <img
-                      src={this.state.retailer ?
-                        `http://localhost:8080/ipfs/${
-                        GiftCardRetailers[this.state.retailer]
-                      }` : `http://localhost:8080/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`}
+                      src={
+                        this.state.retailer
+                          ? `http://localhost:8080/ipfs/${
+                              GiftCardRetailers[this.state.retailer]
+                            }`
+                          : `http://localhost:8080/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`
+                      }
                     />
                   </div>
                 </div>
@@ -254,11 +257,17 @@ class Details extends Component {
     }
 
     if (!this.state.retailer) {
-      newState.retailerError = fbt('Please select a card retailer', 'create.listing.giftcard.select-retailer')
+      newState.retailerError = fbt(
+        'Please select a card retailer',
+        'create.listing.giftcard.select-retailer'
+      )
     }
 
     if (!this.state.cardAmount) {
-      newState.cardAmountError = fbt('Amount on card is required', 'Amount on card is required')
+      newState.cardAmountError = fbt(
+        'Amount on card is required',
+        'Amount on card is required'
+      )
     } else if (!this.state.cardAmount.match(/^-?[0-9.]+$/)) {
       newState.cardAmountError = fbt(
         'Amount on card must be a number',

@@ -51,7 +51,7 @@ export default function applyListingData(props, data) {
         issuingCountry: listing.issuingCountry,
         isDigital: listing.isDigital,
         isCashPurchase: listing.isCashPurchase,
-        receiptAvailable: listing.receiptAvailable,
+        receiptAvailable: listing.receiptAvailable
       }
       variables.commission = listing.boostLimit
       break

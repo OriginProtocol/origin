@@ -59,7 +59,7 @@ module.exports = `
       data: ListingInput!
       unitData: UnitListingInput
       fractionalData: FractionalListingInput
-      giftCardlData: GiftCardlListingInput
+      giftCardlData: GiftCardListingInput
     ): Transaction
 
     updateListing(
@@ -70,7 +70,7 @@ module.exports = `
       data: ListingInput!
       unitData: UnitListingInput
       fractionalData: FractionalListingInput
-      giftCardlData: GiftCardlListingInput
+      giftCardlData: GiftCardListingInput
     ): Transaction
 
     withdrawListing(
