@@ -38,22 +38,19 @@
     "lodash-es": "^4.17.11",
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
+    "pg": "^7.7.1",
+    "sequelize": "^5.3.0",
+    "sequelize-cli": "^5.4.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "eslint": "^5.15.3",
     "prettier": "^1.16.4",
-    "sequelize-cli": "^5.4.0",
-    "web3": "1.0.0-beta.34",
     "webpack": "^4.29.6"
   },
   "devDependencies": {
     "eslint": "^5.15.3",
     "prettier": "^1.16.4"
-  },
-  "optionalDependencies": {
-    "pg": "^7.7.1",
-    "sequelize": "^5.3.0"
   },
   "babel": {
     "presets": [
