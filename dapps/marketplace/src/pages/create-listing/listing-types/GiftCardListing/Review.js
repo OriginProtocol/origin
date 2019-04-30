@@ -66,8 +66,6 @@ class Review extends Component {
             <fbt desc="creation.review.main-title">Review your listing</fbt>
           </h2>
           <div className="detail">
-
-
             <div className="row">
               <div className="col-3 label">
                 <fbt desc="create.review.category">Category</fbt>
@@ -140,7 +138,6 @@ class Review extends Component {
                 {CurrenciesByCountryCode[listing.issuingCountry][2]}
                 {listing.cardAmount}
               </div>
-
             </div>
 
             {quantity <= 1 ? null : (

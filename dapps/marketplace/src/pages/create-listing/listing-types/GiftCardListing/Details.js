@@ -164,7 +164,6 @@ class Details extends Component {
                   {Feedback('quantity')}
                 </div>
 
-
                 <div className="form-group">
                   <label className="mb-0">
                     <fbt desc="create.details.description">Notes</fbt>

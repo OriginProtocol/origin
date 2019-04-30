@@ -132,10 +132,14 @@ class ListingDetail extends Component {
             <hr />
             <div>retailer: {listing.retailer}</div>
             <div>cardAmount: {listing.cardAmount}</div>
-            <div>issuingCountry: {countryCodeMapping['en'][listing.issuingCountry]}</div>
+            <div>
+              issuingCountry: {countryCodeMapping['en'][listing.issuingCountry]}
+            </div>
             <div>isDigital: {listing.isDigital ? '✅' : 'No'}</div>
             <div>isCashPurchase: {listing.isCashPurchase ? '✅' : 'No'}</div>
-            <div>receiptAvailable: {listing.receiptAvailable ? '✅' : 'No'}</div>
+            <div>
+              receiptAvailable: {listing.receiptAvailable ? '✅' : 'No'}
+            </div>
           </>
         )}
         {!isFractional ? null : (
