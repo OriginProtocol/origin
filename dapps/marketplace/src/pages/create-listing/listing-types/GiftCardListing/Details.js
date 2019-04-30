@@ -157,6 +157,15 @@ class Details extends Component {
                 </div>
 
                 <div className="form-group">
+                  <label>
+                    <fbt desc="create.details.quantity">Quantity</fbt>
+                  </label>
+                  <input {...input('quantity')} />
+                  {Feedback('quantity')}
+                </div>
+
+
+                <div className="form-group">
                   <label className="mb-0">
                     <fbt desc="create.details.description">Notes</fbt>
                   </label>

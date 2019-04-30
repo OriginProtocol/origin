@@ -27,32 +27,31 @@ class Review extends Component {
       CurrenciesByCountryCode[this.props.listing.issuingCountry][2]
     listing.title = `${currencySymbol}${this.props.listing.cardAmount} ${
       this.props.listing.retailer
-    } Gift Card `
+    } Gift Card`
     // Construct gift card image entry
-    // const { ipfsGateway } = this.props.config
+    const { ipfsGateway } = this.props.config
     const giftCardHash = GiftCardRetailers[listing.retailer]
     const giftCardImageIpfsUri = `ipfs://${giftCardHash}`
-    // const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}` // TODO
-    const giftCardImageExpandededUri = `http://localhost:8080/ipfs/${giftCardHash}` // TODO
+    const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}` // TODO
+    // const giftCardImageExpandededUri = `http://localhost:8080/ipfs/${giftCardHash}` // TODO
     const giftCardEntry = {
       url: giftCardImageIpfsUri,
       urlExpanded: giftCardImageExpandededUri,
       contentType: 'image/jpeg'
     }
     // Remove existing gift card image if it's there
-    listing.media.filter(e => e.url !== giftCardImageIpfsUri)
+    listing.media = listing.media.filter(e => e.url != giftCardImageIpfsUri)
     // Add it in front position
     listing.media.unshift(giftCardEntry)
 
     return listing
   }
 
-  componentWillMount() {
-    this.listing = this.addDerivedProps(this.props.listing)
-  }
-
   render() {
-    const listing = this.listing
+    console.log(this.props.config)
+    if (!this.props.config) return null
+
+    const listing = this.addDerivedProps(this.props.listing)
     const tokenBalance = this.props.tokenBalance
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1

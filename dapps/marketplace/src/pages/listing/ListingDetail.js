@@ -23,6 +23,8 @@ import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
 import FractionalHourly from './_BuyFractionalHourly'
 
+import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
+
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
@@ -128,7 +130,12 @@ class ListingDetail extends Component {
         {!isGiftCard ? null : (
           <>
             <hr />
-            <div>Hello.</div>
+            <div>retailer: {listing.retailer}</div>
+            <div>cardAmount: {listing.cardAmount}</div>
+            <div>issuingCountry: {countryCodeMapping['en'][listing.issuingCountry]}</div>
+            <div>isDigital: {listing.isDigital ? '✅' : 'No'}</div>
+            <div>isCashPurchase: {listing.isCashPurchase ? '✅' : 'No'}</div>
+            <div>receiptAvailable: {listing.receiptAvailable ? '✅' : 'No'}</div>
           </>
         )}
         {!isFractional ? null : (
