@@ -5,7 +5,6 @@ import Web3 from 'web3'
 import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import { exchangeAbi } from '@origin/graphql/src/contracts/UniswapExchange'
-import Configs from '@origin/graphql/src/configs'
 
 const web3 = new Web3()
 

@@ -11,8 +11,6 @@ import {
 import PushNotification from 'react-native-push-notification'
 import { connect } from 'react-redux'
 
-import Configs from '@origin/graphql/src/configs'
-
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken, setNetwork } from 'actions/Settings'
 import {
@@ -41,9 +39,6 @@ class PushNotifications extends Component {
   }
 
   async componentDidMount() {
-    // Initialise push notifications
-    const { wallet } = this.props
-
     // Add an event listener to log registration errors in development
     if (__DEV__) {
       PushNotificationIOS.addEventListener('registrationError', error =>
@@ -86,7 +81,7 @@ class PushNotifications extends Component {
             data: this.state.backgroundNotification.getData()
           }
           // Pop the alert with option to redirect to WebView
-          this.onNotification(notification)
+          this.onNotification(notificationObj)
         }
       })
 
@@ -158,7 +153,7 @@ class PushNotifications extends Component {
   onNotification(notification) {
     console.debug('Handling notification: ', notification)
 
-    let notificationObj = {}
+    const notificationObj = {}
     if (Platform.OS === 'ios') {
       notificationObj.title = notification.alert.title
       notificationObj.body = notification.alert.body
