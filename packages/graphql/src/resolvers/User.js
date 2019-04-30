@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq'
 
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
+import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
 import { transactions } from './web3/transactions'
 
@@ -328,5 +329,8 @@ export default {
     if (user.lastEvent) return user.lastEvent
     const events = await ec().allEvents(undefined, user.id)
     return events[events.length - 1]
+  },
+  identity: (account) => {
+    return identity({ id: account.id })
   }
 }
