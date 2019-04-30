@@ -86,7 +86,7 @@ function Action(props) {
     buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
-    title = 'Buy a listing'
+    title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
   } else if (type === 'Referral') {
     foregroundImgSrc = '/images/growth/invite-icon.svg'
