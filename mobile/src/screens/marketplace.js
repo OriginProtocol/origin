@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   DeviceEventEmitter,
   Modal,
-  Platform,
   StyleSheet,
   StatusBar,
   View
