@@ -3,8 +3,15 @@ import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 class MobileNav extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+    this.EarnTokens = withEnrolmentModal('a')
+  }
+
   render() {
     const { onClose } = this.props
     const hasUnread = ''
@@ -27,12 +34,9 @@ class MobileNav extends Component {
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
-            <Link
-              onClick={() => onClose()}
-              to="/create"
-              className="dropdown-item earn"
-              children={fbt('Earn Tokens', 'navigation.EarnTokens')}
-            />
+            <this.EarnTokens className="dropdown-item earn">
+              <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+            </this.EarnTokens>
             <div className="dropdown-divider" />
             <h6 className="dropdown-header">My Items</h6>
             <Link
