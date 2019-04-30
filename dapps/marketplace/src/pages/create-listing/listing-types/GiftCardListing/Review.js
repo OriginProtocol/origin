@@ -10,15 +10,50 @@ import Category from 'components/Category'
 import Link from 'components/Link'
 import FormattedDescription from 'components/FormattedDescription'
 import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
+import { CurrenciesByCountryCode } from 'constants/Currencies'
+import { GiftCardRetailers } from 'constants/GiftCardRetailers'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
 
+import withConfig from 'hoc/withConfig'
+
 class Review extends Component {
   state = {}
+  listing = {}
+
+  addDerivedProps(listing) {
+    const currencySymbol = CurrenciesByCountryCode[this.props.listing.issuingCountry][2]
+    listing.title = `${currencySymbol}${this.props.listing.cardAmount} ${this.props.listing.retailer} Gift Card `
+    // Construct gift card image entry
+    const { ipfsGateway } = this.props.config
+    console.log(this.props)
+    const giftCardHash = GiftCardRetailers[listing.retailer]
+    const giftCardImageIpfsUri = `ipfs://${giftCardHash}`
+    // const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}` // TODO
+    const giftCardImageExpandededUri = `http://localhost:8080/ipfs/${giftCardHash}` // TODO
+    const giftCardEntry = {
+      url: giftCardImageIpfsUri,
+      urlExpanded: giftCardImageExpandededUri,
+      contentType: "image/jpeg"
+    }
+    // Remove existing gift card image if it's there
+    listing.media.filter(e => e.url !== giftCardImageIpfsUri)
+    // Add it in front position
+    listing.media.unshift(giftCardEntry)
+
+    console.log(listing.media)
+    return listing
+  }
+
+  componentWillMount() {
+    this.listing = this.addDerivedProps(this.props.listing)
+  }
+
   render() {
     console.log(countryCodeMapping)
-    const { listing, tokenBalance } = this.props
+    const listing = this.listing
+    const tokenBalance = this.props.tokenBalance
     const quantity = Number(listing.quantity || 0)
     const isMulti = quantity > 1
     const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
@@ -47,7 +82,7 @@ class Review extends Component {
             </div>
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.review.description">Description</fbt>
+                <fbt desc="create.review.giftcards.notes">Notes</fbt>
               </div>
               <div className="col-9">
                 <FormattedDescription text={listing.description} />
@@ -182,4 +217,4 @@ class Review extends Component {
   }
 }
 
-export default withTokenBalance(Review)
+export default withTokenBalance(withConfig(Review))

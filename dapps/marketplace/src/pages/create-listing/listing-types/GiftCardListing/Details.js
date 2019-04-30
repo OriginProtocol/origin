@@ -10,7 +10,8 @@ import Link from 'components/Link'
 import CurrencySelect from 'components/CurrencySelect'
 import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
 
-import { Currencies, CurrenciesByCountryCode } from 'constants/Currencies'
+import { CurrenciesByCountryCode } from 'constants/Currencies'
+import { GiftCardRetailers } from 'constants/GiftCardRetailers'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -39,349 +40,7 @@ class Details extends Component {
 
     const issuingCountrySelect = Object.keys(CurrenciesByCountryCode)
 
-    const retailerSelect = [
-      'Topshop',
-      "Grinder's Above & Beyond",
-      "Kiehl's",
-      'Club Monaco',
-      'Staples',
-      'Sun and Ski Sports',
-      "Einstein Bros & Noah's Bagels",
-      'Regal Entertainment Group',
-      "O'Charley's",
-      'Burke Williams Spa',
-      'Calvin Klein',
-      'Johnston and Murphy',
-      'Champs Sports',
-      'Bare Minerals',
-      'Watch Station International',
-      'Build-A-Bear',
-      'Crate & Barrel',
-      'Lettuce Entertain You',
-      'Naturalizer Shoes',
-      'Hautelook',
-      'Nordstrom',
-      'Skechers',
-      'Foot Locker',
-      'L.L. Bean',
-      'Land of Nod',
-      'Abercrombie & Fitch',
-      'Brighton',
-      'American Airlines',
-      'Sally Beauty Supply',
-      'Lids/Hat World',
-      'Gap',
-      'Catherines',
-      'Zara',
-      'Fairmont Hotels',
-      'Texas Roadhouse',
-      'AutoZone',
-      'Lone Star Steakhouse',
-      'Stubhub',
-      'Mission Inn',
-      'Valentinos Restaurants',
-      "Roy's Hawaiian Fusion",
-      'Athleta',
-      'Lululemon Athletica',
-      'Splendid',
-      "Domino's Pizza",
-      'JCPenney',
-      'Yard House',
-      '1-800-Flowers.com',
-      'ALDO',
-      'Gordon Biersch',
-      'Restoration Hardware',
-      'Panera Bread',
-      'Brylane Home',
-      'Hotels.com',
-      'Zales',
-      'Lady Foot Locker',
-      'Carhartt',
-      'Old Spaghetti Factory',
-      'Old Navy',
-      'Brinker Restaurants',
-      'Alice and Olivia',
-      'Piercing Pagoda',
-      'Quiznos',
-      'Ruby Tuesday',
-      'Bebe',
-      'Eddie Bauer',
-      'Playstation Network',
-      'IHOP',
-      'RegencyTheaters',
-      'Harley Davidson',
-      'T.J. Maxx',
-      'DC Shoes',
-      'Famous Footwear',
-      'Boot Barn',
-      'Rue 21',
-      '1-800-Baskets',
-      'True Religion Brand Jeans',
-      'Raymour and Flanigan',
-      'Pappas Restaurants',
-      "Landry's",
-      'Elephant Bar Restaurant',
-      'Subway',
-      'Microsoft Xbox',
-      'The Art of Shaving',
-      'Hard Rock Cafe',
-      'Starbucks',
-      'New Balance',
-      'Baby Gap',
-      'Pier 1 Imports',
-      'Belk',
-      'Alamo Drafthouse Cinema',
-      "Kohl's",
-      'Saltgrass Steak House',
-      'Dean & DeLuca',
-      'Cold Stone Creamery',
-      'Active',
-      'Fuddruckers',
-      'Fandango',
-      "Noah's Bagels",
-      'Pei Wei Asian Diner',
-      'Sur La Table',
-      'Restaurants Unlimited',
-      'Sephora',
-      'BedandBreakfast.com',
-      "Chili's",
-      'Worldwide Golf Shops',
-      'Olive Garden',
-      'Bed Bath and Beyond',
-      'Bliss Spa',
-      "Barney's New York",
-      'All Saints',
-      'Petco',
-      'BOSE',
-      'Tommy Bahama',
-      'California Pizza Kitchen',
-      'Seasons 52',
-      "P.F. Chang's",
-      'Performance Bicycle',
-      'Gap Options',
-      "Fleming's Steakhouse",
-      "Logan's Roadhouse",
-      'Scrubs & Beyond',
-      'AirBnB',
-      "Menchie's Frozen Yogurt",
-      'Aeropostale',
-      'Alex and Ani',
-      'Rooms To Go',
-      'Z Gallerie',
-      'Allen Edmonds',
-      'Busken Bakery',
-      'Soma',
-      'MLB.com',
-      "Chico's",
-      'SpaFinder',
-      "Carrabba's Italian Grill",
-      'ULTA',
-      'World of Beer',
-      'Don Pablos',
-      'Google Play',
-      'The Company Store',
-      "TGI Friday's",
-      'Oceanaire Restaurants',
-      "Damon's Grill",
-      'Pinstripes',
-      'Texas de Brazil',
-      "Macy's",
-      'Big Lots',
-      'Omaha Steaks',
-      "Cavender's",
-      "Atria's Restaurant",
-      'Columbia Sportswear',
-      'Caribou Coffee',
-      'Old Chicago',
-      "Boscov's",
-      'Jos. A. Bank',
-      'Old Country Buffet',
-      'Academy Sports & Outdoors',
-      'West Elm',
-      'REI',
-      'Justice',
-      "Maggiano's Little Italy",
-      'Coach',
-      'MAC Cosmetics',
-      'Marriott',
-      'Blick Art Materials',
-      "Willie G's",
-      "Delia's",
-      'NBA Store',
-      'PGA Tour Superstore',
-      'Charming Charlie',
-      'Orchard Supply Hardware',
-      'Bonanza Steakhouse',
-      "Land's End",
-      'Marcus Theatres',
-      'Grotto/La Griglia',
-      "Cabela's",
-      'Think Geek',
-      'Burger King',
-      'Bath & Body Works',
-      "Eddie V's Prime Seafood",
-      'Dell',
-      'First Watch Cafe',
-      "Carter's",
-      'Callaway Golf',
-      'Honey Baked Ham',
-      "Modell's Sporting Goods",
-      'Pandora',
-      "Children's Place",
-      'Claim Jumper Restaurants',
-      'Chipotle',
-      'Harry and David Gifts',
-      'Tumi',
-      'Southwest Airlines',
-      'Piada Italian Street Food',
-      'Williams-Sonoma',
-      'Ralph Lauren',
-      "See's Candies",
-      "Dillard's",
-      'Cheesecake Factory',
-      'Capital Grille',
-      'Yogurtland',
-      'Apple Store (not iTunes)',
-      'Lacoste',
-      'Jiffy Lube',
-      'Under Armour',
-      'Saks Fifth Avenue',
-      'Brooks Brothers',
-      'Red Door Spa',
-      'The Walking Company',
-      "BJ's Restaurant and Brewhouse",
-      'Quaker Steak & Lube Restaurant',
-      'Michaels',
-      'Abercrombie Kids',
-      'Cole Haan',
-      'Vineyard Vines',
-      'RVCA',
-      "Lucille's BBQ",
-      'Spaghetti Works',
-      'Elie Tahari',
-      'Macaroni Grill',
-      'Brookstone',
-      'Lucky Brand Jeans',
-      "Kirkland's",
-      'Nine West',
-      'Spaghetti Warehouse',
-      'DSW',
-      'Bass Pro Shops',
-      "Sam's Club",
-      'Torrid',
-      "Olga's Kitchen",
-      'Express',
-      'Bow Tie Cinemas',
-      'Buckhead Mountain Grill Restaurant',
-      'Field & Stream',
-      'Pottery Barn',
-      'Pizzeria Uno',
-      'Pottery Barn Kids',
-      "Altar'd State",
-      'Vera Bradley',
-      'Design Within Reach',
-      'AMC Theatres',
-      "Francesca's",
-      "Kincaid's Restaurants",
-      'Best Buy',
-      'Aerosoles',
-      'Advance Auto Parts',
-      'Supercuts',
-      'Vanity',
-      'Picture People',
-      "Tully's Coffee",
-      'Mandee',
-      'Kings Isle Pirate',
-      'Burberry',
-      'Bonefish Grill',
-      'Banana Republic',
-      '16 Handles',
-      'American Eagle Outfitters',
-      'Spa & Wellness ',
-      'Hobby Town',
-      'Hollister',
-      'Casual Male XL',
-      'Aquarium Restaurants',
-      'Rock Bottom Restaurant Brewery',
-      'White House Black Market',
-      "Men's Wearhouse",
-      'Tommy Hilfiger (Online only)',
-      'Netflix',
-      'Outback Steakhouse',
-      'CB2',
-      "Miguel's Jr.",
-      'LongHorn Steakhouse',
-      "Tilly's",
-      'Walmart',
-      'Taco Bell',
-      'Pac Sun',
-      'Uno Chicago Grill',
-      'Sears',
-      'Sperry',
-      'Yogurt Mountain',
-      'Destination XL',
-      "Max & Erma's Restaurant",
-      'Uber',
-      'Steve Madden Shoes',
-      'Legal Sea Foods',
-      'Cato',
-      'CraftWorks Restaurants & Breweries',
-      'The North Face',
-      "Applebee's",
-      'Filson',
-      'Forever 21',
-      'Nike',
-      'Lane Bryant',
-      "Beau Jo's",
-      'Pinkberry',
-      'Barnes & Noble',
-      'Blair',
-      'Tiffany & Co.',
-      'Bealls Outlet (Florida)',
-      'Lord & Taylor',
-      'Smashburger',
-      'Target',
-      'Madewell',
-      'Patagonia',
-      'Buca di Beppo',
-      'Cameron Mitchell Restaurants',
-      'Texas Corral',
-      "Victoria's Secret",
-      'Scene 75 Entertainment Center',
-      'Carson Pirie Scott',
-      'Pet Supermarket',
-      'Harbor Freight',
-      'Smokey Bones',
-      'Sunglass Hut',
-      'Apple iTunes',
-      'Kona Grill',
-      'Destination Maternity',
-      'Hobby Lobby',
-      'Peets Coffee and Tea',
-      'On the Border',
-      'BevMo',
-      'Guitar Center',
-      "Levi's",
-      'iPic Theaters',
-      "Bob's Discount Furniture",
-      'NFLShop',
-      "Morton's the Steakhouse",
-      'Aerie',
-      'Toms',
-      'Rainforest Cafe',
-      'A Pea in the Pod',
-      'Bob Evans Restaurant',
-      'Taco Time',
-      'Celebrity Cruises',
-      'PotBelly Sandwich Shop',
-      'Darden Restaurants',
-      'Safeway',
-      "Bloomin' Brands",
-      "Clark's Shoes",
-      "Wilson's Leather",
-      'Janie and Jack',
-      'Motherhood Maternity'
-    ]
+    const retailerSelect = Object.keys(GiftCardRetailers)
 
     return (
       <div className="row">
@@ -421,16 +80,6 @@ class Details extends Component {
                   {Feedback('title')}
                 </div>
 */}
-
-                <div className="form-group">
-                  <label className="mb-0">
-                    <fbt desc="create.details.description">Notes</fbt>
-                  </label>
-                  <textarea {...input('description')} />
-                  {Feedback('description')}
-                </div>
-
-                {/* BEGIN Gift card specific code */}
 
                 <div className="form-group">
                   <label>
@@ -484,11 +133,10 @@ class Details extends Component {
                   <label className="mb-0">
                     <fbt desc="create.details.cardAmount">Amount on Card</fbt>
                   </label>
-                  <div className="with-symbol" style={{ maxWidth: 270 }}>
+                  <div className="with-symbol">
                     <input {...input('cardAmount')} />
-                    <div class="dropdown currency-select-dropdown">
+                    <div className={('dropdown', 'currency-select-dropdown')}>
                       <span
-                        class="hover"
                         data-content={
                           CurrenciesByCountryCode[this.state.issuingCountry][2]
                         }
@@ -532,7 +180,13 @@ class Details extends Component {
                   </div>
                 </PricingChooser>
 
-                {/* END Gift Card  specific code */}
+                <div className="form-group">
+                  <label className="mb-0">
+                    <fbt desc="create.details.description">Notes</fbt>
+                  </label>
+                  <textarea {...input('description')} />
+                  {Feedback('description')}
+                </div>
 
                 <div className="form-group">
                   <label>
@@ -587,38 +241,7 @@ class Details extends Component {
   validate() {
     const newState = {}
 
-    // not working
-    // this.setState({ title: `CURRENCY ${this.state.cardAmount} ${this.state.retailer} Gift Card` })
-
-    // if (!this.state.title) {
-    //   newState.titleError = fbt(
-    //     'Title is required',
-    //     'create.error.Title is required'
-    //   )
-    // } else if (this.state.title.length < 3) {
-    //   newState.titleError = fbt(
-    //     'Title is too short',
-    //     'create.error.Title is too short'
-    //   )
-    // } else if (this.state.title.length > 100) {
-    //   // Limit from origin-validator/src/schemas/listing.json
-    //   newState.titleError = fbt(
-    //     'Title is too long',
-    //     'create.error.Title is too long'
-    //   )
-    // }
-
-    if (!this.state.description) {
-      newState.descriptionError = fbt(
-        'Description is required',
-        'create.error.Description is required'
-      )
-    } else if (this.state.description.length < 10) {
-      newState.descriptionError = fbt(
-        'Description is too short',
-        'create.error.Description is too short'
-      )
-    } else if (this.state.description.length > 1024) {
+    if (this.state.description.length > 1024) {
       // Limit from origin-validator/src/schemas/listing.json
       newState.descriptionError = fbt(
         'Description is too long',
@@ -640,7 +263,6 @@ class Details extends Component {
       )
     }
 
-    console.log(newState)
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     if (!newState.valid) {
