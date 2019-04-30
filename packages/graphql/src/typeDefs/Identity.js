@@ -52,6 +52,7 @@ module.exports = `
     description: String
     avatar: String
     avatarUrl: String
+    avatarUrlExpanded: String
     strength: Int
 
     facebookVerified: Boolean
