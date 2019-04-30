@@ -84,7 +84,11 @@ const rateLimiterOptions = {
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 const rateLimiterMiddleware = (req, res, next) => {
-  if (!req.url.startsWith('/events') && !req.url.startsWith('/mobile')) {
+  if (
+    !req.url.startsWith('/events') &&
+    !req.url.startsWith('/mobile') &&
+    !req.url.startsWith('/messages')
+  ) {
     rateLimiter
       .consume(req.connection.remoteAddress)
       .then(() => {
@@ -217,6 +221,15 @@ app.delete('/mobile/register', async (req, res) => {
     await registryRow.update({ deleted: true })
     res.sendStatus(200)
   }
+})
+
+/**
+ * Endpoint called by the messaging-server
+ * list of eth address that have received a message
+ */
+app.post('/messages', async (req, res) => {
+  console.log('yo')
+  res.status(200).send({ status: 'ok' })
 })
 
 /**
