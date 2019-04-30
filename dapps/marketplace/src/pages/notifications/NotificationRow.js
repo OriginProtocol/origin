@@ -93,7 +93,7 @@ const Row = ({ node, identity, onClick }) => {
   return (
     <div className="notification-row" onClick={() => onClick()}>
       <div>
-        <Avatar avatar={get(identity, 'profile.avatar')} />
+        <Avatar profile={identity} />
       </div>
       <div>
         <div>{description}</div>
