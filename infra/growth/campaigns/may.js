@@ -191,7 +191,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-tshirt-icon.svg',
+            iconSrc: 'images/growth/tshirt-icon.png',
             titleKey: 'growth.purchase.tshirt.title',
             detailsKey: 'growth.purchase.tshirt.details'
           }
@@ -209,7 +209,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-gc-icon.svg',
+            iconSrc: 'images/growth/amazon-gift-card-icon.png',
             titleKey: 'growth.purchase.gc.title',
             detailsKey: 'growth.purchase.gc.details'
           }
@@ -227,7 +227,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-charity-icon.svg',
+            iconSrc: 'images/growth/dai-icon.svg',
             titleKey: 'growth.purchase.charity.title',
             detailsKey: 'growth.purchase.charity.details'
           }
@@ -245,7 +245,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-housing-icon.svg',
+            iconSrc: 'images/growth/rental-icon.png',
             titleKey: 'growth.purchase.homerental.title',
             detailsKey: 'growth.purchase.homerental.details'
           }
@@ -263,7 +263,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-experience-icon.svg',
+            iconSrc: 'images/growth/influencer-icon.png',
             titleKey: 'growth.purchase.experience.title',
             detailsKey: 'growth.purchase.experience.details'
           }
@@ -281,7 +281,7 @@ const mayConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/purchase-art-icon.svg',
+            iconSrc: 'images/growth/art-icon.png',
             titleKey: 'growth.purchase.art.title',
             detailsKey: 'growth.purchase.art.details'
           }
