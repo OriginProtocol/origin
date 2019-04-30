@@ -15,8 +15,7 @@ const config = {
   bridge: 'https://bridge.dev.originprotocol.com',
   notifications: `http://${HOST}:3456`,
   automine: 2000,
-  attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
-
+  attestationIssuer: '0x02c14Ee67799e1dFac9f776F2f4D5dC69Ab3Ee23',
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,

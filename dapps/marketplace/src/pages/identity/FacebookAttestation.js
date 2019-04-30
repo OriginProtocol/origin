@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
 
@@ -9,8 +10,21 @@ import VerifyFacebookMutation from 'mutations/VerifyFacebook'
 import query from 'queries/FacebookAuthUrl'
 
 class FacebookAttestation extends Component {
-  state = {
-    stage: 'GenerateCode'
+  constructor(props) {
+    super(props)
+    this.state = {
+      stage: 'GenerateCode',
+      mobile: window.innerWidth < 767
+    }
+    this.onResize = this.onResize.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,10 +35,25 @@ class FacebookAttestation extends Component {
     }
   }
 
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.mobile) {
+      this.setState({ mobile: true })
+    } else if (window.innerWidth >= 767 && this.state.mobile) {
+      this.setState({ mobile: false })
+    }
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
+
+    const isMobile = this.state.mobile
+
+    const { origin, pathname } = window.location
+    const redirect = isMobile
+      ? encodeURIComponent(`${origin}${pathname}#/profile/facebook`)
+      : null
 
     return (
       <Modal
@@ -38,20 +67,28 @@ class FacebookAttestation extends Component {
             error: false,
             stage: 'GenerateCode'
           })
+          this.props.history.replace('/profile')
           this.props.onClose()
         }}
       >
-        <Query query={query}>
+        <Query query={query} variables={{ redirect }}>
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.facebookAuthUrl')
-            return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
+            return (
+              <div>
+                {this[`render${this.state.stage}`]({
+                  authUrl,
+                  redirect: isMobile
+                })}
+              </div>
+            )
           }}
         </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode({ authUrl }) {
+  renderGenerateCode({ authUrl, redirect }) {
     return (
       <>
         <h2>
@@ -62,11 +99,6 @@ class FacebookAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verfify.warning">
-            <b>Warning:</b> Currently unavailable on mobile devices
-          </fbt>
-        </div>
         <div className="help">
           <fbt desc="FacebookAttestation.verfify.explanation">
             Other users will know that you have a verified Facebook account, but
@@ -75,7 +107,7 @@ class FacebookAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          {this.renderVerifyButton({ authUrl })}
+          {this.renderVerifyButton({ authUrl, redirect })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -86,7 +118,8 @@ class FacebookAttestation extends Component {
     )
   }
 
-  renderVerifyButton({ authUrl }) {
+  renderVerifyButton({ authUrl, redirect }) {
+    const sid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     return (
       <Mutation
         mutation={VerifyFacebookMutation}
@@ -98,6 +131,7 @@ class FacebookAttestation extends Component {
               data: result.data,
               loading: false
             })
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -109,14 +143,16 @@ class FacebookAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light d-none d-sm-block"
+            className="btn btn-outline-light"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  authUrl
+                  authUrl,
+                  redirect,
+                  code: sid && sid[1] ? sid[1] : null
                 }
               })
             }}
@@ -165,7 +201,7 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default FacebookAttestation
+export default withRouter(FacebookAttestation)
 
 require('react-styl')(`
 `)

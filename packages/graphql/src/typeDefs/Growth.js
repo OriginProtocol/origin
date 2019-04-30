@@ -32,10 +32,12 @@ module.exports = `
     Twitter
     Airbnb
     Facebook
+    Google
     Referral
     Profile
     ListingCreated
     ListingPurchased
+    ListingIdPurchased
     ListingSold
   }
 
@@ -115,6 +117,18 @@ module.exports = `
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
+  }
+
+  type ListingIdPurchasedAction implements GrowthBaseAction {
+    type: GrowthActionType!
+    status: GrowthActionStatus!
+    rewardEarned: GrowthPrice
+    reward: GrowthPrice
+    unlockConditions: [UnlockCondition]
+    listingId: String!
+    titleKey: String!
+    detailsKey: String!
+    iconSrc: String!
   }
 
   type GrowthCampaign {
