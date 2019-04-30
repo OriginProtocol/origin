@@ -105,7 +105,7 @@ const Row = ({ node, identity, onClick }) => {
   )
 }
 
-export default withIdentity(Row, 'party.id')
+export default withIdentity(Row, 'node.party.id')
 
 require('react-styl')(`
   .notification-row
