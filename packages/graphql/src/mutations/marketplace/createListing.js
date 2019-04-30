@@ -78,7 +78,12 @@ async function createListing(_, input) {
   const from = input.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
+  const ipfsData = listingInputToIPFS(
+    data,
+    unitData,
+    fractionalData,
+    giftCardData
+  )
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall
