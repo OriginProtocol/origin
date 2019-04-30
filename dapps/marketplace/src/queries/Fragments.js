@@ -212,6 +212,12 @@ export default {
             messageKey
             iconSource
           }
+          ... on ListingIdPurchasedAction {
+            listingId
+            titleKey
+            detailsKey
+            iconSrc
+          }
           ... on ReferralAction {
             rewardPending {
               amount

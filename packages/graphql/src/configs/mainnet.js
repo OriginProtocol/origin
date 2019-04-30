@@ -8,6 +8,7 @@ export default {
   discovery: 'https://discovery.originprotocol.com',
   growth: 'https://growth.originprotocol.com',
   bridge: 'https://bridge.originprotocol.com',
+  notifications: 'https://notifications.originprotocol.com',
   IdentityEvents: '0x8ac16c08105de55a02e2b7462b1eec6085fa4d86',
   IdentityEvents_Epoch: 7046530,
   IdentityEvents_EventCacheMaxBlock: 7631468,
