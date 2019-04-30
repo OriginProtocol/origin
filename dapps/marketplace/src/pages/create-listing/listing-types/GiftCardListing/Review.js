@@ -77,6 +77,13 @@ class Review extends Component {
               </div>
             </div>
 
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
+              </div>
+              <div className="col-9">{listing.retailer}</div>
+            </div>
+
             <div className="giftcard-image">
               <img
                 src={
@@ -91,9 +98,13 @@ class Review extends Component {
 
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
+                <fbt desc="create.review.giftcard.issuingCountry">
+                  Issuing Country
+                </fbt>
               </div>
-              <div className="col-9">{listing.retailer}</div>
+              <div className="col-9">
+                {countryCodeMapping['en'][listing.issuingCountry]}
+              </div>
             </div>
 
             <div className="row">
@@ -119,16 +130,6 @@ class Review extends Component {
               </div>
             </div>
 
-            <div className="row">
-              <div className="col-3 label">
-                <fbt desc="create.review.giftcard.cardAmount">
-                  Issuing Country
-                </fbt>
-              </div>
-              <div className="col-9">
-                {countryCodeMapping['en'][listing.issuingCountry]}
-              </div>
-            </div>
             <div className="row">
               <div className="col-3 label">
                 <fbt desc="create.review.giftcard.cardAmount">
