@@ -282,11 +282,23 @@ module.exports = `
     booked: [String]
   }
 
+  type GiftCardListing implements Listing {
+    ${ListingInterface}
+
+    # IPFS
+    retailer: String
+    cardAmount: String
+    issuingCountry: String
+    isDigital: Boolean
+    isCashPurchase: Boolean
+    receiptAvailable: Boolean
+  }
+
   type AnnouncementListing implements Listing {
     ${ListingInterface}
   }
 
-  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing
+  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing | GiftCardListing
 
   type Media {
     url: String

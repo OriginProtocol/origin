@@ -54,7 +54,7 @@ class ChooseListingType extends Component {
             <div className="sub-cat">
               <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">
-                  <fbt desc="chooselistingtype.select">Select</fbt>
+                  <fbt desc="select">Select</fbt>
                 </option>
                 {Categories[categoryId].map(([subcategoryId]) => (
                   <option key={subcategoryId} value={subcategoryId}>

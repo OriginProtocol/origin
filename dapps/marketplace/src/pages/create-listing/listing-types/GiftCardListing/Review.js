@@ -29,8 +29,7 @@ class Review extends Component {
       this.props.listing.retailer
     } Gift Card `
     // Construct gift card image entry
-    const { ipfsGateway } = this.props.config
-    console.log(this.props)
+    // const { ipfsGateway } = this.props.config
     const giftCardHash = GiftCardRetailers[listing.retailer]
     const giftCardImageIpfsUri = `ipfs://${giftCardHash}`
     // const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}` // TODO
@@ -45,7 +44,6 @@ class Review extends Component {
     // Add it in front position
     listing.media.unshift(giftCardEntry)
 
-    console.log(listing.media)
     return listing
   }
 
@@ -54,7 +52,6 @@ class Review extends Component {
   }
 
   render() {
-    console.log(countryCodeMapping)
     const listing = this.listing
     const tokenBalance = this.props.tokenBalance
     const quantity = Number(listing.quantity || 0)

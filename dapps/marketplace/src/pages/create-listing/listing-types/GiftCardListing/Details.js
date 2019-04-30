@@ -20,6 +20,7 @@ import PricingChooser from '../_PricingChooser'
 class Details extends Component {
   constructor(props) {
     super(props)
+    props.listing.media.shift() // Remove first image if there (It will be card image)
     this.state = omit(props.listing, 'valid')
   }
 
@@ -70,25 +71,6 @@ class Details extends Component {
                   </div>
                 )}
 
-                {/* TODO: auto-gen title
-
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.Title">Title</fbt>
-                  </label>
-                  <input {...input('title')} ref={r => (this.titleInput = r)} />
-                  {Feedback('title')}
-                </div>
-*/}
-
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.details.quantity">Quantity</fbt>
-                  </label>
-                  <input {...input('quantity')} />
-                  {Feedback('quantity')}
-                </div>
-
                 <div className="form-group">
                   <label>
                     <fbt desc="create.details.retailer">Retailer</fbt>
@@ -100,12 +82,25 @@ class Details extends Component {
                       this.setState({ retailer: e.target.value })
                     }}
                   >
+                    <option key='none' value=''>
+                      <fbt desc="select">Select</fbt>
+                    </option>
                     {retailerSelect.map(name => (
                       <option key={name} value={name}>
                         {name}
                       </option>
                     ))}
                   </select>
+                  {Feedback('retailer')}
+
+                  <div className="giftcard-image">
+                    <img
+                      src={this.state.retailer ?
+                        `http://localhost:8080/ipfs/${
+                        GiftCardRetailers[this.state.retailer]
+                      }` : `http://localhost:8080/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`}
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -127,6 +122,7 @@ class Details extends Component {
                       </option>
                     ))}
                   </select>
+                  {Feedback('issuingCountry')}
                 </div>
 
                 <div className="form-group">
@@ -147,6 +143,22 @@ class Details extends Component {
                   </div>
 
                   {Feedback('cardAmount')}
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <fbt desc="create.details.quantity">Quantity</fbt>
+                  </label>
+                  <input {...input('quantity')} />
+                  {Feedback('quantity')}
+                </div>
+
+                <div className="form-group">
+                  <label className="mb-0">
+                    <fbt desc="create.details.description">Notes</fbt>
+                  </label>
+                  <textarea {...input('description')} />
+                  {Feedback('description')}
                 </div>
 
                 <PricingChooser {...input('acceptedTokens', true)}>
@@ -179,14 +191,6 @@ class Details extends Component {
                     </div>
                   </div>
                 </PricingChooser>
-
-                <div className="form-group">
-                  <label className="mb-0">
-                    <fbt desc="create.details.description">Notes</fbt>
-                  </label>
-                  <textarea {...input('description')} />
-                  {Feedback('description')}
-                </div>
 
                 <div className="form-group">
                   <label>
@@ -249,6 +253,24 @@ class Details extends Component {
       )
     }
 
+    if (!this.state.retailer) {
+      newState.retailerError = fbt('Please select a card retailer', 'create.listing.giftcard.select-retailer')
+    }
+
+    if (!this.state.cardAmount) {
+      newState.cardAmountError = fbt('Amount on card is required', 'Amount on card is required')
+    } else if (!this.state.cardAmount.match(/^-?[0-9.]+$/)) {
+      newState.cardAmountError = fbt(
+        'Amount on card must be a number',
+        'Amount on card must be a number'
+      )
+    } else if (Number(this.state.cardAmount) <= 0) {
+      newState.cardAmountError = fbt(
+        'Amount on card must be greater than zero',
+        'Amount on card must be greater than zero'
+      )
+    }
+
     if (!this.state.price) {
       newState.priceError = fbt('Price is required', 'Price is required')
     } else if (!this.state.price.match(/^-?[0-9.]+$/)) {
@@ -282,4 +304,11 @@ require('react-styl')(`
     .help-text
       .help-icon
         margin-left: auto
+  .giftcard-image
+    height: 202px
+    padding: 16px
+    overflow: hidden
+    img
+      width: 270px
+      height: auto
 `)

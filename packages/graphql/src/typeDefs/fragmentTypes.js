@@ -10,6 +10,9 @@ const introspectionQueryResultData = {
         name: 'ListingResult',
         possibleTypes: [
           {
+            name: 'GiftCardListing'
+          },
+          {
             name: 'UnitListing'
           },
           {
@@ -27,6 +30,9 @@ const introspectionQueryResultData = {
         kind: 'INTERFACE',
         name: 'Listing',
         possibleTypes: [
+          {
+            name: 'GiftCardListing'
+          },
           {
             name: 'UnitListing'
           },

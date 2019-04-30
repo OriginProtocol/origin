@@ -44,6 +44,18 @@ export default function applyListingData(props, data) {
       variables.commission = listing.boostLimit
       break
 
+    case 'GiftCardListing':
+      variables.fractionalData = {
+        retailer: listing.retailer,
+        cardAmount: listing.cardAmount,
+        issuingCountry: listing.issuingCountry,
+        isDigital: listing.isDigital,
+        isCashPurchase: listing.isCashPurchase,
+        receiptAvailable: listing.receiptAvailable,
+      }
+      variables.commission = listing.boostLimit
+      break
+
     case 'AnnouncementListing':
       break
 
