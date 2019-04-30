@@ -118,7 +118,11 @@ class Review extends Component {
                   Amount on Card
                 </fbt>
               </div>
-              <div className="col-9">{listing.cardAmount}</div>
+              <div className="col-9">
+                {CurrenciesByCountryCode[listing.issuingCountry][2]}
+                {listing.cardAmount}
+              </div>
+
             </div>
             <div className="row">
               <div className="col-3 label">
