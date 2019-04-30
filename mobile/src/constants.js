@@ -19,7 +19,7 @@ export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
 export const WALLET_STORE = 'WALLET_STORE'
 
-export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM', 'Email')
+export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 
 export const BALANCE_POLL_INTERVAL = 5000
 

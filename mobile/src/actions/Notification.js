@@ -8,14 +8,14 @@ export const NotificationConstants = keyMirror(
   'NOTIFICATION'
 )
 
-export function add(notification) {
+export function addNotification(notification) {
   return {
     type: NotificationConstants.ADD,
     notification
   }
 }
 
-export function remove(id) {
+export function removeNotification(id) {
   return {
     type: NotificationConstants.REMOVE,
     id

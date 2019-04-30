@@ -49,8 +49,19 @@ spec:
           - name: cloudsql-instance-credentials
             mountPath: /secrets/cloudsql
             readOnly: true
+          - name: origin-apns-key-file
+            mountPath: /secrets/apns
+            readOnly: true
+          - name: firebase-service-json-file
+            mountPath: /secrets/firebase
+            readOnly: true
       volumes:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
-
+        - name: origin-apns-key-file
+          secret:
+            secretName: origin-apns-key-file
+        - name: firebase-service-json-file
+          secret:
+            secretName: firebase-service-json-file

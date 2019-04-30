@@ -49,10 +49,6 @@ creatorIssuerImage: origin-dapp-creator-issuer
 creatorIssuerImageTag: 'latest'
 creatorIssuerIp: '35.233.181.44'
 
-# origin-linking
-linkingImage: origin-linking
-linkingImageTag: 'efc79d3'
-
 # origin-cron
 cronImage: origin-cron
 cronImageTag: 'c0f19e8'
