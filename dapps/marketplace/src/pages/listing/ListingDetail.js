@@ -116,6 +116,7 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
+    const isGiftCard = listing.__typename === 'GiftCardListing'
     const isOwnerViewing = listing.seller.id === this.props.from
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
@@ -123,6 +124,15 @@ class ListingDetail extends Component {
       <>
         <Gallery pics={listing.media} />
         <div className="description">{listing.description}</div>
+
+        {!isGiftCard ? null : (
+          <>
+            <hr />
+            <div>
+              Hello.
+            </div>
+          </>
+        )}
         {!isFractional ? null : (
           <>
             <hr />
