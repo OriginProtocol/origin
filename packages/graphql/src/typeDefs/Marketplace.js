@@ -59,7 +59,6 @@ module.exports = `
       data: ListingInput!
       unitData: UnitListingInput
       fractionalData: FractionalListingInput
-      giftCardlData: GiftCardListingInput
     ): Transaction
 
     updateListing(
@@ -70,7 +69,6 @@ module.exports = `
       data: ListingInput!
       unitData: UnitListingInput
       fractionalData: FractionalListingInput
-      giftCardlData: GiftCardListingInput
     ): Transaction
 
     withdrawListing(
@@ -402,6 +400,14 @@ module.exports = `
 
   input UnitListingInput {
     unitsTotal: Int
+
+    # Gift Cards:
+    retailer: String
+    cardAmount: String
+    issuingCountry: String
+    isDigital: Boolean
+    isCashPurchase: Boolean
+    receiptAvailable: Boolean
   }
 
   input FractionalListingInput {
@@ -411,15 +417,6 @@ module.exports = `
     unavailable: [String]
     customPricing: [String]
     booked: [String]
-  }
-
-  input GiftCardListingInput {
-    retailer: String
-    cardAmount: String
-    issuingCountry: String
-    isDigital: Boolean
-    isCashPurchase: Boolean
-    receiptAvailable: Boolean
   }
 
   input MediaInput {

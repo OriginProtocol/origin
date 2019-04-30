@@ -45,7 +45,7 @@ export default function applyListingData(props, data) {
       break
 
     case 'GiftCardListing':
-      variables.giftCardData = {
+      variables.unitData = {
         retailer: listing.retailer,
         cardAmount: listing.cardAmount,
         issuingCountry: listing.issuingCountry,

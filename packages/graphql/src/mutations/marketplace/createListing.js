@@ -5,17 +5,8 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 
-export function listingInputToIPFS(
-  data,
-  unitData,
-  fractionalData,
-  giftCardData
-) {
-  const listingType = fractionalData
-    ? 'fractional'
-    : giftCardData
-    ? 'giftcard'
-    : 'unit'
+export function listingInputToIPFS(data, unitData, fractionalData) {
+  const listingType = fractionalData ? 'fractional' : 'unit'
   const ipfsData = {
     __typename: data.typename || 'UnitListing',
     schemaId: 'https://schema.originprotocol.com/listing_2.0.0.json',
@@ -49,13 +40,13 @@ export function listingInputToIPFS(
     ipfsData.timeZone = fractionalData.timeZone || ''
     ipfsData.workingHours = fractionalData.workingHours || []
     ipfsData.booked = fractionalData.booked || []
-  } else if (giftCardData) {
-    ipfsData.retailer = giftCardData.retailer || ''
-    ipfsData.cardAmount = giftCardData.cardAmount || '0'
-    ipfsData.issuingCountry = giftCardData.issuingCountry || '0'
-    ipfsData.isDigital = giftCardData.isDigital || false
-    ipfsData.isCashPurchase = giftCardData.isCashPurchase || false
-    ipfsData.receiptAvailable = giftCardData.receiptAvailable || false
+  } else if (data.typename === 'GiftCardListing') {
+    ipfsData.retailer = unitData.retailer || ''
+    ipfsData.cardAmount = unitData.cardAmount || '0'
+    ipfsData.issuingCountry = unitData.issuingCountry || '0'
+    ipfsData.isDigital = unitData.isDigital || false
+    ipfsData.isCashPurchase = unitData.isCashPurchase || false
+    ipfsData.receiptAvailable = unitData.receiptAvailable || false
   } else if (unitData) {
     ipfsData.unitsTotal = unitData.unitsTotal
   } else {
@@ -67,23 +58,11 @@ export function listingInputToIPFS(
 }
 
 async function createListing(_, input) {
-  const {
-    depositManager,
-    data,
-    unitData,
-    fractionalData,
-    giftCardData,
-    autoApprove
-  } = input
+  const { depositManager, data, unitData, fractionalData, autoApprove } = input
   const from = input.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 
-  const ipfsData = listingInputToIPFS(
-    data,
-    unitData,
-    fractionalData,
-    giftCardData
-  )
+  const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   let createListingCall

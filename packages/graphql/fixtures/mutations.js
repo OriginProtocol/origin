@@ -149,7 +149,6 @@ export const CreateListingMutation = gql`
     $data: ListingInput!
     $unitData: UnitListingInput
     $fractionalData: FractionalListingInput
-    $giftCardData: GiftCardListingInput
   ) {
     createListing(
       from: $from
@@ -159,7 +158,6 @@ export const CreateListingMutation = gql`
       data: $data
       unitData: $unitData
       fractionalData: $fractionalData
-      giftCardData: $giftCardData
     ) {
       id
     }
@@ -175,7 +173,6 @@ export const UpdateListingMutation = gql`
     $data: ListingInput!
     $unitData: UnitListingInput
     $fractionalData: FractionalListingInput
-    $giftCardData: GiftCardListingInput
   ) {
     updateListing(
       listingID: $listingID
@@ -185,7 +182,6 @@ export const UpdateListingMutation = gql`
       data: $data
       unitData: $unitData
       fractionalData: $fractionalData
-      giftCardData: $giftCardData
     ) {
       id
     }
