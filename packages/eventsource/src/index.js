@@ -128,7 +128,14 @@ class OriginEventSource {
         'unavailable',
         'customPricing',
         'timeZone',
-        'workingHours'
+        'workingHours',
+
+        'retailer',
+        'cardAmount',
+        'issuingCountry',
+        'isDigital',
+        'isCashPurchase',
+        'receiptAvailable'
       )
       data.valid = true
 

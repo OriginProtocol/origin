@@ -94,6 +94,14 @@ export default {
           customPricing
           unavailable
         }
+        ... on GiftCardListing {
+          retailer
+          cardAmount
+          issuingCountry
+          isDigital
+          isCashPurchase
+          receiptAvailable
+        }
       }
     `
   },
