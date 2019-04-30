@@ -10,7 +10,7 @@ const Avatar = ({ size, avatar, profile, className, emptyClass = 'empty' }) => {
 
   if (profile && profile.avatarUrlExpanded) {
     avatarUrl = profile.avatarUrlExpanded
-  } else if (!avatar) {
+  } else if (avatar) {
     avatarUrl = avatar
   }
 
