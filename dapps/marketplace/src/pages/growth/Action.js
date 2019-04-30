@@ -64,7 +64,7 @@ function Action(props) {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
   } else if (type === 'Google') {
-    foregroundImgSrc = '/images/identity/goole-icon-light.svg'
+    foregroundImgSrc = '/images/identity/google-icon.svg'
     title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
@@ -192,12 +192,17 @@ function Action(props) {
     >
       <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
         <div className="image-holder mt-auto mb-auto">
-          {
+          {type !== 'ListingIdPurchased' && (
             <Fragment>
               <img className="background" src={backgroundImgSrc} />
               <img className={type.toLowerCase()} src={foregroundImgSrc} />
             </Fragment>
-          }
+          )}
+          {type === 'ListingIdPurchased' && (
+            <Fragment>
+              <img className={type.toLowerCase()} src={foregroundImgSrc} />
+            </Fragment>
+          )}
         </div>
       </div>
       <div className={`d-flex flex-column justify-content-center col-6`}>
@@ -316,6 +321,11 @@ require('react-styl')(`
         left: 16px
         top: 20px
         width: 29px
+       .google
+        position: absolute
+        left: 16px
+        top: 16px
+        width: 29px
       .listingsold
         position: absolute
         left: 12px
@@ -326,6 +336,8 @@ require('react-styl')(`
         left: 13px
         top: 17px
         width: 35px
+      .listingidpurchased
+        width: 60px
       .referral
         position: absolute
         left: 15px
@@ -414,8 +426,8 @@ require('react-styl')(`
         top: 10px
         width: 24.5px
       .listingpurchased
-        left: 9px
-        top: 11px
+        left: 0px
+        top: 0px
         width: 23px
       .referral
         left: 10px
