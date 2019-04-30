@@ -292,7 +292,7 @@ describe('May campaign rules', () => {
       {
         id: 11,
         type: GrowthEventTypes.ListingPurchased,
-        customId: '1-000-1-0',
+        customId: '1-000-2554-0',
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
         createdAt: this.duringCampaign

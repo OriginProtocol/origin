@@ -39,8 +39,7 @@ const resolvers = {
         return 'ReferralAction'
       } else if (action.type === 'ListingIdPurchased') {
         return 'ListingIdPurchasedAction'
-      }
-      else {
+      } else {
         return 'GrowthAction'
       }
     }

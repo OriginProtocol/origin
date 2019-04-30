@@ -172,25 +172,25 @@ describe('Apollo adapter - May campaign', () => {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(500), currency: 'OGN' }
+        reward: { amount: tokenNaturalUnits(300), currency: 'OGN' }
       },
       ListingPurchaseHousing: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        reward: { amount: tokenNaturalUnits(750), currency: 'OGN' }
       },
       ListingPurchaseInfluencer: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        reward: { amount: tokenNaturalUnits(1250), currency: 'OGN' }
       },
       ListingPurchaseArt: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(1000), currency: 'OGN' }
+        reward: { amount: tokenNaturalUnits(20000), currency: 'OGN' }
       },
     }
   })
@@ -294,7 +294,7 @@ describe('Apollo adapter - May campaign', () => {
       {
         id: 5,
         type: GrowthEventTypes.ListingPurchased,
-        customId: '1-000-1-0',
+        customId: '1-000-2553-0',
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
         createdAt: this.beforeCampaign
@@ -303,7 +303,7 @@ describe('Apollo adapter - May campaign', () => {
       {
         id: 6,
         type: GrowthEventTypes.ListingPurchased,
-        customId: '1-000-1-0',
+        customId: '1-000-2554-0',
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
         createdAt: this.duringCampaign

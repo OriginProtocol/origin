@@ -405,9 +405,6 @@
   "1aItYz": "Verify your Google Profile",
   "2peucP": "상품 목록 만들기",
   "2QerxF": "상품 구매",
-  "2kbpbo": "Purchase a specific listing",
-  "4rFkyn": "당신의 친구를 오리진(Origin) 에 초대해주세요.",
-  "3XLL4i": "요구 사항:",
   "1FAmQd": {
     "growth.jan2019.name": "2019 년 1 월 캠페인",
     "growth.jan2019.short_name": "2019 년 1 월",
@@ -436,6 +433,8 @@
     "growth.purchase.art.title": "Purchase the Vitalik AR Portrait by Trevor Jones",
     "growth.purchase.art.details": "Only 1 original piece available."
   },
+  "4rFkyn": "당신의 친구를 오리진(Origin) 에 초대해주세요.",
+  "3XLL4i": "요구 사항:",
   "4ETL05": "보류중",
   "4qOByY": "획득",
   "1IZ5ov": "Ok",

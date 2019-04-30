@@ -148,7 +148,9 @@ class ActionList extends Component {
                 <Action
                   action={action}
                   decimalDivision={decimalDivision}
-                  key={`${action.type}:${action.status}:${action.listingId ? action.listingId : '0'}`}
+                  key={`${action.type}:${action.status}:${
+                    action.listingId ? action.listingId : '0'
+                  }`}
                   handleNavigationChange={handleNavigationChange}
                   isMobile={isMobile}
                   onMobileLockClick={requirementText => {

@@ -76,7 +76,7 @@ async function createTestData() {
     shortNameKey: 'growth.apr2019.short_name',
     rules: JSON.stringify(aprilConfig),
     startDate: Date.parse('April 1, 2019'),
-    endDate: Date.parse('May 1, 2019'),
+    endDate: Date.parse('April 28, 2019'),
     distributionDate: Date.parse('May 1, 2019'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,
@@ -85,11 +85,11 @@ async function createTestData() {
   })
 
   await db.GrowthCampaign.upsert({
-    id: 4,
+    id: 5,
     nameKey: 'growth.may2019.name',
     shortNameKey: 'growth.may2019.short_name',
     rules: JSON.stringify(mayConfig),
-    startDate: Date.parse('May 1, 2019'),
+    startDate: Date.parse('April 28, 2019'),
     endDate: Date.parse('June 1, 2019'),
     distributionDate: Date.parse('June 1, 2019'),
     cap: 10000 * Math.pow(10, 18),

@@ -182,7 +182,7 @@ const mayConfig = {
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-1',
+            listingId: '1-000-2554',
             reward: {
               amount: tokenNaturalUnits(25),
               currency: 'OGN'
@@ -200,7 +200,7 @@ const mayConfig = {
           id: 'ListingPurchaseGC',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-2',
+            listingId: '1-000-2553',
             reward: {
               amount: tokenNaturalUnits(50),
               currency: 'OGN'
@@ -218,7 +218,7 @@ const mayConfig = {
           id: 'ListingPurchaseCharity',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-3',
+            listingId: '1-000-2555',
             reward: {
               amount: tokenNaturalUnits(300),
               currency: 'OGN'
@@ -236,7 +236,7 @@ const mayConfig = {
           id: 'ListingPurchaseHousing',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-4',
+            listingId: '1-000-2543',
             reward: {
               amount: tokenNaturalUnits(750),
               currency: 'OGN'
@@ -256,7 +256,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-5',
             reward: {
-              amount: tokenNaturalUnits(100),
+              amount: tokenNaturalUnits(1250),
               currency: 'OGN'
             },
             visible: true,
@@ -272,9 +272,9 @@ const mayConfig = {
           id: 'ListingPurchaseArt',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-6',
+            listingId: '1-000-503',
             reward: {
-              amount: tokenNaturalUnits(1000),
+              amount: tokenNaturalUnits(20000),
               currency: 'OGN'
             },
             visible: true,
@@ -282,7 +282,7 @@ const mayConfig = {
             nextLevelCondition: false,
             scope: 'campaign',
             iconSrc: 'images/growth/purchase-art-icon.svg',
-            titleKey: 'growth.purchase.art.key',
+            titleKey: 'growth.purchase.art.title',
             detailsKey: 'growth.purchase.art.details'
           }
         }

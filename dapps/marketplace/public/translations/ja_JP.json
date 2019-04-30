@@ -405,9 +405,6 @@
   "1aItYz": "Verify your Google Profile",
   "2peucP": "掲載情報を作成する。",
   "2QerxF": "購入する",
-  "2kbpbo": "Purchase a specific listing",
-  "4rFkyn": "友達をOriginに招待する",
-  "3XLL4i": "必要：",
   "1FAmQd": {
     "growth.jan2019.name": "2019年1月キャンペーン",
     "growth.jan2019.short_name": "2019年1月",
@@ -436,6 +433,8 @@
     "growth.purchase.art.title": "Purchase the Vitalik AR Portrait by Trevor Jones",
     "growth.purchase.art.details": "Only 1 original piece available."
   },
+  "4rFkyn": "友達をOriginに招待する",
+  "3XLL4i": "必要：",
   "4ETL05": "保留中",
   "4qOByY": "収益",
   "1IZ5ov": "Ok",

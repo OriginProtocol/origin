@@ -14,7 +14,7 @@ function Action(props) {
     unlockConditions,
     listingId,
     titleKey,
-    //detailsKey,
+    detailsKey,
     iconSrc
   } = props.action
 
@@ -40,7 +40,6 @@ function Action(props) {
 
   let foregroundImgSrc
   let title
-  //let details
   let buttonLink = '/profile'
   let buttonOnClick = () => {
     window.scrollTo(0, 0)
@@ -77,9 +76,13 @@ function Action(props) {
     buttonLink = '/'
   } else if (type === 'ListingIdPurchased') {
     foregroundImgSrc = iconSrc
-    //title = fbt.enum(titleKey, GrowthEnum)
-    title = fbt('Purchase a specific listing', 'some.key')
-    //details = fbt.enum(detailsKey, GrowthEnum)
+    title = (
+      <Fragment>
+        <fbt desc="growth">
+          <fbt:enum enum-range={GrowthEnum} value={titleKey} />
+        </fbt>
+      </Fragment>
+    )
     buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
     foregroundImgSrc = '/images/growth/sell-icon.svg'
@@ -199,6 +202,15 @@ function Action(props) {
       </div>
       <div className={`d-flex flex-column justify-content-center col-6`}>
         <div className="title">{title}</div>
+        <div className="details">
+          {detailsKey && (
+            <Fragment>
+              <fbt desc="growth">
+                <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
+              </fbt>
+            </Fragment>
+          )}
+        </div>
         {actionLocked && !isMobile && unlockConditions.length > 0 && (
           <Fragment>
             <div className="requirement pr-2 d-flex align-items-center ">
@@ -348,6 +360,10 @@ require('react-styl')(`
       .requirement
         color: var(--dusk)
         font-size: 14px
+        font-weight: normal
+      .details
+        color: var(--dusk)
+        font-size: 12px
         font-weight: normal
       .btn
         border-radius: 15rem

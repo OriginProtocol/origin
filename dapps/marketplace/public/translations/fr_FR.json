@@ -405,9 +405,6 @@
   "1aItYz": "Verify your Google Profile",
   "2peucP": "Créer une annonce",
   "2QerxF": "Achat d'une annonce",
-  "2kbpbo": "Purchase a specific listing",
-  "4rFkyn": "Invite Friends to Join Origin",
-  "3XLL4i": "Requires:",
   "1FAmQd": {
     "growth.jan2019.name": "Campagne de janvier 2019",
     "growth.jan2019.short_name": "Jan 2019",
@@ -436,6 +433,8 @@
     "growth.purchase.art.title": "Purchase the Vitalik AR Portrait by Trevor Jones",
     "growth.purchase.art.details": "Only 1 original piece available."
   },
+  "4rFkyn": "Invite Friends to Join Origin",
+  "3XLL4i": "Requires:",
   "4ETL05": "En attente",
   "4qOByY": "Gagné",
   "1IZ5ov": "Ok",

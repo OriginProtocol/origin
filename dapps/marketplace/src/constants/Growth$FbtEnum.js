@@ -21,12 +21,15 @@ const Growth$FbtEnum = {
   'growth.purchase.charity.title': 'Donate $100 to the GiveDirectly charity',
   'growth.purchase.charity.details':
     'Donation will be made by Origin on your behalf.',
-  'growth.purchase.homerental.title': 'Book a home rental at Il Garovaglio in Como, Italy',
+  'growth.purchase.homerental.title':
+    'Book a home rental at Il Garovaglio in Como, Italy',
   'growth.purchase.homerental.details':
     'Booking and stay must happen in the month of May.',
-  'growth.purchase.experience.title': 'Purchase an annual pass to 3lau concert tickets',
+  'growth.purchase.experience.title':
+    'Purchase an annual pass to 3lau concert tickets',
   'growth.purchase.experience.details': 'TBD',
-  'growth.purchase.art.title': 'Purchase the Vitalik AR Portrait by Trevor Jones',
+  'growth.purchase.art.title':
+    'Purchase the Vitalik AR Portrait by Trevor Jones',
   'growth.purchase.art.details': 'Only 1 original piece available.'
 }
 
