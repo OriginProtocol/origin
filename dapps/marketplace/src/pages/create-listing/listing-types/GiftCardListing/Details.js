@@ -165,6 +165,58 @@ class Details extends Component {
                 </div>
 
                 <div className="form-group">
+                  <input
+                    type="checkbox"
+                    checked={this.state.isDigital}
+                    id="isDigital-checkbox"
+                    onChange={() => {
+                      this.setState({ isDigital: !this.state.isDigital })
+                    }}
+                  />
+                  <label htmlFor="isDigital-checkbox">
+                    <fbt desc="create.details.giftcard.isDigital">
+                      Is this card digital?
+                    </fbt>
+                  </label>
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="checkbox"
+                    checked={this.state.isCashPurchase}
+                    id="isCashPurchase-checkbox"
+                    onChange={() => {
+                      this.setState({
+                        isCashPurchase: !this.state.isCashPurchase
+                      })
+                    }}
+                  />
+                  <label htmlFor="isCashPurchase-checkbox">
+                    <fbt desc="create.details.giftcard.isCashPurchase">
+                      Was this a cash purchase?
+                    </fbt>
+                  </label>
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="checkbox"
+                    checked={this.state.receiptAvailable}
+                    id="receiptAvailable-checkbox"
+                    onChange={() => {
+                      this.setState({
+                        receiptAvailable: !this.state.receiptAvailable
+                      })
+                    }}
+                  />
+                  <label htmlFor="receiptAvailable-checkbox">
+                    <fbt desc="create.details.giftcard.receiptAvailable">
+                      Is a receipt available?
+                    </fbt>
+                  </label>
+                </div>
+
+                <div className="form-group">
                   <label className="mb-0">
                     <fbt desc="create.details.description">Notes</fbt>
                   </label>

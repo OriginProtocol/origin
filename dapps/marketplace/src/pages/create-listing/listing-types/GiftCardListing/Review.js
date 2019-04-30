@@ -107,6 +107,37 @@ class Review extends Component {
 
             <div className="row">
               <div className="col-3 label">
+                <fbt desc="create.details.giftcard.isDigital">
+                  Is this card digital?
+                </fbt>
+              </div>
+              <div className="col-9">{listing.isDigital ? 'Yes' : 'No'}</div>
+            </div>
+
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.details.giftcard.isCashPurchase">
+                  Was this a cash purchase?
+                </fbt>
+              </div>
+              <div className="col-9">
+                {listing.isCashPurchase ? 'Yes' : 'No'}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-3 label">
+                <fbt desc="create.details.giftcard.receiptAvailable">
+                  Is a receipt available?
+                </fbt>
+              </div>
+              <div className="col-9">
+                {listing.receiptAvailable ? 'Yes' : 'No'}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-3 label">
                 <fbt desc="create.review.giftcards.notes">Notes</fbt>
               </div>
               <div className="col-9">
