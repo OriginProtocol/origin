@@ -43,10 +43,8 @@ function withGrowthCampaign(WrappedComponent) {
                     // action is completed
                     fetchPolicy="network-only"
                   >
-                    {({ data, error, networkStatus, loading }) => {
-                      if (networkStatus === 1 || loading) {
-                        return ''
-                      } else if (error) {
+                    {({ data, error }) => {
+                      if (error) {
                         return (
                           <QueryError error={error} query={allCampaignsQuery} />
                         )
@@ -56,7 +54,7 @@ function withGrowthCampaign(WrappedComponent) {
                         <WrappedComponent
                           {...props}
                           growthEnrollmentStatus={enrollmentStatus}
-                          growthCampaigns={get(data, 'campaigns.nodes')}
+                          growthCampaigns={get(data, 'campaigns.nodes') || []}
                         />
                       )
                     }}
