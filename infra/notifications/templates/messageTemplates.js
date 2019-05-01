@@ -51,7 +51,7 @@ const messageTemplates = {
     },
     email: {
       OfferCreated: {
-        subject: 'New Offer',
+        subject: _.template('New Offer for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/seller-OfferCreated.html`).toString()
         ),
@@ -60,7 +60,7 @@ const messageTemplates = {
         )
       },
       OfferWithdrawn: {
-        subject: 'Offer Withdrawn',
+        subject: _.template('Offer Withdrawn for <%= listing.title %>'),
         html: _.template(
           fs
             .readFileSync(`${templateDir}/seller-OfferWithdrawn.html`)
@@ -71,7 +71,7 @@ const messageTemplates = {
         )
       },
       OfferDisputed: {
-        subject: 'Dispute Initiated',
+        subject: _.template('Dispute Initiated for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/seller-OfferDisputed.html`).toString()
         ),
@@ -80,7 +80,7 @@ const messageTemplates = {
         )
       },
       OfferRuling: {
-        subject: 'Dispute Resolved',
+        subject: _.template('Dispute Resolved for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/seller-OfferRuling.html`).toString()
         ),
@@ -89,7 +89,7 @@ const messageTemplates = {
         )
       },
       OfferFinalized: {
-        subject: 'Sale Completed',
+        subject: _.template('Sale Completed for <%= listing.title %>'),
         html: _.template(
           fs
             .readFileSync(`${templateDir}/seller-OfferFinalized.html`)
@@ -126,7 +126,7 @@ const messageTemplates = {
     },
     email: {
       OfferWithdrawn: {
-        subject: 'Offer Rejected',
+        subject: _.template('Offer Rejected for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.html`).toString()
         ),
@@ -135,7 +135,7 @@ const messageTemplates = {
         )
       },
       OfferAccepted: {
-        subject: 'Offer Accepted',
+        subject: _.template('Offer Accepted for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/buyer-OfferAccepted.html`).toString()
         ),
@@ -144,7 +144,7 @@ const messageTemplates = {
         )
       },
       OfferDisputed: {
-        subject: 'Dispute Initiated',
+        subject: _.template('Dispute Initiated for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/buyer-OfferDisputed.html`).toString()
         ),
@@ -153,7 +153,7 @@ const messageTemplates = {
         )
       },
       OfferRuling: {
-        subject: 'Dispute Resolved',
+        subject: _.template('Dispute Resolved for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
         ),
@@ -162,7 +162,7 @@ const messageTemplates = {
         )
       },
       OfferData: {
-        subject: 'New Review',
+        subject: _.template('New Review for <%= listing.title %>'),
         html: _.template(
           fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
         ),

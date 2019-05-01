@@ -214,29 +214,22 @@ async function transactionEmailSend(
           2222: 'https://ipfs.dev.originprotocol.com',
           999: 'http://localhost:8080'
         }
-        const vars = {
+        const templateVars = {
+          listing: listing,
+          offer: offer,
+          config: config,
           dappUrl: networkDappDomains[listingNetwork],
           ipfsGatewayUrl: networkGatewayDomains[listingNetwork]
         }
         const email = {
           to: config.overrideEmail || s.email,
           from: config.fromEmail,
-          subject: message.subject,
+          subject: message.subject(templateVars),
           text: emailTemplateTxt({
-            message: message.text({
-              listing: listing,
-              offer: offer,
-              config: config,
-              ...vars
-            })
+            message: message.text(templateVars)
           }),
           html: emailTemplateHtml({
-            message: message.html({
-              listing: listing,
-              offer: offer,
-              config: config,
-              ...vars
-            })
+            message: message.html(templateVars)
           }),
           asm: {
             groupId: config.asmGroupId
