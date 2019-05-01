@@ -1,7 +1,9 @@
+'use strict'
+
 import React from 'react'
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 
-const OnboardingPage = ({ image, title, subtitle }) => {
+const WelcomePage = ({ image, title, subtitle }) => {
   let titleElement = title
 
   if (typeof title === 'string' || title instanceof String) {
@@ -59,4 +61,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default OnboardingPage
+export default WelcomePage
