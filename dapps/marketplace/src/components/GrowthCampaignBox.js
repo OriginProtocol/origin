@@ -39,7 +39,7 @@ const renderNotEnrolledBox = openmodalonstart => {
 
 const renderEnrolledBox = (props, walletAddress) => {
   const campaigns = props.growthCampaigns
-  if (campaigns.length == 0) {
+  if (!campaigns || campaigns.length == 0) {
     return (
       <h5 className="p-2">
         <fbt desc="growthCampaignBox.noCampaignsDetected">
