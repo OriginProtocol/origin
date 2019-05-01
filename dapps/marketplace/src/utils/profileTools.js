@@ -35,3 +35,56 @@ export function changesToPublishExist({ props, state }) {
       (!!state.airbnbAttestation || !!state.airbnbVerified)
   )
 }
+
+const ATTESTATIONS_LOCALSTORAGE_KEY = 'attestations'
+
+export function getVerifiedAccounts({ wallet }, defaultValue = {}) {
+  let attestations = window.localStorage.getItem(ATTESTATIONS_LOCALSTORAGE_KEY)
+
+  if (!attestations) {
+    return defaultValue
+  }
+
+  attestations = JSON.parse(attestations)
+
+  if (attestations.wallet !== wallet) {
+    return defaultValue
+  }
+
+  return attestations.data
+}
+
+export function updateVerifiedAccounts({ wallet, data }) {
+  let attestations = window.localStorage.getItem(ATTESTATIONS_LOCALSTORAGE_KEY)
+
+  if (!attestations) {
+    window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
+      wallet,
+      data
+    }))
+    return
+  }
+
+  attestations = JSON.parse(attestations)
+
+  if (attestations.wallet !== wallet) {
+    // If it is a different wallet, overwrite previous values 
+    window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
+      wallet,
+      data
+    }))
+    return
+  }
+
+  window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
+    ...attestations,
+    data: {
+      ...attestations.data,
+      ...data
+    }
+  }))
+}
+
+export function clearVerifiedAccounts() {
+  window.localStorage.removeItem(ATTESTATIONS_LOCALSTORAGE_KEY)
+}

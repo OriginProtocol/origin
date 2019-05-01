@@ -7,7 +7,7 @@ import { Switch, Route } from 'react-router-dom'
 import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
+import { unpublishedStrength, changesToPublishExist, updateVerifiedAccounts, clearVerifiedAccounts,getVerifiedAccounts } from 'utils/profileTools'
 import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
@@ -73,20 +73,9 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const attestations = store.get(`attestations-${props.wallet}`, {})
-    const storedAttestations = {}
-    Object.keys(attestations).forEach(key => {
-      try {
-        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
-          ...JSON.parse(attestations[key]),
-          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
-        })
-        storedAttestations[key] = attestations[key]
-      } catch (e) {
-        // Invalid attestation
-        console.log('Invalid attestation', attestations[key])
-      }
-    })
+
+    const storedAttestations = this.getStoredAttestions()
+
     this.state = {
       ...getState(profile),
       ...storedAttestations
@@ -147,6 +136,13 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.wallet !== prevProps.wallet) {
+      const storedAttestations = this.getStoredAttestions()
+      this.setState({
+        ...storedAttestations
+      })
+    }
+
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
       this.accountsSwitched = true
@@ -361,8 +357,10 @@ class UserProfile extends Component {
                     ...attestations
                   ],
                   validate: () => this.validate(),
-                  onComplete: () =>
-                    store.set(`attestations-${this.props.wallet}`, undefined),
+                  onComplete: () => {
+                    store.set(`attestations-${this.props.wallet}`, undefined)
+                    clearVerifiedAccounts()
+                  },
                   children: fbt('Publish Now', 'Profile.publishNow')
                 }}
                 publishedProfile={this.props.identity || {}}
@@ -509,6 +507,36 @@ class UserProfile extends Component {
       return m
     }, {})
     store.set(`attestations-${this.props.wallet}`, attestations)
+    updateVerifiedAccounts({
+      wallet: this.props.wallet,
+      data: attestations
+    })
+  }
+
+  getAttestations() {
+    const wallet = this.props.wallet
+    const defaultValue = store.get(`attestations-${wallet}`, {})
+    return getVerifiedAccounts({ wallet }, defaultValue)
+  }
+
+  getStoredAttestions() {
+    const attestations = this.getAttestations()
+    const storedAttestations = {}
+
+    Object.keys(attestations).forEach(key => {
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...JSON.parse(attestations[key]),
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+        storedAttestations[key] = attestations[key]
+      } catch (e) {
+        // Invalid attestation
+        console.log('Invalid attestation', attestations[key])
+      }
+    })
+
+    return storedAttestations
   }
 }
 
