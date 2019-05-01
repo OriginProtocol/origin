@@ -12,6 +12,7 @@ export default gql`
           fullName
           description
           avatar
+          avatarUrl
           avatarUrlExpanded
           strength
           attestations

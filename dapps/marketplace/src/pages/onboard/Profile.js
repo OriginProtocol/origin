@@ -9,10 +9,12 @@ import Link from 'components/Link'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import { unpublishedStrength } from 'utils/profileTools'
+import { uploadImages } from 'utils/uploadImages'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withEthBalance from 'hoc/withEthBalance'
+import withConfig from 'hoc/withConfig'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -68,7 +70,6 @@ class OnboardProfile extends Component {
 
   render() {
     const { listing, linkPrefix } = this.props
-    const { avatar } = this.state
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -105,9 +106,17 @@ class OnboardProfile extends Component {
                     <div className="col-md-4">
                       <div className="avatar-wrap">
                         <ImageCropper
-                          onChange={a => this.setState({ avatar: a })}
+                          onChange={async avatar => {
+                            const { ipfsRPC } = this.props.config
+                            const uploadedImages = await uploadImages(ipfsRPC, [avatar])
+                            const avatarImg = uploadedImages[0]
+                            if (avatarImg) {
+                              const avatarUrl = avatarImg.url
+                              this.setState({ avatar, avatarUrl })
+                            }
+                          }}
                         >
-                          <Avatar className="with-cam" avatar={avatar} />
+                          <Avatar className="with-cam" avatarUrl={this.state.avatarUrl} />
                         </ImageCropper>
                       </div>
                     </div>
@@ -183,7 +192,8 @@ class OnboardProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar'
+                    'avatar',
+                    'avatarUrl'
                   ])}
                   attestations={attestations}
                   validate={() => this.validate()}
@@ -273,7 +283,7 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withWallet(withEthBalance(withIdentity(OnboardProfile)))
+export default withConfig(withWallet(withEthBalance(withIdentity(OnboardProfile))))
 
 require('react-styl')(`
   .onboard .onboard-box.profile
