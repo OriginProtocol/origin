@@ -2,16 +2,11 @@ import gql from 'graphql-tag'
 import fragments from './Fragments'
 
 const UserListingsQuery = gql`
-  query UserListings(
-    $id: ID!
-    $first: Int
-    $after: String
-    $filters: [ListingFilterInput!]
-  ) {
+  query UserListings($id: ID!, $first: Int, $after: String, $filter: String) {
     marketplace {
       user(id: $id) {
         id
-        listings(first: $first, after: $after, filters: $filters) {
+        listings(first: $first, after: $after, filter: $filter) {
           totalCount
           pageInfo {
             hasNextPage
