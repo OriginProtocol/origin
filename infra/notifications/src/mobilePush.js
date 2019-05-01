@@ -1,4 +1,4 @@
-const { messageTemplates } = require('../templates/messageTemplates')
+// const { messageTemplates } = require('../templates/messageTemplates')
 
 const apn = require('apn')
 const firebase = require('firebase-admin')
@@ -43,7 +43,7 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 //
 // Mobile Push notifications for Messages
 //
-async function messageMobilePush(addresses, config) {
+async function messageMobilePush(addresses) {
   if (!addresses) throw 'addresses not defined'
 
   // TODO

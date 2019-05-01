@@ -39,13 +39,13 @@ async function messageEmailSend(receivers, sender, config) {
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
-  messageSender = Identity.findOne({
+  const messageSender = Identity.findOne({
     raw: true,
     where: {
       ethAddress: sender
     }
   })
-  messageReceivers = Identity.findAll({
+  const messageReceivers = Identity.findAll({
     raw: true,
     where: {
       ethAddress: {
