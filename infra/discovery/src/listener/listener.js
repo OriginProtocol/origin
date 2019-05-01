@@ -166,11 +166,7 @@ async function main() {
       // out events outside of interval (processedToBlock, toBlock].
       const newEvents = [].concat(
         ...eventArrays.filter(event => {
-          if (
-            event &&
-            event.blockNumber > processedToBlock &&
-            event.blockNumber <= toBlock
-          ) {
+          if (event && event.blockNumber > processedToBlock) {
             return event
           }
         })
