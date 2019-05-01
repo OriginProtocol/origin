@@ -36,7 +36,7 @@ async function postToDiscordWebhook(url, data) {
   }
   const priceDisp = listing => {
     const price = listing.price
-    return price ? `${price.amount}${price.currency}` : ''
+    return price ? `${price.amount}${price.currency.id}` : ''
   }
 
   const icon = eventIcons[data.event.event] || ':dromedary_camel: '

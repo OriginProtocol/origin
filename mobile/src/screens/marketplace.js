@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   DeviceEventEmitter,
   Modal,
-  Platform,
   StyleSheet,
   StatusBar,
   View
@@ -14,7 +13,6 @@ import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import { DEFAULT_NOTIFICATION_PERMISSIONS, PROMPT_MESSAGE } from '../constants'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -178,6 +176,11 @@ class MarketplaceScreen extends Component {
 
   render() {
     const { modals } = this.state
+    const { navigation } = this.props
+    const marketplaceUrl = navigation.getParam(
+      'marketplaceUrl',
+      this.props.settings.network.dappUrl
+    )
 
     // Use key of network id on safeareaview to force a remount of component on
     // network changes
@@ -192,7 +195,7 @@ class MarketplaceScreen extends Component {
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: this.props.settings.network.dappUrl }}
+          source={{ uri: marketplaceUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectMessagingKeys()
@@ -205,7 +208,7 @@ class MarketplaceScreen extends Component {
                 <ActivityIndicator size="large" color="black" />
               </View>
             )
-          A}}
+          }}
         />
         {modals.map((modal, index) => {
           let card

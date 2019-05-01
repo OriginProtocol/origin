@@ -17,6 +17,7 @@ const config = {
   bridge: `http://${HOST}:5000`,
   growth: `http://${HOST}:4001`,
   discovery: `http://${HOST}:4000/graphql`,
+  notifications: `http://${HOST}:3456`,
   automine: 2000,
   messaging: {
     messagingNamespace: 'origin:docker',
