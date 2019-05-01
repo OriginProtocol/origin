@@ -1,3 +1,5 @@
+const { messageTemplates } = require('../templates/messageTemplates')
+
 const apn = require('apn')
 const firebase = require('firebase-admin')
 const web3Utils = require('web3-utils')
@@ -39,10 +41,18 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 }
 
 //
+// Mobile Push notifications for Messages
+//
+async function messageMobilePush(addresses, config) {
+  if (!addresses) throw 'addresses not defined'
+
+    // TODO
+}
+
 //
 // Mobile Push notifications
 //
-async function mobilePush(
+async function transactionMobilePush(
   eventName,
   party,
   buyerAddress,
@@ -167,4 +177,4 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
   }
 }
 
-module.exports = { mobilePush }
+module.exports = { transactionMobilePush, messageMobilePush }

@@ -7,6 +7,21 @@ const templateDir = `${__dirname}/../templates`
 // Codepen: https://codepen.io/matthewbeta/pen/ZGaYXW
 
 const messageTemplates = {
+  message: {
+    mobile: {
+      messageReceived: {
+        title: 'New Message',
+        body: 'You have received a message.'
+      }
+    },
+    email: {
+      messageReceived: {
+        subject: 'New Origin Message',
+        html: _.template('You have received a message.'),
+        text: _.template('You have received a message.')
+      }
+    }
+  },
   seller: {
     mobile: {
       OfferCreated: {

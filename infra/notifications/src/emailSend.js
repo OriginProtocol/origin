@@ -1,5 +1,6 @@
 // TODO: We need better way to refer to models in other packages.
 const Identity = require('../../identity/src/models').Identity
+const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
 const Sequelize = require('sequelize')
@@ -20,9 +21,105 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
 }
 
 //
-// Email notifications
+// Email notifications for Messages
 //
-async function emailSend(
+async function messageEmailSend(addresses, config) {
+  if (!addresses) throw 'addresses not defined'
+
+  // Load email template
+  const templateDir = `${__dirname}/../templates`
+
+  // Standard template for HTML emails
+  const emailTemplateHtml = _.template(
+    fs.readFileSync(`${templateDir}/emailTemplate.html`).toString()
+  )
+  // Standard template for text emails
+  const emailTemplateTxt = _.template(
+    fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
+  )
+
+  const emails = await Identity.findAll({
+    where: {
+      ethAddress: {
+        [Op.or]: addresses
+      }
+    }
+  })
+
+  await emails.forEach(async s => {
+    try {
+      const message = messageTemplates.message['email']['messageReceived']
+
+      if (!s.email && config.overrideEmail) {
+        if (config.verbose) {
+          logger.info(`${s.ethAddress} has no email address. Skipping.`)
+        }
+      } else {
+        const email = {
+          to: config.overrideEmail || s.email,
+          from: config.fromEmail,
+          subject: message.subject,
+          text: emailTemplateTxt({
+            message: message.text({
+              config: config
+            })
+          }),
+          html: emailTemplateHtml({
+            message: message.html({
+              config: config
+            })
+          }),
+          asm: {
+            groupId: config.asmGroupId
+          }
+        }
+
+        if (config.verbose) {
+          logger.log('email:')
+          logger.log(email)
+        }
+
+        if (config.emailFileOut) {
+          // Optional writing of email contents to files
+          const now = new Date()
+          fs.writeFile(
+            `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
+            email.html,
+            error => {
+              logger.error(error)
+            }
+          )
+          fs.writeFile(
+            `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
+            email.text,
+            error => {
+              logger.error(error)
+            }
+          )
+        }
+
+        try {
+          await sendgridMail.send(email)
+          logger.log(
+            `Email sent to ${s.ethAddress} at ${email.to} ${
+              config.overrideEmail ? ' instead of ' + s.email : ''
+            }`
+          )
+        } catch (error) {
+          logger.error(`Could not email via Sendgrid: ${error}`)
+        }
+      }
+    } catch (error) {
+      logger.error(`Could not email via Sendgrid: ${error}`)
+    }
+  })
+}
+
+
+//
+// Email notifications for Transactions
+//
+async function transactionEmailSend(
   eventName,
   party,
   buyerAddress,
@@ -37,6 +134,7 @@ async function emailSend(
   if (!sellerAddress) throw 'sellerAddress not defined'
   if (!offer) throw 'offer not defined'
   if (!listing) throw 'listing not defined'
+  if (!config) throw 'config not defined'
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
@@ -58,7 +156,6 @@ async function emailSend(
     }
   })
 
-  // Filter out redundants before iterating.
   await emails.forEach(async s => {
     try {
       const recipient = s.ethAddress
@@ -168,4 +265,4 @@ async function emailSend(
   })
 }
 
-module.exports = { emailSend }
+module.exports = { transactionEmailSend, messageEmailSend }

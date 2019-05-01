@@ -13,8 +13,8 @@ const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 // const { browserPush } = require('./browserPush')
-const { emailSend } = require('./emailSend')
-const { mobilePush } = require('./mobilePush')
+const { transactionEmailSend, messageEmailSend } = require('./emailSend')
+const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
 const app = express()
@@ -228,8 +228,17 @@ app.delete('/mobile/register', async (req, res) => {
  * list of eth address that have received a message
  */
 app.post('/messages', async (req, res) => {
-  console.log('yo')
   res.status(200).send({ status: 'ok' })
+
+  const receivers = req.body.recievers
+
+  console.log(req.body)
+
+  // Email notifications
+  messageEmailSend(receivers, config)
+
+  // Mobile Push notifications
+  messageMobilePush(receivers, config)
 })
 
 /**
@@ -302,7 +311,7 @@ app.post('/events', async (req, res) => {
   }
 
   // Email notifications
-  emailSend(
+  transactionEmailSend(
     eventName,
     party,
     buyerAddress,
@@ -313,7 +322,7 @@ app.post('/events', async (req, res) => {
   )
 
   // Mobile Push notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+  transactionMobilePush(eventName, party, buyerAddress, sellerAddress, offer)
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
