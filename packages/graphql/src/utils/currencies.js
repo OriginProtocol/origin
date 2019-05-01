@@ -110,10 +110,11 @@ class Currencies {
    * @returns {Promise<boolean>} Returns true if rates updated successfully. False otherwise.
    */
   async _poll() {
+    const currencyCodes = this.currencyCodes.filter(c => c !== 'DAI').join(',')
     // Fetch rates from CryptoCompare.
     const url =
       'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' +
-      this.currencyCodes.join(',')
+      currencyCodes
     let rates
     try {
       const response = await fetch(url, { timeout: API_TIMEOUT_MS })
@@ -122,6 +123,7 @@ class Currencies {
       console.error('API call to fetch xrates from CryptoCompare failed.')
       return false
     }
+    rates.DAI = 1
 
     // Update rates in our data structure.
     for (const key of Object.keys(this.data)) {
