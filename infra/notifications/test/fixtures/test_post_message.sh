@@ -1,6 +1,6 @@
 # POST a sample message to event listener
 # Usage:
-# $ ./test_post_message.sh message.js
+# $ ./test_post_message.sh Message-2recievers.json
 
 curl -XPOST \
      -H 'Content-Type:application/json' \
