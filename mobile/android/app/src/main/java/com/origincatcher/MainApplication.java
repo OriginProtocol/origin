@@ -3,6 +3,7 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import io.sentry.RNSentryPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AndroidOpenSettingsPackage(),
             new RNSentryPackage(),
             new RandomBytesPackage(),
             new ReactNativePushNotificationPackage(),
