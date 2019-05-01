@@ -58,31 +58,40 @@ export function updateVerifiedAccounts({ wallet, data }) {
   let attestations = window.localStorage.getItem(ATTESTATIONS_LOCALSTORAGE_KEY)
 
   if (!attestations) {
-    window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
-      wallet,
-      data
-    }))
+    window.localStorage.setItem(
+      ATTESTATIONS_LOCALSTORAGE_KEY,
+      JSON.stringify({
+        wallet,
+        data
+      })
+    )
     return
   }
 
   attestations = JSON.parse(attestations)
 
   if (attestations.wallet !== wallet) {
-    // If it is a different wallet, overwrite previous values 
-    window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
-      wallet,
-      data
-    }))
+    // If it is a different wallet, overwrite previous values
+    window.localStorage.setItem(
+      ATTESTATIONS_LOCALSTORAGE_KEY,
+      JSON.stringify({
+        wallet,
+        data
+      })
+    )
     return
   }
 
-  window.localStorage.setItem(ATTESTATIONS_LOCALSTORAGE_KEY, JSON.stringify({
-    ...attestations,
-    data: {
-      ...attestations.data,
-      ...data
-    }
-  }))
+  window.localStorage.setItem(
+    ATTESTATIONS_LOCALSTORAGE_KEY,
+    JSON.stringify({
+      ...attestations,
+      data: {
+        ...attestations.data,
+        ...data
+      }
+    })
+  )
 }
 
 export function clearVerifiedAccounts() {

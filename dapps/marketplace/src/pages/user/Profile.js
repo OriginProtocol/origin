@@ -7,7 +7,13 @@ import { Switch, Route } from 'react-router-dom'
 import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import { unpublishedStrength, changesToPublishExist, updateVerifiedAccounts, clearVerifiedAccounts,getVerifiedAccounts } from 'utils/profileTools'
+import {
+  unpublishedStrength,
+  changesToPublishExist,
+  updateVerifiedAccounts,
+  clearVerifiedAccounts,
+  getVerifiedAccounts
+} from 'utils/profileTools'
 import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
