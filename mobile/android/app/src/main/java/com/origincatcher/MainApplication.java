@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import io.sentry.RNSentryPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new AndroidOpenSettingsPackage(),
             new RNSentryPackage(),
+            new RNGestureHandlerPackage(),
             new RandomBytesPackage(),
             new ReactNativePushNotificationPackage(),
             new RNCWebViewPackage()
