@@ -13,11 +13,11 @@ const Growth$FbtEnum = {
   'growth.two.attestations.requirement': 'Two profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email',
-  'growth.purchase.tshirt.title': 'Purchase an Origin HODL T-shirt',
+  'growth.purchase.tshirt.title': 'Purchase an Origin graphic T-shirt',
   'growth.purchase.tshirt.details': 'Earn 25 OGN per t-shirt purchased.',
   'growth.purchase.gc.title': 'Purchase a $25 Amazon gift card',
   'growth.purchase.gc.details':
-    'Earn 50 OGN per gift card purchased. Must be redeemed on Amazon US site.',
+    'Earn 40 OGN per gift card purchased. Must be redeemed on Amazon US site.',
   'growth.purchase.charity.title': 'Donate $100 to the GiveDirectly charity',
   'growth.purchase.charity.details':
     'Donation will be made by Origin on your behalf.',
@@ -26,8 +26,9 @@ const Growth$FbtEnum = {
   'growth.purchase.homerental.details':
     'Booking and stay must happen in the month of May.',
   'growth.purchase.experience.title':
-    'Purchase an annual pass to 3lau concert tickets',
-  'growth.purchase.experience.details': 'TBD',
+    'Purchase 2 all-access annual passes to 3lau events',
+  'growth.purchase.experience.details':
+    'Valid for one calendar year after purchase',
   'growth.purchase.art.title':
     'Purchase the Vitalik AR Portrait by Trevor Jones',
   'growth.purchase.art.details': 'Only 1 original piece available.'

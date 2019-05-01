@@ -202,7 +202,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-2553',
             reward: {
-              amount: tokenNaturalUnits(50),
+              amount: tokenNaturalUnits(40),
               currency: 'OGN'
             },
             visible: true,
@@ -254,7 +254,7 @@ const mayConfig = {
           id: 'ListingPurchaseInfluencer',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-5',
+            listingId: '1-000-2699',
             reward: {
               amount: tokenNaturalUnits(1250),
               currency: 'OGN'
