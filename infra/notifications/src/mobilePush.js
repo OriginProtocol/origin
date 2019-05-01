@@ -20,7 +20,7 @@ if (process.env.APNS_KEY_FILE) {
     })
     apnBundle = process.env.APNS_BUNDLE_ID
   } catch (error) {
-    logger.warn(`Error trying to configure apnProvider: ${error}`)
+    logger.error(`Error trying to configure apnProvider: ${error}`)
   }
 } else {
   logger.warn('APN provider not configured.')
