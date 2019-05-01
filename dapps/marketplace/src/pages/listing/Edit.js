@@ -16,15 +16,15 @@ class EditListing extends Component {
     const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
       listing: {
-        // Fractional fields:
+        // FractionalListing fields:
         weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
-        // HourlyFractional
+        // HourlyFractionalListing fields:
         timeZone: get(props, 'listing.timeZone', ''),
         workingHours: get(props, 'listing.workingHours', []),
-        // GiftCard
+        // GiftCardListing fields:
         retailer: get(props, 'listing.retailer', '') ,
         cardAmount: get(props, 'listing.cardAmount', '') ,
         issuingCountry: get(props, 'listing.issuingCountry','US') ,
