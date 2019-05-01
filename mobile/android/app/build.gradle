@@ -78,6 +78,8 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-sentry/sentry.gradle"
+if (!getGradle().getStartParameter().getTaskRequests().toString().contains("Debug")) {
+}
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -119,11 +121,14 @@ android {
     signingConfigs {
         release {
             def Properties keyProps = new Properties()
-            keyProps.load(new FileInputStream(file('../keystores/keystore.properties')))
-            storeFile file(keyProps["RELEASE_STORE_FILE"])
-            keyAlias keyProps["RELEASE_KEY_ALIAS"]
-            storePassword keyProps["RELEASE_STORE_PASSWORD"]
-            keyPassword keyProps["RELEASE_KEY_PASSWORD"]
+            File keystoreFile = file('../keystores/keystore.properties')
+            if (keystoreFile.exists()) {
+                keyProps.load(new FileInputStream(keystoreFile))
+                storeFile file(keyProps["RELEASE_STORE_FILE"])
+                keyAlias keyProps["RELEASE_KEY_ALIAS"]
+                storePassword keyProps["RELEASE_STORE_PASSWORD"]
+                keyPassword keyProps["RELEASE_KEY_PASSWORD"]
+            }
         }
     }
     splits {
@@ -157,7 +162,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-android-open-settings')
     implementation project(':react-native-sentry')
+    implementation project(':react-native-gesture-handler')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-webview')

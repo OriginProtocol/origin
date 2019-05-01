@@ -1,6 +1,6 @@
 'use strict'
 
-const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
+const { GrowthEventStatuses } = require('../src/enums')
 
 const tableName = 'growth_event'
 
@@ -17,7 +17,17 @@ module.exports = {
         type: Sequelize.STRING
       },
       type: {
-        type: Sequelize.ENUM(GrowthEventTypes)
+        type: Sequelize.ENUM(
+          'ProfilePublished',
+          'EmailAttestationPublished',
+          'FacebookAttestationPublished',
+          'AirbnbAttestationPublished',
+          'TwitterAttestationPublished',
+          'PhoneAttestationPublished',
+          'ListingCreated',
+          'ListingPurchased',
+          'ListingSold',
+        )
       },
       status: {
         type: Sequelize.ENUM(GrowthEventStatuses)

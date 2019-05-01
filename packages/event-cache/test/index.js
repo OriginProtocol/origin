@@ -8,6 +8,7 @@ const ipfs = require('./_ipfs')
 const { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE, INT_1E24 } = require('./const')
 
 describe('EventCache', function() {
+  this.timeout(30000)
 
   let Marketplace,
       OriginToken,
