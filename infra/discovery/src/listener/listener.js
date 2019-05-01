@@ -137,10 +137,9 @@ async function main() {
     start = new Date()
 
     // Compute the range of blocks to process
-    const currentBlock = await withRetrys(async () => {
+    const toBlock = await withRetrys(async () => {
       return context.web3.eth.getBlockNumber()
     })
-    const toBlock = Math.max(currentBlock, 0)
 
     for (const contractKey of Object.keys(contracts)) {
       let processedToBlock = await getLastBlock(
@@ -158,7 +157,7 @@ async function main() {
         `Querying events within interval (${processedToBlock}, ${toBlock})`
       )
 
-      // Retrieve all events for the relevant contracts
+      // Retrieve all events for the relevant contract
       const eventArrays = await withRetrys(async () => {
         return contracts[contractKey].eventCache.allEvents()
       })
@@ -196,19 +195,10 @@ async function main() {
           // Note: we purposely do not set the exitOnError option of withRetrys to false.
           // In case all retries fails, it indicates something is wrong at the system
           // level and a process restart may fix it.
-          await withRetrys(async () => {
-            try {
-              return handleEvent(event, context)
-            } catch (err) {
-              logger.error(`Unhandled error in event handler`)
-              logger.error(err)
-            }
-          })
+          await withRetrys(async () => handleEvent(event, context))
         }
       }
 
-      // Record state of processing
-      logger.debug(`Updating last processed block to ${toBlock}`)
       /**
        * Don't assume it's the latest block known above, but use the one from
        * event-cache
@@ -217,8 +207,13 @@ async function main() {
         contracts[contractKey].eventCache.latestIndexedBlock
       if (processedToBlock < latestIndexedBlock) {
         processedToBlock = latestIndexedBlock
+
+        logger.debug(`Updating last processed block to ${processedToBlock}`)
+
+        // Record state of processing
         await setLastBlock(context.config, processedToBlock, `${contractKey}_`)
         if (context.config.enableMetrics) {
+          // TODO Separate for every contract?
           blockGauge.set(processedToBlock)
         }
       }
@@ -246,10 +241,7 @@ logger.info(
 
 setNetwork(config.network)
 try {
-  main().catch(err => {
-    logger.error('Error occurred in listener main() process')
-    logger.error(err)
-  })
+  main()
 } catch (err) {
   logger.error('Error occurred in listener main() process')
   logger.error(err)
