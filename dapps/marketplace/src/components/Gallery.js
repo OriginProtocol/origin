@@ -21,7 +21,7 @@ class Gallery extends Component {
                 <div
                   key={idx}
                   onClick={() => this.setState({ active: idx })}
-                  style={{ backgroundImage: `url(${m.urlExpanded})` }}
+                  style={{ backgroundImage: `url(${m.urlExpanded})`, padding:idx===0 ?'5px 5px 5px 0': idx===pics.length-1 ?'5px 0px 5px 5px':'' }}
                   className={this.state.active === idx ? 'active' : ''}
                 />
               ))}
@@ -44,8 +44,6 @@ require('react-styl')(`
       height: 100%
     .thumbnails
       height: 80px
-      margin-left: 1rem
-      margin-right: 1rem
       .inner
         height: 100%
         overflow-x:scroll;
