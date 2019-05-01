@@ -144,9 +144,11 @@ class UserProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.wallet !== prevProps.wallet) {
       const storedAttestations = this.getStoredAttestions()
-      this.setState({
-        ...storedAttestations
-      })
+      const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
+        m[`${o}Attestation`] = null
+        return m
+      }, {})
+      this.setState({ ...resetAtts, ...storedAttestations })
     }
 
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
