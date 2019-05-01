@@ -43,10 +43,67 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 //
 // Mobile Push notifications for Messages
 //
-async function messageMobilePush(addresses) {
-  if (!addresses) throw 'addresses not defined'
+async function messageMobilePush(receivers, sender, config) {
+  if (!receivers) throw 'receivers not defined'
+  if (!sender) throw 'sender not defined'
 
-  // TODO
+  // TODO: Move to config
+  const payload = {
+    url: config.dappMessagesUrl
+  }
+
+  // Get ID of sender
+  const messageSender = Identity.findOne({
+    raw: true,
+    where: {
+      ethAddress: sender
+    }
+  })
+  // Get IDs of recepients
+  const messageReceivers = Identity.findAll({
+    raw: true,
+    where: {
+      ethAddress: {
+        [Op.or]: receivers
+      }
+    }
+  })
+  Promise.all([messageSender, messageReceivers]).then(
+    ([senderIdentity, receiversIdentities]) => {
+      console.log(senderIdentity)
+      console.log(receiversIdentities)
+
+      receiversIdentities.forEach(async s => {
+        try {
+          const message = messageTemplates.message['mobile']['messageReceived']
+          const ethAddress = s.ethAddress
+          const notificationObj = {
+            message: message,
+            payload
+          }
+
+          // Push the message
+          const mobileRegister = await MobileRegistry.findOne({
+            where: { ethAddress, deleted: false, 'permissions.alert': true }
+          })
+          if (mobileRegister) {
+            logger.info(`Pushing message notification to ${ethAddress}`)
+            await sendNotification(
+              mobileRegister.deviceToken,
+              mobileRegister.deviceType,
+              notificationObj
+            )
+          } else {
+            logger.info(
+              `No device registered for notifications for ${ethAddress}`
+            )
+          }
+        } catch (error) {
+          logger.error(`Could not email via Sendgrid: ${error}`)
+        }
+      })
+    }
+  )
 }
 
 //
@@ -80,6 +137,7 @@ async function transactionMobilePush(
     'seller',
     'mobile'
   )
+  // TODO: This URL should dynamically change for staging/dev as email notifications
   const dappOfferUrl =
     process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com/#/purchases/'
   const payload = {
@@ -106,7 +164,7 @@ async function transactionMobilePush(
         where: { ethAddress, deleted: false, 'permissions.alert': true }
       })
       if (mobileRegister) {
-        logger.info(`Sending notification to ${ethAddress}`)
+        logger.info(`Pushing transaction notification to ${ethAddress}`)
         await sendNotification(
           mobileRegister.deviceToken,
           mobileRegister.deviceType,

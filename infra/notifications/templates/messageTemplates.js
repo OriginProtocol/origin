@@ -10,8 +10,8 @@ const messageTemplates = {
   message: {
     mobile: {
       messageReceived: {
-        title: 'New Message',
-        body: 'You have received a message.'
+        title: 'New Origin Message',
+        body: 'You have received a message on Origin.'
       }
     },
     email: {
