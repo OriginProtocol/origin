@@ -16,14 +16,21 @@ class EditListing extends Component {
     const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
       listing: {
-        // HomeShare fields:
+        // Fractional fields:
         weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
-        // Hourly
+        // HourlyFractional
         timeZone: get(props, 'listing.timeZone', ''),
         workingHours: get(props, 'listing.workingHours', []),
+        // GiftCard
+        retailer: get(props, 'listing.retailer', '') ,
+        cardAmount: get(props, 'listing.cardAmount', '') ,
+        issuingCountry: get(props, 'listing.issuingCountry','US') ,
+        isDigital: get(props, 'listing.isDigital', false) ,
+        isCashPurchase: get(props, 'listing.isCashPurchase', false) ,
+        receiptAvailable: get(props, 'listing.receiptAvailable', false),
 
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
