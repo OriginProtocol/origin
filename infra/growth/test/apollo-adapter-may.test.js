@@ -166,7 +166,7 @@ describe('Apollo adapter - May campaign', () => {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
+        reward: { amount: tokenNaturalUnits(40), currency: 'OGN' }
       },
       ListingPurchaseCharity: {
         type: 'ListingIdPurchased',
