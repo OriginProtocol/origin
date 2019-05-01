@@ -24,6 +24,7 @@ import Fractional from './_BuyFractional'
 import FractionalHourly from './_BuyFractionalHourly'
 
 import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
+import { CurrenciesByCountryCode } from 'constants/Currencies'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -130,15 +131,36 @@ class ListingDetail extends Component {
         {!isGiftCard ? null : (
           <>
             <hr />
-            <div>retailer: {listing.retailer}</div>
-            <div>cardAmount: {listing.cardAmount}</div>
             <div>
-              issuingCountry: {countryCodeMapping['en'][listing.issuingCountry]}
+              <fbt desc="create.details.retailer">Retailer</fbt>:{' '}
+              {listing.retailer}
             </div>
-            <div>isDigital: {listing.isDigital ? '✅' : 'No'}</div>
-            <div>isCashPurchase: {listing.isCashPurchase ? '✅' : 'No'}</div>
             <div>
-              receiptAvailable: {listing.receiptAvailable ? '✅' : 'No'}
+              <fbt desc="create.details.cardAmount">Amount on Card</fbt>:
+              {CurrenciesByCountryCode[listing.issuingCountry][2]}
+              {listing.cardAmount}
+            </div>
+            <div>
+              <fbt desc="create.details.issuingCountry">Issuing Country</fbt>:{' '}
+              {countryCodeMapping['en'][listing.issuingCountry]}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.isDigital">
+                Is this card digital?
+              </fbt>
+              {listing.isDigital ? 'Yes' : 'No'}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.isCashPurchase">
+                Was this a cash purchase?
+              </fbt>
+              {listing.isCashPurchase ? 'Yes' : 'No'}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.receiptAvailable">
+                Is a receipt available?
+              </fbt>
+              {listing.receiptAvailable ? 'Yes' : 'No'}
             </div>
           </>
         )}
