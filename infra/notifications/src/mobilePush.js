@@ -46,7 +46,7 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 async function messageMobilePush(addresses, config) {
   if (!addresses) throw 'addresses not defined'
 
-    // TODO
+  // TODO
 }
 
 //

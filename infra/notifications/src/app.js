@@ -230,15 +230,16 @@ app.delete('/mobile/register', async (req, res) => {
 app.post('/messages', async (req, res) => {
   res.status(200).send({ status: 'ok' })
 
-  const receivers = req.body.recievers
+  const sender = req.body.sender // eth address
+  const receivers = req.body.recievers // array of eth addresses
 
   console.log(req.body)
 
   // Email notifications
-  messageEmailSend(receivers, config)
+  messageEmailSend(receivers, sender, config)
 
   // Mobile Push notifications
-  messageMobilePush(receivers, config)
+  messageMobilePush(receivers, sender, config)
 })
 
 /**

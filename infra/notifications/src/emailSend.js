@@ -23,8 +23,9 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
 //
 // Email notifications for Messages
 //
-async function messageEmailSend(addresses, config) {
-  if (!addresses) throw 'addresses not defined'
+async function messageEmailSend(receivers, sender, config) {
+  if (!receivers) throw 'receivers not defined'
+  if (!sender) throw 'sender not defined'
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
@@ -38,83 +39,97 @@ async function messageEmailSend(addresses, config) {
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
-  const emails = await Identity.findAll({
+  messageSender = Identity.findOne({
+    raw: true,
+    where: {
+      ethAddress: sender
+    }
+  })
+  messageReceivers = Identity.findAll({
+    raw: true,
     where: {
       ethAddress: {
-        [Op.or]: addresses
+        [Op.or]: receivers
       }
     }
   })
+  Promise.all([messageSender, messageReceivers]).then(
+    ([senderIdentity, seceiversIdentities]) => {
+      console.log(senderIdentity)
+      console.log(seceiversIdentities)
 
-  await emails.forEach(async s => {
-    try {
-      const message = messageTemplates.message['email']['messageReceived']
-
-      if (!s.email && config.overrideEmail) {
-        if (config.verbose) {
-          logger.info(`${s.ethAddress} has no email address. Skipping.`)
-        }
-      } else {
-        const email = {
-          to: config.overrideEmail || s.email,
-          from: config.fromEmail,
-          subject: message.subject,
-          text: emailTemplateTxt({
-            message: message.text({
-              config: config
-            })
-          }),
-          html: emailTemplateHtml({
-            message: message.html({
-              config: config
-            })
-          }),
-          asm: {
-            groupId: config.asmGroupId
-          }
-        }
-
-        if (config.verbose) {
-          logger.log('email:')
-          logger.log(email)
-        }
-
-        if (config.emailFileOut) {
-          // Optional writing of email contents to files
-          const now = new Date()
-          fs.writeFile(
-            `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
-            email.html,
-            error => {
-              logger.error(error)
-            }
-          )
-          fs.writeFile(
-            `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
-            email.text,
-            error => {
-              logger.error(error)
-            }
-          )
-        }
-
+      seceiversIdentities.forEach(async s => {
         try {
-          await sendgridMail.send(email)
-          logger.log(
-            `Email sent to ${s.ethAddress} at ${email.to} ${
-              config.overrideEmail ? ' instead of ' + s.email : ''
-            }`
-          )
+          const message = messageTemplates.message['email']['messageReceived']
+
+          if (!s.email && config.overrideEmail) {
+            if (config.verbose) {
+              logger.info(`${s.ethAddress} has no email address. Skipping.`)
+            }
+          } else {
+            const email = {
+              to: config.overrideEmail || s.email,
+              from: config.fromEmail,
+              subject: message.subject,
+              text: emailTemplateTxt({
+                message: message.text({
+                  config: config,
+                  sender: sender
+                })
+              }),
+              html: emailTemplateHtml({
+                message: message.html({
+                  config: config,
+                  sender: sender
+                })
+              }),
+              asm: {
+                groupId: config.asmGroupId
+              }
+            }
+
+            if (config.verbose) {
+              logger.log('email:')
+              logger.log(email)
+            }
+
+            if (config.emailFileOut) {
+              // Optional writing of email contents to files
+              const now = new Date()
+              fs.writeFile(
+                `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
+                email.html,
+                error => {
+                  logger.error(error)
+                }
+              )
+              fs.writeFile(
+                `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
+                email.text,
+                error => {
+                  logger.error(error)
+                }
+              )
+            }
+
+            try {
+              await sendgridMail.send(email)
+              logger.log(
+                `Email sent to ${s.ethAddress} at ${email.to} ${
+                  config.overrideEmail ? ' instead of ' + s.email : ''
+                }`
+              )
+            } catch (error) {
+              logger.error(`Could not email via Sendgrid: ${error}`)
+            }
+          }
         } catch (error) {
           logger.error(`Could not email via Sendgrid: ${error}`)
         }
-      }
-    } catch (error) {
-      logger.error(`Could not email via Sendgrid: ${error}`)
+      })
     }
-  })
+  )
 }
-
 
 //
 // Email notifications for Transactions
