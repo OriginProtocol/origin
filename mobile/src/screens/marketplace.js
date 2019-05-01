@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   DeviceEventEmitter,
   Modal,
+  PanResponder,
   StyleSheet,
   StatusBar,
   View
@@ -42,6 +43,20 @@ class MarketplaceScreen extends Component {
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
+
+    this._panResponder = PanResponder.create({
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > 20
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.moveX < 200) {
+          this.dappWebView.goBack()
+        }
+        if (gestureState.moveX > 200) {
+          this.dappWebView.goForward()
+        }
+      }
+    })
   }
 
   static navigationOptions = () => {
@@ -189,6 +204,7 @@ class MarketplaceScreen extends Component {
         key={this.props.settings.network.id}
         style={styles.sav}
         forceInset={{ top: 'always' }}
+        {...this._panResponder.panHandlers}
       >
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
