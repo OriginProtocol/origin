@@ -335,8 +335,7 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google'),
-                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                  fbt('Google', '_ProvisionedChanges.google')
                 )}
               </div>
             </div>

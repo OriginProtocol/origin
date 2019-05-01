@@ -8,9 +8,10 @@ export function unpublishedStrength({ props, state }) {
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatar && state.avatar) strength += 10
-  if (!profile.emailVerified && state.emailAttestation) strength += 15
-  if (!profile.phoneVerified && state.phoneAttestation) strength += 15
+  if (!profile.emailVerified && state.emailAttestation) strength += 10
+  if (!profile.phoneVerified && state.phoneAttestation) strength += 10
   if (!profile.facebookVerified && state.facebookAttestation) strength += 10
+  if (!profile.googleVerified && state.googleAttestation) strength += 10
   if (!profile.twitterVerified && state.twitterAttestation) strength += 10
   if (!profile.airbnbVerified && state.airbnbAttestation) strength += 10
   return strength
@@ -29,6 +30,8 @@ export function changesToPublishExist({ props, state }) {
       (!!state.phoneAttestation || !!state.phoneVerified) &&
     !!profile.facebookVerified ===
       (!!state.facebookAttestation || !!state.facebookVerified) &&
+    !!profile.googleVerified ===
+      (!!state.googleAttestation || !!state.googleVerified) &&
     !!profile.twitterVerified ===
       (!!state.twitterAttestation || !!state.twitterVerified) &&
     !!profile.airbnbVerified ===
