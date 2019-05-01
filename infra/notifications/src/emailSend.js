@@ -54,11 +54,11 @@ async function messageEmailSend(receivers, sender, config) {
     }
   })
   Promise.all([messageSender, messageReceivers]).then(
-    ([senderIdentity, seceiversIdentities]) => {
+    ([senderIdentity, receiversIdentities]) => {
       console.log(senderIdentity)
-      console.log(seceiversIdentities)
+      console.log(receiversIdentities)
 
-      seceiversIdentities.forEach(async s => {
+      receiversIdentities.forEach(async s => {
         try {
           const message = messageTemplates.message['email']['messageReceived']
 
