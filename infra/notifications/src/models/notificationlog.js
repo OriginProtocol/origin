@@ -1,7 +1,8 @@
 'use strict'
+const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  const MobileRegistry = sequelize.define(
+  const NotificationLog = sequelize.define(
     'NotificationLog',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true },
@@ -18,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'notification_log'
     }
   )
-  MobileRegistry.associate = function() {
+  NotificationLog.associate = function() {
     // associations can be defined here
   }
   return NotificationLog
