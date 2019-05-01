@@ -43,8 +43,10 @@ function withGrowthCampaign(WrappedComponent) {
                     // action is completed
                     fetchPolicy="network-only"
                   >
-                    {({ data, error }) => {
-                      if (error) {
+                    {({ data, error, networkStatus, loading }) => {
+                      if (networkStatus === 1 || loading) {
+                        return ''
+                      } else if (error) {
                         return (
                           <QueryError error={error} query={allCampaignsQuery} />
                         )
