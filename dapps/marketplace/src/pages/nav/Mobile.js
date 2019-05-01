@@ -34,7 +34,10 @@ class MobileNav extends Component {
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
-            <this.EarnTokens className="dropdown-item earn">
+            <this.EarnTokens
+              className="dropdown-item earn"
+              onClick={() => onClose()}
+            >
               <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
             </this.EarnTokens>
             <div className="dropdown-divider" />
