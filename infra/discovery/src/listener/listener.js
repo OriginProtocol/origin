@@ -21,7 +21,6 @@ try {
 
 const Web3 = require('web3')
 const pLimit = require('p-limit')
-const sortBy = require('lodash/sortBy')
 const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
@@ -91,6 +90,7 @@ const config = {
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
+  // DEPRECIATED
   trailBlocks: parseInt(
     args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
   ),
@@ -114,8 +114,10 @@ logger.info(config)
 async function main() {
   const context = await new Context().init(config, errorCounter)
 
-  let processedToBlock = await getLastBlock(context.config)
-  logger.info(`Resuming processing from ${processedToBlock}`)
+  const contracts = {
+    IdentityEvents: contractsContext.identityEvents,
+    Marketplace: contractsContext.marketplace
+  }
 
   if (context.config.concurrency > 1) {
     logger.warn(`Backfill mode: concurrency=${context.config.concurrency}`)
@@ -134,84 +136,92 @@ async function main() {
   do {
     start = new Date()
 
-    // Compute the range of blocks to process,
-    // while respecting trailing block configuration.
+    // Compute the range of blocks to process
     const currentBlock = await withRetrys(async () => {
       return context.web3.eth.getBlockNumber()
     })
-    const toBlock = Math.max(currentBlock - context.config.trailBlocks, 0)
+    const toBlock = Math.max(currentBlock, 0)
 
-    // Listener is up to date. Nothing to do.
-    if (toBlock <= processedToBlock) {
-      logger.debug('No new blocks to process')
-      continue
-    }
-    logger.info(
-      `Querying events within interval (${processedToBlock}, ${toBlock}]`
-    )
+    for (const contractKey of Object.keys(contracts)) {
+      let processedToBlock = await getLastBlock(
+        context.config,
+        `${contractKey}_`
+      )
+      logger.debug(`Processing from ${processedToBlock} for ${contractKey}`)
 
-    // Retrieve all events for the relevant contracts
-    const eventArrays = await Promise.all([
-      withRetrys(async () => {
-        return contractsContext.marketplace.eventCache.allEvents()
-      }),
-      withRetrys(async () => {
-        return contractsContext.identityEvents.eventCache.allEvents()
-      })
-    ])
-
-    // Flatten array of arrays filtering out anything undefined
-    const events = [].concat(...eventArrays.filter(x => x))
-
-    // Filter out events outside of interval (processedToBlock, toBlock].
-    let newEvents = events.filter(
-      event =>
-        event.blockNumber > processedToBlock && event.blockNumber <= toBlock
-    )
-    logger.debug(`Got ${newEvents.length} new events`)
-
-    if (context.config.concurrency > 1) {
-      // Concurrency greater than 1 -> Backfill mode.
-      const limit = pLimit(context.config.concurrency)
-      const promises = []
-      newEvents.forEach(newEvent => {
-        promises.push(limit(() => handleEvent(newEvent, context)))
-      })
-      await Promise.all(promises)
-    } else {
-      // Concurrency set to 1 -> Normal operation mode.
-      // Sort events by blockNumber and logIndex to process them in order.
-      // In normal operation (not backfill), ordering does matter for handlers.
-      // For example assume a buyer updates their identity to add their email
-      // then makes a purchase. If the handler would process the purchase
-      // event before the identity update, we may not be able to send the buyer
-      // a confirmation email about their offer.
-      newEvents = sortBy(newEvents, ['blockNumber', 'logIndex'], ['asc', 'asc'])
-
-      // Have the handler process each event.
-      for (const event of newEvents) {
-        // Note: we purposely do not set the exitOnError option of withRetrys to false.
-        // In case all retries fails, it indicates something is wrong at the system
-        // level and a process restart may fix it.
-        await withRetrys(async () => {
-          return handleEvent(event, context)
-        })
+      // Listener is up to date. Nothing to do.
+      if (toBlock <= processedToBlock) {
+        logger.debug('No new blocks to process')
+        continue
       }
-    }
+      logger.info(
+        `Querying events within interval (${processedToBlock}, ${toBlock})`
+      )
 
-    // Record state of processing
-    logger.debug(`Updating last processed block to ${toBlock}`)
-    /**
-     * Don't assume it's the latest block known above, but use the one from
-     * event-cache
-     */
-    processedToBlock = Math.min(
-      contractsContext.marketplace.eventCache.lastEventBlock,
-      contractsContext.identityEvents.eventCache.lastEventBlock
-    )
-    await setLastBlock(context.config, processedToBlock)
-    if (context.config.enableMetrics) {
-      blockGauge.set(processedToBlock)
+      // Retrieve all events for the relevant contracts
+      const eventArrays = await withRetrys(async () => {
+        return contracts[contractKey].eventCache.allEvents()
+      })
+
+      // Flatten array of arrays filtering out anything undefined and filter
+      // out events outside of interval (processedToBlock, toBlock].
+      const newEvents = [].concat(
+        ...eventArrays.filter(event => {
+          if (
+            event &&
+            event.blockNumber > processedToBlock &&
+            event.blockNumber <= toBlock
+          ) {
+            return event
+          }
+        })
+      )
+
+      logger.debug(`Got ${newEvents.length} new events for ${contractKey}`)
+
+      if (context.config.concurrency > 1) {
+        // Concurrency greater than 1 -> Backfill mode.
+        const limit = pLimit(context.config.concurrency)
+        const promises = []
+        newEvents.forEach(newEvent => {
+          promises.push(limit(() => handleEvent(newEvent, context)))
+        })
+        await Promise.all(promises).catch(err => {
+          logger.error(`Unhandled error in event handler`)
+          logger.error(err)
+        })
+      } else {
+        // Have the handler process each event.
+        for (const event of newEvents) {
+          // Note: we purposely do not set the exitOnError option of withRetrys to false.
+          // In case all retries fails, it indicates something is wrong at the system
+          // level and a process restart may fix it.
+          await withRetrys(async () => {
+            try {
+              return handleEvent(event, context)
+            } catch (err) {
+              logger.error(`Unhandled error in event handler`)
+              logger.error(err)
+            }
+          })
+        }
+      }
+
+      // Record state of processing
+      logger.debug(`Updating last processed block to ${toBlock}`)
+      /**
+       * Don't assume it's the latest block known above, but use the one from
+       * event-cache
+       */
+      const latestIndexedBlock =
+        contracts[contractKey].eventCache.latestIndexedBlock
+      if (processedToBlock < latestIndexedBlock) {
+        processedToBlock = latestIndexedBlock
+        await setLastBlock(context.config, processedToBlock, `${contractKey}_`)
+        if (context.config.enableMetrics) {
+          blockGauge.set(processedToBlock)
+        }
+      }
     }
   } while (await nextTick())
 }
@@ -235,4 +245,12 @@ logger.info(
 )
 
 setNetwork(config.network)
-main()
+try {
+  main().catch(err => {
+    logger.error('Error occurred in listener main() process')
+    logger.error(err)
+  })
+} catch (err) {
+  logger.error('Error occurred in listener main() process')
+  logger.error(err)
+}
