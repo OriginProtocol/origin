@@ -16,9 +16,13 @@ const messageTemplates = {
     },
     email: {
       messageReceived: {
-        subject: 'New Origin Message',
-        html: _.template('You have received a message.'),
-        text: _.template('You have received a message.')
+        subject: _.template('New Origin Message from <%- senderName %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/MessageReceived.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/MessageReceived.txt`).toString()
+        )
       }
     }
   },

@@ -67,21 +67,25 @@ async function messageEmailSend(receivers, sender, config) {
               logger.info(`${s.ethAddress} has no email address. Skipping.`)
             }
           } else {
+            // Construct best human readable version of sender name
+            const senderName =
+              s.firstName || s.lastName
+                ? `${s.firstName || ''} ${s.lastName || ''} (${sender})`
+                : sender
+            const templateVars = {
+              config: config,
+              sender: sender,
+              senderName: senderName
+            }
             const email = {
               to: config.overrideEmail || s.email,
               from: config.fromEmail,
-              subject: message.subject,
+              subject: message.subject(templateVars),
               text: emailTemplateTxt({
-                message: message.text({
-                  config: config,
-                  sender: sender
-                })
+                message: message.text(templateVars)
               }),
               html: emailTemplateHtml({
-                message: message.html({
-                  config: config,
-                  sender: sender
-                })
+                message: message.html(templateVars)
               }),
               asm: {
                 groupId: config.asmGroupId
