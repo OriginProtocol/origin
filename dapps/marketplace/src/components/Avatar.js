@@ -2,7 +2,15 @@ import React from 'react'
 import makeGatewayUrl from 'utils/makeGatewayUrl'
 import withConfig from 'hoc/withConfig'
 
-const Avatar = ({ size, avatar, avatarUrl, profile, config, className, emptyClass = 'empty' }) => {
+const Avatar = ({
+  size,
+  avatar,
+  avatarUrl,
+  profile,
+  config,
+  className,
+  emptyClass = 'empty'
+}) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }

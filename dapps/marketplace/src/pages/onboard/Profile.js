@@ -108,7 +108,9 @@ class OnboardProfile extends Component {
                         <ImageCropper
                           onChange={async avatar => {
                             const { ipfsRPC } = this.props.config
-                            const uploadedImages = await uploadImages(ipfsRPC, [avatar])
+                            const uploadedImages = await uploadImages(ipfsRPC, [
+                              avatar
+                            ])
                             const avatarImg = uploadedImages[0]
                             if (avatarImg) {
                               const avatarUrl = avatarImg.url
@@ -116,7 +118,10 @@ class OnboardProfile extends Component {
                             }
                           }}
                         >
-                          <Avatar className="with-cam" avatarUrl={this.state.avatarUrl} />
+                          <Avatar
+                            className="with-cam"
+                            avatarUrl={this.state.avatarUrl}
+                          />
                         </ImageCropper>
                       </div>
                     </div>
@@ -283,7 +288,9 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withConfig(withWallet(withEthBalance(withIdentity(OnboardProfile))))
+export default withConfig(
+  withWallet(withEthBalance(withIdentity(OnboardProfile)))
+)
 
 require('react-styl')(`
   .onboard .onboard-box.profile
