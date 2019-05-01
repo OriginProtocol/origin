@@ -33,7 +33,7 @@ function getIpfsHashFromBytes32(bytes32Hex) {
  * Takes an IPFS hash url (for example: ipfs://QmUwefhweuf...12322a) and
  * returns a url to that resource on the gateway.
  * Ensures that the IPFS hash does not contain anything evil and is the correct length.
- * @param {string} gateway 
+ * @param {string} gateway
  * @param {string} ipfsUrl
  * @returns {string}
  */

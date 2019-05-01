@@ -330,7 +330,7 @@ export default {
     const events = await ec().allEvents(undefined, user.id)
     return events[events.length - 1]
   },
-  identity: (account) => {
+  identity: account => {
     return identity({ id: account.id })
   }
 }
