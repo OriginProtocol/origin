@@ -99,15 +99,29 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
 
 export async function listingsBySeller(
   listingSeller,
-  { first = 10, after },
+  { first = 10, after, filter },
   _,
   info
 ) {
   const fields = graphqlFields(info)
-  const events = await contracts.marketplace.eventCache.getEvents({
+  const party = listingSeller.id
+
+  let events = await contracts.marketplace.eventCache.getEvents({
     event: 'ListingCreated',
-    party: listingSeller.id
+    party
   })
+  if (filter === 'active') {
+    const withdrawnEvents = await contracts.marketplace.eventCache.getEvents({
+      event: 'ListingWithdrawn',
+      party
+    })
+    const withdrawnListingIds = withdrawnEvents.map(
+      e => e.returnValues.listingID
+    )
+    events = events.filter(
+      e => withdrawnListingIds.indexOf(e.returnValues.listingID) < 0
+    )
+  }
   const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
   const totalCount = ids.length
 

@@ -54,7 +54,7 @@ function withGrowthCampaign(WrappedComponent) {
                         <WrappedComponent
                           {...props}
                           growthEnrollmentStatus={enrollmentStatus}
-                          growthCampaigns={get(data, 'campaigns.nodes')}
+                          growthCampaigns={get(data, 'campaigns.nodes') || []}
                         />
                       )
                     }}
