@@ -231,7 +231,7 @@ class GrowthInvite {
     // Lookup the code.
     const inviteCode = await db.GrowthInviteCode.findOne({ where: { code } })
     if (!inviteCode) {
-      throw new Error('Invalid invite code')
+      throw new Error(`Invalid invite code ${code}`)
     }
     return inviteCode.ethAddress
   }
