@@ -1,4 +1,8 @@
 // const { messageTemplates } = require('../templates/messageTemplates')
+const Identity = require('../../identity/src/models').Identity
+const Op = Sequelize.Op
+const { messageTemplates } = require('../templates/messageTemplates')
+const Sequelize = require('sequelize')
 
 const apn = require('apn')
 const firebase = require('firebase-admin')

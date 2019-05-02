@@ -51,7 +51,10 @@ process.argv.forEach(arg => {
 
 const config = {
   // URL for messaging on dapp
-  dappMessagesUrl: args['--dapp-messages-url'] || process.env.DAPP_MESSAGES_URL || 'https://dapp.originprotocol.com/#/messages',
+  dappMessagesUrl:
+    args['--dapp-messages-url'] ||
+    process.env.DAPP_MESSAGES_URL ||
+    'https://dapp.originprotocol.com/#/messages',
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
   overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
