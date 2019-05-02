@@ -95,6 +95,11 @@ export default {
           unavailable
         }
         ... on GiftCardListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
+          unitsPending
+          multiUnit
           retailer
           cardAmount
           issuingCountry
