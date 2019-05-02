@@ -184,6 +184,9 @@ class MarketplaceScreen extends Component {
   /* Remove a modal and return the given result to the DApp
    */
   toggleModal(modal, result) {
+    if (!modal) {
+      return
+    }
     if (modal.msgData) {
       // Send the response to the webview
       this.handleBridgeResponse(modal.msgData, result)
@@ -277,7 +280,7 @@ class MarketplaceScreen extends Component {
               transparent={true}
               visible={true}
               onRequestClose={() => {
-                this.toggalModal(modal)
+                this.toggleModal(modal)
               }}
             >
               <SafeAreaView style={styles.container}>{card}</SafeAreaView>
