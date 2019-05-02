@@ -22,8 +22,12 @@ async function logNotificationSent(messageFingerprint, ethAddress, channel) {
   return NotificationLog.create({
     messageFingerprint: messageFingerprint,
     ethAddress: ethAddress,
-    channel: 'email'
+    channel: channel
   })
 }
 
-module.exports = { getMessageFingerprint, isNotificationDupe, logNotificationSent }
+module.exports = {
+  getMessageFingerprint,
+  isNotificationDupe,
+  logNotificationSent
+}

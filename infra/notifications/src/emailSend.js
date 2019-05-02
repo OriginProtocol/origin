@@ -8,7 +8,6 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
 const logger = require('./logger')
-const web3Utils = require('web3-utils')
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -19,7 +18,11 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
   logger.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
 }
 
-const {getMessageFingerprint, isNotificationDupe, logNotificationSent} = require('./dupeTools')
+const {
+  getMessageFingerprint,
+  isNotificationDupe,
+  logNotificationSent
+} = require('./dupeTools')
 
 //
 // Email notifications for Messages
@@ -67,8 +70,9 @@ async function messageEmailSend(receivers, sender, config) {
           } else {
             // Construct best human readable version of sender name
             const senderName =
-              s.firstName || s.lastName
-                ? `${s.firstName || ''} ${s.lastName || ''} (${sender})`
+              senderIdentity.firstName || senderIdentity.lastName
+                ? `${senderIdentity.firstName ||
+                    ''} ${senderIdentity.lastName || ''} (${sender})`
                 : sender
             const templateVars = {
               config: config,
@@ -114,14 +118,18 @@ async function messageEmailSend(receivers, sender, config) {
               )
             }
             const messageFingerprint = getMessageFingerprint(email)
-            if (await isNotificationDupe(messageFingerprint, config) > 0) {
+            if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
               logger.warn(
                 `Duplicate. Notification already recently sent. Skipping.`
               )
             } else {
               try {
                 await sendgridMail.send(email)
-                await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
+                await logNotificationSent(
+                  messageFingerprint,
+                  s.ethAddress,
+                  'email'
+                )
                 logger.log(
                   `Email sent to ${s.ethAddress} at ${email.to} ${
                     config.overrideEmail ? ' instead of ' + s.email : ''
@@ -265,7 +273,7 @@ async function transactionEmailSend(
           )
         }
         const messageFingerprint = getMessageFingerprint(email)
-        if (await isNotificationDupe(messageFingerprint, config) > 0) {
+        if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
           logger.warn(
             `Duplicate. Notification already recently sent. Skipping.`
           )

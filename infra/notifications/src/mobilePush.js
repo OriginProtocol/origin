@@ -12,7 +12,11 @@ const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
 const MobileRegistry = require('./models').MobileRegistry
 
-const {getMessageFingerprint, isNotificationDupe, logNotificationSent} = require('./dupeTools')
+const {
+  getMessageFingerprint,
+  isNotificationDupe,
+  logNotificationSent
+} = require('./dupeTools')
 
 // Configure the APN provider
 let apnProvider, apnBundle
@@ -78,6 +82,13 @@ async function messageMobilePush(receivers, sender, config) {
     ([senderIdentity, receiversIdentities]) => {
       receiversIdentities.forEach(async s => {
         try {
+          const senderName =
+            senderIdentity.firstName || senderIdentity.lastName
+              ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
+                  ''} (${sender})`
+              : sender
+
+          // TODO: Turn mobile messages into templates
           const message = messageTemplates.message['mobile']['messageReceived']
           const ethAddress = s.ethAddress
           const notificationObj = {
@@ -90,12 +101,15 @@ async function messageMobilePush(receivers, sender, config) {
             where: { ethAddress, deleted: false, 'permissions.alert': true }
           })
           if (mobileRegister) {
-            logger.info(`Pushing message notification to ${ethAddress}`)
+            logger.info(
+              `Pushing message notification to ${ethAddress} from ${senderName}`
+            )
             await sendNotification(
               mobileRegister.deviceToken,
               mobileRegister.deviceType,
               notificationObj,
-              ethAddress
+              ethAddress,
+              config
             )
           } else {
             logger.info(
@@ -118,7 +132,8 @@ async function transactionMobilePush(
   party,
   buyerAddress,
   sellerAddress,
-  offer
+  offer,
+  config
 ) {
   if (!eventName) throw 'eventName not defined'
   if (!party) throw 'party not defined'
@@ -173,7 +188,8 @@ async function transactionMobilePush(
           mobileRegister.deviceToken,
           mobileRegister.deviceType,
           notificationObj,
-          ethAddress
+          ethAddress,
+          config
         )
       } else {
         logger.info(`No device registered for notifications for ${ethAddress}`)
@@ -185,19 +201,23 @@ async function transactionMobilePush(
 /* Send the notification depending on the type of notification (FCM or APN)
  *
  */
-async function sendNotification(deviceToken, deviceType, notificationObj, ethAddress) {
+async function sendNotification(
+  deviceToken,
+  deviceType,
+  notificationObj,
+  ethAddress,
+  config
+) {
   if (notificationObj) {
+    const messageFingerprint = getMessageFingerprint(notificationObj)
     if (deviceType === 'APN') {
       if (!apnProvider) {
         logger.error('APN provider not configured, notification failed')
         return
       }
 
-      const messageFingerprint = getMessageFingerprint(notificationObj)
-      if (await isNotificationDupe(messageFingerprint, config) > 0) {
-        logger.warn(
-          `Duplicate. Notification already recently sent. Skipping.`
-        )
+      if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
+        logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
         return
       }
 
@@ -210,7 +230,11 @@ async function sendNotification(deviceToken, deviceType, notificationObj, ethAdd
       })
       await apnProvider.send(notification, deviceToken).then(async result => {
         if (result.sent.length) {
-          await logNotificationSent(messageFingerprint, ethAddress, 'mobile-ios')
+          await logNotificationSent(
+            messageFingerprint,
+            ethAddress,
+            'mobile-ios'
+          )
           logger.debug('APN sent: ', result.sent.length)
         }
         if (result.failed) {
@@ -241,7 +265,11 @@ async function sendNotification(deviceToken, deviceType, notificationObj, ethAdd
       await firebaseMessaging
         .send(message)
         .then(async response => {
-          await logNotificationSent(messageFingerprint, ethAddress, 'mobile-android')
+          await logNotificationSent(
+            messageFingerprint,
+            ethAddress,
+            'mobile-android'
+          )
           logger.debug('FCM message sent:', response)
         })
         .catch(error => {

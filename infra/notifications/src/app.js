@@ -67,7 +67,8 @@ const config = {
   // Output debugging and other info. Boolean.
   verbose: args['--verbose'] || false,
   // How far back in time to we look for duplicates?
-  dupeLookbackMs: args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 5,
+  dupeLookbackMs:
+    args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 5
 }
 logger.log(config)
 
@@ -330,7 +331,14 @@ app.post('/events', async (req, res) => {
   )
 
   // Mobile Push notifications
-  transactionMobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+  transactionMobilePush(
+    eventName,
+    party,
+    buyerAddress,
+    sellerAddress,
+    offer,
+    config
+  )
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
