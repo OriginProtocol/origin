@@ -25,11 +25,11 @@ class EditListing extends Component {
         timeZone: get(props, 'listing.timeZone', ''),
         workingHours: get(props, 'listing.workingHours', []),
         // GiftCardListing fields:
-        retailer: get(props, 'listing.retailer', '') ,
-        cardAmount: get(props, 'listing.cardAmount', '') ,
-        issuingCountry: get(props, 'listing.issuingCountry','US') ,
-        isDigital: get(props, 'listing.isDigital', false) ,
-        isCashPurchase: get(props, 'listing.isCashPurchase', false) ,
+        retailer: get(props, 'listing.retailer', ''),
+        cardAmount: get(props, 'listing.cardAmount', ''),
+        issuingCountry: get(props, 'listing.issuingCountry', 'US'),
+        isDigital: get(props, 'listing.isDigital', false),
+        isCashPurchase: get(props, 'listing.isCashPurchase', false),
         receiptAvailable: get(props, 'listing.receiptAvailable', false),
 
         // Marketplace creator fields:
