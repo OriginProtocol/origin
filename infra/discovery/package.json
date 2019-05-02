@@ -51,7 +51,8 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.18.7",
     "rewire": "^4.0.1",
-    "sinon": "^7.1.1"
+    "sinon": "^7.1.1",
+    "prettier": "^1.16.4"
   },
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
