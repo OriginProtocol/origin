@@ -1,6 +1,9 @@
 import fetch from 'cross-fetch'
 const memoize = require('lodash/memoize')
 
+const delivrUrl = 'https://cdn.jsdelivr.net/gh/originprotocol/origin'
+const rnd = +new Date()
+
 async function getFeaturedFn(net) {
   if (net === 'localhost') return [1]
   let netId
@@ -9,9 +12,7 @@ async function getFeaturedFn(net) {
   if (!netId) return []
 
   return await new Promise(resolve => {
-    fetch(
-      `https://cdn.jsdelivr.net/gh/originprotocol/origin@hidefeature_list/featurelist_${netId}.txt`
-    )
+    fetch(`${delivrUrl}@hidefeature_list/featurelist_${netId}.txt?r=${rnd}`)
       .then(response => response.text())
       .then(response => {
         const ids = response
@@ -31,9 +32,7 @@ async function getHiddenFn(net) {
   if (!netId) return []
 
   return await new Promise(resolve => {
-    fetch(
-      `https://cdn.jsdelivr.net/gh/originprotocol/origin@hidefeature_list/hidelist_${netId}.txt`
-    )
+    fetch(`${delivrUrl}@hidefeature_list/hidelist_${netId}.txt?r=${rnd}`)
       .then(response => response.text())
       .then(response => {
         const ids = response
