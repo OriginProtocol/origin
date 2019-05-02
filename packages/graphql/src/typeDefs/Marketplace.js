@@ -285,6 +285,21 @@ module.exports = `
   type GiftCardListing implements Listing {
     ${ListingInterface}
 
+    # Number of units available for sale (IPFS)
+    unitsTotal: Int
+
+    # Number of Units Created, Accepted or Disputed (computed)
+    unitsPending: Int
+
+    # Number of units Finalized or Ruling (computed)
+    unitsSold: Int
+
+    # unitsTotal - unitsPending - unitsSold (computed)
+    unitsAvailable: Int
+
+    # Is this is a multi-unit listing or not (computed)
+    multiUnit: Boolean
+
     # IPFS
     retailer: String
     cardAmount: String
