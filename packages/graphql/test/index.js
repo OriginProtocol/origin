@@ -122,7 +122,7 @@ describe('Marketplace', function() {
     })
 
     it('should retrieve the listing as of a specfic block', async function() {
-      const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
+      const blockNumber = await contracts.marketplace.eventCache.getBlockNumber()
       const listingId = `999-000-0-${blockNumber}`
       const res = await client.query({
         query: queries.GetListing,
