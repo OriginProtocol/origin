@@ -230,6 +230,7 @@ class MarketplaceScreen extends Component {
               </View>
             )
           }}
+          decelerationRate="normal"
         />
         {modals.map((modal, index) => {
           let card
