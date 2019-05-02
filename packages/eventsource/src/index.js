@@ -376,7 +376,7 @@ class OriginEventSource {
 
   async _getOffer(listing, listingId, offerId, blockNumber) {
     if (blockNumber === undefined) {
-      blockNumber = this.contract.eventCache.getBlockNumber()
+      blockNumber = await this.contract.eventCache.getBlockNumber()
     }
     const cacheKey = `${listingId}-${offerId}-${blockNumber}`
     if (this.offerCache[cacheKey]) {
