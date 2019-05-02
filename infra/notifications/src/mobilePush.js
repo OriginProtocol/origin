@@ -9,33 +9,41 @@ const MobileRegistry = require('./models').MobileRegistry
 // Configure the APN provider
 let apnProvider, apnBundle
 if (process.env.APNS_KEY_FILE) {
-  apnProvider = new apn.Provider({
-    token: {
-      key: process.env.APNS_KEY_FILE,
-      keyId: process.env.APNS_KEY_ID,
-      teamId: process.env.APNS_TEAM_ID
-    },
-    production: process.env.APNS_PRODUCTION === 'true' ? true : false
-  })
-  apnBundle = process.env.APNS_BUNDLE_ID
+  try {
+    apnProvider = new apn.Provider({
+      token: {
+        key: process.env.APNS_KEY_FILE,
+        keyId: process.env.APNS_KEY_ID,
+        teamId: process.env.APNS_TEAM_ID
+      },
+      production: process.env.APNS_PRODUCTION === 'true' ? true : false
+    })
+    apnBundle = process.env.APNS_BUNDLE_ID
+  } catch (error) {
+    logger.error(`Error trying to configure apnProvider: ${error}`)
+  }
 } else {
-  logger.warn('APN provider not configured, no key file found')
+  logger.warn('APN provider not configured.')
 }
 
 // Firebase Admin SDK
 // ref: https://firebase.google.com/docs/reference/admin/node/admin.messaging
 let firebaseMessaging
 if (process.env.FIREBASE_SERVICE_JSON) {
-  const firebaseServiceJson = require(process.env.FIREBASE_SERVICE_JSON)
+  try {
+    const firebaseServiceJson = require(process.env.FIREBASE_SERVICE_JSON)
 
-  firebase.initializeApp({
-    credential: firebase.credential.cert(firebaseServiceJson),
-    databaseURL: process.env.FIREBASE_DB_URL
-  })
+    firebase.initializeApp({
+      credential: firebase.credential.cert(firebaseServiceJson),
+      databaseURL: process.env.FIREBASE_DB_URL
+    })
 
-  firebaseMessaging = firebase.messaging()
+    firebaseMessaging = firebase.messaging()
+  } catch (error) {
+    logger.error(`Error trying to configure firebaseMessaging: ${error}`)
+  }
 } else {
-  logger.warn('Firebase messaging not configured, no service JSON found')
+  logger.warn('Firebase messaging not configured.')
 }
 
 //
