@@ -18,6 +18,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
+import { decodeTransaction } from '../utils/contractDecoder'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -93,9 +94,15 @@ class MarketplaceScreen extends Component {
     } else {
       PushNotification.checkPermissions(permissions => {
         const newModals = []
-        // Check if we have notification permissions, if not display the nag
-        // message
-        if (!permissions.alert) {
+        // Check if we lack notification permissions, and we are processing a
+        // web3 transactiotn that isn't updating our identitty. If we are then
+        // display a modal requesting notifications be enabled
+        if (
+          !permissions.alert &&
+          msgData.targetFunc === 'processTransaction' &&
+          decodeTransaction(msgData.data.data).functionName !==
+            'emitIdentityUpdated'
+        ) {
           newModals.push({ type: 'enableNotifications' })
         }
         // Transaction/signature modal
