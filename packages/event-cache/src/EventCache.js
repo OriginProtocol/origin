@@ -121,6 +121,8 @@ class EventCache {
     this.contract = contract
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
+    this.lastQueriedBlock = 0
+    this.latestIndexedBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
@@ -209,22 +211,42 @@ class EventCache {
    */
   async _fetchEvents() {
     let toBlock = this.latestBlock
+
+    // Debug sanity check
+    const nodeBlock = await this.web3.eth.getBlockNumber()
+    if (toBlock > nodeBlock) {
+      debug(
+        `Block on JSON-RPC node is less than what we're expecting.  This is an error!  ${
+          this.latestBlock
+        } > ${nodeBlock}`
+      )
+      // TODO, set latestBlock back to nodeBlock?
+    } else if (toBlock < nodeBlock) {
+      debug(
+        `Node block is greater than what we're expecting.  This is OK  ${
+          this.latestBlock
+        } < ${nodeBlock}`
+      )
+    }
+
     if (this.useLatestFromChain || !toBlock) {
-      toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
+      toBlock = this.latestBlock = nodeBlock
     }
 
     if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
       return
     }
 
-    let fromBlock = this.lastQueriedBlock
-      ? this.lastQueriedBlock + 1
-      : this.originBlock
     this.latestIndexedBlock = await this.backend.getLatestBlock()
 
-    if (this.latestIndexedBlock > fromBlock) {
-      fromBlock = this.latestIndexedBlock + 1
-    }
+    /**
+     * Base fromBlock on the latest block number that had an event and was added
+     * to the backend. This is defensive against accidental "future" requests on
+     * nodes that may be out of sync
+     */
+    const fromBlock = this.latestIndexedBlock
+      ? this.latestIndexedBlock + 1
+      : this.originBlock
 
     if (fromBlock > toBlock) {
       debug(`fromBlock > toBlock (${fromBlock} > ${toBlock})`)

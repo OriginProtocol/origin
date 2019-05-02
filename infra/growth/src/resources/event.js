@@ -7,7 +7,8 @@ const AttestationServiceToEventType = {
   email: GrowthEventTypes.EmailAttestationPublished,
   facebook: GrowthEventTypes.FacebookAttestationPublished,
   phone: GrowthEventTypes.PhoneAttestationPublished,
-  twitter: GrowthEventTypes.TwitterAttestationPublished
+  twitter: GrowthEventTypes.TwitterAttestationPublished,
+  google: GrowthEventTypes.GoogleAttestationPublished
 }
 
 class GrowthEvent {
@@ -23,9 +24,10 @@ class GrowthEvent {
   }
 
   /**
-   * Insert an entry in the growth_event DB table after checking there
-   * isn't a past entry of the same type.
+   * Insert N entries in the growth_event DB table after checking there
+   * isn't already N past entries of the same type.
    * @param {Object} logger
+   * @param {integer} num - Number of entries to insert.
    * @param {string} ethAddress
    * @param {GrowthEventTypes} eventType
    * @param {string} customId - Optional custom id. For ex can hold listing or offer Id.
@@ -35,6 +37,7 @@ class GrowthEvent {
    */
   static async insert(
     logger,
+    num,
     ethAddress,
     eventType,
     customId,
@@ -52,14 +55,17 @@ class GrowthEvent {
       eventType,
       customId
     )
-    if (pastEvents.length > 0) {
-      logger.debug(
-        `Skipped insert: found past growth event ${eventType} for account ${ethAddress}`
+    const numToInsert = num - pastEvents.length
+    if (numToInsert <= 0) {
+      logger.info(
+        `Skipped insert: found ${
+          pastEvents.length
+        } past growth event ${eventType} for account ${ethAddress}`
       )
       return
     }
 
-    // Record event.
+    // Record events.
     const eventData = {
       ethAddress: ethAddress.toLowerCase(),
       type: eventType,
@@ -68,8 +74,12 @@ class GrowthEvent {
       data,
       createdAt
     }
-    await db.GrowthEvent.create(eventData)
-    logger.info(`Inserted growth event ${eventType} for account ${ethAddress}`)
+    for (let i = 0; i < numToInsert; i++) {
+      await db.GrowthEvent.create(eventData)
+    }
+    logger.info(
+      `Inserted ${numToInsert} growth event ${eventType} for account ${ethAddress}`
+    )
   }
 
   /**

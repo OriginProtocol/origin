@@ -237,6 +237,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
+      1,
       identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
@@ -269,6 +270,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
+          1,
           identity.id,
           eventType,
           null,

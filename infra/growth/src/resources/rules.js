@@ -293,6 +293,9 @@ function ruleFactory(crules, levelId, config) {
     case 'Referral':
       rule = new ReferralRule(crules, levelId, config)
       break
+    case 'ListingIdPurchase':
+      rule = new ListingIdPurchaseRule(crules, levelId, config)
+      break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
   }
@@ -392,15 +395,17 @@ class BaseRule {
    * Counts events, grouped by types.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
+   * @param {function} customIdFn - Optional. Custom id filter function.
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
    */
-  _tallyEvents(ethAddress, eventTypes, events) {
+  _tallyEvents(ethAddress, eventTypes, events, customIdFn = null) {
     const tally = {}
     events
       .filter(event => {
         return (
           event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
+          (!customIdFn || customIdFn(event.customId)) &&
           (event.status === GrowthEventStatuses.Logged ||
             event.status === GrowthEventStatuses.Verified)
         )
@@ -420,7 +425,7 @@ class BaseRule {
       return []
     }
 
-    const numRewards = this._numRewards(ethAddress, this._inScope(events))
+    const numRewards = await this._numRewards(ethAddress, this._inScope(events))
     const rewards = Array(numRewards).fill(this.reward)
 
     return rewards
@@ -458,14 +463,23 @@ class BaseRule {
       return GrowthActionStatus.Inactive
     }
 
+    // Note:
     if (this.reward) {
       // Reward rule. Determine if the rule is Completed by calculating
       // if all rewards have been earned.
-      const numRewards = await this.getRewards(
+      // For some rules, there are 2 scopes defined:
+      //  1. config.scope should be used for computing earned rewards.
+      //  2. config.statusScope should be used for computing the status.
+      // This is for the case where if he rule was completed in a prior campaign,
+      // then we want to show it as Complete.
+      // For example Attestation rules can only be completed once during a campaign and
+      // later campaigns should show them as Completed. We can achieve this behavior
+      // by setting scope to "campaign" and statusScope to "user".
+      const numRewards = await this._numRewards(
         ethAddress,
-        this._inScope(events)
+        this.config.statusScope === 'user' ? events : this._inScope(events)
       )
-      return numRewards.length < this.limit
+      return numRewards < this.limit
         ? GrowthActionStatus.Active
         : GrowthActionStatus.Completed
     } else {
@@ -506,16 +520,22 @@ class BaseRule {
    * @returns {Promise<Array<Object>>}
    */
   async export(adapter, ethAddress, events, level) {
-    return adapter.process({
+    const data = {
+      ruleId: this.id,
       ethAddress,
       visible: this.config.visible,
       campaign: this.campaign,
-      eventTypes: this.eventTypes,
       status: await this.getStatus(ethAddress, events, level),
       reward: this.reward,
       rewards: await this.getRewards(ethAddress, events),
-      unlockConditions: this.conditionsToUnlock()
-    })
+      unlockConditions: this.conditionsToUnlock(),
+      // Fields specific to the ListingIdPurchased rule.
+      listingId: this.listingId,
+      iconSrc: this.iconSrc,
+      titleKey: this.titleKey,
+      detailsKey: this.detailsKey
+    }
+    return adapter.process(data)
   }
 }
 
@@ -542,8 +562,9 @@ class SingleEventRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  _numRewards(ethAddress, events) {
+  async _numRewards(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
+
     // SingleEventRule has at most 1 event in tally count.
     return Object.keys(tally).length === 1
       ? Math.min(Object.values(tally)[0], this.limit)
@@ -558,8 +579,95 @@ class SingleEventRule extends BaseRule {
    */
   async _evaluate(ethAddress, events) {
     const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-
     return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+  }
+}
+
+/**
+ * A rule that requires the purchase of a specific listing.
+ */
+class ListingIdPurchaseRule extends BaseRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+    if (!this.config.listingId) {
+      throw new Error(`${this.str()}: missing listingId field`)
+    }
+    this.listingId = this.config.listingId
+    if (!this.config.iconSrc) {
+      throw new Error(`${this.str()}: missing iconSrc field`)
+    }
+    this.iconSrc = this.config.iconSrc
+    if (!this.config.titleKey) {
+      throw new Error(`${this.str()}: missing titleKey field`)
+    }
+    this.titleKey = this.config.titleKey
+    if (!this.config.detailsKey) {
+      throw new Error(`${this.str()}: missing detailsKey field`)
+    }
+    this.detailsKey = this.config.detailsKey
+
+    const eventType = 'ListingPurchased'
+    if (!GrowthEventTypes.includes(eventType)) {
+      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    }
+    this.eventTypes = [eventType]
+  }
+
+  /**
+   * Filter function to use when calling _tallyEvent.
+   * Filters out events that are not for an offer on the listingId of the rule.
+   * For ListingPurchased events, customId is the offerId with
+   * format <network>-<contract_version>-<listingSeq>-<offerSeq>
+   * @param {string} customId
+   * @returns {boolean}
+   */
+  customIdFilter(customId) {
+    // Trim the offerId from customId to get the listingId.
+    return (
+      this.listingId ===
+      customId
+        .split('-')
+        .slice(0, 3)
+        .join('-')
+    )
+  }
+
+  /**
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
+  async _numRewards(ethAddress, events) {
+    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      customId => this.customIdFilter(customId)
+    )
+    return Object.keys(tally).length > 0
+      ? Math.min(Object.values(tally)[0], this.limit)
+      : 0
+  }
+
+  /**
+   * Returns true if the rule passes, false otherwise.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
+  async _evaluate(ethAddress, events) {
+    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      customId => this.customIdFilter(customId)
+    )
+
+    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
   }
 }
 
@@ -598,7 +706,7 @@ class MultiEventsRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  _numRewards(ethAddress, events) {
+  async _numRewards(ethAddress, events) {
     // Attempts to picks N different events from the tally.
     // Returns true if success, false otherwise.
     function pickN(tally, n) {
@@ -650,10 +758,6 @@ class ReferralRule extends BaseRule {
       throw new Error(`${this.str()}: missing levelRequired field`)
     }
     this.levelRequired = this.config.levelRequired
-
-    // Note: 'Referral' is not an actual GrowthEventType.
-    // This is used by the export method.
-    this.eventTypes = ['Referral']
   }
 
   /**
@@ -740,6 +844,10 @@ class ReferralRule extends BaseRule {
     }
 
     return rewards
+  }
+
+  async _numRewards(ethAddress) {
+    return (await this.getRewards(ethAddress)).length
   }
 }
 

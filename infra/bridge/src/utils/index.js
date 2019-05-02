@@ -14,12 +14,12 @@ function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000)
 }
 
-function getAbsoluteUrl(relativeUrl, dappRedirectUrl = null) {
+function getAbsoluteUrl(relativeUrl, state) {
   const protocol = process.env.HTTPS ? 'https' : 'http'
   const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
   let url = `${protocol}://${host}${relativeUrl}`
-  if (dappRedirectUrl) {
-    url += '?dappRedirectUrl=' + dappRedirectUrl
+  if (state) {
+    url += '?state=' + state
   }
   return url
 }

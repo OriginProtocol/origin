@@ -41,6 +41,7 @@ const GrowthActionType = new Enum(
   'Twitter',
   'Airbnb',
   'Facebook',
+  'Google',
   'Referral',
   'ListingCreated',
   'ListingPurchased'
@@ -55,6 +56,7 @@ const GrowthEventTypes = new Enum(
   'AirbnbAttestationPublished',
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
+  'GoogleAttestationPublished',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold' // Seller side event.

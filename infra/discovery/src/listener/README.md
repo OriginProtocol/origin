@@ -21,9 +21,9 @@ You can either start the listener via docker compose or via lerna.
  - Setup Postgres locally.
  - Create DB schema:
 ```
-lerna run migrate --scope origin-discovery
-lerna run migrate --scope origin-growth
-lerna run migrate --scope origin-identity
+lerna run migrate --prefix infra/discovery
+lerna run migrate --prefix infra/growth
+lerna run migrate --prefix infra/identity
 ```
 
 ### Start the listener
@@ -32,7 +32,7 @@ export DATABASE_URL=postgres://origin:origin@localhost/origin
 export ELASTICSEARCH=localhost:9200
 export LOG_LEVEL=DEBUG
 export NETWORK=localhost
-lerna run start:listener:development --scope origin-discovery --stream
+lerna run start:listener:development --prefix infra/discovery --stream
 ```
 
 # Command line options
