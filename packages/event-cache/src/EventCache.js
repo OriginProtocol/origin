@@ -237,7 +237,10 @@ class EventCache {
       return
     }
 
-    this.latestIndexedBlock = await this.backend.getLatestBlock()
+    // Set if missing
+    if (this.latestIndexedBlock === 0) {
+      this.latestIndexedBlock = await this.backend.getLatestBlock()
+    }
 
     /**
      * Base fromBlock on the latest block number that had an event and was added
@@ -254,6 +257,9 @@ class EventCache {
     }
 
     await getPastEvents(this, fromBlock, toBlock, this.batchSize)
+
+    // Update latestIndexedBlock
+    this.latestIndexedBlock = await this.backend.getLatestBlock()
   }
 
   /**
