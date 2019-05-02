@@ -16,7 +16,7 @@ class AbstractBackend {
    * Returns the latest block number known by the backend
    * @returns {number} The latest known block number
    */
-  getLatestBlock() {
+  async getLatestBlock() {
     return this.latestBlock
   }
 
