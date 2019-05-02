@@ -163,7 +163,9 @@ async function main() {
       })
 
       // Filter out events outside of interval (processedToBlock, toBlock].
-      const newEvents = events.filter(event => event && event.blockNumber > processedToBlock)
+      const newEvents = events.filter(
+        event => event && event.blockNumber > processedToBlock
+      )
       logger.debug(`Got ${newEvents.length} new events for ${contractKey}`)
 
       if (context.config.concurrency > 1) {
