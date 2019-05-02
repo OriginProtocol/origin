@@ -121,6 +121,8 @@ class EventCache {
     this.contract = contract
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
+    this.lastQueriedBlock = 0
+    this.latestIndexedBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
@@ -235,14 +237,19 @@ class EventCache {
       return
     }
 
-    let fromBlock = this.lastQueriedBlock
-      ? this.lastQueriedBlock + 1
-      : this.originBlock
-    this.latestIndexedBlock = await this.backend.getLatestBlock()
-
-    if (this.latestIndexedBlock > fromBlock) {
-      fromBlock = this.latestIndexedBlock + 1
+    // Set if missing
+    if (this.latestIndexedBlock === 0) {
+      this.latestIndexedBlock = await this.backend.getLatestBlock()
     }
+
+    /**
+     * Base fromBlock on the latest block number that had an event and was added
+     * to the backend. This is defensive against accidental "future" requests on
+     * nodes that may be out of sync
+     */
+    const fromBlock = this.latestIndexedBlock
+      ? this.latestIndexedBlock + 1
+      : this.originBlock
 
     if (fromBlock > toBlock) {
       debug(`fromBlock > toBlock (${fromBlock} > ${toBlock})`)
@@ -250,6 +257,9 @@ class EventCache {
     }
 
     await getPastEvents(this, fromBlock, toBlock, this.batchSize)
+
+    // Update latestIndexedBlock
+    this.latestIndexedBlock = await this.backend.getLatestBlock()
   }
 
   /**
