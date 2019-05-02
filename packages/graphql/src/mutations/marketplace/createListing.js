@@ -47,6 +47,7 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.isDigital = unitData.isDigital || false
     ipfsData.isCashPurchase = unitData.isCashPurchase || false
     ipfsData.receiptAvailable = unitData.receiptAvailable || false
+    ipfsData.unitsTotal = unitData.unitsTotal ? unitData.unitsTotal : 1
   } else if (unitData) {
     ipfsData.unitsTotal = unitData.unitsTotal
   } else {
