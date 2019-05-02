@@ -241,8 +241,6 @@ app.post('/messages', async (req, res) => {
   const sender = req.body.sender // eth address
   const receivers = req.body.recievers // array of eth addresses
 
-  console.log(req.body)
-
   // Email notifications
   messageEmailSend(receivers, sender, config)
 
