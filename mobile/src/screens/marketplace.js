@@ -8,7 +8,6 @@ import {
   PanResponder,
   Platform,
   StyleSheet,
-  StatusBar,
   View
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
@@ -50,13 +49,15 @@ class MarketplaceScreen extends Component {
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > swipeDistance && Math.abs(gestureState.dy) < 50
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
       },
       onPanResponderRelease: (evt, gestureState) => {
         if (gestureState.moveX > swipeDistance) {
           this.dappWebView.goBack()
-        }
-        else if (gestureState.moveX < swipeDistance) {
+        } else if (gestureState.moveX < swipeDistance) {
           this.dappWebView.goForward()
         }
       }
@@ -212,7 +213,6 @@ class MarketplaceScreen extends Component {
         forceInset={{ top: 'always' }}
         {...this._panResponder.panHandlers}
       >
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
           ref={webview => {
             this.dappWebView = webview
