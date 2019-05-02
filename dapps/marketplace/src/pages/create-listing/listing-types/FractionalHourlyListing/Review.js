@@ -29,36 +29,36 @@ class Review extends Component {
 
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.title">Title</fbt>
               </div>
-              <div className="col-9">{listing.title}</div>
+              <div className="col-12 col-sm-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.category">Category</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Category listing={listing} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.description">Description</fbt>
               </div>
-              <div className="col-9">{listing.description}</div>
+              <div className="col-12 col-sm-9">{listing.description}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="lisitng.review.time-zone">Time Zone</fbt>
               </div>
-              <div className="col-9">{listing.timeZone}</div>
+              <div className="col-12 col-sm-9">{listing.timeZone}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.price">Price per Hour</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Price
                   target={listing.currency}
                   price={{ amount: listing.price, currency: listing.currency }}
@@ -66,19 +66,19 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.boost-level">Boost Level</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <CoinPrice price={boost} coin="ogn" />
                 <fbt desc="create.review.price-per-hour">/ hour</fbt>
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.photos">Photos</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 {listing.media.length ? (
                   <div className="photos">
                     {listing.media.map((image, idx) => (
@@ -98,10 +98,10 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.hourly.availability">Availability</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <WeekCalendar
                   interactive={false}
                   small={true}

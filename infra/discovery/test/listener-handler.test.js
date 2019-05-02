@@ -60,6 +60,7 @@ const mockOffer = {
   buyer: {
     id: buyer
   },
+  quantity: 2,
   events: [{ blockNumber: 2, logIndex: 2 }]
 }
 
@@ -209,7 +210,8 @@ describe('Listener Handlers', () => {
       GrowthEventTypes.ListingPurchased,
       offerId
     )
-    expect(listingEvent.length).to.equal(1)
+    // We expect 2 events since quantity purchased was 2.
+    expect(listingEvent.length).to.equal(2)
   })
 
   it(`Identity`, async () => {
