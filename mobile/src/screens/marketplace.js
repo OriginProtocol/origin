@@ -45,9 +45,9 @@ class MarketplaceScreen extends Component {
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
 
-    let swipeDistance = 200
+    const swipeDistance = 200
     this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onStartShouldSetPanResponderCapture: () => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
         return (
           Math.abs(gestureState.dx) > swipeDistance &&
