@@ -68,7 +68,7 @@ const config = {
   verbose: args['--verbose'] || false,
   // How far back in time to we look for duplicates?
   dupeLookbackMs:
-    args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 5
+    args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 30
 }
 logger.log(config)
 
