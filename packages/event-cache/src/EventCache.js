@@ -312,8 +312,8 @@ class EventCache {
    * Returns the latest block number known by the backend
    * @returns {number} The latest known block number
    */
-  getBlockNumber() {
-    return this.backend.getLatestBlock()
+  async getBlockNumber() {
+    return await this.backend.getLatestBlock()
   }
 
   /**
