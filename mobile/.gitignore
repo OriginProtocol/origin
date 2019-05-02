@@ -56,3 +56,5 @@ buck-out/
 *.jsbundle
 
 android/keystores/keystore.properties
+android/app/debug/
+android/app/release/
