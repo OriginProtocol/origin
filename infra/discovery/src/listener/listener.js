@@ -158,20 +158,14 @@ async function main() {
       )
 
       // Retrieve all events for the relevant contract
-      const eventArrays = await withRetrys(async () => {
+      const events = await withRetrys(async () => {
         return contracts[contractKey].eventCache.allEvents()
       })
 
-      // Flatten array of arrays filtering out anything undefined and filter
-      // out events outside of interval (processedToBlock, toBlock].
-      const newEvents = [].concat(
-        ...eventArrays.filter(event => {
-          if (event && event.blockNumber > processedToBlock) {
-            return event
-          }
-        })
+      // Filter out events outside of interval (processedToBlock, toBlock].
+      const newEvents = events.filter(
+        event => event && event.blockNumber > processedToBlock
       )
-
       logger.debug(`Got ${newEvents.length} new events for ${contractKey}`)
 
       if (context.config.concurrency > 1) {
