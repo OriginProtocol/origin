@@ -37,7 +37,6 @@ spec:
                 key: ENVKEY
           - name: NAMESPACE
             value: {{ .Release.Namespace | quote }}
-        allowPrivilegeEscalation: false
         volumeMounts:
           - name: origin-apns-key-file
             mountPath: /secrets/apns
