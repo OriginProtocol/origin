@@ -74,9 +74,6 @@ async function messageMobilePush(receivers, sender, config) {
   })
   Promise.all([messageSender, messageReceivers]).then(
     ([senderIdentity, receiversIdentities]) => {
-      console.log(senderIdentity)
-      console.log(receiversIdentities)
-
       receiversIdentities.forEach(async s => {
         try {
           const message = messageTemplates.message['mobile']['messageReceived']
@@ -191,6 +188,8 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
         logger.error('APN provider not configured, notification failed')
         return
       }
+      const messageFingerprint = web3Utils.keccak256(JSON.stringify(notificationObj))
+
       // iOS notifications
       const notification = new apn.Notification({
         alert: notificationObj.message,
@@ -200,6 +199,11 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
       })
       await apnProvider.send(notification, deviceToken).then(result => {
         if (result.sent.length) {
+          NotificationLog.create({
+            messageFingerprint: messageFingerprint,
+            ethAddress: s.ethAddress,
+            channel: 'mobile-ios'
+          })
           logger.debug('APN sent: ', result.sent.length)
         }
         if (result.failed) {
@@ -230,6 +234,11 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
       await firebaseMessaging
         .send(message)
         .then(response => {
+          NotificationLog.create({
+            messageFingerprint: web3Utils.keccak256(JSON.stringify(notificationObj)),
+            ethAddress: s.ethAddress,
+            channel: 'mobile-android'
+          })
           logger.debug('FCM message sent:', response)
         })
         .catch(error => {

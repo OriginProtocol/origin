@@ -1,5 +1,7 @@
 // TODO: We need better way to refer to models in other packages.
 const Identity = require('../../identity/src/models').Identity
+const NotificationLog = require('./models').NotificationLog
+
 const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
@@ -7,10 +9,8 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
 const logger = require('./logger')
+const web3Utils = require('web3-utils')
 
-if (!Identity) {
-  throw 'Identity model not found.'
-}
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 if (!process.env.SENDGRID_API_KEY) {
@@ -18,6 +18,15 @@ if (!process.env.SENDGRID_API_KEY) {
 }
 if (!process.env.SENDGRID_FROM_EMAIL) {
   logger.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
+}
+
+async function messageIsDupe(messageFingerprint, config) {
+  return NotificationLog.count({where: {
+    messageFingerprint: messageFingerprint,
+    sendDate: {
+      [Op.gte]: new Date( Date.now() - config.dupeLookbackMs )
+    }
+  }})
 }
 
 //
@@ -55,9 +64,6 @@ async function messageEmailSend(receivers, sender, config) {
   })
   Promise.all([messageSender, messageReceivers]).then(
     ([senderIdentity, receiversIdentities]) => {
-      console.log(senderIdentity)
-      console.log(receiversIdentities)
-
       receiversIdentities.forEach(async s => {
         try {
           const message = messageTemplates.message['email']['messageReceived']
@@ -91,6 +97,7 @@ async function messageEmailSend(receivers, sender, config) {
                 groupId: config.asmGroupId
               }
             }
+            const messageFingerprint = web3Utils.keccak256(JSON.stringify(email))
 
             if (config.verbose) {
               logger.log('email:')
@@ -115,16 +122,25 @@ async function messageEmailSend(receivers, sender, config) {
                 }
               )
             }
-
-            try {
-              await sendgridMail.send(email)
-              logger.log(
-                `Email sent to ${s.ethAddress} at ${email.to} ${
-                  config.overrideEmail ? ' instead of ' + s.email : ''
-                }`
-              )
-            } catch (error) {
-              logger.error(`Could not email via Sendgrid: ${error}`)
+            if (await messageIsDupe(messageFingerprint, config)) {
+              logger.warn(`Duplicate. Message already recently sent. Skipping.`)
+            }
+            else {
+              try {
+                await sendgridMail.send(email)
+                NotificationLog.create({
+                  messageFingerprint: messageFingerprint,
+                  ethAddress: s.ethAddress,
+                  channel: 'email'
+                })
+                logger.log(
+                  `Email sent to ${s.ethAddress} at ${email.to} ${
+                    config.overrideEmail ? ' instead of ' + s.email : ''
+                  }`
+                )
+              } catch (error) {
+                logger.error(`Could not email via Sendgrid: ${error}`)
+              }
             }
           }
         } catch (error) {
@@ -262,11 +278,17 @@ async function transactionEmailSend(
 
         try {
           await sendgridMail.send(email)
+          NotificationLog.create({
+            messageFingerprint: web3Utils.keccak256(JSON.stringify(email)),
+            ethAddress: s.ethAddress,
+            channel: 'email'
+          })
           logger.log(
             `Email sent to ${buyerAddress} at ${email.to} ${
               config.overrideEmail ? ' instead of ' + s.email : ''
             }`
           )
+
         } catch (error) {
           logger.error(`Could not email via Sendgrid: ${error}`)
         }

@@ -65,7 +65,9 @@ const config = {
   // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
   emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
   // Output debugging and other info. Boolean.
-  verbose: args['--verbose'] || false
+  verbose: args['--verbose'] || false,
+  // How far back in time to we look for duplicates?
+  dupeLookbackMs: args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 5,
 }
 logger.log(config)
 
