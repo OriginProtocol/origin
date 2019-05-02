@@ -12,6 +12,8 @@ const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
 const MobileRegistry = require('./models').MobileRegistry
 
+const {getMessageFingerprint, isNotificationDupe, logNotificationSent} = require('./dupeTools')
+
 // Configure the APN provider
 let apnProvider, apnBundle
 if (process.env.APNS_KEY_FILE) {
@@ -92,7 +94,8 @@ async function messageMobilePush(receivers, sender, config) {
             await sendNotification(
               mobileRegister.deviceToken,
               mobileRegister.deviceType,
-              notificationObj
+              notificationObj,
+              ethAddress
             )
           } else {
             logger.info(
@@ -169,7 +172,8 @@ async function transactionMobilePush(
         await sendNotification(
           mobileRegister.deviceToken,
           mobileRegister.deviceType,
-          notificationObj
+          notificationObj,
+          ethAddress
         )
       } else {
         logger.info(`No device registered for notifications for ${ethAddress}`)
@@ -181,14 +185,21 @@ async function transactionMobilePush(
 /* Send the notification depending on the type of notification (FCM or APN)
  *
  */
-async function sendNotification(deviceToken, deviceType, notificationObj) {
+async function sendNotification(deviceToken, deviceType, notificationObj, ethAddress) {
   if (notificationObj) {
     if (deviceType === 'APN') {
       if (!apnProvider) {
         logger.error('APN provider not configured, notification failed')
         return
       }
-      const messageFingerprint = web3Utils.keccak256(JSON.stringify(notificationObj))
+
+      const messageFingerprint = getMessageFingerprint(notificationObj)
+      if (await isNotificationDupe(messageFingerprint, config) > 0) {
+        logger.warn(
+          `Duplicate. Notification already recently sent. Skipping.`
+        )
+        return
+      }
 
       // iOS notifications
       const notification = new apn.Notification({
@@ -197,13 +208,9 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
         payload: notificationObj.payload,
         topic: apnBundle
       })
-      await apnProvider.send(notification, deviceToken).then(result => {
+      await apnProvider.send(notification, deviceToken).then(async result => {
         if (result.sent.length) {
-          NotificationLog.create({
-            messageFingerprint: messageFingerprint,
-            ethAddress: s.ethAddress,
-            channel: 'mobile-ios'
-          })
+          await logNotificationSent(messageFingerprint, ethAddress, 'mobile-ios')
           logger.debug('APN sent: ', result.sent.length)
         }
         if (result.failed) {
@@ -233,12 +240,8 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
 
       await firebaseMessaging
         .send(message)
-        .then(response => {
-          NotificationLog.create({
-            messageFingerprint: web3Utils.keccak256(JSON.stringify(notificationObj)),
-            ethAddress: s.ethAddress,
-            channel: 'mobile-android'
-          })
+        .then(async response => {
+          await logNotificationSent(messageFingerprint, ethAddress, 'mobile-android')
           logger.debug('FCM message sent:', response)
         })
         .catch(error => {

@@ -1,6 +1,5 @@
 // TODO: We need better way to refer to models in other packages.
 const Identity = require('../../identity/src/models').Identity
-const NotificationLog = require('./models').NotificationLog
 
 const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
@@ -20,14 +19,7 @@ if (!process.env.SENDGRID_FROM_EMAIL) {
   logger.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
 }
 
-async function messageIsDupe(messageFingerprint, config) {
-  return NotificationLog.count({where: {
-    messageFingerprint: messageFingerprint,
-    sendDate: {
-      [Op.gte]: new Date( Date.now() - config.dupeLookbackMs )
-    }
-  }})
-}
+const {getMessageFingerprint, isNotificationDupe, logNotificationSent} = require('./dupeTools')
 
 //
 // Email notifications for Messages
@@ -97,7 +89,6 @@ async function messageEmailSend(receivers, sender, config) {
                 groupId: config.asmGroupId
               }
             }
-            const messageFingerprint = web3Utils.keccak256(JSON.stringify(email))
 
             if (config.verbose) {
               logger.log('email:')
@@ -122,17 +113,15 @@ async function messageEmailSend(receivers, sender, config) {
                 }
               )
             }
-            if (await messageIsDupe(messageFingerprint, config)) {
-              logger.warn(`Duplicate. Message already recently sent. Skipping.`)
-            }
-            else {
+            const messageFingerprint = getMessageFingerprint(email)
+            if (await isNotificationDupe(messageFingerprint, config) > 0) {
+              logger.warn(
+                `Duplicate. Notification already recently sent. Skipping.`
+              )
+            } else {
               try {
                 await sendgridMail.send(email)
-                NotificationLog.create({
-                  messageFingerprint: messageFingerprint,
-                  ethAddress: s.ethAddress,
-                  channel: 'email'
-                })
+                await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
                 logger.log(
                   `Email sent to ${s.ethAddress} at ${email.to} ${
                     config.overrideEmail ? ' instead of ' + s.email : ''
@@ -275,22 +264,23 @@ async function transactionEmailSend(
             }
           )
         }
-
-        try {
-          await sendgridMail.send(email)
-          NotificationLog.create({
-            messageFingerprint: web3Utils.keccak256(JSON.stringify(email)),
-            ethAddress: s.ethAddress,
-            channel: 'email'
-          })
-          logger.log(
-            `Email sent to ${buyerAddress} at ${email.to} ${
-              config.overrideEmail ? ' instead of ' + s.email : ''
-            }`
+        const messageFingerprint = getMessageFingerprint(email)
+        if (await isNotificationDupe(messageFingerprint, config) > 0) {
+          logger.warn(
+            `Duplicate. Notification already recently sent. Skipping.`
           )
-
-        } catch (error) {
-          logger.error(`Could not email via Sendgrid: ${error}`)
+        } else {
+          try {
+            await sendgridMail.send(email)
+            await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
+            logger.log(
+              `Email sent to ${buyerAddress} at ${email.to} ${
+                config.overrideEmail ? ' instead of ' + s.email : ''
+              }`
+            )
+          } catch (error) {
+            logger.error(`Could not email via Sendgrid: ${error}`)
+          }
         }
       }
     } catch (error) {
