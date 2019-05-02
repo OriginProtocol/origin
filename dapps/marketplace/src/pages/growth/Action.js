@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
+import numberFormat from 'utils/numberFormat'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -32,11 +33,15 @@ function Action(props) {
   }
 
   const formatTokens = tokenAmount => {
-    return web3.utils
-      .toBN(tokenAmount)
-      .div(props.decimalDivision)
-      .toString()
+    return numberFormat(
+      web3.utils
+        .toBN(tokenAmount)
+        .div(props.decimalDivision)
+        .toString()
+    )
   }
+
+  const [detailsToggled, toggleDetails] = useState(false)
 
   let foregroundImgSrc
   let title
@@ -64,7 +69,7 @@ function Action(props) {
     foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
   } else if (type === 'Google') {
-    foregroundImgSrc = '/images/identity/goole-icon-light.svg'
+    foregroundImgSrc = '/images/identity/google-icon.svg'
     title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = '/images/growth/purchase-icon.svg'
@@ -102,7 +107,7 @@ function Action(props) {
   // hover color of the button: #111d28
   const renderReward = amount => {
     return (
-      <div className="reward d-flex ml-4 align-items-center pl-2">
+      <div className="reward d-flex align-items-left pl-2 justify-content-start flex-grow-1">
         <img src="images/ogn-icon.svg" />
         <div className="value">{formatTokens(amount)}</div>
       </div>
@@ -186,86 +191,93 @@ function Action(props) {
 
   return wrapIntoInteraction(
     <div
-      className={`d-flex action ${isInteractable && 'active'} ${
-        isMobile ? 'mobile' : ''
+      className={`action${isInteractable ? ' active' : ''}${
+        isMobile ? ' mobile' : ''
       }`}
     >
-      <div className="col-1 pr-0 pl-0 d-flex justify-content-center">
-        <div className="image-holder mt-auto mb-auto">
-          {
+      <div className="d-flex action-main">
+        <div className="col-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
+          {type === 'ListingIdPurchased' ? (
+            <img className={type.toLowerCase()} src={foregroundImgSrc} />
+          ) : (
             <Fragment>
               <img className="background" src={backgroundImgSrc} />
               <img className={type.toLowerCase()} src={foregroundImgSrc} />
             </Fragment>
-          }
+          )}
         </div>
-      </div>
-      <div className={`d-flex flex-column justify-content-center col-6`}>
-        <div className="title">{title}</div>
-        <div className="details">
-          {detailsKey && (
+        <div className={`d-flex flex-column justify-content-center col-6`}>
+          <div className="title">{title}</div>
+          {actionLocked && !isMobile && unlockConditions.length > 0 && (
             <Fragment>
-              <fbt desc="growth">
-                <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
-              </fbt>
+              <div className="requirement pr-2 d-flex align-items-center ">
+                {unlockConditionText}
+              </div>
             </Fragment>
           )}
         </div>
-        {actionLocked && !isMobile && unlockConditions.length > 0 && (
-          <Fragment>
-            <div className="requirement pr-2 d-flex align-items-center ">
-              {unlockConditionText}
+        <div className="col-5 d-flex align-items-center justify-content-between">
+          <a
+            href="#"
+            className={`toggle-details${detailsKey ? '' : ' invisible'} mr-3`}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              toggleDetails(!detailsToggled)
+            }}
+          >
+            {detailsToggled ? (
+              <fbt desc="RewardActions.hideDetails">Hide Details</fbt>
+            ) : (
+              <fbt desc="RewardActions.viewDetails">View Details</fbt>
+            )}
+          </a>
+          {showReferralPending && (
+            <div className="d-flex flex-column flex-grow-1">
+              {renderReward(rewardPending.amount)}
+              <div className="sub-text ml-2">
+                <fbt desc="RewardActions.pending">Pending</fbt>
+              </div>
             </div>
-          </Fragment>
-        )}
-      </div>
-      <div className="col-5 d-flex align-items-center justify-content-end">
-        {showReferralPending && (
-          <div className="d-flex flex-column">
-            {renderReward(rewardPending.amount)}
-            <div className="sub-text ml-4">
-              <fbt desc="RewardActions.pending">Pending</fbt>
-            </div>
-          </div>
-        )}
-        {showReferralEarned && (
-          <div className="d-flex flex-column">
-            {renderReward(rewardEarned.amount)}
-            <div className="d-center sub-text ml-4">
-              <fbt desc="RewardActions.earned">Earned</fbt>
-            </div>
-          </div>
-        )}
-        {actionCompleted &&
-          rewardEarned !== null &&
-          rewardEarned.amount !== '0' && (
-            <div className="d-flex flex-column">
+          )}
+          {showReferralEarned && (
+            <div className="d-flex flex-column flex-grow-1">
               {renderReward(rewardEarned.amount)}
-              <div className="d-center sub-text ml-4">
+              <div className="d-center sub-text ml-2">
                 <fbt desc="RewardActions.earned">Earned</fbt>
               </div>
             </div>
           )}
-        {showPossibleRewardAmount && renderReward(reward.amount)}
-        {!actionCompleted && !actionLocked && (
-          <div className="ml-3">
-            <div className="btn btn-primary ml-2 mt-2 mb-2">
+          {actionCompleted &&
+            rewardEarned !== null &&
+            rewardEarned.amount !== '0' && (
+              <div className="d-flex flex-column flex-grow-1">
+                {renderReward(rewardEarned.amount)}
+                <div className="d-center sub-text ml-2">
+                  <fbt desc="RewardActions.earned">Earned</fbt>
+                </div>
+              </div>
+            )}
+          {showPossibleRewardAmount && renderReward(reward.amount)}
+          {!actionCompleted && !actionLocked && (
+            <div className="btn btn-primary mt-2 mb-2">
               <img className="button-caret" src="images/caret-white.svg" />
             </div>
-          </div>
-        )}
-        {actionLocked && (
-          <div className="ml-3">
-            <img className="lock ml-2" src="images/growth/lock-icon.svg" />
-          </div>
-        )}
-        {/* Just a padding placeholder*/}
-        {actionCompleted && (
-          <div className={`${isMobile ? 'ml-1' : 'ml-3'}`}>
-            <div className="placeholder ml-2" />
-          </div>
-        )}
+          )}
+          {actionLocked && (
+            <img className="lock" src="images/growth/lock-icon.svg" />
+          )}
+          {/* Just a padding placeholder*/}
+          {actionCompleted && <div className="placeholder" />}
+        </div>
       </div>
+      {!detailsKey || !detailsToggled ? null : (
+        <div className="details">
+          <fbt desc="growth">
+            <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
+          </fbt>
+        </div>
+      )}
     </div>
   )
 }
@@ -275,12 +287,13 @@ export default Action
 require('react-styl')(`
   .growth-campaigns.container
     .action
-      height: 100px
+      min-height: 100px
       border: 1px solid var(--light)
       border-radius: 5px
       margin-top: 20px
-      padding: 20px
       color: var(--dark)
+      .action-main
+        padding: 20px
       &.active:hover
         background-color: var(--pale-grey-three)
         color: var(--dark)
@@ -316,6 +329,11 @@ require('react-styl')(`
         left: 16px
         top: 20px
         width: 29px
+       .google
+        position: absolute
+        left: 16px
+        top: 16px
+        width: 29px
       .listingsold
         position: absolute
         left: 12px
@@ -326,6 +344,8 @@ require('react-styl')(`
         left: 13px
         top: 17px
         width: 35px
+      .listingidpurchased
+        width: 60px
       .referral
         position: absolute
         left: 15px
@@ -338,6 +358,7 @@ require('react-styl')(`
       .title
         font-size: 18px
         font-weight: bold
+        line-height: 1.25
       .info-text
         font-size: 18px
         font-weight: 300
@@ -351,7 +372,6 @@ require('react-styl')(`
         padding-bottom: 1px
       .sub-text
         font-size: 14px
-        text-align: center
         font-weight: normal
         color: var(--dusk)
       .reward img
@@ -363,8 +383,13 @@ require('react-styl')(`
         font-weight: normal
       .details
         color: var(--dusk)
-        font-size: 12px
+        font-size: 14px
         font-weight: normal
+        border-top: 1px solid var(--light)
+        background-color: #f7f8f8
+        text-align: center
+        border-radius: 0 0 5px 5px
+        padding: 10px
       .btn
         border-radius: 15rem
         width: 2.5rem
@@ -378,6 +403,10 @@ require('react-styl')(`
         padding-left: 0px
       .placeholder
         width: 40px
+      .toggle-details
+        font-size: 14px
+        font-weight: normal
+        white-space: nowrap
   .growth-campaigns.container.mobile
     .action
       height: 80px
@@ -414,8 +443,8 @@ require('react-styl')(`
         top: 10px
         width: 24.5px
       .listingpurchased
-        left: 9px
-        top: 11px
+        left: 0px
+        top: 0px
         width: 23px
       .referral
         left: 10px

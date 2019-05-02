@@ -78,6 +78,9 @@ function withEnrolmentModal(WrappedComponent) {
           )
         )
       }
+      if (this.props.onClick) {
+        this.props.onClick()
+      }
     }
 
     handleNotCitizenClick(e) {

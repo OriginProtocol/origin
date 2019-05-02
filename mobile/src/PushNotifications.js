@@ -302,6 +302,7 @@ class PushNotifications extends Component {
         await PushNotificationIOS.requestPermissions()
       )
     } else {
+      // Android has push notifications enabled by default
       DeviceEventEmitter.emit(
         'notificationPermission',
         DEFAULT_NOTIFICATION_PERMISSIONS

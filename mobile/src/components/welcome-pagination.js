@@ -6,7 +6,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Dots from 'components/dots'
 import OriginButton from 'components/origin-button'
 
-const OnboardingPagination = ({
+const WelcomePagination = ({
   currentPage,
   pagesCount,
   onCompletion,
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default OnboardingPagination
+export default WelcomePagination

@@ -22,32 +22,32 @@ class Review extends Component {
           </h2>
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.title">Title</fbt>
               </div>
-              <div className="col-9">{listing.title}</div>
+              <div className="col-12 col-sm-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.category">Category</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Category listing={listing} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.description">Description</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <FormattedDescription text={listing.description} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.photos">Photos</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 {listing.media.length ? (
                   <div className="photos">
                     {listing.media.map((image, idx) => (
