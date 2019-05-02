@@ -46,15 +46,17 @@ class MarketplaceScreen extends Component {
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
 
+    let swipeDistance = 150
     this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > 20
+        return Math.abs(gestureState.dx) > swipeDistance
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.moveX < 200) {
+        if (gestureState.moveX > swipeDistance) {
           this.dappWebView.goBack()
         }
-        if (gestureState.moveX > 200) {
+        else if (gestureState.moveX < swipeDistance) {
           this.dappWebView.goForward()
         }
       }
@@ -220,7 +222,6 @@ class MarketplaceScreen extends Component {
           onLoad={() => {
             this.injectMessagingKeys()
           }}
-          allowsBackForwardNavigationGestures
           startInLoadingState={true}
           renderLoading={() => {
             return (
