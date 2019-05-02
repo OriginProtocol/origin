@@ -21,7 +21,7 @@ class Gallery extends Component {
                 <div
                   key={idx}
                   onClick={() => this.setState({ active: idx })}
-                  style={{backgroundImage: `url(${m.urlExpanded})`}}
+                  style={{ backgroundImage: `url(${m.urlExpanded})` }}
                   className={this.state.active === idx ? 'active' : ''}
                 />
               ))}
