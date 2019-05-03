@@ -1,6 +1,6 @@
 export const GiftCardRetailers = {
   iTunes: 'QmaUdJ6ZoRqkSqdt685UeXYoawAKxMqQV7Ud9vmX5iDRSS',
-  Amazon: 'QmaUdJ6ZoRqkSqdt685UeXYoawAKxMqQV7Ud9vmX5iDRSS',
+  Amazon: 'QmcBdqfucZfjw1fXsdvoH9Mt8HhaZCxQRF63N1utctJMV8',
   Topshop: 'QmVzsLv3cmzmBQw9KTHM7pEjn1HEj4pa891RaCvfBLerLG',
   "Grinder's Above & Beyond": 'QmVkjMt474GywBAdnLiH2Q2epKCiYMJHSrhnBoGx4wgihS',
   "Kiehl's": 'QmZMXPQSe3ixoVLcuEPERcmFvsmkXfNqkqrkbp7173YGX6',
