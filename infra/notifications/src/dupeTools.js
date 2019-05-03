@@ -11,7 +11,7 @@ async function isNotificationDupe(messageFingerprint, config) {
   return NotificationLog.count({
     where: {
       messageFingerprint: messageFingerprint,
-      sendDate: {
+      createdAt: {
         [Op.gte]: new Date(Date.now() - config.dupeLookbackMs)
       }
     }
