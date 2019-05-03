@@ -36,7 +36,7 @@ import {
   PROMPT_PUB_KEY
 } from './constants'
 import { get } from 'utils'
-import { loadData } from './tools'
+import { loadData, deleteData } from './tools'
 import withConfig from 'hoc/withConfig'
 
 class OriginWallet extends Component {
@@ -137,6 +137,7 @@ class OriginWallet extends Component {
             }
           }
         }
+        deleteData('WALLET_STORE')
       }
     })
   }
@@ -147,6 +148,7 @@ class OriginWallet extends Component {
         this.props.setDeviceToken(walletInfo.deviceToken)
         console.debug('Migrated legacy device token')
       }
+      deleteData('WALLET_INFO')
     })
   }
 
@@ -273,7 +275,6 @@ class OriginWallet extends Component {
     await this.props.setAccountActive(account)
     // Generate messaging keys
     this.generateMessagingKeys()
-    // TODO: make sure device is registered with notifications server
   }
 
   /* Get ETH balances and balances of all tokens configured in the graphql
