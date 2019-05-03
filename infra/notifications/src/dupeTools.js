@@ -21,7 +21,7 @@ async function isNotificationDupe(messageFingerprint, config) {
 async function logNotificationSent(messageFingerprint, ethAddress, channel) {
   return NotificationLog.create({
     messageFingerprint,
-    ethAddress: ethAddress.toLower​Case(),
+    ethAddress: ethAddress.toLowerCase(),
     channel
   })
 }
