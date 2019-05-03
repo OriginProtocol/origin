@@ -50,6 +50,22 @@ function withEnrolmentModal(WrappedComponent) {
       }
     }
 
+    componentDidUpdate(previosProps, previousState) {
+      if (!this.state.open && previousState.open) {
+        if (this.props.onClose) {
+          this.props.onClose()
+        }
+      }
+    }
+
+    historyNavigate(href) {
+      if (this.props.onNavigation) {
+        this.props.onNavigation()
+      }
+
+      this.props.history.push(href)
+    }
+
     handleClick(e, enrollmentStatus, walletPresent) {
       e.preventDefault()
 
@@ -59,12 +75,12 @@ function withEnrolmentModal(WrappedComponent) {
           stage: 'NotSupportedOnMobile'
         })
       } else if (!walletPresent) {
-        this.props.history.push(this.props.urlforonboarding)
+        this.historyNavigate(this.props.urlforonboarding)
       } else if (enrollmentStatus === 'Enrolled') {
-        this.props.history.push('/campaigns')
+        this.historyNavigate('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
         if (this.goToWelcomeWhenNotEnrolled) {
-          this.props.history.push('/welcome')
+          this.historyNavigate('/welcome')
         } else {
           this.setState({
             open: true
@@ -464,8 +480,18 @@ function withEnrolmentModal(WrappedComponent) {
       )
     }
 
+    enrollmentSuccessful() {
+      this.historyNavigate('/campaigns')
+      this.handleCloseModal()
+    }
+
     renderMetamaskSignature() {
-      return <Enroll isMobile={this.props.ismobile === 'true'} />
+      return (
+        <Enroll
+          isMobile={this.props.ismobile === 'true'}
+          onSuccess={() => this.enrollmentSuccessful()}
+        />
+      )
     }
 
     renderNotSupportedOnMobile() {
@@ -711,7 +737,7 @@ require('react-styl')(`
     .growth-enrollment-modal
       .join-campaign
         img
-          width: 8rem
+          max-width: 8rem
         .btn-no-outline
           margin-top: 0.8rem
       .btn
