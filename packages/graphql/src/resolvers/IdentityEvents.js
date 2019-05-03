@@ -130,6 +130,13 @@ export function identity({ id, ipfsHash }) {
       }
     }
 
+    if (identity.avatarUrl) {
+      identity.avatarUrlExpanded = originIpfs.gatewayUrl(
+        contracts.ipfsGateway,
+        identity.avatarUrl
+      )
+    }
+
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
         identity.strength += progressPct[key]

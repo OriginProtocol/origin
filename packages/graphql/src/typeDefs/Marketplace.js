@@ -171,6 +171,7 @@ module.exports = `
     account: Account!
     firstEvent: Event
     lastEvent: Event
+    identity: Identity
     listings(first: Int, after: String, filter: String): ListingConnection!
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!

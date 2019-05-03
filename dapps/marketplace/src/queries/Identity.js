@@ -11,7 +11,8 @@ export default gql`
           lastName
           fullName
           description
-          avatar
+          avatarUrl
+          avatarUrlExpanded
           strength
           attestations
 

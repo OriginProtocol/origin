@@ -59,7 +59,7 @@ export default class Reviews extends Component {
                   >
                     <div className="user-info">
                       <div className="avatar-wrap">
-                        <Avatar size="4rem" avatar={profile.avatar} />
+                        <Avatar size="4rem" profile={profile} />
                       </div>
                       <div className="user">
                         <div className="top">
