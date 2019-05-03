@@ -33,8 +33,7 @@ class Review extends Component {
     const { ipfsGateway } = this.props.config
     const giftCardHash = GiftCardRetailers[listing.retailer]
     const giftCardImageIpfsUri = `ipfs://${giftCardHash}`
-    const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}` // TODO
-    // const giftCardImageExpandededUri = `http://localhost:8080/ipfs/${giftCardHash}` // TODO
+    const giftCardImageExpandededUri = `${ipfsGateway}/ipfs/${giftCardHash}`
     const giftCardEntry = {
       url: giftCardImageIpfsUri,
       urlExpanded: giftCardImageExpandededUri,
