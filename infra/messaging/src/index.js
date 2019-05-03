@@ -295,7 +295,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     if (config.NOTIFICATIONS_ENDPOINT_URL) {
       const sender = address
       // Filter out the sender
-      const recievers = conv_addresses.filter(a => a != address)
+      const receivers = conv_addresses.filter(a => a != address)
       fetch(config.NOTIFICATIONS_ENDPOINT_URL, {
         method: 'POST',
         headers: {
@@ -304,7 +304,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         },
         body: JSON.stringify({
           sender,
-          recievers
+          receivers
         })
       })
     }
@@ -321,7 +321,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         },
         body: JSON.stringify({
           sender,
-          recievers,
+          recievers, // YES, This spelling is wrong
           token: config.LINKING_NOTIFY_TOKEN
         })
       })

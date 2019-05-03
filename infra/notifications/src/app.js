@@ -64,8 +64,6 @@ const config = {
   asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
   // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
   emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
-  // Output debugging and other info. Boolean.
-  verbose: args['--verbose'] || false,
   // How far back in time to we look for duplicates?
   dupeLookbackMs:
     args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 30
@@ -239,7 +237,7 @@ app.post('/messages', async (req, res) => {
   res.status(200).send({ status: 'ok' })
 
   const sender = req.body.sender // eth address
-  const receivers = req.body.recievers // array of eth addresses
+  const receivers = req.body.receivers // array of eth addresses
 
   // Email notifications
   messageEmailSend(receivers, sender, config)
@@ -306,16 +304,14 @@ app.post('/events', async (req, res) => {
 
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
-  if (config.verbose) {
-    logger.log(`>eventName: ${eventName}`)
-    logger.log(`>party: ${party}`)
-    logger.log(`>buyerAddress: ${buyerAddress}`)
-    logger.log(`>sellerAddress: ${sellerAddress}`)
-    logger.log(`offer:`)
-    logger.log(offer)
-    logger.log(`listing:`)
-    logger.log(listing)
-  }
+  logger.info(`>eventName: ${eventName}`)
+  logger.info(`>party: ${party}`)
+  logger.info(`>buyerAddress: ${buyerAddress}`)
+  logger.info(`>sellerAddress: ${sellerAddress}`)
+  logger.info(`offer:`)
+  logger.info(offer)
+  logger.info(`listing:`)
+  logger.info(listing)
 
   // Email notifications
   transactionEmailSend(

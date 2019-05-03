@@ -6,22 +6,17 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
       .createTable(TableName, {
-        id: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          autoIncrement: true
+        message_fingerprint: {
+          type: Sequelize.STRING(255),
+          primaryKey: true,
+          allowNull: false
         },
-        send_date: {
-          type: Sequelize.DATE,
-          defaultValue: Sequelize.NOW,
-          primaryKey: true
-        },
-        message_fingerprint: { type: Sequelize.STRING(255), primaryKey: true },
         eth_address: { type: Sequelize.STRING(255) },
         channel: { type: Sequelize.STRING(255) },
         created_at: {
           allowNull: false,
-          type: Sequelize.DATE
+          type: Sequelize.DATE,
+          primaryKey: true
         },
         updated_at: {
           allowNull: false,
@@ -29,7 +24,10 @@ module.exports = {
         }
       })
       .then(() =>
-        queryInterface.addIndex(TableName, ['send_date', 'message_fingerprint'])
+        queryInterface.addIndex(TableName, [
+          'created_at',
+          'message_fingerprint'
+        ])
       )
   },
   down: queryInterface => {

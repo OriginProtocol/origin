@@ -8,6 +8,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
 const logger = require('./logger')
+const web3Utils = require('web3-utils')
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -44,13 +45,11 @@ async function messageEmailSend(receivers, sender, config) {
   )
 
   const messageSender = await Identity.findOne({
-    raw: true,
     where: {
       ethAddress: sender
     }
   })
   const messageReceivers = await Identity.findAll({
-    raw: true,
     where: {
       ethAddress: {
         [Op.or]: receivers
@@ -59,25 +58,25 @@ async function messageEmailSend(receivers, sender, config) {
   })
   Promise.all([messageSender, messageReceivers]).then(
     ([senderIdentity, receiversIdentities]) => {
+      console.log(senderIdentity)
       receiversIdentities.forEach(async s => {
         try {
           const message = messageTemplates.message['email']['messageReceived']
 
           if (!s.email && config.overrideEmail) {
-            if (config.verbose) {
-              logger.info(`${s.ethAddress} has no email address. Skipping.`)
-            }
+            logger.info(`${s.ethAddress} has no email address. Skipping.`)
           } else {
             // Construct best human readable version of sender name
             const senderName =
               senderIdentity.firstName || senderIdentity.lastName
                 ? `${senderIdentity.firstName ||
-                    ''} ${senderIdentity.lastName || ''} (${sender})`
+                    ''} ${senderIdentity.lastName ||
+                    ''} (${web3Utils.toChecksumAddress(sender)})`
                 : sender
             const templateVars = {
-              config: config,
-              sender: sender,
-              senderName: senderName
+              config,
+              sender,
+              senderName
             }
             const email = {
               to: config.overrideEmail || s.email,
@@ -92,11 +91,6 @@ async function messageEmailSend(receivers, sender, config) {
               asm: {
                 groupId: config.asmGroupId
               }
-            }
-
-            if (config.verbose) {
-              logger.log('email:')
-              logger.log(email)
             }
 
             if (config.emailFileOut) {
@@ -160,13 +154,13 @@ async function transactionEmailSend(
   listing,
   config
 ) {
-  if (!eventName) throw 'eventName not defined'
-  if (!party) throw 'party not defined'
-  if (!buyerAddress) throw 'buyerAddress not defined'
-  if (!sellerAddress) throw 'sellerAddress not defined'
-  if (!offer) throw 'offer not defined'
-  if (!listing) throw 'listing not defined'
-  if (!config) throw 'config not defined'
+  if (!eventName) throw new Error('eventName not defined')
+  if (!party) throw new Error('party not defined')
+  if (!buyerAddress) throw new Error('buyerAddress not defined')
+  if (!sellerAddress) throw new Error('sellerAddress not defined')
+  if (!offer) throw new Error('offer not defined')
+  if (!listing) throw new Error('listing not defined')
+  if (!config) throw new Error('config not defined')
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
@@ -193,9 +187,7 @@ async function transactionEmailSend(
       const recipient = s.ethAddress
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
 
-      if (config.verbose) {
-        logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
-      }
+      logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
 
       const message = getNotificationMessage(
         eventName,
@@ -206,13 +198,9 @@ async function transactionEmailSend(
       )
 
       if (!s.email && !config.overrideEmail) {
-        if (config.verbose) {
-          logger.info(`${s.ethAddress} has no email address. Skipping.`)
-        }
+        logger.info(`${s.ethAddress} has no email address. Skipping.`)
       } else if (!message) {
-        if (config.verbose) {
-          logger.info(`No message found`)
-        }
+        logger.info(`No message found`)
       } else {
         const listingNetwork = listing.id.split('-')[0] // First section of id is the network num
         const networkDappDomains = {
@@ -228,9 +216,9 @@ async function transactionEmailSend(
           999: 'http://localhost:8080'
         }
         const templateVars = {
-          listing: listing,
-          offer: offer,
-          config: config,
+          listing,
+          offer,
+          config,
           dappUrl: networkDappDomains[listingNetwork],
           ipfsGatewayUrl: networkGatewayDomains[listingNetwork]
         }
@@ -247,11 +235,6 @@ async function transactionEmailSend(
           asm: {
             groupId: config.asmGroupId
           }
-        }
-
-        if (config.verbose) {
-          logger.log('email:')
-          logger.log(email)
         }
 
         if (config.emailFileOut) {
