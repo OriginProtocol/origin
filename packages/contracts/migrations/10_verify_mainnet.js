@@ -62,9 +62,7 @@ async function verifyTokenContract() {
     'multi-sig allowed to transfer tokens'
   )
   assertEquals(
-    await token.allowedTransactors(
-      '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'
-    ),
+    await token.allowedTransactors('0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'),
     true,
     'other wallet allowed to transfer tokens'
   )
@@ -97,9 +95,7 @@ async function verifyMarketplaceContract() {
     'marketplace affiliate whitelist enabled'
   )
   assertEquals(
-    await marketplace.allowedAffiliates(
-      '0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'
-    ),
+    await marketplace.allowedAffiliates('0x7aD0fa0E2380a5e0208B25AC69216Bd7Ff206bF8'),
     true,
     'marketplace affiliate address is whitelisted'
   )

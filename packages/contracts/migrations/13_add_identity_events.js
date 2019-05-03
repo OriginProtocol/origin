@@ -1,4 +1,4 @@
-const IdentityEvents = artifacts.require('./IdentityEvents.sol')
+var IdentityEvents = artifacts.require("./IdentityEvents.sol")
 
 module.exports = function(deployer, network) {
   return deployer.then(() => {
