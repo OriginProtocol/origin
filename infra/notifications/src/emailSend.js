@@ -8,6 +8,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const _ = require('lodash')
 const logger = require('./logger')
+const web3Utils = require('web3-utils')
 
 const sendgridMail = require('@sendgrid/mail')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -72,7 +73,7 @@ async function messageEmailSend(receivers, sender, config) {
             const senderName =
               senderIdentity.firstName || senderIdentity.lastName
                 ? `${senderIdentity.firstName ||
-                    ''} ${senderIdentity.lastName || ''} (${sender})`
+                    ''} ${senderIdentity.lastName || ''} (${web3Utils.toChecksumAddress(sender)})`
                 : sender
             const templateVars = {
               config,
