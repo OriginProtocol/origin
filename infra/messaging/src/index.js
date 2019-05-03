@@ -294,7 +294,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     // e.g. http://localhost:3456/messages
     if (config.NOTIFICATIONS_ENDPOINT_URL) {
       // Filter out the sender
-      const recievers = conv_addresses.filter(a => a != address)
+      const receivers = conv_addresses.filter(a => a != address)
       fetch(config.NOTIFICATIONS_ENDPOINT_URL, {
         method: 'POST',
         headers: {
