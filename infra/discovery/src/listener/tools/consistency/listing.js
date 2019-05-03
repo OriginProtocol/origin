@@ -22,34 +22,45 @@ async function verifyListingDBRecord(netId, event) {
   const records = await db.Listing.findAll({
     where: {
       id: fqListingID
-    }
+    },
+    order: [['block_number', 'DESC'], ['log_index', 'DESC']]
   })
 
-  // Make sure we have the expected amount of records
+  // Make sure we have at least one record (there can be multiple indicating
+  // revisions)
   assert(
     records.length > 0,
     `Did not find a matching record for listing #${listingId}`
   )
-  assert(records.length < 2, `Found too many records for listing #${listingId}`)
 
-  const listing = records[0]
+  // Should be the latest revision
+  const latestListing = records[0]
+  const firstListing = records[records.length - 1]
 
   // Some super basic verification
   // TODO: Fill out?
   assert(
-    listing.blockNumber === event.blockNumber,
-    `Listing mismatch for blockNumber: ${listing.blockNumber} != ${
+    firstListing.blockNumber === event.blockNumber,
+    `Listing mismatch for blockNumber: ${firstListing.blockNumber} != ${
       event.blockNumber
     }`
   )
   assert(
-    listing.logIndex === event.logIndex,
-    `Listing mismatch for logIndex: ${listing.logIndex} != ${event.logIndex}`
+    firstListing.logIndex === event.logIndex,
+    `Listing mismatch for logIndex: ${firstListing.logIndex} != ${
+      event.logIndex
+    }`
   )
   assert(
-    listing.sellerAddress === event.returnValues.party.toLowerCase(),
+    firstListing.sellerAddress === event.returnValues.party.toLowerCase(),
     `Listing mismatch for sellerAddress: ${
-      listing.sellerAddress
+      firstListing.sellerAddress
+    } != ${event.returnValues.party.toLowerCase()}`
+  )
+  assert(
+    latestListing.sellerAddress === event.returnValues.party.toLowerCase(),
+    `Listing mismatch for sellerAddress: ${
+      latestListing.sellerAddress
     } != ${event.returnValues.party.toLowerCase()}`
   )
 

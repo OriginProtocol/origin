@@ -10,7 +10,8 @@ const db = {
 
 const log = require('../../logger')
 
-const JSONRPC_REQUEST_BATCH_SIZE = 1000 // 10000 was too much?
+const JSONRPC_REQUEST_BATCH_SIZE =
+  process.env.JSONRPC_REQUEST_BATCH_SIZE || 1000 // 10000 was too much?
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 limiter.on('error', err => {
   log.error('Error occurred within rate limiter', err)

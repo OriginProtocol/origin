@@ -47,3 +47,7 @@ Name of the network to check.  Synonymous with `--network`.
 #### `DATABASE_URL`
 
 The URL for the DB to connect to and verify records.
+
+#### `JSONRPC_REQUEST_BATCH_SIZE`
+
+The batch size of requests measured in blocks.  **NOTE**: web3.js beta-34 apparently dies if it returns more than 1000 results, so the default is set to `1000`.
