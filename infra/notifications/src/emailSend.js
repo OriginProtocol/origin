@@ -70,7 +70,8 @@ async function messageEmailSend(receivers, sender, config) {
             const senderName =
               senderIdentity.firstName || senderIdentity.lastName
                 ? `${senderIdentity.firstName ||
-                    ''} ${senderIdentity.lastName || ''} (${web3Utils.toChecksumAddress(sender)})`
+                    ''} ${senderIdentity.lastName ||
+                    ''} (${web3Utils.toChecksumAddress(sender)})`
                 : sender
             const templateVars = {
               config,
