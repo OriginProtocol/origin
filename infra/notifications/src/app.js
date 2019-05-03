@@ -239,7 +239,7 @@ app.post('/messages', async (req, res) => {
   res.status(200).send({ status: 'ok' })
 
   const sender = req.body.sender // eth address
-  const receivers = req.body.recievers // array of eth addresses
+  const receivers = req.body.receivers // array of eth addresses
 
   // Email notifications
   messageEmailSend(receivers, sender, config)

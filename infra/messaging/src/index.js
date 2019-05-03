@@ -302,7 +302,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          recievers
+          receivers
         })
       })
     }
@@ -319,7 +319,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         },
         body: JSON.stringify({
           sender,
-          recievers,
+          recievers, // YES, This spelling is wrong
           token: config.LINKING_NOTIFY_TOKEN
         })
       })
