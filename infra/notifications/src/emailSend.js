@@ -29,8 +29,8 @@ const {
 // Email notifications for Messages
 //
 async function messageEmailSend(receivers, sender, config) {
-  if (!receivers) throw 'receivers not defined'
-  if (!sender) throw 'sender not defined'
+  if (!receivers) throw new Error('receivers not defined')
+  if (!sender) throw new Error('sender not defined')
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
