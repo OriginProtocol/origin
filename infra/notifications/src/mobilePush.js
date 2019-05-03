@@ -100,7 +100,7 @@ async function messageMobilePush(receivers, sender, config) {
           const message = messageTemplates.message['mobile']['messageReceived']
           const ethAddress = s.ethAddress
           const notificationObj = {
-            message: message,
+            message,
             payload
           }
 

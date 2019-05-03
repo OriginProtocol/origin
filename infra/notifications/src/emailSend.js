@@ -75,9 +75,9 @@ async function messageEmailSend(receivers, sender, config) {
                     ''} ${senderIdentity.lastName || ''} (${sender})`
                 : sender
             const templateVars = {
-              config: config,
-              sender: sender,
-              senderName: senderName
+              config,
+              sender,
+              senderName
             }
             const email = {
               to: config.overrideEmail || s.email,
@@ -228,9 +228,9 @@ async function transactionEmailSend(
           999: 'http://localhost:8080'
         }
         const templateVars = {
-          listing: listing,
-          offer: offer,
-          config: config,
+          listing,
+          offer,
+          config,
           dappUrl: networkDappDomains[listingNetwork],
           ipfsGatewayUrl: networkGatewayDomains[listingNetwork]
         }
