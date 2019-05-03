@@ -68,11 +68,13 @@ async function messageEmailSend(receivers, sender, config) {
           } else {
             // Construct best human readable version of sender name
             const senderName =
-              senderIdentity.firstName || senderIdentity.lastName
+              senderIdentity !== null &&
+              senderIdentity.firstName &&
+              senderIdentity.lastName
                 ? `${senderIdentity.firstName ||
                     ''} ${senderIdentity.lastName ||
                     ''} (${web3Utils.toChecksumAddress(sender)})`
-                : sender
+                : web3Utils.toChecksumAddress(sender)
             const templateVars = {
               config,
               sender,

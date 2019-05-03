@@ -91,10 +91,12 @@ async function messageMobilePush(receivers, sender, config) {
       receiversIdentities.forEach(async s => {
         try {
           const senderName =
-            senderIdentity.firstName || senderIdentity.lastName
+            senderIdentity !== null &&
+            senderIdentity.firstName &&
+            senderIdentity.lastName
               ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-                  ''} (${sender})`
-              : sender
+                  ''} (${web3Utils.toChecksumAddress(sender)})`
+              : web3Utils.toChecksumAddress(sender)
 
           // TODO: Turn mobile messages into templates
           const message = messageTemplates.message['mobile']['messageReceived']
