@@ -128,7 +128,14 @@ class OriginEventSource {
         'unavailable',
         'customPricing',
         'timeZone',
-        'workingHours'
+        'workingHours',
+
+        'retailer',
+        'cardAmount',
+        'issuingCountry',
+        'isDigital',
+        'isCashPurchase',
+        'receiptAvailable'
       )
       data.valid = true
 
@@ -228,7 +235,8 @@ class OriginEventSource {
         'UnitListing',
         'FractionalListing',
         'FractionalHourlyListing',
-        'AnnouncementListing'
+        'AnnouncementListing',
+        'GiftCardListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'

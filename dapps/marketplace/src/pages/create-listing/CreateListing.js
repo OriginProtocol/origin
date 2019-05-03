@@ -12,6 +12,7 @@ import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
 import FractionalHourlyListing from './listing-types/FractionalHourlyListing/FractionalHourlyListing'
+import GiftCardListing from './listing-types/GiftCardListing/GiftCardListing'
 
 import ChooseListingType from './ChooseListingType'
 
@@ -51,6 +52,14 @@ class CreateListing extends Component {
         customPricing: [],
         unavailable: [],
 
+        // Gift Card fields:
+        retailer: '',
+        cardAmount: '',
+        issuingCountry: 'US',
+        isDigital: false,
+        isCashPurchase: false,
+        receiptAvailable: false,
+
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
@@ -69,7 +78,8 @@ class CreateListing extends Component {
       UnitListing,
       AnnouncementListing,
       FractionalListing,
-      FractionalHourlyListing
+      FractionalHourlyListing,
+      GiftCardListing
     }
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing
