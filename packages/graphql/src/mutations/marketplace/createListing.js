@@ -66,7 +66,7 @@ async function createListing(_, input) {
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
-  let createListingCall
+  let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
   if (autoApprove && input.deposit > 0) {
@@ -77,22 +77,26 @@ async function createListing(_, input) {
       ['bytes32', 'uint', 'address'],
       [ipfsHash, deposit, depositManager]
     )
-    createListingCall = contracts.ognExec.methods.approveAndCallWithSender(
+    tx = contracts.ognExec.methods.approveAndCallWithSender(
       contracts.marketplace._address,
       deposit,
       fnSig,
       params
     )
   } else {
-    createListingCall = contracts.marketplaceExec.methods.createListing(
+    tx = contracts.marketplaceExec.methods.createListing(
       ipfsHash,
       deposit,
       depositManager
     )
   }
 
-  const tx = createListingCall.send({ gas: cost.createListing, from })
-  return txHelper({ tx, from, mutation: 'createListing' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'createListing',
+    gas: cost.createListing
+  })
 }
 
 export default createListing

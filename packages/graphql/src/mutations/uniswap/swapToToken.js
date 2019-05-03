@@ -19,11 +19,12 @@ async function swapToToken(_, { from, token, tokenValue }) {
     .getEthToTokenOutputPrice(tokenValue)
     .call()
 
-  const tx = contracts.daiExchangeExec.methods
-    .ethToTokenSwapOutput(tokenValue, deadline)
-    .send({ from, value, gas: 103828 })
+  const tx = contracts.daiExchangeExec.methods.ethToTokenSwapOutput(
+    tokenValue,
+    deadline
+  )
 
-  return txHelper({ tx, from, mutation: 'swapToToken' })
+  return txHelper({ tx, from, mutation: 'swapToToken', value, gas: 103828 })
 }
 
 export default swapToToken
