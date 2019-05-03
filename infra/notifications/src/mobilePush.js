@@ -71,14 +71,14 @@ async function messageMobilePush(receivers, sender, config) {
   }
 
   // Get ID of sender
-  const messageSender = Identity.findOne({
+  const messageSender = await Identity.findOne({
     raw: true,
     where: {
       ethAddress: sender
     }
   })
   // Get IDs of recepients
-  const messageReceivers = Identity.findAll({
+  const messageReceivers = await Identity.findAll({
     raw: true,
     where: {
       ethAddress: {
@@ -125,7 +125,7 @@ async function messageMobilePush(receivers, sender, config) {
             )
           }
         } catch (error) {
-          logger.error(`Could not email via Sendgrid: ${error}`)
+          logger.error(`Could not send push notification: ${error}`)
         }
       })
     }

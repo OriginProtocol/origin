@@ -293,6 +293,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     // Send to notifications server
     // e.g. http://localhost:3456/messages
     if (config.NOTIFICATIONS_ENDPOINT_URL) {
+      const sender = address
       // Filter out the sender
       const recievers = conv_addresses.filter(a => a != address)
       fetch(config.NOTIFICATIONS_ENDPOINT_URL, {
@@ -302,6 +303,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          sender,
           recievers
         })
       })
