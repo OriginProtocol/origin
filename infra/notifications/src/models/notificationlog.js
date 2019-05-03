@@ -1,5 +1,4 @@
 'use strict'
-const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   const NotificationLog = sequelize.define(
