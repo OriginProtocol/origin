@@ -5,6 +5,7 @@
 class AbstractBackend {
   constructor() {
     this.type = null
+    this.latestBlock = 0
 
     if (new.target === AbstractBackend) {
       throw new TypeError('AbstractBackend cannot be used directly')
@@ -15,7 +16,7 @@ class AbstractBackend {
    * Returns the latest block number known by the backend
    * @returns {number} The latest known block number
    */
-  getLatestBlock() {
+  async getLatestBlock() {
     return this.latestBlock
   }
 

@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
+import AutoMutate from 'components/AutoMutate'
 
 import VerifyGoogleMutation from 'mutations/VerifyGoogle'
 import query from 'queries/GoogleAuthUrl'
@@ -122,7 +123,8 @@ class GoogleAttestation extends Component {
   }
 
   renderVerifyButton({ authUrl, redirect }) {
-    const sid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
+    const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
+    const sid = matchSid && matchSid[1] ? matchSid[1] : null
 
     return (
       <Mutation
@@ -145,28 +147,36 @@ class GoogleAttestation extends Component {
           this.setState({ error: 'Check console', loading: false })
         }}
       >
-        {verifyCode => (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
-              if (this.state.loading) return
-              this.setState({ error: false, loading: true })
-              verifyCode({
-                variables: {
-                  identity: this.props.wallet,
-                  redirect,
-                  authUrl,
-                  code: sid && sid[1] ? sid[1] : null
+        {verifyCode => {
+          const runMutation = () => {
+            if (this.state.loading) return
+            this.setState({ error: false, loading: true })
+            verifyCode({
+              variables: {
+                identity: this.props.wallet,
+                redirect,
+                authUrl,
+                code: sid
+              }
+            })
+          }
+          return (
+            <>
+              {sid && this.props.wallet ? (
+                <AutoMutate mutatation={runMutation} />
+              ) : null}
+              <button
+                className="btn btn-outline-light"
+                onClick={runMutation}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
                 }
-              })
-            }}
-            children={
-              this.state.loading
-                ? fbt('Loading...', 'Loading...')
-                : fbt('Continue', 'Continue')
-            }
-          />
-        )}
+              />
+            </>
+          )
+        }}
       </Mutation>
     )
   }
