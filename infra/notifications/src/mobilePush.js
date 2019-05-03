@@ -62,8 +62,8 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 // Mobile Push notifications for Messages
 //
 async function messageMobilePush(receivers, sender, config) {
-  if (!receivers) throw 'receivers not defined'
-  if (!sender) throw 'sender not defined'
+  if (!receivers) throw new Error('receivers not defined')
+  if (!sender) throw new Error('sender not defined')
 
   // TODO: Move to config
   const payload = {
@@ -143,11 +143,11 @@ async function transactionMobilePush(
   offer,
   config
 ) {
-  if (!eventName) throw 'eventName not defined'
-  if (!party) throw 'party not defined'
-  if (!buyerAddress) throw 'buyerAddress not defined'
-  if (!sellerAddress) throw 'sellerAddress not defined'
-  if (!offer) throw 'offer not defined'
+  if (!eventName) throw new Error('eventName not defined')
+  if (!party) throw new Error('party not defined')
+  if (!buyerAddress) throw new Error('buyerAddress not defined')
+  if (!sellerAddress) throw new Error('sellerAddress not defined')
+  if (!offer) throw new Error('offer not defined')
 
   const receivers = {}
   const buyerMessage = getNotificationMessage(

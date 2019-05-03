@@ -160,13 +160,13 @@ async function transactionEmailSend(
   listing,
   config
 ) {
-  if (!eventName) throw 'eventName not defined'
-  if (!party) throw 'party not defined'
-  if (!buyerAddress) throw 'buyerAddress not defined'
-  if (!sellerAddress) throw 'sellerAddress not defined'
-  if (!offer) throw 'offer not defined'
-  if (!listing) throw 'listing not defined'
-  if (!config) throw 'config not defined'
+  if (!eventName) throw new Error('eventName not defined')
+  if (!party) throw new Error('party not defined')
+  if (!buyerAddress) throw new Error('buyerAddress not defined')
+  if (!sellerAddress) throw new Error('sellerAddress not defined')
+  if (!offer) throw new Error('offer not defined')
+  if (!listing) throw new Error('listing not defined')
+  if (!config) throw new Error('config not defined')
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
