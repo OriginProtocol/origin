@@ -175,19 +175,25 @@ class ChooseListingType extends Component {
 
     // Derive ListingType from category+subcategory
     let __typename = 'UnitListing'
-    if (category === 'schema.forSale' && subCategory === 'schema.giftCards') {
-      __typename = 'GiftCardListing'
-    } else if (category === 'schema.announcements') {
+    if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
+    } else if (
+      localStorage.getItem('enableGiftCards') &&
+      category === 'schema.forSale' &&
+      subCategory === 'schema.giftCards'
+    ) {
+      // TODO (Stan): Temporary hack to prevent gift cards being used
+      // in production but can be tested and used by executing in console:
+      //      localStorage.setItem('enableGiftCards', 'true');
+      //  remove with:
+      //      localStorage.removeItem('enableGiftCards');
+      __typename = 'GiftCardListing'
     } else if (localStorage.getItem('enableAllFractional')) {
       // TODO (Stan): Temporary hack to prevent hourly fractional being used
       // in production but can be tested and used by executing in console:
       //      localStorage.setItem('enableAllFractional', 'true');
       //  remove with:
       //      localStorage.removeItem('enableAllFractional');
-      console.warn(
-        'enableAllFractional is set: Using fractional listing types that will not validate with origin-js.'
-      )
       if (
         category === 'schema.forRent' &&
         nightlyFractional.includes(subCategory)
