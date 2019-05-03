@@ -64,9 +64,7 @@ async function messageEmailSend(receivers, sender, config) {
           const message = messageTemplates.message['email']['messageReceived']
 
           if (!s.email && config.overrideEmail) {
-            if (config.verbose) {
-              logger.info(`${s.ethAddress} has no email address. Skipping.`)
-            }
+            logger.info(`${s.ethAddress} has no email address. Skipping.`)
           } else {
             // Construct best human readable version of sender name
             const senderName =
@@ -92,11 +90,6 @@ async function messageEmailSend(receivers, sender, config) {
               asm: {
                 groupId: config.asmGroupId
               }
-            }
-
-            if (config.verbose) {
-              logger.log('email:')
-              logger.log(email)
             }
 
             if (config.emailFileOut) {
@@ -193,9 +186,7 @@ async function transactionEmailSend(
       const recipient = s.ethAddress
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
 
-      if (config.verbose) {
-        logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
-      }
+      logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
 
       const message = getNotificationMessage(
         eventName,
@@ -206,13 +197,9 @@ async function transactionEmailSend(
       )
 
       if (!s.email && !config.overrideEmail) {
-        if (config.verbose) {
-          logger.info(`${s.ethAddress} has no email address. Skipping.`)
-        }
+        logger.info(`${s.ethAddress} has no email address. Skipping.`)
       } else if (!message) {
-        if (config.verbose) {
-          logger.info(`No message found`)
-        }
+        logger.info(`No message found`)
       } else {
         const listingNetwork = listing.id.split('-')[0] // First section of id is the network num
         const networkDappDomains = {
@@ -247,11 +234,6 @@ async function transactionEmailSend(
           asm: {
             groupId: config.asmGroupId
           }
-        }
-
-        if (config.verbose) {
-          logger.log('email:')
-          logger.log(email)
         }
 
         if (config.emailFileOut) {
