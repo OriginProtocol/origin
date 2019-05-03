@@ -3,11 +3,24 @@ import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 class MobileNav extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+    this.EarnTokens = withEnrolmentModal('a')
+  }
+
   render() {
     const { onClose } = this.props
     const hasUnread = ''
+    /* react uses upper/lower case convention to distinguish between DOM tags
+     * and user defined components. For that reason if the components starts with
+     * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
+     */
+    const EarnTokens = this.EarnTokens
+
     return (
       <Dropdown
         className="nav-item mobile d-flex d-md-none"
@@ -27,6 +40,13 @@ class MobileNav extends Component {
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
+            <EarnTokens
+              className="dropdown-item earn"
+              onClose={() => onClose()}
+              onNavigation={() => onClose()}
+            >
+              <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+            </EarnTokens>
             <div className="dropdown-divider" />
             <h6 className="dropdown-header">My Items</h6>
             <Link
@@ -142,6 +162,8 @@ require('react-styl')(`
           background-size: 26px
         &.add::before
           background-image: url(images/nav/add-listing-icon.svg)
+        &.earn::before
+          background-image: url(images/nav/earn-tokens-icon.svg)
         &.purchases::before
           background-image: url(images/nav/purchases-icon.svg)
         &.listings::before

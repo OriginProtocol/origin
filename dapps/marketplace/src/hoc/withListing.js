@@ -8,7 +8,7 @@ function withListing(WrappedComponent) {
   const WithListing = props => {
     const listingId = props.match.params.listingID
     return (
-      <Query query={ListingQuery} variables={{ listingId }}>
+      <Query query={ListingQuery} skip={!listingId} variables={{ listingId }}>
         {({ networkStatus, error, data }) => {
           const listing = get(data, 'marketplace.listing')
           return (
@@ -25,41 +25,3 @@ function withListing(WrappedComponent) {
 }
 
 export default withListing
-
-// class Listing extends Component {
-//
-//   state = { quantity: '1' }
-//
-//   render() {
-//     const listingId = this.props.match.params.listingID
-//
-//     return (
-//       <Query query={ListingQuery} variables={{ listingId }}>
-//         {({ networkStatus, error, data }) => {
-//           if (networkStatus === 1) {
-//             return <div>Loading...</div>
-//           } else if (error) {
-//             return <div>Error...</div>
-//           } else if (!data || !data.marketplace) {
-//             return <div>No marketplace contract?</div>
-//           }
-//
-//           const listing = data.marketplace.listing
-//           if (!listing) {
-//             return <div>Listing not found</div>
-//           }
-//
-//           return (
-//             <ListingDetail
-//               listing={listing}
-//               quantity={this.state.quantity}
-//               updateQuantity={quantity => this.setState({ quantity })}
-//             />
-//           )
-//         }}
-//       </Query>
-//     )
-//   }
-// }
-//
-// export default Listing

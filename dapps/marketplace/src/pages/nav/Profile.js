@@ -91,7 +91,7 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
-      <Balances account={id} />
+      <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
         <fbt desc="nav.profile.editProfile">Edit Profile</fbt>

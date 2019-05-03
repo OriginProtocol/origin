@@ -8,19 +8,26 @@ export function getAttestationReward({
   const activeCampaign = growthCampaigns.find(
     campaign => campaign.status === 'Active'
   )
+  if (!activeCampaign) {
+    return ''
+  }
 
-  const reward = activeCampaign.actions
-    .filter(action => action.type === attestation)
-    .map(action => action.reward)[0]
+  try {
+    const reward = activeCampaign.actions
+      .filter(action => action.type === attestation)
+      .map(action => action.reward)[0]
 
-  const decimalDivision = web3.utils
-    .toBN(10)
-    .pow(web3.utils.toBN(tokenDecimals))
+    const decimalDivision = web3.utils
+      .toBN(10)
+      .pow(web3.utils.toBN(tokenDecimals))
 
-  return parseInt(
-    web3.utils
-      .toBN(reward ? reward.amount : 0)
-      .div(decimalDivision)
-      .toString()
-  )
+    return parseInt(
+      web3.utils
+        .toBN(reward ? reward.amount : 0)
+        .div(decimalDivision)
+        .toString()
+    )
+  } catch (e) {
+    return ''
+  }
 }

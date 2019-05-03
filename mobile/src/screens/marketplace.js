@@ -5,19 +5,20 @@ import {
   ActivityIndicator,
   DeviceEventEmitter,
   Modal,
+  PanResponder,
   Platform,
   StyleSheet,
-  StatusBar,
   View
 } from 'react-native'
+import PushNotification from 'react-native-push-notification'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import { DEFAULT_NOTIFICATION_PERMISSIONS, PROMPT_MESSAGE } from '../constants'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
+import { decodeTransaction } from '../utils/contractDecoder'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -44,6 +45,24 @@ class MarketplaceScreen extends Component {
 
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
+
+    const swipeDistance = 200
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.moveX > swipeDistance) {
+          this.dappWebView.goBack()
+        } else if (gestureState.moveX < swipeDistance) {
+          this.dappWebView.goForward()
+        }
+      }
+    })
   }
 
   static navigationOptions = () => {
@@ -73,26 +92,34 @@ class MarketplaceScreen extends Component {
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
     } else {
-      const hasNotificationsEnabled = this.props.activation.notifications
-        .permissions.hard.alert
-
-      if (!hasNotificationsEnabled) {
+      PushNotification.checkPermissions(permissions => {
+        const newModals = []
+        // Check if we lack notification permissions, and we are processing a
+        // web3 transactiotn that isn't updating our identitty. If we are then
+        // display a modal requesting notifications be enabled
+        if (
+          !permissions.alert &&
+          msgData.targetFunc === 'processTransaction' &&
+          decodeTransaction(msgData.data.data).functionName !==
+            'emitIdentityUpdated'
+        ) {
+          newModals.push({ type: 'enableNotifications' })
+        }
+        // Transaction/signature modal
+        const web3Modal = { type: msgData.targetFunc, msgData: msgData }
+        // Modals render in different ordering on Android/iOS so use a different
+        // method of adding the modal to the array to get the notifications modal
+        // to display on top of the web3 modal
+        if (Platform.OS === 'ios') {
+          newModals.push(web3Modal)
+        } else {
+          newModals.unshift(web3Modal)
+        }
+        // Update the state with the new modals
         this.setState(prevState => ({
-          modals: [
-            ...prevState.modals,
-            {
-              type: 'enableNotifications'
-            }
-          ]
+          modals: [...prevState.modals, ...newModals]
         }))
-      }
-
-      this.setState(prevState => ({
-        modals: [
-          ...prevState.modals,
-          { type: msgData.targetFunc, msgData: msgData }
-        ]
-      }))
+      })
     }
   }
 
@@ -164,20 +191,28 @@ class MarketplaceScreen extends Component {
   /* Remove a modal and return the given result to the DApp
    */
   toggleModal(modal, result) {
+    if (!modal) {
+      return
+    }
+    if (modal.msgData) {
+      // Send the response to the webview
+      this.handleBridgeResponse(modal.msgData, result)
+    }
     this.setState(prevState => {
       return {
         ...prevState,
         modals: [...prevState.modals.filter(m => m !== modal)]
       }
     })
-    if (modal.msgData) {
-      // Send the response to the webview
-      this.handleBridgeResponse(modal.msgData, result)
-    }
   }
 
   render() {
     const { modals } = this.state
+    const { navigation } = this.props
+    const marketplaceUrl = navigation.getParam(
+      'marketplaceUrl',
+      this.props.settings.network.dappUrl
+    )
 
     // Use key of network id on safeareaview to force a remount of component on
     // network changes
@@ -186,18 +221,17 @@ class MarketplaceScreen extends Component {
         key={this.props.settings.network.id}
         style={styles.sav}
         forceInset={{ top: 'always' }}
+        {...this._panResponder.panHandlers}
       >
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: this.props.settings.network.dappUrl }}
+          source={{ uri: marketplaceUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectMessagingKeys()
           }}
-          allowsBackForwardNavigationGestures
           startInLoadingState={true}
           renderLoading={() => {
             return (
@@ -205,7 +239,8 @@ class MarketplaceScreen extends Component {
                 <ActivityIndicator size="large" color="black" />
               </View>
             )
-          A}}
+          }}
+          decelerationRate="normal"
         />
         {modals.map((modal, index) => {
           let card
@@ -252,19 +287,10 @@ class MarketplaceScreen extends Component {
               transparent={true}
               visible={true}
               onRequestClose={() => {
-                this.toggalModal(modal)
+                this.toggleModal(modal)
               }}
             >
-              <SafeAreaView style={styles.container}>
-                <View
-                  style={styles.transparent}
-                  onPress={() => {
-                    this.toggleModal(modal)
-                  }}
-                >
-                  {card}
-                </View>
-              </SafeAreaView>
+              <SafeAreaView style={styles.container}>{card}</SafeAreaView>
             </Modal>
           )
         })}

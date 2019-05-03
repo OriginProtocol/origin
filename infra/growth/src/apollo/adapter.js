@@ -2,31 +2,48 @@ const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
 
+// Maps rule Id -> Apollo action type.
+const ruleIdToActionType = {
+  ProfilePublished: 'Profile',
+  EmailAttestation: 'Email',
+  PhoneAttestation: 'Phone',
+  FacebookAttestation: 'Facebook',
+  AirbnbAttestation: 'Airbnb',
+  TwitterAttestation: 'Twitter',
+  GoogleAttestation: 'Google',
+  Referral: 'Referral',
+  // Any listing created.
+  ListingCreated: 'ListingCreated',
+  // Any listing sold.
+  ListingSold: 'ListingSold',
+  // Any listing purchased.
+  ListingPurchase: 'ListingPurchased',
+  // Specific listing purchased.
+  ListingPurchaseTShirt: 'ListingIdPurchased',
+  ListingPurchaseGC: 'ListingIdPurchased',
+  ListingPurchaseCharity: 'ListingIdPurchased',
+  ListingPurchaseHousing: 'ListingIdPurchased',
+  ListingPurchaseInfluencer: 'ListingIdPurchased',
+  ListingPurchaseArt: 'ListingIdPurchased'
+}
+
 /**
  * Adapts data representing the state of a campaign rule into
  * an Apollo compatible view.
  */
 class ApolloAdapter {
   /**
-   * Helper function to convert a growth event type into an Apollo action type.
-   * @param eventType
-   * @returns {*}
+   * Helper function to convert a specific rule Id into a generic Apollo action type.
+   * @param {string} ruleId
+   * @returns {string}
    * @private
    */
-  _eventTypeToActionType(eventType) {
-    const eventToActionType = {
-      ProfilePublished: 'Profile',
-      EmailAttestationPublished: 'Email',
-      FacebookAttestationPublished: 'Facebook',
-      AirbnbAttestationPublished: 'Airbnb',
-      TwitterAttestationPublished: 'Twitter',
-      PhoneAttestationPublished: 'Phone',
-      Referral: 'Referral',
-      ListingCreated: 'ListingCreated',
-      ListingSold: 'ListingSold',
-      ListingPurchased: 'ListingPurchased'
+  _ruleIdToActionType(ruleId) {
+    const actionType = ruleIdToActionType[ruleId]
+    if (!actionType) {
+      throw new Error(`Unexpected ruleId ${ruleId}`)
     }
-    return eventToActionType[eventType]
+    return actionType
   }
 
   /**
@@ -57,9 +74,11 @@ class ApolloAdapter {
     if (!data.visible) {
       return null
     }
+
+    // Fetch common data across all action types.
     let action = {
-      // TODO: handle multi-events type
-      type: this._eventTypeToActionType(data.eventTypes[0]),
+      ruleId: data.ruleId,
+      type: this._ruleIdToActionType(data.ruleId),
       status: data.status,
       rewardEarned: Money.sum(
         data.rewards.map(r => r.value),
@@ -69,11 +88,23 @@ class ApolloAdapter {
       unlockConditions: data.unlockConditions
     }
 
-    // Add extra information in case of a Referral.
-    if (action.type === 'Referral') {
-      const referralsInfo = await this._getReferralsActionData(data)
-      action = { ...action, ...referralsInfo }
+    // Some action types require to fetch extra custom data.
+    switch (action.type) {
+      case 'Referral':
+        const referralsInfo = await this._getReferralsActionData(data)
+        action = { ...action, ...referralsInfo }
+        break
+      case 'ListingIdPurchased':
+        const listingInfo = {
+          listingId: data.listingId,
+          iconSrc: data.iconSrc,
+          titleKey: data.titleKey,
+          detailsKey: data.detailsKey
+        }
+        action = { ...action, ...listingInfo }
+        break
     }
+
     return action
   }
 }

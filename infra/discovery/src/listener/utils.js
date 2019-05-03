@@ -10,7 +10,8 @@ const MAX_RETRY_WAIT_MS = 2 * 60 * 1000
  * Returns the first block the listener should start at for following events.
  * Reads the persisted state from either DB or continue file.
  */
-async function getLastBlock(config) {
+async function getLastBlock(config, prefix) {
+  prefix = prefix ? prefix : ''
   let lastBlock
   if (config.continueFile) {
     // Read state from continue file.
@@ -30,7 +31,7 @@ async function getLastBlock(config) {
     }
   } else {
     // Read state from DB.
-    const row = await db.Listener.findByPk(config.listenerId)
+    const row = await db.Listener.findByPk(`${prefix}${config.listenerId}`)
     if (!row) {
       // No state in DB. This happens if a listener is started for the first time.
       lastBlock = config.defaultContinueBlock
@@ -45,12 +46,16 @@ async function getLastBlock(config) {
  * Stores the last block we have read up.
  * Writes in either DB or continue file.
  */
-async function setLastBlock(config, blockNumber) {
+async function setLastBlock(config, blockNumber, prefix) {
+  prefix = prefix ? prefix : ''
   if (config.continueFile) {
     const json = JSON.stringify({ lastLogBlock: blockNumber, version: 1 })
     fs.writeFileSync(config.continueFile, json, { encoding: 'utf8' })
   } else {
-    await db.Listener.upsert({ id: config.listenerId, blockNumber })
+    await db.Listener.upsert({
+      id: `${prefix}${config.listenerId}`,
+      blockNumber
+    })
   }
 }
 

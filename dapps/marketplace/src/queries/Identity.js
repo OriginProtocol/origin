@@ -17,6 +17,7 @@ export default gql`
           attestations
 
           facebookVerified
+          googleVerified
           twitterVerified
           airbnbVerified
           phoneVerified

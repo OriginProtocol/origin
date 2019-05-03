@@ -33,7 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "lerna run lint"
+      "pre-push": "lerna run lint && npm run lint --prefix mobile"
     }
   }
 }
