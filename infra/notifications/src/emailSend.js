@@ -45,13 +45,11 @@ async function messageEmailSend(receivers, sender, config) {
   )
 
   const messageSender = Identity.findOne({
-    raw: true,
     where: {
       ethAddress: sender
     }
   })
   const messageReceivers = Identity.findAll({
-    raw: true,
     where: {
       ethAddress: {
         [Op.or]: receivers
@@ -60,6 +58,7 @@ async function messageEmailSend(receivers, sender, config) {
   })
   Promise.all([messageSender, messageReceivers]).then(
     ([senderIdentity, receiversIdentities]) => {
+      console.log(senderIdentity)
       receiversIdentities.forEach(async s => {
         try {
           const message = messageTemplates.message['email']['messageReceived']
