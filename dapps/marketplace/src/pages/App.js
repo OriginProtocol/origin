@@ -40,7 +40,7 @@ class App extends Component {
 
   componentDidMount() {
     if (window.ethereum) {
-      window.ethereum.enable()
+      setTimeout(() => window.ethereum.enable(), 100)
     }
   }
 
