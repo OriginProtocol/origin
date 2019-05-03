@@ -3,16 +3,16 @@ export function getAttestationReward({
   attestation,
   tokenDecimals
 }) {
+  if (!growthCampaigns) return 0
+
+  const activeCampaign = growthCampaigns.find(
+    campaign => campaign.status === 'Active'
+  )
+  if (!activeCampaign) {
+    return ''
+  }
+
   try {
-    if (!growthCampaigns) return 0
-
-    const activeCampaign = growthCampaigns.find(
-      campaign => campaign.status === 'Active'
-    )
-    if (!activeCampaign) {
-      return ''
-    }
-
     const reward = activeCampaign.actions
       .filter(action => action.type === attestation)
       .map(action => action.reward)[0]
@@ -28,6 +28,6 @@ export function getAttestationReward({
         .toString()
     )
   } catch (e) {
-    return '?'
+    return ''
   }
 }

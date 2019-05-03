@@ -7,7 +7,13 @@ import { Switch, Route } from 'react-router-dom'
 import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
+import {
+  unpublishedStrength,
+  changesToPublishExist,
+  updateVerifiedAccounts,
+  clearVerifiedAccounts,
+  getVerifiedAccounts
+} from 'utils/profileTools'
 import { getAttestationReward } from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
@@ -73,23 +79,16 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const attestations = store.get(`attestations-${props.wallet}`, {})
-    const storedAttestations = {}
-    Object.keys(attestations).forEach(key => {
-      try {
-        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
-          ...JSON.parse(attestations[key]),
-          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
-        })
-        storedAttestations[key] = attestations[key]
-      } catch (e) {
-        // Invalid attestation
-        console.log('Invalid attestation', attestations[key])
-      }
-    })
+
+    const storedAttestations = this.getStoredAttestions()
+
     this.state = {
       ...getState(profile),
       ...storedAttestations
+    }
+    const activeAttestation = get(props, 'match.params.attestation')
+    if (activeAttestation) {
+      this.state[activeAttestation] = true
     }
     this.accountsSwitched = false
   }
@@ -117,6 +116,7 @@ class UserProfile extends Component {
         profile.emailVerified !== prevProfile.emailVerified ||
         profile.phoneVerified !== prevProfile.phoneVerified ||
         profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
         profile.airbnbVerified !== prevProfile.airbnbVerified) &&
       profile.id === prevProfile.id &&
@@ -142,6 +142,15 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.wallet !== prevProps.wallet) {
+      const storedAttestations = this.getStoredAttestions()
+      const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
+        m[`${o}Attestation`] = null
+        return m
+      }, {})
+      this.setState({ ...resetAtts, ...storedAttestations })
+    }
+
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
       this.accountsSwitched = true
@@ -193,6 +202,10 @@ class UserProfile extends Component {
       {
         attestation: 'facebookAttestation',
         message: fbt('Facebook updated', 'profile.facebookUpdated')
+      },
+      {
+        attestation: 'googleAttestation',
+        message: fbt('Google updated', 'profile.googleUpdated')
       },
       {
         attestation: 'twitterAttestation',
@@ -271,7 +284,7 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <Avatar avatar={this.state.avatar} />
+                <Avatar avatarUrl={this.state.avatarUrl} />
               </div>
               <div className="info">
                 <a
@@ -322,8 +335,7 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google'),
-                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                  fbt('Google', '_ProvisionedChanges.google')
                 )}
               </div>
             </div>
@@ -352,8 +364,10 @@ class UserProfile extends Component {
                     ...attestations
                   ],
                   validate: () => this.validate(),
-                  onComplete: () =>
-                    store.set(`attestations-${this.props.wallet}`, undefined),
+                  onComplete: () => {
+                    store.set(`attestations-${this.props.wallet}`, undefined)
+                    clearVerifiedAccounts()
+                  },
                   children: fbt('Publish Now', 'Profile.publishNow')
                 }}
                 publishedProfile={this.props.identity || {}}
@@ -385,7 +399,8 @@ class UserProfile extends Component {
               'firstName',
               'lastName',
               'description',
-              'avatar'
+              'avatar',
+              'avatarUrl'
             ])}
             avatar={this.state.avatar}
             onClose={() => this.setState({ editProfile: false })}
@@ -500,6 +515,36 @@ class UserProfile extends Component {
       return m
     }, {})
     store.set(`attestations-${this.props.wallet}`, attestations)
+    updateVerifiedAccounts({
+      wallet: this.props.wallet,
+      data: attestations
+    })
+  }
+
+  getAttestations() {
+    const wallet = this.props.wallet
+    const defaultValue = store.get(`attestations-${wallet}`, {})
+    return getVerifiedAccounts({ wallet }, defaultValue)
+  }
+
+  getStoredAttestions() {
+    const attestations = this.getAttestations()
+    const storedAttestations = {}
+
+    Object.keys(attestations).forEach(key => {
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...JSON.parse(attestations[key]),
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+        storedAttestations[key] = attestations[key]
+      } catch (e) {
+        // Invalid attestation
+        console.log('Invalid attestation', attestations[key])
+      }
+    })
+
+    return storedAttestations
   }
 }
 

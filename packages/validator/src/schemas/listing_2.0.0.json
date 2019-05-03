@@ -110,7 +110,32 @@
           }
         }
       }
+    },
+
+    "giftCardListing": {
+      "type": "object",
+      "properties": {
+        "retailer": {
+          "$type": "string"
+        },
+        "cardAmount": {
+          "$type": "integer"
+        },
+        "issuingCountry": {
+          "$type": "string"
+        },
+        "isDigital": {
+          "$type": "boolean"
+        },
+        "isCashPurchase": {
+          "$type": "boolean"
+        },
+        "receiptAvailable": {
+          "$type": "boolean"
+        }
+      }
     }
+
   },
   "type": "object",
   "properties": {
@@ -164,6 +189,9 @@
     },
     {
       "$ref": "#/definitions/fractionalHourlyListing"
+    },
+    {
+      "$ref": "#/definitions/giftCardListing"
     }
   ],
   "required": [

@@ -1,5 +1,6 @@
 import graphqlFields from 'graphql-fields'
 import originIpfs from '@origin/ipfs'
+import IpfsHash from 'ipfs-only-hash'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import contracts from '../contracts'
@@ -12,10 +13,11 @@ const progressPct = {
   description: 10,
   avatar: 10,
 
-  emailVerified: 15,
-  phoneVerified: 15,
+  emailVerified: 10,
+  phoneVerified: 10,
   facebookVerified: 10,
   twitterVerified: 10,
+  googleVerified: 10,
   airbnbVerified: 10
 }
 
@@ -59,6 +61,8 @@ function getAttestations(account, attestations) {
 }
 
 export function identity({ id, ipfsHash }) {
+  const [account, blockNumber] = id.split('-')
+  id = account
   return new Promise(async resolve => {
     if (!contracts.identityEvents.options.address || !id) {
       return null
@@ -68,6 +72,9 @@ export function identity({ id, ipfsHash }) {
         account: id
       })
       events.forEach(event => {
+        if (blockNumber < event.blockNumber) {
+          return
+        }
         if (event.event === 'IdentityUpdated') {
           ipfsHash = event.returnValues.ipfsHash
         } else if (event.event === 'IdentityDeleted') {
@@ -88,7 +95,13 @@ export function identity({ id, ipfsHash }) {
     const identity = {
       id,
       attestations: attestations.map(a => JSON.stringify(a)),
-      ...pick(profile, ['firstName', 'lastName', 'avatar', 'description']),
+      ...pick(profile, [
+        'firstName',
+        'lastName',
+        'avatar',
+        'avatarUrl',
+        'description'
+      ]),
       ...getAttestations(id, data.attestations || []),
       strength: 0,
       ipfsHash
@@ -105,6 +118,25 @@ export function identity({ id, ipfsHash }) {
       .filter(n => n)
       .join(' ')
 
+    // Make old style embedded avatars access by their IPFS hash.
+    if (identity.avatarUrl === undefined && identity.avatar !== undefined) {
+      try {
+        const avatarBinary = dataURItoBinary(identity.avatar)
+        identity.avatarUrl = await IpfsHash.of(Buffer.from(avatarBinary.buffer))
+      } catch {
+        // If we can't translate an old avatar for any reason, don't worry about it.
+        // We've already tested the backfill script, and not seen a problem
+        // for all valid avatar images.
+      }
+    }
+
+    if (identity.avatarUrl) {
+      identity.avatarUrlExpanded = originIpfs.gatewayUrl(
+        contracts.ipfsGateway,
+        identity.avatarUrl
+      )
+    }
+
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
         identity.strength += progressPct[key]
@@ -113,6 +145,20 @@ export function identity({ id, ipfsHash }) {
 
     resolve(identity)
   })
+}
+
+function dataURItoBinary(dataURI) {
+  // From https://stackoverflow.com/questions/12168909/blob-from-dataurl
+  const parts = dataURI.split(',')
+  const byteString = atob(parts[1])
+  const mimeString = parts[0].split(':')[1].split(';')[0]
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  const blob = new Blob([ab], { type: mimeString })
+  return { blob, buffer: ab }
 }
 
 export async function identities(
@@ -158,26 +204,50 @@ export async function identities(
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: async () => {
+  facebookAuthUrl: async (_, args) => {
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {
       return null
     }
-    const authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    let authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
     const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
     })
     const authData = await response.json()
     return authData.url
   },
-  googleAuthUrl: async () => {
+  twitterAuthUrl: async (_, args) => {
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {
       return null
     }
-    const authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    let authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
     const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
+    })
+    const authData = await response.json()
+    return authData.url
+  },
+  googleAuthUrl: async (_, args) => {
+    const bridgeServer = contracts.config.bridge
+    if (!bridgeServer) {
+      return null
+    }
+    let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
+    const response = await fetch(authUrl, {
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
     })
     const authData = await response.json()
     return authData.url

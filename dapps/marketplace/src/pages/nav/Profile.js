@@ -93,7 +93,7 @@ const ProfileDropdown = withWallet(({ wallet, walletProxyOwner, onClose }) => {
           wallet={wallet}
         />
       )}
-      <Balances account={wallet} />
+      <Balances account={wallet} onClose={onClose} />
       <Identity id={wallet} />
       <Link onClick={() => onClose()} to="/profile">
         <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
@@ -117,7 +117,7 @@ const Identity = ({ id }) => (
             <fbt desc="nav.profile.myIdentity">My Identity</fbt>
           </h5>
           <div className="info">
-            <Avatar avatar={profile.avatar} size="3rem" />
+            <Avatar profile={profile} size="3rem" />
             <div>
               <div className="name">
                 {profile.fullName ||

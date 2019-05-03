@@ -40,6 +40,14 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.timeZone = fractionalData.timeZone || ''
     ipfsData.workingHours = fractionalData.workingHours || []
     ipfsData.booked = fractionalData.booked || []
+  } else if (data.typename === 'GiftCardListing') {
+    ipfsData.retailer = unitData.retailer || ''
+    ipfsData.cardAmount = unitData.cardAmount || '0'
+    ipfsData.issuingCountry = unitData.issuingCountry || '0'
+    ipfsData.isDigital = unitData.isDigital || false
+    ipfsData.isCashPurchase = unitData.isCashPurchase || false
+    ipfsData.receiptAvailable = unitData.receiptAvailable || false
+    ipfsData.unitsTotal = unitData.unitsTotal ? unitData.unitsTotal : 1
   } else if (unitData) {
     ipfsData.unitsTotal = unitData.unitsTotal
   } else {

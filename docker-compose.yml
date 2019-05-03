@@ -62,7 +62,6 @@ services:
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
-      - ./infra/linking/:/app/infra/linking/
       # Exclude IPFS and blockchain data from @origin/services
       - /app/packages/services/data
       # Exclude all node_modules from the host
@@ -82,7 +81,6 @@ services:
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
-      - /app/infra/linking/node_modules/
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
       # interacted with via ipfs-proxy
@@ -105,11 +103,11 @@ services:
       - postgres
       - redis-master
     ports:
-      - "9012:9012"
       - "6647:6647"
+      - "9012:9012"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/messaging &&
       npm run start --prefix infra/messaging"
 
@@ -190,7 +188,15 @@ services:
     depends_on:
       - postgres
     environment:
+      - APNS_BUNDLE_ID=com.originprotocol.catcher
+      - APNS_KEY_FILE=
+      - APNS_KEY_ID=
+      - APNS_PRODUCTION=false
+      - APNS_TEAM_ID=
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+        # Service account for Firebase
+      - FIREBASE_SERVICE_JSON=
+      - FIREBASE_DB_URL=
     ports:
       - "3456:3456"
     command:

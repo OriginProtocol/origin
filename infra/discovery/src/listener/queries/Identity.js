@@ -11,6 +11,7 @@ const identityQuery = gql`
           fullName
           description
           avatar
+          avatarUrl
           strength
           attestations
           facebookVerified

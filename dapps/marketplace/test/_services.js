@@ -35,7 +35,8 @@ export default async function() {
         defaultViewport: {
           width: 1280,
           height: 1024
-        }
+        },
+        // dumpio: true
         // slowMo: headless ? undefined : 40
       })
 

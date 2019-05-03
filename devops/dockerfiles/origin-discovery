@@ -20,7 +20,6 @@ COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 

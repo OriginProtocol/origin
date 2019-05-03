@@ -27,6 +27,7 @@ export default {
   Listing,
   UnitListing: Listing,
   FractionalListing: Listing,
+  GiftCardListing: Listing,
   AnnouncementListing: Listing,
   ListingResult: {
     __resolveType(obj) {

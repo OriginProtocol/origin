@@ -43,7 +43,7 @@ class AvailabilityCalculator {
     }
 
     const modifiedSlots = []
-    let bookedRange, unavailableRange, customPriceRange
+    let bookedRange, unavailableRange
     const newBooked = [],
       newUnavailable = [],
       newCustomPrice = []
@@ -92,16 +92,7 @@ class AvailabilityCalculator {
       }
 
       if (slot.customPrice) {
-        if (customPriceRange) {
-          customPriceRange = `${customPriceRange.split('/')[0]}/${slot.date}:${
-            slot.price
-          }`
-        } else {
-          customPriceRange = `${slot.date}/${slot.date}:${slot.price}`
-        }
-      } else if (customPriceRange) {
-        newCustomPrice.push(customPriceRange)
-        customPriceRange = ''
+        newCustomPrice.push(`${slot.date}/${slot.date}:${slot.price}`)
       }
 
       return slot
@@ -117,10 +108,6 @@ class AvailabilityCalculator {
   estimateNightlyPrice(range) {
     const [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
-
-    if (availability.length > 1) {
-      availability.pop() // Exclude checkout slot's price
-    }
 
     const available = availability.every(slot => slot.unavailable === false)
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)

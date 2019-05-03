@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq'
 
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
+import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
 import { transactions } from './web3/transactions'
 
@@ -245,36 +246,47 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
   const u1 = user.id,
     u2 = id
 
-  const u1Listings = await ec().allEvents('ListingCreated', u1)
-  const u1ListingIds = u1Listings.map(e => Number(e.returnValues.listingID))
-  const u2Listings = await ec().allEvents('ListingCreated', u2)
-  const u2ListingIds = u2Listings.map(e => Number(e.returnValues.listingID))
+  const u1Listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: u1
+  })
+  const u1ListingIds = u1Listings.map(e => e.returnValues.listingID)
+  const u2Listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: u2
+  })
+  const u2ListingIds = u2Listings.map(e => e.returnValues.listingID)
 
-  const u1BuyerEvents = await ec().offers(
-    u2ListingIds,
-    null,
-    'OfferCreated',
-    u2,
-    u1
-  )
-  const u1OfferIds = u1BuyerEvents.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
-  const u2BuyerEvents = await ec().offers(
-    u1ListingIds,
-    null,
-    'OfferCreated',
-    u1,
-    u2
-  )
-  const u2OfferIds = u2BuyerEvents.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
+  const u1BuyerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    listingID: u2ListingIds,
+    party: u1
+  })
 
-  const unsortedEvents = await ec().allEvents(null, null, [
-    ...u1OfferIds,
-    ...u2OfferIds
-  ])
+  const u2BuyerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    listingID: u1ListingIds,
+    party: u2
+  })
+  const allListingIds = [...u1ListingIds, ...u2ListingIds]
+  const allOfferIds = [...u1BuyerEvents, ...u2BuyerEvents].reduce((m, o) => {
+    m[o.returnValues.listingID] = m[o.returnValues.listingID] || []
+    if (m[o.returnValues.listingID].indexOf(o.returnValues.offerID) < 0) {
+      m[o.returnValues.listingID].push(o.returnValues.offerID)
+    }
+    return m
+  }, {})
+
+  const unfilteredEvents = await ec().getEvents({
+    listingID: allListingIds,
+    party: [u1, u2]
+  })
+  const unsortedEvents = unfilteredEvents.filter(e => {
+    const listingOffers = allOfferIds[e.returnValues.listingID]
+    if (listingOffers) {
+      return listingOffers.indexOf(e.returnValues.offerID) >= 0
+    }
+  })
   const allEvents = sortBy(unsortedEvents, e => -e.blockNumber)
 
   const totalCount = allEvents.length,
@@ -328,5 +340,8 @@ export default {
     if (user.lastEvent) return user.lastEvent
     const events = await ec().allEvents(undefined, user.id)
     return events[events.length - 1]
+  },
+  identity: account => {
+    return identity({ id: account.id })
   }
 }

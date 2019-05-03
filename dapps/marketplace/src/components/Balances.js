@@ -7,7 +7,7 @@ import withEthBalance from 'hoc/withEthBalance'
 import withWallet from 'hoc/withWallet'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const Balances = ({ ethBalance, account }) => {
+const Balances = ({ ethBalance, account, onClose }) => {
   const EnrollButton = withEnrolmentModal('button')
   const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
@@ -54,7 +54,12 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
         {!enableGrowth ? null : (
-          <EnrollButton className="btn get-ogn d-flex" skipjoincampaign="false">
+          <EnrollButton
+            className="btn get-ogn d-flex"
+            skipjoincampaign="false"
+            onClose={onClose}
+            onNavigation={onClose}
+          >
             <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>
         )}

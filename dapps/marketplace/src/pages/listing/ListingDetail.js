@@ -4,8 +4,6 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-import withWallet from 'hoc/withWallet'
-
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
@@ -24,6 +22,9 @@ import SingleUnit from './_BuySingleUnit'
 import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
 import FractionalHourly from './_BuyFractionalHourly'
+
+import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
+import { CurrenciesByCountryCode } from 'constants/Currencies'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -118,13 +119,51 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-    const isOwnerViewing = listing.seller.id === this.props.wallet
+    const isGiftCard = listing.__typename === 'GiftCardListing'
+    const isOwnerViewing = listing.seller.id === this.props.from
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
       <>
         <Gallery pics={listing.media} />
         <div className="description">{listing.description}</div>
+
+        {!isGiftCard ? null : (
+          <>
+            <hr />
+            <div>
+              <fbt desc="create.details.retailer">Retailer</fbt>:{' '}
+              {listing.retailer}
+            </div>
+            <div>
+              <fbt desc="create.details.cardAmount">Amount on Card</fbt>:
+              {CurrenciesByCountryCode[listing.issuingCountry][2]}
+              {listing.cardAmount}
+            </div>
+            <div>
+              <fbt desc="create.details.issuingCountry">Issuing Country</fbt>:{' '}
+              {countryCodeMapping['en'][listing.issuingCountry]}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.isDigital">
+                Is this card digital?
+              </fbt>
+              {listing.isDigital ? 'Yes' : 'No'}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.isCashPurchase">
+                Was this a cash purchase?
+              </fbt>
+              {listing.isCashPurchase ? 'Yes' : 'No'}
+            </div>
+            <div>
+              <fbt desc="create.details.giftcard.receiptAvailable">
+                Is a receipt available?
+              </fbt>
+              {listing.receiptAvailable ? 'Yes' : 'No'}
+            </div>
+          </>
+        )}
         {!isFractional ? null : (
           <>
             <hr />
@@ -183,10 +222,10 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.wallet
+      b => b.id === this.props.from
     )
 
-    if (listing.seller.id === this.props.wallet) {
+    if (listing.seller.id === this.props.from) {
       return (
         <EditOnly
           {...this.props}
@@ -235,7 +274,7 @@ class ListingDetail extends Component {
   }
 }
 
-export default withWallet(ListingDetail)
+export default ListingDetail
 
 require('react-styl')(`
   .listing-detail

@@ -11,11 +11,13 @@ export default gql`
           lastName
           fullName
           description
-          avatar
+          avatarUrl
+          avatarUrlExpanded
           strength
           attestations
 
           facebookVerified
+          googleVerified
           twitterVerified
           airbnbVerified
           phoneVerified
