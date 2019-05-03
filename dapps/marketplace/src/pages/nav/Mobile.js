@@ -15,6 +15,12 @@ class MobileNav extends Component {
   render() {
     const { onClose } = this.props
     const hasUnread = ''
+    /* react uses upper/lower case convention to distinguish between DOM tags
+     * and user defined components. For that reason if the components starts with
+     * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
+     */
+    const EarnTokens = this.EarnTokens
+
     return (
       <Dropdown
         className="nav-item mobile d-flex d-md-none"
@@ -34,12 +40,13 @@ class MobileNav extends Component {
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
-            <this.EarnTokens
+            <EarnTokens
               className="dropdown-item earn"
-              onClick={() => onClose()}
+              onClose={() => onClose()}
+              onNavigation={() => onClose()}
             >
               <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-            </this.EarnTokens>
+            </EarnTokens>
             <div className="dropdown-divider" />
             <h6 className="dropdown-header">My Items</h6>
             <Link
