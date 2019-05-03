@@ -2,6 +2,7 @@
 
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
+import { createTransform } from 'redux-persist'
 
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
@@ -16,11 +17,30 @@ const encryptor = createEncryptor({
   secretKey: 'WALLET_PASSWORD'
 })
 
+const ValidateAccountTransform = createTransform(
+  inboundState => inboundState,
+  // Transform state being rehydrated
+  outboundState => {
+    // Make sure all accounts in the store are valid, i.e. that they have
+    // both an address and a private key
+    return {
+      ...outboundState,
+      accounts: outboundState.accounts.filter(account => {
+        return account.address && account.privateKey
+      })
+    }
+  },
+  {
+    // Only apply this to wallet
+    whitelist: ['wallet']
+  }
+)
+
 const persistConfig = {
   key: 'EncryptedOriginWallet',
   storage: storage,
   whitelist: ['activation', 'notifications', 'settings', 'wallet'],
-  transforms: [encryptor]
+  transforms: [ValidateAccountTransform, encryptor]
 }
 
 const middlewares = [thunkMiddleware]

@@ -8,7 +8,6 @@ import {
   PanResponder,
   Platform,
   StyleSheet,
-  StatusBar,
   View
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
@@ -19,6 +18,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
+import { decodeTransaction } from '../utils/contractDecoder'
 
 class MarketplaceScreen extends Component {
   constructor(props) {
@@ -46,15 +46,19 @@ class MarketplaceScreen extends Component {
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
 
+    const swipeDistance = 200
     this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > 20
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.moveX < 200) {
+        if (gestureState.moveX > swipeDistance) {
           this.dappWebView.goBack()
-        }
-        if (gestureState.moveX > 200) {
+        } else if (gestureState.moveX < swipeDistance) {
           this.dappWebView.goForward()
         }
       }
@@ -90,9 +94,15 @@ class MarketplaceScreen extends Component {
     } else {
       PushNotification.checkPermissions(permissions => {
         const newModals = []
-        // Check if we have notification permissions, if not display the nag
-        // message
-        if (!permissions.alert) {
+        // Check if we lack notification permissions, and we are processing a
+        // web3 transactiotn that isn't updating our identitty. If we are then
+        // display a modal requesting notifications be enabled
+        if (
+          !permissions.alert &&
+          msgData.targetFunc === 'processTransaction' &&
+          decodeTransaction(msgData.data.data).functionName !==
+            'emitIdentityUpdated'
+        ) {
           newModals.push({ type: 'enableNotifications' })
         }
         // Transaction/signature modal
@@ -181,6 +191,9 @@ class MarketplaceScreen extends Component {
   /* Remove a modal and return the given result to the DApp
    */
   toggleModal(modal, result) {
+    if (!modal) {
+      return
+    }
     if (modal.msgData) {
       // Send the response to the webview
       this.handleBridgeResponse(modal.msgData, result)
@@ -210,7 +223,6 @@ class MarketplaceScreen extends Component {
         forceInset={{ top: 'always' }}
         {...this._panResponder.panHandlers}
       >
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <WebView
           ref={webview => {
             this.dappWebView = webview
@@ -220,7 +232,6 @@ class MarketplaceScreen extends Component {
           onLoad={() => {
             this.injectMessagingKeys()
           }}
-          allowsBackForwardNavigationGestures
           startInLoadingState={true}
           renderLoading={() => {
             return (
@@ -229,6 +240,7 @@ class MarketplaceScreen extends Component {
               </View>
             )
           }}
+          decelerationRate="normal"
         />
         {modals.map((modal, index) => {
           let card
@@ -275,7 +287,7 @@ class MarketplaceScreen extends Component {
               transparent={true}
               visible={true}
               onRequestClose={() => {
-                this.toggalModal(modal)
+                this.toggleModal(modal)
               }}
             >
               <SafeAreaView style={styles.container}>{card}</SafeAreaView>
