@@ -207,7 +207,8 @@ class IdentityEventHandler {
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
-      country: decoratedIdentity.country
+      country: decoratedIdentity.country,
+      avatarUrl: decoratedIdentity.avatarUrl
     }
 
     logger.debug('Identity=', identityRow)
@@ -236,6 +237,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
+      1,
       identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
@@ -268,6 +270,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
+          1,
           identity.id,
           eventType,
           null,
@@ -293,7 +296,8 @@ class IdentityEventHandler {
 
     logger.info(`Processing Identity event for account ${account}`)
 
-    const identity = await this._getIdentityDetails(account)
+    const idWithBlock = account + '-' + event.blockNumber
+    const identity = await this._getIdentityDetails(idWithBlock)
 
     // Avatar can be large binary data. Clip it for logging purposes.
     if (identity.avatar) {

@@ -1,7 +1,5 @@
 'use strict'
 
-import { NativeModules } from 'react-native'
-
 class Enum extends Array {
   constructor(...args) {
     super(...args)
@@ -21,9 +19,9 @@ export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
 export const WALLET_STORE = 'WALLET_STORE'
 
-export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM', 'Email')
+export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 
-export const BALANCE_POLL_INTERVAL = 10000
+export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
   { id: 1, name: 'Mainnet', dappUrl: 'https://dapp.originprotocol.com' },
@@ -46,6 +44,9 @@ if (__DEV__) {
   NETWORKS.push({
     id: 999,
     name: 'Docker',
-    dappUrl: `http://${process.env.HOST}:3000`
+    dappUrl: `http://${process.env.HOST}:3000/docker#/`
   })
 }
+
+export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
+export const PROMPT_PUB_KEY = 'My public messaging key is: '

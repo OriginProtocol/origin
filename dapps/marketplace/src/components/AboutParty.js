@@ -37,7 +37,7 @@ const AboutParty = ({ id }) => {
 
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
-              <Avatar avatar={profile.avatar} size={50} />
+              <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
                 <div className="attestations">

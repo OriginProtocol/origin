@@ -6,6 +6,9 @@ const fs = require('fs')
 const memdown = require('memdown')
 const net = require('net')
 const path = require('path')
+const proxy = require('http-proxy')
+const key = fs.readFileSync(`${__dirname}/data/localhost.key`, 'utf8')
+const cert = fs.readFileSync(`${__dirname}/data/localhost.cert`, 'utf8')
 
 const portInUse = port =>
   new Promise(function(resolve) {
@@ -91,8 +94,9 @@ function writeTruffleAddress(contract, network, address) {
   const rawContract = fs.readFileSync(filename)
   const Contract = JSON.parse(rawContract)
   try {
+    Contract.networks[network] = Contract.networks[network] || {}
     Contract.networks[network].address = address
-    fs.writeFileSync(filename, JSON.stringify(Contract, null, 4))
+    fs.writeFileSync(filename, JSON.stringify(Contract, null, 2))
   } catch (error) {
     // Didn't copy contract build files into the build directory?
     console.log('Could not write contract address to truffle file')
@@ -118,6 +122,28 @@ const writeTruffle = () =>
     } catch (e) {
       console.log(e)
     }
+    resolve()
+  })
+
+const startSslProxy = () =>
+  new Promise(resolve => {
+    console.log('Starting secure proxies...')
+    const Ports = [[443, 3000], [8546, 8545], [8081, 8080], [5003, 5002]]
+
+    Ports.map(pair => {
+      const [src, port] = pair
+      proxy
+        .createServer({
+          xfwd: true,
+          ws: true,
+          target: { port },
+          ssl: { key, cert }
+        })
+        .on('error', e => console.error(e.code))
+        .listen(src)
+
+      console.log(`Started proxy ${src} => ${port}`)
+    })
     resolve()
   })
 
@@ -194,6 +220,10 @@ module.exports = async function start(opts = {}) {
 
   if (opts.writeTruffle) {
     await writeTruffle()
+  }
+
+  if (opts.sslProxy) {
+    await startSslProxy()
   }
 
   if (opts.extras && !started.extras) {

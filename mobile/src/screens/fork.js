@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
@@ -7,6 +9,7 @@ import {
   Text,
   View
 } from 'react-native'
+import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import AccountModal from 'components/account-modal'
@@ -27,11 +30,20 @@ class ForkScreen extends Component {
     title: 'Get Started'
   }
 
+  componentDidUpdate() {
+    if (this.props.wallet.accounts.length > 0) {
+      this.props.navigation.navigate('App')
+    }
+  }
+
   toggleModal() {
     this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
+    const { height } = Dimensions.get('window')
+    const smallScreen = height < 812
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -39,14 +51,11 @@ class ForkScreen extends Component {
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'wallet.png')}
-            style={[
-              styles.image,
-              this.props.screenProps.smallScreen ? { height: '33%' } : {}
-            ]}
+            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>Create Or Import A Wallet</Text>
           <Text style={styles.subtitle}>
-            Create a new wallet and transder funds into it or import an existing
+            Create a new wallet and transfer funds into it or import an existing
             wallet that you already use.
           </Text>
         </View>
@@ -57,7 +66,9 @@ class ForkScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Create New Wallet'}
-            onPress={() => DeviceEventEmitter.emit('createAccount')}
+            onPress={() => {
+              DeviceEventEmitter.emit('createAccount')
+            }}
           />
           <OriginButton
             size="large"
@@ -80,9 +91,11 @@ class ForkScreen extends Component {
   }
 }
 
-export default ForkScreen
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
 
-const { width, height } = Dimensions.get('window')
+export default connect(mapStateToProps)(ForkScreen)
 
 const styles = StyleSheet.create({
   button: {

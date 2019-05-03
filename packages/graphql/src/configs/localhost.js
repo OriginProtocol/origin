@@ -13,14 +13,17 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
+  notifications: `http://${HOST}:3456`,
+  //growth: 'http://localhost:4001',
   automine: 2000,
-  attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
-
+  attestationIssuer: '0x02c14Ee67799e1dFac9f776F2f4D5dC69Ab3Ee23',
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
+  V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
   IdentityEvents: addresses.IdentityEvents,
+  IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
   tokens: []
 }

@@ -1,0 +1,5 @@
+A problem has been reported with your transaction.
+
+An arbitrator will now examine this transaction. You will be notified of any outcome.
+
+Transaction link: <%= dappUrl %>/#/purchases/<%- offer.id %>

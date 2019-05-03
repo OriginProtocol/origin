@@ -29,6 +29,24 @@ function getIpfsHashFromBytes32(bytes32Hex) {
   return hashStr
 }
 
+/**
+ * Takes an IPFS hash url (for example: ipfs://QmUwefhweuf...12322a) and
+ * returns a url to that resource on the gateway.
+ * Ensures that the IPFS hash does not contain anything evil and is the correct length.
+ * @param {string} gateway
+ * @param {string} ipfsUrl
+ * @returns {string}
+ */
+function gatewayUrl(gateway, ipfsUrl) {
+  if (!ipfsUrl) {
+    return
+  }
+  const match = ipfsUrl.match(/^ipfs:\/\/([A-Za-z0-9]{46})$/)
+  if (match) {
+    return `${gateway}/ipfs/${match[1]}`
+  }
+}
+
 // async function postFile(gateway, file) {
 //   const body = new FormData()
 //   body.append('file', file)
@@ -149,5 +167,6 @@ module.exports = {
   getText,
   post,
   getBytes32FromIpfsHash,
-  getIpfsHashFromBytes32
+  getIpfsHashFromBytes32,
+  gatewayUrl
 }

@@ -7,11 +7,8 @@ import IdentityQuery from 'queries/Identity'
 function withIdentity(WrappedComponent, walletProp = 'wallet') {
   const WithIdentity = props => {
     const id = get(props, walletProp)
-    if (!id) {
-      return <WrappedComponent {...props} />
-    }
     return (
-      <Query query={IdentityQuery} variables={{ id }}>
+      <Query query={IdentityQuery} skip={!id} variables={{ id }}>
         {({ data, networkStatus, refetch }) => {
           const identity = get(data, 'web3.account.identity')
           return (

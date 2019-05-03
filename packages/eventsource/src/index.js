@@ -58,7 +58,7 @@ class OriginEventSource {
   async getListing(listingId, blockNumber) {
     const cacheBlockNumber = blockNumber
       ? blockNumber
-      : this.contract.eventCache.getBlockNumber()
+      : this.contract.eventCache.latestBlock
     const cacheKey = `${listingId}-${cacheBlockNumber}`
     const networkId = await this.getNetworkId()
     if (this.listingCache[cacheKey]) {
@@ -84,8 +84,9 @@ class OriginEventSource {
       return null
     }
 
-    const events = await this.contract.eventCache.listings(listingId)
-
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId)
+    })
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -127,7 +128,14 @@ class OriginEventSource {
         'unavailable',
         'customPricing',
         'timeZone',
-        'workingHours'
+        'workingHours',
+
+        'retailer',
+        'cardAmount',
+        'issuingCountry',
+        'isDigital',
+        'isCashPurchase',
+        'receiptAvailable'
       )
       data.valid = true
 
@@ -135,7 +143,6 @@ class OriginEventSource {
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
       }
-
       // TODO: Dapp1 fractional compat
       if (rawData.availability && !rawData.weekendPrice) {
         try {
@@ -204,7 +211,7 @@ class OriginEventSource {
     if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
-        urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
+        urlExpanded: ipfs.gatewayUrl(this.ipfsGateway, m.url)
       }))
     } else {
       data.media = [] // If invalid, set a clean, empty media array
@@ -228,7 +235,8 @@ class OriginEventSource {
         'UnitListing',
         'FractionalListing',
         'FractionalHourlyListing',
-        'AnnouncementListing'
+        'AnnouncementListing',
+        'GiftCardListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
@@ -376,7 +384,7 @@ class OriginEventSource {
 
   async _getOffer(listing, listingId, offerId, blockNumber) {
     if (blockNumber === undefined) {
-      blockNumber = this.contract.eventCache.getBlockNumber()
+      blockNumber = await this.contract.eventCache.getBlockNumber()
     }
     const cacheKey = `${listingId}-${offerId}-${blockNumber}`
     if (this.offerCache[cacheKey]) {
@@ -384,10 +392,12 @@ class OriginEventSource {
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    const events = await this.contract.eventCache.offers(
-      listingId,
-      Number(offerId)
-    )
+
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId),
+      offerID: String(offerId)
+    })
+
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash

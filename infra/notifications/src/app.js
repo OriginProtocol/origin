@@ -12,9 +12,10 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { mobilePush } = require('./mobilePush')
-const { browserPush } = require('./browserPush')
+// const { browserPush } = require('./browserPush')
 const { emailSend } = require('./emailSend')
+const { mobilePush } = require('./mobilePush')
+const MobileRegistry = require('./models').MobileRegistry
 
 const app = express()
 const port = 3456
@@ -61,7 +62,6 @@ const config = {
   // Output debugging and other info. Boolean.
   verbose: args['--verbose'] || false
 }
-
 logger.log(config)
 
 // ------------------------------------------------------------------
@@ -83,17 +83,24 @@ const rateLimiterOptions = {
   duration: 60
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-// use rate limiter on all root path methods
-app.all((req, res, next) => {
-  rateLimiter
-    .consume(req.connection.remoteAddress)
-    .then(() => {
-      next()
-    })
-    .catch(() => {
-      res.status(429).send('<h1>Too Many Requests</h1>')
-    })
-})
+const rateLimiterMiddleware = (req, res, next) => {
+  if (!req.url.startsWith('/events') && !req.url.startsWith('/mobile')) {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        logger.error(`Rejecting request due to rate limiting.`)
+        res.status(429).send('<h2>Too Many Requests</h2>')
+      })
+  } else {
+    next()
+  }
+}
+// Note: register rate limiting middleware *before* all routes
+// so that it gets executed first.
+app.use(rateLimiterMiddleware)
 
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
@@ -158,6 +165,61 @@ app.post('/', async (req, res) => {
 })
 
 /**
+ * Endpoint called from the mobile marketplace app to register a device token
+ * and Ethereum address.
+ */
+app.post('/mobile/register', async (req, res) => {
+  logger.info('Call to mobile device registry endpoint')
+
+  const mobileRegister = {
+    ethAddress: req.body.eth_address,
+    deviceType: req.body.device_type,
+    deviceToken: req.body.device_token,
+    permissions: req.body.permissions
+  }
+
+  // See if a row already exists for this device/address
+  let registryRow = await MobileRegistry.findOne({
+    where: {
+      ethAddress: mobileRegister.ethAddress,
+      deviceToken: mobileRegister.deviceToken
+    }
+  })
+
+  if (!registryRow) {
+    // Nothing exists, create a new row
+    logger.debug('Adding new mobile device to registry: ', req.body)
+    registryRow = await MobileRegistry.create(mobileRegister)
+    res.sendStatus(201)
+  } else {
+    // Row exists, permissions might have changed, update if required
+    logger.debug('Updating mobile device registry: ', req.body)
+    registryRow = await MobileRegistry.upsert(mobileRegister)
+    res.sendStatus(200)
+  }
+})
+
+app.delete('/mobile/register', async (req, res) => {
+  logger.info('Call to delete mobile registry endpoint')
+
+  // See if a row already exists for this device/address
+  const registryRow = await MobileRegistry.findOne({
+    where: {
+      ethAddress: req.body.eth_address,
+      deviceToken: req.body.device_token
+    }
+  })
+
+  if (!registryRow) {
+    res.sendStatus(204)
+  } else {
+    // Update the soft delete column
+    await registryRow.update({ deleted: true })
+    res.sendStatus(200)
+  }
+})
+
+/**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
  * Sample json payloads in test/fixtures
@@ -175,6 +237,9 @@ app.post('/events', async (req, res) => {
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${
     event.blockNumber
   } logIndex=${event.logIndex}`
+
+  // Return 200 to the event-listener without waiting for processing of the event.
+  res.status(200).send({ status: 'ok' })
 
   // TODO: Temp hack for now that we only test for mobile messages.
   // Thats how the old listener decided if there was a message. Will do
@@ -223,15 +288,6 @@ app.post('/events', async (req, res) => {
     logger.log(listing)
   }
 
-  // Return 200 to the event-listener without waiting for processing of the event.
-  res.status(200).send({ status: 'ok' })
-
-  // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
-
-  // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
-
   // Email notifications
   emailSend(
     eventName,
@@ -242,6 +298,14 @@ app.post('/events', async (req, res) => {
     listing,
     config
   )
+
+  // Mobile Push notifications
+  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+
+  // Browser push subscripttions
+  // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
+
+module.exports = app

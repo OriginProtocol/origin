@@ -8,7 +8,6 @@ ENV SKIP_PREFLIGHT_CHECK=true
 COPY package*.json ./
 COPY lerna.json ./
 COPY ./infra/token-transfer-client ./infra/token-transfer-client
-COPY ./scripts ./scripts
 
 RUN npm install --unsafe-perm
 RUN npm run build

@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq'
 
 import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
+import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
 import { transactions } from './web3/transactions'
 
@@ -28,30 +29,34 @@ async function resultsFromIds({ after, allIds, first, fields }) {
 
 async function offers(buyer, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
-  const events = await ec().allEvents('OfferCreated', buyer.id)
+  const offerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    party: buyer.id
+  })
+  const offerIDs = offerEvents.map(e => e.returnValues.offerID)
+  const completedOfferEvents = await ec().getEvents({
+    event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+    offerID: offerIDs.map(id => String(id))
+  })
+  const completedIds = completedOfferEvents.map(ev => {
+    return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+  })
 
-  let allIds = events
-    .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
-    .reverse()
-
-  if (filter) {
-    const completedEvents = await ec().allEvents(
-      ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      undefined,
-      allIds
-    )
-    const completedIds = uniq(
-      completedEvents.map(
-        e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-      )
-    )
-
-    if (filter === 'complete') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) >= 0)
-    } else if (filter === 'pending') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) < 0)
-    }
+  let filteredEvents = offerEvents
+  if (filter === 'complete') {
+    filteredEvents = offerEvents.filter(ev => {
+      const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+      return completedIds.indexOf(id) > -1
+    })
+  } else if (filter === 'pending') {
+    filteredEvents = offerEvents.filter(ev => {
+      const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+      return completedIds.indexOf(id) < 0
+    })
   }
+  const allIds = filteredEvents
+    .map(ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
+    .reverse()
 
   return await resultsFromIds({ after, allIds, first, fields })
 }
@@ -59,20 +64,25 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
 async function sales(seller, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
-  const listings = await ec().allEvents('ListingCreated', seller.id)
-  const listingIds = listings.map(e => Number(e.returnValues.listingID))
-  const events = await ec().offers(listingIds, null, 'OfferCreated')
+  const listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: seller.id
+  })
+  const listingIds = listings.map(e => e.returnValues.listingID)
+  const events = await ec().getEvents({
+    listingID: listingIds,
+    event: 'OfferCreated'
+  })
 
   let allIds = events
     .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
     .reverse()
 
   if (filter) {
-    const completedEvents = await ec().allEvents(
-      ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      undefined,
-      allIds
-    )
+    const completedEvents = await ec().getEvents({
+      event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+      offerID: events.map(e => e.returnValues.offerID)
+    })
     const completedIds = uniq(
       completedEvents.map(
         e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
@@ -90,9 +100,15 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
 }
 
 async function reviews(user) {
-  const listings = await ec().allEvents('ListingCreated', user.id)
-  const listingIds = listings.map(e => Number(e.returnValues.listingID))
-  const events = await ec().offers(listingIds, null, 'OfferFinalized')
+  const listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: user.id
+  })
+  const listingIds = listings.map(e => String(e.returnValues.listingID))
+  const events = await ec().getEvents({
+    listingID: listingIds,
+    event: 'OfferFinalized'
+  })
 
   let nodes = await Promise.all(
     events.map(event =>
@@ -124,16 +140,15 @@ async function reviews(user) {
 async function notifications(user, { first = 10, after, filter }, _, info) {
   const fields = graphqlFields(info)
 
-  const sellerListings = await ec().allEvents('ListingCreated', user.id)
+  const sellerListings = await ec().getEvents({
+    party: user.id,
+    event: 'ListingCreated'
+  })
 
-  const sellerListingIds = sellerListings.map(e =>
-    Number(e.returnValues.listingID)
-  )
+  const sellerListingIds = sellerListings.map(e => e.returnValues.listingID)
 
-  const sellerEvents = await ec().offers(
-    sellerListingIds,
-    null,
-    [
+  const unfilteredSellerEvents = await ec().getEvents({
+    event: [
       'OfferCreated',
       'OfferFinalized',
       'OfferWithdrawn',
@@ -141,20 +156,25 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
       'OfferDisputed',
       'OfferRuling'
     ],
-    user.id
+    listingID: sellerListingIds
+  })
+  const sellerEvents = unfilteredSellerEvents.filter(
+    e => e.returnValues.party !== user.id
   )
 
-  const buyerListings = await ec().allEvents('OfferCreated', user.id)
+  const buyerListings = await ec().getEvents({
+    event: 'OfferCreated',
+    party: user.id
+  })
 
-  const buyerListingIds = buyerListings.map(e =>
-    Number(e.returnValues.listingID)
-  )
+  const buyerListingIds = buyerListings.map(e => e.returnValues.listingID)
 
-  const buyerEvents = await ec().offers(
-    buyerListingIds,
-    null,
-    ['OfferAccepted', 'OfferRuling'],
-    user.id
+  const unfilteredBuyerEvents = await ec().getEvents({
+    listingID: buyerListingIds,
+    event: ['OfferAccepted', 'OfferRuling']
+  })
+  const buyerEvents = unfilteredBuyerEvents.filter(
+    e => e.returnValues.party !== user.id
   )
 
   let allEvents = sortBy([...sellerEvents, ...buyerEvents], e => -e.blockNumber)
@@ -226,36 +246,47 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
   const u1 = user.id,
     u2 = id
 
-  const u1Listings = await ec().allEvents('ListingCreated', u1)
-  const u1ListingIds = u1Listings.map(e => Number(e.returnValues.listingID))
-  const u2Listings = await ec().allEvents('ListingCreated', u2)
-  const u2ListingIds = u2Listings.map(e => Number(e.returnValues.listingID))
+  const u1Listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: u1
+  })
+  const u1ListingIds = u1Listings.map(e => e.returnValues.listingID)
+  const u2Listings = await ec().getEvents({
+    event: 'ListingCreated',
+    party: u2
+  })
+  const u2ListingIds = u2Listings.map(e => e.returnValues.listingID)
 
-  const u1BuyerEvents = await ec().offers(
-    u2ListingIds,
-    null,
-    'OfferCreated',
-    u2,
-    u1
-  )
-  const u1OfferIds = u1BuyerEvents.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
-  const u2BuyerEvents = await ec().offers(
-    u1ListingIds,
-    null,
-    'OfferCreated',
-    u1,
-    u2
-  )
-  const u2OfferIds = u2BuyerEvents.map(
-    e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-  )
+  const u1BuyerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    listingID: u2ListingIds,
+    party: u1
+  })
 
-  const unsortedEvents = await ec().allEvents(null, null, [
-    ...u1OfferIds,
-    ...u2OfferIds
-  ])
+  const u2BuyerEvents = await ec().getEvents({
+    event: 'OfferCreated',
+    listingID: u1ListingIds,
+    party: u2
+  })
+  const allListingIds = [...u1ListingIds, ...u2ListingIds]
+  const allOfferIds = [...u1BuyerEvents, ...u2BuyerEvents].reduce((m, o) => {
+    m[o.returnValues.listingID] = m[o.returnValues.listingID] || []
+    if (m[o.returnValues.listingID].indexOf(o.returnValues.offerID) < 0) {
+      m[o.returnValues.listingID].push(o.returnValues.offerID)
+    }
+    return m
+  }, {})
+
+  const unfilteredEvents = await ec().getEvents({
+    listingID: allListingIds,
+    party: [u1, u2]
+  })
+  const unsortedEvents = unfilteredEvents.filter(e => {
+    const listingOffers = allOfferIds[e.returnValues.listingID]
+    if (listingOffers) {
+      return listingOffers.indexOf(e.returnValues.offerID) >= 0
+    }
+  })
   const allEvents = sortBy(unsortedEvents, e => -e.blockNumber)
 
   const totalCount = allEvents.length,
@@ -309,5 +340,8 @@ export default {
     if (user.lastEvent) return user.lastEvent
     const events = await ec().allEvents(undefined, user.id)
     return events[events.length - 1]
+  },
+  identity: account => {
+    return identity({ id: account.id })
   }
 }

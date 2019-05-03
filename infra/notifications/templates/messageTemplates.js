@@ -1,4 +1,6 @@
 const _ = require('lodash')
+const fs = require('fs')
+const templateDir = `${__dirname}/../templates`
 
 // We use lodash templates.
 // Docs: https://lodash.com/docs/4.17.11#template
@@ -32,58 +34,50 @@ const messageTemplates = {
       OfferCreated: {
         subject: 'New Offer',
         html: _.template(
-          `
-          A buyer (<em><%- offer.buyer.identity.fullName %></em>) has made an offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
+          fs.readFileSync(`${templateDir}/seller-OfferCreated.html`).toString()
         ),
-        text: _.template('A buyer has made an offer on your listing.')
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferCreated.txt`).toString()
+        )
       },
       OfferWithdrawn: {
         subject: 'Offer Withdrawn',
         html: _.template(
-          `
-          The buyer <em><%- offer.buyer.identity.fullName %></em> has withdrawn their offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
+          fs
+            .readFileSync(`${templateDir}/seller-OfferWithdrawn.html`)
+            .toString()
         ),
-        text: _.template('An offer on your listing has been withdrawn.')
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferWithdrawn.txt`).toString()
+        )
       },
       OfferDisputed: {
         subject: 'Dispute Initiated',
-        html: _.template('A problem has been reported with your transaction.'),
-        text: _.template('A problem has been reported with your transaction.')
+        html: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferDisputed.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferDisputed.txt`).toString()
+        )
       },
       OfferRuling: {
         subject: 'Dispute Resolved',
         html: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/seller-OfferRuling.html`).toString()
         ),
         text: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/seller-OfferRuling.txt`).toString()
         )
       },
       OfferFinalized: {
         subject: 'Sale Completed',
         html: _.template(
-          `
-          Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
-          <em><%= listing.title %></em> has been completed.
-
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
+          fs
+            .readFileSync(`${templateDir}/seller-OfferFinalized.html`)
+            .toString()
         ),
         text: _.template(
-          'Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.'
+          fs.readFileSync(`${templateDir}/seller-OfferFinalized.txt`).toString()
         )
       }
     }
@@ -114,32 +108,48 @@ const messageTemplates = {
     email: {
       OfferWithdrawn: {
         subject: 'Offer Rejected',
-        html: _.template('An offer you made has been rejected.'),
-        text: _.template('An offer you made has been rejected.')
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.txt`).toString()
+        )
       },
       OfferAccepted: {
         subject: 'Offer Accepted',
-        html: _.template('An offer you made has been accepted.'),
-        text: _.template('An offer you made has been accepted.')
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.txt`).toString()
+        )
       },
       OfferDisputed: {
         subject: 'Dispute Initiated',
-        html: _.template('A problem has been reported with your transaction.'),
-        text: _.template('A problem has been reported with your transaction.')
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.txt`).toString()
+        )
       },
       OfferRuling: {
         subject: 'Dispute Resolved',
         html: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
         ),
         text: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
         )
       },
       OfferData: {
         subject: 'New Review',
-        html: _.template('A review has been left on your transaction.'),
-        text: _.template('A review has been left on your transaction.')
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
+        )
       }
     }
   }
