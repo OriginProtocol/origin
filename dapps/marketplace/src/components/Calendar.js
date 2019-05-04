@@ -28,7 +28,9 @@ class Calendar extends Component {
   componentDidMount = () => {
     window.addEventListener('mouseup', this.onWindowSelectEnd)
     window.addEventListener('touchend', this.onWindowSelectEnd)
-    window.addEventListener('touchmove', this.preventScrollHack, { passive: false })
+    window.addEventListener('touchmove', this.preventScrollHack, {
+      passive: false
+    })
   }
 
   componentWillUnmount = () => {
@@ -69,6 +71,7 @@ class Calendar extends Component {
       }
     }
 
+    // eslint-disable-next-line react/no-direct-mutation-state
     this.state.days = days
 
     return (
