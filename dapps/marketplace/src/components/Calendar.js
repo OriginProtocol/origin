@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 
+import withIsMobile from 'hoc/withIsMobile'
 import Price from 'components/Price'
 
 const resetDrag = {
@@ -74,6 +75,8 @@ class Calendar extends Component {
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.days = days
 
+    const isMobile = this.props.ismobile === 'true'
+
     return (
       <div className={`calendar${this.props.small ? ' calendar-sm' : ''}`}>
         <div className="month-chooser">
@@ -128,6 +131,7 @@ class Calendar extends Component {
                 className={this.getClass(idx, lastDay, days[idx])}
                 onSelectStart={this.onCellSelectStart}
                 onSelectMove={this.onCellSelectMove}
+                hidePrice={isMobile}
               />
             ))}
         </div>
@@ -269,7 +273,8 @@ class DaySlot extends React.Component {
       currency,
       originalCurrency,
       className,
-      cellIndex
+      cellIndex,
+      hidePrice
     } = this.props
 
     if (!day) {
@@ -286,18 +291,23 @@ class DaySlot extends React.Component {
       )
     }
 
-    let content = (
-      <Price
-        price={{ amount: day.price, currency }}
-        target={originalCurrency ? currency : null}
-      />
-    )
+    let content
+
+    if (!hidePrice) {
+      content = (
+        <Price
+          price={{ amount: day.price, currency }}
+          target={originalCurrency ? currency : null}
+        />
+      )
+  
+    }
 
     if (day.booked && showBooked) {
       content = 'Booked'
     } else if (day.unavailable) {
       content = 'Unavailable'
-    } else if (day.customPrice) {
+    } else if (!hidePrice && day.customPrice) {
       content = <span style={{ color: 'green' }}>{content}</span>
     }
 
@@ -332,7 +342,7 @@ class DaySlot extends React.Component {
   }
 }
 
-export default Calendar
+export default withIsMobile(Calendar)
 
 require('react-styl')(`
   .calendar
