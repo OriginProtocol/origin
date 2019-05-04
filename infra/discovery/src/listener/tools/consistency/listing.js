@@ -1,3 +1,9 @@
+/**
+ * Validates listings by making sure ListingCreated creates DB records, and does
+ * cursory checking of the data.
+ *
+ * TODO: Add support for ListingUpdated events
+ */
 const db = {
   ...require('../../../models')
 }

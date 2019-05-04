@@ -3,15 +3,15 @@ const flattenDeep = require('lodash/flattenDeep')
 const range = require('lodash/range')
 
 const db = {
-  //...require('@origin/bridge/src/models'),
-  //...require('@origin/identity/src/models'),
   ...require('../../../models')
 }
 
 const log = require('../../logger')
 
+// 10000 was too much.  web3.js-beta.34 dies if it returns more than 1k
 const JSONRPC_REQUEST_BATCH_SIZE =
-  process.env.JSONRPC_REQUEST_BATCH_SIZE || 1000 // 10000 was too much?
+  process.env.JSONRPC_REQUEST_BATCH_SIZE || 1000
+
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 limiter.on('error', err => {
   log.error('Error occurred within rate limiter', err)
@@ -49,18 +49,18 @@ function assert(expr, msg) {
 async function getListenerBlock(id, prefix) {
   const listenerId = `${prefix}${id}`
 
-  const res = await db.Listener.findAll({
+  const res = await db.Listener.findOne({
     where: {
       id: listenerId
     },
     order: [['created_at', 'DESC'], ['updated_at', 'DESC']]
   })
 
-  if (res.length < 1) {
+  if (!res) {
     return 0
   }
 
-  const listenerBlock = res[0].blockNumber
+  const listenerBlock = res.blockNumber
 
   if (!listenerBlock) {
     return 0

@@ -1,3 +1,9 @@
+/**
+ * Validates offers by making sure OfferCreated creates DB records, and does
+ * cursory checking of the data.
+ *
+ * TODO: Add support for other events. (e.g. OfferAccepted, OfferFinalized, etc)
+ */
 const db = {
   ...require('../../../models')
 }

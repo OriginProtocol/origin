@@ -9,7 +9,6 @@ const log = require('../../logger')
 
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
-// TODO: Are there more?
 const ATTESTATION_TYPES = [
   'sms',
   'phone',
@@ -17,7 +16,8 @@ const ATTESTATION_TYPES = [
   'email',
   'twitter',
   'airbnb',
-  'facebook'
+  'facebook',
+  'google'
 ]
 const ATTESTATION_TYPE_MAP_DB = {
   sms: 'phone', // TODO: Doesn't exist in db, is phone equivalent?
@@ -25,7 +25,8 @@ const ATTESTATION_TYPE_MAP_DB = {
   email: 'email',
   twitter: 'twitter',
   airbnb: 'airbnb',
-  facebook: 'facebookVerified'
+  facebook: 'facebookVerified',
+  google: 'googleVerified'
 }
 
 /**
