@@ -28,11 +28,22 @@ class Calendar extends Component {
   componentDidMount = () => {
     window.addEventListener('mouseup', this.onWindowSelectEnd)
     window.addEventListener('touchend', this.onWindowSelectEnd)
+    window.addEventListener('touchmove', this.preventScrollHack, { passive: false })
   }
 
   componentWillUnmount = () => {
     window.removeEventListener('mouseup', this.onWindowSelectEnd)
     window.removeEventListener('touchend', this.onWindowSelectEnd)
+    window.removeEventListener('touchmove', this.preventScrollHack)
+  }
+
+  preventScrollHack = e => {
+    // An ugly hack to prevent page-scroll
+    // when drag-selecting vertically
+    if (this.state.dragging) {
+      e.preventDefault()
+      return false
+    }
   }
 
   render() {
@@ -126,6 +137,8 @@ class Calendar extends Component {
     const isTouch = e.type !== 'mousedown'
 
     if (!this.state.dragging && (isLeftClick || isTouch)) {
+      e.preventDefault()
+
       const cellIndex = parseInt(e.target.getAttribute('cellindex'))
 
       this.setState({
