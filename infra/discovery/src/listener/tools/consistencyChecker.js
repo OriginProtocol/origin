@@ -68,9 +68,7 @@ async function main() {
 }
 
 setNetwork(config.network)
-;(async function() {
-  main().then(res => {
-    log.info(`Fin. ${res} checks run.`)
-    process.exit()
-  })
-})()
+main().then(res => {
+  log.info(`Fin. ${res} checks run.`)
+  process.exit()
+})
