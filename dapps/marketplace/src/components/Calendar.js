@@ -300,7 +300,6 @@ class DaySlot extends React.Component {
           target={originalCurrency ? currency : null}
         />
       )
-  
     }
 
     if (day.booked && showBooked) {
