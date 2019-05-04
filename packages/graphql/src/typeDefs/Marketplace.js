@@ -171,6 +171,7 @@ module.exports = `
     account: Account!
     firstEvent: Event
     lastEvent: Event
+    identity: Identity
     listings(first: Int, after: String, filter: String): ListingConnection!
     offers(first: Int, after: String, filter: String): OfferConnection!
     sales(first: Int, after: String, filter: String): OfferConnection!
@@ -282,11 +283,38 @@ module.exports = `
     booked: [String]
   }
 
+  type GiftCardListing implements Listing {
+    ${ListingInterface}
+
+    # Number of units available for sale (IPFS)
+    unitsTotal: Int
+
+    # Number of Units Created, Accepted or Disputed (computed)
+    unitsPending: Int
+
+    # Number of units Finalized or Ruling (computed)
+    unitsSold: Int
+
+    # unitsTotal - unitsPending - unitsSold (computed)
+    unitsAvailable: Int
+
+    # Is this is a multi-unit listing or not (computed)
+    multiUnit: Boolean
+
+    # IPFS
+    retailer: String
+    cardAmount: String
+    issuingCountry: String
+    isDigital: Boolean
+    isCashPurchase: Boolean
+    receiptAvailable: Boolean
+  }
+
   type AnnouncementListing implements Listing {
     ${ListingInterface}
   }
 
-  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing
+  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing | GiftCardListing
 
   type Media {
     url: String
@@ -388,6 +416,14 @@ module.exports = `
 
   input UnitListingInput {
     unitsTotal: Int
+
+    # Gift Cards:
+    retailer: String
+    cardAmount: String
+    issuingCountry: String
+    isDigital: Boolean
+    isCashPurchase: Boolean
+    receiptAvailable: Boolean
   }
 
   input FractionalListingInput {

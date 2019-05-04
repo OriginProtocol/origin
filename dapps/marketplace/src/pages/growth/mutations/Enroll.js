@@ -60,7 +60,7 @@ class Enroll extends Component {
               mutation={GrowthEnroll}
               onCompleted={({ enroll }) => {
                 localStorage.setItem('growth_auth_token', enroll.authToken)
-                this.props.history.push('/campaigns')
+                this.props.onSuccess()
               }}
               onError={errorData => {
                 console.error('Error: ', errorData)

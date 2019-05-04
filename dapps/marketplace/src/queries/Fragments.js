@@ -94,6 +94,19 @@ export default {
           customPricing
           unavailable
         }
+        ... on GiftCardListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
+          unitsPending
+          multiUnit
+          retailer
+          cardAmount
+          issuingCountry
+          isDigital
+          isCashPurchase
+          receiptAvailable
+        }
       }
     `
   },

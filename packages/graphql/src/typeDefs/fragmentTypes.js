@@ -10,6 +10,9 @@ const introspectionQueryResultData = {
         name: 'ListingResult',
         possibleTypes: [
           {
+            name: 'GiftCardListing'
+          },
+          {
             name: 'UnitListing'
           },
           {
@@ -17,6 +20,9 @@ const introspectionQueryResultData = {
           },
           {
             name: 'FractionalHourlyListing'
+          },
+          {
+            name: 'GiftCardListing'
           },
           {
             name: 'AnnouncementListing'
@@ -28,6 +34,9 @@ const introspectionQueryResultData = {
         name: 'Listing',
         possibleTypes: [
           {
+            name: 'GiftCardListing'
+          },
+          {
             name: 'UnitListing'
           },
           {
@@ -35,6 +44,9 @@ const introspectionQueryResultData = {
           },
           {
             name: 'FractionalHourlyListing'
+          },
+          {
+            name: 'GiftCardListing'
           },
           {
             name: 'AnnouncementListing'

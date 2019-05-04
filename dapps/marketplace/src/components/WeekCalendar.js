@@ -222,8 +222,6 @@ class WeekCalendar extends Component {
       unselected = true
     }
 
-    // TODO: (STAN) this seems to be based on days of week?? Ask Nick
-
     if (!unselected && idx + 7 >= start && idx + 7 <= end) {
       cls += ' nbb'
     }

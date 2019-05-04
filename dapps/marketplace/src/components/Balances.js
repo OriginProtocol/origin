@@ -56,7 +56,8 @@ const Balances = ({ ethBalance, account, onClose }) => {
           <EnrollButton
             className="btn get-ogn d-flex"
             skipjoincampaign="false"
-            onClick={onClose}
+            onClose={onClose}
+            onNavigation={onClose}
           >
             <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>

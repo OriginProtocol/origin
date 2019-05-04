@@ -19,7 +19,7 @@ const RoomStatus = ({ conversation, identity, onClick, active }) => {
       className={`room-status${active ? ' active' : ''}`}
       onClick={() => (onClick ? onClick() : {})}
     >
-      <Avatar avatar={get(identity, 'avatar')} size={40} />
+      <Avatar profile={identity} size={40} />
       <div className="right">
         <div className="top">
           <div className="name">{name}</div>
