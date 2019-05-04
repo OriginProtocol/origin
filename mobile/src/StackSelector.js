@@ -10,9 +10,11 @@ class StackSelector extends React.Component {
   }
 
   _selectStack() {
-    if (!this.props.activation.carouselCompleted) {
-      this.props.navigation.navigate('Welcome')
-    } else if (!this.props.wallet.accounts.length) {
+    const onboardingComplete = this.props.wallet.accounts.length > 0 &&
+      this.props.settings.emailAddress &&
+      (this.props.settings.pinCode || this.props.settings.biometryType)
+
+    if (!onboardingComplete) {
       this.props.navigation.navigate('Onboarding')
     } else {
       this.props.navigation.navigate('App')
@@ -24,8 +26,8 @@ class StackSelector extends React.Component {
   }
 }
 
-const mapStateToProps = ({ activation, wallet }) => {
-  return { activation, wallet }
+const mapStateToProps = ({ activation, settings, wallet }) => {
+  return { activation, settings, wallet }
 }
 
 export default connect(

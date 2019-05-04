@@ -15,24 +15,24 @@ import SafeAreaView from 'react-native-safe-area-view'
 import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
 
-const IMAGES_PATH = '../../assets/images/'
+const IMAGES_PATH = '../../../assets/images/'
 
-class ForkScreen extends Component {
+class WelcomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       modalOpen: false
     }
+    // Navigate to email screen if an account already exists
+    if (this.props.wallet.accounts.length > 0) {
+      this.props.navigation.navigate('Email')
+    }
     this.toggleModal = this.toggleModal.bind(this)
-  }
-
-  static navigationOptions = {
-    title: 'Get Started'
   }
 
   componentDidUpdate() {
     if (this.props.wallet.accounts.length > 0) {
-      this.props.navigation.navigate('App')
+      this.props.navigation.navigate('Email')
     }
   }
 
@@ -50,14 +50,11 @@ class ForkScreen extends Component {
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'wallet.png')}
+            source={require(IMAGES_PATH + 'origin-logo-dark_2x.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
-          <Text style={styles.title}>Create Or Import A Wallet</Text>
-          <Text style={styles.subtitle}>
-            Create a new wallet and transfer funds into it or import an existing
-            wallet that you already use.
-          </Text>
+          <Text style={styles.title}>Buy and sell stuff with crypto.</Text>
+          <Text style={styles.title}>Earn rewards.</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -79,6 +76,11 @@ class ForkScreen extends Component {
             onPress={this.toggleModal}
           />
         </View>
+        <View style={styles.legalContainer}>
+          <Text style={styles.legal}>
+            By signing up you agree to the Terms of Use and Privacy Policy
+          </Text>
+        </View>
         <AccountModal
           dark={true}
           heading="Import Wallet"
@@ -95,7 +97,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(ForkScreen)
+export default connect(mapStateToProps)(WelcomeScreen)
 
 const styles = StyleSheet.create({
   button: {
@@ -106,12 +108,19 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     width: '100%'
   },
+  legalContainer: {
+    paddingTop: 20,
+    paddingBottom: 30,
+    width: "80%",
+  },
+  legal: {
+    textAlign: 'center',
+    color: '#98a7b4'
+  },
   container: {
     alignItems: 'center',
-    backgroundColor: '#293f55',
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
     paddingTop: 0
   },
   content: {
@@ -123,20 +132,11 @@ const styles = StyleSheet.create({
     marginBottom: '10%'
   },
   title: {
-    color: 'white',
     fontFamily: 'Lato',
-    fontSize: 20,
-    fontWeight: '300',
+    fontSize: 36,
+    fontWeight: '600',
     marginHorizontal: 50,
-    paddingBottom: 15,
-    textAlign: 'center'
-  },
-  subtitle: {
-    color: 'white',
-    fontFamily: 'Lato',
-    fontSize: 16,
-    fontWeight: '300',
-    marginHorizontal: 50,
+    paddingBottom: 30,
     textAlign: 'center'
   }
 })

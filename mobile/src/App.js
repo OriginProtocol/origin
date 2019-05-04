@@ -11,20 +11,21 @@ import {
   createSwitchNavigator
 } from 'react-navigation'
 
-const IMAGES_PATH = '../assets/images/'
-
 import OriginWallet from './OriginWallet'
 import PushNotifications from './PushNotifications'
 import Store, { persistor } from './Store'
 import StackSelector from './StackSelector'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
-import ForkScreen from 'screens/fork'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
-import WelcomeScreen from 'screens/welcome'
+// Onboarding
+import WelcomeScreen from 'screens/onboarding/welcome'
+import EmailScreen from 'screens/onboarding/email'
 import Loading from 'components/loading'
+
+const IMAGES_PATH = '../assets/images/'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -35,23 +36,11 @@ YellowBox.ignoreWarnings([
 
 const OnboardingStack = createStackNavigator(
   {
-    Fork: ForkScreen
+    Welcome: WelcomeScreen,
+    Email: EmailScreen
   },
   {
-    initialRouteName: 'Fork',
-    defaultNavigationOptions: () => ({
-      headerBackTitle: ' ',
-      headerStyle: {
-        backgroundColor: '#293f55',
-        borderBottomWidth: 0
-      },
-      headerTitleStyle: {
-        color: 'white',
-        fontFamily: 'Poppins',
-        fontSize: 17,
-        fontWeight: 'normal'
-      }
-    })
+    initialRouteName: 'Welcome'
   }
 )
 
