@@ -340,6 +340,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should skip the wizard', async function(){
+      await waitForText(page, 'Skip', 'button')
       await clickByText(page, 'Skip', 'button')
     })
 

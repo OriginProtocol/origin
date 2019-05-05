@@ -28,6 +28,12 @@ class Nav extends Component {
       open: this.state.open === nav
     })
 
+    /* react uses upper/lower case convention to distinguish between DOM tags
+     * and user defined components. For that reason if the components starts with
+     * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
+     */
+    const EarnTokens = this.EarnTokens
+
     return (
       <nav className="navbar navbar-expand-md">
         <div className="container">
@@ -90,14 +96,14 @@ class Nav extends Component {
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-lg-flex">
-                  <this.EarnTokens className="nav-link icon-padding earn-tokens text">
+                  <EarnTokens className="nav-link icon-padding earn-tokens text">
                     <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
                     </span>
                     <span className="d-xl-none">
                       <fbt desc="navbar.tokens">Tokens</fbt>
                     </span>
-                  </this.EarnTokens>
+                  </EarnTokens>
                 </li>
                 <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />

@@ -91,7 +91,7 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
-      <Balances account={id} />
+      <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
         <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
@@ -115,7 +115,7 @@ const Identity = ({ id }) => (
             <fbt desc="nav.profile.myIdentity">My Identity</fbt>
           </h5>
           <div className="info">
-            <Avatar avatar={profile.avatar} size="3rem" />
+            <Avatar profile={profile} size="3rem" />
             <div>
               <div className="name">
                 {profile.fullName ||
