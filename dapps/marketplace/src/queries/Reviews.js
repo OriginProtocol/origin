@@ -32,7 +32,7 @@ export default gql`
               id
               timestamp
             }
-          },
+          }
           pageInfo {
             endCursor
             hasNextPage
