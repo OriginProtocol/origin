@@ -99,7 +99,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-async function reviews(user) {
+async function reviews(user, { first = 10, after }) {
   const listings = await ec().getEvents({
     event: 'ListingCreated',
     party: user.id
@@ -108,6 +108,9 @@ async function reviews(user) {
   const events = await ec().getEvents({
     listingID: listingIds,
     event: 'OfferFinalized'
+  }, {
+    limit: first,
+    offset: after
   })
 
   let nodes = await Promise.all(
@@ -124,16 +127,13 @@ async function reviews(user) {
 
   nodes = sortBy(nodes.filter(n => n.rating), n => -n.event.blockNumber)
 
-  return {
-    totalCount: nodes.length,
-    nodes,
-    pageInfo: {
-      endCursor: '',
-      hasNextPage: false,
-      hasPreviousPage: false,
-      startCursor: ''
-    }
-  }
+  const totalCount = nodes.length
+
+  const allIds = nodes.map(node => node.id)
+
+  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
+
+  return getConnection({ start, first, nodes, ids, totalCount })
 }
 
 // Sourced from offer events where user is alternate party

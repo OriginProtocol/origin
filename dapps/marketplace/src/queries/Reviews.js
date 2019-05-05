@@ -1,11 +1,11 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query Reviews($id: ID!) {
+  query Reviews($id: ID!, $first: Int, $after: String) {
     marketplace {
       user(id: $id) {
         id
-        reviews {
+        reviews(first: $first, after: $after) {
           totalCount
           nodes {
             id
@@ -32,6 +32,12 @@ export default gql`
               id
               timestamp
             }
+          },
+          pageInfo {
+            endCursor
+            hasNextPage
+            hasPreviousPage
+            startCursor
           }
         }
       }
