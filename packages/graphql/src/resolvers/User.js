@@ -109,10 +109,6 @@ async function reviews(user, { first = 10, after }) {
     {
       listingID: listingIds,
       event: 'OfferFinalized'
-    },
-    {
-      limit: first,
-      offset: after
     }
   )
 
@@ -135,6 +131,8 @@ async function reviews(user, { first = 10, after }) {
   const allIds = nodes.map(node => node.id)
 
   const { ids, start } = getIdsForPage({ after, ids: allIds, first })
+
+  nodes = nodes.filter(n => ids.indexOf(n.id) >= 0)
 
   return getConnection({ start, first, nodes, ids, totalCount })
 }

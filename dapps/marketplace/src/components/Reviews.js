@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
+import set from 'lodash/set'
 import { fbt } from 'fbt-runtime'
 import distanceToNow from 'utils/distanceToNow'
 
@@ -13,24 +14,76 @@ import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
 export default class Reviews extends Component {
-  state = { lastReviewShown: 5 }
+  readMore(fetchMore, after) {
+    fetchMore({
+      variables: {
+        after
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return prev
+        }
 
-  readMore() {
-    this.setState({ lastReviewShown: this.state.lastReviewShown + 5 })
+        if (!prev) {
+          return fetchMoreResult
+        }
+
+        let updatedData = { ...prev }
+
+        const prevReviews = get(prev, 'marketplace.user.reviews.nodes', [])
+        const newReviews = get(
+          fetchMoreResult,
+          'marketplace.user.reviews.nodes',
+          []
+        )
+        const prevPageInfo = get(prev, 'marketplace.user.reviews.pageInfo', {})
+        const pageInfo = get(
+          fetchMoreResult,
+          'marketplace.user.reviews.pageInfo',
+          {}
+        )
+
+        updatedData = set(updatedData, 'marketplace.user.reviews.nodes', [
+          ...prevReviews,
+          ...newReviews
+        ])
+
+        updatedData = set(updatedData, 'marketplace.user.reviews.pageInfo', {
+          ...prevPageInfo,
+          ...pageInfo
+        })
+
+        return updatedData
+      }
+    })
   }
 
   render() {
-    const id = this.props.id
+    const { id, after } = this.props
+    const first = this.props.first || 5
+
     return (
-      <Query query={query} variables={{ id }}>
-        {({ data, loading, error }) => {
+      <Query query={query} variables={{ id, first, after }}>
+        {({ data, loading, error, fetchMore }) => {
           if (error) {
-            return <QueryError error={error} query={query} vars={{ id }} />
+            return (
+              <QueryError
+                error={error}
+                query={query}
+                vars={{ id, first, after }}
+              />
+            )
           }
           if (loading) return null
 
           const reviews = get(data, 'marketplace.user.reviews.nodes', [])
           const count = get(data, 'marketplace.user.reviews.totalCount', 0)
+
+          const { hasNextPage, endCursor } = get(
+            data,
+            'marketplace.user.reviews.pageInfo',
+            {}
+          )
 
           if (this.props.hideWhenZero && !count) {
             return null
@@ -49,14 +102,7 @@ export default class Reviews extends Component {
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
                 return (
-                  <div
-                    key={idx}
-                    className={
-                      idx < this.state.lastReviewShown
-                        ? 'review review-ease-in'
-                        : 'd-none'
-                    }
-                  >
+                  <div key={idx} className="review review-ease-in">
                     <div className="user-info">
                       <div className="avatar-wrap">
                         <Avatar size="4rem" profile={profile} />
@@ -88,8 +134,11 @@ export default class Reviews extends Component {
                   </div>
                 )
               })}
-              {this.state.lastReviewShown < count ? (
-                <div className="read-more btn" onClick={() => this.readMore()}>
+              {hasNextPage ? (
+                <div
+                  className="read-more btn"
+                  onClick={() => this.readMore(fetchMore, endCursor)}
+                >
                   <fbt desc="reviews.readMore">Read More</fbt>
                   <i className="read-more-caret" />
                 </div>
