@@ -169,9 +169,8 @@ async function verifyIdent(address, ipfsGateway, ipfsHash) {
     validateIPFSToDB(ipfsJson, records[0])
   } catch (err) {
     // Handle Assertion errors
-    const errString = err.toString()
-    if (errString.indexOf('Assertion') > -1) {
-      log.error(errString)
+    if (err.name === 'AssertionError') {
+      log.error(err.toString())
       return false
     } else {
       throw err

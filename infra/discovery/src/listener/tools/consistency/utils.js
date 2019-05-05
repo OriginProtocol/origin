@@ -26,6 +26,13 @@ limiter.on('failed', async (err, jobInfo) => {
   }
 })
 
+class AssertionError extends Error {
+  constructor(msg) {
+    super(msg)
+    this.name = this.constructor.name
+  }
+}
+
 /**
  * Simple assert function
  *
@@ -35,7 +42,8 @@ limiter.on('failed', async (err, jobInfo) => {
  * @throws {Error} describing assertion error
  */
 function assert(expr, msg) {
-  if (!expr) throw new Error(`Assertion error: ${msg}`)
+  msg = msg ? msg : 'Assertion error'
+  if (!expr) throw new AssertionError(msg)
   return true
 }
 
@@ -93,6 +101,7 @@ async function getPastEvents(contract, event, { fromBlock = 0, toBlock = 0 }) {
 }
 
 module.exports = {
+  AssertionError,
   assert,
   getListenerBlock,
   getPastEvents

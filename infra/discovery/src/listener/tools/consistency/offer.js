@@ -85,14 +85,13 @@ async function validateOffers({ contractsContext, fromBlock }) {
         log.debug('Offer valid. :)')
       }
     } catch (err) {
-      const errString = err.toString()
-      if (errString.indexOf('Assertion') > -1) {
+      if (err.name === 'AssertionError') {
         log.error(
           `Unable to validate ${ev.event} event for transaction ${
             ev.transactionHash
           }`
         )
-        log.error(errString)
+        log.error(err.toString())
       } else {
         throw err
       }
