@@ -16,6 +16,7 @@ import { GiftCardRetailers } from 'constants/GiftCardRetailers'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import PricingChooser from '../_PricingChooser'
+import withConfig from 'hoc/withConfig'
 
 class Details extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class Details extends Component {
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
+    const { ipfsGateway } = this.props.config
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -97,10 +99,10 @@ class Details extends Component {
                     <img
                       src={
                         this.state.retailer
-                          ? `http://localhost:8080/ipfs/${
+                          ? `${ipfsGateway}/ipfs/${
                               GiftCardRetailers[this.state.retailer]
                             }`
-                          : `http://localhost:8080/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`
+                          : `${ipfsGateway}/ipfs/QmVffY9nUZYPt8uBy1ra9aMvixc1NC6jT7JjFNUgsuqbpJ`
                       }
                     />
                   </div>
@@ -368,7 +370,7 @@ class Details extends Component {
   }
 }
 
-export default Details
+export default withConfig(Details)
 
 require('react-styl')(`
   .create-listing .create-listing-step-2 .pricing-chooser
