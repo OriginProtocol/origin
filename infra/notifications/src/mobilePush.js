@@ -71,14 +71,14 @@ async function messageMobilePush(receivers, sender, config) {
   }
 
   // Get ID of sender
-  const messageSender = await Identity.findOne({
+  const messageSender = Identity.findOne({
     raw: true,
     where: {
       ethAddress: sender
     }
   })
   // Get IDs of recepients
-  const messageReceivers = await Identity.findAll({
+  const messageReceivers = Identity.findAll({
     raw: true,
     where: {
       ethAddress: {
