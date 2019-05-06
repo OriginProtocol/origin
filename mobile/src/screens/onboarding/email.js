@@ -18,7 +18,7 @@ import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
 
-class ForkScreen extends Component {
+class EmailScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -73,7 +73,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(ForkScreen)
+export default connect(mapStateToProps)(EmailScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -122,6 +122,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     textAlign: 'center',
     width: 300
-  },
-
+  }
 })
