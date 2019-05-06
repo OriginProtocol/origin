@@ -25,7 +25,8 @@ class ChooseListingType extends Component {
   }
 
   render() {
-    const isForceType = (this.props.creatorConfig && this.props.creatorConfig.forceType)
+    const isForceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
     if (this.state.valid || isForceType) {
       return <Redirect to={this.props.next} push />
     }

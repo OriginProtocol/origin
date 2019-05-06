@@ -74,7 +74,6 @@ class CreateListing extends Component {
   }
 
   render() {
-
     if (this.props.creatorConfigLoading) {
       return (
         <div className="app-spinner">
@@ -89,8 +88,13 @@ class CreateListing extends Component {
     // Force a given listing type/category
     // Hack: '__' is not allowed in GraphQL where we get our config from, so we change
     // `typename` into `__typename` here.
-    const forceType = this.props.creatorConfig && this.props.creatorConfig.forceType ?
-      {...this.props.creatorConfig.forceType, '__typename':this.props.creatorConfig.forceType.typename} : {}
+    const forceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
+        ? {
+            ...this.props.creatorConfig.forceType,
+            __typename: this.props.creatorConfig.forceType.typename
+          }
+        : {}
 
     const listingTypeMapping = {
       UnitListing,
@@ -101,7 +105,7 @@ class CreateListing extends Component {
     }
 
     const props = {
-      listing: {...this.state.listing, ...forceType},
+      listing: { ...this.state.listing, ...forceType },
       onChange: listing => this.setListing(listing)
     }
 
