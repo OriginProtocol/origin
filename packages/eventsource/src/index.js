@@ -128,7 +128,14 @@ class OriginEventSource {
         'unavailable',
         'customPricing',
         'timeZone',
-        'workingHours'
+        'workingHours',
+
+        'retailer',
+        'cardAmount',
+        'issuingCountry',
+        'isDigital',
+        'isCashPurchase',
+        'receiptAvailable'
       )
       data.valid = true
 
@@ -204,7 +211,7 @@ class OriginEventSource {
     if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
-        urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
+        urlExpanded: ipfs.gatewayUrl(this.ipfsGateway, m.url)
       }))
     } else {
       data.media = [] // If invalid, set a clean, empty media array
@@ -228,7 +235,8 @@ class OriginEventSource {
         'UnitListing',
         'FractionalListing',
         'FractionalHourlyListing',
-        'AnnouncementListing'
+        'AnnouncementListing',
+        'GiftCardListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'

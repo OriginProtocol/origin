@@ -15,9 +15,8 @@ class EditProfileModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      ...pick(props, ['firstName', 'lastName', 'description']),
+      ...pick(props, ['firstName', 'lastName', 'description', 'avatarUrl']),
       imageCropperOpened: false,
-      avatar: this.props.avatar,
       avatarUrl: this.props.avatarUrl
     }
   }
@@ -31,6 +30,7 @@ class EditProfileModal extends Component {
   render() {
     const input = formInput(this.state, state => this.setState(state), 'dark')
     const Feedback = formFeedback(this.state)
+    const hasAvatar = this.state.avatar || this.state.avatarUrl
 
     return (
       // Using css hide Edit Profile dialog when image cropper is opened
@@ -68,8 +68,8 @@ class EditProfileModal extends Component {
                 }
               >
                 <Avatar
-                  className={`avatar ${this.state.avatar ? 'with-cam' : ''}`}
-                  avatar={this.state.avatar}
+                  className={`avatar ${hasAvatar ? 'with-cam' : ''}`}
+                  avatarUrl={this.state.avatarUrl}
                   emptyClass="camera"
                 />
               </ImageCropper>
