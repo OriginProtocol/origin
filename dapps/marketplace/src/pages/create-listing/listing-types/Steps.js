@@ -26,6 +26,7 @@ const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
           path={path(step)}
           exact={!step.path}
           render={() => {
+            // Check for required fields
             const requiredStep = steps.find(
               (s, i) => i <= idx && s.require && !listing[s.require]
             )
