@@ -14,6 +14,7 @@
     "test:browser": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test",
     "test:watch": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test -w",
     "start": "node -r @babel/register index",
+    "start:clean": "CLEAN=true node -r @babel/register index",
     "start:test": "NODE_ENV=test node -r @babel/register index",
     "start:development": "DEPLOY_CONTRACTS=1 node -r @babel/register index",
     "build:js": "NODE_ENV=production webpack --loglevel notice",

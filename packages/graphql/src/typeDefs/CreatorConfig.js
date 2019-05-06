@@ -19,6 +19,7 @@ module.exports = `
     marketplacePublisher: String
     isCreatedMarketplace: Boolean
     listingFilters: [ListingFilter!]
+    forceType: ForceType
   }
 
   type CssVars {
@@ -68,5 +69,11 @@ module.exports = `
     boostHigh: String
     boostPremium: String
     defaultRadius: String
+  }
+
+  type ForceType {
+        category: String
+        subCategory: String
+        typename: String
   }
 `
