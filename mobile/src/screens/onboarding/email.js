@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import AccountModal from 'components/account-modal'
+import { setEmail } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -36,6 +36,10 @@ class EmailScreen extends Component {
     if (emailError && !emailValue) {
       this.setState({ emailError: '' })
     }
+
+    if (this.props.settings.email && this.props.settings.email.length > 0) {
+      this.props.navigation.navigate('Authentication')
+    }
   }
 
   handleChange(emailValue) {
@@ -43,6 +47,14 @@ class EmailScreen extends Component {
   }
 
   handleSubmit() {
+    console.log('submit')
+    // Naive/simple email regex but should catch most issues
+    const emailPattern = /.+@.+\..+/
+    if (emailPattern.test(this.state.emailValue)) {
+      this.setEmail(this.state.emailValue)
+    } else {
+      this.setState({ emailError: 'That does not look like a valid email.' })
+    }
   }
 
   render() {
@@ -58,8 +70,14 @@ class EmailScreen extends Component {
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
             value={this.state.emailValue}
-            style={styles.input}
+            style={[
+              styles.input,
+              this.state.emailError ? styles.invalid : {}
+            ]}
           />
+          {this.state.emailError &&
+            <Text style={styles.invalid}>{this.state.emailError}</Text>
+          }
         </View>
         <View style={styles.legalContainer}>
           <Text style={styles.legal}>We will use your email to notify you of important notifications when you buy or sell.</Text>
@@ -69,11 +87,15 @@ class EmailScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
 }
 
-export default connect(mapStateToProps)(EmailScreen)
+const mapDispatchToProps = dispatch => ({
+  setEmail: email => dispatch(setEmail(email)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmailScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -122,5 +144,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     textAlign: 'center',
     width: 300
+  },
+  invalid: {
+    borderColor: '#ff0000',
+    color: '#ff0000'
   }
 })

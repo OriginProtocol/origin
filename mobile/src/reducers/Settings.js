@@ -9,7 +9,8 @@ const defaultNetwork = __DEV__ ? docker : mainnet
 
 const initialState = {
   network: defaultNetwork,
-  deviceToken: null
+  deviceToken: null,
+  email: null
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -22,6 +23,9 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_DEVICE_TOKEN:
       return { ...state, deviceToken: action.deviceToken }
+
+    case SettingsConstants.SET_EMAIL:
+      return { ...state, email: action.email }
   }
 
   return state
