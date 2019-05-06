@@ -1,8 +1,4 @@
-// const { messageTemplates } = require('../templates/messageTemplates')
-const Identity = require('../../identity/src/models').Identity
 const { messageTemplates } = require('../templates/messageTemplates')
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
 
 const apn = require('apn')
 const firebase = require('firebase-admin')
@@ -85,9 +81,7 @@ async function messageMobilePush(receivers, sender, config) {
         where: { ethAddress, deleted: false, 'permissions.alert': true }
       })
       if (mobileRegister) {
-        logger.info(
-          `Pushing message notification to ${ethAddress} from ${senderName}`
-        )
+        logger.info(`Pushing message notification to ${ethAddress}`)
         await sendNotification(
           mobileRegister.deviceToken,
           mobileRegister.deviceType,
@@ -96,9 +90,7 @@ async function messageMobilePush(receivers, sender, config) {
           config
         )
       } else {
-        logger.info(
-          `No device registered for notifications for ${ethAddress}`
-        )
+        logger.info(`No device registered for notifications for ${ethAddress}`)
       }
     } catch (error) {
       logger.error(`Could not send push notification: ${error}`)
