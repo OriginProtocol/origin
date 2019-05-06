@@ -26,44 +26,54 @@ export default function txHelper({
   mutation,
   onConfirmation,
   onReceipt,
-  from
+  from,
+  to,
+  gas,
+  value,
+  web3
 }) {
   return new Promise((resolve, reject) => {
     let txHash
+    let toSend = tx
+    if (web3 && to) {
+      toSend = web3.eth.sendTransaction({ from, to, value, gas })
+    } else {
+      toSend = toSend.send({ from, value, gas })
+    }
+    toSend
+      .once('transactionHash', async hash => {
+        txHash = hash
+        resolve({ id: hash })
 
-    tx.once('transactionHash', async hash => {
-      txHash = hash
-      resolve({ id: hash })
-
-      contracts.transactions[from] = contracts.transactions[from] || []
-      contracts.transactions[from].unshift({
-        id: hash,
-        submittedAt: Math.round(+new Date() / 1000)
-      })
-      // Only store last 10 transactions...
-      contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
-
-      try {
-        window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
-          contracts.transactions
-        )
-      } catch (e) {
-        /* Ignore */
-      }
-
-      const node = await getTransaction(hash, true)
-
-      pubsub.publish('NEW_TRANSACTION', {
-        newTransaction: { totalCount: 1, node }
-      })
-      pubsub.publish('TRANSACTION_UPDATED', {
-        transactionUpdated: {
+        contracts.transactions[from] = contracts.transactions[from] || []
+        contracts.transactions[from].unshift({
           id: hash,
-          status: 'pending',
-          mutation
+          submittedAt: Math.round(+new Date() / 1000)
+        })
+        // Only store last 10 transactions...
+        contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
+
+        try {
+          window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+            contracts.transactions
+          )
+        } catch (e) {
+          /* Ignore */
         }
+
+        const node = await getTransaction(hash, true)
+
+        pubsub.publish('NEW_TRANSACTION', {
+          newTransaction: { totalCount: 1, node }
+        })
+        pubsub.publish('TRANSACTION_UPDATED', {
+          transactionUpdated: {
+            id: hash,
+            status: 'pending',
+            mutation
+          }
+        })
       })
-    })
       .once('receipt', receipt => {
         if (onReceipt) {
           onReceipt(receipt)

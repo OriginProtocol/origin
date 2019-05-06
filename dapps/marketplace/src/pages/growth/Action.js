@@ -37,7 +37,11 @@ function Action(props) {
       web3.utils
         .toBN(tokenAmount)
         .div(props.decimalDivision)
-        .toString()
+        .toString(),
+      2,
+      '.',
+      ',',
+      true
     )
   }
 
@@ -107,7 +111,7 @@ function Action(props) {
   // hover color of the button: #111d28
   const renderReward = amount => {
     return (
-      <div className="reward d-flex align-items-left pl-2 justify-content-start flex-grow-1">
+      <div className="reward d-flex align-items-left pl-2 justify-content-start align-items-center flex-grow-1">
         <img src="images/ogn-icon.svg" />
         <div className="value">{formatTokens(amount)}</div>
       </div>
@@ -200,13 +204,15 @@ function Action(props) {
           {type === 'ListingIdPurchased' ? (
             <img className={type.toLowerCase()} src={foregroundImgSrc} />
           ) : (
-            <Fragment>
+            <div className="icon-holder">
               <img className="background" src={backgroundImgSrc} />
               <img className={type.toLowerCase()} src={foregroundImgSrc} />
-            </Fragment>
+            </div>
           )}
         </div>
-        <div className={`d-flex flex-column justify-content-center col-6`}>
+        <div
+          className={`d-flex flex-column justify-content-center col-5 col-md-6`}
+        >
           <div className="title">{title}</div>
           {actionLocked && !isMobile && unlockConditions.length > 0 && (
             <Fragment>
@@ -216,10 +222,12 @@ function Action(props) {
             </Fragment>
           )}
         </div>
-        <div className="col-5 d-flex align-items-center justify-content-between">
+        <div className="pl-0 pl-md-3 col-6 col-md-5 d-flex align-items-center justify-content-between">
           <a
             href="#"
-            className={`toggle-details${detailsKey ? '' : ' invisible'} mr-3`}
+            className={`toggle-details${
+              detailsKey ? '' : ' invisible'
+            } mr-1 mr-md-3`}
             onClick={e => {
               e.preventDefault()
               e.stopPropagation()
@@ -227,9 +235,15 @@ function Action(props) {
             }}
           >
             {detailsToggled ? (
-              <fbt desc="RewardActions.hideDetails">Hide Details</fbt>
+              isMobile ? (
+                <fbt desc="RewardActions.less">Less</fbt>
+              ) : (
+                <fbt desc="RewardActions.lessDetails">Less Details</fbt>
+              )
+            ) : isMobile ? (
+              <fbt desc="RewardActions.more">More</fbt>
             ) : (
-              <fbt desc="RewardActions.viewDetails">View Details</fbt>
+              <fbt desc="RewardActions.moreDetails">More Details</fbt>
             )}
           </a>
           {showReferralPending && (
@@ -297,6 +311,8 @@ require('react-styl')(`
       &.active:hover
         background-color: var(--pale-grey-three)
         color: var(--dark)
+      .icon-holder
+        position: relative
       .background
         width: 60px
       .profile
@@ -409,21 +425,24 @@ require('react-styl')(`
         white-space: nowrap
   .growth-campaigns.container.mobile
     .action
-      height: 80px
+      min-height: 80px
       margin-top: 10px
-      padding: 10px 0px 10px 20px
+      .action-main
+        padding: 17px 0px 17px 20px
       .background
         width: 2.5rem
+      .reward .value
+        font-size: 0.875rem
       .profile
-        left: 11.5px
+        left: 10.5px
         top: 12px
         width: 18px
       .email
-        left: 12px
+        left: 10.5px
         top: 15px
         width: 18px
       .phone
-        left: 15px
+        left: 14px
         top: 12px
         width: 11.5px
       .facebook
@@ -435,9 +454,13 @@ require('react-styl')(`
         top: 11px
         width: 22.5px
       .twitter
-        left: 11px
+        left: 9.5px
         top: 13px
         width: 20px
+      .google
+        left: 10px
+        top: 10px
+        width: 21px
       .listingsold
         left: 9px
         top: 10px
@@ -451,8 +474,11 @@ require('react-styl')(`
         top: 11px
         width: 20px
       .title
-        font-size: 16px
-        line-height: 1.2
+        font-size: 14px
+        line-height: 1.1rem
+        // only allow 2 lines of height in the title
+        max-height: 2.2rem
+        overflow: hidden
       .btn
         border-radius: 7rem
         width: 1.65rem
@@ -464,4 +490,10 @@ require('react-styl')(`
         margin-left: -4px
       .lock
         width: 1.56rem
+      .listingpurchased
+        left: 13px
+        top: 17px
+        width: 35px
+      .listingidpurchased
+        width: 44px
 `)

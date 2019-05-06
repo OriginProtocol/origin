@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import withTokenBalance from 'hoc/withTokenBalance'
+import withWallet from 'hoc/withWallet'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
@@ -259,4 +260,4 @@ class Review extends Component {
   }
 }
 
-export default withTokenBalance(withConfig(Review))
+export default withWallet(withTokenBalance(withConfig(Review)))
