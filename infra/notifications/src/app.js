@@ -62,11 +62,9 @@ const networkGatewayDomains = {
   999: 'http://localhost:8080'
 }
 
-const config = {
+const configOptions = {
   // Ethereum network we're on
   ethNetworkId: args['--eth-network-id'] || process.env.ETH_NETWORK_ID || 1,
-  dappUrl: networkDappDomains[ethNetworkId],
-  ipfsGatewayUrl: networkGatewayDomains[ethNetworkId],
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
   overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
@@ -79,6 +77,11 @@ const config = {
   // How far back in time to we look for duplicates?
   dupeLookbackMs:
     args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 30
+}
+const config = {
+  dappUrl: networkDappDomains[configOptions.ethNetworkId],
+  ipfsGatewayUrl: networkGatewayDomains[configOptions.ethNetworkId],
+  ...configOptions
 }
 logger.log(config)
 
