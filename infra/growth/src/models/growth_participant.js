@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       agreementId: DataTypes.STRING,
       authToken: DataTypes.STRING,
       ip: DataTypes.INET,
-      country: DataTypes.CHAR(2)
+      country: DataTypes.CHAR(2),
+      banReason: DataTypes.JSONB,
+      whitelisted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {
       tableName: 'growth_participant'
