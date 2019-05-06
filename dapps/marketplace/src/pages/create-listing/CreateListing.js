@@ -74,6 +74,24 @@ class CreateListing extends Component {
   }
 
   render() {
+
+    if (this.props.creatorConfigLoading) {
+      return (
+        <div className="app-spinner">
+          <fbt desc="App.loadingPleaseWait">
+            <h5>Loading</h5>
+            <div>Please wait</div>
+          </fbt>
+        </div>
+      )
+    }
+
+    // Force a given listing type/category
+    // Hack: '__' is not allowed in GraphQL where we get our config from, so we change
+    // `typename` into `__typename` here.
+    const forceType = this.props.creatorConfig && this.props.creatorConfig.forceType ?
+      {...this.props.creatorConfig.forceType, '__typename':this.props.creatorConfig.forceType.typename} : {}
+
     const listingTypeMapping = {
       UnitListing,
       AnnouncementListing,
@@ -81,15 +99,16 @@ class CreateListing extends Component {
       FractionalHourlyListing,
       GiftCardListing
     }
+
+    const props = {
+      listing: {...this.state.listing, ...forceType},
+      onChange: listing => this.setListing(listing)
+    }
+
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing
     const ListingTypeComponent =
-      listingTypeMapping[this.state.listing.__typename] || UnitListing
-
-    const props = {
-      listing: this.state.listing,
-      onChange: listing => this.setListing(listing)
-    }
+      listingTypeMapping[props.listing.__typename] || UnitListing
 
     return (
       <div className="container create-listing">

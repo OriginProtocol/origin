@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -24,11 +25,12 @@ class ChooseListingType extends Component {
   }
 
   render() {
-    const isEdit = this.props.listing.id ? true : false
-    if (this.state.valid) {
+    const isForceType = (this.props.creatorConfig && this.props.creatorConfig.forceType)
+    if (this.state.valid || isForceType) {
       return <Redirect to={this.props.next} push />
     }
 
+    const isEdit = this.props.listing.id ? true : false
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -226,7 +228,7 @@ class ChooseListingType extends Component {
   }
 }
 
-export default ChooseListingType
+export default withCreatorConfig(ChooseListingType)
 
 require('react-styl')(`
   .create-listing .create-listing-choose-listingtype
