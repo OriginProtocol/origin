@@ -48,7 +48,7 @@ export default function txHelper({
     if (web3 && to) {
       toSend = web3.eth.sendTransaction({ from, to, value, gas })
     } else {
-      toSend = toSend.send({ gas, from, value })
+      toSend = toSend.send({ from, value, gas })
     }
     toSend
       .once('transactionHash', async hash => {

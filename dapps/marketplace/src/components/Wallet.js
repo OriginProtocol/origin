@@ -25,7 +25,6 @@ const Wallet = ({ wallet, walletProxyOwner }) => (
         wallet={wallet}
       />
     )}
-
     <Balances account={wallet} />
   </div>
 )
