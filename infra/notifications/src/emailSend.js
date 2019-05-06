@@ -204,25 +204,12 @@ async function transactionEmailSend(
       } else if (!message) {
         logger.info(`No message found`)
       } else {
-        const listingNetwork = listing.id.split('-')[0] // First section of id is the network num
-        const networkDappDomains = {
-          1: 'https://dapp.originprotocol.com',
-          4: 'https://dapp.staging.originprotocol.com',
-          2222: 'https://dapp.dev.originprotocol.com',
-          999: 'http://localhost:3000'
-        }
-        const networkGatewayDomains = {
-          1: 'https://ipfs.originprotocol.com',
-          4: 'https://ipfs.staging.originprotocol.com',
-          2222: 'https://ipfs.dev.originprotocol.com',
-          999: 'http://localhost:8080'
-        }
         const templateVars = {
           listing,
           offer,
           config,
-          dappUrl: networkDappDomains[listingNetwork],
-          ipfsGatewayUrl: networkGatewayDomains[listingNetwork]
+          dappUrl: config.dappUrl,
+          ipfsGatewayUrl: config.ipfsGatewayUrl
         }
         const email = {
           to: config.overrideEmail || s.email,

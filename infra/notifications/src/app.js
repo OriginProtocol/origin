@@ -49,12 +49,24 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
+const networkDappDomains = {
+  1: 'https://dapp.originprotocol.com',
+  4: 'https://dapp.staging.originprotocol.com',
+  2222: 'https://dapp.dev.originprotocol.com',
+  999: 'http://localhost:3000'
+}
+const networkGatewayDomains = {
+  1: 'https://ipfs.originprotocol.com',
+  4: 'https://ipfs.staging.originprotocol.com',
+  2222: 'https://ipfs.dev.originprotocol.com',
+  999: 'http://localhost:8080'
+}
+
 const config = {
-  // URL for messaging on dapp
-  dappMessagesUrl:
-    args['--dapp-messages-url'] ||
-    process.env.DAPP_MESSAGES_URL ||
-    'https://dapp.originprotocol.com/#/messages',
+  // Ethereum network we're on
+  ethNetworkId: args['--eth-network-id'] || process.env.ETH_NETWORK_ID || 1,
+  dappUrl: networkDappDomains[ethNetworkId],
+  ipfsGatewayUrl: networkGatewayDomains[ethNetworkId],
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
   overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,

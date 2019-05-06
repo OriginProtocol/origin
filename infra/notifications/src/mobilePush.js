@@ -61,9 +61,8 @@ async function messageMobilePush(receivers, sender, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
-  // TODO: Move to config
   const payload = {
-    url: config.dappMessagesUrl
+    url: `${config.dappUrl}/#/messages`
   }
 
   receivers.forEach(async receiver => {
@@ -130,11 +129,8 @@ async function transactionMobilePush(
     'seller',
     'mobile'
   )
-  // TODO: This URL should dynamically change for staging/dev as email notifications
-  const dappOfferUrl =
-    process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com/#/purchases/'
   const payload = {
-    url: offer && `${dappOfferUrl}${offer.id}`
+    url: offer && `${config.dappUrl}/#/purchases/${offer.id}`
   }
 
   if (buyerMessage || sellerMessage) {
