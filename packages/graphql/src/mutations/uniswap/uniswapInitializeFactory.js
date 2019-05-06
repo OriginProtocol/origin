@@ -9,12 +9,14 @@ async function uniswapInitializeFactory(_, { from, exchange, factory }) {
     throw new Error('No exchange template found')
   }
   const uniswapFactory = new web3.eth.Contract(factoryAbi, factory)
-  const tx = uniswapFactory.methods.initializeFactory(exchange).send({
-    gas: 5500000,
-    from
-  })
+  const tx = uniswapFactory.methods.initializeFactory(exchange)
 
-  return txHelper({ tx, from, mutation: 'uniswapInitializeFactory' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'uniswapInitializeFactory',
+    gas: 5500000
+  })
 }
 
 export default uniswapInitializeFactory

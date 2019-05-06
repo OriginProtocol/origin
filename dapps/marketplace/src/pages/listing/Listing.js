@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { Switch, Route } from 'react-router-dom'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import QueryError from 'components/QueryError'
@@ -59,8 +58,6 @@ class Listing extends Component {
               )
             }
 
-            const from = get(data, 'web3.primaryAccount.id')
-
             const wrappedRefetch = async redirect => {
               await refetch()
               this.setState({ redirect })
@@ -85,7 +82,6 @@ class Listing extends Component {
                     <ListingDetail
                       listing={listing}
                       refetch={wrappedRefetch}
-                      from={from}
                       quantity={this.state.quantity}
                       updateQuantity={quantity => this.setState({ quantity })}
                     />
