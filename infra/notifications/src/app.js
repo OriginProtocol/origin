@@ -239,6 +239,11 @@ app.post('/messages', async (req, res) => {
   const sender = req.body.sender // eth address
   const receivers = req.body.receivers // array of eth addresses
 
+  if (!sender || !receivers) {
+    console.warn('Invalid json received.')
+    return
+  }
+
   // Email notifications
   messageEmailSend(receivers, sender, config)
 

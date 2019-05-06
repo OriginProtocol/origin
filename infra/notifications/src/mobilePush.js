@@ -70,68 +70,40 @@ async function messageMobilePush(receivers, sender, config) {
     url: config.dappMessagesUrl
   }
 
-  // Get ID of sender
-  const messageSender = Identity.findOne({
-    raw: true,
-    where: {
-      ethAddress: sender
-    }
-  })
-  // Get IDs of recepients
-  const messageReceivers = Identity.findAll({
-    raw: true,
-    where: {
-      ethAddress: {
-        [Op.or]: receivers
+  receivers.forEach(async receiver => {
+    try {
+      // TODO: Turn mobile messages into templates
+      const message = messageTemplates.message['mobile']['messageReceived']
+      const ethAddress = receiver
+      const notificationObj = {
+        message,
+        payload
       }
+
+      // Push the message
+      const mobileRegister = await MobileRegistry.findOne({
+        where: { ethAddress, deleted: false, 'permissions.alert': true }
+      })
+      if (mobileRegister) {
+        logger.info(
+          `Pushing message notification to ${ethAddress} from ${senderName}`
+        )
+        await sendNotification(
+          mobileRegister.deviceToken,
+          mobileRegister.deviceType,
+          notificationObj,
+          ethAddress,
+          config
+        )
+      } else {
+        logger.info(
+          `No device registered for notifications for ${ethAddress}`
+        )
+      }
+    } catch (error) {
+      logger.error(`Could not send push notification: ${error}`)
     }
   })
-  Promise.all([messageSender, messageReceivers]).then(
-    ([senderIdentity, receiversIdentities]) => {
-      receiversIdentities.forEach(async s => {
-        try {
-          const senderName =
-            senderIdentity !== null &&
-            senderIdentity.firstName &&
-            senderIdentity.lastName
-              ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
-                  ''} (${web3Utils.toChecksumAddress(sender)})`
-              : web3Utils.toChecksumAddress(sender)
-
-          // TODO: Turn mobile messages into templates
-          const message = messageTemplates.message['mobile']['messageReceived']
-          const ethAddress = s.ethAddress
-          const notificationObj = {
-            message,
-            payload
-          }
-
-          // Push the message
-          const mobileRegister = await MobileRegistry.findOne({
-            where: { ethAddress, deleted: false, 'permissions.alert': true }
-          })
-          if (mobileRegister) {
-            logger.info(
-              `Pushing message notification to ${ethAddress} from ${senderName}`
-            )
-            await sendNotification(
-              mobileRegister.deviceToken,
-              mobileRegister.deviceType,
-              notificationObj,
-              ethAddress,
-              config
-            )
-          } else {
-            logger.info(
-              `No device registered for notifications for ${ethAddress}`
-            )
-          }
-        } catch (error) {
-          logger.error(`Could not send push notification: ${error}`)
-        }
-      })
-    }
-  )
 }
 
 //
