@@ -25,8 +25,7 @@ async function start() {
     ipfs: true,
     populate: true,
     deployContracts: true,
-    skipContractsIfExists: true,
-    writeTruffle: true
+    skipContractsIfExists: true
   })
   const webpackDevServer = spawn(
     './node_modules/.bin/webpack-dev-server',
