@@ -105,12 +105,10 @@ async function reviews(user, { first = 10, after }) {
     party: user.id
   })
   const listingIds = listings.map(e => String(e.returnValues.listingID))
-  const events = await ec().getEvents(
-    {
-      listingID: listingIds,
-      event: 'OfferFinalized'
-    }
-  )
+  const events = await ec().getEvents({
+    listingID: listingIds,
+    event: 'OfferFinalized'
+  })
 
   let nodes = await Promise.all(
     events.map(event =>
