@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 
 import withTokenBalance from 'hoc/withTokenBalance'
+import withWallet from 'hoc/withWallet'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
@@ -172,4 +173,4 @@ class Review extends Component {
   }
 }
 
-export default withTokenBalance(Review)
+export default withWallet(withTokenBalance(Review))
