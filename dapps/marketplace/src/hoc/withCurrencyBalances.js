@@ -30,15 +30,12 @@ function withCurrencyBalances(WrappedComponent) {
       variables={{ account: props.wallet, tokens: props.targets }}
       fetchPolicy="network-only"
     >
-      {({ data, loading }) => {
-        if (loading) return null
-        return (
-          <WrappedComponent
-            {...props}
-            currencies={get(data, 'currencies') || []}
-          />
-        )
-      }}
+      {({ data }) => (
+        <WrappedComponent
+          {...props}
+          currencies={get(data, 'currencies') || []}
+        />
+      )}
     </Query>
   )
   return WithCurrencyBalances
