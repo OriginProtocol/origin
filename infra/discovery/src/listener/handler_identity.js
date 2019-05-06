@@ -305,6 +305,21 @@ class IdentityEventHandler {
     }
 
     if (event.returnValues.ipfsHash) {
+      if (event.returnValues.ipfsHash !== identity.ipfsHash) {
+        /**
+         * GraphQL and the listener use two different instances of contracts,
+         * with two different instances of EventCache.  It's possible, this is
+         * also a JSON-RPC node sync issue...  They also use two different
+         * EC queries (allEvents() vs getEvents({ account: '0x...' })), which
+         * has a slight chance of causing this.  Be on the lookout for the
+         * following log message:
+         */
+        logger.warn(
+          `GraphQL IPFS hash does not match event IPFS hash. This is probably \
+           a bug! (event: ${event.returnValues.ipfsHash}, GraphQL: \
+           ${identity.ipfsHash}`
+        )
+      }
       identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
     }
 
