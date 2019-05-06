@@ -156,7 +156,7 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
       <h4>Next Step:</h4>
       <div className="next-step">
         <fbt desc="Progress.completeAndCollect">
-          Complete the sale and collect your funds
+          Complete the sale to collect your funds
         </fbt>
       </div>
       <div className="help">
@@ -172,7 +172,7 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
           from={offer.listing.seller.id}
           className="btn btn-primary"
         >
-          <fbt desc="Progress.completeNow">Complete Now</fbt>
+          <fbt desc="Progress.completeSale">Complete Sale</fbt>
         </FinalizeOffer>
       </div>
     </div>
