@@ -44,9 +44,8 @@ class Details extends Component {
     const issuingCountrySelect = Object.keys(CurrenciesByCountryCode)
 
     const retailerSelect = Object.keys(GiftCardRetailers).map(function(key) {
-      return [key, GiftCardRetailers[key]];
-    });
-
+      return [key, GiftCardRetailers[key]]
+    })
 
     return (
       <div className="row">
@@ -91,7 +90,7 @@ class Details extends Component {
                       <fbt desc="select">Select</fbt>
                     </option>
                     {retailerSelect.map(([name, hash]) => (
-                      <option key={name} value={name} disabled={hash==''}>
+                      <option key={name} value={name} disabled={hash == ''}>
                         {name}
                       </option>
                     ))}
