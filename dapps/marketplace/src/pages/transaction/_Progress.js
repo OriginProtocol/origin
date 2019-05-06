@@ -25,7 +25,11 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
     if (offer.status === 4) {
       return <Finalized party="seller" {...props} />
     } else if (offer.status === 2) {
-      return <WaitForFinalize {...props} />
+      if (offer.finalizes < +new Date() / 1000) {
+        return <SellerFinalize {...props} refetch={refetch} />
+      } else {
+        return <WaitForFinalize {...props} />
+      }
     } else if (offer.status === 0) {
       if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
         return <OfferRejected party="seller" {...props} />
@@ -127,6 +131,7 @@ class ReviewAndFinalize extends Component {
               review={this.state.review}
               offer={this.props.offer}
               refetch={this.props.refetch}
+              from={offer.buyer.id}
               className="btn btn-primary"
             >
               <fbt desc="Progress.finalize">Finalize</fbt>
@@ -144,6 +149,36 @@ class ReviewAndFinalize extends Component {
     )
   }
 }
+
+const SellerFinalize = ({ offer, refetch, loading }) => (
+  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
+    <div className="top">
+      <h4>Next Step:</h4>
+      <div className="next-step">
+        <fbt desc="Progress.completeAndCollect">
+          Complete the sale and collect your funds
+        </fbt>
+      </div>
+      <div className="help">
+        <fbt desc="Progress.fundsHeld">
+          Funds are being held in escrow until the sale is completed. Click
+          below to collect your funds
+        </fbt>
+      </div>
+      <div className="d-flex flex-column">
+        <FinalizeOffer
+          offer={offer}
+          refetch={refetch}
+          from={offer.listing.seller.id}
+          className="btn btn-primary"
+        >
+          <fbt desc="Progress.completeNow">Complete Now</fbt>
+        </FinalizeOffer>
+      </div>
+    </div>
+    <Stages offer={offer} />
+  </div>
+)
 
 const MessageSeller = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
