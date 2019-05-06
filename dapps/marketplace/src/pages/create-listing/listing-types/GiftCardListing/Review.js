@@ -100,8 +100,14 @@ class Review extends Component {
                   Issuing Country
                 </fbt>
               </div>
-              <div className="col-9">
-                {countryCodeMapping['en'][listing.issuingCountry]}
+              <div className="col-9 d-flex">
+                <div
+                  className="country-flag"
+                  style={{backgroundImage: `url(images/flags/${listing.issuingCountry}.svg)`}}
+                />
+                <div style={{ flex: 1 }}>
+                  {countryCodeMapping['en'][listing.issuingCountry]}
+                </div>
               </div>
             </div>
 

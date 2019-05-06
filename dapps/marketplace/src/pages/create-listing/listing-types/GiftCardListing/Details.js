@@ -114,19 +114,28 @@ class Details extends Component {
                       Issuing Country
                     </fbt>
                   </label>
-                  <select
-                    className="form-control form-control-lg"
-                    value={this.state.issuingCountry}
-                    onChange={e => {
-                      this.setState({ issuingCountry: e.target.value })
-                    }}
-                  >
-                    {issuingCountrySelect.map(countryCode => (
-                      <option key={countryCode} value={countryCode}>
-                        {countryCodeMapping['en'][countryCode]}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="d-flex">
+                    <div
+                      className="country-flag"
+                      style={{backgroundImage: `url(images/flags/${this.state.issuingCountry}.svg)`}}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <select
+                        className="form-control form-control-lg"
+                        value={this.state.issuingCountry}
+                        onChange={e => {
+                          this.setState({ issuingCountry: e.target.value })
+                        }}
+                      >
+                        {issuingCountrySelect.map(countryCode => (
+                          <option key={countryCode} value={countryCode}>
+                            {countryCodeMapping['en'][countryCode]}
+                          </option>
+                        ))}
+                      </select>
+
+                    </div>
+                  </div>
                   {Feedback('issuingCountry')}
                 </div>
 
@@ -384,4 +393,12 @@ require('react-styl')(`
     img
       width: 270px
       height: auto
+  .country-flag
+    background-image: url(images/flags/us.svg)
+    width: 3rem;
+    height: 3rem
+    background-size: 2rem
+    background-position: center
+    background-repeat: no-repeat
+
 `)

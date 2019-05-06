@@ -73,11 +73,11 @@ require('react-styl')(`
     &.show
       background-color: var(--dark)
     .active-country
-      background-image: url(images/flags/us.svg);
-      width: 3rem;
-      background-size: 2rem;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-image: url(images/flags/us.svg)
+      width: 3rem
+      background-size: 2rem
+      background-position: center
+      background-repeat: no-repeat
 
     .dropdown-menu
       overflow: auto
