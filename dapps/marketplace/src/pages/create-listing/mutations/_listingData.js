@@ -44,6 +44,20 @@ export default function applyListingData(props, data) {
       variables.commission = listing.boostLimit
       break
 
+    case 'GiftCardListing':
+      const unitsTotal = Number(listing.quantity)
+      variables.unitData = {
+        unitsTotal: unitsTotal,
+        retailer: listing.retailer,
+        cardAmount: listing.cardAmount,
+        issuingCountry: listing.issuingCountry,
+        isDigital: listing.isDigital,
+        isCashPurchase: listing.isCashPurchase,
+        receiptAvailable: listing.receiptAvailable
+      }
+      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
+      break
+
     case 'AnnouncementListing':
       break
 

@@ -1,15 +1,34 @@
 import React from 'react'
+import makeGatewayUrl from 'utils/makeGatewayUrl'
+import withConfig from 'hoc/withConfig'
 
-const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
+const Avatar = ({
+  size,
+  avatar,
+  avatarUrl,
+  profile,
+  config,
+  className,
+  emptyClass = 'empty'
+}) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }
   }
+  let httpAvatar = undefined
+  if (avatarUrl && config) {
+    const { ipfsGateway } = config
+    httpAvatar = makeGatewayUrl(ipfsGateway, avatarUrl)
+  } else if (profile && profile.avatarUrlExpanded) {
+    httpAvatar = profile.avatarUrlExpanded
+  } else if (avatar) {
+    httpAvatar = avatar
+  }
 
-  if (!avatar) {
+  if (!httpAvatar) {
     props.className += ` ${emptyClass}`
   } else {
-    props.style.backgroundImage = `url(${avatar})`
+    props.style.backgroundImage = `url(${httpAvatar})`
   }
 
   if (className) {
@@ -19,7 +38,7 @@ const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
   return <div {...props} />
 }
 
-export default Avatar
+export default withConfig(Avatar)
 
 require('react-styl')(`
   .avatar
