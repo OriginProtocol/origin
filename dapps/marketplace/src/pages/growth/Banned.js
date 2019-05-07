@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 import withIsMobile from 'hoc/withIsMobile'
 
@@ -11,20 +11,25 @@ class GrowthBanned extends Component {
     const isMobile = this.props.ismobile === 'true'
 
     return (
-       <div className={`container growth-banned ${isMobile ? 'mobile' : ''} d-flex flex-column align-items-center`}>
+      <div
+        className={`container growth-banned ${
+          isMobile ? 'mobile' : ''
+        } d-flex flex-column align-items-center`}
+      >
         <img className="pl-2 pr-1" src="images/banned-icon.svg" />
-          <h1 className="mt-5">
-            <fbt desc="growth-banned.account not eligible">
-              Your account is not eligible for Origin Rewards
-            </fbt>
-          </h1>
-          <h2>
-            <fbt desc="growth-banned.notEligibleExplanation">
-              We have detected suspicious activity on your account.
-              Note that duplicate accounts are not eligible for participating in Origin Rewards.
-            </fbt>
-          </h2>
-       </div>
+        <h1 className="mt-5">
+          <fbt desc="growth-banned.account not eligible">
+            Your account is not eligible for Origin Rewards
+          </fbt>
+        </h1>
+        <h2>
+          <fbt desc="growth-banned.notEligibleExplanation">
+            We have detected suspicious activity on your account. Note that
+            duplicate accounts are not eligible for participating in Origin
+            Rewards.
+          </fbt>
+        </h2>
+      </div>
     )
   }
 }
