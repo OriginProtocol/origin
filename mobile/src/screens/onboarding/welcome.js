@@ -41,7 +41,7 @@ class WelcomeScreen extends Component {
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'origin-logo-dark_2x.png')}
+            source={require(IMAGES_PATH + 'origin-dark-logo.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>Buy and sell stuff with crypto.</Text>

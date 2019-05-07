@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
@@ -14,7 +14,6 @@ const IMAGES_PATH = '../../../assets/images/'
 class AuthenticationScreen extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       biometryType: null
     }
@@ -29,6 +28,9 @@ class AuthenticationScreen extends Component {
   }
 
   render() {
+    const { height } = Dimensions.get('window')
+    const smallScreen = height < 812
+
     let biometryButtonTitle
     if (this.state.biometryType === 'FaceID') {
       biometryButtonTitle = 'Use Face ID'
@@ -41,6 +43,12 @@ class AuthenticationScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
+          <Image
+            resizeMethod={'scale'}
+            resizeMode={'contain'}
+            source={require(IMAGES_PATH + 'lock-icon.png')}
+            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+          />
           <Text style={styles.title}>Protect your wallet</Text>
           <Text style={styles.subtitle}>
             Add an extra layer of security to keep your crypto safe.
@@ -98,6 +106,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1
+  },
+  image: {
+    marginBottom: '10%'
   },
   button: {
     marginBottom: 20,

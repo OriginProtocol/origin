@@ -24,7 +24,7 @@ class ReadyScreen extends Component {
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'origin-logo-dark_2x.png')}
+            source={require(IMAGES_PATH + 'green-checkmark.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>
