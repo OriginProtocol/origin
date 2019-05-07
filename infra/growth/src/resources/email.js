@@ -88,7 +88,6 @@ function generateEmail(emailType, vars) {
       throw new Error(`Invalid emailtType ${emailType}`)
   }
 
-
   return { subject, text, html }
 }
 
@@ -252,7 +251,9 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
   // Load identity of the user to get their email address.
   const identity = await db.Identity.findOne({ where: { ethAddress } })
   if (!identity || !identity.email) {
-    logger.info('No email on record for account ${ethAddress}. Skipping sending payout email.')
+    logger.info(
+      'No email on record for account ${ethAddress}. Skipping sending payout email.'
+    )
     return
   }
   const recipient = identity.email
@@ -262,7 +263,7 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
   const vars = {
     ethAddress,
     amount,
-    txLink: `https://etherscan.io/#{txHash}`,
+    txLink: `https://etherscan.io/tx/${txHash}`,
     campaignLink: 'https://dapp.originprotocol.com/#/welcome'
   }
   const { subject, text, html } = generateEmail('payout', vars)
@@ -282,4 +283,9 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
   }
 }
 
-module.exports = { generateEmail, sendInvites, sendInviteReminder, sendPayoutEmail }
+module.exports = {
+  generateEmail,
+  sendInvites,
+  sendInviteReminder,
+  sendPayoutEmail
+}

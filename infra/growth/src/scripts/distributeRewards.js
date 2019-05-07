@@ -14,6 +14,7 @@ const { createProviders } = require('@origin/token/src/config')
 const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
+const { sendPayoutEmail } = require('../resources/email')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('distRewards', { showTimestamp: false })
@@ -152,7 +153,7 @@ class DistributeRewards {
 
     if (!txnReceipt.status) {
       // The transaction did not get confirmed.
-      // Rollback the rewards status to Pending so that the transaction
+      // Rollback the rewards status to Failed so that the transaction
       // gets attempted again next time the job runs.
       const ids = rewards.map(reward => reward.id)
       logger.error(`Rewards with ids ${ids}`)
@@ -203,6 +204,88 @@ class DistributeRewards {
       }
     }
     return allConfirmed
+  }
+
+  /**
+   * Send a payout email to every account that got a payout.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _sendPayoutEmails(campaign) {
+    // Ensure the campaign distribution is finished.
+    await campaign.reload()
+    if (campaign.status !== enums.GrowthCampaignRewardStatuses.Distributed) {
+      throw new Error(
+        `Can not send payout email for campaign ${campaign.id} with status ${
+          campaign.status
+        }`
+      )
+    }
+
+    // Load all rewards rows for this campaign.
+    const rewardRows = await db.GrowthReward.findAll({
+      where: { campaignId: campaign.id }
+    })
+
+    // Group rewards by recipient.
+    const ethAddressToRewards = {}
+    rewardRows.forEach(reward => {
+      if (ethAddressToRewards[reward.ethAddress]) {
+        ethAddressToRewards[reward.ethAddress].push(reward)
+      } else {
+        ethAddressToRewards[reward.ethAddress] = [reward]
+      }
+    })
+
+    // If we are not in dry-run mode, do some extra consistency checks of the data.
+    if (this.config.persist) {
+      // Ensure all rewards rows have status Paid.
+      for (const reward of rewardRows) {
+        if (reward.status !== enums.GrowthRewardStatuses.Paid) {
+          throw new Error(
+            `Can not send email, reward ${reward.id} with status ${
+              reward.status
+            }`
+          )
+        }
+      }
+
+      // Ensure all rewards for a given recipient have same txHash.
+      for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+        let txHash = null
+        for (const reward of rewards) {
+          if (!txHash) {
+            txHash = reward.txnHash
+            continue
+          }
+          if (reward.txnHash !== txHash) {
+            throw new Error(
+              `Account ${ethAddress}: expected reward ${
+                reward.id
+              } to have txHash ${txHash}`
+            )
+          }
+        }
+      }
+    }
+
+    // For each account, sum up individual rewards and send email with total payout.
+    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+      // Sum up amount in natural units, then convert to token.
+      const amount = rewards
+        .map(reward => reward.amount)
+        .reduce((a1, a2) => BigNumber(a1).plus(a2))
+        .dividedBy(BigNumber(10).pow(18))
+      const txnHash = rewards[0].txnHash
+
+      if (this.config.persist) {
+        await sendPayoutEmail(ethAddress, amount, txnHash)
+      } else {
+        logger.info(
+          `Would send email to account ${ethAddress}, payout amount ${amount}`
+        )
+      }
+    }
   }
 
   async process() {
@@ -257,8 +340,8 @@ class DistributeRewards {
         ethAddressToRewards
       )
 
-      // Update the campaign reward status to indicate it was distributed.
       if (allConfirmed) {
+        // Update the campaign reward status to indicate it was distributed
         if (this.config.persist) {
           await campaign.update({
             rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
@@ -269,8 +352,11 @@ class DistributeRewards {
             `Would update campaign ${campaign.id} status to Distributed.`
           )
         }
+
+        // Send payout emails.
+        await this._sendPayoutEmails()
       } else {
-        logger.info(
+        logger.error(
           `One or more transactions not confirmed. Leaving campaign ${
             campaign.id
           } status as Calculated.`
