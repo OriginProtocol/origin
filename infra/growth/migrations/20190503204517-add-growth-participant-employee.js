@@ -6,7 +6,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn(
       tableName,
-      'whitelisted',
+      'employee',
       {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -17,7 +17,7 @@ module.exports = {
   down: (queryInterface) => {
     return queryInterface.removeColumn(
       tableName,
-      'whitelisted'
+      'employee'
     )
   }
 }

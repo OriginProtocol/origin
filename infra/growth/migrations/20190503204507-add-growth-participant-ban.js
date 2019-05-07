@@ -6,14 +6,14 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn(
       tableName,
-      'ban_reason',
+      'ban',
       Sequelize.JSONB
     )
   },
   down: (queryInterface) => {
     return queryInterface.removeColumn(
       tableName,
-      'ban_reason'
+      'ban'
     )
   }
 }
