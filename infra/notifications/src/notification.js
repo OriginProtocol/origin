@@ -39,7 +39,7 @@ function getNotificationMessage(
     return null
   }
 
-  let message
+  let message = ''
   if (recipientRole === 'buyer') {
     message = messageTemplates.buyer[channel][eventName]
   } else {
