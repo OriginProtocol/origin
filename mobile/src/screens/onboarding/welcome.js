@@ -12,7 +12,6 @@ import {
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -20,24 +19,16 @@ const IMAGES_PATH = '../../../assets/images/'
 class WelcomeScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      modalOpen: false
-    }
     // Navigate to email screen if an account already exists
     if (this.props.wallet.accounts.length > 0) {
       this.props.navigation.navigate('Email')
     }
-    this.toggleModal = this.toggleModal.bind(this)
   }
 
   componentDidUpdate() {
     if (this.props.wallet.accounts.length > 0) {
       this.props.navigation.navigate('Email')
     }
-  }
-
-  toggleModal() {
-    this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
@@ -74,7 +65,7 @@ class WelcomeScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'I already have a wallet'}
             onPress={() => {
-              this.props.navigation.navigate('Mnemonic')
+              this.props.navigation.navigate('ImportAccount')
             }}
           />
         </View>
@@ -87,12 +78,6 @@ class WelcomeScreen extends Component {
     )
   }
 }
-
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-export default connect(mapStateToProps)(WelcomeScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -135,3 +120,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(WelcomeScreen)

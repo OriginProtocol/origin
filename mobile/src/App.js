@@ -17,6 +17,7 @@ import Store, { persistor } from './Store'
 import StackSelector from './StackSelector'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
+import ImportAccountScreen from 'screens/import'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
@@ -26,7 +27,6 @@ import EmailScreen from 'screens/onboarding/email'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
 import ReadyScreen from 'screens/onboarding/ready'
-import MnemonicScreen from 'screens/onboarding/mnemonic'
 import Loading from 'components/loading'
 
 const IMAGES_PATH = '../assets/images/'
@@ -41,7 +41,12 @@ YellowBox.ignoreWarnings([
 const OnboardingStack = createSwitchNavigator(
   {
     Welcome: WelcomeScreen,
-    Mnemonic: MnemonicScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        navigateOnSuccess: 'Ready'
+      }
+    },
     Email: EmailScreen,
     Authentication: Authentication,
     Pin: PinScreen,
@@ -71,6 +76,12 @@ const SettingsStack = createStackNavigator(
   {
     Account: AccountScreen,
     Accounts: AccountsScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        navigateOnSuccess: 'Accounts'
+      }
+    },
     Settings: SettingsScreen
   },
   {

@@ -11,21 +11,10 @@ import {
 import { connect } from 'react-redux'
 
 import AccountItem from 'components/account-item'
-import AccountModal from 'components/account-modal'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class AccountsScreen extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      modalOpen: false
-    }
-
-    this.toggleModal = this.toggleModal.bind(this)
-  }
-
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Accounts',
@@ -37,7 +26,7 @@ class AccountsScreen extends Component {
       headerRight: (
         <TouchableOpacity
           onPress={() => {
-            navigation.state.params.toggleModal()
+            navigation.navigate('ImportAccount')
           }}
         >
           <Image
@@ -49,12 +38,8 @@ class AccountsScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({ toggleModal: this.toggleModal })
-  }
-
-  toggleModal() {
-    this.setState({ modalOpen: !this.state.modalOpen })
+  constructor(props) {
+    super(props)
   }
 
   render() {
@@ -70,11 +55,6 @@ class AccountsScreen extends Component {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           style={styles.list}
           keyExtractor={item => item.address}
-        />
-        <AccountModal
-          visible={this.state.modalOpen}
-          onPress={this.toggleModal}
-          onRequestClose={this.toggleModal}
         />
       </>
     )

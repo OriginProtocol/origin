@@ -1,18 +1,10 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import AccountModal from 'components/account-modal'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -35,7 +27,9 @@ class ReadyScreen extends Component {
             source={require(IMAGES_PATH + 'origin-logo-dark_2x.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
-          <Text style={styles.title}>You&apos;re ready to start buying and selling on Origin</Text>
+          <Text style={styles.title}>
+            You&apos;re ready to start buying and selling on Origin
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
