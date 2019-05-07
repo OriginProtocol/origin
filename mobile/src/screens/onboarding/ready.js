@@ -17,27 +17,9 @@ import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
 
-class WelcomeScreen extends Component {
+class ReadyScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      modalOpen: false
-    }
-    // Navigate to email screen if an account already exists
-    if (this.props.wallet.accounts.length > 0) {
-      this.props.navigation.navigate('Email')
-    }
-    this.toggleModal = this.toggleModal.bind(this)
-  }
-
-  componentDidUpdate() {
-    if (this.props.wallet.accounts.length > 0) {
-      this.props.navigation.navigate('Email')
-    }
-  }
-
-  toggleModal() {
-    this.setState({ modalOpen: !this.state.modalOpen })
   }
 
   render() {
@@ -53,8 +35,7 @@ class WelcomeScreen extends Component {
             source={require(IMAGES_PATH + 'origin-logo-dark_2x.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
-          <Text style={styles.title}>Buy and sell stuff with crypto.</Text>
-          <Text style={styles.title}>Earn rewards.</Text>
+          <Text style={styles.title}>You&apos;re ready to start buying and selling on Origin</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -62,26 +43,11 @@ class WelcomeScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Create New Wallet'}
+            title={'Start using Origin'}
             onPress={() => {
-              DeviceEventEmitter.emit('createAccount')
+              this.props.navigation.navigate('App')
             }}
           />
-          <OriginButton
-            size="large"
-            type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'I already have a wallet'}
-            onPress={() => {
-              this.props.navigation.navigate('Mnemonic')
-            }}
-          />
-        </View>
-        <View style={styles.legalContainer}>
-          <Text style={styles.legal}>
-            By signing up you agree to the Terms of Use and Privacy Policy
-          </Text>
         </View>
       </SafeAreaView>
     )
@@ -92,7 +58,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(WelcomeScreen)
+export default connect(mapStateToProps)(ReadyScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -106,6 +72,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center'
   },
+  image: {
+    marginBottom: '10%'
+  },
   buttonsContainer: {
     paddingTop: 10,
     width: '100%'
@@ -113,18 +82,6 @@ const styles = StyleSheet.create({
   button: {
     marginBottom: 20,
     marginHorizontal: 50
-  },
-  legalContainer: {
-    paddingTop: 20,
-    paddingBottom: 30,
-    width: '80%'
-  },
-  legal: {
-    textAlign: 'center',
-    color: '#98a7b4'
-  },
-  image: {
-    marginBottom: '10%'
   },
   title: {
     fontFamily: 'Lato',
