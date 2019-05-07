@@ -6,7 +6,7 @@ bridgeImageTag: '9551bc3'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '0e66526'
+dappImageTag: 'b739587'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -30,7 +30,7 @@ growthImageTag: '319b9a8'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '189cb0f'
+messagingImageTag: 'b739587'
 
 # origin-notifications
 notificationsImage: origin-notifications
