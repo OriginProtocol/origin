@@ -169,6 +169,7 @@ if (require.main === module) {
   job
     .process(config)
     .then(() => {
+      logger.info('================================')
       logger.info('Events verification stats:')
       logger.info(
         '  Total number of participants processed:  ',

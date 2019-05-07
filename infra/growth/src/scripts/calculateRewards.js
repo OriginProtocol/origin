@@ -1,4 +1,4 @@
-// Tool for calculating Growth Engine rewards earned y users. Steps are as follow:
+// Tool for calculating Growth Engine rewards earned by users. Steps are as follow:
 //  - Look for a finished campaign for which calculation hasn't happened yet.
 //  - Gather list of accounts that had events during the campaign window.
 //  - For each account, calculate rewards and insert rows in growth_reward with status 'Pending'.
@@ -28,6 +28,7 @@ class CalculateRewards {
     this.token = token
     this.stats = {
       numCampaigns: 0,
+      numAccountsPayout: 0,
       calcGrandTotal: BigNumber(0)
     }
   }
@@ -117,6 +118,7 @@ class CalculateRewards {
           }.`
         )
       }
+      this.stats.numCampaigns++
 
       let campaignTotal = BigNumber(0)
       const participants = await this._getParticipants(campaign)
@@ -137,25 +139,28 @@ class CalculateRewards {
         // Note that we set the onlyVerifiedEvents param of getRewards to true.
         const rewards = await rules.getRewards(ethAddress, true)
         if (!rewards.length) {
+          // User did not earn any reward.
           continue
         }
 
-        // Insert rewards in the growth_reward table.
+        // Insert rewards in the growth_reward table, if any.
         const total = rewards
-          .map(reward => reward.value.amount)
-          .reduce((v1, v2) => BigNumber(v1).plus(v2))
+          .map(reward => BigNumber(reward.value.amount))
+          .reduce((v1, v2) => v1.plus(v2))
         await this._insertRewards(ethAddress, campaign, rewards)
 
+        this.stats.numAccountsPayout++
+
         // Log and update stats.
-        logger.info(`Participant ${ethAddress} - Calculation result:`)
-        logger.info('  Num reward:      ', rewards.length)
-        logger.info('  Total (natural): ', total.toFixed())
-        logger.info('  Total (token):   ', this.token.toTokenUnit(total))
+        logger.debug(`Participant ${ethAddress} - Calculation result:`)
+        logger.debug('  Num reward:      ', rewards.length)
+        logger.debug('  Total (natural): ', total.toFixed())
+        logger.debug('  Total (token):   ', this.token.toTokenUnit(total))
         campaignTotal = campaignTotal.plus(total)
       }
 
       // Done calculating rewards for this campaign.
-      logger.info(`Campaign calculation done. Total reward of ${campaignTotal}`)
+      logger.info(`Campaign calculation done. Total reward of ${campaignTotal.toFixed()}`)
 
       // Some sanity checks before we record the rewards.
       const maxCap = BigNumber(campaign.cap).times(CampaignMaxOverCapFactor)
@@ -198,6 +203,7 @@ const job = new CalculateRewards(config, token)
 job
   .process()
   .then(() => {
+    logger.info('================================')
     logger.info('Rewards calculation stats:')
     logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
     logger.info(

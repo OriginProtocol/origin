@@ -67,6 +67,7 @@ class VerifyEvents {
 
     // Walk thru each event and update their status based
     // on fraud engine output.
+    logger.info('Verifying events... This may take some time.')
     for (const event of events) {
       // Check if event was logged for a user enrolled in Origin Reward.
       // TODO: would be more efficient to load all participants upfront.
@@ -128,6 +129,7 @@ if (require.main === module) {
   job
     .process()
     .then(() => {
+      logger.info('================================')
       logger.info('Events verification stats:')
       logger.info(
         '  Number of events skipped:            ',

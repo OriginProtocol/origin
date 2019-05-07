@@ -66,8 +66,8 @@ class DistributeRewards {
   async _distributeRewards(ethAddress, rewards) {
     // Sum up the reward amount.
     let total = rewards
-      .map(reward => reward.amount)
-      .reduce((a1, a2) => BigNumber(a1).plus(a2))
+      .map(reward => BigNumber(reward.amount))
+      .reduce((a1, a2) => a1.plus(a2))
 
     if (!this.config.persist) {
       logger.info(`Would distribute reward of ${total} from to ${ethAddress}`)
@@ -273,8 +273,8 @@ class DistributeRewards {
     for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
       // Sum up amount in natural units, then convert to token.
       const amount = rewards
-        .map(reward => reward.amount)
-        .reduce((a1, a2) => BigNumber(a1).plus(a2))
+        .map(reward => BigNumber(reward.amount))
+        .reduce((a1, a2) => a1.plus(a2))
         .dividedBy(BigNumber(10).pow(18))
       const txnHash = rewards[0].txnHash
 
