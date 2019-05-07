@@ -148,7 +148,7 @@ async function createInviteCode(accountId) {
 
   /* Consists of first 3 and last 3 ether address letters plus hex
    * representation of a random number
-   * 
+   *
    * IMPORTANT: Frontend expects 11 letter invite code. Be mindful of that
    * if changing invite code creation logic
    */
