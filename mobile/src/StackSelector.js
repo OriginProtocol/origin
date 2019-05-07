@@ -10,12 +10,12 @@ class StackSelector extends React.Component {
   }
 
   _selectStack() {
-    const onboardingComplete = this.props.wallet.accounts.length > 0 &&
-      this.props.settings.emailAddress &&
-      (this.props.settings.pinCode || this.props.settings.biometryType)
-
-    if (!onboardingComplete) {
-      this.props.navigation.navigate('Onboarding')
+    if (this.props.wallet.accounts.length == 0) {
+      this.props.navigation.navigate('Welcome')
+    } else if (!this.props.settings.email) {
+      this.props.navigation.navigate('Email')
+    } else if (!this.props.settings.pinCode && !this.props.settings.biometryType) {
+      this.props.navigation.navigate('Authentication')
     } else {
       this.props.navigation.navigate('App')
     }

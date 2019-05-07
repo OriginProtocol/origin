@@ -23,6 +23,8 @@ import WalletScreen from 'screens/wallet'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import EmailScreen from 'screens/onboarding/email'
+import Authentication from 'screens/onboarding/authentication'
+import PinScreen from 'screens/onboarding/pin'
 import Loading from 'components/loading'
 
 const IMAGES_PATH = '../assets/images/'
@@ -34,10 +36,12 @@ YellowBox.ignoreWarnings([
   'Module RCTImageLoader requires main queue setup'
 ])
 
-const OnboardingStack = createStackNavigator(
+const OnboardingStack = createSwitchNavigator(
   {
     Welcome: WelcomeScreen,
-    Email: EmailScreen
+    Email: EmailScreen,
+    Authentication: Authentication,
+    Pin: PinScreen
   },
   {
     initialRouteName: 'Welcome'
