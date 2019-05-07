@@ -7,7 +7,7 @@ const fs = require('fs')
 
 const Logger = require('logplease')
 
-const enums = require('../enums')
+const enums = require('enums')
 const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
@@ -154,7 +154,7 @@ class BanParticipants {
  * MAIN
  */
 if (require.main === module) {
-  logger.info('Starting events verification job.')
+  logger.info('Starting ban participant job.')
 
   const args = parseArgv()
   const config = {

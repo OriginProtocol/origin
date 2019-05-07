@@ -22,10 +22,11 @@ class FraudEngine {
    * Runs the fraud engine on an event to determine if it is Fraud or not.
    * If fraud, returns an object with type and reasons field.
    *
+   * @param {models.GrowthParticipant} participant
    * @param {models.GrowthEvent} event
    * @returns {Promise<{type: string, reasons: string} || null>}
    */
-  async isFraudEvent(event) {
+  async isFraudEvent(participant, event) {
     logger.debug(`FraudEngine: analyzing event ${event.id}`)
     return null
   }
