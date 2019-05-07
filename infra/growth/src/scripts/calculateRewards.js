@@ -44,14 +44,6 @@ class CalculateRewards {
     return participants
   }
 
-  // TODO: Consider flagging the user in the identity table.
-  async _banParticipant(participant, reason) {
-    await participant.update({
-      status: enums.GrowthParticipantStatus.Banned,
-      data: Object.assign({}, participant.data, { banReason: reason })
-    })
-  }
-
   async _checkForExistingReward(ethAddress, campaignId) {
     const rewards = await db.GrowthReward.findAll({
       where: {
@@ -138,13 +130,6 @@ class CalculateRewards {
           logger.info(
             `Already calculated participant ${ethAddress} - Skipping.`
           )
-          continue
-        }
-
-        // Check the user's name against the black list.
-        if (await this._matchBlackList(ethAddress)) {
-          await this._banParticipant(ethAddress, 'SDN Blacklist match')
-          logger.info(`Banned participant ${ethAddress} - Skipping.`)
           continue
         }
 

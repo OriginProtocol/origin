@@ -93,10 +93,9 @@ class BanParticipants {
     )
     // Changed status to banned and add the ban data, making sure to not
     // overwrite any data already present in the fraud column.
-    const fraudData = Object.assign(participant.fraud || {}, { ban: banData })
     await participant.update({
       status: enums.GrowthParticipantStatuses.Banned,
-      ban: fraudData
+      ban: banData
     })
   }
 
