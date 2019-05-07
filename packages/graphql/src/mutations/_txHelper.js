@@ -26,6 +26,12 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
+function useRelayer({ mutation }) {
+  if (!contracts.config.relayer) return false
+  if (mutation !== 'deployIdentity') return false
+  return true
+}
+
 export default function txHelper({
   tx,
   mutation,
@@ -37,11 +43,10 @@ export default function txHelper({
   value,
   web3
 }) {
-  if (contracts.config.relayer) {
-    if (proxyOwnerOrNull(from) || mutation === 'deployIdentity') {
-      return relayerHelper({ tx, from, address: tx._parent._address })
-    }
+  if (useRelayer({ mutation })) {
+    return relayerHelper({ tx, from, address: tx._parent._address })
   }
+
   return new Promise((resolve, reject) => {
     let txHash
     let toSend = tx

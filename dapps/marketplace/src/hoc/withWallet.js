@@ -2,8 +2,6 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 
-import { isProxy, proxyOrWallet, proxyOwnerOrNull } from 'utils/identityProxy'
-
 import WalletQuery from 'queries/Wallet'
 
 function withWallet(WrappedComponent) {
@@ -13,16 +11,13 @@ function withWallet(WrappedComponent) {
         {/* TODO: see if there's a way to avoid polling */}
         {({ data, error, networkStatus }) => {
           if (error) console.error(error)
-          const wallet = proxyOrWallet(get(data, 'web3.primaryAccount.id'))
 
           return (
             <WrappedComponent
               {...props}
-              wallet={wallet}
+              wallet={get(data, 'web3.primaryAccount.id')}
               walletType={get(data, 'web3.walletType')}
               walletLoading={networkStatus === 1}
-              walletIsProxy={isProxy(wallet)}
-              walletProxyOwner={proxyOwnerOrNull(wallet)}
             />
           )
         }}

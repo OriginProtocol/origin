@@ -3,28 +3,23 @@ import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 
+import Identicon from 'components/Identicon'
 import Balances from 'components/Balances'
-import WalletInfo from 'components/WalletInfo'
+import EthAddress from 'components/EthAddress'
 
-const Wallet = ({ wallet, walletProxyOwner }) => (
+const Wallet = ({ wallet }) => (
   <div className="wallet">
-    {walletProxyOwner ? (
-      <>
-        <WalletInfo
-          title={fbt('Identity Contract', 'Wallet.identityContract')}
-          wallet={wallet}
-        />
-        <WalletInfo
-          title={fbt('Identity Owner', 'Wallet.identityOwner')}
-          wallet={walletProxyOwner}
-        />
-      </>
-    ) : (
-      <WalletInfo
-        title={fbt('ETH Address', 'Wallet.ethAddress')}
-        wallet={wallet}
-      />
-    )}
+    <div className="wallet-info">
+      <div>
+        <h5>
+          <fbt desc="Wallet.ethAddress">ETH Address</fbt>
+        </h5>
+        <EthAddress address={wallet} />
+      </div>
+      <div className="identicon">
+        <Identicon size={50} address={wallet} />
+      </div>
+    </div>
     <Balances account={wallet} />
   </div>
 )
@@ -46,7 +41,6 @@ require('react-styl')(`
       font-size: 14px
       border-bottom: 2px solid black
       padding-bottom: 1rem
-      font-weight: normal
       a
         color: var(--white)
       .identicon

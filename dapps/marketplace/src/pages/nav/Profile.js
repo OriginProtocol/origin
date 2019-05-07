@@ -4,7 +4,6 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
-import withWallet from 'hoc/withWallet'
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
@@ -14,7 +13,6 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
-import WalletInfo from 'components/WalletInfo'
 
 class ProfileNav extends Component {
   constructor() {
@@ -42,7 +40,12 @@ class ProfileNav extends Component {
               className="nav-item dark profile"
               open={this.props.open}
               onClose={() => this.props.onClose()}
-              content={<ProfileDropdown onClose={() => this.props.onClose()} />}
+              content={
+                <ProfileDropdown
+                  onClose={() => this.props.onClose()}
+                  data={data}
+                />
+              }
             >
               <a
                 className="nav-link"
@@ -72,29 +75,24 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdown = withWallet(({ wallet, walletProxyOwner, onClose }) => {
+const ProfileDropdown = ({ data, onClose }) => {
+  const { checksumAddress, id } = data.web3.primaryAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
       <Network />
-      {walletProxyOwner ? (
-        <>
-          <WalletInfo
-            title={fbt('Identity Contract', 'nav.profile.identityContract')}
-            wallet={wallet}
-          />
-          <WalletInfo
-            title={fbt('Identity Owner', 'nav.profile.identityOwner')}
-            wallet={walletProxyOwner}
-          />
-        </>
-      ) : (
-        <WalletInfo
-          title={fbt('ETH Address', 'nav.profile.ethAddress')}
-          wallet={wallet}
-        />
-      )}
-      <Balances account={wallet} onClose={onClose} />
-      <Identity id={wallet} />
+      <div className="wallet-info">
+        <div>
+          <h5>
+            <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
+          </h5>
+          <div className="wallet-address">{checksumAddress}</div>
+        </div>
+        <div className="identicon">
+          <Identicon size={50} address={checksumAddress} />
+        </div>
+      </div>
+      <Balances account={id} onClose={onClose} />
+      <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
         <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
       </Link>
@@ -103,7 +101,7 @@ const ProfileDropdown = withWallet(({ wallet, walletProxyOwner, onClose }) => {
       </Link>
     </div>
   )
-})
+}
 
 const Identity = ({ id }) => (
   <Query query={IdentityQuery} variables={{ id }}>

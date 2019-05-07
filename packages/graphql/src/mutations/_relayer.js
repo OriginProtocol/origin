@@ -26,31 +26,6 @@ export default async function relayerHelper({ tx, from, address }) {
 
   const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
 
-  // const signedAlt = await new Promise(resolve =>
-  //   setTimeout(() => {
-  //     context.web3Exec.currentProvider.sendAsync(
-  //       {
-  //         method: 'eth_signTypedData',
-  //         params: [
-  //           [
-  //             {
-  //               type: 'bytes',
-  //               name: 'Create Listing Hash',
-  //               value: dataToSign
-  //             }
-  //           ],
-  //           from
-  //         ],
-  //         from
-  //       },
-  //       (err, res) => resolve(res.result)
-  //     )
-  //   }, 500)
-  // )
-  //
-  // console.log(signature)
-  // console.log(signedAlt)
-
   const response = await fetch(contracts.config.relayer, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
