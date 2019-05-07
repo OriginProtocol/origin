@@ -5,7 +5,7 @@ export default {
   updateListing: 38048,
   makeOffer: 301785,
   acceptOffer: 48099,
-  finalizeOffer: 128219,
+  finalizeOffer: 150000,
   withdrawOffer: 41321,
   withdrawListing: 60000,
   addFunds: 200000, // Needs real value. Needs GraphQL tests.
