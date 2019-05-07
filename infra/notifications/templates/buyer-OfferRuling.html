@@ -1,19 +1,12 @@
-<table>
-    <tr>
-        <td style="font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif; width:357px; vertical-align:top;" valign="top">
-            <div style="font-size: 28px; font-weight: bold;" valign="top">
-            A ruling has been made on your transaction.
-            </div>
-        </td>
-        <td style="width:193px;  vertical-align:top;"  valign="top">
-            <% if (listing.media[0]) { %>
-                <img class="listing-img" style="max-width:100%; height: auto;" src="<%= ipfsGatewayUrl %>/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-            <% } %>
-        </td>
-    </tr>
-</table>
+<div style="font-size: 28px; font-weight: bold;" valign="top">
+  A ruling has been made on your transaction.
+</div>
 
-<br/>
+<div style="width:100%;  vertical-align:top; text-align: center;">
+  <% if (listing.media[0]) { %>
+      <img class="listing-img" style="max-width:300px; height: auto; margin: 22px" src="<%= ipfsGatewayUrl %>/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
+  <% } %>
+</div>
 
 <!-- button -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
