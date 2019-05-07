@@ -169,56 +169,98 @@ class Details extends Component {
                   {Feedback('quantity')}
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.isDigital}
-                    id="isDigital-checkbox"
-                    onChange={() => {
-                      this.setState({ isDigital: !this.state.isDigital })
-                    }}
-                  />
-                  <label htmlFor="isDigital-checkbox">
-                    <fbt desc="create.details.giftcard.isDigital">
-                      Is this card digital?
-                    </fbt>
-                  </label>
+                <div className="form-group inline-radio">
+                    <label>
+                      <fbt desc="create.details.giftcard.isDigital">
+                        Card type
+                      </fbt>
+                    </label>
+
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="isDigital-radio"
+                        checked={this.state.isDigital}
+                        onChange={() => this.setState({ isDigital: true })}
+                      />
+                      <label htmlFor="isDigital-radio">
+                        <fbt desc="digital">Digital</fbt>
+                      </label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="isPhysical-radio"
+                        checked={!this.state.isDigital}
+                        onChange={() => this.setState({ isDigital: false })}
+                      />
+                      <label htmlFor="isPhysical-radio">
+                        <fbt desc="physical">Physical</fbt>
+                      </label>
+                    </div>
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.isCashPurchase}
-                    id="isCashPurchase-checkbox"
-                    onChange={() => {
-                      this.setState({
-                        isCashPurchase: !this.state.isCashPurchase
-                      })
-                    }}
-                  />
-                  <label htmlFor="isCashPurchase-checkbox">
-                    <fbt desc="create.details.giftcard.isCashPurchase">
-                      Was this a cash purchase?
-                    </fbt>
-                  </label>
+
+
+                <div className="form-group inline-radio">
+                    <label>
+                      <fbt desc="create.details.giftcard.isCashPurchase">
+                        Was this a cash purchase?
+                      </fbt>
+                    </label>
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="isCashPurchase-yes-radio"
+                        checked={this.state.isCashPurchase}
+                        onChange={() => this.setState({ isCashPurchase: true })}
+                      />
+                      <label htmlFor="isCashPurchase-yes-radio">
+                        <fbt desc="yes">Yes</fbt>
+                      </label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="isCashPurchase-no-radio"
+                        checked={!this.state.isCashPurchase}
+                        onChange={() => this.setState({ isCashPurchase: false })}
+                      />
+                      <label htmlFor="isCashPurchase-no-radio">
+                        <fbt desc="no">No</fbt>
+                      </label>
+                    </div>
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.receiptAvailable}
-                    id="receiptAvailable-checkbox"
-                    onChange={() => {
-                      this.setState({
-                        receiptAvailable: !this.state.receiptAvailable
-                      })
-                    }}
-                  />
-                  <label htmlFor="receiptAvailable-checkbox">
-                    <fbt desc="create.details.giftcard.receiptAvailable">
-                      Is a receipt available?
-                    </fbt>
-                  </label>
+
+                <div className="form-group inline-radio">
+                    <label>
+                      <fbt desc="create.details.giftcard.receiptAvailable">
+                        Is a receipt available?
+                      </fbt>
+                    </label>
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="receiptAvailable-yes-radio"
+                        checked={this.state.receiptAvailable}
+                        onChange={() => this.setState({ receiptAvailable: true })}
+                      />
+                      <label htmlFor="receiptAvailable-yes-radio">
+                        <fbt desc="yes">Yes</fbt>
+                      </label>
+                    </div>
+                    <div style={{display:'flex'}}>
+                      <input
+                        type="radio"
+                        id="receiptAvailable-no-radio"
+                        checked={!this.state.receiptAvailable}
+                        onChange={() => this.setState({ receiptAvailable: false })}
+                      />
+                      <label htmlFor="receiptAvailable-no-radio">
+                        <fbt desc="no">No</fbt>
+                      </label>
+                    </div>
                 </div>
 
                 <div className="form-group">
@@ -395,6 +437,14 @@ require('react-styl')(`
     img
       width: 270px
       height: auto
+  .inline-radio
+    display: flex
+    div
+      margin-left: 1rem
+      align-items: baseline
+      display: flex
+      input
+        margin-right: .25rem
   .country-flag
     background-image: url(images/flags/us.svg)
     width: 3rem;
