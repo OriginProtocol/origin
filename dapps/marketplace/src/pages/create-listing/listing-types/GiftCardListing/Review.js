@@ -103,7 +103,11 @@ class Review extends Component {
               <div className="col-9 d-flex">
                 <div
                   className="country-flag"
-                  style={{backgroundImage: `url(images/flags/${listing.issuingCountry}.svg)`}}
+                  style={{
+                    backgroundImage: `url(images/flags/${
+                      listing.issuingCountry
+                    }.svg)`
+                  }}
                 />
                 <div style={{ flex: 1 }}>
                   {countryCodeMapping['en'][listing.issuingCountry]}

@@ -119,7 +119,11 @@ class Details extends Component {
                   <div className="d-flex">
                     <div
                       className="country-flag"
-                      style={{backgroundImage: `url(images/flags/${this.state.issuingCountry}.svg)`}}
+                      style={{
+                        backgroundImage: `url(images/flags/${
+                          this.state.issuingCountry
+                        }.svg)`
+                      }}
                     />
                     <div style={{ flex: 1 }}>
                       <select
@@ -135,7 +139,6 @@ class Details extends Component {
                           </option>
                         ))}
                       </select>
-
                     </div>
                   </div>
                   {Feedback('issuingCountry')}
@@ -170,97 +173,96 @@ class Details extends Component {
                 </div>
 
                 <div className="form-group inline-radio">
-                    <label>
-                      <fbt desc="create.details.giftcard.isDigital">
-                        Card type
-                      </fbt>
-                    </label>
+                  <label>
+                    <fbt desc="create.details.giftcard.isDigital">
+                      Card type
+                    </fbt>
+                  </label>
 
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="isDigital-radio"
-                        checked={this.state.isDigital}
-                        onChange={() => this.setState({ isDigital: true })}
-                      />
-                      <label htmlFor="isDigital-radio">
-                        <fbt desc="digital">Digital</fbt>
-                      </label>
-                    </div>
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="isPhysical-radio"
-                        checked={!this.state.isDigital}
-                        onChange={() => this.setState({ isDigital: false })}
-                      />
-                      <label htmlFor="isPhysical-radio">
-                        <fbt desc="physical">Physical</fbt>
-                      </label>
-                    </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isDigital-radio"
+                      checked={this.state.isDigital}
+                      onChange={() => this.setState({ isDigital: true })}
+                    />
+                    <label htmlFor="isDigital-radio">
+                      <fbt desc="digital">Digital</fbt>
+                    </label>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isPhysical-radio"
+                      checked={!this.state.isDigital}
+                      onChange={() => this.setState({ isDigital: false })}
+                    />
+                    <label htmlFor="isPhysical-radio">
+                      <fbt desc="physical">Physical</fbt>
+                    </label>
+                  </div>
                 </div>
 
-
-
                 <div className="form-group inline-radio">
-                    <label>
-                      <fbt desc="create.details.giftcard.isCashPurchase">
-                        Was this a cash purchase?
-                      </fbt>
+                  <label>
+                    <fbt desc="create.details.giftcard.isCashPurchase">
+                      Was this a cash purchase?
+                    </fbt>
+                  </label>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isCashPurchase-yes-radio"
+                      checked={this.state.isCashPurchase}
+                      onChange={() => this.setState({ isCashPurchase: true })}
+                    />
+                    <label htmlFor="isCashPurchase-yes-radio">
+                      <fbt desc="yes">Yes</fbt>
                     </label>
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="isCashPurchase-yes-radio"
-                        checked={this.state.isCashPurchase}
-                        onChange={() => this.setState({ isCashPurchase: true })}
-                      />
-                      <label htmlFor="isCashPurchase-yes-radio">
-                        <fbt desc="yes">Yes</fbt>
-                      </label>
-                    </div>
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="isCashPurchase-no-radio"
-                        checked={!this.state.isCashPurchase}
-                        onChange={() => this.setState({ isCashPurchase: false })}
-                      />
-                      <label htmlFor="isCashPurchase-no-radio">
-                        <fbt desc="no">No</fbt>
-                      </label>
-                    </div>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isCashPurchase-no-radio"
+                      checked={!this.state.isCashPurchase}
+                      onChange={() => this.setState({ isCashPurchase: false })}
+                    />
+                    <label htmlFor="isCashPurchase-no-radio">
+                      <fbt desc="no">No</fbt>
+                    </label>
+                  </div>
                 </div>
 
-
                 <div className="form-group inline-radio">
-                    <label>
-                      <fbt desc="create.details.giftcard.receiptAvailable">
-                        Is a receipt available?
-                      </fbt>
+                  <label>
+                    <fbt desc="create.details.giftcard.receiptAvailable">
+                      Is a receipt available?
+                    </fbt>
+                  </label>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="receiptAvailable-yes-radio"
+                      checked={this.state.receiptAvailable}
+                      onChange={() => this.setState({ receiptAvailable: true })}
+                    />
+                    <label htmlFor="receiptAvailable-yes-radio">
+                      <fbt desc="yes">Yes</fbt>
                     </label>
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="receiptAvailable-yes-radio"
-                        checked={this.state.receiptAvailable}
-                        onChange={() => this.setState({ receiptAvailable: true })}
-                      />
-                      <label htmlFor="receiptAvailable-yes-radio">
-                        <fbt desc="yes">Yes</fbt>
-                      </label>
-                    </div>
-                    <div style={{display:'flex'}}>
-                      <input
-                        type="radio"
-                        id="receiptAvailable-no-radio"
-                        checked={!this.state.receiptAvailable}
-                        onChange={() => this.setState({ receiptAvailable: false })}
-                      />
-                      <label htmlFor="receiptAvailable-no-radio">
-                        <fbt desc="no">No</fbt>
-                      </label>
-                    </div>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="receiptAvailable-no-radio"
+                      checked={!this.state.receiptAvailable}
+                      onChange={() =>
+                        this.setState({ receiptAvailable: false })
+                      }
+                    />
+                    <label htmlFor="receiptAvailable-no-radio">
+                      <fbt desc="no">No</fbt>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="form-group">
