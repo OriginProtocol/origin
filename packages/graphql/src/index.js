@@ -15,3 +15,5 @@ if (typeof window !== 'undefined') {
 }
 
 export default client
+
+export { link, cache }
