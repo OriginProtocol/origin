@@ -191,28 +191,16 @@ class ChooseListingType extends Component {
       //  remove with:
       //      localStorage.removeItem('enableGiftCards');
       __typename = 'GiftCardListing'
-    } else if (localStorage.getItem('enableAllFractional')) {
-      // TODO (Stan): Temporary hack to prevent hourly fractional being used
-      // in production but can be tested and used by executing in console:
-      //      localStorage.setItem('enableAllFractional', 'true');
-      //  remove with:
-      //      localStorage.removeItem('enableAllFractional');
-      if (
-        category === 'schema.forRent' &&
-        nightlyFractional.includes(subCategory)
-      ) {
-        __typename = 'FractionalListing'
-      } else if (
-        category === 'schema.forRent' &&
-        hourlyFractional.includes(subCategory)
-      ) {
-        __typename = 'FractionalHourlyListing'
-      }
     } else if (
       category === 'schema.forRent' &&
-      subCategory === 'schema.housing'
+      nightlyFractional.includes(subCategory)
     ) {
       __typename = 'FractionalListing'
+    } else if (
+      category === 'schema.forRent' &&
+      hourlyFractional.includes(subCategory)
+    ) {
+      __typename = 'FractionalHourlyListing'
     }
 
     if (!newState.valid) {
