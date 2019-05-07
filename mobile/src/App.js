@@ -25,6 +25,8 @@ import WelcomeScreen from 'screens/onboarding/welcome'
 import EmailScreen from 'screens/onboarding/email'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
+import ReadyScreen from 'screens/onboarding/ready'
+import MnemonicScreen from 'screens/onboarding/mnemonic'
 import Loading from 'components/loading'
 
 const IMAGES_PATH = '../assets/images/'
@@ -39,9 +41,11 @@ YellowBox.ignoreWarnings([
 const OnboardingStack = createSwitchNavigator(
   {
     Welcome: WelcomeScreen,
+    Mnemonic: MnemonicScreen,
     Email: EmailScreen,
     Authentication: Authentication,
-    Pin: PinScreen
+    Pin: PinScreen,
+    Ready: ReadyScreen
   },
   {
     initialRouteName: 'Welcome'
