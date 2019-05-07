@@ -13,7 +13,8 @@ import {
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
-import AccountModal from 'components/account-modal'
+import TouchID from 'react-native-touch-id'
+
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -21,36 +22,59 @@ const IMAGES_PATH = '../../../assets/images/'
 class AuthenticationScreen extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      emailValue: '',
-      emailError: ''
-    }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  componentDidUpdate() {
-    const { emailError, emailValue } = this.state
-
-    if (emailError && !emailValue) {
-      this.setState({ emailError: '' })
+      biometryType: null
     }
   }
 
-  handleChange(emailValue) {
-    this.setState({ emailValue: emailValue.trim() })
-  }
-
-  handleSubmit() {
+  componentDidMount() {
+    TouchID.isSupported().then(biometryType => this.setState({ biometryType }))
+      .catch(() => { console.debug('No biometry available')})
   }
 
   render() {
+    let biometryButtonTitle
+    if (this.state.biometryType === 'FaceID') {
+      biometryButtonTitle = 'Use Face ID'
+    } else if (this.state.biometryType === 'TouchID' || this.state.biometryType) {
+      biometryButtonTitle = 'Use Touch ID'
+    }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Protect your wllet</Text>
+          <Text style={styles.title}>Protect your wallet</Text>
           <Text style={styles.subtitle}>Add an extra layer of security to keep your crypto safe.</Text>
+        </View>
+        <View style={styles.buttonsContainer}>
+          {biometryButtonTitle &&
+            <OriginButton
+              size="large"
+              type="primary"
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={biometryButtonTitle}
+              onPress={() => {
+                TouchID.authenticate('Test')
+                  .then(success => {
+                    this.setBiometryType(this.state.biometryType)
+                  })
+                  .catch(error => {
+                    console.error('Biometry failure: ', error)
+                  })
+              }}
+            />
+          }
+          <OriginButton
+            size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 16, fontWeight: '900' }}
+            title={'Create a Pin Code'}
+            onPress={() => {
+              this.props.navigation.navigate('Pin')
+            }}
+          />
         </View>
       </SafeAreaView>
     )
@@ -74,6 +98,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1
+  },
+  button: {
+    marginBottom: 20,
+    marginHorizontal: 50
+  },
+  buttonsContainer: {
+    paddingTop: 10,
+    width: '100%'
   },
   title: {
     fontFamily: 'Lato',

@@ -36,6 +36,11 @@ export default class OriginButton extends Component {
         borderColor = '#26d198'
         color = outline ? '#26d198' : 'white'
         break
+      case 'link':
+        backgroundColor = 'transparent'
+        borderColor = 'transparent'
+        color = '#1a82ff'
+        break
       default:
         backgroundColor = outline ? 'transparent' : '#ff0000'
         borderColor = '#ff0000'
