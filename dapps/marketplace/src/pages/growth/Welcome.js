@@ -28,7 +28,7 @@ class GrowthWelcome extends Component {
     // code so ignore it.
     inviteCode = inviteCode !== 'onboard' ? inviteCode : undefined
 
-    if (inviteCode.length !== 11) {
+    if (inviteCode && inviteCode.length !== 11) {
       console.warn(
         `Unexpected invite code ${inviteCode}. Invite code should be 11 characters long.`
       )
