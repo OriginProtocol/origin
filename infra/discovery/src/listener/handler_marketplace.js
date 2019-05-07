@@ -1,3 +1,4 @@
+const get = require('lodash/get')
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
@@ -70,13 +71,34 @@ class MarketplaceEventHandler {
   async _getListingDetails(block, event) {
     // Note that the listingId is passed with the blocknumber appended so we
     // can get the historical version of the listting
-    const result = await this.graphqlClient.query({
-      query: listingQuery,
-      variables: {
-        listingId: getOriginListingId(this.config.networkId, event)
+    let result = null,
+      retryCount = 0
+    // Retries in case we're "early" according to the node queried
+    while (get(result, 'data.marketplace.listing', null) === null) {
+      result = await this.graphqlClient.query({
+        query: listingQuery,
+        variables: {
+          listingId: getOriginListingId(this.config.networkId, event)
+        }
+      })
+
+      if (
+        get(result, 'data.marketplace.listing', null) === null &&
+        retryCount < 3
+      ) {
+        retryCount += 1
+        // Backoff for 30 seconds for every retry
+        await new Promise(resolve =>
+          setTimeout(resolve, 30 * retryCount * 1000)
+        )
+        console.log(`Retry #${retryCount}`)
+      } else {
+        break
       }
-    })
-    return result.data.marketplace
+    }
+    return result && result.data.marketplace.listing
+      ? result.data.marketplace
+      : null
   }
 
   /**
@@ -272,6 +294,10 @@ class MarketplaceEventHandler {
     }
 
     const details = await this._getDetails(block, event)
+
+    if (!details) {
+      throw new Error('Unable to find listing or offer')
+    }
 
     // On both listing and offer event, index the listing.
     // Notes:
