@@ -22,7 +22,6 @@ export LOG_LEVEL=DEBUG
 
 ./node_modules/.bin/nodemon src/app.js \
   --override-email=stan@originprotocol.com \
-  --verbose=true
 ```
 
 
