@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   legalContainer: {
     paddingTop: 20,
     paddingBottom: 30,
-    width: "80%",
+    width: '80%'
   },
   legal: {
     textAlign: 'center',

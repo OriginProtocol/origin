@@ -1,15 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
@@ -29,25 +21,33 @@ class AuthenticationScreen extends Component {
   }
 
   componentDidMount() {
-    TouchID.isSupported().then(biometryType => this.setState({ biometryType }))
-      .catch(() => { console.debug('No biometry available')})
+    TouchID.isSupported()
+      .then(biometryType => this.setState({ biometryType }))
+      .catch(() => {
+        console.debug('No biometry available')
+      })
   }
 
   render() {
     let biometryButtonTitle
     if (this.state.biometryType === 'FaceID') {
       biometryButtonTitle = 'Use Face ID'
-    } else if (this.state.biometryType === 'TouchID' || this.state.biometryType) {
+    } else if (
+      this.state.biometryType === 'TouchID' ||
+      this.state.biometryType
+    ) {
       biometryButtonTitle = 'Use Touch ID'
     }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>Protect your wallet</Text>
-          <Text style={styles.subtitle}>Add an extra layer of security to keep your crypto safe.</Text>
+          <Text style={styles.subtitle}>
+            Add an extra layer of security to keep your crypto safe.
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
-          {biometryButtonTitle &&
+          {biometryButtonTitle && (
             <OriginButton
               size="large"
               type="primary"
@@ -56,7 +56,7 @@ class AuthenticationScreen extends Component {
               title={biometryButtonTitle}
               onPress={() => {
                 TouchID.authenticate('Test')
-                  .then(success => {
+                  .then(() => {
                     this.setBiometryType(this.state.biometryType)
                   })
                   .catch(error => {
@@ -64,7 +64,7 @@ class AuthenticationScreen extends Component {
                   })
               }}
             />
-          }
+          )}
           <OriginButton
             size="large"
             type="link"

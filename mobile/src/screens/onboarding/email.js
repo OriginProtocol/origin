@@ -1,22 +1,11 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import { setEmail } from 'actions/Settings'
-import OriginButton from 'components/origin-button'
-
-const IMAGES_PATH = '../../../assets/images/'
 
 class EmailScreen extends Component {
   constructor(props) {
@@ -60,8 +49,8 @@ class EmailScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Let's Get Started</Text>
-          <Text style={styles.subtitle}>What's your email address?</Text>
+          <Text style={styles.title}>Let&apos;s Get Started</Text>
+          <Text style={styles.subtitle}>What&apos;s your email address?</Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -69,17 +58,17 @@ class EmailScreen extends Component {
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
             value={this.state.emailValue}
-            style={[
-              styles.input,
-              this.state.emailError ? styles.invalid : {}
-            ]}
+            style={[styles.input, this.state.emailError ? styles.invalid : {}]}
           />
           {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
           )}
         </View>
         <View style={styles.legalContainer}>
-          <Text style={styles.legal}>We will use your email to notify you of important notifications when you buy or sell.</Text>
+          <Text style={styles.legal}>
+            We will use your email to notify you of important notifications when
+            you buy or sell.
+          </Text>
         </View>
       </SafeAreaView>
     )
@@ -91,10 +80,13 @@ const mapStateToProps = ({ settings, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmail: email => dispatch(setEmail(email)),
+  setEmail: email => dispatch(setEmail(email))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EmailScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +98,7 @@ const styles = StyleSheet.create({
   legalContainer: {
     paddingTop: 20,
     paddingBottom: 30,
-    width: "80%",
+    width: '80%'
   },
   legal: {
     textAlign: 'center',

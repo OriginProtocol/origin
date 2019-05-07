@@ -14,7 +14,7 @@ class StackSelector extends React.Component {
       this.props.navigation.navigate('Welcome')
     } else if (!this.props.settings.email) {
       this.props.navigation.navigate('Email')
-    } else if (!this.props.settings.pinCode && !this.props.settings.biometryType) {
+    } else if (!this.props.settings.pin && !this.props.settings.biometryType) {
       this.props.navigation.navigate('Authentication')
     } else {
       this.props.navigation.navigate('App')
