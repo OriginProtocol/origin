@@ -47,11 +47,10 @@ class EmailScreen extends Component {
   }
 
   handleSubmit() {
-    console.log('submit')
     // Naive/simple email regex but should catch most issues
     const emailPattern = /.+@.+\..+/
     if (emailPattern.test(this.state.emailValue)) {
-      this.setEmail(this.state.emailValue)
+      this.props.setEmail(this.state.emailValue)
     } else {
       this.setState({ emailError: 'That does not look like a valid email.' })
     }
@@ -75,9 +74,9 @@ class EmailScreen extends Component {
               this.state.emailError ? styles.invalid : {}
             ]}
           />
-          {this.state.emailError &&
+          {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
-          }
+          )}
         </View>
         <View style={styles.legalContainer}>
           <Text style={styles.legal}>We will use your email to notify you of important notifications when you buy or sell.</Text>
@@ -141,6 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingTop: 20,
     paddingBottom: 20,
+    marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
     width: 300
