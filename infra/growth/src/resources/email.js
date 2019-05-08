@@ -36,6 +36,26 @@ const payoutHtmlTemplate = fs
 /**
  * Returns the content for invite email.
  * TODO: localize the content.
+ * TODO(franck): Make this code more generic. Idea (credit to Domen):
+ * function generateEmail(emailType, vars) {
+ *    const emailTemplates = {
+ *      'invite`: {
+ *        'subject': ...
+ *        'text': ...
+ *        'html': ...
+ *      }
+ *      ....
+ *    }
+ *    let textTemplate = emailTemplates[emailType].text
+ *    const textTemplateVars = //use regex to extract all vars in text template
+ *
+ *    const missingVars = _.difference(textTemplateVars, Object.keys(vars))
+ *    if (missingVars.length > 0) {
+ *      throw new Error (`The following template variables missing: ${missingVars.join(', ')}`)
+ *    }
+ *    textTemplateVars.forEach(varName => textTemplate.replace(/\${varName}/g, var[varName]))
+ * }
+ *
  *
  * @param {string} emailType: 'invite' or 'reminder'
  * @param {Object} vars: dynamic variables
@@ -43,6 +63,10 @@ const payoutHtmlTemplate = fs
  * @returns {{subject: string, html: *, text: *}}
  */
 function generateEmail(emailType, vars) {
+  /*
+
+  }
+   */
   let subject, text, html
   switch (emailType) {
     case 'invite':

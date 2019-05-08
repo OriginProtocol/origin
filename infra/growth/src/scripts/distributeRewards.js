@@ -96,9 +96,12 @@ class DistributeRewards {
     let amount = rewards
       .map(reward => BigNumber(reward.amount))
       .reduce((a1, a2) => a1.plus(a2))
+    const amountTokenUnit = this.distributor.token.toTokenUnit(amount)
 
     if (!this.config.persist) {
-      logger.info(`Would distribute total reward of ${amount} to ${ethAddress}`)
+      logger.info(
+        `Would distribute total reward of ${amountTokenUnit} OGN to ${ethAddress}`
+      )
       return amount
     }
 
@@ -119,11 +122,13 @@ class DistributeRewards {
       )
     }
 
-    logger.info(`Distributing reward of ${amount} to ${ethAddress}`)
+    logger.info(
+      `Distributing reward of ${amountTokenUnit} OGN to ${ethAddress}`
+    )
 
     // Create a payout row with status Pending.
     payout = await db.GrowthReward.create({
-      from_address: this.distributor.supplier,
+      from_address: this.distributor.supplier.toLowerCase(),
       to_address: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
       campaignId,
@@ -237,7 +242,7 @@ class DistributeRewards {
     const blockNumber = await this.web3.eth.getBlockNumber()
 
     // Reload the payouts that are in status Paid.
-    const payouts = db.GrowthPayout.findAll({
+    const payouts = await db.GrowthPayout.findAll({
       where: {
         campaignId,
         status: enums.GrowthPayoutStatuses.Paid
@@ -259,6 +264,37 @@ class DistributeRewards {
     return allConfirmed
   }
 
+  /**
+   * Verifies all addresses passed as argument have a Confirmed payout.
+   * Returns true if check passed, false otherwise.
+   *
+   * @param campaignId
+   * @param ethAddresses
+   * @returns {Promise<boolean>}
+   * @private
+   */
+  async _checkAllUsersPaid(campaignId, ethAddresses) {
+    if (!this.config.persist) {
+      return true
+    }
+
+    let allPaid = true
+    for (const ethAddress of ethAddresses) {
+      const payout = await db.GrowthPayout.findOne({
+        where: {
+          ethAddress,
+          campaignId,
+          status: enums.GrowthPayoutdStatuses.Confirmed
+        }
+      })
+      if (!payout) {
+        logger.error(`Account ${ethAddress} was not paid.`)
+        allPaid = false
+      }
+    }
+    return allPaid
+  }
+
   async process() {
     const now = new Date()
 
@@ -272,7 +308,9 @@ class DistributeRewards {
 
     for (const campaign of campaigns) {
       logger.info(
-        `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
+        `Calculating rewards for campaign ${campaign.id} (${
+          campaign.shortNameKey
+        })`
       )
       let campaignDistTotal = BigNumber(0)
 
@@ -302,21 +340,6 @@ class DistributeRewards {
       // Confirm the transactions.
       const allConfirmed = await this._confirmAllTransactions(campaign.id)
 
-      // Check that all users got paid.
-      await this._checkAllUsersPaid()
-      for (const ethAddress of Object.keys(ethAddressToRewards)) {
-        const payout = db.GrowthPayout.findOne({
-          where: {
-            ethAddress,
-            campaignId: campaign.id,
-            status: enums.GrowthPayoutdStatuses.Confirmed
-          }
-        })
-        if (!payout) {
-          throw new Error(`Account ${ethAddress} was not paid.`)
-        }
-      }
-
       if (allConfirmed) {
         if (this.config.persist) {
           // We are done ! Update the campaign status to Distributed.
@@ -337,14 +360,27 @@ class DistributeRewards {
         )
       }
 
+      // Double check that all users got paid.
+      const allUsersPaid = await this._checkAllUsersPaid(
+        campaign.id,
+        Object.keys(ethAddressToRewards)
+      )
+      if (allUsersPaid) {
+        logger.info('Verified all users got paid. All good!')
+      } else {
+        logger.error('Some users did not get paid. Inspect the data!')
+      }
+
       this.stats.numCampaigns++
       this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
         campaignDistTotal
       )
       logger.info(
-        `Finished distribution for campaign ${campaign.id} / ${campaign.name}`
+        `Finished distribution for campaign ${campaign.id} / ${
+          campaign.shortNameKey
+        }`
       )
-      logger.info(`Distributed a total of ${campaignDistTotal}`)
+      logger.info(`Distributed a total of ${campaignDistTotal.toFixed()}`)
     }
   }
 }
@@ -384,7 +420,7 @@ distributor.init(config.networkId).then(() => {
       logger.info('  Number of transactions:            ', job.stats.numTxns)
       logger.info(
         '  Grand total distributed (natural): ',
-        job.stats.distGrandTotal
+        job.stats.distGrandTotal.toFixed()
       )
       logger.info(
         '  Grand total distributed (tokens):  ',

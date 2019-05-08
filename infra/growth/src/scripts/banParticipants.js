@@ -7,7 +7,7 @@ const fs = require('fs')
 
 const Logger = require('logplease')
 
-const enums = require('enums')
+const enums = require('../enums')
 const _growthModels = require('../models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._identityModels }
@@ -116,10 +116,10 @@ class BanParticipants {
       const address = participant.ethAddress
       this.stats.numProcessed++
 
-      // Check if participant should be whitelisted.
+      // Check if participant is an employee and if yes mark them as such.
       if (this.employees.match(address)) {
         if (this.config.persist) {
-          await participant.update({ whitelisted: true })
+          await participant.update({ employee: true })
           logger.info('Setting employee flag on account ', address)
         } else {
           logger.info('Would set employee flag on account ', address)

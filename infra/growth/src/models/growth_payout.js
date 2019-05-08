@@ -4,7 +4,7 @@ const enums = require('../enums')
 
 module.exports = (sequelize, DataTypes) => {
   const GrowthPayout = sequelize.define(
-    'GrowthReward',
+    'GrowthPayout',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       status: DataTypes.ENUM(enums.GrowthPayoutStatuses),
