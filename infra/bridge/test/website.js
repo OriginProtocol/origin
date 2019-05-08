@@ -74,4 +74,75 @@ describe('website attestations', () => {
     expect(results[0].method).to.equal(AttestationTypes.WEBSITE)
     expect(results[0].value).to.equal('https://random.domainname')
   })
+
+  it('should throw error on incorrect verification code', async () => {
+    nock('https://random.domainname')
+      .get(`/${ethAddress}.html`)
+      .once()
+      .reply(200, 'Invalid code')
+
+    const response = await request(app)
+      .post('/api/attestations/website/verify')
+      .send({
+        identity: ethAddress,
+        websiteHost: 'https://random.domainname/'
+      })
+      .expect(400)
+
+    expect(response.body.errors[0]).to.equal(
+      'Origin verification code is incorrect.'
+    )
+  })
+
+  it('should throw error on internal server error', async () => {
+    nock('https://random.domainname')
+      .get(`/${ethAddress}.html`)
+      .once()
+      .reply(500)
+
+    const response = await request(app)
+      .post('/api/attestations/website/verify')
+      .send({
+        identity: ethAddress,
+        websiteHost: 'https://random.domainname/'
+      })
+      .expect(500)
+
+    expect(response.body.errors[0]).to.equal(
+      `Could not fetch website at 'https://random.domainname'.`
+    )
+  })
+
+  it('should throw error if file not found', async () => {
+    nock('https://random.domainname')
+      .get(`/${ethAddress}.html`)
+      .once()
+      .reply(404)
+
+    const response = await request(app)
+      .post('/api/attestations/website/verify')
+      .send({
+        identity: ethAddress,
+        websiteHost: 'https://random.domainname/'
+      })
+      .expect(400)
+
+    expect(response.body.errors[0]).to.equal(
+      `File "${ethAddress}.html" was not found in remote host.`
+    )
+  })
+
+  it('should throw error on malformed URL', async () => {
+    const response = await request(app)
+      .post('/api/attestations/website/verify')
+      .send({
+        identity: ethAddress,
+        websiteHost: 'https//random...domainname/'
+      })
+      // .expect(400)
+
+    expect(response.body.errors[0]).to.equal(
+      'Field `websiteHost` must be a valid URL'
+    )
+  })
 })

@@ -27,6 +27,17 @@ const codeValidation = (_, { req }) => {
   return true
 }
 
+const urlValidation = (websiteHost) => {
+  try {
+    // The following will throw if the URL is malformed
+    new URL(websiteHost)
+  } catch (e) {
+    throw new Error('Field `websiteHost` must be a valid URL')
+  }
+
+  return true
+}
+
 const airbnbGenerateCode = [
   identityValidation,
   check('airbnbUserId')
@@ -125,6 +136,14 @@ const googleVerify = [
   handleValidationError
 ]
 
+const websiteGenerateCode = [
+  identityValidation,
+  check('websiteHost').custom(urlValidation),
+  handleValidationError
+]
+
+const websiteVerify = websiteGenerateCode
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -134,5 +153,7 @@ module.exports = {
   phoneGenerateCode,
   phoneVerifyCode,
   twitterVerifyCode,
-  googleVerify
+  googleVerify,
+  websiteGenerateCode,
+  websiteVerify
 }

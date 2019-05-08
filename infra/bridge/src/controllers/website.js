@@ -7,16 +7,17 @@ const get = require('lodash/get')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
+const { websiteGenerateCode, websiteVerify } = require('../utils/validation')
 const { generateAttestation } = require('../utils/attestation')
 const { generateWebsiteCode } = require('../utils')
 const logger = require('../logger')
 
-router.get('/generate-code', async (req, res) => {
+router.get('/generate-code', websiteGenerateCode, async (req, res) => {
   const code = generateWebsiteCode(req.query.identity, req.query.websiteHost)
   res.send({ code })
 })
 
-router.post('/verify', async (req, res) => {
+router.post('/verify', websiteVerify, async (req, res) => {
   const { identity, websiteHost } = req.body
   const code = generateWebsiteCode(identity, websiteHost)
 
@@ -44,7 +45,7 @@ router.post('/verify', async (req, res) => {
 
   if (response.text.trim() !== code) {
     return res.status(400).send({
-      errors: [`Origin verification code "${code}" was not found.`]
+      errors: [`Origin verification code is incorrect.`]
     })
   }
 
