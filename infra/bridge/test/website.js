@@ -139,7 +139,7 @@ describe('website attestations', () => {
         identity: ethAddress,
         websiteHost: 'https//random...domainname/'
       })
-      // .expect(400)
+    // .expect(400)
 
     expect(response.body.errors[0]).to.equal(
       'Field `websiteHost` must be a valid URL'

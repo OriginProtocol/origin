@@ -27,7 +27,7 @@ const codeValidation = (_, { req }) => {
   return true
 }
 
-const urlValidation = (websiteHost) => {
+const urlValidation = websiteHost => {
   try {
     // The following will throw if the URL is malformed
     new URL(websiteHost)
