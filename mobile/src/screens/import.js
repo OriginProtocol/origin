@@ -108,7 +108,11 @@ class ImportAccountScreen extends Component {
       }
       wallet = new ethers.Wallet(privateKey)
     } catch (error) {
-      this.setState({ error: error.message })
+      let errorMessage = error.message
+      if (error.code === 'INVALID_ARGUMENT') {
+        errorMessage = 'That is not a valid private key.'
+      }
+      this.setState({ error: errorMessage })
     }
     if (wallet) {
       DeviceEventEmitter.emit('addAccount', {
@@ -154,7 +158,9 @@ class ImportAccountScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Use a private key'}
-            onPress={() => this.setState({ method: 'privatekey' })}
+            onPress={() =>
+              this.setState({ method: 'privatekey', value: '', error: '' })
+            }
           />
           <OriginButton
             size="large"
@@ -193,7 +199,9 @@ class ImportAccountScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Use a recovery phrase'}
-            onPress={() => this.setState({ method: 'mnemonic' })}
+            onPress={() =>
+              this.setState({ method: 'mnemonic', value: '', error: '' })
+            }
           />
           <OriginButton
             size="large"
