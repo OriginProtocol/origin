@@ -26,6 +26,7 @@ import Notifications from './notifications/Notifications'
 import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
+import GrowthBanned from 'pages/growth/Banned'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
@@ -125,6 +126,7 @@ class App extends Component {
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route exact path="/campaigns" component={GrowthCampaigns} />
+            <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route component={Listings} />
           </Switch>
