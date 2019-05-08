@@ -72,6 +72,8 @@ class CalculateRewards {
         const data = {
           ethAddress,
           campaignId: reward.campaignId,
+          levelId: reward.levelId,
+          ruleId: reward.ruleId,
           amount: reward.value.amount,
           currency: reward.value.currency
         }

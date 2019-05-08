@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       ethAddress: DataTypes.STRING,
       campaignId: DataTypes.INTEGER,
+      ruleId: DataTypes.STRING,
+      levelId: DataTypes.INTEGER,
       amount: DataTypes.DECIMAL,
       currency: DataTypes.STRING
     },
