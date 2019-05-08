@@ -51,9 +51,7 @@ class WebsiteAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="VerifyWebsite.verifyYourWebsite">
-            Verify your website
-          </fbt>
+          <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
         </h2>
         <div className="instructions">
           <fbt desc="VerifyWebsite.enterWebsiteProfileUrl">
@@ -74,8 +72,8 @@ class WebsiteAttestation extends Component {
         )}
         <div className="help">
           <fbt desc="VerifyWebsite.websiteProfilePublished">
-            Other users will know that you have a verified website and
-            your user id will be published on the blockchain.
+            Other users will know that you have a verified website and your user
+            id will be published on the blockchain.
           </fbt>
         </div>
         <div className="actions">
@@ -100,7 +98,8 @@ class WebsiteAttestation extends Component {
         </h2>
         <div className="instructions">
           <fbt desc="VerifyWebsite.uploadCodeToWebsite">
-            Download the following file and place it in the root of your website:
+            Download the following file and place it in the root of your
+            website:
           </fbt>
         </div>
         <div className="actions">
@@ -250,7 +249,7 @@ class WebsiteAttestation extends Component {
 
   downloadVerificationFile = () => {
     const element = document.createElement('a')
-    const file = new Blob([this.state.code], {type: 'text/plain'})
+    const file = new Blob([this.state.code], { type: 'text/plain' })
     element.href = URL.createObjectURL(file)
     element.download = `${this.props.wallet}.html`
     element.style.display = 'none'

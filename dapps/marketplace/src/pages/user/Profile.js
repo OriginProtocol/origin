@@ -121,7 +121,7 @@ class UserProfile extends Component {
         profile.facebookVerified !== prevProfile.facebookVerified ||
         profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
-        profile.airbnbVerified !== prevProfile.airbnbVerified || 
+        profile.airbnbVerified !== prevProfile.airbnbVerified ||
         profile.websiteVerified !== prevProfile.websiteVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
