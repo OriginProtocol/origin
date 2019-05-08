@@ -88,7 +88,9 @@ async function messageEmailSend(receivers, sender, config) {
             const templateVars = {
               config,
               sender,
-              senderName
+              senderName,
+              dappUrl: config.dappUrl,
+              ipfsGatewayUrl: config.ipfsGatewayUrl
             }
             const email = {
               to: config.overrideEmail || s.email,
