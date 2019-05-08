@@ -15,5 +15,17 @@ module.exports = (sequelize, DataTypes) => {
   NotificationLog.associate = function() {
     // associations can be defined here
   }
+  NotificationLog.beforeCreate(function(model, options) {
+    console.log(`In beforeCreate()`)
+    console.log(model)
+    console.log(options)
+
+    return new Promise ((resolve, reject) => {
+      model.ethAddress = model.ethAddress.toLowerCase()
+      return resolve(model, options)
+    })
+
+  })
+
   return NotificationLog
 }

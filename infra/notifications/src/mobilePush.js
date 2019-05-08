@@ -61,6 +61,10 @@ async function messageMobilePush(receivers, sender, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
+  // Force lowercase
+  sender = sender.toLowerCase()
+  receivers = receivers.map(function(x){ return x.toLowerCase() })
+
   const payload = {
     url: `${config.dappUrl}/#/messages`
   }
@@ -113,6 +117,11 @@ async function transactionMobilePush(
   if (!buyerAddress) throw new Error('buyerAddress not defined')
   if (!sellerAddress) throw new Error('sellerAddress not defined')
   if (!offer) throw new Error('offer not defined')
+
+  // Force lowercase
+  buyerAddress = buyerAddress.toLowerCase()
+  sellerAddress = sellerAddress.toLowerCase()
+  party = party.toLowerCase()
 
   const receivers = {}
   const buyerMessage = getNotificationMessage(
