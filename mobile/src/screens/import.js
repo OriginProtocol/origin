@@ -81,8 +81,12 @@ class ImportAccountScreen extends Component {
     try {
       wallet = ethers.Wallet.fromMnemonic(this.state.value.trim(), derivePath)
     } catch (error) {
+      let errorMessage = error.message
+      if (errorMessage === 'invalid mnemonic') {
+        errorMessage = 'That does not look like a valid recovery phrase.'
+      }
       this.setState({
-        error: error.message
+        error: errorMessage
       })
     }
     if (wallet) {
