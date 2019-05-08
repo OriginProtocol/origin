@@ -13,8 +13,8 @@ const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
 // const { browserPush } = require('./browserPush')
-const { emailSend } = require('./emailSend')
-const { mobilePush } = require('./mobilePush')
+const { transactionEmailSend, messageEmailSend } = require('./emailSend')
+const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
 const app = express()
@@ -49,7 +49,22 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-const config = {
+const networkDappDomains = {
+  1: 'https://dapp.originprotocol.com',
+  4: 'https://dapp.staging.originprotocol.com',
+  2222: 'https://dapp.dev.originprotocol.com',
+  999: 'http://localhost:3000'
+}
+const networkGatewayDomains = {
+  1: 'https://ipfs.originprotocol.com',
+  4: 'https://ipfs.staging.originprotocol.com',
+  2222: 'https://ipfs.dev.originprotocol.com',
+  999: 'http://localhost:8080'
+}
+
+const configOptions = {
+  // Ethereum network we're on
+  ethNetworkId: args['--eth-network-id'] || process.env.ETH_NETWORK_ID || 1,
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
   overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
@@ -59,8 +74,14 @@ const config = {
   asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
   // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
   emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
-  // Output debugging and other info. Boolean.
-  verbose: args['--verbose'] || false
+  // How far back in time to we look for duplicates?
+  dupeLookbackMs:
+    args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 30
+}
+const config = {
+  dappUrl: networkDappDomains[configOptions.ethNetworkId],
+  ipfsGatewayUrl: networkGatewayDomains[configOptions.ethNetworkId],
+  ...configOptions
 }
 logger.log(config)
 
@@ -84,14 +105,18 @@ const rateLimiterOptions = {
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
 const rateLimiterMiddleware = (req, res, next) => {
-  if (!req.url.startsWith('/events') && !req.url.startsWith('/mobile')) {
+  if (
+    !req.url.startsWith('/events') &&
+    !req.url.startsWith('/mobile') &&
+    !req.url.startsWith('/messages')
+  ) {
     rateLimiter
       .consume(req.connection.remoteAddress)
       .then(() => {
         next()
       })
       .catch(() => {
-        logger.error(`Rejecting request due to rate limiting.`)
+        logger.error(`Rejecting request due to rate limiting: ${req.url}`)
         res.status(429).send('<h2>Too Many Requests</h2>')
       })
   } else {
@@ -220,6 +245,28 @@ app.delete('/mobile/register', async (req, res) => {
 })
 
 /**
+ * Endpoint called by the messaging-server
+ * list of eth address that have received a message
+ */
+app.post('/messages', async (req, res) => {
+  res.status(200).send({ status: 'ok' })
+
+  const sender = req.body.sender // eth address
+  const receivers = req.body.receivers // array of eth addresses
+
+  if (!sender || !receivers) {
+    console.warn('Invalid json received.')
+    return
+  }
+
+  // Email notifications
+  messageEmailSend(receivers, sender, config)
+
+  // Mobile Push notifications
+  messageMobilePush(receivers, sender, config)
+})
+
+/**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
  * Sample json payloads in test/fixtures
@@ -277,19 +324,17 @@ app.post('/events', async (req, res) => {
 
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
-  if (config.verbose) {
-    logger.log(`>eventName: ${eventName}`)
-    logger.log(`>party: ${party}`)
-    logger.log(`>buyerAddress: ${buyerAddress}`)
-    logger.log(`>sellerAddress: ${sellerAddress}`)
-    logger.log(`offer:`)
-    logger.log(offer)
-    logger.log(`listing:`)
-    logger.log(listing)
-  }
+  logger.info(`>eventName: ${eventName}`)
+  logger.info(`>party: ${party}`)
+  logger.info(`>buyerAddress: ${buyerAddress}`)
+  logger.info(`>sellerAddress: ${sellerAddress}`)
+  logger.info(`offer:`)
+  logger.info(offer)
+  logger.info(`listing:`)
+  logger.info(listing)
 
   // Email notifications
-  emailSend(
+  transactionEmailSend(
     eventName,
     party,
     buyerAddress,
@@ -300,7 +345,14 @@ app.post('/events', async (req, res) => {
   )
 
   // Mobile Push notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
+  transactionMobilePush(
+    eventName,
+    party,
+    buyerAddress,
+    sellerAddress,
+    offer,
+    config
+  )
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)

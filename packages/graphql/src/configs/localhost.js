@@ -28,7 +28,13 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  tokens: []
+  tokens: [],
+
+  messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
+  messaging: {
+    messagingNamespace: 'origin',
+    globalKeyServer: 'http://localhost:6647'
+  }
 }
 
 if (addresses.DAI) {
