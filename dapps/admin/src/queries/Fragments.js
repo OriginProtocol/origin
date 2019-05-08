@@ -120,6 +120,9 @@ export default {
         }
         buyer {
           id
+          owner {
+            id
+          }
         }
         withdrawnBy {
           id
