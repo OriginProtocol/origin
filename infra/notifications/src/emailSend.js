@@ -25,7 +25,6 @@ const {
   logNotificationSent
 } = require('./dupeTools')
 
-
 //
 // Email notifications for Messages
 //
@@ -39,7 +38,9 @@ async function messageEmailSend(receivers, sender, config) {
     return r.toLowerCase()
   })
 
-  logger.info(`Messsage email: attempting to email addresses ${receivers.join(',')}`)
+  logger.info(
+    `Messsage email: attempting to email addresses ${receivers.join(',')}`
+  )
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
@@ -178,7 +179,9 @@ async function transactionEmailSend(
   sellerAddress = sellerAddress.toLowerCase()
   party = party.toLowerCase()
 
-  logger.info(`Transaction Email: party:${party} buyerAddress:${buyerAddress} sellerAddress:${sellerAddress}`)
+  logger.info(
+    `Transaction Email: party:${party} buyerAddress:${buyerAddress} sellerAddress:${sellerAddress}`
+  )
 
   // Load email template
   const templateDir = `${__dirname}/../templates`

@@ -95,7 +95,9 @@ async function messageMobilePush(receivers, sender, config) {
           config
         )
       } else {
-        logger.info(`Message: No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Message: No device registered for notifications for ${ethAddress}`
+        )
       }
     } catch (error) {
       logger.error(`Could not send push notification: ${error}`)
@@ -173,7 +175,9 @@ async function transactionMobilePush(
           config
         )
       } else {
-        logger.info(`Transaction: No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Transaction: No device registered for notifications for ${ethAddress}`
+        )
       }
     }
   }

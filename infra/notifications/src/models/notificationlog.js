@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
   }
   NotificationLog.beforeCreate(function(model, options) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // Force ethAddress to lowercase
       model.ethAddress = model.ethAddress.toLowerCase()
       return resolve(model, options)
