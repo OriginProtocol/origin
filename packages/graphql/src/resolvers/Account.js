@@ -54,5 +54,9 @@ export default {
     } catch (e) {
       return { id: account.id }
     }
+  },
+  proxy: async account => {
+    const id = await contracts.hasAccount(account.id)
+    return id ? { id } : null
   }
 }

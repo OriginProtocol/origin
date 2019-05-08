@@ -4,6 +4,8 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
+import withWallet from 'hoc/withWallet'
+
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
@@ -103,8 +105,8 @@ const ProfileDropdown = ({ data, onClose }) => {
   )
 }
 
-const Identity = ({ id }) => (
-  <Query query={IdentityQuery} variables={{ id }}>
+const Identity = withWallet(({ walletProxy }) => (
+  <Query query={IdentityQuery} variables={{ id: walletProxy }}>
     {({ data, error }) => {
       if (error) return null
       const profile = get(data, 'web3.account.identity') || {}
@@ -140,7 +142,7 @@ const Identity = ({ id }) => (
       )
     }}
   </Query>
-)
+))
 
 export default ProfileNav
 

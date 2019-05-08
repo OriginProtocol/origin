@@ -12,6 +12,9 @@ async function deployIdentity(
 ) {
   await checkMetaMask(from)
 
+  let wallet = await contracts.hasAccount(from)
+  if (!wallet) wallet = from
+
   attestations = attestations
     .map(a => {
       try {
@@ -24,10 +27,10 @@ async function deployIdentity(
         return null
       }
     })
-    .filter(a => validateAttestation(from, a))
+    .filter(a => validateAttestation(wallet, a))
 
   profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
-  profile.ethAddress = from
+  profile.ethAddress = wallet
 
   const data = {
     schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',

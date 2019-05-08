@@ -6,7 +6,9 @@ import AddDataMutation from 'mutations/AddData'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class AddData extends Component {
   state = {}
@@ -53,7 +55,7 @@ class AddData extends Component {
     const variables = {
       offerID: offer.id,
       listingID: offer.listing.id,
-      from: offer.listing.seller.id,
+      from: this.props.wallet,
       data: 'test'
     }
 
@@ -93,4 +95,4 @@ class AddData extends Component {
   }
 }
 
-export default withCanTransact(AddData)
+export default withWallet(withCanTransact(AddData))

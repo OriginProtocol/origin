@@ -13,8 +13,9 @@ import QueryError from 'components/QueryError'
 import Link from 'components/Link'
 
 import query from 'queries/Identity'
+import withOwner from 'hoc/withOwner'
 
-const AboutParty = ({ id }) => {
+const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
   if (redirect) {
@@ -105,11 +106,11 @@ const AboutParty = ({ id }) => {
         }}
       </Query>
       <div className="eth-address">
-        <Identicon size={40} address={id} />
+        <Identicon size={40} address={owner} />
         <div>
           <div>ETH Address:</div>
           <div>
-            <EthAddress address={id} />
+            <EthAddress address={owner} />
           </div>
         </div>
       </div>
@@ -130,7 +131,7 @@ const AboutParty = ({ id }) => {
   )
 }
 
-export default AboutParty
+export default withOwner(AboutParty)
 
 require('react-styl')(`
   .about-party
