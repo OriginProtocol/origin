@@ -158,7 +158,9 @@ class ImportAccountScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Use a private key'}
-            onPress={() => this.setState({ method: 'privatekey', value: '', error: '' })}
+            onPress={() =>
+              this.setState({ method: 'privatekey', value: '', error: '' })
+            }
           />
           <OriginButton
             size="large"
@@ -197,7 +199,9 @@ class ImportAccountScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Use a recovery phrase'}
-            onPress={() => this.setState({ method: 'mnemonic', value: '', error: '' })}
+            onPress={() =>
+              this.setState({ method: 'mnemonic', value: '', error: '' })
+            }
           />
           <OriginButton
             size="large"
