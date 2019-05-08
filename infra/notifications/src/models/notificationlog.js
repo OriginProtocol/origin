@@ -22,6 +22,5 @@ module.exports = (sequelize, DataTypes) => {
       return resolve(model, options)
     })
   })
-
   return NotificationLog
 }
