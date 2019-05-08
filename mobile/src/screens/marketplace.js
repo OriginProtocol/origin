@@ -21,6 +21,12 @@ import TransactionCard from 'components/transaction-card'
 import { decodeTransaction } from '../utils/contractDecoder'
 
 class MarketplaceScreen extends Component {
+  static navigationOptions = () => {
+    return {
+      header: null
+    }
+  }
+
   constructor(props) {
     super(props)
 
@@ -65,17 +71,17 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  static navigationOptions = () => {
-    return {
-      header: null
-    }
-  }
-
   componentDidMount() {
     console.debug(
       `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
     )
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
+  }
+
+  componentWillUnmount() {
+    DeviceEventEmitter.removeListener('transactionHash')
+    DeviceEventEmitter.removeListener('messageSigned')
+    DeviceEventEmitter.removeListener('messagingKeys')
   }
 
   onWebViewMessage(event) {
@@ -154,7 +160,10 @@ class MarketplaceScreen extends Component {
           }
         })()
       `
-      this.dappWebView.injectJavaScript(keyInjection)
+      if (this.dappWebView) {
+        console.debug('Injecting messaging keys')
+        this.dappWebView.injectJavaScript(keyInjection)
+      }
     }
   }
 

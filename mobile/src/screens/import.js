@@ -96,18 +96,21 @@ class ImportAccountScreen extends Component {
   }
 
   addAccountFromPrivateKey() {
-    let account
+    let wallet
     try {
-      let privateKey = this.state.keyValue
+      let privateKey = this.state.value
       if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
         privateKey = '0x' + privateKey
       }
-      account = web3.eth.accounts.privateKeyToAccount(privateKey)
+      wallet = new ethers.Wallet(privateKey)
     } catch (error) {
       this.setState({ error: error.message })
     }
-    if (account) {
-      DeviceEventEmitter.emit('addAccount', account)
+    if (wallet) {
+      DeviceEventEmitter.emit('addAccount', {
+        address: wallet.address,
+        privateKey: wallet.privateKey
+      })
       return true
     }
   }
@@ -143,6 +146,14 @@ class ImportAccountScreen extends Component {
         <View style={styles.buttonsContainer}>
           <OriginButton
             size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={'Use a private key'}
+            onPress={() => this.setState({ method: 'privatekey' })}
+          />
+          <OriginButton
+            size="large"
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
@@ -172,6 +183,14 @@ class ImportAccountScreen extends Component {
           )}
         </View>
         <View style={styles.buttonsContainer}>
+          <OriginButton
+            size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={'Use a recovery phrase'}
+            onPress={() => this.setState({ method: 'mnemonic' })}
+          />
           <OriginButton
             size="large"
             type="primary"

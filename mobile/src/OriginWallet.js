@@ -263,7 +263,9 @@ class OriginWallet extends Component {
       // to the first account found that is not the removed account
       const newActiveAccount =
         wallet.accounts.find(a => a.address !== account.address) || null
-      this.setAccountActive(newActiveAccount)
+      if (newActiveAccount) {
+        this.setAccountActive(newActiveAccount)
+      }
     }
     return result
   }

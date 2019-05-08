@@ -27,7 +27,12 @@ class EmailScreen extends Component {
     }
 
     if (this.props.settings.email && this.props.settings.email.length > 0) {
-      this.props.navigation.navigate('Authentication')
+      // Email is set
+      if (!this.props.settings.pin && !this.props.settings.biometryType) {
+        this.props.navigation.navigate('Authentication')
+      } else {
+        this.props.navigation.navigate('Ready')
+      }
     }
   }
 

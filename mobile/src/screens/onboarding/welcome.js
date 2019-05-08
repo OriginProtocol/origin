@@ -19,16 +19,6 @@ const IMAGES_PATH = '../../../assets/images/'
 class WelcomeScreen extends Component {
   constructor(props) {
     super(props)
-    // Navigate to email screen if an account already exists
-    if (this.props.wallet.accounts.length > 0) {
-      this.props.navigation.navigate('Email')
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.wallet.accounts.length > 0) {
-      this.props.navigation.navigate('Email')
-    }
   }
 
   render() {
@@ -56,6 +46,7 @@ class WelcomeScreen extends Component {
             title={'Create New Wallet'}
             onPress={() => {
               DeviceEventEmitter.emit('createAccount')
+              this.props.navigation.navigate('Email')
             }}
           />
           <OriginButton

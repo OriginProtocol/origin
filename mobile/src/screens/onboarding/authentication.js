@@ -7,6 +7,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 
 import TouchID from 'react-native-touch-id'
 
+import { setBiometryType } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -65,10 +66,11 @@ class AuthenticationScreen extends Component {
               onPress={() => {
                 TouchID.authenticate('Test')
                   .then(() => {
-                    this.setBiometryType(this.state.biometryType)
+                    this.props.setBiometryType(this.state.biometryType)
+                    this.props.navigation.navigate('Ready')
                   })
                   .catch(error => {
-                    console.error('Biometry failure: ', error)
+                    console.warn('Biometry failure: ', error)
                   })
               }}
             />
@@ -93,7 +95,11 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(AuthenticationScreen)
+const mapDispatchToProps = dispatch => ({
+  setBiometryType: biometryType => dispatch(setBiometryType(biometryType))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthenticationScreen)
 
 const styles = StyleSheet.create({
   container: {

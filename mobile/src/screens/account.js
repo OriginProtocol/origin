@@ -39,7 +39,7 @@ class AccountScreen extends Component {
   async handleDangerousCopy(privateKey) {
     Alert.alert(
       'Important!',
-      'As a security precaution, your key will be removed from the clipboard after one minute.',
+      'As a security precaution, the clipboard will be cleared after one minute.',
       [
         {
           text: 'Got it.',
@@ -62,12 +62,13 @@ class AccountScreen extends Component {
   }
 
   handleDelete() {
-    const { navigation } = this.props
+    const { navigation, wallet } = this.props
+    const isLastAccount = wallet.accounts.length === 1
 
     Alert.alert(
       'Important!',
-      'Have you backed up your private key for this account? ' +
-        'The account will be permanently deleted and you must have the private key to recover it. ' +
+      'Have you backed up your private key or recovery phrase for this account? ' +
+        'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
         'Are you sure that you want to delete this account?',
       [
         { text: 'Cancel' },
@@ -79,7 +80,13 @@ class AccountScreen extends Component {
                 'removeAccount',
                 navigation.getParam('account')
               )
-              navigation.goBack()
+              if (isLastAccount) {
+                // No accounts left, navigate back to welcome screen
+                navigation.navigate('Welcome')
+              } else {
+                // There are still some accounts, go back to accounts list
+                navigation.goBack()
+              }
             } catch (e) {
               console.error(e)
             }
@@ -101,15 +108,10 @@ class AccountScreen extends Component {
     DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
   }
 
-  showPrivateKey() {
-    const { privateKey } = this.props.navigation.getParam('account')
-    Alert.alert('Private Key', privateKey)
-  }
-
   render() {
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
-    const { address, privateKey } = account
+    const { address, privateKey, mnemonic } = account
     const name = wallet.accountNameMapping[address]
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.address
@@ -148,22 +150,46 @@ class AccountScreen extends Component {
               onPress={this.handleSetAccountActive}
             />
           )}
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Show Private Key'}
-            onPress={() => this.showPrivateKey(address)}
-          />
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Copy Private Key'}
-            onPress={() => this.handleDangerousCopy(privateKey)}
-          />
+          {mnemonic !== undefined &&
+            <>
+              <OriginButton
+                size="large"
+                type="primary"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Show Recovery Phrase'}
+                onPress={() => Alert.alert('Recovery Phrase', mnemonic)}
+              />
+              <OriginButton
+                size="large"
+                type="primary"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Copy Recovery Phrase'}
+                onPress={() => this.handleDangerousCopy(mnemonic)}
+              />
+            </>
+          }
+          {mnemonic === undefined &&
+            <>
+              <OriginButton
+                size="large"
+                type="primary"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Show Private Key'}
+                onPress={() => Alert.alert('Private Key', privateKey)}
+              />
+              <OriginButton
+                size="large"
+                type="primary"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Copy Private Key'}
+                onPress={() => this.handleDangerousCopy(privateKey)}
+              />
+            </>
+          }
           {(multipleAccounts || true) && (
             <OriginButton
               size="large"
