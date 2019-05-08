@@ -17,10 +17,13 @@ async function acceptOffer(_, data) {
     throw new Error(`Invalid offer: ${offer.validationError}`)
   }
 
-  const tx = contracts.marketplaceExec.methods
-    .acceptOffer(listingId, offerId, ipfsHash)
-    .send({ gas: cost.acceptOffer, from })
-  return txHelper({ tx, from, mutation: 'acceptOffer' })
+  const tx = contracts.marketplaceExec.methods.acceptOffer(
+    listingId,
+    offerId,
+    ipfsHash
+  )
+
+  return txHelper({ tx, from, mutation: 'acceptOffer', gas: cost.acceptOffer })
 }
 
 export default acceptOffer

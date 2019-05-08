@@ -5,15 +5,19 @@ import get from 'lodash/get'
 import AccountTokenBalance from 'queries/TokenBalance'
 
 function tokenBalance(amount, decimals, places = 0) {
-  const supplyBN = web3.utils.toBN(amount)
-  const decimalsBN = web3.utils.toBN(
-    web3.utils.padRight('1', decimals + 1 - places)
-  )
-  const str = supplyBN.div(decimalsBN).toString()
-  if (places > 0) {
-    return String(Number(str) / Math.pow(10, places))
+  try {
+    const supplyBN = web3.utils.toBN(amount)
+    const decimalsBN = web3.utils.toBN(
+      web3.utils.padRight('1', decimals + 1 - places)
+    )
+    const str = supplyBN.div(decimalsBN).toString()
+    if (places > 0) {
+      return String(Number(str) / Math.pow(10, places))
+    }
+    return str
+  } catch (e) {
+    return `${amount}`
   }
-  return str
 }
 
 class TokenBalance extends Component {

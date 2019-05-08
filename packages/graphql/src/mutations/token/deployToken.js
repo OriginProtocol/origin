@@ -23,11 +23,10 @@ async function deployToken(_, args) {
     })
   }
 
-  tx = tx.send({ gas: 4612388, from: args.from })
-
   return txHelper({
     tx,
     from: args.from,
+    gas: 4612388,
     mutation: 'deployToken',
     onReceipt: receipt => {
       let tokens = []

@@ -87,12 +87,7 @@ function withEnrolmentModal(WrappedComponent) {
           })
         }
       } else if (enrollmentStatus === 'Banned') {
-        alert(
-          fbt(
-            'You have been banned from earning tokens',
-            'GrowthEnrollment.bannedFromEarning'
-          )
-        )
+        this.historyNavigate('/rewards/banned')
       }
       if (this.props.onClick) {
         this.props.onClick()
