@@ -61,6 +61,12 @@ async function messageMobilePush(receivers, sender, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
+  // Force lowercase
+  sender = sender.toLowerCase()
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
+
   const payload = {
     url: `${config.dappUrl}/#/messages`
   }
@@ -89,7 +95,9 @@ async function messageMobilePush(receivers, sender, config) {
           config
         )
       } else {
-        logger.info(`No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Message: No device registered for notifications for ${ethAddress}`
+        )
       }
     } catch (error) {
       logger.error(`Could not send push notification: ${error}`)
@@ -113,6 +121,11 @@ async function transactionMobilePush(
   if (!buyerAddress) throw new Error('buyerAddress not defined')
   if (!sellerAddress) throw new Error('sellerAddress not defined')
   if (!offer) throw new Error('offer not defined')
+
+  // Force lowercase
+  buyerAddress = buyerAddress.toLowerCase()
+  sellerAddress = sellerAddress.toLowerCase()
+  party = party.toLowerCase()
 
   const receivers = {}
   const buyerMessage = getNotificationMessage(
@@ -162,7 +175,9 @@ async function transactionMobilePush(
           config
         )
       } else {
-        logger.info(`No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Transaction: No device registered for notifications for ${ethAddress}`
+        )
       }
     }
   }
