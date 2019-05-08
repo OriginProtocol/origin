@@ -70,6 +70,7 @@ const GrowthParticipantAuthenticationStatus = new Enum(
   'NotEnrolled'
 )
 
+// DEPRECATED. Do not use.
 const GrowthRewardStatuses = new Enum(
   'Pending',
   'Fraud,',
@@ -78,6 +79,13 @@ const GrowthRewardStatuses = new Enum(
   'Paid',
   'PaymentFailed',
   'PaidConfirmed'
+)
+
+const GrowthPayoutStatuses = new Enum(
+  'Pending', // Payout transaction submitted to the blockchain
+  'Paid', // Transaction receipt received from blokchain.
+  'Confirmed', // Transaction confirmed.
+  'Failed' // Transaction failed. Should be retried.
 )
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
@@ -92,6 +100,7 @@ module.exports = {
   GrowthParticipantStatuses,
   GrowthParticipantAuthenticationStatus,
   GrowthRewardStatuses,
+  GrowthPayoutStatuses,
   GrowthInviteContactTypes,
   GrowthInviteStatuses,
   GrowthCampaignStatuses,

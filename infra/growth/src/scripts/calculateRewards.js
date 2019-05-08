@@ -33,13 +33,23 @@ class CalculateRewards {
     }
   }
 
-  async _getParticipants(campaign) {
-    // Get list of growth engine program participants that signed up
-    // before campaign ended and that are in active status.
+  /**
+   *  Returns list of growth engine program participants that are potentially
+   *  eligible for a payout during the campaign. Conditions:
+   *  - signed up before campaign ended
+   *  - in active status
+   *  - not an employee
+   *
+   * @param {models.GrowthCampgign} campaign
+   * @returns {Promise<Array<Object>>}
+   * @private
+   */
+  async _getPayableParticipants(campaign) {
     const participants = await db.GrowthParticipant.findAll({
       where: {
         status: enums.GrowthParticipantStatuses.Active,
-        createdAt: { [Sequelize.Op.lt]: campaign.endDate }
+        createdAt: { [Sequelize.Op.lt]: campaign.endDate },
+        employee: { [Sequelize.Op.ne]: true }
       }
     })
     return participants
@@ -60,11 +70,8 @@ class CalculateRewards {
     try {
       for (const reward of rewards) {
         const data = {
-          status: enums.GrowthRewardStatuses.Pending,
           ethAddress,
           campaignId: reward.campaignId,
-          levelId: reward.levelId,
-          ruleId: reward.ruleId,
           amount: reward.value.amount,
           currency: reward.value.currency
         }
@@ -121,7 +128,7 @@ class CalculateRewards {
       this.stats.numCampaigns++
 
       let campaignTotal = BigNumber(0)
-      const participants = await this._getParticipants(campaign)
+      const participants = await this._getPayableParticipants(campaign)
       for (const participant of participants) {
         const ethAddress = participant.ethAddress
         logger.info(`Calculating reward for account ${ethAddress}`)
@@ -143,15 +150,14 @@ class CalculateRewards {
           continue
         }
 
-        // Insert rewards in the growth_reward table, if any.
+        // Insert rewards in the growth_reward table.
+        await this._insertRewards(ethAddress, campaign, rewards)
+
+        // Log and update stats.
+        this.stats.numAccountsPayout++
         const total = rewards
           .map(reward => BigNumber(reward.value.amount))
           .reduce((v1, v2) => v1.plus(v2))
-        await this._insertRewards(ethAddress, campaign, rewards)
-
-        this.stats.numAccountsPayout++
-
-        // Log and update stats.
         logger.debug(`Participant ${ethAddress} - Calculation result:`)
         logger.debug('  Num reward:      ', rewards.length)
         logger.debug('  Total (natural): ', total.toFixed())
@@ -160,7 +166,9 @@ class CalculateRewards {
       }
 
       // Done calculating rewards for this campaign.
-      logger.info(`Campaign calculation done. Total reward of ${campaignTotal.toFixed()}`)
+      logger.info(
+        `Campaign calculation done. Total reward of ${campaignTotal.toFixed()}`
+      )
 
       // Some sanity checks before we record the rewards.
       const maxCap = BigNumber(campaign.cap).times(CampaignMaxOverCapFactor)

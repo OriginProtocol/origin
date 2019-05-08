@@ -1,6 +1,4 @@
 // Script to distribute Growth Engine rewards.
-//  - Scans growth_reward table for rows with status Pending, grouped by account.
-//  - For each row, distribute tokens to acco
 
 'use strict'
 
@@ -14,7 +12,6 @@ const { createProviders } = require('@origin/token/src/config')
 const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
-const { sendPayoutEmail } = require('../resources/email')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('distRewards', { showTimestamp: false })
@@ -63,87 +60,142 @@ class DistributeRewards {
     }
   }
 
+  /**
+   *
+   * @param {string} ethAddress
+   * @param {Array<models.GrowthReward>} rewards
+   * @returns {Promise<*>}
+   * @private
+   */
   async _distributeRewards(ethAddress, rewards) {
+    // Paranoia consistency checks
+    if (!rewards || rewards.length < 1) {
+      throw new Error(`Expected at least 1 reward for ${ethAddress}`)
+    }
+    const campaignId = rewards[0].campaignId
+    const currency = rewards[0].currency
+    for (const reward of rewards) {
+      if (reward.ethAddress !== ethAddress) {
+        throw new Error(
+          `Expected address ${ethAddress} for reward id ${reward.id}`
+        )
+      }
+      if (reward.campaignId !== campaignId) {
+        throw new Error(
+          `Expected campaign id ${campaignId} for reward id ${reward.id}`
+        )
+      }
+      if (reward.currency !== currency) {
+        throw new Error(
+          `Expected currency ${currency} for reward id ${reward.id}`
+        )
+      }
+    }
+
     // Sum up the reward amount.
-    let total = rewards
+    let amount = rewards
       .map(reward => BigNumber(reward.amount))
       .reduce((a1, a2) => a1.plus(a2))
 
     if (!this.config.persist) {
-      logger.info(`Would distribute reward of ${total} from to ${ethAddress}`)
-      return total
+      logger.info(`Would distribute total reward of ${amount} to ${ethAddress}`)
+      return amount
     }
 
-    logger.info(`Distributing reward of ${total} to ${ethAddress}`)
-
-    // Mark the reward row(s) as InPayment.
-    let txn = await db.sequelize.transaction()
-    try {
-      for (const reward of rewards) {
-        await reward.update({ status: enums.GrowthRewardStatuses.InPayment })
+    // Check there is not already a payout row.
+    // If there is and it is not in status Failed, something is wrong. Bail out.
+    let payout = await db.GrowthReward.findOne({
+      where: {
+        ethAddress,
+        campaignId,
+        status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
-      await txn.commit()
-    } catch (e) {
-      await txn.rollback()
-      throw e
+    })
+    if (payout) {
+      throw new Error(
+        `Existing payout row id ${payout.id} with status ${
+          payout.status
+        } for account ${ethAddress}`
+      )
     }
 
-    // Send a transaction for the total amount.
+    logger.info(`Distributing reward of ${amount} to ${ethAddress}`)
+
+    // Create a payout row with status Pending.
+    payout = await db.GrowthReward.create({
+      from_address: this.distributor.supplier,
+      to_address: ethAddress,
+      status: enums.GrowthPayoutStatuses.Pending,
+      campaignId,
+      amount,
+      currency
+    })
+
+    // Send a blockchain transaction to payout the reward to the participant.
     let status, txnHash, txnReceipt
     try {
-      txnReceipt = await this.distributor.credit(ethAddress, total)
+      txnReceipt = await this.distributor.credit(ethAddress, amount)
     } catch (e) {
       logger.error('Credit failed: ', e)
     }
     if (txnReceipt && txnReceipt.status) {
-      status = enums.GrowthRewardStatuses.Paid
+      status = enums.GrowthPayoutStatuses.Paid
       txnHash = txnReceipt.transactionHash
     } else {
-      logger.error(`EVM reverted transaction - Marking rewards as Failed`)
-      status = enums.GrowthRewardStatuses.PaymentFailed
+      logger.error(
+        `EVM reverted transaction - Marking payout id ${payout.id} as Failed`
+      )
+      status = enums.GrowthPayoutStatuses.Failed
       txnHash = null
-      total = 0
+      amount = 0
     }
 
-    // Mark the rewards as Paid.
-    txn = await db.sequelize.transaction()
+    // Update the status of the payout row.
     try {
-      for (const reward of rewards) {
-        await reward.update({ status, txnHash })
-      }
-      await txn.commit()
+      await payout.update({ status, txnHash })
     } catch (e) {
-      logger.error(`IMPORTANT: failed updating reward status to Paid.`)
-      logger.error(`Leaving status as InPayment. Needs manual intervention.`)
-      await txn.rollback()
+      logger.error(`IMPORTANT: failed updating payout id ${payout.id} status.`)
+      logger.error(`Need manual intervention.`)
       throw e
     }
 
     this.stats.numTxns++
-    return total
+    return amount
   }
 
-  async _confirmTransaction(ethAddress, rewards, currentBlockNumber) {
+  /**
+   * Returns true if the payout transaction was confirmed on the blockchain.
+   * False otherwise.
+   * Updates the status of the payout row to either Confirmed or Failed.
+   *
+   * @param {models.GrowthPayout} payout
+   * @param {integer} currentBlockNumber
+   * @returns {Promise<boolean>}
+   * @private
+   */
+  async _confirmTransaction(payout, currentBlockNumber) {
     if (!this.config.persist) {
       return true
     }
 
-    // Reload the reward to get the txnHash and run some consistency checks.
-    for (const reward of rewards) {
-      await reward.reload()
-      if (!reward.txnHash) {
-        // Make sure all rewards have a txnHash.
-        throw new Error(`Null txnHash for reward ${reward.id}`)
-      }
-      if (reward.txnHash !== rewards[0].txnHash) {
-        // Make sure all rewards point to same txnHash.
-        throw new Error(`Inconsistent txnHash reward ${reward.id}`)
-      }
+    // Consistency checks.
+    if (payout.status === enums.GrowthPayoutStatuses.Confirmed) {
+      // Already confirmed. Nothing to do.
+      return true
     }
-    const txnHash = rewards[0].txnHash
+    if (payout.status !== enums.GrowthPayoutStatuses.Paid) {
+      throw new Error(
+        `Can't confirm payout id ${payout.id}, status is ${
+          payout.status
+        } rather than Paid`
+      )
+    }
+    if (!payout.txnHash) {
+      throw new Error(`Can't confirm payout id ${payout.id}, txnHash is empty`)
+    }
 
-    // Load the transaction receipt.
-    const txnReceipt = await this.web3.eth.getTransactionReceipt(txnHash)
+    // Load the transaction receipt form the blockchain.
+    const txnReceipt = await this.web3.eth.getTransactionReceipt(payout.txnHash)
 
     // Make sure we've waited long enough to verify the confirmation.
     const numConfirmations = currentBlockNumber - txnReceipt.blockNumber
@@ -153,32 +205,27 @@ class DistributeRewards {
 
     if (!txnReceipt.status) {
       // The transaction did not get confirmed.
-      // Rollback the rewards status to Failed so that the transaction
+      // Rollback the payout status from Paid to Failed so that the transaction
       // gets attempted again next time the job runs.
-      const ids = rewards.map(reward => reward.id)
-      logger.error(`Rewards with ids ${ids}`)
-      logger.error('  Transaction hash ${txnHash} failed confirmation.')
+      logger.error(`Account ${payout.ethAddress} Payout ${payout.id}`)
+      logger.error('  Transaction hash ${payout.txnHash} failed confirmation.')
       logger.error('  Setting status to PaymentFailed.')
-      const txn = await db.sequelize.transaction()
-      try {
-        for (const reward of rewards) {
-          delete reward.data.txnHash
-          await reward.update({
-            status: enums.GrowthRewardStatuses.PaymentFailed,
-            data: reward.data
-          })
-        }
-        await txn.commit()
-      } catch (e) {
-        await txn.rollback()
-        throw e
-      }
+      await payout.update({ status: enums.GrowthPayoutStatuses.Failed })
       return false
     }
+    await payout.update({ status: enums.GrowthPayoutStatuses.Confirmed })
     return true
   }
 
-  async _confirmAllTransactions(ethAddressToRewards) {
+  /**
+   * Returns true if all payout with status Paid are confirmed on the blockchain.
+   * False otherwise.
+   *
+   * @param campaignId
+   * @returns {Promise<boolean>}
+   * @private
+   */
+  async _confirmAllTransactions(campaignId) {
     // Wait a bit for the last transaction to settle.
     const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
     logger.info(
@@ -186,106 +233,30 @@ class DistributeRewards {
     )
     await new Promise(resolve => setTimeout(resolve, waitMsec))
 
-    // Verify the reward transactions were confirmed on the blockchain.
+    // Get current blockNumber from the blockchain.
     const blockNumber = await this.web3.eth.getBlockNumber()
 
+    // Reload the payouts that are in status Paid.
+    const payouts = db.GrowthPayout.findAll({
+      where: {
+        campaignId,
+        status: enums.GrowthPayoutStatuses.Paid
+      }
+    })
+
     let allConfirmed = true
-    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
+    for (const payout of payouts) {
+      let confirmed
       try {
-        const confirmed = await this._confirmTransaction(
-          ethAddress,
-          rewards,
-          blockNumber
-        )
-        allConfirmed = allConfirmed && confirmed
+        confirmed = await this._confirmTransaction(payout, blockNumber)
       } catch (e) {
         logger.error('Failed verifying transaction:', e)
-        allConfirmed = false
+        confirmed = false
       }
+      allConfirmed = allConfirmed && confirmed
     }
+
     return allConfirmed
-  }
-
-  /**
-   * Send a payout email to every account that got a payout.
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _sendPayoutEmails(campaign) {
-    // Ensure the campaign distribution is finished.
-    await campaign.reload()
-    if (campaign.status !== enums.GrowthCampaignRewardStatuses.Distributed) {
-      throw new Error(
-        `Can not send payout email for campaign ${campaign.id} with status ${
-          campaign.status
-        }`
-      )
-    }
-
-    // Load all rewards rows for this campaign.
-    const rewardRows = await db.GrowthReward.findAll({
-      where: { campaignId: campaign.id }
-    })
-
-    // Group rewards by recipient.
-    const ethAddressToRewards = {}
-    rewardRows.forEach(reward => {
-      if (ethAddressToRewards[reward.ethAddress]) {
-        ethAddressToRewards[reward.ethAddress].push(reward)
-      } else {
-        ethAddressToRewards[reward.ethAddress] = [reward]
-      }
-    })
-
-    // If we are not in dry-run mode, do some extra consistency checks of the data.
-    if (this.config.persist) {
-      // Ensure all rewards rows have status Paid.
-      for (const reward of rewardRows) {
-        if (reward.status !== enums.GrowthRewardStatuses.Paid) {
-          throw new Error(
-            `Can not send email, reward ${reward.id} with status ${
-              reward.status
-            }`
-          )
-        }
-      }
-
-      // Ensure all rewards for a given recipient have same txHash.
-      for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-        let txHash = null
-        for (const reward of rewards) {
-          if (!txHash) {
-            txHash = reward.txnHash
-            continue
-          }
-          if (reward.txnHash !== txHash) {
-            throw new Error(
-              `Account ${ethAddress}: expected reward ${
-                reward.id
-              } to have txHash ${txHash}`
-            )
-          }
-        }
-      }
-    }
-
-    // For each account, sum up individual rewards and send email with total payout.
-    for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
-      // Sum up amount in natural units, then convert to token.
-      const amount = rewards
-        .map(reward => BigNumber(reward.amount))
-        .reduce((a1, a2) => a1.plus(a2))
-        .dividedBy(BigNumber(10).pow(18))
-      const txnHash = rewards[0].txnHash
-
-      if (this.config.persist) {
-        await sendPayoutEmail(ethAddress, amount, txnHash)
-      } else {
-        logger.info(
-          `Would send email to account ${ethAddress}, payout amount ${amount}`
-        )
-      }
-    }
   }
 
   async process() {
@@ -305,17 +276,9 @@ class DistributeRewards {
       )
       let campaignDistTotal = BigNumber(0)
 
-      // Load rewards rows for this campaign that are in status Pending or Failed.
+      // Load rewards rows for this campaign.
       const rewardRows = await db.GrowthReward.findAll({
-        where: {
-          campaignId: campaign.id,
-          status: {
-            [Sequelize.Op.in]: [
-              enums.GrowthRewardStatuses.Pending,
-              enums.GrowthRewardStatuses.PaymentFailed
-            ]
-          }
-        }
+        where: { campaignId: campaign.id }
       })
 
       // TODO: If this data set becomes too large to hold in memory,
@@ -329,20 +292,34 @@ class DistributeRewards {
         }
       })
 
-      // Distribute the rewards to each account.
+      // Distribute the rewards to all accounts.
+      // This will create payout rows.
       for (const [ethAddress, rewards] of Object.entries(ethAddressToRewards)) {
         const distAmount = await this._distributeRewards(ethAddress, rewards)
         campaignDistTotal = campaignDistTotal.plus(distAmount)
       }
 
       // Confirm the transactions.
-      const allConfirmed = await this._confirmAllTransactions(
-        ethAddressToRewards
-      )
+      const allConfirmed = await this._confirmAllTransactions(campaign.id)
+
+      // Check that all users got paid.
+      await this._checkAllUsersPaid()
+      for (const ethAddress of Object.keys(ethAddressToRewards)) {
+        const payout = db.GrowthPayout.findOne({
+          where: {
+            ethAddress,
+            campaignId: campaign.id,
+            status: enums.GrowthPayoutdStatuses.Confirmed
+          }
+        })
+        if (!payout) {
+          throw new Error(`Account ${ethAddress} was not paid.`)
+        }
+      }
 
       if (allConfirmed) {
-        // Update the campaign reward status to indicate it was distributed
         if (this.config.persist) {
+          // We are done ! Update the campaign status to Distributed.
           await campaign.update({
             rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
           })
@@ -352,9 +329,6 @@ class DistributeRewards {
             `Would update campaign ${campaign.id} status to Distributed.`
           )
         }
-
-        // Send payout emails.
-        await this._sendPayoutEmails()
       } else {
         logger.error(
           `One or more transactions not confirmed. Leaving campaign ${
