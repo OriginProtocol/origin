@@ -26,37 +26,91 @@ const reminderTextTemplate = fs
 const reminderHtmlTemplate = fs
   .readFileSync(`${templateDir}/emailReminder.html`)
   .toString()
+const payoutTextTemplate = fs
+  .readFileSync(`${templateDir}/emailPayout.txt`)
+  .toString()
+const payoutHtmlTemplate = fs
+  .readFileSync(`${templateDir}/emailPayout.html`)
+  .toString()
 
 /**
  * Returns the content for invite email.
  * TODO: localize the content.
+ * TODO(franck): Make this code more generic. Idea (credit to Domen):
+ * function generateEmail(emailType, vars) {
+ *    const emailTemplates = {
+ *      'invite`: {
+ *        'subject': ...
+ *        'text': ...
+ *        'html': ...
+ *      }
+ *      ....
+ *    }
+ *    let textTemplate = emailTemplates[emailType].text
+ *    const textTemplateVars = //use regex to extract all vars in text template
+ *
+ *    const missingVars = _.difference(textTemplateVars, Object.keys(vars))
+ *    if (missingVars.length > 0) {
+ *      throw new Error (`The following template variables missing: ${missingVars.join(', ')}`)
+ *    }
+ *    textTemplateVars.forEach(varName => textTemplate.replace(/\${varName}/g, var[varName]))
+ * }
+ *
  *
  * @param {string} emailType: 'invite' or 'reminder'
- * @param {string} friendName
+ * @param {Object} vars: dynamic variables
  * @param {string} targetUrl
  * @returns {{subject: string, html: *, text: *}}
  */
-function generateEmail(emailType, referrerName, targetUrl) {
-  let subject, textTemplate, htmlTemplate
-  if (emailType === 'invite') {
-    subject = 'Join Origin and earn free cryptocurrency'
-    textTemplate = inviteTextTemplate
-    htmlTemplate = inviteHtmlTemplate
-  } else {
-    subject = 'Earn Origin cryptocurrency'
-    textTemplate = reminderTextTemplate
-    htmlTemplate = reminderHtmlTemplate
+function generateEmail(emailType, vars) {
+  /*
+
   }
-  const text = textTemplate
-    .replace(/\${referrerName}/g, referrerName)
-    .replace(/\${targetUrl}/g, targetUrl)
-  const html = htmlTemplate
-    .replace(/\${referrerName}/g, referrerName)
-    .replace(/\${targetUrl}/g, targetUrl)
-    .replace(
-      /\${referrerImgUrl}/g,
-      'https://www.originprotocol.com/static/img/unknown-user.png'
-    )
+   */
+  let subject, text, html
+  switch (emailType) {
+    case 'invite':
+      subject = 'Join Origin and earn free cryptocurrency'
+      text = inviteTextTemplate
+        .replace(/\${referrerName}/g, vars.referrerName)
+        .replace(/\${targetUrl}/g, vars.targetUrl)
+      html = inviteHtmlTemplate
+        .replace(/\${referrerName}/g, vars.referrerName)
+        .replace(/\${targetUrl}/g, vars.targetUrl)
+        .replace(
+          /\${referrerImgUrl}/g,
+          'https://www.originprotocol.com/static/img/unknown-user.png'
+        )
+      break
+    case 'reminder':
+      subject = 'Earn Origin cryptocurrency'
+      text = reminderTextTemplate
+        .replace(/\${referrerName}/g, vars.referrerName)
+        .replace(/\${targetUrl}/g, vars.targetUrl)
+      html = reminderHtmlTemplate
+        .replace(/\${referrerName}/g, vars.referrerName)
+        .replace(/\${targetUrl}/g, vars.targetUrl)
+        .replace(
+          /\${referrerImgUrl}/g,
+          'https://www.originprotocol.com/static/img/unknown-user.png'
+        )
+      break
+    case 'payout':
+      subject = `You've received Origin Tokens (OGN)!`
+      text = payoutTextTemplate
+        .replace(/\${amount}/g, vars.amount)
+        .replace(/\${ethAddress}/g, vars.ethAddress)
+        .replace(/\${txLink}/g, vars.txLink)
+        .replace(/\${campaignLink}/g, vars.campaignLink)
+      html = payoutHtmlTemplate
+        .replace(/\${amount}/g, vars.amount)
+        .replace(/\${ethAddress}/g, vars.ethAddress)
+        .replace(/\${txLink}/g, vars.txLink)
+        .replace(/\${campaignLink}/g, vars.campaignLink)
+      break
+    default:
+      throw new Error(`Invalid emailtType ${emailType}`)
+  }
 
   return { subject, text, html }
 }
@@ -108,7 +162,7 @@ async function sendInvites(referrer, recipients) {
     `Sending ${recipients.length} invitation emails on behalf of ${referrer}`
   )
 
-  const { referrerName, targetUrl } = await _getEmailVars(referrer)
+  const vars = await _getEmailVars(referrer)
 
   for (const recipient of recipients) {
     // Validate recipient is a proper email.
@@ -118,11 +172,7 @@ async function sendInvites(referrer, recipients) {
     }
 
     // Send the invite code to the recipient.
-    const { subject, text, html } = generateEmail(
-      'invite',
-      referrerName,
-      targetUrl
-    )
+    const { subject, text, html } = generateEmail('invite', vars)
     const email = {
       to: recipient,
       from: process.env.SENDGRID_FROM_EMAIL,
@@ -182,15 +232,11 @@ async function sendInviteReminder(referrer, inviteId) {
   }
 
   logger.info(`Sending reminder email on behalf of ${referrer}`)
-  const { referrerName, targetUrl } = await _getEmailVars(referrer)
+  const vars = await _getEmailVars(referrer)
   const recipient = invite.refereeContact
 
   // Send the reminder email.
-  const { subject, text, html } = generateEmail(
-    'reminder',
-    referrerName,
-    targetUrl
-  )
+  const { subject, text, html } = generateEmail('reminder', vars)
   const email = {
     to: recipient,
     from: process.env.SENDGRID_FROM_EMAIL,
@@ -206,4 +252,64 @@ async function sendInviteReminder(referrer, inviteId) {
   }
 }
 
-module.exports = { generateEmail, sendInvites, sendInviteReminder }
+/**
+ * Sends a campaign payout email.
+ *
+ * @returns {Promise<void>}
+ */
+/**
+ *
+ * @param ethAddress
+ * @param {amount: string, ethAddress: string, txLink: string, campaig}vars
+ * @returns {Promise<void>}
+ */
+
+/**
+ *
+ * @param ethAddress
+ * @param {string} amount - Payout amount.
+ * @param {string} txHash - Payput transaction hash
+ * @returns {Promise<void>}
+ */
+async function sendPayoutEmail(ethAddress, amount, txHash) {
+  // Load identity of the user to get their email address.
+  const identity = await db.Identity.findOne({ where: { ethAddress } })
+  if (!identity || !identity.email) {
+    logger.info(
+      'No email on record for account ${ethAddress}. Skipping sending payout email.'
+    )
+    return
+  }
+  const recipient = identity.email
+  logger.info(`Sending payout email to ${email} for account ${ethAddress}`)
+
+  // Generate the content of the email.
+  const vars = {
+    ethAddress,
+    amount,
+    txLink: `https://etherscan.io/tx/${txHash}`,
+    campaignLink: 'https://dapp.originprotocol.com/#/welcome'
+  }
+  const { subject, text, html } = generateEmail('payout', vars)
+
+  const email = {
+    to: recipient,
+    from: process.env.SENDGRID_FROM_EMAIL,
+    subject,
+    text,
+    html
+  }
+  try {
+    await sendgridMail.send(email)
+  } catch (error) {
+    logger.error(`Failed sending payout email: ${error}`)
+    throw new Error(`Failed sending payout email: ${error}`)
+  }
+}
+
+module.exports = {
+  generateEmail,
+  sendInvites,
+  sendInviteReminder,
+  sendPayoutEmail
+}
