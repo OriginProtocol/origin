@@ -24,6 +24,7 @@ COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/cron ./infra/cron
+COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
 

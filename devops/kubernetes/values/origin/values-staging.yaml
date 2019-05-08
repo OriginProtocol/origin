@@ -28,7 +28,7 @@ discoveryImageTag: 'c24c059'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '6317a43'
+growthImageTag: '83896a4'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -57,7 +57,7 @@ linkingImageTag: 'bce3090'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'cbd89b1'
+cronImageTag: '984b546'
 
 # origin-admin
 adminImage: origin-admin
