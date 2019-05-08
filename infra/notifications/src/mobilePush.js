@@ -63,7 +63,9 @@ async function messageMobilePush(receivers, sender, config) {
 
   // Force lowercase
   sender = sender.toLowerCase()
-  receivers = receivers.map(function(x){ return x.toLowerCase() })
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
 
   const payload = {
     url: `${config.dappUrl}/#/messages`

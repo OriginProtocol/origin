@@ -20,11 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     console.log(model)
     console.log(options)
 
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       model.ethAddress = model.ethAddress.toLowerCase()
       return resolve(model, options)
     })
-
   })
 
   return NotificationLog

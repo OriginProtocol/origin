@@ -34,7 +34,9 @@ async function messageEmailSend(receivers, sender, config) {
 
   // Force lowercase
   sender = sender.toLowerCase()
-  receivers = receivers.map(function(x){ return x.toLowerCase() })
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
 
   // Load email template
   const templateDir = `${__dirname}/../templates`
