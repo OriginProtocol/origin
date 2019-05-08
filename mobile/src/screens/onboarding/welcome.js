@@ -43,7 +43,7 @@ class WelcomeScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Create New Wallet'}
+            title={'Create a wallet'}
             onPress={() => {
               DeviceEventEmitter.emit('createAccount')
               this.props.navigation.navigate('Email')
