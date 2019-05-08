@@ -13,17 +13,17 @@ const { generateWebsiteCode } = require('../utils')
 const logger = require('../logger')
 
 router.get('/generate-code', websiteGenerateCode, async (req, res) => {
-  const code = generateWebsiteCode(req.query.identity, req.query.websiteHost)
+  const code = generateWebsiteCode(req.query.identity, req.query.website)
   res.send({ code })
 })
 
 router.post('/verify', websiteVerify, async (req, res) => {
-  const { identity, websiteHost } = req.body
-  const code = generateWebsiteCode(identity, websiteHost)
+  const { identity, website } = req.body
+  const code = generateWebsiteCode(identity, website)
 
   // Ignore the pathname and query params in the URL and
   // check if the file exists in the root of the domain
-  const remoteOrigin = new URL(websiteHost).origin
+  const remoteOrigin = new URL(website).origin
   const remoteFileURL = `${remoteOrigin}/${identity}.html`
 
   let response

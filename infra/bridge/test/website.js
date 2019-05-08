@@ -28,7 +28,7 @@ describe('website attestations', () => {
       .get('/api/attestations/website/generate-code')
       .query({
         identity: ethAddress,
-        websiteHost: 'https://random.domainname/'
+        website: 'https://random.domainname/'
       })
       .expect(200)
 
@@ -50,7 +50,7 @@ describe('website attestations', () => {
       .post('/api/attestations/website/verify')
       .send({
         identity: ethAddress,
-        websiteHost: 'https://random.domainname/'
+        website: 'https://random.domainname/'
       })
 
     expect(response.body.schemaId).to.equal(
@@ -85,7 +85,7 @@ describe('website attestations', () => {
       .post('/api/attestations/website/verify')
       .send({
         identity: ethAddress,
-        websiteHost: 'https://random.domainname/'
+        website: 'https://random.domainname/'
       })
       .expect(400)
 
@@ -104,7 +104,7 @@ describe('website attestations', () => {
       .post('/api/attestations/website/verify')
       .send({
         identity: ethAddress,
-        websiteHost: 'https://random.domainname/'
+        website: 'https://random.domainname/'
       })
       .expect(500)
 
@@ -123,7 +123,7 @@ describe('website attestations', () => {
       .post('/api/attestations/website/verify')
       .send({
         identity: ethAddress,
-        websiteHost: 'https://random.domainname/'
+        website: 'https://random.domainname/'
       })
       .expect(400)
 
@@ -137,12 +137,12 @@ describe('website attestations', () => {
       .post('/api/attestations/website/verify')
       .send({
         identity: ethAddress,
-        websiteHost: 'https//random...domainname/'
+        website: 'https//random...domainname/'
       })
     // .expect(400)
 
     expect(response.body.errors[0]).to.equal(
-      'Field `websiteHost` must be a valid URL'
+      'Field `website` must be a valid URL'
     )
   })
 })

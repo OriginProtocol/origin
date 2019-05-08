@@ -43,6 +43,8 @@ class IdentityEventHandler {
       return 'phone'
     } else if (attestation.data.attestation.email) {
       return 'email'
+    } else if (attestation.data.attestation.domain) {
+      return 'website'
     } else {
       logger.error(`Failed extracting service from attestation ${attestation}`)
     }
@@ -167,6 +169,12 @@ class IdentityEventHandler {
           case 'google':
             decoratedIdentity.googleVerified = true
             break
+          case 'website':
+            decoratedIdentity.website = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WEBSITE'
+            )
+            break
         }
       })
     )
@@ -208,7 +216,8 @@ class IdentityEventHandler {
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
       country: decoratedIdentity.country,
-      avatarUrl: decoratedIdentity.avatarUrl
+      avatarUrl: decoratedIdentity.avatarUrl,
+      website: decoratedIdentity.website
     }
 
     logger.debug('Identity=', identityRow)

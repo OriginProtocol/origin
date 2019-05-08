@@ -27,12 +27,12 @@ const codeValidation = (_, { req }) => {
   return true
 }
 
-const urlValidation = websiteHost => {
+const urlValidation = website => {
   try {
     // The following will throw if the URL is malformed
-    new URL(websiteHost)
+    new URL(website)
   } catch (e) {
-    throw new Error('Field `websiteHost` must be a valid URL')
+    throw new Error('Field `website` must be a valid URL')
   }
 
   return true
@@ -138,7 +138,7 @@ const googleVerify = [
 
 const websiteGenerateCode = [
   identityValidation,
-  check('websiteHost').custom(urlValidation),
+  check('website').custom(urlValidation),
   handleValidationError
 ]
 
