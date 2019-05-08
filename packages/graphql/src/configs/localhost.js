@@ -12,7 +12,7 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  bridge: 'https://bridge.dev.originprotocol.com',
+  bridge: `http://${HOST}:5000`,
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
   automine: 2000,
