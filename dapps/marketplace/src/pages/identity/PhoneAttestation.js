@@ -279,7 +279,6 @@ export default PhoneAttestation
 
 require('react-styl')(`
   .attestation-modal
-    overflow: visible !important
     padding-bottom: 1.5rem !important
     > div
       h2

@@ -21,6 +21,7 @@ const identityQuery = gql`
           emailVerified
           googleVerified
           websiteVerified
+          ipfsHash
         }
       }
     }
