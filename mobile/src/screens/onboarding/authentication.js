@@ -99,7 +99,10 @@ const mapDispatchToProps = dispatch => ({
   setBiometryType: biometryType => dispatch(setBiometryType(biometryType))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthenticationScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AuthenticationScreen)
 
 const styles = StyleSheet.create({
   container: {

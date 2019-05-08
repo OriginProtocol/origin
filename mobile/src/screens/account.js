@@ -150,7 +150,7 @@ class AccountScreen extends Component {
               onPress={this.handleSetAccountActive}
             />
           )}
-          {mnemonic !== undefined &&
+          {mnemonic !== undefined && (
             <>
               <OriginButton
                 size="large"
@@ -169,8 +169,8 @@ class AccountScreen extends Component {
                 onPress={() => this.handleDangerousCopy(mnemonic)}
               />
             </>
-          }
-          {mnemonic === undefined &&
+          )}
+          {mnemonic === undefined && (
             <>
               <OriginButton
                 size="large"
@@ -189,7 +189,7 @@ class AccountScreen extends Component {
                 onPress={() => this.handleDangerousCopy(privateKey)}
               />
             </>
-          }
+          )}
           {(multipleAccounts || true) && (
             <OriginButton
               size="large"
