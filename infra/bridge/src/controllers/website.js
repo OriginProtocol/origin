@@ -20,9 +20,9 @@ router.post('/verify', async (req, res) => {
   const { identity, websiteHost } = req.body
   const code = generateWebsiteCode(identity, websiteHost)
 
-  // Ignore the pathname and query params in the URL and 
+  // Ignore the pathname and query params in the URL and
   // check if the file exists in the root of the domain
-  const remoteOrigin = (new URL(websiteHost)).origin
+  const remoteOrigin = new URL(websiteHost).origin
   const remoteFileURL = `${remoteOrigin}/${identity}.html`
 
   let response
@@ -31,11 +31,9 @@ router.post('/verify', async (req, res) => {
   } catch (error) {
     const statusCode = get(error, 'response.status')
     if (statusCode === 404) {
-      logger.warn(
-        `File`
-      )
+      logger.warn(`File "${identity}.html" not found`)
       return res.status(400).send({
-        errors: [`File "${identity.html}" was not found in remote host.`]
+        errors: [`File "${identity}.html" was not found in remote host.`]
       })
     } else {
       return res.status(500).send({
@@ -46,9 +44,7 @@ router.post('/verify', async (req, res) => {
 
   if (response.text.trim() !== code) {
     return res.status(400).send({
-      errors: [
-        `Origin verification code "${code}" was not found.`
-      ]
+      errors: [`Origin verification code "${code}" was not found.`]
     })
   }
 

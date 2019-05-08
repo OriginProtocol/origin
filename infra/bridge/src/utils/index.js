@@ -25,7 +25,7 @@ function generateSixDigitCode() {
 }
 
 function generateWebsiteCode(ethAddress, host) {
-  const data = Web3.utils.sha3(`${ethAddress}--${host}`);
+  const data = Web3.utils.sha3(`${ethAddress}--${host}`)
   const sign = generateSignature(process.env.ATTESTATION_SIGNING_KEY, data)
 
   // trim '0x' prefix
