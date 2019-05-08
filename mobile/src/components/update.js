@@ -2,14 +2,13 @@
 
 import React from 'react'
 import {
-  Image,
+  // Image,
   Linking,
   Modal,
   Platform,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from 'react-native'
 import compareVersions from 'compare-versions'
@@ -17,7 +16,7 @@ import compareVersions from 'compare-versions'
 import OriginButton from 'components/origin-button'
 import { version } from '../../package.json'
 
-const IMAGES_PATH = '../../assets/images/'
+// const IMAGES_PATH = '../../assets/images/'
 
 class RecommendForceUpdate extends React.Component {
   constructor(props) {

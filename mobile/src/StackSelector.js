@@ -9,7 +9,7 @@ class StackSelector extends React.Component {
     this.selectStack()
   }
 
-  selectStack(versions) {
+  selectStack() {
     if (this.props.wallet.accounts.length == 0) {
       this.props.navigation.navigate('Welcome')
     } else if (!this.props.settings.email) {
