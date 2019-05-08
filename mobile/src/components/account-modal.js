@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import { fbt } from 'fbt-runtime'
 import Web3 from 'web3'
 const web3 = new Web3()
 
@@ -88,14 +89,16 @@ class AccountModal extends Component {
             </TouchableOpacity>
             <View style={styles.navHeadingContainer}>
               <Text style={[styles.heading, dark ? styles.headingDark : {}]}>
-                {heading || 'Add Account'}
+                {heading || fbt('Add Account', 'AccountModal.addAccount')}
               </Text>
             </View>
             <View style={styles.navImageContainer} />
           </View>
           <View style={[styles.body, dark ? styles.bodyDark : {}]}>
             <Text style={[styles.label, dark ? styles.labelDark : {}]}>
-              Enter Your Private Key
+              <fbt desc="AccountModal.enterPrivateKey">
+                Enter Your Private Key
+              </fbt>
             </Text>
             <TextInput
               autoCapitalize="none"
@@ -123,7 +126,7 @@ class AccountModal extends Component {
               disabled={!this.state.keyValue}
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Submit Private Key'}
+              title={fbt('Submit Private Key', 'AccountModal.submitPrivateKey')}
               onPress={this.handleSubmit}
             />
           </View>

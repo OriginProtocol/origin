@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
@@ -28,7 +29,7 @@ class AccountScreen extends Component {
   }
 
   static navigationOptions = {
-    title: 'Account Details',
+    title: fbt('Account Details', 'AccountScreen.headerTitle'),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -38,15 +39,23 @@ class AccountScreen extends Component {
 
   async handleDangerousCopy(privateKey) {
     Alert.alert(
-      'Important!',
-      'As a security precaution, your key will be removed from the clipboard after one minute.',
+      fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle'),
+      fbt(
+        'As a security precaution, your key will be removed from the clipboard after one minute.',
+        'AccountScreen.dangerousCopyAlertMessage'
+      ),
       [
         {
-          text: 'Got it.',
+          text: fbt('Got it.', 'AccountScreen.dangerousCopyButton'),
           onPress: async () => {
             await Clipboard.setString(privateKey)
 
-            Alert.alert('Copied to clipboard!')
+            Alert.alert(
+              fbt(
+                'Copied to clipboard!',
+                'AccountScreen.dangerousCopySuccessAlert'
+              )
+            )
 
             setTimeout(async () => {
               const s = await Clipboard.getString()
@@ -65,14 +74,17 @@ class AccountScreen extends Component {
     const { navigation } = this.props
 
     Alert.alert(
-      'Important!',
-      'Have you backed up your private key for this account? ' +
-        'The account will be permanently deleted and you must have the private key to recover it. ' +
-        'Are you sure that you want to delete this account?',
+      fbt('Important!', 'AccountScreen.deleteAlertTitle'),
+      fbt(
+        'Have you backed up your private key for this account? ' +
+          'The account will be permanently deleted and you must have the private key to recover it. ' +
+          'Are you sure that you want to delete this account?',
+        'AccountScreen.deleteAlertMessage'
+      ),
       [
-        { text: 'Cancel' },
+        { text: fbt('Cancel', 'AccountScreen.deleteAlertCancelButton') },
         {
-          text: 'Delete',
+          text: fbt('Delete', 'AccountScreen.deleteAlertConfirmButton'),
           onPress: () => {
             try {
               DeviceEventEmitter.emit(
@@ -103,7 +115,7 @@ class AccountScreen extends Component {
 
   showPrivateKey() {
     const { privateKey } = this.props.navigation.getParam('account')
-    Alert.alert('Private Key', privateKey)
+    Alert.alert(fbt('Private Key', 'AccountScreen.privateKeyAlert'), privateKey)
   }
 
   render() {
@@ -121,7 +133,10 @@ class AccountScreen extends Component {
             <Text style={styles.heading}>NAME</Text>
           </View>
           <TextInput
-            placeholder={'Unnamed Account'}
+            placeholder={fbt(
+              'Unnamed Account',
+              'AccountScreen.accountNamePlaceholder'
+            )}
             value={name}
             style={styles.input}
             onChange={this.handleSetAccountName}
@@ -144,7 +159,10 @@ class AccountScreen extends Component {
               disabled={isActive}
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Make Active Account'}
+              title={fbt(
+                'Make Active Account',
+                'AccountScreen.makeActiveButton'
+              )}
               onPress={this.handleSetAccountActive}
             />
           )}
@@ -153,7 +171,10 @@ class AccountScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Show Private Key'}
+            title={fbt(
+              'Show Private Key',
+              'AccountScreen.showPrivateKeyButton'
+            )}
             onPress={() => this.showPrivateKey(address)}
           />
           <OriginButton
@@ -161,7 +182,10 @@ class AccountScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Copy Private Key'}
+            title={fbt(
+              'Copy Private Key',
+              'AccountScreen.copyPrivateKeyButton'
+            )}
             onPress={() => this.handleDangerousCopy(privateKey)}
           />
           {(multipleAccounts || true) && (
@@ -171,7 +195,7 @@ class AccountScreen extends Component {
               disabled={isActive}
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Delete Account'}
+              title={fbt('Delete Account', 'AccountScreen.deleteAccountButton')}
               onPress={this.handleDelete}
             />
           )}

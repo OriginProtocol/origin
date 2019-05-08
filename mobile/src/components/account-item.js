@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 
@@ -24,11 +25,12 @@ export default class AccountItem extends Component {
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
             <Text style={styles.name}>
-              {wallet.accountNameMapping[item.address] || 'Unnamed Account'}
+              {wallet.accountNameMapping[item.address] ||
+                fbt('Unnamed Account', 'AccountItem.accountNamePlaceholder')}
             </Text>
             <Address
               address={item.address}
-              label={'Address'}
+              label={fbt('Address', 'AccountItem.address')}
               style={styles.address}
             />
           </View>
