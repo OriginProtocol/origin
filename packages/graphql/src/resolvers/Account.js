@@ -44,5 +44,15 @@ export default {
     }
     return null
   },
-  identity: async account => identity({ id: account.id })
+  identity: async account => identity({ id: account.id }),
+  owner: async account => {
+    const Proxy = contracts.ProxyImp.clone()
+    Proxy.options.address = account.id
+    try {
+      const id = await Proxy.methods.owner().call()
+      return id ? { id } : { id: account.id }
+    } catch (e) {
+      return { id: account.id }
+    }
+  }
 }

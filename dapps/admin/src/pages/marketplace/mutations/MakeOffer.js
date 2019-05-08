@@ -42,7 +42,7 @@ class MakeOffer extends Component {
       quantity: 1,
       currency: get(props, 'listing.acceptedTokens.0.id', 'token-ETH'),
       arbitrator: arbitrator ? arbitrator.id : '',
-      from: buyer ? buyer.id : ''
+      from: buyer ? buyer.owner.id : ''
     }
   }
 

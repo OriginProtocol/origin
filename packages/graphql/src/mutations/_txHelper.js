@@ -2,7 +2,7 @@ import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
 
 import { getTransaction } from '../resolvers/web3/transactions'
-import relayerHelper from './_relayer'
+// import relayerHelper from './_relayer'
 import { isProxy, proxyOwnerOrNull } from '../utils/identityProxy'
 
 export async function checkMetaMask(from) {
@@ -26,10 +26,42 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
-function useRelayer({ mutation }) {
-  if (!contracts.config.relayer) return false
-  if (mutation !== 'deployIdentity') return false
-  return true
+// function useRelayer({ mutation }) {
+//   if (!contracts.config.relayer) return false
+//   if (mutation !== 'deployIdentity') return false
+//   return true
+// }
+
+contracts.hasAccount = async function hasAccount(address) {
+  try {
+    const web3 = contracts.web3Exec
+
+    const changeOwner = await contracts.ProxyImp.methods
+      .changeOwner(address)
+      .encodeABI()
+
+    const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
+
+    let creationCode = await contracts.ProxyFactory.methods
+      .proxyCreationCode()
+      .call()
+
+    creationCode += web3.eth.abi
+      .encodeParameter('uint256', contracts.ProxyImp._address)
+      .slice(2)
+
+    const creationHash = web3.utils.sha3(creationCode)
+
+    const create2hash = web3.utils
+      .soliditySha3('0xff', contracts.ProxyFactory._address, salt, creationHash)
+      .slice(-40)
+    const predicted = `0x${create2hash}`
+
+    const code = await web3.eth.getCode(predicted)
+    return code.slice(2).length > 0 ? predicted : false
+  } catch (e) {
+    return false
+  }
 }
 
 export default function txHelper({
@@ -43,13 +75,25 @@ export default function txHelper({
   value,
   web3
 }) {
-  if (useRelayer({ mutation })) {
-    return relayerHelper({ tx, from, address: tx._parent._address })
-  }
+  // if (useRelayer({ mutation })) {
+  //   return relayerHelper({ tx, from, address: tx._parent._address })
+  // }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let txHash
     let toSend = tx
+
+    // Use proxy is this wallet has one deployed
+    const proxyAddress = await contracts.hasAccount(from)
+    if (proxyAddress && !to && mutation !== 'deployIdentityViaProxy') {
+      const Proxy = contracts.ProxyImp.clone()
+      Proxy.options.address = proxyAddress
+      const txData = await tx.encodeABI()
+      const addr = tx._parent._address
+      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
+      gas += 1000
+    }
+
     if (web3 && to) {
       toSend = web3.eth.sendTransaction({ from, to, value, gas })
     } else {

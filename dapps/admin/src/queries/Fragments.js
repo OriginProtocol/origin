@@ -26,6 +26,9 @@ export default {
         totalEvents
         seller {
           id
+          owner {
+            id
+          }
         }
         arbitrator {
           id

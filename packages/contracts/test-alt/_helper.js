@@ -4,6 +4,7 @@ import solc from 'solc'
 import linker from 'solc/linker'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
+import requireFromString from 'require-from-string'
 
 const solcOpts = {
   language: 'Solidity',
@@ -63,35 +64,31 @@ export default async function testHelper(contracts, provider) {
     const sources = { [file]: { content } }
     const compileOpts = JSON.stringify({ ...solcOpts, sources })
 
-    // Compile the contract using solc
-    const rawOutput = solc.compileStandardWrapper(
-      compileOpts,
-      findImportsPath(path)
-    )
-
+    const version = content.match(/pragma solidity \^?([^;]+);/)[1]
+    // if (version === '0.4.24') {
+    //   // Compile the contract using solc
+    //   rawOutput = solc.compileStandardWrapper(
+    //     compileOpts,
+    //     findImportsPath(path)
+    //   )
+    // } else {
     // Multi Version support. Comment out above and use below instead.
     // requires a dir solc/ with different solc versions inside.
     //
     // curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.5.3+commit.10d17f24.js" --output soljson-v0.5.3.js
+    // curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.4.24+commit.e67f0147.js" --output soljson-v0.4.24.js
     //
-    // import requireFromString from 'require-from-string'
-    // const version = content.match(/pragma solidity \^?([^;]+);/)[1]
-    // const versions = {
-    //   '0.4.24': 'v0.4.24+commit.e67f0147',
-    //   '0.4.25': 'v0.4.25+commit.59dbf8f1',
-    //   '0.5.0': 'v0.5.0+commit.1d4f565a',
-    //   '0.5.3': 'v0.5.3+commit.10d17f24'
+    const rawOutput = await new Promise(resolve => {
+      const solcPath = `${__dirname}/solc/soljson-v${version}.js`
+      const solcSrc = fs.readFileSync(solcPath).toString()
+      const solcSnapshot = solc.setupMethods(requireFromString(solcSrc))
+      const solcOutput = solcSnapshot.compileStandardWrapper(
+        compileOpts,
+        findImportsPath(path)
+      )
+      resolve(solcOutput)
+    })
     // }
-    // const rawOutput = await new Promise(resolve => {
-    //   const solcSnapshot = solc.setupMethods(
-    //     requireFromString(
-    //       fs.readFileSync(`${__dirname}/solc/soljson-v${version}.js`).toString()
-    //     )
-    //   )
-    //   resolve(
-    //     solcSnapshot.compileStandardWrapper(compileOpts, findImportsPath(path))
-    //   )
-    // })
 
     const output = JSON.parse(rawOutput)
 
@@ -111,11 +108,10 @@ export default async function testHelper(contracts, provider) {
 
     async function deployLib(linkedFile, linkedLib, bytecode) {
       const libObj = output.contracts[linkedFile][linkedLib]
+      const linkReferences = libObj.evm.bytecode.linkReferences
 
-      for (const linkedFile2 in libObj.evm.bytecode.linkReferences) {
-        for (const linkedLib2 in libObj.evm.bytecode.linkReferences[
-          linkedFile2
-        ]) {
+      for (const linkedFile2 in linkReferences) {
+        for (const linkedLib2 in linkReferences[linkedFile2]) {
           libObj.evm.bytecode.object = await deployLib(
             linkedFile2,
             linkedLib2,
@@ -141,24 +137,14 @@ export default async function testHelper(contracts, provider) {
     }
 
     if (!bytecode.object) {
-      throw new Error(
-        'No Bytecode. Do the method signatures match the interface?'
-      )
+      const err = 'No Bytecode. Do the method signatures match the interface?'
+      throw new Error(err)
     }
 
     if (process.env.BUILD) {
-      fs.writeFileSync(
-        __dirname + '/../src/contracts/' + contractName + '.js',
-        'module.exports = ' +
-          JSON.stringify(
-            {
-              abi,
-              data: bytecode.object
-            },
-            null,
-            4
-          )
-      )
+      const path = `${__dirname}/../build/contracts/${contractName}_solc.json`
+      const json = { abi, bytecode: '0x' + bytecode.object }
+      fs.writeFileSync(path, JSON.stringify(json, null, 4))
     }
 
     // Instantiate the web3 contract using the abi and bytecode output from solc

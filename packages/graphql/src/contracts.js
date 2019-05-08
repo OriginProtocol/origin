@@ -2,6 +2,8 @@ import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketpla
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
+import IdentityProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
+import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
@@ -156,6 +158,14 @@ export function setNetwork(net, customConfig) {
 
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
+  context.ProxyFactory = new web3.eth.Contract(
+    IdentityProxyFactory.abi,
+    config.ProxyFactory
+  )
+  context.ProxyImp = new web3.eth.Contract(
+    IdentityProxy.abi,
+    config.IdentityProxyImplementation
+  )
 
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))

@@ -26,6 +26,8 @@ const config = {
   IdentityEvents: addresses.IdentityEvents,
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
+  ProxyFactory: addresses.ProxyFactory,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   tokens: []
 }
 

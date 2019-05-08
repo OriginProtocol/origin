@@ -54,6 +54,7 @@ class Users extends Component {
                     <thead>
                       <tr>
                         <th>Account</th>
+                        <th>Owner</th>
                         <th>Identity</th>
                         <ThSort
                           onSort={() => this.setState({ sort: 'listings' })}
@@ -88,6 +89,11 @@ class Users extends Component {
                           >
                             <td>
                               <Address address={user.id} />
+                            </td>
+                            <td>
+                              {user.id === user.account.owner.id ? null : (
+                                <Address address={user.account.owner.id} />
+                              )}
                             </td>
                             <td>
                               <Identity account={user.id} />

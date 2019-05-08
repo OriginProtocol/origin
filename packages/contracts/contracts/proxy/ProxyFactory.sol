@@ -1,6 +1,6 @@
 // From https://github.com/gnosis/safe-contracts/tree/development/contracts/proxies
 
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.3;
 
 /// @title Proxy Factory - Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
 /// @author Stefan George - <stefan@gnosis.pm>

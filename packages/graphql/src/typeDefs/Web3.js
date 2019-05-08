@@ -104,6 +104,7 @@ module.exports = `
     name: String
     token(symbol: String!): TokenHolder
     identity: Identity
+    owner: Account
   }
 
   type Balance {
