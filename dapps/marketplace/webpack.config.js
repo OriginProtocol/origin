@@ -123,7 +123,7 @@ const config = {
       ENABLE_GOOGLE_ATTESTATION: false,
       SENTRY_DSN: null,
       NAMESPACE: 'dev',
-      NODE_ENV: 'devevelopment'
+      NODE_ENV: 'development'
     })
   ],
 
