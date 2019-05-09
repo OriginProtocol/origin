@@ -197,7 +197,7 @@ async function sendNotification(
   config
 ) {
   if (notificationObj) {
-    const notificationObjAndHash = {...notificationObj, messageHash}
+    const notificationObjAndHash = { ...notificationObj, messageHash }
     const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
     if (deviceType === 'APN') {
       if (!apnProvider) {
