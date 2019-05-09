@@ -11,10 +11,16 @@ let creatorConfigUrl
 
 function withCreatorConfig(WrappedComponent) {
   const WithCreatorConfig = props => {
-    const parsed = queryString.parse(props.location.search)
-    if (parsed.config) {
-      // Config URL was passed in the query string
-      creatorConfigUrl = parsed.config
+    const parsedPostHash = queryString.parse(props.location.search)
+    const parsedPreHash = queryString.parse(location.search)
+    if (parsedPostHash.config) {
+      // Config URL was passed in the query string after #
+      // e.g. http://localhost:3000/#/?config=<URL>
+      creatorConfigUrl = parsedPostHash.config
+    } else if (parsedPreHash.config) {
+      // Config URL was passed in the query string before #
+      // e.g. http://localhost:3000/?config=<URL>#/
+      creatorConfigUrl = parsedPreHash.config
     } else if (creatorConfigUrl) {
       // Config URL already set...
     } else if (isWhiteLabelHostname()) {
