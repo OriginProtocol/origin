@@ -86,17 +86,24 @@ class BanParticipants {
   }
 
   async _banParticipant(participant, banData) {
-    logger.info(
-      `Banning account ${participant.ethAddress} - Ban type: ${
-        banData.type
-      } reasons: ${banData.reasons}`
-    )
-    // Changed status to banned and add the ban data, making sure to not
-    // overwrite any data already present in the fraud column.
-    await participant.update({
-      status: enums.GrowthParticipantStatuses.Banned,
-      ban: banData
-    })
+    if (this.config.persist) {
+      logger.info(
+        `Banning account ${participant.ethAddress} - Ban type: ${
+          banData.type
+        } reasons: ${banData.reasons}`
+      )
+      // Change status to banned and add the ban data.
+      await participant.update({
+        status: enums.GrowthParticipantStatuses.Banned,
+        ban: banData
+      })
+    } else {
+      logger.info(
+        `Would ban account ${participant.ethAddress} - Ban type: ${
+          banData.type
+        } reasons: ${banData.reasons}`
+      )
+    }
   }
 
   async process() {
