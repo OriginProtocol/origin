@@ -1,5 +1,6 @@
 import balancesFromWei from '../utils/balancesFromWei'
 import contracts from '../contracts'
+import hasProxy from '../utils/hasProxy'
 import { identity } from './IdentityEvents'
 
 export default {
@@ -46,6 +47,9 @@ export default {
   },
   identity: async account => identity({ id: account.id }),
   owner: async account => {
+    if (!process.env.ENABLE_PROXY_ACCOUNTS) {
+      return { id: account.id }
+    }
     const Proxy = contracts.ProxyImp.clone()
     Proxy.options.address = account.id
     try {
@@ -56,7 +60,10 @@ export default {
     }
   },
   proxy: async account => {
-    const id = await contracts.hasAccount(account.id)
+    if (!process.env.ENABLE_PROXY_ACCOUNTS) {
+      return { id: account.id }
+    }
+    const id = await hasProxy(account.id)
     return id ? { id } : { id: account.id }
   }
 }

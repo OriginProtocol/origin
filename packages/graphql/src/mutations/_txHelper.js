@@ -1,6 +1,7 @@
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
+import hasProxy from '../utils/hasProxy'
 
 import { getTransaction } from '../resolvers/web3/transactions'
 // import relayerHelper from './_relayer'
@@ -29,40 +30,6 @@ const isServer = typeof window === 'undefined'
 //   return true
 // }
 
-contracts.hasAccount = async function hasAccount(address) {
-  try {
-    const web3 = contracts.web3Exec
-
-    const changeOwner = await contracts.ProxyImp.methods
-      .changeOwner(address)
-      .encodeABI()
-
-    const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
-
-    let creationCode = await contracts.ProxyFactory.methods
-      .proxyCreationCode()
-      .call()
-
-    creationCode += web3.eth.abi
-      .encodeParameter('uint256', contracts.ProxyImp._address)
-      .slice(2)
-
-    const creationHash = web3.utils.sha3(creationCode)
-
-    const create2hash = web3.utils
-      .soliditySha3('0xff', contracts.ProxyFactory._address, salt, creationHash)
-      .slice(-40)
-    const predicted = `0x${create2hash}`
-
-    const code = await web3.eth.getCode(predicted)
-    return code.slice(2).length > 0
-      ? web3.utils.toChecksumAddress(predicted)
-      : false
-  } catch (e) {
-    return false
-  }
-}
-
 export default function txHelper({
   tx,
   mutation,
@@ -84,7 +51,7 @@ export default function txHelper({
     web3 = contracts.web3Exec
 
     // Use proxy is this wallet has one deployed
-    const proxyAddress = await contracts.hasAccount(from)
+    const proxyAddress = await hasProxy(from)
     if (proxyAddress && !to && mutation !== 'deployIdentityViaProxy') {
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxyAddress)
       const txData = await tx.encodeABI()

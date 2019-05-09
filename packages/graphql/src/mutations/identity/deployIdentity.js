@@ -4,6 +4,7 @@ import validator from '@origin/validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
+import hasProxy from '../../utils/hasProxy'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(
@@ -12,7 +13,7 @@ async function deployIdentity(
 ) {
   await checkMetaMask(from)
 
-  let wallet = await contracts.hasAccount(from)
+  let wallet = await hasProxy(from)
   if (!wallet) wallet = from
 
   attestations = attestations

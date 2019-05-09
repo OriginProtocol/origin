@@ -153,7 +153,7 @@ export default async function testHelper(contracts, provider) {
     if (process.env.BUILD) {
       const path = `${__dirname}/../build/contracts/${contractName}_solc.json`
       const json = { abi, bytecode: '0x' + bytecode.object }
-      fs.writeFileSync(path, JSON.stringify(json, null, 4))
+      fs.writeFileSync(path, JSON.stringify(json, null, 2))
     }
 
     // Instantiate the web3 contract using the abi and bytecode output from solc
