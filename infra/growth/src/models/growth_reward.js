@@ -1,20 +1,16 @@
 'use strict'
 
-const enums = require('../enums')
-
 module.exports = (sequelize, DataTypes) => {
   const GrowthReward = sequelize.define(
     'GrowthReward',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      status: DataTypes.ENUM(enums.GrowthRewardStatuses),
       ethAddress: DataTypes.STRING,
       campaignId: DataTypes.INTEGER,
-      levelId: DataTypes.INTEGER,
       ruleId: DataTypes.STRING,
+      levelId: DataTypes.INTEGER,
       amount: DataTypes.DECIMAL,
-      currency: DataTypes.STRING,
-      txnHash: DataTypes.STRING
+      currency: DataTypes.STRING
     },
     {
       tableName: 'growth_reward'

@@ -42,6 +42,7 @@
     "@origin/mobile-bridge": "^0.1.0",
     "@origin/services": "^0.1.0",
     "@origin/validator": "^0.1.0",
+    "@sentry/browser": "^5.2.0",
     "apollo-cache-persist": "^0.1.1",
     "apollo-link": "^1.2.11",
     "babel-plugin-module-resolver": "^3.2.0",
