@@ -122,8 +122,7 @@ const config = {
       ORIGIN_LINKING: null,
       ENABLE_GOOGLE_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev',
-      NODE_ENV: 'development'
+      NAMESPACE: 'dev'
     })
   ],
 
