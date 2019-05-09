@@ -131,7 +131,6 @@ const campaignToApolloObject = async (
     id: campaign.id,
     nameKey: campaign.nameKey,
     shortNameKey: campaign.shortNameKey,
-    name: campaign.name,
     startDate: campaign.startDate,
     endDate: campaign.endDate,
     distributionDate: campaign.distributionDate,
@@ -150,9 +149,9 @@ const campaignToApolloObject = async (
     campaign.rewardStatus === enums.GrowthCampaignRewardStatuses.Distributed
   ) {
     // Read the payout from the DB
-    const payout = db.GrowthPayout.findOne({
+    const payout = await db.GrowthPayout.findOne({
       where: {
-        ethAddress,
+        toAddress: ethAddress,
         campaignId: campaign.id,
         status: enums.GrowthPayoutStatuses.Confirmed
       }
