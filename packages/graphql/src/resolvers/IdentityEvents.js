@@ -7,7 +7,8 @@ import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 
-const websiteAttestationEnabled = process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
+const websiteAttestationEnabled =
+  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
 
 const progressPct = {
   firstName: 10,

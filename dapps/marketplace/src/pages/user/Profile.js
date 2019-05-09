@@ -345,10 +345,11 @@ class UserProfile extends Component {
                   'google',
                   fbt('Google', '_ProvisionedChanges.google')
                 )}
-                {process.env.ENABLE_WEBSITE_ATTESTATION === 'true' && this.renderAtt(
-                  'website',
-                  fbt('Website', '_ProvisionedChanges.website')
-                )}
+                {process.env.ENABLE_WEBSITE_ATTESTATION === 'true' &&
+                  this.renderAtt(
+                    'website',
+                    fbt('Website', '_ProvisionedChanges.website')
+                  )}
               </div>
             </div>
 
