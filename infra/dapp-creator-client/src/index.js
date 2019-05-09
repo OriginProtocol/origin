@@ -9,9 +9,9 @@ import * as Sentry from '@sentry/browser'
 import './css/app.css'
 import App from './pages/App'
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
   Sentry.init({
-    dsn: 'https://bdd3bd39b52c4aeea53c401b7eb76a71@sentry.io/1377204'
+    dsn: process.env.SENTRY_DSN
   })
 }
 
