@@ -16,6 +16,7 @@ const { GrowthInvite } = require('../resources/invite')
 const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
+const { BannedUserError } = require('../util/BannedUserError')
 
 const requireEnrolledUser = context => {
   if (
@@ -174,7 +175,7 @@ const resolvers = {
           isBanned: false
         }
       } catch (e) {
-        if (e.message === 'This user is banned') {
+        if (e instanceof BannedUserError) {
           return {
             authToken: '',
             isBanned: true
