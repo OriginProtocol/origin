@@ -13,6 +13,7 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
 import client from '@origin/graphql'
+import * as Sentry from '@sentry/browser'
 
 import setLocale from 'utils/setLocale'
 
@@ -24,6 +25,11 @@ if (process.env.NODE_ENV === 'production') {
     require('../public/app.css')
   } catch (e) {
     console.warn('No built CSS found')
+  }
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN
+    })
   }
 } else {
   try {
