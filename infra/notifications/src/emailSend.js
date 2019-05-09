@@ -32,6 +32,16 @@ async function messageEmailSend(receivers, sender, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
+  // Force lowercase
+  sender = sender.toLowerCase()
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
+
+  logger.info(
+    `Messsage email: attempting to email addresses ${receivers.join(',')}`
+  )
+
   // Load email template
   const templateDir = `${__dirname}/../templates`
 
@@ -78,7 +88,9 @@ async function messageEmailSend(receivers, sender, config) {
             const templateVars = {
               config,
               sender,
-              senderName
+              senderName,
+              dappUrl: config.dappUrl,
+              ipfsGatewayUrl: config.ipfsGatewayUrl
             }
             const email = {
               to: config.overrideEmail || s.email,
@@ -164,6 +176,15 @@ async function transactionEmailSend(
   if (!listing) throw new Error('listing not defined')
   if (!config) throw new Error('config not defined')
 
+  // Force lowercase
+  buyerAddress = buyerAddress.toLowerCase()
+  sellerAddress = sellerAddress.toLowerCase()
+  party = party.toLowerCase()
+
+  logger.info(
+    `Transaction Email: party:${party} buyerAddress:${buyerAddress} sellerAddress:${sellerAddress}`
+  )
+
   // Load email template
   const templateDir = `${__dirname}/../templates`
 
@@ -186,7 +207,7 @@ async function transactionEmailSend(
 
   await emails.forEach(async s => {
     try {
-      const recipient = s.ethAddress
+      const recipient = s.ethAddress.toLowerCase()
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
 
       logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)

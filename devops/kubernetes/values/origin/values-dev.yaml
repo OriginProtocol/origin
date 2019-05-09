@@ -6,7 +6,7 @@ bridgeImageTag: '9551bc3'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '3e31258'
+dappImageTag: '67bfd4d'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: '8c30f02'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'cc72135'
+eventlistenerImageTag: '67bfd4d'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: '612853d'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '3a64eb5'
+growthImageTag: '67bfd4d'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -34,11 +34,11 @@ messagingImageTag: 'b739587'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'b739587'
+notificationsImageTag: '1f7d565'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '5bd8b29'
+creatorClientImageTag: '0e70329'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'c0f19e8'
+cronImageTag: '9898f9d'
 
 # origin-admin
 adminImage: origin-admin
