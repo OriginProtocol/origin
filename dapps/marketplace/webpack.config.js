@@ -121,7 +121,9 @@ const config = {
       LINKER_HOST: 'localhost',
       ORIGIN_LINKING: null,
       ENABLE_GOOGLE_ATTESTATION: false,
-      SENTRY_DSN: null
+      SENTRY_DSN: null,
+      NAMESPACE: 'dev',
+      NODE_ENV: 'devevelopment'
     })
   ],
 
