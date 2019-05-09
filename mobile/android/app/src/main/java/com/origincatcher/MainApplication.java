@@ -3,6 +3,7 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.bebnev.RNUserAgentPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import io.sentry.RNSentryPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNUserAgentPackage(),
             new AndroidOpenSettingsPackage(),
             new RNSentryPackage(),
             new RNGestureHandlerPackage(),
