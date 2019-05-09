@@ -247,7 +247,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     conv_addresses = conversees.map(c => c.ethAddress)
 
     if (!conv_addresses.includes(address)) {
-      return res.status(401).send(`Address '${address}' not part of current conversation.`)
+      return res
+        .status(401)
+        .send(`Address '${address}' not part of current conversation.`)
     }
 
     //create a message that's the correct sequence
