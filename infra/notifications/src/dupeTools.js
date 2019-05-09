@@ -21,7 +21,7 @@ async function isNotificationDupe(messageFingerprint, config) {
 async function logNotificationSent(messageFingerprint, ethAddress, channel) {
   return NotificationLog.create({
     messageFingerprint,
-    ethAddress: ethAddress.toLowerCase(),
+    ethAddress, // Model will force this to lowercase
     channel
   })
 }
