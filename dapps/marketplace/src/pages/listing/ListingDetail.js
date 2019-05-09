@@ -132,7 +132,7 @@ class ListingDetail extends Component {
         )}
         {!isGiftCard ? null : (
           <>
-            <div class="row">
+            <div className="row">
               <div className="card-details col-sm-6">
                 <div className="field-row">
                   <span>
