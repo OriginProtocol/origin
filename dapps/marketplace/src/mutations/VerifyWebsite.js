@@ -5,7 +5,7 @@ export default gql`
     verifyWebsite(identity: $identity, website: $website) {
       success
       reason
-      code
+      data
     }
   }
 `

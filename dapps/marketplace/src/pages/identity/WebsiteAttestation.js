@@ -114,6 +114,11 @@ class WebsiteAttestation extends Component {
             Continue once you have uploaded the file and it is accessible.
           </fbt>
         </div>
+        <div className="error-alert">
+          {this.state.error && (
+            <div className="alert alert-danger mt-3">{this.state.error}</div>
+          )}
+        </div>
         <div className="actions">
           {this.renderVerifyButton()}
           <button
@@ -261,8 +266,12 @@ class WebsiteAttestation extends Component {
 export default WebsiteAttestation
 
 require('react-styl')(`
-  .attestation-modal > div .verification-code .form-control.website-verification-code
-    height: 6rem
-    max-width: 24rem
-    resize: none
+  .attestation-modal
+    > div .verification-code .form-control.website-verification-code
+      height: 6rem
+      max-width: 24rem
+      resize: none
+
+    .error-alert
+      word-wrap: break-word;
 `)
