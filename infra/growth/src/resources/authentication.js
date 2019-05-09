@@ -5,7 +5,7 @@ const logger = require('../logger')
 const Web3 = require('web3')
 const enums = require('../enums')
 const crypto = require('crypto')
-const { BannedUserError } = require('../util/BannedUserError')
+const { BannedUserError } = require('../util/bannedUserError')
 
 const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 // TODO: have this stored somewhere in the db
