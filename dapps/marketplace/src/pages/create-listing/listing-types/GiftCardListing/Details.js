@@ -36,6 +36,8 @@ class Details extends Component {
       return <Redirect to={this.props.next} push />
     }
     const { ipfsGateway } = this.props.config
+    const isForceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -265,6 +267,32 @@ class Details extends Component {
                   </div>
                 </div>
 
+                {this.state.receiptAvailable && (
+                  <div className="form-group">
+                    <label>
+                      <fbt desc="create.giftcard.receipt-photos">
+                        Receipt photos
+                      </fbt>
+                    </label>
+                    <ImagePicker
+                      images={this.state.media}
+                      onChange={media => this.setState({ media })}
+                    >
+                      <div className="add-photos">
+                        <fbt desc="create.select-photos">Select photos</fbt>
+                      </div>
+                    </ImagePicker>
+                    <ul className="help-text photo-help list-unstyled">
+                      <fbt desc="create.listing.photos.help">
+                        <li>
+                          Hold down &apos;command&apos; (⌘) to select multiple
+                          images.
+                        </li>
+                      </fbt>
+                    </ul>
+                  </div>
+                )}
+
                 <div className="form-group">
                   <label className="mb-0">
                     <fbt desc="create.details.description">Notes</fbt>
@@ -304,41 +332,16 @@ class Details extends Component {
                   </div>
                 </PricingChooser>
 
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.select-photos">Select photos</fbt>
-                  </label>
-                  <ImagePicker
-                    images={this.state.media}
-                    onChange={media => this.setState({ media })}
-                  >
-                    <div className="add-photos">
-                      <fbt desc="create.select-photos">Select photos</fbt>
-                    </div>
-                  </ImagePicker>
-                  <ul className="help-text photo-help list-unstyled">
-                    <fbt desc="create.listing.photos.help">
-                      <li>
-                        Hold down &apos;command&apos; (⌘) to select multiple
-                        images.
-                      </li>
-                      <li>Maximum 10 images per listing.</li>
-                      <li>
-                        First image will be featured - drag and drop images to
-                        reorder.
-                      </li>
-                      <li>Recommended aspect ratio is 4:3</li>
-                    </fbt>
-                  </ul>
-                </div>
-
                 <div className="actions">
-                  <Link
-                    className="btn btn-outline-primary"
-                    to={this.props.prev}
-                  >
-                    <fbt desc="back">Back</fbt>
-                  </Link>
+                  {/* If we're forcing the type, there is no previous "choose type" step */}
+                  {isForceType ? null : (
+                    <Link
+                      className="btn btn-outline-primary"
+                      to={this.props.prev}
+                    >
+                      <fbt desc="back">Back</fbt>
+                    </Link>
+                  )}
                   <button type="submit" className="btn btn-primary">
                     <fbt desc="continue">Continue</fbt>
                   </button>
