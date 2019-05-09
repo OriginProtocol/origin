@@ -166,7 +166,7 @@ if (require.main === module) {
   const args = parseArgv()
   const config = {
     // By default run in dry-run mode unless explicitly specified using persist.
-    persist: args['--persist'] ? args['--persist'] : false
+    persist: args['--persist'] === 'true' || false
   }
   logger.info('Config:')
   logger.info(config)
