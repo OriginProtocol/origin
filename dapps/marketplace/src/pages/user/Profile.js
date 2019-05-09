@@ -365,7 +365,10 @@ class UserProfile extends Component {
                   ],
                   validate: () => this.validate(),
                   onComplete: () => {
-                    store.set(`attestations-${this.props.walletProxy}`, undefined)
+                    store.set(
+                      `attestations-${this.props.walletProxy}`,
+                      undefined
+                    )
                     clearVerifiedAccounts()
                   },
                   children: fbt('Publish Now', 'Profile.publishNow')

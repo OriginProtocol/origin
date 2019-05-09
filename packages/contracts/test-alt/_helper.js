@@ -5,6 +5,7 @@ import linker from 'solc/linker'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
 import requireFromString from 'require-from-string'
+import memoize from 'lodash/memoize'
 
 const solcOpts = {
   language: 'Solidity',
@@ -26,6 +27,29 @@ const defaultProvider = solidityCoverage
 export const contractPath = solidityCoverage
   ? `${__dirname}/../../coverageEnv/contracts`
   : `${__dirname}/../contracts`
+
+/**
+ * Multi Solc Version support. Can use local solc bin or load from remote
+ * Local use requires a dir solc/ with different solc versions inside:
+ * curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.4.24+commit.e67f0147.js" --output soljson-v0.4.24.js
+ */
+const getSolcVersion = memoize(async version => {
+  try {
+    const solcPath = `${__dirname}/solc/soljson-v${version}.js`
+    const solcSrc = fs.readFileSync(solcPath).toString()
+    const solcImport = requireFromString(solcSrc)
+    // console.log('Using local solc4')
+    return solc.setupMethods(solcImport)
+  } catch (e) {
+    return await new Promise((resolve, reject) => {
+      // console.log('Loading remote solc4')
+      solc.loadRemoteVersion('v0.4.24+commit.e67f0147', function(err, solcv4) {
+        if (err) return reject(err)
+        resolve(solcv4)
+      })
+    })
+  }
+})
 
 // Instantiate a web3 instance. Start a node if one is not already running.
 export async function web3Helper(provider = defaultProvider) {
@@ -63,32 +87,17 @@ export default async function testHelper(contracts, provider) {
     const content = fs.readFileSync(`${path || contracts}/${file}`).toString()
     const sources = { [file]: { content } }
     const compileOpts = JSON.stringify({ ...solcOpts, sources })
-
     const version = content.match(/pragma solidity \^?([^;]+);/)[1]
-    // if (version === '0.4.24') {
-    //   // Compile the contract using solc
-    //   rawOutput = solc.compileStandardWrapper(
-    //     compileOpts,
-    //     findImportsPath(path)
-    //   )
-    // } else {
-    // Multi Version support. Comment out above and use below instead.
-    // requires a dir solc/ with different solc versions inside.
-    //
-    // curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.5.3+commit.10d17f24.js" --output soljson-v0.5.3.js
-    // curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.4.24+commit.e67f0147.js" --output soljson-v0.4.24.js
-    //
-    const rawOutput = await new Promise(resolve => {
-      const solcPath = `${__dirname}/solc/soljson-v${version}.js`
-      const solcSrc = fs.readFileSync(solcPath).toString()
-      const solcSnapshot = solc.setupMethods(requireFromString(solcSrc))
-      const solcOutput = solcSnapshot.compileStandardWrapper(
-        compileOpts,
-        findImportsPath(path)
-      )
-      resolve(solcOutput)
-    })
-    // }
+    const imports = findImportsPath(path)
+    let rawOutput
+
+    if (version.indexOf('0.5.') === 0) {
+      // Compile the contract using solc
+      rawOutput = solc.compileStandardWrapper(compileOpts, imports)
+    } else {
+      const solcSnapshot = await getSolcVersion(version)
+      rawOutput = solcSnapshot.compileStandardWrapper(compileOpts, imports)
+    }
 
     const output = JSON.parse(rawOutput)
 

@@ -48,13 +48,13 @@ describe('Identity', async function() {
     ProxyFactory = await deploy('ProxyFactory', {
       from: accounts[0],
       path: `${contractPath}/proxy`,
-      file: 'ProxyFactory.sol'
+      file: 'ProxyFactory.s'
     })
 
     IdentityProxyImp = await deploy('IdentityProxy', {
       from: Forwarder,
       path: `${contractPath}/identity`,
-      file: 'IdentityProxy.sol',
+      file: 'IdentityProxy.s',
       args: [Forwarder]
     })
   })
@@ -69,21 +69,21 @@ describe('Identity', async function() {
       .send({ from: Forwarder, gas: 4000000 })
       .once('receipt', trackGas('Deploy Proxy'))
 
-    const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
+    // const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
+    //
+    // let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
+    // creationCode += web3.eth.abi
+    //   .encodeParameter('uint256', IdentityProxyImp._address)
+    //   .slice(2)
+    // const creationHash = web3.utils.sha3(creationCode)
+    //
+    // const create2hash = web3.utils
+    //   .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+    //   .slice(-40)
+    // const predicted = `0x${create2hash}`
 
-    let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
-    creationCode += web3.eth.abi
-      .encodeParameter('uint256', IdentityProxyImp._address)
-      .slice(2)
-    const creationHash = web3.utils.sha3(creationCode)
-
-    const create2hash = web3.utils
-      .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
-      .slice(-40)
-    const predicted = `0x${create2hash}`
-
-    console.log('predicted', predicted)
-    console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
+    // console.log('predicted', predicted)
+    // console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
 
     return new web3.eth.Contract(
       IdentityProxyImp.options.jsonInterface,

@@ -12,7 +12,7 @@ interface ERC725 {
 }
 
 interface ERC20 {
-    function approve(address _spender, uint256 _value);
+    function approve(address _spender, uint256 _value) public;
 }
 
 contract IdentityProxy is ERC725 {
@@ -72,7 +72,7 @@ contract IdentityProxy is ERC725 {
             emit ContractCreated(newContract);
         } else {
             // We don't want to spend users gas if parametar is wrong
-            revert();
+            revert("invalid operationType");
         }
     }
 
