@@ -63,6 +63,11 @@ export default gql`
         operator
         valueType
       }
+      forceType {
+        category
+        subCategory
+        typename
+      }
     }
   }
 `

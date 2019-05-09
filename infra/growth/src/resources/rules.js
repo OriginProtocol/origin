@@ -802,7 +802,7 @@ class ReferralRule extends BaseRule {
       return []
     }
 
-    const rewards = []
+    let rewards = []
 
     // Go thru each referee and check if they meet the referral reward conditions.
     const referees = await this._getReferees(ethAddress)
@@ -842,6 +842,9 @@ class ReferralRule extends BaseRule {
       )
       rewards.push(reward)
     }
+
+    // Enforce rules limit.
+    rewards = rewards.slice(0, this.limit)
 
     return rewards
   }

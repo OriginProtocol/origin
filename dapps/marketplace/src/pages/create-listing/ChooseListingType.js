@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Wallet from 'components/Wallet'
+import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -24,11 +25,13 @@ class ChooseListingType extends Component {
   }
 
   render() {
-    const isEdit = this.props.listing.id ? true : false
-    if (this.state.valid) {
+    const isForceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
+    if (this.state.valid || isForceType) {
       return <Redirect to={this.props.next} push />
     }
 
+    const isEdit = this.props.listing.id ? true : false
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
@@ -54,7 +57,7 @@ class ChooseListingType extends Component {
             <div className="sub-cat">
               <select {...input('subCategory')} ref={r => (this.catRef = r)}>
                 <option value="">
-                  <fbt desc="chooselistingtype.select">Select</fbt>
+                  <fbt desc="select">Select</fbt>
                 </option>
                 {Categories[categoryId].map(([subcategoryId]) => (
                   <option key={subcategoryId} value={subcategoryId}>
@@ -177,31 +180,27 @@ class ChooseListingType extends Component {
     let __typename = 'UnitListing'
     if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
-    } else if (localStorage.getItem('enableAllFractional')) {
-      // TODO (Stan): Temporary hack to prevent hourly fractional being used
+    } else if (
+      localStorage.getItem('enableGiftCards') &&
+      category === 'schema.forSale' &&
+      subCategory === 'schema.giftCards'
+    ) {
+      // TODO (Stan): Temporary hack to prevent gift cards being used
       // in production but can be tested and used by executing in console:
-      //      localStorage.setItem('enableAllFractional', 'true');
+      //      localStorage.setItem('enableGiftCards', 'true');
       //  remove with:
-      //      localStorage.removeItem('enableAllFractional');
-      console.warn(
-        'enableAllFractional is set: Using fractional listing types that will not validate with origin-js.'
-      )
-      if (
-        category === 'schema.forRent' &&
-        nightlyFractional.includes(subCategory)
-      ) {
-        __typename = 'FractionalListing'
-      } else if (
-        category === 'schema.forRent' &&
-        hourlyFractional.includes(subCategory)
-      ) {
-        __typename = 'FractionalHourlyListing'
-      }
+      //      localStorage.removeItem('enableGiftCards');
+      __typename = 'GiftCardListing'
     } else if (
       category === 'schema.forRent' &&
-      subCategory === 'schema.housing'
+      nightlyFractional.includes(subCategory)
     ) {
       __typename = 'FractionalListing'
+    } else if (
+      category === 'schema.forRent' &&
+      hourlyFractional.includes(subCategory)
+    ) {
+      __typename = 'FractionalHourlyListing'
     }
 
     if (!newState.valid) {
@@ -218,7 +217,7 @@ class ChooseListingType extends Component {
   }
 }
 
-export default ChooseListingType
+export default withCreatorConfig(ChooseListingType)
 
 require('react-styl')(`
   .create-listing .create-listing-choose-listingtype

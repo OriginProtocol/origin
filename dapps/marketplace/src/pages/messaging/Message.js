@@ -118,7 +118,7 @@ const Message = props => {
         <div className={`d-flex message-container ${justifyContent}`}>
           {!props.isUser && showTailAndAvatar && (
             <div className="align-self-end avatar-container">
-              <Avatar avatar={get(props, 'identity.avatar')} size={60} />
+              <Avatar profile={props.identity} size={60} />
             </div>
           )}
           <div className={`bubble ${showTailAndAvatar ? 'tail' : ''}`}>
@@ -138,7 +138,7 @@ const Message = props => {
           </div>
           {props.isUser && showTailAndAvatar && (
             <div className="align-self-end avatar-container">
-              <Avatar avatar={get(props, 'identity.avatar')} size={60} />
+              <Avatar profile={props.identity} size={60} />
             </div>
           )}
         </div>

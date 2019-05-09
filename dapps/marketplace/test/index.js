@@ -1,6 +1,7 @@
 import {
   changeAccount,
   waitForText,
+  hasText,
   clickByText,
   clickBySelector,
   pic,
@@ -307,7 +308,6 @@ describe('Marketplace Dapp', function() {
     })
   })
 
-
   describe('Edit user profile', function() {
     before(async function() {
       ({ seller, buyer } = await reset())
@@ -340,8 +340,9 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should skip the wizard', async function(){
-      await waitForText(page, 'Skip', 'button')
-      await clickByText(page, 'Skip', 'button')
+      if (await hasText(page, 'Skip', 'button')) {
+        await clickByText(page, 'Skip', 'button')
+      }
     })
 
     it('should publish the profile changes', async function(){

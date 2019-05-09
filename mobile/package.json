@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.4.14",
+  "version": "0.6.0",
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/plugin-transform-new-target": "^7.4.4",
@@ -48,6 +48,7 @@
     "react-native-randombytes": "^3.5.2",
     "react-native-safe-area-view": "^0.13.1",
     "react-native-sentry": "^0.42.0",
+    "react-native-user-agent": "^1.0.3",
     "react-native-webview": "^5.8.1",
     "react-navigation": "^3.9.1",
     "react-redux": "^7.0.3",

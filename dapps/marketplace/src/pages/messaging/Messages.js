@@ -29,7 +29,7 @@ const MobileNavigation = props => (
       onClick={() => props.history.push('/messages?back=true')}
     />
     <Link to={`/user/${props.wallet}`} className="mr-auto">
-      <Avatar avatar={get(props, 'identity.avatar')} size={30} />
+      <Avatar profile={props.identity} size={30} />
       <span className="counterparty">
         {abbreviateName(props.identity) || truncateAddress(props.wallet)}
       </span>

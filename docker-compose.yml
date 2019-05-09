@@ -46,6 +46,8 @@ services:
       - ./packages/contracts/migrations:/app/packages/contracts/migrations
       # Core packages
       - ./packages/services/:/app/packages/services/
+      - ./packages/services/data/localhost.key:/app/packages/services/data/localhost.key
+      - ./packages/services/data/localhost.cert:/app/packages/services/data/localhost.cert
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/event-cache/:/app/packages/event-cache/
@@ -99,6 +101,7 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis-master:6379
+      - NOTIFICATIONS_ENDPOINT_URL=http://notifications:3456/messages
     depends_on:
       - postgres
       - redis-master

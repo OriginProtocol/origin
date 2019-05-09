@@ -284,7 +284,7 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <Avatar avatar={this.state.avatar} />
+                <Avatar avatarUrl={this.state.avatarUrl} />
               </div>
               <div className="info">
                 <a
@@ -399,7 +399,8 @@ class UserProfile extends Component {
               'firstName',
               'lastName',
               'description',
-              'avatar'
+              'avatar',
+              'avatarUrl'
             ])}
             avatar={this.state.avatar}
             onClose={() => this.setState({ editProfile: false })}

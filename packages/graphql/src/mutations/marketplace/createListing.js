@@ -40,6 +40,14 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.timeZone = fractionalData.timeZone || ''
     ipfsData.workingHours = fractionalData.workingHours || []
     ipfsData.booked = fractionalData.booked || []
+  } else if (data.typename === 'GiftCardListing') {
+    ipfsData.retailer = unitData.retailer || ''
+    ipfsData.cardAmount = unitData.cardAmount || '0'
+    ipfsData.issuingCountry = unitData.issuingCountry || '0'
+    ipfsData.isDigital = unitData.isDigital || false
+    ipfsData.isCashPurchase = unitData.isCashPurchase || false
+    ipfsData.receiptAvailable = unitData.receiptAvailable || false
+    ipfsData.unitsTotal = unitData.unitsTotal ? unitData.unitsTotal : 1
   } else if (unitData) {
     ipfsData.unitsTotal = unitData.unitsTotal
   } else {
@@ -58,7 +66,7 @@ async function createListing(_, input) {
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
-  let createListingCall
+  let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
   if (autoApprove && input.deposit > 0) {
@@ -69,22 +77,26 @@ async function createListing(_, input) {
       ['bytes32', 'uint', 'address'],
       [ipfsHash, deposit, depositManager]
     )
-    createListingCall = contracts.ognExec.methods.approveAndCallWithSender(
+    tx = contracts.ognExec.methods.approveAndCallWithSender(
       contracts.marketplace._address,
       deposit,
       fnSig,
       params
     )
   } else {
-    createListingCall = contracts.marketplaceExec.methods.createListing(
+    tx = contracts.marketplaceExec.methods.createListing(
       ipfsHash,
       deposit,
       depositManager
     )
   }
 
-  const tx = createListingCall.send({ gas: cost.createListing, from })
-  return txHelper({ tx, from, mutation: 'createListing' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'createListing',
+    gas: cost.createListing
+  })
 }
 
 export default createListing

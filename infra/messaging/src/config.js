@@ -19,8 +19,7 @@ module.exports = Object.freeze({
   IPFS_REPO_PATH: process.env.IPFS_REPO_PATH || './ipfs',
   IPFS_WS_ADDRESS: process.env.IPFS_WS_ADDRESS || '/ip4/0.0.0.0/tcp/9012/ws',
 
-  LINKING_NOTIFY_ENDPOINT: process.env.LINKING_NOTIFY_ENDPOINT || null,
-  LINKING_NOTIFY_TOKEN: process.env.LINKING_NOTIFY_TOKEN || null,
+  NOTIFICATIONS_ENDPOINT_URL: process.env.NOTIFICATIONS_ENDPOINT_URL || null,
 
   ORBIT_DB_PATH: process.env.ORBIT_DB_PATH || './odb',
 

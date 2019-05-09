@@ -12,11 +12,18 @@ async function withdrawListing(_, data) {
     schemaId: 'https://schema.originprotocol.com/listing-withdraw_1.0.0.json'
   })
 
-  const tx = contracts.marketplaceExec.methods
-    .withdrawListing(listingId, data.target, ipfsHash)
-    .send({ gas: cost.withdrawListing, from })
+  const tx = contracts.marketplaceExec.methods.withdrawListing(
+    listingId,
+    data.target,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'withdrawListing' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'withdrawListing',
+    gas: cost.withdrawListing
+  })
 }
 
 export default withdrawListing
