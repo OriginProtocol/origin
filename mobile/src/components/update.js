@@ -2,7 +2,8 @@
 
 import React from 'react'
 import {
-  // Image,
+  Dimensions,
+  Image,
   Linking,
   Modal,
   Platform,
@@ -16,7 +17,7 @@ import compareVersions from 'compare-versions'
 import OriginButton from 'components/origin-button'
 import { version } from '../../package.json'
 
-// const IMAGES_PATH = '../../assets/images/'
+const IMAGES_PATH = '../../assets/images/'
 
 class RecommendForceUpdate extends React.Component {
   constructor(props) {
@@ -64,15 +65,24 @@ class RecommendForceUpdate extends React.Component {
   }
 
   render() {
+    const { height } = Dimensions.get('window')
+    const smallScreen = height < 812
+
     return (
       <Modal animationType="slide" visible={this.state.upgrade !== null}>
         <SafeAreaView style={styles.container}>
           <View style={styles.body}>
+            <Image
+              resizeMethod={'scale'}
+              resizeMode={'contain'}
+              source={require(IMAGES_PATH + 'update-graphic.png')}
+              style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            />
             {this.state.upgrade === 'force' && (
               <>
                 <Text style={styles.title}>Update required</Text>
                 <Text style={styles.subtitle}>
-                  Woops! It looks like you are using an older version of the
+                  Woops! It looks like you are using an old version of the
                   Origin Marketplace App. Please update to proceed.
                 </Text>
               </>
@@ -133,6 +143,9 @@ const styles = StyleSheet.create({
   button: {
     marginBottom: 10,
     marginHorizontal: 20
+  },
+  image: {
+    marginBottom: '10%'
   },
   title: {
     color: 'white',
