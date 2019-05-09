@@ -169,10 +169,20 @@ const resolvers = {
           )
         }
 
-        return { authToken }
+        return {
+          authToken,
+          isBanned: false
+        }
       } catch (e) {
-        logger.warn('User authentication failed: ', e.message, e.stack)
-        throw new AuthenticationError('Growth authentication failure')
+        if (e.message === 'This user is banned') {
+          return {
+            authToken: '',
+            isBanned: true
+          }
+        } else {
+          logger.warn('User authentication failed: ', e.message, e.stack)
+          throw new AuthenticationError('Growth authentication failure')
+        }
       }
     },
     async inviteRemind(_, args, context) {

@@ -54,6 +54,7 @@ async function authenticateEnrollment(
     participant.status === enums.GrowthParticipantStatuses.Banned
   ) {
     logger.warn(`Banned user: ${accountId} tried to enroll`)
+    // If you change this message also change it in src/apollo/resolvers catch block
     throw new Error('This user is banned')
   }
 
