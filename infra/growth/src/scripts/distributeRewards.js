@@ -131,6 +131,8 @@ class DistributeRewards {
       .reduce((a1, a2) => a1.plus(a2))
     const amountTokenUnit = this.distributor.token.toTokenUnit(amount)
 
+    logger.info(`Distribution of ${amountTokenUnit} to ${ethAddress}`)
+
     // Check there is not already a payout row.
     // If there is and it is not in status Failed, something is wrong. Bail out.
     let payout = await db.GrowthPayout.findOne({
@@ -140,7 +142,16 @@ class DistributeRewards {
         status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
     })
-    if (payout) {
+    if (
+      payout.status === enums.GrowthPayoutStatuses.Paid ||
+      payout.status === enums.GrowthPayoutStatuses.Confirmed
+    ) {
+      logger.info(
+        `Skipping distribution. Found existing payout ${
+          payout.id
+        } with status ${payout.status}`
+      )
+    } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${
           payout.status
@@ -170,8 +181,8 @@ class DistributeRewards {
       } else {
         txnReceipt = {
           status: 'OK',
-          transactionHash: '0x123',
-          blockNumber: 456
+          transactionHash: 'TESTING',
+          blockNumber: 123
         }
       }
     } catch (e) {
