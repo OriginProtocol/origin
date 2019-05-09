@@ -55,7 +55,6 @@ router.post('/verify', websiteVerify, async (req, res) => {
         proofUrl: remoteFileURL
       }
     },
-    // TBD: Should `site` attribute be used for this instead of `domain`?
     domain: {
       verified: true
     }

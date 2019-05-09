@@ -345,7 +345,7 @@ class UserProfile extends Component {
                   'google',
                   fbt('Google', '_ProvisionedChanges.google')
                 )}
-                {this.renderAtt(
+                {process.env.ENABLE_WEBSITE_ATTESTATION === 'true' && this.renderAtt(
                   'website',
                   fbt('Website', '_ProvisionedChanges.website')
                 )}
