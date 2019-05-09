@@ -234,7 +234,7 @@ class Review extends Component {
                   </div>
                 </div>
               </div>
-            ) }
+            )}
           </div>
 
           <div className="actions">
