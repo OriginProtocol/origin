@@ -9,6 +9,7 @@ const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
 const { sendPayoutEmail } = require('../resources/email')
+const { naturalUnitsToToken } = require('../../src/util/token')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('sendPayoutEmails', { showTimestamp: false })
@@ -33,7 +34,7 @@ class SendPayoutEmails {
     const campaign = await db.GrowthCampaign.findOne({
       where: {
         id: campaignId,
-        status: enums.GrowthCampaignRewardStatuses.Distributed
+        rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
       }
     })
     if (!campaign) {
@@ -46,19 +47,30 @@ class SendPayoutEmails {
     const payouts = await db.GrowthPayout.findAll({
       where: {
         campaignId,
-        status: enums.GrowthPayoutdStatuses.Confirmed
-      }
+        status: enums.GrowthPayoutStatuses.Confirmed
+      },
+      order: [['id', 'ASC']]
     })
+    logger.info(`Sending payout email to ${payouts.length} lucky recipients`)
 
     for (const payout of payouts) {
+      logger.info(`Sending email for payout id ${payout.id}`)
+      if (payout.currency !== 'OGN') {
+        throw new Error(`Unexpected currency ${payout.currency}`)
+      }
+      const amount = naturalUnitsToToken(payout.amount)
       if (this.config.doIt) {
-        await sendPayoutEmail(payout.toAddress, payout.amount, payout.txnHash)
+        await sendPayoutEmail(payout.toAddress, amount, payout.txnHash)
       } else {
         logger.info(
-          `Would send email to account ${payout.toAddress}, amount ${
-            payout.amount
-          }, txnHash ${payout.txnHash}`
+          `Would send email to account ${
+            payout.toAddress
+          }, amount ${amount}, txnHash ${payout.txnHash}`
         )
+      }
+      this.stats.numEmailsSent++
+      if (this.stats.numEmailsSent > 0) {
+        return
       }
     }
   }
@@ -71,12 +83,22 @@ logger.info('Starting payout emails job.')
 
 const args = parseArgv()
 const config = {
-  // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--doIt'] === 'true' || false,
+  // By default run in dry-run mode unless explicitly specified.
+  doIt: args['--doIt'] === 'true' || false,
   campaignId: args['--campaignId']
 }
 logger.info('Config:')
 logger.info(config)
+
+if (!config.campaignId) {
+  throw new Error('--campaignId arg missing')
+}
+if (
+  config.doIt &&
+  (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL)
+) {
+  throw new Error('Env vars SENDGRID_API_KEY and SENDGRID_FROM_EMAIL not set')
+}
 
 const job = new SendPayoutEmails(config)
 
