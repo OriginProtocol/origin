@@ -181,15 +181,9 @@ class ChooseListingType extends Component {
     if (category === 'schema.announcements') {
       __typename = 'AnnouncementListing'
     } else if (
-      localStorage.getItem('enableGiftCards') &&
       category === 'schema.forSale' &&
       subCategory === 'schema.giftCards'
     ) {
-      // TODO (Stan): Temporary hack to prevent gift cards being used
-      // in production but can be tested and used by executing in console:
-      //      localStorage.setItem('enableGiftCards', 'true');
-      //  remove with:
-      //      localStorage.removeItem('enableGiftCards');
       __typename = 'GiftCardListing'
     } else if (
       category === 'schema.forRent' &&
