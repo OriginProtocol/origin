@@ -60,15 +60,22 @@ router.post('/verify', websiteVerify, async (req, res) => {
     }
   }
 
-  const attestation = await generateAttestation(
-    AttestationTypes.WEBSITE,
-    attestationBody,
-    remoteOrigin,
-    req.body.identity,
-    req.ip
-  )
+  try {
+    const attestation = await generateAttestation(
+      AttestationTypes.WEBSITE,
+      attestationBody,
+      remoteOrigin,
+      req.body.identity,
+      req.ip
+    )
 
-  return res.send(attestation)
+    return res.send(attestation)
+  } catch (error) {
+    logger.error(error)
+    return res.status(500).send({
+      errors: ['Could not create attestation.']
+    })
+  }
 })
 
 module.exports = router
