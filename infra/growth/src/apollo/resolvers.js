@@ -16,6 +16,7 @@ const { GrowthInvite } = require('../resources/invite')
 const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
+const { BannedUserError } = require('../util/bannedUserError')
 
 const requireEnrolledUser = context => {
   if (
@@ -169,10 +170,20 @@ const resolvers = {
           )
         }
 
-        return { authToken }
+        return {
+          authToken,
+          isBanned: false
+        }
       } catch (e) {
-        logger.warn('User authentication failed: ', e.message, e.stack)
-        throw new AuthenticationError('Growth authentication failure')
+        if (e instanceof BannedUserError) {
+          return {
+            authToken: '',
+            isBanned: true
+          }
+        } else {
+          logger.warn('User authentication failed: ', e.message, e.stack)
+          throw new AuthenticationError('Growth authentication failure')
+        }
       }
     },
     async inviteRemind(_, args, context) {
