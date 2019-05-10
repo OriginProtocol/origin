@@ -36,6 +36,8 @@ class Details extends Component {
       return <Redirect to={this.props.next} push />
     }
     const { ipfsGateway } = this.props.config
+    const isForceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -116,19 +118,31 @@ class Details extends Component {
                       Issuing Country
                     </fbt>
                   </label>
-                  <select
-                    className="form-control form-control-lg"
-                    value={this.state.issuingCountry}
-                    onChange={e => {
-                      this.setState({ issuingCountry: e.target.value })
-                    }}
-                  >
-                    {issuingCountrySelect.map(countryCode => (
-                      <option key={countryCode} value={countryCode}>
-                        {countryCodeMapping['en'][countryCode]}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="d-flex">
+                    <div
+                      className="country-flag"
+                      style={{
+                        backgroundImage: `url(images/flags/${
+                          this.state.issuingCountry
+                        }.svg)`
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <select
+                        className="form-control form-control-lg"
+                        value={this.state.issuingCountry}
+                        onChange={e => {
+                          this.setState({ issuingCountry: e.target.value })
+                        }}
+                      >
+                        {issuingCountrySelect.map(countryCode => (
+                          <option key={countryCode} value={countryCode}>
+                            {countryCodeMapping['en'][countryCode]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                   {Feedback('issuingCountry')}
                 </div>
 
@@ -160,57 +174,124 @@ class Details extends Component {
                   {Feedback('quantity')}
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.isDigital}
-                    id="isDigital-checkbox"
-                    onChange={() => {
-                      this.setState({ isDigital: !this.state.isDigital })
-                    }}
-                  />
-                  <label htmlFor="isDigital-checkbox">
+                <div className="form-group inline-radio">
+                  <label>
                     <fbt desc="create.details.giftcard.isDigital">
-                      Is this card digital?
+                      Card type
                     </fbt>
                   </label>
+
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isDigital-radio"
+                      checked={this.state.isDigital}
+                      onChange={() => this.setState({ isDigital: true })}
+                    />
+                    <label htmlFor="isDigital-radio">
+                      <fbt desc="digital">Digital</fbt>
+                    </label>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isPhysical-radio"
+                      checked={!this.state.isDigital}
+                      onChange={() => this.setState({ isDigital: false })}
+                    />
+                    <label htmlFor="isPhysical-radio">
+                      <fbt desc="physical">Physical</fbt>
+                    </label>
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.isCashPurchase}
-                    id="isCashPurchase-checkbox"
-                    onChange={() => {
-                      this.setState({
-                        isCashPurchase: !this.state.isCashPurchase
-                      })
-                    }}
-                  />
-                  <label htmlFor="isCashPurchase-checkbox">
+                <div className="form-group inline-radio">
+                  <label>
                     <fbt desc="create.details.giftcard.isCashPurchase">
                       Was this a cash purchase?
                     </fbt>
                   </label>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isCashPurchase-yes-radio"
+                      checked={this.state.isCashPurchase}
+                      onChange={() => this.setState({ isCashPurchase: true })}
+                    />
+                    <label htmlFor="isCashPurchase-yes-radio">
+                      <fbt desc="yes">Yes</fbt>
+                    </label>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="isCashPurchase-no-radio"
+                      checked={!this.state.isCashPurchase}
+                      onChange={() => this.setState({ isCashPurchase: false })}
+                    />
+                    <label htmlFor="isCashPurchase-no-radio">
+                      <fbt desc="no">No</fbt>
+                    </label>
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <input
-                    type="checkbox"
-                    checked={this.state.receiptAvailable}
-                    id="receiptAvailable-checkbox"
-                    onChange={() => {
-                      this.setState({
-                        receiptAvailable: !this.state.receiptAvailable
-                      })
-                    }}
-                  />
-                  <label htmlFor="receiptAvailable-checkbox">
+                <div className="form-group inline-radio">
+                  <label>
                     <fbt desc="create.details.giftcard.receiptAvailable">
                       Is a receipt available?
                     </fbt>
                   </label>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="receiptAvailable-yes-radio"
+                      checked={this.state.receiptAvailable}
+                      onChange={() => this.setState({ receiptAvailable: true })}
+                    />
+                    <label htmlFor="receiptAvailable-yes-radio">
+                      <fbt desc="yes">Yes</fbt>
+                    </label>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="radio"
+                      id="receiptAvailable-no-radio"
+                      checked={!this.state.receiptAvailable}
+                      onChange={() =>
+                        this.setState({ receiptAvailable: false })
+                      }
+                    />
+                    <label htmlFor="receiptAvailable-no-radio">
+                      <fbt desc="no">No</fbt>
+                    </label>
+                  </div>
                 </div>
+
+                {this.state.receiptAvailable && (
+                  <div className="form-group">
+                    <label>
+                      <fbt desc="create.giftcard.receipt-photos">
+                        Receipt photos
+                      </fbt>
+                    </label>
+                    <ImagePicker
+                      images={this.state.media}
+                      onChange={media => this.setState({ media })}
+                    >
+                      <div className="add-photos">
+                        <fbt desc="create.select-photos">Select photos</fbt>
+                      </div>
+                    </ImagePicker>
+                    <ul className="help-text photo-help list-unstyled">
+                      <fbt desc="create.listing.photos.help">
+                        <li>
+                          Hold down &apos;command&apos; (⌘) to select multiple
+                          images.
+                        </li>
+                      </fbt>
+                    </ul>
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label className="mb-0">
@@ -251,41 +332,16 @@ class Details extends Component {
                   </div>
                 </PricingChooser>
 
-                <div className="form-group">
-                  <label>
-                    <fbt desc="create.select-photos">Select photos</fbt>
-                  </label>
-                  <ImagePicker
-                    images={this.state.media}
-                    onChange={media => this.setState({ media })}
-                  >
-                    <div className="add-photos">
-                      <fbt desc="create.select-photos">Select photos</fbt>
-                    </div>
-                  </ImagePicker>
-                  <ul className="help-text photo-help list-unstyled">
-                    <fbt desc="create.listing.photos.help">
-                      <li>
-                        Hold down &apos;command&apos; (⌘) to select multiple
-                        images.
-                      </li>
-                      <li>Maximum 10 images per listing.</li>
-                      <li>
-                        First image will be featured - drag and drop images to
-                        reorder.
-                      </li>
-                      <li>Recommended aspect ratio is 4:3</li>
-                    </fbt>
-                  </ul>
-                </div>
-
                 <div className="actions">
-                  <Link
-                    className="btn btn-outline-primary"
-                    to={this.props.prev}
-                  >
-                    <fbt desc="back">Back</fbt>
-                  </Link>
+                  {/* If we're forcing the type, there is no previous "choose type" step */}
+                  {isForceType ? null : (
+                    <Link
+                      className="btn btn-outline-primary"
+                      to={this.props.prev}
+                    >
+                      <fbt desc="back">Back</fbt>
+                    </Link>
+                  )}
                   <button type="submit" className="btn btn-primary">
                     <fbt desc="continue">Continue</fbt>
                   </button>
@@ -386,4 +442,20 @@ require('react-styl')(`
     img
       width: 270px
       height: auto
+  .inline-radio
+    display: flex
+    div
+      margin-left: 1rem
+      align-items: baseline
+      display: flex
+      input
+        margin-right: .25rem
+  .country-flag
+    background-image: url(images/flags/us.svg)
+    width: 3rem;
+    height: 3rem
+    background-size: 2rem
+    background-position: center
+    background-repeat: no-repeat
+
 `)

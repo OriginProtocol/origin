@@ -68,6 +68,9 @@ const resolvers = {
     },
     async campaign(root, args, context) {
       const campaign = await GrowthCampaign.get(args.id)
+      if (!campaign) {
+        throw new UserInputError('Invalid campaign id', { id: args.id })
+      }
       return await campaignToApolloObject(
         campaign,
         context.authentication,
