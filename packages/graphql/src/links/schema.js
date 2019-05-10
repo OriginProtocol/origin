@@ -50,7 +50,12 @@ if (context.growth) {
 } else {
   addMockFunctionsToSchema({
     schema: growthSchema,
-    mocks: { DateTime: () => '' }
+    mocks: {
+      DateTime: () => '',
+      Query: () => ({
+        enrollmentStatus: () => 'NotEnrolled'
+      })
+    }
   })
   schemas.unshift(growthSchema)
 }
