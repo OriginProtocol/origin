@@ -11,7 +11,6 @@ const parseArgv = require('../util/args')
 const { sendPayoutEmail } = require('../resources/email')
 const { naturalUnitsToToken } = require('../../src/util/token')
 
-
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('sendPayoutEmails', { showTimestamp: false })
 
@@ -61,9 +60,9 @@ class SendPayoutEmails {
         await sendPayoutEmail(payout.toAddress, amount, payout.txnHash)
       } else {
         logger.info(
-          `Would send email to account ${payout.toAddress}, amount ${
-            amount
-          }, txnHash ${payout.txnHash}`
+          `Would send email to account ${
+            payout.toAddress
+          }, amount ${amount}, txnHash ${payout.txnHash}`
         )
       }
       this.stats.numEmailsSent++
@@ -91,7 +90,10 @@ logger.info(config)
 if (!config.campaignId) {
   throw new Error('--campaignId arg missing')
 }
-if (config.doIt && (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL)) {
+if (
+  config.doIt &&
+  (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL)
+) {
   throw new Error('Env vars SENDGRID_API_KEY and SENDGRID_FROM_EMAIL not set')
 }
 

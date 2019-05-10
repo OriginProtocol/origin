@@ -1,7 +1,7 @@
 // Script to create campaigns in production.
 const db = require('../models')
 const enums = require('../enums')
-const { tokenToNaturalUnit } = require('../../src/util/token')
+const { tokenToNaturalUnits } = require('../../src/util/token')
 
 const aprilConfig = require('../../campaigns/april.js')
 const mayConfig = require('../../campaigns/may.js')

@@ -144,8 +144,7 @@ class DistributeRewards {
     })
     if (!payout) {
       logger.info(`Checked there is no existing payout row for ${ethAddress}`)
-    }
-    else if (
+    } else if (
       payout.status === enums.GrowthPayoutStatuses.Paid ||
       payout.status === enums.GrowthPayoutStatuses.Confirmed
     ) {
