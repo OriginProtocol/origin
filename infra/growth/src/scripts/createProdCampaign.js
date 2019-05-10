@@ -1,7 +1,7 @@
 // Script to create campaigns in production.
 const db = require('../models')
 const enums = require('../enums')
-const tokenNaturalUnits = require('../../src/util/token')
+const { tokenToNaturalUnits } = require('../../src/util/token')
 
 const aprilConfig = require('../../campaigns/april.js')
 const mayConfig = require('../../campaigns/may.js')
@@ -19,7 +19,7 @@ async function createAprilProdCampaign() {
     startDate: Date.parse('March 18, 2019, 00:00 UTC'),
     endDate: Date.parse('May 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2019, 00:00 UTC'),
-    cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
     rewardStatus: enums.GrowthCampaignRewardStatuses.Active
@@ -39,7 +39,7 @@ async function createMayProdCampaign() {
     startDate: Date.parse('May 1, 2019, 00:00 UTC'),
     endDate: Date.parse('June 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('June 1, 2019, 00:00 UTC'),
-    cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
     rewardStatus: enums.GrowthCampaignRewardStatuses.Active

@@ -485,6 +485,7 @@ function withEnrolmentModal(WrappedComponent) {
         <Enroll
           isMobile={this.props.ismobile === 'true'}
           onSuccess={() => this.enrollmentSuccessful()}
+          onAccountBlocked={() => this.historyNavigate('/rewards/banned')}
         />
       )
     }
