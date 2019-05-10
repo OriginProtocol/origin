@@ -102,9 +102,7 @@ class WebsiteAttestation extends Component {
             website:
           </fbt>
         </div>
-        <div className="actions">
-          {this.renderDownloadButton()}
-        </div>
+        <div className="actions">{this.renderDownloadButton()}</div>
       </>
     )
   }
@@ -113,9 +111,7 @@ class WebsiteAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="VerifyWebsite.verifyYourWebsite">
-            Verify your website
-          </fbt>
+          <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
         </h2>
         <div className="instructions">
           <fbt desc="VerifyWebsite.continueAfterUPload">
@@ -192,7 +188,7 @@ class WebsiteAttestation extends Component {
           this.setState({
             stage: 'VerifyCode'
           })
-      
+
           this.downloadVerificationFile()
         }}
         children={fbt('Download', 'Download')}
