@@ -37,7 +37,7 @@ contract IdentityProxy is ERC725 {
     function () external payable {}
 
     function changeOwner(address _owner)
-        external
+        public
         onlyOwner
     {
         owner = _owner;
