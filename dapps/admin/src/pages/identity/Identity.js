@@ -23,6 +23,7 @@ const IdentityQuery = gql`
       airbnbVerified
       phoneVerified
       emailVerified
+      websiteVerified
     }
   }
 `

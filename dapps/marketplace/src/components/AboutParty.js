@@ -98,6 +98,14 @@ const AboutParty = ({ id }) => {
                       <div className="attestation airbnb" />
                     </Tooltip>
                   )}
+                  {profile.websiteVerified && (
+                    <Tooltip
+                      tooltip={fbt('Website Verified', 'Website Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation website" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>

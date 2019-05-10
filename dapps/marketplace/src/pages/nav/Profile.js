@@ -242,6 +242,8 @@ require('react-styl')(`
       background-image: url(images/identity/airbnb-icon-verified.svg)
     &.google
       background-image: url(images/identity/google-icon-verified.svg)
+    &.website
+      background-image: url(images/identity/website-icon-verified.svg)
 
   @media (max-width: 767.98px)
     .dropdown-menu.profile
