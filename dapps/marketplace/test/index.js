@@ -325,6 +325,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should enter new profile information', async function() {
+      await page.waitForSelector('input[name=firstName]')
       await page.type('input[name=firstName]', 'Amerigo vespucci')
       await page.type('input[name=lastName]', 'Vespucci')
       await page.type(
