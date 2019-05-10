@@ -54,8 +54,8 @@ class WebsiteAttestation extends Component {
           <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
         </h2>
         <div className="instructions">
-          <fbt desc="VerifyWebsite.enterWebsiteProfileUrl">
-            Enter Website profile URL below
+          <fbt desc="VerifyWebsite.enterWebsiteUrl">
+            Enter your website URL below
           </fbt>
         </div>
         <div className="mt-3">
@@ -71,7 +71,7 @@ class WebsiteAttestation extends Component {
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          <fbt desc="VerifyWebsite.websiteProfilePublished">
+          <fbt desc="VerifyWebsite.websitePublished">
             Other users will know that you have a verified website and your user
             id will be published on the blockchain.
           </fbt>
@@ -88,12 +88,12 @@ class WebsiteAttestation extends Component {
     )
   }
 
-  renderVerifyCode() {
+  renderDownloadCode() {
     return (
       <>
         <h2>
-          <fbt desc="VerifyWebsite.verifyYourWebsite">
-            Verify your Website account
+          <fbt desc="VerifyWebsite.uploadFile">
+            Upload the file to your website
           </fbt>
         </h2>
         <div className="instructions">
@@ -103,13 +103,21 @@ class WebsiteAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          <button
-            className="btn btn-outline-light"
-            onClick={() => this.downloadVerificationFile()}
-            children={fbt('Download', 'Download')}
-          />
+          {this.renderDownloadButton()}
         </div>
-        <div className="help">
+      </>
+    )
+  }
+
+  renderVerifyCode() {
+    return (
+      <>
+        <h2>
+          <fbt desc="VerifyWebsite.verifyYourWebsite">
+            Verify your website
+          </fbt>
+        </h2>
+        <div className="instructions">
           <fbt desc="VerifyWebsite.continueAfterUPload">
             Continue once you have uploaded the file and it is accessible.
           </fbt>
@@ -139,7 +147,7 @@ class WebsiteAttestation extends Component {
           const result = res.generateWebsiteCode
           if (result.success) {
             this.setState({
-              stage: 'VerifyCode',
+              stage: 'DownloadCode',
               code: result.code,
               loading: false
             })
@@ -173,6 +181,22 @@ class WebsiteAttestation extends Component {
           />
         )}
       </Mutation>
+    )
+  }
+
+  renderDownloadButton() {
+    return (
+      <button
+        className="btn btn-outline-light"
+        onClick={() => {
+          this.setState({
+            stage: 'VerifyCode'
+          })
+      
+          this.downloadVerificationFile()
+        }}
+        children={fbt('Download', 'Download')}
+      />
     )
   }
 
