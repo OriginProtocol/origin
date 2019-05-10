@@ -65,6 +65,11 @@ const ProfileFields = [
   'googleVerified'
 ]
 
+const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
+  m[`${o}Attestation`] = null
+  return m
+}, {})
+
 function getState(profile) {
   return {
     firstName: '',
@@ -83,6 +88,7 @@ class UserProfile extends Component {
     const storedAttestations = this.getStoredAttestions()
 
     this.state = {
+      ...resetAtts,
       ...getState(profile),
       ...storedAttestations
     }
@@ -90,7 +96,7 @@ class UserProfile extends Component {
     if (activeAttestation) {
       this.state[activeAttestation] = true
     }
-    this.accountsSwitched = false
+    this.toasterTimeout()
   }
 
   componentDidMount() {
@@ -102,6 +108,7 @@ class UserProfile extends Component {
      * since it initially returns an empty string
      */
     document.body.style.backgroundColor = 'white'
+    clearTimeout(this.timeout)
   }
 
   changesPublishedToBlockchain(props, prevProps) {
@@ -144,33 +151,12 @@ class UserProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.wallet !== prevProps.wallet) {
       const storedAttestations = this.getStoredAttestions()
-      const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
-        m[`${o}Attestation`] = null
-        return m
-      }, {})
       this.setState({ ...resetAtts, ...storedAttestations })
     }
 
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
-      this.accountsSwitched = true
-      /* Semi ugly hack - can not find a better solution to the problem.
-       *
-       * The problem: To show toast notification when a user changes profile or attestation
-       * data we are observing this component's state. False positive notifications
-       * need to be prevented to not falsely fire when state is initially populated or when user
-       * changes wallets.
-       *
-       * The biggest challenge is that wallet id prop changes immediately when the wallet
-       * changes and bit later identity information prop is populated (which can also be empty). It
-       * is hard to connect the wallet change to the identity change, to rule out profile switches.
-       *
-       * Current solution is just to disable any notifications firing 3 seconds after
-       * account switch.
-       */
-      setTimeout(() => {
-        this.accountsSwitched = false
-      }, 3000)
+      this.toasterTimeout()
     }
 
     if (this.changesPublishedToBlockchain(this.props, prevProps)) {
@@ -222,6 +208,26 @@ class UserProfile extends Component {
         this.handleShowNotification(message, 'blue')
       }
     })
+  }
+
+  /**
+   * Semi ugly hack - can not find a better solution to the problem.
+   *
+   * The problem: To show toast notification when a user changes profile or attestation
+   * data we are observing this component's state. False positive notifications
+   * need to be prevented to not falsely fire when state is initially populated or when user
+   * changes wallets.
+   *
+   * The biggest challenge is that wallet id prop changes immediately when the wallet
+   * changes and bit later identity information prop is populated (which can also be empty). It
+   * is hard to connect the wallet change to the identity change, to rule out profile switches.
+   *
+   * Current solution is just to disable any notifications firing 3 seconds after
+   * account switch.
+   */
+  toasterTimeout() {
+    this.accountsSwitched = true
+    this.timeout = setTimeout(() => this.accountsSwitched = false, 3000)
   }
 
   render() {
