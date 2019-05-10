@@ -177,7 +177,8 @@ contract IdentityProxy is ERC725 {
         public
         payable
     {
-        owner = _owner;
+        // owner = _owner;
+        changeOwner(_owner);
         executeCall(_exchange, msg.value, _swap);
         ERC20(_token).approve(_marketplace, _value);
         executeCall(_marketplace, 0, _offer);
@@ -193,7 +194,8 @@ contract IdentityProxy is ERC725 {
         public
         payable
     {
-        owner = _owner;
+        // owner = _owner;
+        changeOwner(_owner);
         executeCall(_marketplace, 0, _offer);
         ERC20(_token).approve(_marketplace, _value);
     }
