@@ -317,7 +317,6 @@ describe('Marketplace Dapp', function() {
       await page.evaluate(() => {
         window.location = '/#/profile'
       })
-      await changeAccount(page, seller)
       await pic(page, 'profile-page')
     })
 
