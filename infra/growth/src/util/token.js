@@ -1,9 +1,13 @@
 const BigNumber = require('bignumber.js')
 
-function tokenNaturalUnits(x) {
-  return BigNumber(x)
-    .times(BigNumber(10).pow(18))
-    .toFixed()
+const scaling = BigNumber(10).pow(18)
+
+function tokenToNaturalUnits(x) {
+  return BigNumber(x).times(scaling).toFixed()
 }
 
-module.exports = tokenNaturalUnits
+function naturalUnitsToToken(x) {
+  return BigNumber(x).dividedBy(scaling).toFixed()
+}
+
+module.exports = { tokenToNaturalUnits, naturalUnitsToToken }
