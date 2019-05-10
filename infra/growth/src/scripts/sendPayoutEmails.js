@@ -72,7 +72,7 @@ logger.info('Starting payout emails job.')
 const args = parseArgv()
 const config = {
   // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--doIt'] ? args['--doIt'] : false,
+  persist: args['--doIt'] === 'true' || false,
   campaignId: args['--campaignId']
 }
 logger.info('Config:')
