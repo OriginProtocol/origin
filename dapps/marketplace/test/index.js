@@ -320,11 +320,12 @@ describe('Marketplace Dapp', function() {
       await pic(page, 'profile-page')
     })
 
-    it('should open the edit modal', async function(){
+    it('should open the edit modal', async function() {
       await clickBySelector(page, '.profile a.edit')
     })
 
-    it('should enter new profile information', async function(){
+    it('should enter new profile information', async function() {
+      await page.waitForSelector('input[name=firstName]')
       await page.type('input[name=firstName]', 'Amerigo vespucci')
       await page.type('input[name=lastName]', 'Vespucci')
       await page.type(
@@ -334,23 +335,23 @@ describe('Marketplace Dapp', function() {
       await pic(page, 'profile-edit-modal')
     })
 
-    it('should close the edit modal', async function(){
+    it('should close the edit modal', async function() {
       await clickByText(page, 'OK', 'button')
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
-    it('should skip the wizard', async function(){
+    it('should skip the wizard', async function() {
       if (await hasText(page, 'Skip', 'button')) {
         await clickByText(page, 'Skip', 'button')
       }
     })
 
-    it('should publish the profile changes', async function(){
+    it('should publish the profile changes', async function() {
       await pic(page, 'profile-before-publish')
       await clickByText(page, 'Publish Changes')
     })
 
-    it('should reach a success page', async function(){
+    it('should reach a success page', async function() {
       await waitForText(page, 'Success')
       await pic(page, 'profile-edited')
     })
