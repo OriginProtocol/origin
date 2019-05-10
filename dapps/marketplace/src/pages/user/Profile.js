@@ -227,7 +227,9 @@ class UserProfile extends Component {
    */
   toasterTimeout() {
     this.accountsSwitched = true
-    this.timeout = setTimeout(() => this.accountsSwitched = false, 3000)
+    this.timeout = setTimeout(() => {
+      this.accountsSwitched = false
+    }, 3000)
   }
 
   render() {
