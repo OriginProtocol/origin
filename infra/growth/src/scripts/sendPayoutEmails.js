@@ -55,6 +55,9 @@ class SendPayoutEmails {
 
     for (const payout of payouts) {
       logger.info(`Sending email for payout id ${payout.id}`)
+      if (payout.currency !== 'OGN') {
+        throw new Error(`Unexpected currency ${payout.currency}`)
+      }
       const amount = naturalUnitsToToken(payout.amount)
       if (this.config.doIt) {
         await sendPayoutEmail(payout.toAddress, amount, payout.txnHash)
