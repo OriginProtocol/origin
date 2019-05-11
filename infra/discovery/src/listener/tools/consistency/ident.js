@@ -173,7 +173,7 @@ async function verifyIdent(address, ipfsGateway, ipfsHash) {
   } catch (err) {
     // Handle Assertion errors
     if (err.name === 'AssertionError') {
-      log.error(err.toString())
+      log.error(`Identity validation failed  for ${address}: ${err.toString()}`)
       return false
     } else {
       throw err
