@@ -19,7 +19,8 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
   await checkMetaMask(from)
   value = contracts.web3.utils.toWei(value, 'ether')
   const tx = tokenContract.contractExec.methods.approve(to, value)
-  return txHelper({ tx, from, mutation: 'updateTokenAllowance', gas: 4612388 })
+  const gas = await tx.estimateGas({ from })
+  return txHelper({ tx, from, mutation: 'updateTokenAllowance', gas })
 }
 
 export default updateTokenAllowance

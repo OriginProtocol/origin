@@ -32,6 +32,7 @@ import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
+import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -46,7 +47,8 @@ const AttestationComponents = {
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
   airbnb: AirbnbAttestation,
-  google: GoogleAttestation
+  google: GoogleAttestation,
+  website: WebsiteAttestation
 }
 
 const ProfileFields = [
@@ -62,7 +64,8 @@ const ProfileFields = [
   'airbnbVerified',
   'phoneVerified',
   'emailVerified',
-  'googleVerified'
+  'googleVerified',
+  'websiteVerified'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -125,7 +128,8 @@ class UserProfile extends Component {
         profile.facebookVerified !== prevProfile.facebookVerified ||
         profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
-        profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+        profile.airbnbVerified !== prevProfile.airbnbVerified ||
+        profile.websiteVerified !== prevProfile.websiteVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -200,6 +204,10 @@ class UserProfile extends Component {
       {
         attestation: 'airbnbAttestation',
         message: fbt('Airbnb updated', 'profile.airbnbUpdated')
+      },
+      {
+        attestation: 'websiteAttestation',
+        message: fbt('Website updated', 'profile.websiteUpdated')
       }
     ]
 
@@ -345,6 +353,11 @@ class UserProfile extends Component {
                   'google',
                   fbt('Google', '_ProvisionedChanges.google')
                 )}
+                {process.env.ENABLE_WEBSITE_ATTESTATION === 'true' &&
+                  this.renderAtt(
+                    'website',
+                    fbt('Website', '_ProvisionedChanges.website')
+                  )}
               </div>
             </div>
 
