@@ -48,17 +48,25 @@ class MobileUserActivation extends Component {
         <MobileModal
           onClose={() => this.onClose()}
           shouldClose={shouldClose}
-          title={<fbt desc="MobileUserActivation.createProfile">Create a Profile</fbt>}
+          title={
+            <fbt desc="MobileUserActivation.createProfile">
+              Create a Profile
+            </fbt>
+          }
           className="mobile-user-activation"
         >
           <h2 className="step-title">
-            { stage !== 'PublishDetail' && <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt> }
-            { stage === 'PublishDetail' && <fbt desc="MobileUserActivation.addYourEmail">Add name and photo</fbt> }
+            {stage !== 'PublishDetail' && (
+              <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt>
+            )}
+            {stage === 'PublishDetail' && (
+              <fbt desc="MobileUserActivation.addYourEmail">
+                Add name and photo
+              </fbt>
+            )}
           </h2>
           <Steps steps={2} step={step} />
-          <div>
-            {this[`render${stage}`]()}
-          </div>
+          <div>{this[`render${stage}`]()}</div>
         </MobileModal>
         {/* { txModal && (
           <MobileModal
@@ -104,42 +112,53 @@ class MobileUserActivation extends Component {
         }}
       >
         {generateCode => (
-          <form onSubmit={e => {
-            e.preventDefault()
-            if (this.state.loading) return
-            this.setState({ error: null, loading: true })
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              if (this.state.loading) return
+              this.setState({ error: null, loading: true })
 
-            const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
-            if (!emailRegex.test(this.state.email)) {
-              this.setState({
-                error: 'This is not a valid email address',
-                loading: false
-              })
-              return
-            }
-
-            generateCode({
-              variables: {
-                email: this.state.email
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              if (!emailRegex.test(this.state.email)) {
+                this.setState({
+                  error: 'This is not a valid email address',
+                  loading: false
+                })
+                return
               }
-            })
-          }}>
+
+              generateCode({
+                variables: {
+                  email: this.state.email
+                }
+              })
+            }}
+          >
             <div className="boxed-container">
-              <h3><fbt desc="MobileUserActivation.enterValidEmail">Enter a valid email address</fbt></h3>
+              <h3>
+                <fbt desc="MobileUserActivation.enterValidEmail">
+                  Enter a valid email address
+                </fbt>
+              </h3>
               <div className="mt-3">
-                  <input
-                    type="email"
-                    className="form-control form-control-lg text-center"
-                    placeholder="username@email.com"
-                    value={this.state.email}
-                    onChange={e => this.setState({ email: e.target.value })}
-                  />
+                <input
+                  type="email"
+                  className="form-control form-control-lg text-center"
+                  placeholder="username@email.com"
+                  value={this.state.email}
+                  onChange={e => this.setState({ email: e.target.value })}
+                />
               </div>
               {this.state.error && (
-                <div className="alert alert-danger mt-3">{this.state.error}</div>
+                <div className="alert alert-danger mt-3">
+                  {this.state.error}
+                </div>
               )}
               <div className="help mt-3">
-                <fbt desc="MobileUserActivation.emailHelp ">We use your email to send you important notifications when you buy or sell.</fbt>
+                <fbt desc="MobileUserActivation.emailHelp ">
+                  We use your email to send you important notifications when you
+                  buy or sell.
+                </fbt>
               </div>
             </div>
             <div className="info">
@@ -149,7 +168,8 @@ class MobileUserActivation extends Component {
                 </fbt>
               </span>
               <fbt desc="MobileUserActivation.verifiedButNotEmail">
-                That you have a verified email, but NOT your actual email address
+                That you have a verified email, but NOT your actual email
+                address
               </fbt>
             </div>
             <div className="actions">
@@ -195,42 +215,56 @@ class MobileUserActivation extends Component {
         }}
       >
         {verifyCode => (
-          <form onSubmit={e => {
-            e.preventDefault()
-            if (this.state.loading) return
-            this.setState({ error: false, loading: true })
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              if (this.state.loading) return
+              this.setState({ error: false, loading: true })
 
-            const trimmedCode = this.state.code.trim()
+              const trimmedCode = this.state.code.trim()
 
-            if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
-              this.setState({
-                error: 'Verification code should be a 6 digit number',
-                loading: false
+              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                this.setState({
+                  error: 'Verification code should be a 6 digit number',
+                  loading: false
+                })
+                return
+              }
+
+              verifyCode({
+                variables: { identity: this.props.wallet, email, code }
               })
-              return
-            }
-
-            verifyCode({
-              variables: { identity: this.props.wallet, email, code }
-            })
-          }}>
+            }}
+          >
             <div className="boxed-container">
-              <h3><fbt desc="MobileUserActivation.codeSentToEmail">We emailed you a code</fbt></h3>
+              <h3>
+                <fbt desc="MobileUserActivation.codeSentToEmail">
+                  We emailed you a code
+                </fbt>
+              </h3>
               <div className="mt-3">
                 <input
                   type="tel"
                   maxLength="6"
                   className="form-control form-control-lg"
-                  placeholder={fbt('Enter verification code', 'MobileUserActivation.enterCode')}
+                  placeholder={fbt(
+                    'Enter verification code',
+                    'MobileUserActivation.enterCode'
+                  )}
                   value={this.state.code}
                   onChange={e => this.setState({ code: e.target.value })}
                 />
               </div>
               {this.state.error && (
-                <div className="alert alert-danger mt-3">{this.state.error}</div>
+                <div className="alert alert-danger mt-3">
+                  {this.state.error}
+                </div>
               )}
               <div className="help mt-3">
-                <fbt desc="MobileUserActivation.emailHelp ">We sent a code to the email address you provided. Please enter it above.</fbt>
+                <fbt desc="MobileUserActivation.emailHelp ">
+                  We sent a code to the email address you provided. Please enter
+                  it above.
+                </fbt>
               </div>
             </div>
             <div className="info">
@@ -240,7 +274,8 @@ class MobileUserActivation extends Component {
                 </fbt>
               </span>
               <fbt desc="MobileUserActivation.verifiedButNotEmail">
-                That you have a verified email, but NOT your actual email address
+                That you have a verified email, but NOT your actual email
+                address
               </fbt>
             </div>
             <div className="actions">
@@ -265,23 +300,23 @@ class MobileUserActivation extends Component {
     const attestations = [this.state.data]
 
     return (
-      <form onSubmit={e => {
-        e.preventDefault()
-        this.validate()
-        // if (this.validate()) {
-        //   this.setState({
-        //     txModal: true
-        //   })
-        // }
-      }}>
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          this.validate()
+          // if (this.validate()) {
+          //   this.setState({
+          //     txModal: true
+          //   })
+          // }
+        }}
+      >
         <div className="boxed-container">
           <div className="avatar-wrap mt-3">
             <ImageCropper
               onChange={async avatar => {
                 const { ipfsRPC } = this.props.config
-                const uploadedImages = await uploadImages(ipfsRPC, [
-                  avatar  
-                ])
+                const uploadedImages = await uploadImages(ipfsRPC, [avatar])
                 const avatarImg = uploadedImages[0]
                 if (avatarImg) {
                   const avatarUrl = avatarImg.url
@@ -289,10 +324,7 @@ class MobileUserActivation extends Component {
                 }
               }}
             >
-              <Avatar
-                className="with-cam"
-                avatarUrl={this.state.avatarUrl}
-              />
+              <Avatar className="with-cam" avatarUrl={this.state.avatarUrl} />
             </ImageCropper>
           </div>
           <div className="mt-3">
@@ -304,7 +336,9 @@ class MobileUserActivation extends Component {
               onChange={e => this.setState({ firstName: e.target.value })}
             />
             {this.state.firstNameError && (
-              <div className="alert alert-danger mt-3">{this.state.firstNameError}</div>
+              <div className="alert alert-danger mt-3">
+                {this.state.firstNameError}
+              </div>
             )}
           </div>
           <div className="mt-3">
@@ -327,12 +361,13 @@ class MobileUserActivation extends Component {
             </fbt>
           </span>
           <fbt desc="MobileUserActivation.nameAndPhoto">
-            Your name and photo. 
+            Your name and photo.
           </fbt>
-          <a href="#"><fbt desc="MobileUserActivation.learnMore">Learn more</fbt></a>
+          <a href="#">
+            <fbt desc="MobileUserActivation.learnMore">Learn more</fbt>
+          </a>
         </div>
         <div className="actions">
-          
           {/* <button
             type="submit"
             className="btn btn-primary mt-3 mb-3"
@@ -370,7 +405,7 @@ class MobileUserActivation extends Component {
   // }
 
   validate() {
-    const newState = {
+    let newState = {
       firstNameError: null,
       valid: true
     }

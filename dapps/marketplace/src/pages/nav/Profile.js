@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import ProfileQuery from 'queries/Profile'
-import IdentityQuery from 'queries/Identity'
 
 import Link from 'components/Link'
-import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
-import Modal from 'components/Modal'
 import MobileUserActivation from 'components/MobileUserActivation'
 
 class ProfileNav extends Component {
@@ -69,8 +65,19 @@ class ProfileNav extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                { identity && <Avatar avatar={identity.avatar} avatarUrl={identity.avatarUrl} className="user-image-mask" />}
-                { !identity && <img className="user-image-mask" src="images/identity/unknown-user-small.svg" /> }
+                {identity && (
+                  <Avatar
+                    avatar={identity.avatar}
+                    avatarUrl={identity.avatarUrl}
+                    className="user-image-mask"
+                  />
+                )}
+                {!identity && (
+                  <img
+                    className="user-image-mask"
+                    src="images/identity/unknown-user-small.svg"
+                  />
+                )}
               </a>
             </Dropdown>
           )
@@ -92,19 +99,34 @@ class CreateIdentity extends Component {
     return (
       <>
         <div className="create-identity text-center">
-          <img className="user-image-mask large" src="images/identity/unknown-user.svg" />
-          <h3><fbt desc="nav.profile.profileNotCreated">You haven't created a profile yet</fbt></h3>
-          <p><fbt desc="nav.profile.createYourProfile">Creating a profile allows other users to know that you are real and increases the chances of successful transactions on Origin.</fbt></p>
+          <img
+            className="user-image-mask large"
+            src="images/identity/unknown-user.svg"
+          />
+          <h3>
+            <fbt desc="nav.profile.profileNotCreated">
+              You haven&apos;t created a profile yet
+            </fbt>
+          </h3>
+          <p>
+            <fbt desc="nav.profile.createYourProfile">
+              Creating a profile allows other users to know that you are real
+              and increases the chances of successful transactions on Origin.
+            </fbt>
+          </p>
 
-          <button className="btn btn-primary" onClick={() => {
-            this.setState({
-              enable: true
-            })
-          }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              this.setState({
+                enable: true
+              })
+            }}
+          >
             <fbt desc="nav.profile.getStarted">Get Started</fbt>
           </button>
         </div>
-        { this.state.enable && <MobileUserActivation onClose={this.onClose} /> }
+        {this.state.enable && <MobileUserActivation onClose={this.onClose} />}
       </>
     )
   }
@@ -130,9 +152,12 @@ const WalletAddress = ({ wallet, walletType }) => {
     <div className="connected">
       <fbt desc="nav.profile.activeWallet">Active wallet</fbt>
       <span>
-        <span className={`wallet-icon ${getWalletIconClass(walletType)}`}></span>
+        <span className={`wallet-icon ${getWalletIconClass(walletType)}`} />
         <span className="wallet-name">{walletType}</span>
-        <span className="wallet-address">{`${wallet.slice(0, 4)}...${wallet.slice(-4)}`}</span>
+        <span className="wallet-address">{`${wallet.slice(
+          0,
+          4
+        )}...${wallet.slice(-4)}`}</span>
       </span>
     </div>
   )
@@ -140,9 +165,13 @@ const WalletAddress = ({ wallet, walletType }) => {
 
 const Identity = ({ id, identity, identityLoading, onClose }) => {
   if (identityLoading) {
-    return <div>
-      <fbt desc="nav.profile.identityLoading">Hold on while we load your identity...</fbt>
-    </div>
+    return (
+      <div>
+        <fbt desc="nav.profile.identityLoading">
+          Hold on while we load your identity...
+        </fbt>
+      </div>
+    )
   }
 
   if (!identity) {
@@ -174,17 +203,30 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
           'nav.profile.ProfileStrength'
         )} - ${identity.strength || '0'}%`}
       </div>
-      <Link onClick={() => onClose()} to="/profile" className="earn-ogn-link mt-3 mb-3">
+      <Link
+        onClick={() => onClose()}
+        to="/profile"
+        className="earn-ogn-link mt-3 mb-3"
+      >
         <fbt desc="nav.profile.earnOGN">Strengthen profile &amp; earn OGN</fbt>
       </Link>
-      <Balances account={id} onClose={onClose} title={
-        <fbt desc="nav.profile.walletBalance">Wallet balance</fbt>
-      } className="pt-3 pb-3" />
+      <Balances
+        account={id}
+        onClose={onClose}
+        title={<fbt desc="nav.profile.walletBalance">Wallet balance</fbt>}
+        className="pt-3 pb-3"
+      />
     </div>
   )
 }
 
-const ProfileDropdown = ({ data, identity, identityLoading, walletType, onClose }) =>  {
+const ProfileDropdown = ({
+  data,
+  identity,
+  identityLoading,
+  walletType,
+  onClose
+}) => {
   const { checksumAddress, id } = data.web3.primaryAccount
 
   return (
@@ -194,7 +236,12 @@ const ProfileDropdown = ({ data, identity, identityLoading, walletType, onClose 
         <WalletAddress wallet={checksumAddress} walletType={walletType} />
       </div>
       <div className="identity-info">
-        <Identity id={id} identity={identity} identityLoading={identityLoading} onClose={onClose} />
+        <Identity
+          id={id}
+          identity={identity}
+          identityLoading={identityLoading}
+          onClose={onClose}
+        />
       </div>
     </div>
   )
@@ -204,17 +251,17 @@ function getWalletIconClass(walletType) {
   switch (walletType) {
     case 'Origin Wallet':
       return 'origin'
-    
+
     case 'MetaMask':
     case 'Meta Mask':
       return 'metamask'
 
     case 'Trust Wallet':
       return 'trust'
-    
+
     case 'Coinbase Wallet':
       return 'toshi'
-    
+
     case 'Cipher':
       return 'cipher'
 

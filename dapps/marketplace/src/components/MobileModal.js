@@ -63,11 +63,11 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
-        <div className="modal-header"></div>
+        <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}
         </div>
-        <div className="modal-header"></div>
+        <div className="modal-header" />
       </>
     )
   }
@@ -91,10 +91,7 @@ export default class MobileModal extends Component {
   }
 
   onClose() {
-    if (
-      this.props.onClose &&
-      !this.onCloseTimeout
-    ) {
+    if (this.props.onClose && !this.onCloseTimeout) {
       this.doClose()
     }
   }

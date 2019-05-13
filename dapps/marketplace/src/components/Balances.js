@@ -11,11 +11,13 @@ const Balances = ({ ethBalance, account, onClose, title, className }) => {
   const EnrollButton = withEnrolmentModal('button')
   const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
-  let titleEl = title || (<fbt desc="Balances.account-balance">Account Balance</fbt>)
+  const titleEl = title || (
+    <fbt desc="Balances.account-balance">Account Balance</fbt>
+  )
 
   return (
     <div className={`balances ${className || ''}`}>
-      <h5>{ titleEl }</h5>
+      <h5>{titleEl}</h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">
