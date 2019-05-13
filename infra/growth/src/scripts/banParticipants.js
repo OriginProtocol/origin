@@ -40,6 +40,9 @@ class OriginEmployees {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
+      if (line.startsWith('#')) {
+        continue
+      }
       const address = line.trim().toLowerCase()
       this.addresses[address] = true
     }
@@ -61,6 +64,9 @@ class TrustedAccounts {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
+      if (line.startsWith('#')) {
+        continue
+      }
       const address = line.trim().toLowerCase()
       this.addresses[address] = true
     }
@@ -139,7 +145,8 @@ class BanParticipants {
     const participants = await db.GrowthParticipant.findAll({
       where: {
         status: enums.GrowthParticipantStatuses.Active,
-        employee: false
+        employee: false,
+        trusted: false
       },
       order: [['created_at', 'ASC']]
     })
@@ -165,7 +172,7 @@ class BanParticipants {
       // Check if participant is trusted and if yes mark them as such.
       if (this.trusted.match(address)) {
         if (this.config.persist) {
-          await participant.update({ employee: true })
+          await participant.update({ trusted: true })
           logger.info('Setting trusted flag on account ', address)
         } else {
           logger.info('Would set trusted flag on account ', address)
