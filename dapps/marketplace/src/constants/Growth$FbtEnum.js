@@ -21,8 +21,7 @@ const Growth$FbtEnum = {
   'growth.purchase.charity.title': 'Donate $100 to the GiveDirectly charity',
   'growth.purchase.charity.details':
     'Donation will be made by Origin on your behalf.',
-  'growth.purchase.homerental.title':
-    'Book a home rental in Lake Orta, Italy',
+  'growth.purchase.homerental.title': 'Book a home rental in Lake Orta, Italy',
   'growth.purchase.homerental.details':
     'Booking and stay must happen in the month of May.',
   'growth.purchase.experience.title':
