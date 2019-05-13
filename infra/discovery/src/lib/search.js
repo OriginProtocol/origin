@@ -299,8 +299,8 @@ class Listing {
       body: {
         from: offset,
         size: numberOfItems,
-        query: boostScoreQuery,
-        _source: ['title', 'description', 'price']
+        query: scoreQuery,
+        _source: ['title', 'description', 'price', 'commissionPerUnit']
       }
     })
 
