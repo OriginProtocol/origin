@@ -47,7 +47,7 @@ export default {
   },
   identity: async account => identity({ id: account.id }),
   owner: async account => {
-    if (!process.env.ENABLE_PROXY_ACCOUNTS) {
+    if (!contracts.config.proxyAccountsEnabled) {
       return { id: account.id }
     }
     const Proxy = contracts.ProxyImp.clone()
@@ -60,7 +60,7 @@ export default {
     }
   },
   proxy: async account => {
-    if (!process.env.ENABLE_PROXY_ACCOUNTS) {
+    if (!contracts.config.proxyAccountsEnabled) {
       return { id: account.id }
     }
     const id = await hasProxy(account.id)

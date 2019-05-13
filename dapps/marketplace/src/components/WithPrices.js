@@ -11,9 +11,12 @@ const WithPrices = ({
   target,
   targets = [],
   currencies,
+  proxyCurrencies,
   price: { currency, amount } = {},
   children
 }) => {
+  proxyCurrencies = proxyCurrencies.length ? proxyCurrencies : currencies
+
   let hasBalance = false,
     hasAllowance = false,
     needsAllowance,
@@ -27,6 +30,17 @@ const WithPrices = ({
 
   const results = targets.reduce((memo, target) => {
     const targetCurrency = currencies.find(c => c.id === target)
+    if (!targetCurrency) return memo
+
+    const amountUSD = amount * foundCurrency.priceInUSD
+    const targetAmount = amountUSD / targetCurrency.priceInUSD
+
+    memo[target] = { amount: String(targetAmount), currency: targetCurrency }
+    return memo
+  }, {})
+
+  const proxyResults = targets.reduce((memo, target) => {
+    const targetCurrency = proxyCurrencies.find(c => c.id === target)
     if (!targetCurrency) return memo
 
     const amountUSD = amount * foundCurrency.priceInUSD
@@ -53,7 +67,7 @@ const WithPrices = ({
       get(results, `${target}.currency.balance`) || '0'
     )
     const availableAllowance = web3.utils.toBN(
-      get(results, `${target}.currency.allowance`) || '0'
+      get(proxyResults, `${target}.currency.allowance`) || '0'
     )
 
     hasBalance = availableBalance.gte(targetValue)

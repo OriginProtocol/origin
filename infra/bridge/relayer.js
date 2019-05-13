@@ -10,13 +10,14 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
+const config = require('@origin/contracts/build/contracts.json')
 
 app.use(express.json())
 app.use(cors({ origin: true, credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const verifySign = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
+const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
     { t: 'address', v: from },
     { t: 'address', v: to },
@@ -29,7 +30,7 @@ const verifySign = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
     const msgBuffer = utils.toBuffer(signedData)
 
     const prefix = Buffer.from('\x19Ethereum Signed Message:\n')
-    const prefixedMsg = utils.sha3(
+    const prefixedMsg = utils.keccak256(
       Buffer.concat([prefix, Buffer.from(String(msgBuffer.length)), msgBuffer])
     )
 
@@ -44,16 +45,28 @@ const verifySign = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 
     return address.toLowerCase() === from.toLowerCase()
   } catch (e) {
+    console.log('error recovering', e)
     return false
   }
 }
 
-let ProxyFactory, IdentityProxyImp
-
 app.post('/', async function(req, res) {
-  const { signature, from, txData, provider, to, identity } = req.body
+  const { signature, from, txData, provider, to, proxy, preflight } = req.body
+
+  // Pre-flight requests check if the relayer is available
+  if (preflight) {
+    return res.send({ success: true })
+  }
 
   const web3 = new Web3(provider)
+  const ProxyFactory = new web3.eth.Contract(
+    ProxyFactoryContract.abi,
+    config.ProxyFactory
+  )
+  const IdentityImp = new web3.eth.Contract(
+    IdentityProxyContract.abi,
+    config.IdentityProxyImplementation
+  )
 
   const nodeAccounts = await web3.eth.getAccounts()
   const forwarder = nodeAccounts[0]
@@ -71,12 +84,12 @@ app.post('/', async function(req, res) {
 
   const method = methods[txData.substr(0, 10)]
 
-  if (identity) {
-    IdentityProxy.options.address = identity
+  if (proxy) {
+    IdentityProxy.options.address = proxy
     nonce = await IdentityProxy.methods.nonce(from).call()
   }
 
-  const signValid = await verifySign({
+  const signValid = await verifySig({
     to,
     from,
     signature,
@@ -96,32 +109,11 @@ app.post('/', async function(req, res) {
   // }
 
   // 3. Deploy or get user's proxy instance
-  if (!identity) {
-    if (!ProxyFactory) {
-      ProxyFactory = new web3.eth.Contract(ProxyFactoryContract.abi)
-      const fr = await ProxyFactory.deploy({
-        data: ProxyFactoryContract.bytecode
-      }).send({
-        from: nodeAccounts[0],
-        gas: 4000000
-      })
-      ProxyFactory.options.address = fr._address
-
-      IdentityProxyImp = await IdentityProxy.deploy({
-        data: IdentityProxyContract.bytecode
-      }).send({
-        from: nodeAccounts[0],
-        gas: 4000000
-      })
-      console.log('Deployed Proxy Factory')
-    }
-
-    const changeOwner = await IdentityProxyImp.methods
-      .changeOwner(from)
-      .encodeABI()
+  if (!proxy) {
+    const changeOwner = await IdentityImp.methods.changeOwner(from).encodeABI()
 
     const res = await ProxyFactory.methods
-      .createProxy(IdentityProxyImp._address, changeOwner)
+      .createProxy(IdentityImp._address, changeOwner)
       .send({
         from: nodeAccounts[0],
         gas: 4000000
@@ -154,7 +146,7 @@ app.post('/', async function(req, res) {
   }
 
   res.status(200)
-  res.send({ userProxy: IdentityProxy._address, id: txHash })
+  res.send({ id: txHash })
 })
 
 app.listen(5100, () => {

@@ -1,12 +1,9 @@
 import contracts from '../contracts'
-import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy'
+import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy_solc'
 
-import { isProxy, proxyOwnerOrNull, setProxy } from '../utils/identityProxy'
-
-export default async function relayerHelper({ tx, from, address }) {
+export default async function relayerHelper({ tx, from, proxy, to }) {
+  const provider = contracts.web3.currentProvider.host
   let nonce = 0
-  const proxy = isProxy(from) ? from : null
-  from = isProxy(from) ? proxyOwnerOrNull(from) : from
 
   if (proxy) {
     const IdentityProxy = new contracts.web3Exec.eth.Contract(
@@ -15,27 +12,48 @@ export default async function relayerHelper({ tx, from, address }) {
     )
     nonce = await IdentityProxy.methods.nonce(from).call()
   }
-  const txData = tx.encodeABI()
-  const dataToSign = contracts.web3.utils.soliditySha3(
-    { t: 'address', v: from }, // Signer
-    { t: 'address', v: address }, // Marketplace address
-    { t: 'uint256', v: contracts.web3.utils.toWei('0', 'ether') }, // value
-    { t: 'bytes', v: txData },
-    { t: 'uint256', v: nonce } // nonce
-  )
 
+  const txData = tx.encodeABI()
+
+  // Check if the relayer is available and willing to pay gas for this tx
+  const relayerAvailable = await fetch(contracts.config.relayer, {
+    headers: { 'content-type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify({
+      to,
+      from,
+      txData,
+      provider,
+      proxy,
+      preflight: true
+    })
+  })
+  const availableData = await relayerAvailable.json()
+  if (availableData.errors) {
+    throw new Error(availableData.errors[0])
+  } else if (!availableData.success) {
+    throw new Error('Relayer server unavailable')
+  }
+
+  const dataToSign = contracts.web3.utils.soliditySha3(
+    { t: 'address', v: from },
+    { t: 'address', v: to },
+    { t: 'uint256', v: contracts.web3.utils.toWei('0', 'ether') },
+    { t: 'bytes', v: txData },
+    { t: 'uint256', v: nonce }
+  )
   const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
 
   const response = await fetch(contracts.config.relayer, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify({
-      to: address,
+      to,
       from,
       signature,
       txData,
-      provider: contracts.web3.currentProvider.host,
-      identity: proxy
+      provider,
+      proxy
     })
   })
 
@@ -46,8 +64,8 @@ export default async function relayerHelper({ tx, from, address }) {
   }
 
   const data = await response.json()
-  if (data.userProxy) {
-    setProxy(from, data.userProxy)
+  if (data.errors) {
+    throw new Error(data.errors[0])
   }
 
   return { id: data.id }

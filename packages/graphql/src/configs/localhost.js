@@ -28,6 +28,7 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+  proxyAccountsEnabled: true,
   tokens: [],
 
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',

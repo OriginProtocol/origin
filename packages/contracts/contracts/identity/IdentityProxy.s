@@ -12,7 +12,8 @@ interface ERC725 {
 }
 
 interface ERC20 {
-    function approve(address _spender, uint256 _value) public;
+    function approve(address _spender, uint256 _value) external;
+    function transferFrom(address from, address to, uint tokens) external;
 }
 
 contract IdentityProxy is ERC725 {
@@ -177,9 +178,24 @@ contract IdentityProxy is ERC725 {
         public
         payable
     {
-        // owner = _owner;
         changeOwner(_owner);
         executeCall(_exchange, msg.value, _swap);
+        ERC20(_token).approve(_marketplace, _value);
+        executeCall(_marketplace, 0, _offer);
+    }
+
+    function transferTokenMarketplaceExecute(
+        address _owner,
+        address _marketplace,
+        bytes _offer,
+        address _token,
+        uint _value
+    )
+        public
+        payable
+    {
+        changeOwner(_owner);
+        ERC20(_token).transferFrom(_owner, this, _value);
         ERC20(_token).approve(_marketplace, _value);
         executeCall(_marketplace, 0, _offer);
     }
@@ -194,9 +210,8 @@ contract IdentityProxy is ERC725 {
         public
         payable
     {
-        // owner = _owner;
         changeOwner(_owner);
-        executeCall(_marketplace, 0, _offer);
         ERC20(_token).approve(_marketplace, _value);
+        executeCall(_marketplace, 0, _offer);
     }
 }

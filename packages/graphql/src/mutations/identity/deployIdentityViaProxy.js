@@ -24,16 +24,11 @@ async function deployIdentityViaProxy(
   const initFn = await IdentityContract.methods.changeOwner(owner).encodeABI()
   const Contract = new web3.eth.Contract(ProxyFactory.abi, factoryAddress)
 
-  console.log('changeOwner', owner, initFn)
-
   return txHelper({
     tx: Contract.methods.createProxyWithNonce(proxyAddress, initFn, 0),
     from,
     gas: 5500000,
-    mutation: 'deployIdentityViaProxy',
-    onReceipt: res => {
-      console.log('res', res)
-    }
+    mutation: 'deployIdentityViaProxy'
   })
 }
 

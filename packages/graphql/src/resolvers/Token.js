@@ -1,4 +1,5 @@
 import currencies from '../utils/currencies'
+import hasProxy from '../utils/hasProxy'
 import contracts from '../contracts'
 
 function tokenContract(id) {

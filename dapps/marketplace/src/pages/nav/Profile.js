@@ -77,7 +77,7 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdown = ({ data, onClose }) => {
+const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
@@ -93,6 +93,14 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
+      {walletProxy === wallet ? null : (
+        <div className="wallet-info">
+          <div>
+            <h5>Proxy Account</h5>
+            <div className="wallet-address">{walletProxy}</div>
+          </div>
+        </div>
+      )}
       <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
@@ -103,7 +111,7 @@ const ProfileDropdown = ({ data, onClose }) => {
       </Link>
     </div>
   )
-}
+})
 
 const Identity = withWallet(({ walletProxy }) => (
   <Query query={IdentityQuery} variables={{ id: walletProxy }}>

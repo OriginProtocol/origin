@@ -48,9 +48,10 @@ module.exports = `
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String
+    originGraphQLVersion: String
     provider: String
     providerWS: String
-    originGraphQLVersion: String
+    relayer: String
   }
 
   type Mutation {
