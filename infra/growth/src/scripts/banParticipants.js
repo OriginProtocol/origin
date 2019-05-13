@@ -17,20 +17,22 @@ const { SdnMatcher } = require('../util/sdnMatcher')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('banParticipants', { showTimestamp: false })
 
-let FraudEngine, employeesFilename
+let FraudEngine, employeesFilename, trustedFilename
 if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_FRAUD) {
   FraudEngine = require('../fraud/prod/engine')
   employeesFilename = `${__dirname}/../fraud/prod/data/employees.txt`
+  trustedFilename = `${__dirname}/../fraud/prod/data/trusted.txt`
   logger.info('Loaded PROD fraud engine.')
 } else {
   FraudEngine = require('../fraud/dev/engine')
   employeesFilename = `${__dirname}/../fraud/dev/data/employees.txt`
+  trustedFilename = `${__dirname}/../fraud/dev/data/trusted.txt`
   logger.info('Loaded DEV fraud engine.')
 }
 
 /**
  * Helper class that loads the list of Origin employees accounts.
- * These acounts are exempt from fraud check but also do not get any reward payout.
+ * These accounts are exempt from fraud check but also do not get any reward payout.
  */
 class OriginEmployees {
   constructor(filename) {
@@ -49,15 +51,38 @@ class OriginEmployees {
   }
 }
 
+/**
+ * Helper class that loads the list of trusted accounts.
+ * These accounts are exempt from fraud check.
+ */
+class TrustedAccounts {
+  constructor(filename) {
+    this.addresses = {}
+    const data = fs.readFileSync(filename).toString()
+    const lines = data.split('\n')
+    for (const line of lines) {
+      const address = line.trim().toLowerCase()
+      this.addresses[address] = true
+    }
+    logger.info(`Loaded ${lines.length} trusted addresses.`)
+  }
+
+  match(ethAddress) {
+    return this.addresses[ethAddress] || false
+  }
+}
+
 class BanParticipants {
   constructor(config) {
     this.config = config
     this.stats = {
       numProcessed: 0,
       numEmployeesTagged: 0,
+      numTrustedTagged: 0,
       numBanned: 0
     }
     this.employees = new OriginEmployees(employeesFilename)
+    this.trusted = new TrustedAccounts(trustedFilename)
     this.sdnMatcher = new SdnMatcher()
     this.fraudEngine = new FraudEngine()
   }
@@ -123,6 +148,8 @@ class BanParticipants {
       const address = participant.ethAddress
       this.stats.numProcessed++
 
+      let isEmployee, isTrusted
+
       // Check if participant is an employee and if yes mark them as such.
       if (this.employees.match(address)) {
         if (this.config.persist) {
@@ -132,7 +159,23 @@ class BanParticipants {
           logger.info('Would set employee flag on account ', address)
         }
         this.stats.numEmployeesTagged++
-        // Employees do not get checked for fraud.
+        isEmployee = true
+      }
+
+      // Check if participant is trusted and if yes mark them as such.
+      if (this.trusted.match(address)) {
+        if (this.config.persist) {
+          await participant.update({ employee: true })
+          logger.info('Setting trusted flag on account ', address)
+        } else {
+          logger.info('Would set trusted flag on account ', address)
+        }
+        this.stats.numTrustedTagged++
+        isTrusted = true
+      }
+
+      if (isEmployee || isTrusted) {
+        // Trusted and employee accounts do not get checked for fraud.
         // Proceed with the next participant record.
         continue
       }
@@ -185,6 +228,10 @@ if (require.main === module) {
       logger.info(
         '  Number of participants tagged as employees:',
         job.stats.numEmployeesTagged
+      )
+      logger.info(
+        '  Number of participants tagged as trusted:',
+        job.stats.numTrustedTagged
       )
       logger.info('  Number of participants banned:     ', job.stats.numBanned)
       logger.info('Finished')

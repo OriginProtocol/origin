@@ -46,6 +46,13 @@ async function createMayProdCampaign() {
   })
 }
 
+async function updateMayProdRules() {
+  console.log('Updating May campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 2 } })
+  await campaign.update({ rules: JSON.stringify(mayConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -53,14 +60,23 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-if (args['--month'] === 'april') {
-  createAprilProdCampaign().then(() => {
-    console.log('Done')
-    process.exit()
-  })
-} else if (args['--month'] === 'may') {
-  createMayProdCampaign().then(() => {
-    console.log('Done')
-    process.exit()
-  })
+if (args['--action'] === 'create') {
+  if (args['--month'] === 'april') {
+    createAprilProdCampaign().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  } else if (args['--month'] === 'may') {
+    createMayProdCampaign().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  }
+} else if (args['--action'] === 'update') {
+  if (args['--month'] === 'may') {
+    updateMayProdRules().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  }
 }
