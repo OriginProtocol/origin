@@ -44,21 +44,22 @@ class MobileUserActivation extends Component {
       return null
     }
 
-    const stepHeader = stage === 'ProfileCreated' ? null : (
-      <>
-        <h2 className="step-title">
-          {stage !== 'PublishDetail' && (
-            <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt>
-          )}
-          {stage === 'PublishDetail' && (
-            <fbt desc="MobileUserActivation.addYourEmail">
-              Add name and photo
-            </fbt>
-          )}
-        </h2>
-        <Steps steps={2} step={step} />
-      </>
-    )
+    const stepHeader =
+      stage === 'ProfileCreated' ? null : (
+        <>
+          <h2 className="step-title">
+            {stage !== 'PublishDetail' && (
+              <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt>
+            )}
+            {stage === 'PublishDetail' && (
+              <fbt desc="MobileUserActivation.addYourEmail">
+                Add name and photo
+              </fbt>
+            )}
+          </h2>
+          <Steps steps={2} step={step} />
+        </>
+      )
 
     return (
       <>
@@ -72,7 +73,7 @@ class MobileUserActivation extends Component {
           }
           className="mobile-user-activation"
         >
-          { stepHeader }
+          {stepHeader}
           <div>{this[`render${stage}`]()}</div>
         </MobileModal>
         {/* { txModal && (
@@ -415,17 +416,26 @@ class MobileUserActivation extends Component {
     return (
       <div className="profile-created">
         <img src="images/identity/rocket.svg" />
-        <h2 className="mt-3"><fbt desc="MobileUserActivation.congratulations">Congratulations</fbt></h2>
+        <h2 className="mt-3">
+          <fbt desc="MobileUserActivation.congratulations">Congratulations</fbt>
+        </h2>
         <div>
-          <fbt desc="MobileUserActivation.profileCreated">You&apos;ve successfully created your profile You&apos;re now ready to continue your journey in the Origin Marketplace.</fbt>
+          <fbt desc="MobileUserActivation.profileCreated">
+            You&apos;ve successfully created your profile You&apos;re now ready
+            to continue your journey in the Origin Marketplace.
+          </fbt>
         </div>
         <div className="info white mt-6 mb-3">
-          <div className="image"></div>
+          <div className="image" />
           <div className="content">
             <div className="title">
-              <fbt desc="MobileUserActivation.earnOgnTokens">Earn OGN Tokens</fbt>
+              <fbt desc="MobileUserActivation.earnOgnTokens">
+                Earn OGN Tokens
+              </fbt>
             </div>
-            <fbt desc="MobileUserActivation.completeTasks">Complete tasks and earn tokens.</fbt>
+            <fbt desc="MobileUserActivation.completeTasks">
+              Complete tasks and earn tokens.
+            </fbt>
             <div>
               <Link to="/welcome" target="_blank">
                 <fbt desc="learnMore">Learn More &gt;</fbt>
