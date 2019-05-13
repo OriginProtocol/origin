@@ -12,6 +12,7 @@ import Steps from './Steps'
 import ImageCropper from './ImageCropper'
 import Avatar from './Avatar'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import Link from './Link'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -43,6 +44,22 @@ class MobileUserActivation extends Component {
       return null
     }
 
+    const stepHeader = stage === 'ProfileCreated' ? null : (
+      <>
+        <h2 className="step-title">
+          {stage !== 'PublishDetail' && (
+            <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt>
+          )}
+          {stage === 'PublishDetail' && (
+            <fbt desc="MobileUserActivation.addYourEmail">
+              Add name and photo
+            </fbt>
+          )}
+        </h2>
+        <Steps steps={2} step={step} />
+      </>
+    )
+
     return (
       <>
         <MobileModal
@@ -55,17 +72,7 @@ class MobileUserActivation extends Component {
           }
           className="mobile-user-activation"
         >
-          <h2 className="step-title">
-            {stage !== 'PublishDetail' && (
-              <fbt desc="MobileUserActivation.addYourEmail">Add your email</fbt>
-            )}
-            {stage === 'PublishDetail' && (
-              <fbt desc="MobileUserActivation.addYourEmail">
-                Add name and photo
-              </fbt>
-            )}
-          </h2>
-          <Steps steps={2} step={step} />
+          { stepHeader }
           <div>{this[`render${stage}`]()}</div>
         </MobileModal>
         {/* { txModal && (
@@ -354,7 +361,7 @@ class MobileUserActivation extends Component {
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
         </div>
-        <div className="info">
+        <div className="info yellow">
           <span className="title">
             <fbt desc="MobileUserActivation.visibleOnBlockchain">
               What will be visible on the blockchain?
@@ -387,7 +394,7 @@ class MobileUserActivation extends Component {
             children={fbt('Publish', 'Publish')}
             onComplete={() => {
               this.setState({
-                shouldClose: true
+                stage: 'ProfileCreated'
               })
             }}
           />
@@ -403,6 +410,45 @@ class MobileUserActivation extends Component {
   //     </div>
   //   )
   // }
+
+  renderProfileCreated() {
+    return (
+      <div className="profile-created">
+        <img src="images/identity/rocket.svg" />
+        <h2 className="mt-3"><fbt desc="MobileUserActivation.congratulations">Congratulations</fbt></h2>
+        <div>
+          <fbt desc="MobileUserActivation.profileCreated">You&apos;ve successfully created your profile You&apos;re now ready to continue your journey in the Origin Marketplace.</fbt>
+        </div>
+        <div className="info white mt-6 mb-3">
+          <div className="image"></div>
+          <div className="content">
+            <div className="title">
+              <fbt desc="MobileUserActivation.earnOgnTokens">Earn OGN Tokens</fbt>
+            </div>
+            <fbt desc="MobileUserActivation.completeTasks">Complete tasks and earn tokens.</fbt>
+            <div>
+              <Link to="/welcome" target="_blank">
+                <fbt desc="learnMore">Learn More &gt;</fbt>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="actions">
+          <button
+            type="button"
+            onClick={e => {
+              e.preventDefault()
+              this.setState({
+                shouldClose: true
+              })
+            }}
+            className="btn btn-primary mt-3 mb-3"
+            children={fbt('Ok', 'Ok')}
+          />
+        </div>
+      </div>
+    )
+  }
 
   validate() {
     let newState = {
@@ -485,6 +531,20 @@ require('react-styl')(`
         display: block
         font-weight: bold
         margin-bottom: 3px
+      &.yellow
+        border: solid 1px var(--golden-rod)
+        background-color: rgba(244, 193, 16, 0.1)
+      &.white
+        border: solid 1px #c2cbd3
+        background-color: white
+        display: flex
+        text-align: left
+        .image
+          flex: auto 0 0
+        .content
+          flex: auto 1 1
+    .profile-created
+      text-align: center
     .actions
       .btn
         width: 100%
