@@ -236,7 +236,7 @@ const mayConfig = {
           id: 'ListingPurchaseHousing',
           class: 'ListingIdPurchase',
           config: {
-            listingId: '1-000-2543',
+            listingId: '1-000-535',
             reward: {
               amount: tokenToNaturalUnits(750),
               currency: 'OGN'
