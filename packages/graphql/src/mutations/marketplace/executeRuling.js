@@ -33,11 +33,20 @@ async function executeRuling(_, data) {
     throw new Error('commission must be either "pay", or "refund"')
   }
 
-  const tx = contracts.marketplaceExec.methods
-    .executeRuling(listingId, offerId, ipfsHash, ruling, refund)
-    .send({ gas: cost.executeRuling, from })
+  const tx = contracts.marketplaceExec.methods.executeRuling(
+    listingId,
+    offerId,
+    ipfsHash,
+    ruling,
+    refund
+  )
 
-  return txHelper({ tx, from, mutation: 'executeRuling' })
+  return txHelper({
+    tx,
+    from,
+    mutation: 'executeRuling',
+    gas: cost.executeRuling
+  })
 }
 
 export default executeRuling

@@ -43,6 +43,8 @@ class IdentityEventHandler {
       return 'phone'
     } else if (attestation.data.attestation.email) {
       return 'email'
+    } else if (attestation.data.attestation.domain) {
+      return 'website'
     } else {
       logger.error(`Failed extracting service from attestation ${attestation}`)
     }
@@ -167,6 +169,12 @@ class IdentityEventHandler {
           case 'google':
             decoratedIdentity.googleVerified = true
             break
+          case 'website':
+            decoratedIdentity.website = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WEBSITE'
+            )
+            break
         }
       })
     )
@@ -208,7 +216,8 @@ class IdentityEventHandler {
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
       country: decoratedIdentity.country,
-      avatarUrl: decoratedIdentity.avatarUrl
+      avatarUrl: decoratedIdentity.avatarUrl,
+      website: decoratedIdentity.website
     }
 
     logger.debug('Identity=', identityRow)
@@ -305,6 +314,21 @@ class IdentityEventHandler {
     }
 
     if (event.returnValues.ipfsHash) {
+      if (event.returnValues.ipfsHash !== identity.ipfsHash) {
+        /**
+         * GraphQL and the listener use two different instances of contracts,
+         * with two different instances of EventCache.  It's possible, this is
+         * also a JSON-RPC node sync issue...  They also use two different
+         * EC queries (allEvents() vs getEvents({ account: '0x...' })), which
+         * has a slight chance of causing this.  Be on the lookout for the
+         * following log message:
+         */
+        logger.warn(
+          `GraphQL IPFS hash does not match event IPFS hash. This is probably \
+           a bug! (event: ${event.returnValues.ipfsHash}, GraphQL: \
+           ${identity.ipfsHash}`
+        )
+      }
       identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
     }
 

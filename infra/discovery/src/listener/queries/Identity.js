@@ -20,6 +20,8 @@ const identityQuery = gql`
           phoneVerified
           emailVerified
           googleVerified
+          websiteVerified
+          ipfsHash
         }
       }
     }

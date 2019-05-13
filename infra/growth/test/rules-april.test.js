@@ -3,7 +3,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('April campaign rules', () => {
@@ -102,7 +102,7 @@ describe('April campaign rules', () => {
         ruleId: 'FacebookAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         },
       },
       {
@@ -111,7 +111,7 @@ describe('April campaign rules', () => {
         ruleId: 'TwitterAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         }
       }
     ]
@@ -162,7 +162,7 @@ describe('April campaign rules', () => {
       ruleId: 'Referral',
       value: {
         currency: 'OGN',
-        amount: tokenNaturalUnits(50)
+        amount: tokenToNaturalUnits(50)
       },
       refereeEthAddress: this.referee
     })
@@ -190,7 +190,7 @@ describe('April campaign rules', () => {
       ruleId: 'ListingSold',
       value: {
         currency: 'OGN',
-        amount: tokenNaturalUnits(100)
+        amount: tokenToNaturalUnits(100)
       }
     })
     expect(rewards).to.deep.equal(this.expectedRewards)
@@ -217,7 +217,7 @@ describe('April campaign rules', () => {
       ruleId: 'ListingPurchase',
       value: {
         currency: 'OGN',
-        amount: tokenNaturalUnits(100)
+        amount: tokenToNaturalUnits(100)
       }
     })
     expect(rewards).to.deep.equal(this.expectedRewards)
@@ -250,13 +250,13 @@ describe('April campaign rules', () => {
         campaignId: 1,
         levelId: 1,
         ruleId: 'FacebookAttestation',
-        value: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        value: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       {
         campaignId: 1,
         levelId: 1,
         ruleId: 'TwitterAttestation',
-        value: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        value: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       {
         campaignId: 1,
@@ -265,7 +265,7 @@ describe('April campaign rules', () => {
         ruleId: 'Referral',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(50)
+          amount: tokenToNaturalUnits(50)
         }
       },
       {
@@ -274,7 +274,7 @@ describe('April campaign rules', () => {
         ruleId: 'ListingSold',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(100)
+          amount: tokenToNaturalUnits(100)
         }
       },
       {
@@ -283,7 +283,7 @@ describe('April campaign rules', () => {
         ruleId: 'ListingPurchase',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(100)
+          amount: tokenToNaturalUnits(100)
         }
       }
     ]

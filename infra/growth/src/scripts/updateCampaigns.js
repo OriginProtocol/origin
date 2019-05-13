@@ -31,6 +31,10 @@ class UpdateCampaigns {
     return 0
   }
 
+  // TODO(franck): Update this logic:
+  //  - The listener logs events for all users, not only enrolled.
+  //  - But the verfifyEvent job only verifies event that belong to enrolled users.
+  //  => The check here should only consider events for enrolled users.
   async _allEventsVerified(cutoffDate) {
     const events = await db.GrowthEvent.findAll({
       where: {

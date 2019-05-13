@@ -99,7 +99,8 @@ const config = {
       DAPP_URL: null,
       IPFS_API_URL: null,
       IPFS_GATEWAY_URL: null,
-      SSL_ISSUER_IP: null
+      SSL_ISSUER_IP: null,
+      SENTRY_DSN: null
     })
   ],
   optimization: {}

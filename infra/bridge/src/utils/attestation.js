@@ -1,10 +1,10 @@
 'use strict'
 
-const eth = require('web3-eth')
 const Web3 = require('web3')
 const Attestation = require('../models/index').Attestation
 const constants = require('../constants')
 const stringify = require('json-stable-stringify')
+const { generateSignature } = require('./index.js')
 
 async function generateAttestation(
   attestationType,
@@ -49,9 +49,6 @@ async function generateAttestation(
 }
 
 function generateAttestationSignature(privateKey, subject, data) {
-  if (!Web3.utils.isHexStrict(privateKey)) {
-    throw new Error('Invalid private key, not a hex string')
-  }
   const hashToSign = Web3.utils.soliditySha3(
     {
       t: 'address',
@@ -62,8 +59,8 @@ function generateAttestationSignature(privateKey, subject, data) {
       v: Web3.utils.sha3(data)
     }
   )
-  const signedMessage = new eth().accounts.sign(hashToSign, privateKey)
-  return signedMessage.signature
+
+  return generateSignature(privateKey, hashToSign)
 }
 
 module.exports = {

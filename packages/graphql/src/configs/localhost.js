@@ -12,7 +12,7 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  bridge: 'https://bridge.dev.originprotocol.com',
+  bridge: `https://bridge.dev.originprotocol.com`,
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
   automine: 2000,
@@ -25,7 +25,13 @@ const config = {
   IdentityEvents: addresses.IdentityEvents,
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
-  tokens: []
+  tokens: [],
+
+  messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
+  messaging: {
+    messagingNamespace: 'origin',
+    globalKeyServer: 'http://localhost:6647'
+  }
 }
 
 if (addresses.DAI) {

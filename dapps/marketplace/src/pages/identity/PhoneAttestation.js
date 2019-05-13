@@ -279,7 +279,6 @@ export default PhoneAttestation
 
 require('react-styl')(`
   .attestation-modal
-    overflow: visible !important
     padding-bottom: 1.5rem !important
     > div
       h2
@@ -341,6 +340,9 @@ require('react-styl')(`
       background-size: 4rem
     &.google > div h2::before
       background-image: url(images/identity/google-icon-dark.svg);
+      background-size: 4rem
+    &.website > div h2::before
+      background-image: url(images/identity/website-icon-dark.svg);
       background-size: 4rem
 
     &.success
