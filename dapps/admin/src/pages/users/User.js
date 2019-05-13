@@ -31,6 +31,7 @@ const UserQuery = gql`
             airbnbVerified
             phoneVerified
             emailVerified
+            websiteVerified
           }
         }
         listings {

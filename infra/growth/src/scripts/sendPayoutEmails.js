@@ -69,9 +69,6 @@ class SendPayoutEmails {
         )
       }
       this.stats.numEmailsSent++
-      if (this.stats.numEmailsSent > 0) {
-        return
-      }
     }
   }
 }

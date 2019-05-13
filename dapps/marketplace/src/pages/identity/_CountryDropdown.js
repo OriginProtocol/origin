@@ -28,7 +28,7 @@ const Row = ({ country, onClick }) => (
 class CountryDropdown extends Component {
   state = { open: false }
   render() {
-    const backgroundImage = `url(images/flags/${this.props.active}.svg)`
+    const backgroundImage = `url(images/flags/${this.props.active.toLowerCase()}.svg)`
     return (
       <Dropdown
         className="country-code"

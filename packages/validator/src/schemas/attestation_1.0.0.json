@@ -236,6 +236,15 @@
         {
           "type": "object",
           "properties": {
+            "domain": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["domain"]
+        },
+        {
+          "type": "object",
+          "properties": {
             "site": {
               "$ref": "#/definitions/site"
             }
