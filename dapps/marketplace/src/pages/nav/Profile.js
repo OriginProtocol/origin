@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 import withNetwork from 'hoc/withNetwork'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
+import withIsMobile from 'hoc/withIsMobile'
 import ProfileQuery from 'queries/Profile'
 
 import Link from 'components/Link'
@@ -21,7 +22,9 @@ class ProfileNav extends Component {
   }
 
   render() {
-    const { identity, identityLoading } = this.props
+    const { identity, identityLoading, ismobile } = this.props
+
+    if (ismobile === 'false') return null
 
     const poll = window.transactionPoll || 1000
     return (
@@ -275,7 +278,7 @@ function getWalletIconClass(walletType) {
   return 'metamask'
 }
 
-export default withWallet(withIdentity(ProfileNav))
+export default withIsMobile(withWallet(withIdentity(ProfileNav)))
 
 require('react-styl')(`
   .dropdown.profile.show

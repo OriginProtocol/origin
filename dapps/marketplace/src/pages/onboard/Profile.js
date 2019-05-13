@@ -465,5 +465,7 @@ require('react-styl')(`
     .onboard .onboard-box.profile
       > form .image-cropper
         max-width: 6rem
+    .profile-attestations
+      grid-template-columns: repeat(auto-fill,minmax(170px, 1fr))
 
 `)

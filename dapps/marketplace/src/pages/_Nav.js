@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -34,6 +36,8 @@ class Nav extends Component {
      */
     const EarnTokens = this.EarnTokens
 
+    const isMobile = this.props.ismobile === 'true'
+
     return (
       <nav className="navbar navbar-expand-md">
         <div className="container">
@@ -50,7 +54,7 @@ class Nav extends Component {
               />
             </Link>
           )}
-          {!this.props.wallet ? (
+          {!isMobile && !this.props.identity ? (
             <GetStarted />
           ) : (
             <>
@@ -118,7 +122,7 @@ class Nav extends Component {
   }
 }
 
-export default withWallet(withCreatorConfig(Nav))
+export default withIsMobile(withWallet(withIdentity(withCreatorConfig(Nav))))
 
 require('react-styl')(`
   .navbar
