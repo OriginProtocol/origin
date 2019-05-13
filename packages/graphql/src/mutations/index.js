@@ -48,6 +48,8 @@ import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import verifyGoogle from './attestations/verifyGoogle'
+import generateWebsiteCode from './attestations/generateWebsiteCode'
+import verifyWebsite from './attestations/verifyWebsite'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -77,6 +79,7 @@ export default {
   generateAirbnbCode,
   generateEmailCode,
   generatePhoneCode,
+  generateWebsiteCode,
   importWallet,
   importWallets,
   makeOffer,
@@ -106,6 +109,7 @@ export default {
   verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
+  verifyWebsite,
   withdrawListing,
   withdrawOffer,
   refetch: () => true

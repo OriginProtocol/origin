@@ -25,6 +25,7 @@ export default gql`
           airbnbVerified
           phoneVerified
           emailVerified
+          websiteVerified
         }
       }
     }

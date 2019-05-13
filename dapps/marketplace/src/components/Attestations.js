@@ -8,6 +8,7 @@ const Attestations = ({ profile = {} }) => (
     {profile.twitterVerified && <div className="attestation twitter" />}
     {profile.airbnbVerified && <div className="attestation airbnb" />}
     {profile.googleVerified && <div className="attestation google" />}
+    {profile.websiteVerified && <div className="attestation website" />}
   </div>
 )
 

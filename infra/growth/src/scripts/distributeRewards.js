@@ -14,7 +14,7 @@ const enums = require('../enums')
 const parseArgv = require('../util/args')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
-const logger = Logger.create('distRewards', { showTimestamp: false })
+const logger = Logger.create('distRewards')
 
 // Minimum number of block confirmations to wait for before considering
 // a reward distributed.
@@ -23,21 +23,54 @@ const BlockMiningTimeMsec = 15000 // 15sec
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
-  async init(networkId) {
+  async init(networkId, gasPriceMultiplier) {
     this.networkId = networkId
+    this.gasPriceMultiplier = gasPriceMultiplier
     this.token = new Token({ providers: createProviders([config.networkId]) })
     this.supplier = await this.token.defaultAccount(networkId)
     this.web3 = this.token.web3(networkId)
   }
 
+  /**
+   * Calculates gas price to use for sending transactions, by applying an
+   * optional gasPriceMultiplier against the current median gas price
+   * fetched from the network.
+   *
+   * @returns {Promise<{BigNumber}>} Gas price to use.
+   */
+  async _calcGasPrice() {
+    // Get default gas price from web3 which is determined by the
+    // last few blocks median gas price.
+    const web3 = this.token.web3(this.networkId)
+    const medianGasPrice = await web3.eth.getGasPrice()
+
+    if (this.gasPriceMultiplier) {
+      // Apply our ratio.
+      const gasPrice = BigNumber(medianGasPrice).times(this.gasPriceMultiplier)
+      return gasPrice.integerValue()
+    }
+    return medianGasPrice
+  }
+
+  /**
+   * Sends OGN to a user
+   *
+   * @param {string} ethAddress
+   * @param {string} amount in natural units.
+   * @returns {Promise<Object>} The transaction receipt.
+   */
   async credit(ethAddress, amount) {
+    const gasPrice = await this._calcGasPrice()
     const txnReceipt = await this.token.credit(
       this.networkId,
       ethAddress,
-      amount
+      amount,
+      { gasPrice }
     )
-    logger.info('Transaction')
+    logger.info('Blockchain transaction')
     logger.info('  NetworkId:        ', this.networkId)
+    logger.info('  GasMultiplier:    ', this.gasPriceMultiplier)
+    logger.info('  GasPrice:         ', gasPrice.toFixed())
     logger.info('  Amount (natural): ', amount)
     logger.info('  Amount (tokens):  ', this.token.toTokenUnit(amount))
     logger.info('  From:             ', this.supplier)
@@ -61,10 +94,11 @@ class DistributeRewards {
   }
 
   /**
+   * Pays out the sum of the rewards to the user.
    *
    * @param {string} ethAddress
    * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<*>}
+   * @returns {Promise<BigNumber>} Payout amount.
    * @private
    */
   async _distributeRewards(ethAddress, rewards) {
@@ -98,23 +132,30 @@ class DistributeRewards {
       .reduce((a1, a2) => a1.plus(a2))
     const amountTokenUnit = this.distributor.token.toTokenUnit(amount)
 
-    if (!this.config.persist) {
-      logger.info(
-        `Would distribute total reward of ${amountTokenUnit} OGN to ${ethAddress}`
-      )
-      return amount
-    }
+    logger.info(`Distribution of ${amountTokenUnit} to ${ethAddress}`)
 
     // Check there is not already a payout row.
     // If there is and it is not in status Failed, something is wrong. Bail out.
-    let payout = await db.GrowthReward.findOne({
+    let payout = await db.GrowthPayout.findOne({
       where: {
-        ethAddress,
+        toAddress: ethAddress,
         campaignId,
         status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
     })
-    if (payout) {
+    if (!payout) {
+      logger.info(`Checked there is no existing payout row for ${ethAddress}`)
+    } else if (
+      payout.status === enums.GrowthPayoutStatuses.Paid ||
+      payout.status === enums.GrowthPayoutStatuses.Confirmed
+    ) {
+      logger.info(
+        `Skipping distribution. Found existing payout ${
+          payout.id
+        } with status ${payout.status}`
+      )
+      return BigNumber(0)
+    } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${
           payout.status
@@ -127,9 +168,9 @@ class DistributeRewards {
     )
 
     // Create a payout row with status Pending.
-    payout = await db.GrowthReward.create({
-      from_address: this.distributor.supplier.toLowerCase(),
-      to_address: ethAddress,
+    payout = await db.GrowthPayout.create({
+      fromAddress: this.distributor.supplier.toLowerCase(),
+      toAddress: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
       campaignId,
       amount,
@@ -139,7 +180,15 @@ class DistributeRewards {
     // Send a blockchain transaction to payout the reward to the participant.
     let status, txnHash, txnReceipt
     try {
-      txnReceipt = await this.distributor.credit(ethAddress, amount)
+      if (this.config.doIt) {
+        txnReceipt = await this.distributor.credit(ethAddress, amount)
+      } else {
+        txnReceipt = {
+          status: 'OK',
+          transactionHash: 'TESTING',
+          blockNumber: 123
+        }
+      }
     } catch (e) {
       logger.error('Credit failed: ', e)
     }
@@ -179,7 +228,7 @@ class DistributeRewards {
    * @private
    */
   async _confirmTransaction(payout, currentBlockNumber) {
-    if (!this.config.persist) {
+    if (!this.config.doIt) {
       return true
     }
 
@@ -200,6 +249,7 @@ class DistributeRewards {
     }
 
     // Load the transaction receipt form the blockchain.
+    logger.info(`Verifying payout ${payout.id}`)
     const txnReceipt = await this.web3.eth.getTransactionReceipt(payout.txnHash)
 
     // Make sure we've waited long enough to verify the confirmation.
@@ -212,12 +262,13 @@ class DistributeRewards {
       // The transaction did not get confirmed.
       // Rollback the payout status from Paid to Failed so that the transaction
       // gets attempted again next time the job runs.
-      logger.error(`Account ${payout.ethAddress} Payout ${payout.id}`)
+      logger.error(`Account ${payout.toAddress} Payout ${payout.id}`)
       logger.error('  Transaction hash ${payout.txnHash} failed confirmation.')
       logger.error('  Setting status to PaymentFailed.')
       await payout.update({ status: enums.GrowthPayoutStatuses.Failed })
       return false
     }
+    logger.info(`Payout ${payout.id} confirmed.`)
     await payout.update({ status: enums.GrowthPayoutStatuses.Confirmed })
     return true
   }
@@ -232,7 +283,9 @@ class DistributeRewards {
    */
   async _confirmAllTransactions(campaignId) {
     // Wait a bit for the last transaction to settle.
-    const waitMsec = MinBlockConfirmation * BlockMiningTimeMsec
+    const waitMsec = this.config.doIt
+      ? 2 * MinBlockConfirmation * BlockMiningTimeMsec
+      : 1000
     logger.info(
       `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
     )
@@ -274,7 +327,7 @@ class DistributeRewards {
    * @private
    */
   async _checkAllUsersPaid(campaignId, ethAddresses) {
-    if (!this.config.persist) {
+    if (!this.config.doIt) {
       return true
     }
 
@@ -284,7 +337,7 @@ class DistributeRewards {
         where: {
           ethAddress,
           campaignId,
-          status: enums.GrowthPayoutdStatuses.Confirmed
+          status: enums.GrowthPayoutStatuses.Confirmed
         }
       })
       if (!payout) {
@@ -314,7 +367,7 @@ class DistributeRewards {
       )
       let campaignDistTotal = BigNumber(0)
 
-      // Load rewards rows for this campaign.
+      // Load all rewards rows for this campaign.
       const rewardRows = await db.GrowthReward.findAll({
         where: { campaignId: campaign.id }
       })
@@ -336,42 +389,6 @@ class DistributeRewards {
         const distAmount = await this._distributeRewards(ethAddress, rewards)
         campaignDistTotal = campaignDistTotal.plus(distAmount)
       }
-
-      // Confirm the transactions.
-      const allConfirmed = await this._confirmAllTransactions(campaign.id)
-
-      if (allConfirmed) {
-        if (this.config.persist) {
-          // We are done ! Update the campaign status to Distributed.
-          await campaign.update({
-            rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
-          })
-          logger.info(`Updated campaign ${campaign.id} status to Distributed.`)
-        } else {
-          logger.info(
-            `Would update campaign ${campaign.id} status to Distributed.`
-          )
-        }
-      } else {
-        logger.error(
-          `One or more transactions not confirmed. Leaving campaign ${
-            campaign.id
-          } status as Calculated.`
-        )
-      }
-
-      // Double check that all users got paid.
-      const allUsersPaid = await this._checkAllUsersPaid(
-        campaign.id,
-        Object.keys(ethAddressToRewards)
-      )
-      if (allUsersPaid) {
-        logger.info('Verified all users got paid. All good!')
-      } else {
-        logger.error('Some users did not get paid. Inspect the data!')
-      }
-
-      this.stats.numCampaigns++
       this.stats.distGrandTotal = this.stats.distGrandTotal.plus(
         campaignDistTotal
       )
@@ -381,6 +398,36 @@ class DistributeRewards {
         }`
       )
       logger.info(`Distributed a total of ${campaignDistTotal.toFixed()}`)
+
+      //
+      // Check all transactions are confirmed and that all users got paid.
+      //
+      const allConfirmed = await this._confirmAllTransactions(campaign.id)
+      if (!allConfirmed) {
+        logger.error('One or more transactions not confirmed')
+      }
+      const allUsersPaid = await this._checkAllUsersPaid(
+        campaign.id,
+        Object.keys(ethAddressToRewards)
+      )
+      if (!allUsersPaid) {
+        logger.error('Some users did not get paid. Inspect the data!')
+      }
+
+      if (allConfirmed && allUsersPaid) {
+        // All checks passed. Flip campaign reward status to Distributed.
+        await campaign.update({
+          rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
+        })
+        logger.info(
+          `Updated campaign ${campaign.id} reward status to Distributed.`
+        )
+      } else {
+        logger.error('Campaign reward status NOT updated to Distributed.')
+        logger.error('Manual intervention required.')
+      }
+
+      this.stats.numCampaigns++
     }
   }
 }
@@ -395,8 +442,10 @@ const args = parseArgv()
 const config = {
   // 1=Mainnet, 4=Rinkeby, 999=Local.
   networkId: parseInt(args['--networkId'] || process.env.NETWORK_ID || 0),
-  // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] ? args['--persist'] : false
+  // By default run in dry-run mode unless explicitly specified using doIt.
+  doIt: args['--doIt'] === 'true' || false,
+  // Gas price multiplier to use for sending transactions. Optional.
+  gasPriceMultiplier: args['--gasPriceMultiplier'] || null
 }
 logger.info('Config:')
 logger.info(config)
@@ -407,7 +456,7 @@ if (!config.networkId) {
 
 // Initialize the job and start it.
 const distributor = new TokenDistributor()
-distributor.init(config.networkId).then(() => {
+distributor.init(config.networkId, config.gasPriceMultiplier).then(() => {
   const job = new DistributeRewards(config, distributor)
   job
     .process()

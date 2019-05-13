@@ -1,5 +1,8 @@
 import get from 'lodash/get'
 
+const websiteAttestationEnabled =
+  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
+
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
@@ -13,7 +16,10 @@ export function unpublishedStrength({ props, state }) {
   if (!profile.facebookVerified && state.facebookAttestation) strength += 10
   if (!profile.googleVerified && state.googleAttestation) strength += 10
   if (!profile.twitterVerified && state.twitterAttestation) strength += 10
-  if (!profile.airbnbVerified && state.airbnbAttestation) strength += 10
+  if (!profile.airbnbVerified && state.airbnbAttestation)
+    strength += websiteAttestationEnabled ? 5 : 10
+  if (!profile.websiteVerified && state.websiteAttestation)
+    strength += websiteAttestationEnabled ? 5 : 0
   return strength
 }
 
@@ -35,7 +41,9 @@ export function changesToPublishExist({ props, state }) {
     !!profile.twitterVerified ===
       (!!state.twitterAttestation || !!state.twitterVerified) &&
     !!profile.airbnbVerified ===
-      (!!state.airbnbAttestation || !!state.airbnbVerified)
+      (!!state.airbnbAttestation || !!state.airbnbVerified) &&
+    !!profile.websiteVerified ===
+      (!!state.websiteAttestation || !!state.websiteVerified)
   )
 }
 

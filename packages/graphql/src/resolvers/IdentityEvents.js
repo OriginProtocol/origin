@@ -7,6 +7,9 @@ import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 
+const websiteAttestationEnabled =
+  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
+
 const progressPct = {
   firstName: 10,
   lastName: 10,
@@ -18,7 +21,8 @@ const progressPct = {
   facebookVerified: 10,
   twitterVerified: 10,
   googleVerified: 10,
-  airbnbVerified: 10
+  airbnbVerified: websiteAttestationEnabled ? 5 : 10,
+  websiteVerified: websiteAttestationEnabled ? 5 : 0
 }
 
 function getAttestations(account, attestations) {
@@ -28,7 +32,8 @@ function getAttestations(account, attestations) {
     facebookVerified: false,
     twitterVerified: false,
     airbnbVerified: false,
-    googleVerified: false
+    googleVerified: false,
+    websiteVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -37,6 +42,9 @@ function getAttestations(account, attestations) {
       }
       if (get(attestation, 'data.attestation.phone.verified', false)) {
         result.phoneVerified = true
+      }
+      if (get(attestation, 'data.attestation.domain.verified', false)) {
+        result.websiteVerified = true
       }
       const siteName = get(attestation, 'data.attestation.site.siteName')
       if (siteName === 'facebook.com') {
