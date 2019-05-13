@@ -22,7 +22,7 @@ const Growth$FbtEnum = {
   'growth.purchase.charity.details':
     'Donation will be made by Origin on your behalf.',
   'growth.purchase.homerental.title':
-    'Book a home rental at Il Garovaglio in Como, Italy',
+    'Book a home rental in Lake Orta, Italy',
   'growth.purchase.homerental.details':
     'Booking and stay must happen in the month of May.',
   'growth.purchase.experience.title':
