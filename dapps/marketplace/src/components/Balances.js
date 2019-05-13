@@ -7,15 +7,15 @@ import withEthBalance from 'hoc/withEthBalance'
 import withWallet from 'hoc/withWallet'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const Balances = ({ ethBalance, account, onClose }) => {
+const Balances = ({ ethBalance, account, onClose, title, className }) => {
   const EnrollButton = withEnrolmentModal('button')
   const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
+  let titleEl = title || (<fbt desc="Balances.account-balance">Account Balance</fbt>)
+
   return (
-    <div className="balances">
-      <h5>
-        <fbt desc="Balances.account-balance">Account Balance</fbt>
-      </h5>
+    <div className={`balances ${className || ''}`}>
+      <h5>{ titleEl }</h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">
