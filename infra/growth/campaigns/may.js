@@ -1,4 +1,4 @@
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 const mayConfig = {
@@ -60,7 +60,7 @@ const mayConfig = {
           config: {
             eventType: 'PhoneAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -76,7 +76,7 @@ const mayConfig = {
           config: {
             eventType: 'FacebookAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -92,7 +92,7 @@ const mayConfig = {
           config: {
             eventType: 'AirbnbAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -108,7 +108,7 @@ const mayConfig = {
           config: {
             eventType: 'TwitterAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -124,7 +124,7 @@ const mayConfig = {
           config: {
             eventType: 'GoogleAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -168,7 +168,7 @@ const mayConfig = {
           config: {
             levelRequired: 2,
             reward: {
-              amount: tokenNaturalUnits(50),
+              amount: tokenToNaturalUnits(50),
               currency: 'OGN'
             },
             limit: 25,
@@ -184,7 +184,7 @@ const mayConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2554',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -202,7 +202,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-2553',
             reward: {
-              amount: tokenNaturalUnits(40),
+              amount: tokenToNaturalUnits(40),
               currency: 'OGN'
             },
             visible: true,
@@ -220,7 +220,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-2555',
             reward: {
-              amount: tokenNaturalUnits(300),
+              amount: tokenToNaturalUnits(300),
               currency: 'OGN'
             },
             visible: true,
@@ -238,7 +238,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-2543',
             reward: {
-              amount: tokenNaturalUnits(750),
+              amount: tokenToNaturalUnits(750),
               currency: 'OGN'
             },
             visible: true,
@@ -256,7 +256,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-2699',
             reward: {
-              amount: tokenNaturalUnits(1250),
+              amount: tokenToNaturalUnits(1250),
               currency: 'OGN'
             },
             visible: true,
@@ -274,7 +274,7 @@ const mayConfig = {
           config: {
             listingId: '1-000-503',
             reward: {
-              amount: tokenNaturalUnits(20000),
+              amount: tokenToNaturalUnits(20000),
               currency: 'OGN'
             },
             visible: true,
