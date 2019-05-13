@@ -237,17 +237,17 @@ class Listing {
             // Downrank "cheap" listings to hide wash/spam transactions.
             // We might want to make this a smoother transition later.
             // ETH value may need to become a dynamic parameter later.
+            def cheapListingThresholds = [
+              'fiat-USD' : 1.5,
+              'fiat-EUR' : 1.35,
+              'token-DAI' : 1.5,
+              'token-ETH' : 0.01
+            ];
+
             if (doc['price.amount'] != null && doc['price.currency.id'] != null) {
-              if(doc['price.currency.id'].value == "fiat-USD"){
-                if(doc['price.amount'].value < 1.50) {
-                  score *= 0.2;
-                }
-              } else if(doc['price.currency.id'].value == "token-DAI"){
-                if(doc['price.amount'].value < 1.50) {
-                  score *= 0.2;
-                }
-              } else if (doc['price.currency.id'].value == "token-ETH"){
-                if(doc['price.amount'].value < 0.009) {
+              if (cheapListingThresholds[doc['price.currency.id'].value] != null) {
+                double cheapThreshold = cheapListingThresholds[doc['price.currency.id'].value];
+                if(doc['price.amount'].value <= cheapThreshold) {
                   score *= 0.2;
                 }
               }
