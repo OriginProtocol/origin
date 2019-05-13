@@ -160,7 +160,7 @@ class ListingDetail extends Component {
                   <span>
                     <img
                       className="country-flag-img"
-                      src={`images/flags/${listing.issuingCountry}.svg`}
+                      src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
                     />
                     {countryCodeMapping['en'][listing.issuingCountry]}
                   </span>

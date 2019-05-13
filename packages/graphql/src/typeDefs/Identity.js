@@ -62,6 +62,7 @@ module.exports = `
     phoneVerified: Boolean
     emailVerified: Boolean
     googleVerified: Boolean
+    websiteVerified: Boolean
 
     name: String
     ipfsHash: String

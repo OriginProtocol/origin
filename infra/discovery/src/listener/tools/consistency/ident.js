@@ -17,7 +17,8 @@ const ATTESTATION_TYPES = [
   'twitter',
   'airbnb',
   'facebook',
-  'google'
+  'google',
+  'website'
 ]
 const ATTESTATION_TYPE_MAP_DB = {
   sms: 'phone', // TODO: Doesn't exist in db, is phone equivalent?
@@ -26,7 +27,8 @@ const ATTESTATION_TYPE_MAP_DB = {
   twitter: 'twitter',
   airbnb: 'airbnb',
   facebook: 'facebookVerified',
-  google: 'googleVerified'
+  google: 'googleVerified',
+  website: 'website'
 }
 
 /**
@@ -116,6 +118,7 @@ function validateIPFSToDB(ipfsJson, dbRecord) {
         case 'phone':
         case 'twitter':
         case 'airbnb':
+        case 'website':
         default:
           assert(
             attestationValueDB !== null,
@@ -170,7 +173,7 @@ async function verifyIdent(address, ipfsGateway, ipfsHash) {
   } catch (err) {
     // Handle Assertion errors
     if (err.name === 'AssertionError') {
-      log.error(err.toString())
+      log.error(`Identity validation failed  for ${address}: ${err.toString()}`)
       return false
     } else {
       throw err
