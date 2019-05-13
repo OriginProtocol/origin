@@ -49,7 +49,7 @@ async function createMayProdCampaign() {
 async function updateMayProdRules() {
   console.log('Updating May campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 2 } })
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 3 } })
   await campaign.update({ rules: JSON.stringify(mayConfig) })
 }
 
