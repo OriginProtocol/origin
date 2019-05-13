@@ -202,7 +202,7 @@
   "qwfdiBdUkk+dNbicPoPtRw==": "암호화폐 사용 거래 제안",
   "VrGMn9VJ/5lXPpHHki7BQA==": "구매자가 상품 구매를 제안하게 되면, 구매자의 이더리움 지갑에 있는 암호화폐가 오리진 마켓플레이스 스마트 컨트렉트로 전송됩니다. 해당 암호화폐는 거래가 완료되거나 또는 거절/철회가 되는 시점까지 에스크로에 보관됩니다. 해당 에스크로에 있는 암호화폐는 판매자가 어떤 통화로 지불 받기를 윈하는 지에 따라 이더(ETH) 또는 다이(DAI) 로 에스크로 상에 보관됩니다.",
   "6yQ3BbqcEqCCgbU4ZltzyA==": "변동성",
-  "McGi8PZK9oKWlZk29RcWOg==": "The amount of cryptocurrency withdrawn from a buyer's Ethereum wallet depends on the conversion rate of the seller's pricing currency at the time that the offer is made. Once this ETH or DAI is escrowed, it cannot be increased or decreased. However, the value of the cryptocurrency (relative to the seller's pricing currency) may fluctuate between the time that the offer is made and the sale is completed.",
+  "McGi8PZK9oKWlZk29RcWOg==": "구매자의 이더리움 지갑에서 철회되는 암호 화폐의 양은 거래가 제안된 시점에서 판매자의 가격 통화 환율에 따라 변환됩니다. 한번 해당 거래 금액의 이더(ETH) 또는 다이(DAI) 가 에스크로에 보관된 후에는, 가격 증감을 불가합니다. 하지만, 암호화폐 자체의 가치(판매자의 기축 통화와 비교하여) 는 거래가 제안된 시점과 거래가 완료 된 시점 사이에 변동이 있을 수 있습니다.",
   "xIrCn6YhZw1NfC2ar0MD4Q==": "오리진 토큰에 대해",
   "GwcDe9CcWWasPietMqdHww==": "{VAR_PU92ZXJ2aWV3fXs9T3JpZ2luIFRva2VucyBhcmUgRVJDLTIwIHRva2VucyB0aGF0IGFyZSB1c2VkIG9uIHRoZSBPcmlnaW4gREFwcCBhbmQgcGxhdGZvcm0uIE9yaWdpbiBUb2tlbnMgbWF5IGJlIHVzZWQgdG8gcmV3YXJkIG1hcmtldHBsYWNlIG9wZXJhdG9ycywgREFwcCBjcmVhdG9ycywgdXNlcnMsIGRldmVsb3BlcnMsIGFuZC9vciBvdGhlcnMgdGhhdCBidXksIHNlbGwsIGFuZCBjb250cmlidXRlIHRvIE9yaWdpbi4}",
   "nJke93V/TKDxmDaxzZGitw==": "개요",
