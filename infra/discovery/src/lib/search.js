@@ -220,20 +220,70 @@ class Listing {
       esQuery.bool.filter.push(innerFilter)
     })
 
-    /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
-     * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
-     *
-     * If boost slider's max value (currently 100) on listing-create changes this factor needs tweaking as well. (see referenced document)
-     */
-    const boostScoreQuery = {
+    const scoreQuery = {
       function_score: {
         query: esQuery,
-        field_value_factor: {
-          field: 'commissionPerUnit',
-          factor: 0.0000000000000000005, // the same as delimited by 20
-          missing: 0
-        },
-        boost_mode: 'sum'
+
+        script_score: {
+          script: {
+            params: {
+              // Strongly reccomended to pass date in as a paramter since:
+              // - All nodes in an elastic search cluster will be using the same value
+              // - Script itself stays the same, and never needs to be recompiled
+              now: new Date().getTime()
+            },
+            source: `double score = _score;
+
+            // Downrank "cheap" listings to hide wash/spam transactions.
+            // We might want to make this a smoother transition later.
+            // ETH value may need to become a dynamic parameter later.
+            if (doc['price.amount'] != null && doc['price.currency.id'] != null) {
+              if(doc['price.currency.id'].value == "fiat-USD"){
+                if(doc['price.amount'].value < 1.50) {
+                  score *= 0.2;
+                }
+              } else if(doc['price.currency.id'].value == "token-DAI"){
+                if(doc['price.amount'].value < 1.50) {
+                  score *= 0.2;
+                }
+              } else if (doc['price.currency.id'].value == "token-ETH"){
+                if(doc['price.amount'].value < 0.009) {
+                  score *= 0.2;
+                }
+              }
+            }
+
+            // Downrank anything not active (so lower pending / sold / withdrawn)
+            if (doc['status'] != null && doc['status'].value != 'active') {
+              score *= 0.3
+            }
+
+            // OGN Boosts
+            // 50 tokens gets you a 2.25 multiplier to your base score,
+            // That's probably overpowered. We might as well encourage
+            // listings to use them, and we can sort out a more exact value later.
+            if (doc['commissionPerUnit'] != null && doc['commissionPerUnit'].value > 0) {
+              double commission = doc['commissionPerUnit'].value;
+              if(commission > 100) {
+                commission = 100;
+              }
+              score *= (1.0 + doc['commissionPerUnit'].value * 0.000000000000000000025);
+            }
+
+            // Temporary boost for recently created listings
+            if (doc['createdEvent.timestamp'] != null) {
+              double recentBoostAmount = 0.5;
+              long boostPeriod = 1555200; // 15 days, linear drop off
+              long age = params.now - doc['createdEvent.timestamp'].value;
+              if (age > 0 && age < boostPeriod) {
+                score *= 1.0 + ((double)age / (double)boostPeriod) * recentBoostAmount;
+              }
+            }
+            
+            return score;
+            `
+          }
+        }
       }
     }
 
