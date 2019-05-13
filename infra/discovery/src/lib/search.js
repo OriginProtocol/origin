@@ -270,10 +270,11 @@ class Listing {
               score *= (1.0 + doc['commissionPerUnit'].value * 0.000000000000000000025);
             }
 
-            // Temporary boost for recently created listings
+            // Temporary boost for recently created listings.
+            // linear reduction in boost off during boost period.
             if (doc['createdEvent.timestamp'] != null) {
               double recentBoostAmount = 0.5;
-              long boostPeriod = 1555200; // 15 days, linear drop off
+              long boostPeriod = 18 * 24 * 60 * 60;
               long age = params.now - doc['createdEvent.timestamp'].value;
               if (age > 0 && age < boostPeriod) {
                 score *= 1.0 + ((double)age / (double)boostPeriod) * recentBoostAmount;
