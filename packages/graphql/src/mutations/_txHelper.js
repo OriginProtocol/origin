@@ -37,14 +37,8 @@ function useRelayer({ mutation, value }) {
 function useProxy({ proxy, addr, to, mutation }) {
   if (!contracts.config.proxyAccountsEnabled) return false
   if (!proxy) return false
-<<<<<<< HEAD
-  if (addr === proxy) return false
-  if (to) return false
-  if (mutation === 'deployIdentityViaProxy') return false
-=======
   if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
   if (to) return false
->>>>>>> meta-tx-wip
   if (mutation === 'updateTokenAllowance') return false
   if (mutation === 'swapToToken') return false
   return true
@@ -73,6 +67,24 @@ export default function txHelper({
       const address = tx._parent._address
       try {
         const relayerResponse = await relayer({ tx, proxy, from, to: address })
+        const hasCallbacks = onReceipt || onConfirmation ? true : false
+
+        if (hasCallbacks && relayerResponse && relayerResponse.id) {
+          let receipt
+          const responseBlocks = async ({ newBlock }) => {
+            if (!receipt) {
+              receipt = await web3.eth.getTransactionReceipt(relayerResponse.id)
+            }
+            if (receipt && newBlock.number === receipt.blockNumber) {
+              if (onReceipt) onReceipt()
+            } else if (receipt && newBlock.number === receipt.blockNumber + 1) {
+              if (onConfirmation) onConfirmation()
+              pubsub.ee.off('NEW_BLOCK', responseBlocks)
+            }
+          }
+          pubsub.ee.on('NEW_BLOCK', responseBlocks)
+        }
+
         return resolve(relayerResponse)
       } catch (err) {
         console.log('Relayer error', err)

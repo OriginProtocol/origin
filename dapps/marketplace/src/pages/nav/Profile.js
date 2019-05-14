@@ -95,10 +95,6 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
-<<<<<<< HEAD
-      {walletProxy === wallet ? null : (
-        <div className="wallet-info">
-=======
       <div className="wallet-info">
         {walletProxy === wallet ? (
           <div className="d-flex w-100 align-items-center">
@@ -106,7 +102,6 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
             {walletProxy === wallet ? (
               <DeployProxy
                 className="btn btn-sm btn-outline-primary px-3"
-                onComplete={() => onClose()}
                 children="Deploy"
               />
             ) : (
@@ -114,18 +109,12 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
             )}
           </div>
         ) : (
->>>>>>> meta-tx-wip
           <div>
             <h5>Proxy Account</h5>
             <div className="wallet-address">{walletProxy}</div>
           </div>
-<<<<<<< HEAD
-        </div>
-      )}
-=======
         )}
       </div>
->>>>>>> meta-tx-wip
       <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">

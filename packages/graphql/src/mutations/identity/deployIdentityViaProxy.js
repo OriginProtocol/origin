@@ -5,8 +5,6 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import hasProxy from '../../utils/hasProxy'
 
-window.hasProxy = hasProxy
-
 async function deployIdentityViaProxy(
   _,
   { from, factoryAddress, proxyAddress, owner }
