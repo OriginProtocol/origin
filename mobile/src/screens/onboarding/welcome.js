@@ -46,7 +46,7 @@ class WelcomeScreen extends Component {
             title={'Create a wallet'}
             onPress={() => {
               DeviceEventEmitter.emit('createAccount')
-              this.props.navigation.navigate('Email')
+              this.props.navigation.navigate('Authentication')
             }}
           />
           <OriginButton
