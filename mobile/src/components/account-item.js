@@ -2,12 +2,18 @@
 
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import Address from 'components/address'
+import Identicon from 'components/identicon'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class AccountItem extends Component {
+class AccountItem extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     const { item, navigation, wallet } = this.props
 
@@ -23,6 +29,9 @@ export default class AccountItem extends Component {
       >
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
+            <View style={[styles.iconContainer, styles.identiconContainer]}>
+              <Identicon address={item.address} />
+            </View>
             <Text style={styles.name}>
               {wallet.accountNameMapping[item.address] || 'Unnamed Account'}
             </Text>
@@ -49,6 +58,12 @@ export default class AccountItem extends Component {
   }
 }
 
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountItem)
+
 const styles = StyleSheet.create({
   address: {
     fontFamily: 'Lato',
@@ -60,6 +75,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  identiconContainer: {
+    marginRight: 10
   },
   listItem: {
     backgroundColor: 'white',
