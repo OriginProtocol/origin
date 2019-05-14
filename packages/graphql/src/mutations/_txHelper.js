@@ -37,9 +37,14 @@ function useRelayer({ mutation, value }) {
 function useProxy({ proxy, addr, to, mutation }) {
   if (!contracts.config.proxyAccountsEnabled) return false
   if (!proxy) return false
+<<<<<<< HEAD
   if (addr === proxy) return false
   if (to) return false
   if (mutation === 'deployIdentityViaProxy') return false
+=======
+  if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
+  if (to) return false
+>>>>>>> meta-tx-wip
   if (mutation === 'updateTokenAllowance') return false
   if (mutation === 'swapToToken') return false
   return true

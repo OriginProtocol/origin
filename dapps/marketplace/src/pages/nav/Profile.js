@@ -16,6 +16,8 @@ import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 
+import DeployProxy from '../identity/mutations/DeployProxy'
+
 class ProfileNav extends Component {
   constructor() {
     super()
@@ -93,14 +95,37 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
+<<<<<<< HEAD
       {walletProxy === wallet ? null : (
         <div className="wallet-info">
+=======
+      <div className="wallet-info">
+        {walletProxy === wallet ? (
+          <div className="d-flex w-100 align-items-center">
+            <h5 className="mb-0 flex-grow-1">Proxy Account</h5>
+            {walletProxy === wallet ? (
+              <DeployProxy
+                className="btn btn-sm btn-outline-primary px-3"
+                onComplete={() => onClose()}
+                children="Deploy"
+              />
+            ) : (
+              <div className="wallet-address">{walletProxy}</div>
+            )}
+          </div>
+        ) : (
+>>>>>>> meta-tx-wip
           <div>
             <h5>Proxy Account</h5>
             <div className="wallet-address">{walletProxy}</div>
           </div>
+<<<<<<< HEAD
         </div>
       )}
+=======
+        )}
+      </div>
+>>>>>>> meta-tx-wip
       <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">

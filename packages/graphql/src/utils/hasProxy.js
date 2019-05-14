@@ -1,5 +1,7 @@
 import contracts from '../contracts'
 
+import memoize from 'lodash/memoize'
+
 /**
  * Works out if a proxy exists for a given account or not.
  *
@@ -10,7 +12,7 @@ import contracts from '../contracts'
  * the address the contract will be deployed to for a given account.
  */
 
-export default async function hasProxy(address) {
+async function hasProxy(address) {
   if (!contracts.config.proxyAccountsEnabled) {
     return false
   }
@@ -51,3 +53,6 @@ export default async function hasProxy(address) {
     return false
   }
 }
+
+// export default hasProxy
+export default memoize(hasProxy, address => address)
