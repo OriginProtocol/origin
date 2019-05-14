@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import Link from './Link'
 

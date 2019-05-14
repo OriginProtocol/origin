@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import withConfig from 'hoc/withConfig'
-import withWallet from 'hoc/withWallet'
-
 import MobileModal from './MobileModal'
 import UserActivation from './UserActivation'
 

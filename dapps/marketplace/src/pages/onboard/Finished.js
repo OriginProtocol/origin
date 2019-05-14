@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { fbt } from 'fbt-runtime'
 
 import Redirect from 'components/Redirect'
 import UserProfileCreated from 'components/_UserProfileCreated'

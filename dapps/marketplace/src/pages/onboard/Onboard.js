@@ -7,8 +7,6 @@ import store from 'utils/store'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
-import { Messaging } from './Messaging'
-import Notifications from './Notifications'
 import Profile from './Profile'
 import Finished from './Finished'
 
