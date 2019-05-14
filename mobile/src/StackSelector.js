@@ -12,8 +12,6 @@ class StackSelector extends React.Component {
   _selectStack() {
     if (this.props.wallet.accounts.length == 0) {
       this.props.navigation.navigate('Welcome')
-    } else if (!this.props.settings.email) {
-      this.props.navigation.navigate('Email')
     } else if (!this.props.settings.pin && !this.props.settings.biometryType) {
       this.props.navigation.navigate('Authentication')
     } else {
