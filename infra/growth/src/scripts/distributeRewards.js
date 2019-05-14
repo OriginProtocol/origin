@@ -94,10 +94,11 @@ class DistributeRewards {
   }
 
   /**
+   * Pays out the sum of the rewards to the user.
    *
    * @param {string} ethAddress
    * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<*>}
+   * @returns {Promise<BigNumber>} Payout amount.
    * @private
    */
   async _distributeRewards(ethAddress, rewards) {
@@ -153,6 +154,7 @@ class DistributeRewards {
           payout.id
         } with status ${payout.status}`
       )
+      return BigNumber(0)
     } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${
@@ -282,7 +284,7 @@ class DistributeRewards {
   async _confirmAllTransactions(campaignId) {
     // Wait a bit for the last transaction to settle.
     const waitMsec = this.config.doIt
-      ? MinBlockConfirmation * BlockMiningTimeMsec
+      ? 2 * MinBlockConfirmation * BlockMiningTimeMsec
       : 1000
     logger.info(
       `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
@@ -335,7 +337,7 @@ class DistributeRewards {
         where: {
           ethAddress,
           campaignId,
-          status: enums.GrowthPayoutdStatuses.Confirmed
+          status: enums.GrowthPayoutStatuses.Confirmed
         }
       })
       if (!payout) {
