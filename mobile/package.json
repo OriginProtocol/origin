@@ -36,6 +36,7 @@
     "acorn": "^6.1.1",
     "cross-fetch": "^3.0.2",
     "ethers": "^4.0.27",
+    "myetherwallet-blockies": "^0.1.1",
     "node-libs-react-native": "^1.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
