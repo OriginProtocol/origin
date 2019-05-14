@@ -1,11 +1,20 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  Alert,
+  Clipboard,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import Currency from 'components/currency'
+import BackupCard from 'components/backup-card'
 
 import currencies from 'utils/currencies'
 import { evenlySplitAddress } from 'utils/user'
@@ -20,7 +29,25 @@ class WalletScreen extends Component {
     }
   }
 
-  componentDidMount() {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      displayBackupModal: true
+    }
+  }
+
+  componentDidMount() {
+    const { activation, wallet } = this.props
+    const hasBalance =
+      Object.keys(wallet.accountBalance).find((currency, balance) => {
+        return balance > 0
+      }) !== undefined
+
+    // Prompt that backup is required if balance was detected
+    if (hasBalance && !activation.backupWarningDismissed) {
+      this.setState({ displayBackupModal: true })
+    }
+  }
 
   handleFunding(currency) {
     const { address } = this.props.wallet.activeAccount
@@ -96,18 +123,50 @@ class WalletScreen extends Component {
             onPress={() => this.handleFunding('OGN')}
           />
         </ScrollView>
+        {this.state.displayBackupModal && (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={true}
+            onRequestClose={() => {
+              this.setState({ displayBackupModal: false })
+            }}
+          >
+            <SafeAreaView style={styles.svContainer}>
+              <BackupCard
+                wallet={this.props.wallet}
+                navigation={this.props.navigation}
+                onRequestClose={() => {
+                  this.setState({ displayBackupModal: false })
+                }}
+              />
+            </SafeAreaView>
+          </Modal>
+        )}
       </>
     )
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7f8f8',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20
+  },
+  svContainer: {
+    flex: 1
+  },
+  walletSVContainer: {
+    paddingHorizontal: 10
+  },
   address: {
     color: '#6a8296',
     fontFamily: 'Lato',
@@ -118,29 +177,5 @@ const styles = StyleSheet.create({
   addressContainer: {
     paddingHorizontal: 18 * 3,
     paddingVertical: 22
-  },
-  container: {
-    backgroundColor: '#f7f8f8',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20
-  },
-  placeholder: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textAlign: 'center'
-  },
-  separator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  },
-  svContainer: {
-    flex: 1
-  },
-  walletSVContainer: {
-    paddingHorizontal: 10
   }
 })

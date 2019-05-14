@@ -2,18 +2,13 @@
 
 import React, { Component } from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
-import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
 
-class ReadyScreen extends Component {
-  constructor(props) {
-    super(props)
-  }
-
+export default class ReadyScreen extends Component {
   render() {
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
@@ -47,12 +42,6 @@ class ReadyScreen extends Component {
     )
   }
 }
-
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-export default connect(mapStateToProps)(ReadyScreen)
 
 const styles = StyleSheet.create({
   container: {

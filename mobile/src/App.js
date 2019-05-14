@@ -18,6 +18,7 @@ import StackSelector from './StackSelector'
 import RecommendForceUpdate from 'components/update'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
+import BackupScreen from 'screens/backup'
 import ImportAccountScreen from 'screens/import'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
@@ -72,6 +73,10 @@ const WalletStack = createStackNavigator(
     }
   }
 )
+
+const BackupStack = createStackNavigator({
+  Backup: BackupScreen
+})
 
 const SettingsStack = createStackNavigator(
   {
@@ -148,6 +153,7 @@ const AppContainer = createAppContainer(
       StackSelector: StackSelector,
       Welcome: WelcomeScreen,
       Onboarding: OnboardingStack,
+      Backup: BackupStack,
       App: OriginMarketplaceApp
     },
     {
