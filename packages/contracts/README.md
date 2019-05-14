@@ -14,6 +14,9 @@ The marketplace contract facilitates transactions between buyers and sellers. It
 **Identity**
 The identity contract uses simple event-sourced updates and deletions. We are currently phasing out ERC725 identity contracts.
 
+**Note**
+Since we have a mix of Solidity 0.4 and 0.5 and are currently using Truffle for compilation of 0.4 contracts, we have had to use `.s` instead of `.sol` for contracts using Solidity 0.5 so Truffle does not try to compile them. Instead, we use Solc for compilation of 0.5 contracts and appent _solc to the build output JSON files.
+
 ### Marketplace in depth
 
 #### Actors

@@ -49,8 +49,8 @@ class Notifications extends Component {
     if (this.state.redirect) {
       return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
     }
-    const vars = { first: 10, id: this.props.wallet }
-    if (!this.props.wallet) return null
+    const vars = { first: 10, id: this.props.walletProxy }
+    if (!vars.id) return null
 
     return (
       <div className="container purchases">

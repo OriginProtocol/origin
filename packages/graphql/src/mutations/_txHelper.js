@@ -1,7 +1,11 @@
+import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
+import hasProxy from '../utils/hasProxy'
+import get from 'lodash/get'
 
 import { getTransaction } from '../resolvers/web3/transactions'
+import relayer from './_relayer'
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -21,20 +25,63 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
+function useRelayer({ mutation, value }) {
+  if (!contracts.config.relayer) return false
+  if (!mutation) return false
+  if (mutation === 'makeOffer' && value) return false
+  if (mutation === 'transferToken') return false
+  if (mutation === 'swapToToken') return false
+  return window.localStorage.enableRelayer ? true : false
+}
+
+function useProxy({ proxy, addr, to, mutation }) {
+  if (!contracts.config.proxyAccountsEnabled) return false
+  if (!proxy) return false
+  if (addr === proxy) return false
+  if (to) return false
+  if (mutation === 'deployIdentityViaProxy') return false
+  if (mutation === 'updateTokenAllowance') return false
+  if (mutation === 'swapToToken') return false
+  return true
+}
+
 export default function txHelper({
-  tx,
-  mutation,
-  onConfirmation,
-  onReceipt,
-  from,
-  to,
-  gas,
-  value,
-  web3
+  tx, // Raw web3.js transaction
+  mutation, // Name of mutation
+  onConfirmation, // Optional callback once transaction is confirmed
+  onReceipt, // Optional callback once receipt is available
+  from, // From address
+  to, // To address or contract
+  gas, // Max gas to spend
+  value, // Eth to send with transaction
+  web3 // web3.js instance
 }) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let txHash
     let toSend = tx
+    web3 = contracts.web3Exec
+
+    // Use proxy if this wallet has one deployed
+    const proxy = await hasProxy(from)
+
+    if (useRelayer({ mutation, value })) {
+      const address = tx._parent._address
+      try {
+        const relayerResponse = await relayer({ tx, proxy, from, to: address })
+        return resolve(relayerResponse)
+      } catch (err) {
+        console.log('Relayer error', err)
+      }
+    }
+
+    const addr = get(tx, '_parent._address')
+    if (useProxy({ proxy, addr, to, mutation })) {
+      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
+      const txData = await tx.encodeABI()
+      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
+      gas = await toSend.estimateGas({ from })
+    }
+
     if (web3 && to) {
       toSend = web3.eth.sendTransaction({ from, to, value, gas })
     } else {
@@ -110,13 +157,14 @@ export default function txHelper({
           })
         }
       })
-      .on('error', function(err) {
+      .on('error', function(error) {
+        console.log('tx error', error)
         if (txHash) {
           pubsub.publish('TRANSACTION_UPDATED', {
             transactionUpdated: {
               id: txHash,
               status: 'error',
-              error: err,
+              error,
               mutation
             }
           })

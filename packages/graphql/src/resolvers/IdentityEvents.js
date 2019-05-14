@@ -112,7 +112,10 @@ export function identity({ id, ipfsHash }) {
       ]),
       ...getAttestations(id, data.attestations || []),
       strength: 0,
-      ipfsHash
+      ipfsHash,
+      owner: {
+        id
+      }
     }
 
     if (identity.firstName) {
