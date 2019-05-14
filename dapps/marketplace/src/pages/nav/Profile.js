@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
 import withWallet from 'hoc/withWallet'
+import withConfig from 'hoc/withConfig'
 
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
@@ -79,7 +80,7 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
+const ProfileDropdownRaw = ({ data, onClose, wallet, walletProxy, config }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
@@ -95,26 +96,28 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
-      <div className="wallet-info">
-        {walletProxy === wallet ? (
-          <div className="d-flex w-100 align-items-center">
-            <h5 className="mb-0 flex-grow-1">Proxy Account</h5>
-            {walletProxy === wallet ? (
-              <DeployProxy
-                className="btn btn-sm btn-outline-primary px-3"
-                children="Deploy"
-              />
-            ) : (
+      {!config.proxyAccountsEnabled ? null : (
+        <div className="wallet-info">
+          {walletProxy === wallet ? (
+            <div className="d-flex w-100 align-items-center">
+              <h5 className="mb-0 flex-grow-1">Proxy Account</h5>
+              {walletProxy === wallet ? (
+                <DeployProxy
+                  className="btn btn-sm btn-outline-primary px-3"
+                  children="Deploy"
+                />
+              ) : (
+                <div className="wallet-address">{walletProxy}</div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h5>Proxy Account</h5>
               <div className="wallet-address">{walletProxy}</div>
-            )}
-          </div>
-        ) : (
-          <div>
-            <h5>Proxy Account</h5>
-            <div className="wallet-address">{walletProxy}</div>
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
       <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
@@ -125,7 +128,8 @@ const ProfileDropdown = withWallet(({ data, onClose, wallet, walletProxy }) => {
       </Link>
     </div>
   )
-})
+}
+const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
 const Identity = withWallet(({ walletProxy }) => (
   <Query query={IdentityQuery} variables={{ id: walletProxy }}>

@@ -97,6 +97,7 @@ export default function txHelper({
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
       gas = await toSend.estimateGas({ from })
+      gas += 100000
     }
 
     if (web3 && to) {

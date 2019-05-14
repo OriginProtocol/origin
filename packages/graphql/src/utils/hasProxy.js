@@ -54,5 +54,4 @@ async function hasProxy(address) {
   }
 }
 
-// export default hasProxy
 export default memoize(hasProxy, address => address)
