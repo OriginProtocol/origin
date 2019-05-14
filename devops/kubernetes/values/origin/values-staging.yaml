@@ -24,7 +24,7 @@ eventlistenerImageTag: 'a141762'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'c24c059'
+discoveryImageTag: 'a141762'
 
 # origin-growth
 growthImage: origin-growth
