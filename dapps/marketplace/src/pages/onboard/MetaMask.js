@@ -3,13 +3,13 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 
-import Steps from 'components/Steps'
 import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 
-import Header from './_Header'
+import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
+import HelpOriginWallet from './_HelpOriginWallet'
 
 const MetaMaskURL = 'https://metamask.io'
 
@@ -58,7 +58,7 @@ const ConfirmInstalled = () => (
       </fbt>
     </div>
     <button
-      className="btn btn-outline-primary"
+      className="btn btn-primary"
       onClick={() => window.location.reload()}
     >
       <fbt desc="continue">Continue</fbt>
@@ -170,7 +170,7 @@ const IncorrectNetwork = ({ networkName, connectTo }) => (
   </div>
 )
 
-const Connected = ({ networkName }) => (
+const Connected = ({ networkName, nextLink }) => (
   <div className="onboard-box">
     <div className="metamask-logo" />
     <div className="status">
@@ -186,22 +186,26 @@ const Connected = ({ networkName }) => (
         Continue below.
       </fbt>
     </div>
+            
+    <Link
+      to={nextLink}
+      className={`btn btn-primary`}
+    >
+      <fbt desc="continue">Continue</fbt>
+    </Link>
   </div>
 )
 
 class OnboardMetaMask extends Component {
   state = {}
   render() {
-    const { listing, linkPrefix } = this.props
+    const { listing, linkPrefix, hideOriginWallet } = this.props
 
     return (
       <>
-        <Header />
-        <div className="step">Step 1</div>
-        <h3>Connect a Crypto Wallet</h3>
+        <WalletHeader />
         <div className="row">
           <div className="col-md-8">
-            <Steps steps={4} step={1} />
             <Query query={query} notifyOnNetworkStatusChange>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
@@ -213,56 +217,39 @@ class OnboardMetaMask extends Component {
                 }
 
                 const backLink = `${linkPrefix}/onboard`
-                const nextLink = `${linkPrefix}/onboard/messaging`
-                let nextEnabled = false
+                const nextLink = `${linkPrefix}/onboard/profile`
+
                 const { web3 } = data
 
-                let cmp
                 if (!web3.metaMaskAvailable && !this.state.installing) {
-                  cmp = (
+                  return (
                     <NotInstalled
                       back={backLink}
                       onInstall={() => this.setState({ installing: true })}
                     />
                   )
                 } else if (!web3.metaMaskAvailable) {
-                  cmp = <ConfirmInstalled />
+                  return <ConfirmInstalled />
                 } else if (!web3.metaMaskUnlocked) {
-                  cmp = <AwaitingLogin back={backLink} />
+                  return <AwaitingLogin back={backLink} />
                 } else if (!web3.metaMaskApproved) {
-                  cmp = <AwaitingApproval back={backLink} />
+                  return <AwaitingApproval back={backLink} />
                 } else if (web3.networkId !== web3.metaMaskNetworkId) {
-                  cmp = (
+                  return (
                     <IncorrectNetwork
                       connectTo={web3.networkName}
                       networkName={web3.metaMaskNetworkName}
                     />
                   )
                 } else {
-                  nextEnabled = true
-                  cmp = <Connected networkName={web3.metaMaskNetworkName} />
+                  return <Connected nextLink={nextLink} networkName={web3.metaMaskNetworkName} />
                 }
-
-                return (
-                  <>
-                    {cmp}
-                    <div className="continue-btn">
-                      <Link
-                        to={nextLink}
-                        className={`btn btn-primary${
-                          nextEnabled ? '' : ' disabled'
-                        }`}
-                      >
-                        <fbt desc="continue">Continue</fbt>
-                      </Link>
-                    </div>
-                  </>
-                )
               }}
             </Query>
           </div>
           <div className="col-md-4">
             <ListingPreview listing={listing} />
+            {!hideOriginWallet && <HelpOriginWallet />}
             <HelpWallet />
           </div>
         </div>

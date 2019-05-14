@@ -426,7 +426,9 @@ class MobileUserActivation extends Component {
           </fbt>
         </div>
         <div className="info white mt-6 mb-3">
-          <div className="image" />
+          <div className="image">
+            <img src="images/blue-coins.svg" />
+          </div>
           <div className="content">
             <div className="title">
               <fbt desc="MobileUserActivation.earnOgnTokens">
@@ -551,6 +553,8 @@ require('react-styl')(`
         text-align: left
         .image
           flex: auto 0 0
+          img
+            margin-right: 1rem
         .content
           flex: auto 1 1
     .profile-created
