@@ -35,7 +35,7 @@ const index = {
     listing: {
       properties: {
         'price.amount': { type: 'double' },
-        'price.currency.id': { type: 'text' },
+        'price.currency.id': { type: 'keyword' },
         commission: { type: 'double' },
         commissionPerUnit: { type: 'double' },
         unitsTotal: { type: 'integer' },

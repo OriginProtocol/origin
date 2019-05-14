@@ -55,7 +55,7 @@ class AcceptOffer extends Component {
     return {
       variables: {
         offerID: String(this.props.offer.id),
-        from: this.props.listing.seller.id
+        from: this.props.listing.seller.owner.id
       }
     }
   }
