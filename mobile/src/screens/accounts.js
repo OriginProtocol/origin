@@ -46,9 +46,7 @@ class AccountsScreen extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        {this.renderLists()}
-      </ScrollView>
+      <ScrollView style={styles.container}>{this.renderLists()}</ScrollView>
     )
   }
 
@@ -56,7 +54,7 @@ class AccountsScreen extends Component {
     const { wallet } = this.props
     // Display headers if there are more than one mnemonic, this covers the
     // case of private key accounts because mnemonic will be undefined
-    const uniqueMnemonics = [... new Set(wallet.accounts.map(a => a.mnemonic))]
+    const uniqueMnemonics = [...new Set(wallet.accounts.map(a => a.mnemonic))]
 
     if (uniqueMnemonics.length > 1) {
       let recoveryPhraseNumber = 1
@@ -64,7 +62,8 @@ class AccountsScreen extends Component {
         const listHeaderComponent = (
           <View style={styles.listHeaderContainer}>
             <Text style={styles.listHeader}>
-              {mnemonic && `Recovery Phrase ${recoveryPhraseNumber}` || 'Imported from Private Key' }
+              {(mnemonic && `Recovery Phrase ${recoveryPhraseNumber}`) ||
+                'Imported from Private Key'}
             </Text>
           </View>
         )
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 13,
     fontWeight: '300',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   list: {
     backgroundColor: '#f7f8f8'
