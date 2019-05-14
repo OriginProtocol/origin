@@ -53,7 +53,7 @@ class AccountsScreen extends Component {
   }
 
   renderLists() {
-    const { navigation, wallet } = this.props
+    const { wallet } = this.props
     // Display headers if there are more than one mnemonic, this covers the
     // case of private key accounts because mnemonic will be undefined
     const uniqueMnemonics = [... new Set(wallet.accounts.map(a => a.mnemonic))]
