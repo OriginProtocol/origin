@@ -189,7 +189,6 @@ class OriginWallet extends Component {
         a => a.address === wallet.activeAccount.address
       )
     }
-
     // Setup the active account
     if (length) {
       const activeAccount = hasValidActiveAccount
@@ -240,15 +239,14 @@ class OriginWallet extends Component {
    */
   async createAccount() {
     const wallet = this.web3.eth.accounts.wallet.create(1)
-    const account = wallet[wallet.length - 1]
-    this.props.addAccount(account)
-    this.setAccountActive(account)
+    this.addAccount(wallet[wallet.length - 1])
   }
 
   /* Add a new account
    */
   async addAccount(account) {
     this.props.addAccount(account)
+    this.web3.eth.wallet.accounts.add(account)
     this.setAccountActive(account)
   }
 

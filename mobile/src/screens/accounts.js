@@ -6,6 +6,8 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Text,
+  ScrollView,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -43,34 +45,87 @@ class AccountsScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
-
     return (
-      <>
-        <FlatList
-          data={wallet.accounts.sort((a, b) => a.address > b.address)}
-          renderItem={({ item }) => (
-            <AccountItem item={item} wallet={wallet} navigation={navigation} />
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          style={styles.list}
-          keyExtractor={item => item.address}
-        />
-      </>
+      <ScrollView style={styles.container}>
+        {this.renderLists()}
+      </ScrollView>
+    )
+  }
+
+  renderLists() {
+    const { navigation, wallet } = this.props
+    // Display headers if there are more than one mnemonic, this covers the
+    // case of private key accounts because mnemonic will be undefined
+    const uniqueMnemonics = [... new Set(wallet.accounts.map(a => a.mnemonic))]
+
+    if (uniqueMnemonics.length > 1) {
+      let recoveryPhraseNumber = 1
+      return uniqueMnemonics.map((mnemonic, i) => {
+        const listHeaderComponent = (
+          <View style={styles.listHeaderContainer}>
+            <Text style={styles.listHeader}>
+              {mnemonic && `Recovery Phrase ${recoveryPhraseNumber}` || 'Imported from Private Key' }
+            </Text>
+          </View>
+        )
+
+        if (mnemonic) {
+          recoveryPhraseNumber += 1
+        }
+
+        return this.renderAccountList(
+          wallet.accounts.filter(a => a.mnemonic === mnemonic),
+          listHeaderComponent,
+          i
+        )
+      })
+    } else {
+      return this.renderAccountList(wallet.accounts, <></>)
+    }
+  }
+
+  renderAccountList(accounts, listHeaderComponent, key) {
+    const { navigation } = this.props
+    return (
+      <FlatList
+        data={accounts}
+        renderItem={({ item }) => (
+          <AccountItem item={item} navigation={navigation} />
+        )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListHeaderComponent={() => listHeaderComponent}
+        keyExtractor={item => item.address}
+        key={key ? key : 0}
+        style={styles.list}
+      />
     )
   }
 }
 
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountsScreen)
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f7f8f8',
     flex: 1,
-    justifyContent: 'center',
-    padding: 20
+    backgroundColor: '#f7f8f8'
+  },
+  listHeaderContainer: {
+    paddingHorizontal: 18 * 3,
+    paddingVertical: 22
+  },
+  listHeader: {
+    color: '#6a8296',
+    fontFamily: 'Lato',
+    fontSize: 13,
+    fontWeight: '300',
+    textAlign: 'center',
   },
   list: {
-    backgroundColor: '#f7f8f8',
-    height: '100%'
+    backgroundColor: '#f7f8f8'
   },
   separator: {
     backgroundColor: 'white',
@@ -79,9 +134,3 @@ const styles = StyleSheet.create({
     width: '5%'
   }
 })
-
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-export default connect(mapStateToProps)(AccountsScreen)
