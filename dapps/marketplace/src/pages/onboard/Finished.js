@@ -15,9 +15,11 @@ const Finished = ({ linkPrefix, redirectto }) => {
 
   return (
     <div className="finished">
-      <UserProfileCreated onCompleted={() => {
-        setFinished(true)
-      }} />
+      <UserProfileCreated
+        onCompleted={() => {
+          setFinished(true)
+        }}
+      />
     </div>
   )
   // return (

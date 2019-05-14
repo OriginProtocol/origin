@@ -186,11 +186,8 @@ const Connected = ({ networkName, nextLink }) => (
         Continue below.
       </fbt>
     </div>
-            
-    <Link
-      to={nextLink}
-      className={`btn btn-primary`}
-    >
+
+    <Link to={nextLink} className={`btn btn-primary`}>
       <fbt desc="continue">Continue</fbt>
     </Link>
   </div>
@@ -242,7 +239,12 @@ class OnboardMetaMask extends Component {
                     />
                   )
                 } else {
-                  return <Connected nextLink={nextLink} networkName={web3.metaMaskNetworkName} />
+                  return (
+                    <Connected
+                      nextLink={nextLink}
+                      networkName={web3.metaMaskNetworkName}
+                    />
+                  )
                 }
               }}
             </Query>

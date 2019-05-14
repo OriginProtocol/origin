@@ -7,7 +7,9 @@ const OnboardHelpOriginWallet = () => (
       <img src="images/blue-coins.svg" />
     </div>
     <h5>
-      <fbt desc="onboard.Wallet.downloadApp">Download the Origin Marketplace App</fbt>
+      <fbt desc="onboard.Wallet.downloadApp">
+        Download the Origin Marketplace App
+      </fbt>
     </h5>
     <div className="description">
       <fbt desc="onboard.Wallet.unlockExperience">

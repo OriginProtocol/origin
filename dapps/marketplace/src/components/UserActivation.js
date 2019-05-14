@@ -49,9 +49,7 @@ class UserActivation extends Component {
                 <fbt desc="UserActivation.addYourEmail">Add your email</fbt>
               )}
               {stage === 'PublishDetail' && (
-                <fbt desc="UserActivation.addYourEmail">
-                  Add name and photo
-                </fbt>
+                <fbt desc="UserActivation.addYourEmail">Add name and photo</fbt>
               )}
             </h2>
             <Steps steps={2} step={step} />
@@ -60,7 +58,11 @@ class UserActivation extends Component {
     }
 
     return (
-      <div className={`user-activation${renderMobileVersion ? ' mobile' : ' desktop'}`}>
+      <div
+        className={`user-activation${
+          renderMobileVersion ? ' mobile' : ' desktop'
+        }`}
+      >
         {stepHeader}
         <div>{this[`render${stage}`]()}</div>
         {/* { txModal && (
@@ -83,9 +85,7 @@ class UserActivation extends Component {
         Enter a valid email address
       </fbt>
     ) : (
-      <fbt desc="UserActivation.whatsYourEmail">
-        What’s your email address?
-      </fbt>
+      <fbt desc="UserActivation.whatsYourEmail">What’s your email address?</fbt>
     )
 
     return (
@@ -133,9 +133,7 @@ class UserActivation extends Component {
             }}
           >
             <div className="boxed-container">
-              <h3>
-                {headerText}
-              </h3>
+              <h3>{headerText}</h3>
               <div className="mt-3">
                 <input
                   type="email"
@@ -190,23 +188,14 @@ class UserActivation extends Component {
     const { renderMobileVersion } = this.props
 
     const headerText = renderMobileVersion ? (
-      <fbt desc="UserActivation.codeSentToEmail">
-        We emailed you a code
-      </fbt>
+      <fbt desc="UserActivation.codeSentToEmail">We emailed you a code</fbt>
     ) : (
-      <fbt desc="UserActivation.checkYourEmail">
-        Please check your email
-      </fbt>
+      <fbt desc="UserActivation.checkYourEmail">Please check your email</fbt>
     )
 
-    const placeholderText = renderMobileVersion ? 
-    fbt(
-      'Enter verification code',
-      'UserActivation.enterVerificationCode'
-    ) : fbt(
-      'Enter code',
-      'UserActivation.enterCode'
-    )
+    const placeholderText = renderMobileVersion
+      ? fbt('Enter verification code', 'UserActivation.enterVerificationCode')
+      : fbt('Enter code', 'UserActivation.enterCode')
 
     return (
       <Mutation
@@ -260,9 +249,7 @@ class UserActivation extends Component {
             }}
           >
             <div className="boxed-container">
-              <h3>
-                {headerText}
-              </h3>
+              <h3>{headerText}</h3>
               <div className="mt-3">
                 <input
                   type="tel"
@@ -357,7 +344,9 @@ class UserActivation extends Component {
               type="text"
               className="form-control form-control-lg"
               value={this.state.firstName}
-              placeholder={renderMobileVersion ? '' : fbt('First Name', 'firstName')}
+              placeholder={
+                renderMobileVersion ? '' : fbt('First Name', 'firstName')
+              }
               onChange={e => this.setState({ firstName: e.target.value })}
             />
             {this.state.firstNameError && (
@@ -367,12 +356,14 @@ class UserActivation extends Component {
             )}
           </div>
           <div className="mt-3">
-          {renderMobileVersion && <fbt desc="lastName">Last Name</fbt>}
+            {renderMobileVersion && <fbt desc="lastName">Last Name</fbt>}
             <input
               type="text"
               className="form-control form-control-lg"
               value={this.state.lastName}
-              placeholder={renderMobileVersion ? '' : fbt('Last Name', 'lastName')}
+              placeholder={
+                renderMobileVersion ? '' : fbt('Last Name', 'lastName')
+              }
               onChange={e => this.setState({ lastName: e.target.value })}
             />
           </div>
@@ -386,9 +377,7 @@ class UserActivation extends Component {
               What will be visible on the blockchain?
             </fbt>
           </span>
-          <fbt desc="UserActivation.nameAndPhoto">
-            Your name and photo.
-          </fbt>
+          <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
           <a href="#">
             <fbt desc="UserActivation.learnMore">Learn more</fbt>
           </a>
@@ -431,9 +420,7 @@ class UserActivation extends Component {
   // }
 
   renderProfileCreated() {
-    return (
-      <UserProfileCreated onCompleted={this.props.onCompleted} />
-    )
+    return <UserProfileCreated onCompleted={this.props.onCompleted} />
   }
 
   validate() {

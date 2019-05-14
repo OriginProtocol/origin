@@ -10,8 +10,8 @@ const UserProfileCreated = ({ onCompleted }) => (
     </h2>
     <div>
       <fbt desc="UserActivation.profileCreated">
-        You&apos;ve successfully created your profile You&apos;re now ready
-        to continue your journey in the Origin Marketplace.
+        You&apos;ve successfully created your profile You&apos;re now ready to
+        continue your journey in the Origin Marketplace.
       </fbt>
     </div>
     <div className="info white mt-6 mb-3">
@@ -20,9 +20,7 @@ const UserProfileCreated = ({ onCompleted }) => (
       </div>
       <div className="content">
         <div className="title">
-          <fbt desc="UserActivation.earnOgnTokens">
-            Earn OGN Tokens
-          </fbt>
+          <fbt desc="UserActivation.earnOgnTokens">Earn OGN Tokens</fbt>
         </div>
         <fbt desc="UserActivation.completeTasks">
           Complete tasks and earn tokens.

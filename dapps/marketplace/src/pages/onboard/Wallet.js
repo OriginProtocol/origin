@@ -27,24 +27,26 @@ const MetaMask = ({ linkPrefix }) => (
     </div>
     <div className="help mb-3">
       <fbt desc="onboard.Wallet.metamaskDescription">
-        Metamask is a browser extension for Chrome that will allow you to access the decentralized web.
+        Metamask is a browser extension for Chrome that will allow you to access
+        the decentralized web.
       </fbt>
     </div>
     <div className="help mb">
       <i>
-      <fbt desc="onboard.Wallet.metamaskAvailable">
-        Available for
-        <fbt:param name="browser">
-          {isFirefox ? ' Firefox' : ' Google Chrome'}
-        </fbt:param>
-      </fbt></i>
+        <fbt desc="onboard.Wallet.metamaskAvailable">
+          Available for
+          <fbt:param name="browser">
+            {isFirefox ? ' Firefox' : ' Google Chrome'}
+          </fbt:param>
+        </fbt>
+      </i>
     </div>
-     <Link
-       to={`${linkPrefix}/onboard/metamask`}
-       className="btn btn-primary mt-10"
-     >
-       <fbt desc="onboard.Wallet.connectMetaMask">Connect MetaMask</fbt>
-     </Link>
+    <Link
+      to={`${linkPrefix}/onboard/metamask`}
+      className="btn btn-primary mt-10"
+    >
+      <fbt desc="onboard.Wallet.connectMetaMask">Connect MetaMask</fbt>
+    </Link>
   </div>
 )
 
@@ -76,7 +78,12 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
 
               return (
                 <>
-                  {!showMetaMask ? null : <MetaMask hideOriginWallet={hideOriginWallet} linkPrefix={linkPrefix} />}
+                  {!showMetaMask ? null : (
+                    <MetaMask
+                      hideOriginWallet={hideOriginWallet}
+                      linkPrefix={linkPrefix}
+                    />
+                  )}
                 </>
               )
             }}

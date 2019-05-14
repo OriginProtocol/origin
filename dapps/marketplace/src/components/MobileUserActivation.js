@@ -34,11 +34,14 @@ class MobileUserActivation extends Component {
             </fbt>
           }
         >
-          <UserActivation onCompleted={() => {
-            this.setState({
-              shouldClose: true
-            })
-          }} renderMobileVersion={true} />
+          <UserActivation
+            onCompleted={() => {
+              this.setState({
+                shouldClose: true
+              })
+            }}
+            renderMobileVersion={true}
+          />
         </MobileModal>
       </>
     )

@@ -26,23 +26,25 @@ class OnboardProfile extends Component {
     return (
       <>
         <h1 className="mb-1">
-          <fbt desc="onboard.Profile.createAccount">
-            Create an Account
-          </fbt>
+          <fbt desc="onboard.Profile.createAccount">Create an Account</fbt>
         </h1>
         <p className="description mb-5">
           <fbt desc="onboard.Profile.description">
-            Create a basic profile so others will know who you are in the Origin Marketplace.
+            Create a basic profile so others will know who you are in the Origin
+            Marketplace.
           </fbt>
         </p>
         <div className="row">
           <div className="col-md-8">
             <div className="onboard-box profile pt-3">
-              <UserActivation onCompleted={() => {
-                this.setState({
-                  finished: true
-                })
-              }} hideHeader={true} />
+              <UserActivation
+                onCompleted={() => {
+                  this.setState({
+                    finished: true
+                  })
+                }}
+                hideHeader={true}
+              />
             </div>
           </div>
           <div className="col-md-4">
@@ -54,7 +56,6 @@ class OnboardProfile extends Component {
       </>
     )
   }
-
 }
 
 export default OnboardProfile

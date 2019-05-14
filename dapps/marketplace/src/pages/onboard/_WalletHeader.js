@@ -10,7 +10,8 @@ const WalletHeader = () => (
     </h1>
     <p className="description mb-5">
       <fbt desc="onboard.Wallet.needWalletToTransact">
-        In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.
+        In order to successfully transact with others on our DApp, you’ll need a
+        wallet to store cryptocurrency.
       </fbt>
     </p>
   </>
