@@ -66,7 +66,8 @@ const Transaction = props => {
             return <div className="container">Offer not found</div>
           }
 
-          const isSeller = get(offer, 'listing.seller.id', '') === props.wallet
+          const isSeller =
+            get(offer, 'listing.seller.id', '') === props.walletProxy
           const party = isSeller ? offer.buyer.id : offer.listing.seller.id
 
           const Progress = (
@@ -76,7 +77,7 @@ const Transaction = props => {
               </h3>
               <TxProgress
                 offer={offer}
-                wallet={props.wallet}
+                wallet={props.walletProxy}
                 refetch={refetch}
                 loading={networkStatus === 4}
               />
