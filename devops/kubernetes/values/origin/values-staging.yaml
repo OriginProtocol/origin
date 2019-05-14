@@ -7,7 +7,7 @@ bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '4e5422e'
+dappImageTag: 'a141762'
 dappReplicas: 2
 
 # origin-ipfs-proxy
@@ -20,11 +20,11 @@ faucetImageTag: 'cbd89b1'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '4e5422e'
+eventlistenerImageTag: 'a141762'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'c24c059'
+discoveryImageTag: 'a141762'
 
 # origin-growth
 growthImage: origin-growth
@@ -61,4 +61,4 @@ cronImageTag: '984b546'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: '4e5422e'
+adminImageTag: 'a141762'

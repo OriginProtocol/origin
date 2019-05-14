@@ -45,7 +45,7 @@ class SelectAccount extends Component {
           let disabled = false
           if (data.web3.metaMaskAccount) {
             const acct = data.web3.metaMaskAccount
-            disabled = true
+            disabled = data.web3.useMetaMask
             options.unshift(
               <option value={acct.id} key={'mm'}>{`MetaMask Account: ${(
                 acct.name || acct.id
