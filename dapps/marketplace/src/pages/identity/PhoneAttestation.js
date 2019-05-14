@@ -3,7 +3,10 @@ import { Mutation } from 'react-apollo'
 import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import CountryDropdown from './_CountryDropdown'
 
 import GeneratePhoneCodeMutation from 'mutations/GeneratePhoneCode'
@@ -28,13 +31,20 @@ class PhoneAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt('Verify Phone Number', 'PhoneAttestation.verifyPhoneNumber')}
         className={`attestation-modal phone${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -49,11 +59,42 @@ class PhoneAttestation extends Component {
         }}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+    )
+
+    const descEl = isMobile ? (
+      <fbt desc="PhoneAttestation.mobile.description">
+        Enter a valid 10-digit phone number
+      </fbt>
+    ) : (
+      <fbt desc="PhoneAttestation.description">
+        Enter your phone number below and OriginID will send you a verification
+        code via SMS.
+      </fbt>
+    )
+
+    const storedOnBlockchain = isMobile ? (
+      <div className="info mt-3 mb-3">
+        <span className="title">
+          <fbt desc="PhoneAttestation.visibleOnBlockchain">
+            What will be visible on the blockchain?
+          </fbt>
+        </span>
+        <fbt desc="PhoneAttestation.verifiedButNotNumber">
+          That you have a verified phone number, but NOT your actual phone
+          number
+        </fbt>
+      </div>
+    ) : null
+
     return (
       <Mutation
         mutation={GeneratePhoneCodeMutation}
@@ -81,15 +122,8 @@ class PhoneAttestation extends Component {
               })
             }}
           >
-            <h2>
-              <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
-            </h2>
-            <div className="instructions">
-              <fbt desc="PhoneAttestation.description">
-                Enter your phone number below and OriginID will send you a
-                verification code via SMS.
-              </fbt>
-            </div>
+            <h2>{header}</h2>
+            <div className="instructions">{descEl}</div>
             <div className="d-flex mt-3">
               <CountryDropdown
                 onChange={({ code, prefix }) =>
@@ -114,26 +148,32 @@ class PhoneAttestation extends Component {
             <div className="help">
               <fbt desc="Attestation.phonePublishClarification">
                 By verifying your phone number, you give Origin permission to
-                send you occasional emails such as notifications about your
-                transactions.
+                send you occasional text messages such as notifications about
+                your transactions.
               </fbt>
             </div>
+            {storedOnBlockchain}
             <div className="actions">
               <button
                 type="submit"
-                className="btn btn-outline-light"
+                className={`btn ${
+                  isMobile ? 'btn-primary' : 'btn-outline-light'
+                }`}
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                type="button"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
@@ -142,6 +182,22 @@ class PhoneAttestation extends Component {
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
+    const storedOnBlockchain = isMobile ? (
+      <div className="info mt-3 mb-3">
+        <span className="title">
+          <fbt desc="PhoneAttestation.visibleOnBlockchain">
+            What will be visible on the blockchain?
+          </fbt>
+        </span>
+        <fbt desc="PhoneAttestation.verifiedButNotNumber">
+          That you have a verified phone number, but NOT your actual phone
+          number
+        </fbt>
+      </div>
+    ) : null
+
     return (
       <Mutation
         mutation={VerifyPhoneCodeMutation}
@@ -221,21 +277,28 @@ class PhoneAttestation extends Component {
                 </div>
               )}
             </div>
+            {storedOnBlockchain}
             <div className="actions">
               <button
                 type="submit"
-                className="btn btn-outline-light"
+                className={`btn ${
+                  isMobile ? 'btn-primary' : 'btn-outline-light'
+                }`}
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
@@ -244,6 +307,8 @@ class PhoneAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const isMobile = this.isMobile()
+
     return (
       <>
         <h2>
@@ -262,7 +327,7 @@ class PhoneAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className="btn btn-outline-light"
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
@@ -275,7 +340,7 @@ class PhoneAttestation extends Component {
   }
 }
 
-export default PhoneAttestation
+export default withIsMobile(PhoneAttestation)
 
 require('react-styl')(`
   .attestation-modal
@@ -356,4 +421,43 @@ require('react-styl')(`
             background-image: none
         .actions
           margin-bottom: 1.5rem
+
+  .mobile-modal .attestation-modal.phone
+    padding: 20px
+    text-align: center
+    h2
+      padding-top: 7.5rem
+    .btn
+      width: 100%
+      border-radius: 2rem
+    .verification-code .form-control
+      display: inline-block
+    .country-code, .form-control
+      border: solid 1px #c2cbd3
+      background-color: var(--white)
+      color: black
+    .dropdown .dropdown-menu
+      border: solid 1px #c2cbd3
+      background-color: var(--white)
+      .dropdown-item
+        .name
+          color: black
+        .prefix
+          color: #6f8294
+        &:hover
+          background-color: var(--light-footer)
+    .info
+      text-align: center
+      border-radius: 5px
+      border: solid 1px var(--bluey-grey)
+      background-color: rgba(152, 167, 180, 0.1)
+      font-family: Lato
+      font-size: 14px
+      color: black
+      padding: 10px
+      margin-top: 1rem
+      .title
+        display: block
+        font-weight: bold
+        margin-bottom: 3px
 `)
