@@ -70,32 +70,40 @@ class ImportAccountScreen extends Component {
   }
 
   addAccountFromMnemonic() {
-    // This is the default path but explicitly stated here for clarity
-    const derivePath = "m/44'/60'/0'/0/0"
-    // Web3js doesn't support wallet creation from a mnemonic, so somewhat
-    // redundantly we have to include ethersjs. Perhaps migrate everything
-    // away from web3js to ethersjs or the functionality will be added to web3js
-    // sometime in the future, see:
-    // https://github.com/ethereum/web3.js/issues/1594
-    let wallet
-    try {
-      wallet = ethers.Wallet.fromMnemonic(this.state.value.trim(), derivePath)
-    } catch (error) {
-      let errorMessage = error.message
-      if (errorMessage === 'invalid mnemonic') {
-        errorMessage = 'That does not look like a valid recovery phrase.'
+    const existingAddresses = this.props.wallet.accounts.map(a => a.address)
+    // Use a loop to try the next account in the derivation path
+    for (let i = 0; i < 10; i++) {
+      // This is the default path but explicitly stated here for clarity
+      const derivePath = `m/44'/60'/0'/0/${i}`
+      // Web3js doesn't support wallet creation from a mnemonic, so somewhat
+      // redundantly we have to include ethersjs. Perhaps migrate everything
+      // away from web3js to ethersjs or the functionality will be added to web3js
+      // sometime in the future, see:
+      // https://github.com/ethereum/web3.js/issues/1594
+      let wallet
+      try {
+        wallet = ethers.Wallet.fromMnemonic(this.state.value.trim(), derivePath)
+      } catch (error) {
+        let errorMessage = error.message
+        if (errorMessage === 'invalid mnemonic') {
+          errorMessage = 'That does not look like a valid recovery phrase.'
+        }
+        this.setState({ error: errorMessage })
+        return false
       }
-      this.setState({
-        error: errorMessage
-      })
-    }
-    if (wallet) {
-      DeviceEventEmitter.emit('addAccount', {
-        address: wallet.address,
-        mnemonic: wallet.mnemonic,
-        privateKey: wallet.privateKey
-      })
-      return true
+      if (existingAddresses.includes(wallet.address)) {
+        // Account already added, try the next in line
+        continue
+      }
+      if (wallet) {
+        // Got an account we don't have, use that
+        DeviceEventEmitter.emit('addAccount', {
+          address: wallet.address,
+          mnemonic: wallet.mnemonic,
+          privateKey: wallet.privateKey
+        })
+        return true
+      }
     }
   }
 
