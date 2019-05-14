@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 class StackSelector extends React.Component {
   constructor(props) {
     super(props)
-    this._selectStack()
+    this.selectStack()
   }
 
-  _selectStack() {
+  selectStack() {
     if (this.props.wallet.accounts.length == 0) {
       this.props.navigation.navigate('Welcome')
     } else if (!this.props.settings.pin && !this.props.settings.biometryType) {
@@ -24,8 +24,8 @@ class StackSelector extends React.Component {
   }
 }
 
-const mapStateToProps = ({ activation, settings, wallet }) => {
-  return { activation, settings, wallet }
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
 }
 
 export default connect(

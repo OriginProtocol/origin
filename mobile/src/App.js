@@ -15,6 +15,7 @@ import OriginWallet from './OriginWallet'
 import PushNotifications from './PushNotifications'
 import Store, { persistor } from './Store'
 import StackSelector from './StackSelector'
+import RecommendForceUpdate from 'components/update'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
 import ImportAccountScreen from 'screens/import'
@@ -162,6 +163,7 @@ class App extends Component {
         <PersistGate loading={<Loading />} persistor={persistor}>
           <OriginWallet />
           <PushNotifications />
+          <RecommendForceUpdate />
           <AppContainer />
         </PersistGate>
       </ReduxProvider>

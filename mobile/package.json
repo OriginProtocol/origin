@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "acorn": "^6.1.1",
+    "compare-versions": "^3.4.0",
     "cross-fetch": "^3.0.2",
     "ethers": "^4.0.27",
     "myetherwallet-blockies": "^0.1.1",
