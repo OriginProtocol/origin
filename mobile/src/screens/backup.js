@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import { NavigationActions } from 'react-navigation'
 
 import OriginButton from 'components/origin-button'
 import { shuffleArray } from 'utils'
@@ -77,8 +78,8 @@ class BackupScreen extends Component {
 
   handleWordTouch(word, index) {
     // Copy arrays for state update
-    let newShuffledMnemonic = this.state.shuffledMnemonic.slice()
-    let newVerify = this.state.verify.slice()
+    const newShuffledMnemonic = this.state.shuffledMnemonic.slice()
+    const newVerify = this.state.verify.slice()
 
     if (this.state.verify[index] === word) {
       // Remove from the verify phrase
@@ -88,7 +89,7 @@ class BackupScreen extends Component {
       const smIndex = this.state.shuffledMnemonicBackup.findIndex((x, i) => {
         // Must also check the index in shuffledMnemonic is undefined to handle
         // mnemonics with the multiple words that are the same
-        return x === word // && this.state.shuffledMnemonic[i] === undefined
+        return x === word && this.state.shuffledMnemonic[i] === undefined
       })
       newShuffledMnemonic[smIndex] = word
     } else {
@@ -187,7 +188,7 @@ class BackupScreen extends Component {
             title={'Next'}
             onPress={() => this.setState({ step: 'verify' })}
           />
-         <OriginButton
+          <OriginButton
             size="large"
             type="link"
             style={styles.button}
@@ -203,8 +204,6 @@ class BackupScreen extends Component {
   }
 
   renderVerify() {
-    const { wallet } = this.props
-
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -255,8 +254,6 @@ class BackupScreen extends Component {
   }
 
   renderWordSlots(wordList) {
-    const { wallet } = this.props
-
     return (
       <View style={styles.recoveryContainer}>
         {wordList.map((word, i) => {
@@ -310,7 +307,12 @@ class BackupScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Done'}
             onPress={() => {
-              this.props.navigation.navigate('App')
+              // Navigate to subroute to skip authentication requirement
+              this.props.navigation.navigate(
+                'GuardedApp',
+                {},
+                NavigationActions.navigate({ routeName: 'App' })
+              )
             }}
           />
         </View>
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
     height: 100
   },
   recoveryContainer: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -400,20 +402,19 @@ const styles = StyleSheet.create({
   recoveryWordContainer: {
     paddingVertical: 10,
     width: '30%',
-    marginLeft: 10,
     flexDirection: 'row'
   },
   recoveryWordNumber: {
     fontSize: 16,
     color: '#6a8296',
     textAlign: 'right',
-    width: '20%',
-    marginRight: '10%'
+    width: '15%',
+    marginRight: '5%'
   },
   recoveryWord: {
     fontSize: 16,
     textAlign: 'left',
-    width: '70%'
+    width: '75%'
   },
   recoveryWordSlotContainer: {
     borderWidth: 1,

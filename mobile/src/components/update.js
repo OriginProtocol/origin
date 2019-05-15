@@ -7,11 +7,11 @@ import {
   Linking,
   Modal,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   View
 } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 import compareVersions from 'compare-versions'
 
 import OriginButton from 'components/origin-button'
@@ -31,20 +31,22 @@ class RecommendForceUpdate extends React.Component {
     const versionUrl =
       'https://raw.githubusercontent.com/OriginProtocol/origin/master/mobile/.version'
     let versions
-    try {
-      const response = await fetch(versionUrl)
-      versions = await response.json()
-    } catch (error) {
-      console.warn('Could not fetch versions: ', error)
-    }
+    if (!__DEV__) {
+      try {
+        const response = await fetch(versionUrl)
+        versions = await response.json()
+      } catch (error) {
+        console.warn('Could not fetch versions: ', error)
+      }
 
-    if (versions && compareVersions(version, versions.force) === -1) {
-      this.setState({ upgrade: 'force' })
-    } else if (
-      versions &&
-      compareVersions(version, versions.recommend) === -1
-    ) {
-      this.setState({ upgrade: 'recommend' })
+      if (versions && compareVersions(version, versions.force) === -1) {
+        this.setState({ upgrade: 'force' })
+      } else if (
+        versions &&
+        compareVersions(version, versions.recommend) === -1
+      ) {
+        this.setState({ upgrade: 'recommend' })
+      }
     }
   }
 

@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
-
 import TouchID from 'react-native-touch-id'
 
 import { setBiometryType } from 'actions/Settings'

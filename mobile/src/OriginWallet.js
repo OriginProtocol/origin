@@ -238,7 +238,7 @@ class OriginWallet extends Component {
   /* Create new account
    */
   async createAccount() {
-    const wallet = this.web3.eth.accounts.wallet.create(1)
+    const wallet = await this.web3.eth.accounts.wallet.create(1)
     this.addAccount(wallet[wallet.length - 1])
   }
 
@@ -246,7 +246,7 @@ class OriginWallet extends Component {
    */
   async addAccount(account) {
     this.props.addAccount(account)
-    this.web3.eth.wallet.accounts.add(account)
+    this.web3.eth.accounts.wallet.add(account)
     this.setAccountActive(account)
   }
 

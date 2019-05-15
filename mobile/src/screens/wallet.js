@@ -5,11 +5,11 @@ import {
   Alert,
   Clipboard,
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   View
 } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 import { connect } from 'react-redux'
 import { get } from 'utils'
 
@@ -33,7 +33,7 @@ class WalletScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      displayBackupModal: true
+      displayBackupModal: false
     }
   }
 

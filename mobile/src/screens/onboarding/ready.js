@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
+import { NavigationActions } from 'react-navigation'
 
 import OriginButton from 'components/origin-button'
 
@@ -34,7 +35,12 @@ export default class ReadyScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Start using Origin'}
             onPress={() => {
-              this.props.navigation.navigate('App')
+              // Navigate to subroute to skip authentication requirement
+              this.props.navigation.navigate(
+                'GuardedApp',
+                {},
+                NavigationActions.navigate({ routeName: 'App' })
+              )
             }}
           />
         </View>

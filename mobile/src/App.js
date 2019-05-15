@@ -23,6 +23,7 @@ import ImportAccountScreen from 'screens/import'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
+import AuthenticationGuard from 'components/auth'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import EmailScreen from 'screens/onboarding/email'
@@ -74,13 +75,37 @@ const WalletStack = createStackNavigator(
   }
 )
 
-const BackupStack = createStackNavigator({
-  Backup: BackupScreen
-})
+const BackupStack = createSwitchNavigator(
+  {
+    Auth: {
+      screen: AuthenticationGuard,
+      params: {
+        navigateOnSuccess: 'Backup'
+      }
+    },
+    Backup: BackupScreen
+  },
+  {
+    initialRouteName: 'Auth'
+  }
+)
 
 const SettingsStack = createStackNavigator(
   {
-    Account: AccountScreen,
+    Account: createSwitchNavigator(
+      {
+        Auth: {
+          screen: AuthenticationGuard,
+          params: {
+            navigateOnSuccess: 'Account'
+          }
+        },
+        Account: AccountScreen
+      },
+      {
+        initialRouteName: 'Auth'
+      }
+    ),
     Accounts: AccountsScreen,
     ImportAccount: {
       screen: ImportAccountScreen,
@@ -153,8 +178,21 @@ const AppContainer = createAppContainer(
       StackSelector: StackSelector,
       Welcome: WelcomeScreen,
       Onboarding: OnboardingStack,
-      Backup: BackupStack,
-      App: OriginMarketplaceApp
+      GuardedBackup: BackupStack,
+      GuardedApp: createSwitchNavigator(
+        {
+          Auth: {
+            screen: AuthenticationGuard,
+            params: {
+              navigateOnSuccess: 'App'
+            }
+          },
+          App: OriginMarketplaceApp
+        },
+        {
+          initialRouteName: 'Auth'
+        }
+      )
     },
     {
       initialRouteName: 'StackSelector'
