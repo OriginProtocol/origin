@@ -236,9 +236,12 @@ class IdentityEventHandler {
    */
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
     // Check required fields are populated.
-    const validProfile =
-      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
-      identity.avatar.length > 0
+    const validFirstName = identity.firstName && identity.firstName.length > 0
+    const validLastName = identity.lastName && identity.lastName.length > 0
+    const validAvatar =
+      (identity.avatar && identity.avatar.length > 0) ||
+      (identity.avatarUrl && identity.avatarUrl.length > 0)
+    const validProfile = validFirstName && validLastName && validAvatar
     if (!validProfile) {
       return
     }
