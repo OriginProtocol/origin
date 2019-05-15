@@ -16,6 +16,8 @@ import { DeviceEventEmitter } from 'react-native'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
+import { ethers } from 'ethers'
+const bip39 = require('bip39')
 
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
@@ -238,8 +240,20 @@ class OriginWallet extends Component {
   /* Create new account
    */
   async createAccount() {
-    const wallet = await this.web3.eth.accounts.wallet.create(1)
-    this.addAccount(wallet[wallet.length - 1])
+    const mnemonic = bip39.generateMnemonic()
+    // This is the default path but explicitly stated here for clarity
+    const derivePath = `m/44'/60'/0'/0/0`
+    // Web3js doesn't support wallet creation from a mnemonic, so somewhat
+    // redundantly we have to include ethersjs. Perhaps migrate everything
+    // away from web3js to ethersjs or the functionality will be added to web3js
+    // sometime in the future, see:
+    // https://github.com/ethereum/web3.js/issues/1594
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic, derivePath)
+    this.addAccount({
+      address: wallet.address,
+      mnemonic: wallet.mnemonic,
+      privateKey: wallet.privateKey
+    })
   }
 
   /* Add a new account
