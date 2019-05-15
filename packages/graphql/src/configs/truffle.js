@@ -14,6 +14,8 @@ const config = {
   ipfsRPC: `http://${HOST}:5002`,
   growth: `http://${HOST}:4001`,
   bridge: `http://${HOST}:5000`,
+  performanceMode: false,
+  graphql: 'https://${HOST}:4002',
   automine: 2000,
   attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
   messaging: {

@@ -183,3 +183,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s.originprotocol.com" $prefix -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "graphql.fullname" -}}
+{{- printf "%s-%s" .Release.Name "graphql" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
