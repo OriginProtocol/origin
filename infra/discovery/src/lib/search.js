@@ -262,12 +262,14 @@ class Listing {
             // 50 tokens gets you a 2.25 multiplier to your base score,
             // That's probably overpowered. We might as well encourage
             // listings to use them, and we can sort out a more exact value later.
-            if (doc['commissionPerUnit'] != null && doc['commissionPerUnit'].value > 0) {
-              double commission = doc['commissionPerUnit'].value;
-              if(commission > 100) {
-                commission = 100;
+            if (doc['commission'] != null && doc['commission'].value > 0){
+              if (doc['commissionPerUnit'] != null && doc['commissionPerUnit'].value > 0) {
+                double commission = Math.min(doc['commissionPerUnit'].value, doc['commission'].value);
+                if(commission > 100) {
+                  commission = 100;
+                }
+                score *= (1.0 + commission * 0.000000000000000000025);
               }
-              score *= (1.0 + doc['commissionPerUnit'].value * 0.000000000000000000025);
             }
 
             // Temporary boost for recently created listings.
