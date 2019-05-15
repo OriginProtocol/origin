@@ -6,7 +6,9 @@ import AcceptOfferMutation from 'mutations/AcceptOffer'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class AcceptOffer extends Component {
   state = {}
@@ -55,7 +57,7 @@ class AcceptOffer extends Component {
     acceptOffer({
       variables: {
         offerID: this.props.offer.id,
-        from: this.props.offer.listing.seller.id
+        from: this.props.wallet
       }
     })
   }
@@ -94,4 +96,4 @@ class AcceptOffer extends Component {
   }
 }
 
-export default withCanTransact(AcceptOffer)
+export default withWallet(withCanTransact(AcceptOffer))

@@ -22,11 +22,10 @@ app.use(serveStatic('public'))
 async function start() {
   await services({
     ganache: true,
+    deployContracts: true,
     ipfs: true,
     populate: true,
-    deployContracts: true,
-    skipContractsIfExists: true,
-    writeTruffle: true
+    skipContractsIfExists: process.env.CLEAN ? false : true
   })
   const webpackDevServer = spawn(
     './node_modules/.bin/webpack-dev-server',

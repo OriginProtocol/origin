@@ -55,7 +55,7 @@ class FinalizeOffer extends Component {
     return {
       variables: {
         offerID: String(this.props.offer.id),
-        from: this.props.offer.buyer.id
+        from: this.props.offer.buyer.owner.id
       }
     }
   }
