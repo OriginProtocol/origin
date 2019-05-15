@@ -4,6 +4,8 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
+
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
@@ -120,7 +122,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isGiftCard = listing.__typename === 'GiftCardListing'
-    const isOwnerViewing = listing.seller.id === this.props.from
+    const isOwnerViewing = listing.seller.id === this.props.walletProxy
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
@@ -158,7 +160,7 @@ class ListingDetail extends Component {
                   <span>
                     <img
                       className="country-flag-img"
-                      src={`images/flags/${listing.issuingCountry}.svg`}
+                      src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
                     />
                     {countryCodeMapping['en'][listing.issuingCountry]}
                   </span>
@@ -274,10 +276,10 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.from
+      b => b.id === this.props.walletProxy
     )
 
-    if (listing.seller.id === this.props.from) {
+    if (listing.seller.id === this.props.walletProxy) {
       return (
         <EditOnly
           {...this.props}
@@ -326,7 +328,7 @@ class ListingDetail extends Component {
   }
 }
 
-export default ListingDetail
+export default withWallet(ListingDetail)
 
 require('react-styl')(`
   .listing-detail

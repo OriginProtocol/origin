@@ -140,6 +140,22 @@ export const DeployIdentityEventsContractMutation = gql`
   }
 `
 
+export const DeployProxyFactoryContractMutation = gql`
+  mutation DeployProxyFactoryContract($from: String!) {
+    deployProxyFactory(from: $from) {
+      id
+    }
+  }
+`
+
+export const DeployIdentityProxyMutation = gql`
+  mutation DeployIdentityProxy($from: String!) {
+    deployIdentityProxy(from: $from) {
+      id
+    }
+  }
+`
+
 export const CreateListingMutation = gql`
   mutation CreateListing(
     $from: String!

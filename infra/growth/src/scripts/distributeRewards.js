@@ -14,7 +14,7 @@ const enums = require('../enums')
 const parseArgv = require('../util/args')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
-const logger = Logger.create('distRewards', { showTimestamp: false })
+const logger = Logger.create('distRewards')
 
 // Minimum number of block confirmations to wait for before considering
 // a reward distributed.
@@ -94,10 +94,11 @@ class DistributeRewards {
   }
 
   /**
+   * Pays out the sum of the rewards to the user.
    *
    * @param {string} ethAddress
    * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<*>}
+   * @returns {Promise<BigNumber>} Payout amount.
    * @private
    */
   async _distributeRewards(ethAddress, rewards) {
@@ -142,7 +143,9 @@ class DistributeRewards {
         status: { [Sequelize.Op.ne]: enums.GrowthPayoutStatuses.Failed }
       }
     })
-    if (
+    if (!payout) {
+      logger.info(`Checked there is no existing payout row for ${ethAddress}`)
+    } else if (
       payout.status === enums.GrowthPayoutStatuses.Paid ||
       payout.status === enums.GrowthPayoutStatuses.Confirmed
     ) {
@@ -151,6 +154,7 @@ class DistributeRewards {
           payout.id
         } with status ${payout.status}`
       )
+      return BigNumber(0)
     } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${
@@ -176,7 +180,7 @@ class DistributeRewards {
     // Send a blockchain transaction to payout the reward to the participant.
     let status, txnHash, txnReceipt
     try {
-      if (this.config.persist) {
+      if (this.config.doIt) {
         txnReceipt = await this.distributor.credit(ethAddress, amount)
       } else {
         txnReceipt = {
@@ -224,7 +228,7 @@ class DistributeRewards {
    * @private
    */
   async _confirmTransaction(payout, currentBlockNumber) {
-    if (!this.config.persist) {
+    if (!this.config.doIt) {
       return true
     }
 
@@ -279,8 +283,8 @@ class DistributeRewards {
    */
   async _confirmAllTransactions(campaignId) {
     // Wait a bit for the last transaction to settle.
-    const waitMsec = this.config.persist
-      ? MinBlockConfirmation * BlockMiningTimeMsec
+    const waitMsec = this.config.doIt
+      ? 2 * MinBlockConfirmation * BlockMiningTimeMsec
       : 1000
     logger.info(
       `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
@@ -323,7 +327,7 @@ class DistributeRewards {
    * @private
    */
   async _checkAllUsersPaid(campaignId, ethAddresses) {
-    if (!this.config.persist) {
+    if (!this.config.doIt) {
       return true
     }
 
@@ -333,7 +337,7 @@ class DistributeRewards {
         where: {
           ethAddress,
           campaignId,
-          status: enums.GrowthPayoutdStatuses.Confirmed
+          status: enums.GrowthPayoutStatuses.Confirmed
         }
       })
       if (!payout) {
@@ -438,8 +442,8 @@ const args = parseArgv()
 const config = {
   // 1=Mainnet, 4=Rinkeby, 999=Local.
   networkId: parseInt(args['--networkId'] || process.env.NETWORK_ID || 0),
-  // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] === 'true' || false,
+  // By default run in dry-run mode unless explicitly specified using doIt.
+  doIt: args['--doIt'] === 'true' || false,
   // Gas price multiplier to use for sending transactions. Optional.
   gasPriceMultiplier: args['--gasPriceMultiplier'] || null
 }

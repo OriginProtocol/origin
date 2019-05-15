@@ -174,7 +174,7 @@ require('react-styl')(`
     .preview-row
       position: relative
       background: var(--white)
-      cursor: pointer
+      cursor: move
       border: 2px dashed transparent
       .info
         position: absolute

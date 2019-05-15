@@ -1,7 +1,7 @@
 // Script to create campaigns in production.
 const db = require('../models')
 const enums = require('../enums')
-const tokenNaturalUnits = require('../../src/util/token')
+const { tokenToNaturalUnits } = require('../../src/util/token')
 
 const aprilConfig = require('../../campaigns/april.js')
 const mayConfig = require('../../campaigns/may.js')
@@ -19,7 +19,7 @@ async function createAprilProdCampaign() {
     startDate: Date.parse('March 18, 2019, 00:00 UTC'),
     endDate: Date.parse('May 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('May 1, 2019, 00:00 UTC'),
-    cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
     rewardStatus: enums.GrowthCampaignRewardStatuses.Active
@@ -39,11 +39,18 @@ async function createMayProdCampaign() {
     startDate: Date.parse('May 1, 2019, 00:00 UTC'),
     endDate: Date.parse('June 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('June 1, 2019, 00:00 UTC'),
-    cap: tokenNaturalUnits(1000000), // Set cap to 1M tokens
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
     rewardStatus: enums.GrowthCampaignRewardStatuses.Active
   })
+}
+
+async function updateMayProdRules() {
+  console.log('Updating May campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 3 } })
+  await campaign.update({ rules: JSON.stringify(mayConfig) })
 }
 
 const args = {}
@@ -53,14 +60,23 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-if (args['--month'] === 'april') {
-  createAprilProdCampaign().then(() => {
-    console.log('Done')
-    process.exit()
-  })
-} else if (args['--month'] === 'may') {
-  createMayProdCampaign().then(() => {
-    console.log('Done')
-    process.exit()
-  })
+if (args['--action'] === 'create') {
+  if (args['--month'] === 'april') {
+    createAprilProdCampaign().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  } else if (args['--month'] === 'may') {
+    createMayProdCampaign().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  }
+} else if (args['--action'] === 'update') {
+  if (args['--month'] === 'may') {
+    updateMayProdRules().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  }
 }
