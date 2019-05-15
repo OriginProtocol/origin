@@ -202,18 +202,12 @@ class UserActivation extends Component {
         mutation={VerifyEmailCodeMutation}
         onCompleted={({ verifyEmailCode: result }) => {
           if (result.success) {
-            if (renderMobileVersion) {
-              this.setState({
-                stage: 'PublishDetail',
-                loading: false,
-                step: 2,
-                data: result.data
-              })
-            } else {
-              if (this.props.onCompleted) {
-                this.props.onCompleted()
-              }
-            }
+            this.setState({
+              stage: 'PublishDetail',
+              loading: false,
+              step: 2,
+              data: result.data
+            })
           } else {
             this.setState({
               error: result.reason,
@@ -401,9 +395,13 @@ class UserActivation extends Component {
             validate={() => this.validate()}
             children={fbt('Publish', 'Publish')}
             onComplete={() => {
-              this.setState({
-                stage: 'ProfileCreated'
-              })
+              if (this.props.renderMobileVersion) {
+                this.setState({
+                  stage: 'ProfileCreated'
+                })
+              } else if (this.props.onCompleted) {
+                this.props.onCompleted()
+              }
             }}
           />
         </div>
@@ -539,4 +537,7 @@ require('react-styl')(`
       .actions
         .btn
           width: auto
+      
+      .avatar
+        border-radius: 50%
 `)
