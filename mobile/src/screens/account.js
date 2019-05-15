@@ -42,7 +42,7 @@ class AccountScreen extends Component {
       'As a security precaution, the clipboard will be cleared after one minute.',
       [
         {
-          text: 'Got it.',
+          text: 'Got it',
           onPress: async () => {
             await Clipboard.setString(privateKey)
 

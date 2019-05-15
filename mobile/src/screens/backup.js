@@ -9,12 +9,14 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import OriginButton from 'components/origin-button'
+import { shuffleArray } from 'utils'
 
 const ONE_MINUTE = 1000 * 60
 const IMAGES_PATH = '../../assets/images/'
@@ -28,11 +30,26 @@ class BackupScreen extends Component {
 
   constructor(props) {
     super(props)
+    this.isPrivateKey = this.props.wallet.activeAccount.mnemonic === undefined
+
+    // Create an empty array the same length as the mnemonic to fill when
+    // verifying, or null for private keys
+    let verify, shuffledMnemonic
+    if (!this.isPrivateKey) {
+      verify = new Array(
+        this.props.wallet.activeAccount.mnemonic.split(' ').length
+      ).fill(undefined)
+      shuffledMnemonic = shuffleArray(
+        this.props.wallet.activeAccount.mnemonic.split(' ')
+      )
+    }
+
     this.state = {
       step: 'backup',
-      privateKeyVerify: null
+      verify: verify,
+      shuffledMnemonic: shuffledMnemonic,
+      shuffledMnemonicBackup: shuffledMnemonic
     }
-    this.isPrivateKey = this.props.wallet.activeAccount.mnemonic === undefined
   }
 
   async handleDangerousCopy(data) {
@@ -41,7 +58,7 @@ class BackupScreen extends Component {
       'As a security precaution, the clipboard will be cleared after one minute.',
       [
         {
-          text: 'Got it.',
+          text: 'Got it',
           onPress: async () => {
             await Clipboard.setString(data)
 
@@ -58,12 +75,42 @@ class BackupScreen extends Component {
     )
   }
 
+  handleWordTouch(word, index) {
+    // Copy arrays for state update
+    let newShuffledMnemonic = this.state.shuffledMnemonic.slice()
+    let newVerify = this.state.verify.slice()
+
+    if (this.state.verify[index] === word) {
+      // Remove from the verify phrase
+      newVerify[index] = undefined
+      // Add it back to the shuffledMnemonic in the position it was in before
+      // it was removed
+      const smIndex = this.state.shuffledMnemonicBackup.findIndex((x, i) => {
+        // Must also check the index in shuffledMnemonic is undefined to handle
+        // mnemonics with the multiple words that are the same
+        return x === word // && this.state.shuffledMnemonic[i] === undefined
+      })
+      newShuffledMnemonic[smIndex] = word
+    } else {
+      // Remove from the shuffledMnemonic
+      newShuffledMnemonic[index] = undefined
+      // Add to the first empty slot of the verify phrase
+      const verifyIndex = this.state.verify.findIndex(x => x === undefined)
+      newVerify[verifyIndex] = word
+    }
+
+    this.setState({
+      verify: newVerify,
+      shuffledMnemonic: newShuffledMnemonic
+    })
+  }
+
   backupIsVerified() {
     const { wallet } = this.props
     if (this.isPrivateKey) {
-      return this.state.privateKeyVerify === wallet.activeAccount.privateKey
+      return this.state.verify === wallet.activeAccount.privateKey
     } else {
-      return false
+      return this.state.verify.join(' ') === wallet.activeAccount.mnemonic
     }
   }
 
@@ -98,11 +145,14 @@ class BackupScreen extends Component {
             </View>
           )}
           {!this.isPrivateKey && (
-            <View style={styles.mnemonicContainer}>
+            <View style={styles.recoveryContainer}>
               {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
-                ;<Text>
-                  {i} {word}
-                </Text>
+                return (
+                  <View style={styles.recoveryWordContainer} key={i}>
+                    <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
+                    <Text style={styles.recoveryWord}>{word}</Text>
+                  </View>
+                )
               })}
             </View>
           )}
@@ -122,9 +172,9 @@ class BackupScreen extends Component {
           </View>
           <View style={styles.descContainer}>
             <Text style={styles.desc}>
-              This private key is the key to your account. Write it down, or
-              copy it to a password manager. We recommend NOT emailing it to
-              yourself.
+              This {this.isPrivateKey ? 'private key' : 'recovery phrase'} is
+              the key to your account. Write it down, or copy it to a password
+              manager. We recommend NOT emailing it to yourself.
             </Text>
           </View>
         </View>
@@ -143,6 +193,8 @@ class BackupScreen extends Component {
   }
 
   renderVerify() {
+    const { wallet } = this.props
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -154,15 +206,20 @@ class BackupScreen extends Component {
               ? 'Enter your private key'
               : 'Select the words in the correct order'}
           </Text>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            multiline={true}
-            style={styles.input}
-            onChangeText={value => {
-              this.setState({ privateKeyVerify: value })
-            }}
-          />
+          {this.isPrivateKey && (
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              multiline={true}
+              style={styles.input}
+              onChangeText={value => {
+                this.setState({ verify: value })
+              }}
+            />
+          )}
+          {!this.isPrivateKey && this.renderWordSlots(this.state.verify)}
+          {!this.isPrivateKey &&
+            this.renderWordSlots(this.state.shuffledMnemonic)}
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -184,6 +241,37 @@ class BackupScreen extends Component {
           />
         </View>
       </SafeAreaView>
+    )
+  }
+
+  renderWordSlots(wordList) {
+    const { wallet } = this.props
+
+    return (
+      <View style={styles.recoveryContainer}>
+        {wordList.map((word, i) => {
+          return (
+            <TouchableOpacity
+              style={[
+                styles.recoveryWordSlotContainer,
+                word ? '' : styles.emptyRecoveryWordSlotContainer
+              ]}
+              key={i}
+              onPress={() => this.handleWordTouch(word, i)}
+            >
+              <Text
+                style={[
+                  styles.recoveryWordSlot,
+                  word ? '' : styles.emptyRecoveryWordSlot
+                ]}
+              >
+                {word && word}
+                {!word && i + 1}
+              </Text>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
     )
   }
 
@@ -291,6 +379,49 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 300,
     height: 100
+  },
+  recoveryContainer: {
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+  recoveryWordContainer: {
+    paddingVertical: 10,
+    width: '30%',
+    marginLeft: 10,
+    flexDirection: 'row'
+  },
+  recoveryWordNumber: {
+    fontSize: 16,
+    color: '#6a8296',
+    textAlign: 'right',
+    width: '20%',
+    marginRight: '10%'
+  },
+  recoveryWord: {
+    fontSize: 16,
+    textAlign: 'left',
+    width: '70%'
+  },
+  recoveryWordSlotContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#c0cbd4',
+    width: '25%',
+    marginBottom: 10,
+    marginHorizontal: 5,
+    paddingVertical: 10
+  },
+  recoveryWordSlot: {
+    textAlign: 'center'
+  },
+  emptyRecoveryWordSlotContainer: {
+    backgroundColor: '#f7f8f8'
+  },
+  emptyRecoveryWordSlot: {
+    color: '#c0cbd4'
   }
 })
 
