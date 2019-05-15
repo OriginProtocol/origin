@@ -294,6 +294,8 @@ class OriginWallet extends Component {
         return
       }
 
+      ethBalance = Number(this.web3.utils.fromWei(ethBalance))
+
       const tokens = [
         {
           id: this.props.config.OriginToken,
@@ -337,7 +339,7 @@ class OriginWallet extends Component {
       }
 
       this.props.setAccountBalances({
-        eth: this.web3.utils.fromWei(ethBalance),
+        eth: ethBalance,
         ...tokenBalances
       })
     }
