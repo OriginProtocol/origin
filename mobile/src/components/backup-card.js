@@ -30,7 +30,7 @@ class BackupCard extends Component {
             title={
               isPrivateKey ? 'Back up private key' : 'Back up recovery phrase'
             }
-            onPress={navigation.navigate('Backup')}
+            onPress={() => navigation.navigate('Backup')}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>

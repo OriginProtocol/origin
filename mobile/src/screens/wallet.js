@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { get } from 'utils'
 
 import Address from 'components/address'
 import Currency from 'components/currency'
@@ -39,8 +40,8 @@ class WalletScreen extends Component {
   componentDidMount() {
     const { activation, wallet } = this.props
     const hasBalance =
-      Object.keys(wallet.accountBalance).find((currency, balance) => {
-        return balance > 0
+      Object.keys(wallet.accountBalance).find(currency => {
+        return get(wallet.accountBalance, currency, 0) > 0
       }) !== undefined
 
     // Prompt that backup is required if balance was detected

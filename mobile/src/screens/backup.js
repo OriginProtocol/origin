@@ -187,6 +187,16 @@ class BackupScreen extends Component {
             title={'Next'}
             onPress={() => this.setState({ step: 'verify' })}
           />
+         <OriginButton
+            size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={'Cancel'}
+            onPress={() => {
+              this.props.navigation.navigate('Wallet')
+            }}
+          />
         </View>
       </SafeAreaView>
     )
