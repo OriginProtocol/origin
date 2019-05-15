@@ -13,6 +13,10 @@ module.exports = `
     ): Transaction
 
     deployIdentityEvents(from: String!): Transaction
+
+    deployProxyFactory(from: String!): Transaction
+    deployIdentityProxy(from: String!): Transaction
+    deployIdentityViaProxy(from: String!, factoryAddress: String, proxyAddress: String, owner: String!): Transaction
   }
 
   input ProfileInput {
@@ -62,6 +66,7 @@ module.exports = `
     phoneVerified: Boolean
     emailVerified: Boolean
     googleVerified: Boolean
+    websiteVerified: Boolean
 
     name: String
     ipfsHash: String

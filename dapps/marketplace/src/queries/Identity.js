@@ -5,6 +5,9 @@ export default gql`
     web3 {
       account(id: $id) {
         id
+        owner {
+          id
+        }
         identity {
           id
           firstName
@@ -22,6 +25,7 @@ export default gql`
           airbnbVerified
           phoneVerified
           emailVerified
+          websiteVerified
         }
       }
     }

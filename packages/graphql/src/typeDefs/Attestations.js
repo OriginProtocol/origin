@@ -12,6 +12,9 @@ module.exports = `
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!
+
+    generateWebsiteCode(identity: String!, website: String!): AttestationCodeResult!
+    verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
   }
 
   type AttestationCodeResult {

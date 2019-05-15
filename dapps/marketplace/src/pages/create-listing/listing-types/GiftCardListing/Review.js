@@ -103,7 +103,7 @@ class Review extends Component {
               <div className="col-9 d-flex">
                 <img
                   className="country-flag-img"
-                  src={`images/flags/${listing.issuingCountry}.svg`}
+                  src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
                 />
 
                 <div style={{ flex: 1 }}>

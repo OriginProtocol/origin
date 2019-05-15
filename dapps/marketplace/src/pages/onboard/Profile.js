@@ -62,7 +62,8 @@ class OnboardProfile extends Component {
           'airbnbVerified',
           'phoneVerified',
           'emailVerified',
-          'googleVerified'
+          'googleVerified',
+          'websiteVerified'
         ])
       )
     }
@@ -416,6 +417,9 @@ require('react-styl')(`
         background-image: url(images/identity/google-icon.svg)
         background-size: 1.1rem
         margin-left: 0.1rem
+      &.website > i::before
+        background-image: url(images/identity/website-icon-light.svg)
+        background-size: 1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)
