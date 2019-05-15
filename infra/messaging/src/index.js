@@ -70,7 +70,7 @@ app.get('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -90,7 +90,7 @@ app.post('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -119,7 +119,7 @@ app.get('/conversations/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -247,7 +247,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     conv_addresses = conversees.map(c => c.ethAddress)
 
     if (!conv_addresses.includes(address)) {
-      return res.status(401).send('Address not part of current conversation.')
+      return res
+        .status(401)
+        .send(`Address '${address}' not part of current conversation.`)
     }
 
     //create a message that's the correct sequence
@@ -294,6 +296,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     // e.g. http://localhost:3456/messages
     if (config.NOTIFICATIONS_ENDPOINT_URL) {
       const sender = address
+      const messageHash = Web3.utils.keccak256(JSON.stringify(message))
+
       // Filter out the sender
       const receivers = conv_addresses.filter(a => a != address)
       fetch(config.NOTIFICATIONS_ENDPOINT_URL, {
@@ -304,7 +308,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         },
         body: JSON.stringify({
           sender,
-          receivers
+          receivers,
+          messageHash
         })
       })
     }
