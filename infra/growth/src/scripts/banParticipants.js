@@ -40,7 +40,7 @@ class OriginEmployees {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
-      if (line.startsWith('#')) {
+      if (line.match(/\s+#.+/g)) {
         continue
       }
       const address = line.trim().toLowerCase()
@@ -64,7 +64,7 @@ class TrustedAccounts {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
-      if (line.startsWith('#')) {
+      if (line.match(/\s+#.+/g)) {
         continue
       }
       const address = line.trim().toLowerCase()
