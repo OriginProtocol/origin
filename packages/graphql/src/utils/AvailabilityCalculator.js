@@ -36,16 +36,12 @@ class AvailabilityCalculator {
       end = dayjs(endStr).add(1, 'day')
 
     /**
-     * Hack:
-     *
      * dayjs('2019-05-15') will return date object with value 2019-05-15 00:00:00
      * dayjs() will return current date with current time. e.g. 2019-05-15 12:30:23
      * So if startStr is current date, start.isBefore(dayjs()) will always fail
      * The following line will give date object with the current date at 00:00:00 time
      */
-    const currentDateIgnoringTime = dayjs(
-      dayjs().format('YYYY-MM-DD')
-    ).subtract(1, 'day') // This subtract is to match it with `start` vairable in L35
+    const currentDateIgnoringTime = start.startOf('day')
 
     if (start.isBefore(currentDateIgnoringTime) || end.isAfter(slotRangeMax)) {
       throw 'Cannot update() range outside of one year limit.'
