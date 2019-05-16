@@ -6,6 +6,7 @@ import {
   Clipboard,
   Dimensions,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -16,6 +17,7 @@ import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { NavigationActions } from 'react-navigation'
 
+import { setBackupWarningStatus } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
 import { shuffleArray } from 'utils'
 
@@ -130,75 +132,77 @@ class BackupScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>
-            {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
-          </Text>
-          <Text style={styles.subtitle}>
-            Write down your{' '}
-            {this.isPrivateKey ? 'private key' : 'recovery phrase'}
-          </Text>
-          {this.isPrivateKey && (
-            <View style={styles.privateKeyContainer}>
-              <Text style={styles.privateKey}>
-                {wallet.activeAccount.privateKey}
+        <ScrollView>
+          <View style={styles.content}>
+            <Text style={styles.title}>
+              {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
+            </Text>
+            <Text style={styles.subtitle}>
+              Write down your{' '}
+              {this.isPrivateKey ? 'private key' : 'recovery phrase'}
+            </Text>
+            {this.isPrivateKey && (
+              <View style={styles.privateKeyContainer}>
+                <Text style={styles.privateKey}>
+                  {wallet.activeAccount.privateKey}
+                </Text>
+              </View>
+            )}
+            {!this.isPrivateKey && (
+              <View style={styles.recoveryContainer}>
+                {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
+                  return (
+                    <View style={styles.recoveryWordContainer} key={i}>
+                      <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
+                      <Text style={styles.recoveryWord}>{word}</Text>
+                    </View>
+                  )
+                })}
+              </View>
+            )}
+            <View>
+              <OriginButton
+                size="large"
+                type="link"
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Copy to clipboard'}
+                onPress={() =>
+                  this.isPrivateKey
+                    ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
+                    : this.handleDangerousCopy(wallet.activeAccount.mnemonic)
+                }
+              />
+            </View>
+            <View style={styles.descContainer}>
+              <Text style={styles.desc}>
+                This {this.isPrivateKey ? 'private key' : 'recovery phrase'} is
+                the key to your account. Write it down, or copy it to a password
+                manager. We recommend NOT emailing it to yourself.
               </Text>
             </View>
-          )}
-          {!this.isPrivateKey && (
-            <View style={styles.recoveryContainer}>
-              {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
-                return (
-                  <View style={styles.recoveryWordContainer} key={i}>
-                    <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
-                    <Text style={styles.recoveryWord}>{word}</Text>
-                  </View>
-                )
-              })}
-            </View>
-          )}
-          <View>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <OriginButton
+              size="large"
+              type="primary"
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Next'}
+              onPress={() => this.setState({ step: 'verify' })}
+            />
             <OriginButton
               size="large"
               type="link"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Copy to clipboard'}
-              onPress={() =>
-                this.isPrivateKey
-                  ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
-                  : this.handleDangerousCopy(wallet.activeAccount.mnemonic)
-              }
+              title={'Cancel'}
+              onPress={() => {
+                this.props.navigation.navigate('Wallet')
+              }}
             />
           </View>
-          <View style={styles.descContainer}>
-            <Text style={styles.desc}>
-              This {this.isPrivateKey ? 'private key' : 'recovery phrase'} is
-              the key to your account. Write it down, or copy it to a password
-              manager. We recommend NOT emailing it to yourself.
-            </Text>
-          </View>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Next'}
-            onPress={() => this.setState({ step: 'verify' })}
-          />
-          <OriginButton
-            size="large"
-            type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Cancel'}
-            onPress={() => {
-              this.props.navigation.navigate('Wallet')
-            }}
-          />
-        </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -206,49 +210,51 @@ class BackupScreen extends Component {
   renderVerify() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>
-            {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
-          </Text>
-          <Text style={styles.subtitle}>
-            {this.isPrivateKey
-              ? 'Enter your private key'
-              : 'Select the words in the correct order'}
-          </Text>
-          {this.isPrivateKey && (
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              multiline={true}
-              style={styles.input}
-              onChangeText={value => {
-                this.setState({ verify: value })
-              }}
+        <ScrollView>
+          <View style={styles.content}>
+            <Text style={styles.title}>
+              {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
+            </Text>
+            <Text style={styles.subtitle}>
+              {this.isPrivateKey
+                ? 'Enter your private key'
+                : 'Select the words in the correct order'}
+            </Text>
+            {this.isPrivateKey && (
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                multiline={true}
+                style={styles.input}
+                onChangeText={value => {
+                  this.setState({ verify: value })
+                }}
+              />
+            )}
+            {!this.isPrivateKey && this.renderWordSlots(this.state.verify)}
+            {!this.isPrivateKey &&
+              this.renderWordSlots(this.state.shuffledMnemonic)}
+          </View>
+          <View style={styles.buttonsContainer}>
+            <OriginButton
+              size="large"
+              type="primary"
+              disabled={!this.backupIsVerified()}
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Next'}
+              onPress={() => this.setState({ step: 'success' })}
             />
-          )}
-          {!this.isPrivateKey && this.renderWordSlots(this.state.verify)}
-          {!this.isPrivateKey &&
-            this.renderWordSlots(this.state.shuffledMnemonic)}
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            disabled={!this.backupIsVerified()}
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Next'}
-            onPress={() => this.setState({ step: 'success' })}
-          />
-          <OriginButton
-            size="large"
-            type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Go back'}
-            onPress={() => this.setState({ step: 'backup' })}
-          />
-        </View>
+            <OriginButton
+              size="large"
+              type="link"
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Go back'}
+              onPress={() => this.setState({ step: 'backup' })}
+            />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -283,6 +289,7 @@ class BackupScreen extends Component {
   }
 
   renderSuccess() {
+    const { wallet } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
@@ -296,7 +303,7 @@ class BackupScreen extends Component {
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>
-            You&apos;ve successfully backed up your recovery phrase
+            You have successfully backed up your recovery phrase
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
@@ -306,7 +313,10 @@ class BackupScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Done'}
-            onPress={() => {
+            onPress={async () => {
+              await this.props.setBackupWarningStatus(
+                wallet.activeAccount.address
+              )
               // Navigate to subroute to skip authentication requirement
               this.props.navigation.navigate(
                 'GuardedApp',
@@ -323,8 +333,7 @@ class BackupScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 0
+    flex: 1
   },
   content: {
     flex: 1,
@@ -393,7 +402,7 @@ const styles = StyleSheet.create({
     height: 100
   },
   recoveryContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -440,4 +449,11 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(BackupScreen)
+const mapDispatchToProps = dispatch => ({
+  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BackupScreen)

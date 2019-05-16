@@ -1,8 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
+import {
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
 
@@ -25,7 +32,7 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (__DEV__ && false) {
+    if (__DEV__) {
       console.debug('Bypassing authentication prompt')
       this.onSuccess()
     } else if (this.props.settings.biometryType) {
@@ -70,7 +77,9 @@ class AuthenticationGuard extends Component {
     const { settings } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
-    const guard = settings.biometryType ? this.renderBiometryGuard() : this.renderPinGuard()
+    const guard = settings.biometryType
+      ? this.renderBiometryGuard()
+      : this.renderPinGuard()
 
     return (
       <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
@@ -95,7 +104,7 @@ class AuthenticationGuard extends Component {
   renderBiometryGuard() {
     return (
       <>
-        <Text style={styles.title}>Authentication Required</Text>
+        <Text style={styles.title}>Authentication required</Text>
         {this.state.error && (
           <Text
             style={styles.invalid}
@@ -112,7 +121,7 @@ class AuthenticationGuard extends Component {
     const { settings } = this.props
     return (
       <>
-        <Text style={styles.title}>Pin Required</Text>
+        <Text style={styles.title}>Pin required</Text>
         {this.state.error && (
           <Text style={styles.invalid}>{this.state.error}</Text>
         )}
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   container: {
-    flex: 1,
+    flex: 1
   },
   content: {
     flex: 1,

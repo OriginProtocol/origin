@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import {
-  ActivityIndicator,
   DeviceEventEmitter,
   StyleSheet,
   Text,
@@ -146,13 +145,7 @@ class ImportAccountScreen extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="black" />
-        </View>
-      )
-    } else if (this.state.method === 'mnemonic') {
+    if (this.state.method === 'mnemonic') {
       return this.renderMnemonicInput()
     } else {
       return this.renderPrivateKeyInput()
@@ -238,6 +231,7 @@ class ImportAccountScreen extends Component {
             onPress={() =>
               this.setState({ method: 'mnemonic', value: '', error: '' })
             }
+            disabled={this.state.loading}
           />
           <OriginButton
             size="large"
@@ -246,6 +240,7 @@ class ImportAccountScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Done'}
             onPress={this.handleSubmit}
+            disabled={this.state.loading}
           />
         </View>
       </SafeAreaView>

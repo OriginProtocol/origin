@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 
 export default class PinInput extends Component {
   constructor(props) {
@@ -16,11 +16,14 @@ export default class PinInput extends Component {
 
     return (
       <>
-        <TouchableOpacity style={styles.pinCode} onPress={() => this.textInput.focus()}>
+        <TouchableOpacity
+          style={styles.pinCode}
+          onPress={() => this.textInput.focus()}
+        >
           {placeholder}
         </TouchableOpacity>
         <TextInput
-          ref={ref => this.textInput = ref}
+          ref={ref => (this.textInput = ref)}
           autoFocus={true}
           value={this.props.value}
           enablesReturnKeyAutomatically={false}

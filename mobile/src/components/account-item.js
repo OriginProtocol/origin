@@ -32,11 +32,11 @@ class AccountItem extends Component {
             <View style={[styles.iconContainer, styles.identiconContainer]}>
               <Identicon address={item.address} />
             </View>
-            {wallet.accountNameMapping[item.address] &&
+            {wallet.accountNameMapping[item.address] && (
               <Text style={styles.name}>
                 {wallet.accountNameMapping[item.address]}
               </Text>
-            }
+            )}
             <Address
               address={item.address}
               label={'Address'}
