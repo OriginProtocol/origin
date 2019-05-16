@@ -61,3 +61,7 @@ cronImageTag: latest
 # origin-admin
 adminImage: origin-admin
 adminImageTag: latest
+
+# origin-relayer
+cronImage: origin-relayer
+cronImageTag: latest
