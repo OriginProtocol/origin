@@ -1,6 +1,7 @@
 import withCurrencyBalances from 'hoc/withCurrencyBalances'
 import withWallet from 'hoc/withWallet'
 import get from 'lodash/get'
+import floor from 'lodash/floor'
 
 // web3.utils.toWei only accepts up to 18 decimal places
 function removeExtraDecimals(numStr) {
@@ -33,7 +34,7 @@ const WithPrices = ({
     if (!targetCurrency) return memo
 
     const amountUSD = amount * foundCurrency.priceInUSD
-    const targetAmount = amountUSD / targetCurrency.priceInUSD
+    const targetAmount = floor(amountUSD / targetCurrency.priceInUSD, 16)
 
     memo[target] = { amount: String(targetAmount), currency: targetCurrency }
     return memo
@@ -44,7 +45,7 @@ const WithPrices = ({
     if (!targetCurrency) return memo
 
     const amountUSD = amount * foundCurrency.priceInUSD
-    const targetAmount = amountUSD / targetCurrency.priceInUSD
+    const targetAmount = floor(amountUSD / targetCurrency.priceInUSD, 16)
 
     memo[target] = { amount: String(targetAmount), currency: targetCurrency }
     return memo
