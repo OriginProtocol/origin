@@ -42,5 +42,5 @@ export default {
     __resolveType(obj) {
       return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
     }
-  },
+  }
 }
