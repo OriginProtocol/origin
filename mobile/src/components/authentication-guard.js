@@ -70,6 +70,7 @@ class AuthenticationGuard extends Component {
     const { settings } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
+    const guard = settings.biometryType ? this.renderBiometryGuard() : this.renderPinGuard()
 
     return (
       <SafeAreaView style={styles.container}>
@@ -80,34 +81,42 @@ class AuthenticationGuard extends Component {
             source={require(IMAGES_PATH + 'lock-icon.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
-          {settings.biometryType && (
-            <>
-              <Text style={styles.title}>Authentication Required</Text>
-              {this.state.error && (
-                <Text
-                  style={styles.invalid}
-                  onPress={() => this.state.error && this.touchAuthenticate()}
-                >
-                  {this.state.error}
-                </Text>
-              )}
-            </>
-          )}
-          {settings.pin && (
-            <>
-              <Text style={styles.title}>Pin Required</Text>
-              {this.state.error && (
-                <Text style={styles.invalid}>{this.state.error}</Text>
-              )}
-              <PinInput
-                value={this.state.pin}
-                pinLength={settings.pin.length}
-                onChangeText={this.handleChange}
-              />
-            </>
-          )}
+          {guard}
         </View>
       </SafeAreaView>
+    )
+  }
+
+  renderBiometryGuard() {
+    return (
+      <>
+        <Text style={styles.title}>Authentication Required</Text>
+        {this.state.error && (
+          <Text
+            style={styles.invalid}
+            onPress={() => this.state.error && this.touchAuthenticate()}
+          >
+            {this.state.error}
+          </Text>
+        )}
+      </>
+    )
+  }
+
+  renderPinGuard() {
+    const { settings } = this.props
+    return (
+      <>
+        <Text style={styles.title}>Pin Required</Text>
+        {this.state.error && (
+          <Text style={styles.invalid}>{this.state.error}</Text>
+        )}
+        <PinInput
+          value={this.state.pin}
+          pinLength={settings.pin.length}
+          onChangeText={this.handleChange}
+        />
+      </>
     )
   }
 }
