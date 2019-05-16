@@ -13,5 +13,5 @@ export default [
   Marketplace,
   Notifications,
   Attestations,
-  Currency,
+  Currency
 ]

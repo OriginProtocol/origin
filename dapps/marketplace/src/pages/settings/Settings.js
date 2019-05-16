@@ -46,11 +46,12 @@ class Settings extends Component {
       ...pick(this.state, configurableFields),
       ...configUpdate
     }
-    window.localStorage.customConfig = JSON.stringify(
-      customConfig
-    )
+    window.localStorage.customConfig = JSON.stringify(customConfig)
     setNetwork({
-      variables: { network: window.localStorage.ognNetwork || 'mainnet', customConfig }
+      variables: {
+        network: window.localStorage.ognNetwork || 'mainnet',
+        customConfig
+      }
     })
   }
 
@@ -188,7 +189,11 @@ class Settings extends Component {
                         </div>
                         <button
                           className="btn btn-success"
-                          onClick={() => this.saveConfig(setNetwork, { performanceMode: true })}
+                          onClick={() =>
+                            this.saveConfig(setNetwork, {
+                              performanceMode: true
+                            })
+                          }
                         >
                           <fbt desc="settings.performanceModeButtonEnable">
                             Enable
@@ -199,7 +204,11 @@ class Settings extends Component {
                       <div>
                         <button
                           className="btn btn-secondary"
-                          onClick={() => this.saveConfig(setNetwork, { performanceMode: false })}
+                          onClick={() =>
+                            this.saveConfig(setNetwork, {
+                              performanceMode: false
+                            })
+                          }
                         >
                           <fbt desc="settings.performanceModeButtonDisable">
                             Disable
