@@ -211,7 +211,8 @@ class App extends Component {
           <PushNotifications />
           <UpdatePrompt />
           <BackupPrompt />
-          <AppContainer ref={navigatorRef => {
+          <AppContainer
+            ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef)
             }}
           />

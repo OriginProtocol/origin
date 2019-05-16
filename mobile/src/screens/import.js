@@ -156,7 +156,11 @@ class ImportAccountScreen extends Component {
             multiline={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
-            style={[styles.input, styles.mnemonicInput, this.state.error ? styles.invalid : {}]}
+            style={[
+              styles.input,
+              styles.mnemonicInput,
+              this.state.error ? styles.invalid : {}
+            ]}
           />
           {this.state.error.length > 0 && (
             <Text style={styles.invalid}>{this.state.error}</Text>
