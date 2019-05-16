@@ -225,13 +225,9 @@ class MarketplaceScreen extends Component {
       this.props.settings.network.dappUrl
     )
 
-    // Use key of network id on safeareaview to force a remount of component on
-    // network changes
     return (
       <SafeAreaView
-        key={this.props.settings.network.id}
         style={styles.sav}
-        forceInset={{ top: 'always' }}
         {...this._panResponder.panHandlers}
       >
         <WebView
@@ -313,11 +309,9 @@ class MarketplaceScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0B18234C',
     flex: 1
   },
   sav: {
-    backgroundColor: 'white',
     flex: 1
   },
   transparent: {
@@ -325,7 +319,8 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    backgroundColor: 'white'
   }
 })
 
