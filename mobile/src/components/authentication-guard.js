@@ -25,7 +25,7 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (__DEV__) {
+    if (__DEV__ && false) {
       console.debug('Bypassing authentication prompt')
       this.onSuccess()
     } else if (this.props.settings.biometryType) {
