@@ -157,6 +157,7 @@ module.exports = `
 
   type EnrollResponse {
     authToken: String
+    isBanned: Boolean
   }
 
   type Query {

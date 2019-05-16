@@ -18,7 +18,8 @@ import SafeAreaView from 'react-native-safe-area-view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
-import { decodeTransaction } from '../utils/contractDecoder'
+import { decodeTransaction } from 'utils/contractDecoder'
+import { webViewToBrowserUserAgent } from 'utils'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -251,6 +252,7 @@ class MarketplaceScreen extends Component {
             )
           }}
           decelerationRate="normal"
+          userAgent={webViewToBrowserUserAgent()}
         />
         {modals.map((modal, index) => {
           let card

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.rnfingerprint.FingerprintAuthPackage;
+import com.bebnev.RNUserAgentPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import io.sentry.RNSentryPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new FingerprintAuthPackage(),
+            new RNUserAgentPackage(),
             new AndroidOpenSettingsPackage(),
             new RNSentryPackage(),
             new RNGestureHandlerPackage(),

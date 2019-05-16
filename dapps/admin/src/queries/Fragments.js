@@ -26,6 +26,9 @@ export default {
         totalEvents
         seller {
           id
+          owner {
+            id
+          }
         }
         arbitrator {
           id
@@ -117,6 +120,9 @@ export default {
         }
         buyer {
           id
+          owner {
+            id
+          }
         }
         withdrawnBy {
           id

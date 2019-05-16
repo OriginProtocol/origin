@@ -98,9 +98,9 @@ async function validateListings({ contractsContext, fromBlock }) {
     } catch (err) {
       if (err.name === 'AssertionError') {
         log.error(
-          `Unable to validate ${ev.event} event for transaction ${
-            ev.transactionHash
-          }`
+          `Unable to validate ${ev.event} event for listing #${netId}-000-${
+            ev.returnValues.listingID
+          },  transaction ${ev.transactionHash}`
         )
         log.error(err.toString())
       } else {

@@ -6,7 +6,7 @@ const { CampaignRules } = require('../src/resources/rules')
 const { ApolloAdapter, campaignToApolloObject } = require('../src/apollo/adapter')
 const enums = require('../src/enums')
 const db = require('../src/models')
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('Apollo adapter - April campaign', () => {
@@ -101,37 +101,37 @@ describe('Apollo adapter - April campaign', () => {
       Phone: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       Airbnb: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       Facebook: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       Twitter: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       ListingPurchased: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(100), currency: 'OGN' }
       },
       ListingSold: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(100), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(100), currency: 'OGN' }
       },
       Referral: {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
       },
     }
 

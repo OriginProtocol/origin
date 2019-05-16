@@ -10,7 +10,7 @@ class ImageCropperModal extends Component {
     this.state = {
       src: props.src,
       didCrop: false,
-      crop: {}
+      crop: { x: 0, y: 0, width: 100, height: 100 }
     }
   }
 
@@ -63,37 +63,42 @@ class ImageCropperModal extends Component {
     }
     return (
       <Modal
+        className="image-cropper-modal"
         shouldClose={this.state.shouldClose}
         onClose={() => this.props.onClose()}
       >
-        <div style={{ height: 200 }}>
-          <ReactCrop
-            src={this.state.blobUrl}
-            crop={this.state.crop}
-            onImageLoaded={image => (this.imageRef = image)}
-            onChange={(crop, pixelCrop) =>
-              this.setState({ crop, pixelCrop, didCrop: true })
-            }
-          />
-        </div>
-        <div className="actions">
-          <button
-            className="btn btn-outline-light"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'Cancel')}
-          />
-          <button
-            className="btn btn-outline-light"
-            onClick={async () => {
-              if (this.state.didCrop) {
-                const croppedImageBlob = await this.getCroppedImg()
-                this.props.onChange(croppedImageBlob)
+        <>
+          <h5>Crop</h5>
+          <div style={{ height: 200 }}>
+            <ReactCrop
+              src={this.state.blobUrl}
+              crop={this.state.crop}
+              onImageLoaded={image => (this.imageRef = image)}
+              onChange={(crop, pixelCrop) =>
+                this.setState({ crop, pixelCrop, didCrop: true })
               }
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('OK', 'OK')}
-          />
-        </div>
+            />
+          </div>
+          <div className="help-text">Click and drag to crop</div>
+          <div className="actions">
+            <button
+              className="btn btn-outline-light"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+            <button
+              className="btn btn-outline-light"
+              onClick={async () => {
+                if (this.state.didCrop) {
+                  const croppedImageBlob = await this.getCroppedImg()
+                  this.props.onChange(croppedImageBlob)
+                }
+                this.setState({ shouldClose: true })
+              }}
+              children={fbt('OK', 'OK')}
+            />
+          </div>
+        </>
       </Modal>
     )
   }

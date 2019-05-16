@@ -59,8 +59,12 @@ class Enroll extends Component {
             <Mutation
               mutation={GrowthEnroll}
               onCompleted={({ enroll }) => {
-                localStorage.setItem('growth_auth_token', enroll.authToken)
-                this.props.onSuccess()
+                if (enroll.isBanned) {
+                  this.props.onAccountBlocked()
+                } else {
+                  localStorage.setItem('growth_auth_token', enroll.authToken)
+                  this.props.onSuccess()
+                }
               }}
               onError={errorData => {
                 console.error('Error: ', errorData)

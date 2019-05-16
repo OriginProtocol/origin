@@ -341,6 +341,9 @@ require('react-styl')(`
     &.google > div h2::before
       background-image: url(images/identity/google-icon-dark.svg);
       background-size: 4rem
+    &.website > div h2::before
+      background-image: url(images/identity/website-icon-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

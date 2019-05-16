@@ -1,4 +1,4 @@
-const logger = require('../logger')
+const logger = require('../../logger')
 
 class FraudEngine {
   async init() {
@@ -6,14 +6,12 @@ class FraudEngine {
   }
 
   /**
-   * Runs the fraud engine to determine if a participant should
-   * be banned from the Origin Rewards program.
-   * Returns an object with a type and reasons field
+   * Returns fraud data if account is deemed fraudulent. null otherwise.
    *
    * @param {string} ethAddress
-   * @returns {Promise<{type: string, reasons: Array<string>>} || null>}
+   * @returns {Promise<{type: string, reasons: Array<string>} || null>}
    */
-  async shouldBanParticipant(ethAddress) {
+  async isFraudAccount(ethAddress) {
     logger.debug(`FraudEngine: analyzing account ${ethAddress}`)
     return null
   }

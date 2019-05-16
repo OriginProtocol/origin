@@ -57,9 +57,15 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 //
 // Mobile Push notifications for Messages
 //
-async function messageMobilePush(receivers, sender, config) {
+async function messageMobilePush(receivers, sender, messageHash, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
+
+  // Force lowercase
+  sender = sender.toLowerCase()
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
 
   const payload = {
     url: `${config.dappUrl}/#/messages`
@@ -86,10 +92,13 @@ async function messageMobilePush(receivers, sender, config) {
           mobileRegister.deviceType,
           notificationObj,
           ethAddress,
+          messageHash,
           config
         )
       } else {
-        logger.info(`No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Message: No device registered for notifications for ${ethAddress}`
+        )
       }
     } catch (error) {
       logger.error(`Could not send push notification: ${error}`)
@@ -113,6 +122,11 @@ async function transactionMobilePush(
   if (!buyerAddress) throw new Error('buyerAddress not defined')
   if (!sellerAddress) throw new Error('sellerAddress not defined')
   if (!offer) throw new Error('offer not defined')
+
+  // Force lowercase
+  buyerAddress = buyerAddress.toLowerCase()
+  sellerAddress = sellerAddress.toLowerCase()
+  party = party.toLowerCase()
 
   const receivers = {}
   const buyerMessage = getNotificationMessage(
@@ -159,10 +173,13 @@ async function transactionMobilePush(
           mobileRegister.deviceType,
           notificationObj,
           ethAddress,
+          null,
           config
         )
       } else {
-        logger.info(`No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Transaction: No device registered for notifications for ${ethAddress}`
+        )
       }
     }
   }
@@ -176,10 +193,12 @@ async function sendNotification(
   deviceType,
   notificationObj,
   ethAddress,
+  messageHash,
   config
 ) {
   if (notificationObj) {
-    const messageFingerprint = getMessageFingerprint(notificationObj)
+    const notificationObjAndHash = { ...notificationObj, messageHash }
+    const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
     if (deviceType === 'APN') {
       if (!apnProvider) {
         logger.error('APN provider not configured, notification failed')

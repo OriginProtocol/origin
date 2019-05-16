@@ -24,6 +24,12 @@ const UsersQuery = gql`
         }
         nodes {
           id
+          account {
+            id
+            owner {
+              id
+            }
+          }
           firstEvent {
             id
             timestamp
