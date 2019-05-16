@@ -1,0 +1,55 @@
+{
+  "name": "@origin/relayer",
+  "description": "Origin relayer service",
+  "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OriginProtocol/origin/issues"
+  },
+  "dependencies": {
+    "@origin/contracts": "^0.8.6",
+    "apollo-server-express": "^2.2.6",
+    "bignumber.js": "8.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
+    "ethereumjs-util": "^6.1.0",
+    "express": "^4.16.4",
+    "express-prom-bundle": "^4.2.1",
+    "http": "0.0.0",
+    "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
+    "pg": "^7.7.1",
+    "sequelize": "^5.0.0-beta.14",
+    "sequelize-cli": "^5.4.0",
+    "url": "^0.11.0",
+    "validator": "^10.11.0",
+    "web3": "1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "chai-things": "^0.2.0",
+    "chai": "^4.2.0",
+    "chalk": "^2.4.1",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7",
+    "rewire": "^4.0.1"
+  },
+  "scripts": {
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "migrate": "sequelize db:migrate",
+    "start": "per-env",
+    "start:development": "nodemon src/app.js",
+    "start:production": "node src/app.js",
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}
