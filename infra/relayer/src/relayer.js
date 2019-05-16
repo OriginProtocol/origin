@@ -8,7 +8,6 @@ const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marke
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
 const config = require('@origin/contracts/build/contracts.json')
 
-
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
     { t: 'address', v: from },
@@ -49,7 +48,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
  * @param res
  * @returns {Promise<*>}
  */
-const relayTx = async(req, res) => {
+const relayTx = async (req, res) => {
   const { signature, from, txData, provider, to, proxy, preflight } = req.body
 
   // Pre-flight requests check if the relayer is available
@@ -149,4 +148,3 @@ const relayTx = async(req, res) => {
 }
 
 module.exports = { relayTx }
-
