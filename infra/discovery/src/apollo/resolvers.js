@@ -1,5 +1,6 @@
 const GraphQLJSON = require('graphql-type-json')
 const listingMetadata = require('./listing-metadata')
+const logger = require('./logger')
 const search = require('../lib/search')
 
 // Resolvers define the technique for fetching the types in the schema.
@@ -16,6 +17,9 @@ const resolvers = {
         true, // idsOnly
         listingMetadata.hiddenIds,
         listingMetadata.featuredIds
+      )
+      logger.info(
+        `Query: "${args.searchQuery}" returned ${listingIds.length} results.`
       )
       return {
         nodes: listingIds.map(x => Object.assign({}, { id: x })),
