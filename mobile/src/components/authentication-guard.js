@@ -25,7 +25,7 @@ class AuthenticationGuard extends Component {
       error: null
     }
     if (!this.props.settings.biometryType && !this.props.settings.pin) {
-      // User has on authenticatio method set, proceed
+      // User has an authentication method set, proceed
       this.onSuccess()
     }
     this.handleChange = this.handleChange.bind(this)
