@@ -1,5 +1,16 @@
 // Script to make manual adjustment payouts for Origin Rewards.
-// TODO(franck): refactor to share more code with distributeRewards script.
+// Take as input a file with format: <ethAddress>|<amountInTokenUnit>|<reason>
+// For example:
+//  0x627306090abaB3A6e1400e9345bC60c78a8BEf57|1973|Account manually reviewed. Not a duplicate.
+//  0xf17f52151EbEF6C7334FAD080c5704D77216b732|27|Trusted partner account.
+//
+// Command line examples.
+//   Dry run:
+//     node adjustPayout.js --networkId=1 --campaignId=2 --adjustmentFilename="./adjust.txt"
+//   For real:
+//     node adjustPayout.js --networkId=1 --campaignId=2 --adjustmentFilename="./adjust.txt" --doIt=true
+//
+// TODO(franck): refactor to share more code with the distributeRewards script.
 
 'use strict'
 
@@ -45,7 +56,7 @@ class AdjustPayout {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
-      if (line.match(/\s+#.+/g)) {
+      if (!line.length || line.match(/\s+#.+/g)) {
         continue
       }
       const parts = line.split('|')
@@ -59,7 +70,7 @@ class AdjustPayout {
       if (!ethAddress) {
         throw new Error(`Invalid ETH address at line: ${line}`)
       }
-      if (amount.isNan()) {
+      if (amount.isNaN()) {
         throw new Error(`Invalid amount at line: ${line}`)
       }
       if (!reason) {
@@ -83,9 +94,6 @@ class AdjustPayout {
    * @private
    */
   async _adjust(campaign, ethAddress, amount, reason) {
-    const amountNaturalUnit = this.distributor.token.toNaturalUnit(amount)
-    logger.info(`Adjustment of ${amount} OGN to ${ethAddress}`)
-
     // Check there is not already a payout row.
     // If there is and it is not in status Failed, something is wrong. Bail out.
     let payout = await db.GrowthPayout.findOne({
@@ -103,16 +111,19 @@ class AdjustPayout {
       )
     }
 
-    logger.info(`Paying adjustment of ${amount} OGN to ${ethAddress}`)
+    const amountNaturalUnit = this.distributor.token.toNaturalUnit(amount)
+    logger.info(
+      `Paying adjustment of ${amount} OGN (${amountNaturalUnit} in natural unit) to ${ethAddress}`
+    )
 
     // Create a payout row with status Pending.
     payout = await db.GrowthPayout.create({
       fromAddress: this.distributor.supplier.toLowerCase(),
       toAddress: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
-      type: enums.GrowthPayout.Adjustment,
+      type: enums.GrowthPayoutStatuses.Adjustment,
       campaignId: campaign.id,
-      amountNaturalUnit,
+      amount: amountNaturalUnit,
       currency: campaign.currency,
       data: { reason }
     })
@@ -212,7 +223,7 @@ class AdjustPayout {
     return true
   }
 
-  async process(adjustments) {
+  async process() {
     const campaign = await db.GrowthCampaign.findOne({
       where: { id: this.config.campaignId }
     })
@@ -220,12 +231,25 @@ class AdjustPayout {
       throw new Error(`Failed loading campaign ${this.config.campaignId}`)
     }
 
+    // Make sure all users are enrolled and not banned.
+    for (const adjustment of this.adjustments) {
+      const participant = await db.GrowthParticipant.findOne({
+        where: { ethAddress: adjustment.ethAddress }
+      })
+      if (!participant) {
+        throw new Error(`${adjustment.ethAddress} not enrolled !`)
+      }
+      if (participant.status !== enums.GrowthParticipantStatuses.Active) {
+        throw new Error(`${adjustment.ethAddress} banned !`)
+      }
+    }
+
     // Process each adjustment.
-    for (const adjustment of adjustments) {
+    for (const adjustment of this.adjustments) {
       logger.info(
-        `Adjustment of ${adjustment.amount} to ${
+        `Processing adjustment of ${adjustment.amount} to ${
           adjustment.ethAddress
-        } with data ${adjustment.data}`
+        } with reason "${adjustment.reason}"`
       )
       adjustment.payout = await this._adjust(
         campaign,
@@ -233,9 +257,11 @@ class AdjustPayout {
         adjustment.amount,
         adjustment.reason
       )
-      this.totalAdjusted = this.totalAdjusted.plus(adjustment.amount)
+      this.stats.totalAdjusted = this.stats.totalAdjusted.plus(
+        adjustment.amount
+      )
     }
-    logger.info(`Adjusted a total of ${this.totalAdjusted.toFixed()}`)
+    logger.info(`Adjusted a total of ${this.stats.totalAdjusted.toFixed()}`)
 
     // Wait a bit for the last transaction to settle.
     const waitMsec = this.config.doIt
@@ -248,7 +274,7 @@ class AdjustPayout {
 
     // Check all transactions are confirmed.
     const blockNumber = await this.web3.eth.getBlockNumber()
-    for (const adjustment of adjustments) {
+    for (const adjustment of this.adjustments) {
       let confirmed
       try {
         confirmed = await this._confirm(adjustment.payout, blockNumber)
@@ -302,12 +328,9 @@ distributor.init(config.networkId, config.gasPriceMultiplier).then(() => {
       logger.info('  Number of transactions:            ', job.stats.numTxns)
       logger.info(
         '  Grand total adjusted (natural): ',
-        job.stats.totalAdjusted.toFixed()
+        job.distributor.token.toNaturalUnit(job.stats.totalAdjusted).toFixed()
       )
-      logger.info(
-        '  Grand total adjusted (tokens):  ',
-        job.distributor.token.toTokenUnit(job.stats.totalAdjusted)
-      )
+      logger.info('  Grand total adjusted (tokens):  ', job.stats.totalAdjusted)
       logger.info('Finished')
       process.exit()
     })

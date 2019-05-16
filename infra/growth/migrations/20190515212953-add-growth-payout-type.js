@@ -12,7 +12,7 @@ module.exports = {
       {
         type: Sequelize.ENUM(GrowthPayoutTypes),
         allowNull: false,
-        defaultValue: false
+        defaultValue: GrowthPayoutTypes.CampaignDistribution
       }
     )
   },
@@ -20,7 +20,7 @@ module.exports = {
     return queryInterface.removeColumn(
       tableName,
       'type'
-    )
+    ).then(queryInterface.sequelize.query('DROP TYPE enum_growth_payout_type;'))
   }
 }
 
