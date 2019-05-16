@@ -16,6 +16,6 @@ import App from './src/App'
 
 // Shims required by ethersjsA
 // https://github.com/ethers-io/ethers.js/issues/304
-import 'ethers/dist/shims.js';
+import 'ethers/dist/shims.js'
 
 AppRegistry.registerComponent('OriginCatcher', () => App)
