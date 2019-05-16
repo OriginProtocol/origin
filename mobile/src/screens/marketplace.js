@@ -104,6 +104,7 @@ class MarketplaceScreen extends Component {
         // web3 transactiotn that isn't updating our identitty. If we are then
         // display a modal requesting notifications be enabled
         if (
+          !__DEV__ &&
           !permissions.alert &&
           msgData.targetFunc === 'processTransaction' &&
           decodeTransaction(msgData.data.data).functionName !==
