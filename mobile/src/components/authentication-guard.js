@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
@@ -73,17 +73,22 @@ class AuthenticationGuard extends Component {
     const guard = settings.biometryType ? this.renderBiometryGuard() : this.renderPinGuard()
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Image
-            resizeMethod={'scale'}
-            resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'lock-icon.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
-          />
-          {guard}
-        </View>
-      </SafeAreaView>
+      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+        <ScrollView
+          contentContainerStyle={styles.content}
+          style={styles.container}
+        >
+          <View style={styles.content}>
+            <Image
+              resizeMethod={'scale'}
+              resizeMode={'contain'}
+              source={require(IMAGES_PATH + 'lock-icon.png')}
+              style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            />
+            {guard}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -128,26 +133,26 @@ const mapStateToProps = ({ settings }) => {
 export default connect(mapStateToProps)(AuthenticationGuard)
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  keyboardWrapper: {
     flex: 1
   },
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   image: {
-    marginBottom: '10%'
+    marginBottom: 20
   },
   title: {
     fontFamily: 'Lato',
     fontSize: 36,
     fontWeight: '600',
     marginHorizontal: 50,
-    paddingBottom: 30,
+    paddingBottom: 10,
     textAlign: 'center'
   },
   invalid: {

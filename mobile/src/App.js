@@ -122,7 +122,7 @@ const SettingsStack = createStackNavigator(
   }
 )
 
-const OriginMarketplaceApp = createBottomTabNavigator(
+const _MarketplaceApp = createBottomTabNavigator(
   {
     Marketplace: MarketplaceStack,
     Wallet: WalletStack,
@@ -174,6 +174,23 @@ const OriginMarketplaceApp = createBottomTabNavigator(
   }
 )
 
+// Extend the main app navigator to render components that prompt as well
+// This is to avoid prompts coming up over other screens (i.e. auth guard)
+class MarketplaceApp extends React.Component {
+  static router = _MarketplaceApp.router
+  render() {
+    const { navigation } = this.props
+    return (
+      <>
+        <PushNotifications />
+        <UpdatePrompt />
+        <BackupPrompt />
+        <_MarketplaceApp navigation={navigation} />
+      </>
+    )
+  }
+}
+
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
@@ -189,7 +206,7 @@ const AppContainer = createAppContainer(
               navigateOnSuccess: 'App'
             }
           },
-          App: OriginMarketplaceApp
+          App: MarketplaceApp
         },
         {
           initialRouteName: 'Auth'
@@ -208,9 +225,6 @@ class App extends Component {
       <ReduxProvider store={Store}>
         <PersistGate loading={<Loading />} persistor={persistor}>
           <OriginWallet />
-          <PushNotifications />
-          <UpdatePrompt />
-          <BackupPrompt />
           <AppContainer
             ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef)

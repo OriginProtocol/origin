@@ -74,16 +74,14 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex: 1,
-    flexDirection: 'column',
     paddingTop: 0
   },
   content: {
+    justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    justifyContent: 'center'
   },
   buttonsContainer: {
-    paddingTop: 10,
     width: '100%'
   },
   button: {
@@ -91,7 +89,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 50
   },
   legalContainer: {
-    paddingTop: 20,
     paddingBottom: 30,
     width: '80%'
   },
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Lato',
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: '600',
     marginHorizontal: 50,
     paddingBottom: 30,

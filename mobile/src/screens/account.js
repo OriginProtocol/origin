@@ -3,8 +3,10 @@
 import React, { Component } from 'react'
 import {
   Alert,
-  DeviceEventEmitter,
   Clipboard,
+  DeviceEventEmitter,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -117,97 +119,111 @@ class AccountScreen extends Component {
     const isActive = address === wallet.address
 
     return (
-      <View style={styles.wrapper}>
-        <View contentContainerStyle={styles.content} style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.heading}>NAME</Text>
-          </View>
-          <TextInput
-            placeholder={'Unnamed Account'}
-            value={name}
-            style={styles.input}
-            onChange={this.handleSetAccountName}
-            onSubmitEditing={this.handleNameUpdate}
-          />
-          <View style={styles.header}>
-            <Text style={styles.heading}>ETH ADDRESS</Text>
-          </View>
-          <TextInput
-            editable={false}
-            value={truncateAddress(address, 14)}
-            style={styles.input}
-          />
-        </View>
-        <View style={styles.buttonsContainer}>
-          {multipleAccounts && (
-            <OriginButton
-              size="large"
-              type="primary"
-              disabled={isActive}
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Make Active Account'}
-              onPress={this.handleSetAccountActive}
+      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+        <ScrollView
+          contentContainerStyle={styles.content}
+          style={styles.container}
+        >
+          <View contentContainerStyle={styles.content} style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.heading}>NAME</Text>
+            </View>
+            <TextInput
+              placeholder={'Account name'}
+              value={name}
+              style={styles.input}
+              onChange={this.handleSetAccountName}
+              onSubmitEditing={this.handleNameUpdate}
             />
-          )}
-          {mnemonic !== undefined && (
-            <>
-              <OriginButton
-                size="large"
-                type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Show Recovery Phrase'}
-                onPress={() => Alert.alert('Recovery Phrase', mnemonic)}
-              />
-              <OriginButton
-                size="large"
-                type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Copy Recovery Phrase'}
-                onPress={() => this.handleDangerousCopy(mnemonic)}
-              />
-            </>
-          )}
-          {mnemonic === undefined && (
-            <>
-              <OriginButton
-                size="large"
-                type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Show Private Key'}
-                onPress={() => Alert.alert('Private Key', privateKey)}
-              />
-              <OriginButton
-                size="large"
-                type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Copy Private Key'}
-                onPress={() => this.handleDangerousCopy(privateKey)}
-              />
-            </>
-          )}
-          {(multipleAccounts || true) && (
-            <OriginButton
-              size="large"
-              type="danger"
-              disabled={isActive}
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Delete Account'}
-              onPress={this.handleDelete}
+            <View style={styles.header}>
+              <Text style={styles.heading}>ETH ADDRESS</Text>
+            </View>
+            <TextInput
+              editable={false}
+              value={truncateAddress(address, 14)}
+              style={styles.input}
             />
-          )}
-        </View>
-      </View>
+          </View>
+          <View style={styles.buttonsContainer}>
+            {multipleAccounts && (
+              <OriginButton
+                size="large"
+                type="primary"
+                disabled={isActive}
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Make Active Account'}
+                onPress={this.handleSetAccountActive}
+              />
+            )}
+            {mnemonic !== undefined && (
+              <>
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={'Show Recovery Phrase'}
+                  onPress={() => Alert.alert('Recovery Phrase', mnemonic)}
+                />
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={'Copy Recovery Phrase'}
+                  onPress={() => this.handleDangerousCopy(mnemonic)}
+                />
+              </>
+            )}
+            {mnemonic === undefined && (
+              <>
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={'Show Private Key'}
+                  onPress={() => Alert.alert('Private Key', privateKey)}
+                />
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={'Copy Private Key'}
+                  onPress={() => this.handleDangerousCopy(privateKey)}
+                />
+              </>
+            )}
+            {(multipleAccounts || true) && (
+              <OriginButton
+                size="large"
+                type="danger"
+                disabled={isActive}
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Delete Account'}
+                onPress={this.handleDelete}
+              />
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  keyboardWrapper: {
+    flex: 1
+  },
+  container: {
+    flex: 1
+  },
+  content: {
+    paddingBottom: 20
+  },
   button: {
     marginBottom: 10,
     marginHorizontal: 20
@@ -215,12 +231,6 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     marginBottom: 10,
     paddingTop: 20
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    paddingBottom: 20
   },
   header: {
     paddingBottom: 5,

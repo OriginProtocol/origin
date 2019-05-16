@@ -32,9 +32,11 @@ class AccountItem extends Component {
             <View style={[styles.iconContainer, styles.identiconContainer]}>
               <Identicon address={item.address} />
             </View>
-            <Text style={styles.name}>
-              {wallet.accountNameMapping[item.address] || 'Unnamed Account'}
-            </Text>
+            {wallet.accountNameMapping[item.address] &&
+              <Text style={styles.name}>
+                {wallet.accountNameMapping[item.address]}
+              </Text>
+            }
             <Address
               address={item.address}
               label={'Address'}
@@ -92,6 +94,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 17,
     marginRight: '5%'
+  },
+  unnamed: {
+    color: '#98a7b4'
   },
   selected: {
     marginRight: 17

@@ -47,8 +47,8 @@ class ImportAccountScreen extends Component {
 
   /* Add a new account to the wallet
    */
-  handleSubmit() {
-    this.setState({ loading: true })
+  async handleSubmit() {
+    await this.setState({ loading: true })
     let account
     if (this.state.method === 'mnemonic') {
       account = this.addAccountFromMnemonic()
@@ -76,14 +76,14 @@ class ImportAccountScreen extends Component {
         this.props.navigation.navigate(onSuccess)
       }
     }
-    this.setState({
-      loading: false
-    })
+    await this.setState({ loading: false })
   }
 
   /* Add a new account based on a mnemonic (this.state.value). If the first account
    * in the derivation path is used it will continue to try the next number
    * until an address that is unused is found.
+   *
+   * This function can be slow.
    *
    * TODO: this logic should be in OriginWallet.js rather than here but to
    * catch errors for invalid mnemonics it needs to be here. This could be
