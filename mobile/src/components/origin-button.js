@@ -1,5 +1,7 @@
+'use strict'
+
 import React, { Component } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export default class OriginButton extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ export default class OriginButton extends Component {
       deactivate,
       disabled,
       image,
+      loading,
       outline,
       size,
       style,
@@ -81,8 +84,15 @@ export default class OriginButton extends Component {
             style
           ]}
         >
-          <Text style={[{ color }, styles.buttonText, textStyle]}>{title}</Text>
-          {image && <View style={styles.image}>{image}</View>}
+          {!loading && (
+            <>
+              <Text style={[{ color }, styles.buttonText, textStyle]}>{title}</Text>
+              {image && <View style={styles.image}>{image}</View>}
+            </>
+          )}
+          {loading && (
+            <ActivityIndicator color={color} />
+          )}
         </View>
       </TouchableOpacity>
     )
