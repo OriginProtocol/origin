@@ -15,6 +15,7 @@ export default gql`
       providerWS
       originGraphQLVersion
       relayer
+      performanceMode
     }
   }
 `

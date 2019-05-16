@@ -17,7 +17,8 @@ const configurableFields = [
   'ipfsGateway',
   'ipfsRPC',
   'provider',
-  'providerWS'
+  'providerWS',
+  'performanceMode'
 ]
 
 class Settings extends Component {
@@ -40,12 +41,16 @@ class Settings extends Component {
     }
   }
 
-  saveConfig(setNetwork) {
+  saveConfig(setNetwork, configUpdate = {}) {
+    const customConfig = {
+      ...pick(this.state, configurableFields),
+      ...configUpdate
+    }
     window.localStorage.customConfig = JSON.stringify(
-      pick(this.state, configurableFields)
+      customConfig
     )
     setNetwork({
-      variables: { network: window.localStorage.ognNetwork || 'mainnet' }
+      variables: { network: window.localStorage.ognNetwork || 'mainnet', customConfig }
     })
   }
 
@@ -165,6 +170,44 @@ class Settings extends Component {
                       )}
                     </div>
                   )}
+
+                  <div className="form-group">
+                    <label htmlFor="performanceMode">
+                      <fbt desc="settings.performanceMode">
+                        Performance Mode
+                      </fbt>
+                    </label>
+                    {!this.state.performanceMode ? (
+                      <>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.performanceModeHint">
+                              Enable performance mode. TODO
+                            </fbt>
+                          </small>
+                        </div>
+                        <button
+                          className="btn btn-success"
+                          onClick={() => this.saveConfig(setNetwork, { performanceMode: true })}
+                        >
+                          <fbt desc="settings.performanceModeButtonEnable">
+                            Enable
+                          </fbt>
+                        </button>
+                      </>
+                    ) : (
+                      <div>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => this.saveConfig(setNetwork, { performanceMode: false })}
+                        >
+                          <fbt desc="settings.performanceModeButtonDisable">
+                            Disable
+                          </fbt>
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   {/*
                   <div className="form-group">
