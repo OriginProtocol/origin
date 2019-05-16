@@ -112,7 +112,6 @@ export function setNetwork(net, customConfig) {
   context.discovery = config.discovery
   context.growth = config.growth
   context.graphql = config.graphql
-  context.performanceMode = config.performanceMode
 
   delete context.marketplace
   delete context.marketplaceExec

@@ -19,7 +19,7 @@ const config = {
   discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   performanceMode: false,
-  graphql: 'http://${HOST}:4002',
+  graphql: `http://${HOST}:4002`,
   automine: 2000,
   messaging: {
     messagingNamespace: 'origin:docker',

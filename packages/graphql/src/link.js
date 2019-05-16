@@ -17,7 +17,7 @@ const link = new ApolloLink(operation => {
   const definition = getMainDefinition(operation.query)
   if (definition.operation === 'subscription') {
     return subscriptionLink.request(operation) || Observable.of()
-  } else if (context.performanceMode) {
+  } else if (context.config.performanceMode) {
     return remoteSchemaLink.request(operation) || Observable.of()
   } else {
     return schemaLink.request(operation) || Observable.of()
