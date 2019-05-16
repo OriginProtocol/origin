@@ -85,7 +85,7 @@ class AccountScreen extends Component {
                 navigation.navigate('Welcome')
               } else {
                 // There are still some accounts, go back to accounts list
-                navigation.goBack()
+                navigation.navigate('Accounts')
               }
             } catch (e) {
               console.error(e)
