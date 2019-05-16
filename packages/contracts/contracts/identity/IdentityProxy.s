@@ -197,7 +197,7 @@ contract IdentityProxy is ERC725 {
         changeOwner(_owner);
         ERC20(_token).transferFrom(_owner, this, _value);
         ERC20(_token).approve(_marketplace, _value);
-        executeCall(_marketplace, 0, _offer);
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
     }
 
     function marketplaceExecute(
@@ -212,6 +212,6 @@ contract IdentityProxy is ERC725 {
     {
         changeOwner(_owner);
         ERC20(_token).approve(_marketplace, _value);
-        executeCall(_marketplace, 0, _offer);
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
     }
 }
