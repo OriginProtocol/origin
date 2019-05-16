@@ -11,7 +11,7 @@ class BackupCard extends Component {
   }
 
   render() {
-    const { wallet, navigation } = this.props
+    const { wallet } = this.props
     const isPrivateKey = wallet.activeAccount.mnemonic === undefined
 
     return (
@@ -30,7 +30,7 @@ class BackupCard extends Component {
             title={
               isPrivateKey ? 'Back up private key' : 'Back up recovery phrase'
             }
-            onPress={() => navigation.navigate('GuardedBackup')}
+            onPress={this.props.onRequestBackup}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>

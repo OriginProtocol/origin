@@ -13,6 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { ethers } from 'ethers'
 
 import OriginButton from 'components/origin-button'
+import { setBackupWarningStatus } from 'actions/Activation'
 
 class ImportAccountScreen extends Component {
   constructor(props) {
@@ -43,19 +44,24 @@ class ImportAccountScreen extends Component {
     }
   }
 
-  /* Add a new account to the wallet based on the given mnemonic.
-   * TODO: this logic should be in OriginWallet.js rather than here but to
-   * catch errors for invalid mnemonics it needs to be here. This could be
-   * improved with a refactor of the OriginWallet <> component communication.
+  /* Add a new account to the wallet
    */
-  handleSubmit() {
-    let success
+  async handleSubmit() {
+    let account
     if (this.state.method === 'mnemonic') {
-      success = this.addAccountFromMnemonic()
+      account = await this.addAccountFromMnemonic()
     } else {
-      success = this.addAccountFromPrivateKey()
+      account = await this.addAccountFromPrivateKey()
     }
-    if (success) {
+    if (account) {
+      // Since this is an imported account disable backup prompts because it
+      // is assumed the user already has their mnemonic recorded
+      await this.props.setBackupWarningStatus(account.address)
+      DeviceEventEmitter.emit('addAccount', {
+        address: account.address,
+        mnemonic: account.mnemonic,
+        privateKey: account.privateKey
+      })
       // Reset state of component
       this.setState({
         method: 'mnemonic',
@@ -69,7 +75,15 @@ class ImportAccountScreen extends Component {
     }
   }
 
-  addAccountFromMnemonic() {
+  /* Add a new account based on a mnemonic (this.state.value). If the first account
+   * in the derivation path is used it will continue to try the next number
+   * until an address that is unused is found.
+   *
+   * TODO: this logic should be in OriginWallet.js rather than here but to
+   * catch errors for invalid mnemonics it needs to be here. This could be
+   * improved with a refactor of the OriginWallet <> component communication.
+   */
+  async addAccountFromMnemonic() {
     const existingAddresses = this.props.wallet.accounts.map(a => a.address)
     // Use a loop to try the next account in the derivation path
     for (let i = 0; i < 10; i++) {
@@ -91,23 +105,17 @@ class ImportAccountScreen extends Component {
         this.setState({ error: errorMessage })
         return false
       }
-      if (existingAddresses.includes(wallet.address)) {
-        // Account already added, try the next in line
-        continue
-      }
-      if (wallet) {
+      if (!existingAddresses.includes(wallet.address)) {
         // Got an account we don't have, use that
-        DeviceEventEmitter.emit('addAccount', {
-          address: wallet.address,
-          mnemonic: wallet.mnemonic,
-          privateKey: wallet.privateKey
-        })
-        return true
+        return wallet
       }
     }
+    return false
   }
 
-  addAccountFromPrivateKey() {
+  /* Add a new account based on a private key (this.state.value).
+   */
+  async addAccountFromPrivateKey() {
     let wallet
     try {
       let privateKey = this.state.value
@@ -121,14 +129,9 @@ class ImportAccountScreen extends Component {
         errorMessage = 'That is not a valid private key.'
       }
       this.setState({ error: errorMessage })
+      return false
     }
-    if (wallet) {
-      DeviceEventEmitter.emit('addAccount', {
-        address: wallet.address,
-        privateKey: wallet.privateKey
-      })
-      return true
-    }
+    return wallet
   }
 
   render() {
@@ -153,7 +156,7 @@ class ImportAccountScreen extends Component {
             multiline={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
-            style={[styles.input, this.state.error ? styles.invalid : {}]}
+            style={[styles.input, styles.mnemonicInput, this.state.error ? styles.invalid : {}]}
           />
           {this.state.error.length > 0 && (
             <Text style={styles.invalid}>{this.state.error}</Text>
@@ -273,17 +276,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 300
   },
+  mnemonicInput: {
+    height: 100
+  },
   invalid: {
     borderColor: '#ff0000',
     color: '#ff0000'
   }
 })
 
-const mapStateToProps = ({ settings, wallet }) => {
-  return { settings, wallet }
+const mapStateToProps = ({ activation, settings, wallet }) => {
+  return { activation, settings, wallet }
 }
+
+const mapDispatchToProps = dispatch => ({
+  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
+})
 
 export default connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(ImportAccountScreen)

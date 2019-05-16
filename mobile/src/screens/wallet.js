@@ -1,21 +1,11 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  Alert,
-  Clipboard,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  View
-} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
+import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
-import { get } from 'utils'
 
 import Address from 'components/address'
 import Currency from 'components/currency'
-import BackupCard from 'components/backup-card'
 
 import currencies from 'utils/currencies'
 import { evenlySplitAddress } from 'utils/user'
@@ -32,22 +22,6 @@ class WalletScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      displayBackupModal: false
-    }
-  }
-
-  componentDidMount() {
-    const { activation, wallet } = this.props
-    const hasBalance =
-      Object.keys(wallet.accountBalance).find(currency => {
-        return get(wallet.accountBalance, currency, 0) > 0
-      }) !== undefined
-
-    // Prompt that backup is required if balance was detected
-    if (hasBalance && !activation.backupWarningDismissed) {
-      this.setState({ displayBackupModal: true })
-    }
   }
 
   handleFunding(currency) {
@@ -124,26 +98,6 @@ class WalletScreen extends Component {
             onPress={() => this.handleFunding('OGN')}
           />
         </ScrollView>
-        {this.state.displayBackupModal && (
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={true}
-            onRequestClose={() => {
-              this.setState({ displayBackupModal: false })
-            }}
-          >
-            <SafeAreaView style={styles.svContainer}>
-              <BackupCard
-                wallet={this.props.wallet}
-                navigation={this.props.navigation}
-                onRequestClose={() => {
-                  this.setState({ displayBackupModal: false })
-                }}
-              />
-            </SafeAreaView>
-          </Modal>
-        )}
       </>
     )
   }

@@ -15,15 +15,16 @@ import OriginWallet from './OriginWallet'
 import PushNotifications from './PushNotifications'
 import Store, { persistor } from './Store'
 import StackSelector from './StackSelector'
-import RecommendForceUpdate from 'components/update'
+import UpdatePrompt from 'components/update-prompt'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
+import BackupPrompt from 'components/backup-prompt'
 import BackupScreen from 'screens/backup'
 import ImportAccountScreen from 'screens/import'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
-import AuthenticationGuard from 'components/auth'
+import AuthenticationGuard from 'components/authentication-guard'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import EmailScreen from 'screens/onboarding/email'
@@ -31,6 +32,7 @@ import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
 import ReadyScreen from 'screens/onboarding/ready'
 import Loading from 'components/loading'
+import NavigationService from './NavigationService'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -47,7 +49,7 @@ const OnboardingStack = createSwitchNavigator(
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
-        navigateOnSuccess: 'Ready'
+        navigateOnSuccess: 'Authentication'
       }
     },
     Email: EmailScreen,
@@ -207,8 +209,12 @@ class App extends Component {
         <PersistGate loading={<Loading />} persistor={persistor}>
           <OriginWallet />
           <PushNotifications />
-          <RecommendForceUpdate />
-          <AppContainer />
+          <UpdatePrompt />
+          <BackupPrompt />
+          <AppContainer ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef)
+            }}
+          />
         </PersistGate>
       </ReduxProvider>
     )

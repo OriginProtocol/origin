@@ -19,7 +19,7 @@ import { version } from '../../package.json'
 
 const IMAGES_PATH = '../../assets/images/'
 
-class RecommendForceUpdate extends React.Component {
+class UpdatePrompt extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RecommendForceUpdate
+export default UpdatePrompt
