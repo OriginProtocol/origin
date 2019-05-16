@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import {
+  ActivityIndicator,
   DeviceEventEmitter,
   StyleSheet,
   Text,
@@ -12,8 +13,8 @@ import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { ethers } from 'ethers'
 
-import OriginButton from 'components/origin-button'
 import { setBackupWarningStatus } from 'actions/Activation'
+import OriginButton from 'components/origin-button'
 
 class ImportAccountScreen extends Component {
   constructor(props) {
@@ -46,17 +47,18 @@ class ImportAccountScreen extends Component {
 
   /* Add a new account to the wallet
    */
-  async handleSubmit() {
+  handleSubmit() {
+    this.setState({ loading: true })
     let account
     if (this.state.method === 'mnemonic') {
-      account = await this.addAccountFromMnemonic()
+      account = this.addAccountFromMnemonic()
     } else {
-      account = await this.addAccountFromPrivateKey()
+      account = this.addAccountFromPrivateKey()
     }
     if (account) {
       // Since this is an imported account disable backup prompts because it
       // is assumed the user already has their mnemonic recorded
-      await this.props.setBackupWarningStatus(account.address)
+      this.props.setBackupWarningStatus(account.address)
       DeviceEventEmitter.emit('addAccount', {
         address: account.address,
         mnemonic: account.mnemonic,
@@ -66,13 +68,17 @@ class ImportAccountScreen extends Component {
       this.setState({
         method: 'mnemonic',
         value: '',
-        error: ''
+        error: '',
+        loading: false
       })
       const onSuccess = this.props.navigation.getParam('navigateOnSuccess')
       if (onSuccess) {
         this.props.navigation.navigate(onSuccess)
       }
     }
+    this.setState({
+      loading: false
+    })
   }
 
   /* Add a new account based on a mnemonic (this.state.value). If the first account
@@ -83,7 +89,7 @@ class ImportAccountScreen extends Component {
    * catch errors for invalid mnemonics it needs to be here. This could be
    * improved with a refactor of the OriginWallet <> component communication.
    */
-  async addAccountFromMnemonic() {
+  addAccountFromMnemonic() {
     const existingAddresses = this.props.wallet.accounts.map(a => a.address)
     // Use a loop to try the next account in the derivation path
     for (let i = 0; i < 10; i++) {
@@ -110,12 +116,17 @@ class ImportAccountScreen extends Component {
         return wallet
       }
     }
+    this.setState({
+      error: 'Maximum addresses reached'
+    })
     return false
   }
 
   /* Add a new account based on a private key (this.state.value).
+   *
+   * TODO: as above
    */
-  async addAccountFromPrivateKey() {
+  addAccountFromPrivateKey() {
     let wallet
     try {
       let privateKey = this.state.value
@@ -135,7 +146,13 @@ class ImportAccountScreen extends Component {
   }
 
   render() {
-    if (this.state.method === 'mnemonic') {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+      )
+    } else if (this.state.method === 'mnemonic') {
       return this.renderMnemonicInput()
     } else {
       return this.renderPrivateKeyInput()
@@ -154,6 +171,8 @@ class ImportAccountScreen extends Component {
             autoCapitalize="none"
             autoCorrect={false}
             multiline={true}
+            returnKeyType="done"
+            blurOnSubmit={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
             style={[
@@ -199,6 +218,8 @@ class ImportAccountScreen extends Component {
             autoCapitalize="none"
             autoCorrect={false}
             multiline={true}
+            returnKeyType="done"
+            blurOnSubmit={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
             style={[styles.input, this.state.error ? styles.invalid : {}]}
@@ -243,6 +264,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'space-around'
   },
   buttonsContainer: {
     paddingTop: 10,
