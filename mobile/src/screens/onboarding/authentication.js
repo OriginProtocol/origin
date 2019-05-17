@@ -1,10 +1,19 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import TouchID from 'react-native-touch-id'
+import AndroidOpenSettings from 'react-native-android-open-settings'
 
 import { setBiometryType } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
@@ -15,7 +24,8 @@ class AuthenticationScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      biometryType: null
+      biometryType: null,
+      biometryError: {}
     }
   }
 
@@ -40,19 +50,53 @@ class AuthenticationScreen extends Component {
     ) {
       biometryButtonTitle = 'Use Touch ID'
     }
+
+    const biometryPermissionDenied = [
+      'LAErrorTouchIDNotAvailable',
+      'LAErrorTouchIDNotEnrolled'
+    ].includes(this.state.biometryError.name)
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Image
-            resizeMethod={'scale'}
-            resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'lock-icon.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
-          />
-          <Text style={styles.title}>Protect your wallet</Text>
-          <Text style={styles.subtitle}>
-            Add an extra layer of security to keep your crypto safe.
-          </Text>
+          {biometryPermissionDenied ? (
+            <>
+              <Text style={styles.title}>
+                {this.state.biometryType} Unavailable
+              </Text>
+              <Text style={styles.subtitle}>
+                It looks like you have {this.state.biometryType} disabled. You
+                will need to enable it in the settings for the Origin
+                Marketplace App.
+              </Text>
+              <OriginButton
+                size="large"
+                type="primary"
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={'Open Settings'}
+                onPress={() => {
+                  if (Platform.OS === 'ios') {
+                    Linking.openURL('app-settings:')
+                  } else {
+                    AndroidOpenSettings.appDetailsSettings()
+                  }
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Image
+                resizeMethod={'scale'}
+                resizeMode={'contain'}
+                source={require(IMAGES_PATH + 'lock-icon.png')}
+                style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+              />
+              <Text style={styles.title}>Protect your wallet</Text>
+              <Text style={styles.subtitle}>
+                Add an extra layer of security to keep your crypto safe.
+              </Text>
+            </>
+          )}
         </View>
         <View style={styles.buttonsContainer}>
           {biometryButtonTitle && (
@@ -63,13 +107,14 @@ class AuthenticationScreen extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={biometryButtonTitle}
               onPress={() => {
-                TouchID.authenticate('Test')
+                TouchID.authenticate('Enable access to Origin Marketplace App')
                   .then(() => {
                     this.props.setBiometryType(this.state.biometryType)
                     this.props.navigation.navigate('Ready')
                   })
                   .catch(error => {
                     console.warn('Biometry failure: ', error)
+                    this.setState({ biometryError: error })
                   })
               }}
             />
