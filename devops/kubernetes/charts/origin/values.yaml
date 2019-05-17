@@ -63,5 +63,5 @@ adminImage: origin-admin
 adminImageTag: latest
 
 # origin-relayer
-cronImage: origin-relayer
-cronImageTag: latest
+relayerImage: origin-relayer
+relayerImageTag: latest
