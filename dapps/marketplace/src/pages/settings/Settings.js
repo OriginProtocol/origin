@@ -183,7 +183,8 @@ class Settings extends Component {
                         <div className="form-text form-text-muted">
                           <small>
                             <fbt desc="settings.performanceModeHint">
-                              Enable performance mode. TODO
+                              Performance mode uses a centralized server to
+                              improve performance of the dapp.
                             </fbt>
                           </small>
                         </div>
