@@ -116,7 +116,7 @@ class AccountScreen extends Component {
     const { address, privateKey, mnemonic } = account
     const name = wallet.accountNameMapping[address]
     const multipleAccounts = wallet.accounts.length > 1
-    const isActive = address === wallet.address
+    const isActive = address === wallet.activeAccount.address
 
     return (
       <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
@@ -154,7 +154,6 @@ class AccountScreen extends Component {
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={'Make Active Account'}
                 onPress={this.handleSetAccountActive}
-                disabled={wallet.activeAccount.address === account.address}
               />
             )}
             {mnemonic !== undefined && (

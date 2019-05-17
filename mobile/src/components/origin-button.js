@@ -1,7 +1,13 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native'
 
 export default class OriginButton extends Component {
   constructor(props) {
@@ -86,13 +92,13 @@ export default class OriginButton extends Component {
         >
           {!loading && (
             <>
-              <Text style={[{ color }, styles.buttonText, textStyle]}>{title}</Text>
+              <Text style={[{ color }, styles.buttonText, textStyle]}>
+                {title}
+              </Text>
               {image && <View style={styles.image}>{image}</View>}
             </>
           )}
-          {loading && (
-            <ActivityIndicator color={color} />
-          )}
+          {loading && <ActivityIndicator color={color} />}
         </View>
       </TouchableOpacity>
     )

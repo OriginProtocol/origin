@@ -1,7 +1,14 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
@@ -38,7 +45,10 @@ class AccountItem extends Component {
             </View>
             {wallet.accountNameMapping[item.address] && (
               <Text style={styles.name}>
-                {truncate(wallet.accountNameMapping[item.address], truncateLength )}
+                {truncate(
+                  wallet.accountNameMapping[item.address],
+                  truncateLength
+                )}
               </Text>
             )}
             <Address

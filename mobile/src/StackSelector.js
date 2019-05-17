@@ -10,7 +10,8 @@ class StackSelector extends React.Component {
   }
 
   selectStack() {
-    const displayOnboarding = !this.props.settings.pin && !this.props.settings.biometryType
+    const displayOnboarding =
+      !this.props.settings.pin && !this.props.settings.biometryType
     if (displayOnboarding) {
       this.props.navigation.navigate('Welcome')
     } else {

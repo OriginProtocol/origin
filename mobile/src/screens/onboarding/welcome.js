@@ -76,7 +76,7 @@ class WelcomeScreen extends Component {
             </>
           )}
           {wallet.accounts.length > 0 && (
-           <OriginButton
+            <OriginButton
               size="large"
               type="primary"
               style={styles.button}

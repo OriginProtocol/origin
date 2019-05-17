@@ -226,10 +226,7 @@ class MarketplaceScreen extends Component {
     )
 
     return (
-      <SafeAreaView
-        style={styles.sav}
-        {...this._panResponder.panHandlers}
-      >
+      <SafeAreaView style={styles.sav} {...this._panResponder.panHandlers}>
         <WebView
           ref={webview => {
             this.dappWebView = webview

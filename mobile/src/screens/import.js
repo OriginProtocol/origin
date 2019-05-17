@@ -159,7 +159,9 @@ class ImportAccountScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Enter {this.state.mnemonic ? 'Recovery Phrase' : 'Private Key' }</Text>
+          <Text style={styles.title}>
+            Enter {this.state.mnemonic ? 'Recovery Phrase' : 'Private Key'}
+          </Text>
           {this.state.mnemonic && (
             <Text style={styles.subtitle}>
               Enter the 12 words in the correct order
@@ -173,15 +175,13 @@ class ImportAccountScreen extends Component {
             blurOnSubmit={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
-            style={[
-              styles.input,
-              this.state.error ? styles.invalid : {}
-            ]}
+            style={[styles.input, this.state.error ? styles.invalid : {}]}
           />
           {this.state.error.length > 0 && (
             <Text style={styles.invalid}>{this.state.error}</Text>
           )}
-          <TouchableOpacity onPress={() =>
+          <TouchableOpacity
+            onPress={() =>
               this.setState({
                 mnemonic: !this.state.mnemonic,
                 value: '',
@@ -189,9 +189,11 @@ class ImportAccountScreen extends Component {
               })
             }
           >
-            <Text style={styles.switchMethod}>Use a {this.state.mnemonic ? 'private key' : 'recovery phrase'} instead</Text>
+            <Text style={styles.switchMethod}>
+              Use a {this.state.mnemonic ? 'private key' : 'recovery phrase'}{' '}
+              instead
+            </Text>
           </TouchableOpacity>
-
         </View>
         <View style={styles.buttonsContainer}>
           {cancelRoute && (
