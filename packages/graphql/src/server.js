@@ -15,7 +15,29 @@ const schema = makeExecutableSchema({
   resolverValidationOptions: { requireResolversForResolveType: false }
 })
 
-const options = { schema }
+const options = {
+  schema,
+  context: ({ req }) => {
+    const operation = req.body
+    if (operation && operation.query) {
+      /**
+       * TODO: Maybe check how apollo parses queries and use the same parser.
+       * There could be a case here where a character is inserted before
+       * 'motation' in the query body that apollo would ignore, but would cause
+       * this to fail.  While I don't think any of the mutations being run from
+       * the server are *dangerous*, it sure isn't ideal and could have some
+       * unintended side-effects.
+       */
+      const match = operation.query.match(/^\s*(mutation)/)
+      if (match) {
+        console.warn(
+          `Mutations not allowed.  Operation: ${operation.operationName}`
+        )
+        throw new Error('Mutations not allowed')
+      }
+    }
+  }
+}
 
 const API_KEY = process.env.ENGINE_API_KEY || process.env.APOLLO_METRICS_API_KEY
 if (typeof API_KEY !== 'undefined') {

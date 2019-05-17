@@ -1,8 +1,8 @@
 import Common from './Common'
 import Web3Common from './Web3Common'
-import Marketplace from './Marketplace'
-import Identity from './Identity'
-import Attestations from './Attestations'
+import { types as Marketplace } from './Marketplace'
+import { types as Identity } from './Identity'
+import { types as Attestations } from './Attestations'
 import Notifications from './Notifications'
 import Currency from './Currency'
 
