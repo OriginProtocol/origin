@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.6.0",
+  "version": "0.8.2",
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/plugin-transform-new-target": "^7.4.4",
@@ -34,7 +34,11 @@
   },
   "dependencies": {
     "acorn": "^6.1.1",
+    "bip39": "^3.0.2",
+    "compare-versions": "^3.4.0",
     "cross-fetch": "^3.0.2",
+    "ethers": "^4.0.27",
+    "myetherwallet-blockies": "^0.1.1",
     "node-libs-react-native": "^1.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -48,6 +52,7 @@
     "react-native-randombytes": "^3.5.2",
     "react-native-safe-area-view": "^0.13.1",
     "react-native-sentry": "^0.42.0",
+    "react-native-touch-id": "^4.4.1",
     "react-native-user-agent": "^1.0.3",
     "react-native-webview": "^5.8.1",
     "react-navigation": "^3.9.1",
