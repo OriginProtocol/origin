@@ -10,10 +10,9 @@ class StackSelector extends React.Component {
   }
 
   selectStack() {
-    if (this.props.wallet.accounts.length == 0) {
+    const displayOnboarding = !this.props.settings.pin && !this.props.settings.biometryType || true
+    if (displayOnboarding) {
       this.props.navigation.navigate('Welcome')
-    } else if (!this.props.settings.pin && !this.props.settings.biometryType) {
-      this.props.navigation.navigate('Authentication')
     } else {
       this.props.navigation.navigate('GuardedApp')
     }
