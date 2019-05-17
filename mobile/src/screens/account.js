@@ -154,6 +154,7 @@ class AccountScreen extends Component {
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={'Make Active Account'}
                 onPress={this.handleSetAccountActive}
+                disabled={wallet.activeAccount.address === account.address}
               />
             )}
             {mnemonic !== undefined && (
