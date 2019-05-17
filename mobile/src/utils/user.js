@@ -43,3 +43,7 @@ export function truncateAddress(address = '', chars = 5) {
     address.substr(address.length - chars)
   )
 }
+
+export function truncate(data, chars=5) {
+  return data.substr(0, chars) + '...'
+}

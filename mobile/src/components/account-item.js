@@ -1,11 +1,12 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import Address from 'components/address'
 import Identicon from 'components/identicon'
+import { truncate } from 'utils/user'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -16,6 +17,9 @@ class AccountItem extends Component {
 
   render() {
     const { item, navigation, wallet } = this.props
+    // Truncate the account name to something that looks reasonable, the upper
+    // bound was set from an iPhone X
+    const truncateLength = Dimensions.get('window').width < 375 ? 15 : 20
 
     return (
       <TouchableHighlight
@@ -34,7 +38,7 @@ class AccountItem extends Component {
             </View>
             {wallet.accountNameMapping[item.address] && (
               <Text style={styles.name}>
-                {wallet.accountNameMapping[item.address]}
+                {truncate(wallet.accountNameMapping[item.address], truncateLength )}
               </Text>
             )}
             <Address
