@@ -26,7 +26,7 @@
     "dotenv": "^6.2.0",
     "elasticsearch": "^15.2.0",
     "envkey": "^1.2.4",
-    "esm": "^3.2.18",
+    "esm": "3.2.18",
     "express": "^4.16.4",
     "express-prom-bundle": "^4.2.1",
     "graphql": "^14.1.1",
