@@ -62,3 +62,7 @@ cronImageTag: '984b546'
 # origin-admin
 adminImage: origin-admin
 adminImageTag: 'a141762'
+
+# origin-relayer
+relayerImage: origin-relayer
+relayerImageTag: 'latest'

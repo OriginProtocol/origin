@@ -3,8 +3,9 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.bebnev.RNUserAgentPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
+import com.rnfingerprint.FingerprintAuthPackage;
+import com.bebnev.RNUserAgentPackage;
 import io.sentry.RNSentryPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -30,8 +31,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNUserAgentPackage(),
             new AndroidOpenSettingsPackage(),
+            new FingerprintAuthPackage(),
+            new RNUserAgentPackage(),
             new RNSentryPackage(),
             new RNGestureHandlerPackage(),
             new RandomBytesPackage(),
