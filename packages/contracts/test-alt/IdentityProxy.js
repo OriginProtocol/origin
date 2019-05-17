@@ -59,9 +59,9 @@ describe('Identity', async function() {
     })
   })
 
-  async function deployNewProxyContract() {
+  async function deployNewProxyContract(owner) {
     const changeOwner = await IdentityProxyImp.methods
-      .changeOwner(NewUserAccount.address)
+      .changeOwner(owner)
       .encodeABI()
 
     const res = await ProxyFactory.methods
@@ -92,6 +92,144 @@ describe('Identity', async function() {
   }
 
   describe('IdentityProxy.sol', function() {
+    describe('transferToOwner with Eth', function() {
+      let Wallet, IdentityProxy
+      before(async function() {
+        web3.eth.accounts.wallet.create(1)
+        Wallet = web3.eth.accounts.wallet[web3.eth.accounts.wallet.length - 1]
+        await web3.eth.sendTransaction({
+          from: Forwarder,
+          to: Wallet.address,
+          value: web3.utils.toWei('0.1', 'ether'),
+          gas: 100000
+        })
+        IdentityProxy = await deployNewProxyContract(Wallet.address)
+        await web3.eth.sendTransaction({
+          from: Forwarder,
+          to: IdentityProxy._address,
+          value: web3.utils.toWei('0.1', 'ether'),
+          gas: 100000
+        })
+      })
+
+      it('should have the correct owner', async function() {
+        const owner = await IdentityProxy.methods.owner().call()
+        assert(owner === Wallet.address)
+      })
+
+      it('should allow transfer of Eth by owner', async function() {
+        const balanceBefore = await web3.eth.getBalance(Wallet.address)
+        await IdentityProxy.methods
+          .transferToOwner(0x00, web3.utils.toWei('0.01', 'ether'))
+          .send({ from: Wallet.address, gas: 100000 })
+        const balanceAfter = await web3.eth.getBalance(Wallet.address)
+        assert(balanceAfter !== balanceBefore)
+      })
+
+      it('should allow transfer of Eth by non-owner', async function() {
+        const balanceBefore = await web3.eth.getBalance(Wallet.address)
+        await IdentityProxy.methods
+          .transferToOwner(0x00, web3.utils.toWei('0.01', 'ether'))
+          .send({ from: Forwarder, gas: 100000 })
+        const balanceAfter = await web3.eth.getBalance(Wallet.address)
+        assert(balanceAfter !== balanceBefore)
+      })
+
+      it('should allow transfer by non-owner to be enabled', async function() {
+        const transferToOwner = web3.utils.fromAscii('transferToOwner')
+        await IdentityProxy.methods
+          .setData(
+            web3.utils.padLeft(transferToOwner, 64),
+            web3.utils.padLeft(web3.utils.fromAscii('disable'), 64)
+          )
+          .send({ from: Wallet.address, gas: 100000 })
+      })
+
+      it('should throw when transfer of Eth is attempted by non-owner', async function() {
+        const res = await new Promise((resolve, reject) => {
+          IdentityProxy.methods
+            .transferToOwner(0x00, web3.utils.toWei('0.01', 'ether'))
+            .send({ from: Forwarder, gas: 100000 })
+            .catch(resolve)
+            .then(reject)
+        })
+        assert(res.toString().indexOf('revert') > 0)
+      })
+    })
+
+    describe('transferToOwner with Dai', function() {
+      let Wallet, IdentityProxy
+      before(async function() {
+        web3.eth.accounts.wallet.create(1)
+        Wallet = web3.eth.accounts.wallet[web3.eth.accounts.wallet.length - 1]
+        await web3.eth.sendTransaction({
+          from: Forwarder,
+          to: Wallet.address,
+          value: web3.utils.toWei('0.1', 'ether'),
+          gas: 100000
+        })
+        IdentityProxy = await deployNewProxyContract(Wallet.address)
+        await DaiStableCoin.methods
+          .transfer(IdentityProxy._address, '1000')
+          .send({
+            from: accounts[0],
+            gas: 100000
+          })
+      })
+
+      it('should have the correct owner', async function() {
+        const owner = await IdentityProxy.methods.owner().call()
+        assert(owner === Wallet.address)
+      })
+
+      it('should allow transfer of Dai by owner', async function() {
+        const balanceBefore = await DaiStableCoin.methods.balanceOf(
+          Wallet.address
+        )
+        await IdentityProxy.methods
+          .transferToOwner(DaiStableCoin._address, '100')
+          .send({ from: Wallet.address, gas: 100000 })
+        const balanceAfter = await DaiStableCoin.methods.balanceOf(
+          Wallet.address
+        )
+        assert(balanceAfter !== balanceBefore)
+      })
+
+      it('should allow transfer of Dai by non-owner', async function() {
+        const balanceBefore = await DaiStableCoin.methods.balanceOf(
+          Wallet.address
+        )
+        await IdentityProxy.methods
+          .transferToOwner(DaiStableCoin._address, '100')
+          .send({ from: Forwarder, gas: 100000 })
+        const balanceAfter = await DaiStableCoin.methods.balanceOf(
+          Wallet.address
+        )
+        assert(balanceAfter !== balanceBefore)
+      })
+
+      it('should allow transfer by non-owner to be disabled', async function() {
+        const transferToOwner = web3.utils.fromAscii('transferToOwner')
+        await IdentityProxy.methods
+          .setData(
+            web3.utils.padLeft(transferToOwner, 64),
+            web3.utils.padLeft(web3.utils.fromAscii('disable'), 64)
+          )
+          .send({ from: Wallet.address, gas: 100000 })
+      })
+
+      it('should throw when transfer of Dai is attempted by non-owner', async function() {
+        const res = await new Promise((resolve, reject) => {
+          IdentityProxy.methods
+            .transferToOwner(DaiStableCoin._address, '100')
+            .send({ from: Forwarder, gas: 100000 })
+            .catch(resolve)
+            .then(reject)
+        })
+        assert(res.toString().indexOf('revert') > 0)
+      })
+    })
+
     it('should forward createListing tx from user proxy', async function() {
       const txData = Marketplace.methods
         .createListing(IpfsHash, 0, Marketplace._address)
@@ -111,8 +249,8 @@ describe('Identity', async function() {
       const IdentityProxy = await deployNewProxyContract(NewUserAccount.address)
 
       const owner = await IdentityProxy.methods.owner().call()
-      console.log('Account', NewUserAccount.address)
-      console.log('Owner  ', owner)
+      // console.log('Account', NewUserAccount.address)
+      // console.log('Owner  ', owner)
 
       assert(owner, NewUserAccount.address)
 
@@ -156,13 +294,14 @@ describe('Identity', async function() {
       const SellerProxy = SellerProxyRes.events.ProxyCreation.returnValues.proxy
 
       const listing2 = await Marketplace.methods.listings(1).call()
-      console.log(Seller, listing2)
+      assert(listing2)
 
       const allowance = await DaiStableCoin.methods
         .allowance(SellerProxy, Marketplace._address)
         .call()
-      console.log('allowance', allowance)
-      // assert.equal(await Marketplace.methods.totalListings().call(), 2)
+
+      assert(allowance === '100')
+      assert.equal(await Marketplace.methods.totalListings().call(), 2)
     })
   })
 
