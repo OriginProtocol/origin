@@ -14,6 +14,7 @@ interface ERC725 {
 interface ERC20 {
     function approve(address _spender, uint256 _value) external;
     function transferFrom(address from, address to, uint tokens) external;
+    function transfer(address to, uint tokens) external returns (bool);
 }
 
 contract IdentityProxy is ERC725 {
@@ -166,6 +167,18 @@ contract IdentityProxy is ERC725 {
         }
     }
 
+    function transferToOwner(address _currency, uint _value) public {
+        if (msg.sender != owner) {
+            // web3.utils.fromAscii('transferToOwner') != web3.utils.fromAscii('disable')
+            require(store[0x7472616e73666572546f4f776e6572] != 0x64697361626c65, 'transferToOwner-disabled');
+        }
+        if (_currency == 0x0) {
+            owner.transfer(_value);
+        } else {
+            require(ERC20(_currency).transfer(owner, _value), 'erc20-transfer-fail');
+        }
+    }
+
     function swapAndMakeOffer(
         address _owner,
         address _marketplace,
@@ -197,7 +210,7 @@ contract IdentityProxy is ERC725 {
         changeOwner(_owner);
         ERC20(_token).transferFrom(_owner, this, _value);
         ERC20(_token).approve(_marketplace, _value);
-        executeCall(_marketplace, 0, _offer);
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
     }
 
     function marketplaceExecute(
@@ -212,6 +225,6 @@ contract IdentityProxy is ERC725 {
     {
         changeOwner(_owner);
         ERC20(_token).approve(_marketplace, _value);
-        executeCall(_marketplace, 0, _offer);
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
     }
 }

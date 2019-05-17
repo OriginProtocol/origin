@@ -3,6 +3,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
+import hasProxy from '../../utils/hasProxy'
 
 async function deployIdentityViaProxy(
   _,
@@ -24,11 +25,15 @@ async function deployIdentityViaProxy(
   const initFn = await IdentityContract.methods.changeOwner(owner).encodeABI()
   const Contract = new web3.eth.Contract(ProxyFactory.abi, factoryAddress)
 
+  const tx = Contract.methods.createProxyWithNonce(proxyAddress, initFn, 0)
+  const gas = await tx.estimateGas()
+
   return txHelper({
-    tx: Contract.methods.createProxyWithNonce(proxyAddress, initFn, 0),
+    tx,
     from,
-    gas: 5500000,
-    mutation: 'deployIdentityViaProxy'
+    gas,
+    mutation: 'deployIdentityViaProxy',
+    onConfirmation: () => hasProxy.cache.clear()
   })
 }
 
