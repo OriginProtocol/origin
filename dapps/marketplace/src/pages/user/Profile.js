@@ -20,6 +20,7 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
+import Redirect from 'components/Redirect'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
@@ -271,6 +272,9 @@ class UserProfile extends Component {
   }
 
   renderProfile(arrivedFromOnboarding) {
+    // if (!arrivedFromOnboarding && !this.props.identityLoading && !this.props.identity) {
+    //   return <Redirect to={`/onboard`} />
+    // }
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
         m.push(this.state[`${key}Attestation`])
@@ -282,6 +286,8 @@ class UserProfile extends Component {
     if (this.state.firstName) name.push(this.state.firstName)
     if (this.state.lastName) name.push(this.state.lastName)
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
+
+    const profileCreated = this.props.growthEnrollmentStatus === 'Enrolled' && (this.state.PhoneAttestation || this.state.phoneVerified)
 
     return (
       <div className="container profile-edit">
@@ -331,25 +337,29 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'facebook',
-                  fbt('Facebook', '_ProvisionedChanges.facebook')
+                  fbt('Facebook', '_ProvisionedChanges.facebook'),
+                  { disabled: !profileCreated }
                 )}
                 {this.renderAtt(
                   'twitter',
-                  fbt('Twitter', '_ProvisionedChanges.twitter')
+                  fbt('Twitter', '_ProvisionedChanges.twitter'),
+                  { disabled: !profileCreated }
                 )}
                 {this.renderAtt(
                   'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb'),
+                  { disabled: !profileCreated }
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google')
+                  fbt('Google', '_ProvisionedChanges.google'),
+                  { disabled: !profileCreated }
                 )}
-                {process.env.ENABLE_WEBSITE_ATTESTATION === 'true' &&
-                  this.renderAtt(
-                    'website',
-                    fbt('Website', '_ProvisionedChanges.website')
-                  )}
+                {this.renderAtt(
+                  'website',
+                  fbt('Website', '_ProvisionedChanges.website'),
+                  { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
+                )}
               </div>
             </div>
 
@@ -388,6 +398,12 @@ class UserProfile extends Component {
                 changesToPublishExist={changesToPublishExist(this)}
                 publishedStrength={get(this.props, 'identity.strength') || 0}
                 openEditProfile={e => this.openEditProfile(e)}
+                onEnrolled={() => {
+                  // Open phone attestation once enrollment is complete
+                  this.setState({
+                    phone: true
+                  })
+                }}
               />
             </div>
           </div>
@@ -429,7 +445,12 @@ class UserProfile extends Component {
     )
   }
 
-  renderAtt(type, text, soon) {
+  renderAtt(type, text, props = {}) {
+    const { soon, disabled, hidden } = props
+    if (hidden) {
+      return null
+    }
+
     const { wallet } = this.props
     const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
@@ -443,14 +464,17 @@ class UserProfile extends Component {
       status = ' provisional'
       attestationProvisional = true
     }
+
     if (soon) {
       status = ' soon'
+    } else if (disabled) {
+      status = ' disabled'
     } else {
       status += ' interactive'
     }
 
     let AttestationComponent = AttestationComponents[type]
-    if (AttestationComponent) {
+    if (AttestationComponent && !soon && !disabled) {
       AttestationComponent = (
         <AttestationComponent
           wallet={wallet}
@@ -463,6 +487,8 @@ class UserProfile extends Component {
           }}
         />
       )
+    } else {
+      AttestationComponent = <AttestationComponent wallet={wallet} />
     }
 
     let attestationReward = 0

@@ -6,16 +6,16 @@ import Enum from 'utils/enum'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import { getAttestationReward } from 'utils/growthTools'
-import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
+// import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 
 const WizardStep = new Enum(
   'Publish',
-  'RewardsEnroll',
-  'SetOriginProfile',
-  'SetEmail',
-  'SetPhoneNumber',
+  'VerifyPhone',
+  // 'SetOriginProfile',
+  // 'SetEmail',
+  // 'SetPhoneNumber',
   'VerifyYourOtherProfiles'
 )
 
@@ -23,157 +23,170 @@ class ProfileWizard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      uiStep: WizardStep.Publish,
-      publishChanges: false,
-      skipRewardsEnroll: false,
-      skipVerifyOtherProfiles: false,
-      userEnroledIntoRewards: false
+      uiStep: WizardStep.VerifyPhone,
+      publishChanges: false
+      // skipRewardsEnroll: false,
+      // skipVerifyOtherProfiles: false,
+      // userEnroledIntoRewards: false
     }
 
     this.EnrollButton = withEnrolmentModal('button')
-    this.timeout = setTimeout(() => this.calculateUIStep(), 1)
+    // this.timeout = setTimeout(() => this.calculateUIStep(), 1)
   }
 
-  componentDidUpdate() {
-    this.calculateUIStep()
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.timeout)
-  }
-
-  calculateUIStep() {
-    const {
-      publishedProfile,
-      currentProfile,
-      changesToPublishExist,
-      growthEnrollmentStatus
-    } = this.props
-
-    const { skipRewardsEnroll, skipVerifyOtherProfiles } = this.state
-    const userEnroledIntoRewards = growthEnrollmentStatus === 'Enrolled'
-    const isMobile = window.innerWidth < 767
-
-    const meetsCritria = ({
-      originProfile = false,
-      email = false,
-      phone = false,
-      allAttestations = false
-    }) => {
-      const isOriginProfile = profile => {
-        return profile.firstName && profile.lastName && profile.description
-      }
-      const hasEmailAttestation = profile => {
-        return profile.emailVerified || profile.emailAttestation
-      }
-      const hasPhoneAttestation = profile => {
-        return profile.phoneVerified || profile.phoneAttestation
-      }
-
-      const hasAllAttestation = profile => {
-        return (
-          (profile.emailVerified || profile.emailAttestation) &&
-          (profile.phoneVerified || profile.phoneAttestation) &&
-          (profile.facebookVerified || profile.facebookAttestation) &&
-          (profile.twitterVerified || profile.twitterAttestation) &&
-          (profile.airbnbVerified || profile.airbnbAttestation)
-        )
-      }
-
-      if (
-        originProfile &&
-        !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))
-      ) {
-        return false
-      }
-
-      if (
-        email &&
-        !(
-          hasEmailAttestation(currentProfile) ||
-          hasEmailAttestation(publishedProfile)
-        )
-      ) {
-        return false
-      }
-
-      if (
-        phone &&
-        !(
-          hasPhoneAttestation(currentProfile) ||
-          hasPhoneAttestation(publishedProfile)
-        )
-      ) {
-        return false
-      }
-
-      if (
-        allAttestations &&
-        !(
-          hasAllAttestation(currentProfile) ||
-          hasAllAttestation(publishedProfile)
-        )
-      ) {
-        return false
-      }
-
-      return true
-    }
-
-    /* show enroll step if user is not enrolled, or user has skipped
-     * that step. If user is on mobile and we do not yet support mobile
-     * Origin Rewards also skip this step
-     */
-    if (
-      !skipRewardsEnroll &&
-      !userEnroledIntoRewards &&
-      (!isMobile || (isMobile && rewardsOnMobileEnabled))
-    ) {
-      this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
-    } else if (
-      meetsCritria({
-        originProfile: true,
-        email: true,
-        phone: true,
-        allAttestations: true
-      })
-    ) {
-      this.updateUiStepIfNecessary(WizardStep.Publish)
-    } else if (
-      meetsCritria({ originProfile: true, email: true, phone: true }) &&
-      skipVerifyOtherProfiles
-    ) {
-      this.updateUiStepIfNecessary(WizardStep.Publish)
-    } else if (
-      meetsCritria({ originProfile: true, email: true, phone: true })
-    ) {
-      this.updateUiStepIfNecessary(WizardStep.VerifyYourOtherProfiles)
-    } else if (meetsCritria({ originProfile: true, email: true })) {
-      this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
-    } else if (meetsCritria({ originProfile: true })) {
-      this.updateUiStepIfNecessary(WizardStep.SetEmail)
-    } else {
-      this.updateUiStepIfNecessary(WizardStep.SetOriginProfile)
-    }
-
-    if (changesToPublishExist !== this.state.publishChanges) {
+  componentDidUpdate(prevProps) {
+    if (!this.hasPhoneAttestation(prevProps.currentProfile) && this.hasPhoneAttestation(this.props.currentProfile)) {
       this.setState({
-        publishChanges: changesToPublishExist
+        uiStep: WizardStep.VerifyYourOtherProfiles,
+        publishChanges: true
+      })
+    } else if (this.props.changesToPublishExist !== this.state.publishChanges) {
+      this.setState({
+        publishChanges: this.props.changesToPublishExist
       })
     }
   }
 
-  updateUiStepIfNecessary(wizardStep) {
-    if (this.state.uiStep !== wizardStep) {
-      this.setState({
-        uiStep: wizardStep
-      })
-    }
+  hasPhoneAttestation(profile) {
+    return profile.phoneVerified || profile.phoneAttestation
   }
+
+  // componentWillUnmount() {
+  //   clearTimeout(this.timeout)
+  // }
+
+  // calculateUIStep() {
+  //   const {
+  //     publishedProfile,
+  //     currentProfile,
+  //     changesToPublishExist,
+  //     growthEnrollmentStatus
+  //   } = this.props
+
+  //   const { skipRewardsEnroll, skipVerifyOtherProfiles } = this.state
+  //   const userEnroledIntoRewards = growthEnrollmentStatus === 'Enrolled'
+  //   const isMobile = window.innerWidth < 767
+
+  //   const meetsCritria = ({
+  //     originProfile = false,
+  //     email = false,
+  //     phone = false,
+  //     allAttestations = false
+  //   }) => {
+  //     const isOriginProfile = profile => {
+  //       return profile.firstName && profile.lastName && profile.description
+  //     }
+  //     const hasEmailAttestation = profile => {
+  //       return profile.emailVerified || profile.emailAttestation
+  //     }
+  //     const hasPhoneAttestation = profile => {
+  //       return profile.phoneVerified || profile.phoneAttestation
+  //     }
+
+  //     const hasAllAttestation = profile => {
+  //       return (
+  //         (profile.emailVerified || profile.emailAttestation) &&
+  //         (profile.phoneVerified || profile.phoneAttestation) &&
+  //         (profile.facebookVerified || profile.facebookAttestation) &&
+  //         (profile.twitterVerified || profile.twitterAttestation) &&
+  //         (profile.airbnbVerified || profile.airbnbAttestation)
+  //       )
+  //     }
+
+  //     if (
+  //       originProfile &&
+  //       !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))
+  //     ) {
+  //       return false
+  //     }
+
+  //     if (
+  //       email &&
+  //       !(
+  //         hasEmailAttestation(currentProfile) ||
+  //         hasEmailAttestation(publishedProfile)
+  //       )
+  //     ) {
+  //       return false
+  //     }
+
+  //     if (
+  //       phone &&
+  //       !(
+  //         hasPhoneAttestation(currentProfile) ||
+  //         hasPhoneAttestation(publishedProfile)
+  //       )
+  //     ) {
+  //       return false
+  //     }
+
+  //     if (
+  //       allAttestations &&
+  //       !(
+  //         hasAllAttestation(currentProfile) ||
+  //         hasAllAttestation(publishedProfile)
+  //       )
+  //     ) {
+  //       return false
+  //     }
+
+  //     return true
+  //   }
+
+  //   /* show enroll step if user is not enrolled, or user has skipped
+  //    * that step. If user is on mobile and we do not yet support mobile
+  //    * Origin Rewards also skip this step
+  //    */
+  //   if (
+  //     !skipRewardsEnroll &&
+  //     !userEnroledIntoRewards &&
+  //     (!isMobile || (isMobile && rewardsOnMobileEnabled))
+  //   ) {
+  //     this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
+  //   } else if (
+  //     meetsCritria({
+  //       originProfile: true,
+  //       email: true,
+  //       phone: true,
+  //       allAttestations: true
+  //     })
+  //   ) {
+  //     this.updateUiStepIfNecessary(WizardStep.Publish)
+  //   } else if (
+  //     meetsCritria({ originProfile: true, email: true, phone: true }) &&
+  //     skipVerifyOtherProfiles
+  //   ) {
+  //     this.updateUiStepIfNecessary(WizardStep.Publish)
+  //   } else if (
+  //     meetsCritria({ originProfile: true, email: true, phone: true })
+  //   ) {
+  //     this.updateUiStepIfNecessary(WizardStep.VerifyYourOtherProfiles)
+  //   } else if (meetsCritria({ originProfile: true, email: true })) {
+  //     this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
+  //   } else if (meetsCritria({ originProfile: true })) {
+  //     this.updateUiStepIfNecessary(WizardStep.SetEmail)
+  //   } else {
+  //     this.updateUiStepIfNecessary(WizardStep.SetOriginProfile)
+  //   }
+
+  //   if (changesToPublishExist !== this.state.publishChanges) {
+  //     this.setState({
+  //       publishChanges: changesToPublishExist
+  //     })
+  //   }
+  // }
+
+  // updateUiStepIfNecessary(wizardStep) {
+  //   if (this.state.uiStep !== wizardStep) {
+  //     this.setState({
+  //       uiStep: wizardStep
+  //     })
+  //   }
+  // }
 
   renderVerifyYourOtherProfiles() {
     return (
-      <Fragment>
+      <>
         <div className="title">
           <fbt desc="ProfileWizard.VerifyOtherProfiles">
             Verify your other profiles
@@ -217,98 +230,101 @@ class ProfileWizard extends Component {
           </div>
         )}
         <div className="d-flex mr-auto ml-auto mt-3">
-          {this.addPublishNowButtonIfApplicable()}
+          {/* {this.addPublishNowButtonIfApplicable()} */}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
             onClick={e => {
               e.preventDefault()
-              this.setState({ skipVerifyOtherProfiles: true })
+              // this.setState({ skipVerifyOtherProfiles: true })
+              this.setState({
+                uiStep: WizardStep.Publish
+              })
             }}
           >
             <fbt desc="ProfileWizard.gotIt!">Got it!</fbt>
           </button>
         </div>
-      </Fragment>
+      </>
     )
   }
 
-  renderSetPhoneNumber() {
-    return (
-      <Fragment>
-        <div className="title">
-          <fbt desc="ProfileWizard.VerifyPhoneNumberTitle">
-            Next Step: Verify your phone number
-          </fbt>
-        </div>
-        <div className="sub-title">
-          <fbt desc="ProfileWizard.VerifyPhoneNumberSubTitle">
-            Strengthen your profile even further by verifying a valid 10-digit
-            phone number
-          </fbt>
-        </div>
-        {this.attestationRewardsAvailable() && (
-          <div className="d-flex rewards justify-content-center mt-2">
-            <div>
-              <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
-            </div>
-            <div className="d-flex align-items-center">
-              <div className="icon" />
-              <div className="ogn-coin">
-                {getAttestationReward({
-                  growthCampaigns: this.props.growthCampaigns,
-                  attestation: 'Phone',
-                  tokenDecimals: this.props.tokenDecimals || 18
-                }).toString()}
-                &nbsp;
-                <span>OGN</span>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="d-flex mr-auto ml-auto mt-3">
-          {this.addPublishNowButtonIfApplicable()}
-          <button
-            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={e => {
-              e.preventDefault()
-              document.getElementById('attestation-component-phone').click()
-            }}
-          >
-            <fbt desc="ProfileWizard.continue">Continue</fbt>
-          </button>
-        </div>
-      </Fragment>
-    )
-  }
+  // renderSetPhoneNumber() {
+  //   return (
+  //     <Fragment>
+  //       <div className="title">
+  //         <fbt desc="ProfileWizard.VerifyPhoneNumberTitle">
+  //           Next Step: Verify your phone number
+  //         </fbt>
+  //       </div>
+  //       <div className="sub-title">
+  //         <fbt desc="ProfileWizard.VerifyPhoneNumberSubTitle">
+  //           Strengthen your profile even further by verifying a valid 10-digit
+  //           phone number
+  //         </fbt>
+  //       </div>
+  //       {this.attestationRewardsAvailable() && (
+  //         <div className="d-flex rewards justify-content-center mt-2">
+  //           <div>
+  //             <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
+  //           </div>
+  //           <div className="d-flex align-items-center">
+  //             <div className="icon" />
+  //             <div className="ogn-coin">
+  //               {getAttestationReward({
+  //                 growthCampaigns: this.props.growthCampaigns,
+  //                 attestation: 'Phone',
+  //                 tokenDecimals: this.props.tokenDecimals || 18
+  //               }).toString()}
+  //               &nbsp;
+  //               <span>OGN</span>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       )}
+  //       <div className="d-flex mr-auto ml-auto mt-3">
+  //         {this.addPublishNowButtonIfApplicable()}
+  //         <button
+  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+  //           onClick={e => {
+  //             e.preventDefault()
+  //             document.getElementById('attestation-component-phone').click()
+  //           }}
+  //         >
+  //           <fbt desc="ProfileWizard.continue">Continue</fbt>
+  //         </button>
+  //       </div>
+  //     </Fragment>
+  //   )
+  // }
 
-  renderSetEmail() {
-    return (
-      <Fragment>
-        <div className="title">
-          <fbt desc="ProfileWizard.VerifyEmailTitle">
-            Next Step: Verify your email
-          </fbt>
-        </div>
-        <div className="sub-title">
-          <fbt desc="ProfileWizard.VerifyEmailSubTitle">
-            Publish to save your changes or continue with verifications
-          </fbt>
-        </div>
-        <div className="d-flex mr-auto ml-auto mt-3">
-          {this.addPublishNowButtonIfApplicable()}
-          <button
-            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={e => {
-              e.preventDefault()
-              document.getElementById('attestation-component-email').click()
-            }}
-          >
-            <fbt desc="ProfileWizard.continue">Continue</fbt>
-          </button>
-        </div>
-      </Fragment>
-    )
-  }
+  // renderSetEmail() {
+  //   return (
+  //     <Fragment>
+  //       <div className="title">
+  //         <fbt desc="ProfileWizard.VerifyEmailTitle">
+  //           Next Step: Verify your email
+  //         </fbt>
+  //       </div>
+  //       <div className="sub-title">
+  //         <fbt desc="ProfileWizard.VerifyEmailSubTitle">
+  //           Publish to save your changes or continue with verifications
+  //         </fbt>
+  //       </div>
+  //       <div className="d-flex mr-auto ml-auto mt-3">
+  //         {this.addPublishNowButtonIfApplicable()}
+  //         <button
+  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+  //           onClick={e => {
+  //             e.preventDefault()
+  //             document.getElementById('attestation-component-email').click()
+  //           }}
+  //         >
+  //           <fbt desc="ProfileWizard.continue">Continue</fbt>
+  //         </button>
+  //       </div>
+  //     </Fragment>
+  //   )
+  // }
 
   renderPublishChanges(buttonTextOption) {
     const props = this.props.deployIdentityProps
@@ -323,18 +339,18 @@ class ProfileWizard extends Component {
     )
   }
 
-  addPublishNowButtonIfApplicable() {
-    if (this.state.publishChanges) {
-      return (
-        <DeployIdentity
-          {...this.props.deployIdentityProps}
-          children={fbt('Publish Changes', 'ProfileWizard.PubishChanges')}
-          className="btn btn-primary btn-rounded btn-light mr-3"
-        />
-      )
-    }
-    return ''
-  }
+  // addPublishNowButtonIfApplicable() {
+  //   if (this.state.publishChanges) {
+  //     return (
+  //       <DeployIdentity
+  //         {...this.props.deployIdentityProps}
+  //         children={fbt('Publish Changes', 'ProfileWizard.PubishChanges')}
+  //         className="btn btn-primary btn-rounded btn-light mr-3"
+  //       />
+  //     )
+  //   }
+  //   return ''
+  // }
 
   renderPublish() {
     return this.renderPublishChanges(
@@ -342,55 +358,86 @@ class ProfileWizard extends Component {
     )
   }
 
-  renderRewardsEnroll() {
+  // renderRewardsEnroll() {
+  //   return (
+  //     <>
+  //       <div className="title">
+  //         <fbt desc="ProfileWizard.EnrollToEarn">
+  //           Enroll to earn Origin cryptocurrency tokens (OGN)
+  //         </fbt>
+  //       </div>
+  //       <div className="sub-title">
+  //         <fbt desc="ProfileWizard.EarnByCompletingYourProfile">
+  //           Earn tokens by completing your profile.
+  //         </fbt>
+  //       </div>
+  //       <this.EnrollButton
+  //         className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
+  //         skipjoincampaign="false"
+  //       >
+  //         <fbt desc="ProfileWizard.EnrollNow">Enroll Now</fbt>
+  //       </this.EnrollButton>
+  //     </>
+  //   )
+  // }
+
+  renderVerifyPhone() {
+    const continueButton = this.props.growthEnrollmentStatus === 'Enrolled' ? (
+      <button className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
+       onClick={this.props.onEnrolled}>
+        <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
+      </button>
+    ) : (
+      <this.EnrollButton
+        className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
+        skipjoincampaign="true"
+        onCompleted={this.props.onEnrolled}
+      >
+        <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
+      </this.EnrollButton>
+    )
     return (
-      <Fragment>
+      <>
         <div className="title">
-          <fbt desc="ProfileWizard.EnrollToEarn">
-            Enroll to earn Origin cryptocurrency tokens (OGN)
+          <fbt desc="ProfileWizard.VerifyPhoneToEarn">
+            Verify your phone number &amp; earn OGN
           </fbt>
         </div>
         <div className="sub-title">
-          <fbt desc="ProfileWizard.EarnByCompletingYourProfile">
-            Earn tokens by completing your profile.
+          <fbt desc="ProfileWizard.strengthenProfile">
+            Strengthen your profile even further by verifying a valid 10-digit phone number.
           </fbt>
         </div>
-        <this.EnrollButton
-          className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-          skipjoincampaign="false"
-        >
-          <fbt desc="ProfileWizard.EnrollNow">Enroll Now</fbt>
-        </this.EnrollButton>
-        <button
-          className="skip ml-auto mr-auto p-2"
-          onClick={() => this.setState({ skipRewardsEnroll: true })}
-        >
-          <fbt desc="ProfileWizard.skip">Skip</fbt>
-        </button>
-      </Fragment>
+        <div className="reward-text">
+          <fbt desc="ProfileWizard.verifyToWarn">
+            Verify to earn <span className="reward-amount">10 OGN</span>
+          </fbt>
+        </div>
+        {continueButton}
+      </>
     )
   }
 
-  renderSetOriginProfile() {
-    return (
-      <Fragment>
-        <div className="title">
-          <fbt desc="ProfileWizard.OriginProfileStep">
-            Upload a photo and provide a name and description
-          </fbt>
-        </div>
-        <div className="d-flex mr-auto ml-auto mt-3">
-          {this.addPublishNowButtonIfApplicable()}
-          <button
-            className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-            onClick={e => this.props.openEditProfile(e)}
-          >
-            <fbt desc="ProfileWizard.getStarted">Get Started</fbt>
-          </button>
-        </div>
-      </Fragment>
-    )
-  }
+  // renderSetOriginProfile() {
+  //   return (
+  //     <Fragment>
+  //       <div className="title">
+  //         <fbt desc="ProfileWizard.OriginProfileStep">
+  //           Upload a photo and provide a name and description
+  //         </fbt>
+  //       </div>
+  //       <div className="d-flex mr-auto ml-auto mt-3">
+  //         {this.addPublishNowButtonIfApplicable()}
+  //         <button
+  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
+  //           onClick={e => this.props.openEditProfile(e)}
+  //         >
+  //           <fbt desc="ProfileWizard.getStarted">Get Started</fbt>
+  //         </button>
+  //       </div>
+  //     </Fragment>
+  //   )
+  // }
 
   attestationRewardsAvailable() {
     return (
@@ -401,30 +448,28 @@ class ProfileWizard extends Component {
 
   render() {
     const { uiStep, publishChanges } = this.state
+    const { growthEnrollmentStatus, currentProfile } = this.props
+
+    if (growthEnrollmentStatus === 'Enrolled' && this.hasPhoneAttestation(currentProfile)) return this.renderPublish()
 
     return (
-      <Fragment>
-        {uiStep === WizardStep.Publish && this.renderPublish()}
-        {uiStep !== WizardStep.Publish && (
-          <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
-            {this[`render${uiStep}`]()}
-            <div className="status-bar d-flex justify-content-end">
-              {publishChanges && (
-                <div className="publish-changes d-flex align-items-center mr-auto ml-3">
-                  <div className="indicator mr-2" />
-                  <fbt desc="ProfileWizard.unpublishedChanges">
-                    You have unpublished changes
-                  </fbt>
-                </div>
-              )}
-              <div className="origin-id d-flex align-items-center">
-                <fbt desc="ProfileWizard.poweredBy">Powered by</fbt>
-                <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
-              </div>
+      <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">
+        {this[`render${uiStep}`]()}
+        <div className="status-bar d-flex justify-content-end">
+          {publishChanges && (
+            <div className="publish-changes d-flex align-items-center mr-auto ml-3">
+              <div className="indicator mr-2" />
+              <fbt desc="ProfileWizard.unpublishedChanges">
+                You have unpublished changes
+              </fbt>
             </div>
+          )}
+          <div className="origin-id d-flex align-items-center">
+            <fbt desc="ProfileWizard.poweredBy">Powered by</fbt>
+            <img className="ml-2 mr-3" src="images/origin-id-logo.svg" />
           </div>
-        )}
-      </Fragment>
+        </div>
+      </div>
     )
   }
 }
@@ -494,4 +539,20 @@ require('react-styl')(`
       font-size: 16px
       font-weight: bold
       color: var(--clear-blue)
+  .reward-text
+    margin-top: 1rem
+    color: black
+    font-size: 0.8rem
+    .reward-amount
+      color: #007bff
+      &::before
+        content: ''
+        display: inline-block
+        width: 1rem
+        height: 1rem
+        background: url(images/ogn-icon.svg) no-repeat center
+        background-size: cover
+        margin-right: 0.3rem
+        margin-left: 0.5rem
+        vertical-align: middle
 `)

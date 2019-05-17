@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
@@ -46,7 +47,8 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
-        userAlreadyEnrolled: false
+        userAlreadyEnrolled: false,
+        modalTitle: fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
       }
     }
 
@@ -131,26 +133,33 @@ function withEnrolmentModal(WrappedComponent) {
 
     // Renders mobile header with close button when on mobile device
     renderMobileHeaderOption(title) {
-      if (this.props.ismobile === 'false') return ''
+      if (this.state.modalTitle === title) {
+        return null
+      }
 
-      return (
-        <div className="header d-flex mb-4">
-          <div
-            className="col-2 d-flex justify-content-center align-items-center back"
-            onClick={() => {
-              this.setState({
-                open: false
-              })
-            }}
-          >
-            <img src="images/close-button.svg" />
-          </div>
-          <div className="container d-flex justify-content-center align-items-center col-8">
-            {title}
-          </div>
-          <div className="col-2" />
-        </div>
-      )
+      this.setState({
+        modalTitle: title
+      })
+
+      return null
+      // return (
+      //   <div className="header d-flex mb-4">
+      //     <div
+      //       className="col-2 d-flex justify-content-center align-items-center back"
+      //       onClick={() => {
+      //         this.setState({
+      //           open: false
+      //         })
+      //       }}
+      //     >
+      //       <img src="images/close-button.svg" />
+      //     </div>
+      //     <div className="container d-flex justify-content-center align-items-center col-8">
+      //       {title}
+      //     </div>
+      //     <div className="col-2" />
+      //   </div>
+      // )
     }
 
     renderJoinActiveCampaign() {
@@ -267,12 +276,12 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <div>
           {this.renderMobileHeaderOption(
-            fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin')
+            fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
           )}
           <div className="internal-modal-content">
             {!isMobile && (
               <div className="title title-light mt-2">
-                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
+                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin Rewards</fbt>
               </div>
             )}
             <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
@@ -476,7 +485,11 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     enrollmentSuccessful() {
-      this.historyNavigate('/campaigns')
+      if (this.props.onCompleted) {
+        this.props.onCompleted()
+      } else {
+        this.historyNavigate('/campaigns')
+      }
       this.handleCloseModal()
     }
 
@@ -508,6 +521,10 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
+
+      const isMobile = this.props.ismobile === 'true'
+
+      const ModalComponent = isMobile ? MobileModal : Modal
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
@@ -557,7 +574,8 @@ function withEnrolmentModal(WrappedComponent) {
                         }
                       />
                       {open && (
-                        <Modal
+                        <ModalComponent
+                          title={this.state.modalTitle}
                           className={`growth-enrollment-modal ${
                             snowSmallerModal ? 'small' : ''
                           } ${displayMobileModal ? 'mobile' : ''}`}
@@ -568,7 +586,7 @@ function withEnrolmentModal(WrappedComponent) {
                           }}
                         >
                           {this[`render${this.state.stage}`]()}
-                        </Modal>
+                        </ModalComponent>
                       )}
                     </Fragment>
                   )

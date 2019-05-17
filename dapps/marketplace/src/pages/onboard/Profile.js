@@ -94,8 +94,6 @@ require('react-styl')(`
         font-family: var(--heading-font)
         font-size: 24px
         font-weight: 200
-    .avatar
-      border-radius: 1rem
 
     > form
       text-align: left
@@ -149,6 +147,7 @@ require('react-styl')(`
       overflow: hidden
       &.interactive
         cursor: pointer
+        color: black
         &:hover
           border-color: var(--clear-blue)
           border-style: solid
@@ -196,6 +195,8 @@ require('react-styl')(`
         color: var(--dusk)
         > i
           background-image: url(images/identity/verification-shape-blue.svg)
+      &.disabled
+        opacity: 0.5
       &.soon
         opacity: 0.5
         &::after
