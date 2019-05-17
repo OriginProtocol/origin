@@ -20,7 +20,7 @@ faucetImageTag: 'cbd89b1'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '8940022'
+eventlistenerImageTag: '5522105'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -28,7 +28,7 @@ discoveryImageTag: '8940022'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '4e5422e'
+growthImageTag: '8940022'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -62,3 +62,7 @@ cronImageTag: '984b546'
 # origin-admin
 adminImage: origin-admin
 adminImageTag: 'a141762'
+
+# origin-relayer
+relayerImage: origin-relayer
+relayerImageTag: 'latest'
