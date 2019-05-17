@@ -69,6 +69,11 @@ export default function txHelper({
         const relayerResponse = await relayer({ tx, proxy, from, to: address })
         const hasCallbacks = onReceipt || onConfirmation ? true : false
 
+        /**
+         * Since we don't get the event handlers when the relayer processes a
+         * transaction, make sure that any provided callbacks are run by
+         * manually listening for new blocks.
+         */
         if (hasCallbacks && relayerResponse && relayerResponse.id) {
           let receipt
           const responseBlocks = async ({ newBlock }) => {

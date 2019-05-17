@@ -25,7 +25,10 @@ export default {
   arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
   ProxyFactory: '0x58fEB74DD1896B0659BE3AFa55Ad7C473737d456',
   IdentityProxyImplementation: '0x8ceB35b8E084E204e3E914e6C5203Fb826A00c4f',
-  proxyAccountsEnabled: true,
+  proxyAccountsEnabled:
+    typeof window === undefined || !window.localStorage.proxyAccountsEnabled
+      ? false
+      : true,
   messaging: {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
