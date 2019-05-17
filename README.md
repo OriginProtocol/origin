@@ -60,6 +60,7 @@ Servers and packages that provide extra functionality to DApps (e.g. search or a
 | [`@origin/ipfs-proxy`](/infra/ipfs-proxy) | Layer between IPFS and clients to prevent malicious use |
 | [`@origin/messaging`](/infra/messaging) | Messaging server |
 | [`@origin/notifications`](/infra/notifications) | Delivers in browser notifications |
+| [`@origin/relayer`](/infra/relayer) | Meta-txn relayer service |
 | [`@origin/tests`](/infra/tests) | Runs integration tests in Docker Compose |
 | [`@origin/token-transfer-client`](/infra/token-transfer-client) | Client for delivering tokens |
 | [`@origin/token-transfer-server`](/infra/token-transfer-server) | Server for delivering tokens |

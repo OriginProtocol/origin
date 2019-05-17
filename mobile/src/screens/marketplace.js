@@ -22,6 +22,12 @@ import { decodeTransaction } from 'utils/contractDecoder'
 import { webViewToBrowserUserAgent } from 'utils'
 
 class MarketplaceScreen extends Component {
+  static navigationOptions = () => {
+    return {
+      header: null
+    }
+  }
+
   constructor(props) {
     super(props)
 
@@ -66,17 +72,17 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  static navigationOptions = () => {
-    return {
-      header: null
-    }
-  }
-
   componentDidMount() {
     console.debug(
       `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
     )
     this.props.navigation.setParams({ toggleModal: this.toggleModal })
+  }
+
+  componentWillUnmount() {
+    DeviceEventEmitter.removeListener('transactionHash')
+    DeviceEventEmitter.removeListener('messageSigned')
+    DeviceEventEmitter.removeListener('messagingKeys')
   }
 
   onWebViewMessage(event) {
@@ -99,6 +105,7 @@ class MarketplaceScreen extends Component {
         // web3 transactiotn that isn't updating our identitty. If we are then
         // display a modal requesting notifications be enabled
         if (
+          !__DEV__ &&
           !permissions.alert &&
           msgData.targetFunc === 'processTransaction' &&
           decodeTransaction(msgData.data.data).functionName !==
@@ -155,7 +162,10 @@ class MarketplaceScreen extends Component {
           }
         })()
       `
-      this.dappWebView.injectJavaScript(keyInjection)
+      if (this.dappWebView) {
+        console.debug('Injecting messaging keys')
+        this.dappWebView.injectJavaScript(keyInjection)
+      }
     }
   }
 
@@ -215,15 +225,8 @@ class MarketplaceScreen extends Component {
       this.props.settings.network.dappUrl
     )
 
-    // Use key of network id on safeareaview to force a remount of component on
-    // network changes
     return (
-      <SafeAreaView
-        key={this.props.settings.network.id}
-        style={styles.sav}
-        forceInset={{ top: 'always' }}
-        {...this._panResponder.panHandlers}
-      >
+      <SafeAreaView style={styles.sav} {...this._panResponder.panHandlers}>
         <WebView
           ref={webview => {
             this.dappWebView = webview
@@ -303,11 +306,9 @@ class MarketplaceScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0B18234C',
     flex: 1
   },
   sav: {
-    backgroundColor: 'white',
     flex: 1
   },
   transparent: {
@@ -315,7 +316,8 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    backgroundColor: 'white'
   }
 })
 

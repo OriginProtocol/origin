@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6</string>
+	<string>0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0</string>
+	<string>2</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We will not be using the location</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -46,6 +46,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enabling Face ID allows you quick and secure access to your account</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>We will not be using music</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -115,5 +117,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<true/>
 </dict>
 </plist>

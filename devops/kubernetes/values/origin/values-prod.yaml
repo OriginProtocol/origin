@@ -54,6 +54,10 @@ linkingImageTag: 'latest'
 cronImage: origin-cron
 cronImageTag: 'latest'
 
+# origin-relayer
+relayerImage: origin-relayer
+relayerImageTag: 'latest'
+
 # origin-graphql
 adminImage: origin-graphql
 adminImageTag: 'latest'
