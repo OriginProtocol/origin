@@ -44,10 +44,18 @@ class ImportAccountScreen extends Component {
     }
   }
 
+  handleSubmit() {
+    this.setState({ loading: true }, () => {
+      setTimeout(() => {
+        this.addAccount()
+        this.setState({ loading: false })
+      })
+    })
+  }
+
   /* Add a new account to the wallet
    */
-  async handleSubmit() {
-    await this.setState({ loading: true })
+  addAccount() {
     let account
     if (this.state.method === 'mnemonic') {
       account = this.addAccountFromMnemonic()
@@ -75,7 +83,6 @@ class ImportAccountScreen extends Component {
         this.props.navigation.navigate(onSuccess)
       }
     }
-    await this.setState({ loading: false })
   }
 
   /* Add a new account based on a mnemonic (this.state.value). If the first account
@@ -170,7 +177,6 @@ class ImportAccountScreen extends Component {
             onSubmitEditing={this.handleSubmit}
             style={[
               styles.input,
-              styles.mnemonicInput,
               this.state.error ? styles.invalid : {}
             ]}
           />
@@ -196,6 +202,8 @@ class ImportAccountScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Done'}
             onPress={this.handleSubmit}
+            loading={this.state.loading}
+            disabled={this.state.loading}
           />
         </View>
       </SafeAreaView>
@@ -240,6 +248,7 @@ class ImportAccountScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={'Done'}
             onPress={this.handleSubmit}
+            loading={this.state.loading}
             disabled={this.state.loading}
           />
         </View>
@@ -298,10 +307,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
-    width: 300
-  },
-  mnemonicInput: {
-    height: 100
+    width: 300,
+    height: 80
   },
   invalid: {
     borderColor: '#ff0000',

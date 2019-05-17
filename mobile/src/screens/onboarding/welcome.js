@@ -53,11 +53,13 @@ class WelcomeScreen extends Component {
                 title={'Create a wallet'}
                 loading={this.state.loading}
                 disabled={this.state.loading}
-                onPress={async () => {
-                  await this.setState(prevState => { loading: true })
-                  console.log(this.state)
-                  DeviceEventEmitter.emit('createAccount')
-                  this.props.navigation.navigate('Authentication')
+                onPress={() => {
+                  this.setState({ loading: true }, () => {
+                    setTimeout(() => {
+                      DeviceEventEmitter.emit('createAccount')
+                      this.props.navigation.navigate('Authentication')
+                    })
+                  })
                 }}
               />
               <OriginButton
