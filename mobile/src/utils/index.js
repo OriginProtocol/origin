@@ -9,6 +9,14 @@ export function get(object, path, defval = null) {
   return path.reduce((xs, x) => (xs && xs[x] ? xs[x] : defval), object)
 }
 
+export function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+  return array
+}
+
 /* Build a user agent string for the current platform that approximates what
  * would be returned by the standard browser for this device
  */

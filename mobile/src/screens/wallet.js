@@ -20,7 +20,9 @@ class WalletScreen extends Component {
     }
   }
 
-  componentDidMount() {}
+  constructor(props) {
+    super(props)
+  }
 
   handleFunding(currency) {
     const { address } = this.props.wallet.activeAccount
@@ -101,13 +103,25 @@ class WalletScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7f8f8',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20
+  },
+  svContainer: {
+    flex: 1
+  },
+  walletSVContainer: {
+    paddingHorizontal: 10
+  },
   address: {
     color: '#6a8296',
     fontFamily: 'Lato',
@@ -118,29 +132,5 @@ const styles = StyleSheet.create({
   addressContainer: {
     paddingHorizontal: 18 * 3,
     paddingVertical: 22
-  },
-  container: {
-    backgroundColor: '#f7f8f8',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20
-  },
-  placeholder: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textAlign: 'center'
-  },
-  separator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  },
-  svContainer: {
-    flex: 1
-  },
-  walletSVContainer: {
-    paddingHorizontal: 10
   }
 })
