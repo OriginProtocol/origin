@@ -32,7 +32,7 @@ export default function Wallet(state = initialState, action = {}) {
       if (!exists && action.account.address && action.account.privateKey) {
         return {
           ...state,
-          accounts: [action.account, ...state.accounts]
+          accounts: [...state.accounts, action.account]
         }
       } else {
         return state
