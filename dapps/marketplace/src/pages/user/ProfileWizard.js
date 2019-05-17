@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withApollo } from 'react-apollo'
 
@@ -35,7 +35,10 @@ class ProfileWizard extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.hasPhoneAttestation(prevProps.currentProfile) && this.hasPhoneAttestation(this.props.currentProfile)) {
+    if (
+      !this.hasPhoneAttestation(prevProps.currentProfile) &&
+      this.hasPhoneAttestation(this.props.currentProfile)
+    ) {
       this.setState({
         uiStep: WizardStep.VerifyYourOtherProfiles,
         publishChanges: true
@@ -382,20 +385,23 @@ class ProfileWizard extends Component {
   // }
 
   renderVerifyPhone() {
-    const continueButton = this.props.growthEnrollmentStatus === 'Enrolled' ? (
-      <button className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-       onClick={this.props.onEnrolled}>
-        <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
-      </button>
-    ) : (
-      <this.EnrollButton
-        className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-        skipjoincampaign="true"
-        onCompleted={this.props.onEnrolled}
-      >
-        <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
-      </this.EnrollButton>
-    )
+    const continueButton =
+      this.props.growthEnrollmentStatus === 'Enrolled' ? (
+        <button
+          className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
+          onClick={this.props.onEnrolled}
+        >
+          <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
+        </button>
+      ) : (
+        <this.EnrollButton
+          className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
+          skipjoincampaign="true"
+          onCompleted={this.props.onEnrolled}
+        >
+          <fbt desc="ProfileWizard.EnrollNow">Continue</fbt>
+        </this.EnrollButton>
+      )
     return (
       <>
         <div className="title">
@@ -405,7 +411,8 @@ class ProfileWizard extends Component {
         </div>
         <div className="sub-title">
           <fbt desc="ProfileWizard.strengthenProfile">
-            Strengthen your profile even further by verifying a valid 10-digit phone number.
+            Strengthen your profile even further by verifying a valid 10-digit
+            phone number.
           </fbt>
         </div>
         <div className="reward-text">
@@ -450,7 +457,11 @@ class ProfileWizard extends Component {
     const { uiStep, publishChanges } = this.state
     const { growthEnrollmentStatus, currentProfile } = this.props
 
-    if (growthEnrollmentStatus === 'Enrolled' && this.hasPhoneAttestation(currentProfile)) return this.renderPublish()
+    if (
+      growthEnrollmentStatus === 'Enrolled' &&
+      this.hasPhoneAttestation(currentProfile)
+    )
+      return this.renderPublish()
 
     return (
       <div className="profile-wizard-box d-flex flex-column justify-content-center pl-4 pr-4 pt-4">

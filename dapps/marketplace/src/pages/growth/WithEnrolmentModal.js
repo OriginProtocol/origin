@@ -48,7 +48,10 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenConfirmed: false,
         termsAccepted: false,
         userAlreadyEnrolled: false,
-        modalTitle: fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
+        modalTitle: fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
       }
     }
 
@@ -276,12 +279,17 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <div>
           {this.renderMobileHeaderOption(
-            fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
+            fbt(
+              'Sign Up for Origin Rewards',
+              'WithEnrolmentModal.SignUpForOrigin'
+            )
           )}
           <div className="internal-modal-content">
             {!isMobile && (
               <div className="title title-light mt-2">
-                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin Rewards</fbt>
+                <fbt desc="EnrollmentModal.termsTitle">
+                  Sign Up for Origin Rewards
+                </fbt>
               </div>
             )}
             <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">

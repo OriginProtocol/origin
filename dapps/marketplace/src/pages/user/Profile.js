@@ -20,7 +20,7 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
-import Redirect from 'components/Redirect'
+// import Redirect from 'components/Redirect'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
@@ -287,7 +287,9 @@ class UserProfile extends Component {
     if (this.state.lastName) name.push(this.state.lastName)
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
-    const profileCreated = this.props.growthEnrollmentStatus === 'Enrolled' && (this.state.PhoneAttestation || this.state.phoneVerified)
+    const profileCreated =
+      this.props.growthEnrollmentStatus === 'Enrolled' &&
+      (this.state.PhoneAttestation || this.state.phoneVerified)
 
     return (
       <div className="container profile-edit">
