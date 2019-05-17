@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -19,7 +20,7 @@ class ImportAccountScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      method: 'mnemonic',
+      mnemonic: true,
       value: '',
       error: ''
     }
@@ -36,7 +37,7 @@ class ImportAccountScreen extends Component {
   }
 
   handleChange(value) {
-    if (this.state.method === 'mnemonic') {
+    if (this.state.mnemonic) {
       this.setState({ value })
     } else {
       // Private key, trim it
@@ -57,7 +58,7 @@ class ImportAccountScreen extends Component {
    */
   addAccount() {
     let account
-    if (this.state.method === 'mnemonic') {
+    if (this.state.mnemonic) {
       account = this.addAccountFromMnemonic()
     } else {
       account = this.addAccountFromPrivateKey()
@@ -73,7 +74,7 @@ class ImportAccountScreen extends Component {
       })
       // Reset state of component
       this.setState({
-        method: 'mnemonic',
+        mnemonic: true,
         value: '',
         error: '',
         loading: false
@@ -152,21 +153,18 @@ class ImportAccountScreen extends Component {
   }
 
   render() {
-    if (this.state.method === 'mnemonic') {
-      return this.renderMnemonicInput()
-    } else {
-      return this.renderPrivateKeyInput()
-    }
-  }
+    const { navigation } = this.props
+    const cancelRoute = this.props.navigation.getParam('cancelRoute')
 
-  renderMnemonicInput() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Enter Recovery Phrase</Text>
-          <Text style={styles.subtitle}>
-            Enter the 12 words in the correct order
-          </Text>
+          <Text style={styles.title}>Enter {this.state.mnemonic ? 'Recovery Phrase' : 'Private Key' }</Text>
+          {this.state.mnemonic && (
+            <Text style={styles.subtitle}>
+              Enter the 12 words in the correct order
+            </Text>
+          )}
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -183,64 +181,29 @@ class ImportAccountScreen extends Component {
           {this.state.error.length > 0 && (
             <Text style={styles.invalid}>{this.state.error}</Text>
           )}
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Use a private key'}
-            onPress={() =>
-              this.setState({ method: 'privatekey', value: '', error: '' })
+          <TouchableOpacity onPress={() =>
+              this.setState({
+                mnemonic: !this.state.mnemonic,
+                value: '',
+                error: ''
+              })
             }
-          />
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Done'}
-            onPress={this.handleSubmit}
-            loading={this.state.loading}
-            disabled={this.state.loading}
-          />
-        </View>
-      </SafeAreaView>
-    )
-  }
+          >
+            <Text style={styles.switchMethod}>Use a {this.state.mnemonic ? 'private key' : 'recovery phrase'} instead</Text>
+          </TouchableOpacity>
 
-  renderPrivateKeyInput() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Enter Your Private Key</Text>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            multiline={true}
-            returnKeyType="done"
-            blurOnSubmit={true}
-            onChangeText={this.handleChange}
-            onSubmitEditing={this.handleSubmit}
-            style={[styles.input, this.state.error ? styles.invalid : {}]}
-          />
-          {this.state.error.length > 0 && (
-            <Text style={styles.invalid}>{this.state.error}</Text>
-          )}
         </View>
         <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Use a recovery phrase'}
-            onPress={() =>
-              this.setState({ method: 'mnemonic', value: '', error: '' })
-            }
-            disabled={this.state.loading}
-          />
+          {cancelRoute && (
+            <OriginButton
+              size="large"
+              type="link"
+              style={styles.button}
+              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              title={'Cancel'}
+              onPress={() => navigation.navigate(cancelRoute)}
+            />
+          )}
           <OriginButton
             size="large"
             type="primary"
@@ -313,6 +276,10 @@ const styles = StyleSheet.create({
   invalid: {
     borderColor: '#ff0000',
     color: '#ff0000'
+  },
+  switchMethod: {
+    fontWeight: '600',
+    color: '#1a82ff'
   }
 })
 

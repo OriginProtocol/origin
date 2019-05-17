@@ -49,7 +49,8 @@ const OnboardingStack = createSwitchNavigator(
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
-        navigateOnSuccess: 'Authentication'
+        navigateOnSuccess: 'Authentication',
+        cancelRoute: 'Welcome'
       }
     },
     Email: EmailScreen,
@@ -59,21 +60,6 @@ const OnboardingStack = createSwitchNavigator(
   },
   {
     initialRouteName: 'Welcome'
-  }
-)
-
-const MarketplaceStack = createStackNavigator({
-  Marketplace: MarketplaceScreen
-})
-
-const WalletStack = createStackNavigator(
-  {
-    Wallet: WalletScreen
-  },
-  {
-    cardStyle: {
-      backgroundColor: '#f7f8f8'
-    }
   }
 )
 
@@ -89,6 +75,21 @@ const BackupStack = createSwitchNavigator(
   },
   {
     initialRouteName: 'Auth'
+  }
+)
+
+const MarketplaceStack = createStackNavigator({
+  Marketplace: MarketplaceScreen
+})
+
+const WalletStack = createStackNavigator(
+  {
+    Wallet: WalletScreen
+  },
+  {
+    cardStyle: {
+      backgroundColor: '#f7f8f8'
+    }
   }
 )
 
