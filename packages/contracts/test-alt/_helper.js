@@ -1,23 +1,9 @@
 import assert from 'assert'
-import fs from 'fs'
-import solc from 'solc'
 import linker from 'solc/linker'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
-import requireFromString from 'require-from-string'
-import memoize from 'lodash/memoize'
 
-const solcOpts = {
-  language: 'Solidity',
-  settings: {
-    metadata: { useLiteralContent: true },
-    outputSelection: {
-      '*': {
-        '*': ['abi', 'evm.bytecode.object']
-      }
-    }
-  }
-}
+import compile from './_compile'
 
 const solidityCoverage = process.env['SOLIDITY_COVERAGE'] !== undefined
 // Use solidity-coverage's forked testrpc if this is a coverage run
@@ -28,51 +14,11 @@ export const contractPath = solidityCoverage
   ? `${__dirname}/../../coverageEnv/contracts`
   : `${__dirname}/../contracts`
 
-/**
- * Multi Solc Version support. Can use local solc bin or load from remote
- * Local use requires a dir solc/ with different solc versions inside:
- * curl "https://ethereum.github.io/solc-bin/bin/soljson-v0.4.24+commit.e67f0147.js" --output soljson-v0.4.24.js
- */
-const getSolcVersion = memoize(async version => {
-  try {
-    const solcPath = `${__dirname}/solc/soljson-v${version}.js`
-    const solcSrc = fs.readFileSync(solcPath).toString()
-    const solcImport = requireFromString(solcSrc)
-    // console.log('Using local solc4')
-    return solc.setupMethods(solcImport)
-  } catch (e) {
-    return await new Promise((resolve, reject) => {
-      // console.log('Loading remote solc4')
-      solc.loadRemoteVersion('v0.4.24+commit.e67f0147', function(err, solcv4) {
-        if (err) return reject(err)
-        resolve(solcv4)
-      })
-    })
-  }
-})
-
 // Instantiate a web3 instance. Start a node if one is not already running.
 export async function web3Helper(provider = defaultProvider) {
   const web3 = new Web3(provider)
   const instance = await server(web3, provider)
   return { web3, server: instance }
-}
-
-function findImportsPath(prefix) {
-  return function findImports(path) {
-    try {
-      if (path.indexOf('node_modules') < 0) {
-        path = prefix + path
-      }
-      const contents = fs.readFileSync(path).toString()
-      return {
-        contents
-      }
-    } catch (e) {
-      console.log(`File not found: ${path}`)
-      return { error: 'File not found' }
-    }
-  }
 }
 
 export default async function testHelper(contracts, provider) {
@@ -83,37 +29,12 @@ export default async function testHelper(contracts, provider) {
     contractName,
     { from, args, log, path, trackGas, file }
   ) {
-    file = file || `${contractName}.sol`
-    const content = fs.readFileSync(`${path || contracts}/${file}`).toString()
-    const sources = { [file]: { content } }
-    const compileOpts = JSON.stringify({ ...solcOpts, sources })
-    const version = content.match(/pragma solidity \^?([^;]+);/)[1]
-    const imports = findImportsPath(path)
-    let rawOutput
-
-    if (version.indexOf('0.5.') === 0) {
-      // Compile the contract using solc
-      rawOutput = solc.compileStandardWrapper(compileOpts, imports)
-    } else {
-      const solcSnapshot = await getSolcVersion(version)
-      rawOutput = solcSnapshot.compileStandardWrapper(compileOpts, imports)
-    }
-
-    const output = JSON.parse(rawOutput)
-
-    // If there were any compilation errors, throw them
-    if (output.errors) {
-      output.errors.forEach(err => {
-        if (!err.formattedMessage.match(/Warning:/)) {
-          throw new SyntaxError(err.formattedMessage)
-        }
-      })
-    }
-
-    const {
-      abi,
-      evm: { bytecode }
-    } = output.contracts[file][contractName]
+    const { abi, bytecode, output } = await compile({
+      contractName,
+      path,
+      file,
+      contracts
+    })
 
     async function deployLib(linkedFile, linkedLib, bytecode) {
       const libObj = output.contracts[linkedFile][linkedLib]
@@ -148,12 +69,6 @@ export default async function testHelper(contracts, provider) {
     if (!bytecode.object) {
       const err = 'No Bytecode. Do the method signatures match the interface?'
       throw new Error(err)
-    }
-
-    if (process.env.BUILD) {
-      const path = `${__dirname}/../build/contracts/${contractName}_solc.json`
-      const json = { abi, bytecode: '0x' + bytecode.object }
-      fs.writeFileSync(path, JSON.stringify(json, null, 2))
     }
 
     // Instantiate the web3 contract using the abi and bytecode output from solc

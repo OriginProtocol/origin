@@ -1,3 +1,8 @@
+function localStorageHas(prop) {
+  if (typeof window === 'undefined') return false
+  return window.localStorage[prop] ? true : false
+}
+
 export default {
   provider:
     'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
@@ -25,10 +30,7 @@ export default {
   arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
   ProxyFactory: '0x58fEB74DD1896B0659BE3AFa55Ad7C473737d456',
   IdentityProxyImplementation: '0x8ceB35b8E084E204e3E914e6C5203Fb826A00c4f',
-  proxyAccountsEnabled:
-    typeof window === undefined || !window.localStorage.proxyAccountsEnabled
-      ? false
-      : true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
   messaging: {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
