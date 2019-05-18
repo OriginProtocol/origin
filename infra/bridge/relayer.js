@@ -53,7 +53,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 app.post('/', async function(req, res) {
   const { signature, from, txData, provider, to, proxy, preflight } = req.body
 
-  // Pre-flight requests check if the relayer is available
+  // Pre-flight requests check if the relayer is available and willing to pay
   if (preflight) {
     return res.send({ success: true })
   }
@@ -63,75 +63,61 @@ app.post('/', async function(req, res) {
     ProxyFactoryContract.abi,
     config.ProxyFactory
   )
-  const IdentityImp = new web3.eth.Contract(
-    IdentityProxyContract.abi,
-    config.IdentityProxyImplementation
-  )
 
   const nodeAccounts = await web3.eth.getAccounts()
-  const forwarder = nodeAccounts[0]
+  const Forwarder = nodeAccounts[0]
   let nonce = 0
 
-  const IdentityProxy = new web3.eth.Contract(IdentityProxyContract.abi)
+  const IdentityProxy = new web3.eth.Contract(IdentityProxyContract.abi, proxy)
   const Marketplace = new web3.eth.Contract(MarketplaceContract.abi)
   const IdentityEvents = new web3.eth.Contract(IdentityEventsContract.abi)
   const methods = {}
   Marketplace._jsonInterface
     .concat(IdentityProxy._jsonInterface)
     .concat(IdentityEvents._jsonInterface)
+    .concat(ProxyFactory._jsonInterface)
     .filter(i => i.type === 'function' && !i.constant)
     .forEach(o => (methods[o.signature] = o))
 
   const method = methods[txData.substr(0, 10)]
 
   if (proxy) {
-    IdentityProxy.options.address = proxy
     nonce = await IdentityProxy.methods.nonce(from).call()
   }
 
-  const signValid = await verifySig({
-    to,
-    from,
-    signature,
-    txData,
-    web3,
-    nonce
-  })
-
-  // 1. Verify sign
-  if (!signValid) {
+  const args = { to, from, signature, txData, web3, nonce }
+  const sigValid = await verifySig(args)
+  if (!sigValid) {
     return res.status(400).send({ errors: ['Cannot verify your signature'] })
   }
 
   // 2. Verify txData and check function signature
-  // if (!txData.toLowerCase().startsWith('0xca27eb1c')) {
-  //   return res.status(400).send({ errors: ['Invalid function signature'] })
-  // }
-
-  // 3. Deploy or get user's proxy instance
-  if (!proxy) {
-    const changeOwner = await IdentityImp.methods.changeOwner(from).encodeABI()
-
-    const res = await ProxyFactory.methods
-      .createProxy(IdentityImp._address, changeOwner)
-      .send({
-        from: nodeAccounts[0],
-        gas: 4000000
-      })
-      .once('receipt', receipt => {
-        console.log(`Deployed identity proxy (${receipt.gasUsed} gas)`)
-      })
-
-    IdentityProxy.options.address = res.events.ProxyCreation.returnValues.proxy
+  if (!method) {
+    return res.status(400).send({ errors: ['Invalid function signature'] })
   }
 
-  // 4. Call the forward method
-  let txHash
+  let tx, txHash
+
   try {
+    // If no proxy was specified assume the request is to deploy a proxy...
+    if (!proxy) {
+      if (to !== ProxyFactory.options.address) {
+        throw new Error('Incorrect ProxyFactory address provided')
+      } else if (method.name !== 'createProxyWithNonce') {
+        throw new Error('Incorrect ProxyFactory method provided')
+      }
+      const args = { to, data: txData, from: Forwarder }
+      const gas = await web3.eth.estimateGas(args)
+      tx = web3.eth.sendTransaction({ ...args, gas })
+    } else {
+      const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
+      const gas = await rawTx.estimateGas({ from: Forwarder })
+      // TODO: Not sure why we need extra gas here
+      tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
+    }
+
     txHash = await new Promise((resolve, reject) =>
-      IdentityProxy.methods
-        .forward(to, signature, from, txData)
-        .send({ from: forwarder, gas: 4000000 })
+      tx
         .once('transactionHash', resolve)
         .once('receipt', receipt => {
           const gas = receipt.gasUsed
@@ -140,12 +126,11 @@ app.post('/', async function(req, res) {
         })
         .catch(reject)
     )
-  } catch (e) {
-    console.log(e)
+  } catch (err) {
+    console.log(err)
     return res.status(400).send({ errors: ['Error forwarding'] })
   }
 
-  res.status(200)
   res.send({ id: txHash })
 })
 

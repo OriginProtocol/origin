@@ -51,6 +51,7 @@ module.exports = `
     originGraphQLVersion: String
     provider: String
     providerWS: String
+    proxyAccountsEnabled: Boolean
     relayer: String
   }
 
