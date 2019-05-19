@@ -88,6 +88,11 @@ const GrowthPayoutStatuses = new Enum(
   'Failed' // Transaction failed. Should be retried.
 )
 
+const GrowthPayoutTypes = new Enum(
+  'CampaignDistribution', // Payout part of regular campaign distribution.
+  'Adjustment' // Payout part of a manual adjustment. The data column should include details about the reason.
+)
+
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
 
 // currently Completed state is not used in the database.
@@ -101,6 +106,7 @@ module.exports = {
   GrowthParticipantAuthenticationStatus,
   GrowthRewardStatuses,
   GrowthPayoutStatuses,
+  GrowthPayoutTypes,
   GrowthInviteContactTypes,
   GrowthInviteStatuses,
   GrowthCampaignStatuses,

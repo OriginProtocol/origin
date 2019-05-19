@@ -28,7 +28,7 @@ const {
 //
 // Email notifications for Messages
 //
-async function messageEmailSend(receivers, sender, config) {
+async function messageEmailSend(receivers, sender, messageHash, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
@@ -104,7 +104,8 @@ async function messageEmailSend(receivers, sender, config) {
               }),
               asm: {
                 groupId: config.asmGroupId
-              }
+              },
+              __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
             }
 
             if (config.emailFileOut) {

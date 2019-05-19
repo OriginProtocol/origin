@@ -13,11 +13,17 @@ const AccountsQuery = gql`
         balance {
           eth
         }
+        owner {
+          id
+        }
       }
       metaMaskAccount {
         id
         balance {
           eth
+        }
+        owner {
+          id
         }
       }
     }

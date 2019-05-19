@@ -5,6 +5,8 @@ import { fbt } from 'fbt-runtime'
 import withNetwork from 'hoc/withNetwork'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
+import withConfig from 'hoc/withConfig'
+
 import ProfileQuery from 'queries/Profile'
 
 import Link from 'components/Link'
@@ -13,6 +15,8 @@ import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import MobileUserActivation from 'components/MobileUserActivation'
+
+import DeployProxy from '../identity/mutations/DeployProxy'
 
 class ProfileNav extends Component {
   constructor() {
@@ -47,7 +51,7 @@ class ProfileNav extends Component {
                 <ProfileDropdown
                   identity={identity}
                   identityLoading={identityLoading}
-                  walletType={walletType}
+                  // walletType={walletType}
                   onClose={() => this.props.onClose()}
                   data={data}
                 />
@@ -147,10 +151,10 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const WalletAddress = ({ wallet, walletType }) => {
+const WalletAddress = ({ wallet, walletType, children }) => {
   return (
     <div className="connected">
-      <fbt desc="nav.profile.activeWallet">Active wallet</fbt>
+      { children || <fbt desc="nav.profile.activeWallet">Active wallet</fbt> }
       <span>
         <span className={`wallet-icon ${getWalletIconClass(walletType)}`} />
         <span className="wallet-name">{walletType}</span>
@@ -220,11 +224,14 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
   )
 }
 
-const ProfileDropdown = ({
+const ProfileDropdownRaw = ({
   data,
   identity,
   identityLoading,
   walletType,
+  // wallet,
+  // walletProxy,
+  // config,
   onClose
 }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
@@ -234,6 +241,20 @@ const ProfileDropdown = ({
       <div className="active-wallet-info">
         <Network />
         <WalletAddress wallet={checksumAddress} walletType={walletType} />
+        {/* {!config.proxyAccountsEnabled ? null : (
+          <>
+            {walletProxy === wallet ? (
+              <DeployProxy
+                className="btn btn-sm btn-outline-primary px-3"
+                children="Deploy"
+              />
+            ) : (
+              <WalletAddress wallet={walletProxy} walletType={walletType}>
+                <fbt desc="nav.profile.proxyAccount">Proxy Account</fbt>
+              </WalletAddress>
+            )}
+          </>
+        )} */}
       </div>
       <div className="identity-info">
         <Identity
@@ -246,6 +267,8 @@ const ProfileDropdown = ({
     </div>
   )
 }
+
+const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
 function getWalletIconClass(walletType) {
   switch (walletType) {

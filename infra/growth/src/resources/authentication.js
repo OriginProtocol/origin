@@ -50,13 +50,13 @@ async function authenticateEnrollment(
     }
   })
 
-  if (
-    participant !== null &&
-    participant.status === enums.GrowthParticipantStatuses.Banned
-  ) {
-    logger.warn(`Banned user: ${accountId} tried to enroll`)
-    throw new BannedUserError('This user is banned')
-  }
+  // if (
+  //   participant !== null &&
+  //   participant.status === enums.GrowthParticipantStatuses.Banned
+  // ) {
+  //   logger.warn(`Banned user: ${accountId} tried to enroll`)
+  //   throw new BannedUserError('This user is banned')
+  // }
 
   const authToken =
     participant === null

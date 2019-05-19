@@ -11,6 +11,8 @@ import {
   SendFromNodeMutation,
   TransferTokenMutation,
   DeployMarketplaceMutation,
+  DeployProxyFactoryContractMutation,
+  DeployIdentityProxyMutation,
   UpdateTokenAllowanceMutation,
   AddAffiliateMutation,
   DeployIdentityEventsContractMutation,
@@ -198,6 +200,12 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed marketplace to ${Marketplace.contractAddress}`)
 
+  const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)
+  log(`Deployed Proxy Factory to ${ProxyFactory.contractAddress}`)
+
+  const IdentityProxy = await mutate(DeployIdentityProxyMutation, Admin)
+  log(`Deployed Identity Proxy imp to ${IdentityProxy.contractAddress}`)
+
   await mutate(SendFromNodeMutation, NodeAccount, { to: Seller, value: '0.5' })
   log('Sent eth to seller')
 
@@ -326,7 +334,9 @@ export default async function populate(gqlClient, log, done) {
       IdentityEventsEpoch: IdentityEvents.blockNumber,
       UniswapFactory: UniswapFactory.contractAddress,
       UniswapExchTpl: UniswapExchTpl.contractAddress,
-      UniswapDaiExchange
+      UniswapDaiExchange,
+      ProxyFactory: ProxyFactory.contractAddress,
+      IdentityProxyImplementation: IdentityProxy.contractAddress
     })
   }
 }

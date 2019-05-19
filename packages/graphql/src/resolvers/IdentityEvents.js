@@ -116,7 +116,10 @@ export function identity({ id, ipfsHash }) {
       ]),
       ...getAttestations(id, data.attestations || []),
       strength: 0,
-      ipfsHash
+      ipfsHash,
+      owner: {
+        id
+      }
     }
 
     if (identity.firstName) {
@@ -131,10 +134,14 @@ export function identity({ id, ipfsHash }) {
       .join(' ')
 
     // Make old style embedded avatars access by their IPFS hash.
-    if (identity.avatarUrl === undefined && identity.avatar !== undefined) {
+    if (
+      identity.avatarUrl === undefined &&
+      identity.avatar !== undefined &&
+      identity.avatar.length > 0
+    ) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
-        identity.avatarUrl = await IpfsHash.of(Buffer.from(avatarBinary.buffer))
+        identity.avatarUrl = await IpfsHash.of(avatarBinary.buffer)
       } catch {
         // If we can't translate an old avatar for any reason, don't worry about it.
         // We've already tested the backfill script, and not seen a problem
@@ -159,18 +166,17 @@ export function identity({ id, ipfsHash }) {
   })
 }
 
+/**
+ * Extracts binary data and mime type from a data URI.
+ *
+ * @param dataURI
+ * @returns {{buffer: Buffer, mimeType: string}}
+ */
 function dataURItoBinary(dataURI) {
-  // From https://stackoverflow.com/questions/12168909/blob-from-dataurl
   const parts = dataURI.split(',')
-  const byteString = atob(parts[1])
-  const mimeString = parts[0].split(':')[1].split(';')[0]
-  const ab = new ArrayBuffer(byteString.length)
-  const ia = new Uint8Array(ab)
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
-  }
-  const blob = new Blob([ab], { type: mimeString })
-  return { blob, buffer: ab }
+  const mimeType = parts[0].split(':')[1].split(';')[0]
+  const buffer = new Buffer(parts[1], 'base64')
+  return { buffer, mimeType }
 }
 
 export async function identities(
