@@ -14,7 +14,12 @@ import {
   clearVerifiedAccounts,
   getVerifiedAccounts
 } from 'utils/profileTools'
-import { getAttestationReward } from 'utils/growthTools'
+
+import {
+  getAttestationReward,
+  getMaxRewardPerUser,
+  getTokensEarned
+} from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -26,6 +31,7 @@ import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
+import Earnings from 'components/Earning'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -365,11 +371,33 @@ class UserProfile extends Component {
               </div>
             </div>
 
-            <ProfileStrength
-              large={true}
-              published={get(this.props, 'identity.strength') || 0}
-              unpublished={unpublishedStrength(this)}
-            />
+            <div className="profile-progress">
+              <div>
+                <ProfileStrength
+                  large={true}
+                  published={get(this.props, 'identity.strength') || 0}
+                  unpublished={unpublishedStrength(this)}
+                />
+              </div>
+              {profileCreated && (
+                <div>
+                  <Earnings
+                    large={true}
+                    total={getMaxRewardPerUser({
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                    earned={getTokensEarned({
+                      verifiedServices: Object.keys(
+                        AttestationComponents
+                      ).filter(a => this.state[`${a}Verified`]),
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                  />
+                </div>
+              )}
+            </div>
 
             <div className="actions">
               <ProfileWizard
@@ -660,6 +688,11 @@ require('react-styl')(`
         &::before
           background: url(images/ogn-icon.svg) no-repeat center
           background-size: 1rem
+    .profile-progress
+      display: flex
+      > div
+        flex: 50% 1 1
+        padding: 1rem
 
   @media (max-width: 767.98px)
     .profile-edit

@@ -43,4 +43,9 @@ require('react-styl')(`
         &.unpublished
           background-color: rgba(38, 209, 152, 0.5)
 
+  @media (max-width: 767.98px)
+    .profile-strength
+      .title
+        font-size: 14px
+
 `)
