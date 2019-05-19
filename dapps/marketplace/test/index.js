@@ -66,7 +66,7 @@ const finalizeOffer = async ({ buyer }) => {
 
 describe('Marketplace Dapp', function() {
   let seller, buyer
-  this.timeout(60000)
+  this.timeout(5000)
 
   describe('Single Unit Listing for Eth', function() {
     before(async function() {
@@ -344,11 +344,11 @@ describe('Marketplace Dapp', function() {
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
-    it('should skip the wizard', async function() {
-      if (await hasText(page, 'Skip', 'button')) {
-        await clickByText(page, 'Skip', 'button')
-      }
-    })
+    // it('should skip the wizard', async function() {
+    //   if (await hasText(page, 'Skip', 'button')) {
+    //     await clickByText(page, 'Skip', 'button')
+    //   }
+    // })
 
     it('should publish the profile changes', async function() {
       await pic(page, 'profile-before-publish')

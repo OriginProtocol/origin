@@ -458,8 +458,9 @@ class ProfileWizard extends Component {
     const { growthEnrollmentStatus, currentProfile } = this.props
 
     if (
-      growthEnrollmentStatus === 'Enrolled' &&
-      this.hasPhoneAttestation(currentProfile)
+      (growthEnrollmentStatus === 'Enrolled' &&
+        this.hasPhoneAttestation(currentProfile)) ||
+      localStorage.useWeb3Identity
     )
       return this.renderPublish()
 
