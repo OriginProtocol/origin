@@ -69,6 +69,17 @@ export const clickBySelector = async (page, path) => {
 export const changeAccount = async (page, account) => {
   await page.evaluate(account => {
     window.localStorage.useWeb3Wallet = account
+    window.localStorage.useWeb3Identity = JSON.stringify({
+      id: account,
+      profile: {
+        firstName: 'Test',
+        lastName: 'Account',
+        description: '',
+        avatar: ''
+      },
+      attestations: [],
+      strength: 0
+    })
   }, account)
   await new Promise(resolve => setTimeout(resolve, 500))
 }
@@ -81,6 +92,15 @@ export const createAccount = async page => {
       )
   )
 }
+
+// export const deployIdentity = async (page, ethAddress) => {
+//   return await page.evaluate(
+//     ethAddress => {
+//       new Promise(resolve =>
+//         window.ognTools.deployIdentity(window.gql, ethAddress).then(resolve)
+//       )
+//     }, ethAddress)
+// }
 
 const shouldScreenshot = process.env.SCREENSHOTS ? true : false
 let screenshots = 0

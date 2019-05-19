@@ -69,6 +69,10 @@ function getAttestations(account, attestations) {
 }
 
 export function identity({ id, ipfsHash }) {
+  if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
+    return JSON.parse(localStorage.useWeb3Identity)
+  }
+
   const [account, blockNumber] = id.split('-')
   id = account
   return new Promise(async resolve => {

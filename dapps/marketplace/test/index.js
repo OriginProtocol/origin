@@ -6,6 +6,7 @@ import {
   clickBySelector,
   pic,
   createAccount
+  // deployIdentity
 } from './_helpers'
 import services from './_services'
 
@@ -19,6 +20,9 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
+  // await deployIdentity(page, seller)
+  // await deployIdentity(page, buyer)
+
   await page.evaluate(() => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
@@ -62,7 +66,7 @@ const finalizeOffer = async ({ buyer }) => {
 
 describe('Marketplace Dapp', function() {
   let seller, buyer
-  this.timeout(5000)
+  this.timeout(60000)
 
   describe('Single Unit Listing for Eth', function() {
     before(async function() {
