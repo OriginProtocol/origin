@@ -17,7 +17,7 @@ jobs:
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ./node_modules
+            - .
       - persist_to_workspace:
           root: .
           paths:
