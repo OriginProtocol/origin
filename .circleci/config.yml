@@ -15,12 +15,14 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          command: npm install
+      - run: npm install
+      - run: sudo apt install -y postgresql-client || true
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+            - ./packages/contracts/node_modules
+            - ./infra/messaging/node_modules
       - persist_to_workspace:
           root: .
           paths:
