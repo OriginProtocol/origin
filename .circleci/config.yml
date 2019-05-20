@@ -14,10 +14,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache2-{{ checksum "package.json" }}
       - run: '[ -d "node_modules" ] && npm install || echo "Skip node_modules"'
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache2-{{ checksum "package.json" }}
           paths:
             - ./node_modules
             - ./dapps/marketplace/node_modules
