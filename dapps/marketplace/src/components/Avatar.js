@@ -6,6 +6,7 @@ const Avatar = ({
   size,
   avatar,
   avatarUrl,
+  avatarUrlExpanded,
   profile,
   config,
   className,
@@ -16,11 +17,19 @@ const Avatar = ({
     props.style = { width: size || 50, paddingTop: size || 50 }
   }
   let httpAvatar = undefined
-  if (avatarUrl && config) {
+
+  // If we have a profile, use its avatarUrl and avatarUrlExpanded if needed
+  if (profile) {
+    avatarUrl = avatarUrl || profile.avatarUrl
+    avatarUrlExpanded = avatarUrlExpanded || profile.avatarUrlExpanded
+  }
+
+  // Try expanded url first, since we don't have to wait to get a config object
+  if (avatarUrlExpanded) {
+    httpAvatar = avatarUrlExpanded
+  } else if (avatarUrl && config) {
     const { ipfsGateway } = config
     httpAvatar = makeGatewayUrl(ipfsGateway, avatarUrl)
-  } else if (profile && profile.avatarUrlExpanded) {
-    httpAvatar = profile.avatarUrlExpanded
   } else if (avatar) {
     httpAvatar = avatar
   }
