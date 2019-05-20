@@ -39,6 +39,13 @@ const options = {
   }
 }
 
+/**
+ * `ENGINE_API_KEY` is the default that Apollo uses and what it specifies in 
+ * the docs.  `APOLLO_METRICS_API_KEY` was chosen for clarity, but both are
+ * supported here on the off chance someone uses the former.  Without supporting
+ * both, it may cause some unexpected behavior that I'd rather not have to chase
+ * down later.
+ */
 const API_KEY = process.env.ENGINE_API_KEY || process.env.APOLLO_METRICS_API_KEY
 if (typeof API_KEY !== 'undefined') {
   options.engine = {
