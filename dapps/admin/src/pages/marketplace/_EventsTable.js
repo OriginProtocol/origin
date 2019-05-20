@@ -6,8 +6,6 @@ import IpfsLink from 'components/IpfsLink'
 
 import withNetwork from 'hoc/withNetwork'
 
-
-
 function eventName(e, networkId) {
   const [, type, target] = e.event.split(/(Offer|Listing)/)
   const { listingID, offerID } = e.returnValues
