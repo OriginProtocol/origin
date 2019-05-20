@@ -55,7 +55,6 @@ const ProfileFields = [
   'firstName',
   'lastName',
   'description',
-  'avatar',
   'avatarUrl',
   'strength',
   'attestations',
@@ -78,7 +77,6 @@ function getState(profile) {
     firstName: '',
     lastName: '',
     description: '',
-    avatar: '',
     ...pickBy(pick(profile, ProfileFields), k => k)
   }
 }
@@ -122,7 +120,7 @@ class UserProfile extends Component {
       (profile.firstName !== prevProfile.firstName ||
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
-        profile.avatar !== prevProfile.avatar ||
+        profile.avatarUrl !== prevProfile.avatarUrl ||
         profile.emailVerified !== prevProfile.emailVerified ||
         profile.phoneVerified !== prevProfile.phoneVerified ||
         profile.facebookVerified !== prevProfile.facebookVerified ||
@@ -141,7 +139,7 @@ class UserProfile extends Component {
       (state.firstName !== prevState.firstName ||
         state.lastName !== prevState.lastName ||
         state.description !== prevState.description ||
-        state.avatar !== prevState.avatar) &&
+        state.avatarUrl !== prevState.avatarUrl) &&
       !this.accountsSwitched
     )
   }
@@ -377,7 +375,6 @@ class UserProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar',
                     'avatarUrl'
                   ]),
                   attestations: [
@@ -420,17 +417,14 @@ class UserProfile extends Component {
               'firstName',
               'lastName',
               'description',
-              'avatar',
               'avatarUrl'
             ])}
-            avatar={this.state.avatar}
+            avatarUrl={this.state.avatarUrl}
             onClose={() => this.setState({ editProfile: false })}
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            onAvatarChange={(avatar, avatarUrl) =>
-              this.setState({ avatar, avatarUrl })
-            }
+            onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
           />
         )}
       </div>

@@ -238,7 +238,8 @@ class IdentityEventHandler {
     // Check required fields are populated.
     const validProfile =
       (identity.firstName.length > 0 || identity.lastName.length > 0) &&
-      identity.avatar.length > 0
+      identity.avatarUrl &&
+      identity.avatarUrl.length > 0
     if (!validProfile) {
       return
     }
