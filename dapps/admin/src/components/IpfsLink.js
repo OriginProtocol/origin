@@ -4,7 +4,7 @@ import { getIpfsHashFromBytes32 } from 'utils/ipfsHash'
 import { getIpfsGateway } from 'utils/config'
 
 export default function IpfsLink(props) {
-  if (props.rawHash == undefined) {
+  if (props.rawHash === undefined) {
     return <span>None</span>
   }
   const hash = getIpfsHashFromBytes32(props.rawHash)
