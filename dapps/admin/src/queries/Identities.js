@@ -14,6 +14,7 @@ const IdentitiesQuery = gql`
         nodes {
           id
           fullName
+          ipfsHash
         }
       }
     }
