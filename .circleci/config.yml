@@ -16,13 +16,13 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run: npm install
-      - run: sudo apt install -y postgresql-client || true
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
             - ./packages/contracts/node_modules
             - ./infra/messaging/node_modules
+            - ./infra/notifications/node_modules
       - persist_to_workspace:
           root: .
           paths:
@@ -33,40 +33,34 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: psql -c 'create database travis_ci_test;' -U postgres
-      - run:
-          command: lerna run migrate --scope @origin/event-cache
-      - run:
-          command: npm run test --prefix packages/event-cache
+      - run: sudo apt install -y postgresql-client || true
+      - run: psql -c 'create database travis_ci_test;' -U postgres
+      - run: lerna run migrate --scope @origin/event-cache
+      - run: npm run test --prefix packages/event-cache
   test_lint:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: npm run lint
+      - run: npm run lint
   test_graphql:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: npm run test --prefix packages/graphql
+      - run: npm run test --prefix packages/graphql
   test_marketplace:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: npm run test --prefix dapps/marketplace
+      - run: npm run test --prefix dapps/marketplace
   test_contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: npm run test --prefix packages/contracts
+      - run: npm run test --prefix packages/contracts
 
 workflows:
   version: 2
