@@ -132,7 +132,7 @@ class AdjustPayout {
     let status, txnHash, txnReceipt
     try {
       if (this.config.doIt) {
-        txnReceipt = await this.distributor.credit(ethAddress, amount)
+        txnReceipt = await this.distributor.credit(ethAddress, amountNaturalUnit)
       } else {
         txnReceipt = {
           status: 'OK',
