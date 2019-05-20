@@ -12,7 +12,7 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          command: npm install
+          command: '[ -d "node_modules" ] && npm install'
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
