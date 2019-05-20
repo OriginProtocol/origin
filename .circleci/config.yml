@@ -6,6 +6,8 @@ defaults: &defaults
         POSTGRES_USER: postgres
         POSTGRES_DB: travis_ci_test
   working_directory: ~/origin
+  environment:
+    DATABASE_URL: postgres://postgres@localhost/travis_ci_test
 
 version: 2
 jobs:
@@ -20,9 +22,36 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+            - ./dapps/marketplace/node_modules
+            - ./dapps/admin/node_modules
+            - ./dapps/graphql-simple-demo/node_modules
+            - ./packages/token/node_modules
+            - ./packages/eventsource/node_modules
+            - ./packages/validator/node_modules
+            - ./packages/ipfs/node_modules
+            - ./packages/mobile-bridge/node_modules
+            - ./packages/event-cache/node_modules
             - ./packages/contracts/node_modules
+            - ./packages/graphql/node_modules
+            - ./packages/origin-js/node_modules
+            - ./packages/linker-client/node_modules
+            - ./packages/services/node_modules
+            - ./infra/dapp-creator-server/node_modules
+            - ./infra/identity/node_modules
+            - ./infra/ipfs-proxy/node_modules
+            - ./infra/token-transfer-client/node_modules
+            - ./infra/bridge/node_modules
+            - ./infra/discovery/node_modules
+            - ./infra/tests/node_modules
+            - ./infra/growth/node_modules
+            - ./infra/relayer/node_modules
+            - ./infra/dapp-creator-client/node_modules
+            - ./infra/token-transfer-server/node_modules
+            - ./infra/faucet/node_modules
             - ./infra/messaging/node_modules
             - ./infra/notifications/node_modules
+            - ./infra/cron/node_modules
+            - ./infra/linking/node_modules
       - persist_to_workspace:
           root: .
           paths:
