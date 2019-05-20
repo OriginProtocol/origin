@@ -6,6 +6,7 @@ import { Query } from 'react-apollo'
 
 import Identity from 'components/Identity'
 import LoadingSpinner from 'components/LoadingSpinner'
+import IpfsLink from 'components/IpfsLink'
 
 import UserProfile from '../users/UserProfile'
 
@@ -17,6 +18,7 @@ const IdentityQuery = gql`
       lastName
       description
       avatar
+      ipfsHash
 
       facebookVerified
       twitterVerified
@@ -62,6 +64,9 @@ class IdentityPage extends Component {
                     <Identity account={identityId} />
                   </li>
                 </ul>
+                <p>
+                  IPFS: <IpfsLink rawHash={data.identity.ipfsHash} />
+                </p>
                 <UserProfile profile={profile} />
               </div>
             )
