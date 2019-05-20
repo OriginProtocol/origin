@@ -13,6 +13,10 @@ module.exports = `
     ): Transaction
 
     deployIdentityEvents(from: String!): Transaction
+
+    deployProxyFactory(from: String!): Transaction
+    deployIdentityProxy(from: String!): Transaction
+    deployIdentityViaProxy(from: String!, factoryAddress: String, proxyAddress: String, owner: String!): Transaction
   }
 
   input ProfileInput {

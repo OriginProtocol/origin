@@ -354,6 +354,7 @@ describe('Marketplace Dapp', function() {
     it('should reach a success page', async function() {
       await waitForText(page, 'Success')
       await pic(page, 'profile-edited')
+      await clickByText(page, 'OK', 'button')
     })
   })
 })

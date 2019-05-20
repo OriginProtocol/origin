@@ -14,6 +14,12 @@ const IdentitiesQuery = gql`
         nodes {
           id
           fullName
+          owner {
+            id
+            owner {
+              id
+            }
+          }
         }
       }
     }

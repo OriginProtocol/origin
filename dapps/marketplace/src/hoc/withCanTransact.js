@@ -4,8 +4,10 @@ import get from 'lodash/get'
 
 import CanBuyQuery from 'queries/CanBuy'
 
+import withConfig from './withConfig'
+
 function withCanTransact(WrappedComponent) {
-  const WithCanTransact = props => {
+  const WithCanTransact = ({ config, ...props }) => {
     return (
       <Query query={CanBuyQuery}>
         {({ data, error, loading }) => {
@@ -32,7 +34,9 @@ function withCanTransact(WrappedComponent) {
           if (!metaMaskId) {
             return <WrappedComponent {...props} cannotTransact="no-wallet" />
           }
-          if (get(data, 'web3.metaMaskAccount.balance.eth') === '0') {
+
+          const balance = get(data, 'web3.metaMaskAccount.balance.eth')
+          if (balance === '0' && !config.relayer) {
             return <WrappedComponent {...props} cannotTransact="no-balance" />
           }
 
@@ -54,7 +58,7 @@ function withCanTransact(WrappedComponent) {
       </Query>
     )
   }
-  return WithCanTransact
+  return withConfig(WithCanTransact)
 }
 
 export default withCanTransact
