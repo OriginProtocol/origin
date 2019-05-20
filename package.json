@@ -11,9 +11,7 @@
       "packages/**"
     ],
     "nohoist": [
-      "**/react-native",
-      "**/react-native/**",
-      "openzeppelin-solidity"
+      "**/openzeppelin-solidity"
     ]
   },
   "devDependencies": {
