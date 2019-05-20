@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 jobs:
-  build:
+  install:
     docker:
       - image: circleci/node:10
     steps:
@@ -14,6 +14,23 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+  test-lint:
+    steps:
       - run:
-          name: test
           command: npm run lint
+  test-graphql:
+    steps:
+      - run:
+          command: npm run test --prefix packages/graphql
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - install
+      - test-lint:
+          requires:
+            - install
+      - test-graphql:
+          requires:
+            - install
