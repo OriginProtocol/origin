@@ -26,16 +26,16 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
-        command: npm run lint
+          command: npm run lint
   test_graphql:
     <<: *defaults
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
-        command: npm run test --prefix packages/graphql
+          command: npm run test --prefix packages/graphql
 
 workflows:
   version: 2
@@ -43,8 +43,8 @@ workflows:
     jobs:
       - setup_environment
       - test_lint:
-          requires:
-            - setup_environment
+        requires:
+          - setup_environment
       - test_graphql:
-          requires:
-            - setup_environment
+        requires:
+          - setup_environment
