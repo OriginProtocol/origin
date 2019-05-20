@@ -122,7 +122,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isGiftCard = listing.__typename === 'GiftCardListing'
-    const isOwnerViewing = listing.seller.id === this.props.wallet
+    const isOwnerViewing = listing.seller.id === this.props.walletProxy
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
@@ -276,10 +276,10 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.wallet
+      b => b.id === this.props.walletProxy
     )
 
-    if (listing.seller.id === this.props.wallet) {
+    if (listing.seller.id === this.props.walletProxy) {
       return (
         <EditOnly
           {...this.props}

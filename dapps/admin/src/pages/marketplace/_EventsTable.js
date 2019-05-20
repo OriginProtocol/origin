@@ -2,29 +2,29 @@ import React, { Component } from 'react'
 import formatDate from 'utils/formatDate'
 
 import Identity from 'components/Identity'
-
 import IpfsLink from 'components/IpfsLink'
 
-function eventName(e) {
+import withNetwork from 'hoc/withNetwork'
+
+
+
+function eventName(e, networkId) {
   const [, type, target] = e.event.split(/(Offer|Listing)/)
   const { listingID, offerID } = e.returnValues
   // console.log(e.event.split(/(Offer|Listing)/))
+  const href = `#/marketplace/listings/${networkId}-000-`
   if (type === 'Offer') {
     return (
-      <>
-        <a
-          href={`#/marketplace/listings/${listingID}`}
-        >{`${type} ${listingID}-${offerID} ${target}`}</a>
-      </>
+      <a href={`${href}${listingID}`}>
+        {`${type} ${listingID}-${offerID} ${target}`}
+      </a>
     )
   } else if (type === 'Listing') {
     // return `${type} ${e.returnValues.listingID} ${target}`
     return (
-      <>
-        <a href={`#/marketplace/listings/${listingID}`}>{`${type} ${
-          e.returnValues.listingID
-        } ${target}`}</a>
-      </>
+      <a href={`${href}${listingID}`}>
+        {`${type} ${e.returnValues.listingID} ${target}`}
+      </a>
     )
   }
   return `${e.event} ${e.returnValues.listingID || ''}-${e.returnValues
@@ -50,7 +50,7 @@ class EventsTable extends Component {
           {this.props.events.map(e => (
             <tr key={e.id}>
               <td>{formatDate(e.block.timestamp)}</td>
-              <td>{eventName(e)}</td>
+              <td>{eventName(e, this.props.networkId)}</td>
               <td>
                 <Identity account={e.returnValues.party} />
               </td>
@@ -68,4 +68,4 @@ class EventsTable extends Component {
   }
 }
 
-export default EventsTable
+export default withNetwork(EventsTable)

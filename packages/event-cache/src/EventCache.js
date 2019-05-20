@@ -74,8 +74,6 @@ const getPastEvents = memoize(
     const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
 
-    instance.lastQueriedBlock = toBlock
-
     if (!numBlocks) return
 
     const newEvents = flattenDeep(await Promise.all(requests))
@@ -89,6 +87,8 @@ const getPastEvents = memoize(
         debug('Error adding new events to backend', e)
       }
     }
+
+    instance.lastQueriedBlock = toBlock
   },
   (...args) => `${args[0].contract._address}-${args[1]}-${args[2]}`
 )

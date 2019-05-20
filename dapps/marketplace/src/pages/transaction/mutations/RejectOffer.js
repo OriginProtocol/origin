@@ -8,7 +8,9 @@ import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class RejectOffer extends Component {
   state = {}
@@ -94,7 +96,7 @@ class RejectOffer extends Component {
     withdrawOffer({
       variables: {
         offerID: this.props.offer.id,
-        from: this.props.offer.listing.seller.id
+        from: this.props.wallet
       }
     })
   }
@@ -139,7 +141,7 @@ class RejectOffer extends Component {
   }
 }
 
-export default withCanTransact(RejectOffer)
+export default withWallet(withCanTransact(RejectOffer))
 
 require('react-styl')(`
   .reject-offer-modal
