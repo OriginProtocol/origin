@@ -15,10 +15,14 @@ jobs:
           paths:
             - ./node_modules
   test-lint:
+    docker:
+      - image: circleci/node:10
     steps:
       - run:
           command: npm run lint
   test-graphql:
+    docker:
+      - image: circleci/node:10
     steps:
       - run:
           command: npm run test --prefix packages/graphql
