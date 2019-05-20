@@ -28,14 +28,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          command: npm run lint
+          command: lerna run lint
   test_graphql:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run:
-          command: npm run test --prefix packages/graphql
+          command: lerna run test --prefix packages/graphql
 
 workflows:
   version: 2
