@@ -143,10 +143,10 @@ class OfferRow extends Component {
     const { offer, listing, accounts } = this.props
 
     const buyerPresent = accounts.find(
-      a => offer.buyer && a.id === offer.buyer.id
+      a => offer.buyer && a.id === offer.buyer.owner.id
     )
     const sellerPresent = accounts.find(
-      a => listing.seller && a.id === listing.seller.id
+      a => listing.seller && a.id === listing.seller.owner.id
     )
     const arbitratorPresent = accounts.find(
       a => offer.arbitrator && a.id === offer.arbitrator.id

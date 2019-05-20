@@ -16,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       // Populated only if status is banned and if such contains reason(s) why participant was banned.
       ban: DataTypes.JSONB,
       // Participant is an Origin employee.
-      employee: { type: DataTypes.BOOLEAN, defaultValue: false }
+      employee: { type: DataTypes.BOOLEAN, defaultValue: false },
+      // Trusted account. Do not ban.
+      trusted: { type: DataTypes.BOOLEAN, defaultValue: false }
     },
     {
       tableName: 'growth_participant'

@@ -106,7 +106,7 @@ matrix:
         - lerna run migrate --scope @origin/bridge
       install:
         - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/bridge
+        - npm run bootstrap -- --scope @origin/bridge --scope @origin/contracts
       script:
         - npm run test --prefix infra/bridge
 

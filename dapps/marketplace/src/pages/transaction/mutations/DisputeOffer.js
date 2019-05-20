@@ -8,7 +8,9 @@ import SendMessage from 'mutations/SendMessage'
 import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class DisputeOffer extends Component {
   state = { problem: '' }
@@ -136,12 +138,10 @@ class DisputeOffer extends Component {
     }
 
     this.setState({ waitFor: 'pending' })
-    let from = this.props.offer.buyer.id
-    if (this.props.party === 'seller') {
-      from = this.props.offer.listing.seller.id
-    }
 
-    disputeOffer({ variables: { offerID: this.props.offer.id, from } })
+    disputeOffer({
+      variables: { offerID: this.props.offer.id, from: this.props.wallet }
+    })
   }
 
   renderWaitModal(client) {
@@ -177,4 +177,4 @@ class DisputeOffer extends Component {
   }
 }
 
-export default withCanTransact(DisputeOffer)
+export default withWallet(withCanTransact(DisputeOffer))

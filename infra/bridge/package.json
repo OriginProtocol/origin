@@ -27,6 +27,7 @@
     "DApp"
   ],
   "dependencies": {
+    "@origin/contracts": "^0.8.6",
     "@sendgrid/mail": "^6.3.1",
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",

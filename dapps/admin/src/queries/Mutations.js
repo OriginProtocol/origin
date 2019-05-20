@@ -37,7 +37,9 @@ export const ImportWalletMutation = gql`
 
 export const ImportWalletsMutation = gql`
   mutation ImportWallets($accounts: [WalletInput]!) {
-    importWallets(accounts: $accounts)
+    importWallets(accounts: $accounts) {
+      id
+    }
   }
 `
 
@@ -392,6 +394,24 @@ export const UniswapAddLiquidity = gql`
       value: $value
       tokens: $tokens
       liquidity: $liquidity
+    ) {
+      id
+    }
+  }
+`
+
+export const DeployIdentityViaProxyMutation = gql`
+  mutation DeployIdentityViaProxy(
+    $from: String!
+    $factoryAddress: String
+    $proxyAddress: String
+    $owner: String!
+  ) {
+    deployIdentityViaProxy(
+      from: $from
+      factoryAddress: $factoryAddress
+      proxyAddress: $proxyAddress
+      owner: $owner
     ) {
       id
     }
