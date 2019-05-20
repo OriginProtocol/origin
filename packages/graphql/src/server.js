@@ -23,7 +23,7 @@ const options = {
       /**
        * TODO: Maybe check how apollo parses queries and use the same parser.
        * There could be a case here where a character is inserted before
-       * 'motation' in the query body that apollo would ignore, but would cause
+       * 'mutation' in the query body that apollo would ignore, but would cause
        * this to fail.  While I don't think any of the mutations being run from
        * the server are *dangerous*, it sure isn't ideal and could have some
        * unintended side-effects.

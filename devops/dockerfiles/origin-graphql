@@ -3,7 +3,6 @@ FROM node:10 as build
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV GRAPHQL_SERVER_PORT=4002
 
 COPY package*.json ./
 COPY lerna.json ./
