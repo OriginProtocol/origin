@@ -13,6 +13,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
@@ -30,7 +31,7 @@ class AccountScreen extends Component {
   }
 
   static navigationOptions = {
-    title: 'Account Details',
+    title: fbt('Account Details', 'AccountScreen.headerTitle'),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -40,15 +41,23 @@ class AccountScreen extends Component {
 
   async handleDangerousCopy(privateKey) {
     Alert.alert(
-      'Important!',
-      'As a security precaution, the clipboard will be cleared after one minute.',
+      fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle'),
+      fbt(
+        'As a security precaution, the clipboard will be cleared after one minute.',
+        'AccountScreen.dangerousCopyAlertMessage'
+      ),
       [
         {
-          text: 'Got it',
+          text: fbt('Got it', 'AccountScreen.dangerousCopyButton'),
           onPress: async () => {
             await Clipboard.setString(privateKey)
 
-            Alert.alert('Copied to clipboard!')
+            Alert.alert(
+              fbt(
+                'Copied to clipboard!',
+                'AccountScreen.dangerousCopySuccessAlert'
+              )
+            )
 
             setTimeout(async () => {
               const s = await Clipboard.getString()
@@ -68,14 +77,17 @@ class AccountScreen extends Component {
     const isLastAccount = wallet.accounts.length === 1
 
     Alert.alert(
-      'Important!',
-      'Have you backed up your private key or recovery phrase for this account? ' +
-        'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
-        'Are you sure that you want to delete this account?',
+      fbt('Important!', 'AccountScreen.deleteAlertTitle'),
+      fbt(
+        'Have you backed up your private key or recovery phrase for this account? ' +
+          'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
+          'Are you sure that you want to delete this account?',
+        'AccountScreen.deleteAlertMessage'
+      ),
       [
-        { text: 'Cancel' },
+        { text: fbt('Cancel', 'AccountScreen.deleteAlertCancelButton') },
         {
-          text: 'Delete',
+          text: fbt('Delete', 'AccountScreen.deleteAlertConfirmButton'),
           onPress: () => {
             try {
               DeviceEventEmitter.emit(
@@ -164,7 +176,12 @@ class AccountScreen extends Component {
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={'Show Recovery Phrase'}
-                  onPress={() => Alert.alert('Recovery Phrase', mnemonic)}
+                  onPress={() =>
+                    Alert.alert(
+                      fbt('Recovery Phrase', 'AccountScreen.recoveryPhrase'),
+                      mnemonic
+                    )
+                  }
                 />
                 <OriginButton
                   size="large"
@@ -184,7 +201,12 @@ class AccountScreen extends Component {
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={'Show Private Key'}
-                  onPress={() => Alert.alert('Private Key', privateKey)}
+                  onPress={() =>
+                    Alert.alert(
+                      fbt('Private Key', 'AccountScreen.privateKey'),
+                      privateKey
+                    )
+                  }
                 />
                 <OriginButton
                   size="large"

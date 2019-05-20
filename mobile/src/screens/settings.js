@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
@@ -19,7 +20,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 class SettingsScreen extends Component {
   static navigationOptions = {
-    title: 'Settings',
+    title: fbt('Settings', 'SettingsScreen.headerTitle'),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -39,20 +40,26 @@ class SettingsScreen extends Component {
           style={styles.container}
         >
           <View style={styles.header}>
-            <Text style={styles.heading}>GENERAL</Text>
+            <Text style={styles.heading}>
+              <fbt desc="SettingsScreen.generalHeading">GENERAL</fbt>
+            </Text>
           </View>
           <TouchableHighlight
             onPress={() => this.props.navigation.navigate('Accounts')}
           >
             <View style={styles.item}>
-              <Text style={styles.text}>Accounts</Text>
+              <Text style={styles.text}>
+                <fbt desc="SettingsScreen.accountsItem">Accounts</fbt>
+              </Text>
               <View style={styles.iconContainer}>
                 <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
               </View>
             </View>
           </TouchableHighlight>
           <View style={styles.header}>
-            <Text style={styles.heading}>NETWORK</Text>
+            <Text style={styles.heading}>
+              <fbt desc="SettingsScreen.networkHeading">NETWORK</fbt>
+            </Text>
           </View>
           {NETWORKS.map(network => (
             <Fragment key={network.name}>

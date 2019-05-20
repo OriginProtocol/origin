@@ -38,6 +38,7 @@
     "compare-versions": "^3.4.0",
     "cross-fetch": "^3.0.2",
     "ethers": "^4.0.27",
+    "fbt-runtime": "^0.9.4",
     "myetherwallet-blockies": "^0.1.1",
     "node-libs-react-native": "^1.0.3",
     "react": "^16.8.6",

@@ -11,6 +11,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import AccountItem from 'components/account-item'
 
@@ -19,7 +20,7 @@ const IMAGES_PATH = '../../assets/images/'
 class AccountsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Accounts',
+      title: fbt('Accounts', 'AccountsScreen.headerTitle'),
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,
