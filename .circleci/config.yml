@@ -1,13 +1,11 @@
 defaults: &defaults
   docker:
     - image: circleci/node:10-browsers
-    - image: circleci/postgres:9.6.2-alpine
+    - image: circleci/postgres:9.6-alpine
       environment:
         POSTGRES_USER: postgres
         POSTGRES_DB: travis_ci_test
   working_directory: ~/origin
-  environment:
-    DATABASE_URL: postgres://postgres@localhost/travis_ci_test
 
 version: 2
 jobs:
@@ -17,7 +15,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-      - run: npm install
+      - run: [ -d "node_modules" ] && npm install || echo "Skip node_modules"
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -59,6 +57,8 @@ jobs:
 
   test_event_cache:
     <<: *defaults
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
       - attach_workspace:
           at: .
@@ -66,6 +66,7 @@ jobs:
       - run: psql -c 'create database travis_ci_test;' -U postgres
       - run: lerna run migrate --scope @origin/event-cache
       - run: npm run test --prefix packages/event-cache
+
   test_lint:
     <<: *defaults
     steps:
