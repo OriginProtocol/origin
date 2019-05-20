@@ -12,7 +12,7 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          command: npm install --loglevel notice --dev-only --ignore-scripts
+          command: npm install --ignore-scripts
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -28,14 +28,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          command: lerna run lint
+          command: npm run lint
   test_graphql:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run:
-          command: lerna run test --prefix packages/graphql
+          command: npm run test --prefix packages/graphql
 
 workflows:
   version: 2
