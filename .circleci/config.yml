@@ -19,7 +19,10 @@ jobs:
           paths:
             - ./node_modules
       - persist_to_workspace:
-          root: node_modules
+          root: /tmp
+          paths:
+            - node_modules
+
   test-lint:
     executor: my-executor
     steps:
