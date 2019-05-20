@@ -8,9 +8,9 @@ import remoteSchemaLink from './links/remoteSchemaLink'
 import SubscriptionsLink from './links/SubscriptionsLink'
 
 /**
- * Making decisions on whwat to send the query to.  Either the subscription
- * link remote, or local.  The `Observable.of()` addition shamelessly stolen
- * from ApolloLink.split source
+ * Making decisions on what to send the query to.  Either the subscription
+ * link combined local+remote, or local-only.  The `Observable.of()` addition
+ * shamelessly stolen from ApolloLink.split source
  */
 const link = new ApolloLink(operation => {
   const subscriptionLink = new SubscriptionsLink()

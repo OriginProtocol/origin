@@ -62,5 +62,5 @@ relayerImage: origin-relayer
 relayerImageTag: 'latest'
 
 # origin-graphql
-adminImage: origin-graphql
-adminImageTag: 'latest'
+graphqlImage: origin-graphql
+graphqlImageTag: 'latest'

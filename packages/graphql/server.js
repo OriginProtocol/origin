@@ -7,7 +7,10 @@ server
       if (v && Number.isInteger(v)) {
         return v
       }
-      return 4000
+      if (Number.isNaN(v)) {
+        console.warn('GRAPHQL_SERVER_PORT is NaN.  Using default')
+      }
+      return 4002
     })()
   })
   .then(({ url }) => {
