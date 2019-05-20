@@ -1,8 +1,12 @@
 version: 2.1
-jobs:
-  install:
+executors:
+  my-executor:
     docker:
       - image: circleci/node:10
+    working_directory: /tmp
+jobs:
+  install:
+    executor: my-executor
     steps:
       - checkout
       - restore_cache:
@@ -14,16 +18,20 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+      - persist_to_workspace:
+          root: node_modules
   test-lint:
-    docker:
-      - image: circleci/node:10
+    executor: my-executor
     steps:
+      - attach_workspace:
+        at: /tmp/node_modules
       - run:
           command: npm run lint
   test-graphql:
-    docker:
-      - image: circleci/node:10
+    executor: my-executor
     steps:
+      - attach_workspace:
+        at: /tmp/node_modules
       - run:
           command: npm run test --prefix packages/graphql
 
@@ -35,8 +43,6 @@ workflows:
       - test-lint:
           requires:
             - install
-            - test-lint
       - test-graphql:
           requires:
             - install
-            - test-graphql
