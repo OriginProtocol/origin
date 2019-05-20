@@ -36,6 +36,20 @@ jobs:
           at: .
       - run:
           command: npm run test --prefix packages/graphql
+  test_marketplace:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          command: npm run test --prefix dapps/marketplace
+  test_contracts:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          command: npm run test --prefix packages/contracts
 
 workflows:
   version: 2
@@ -46,5 +60,11 @@ workflows:
           requires:
             - setup_environment
       - test_graphql:
+          requires:
+            - setup_environment
+      - test_marketplace:
+          requires:
+            - setup_environment
+      - test_contracts:
           requires:
             - setup_environment
