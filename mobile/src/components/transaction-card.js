@@ -181,7 +181,7 @@ class TransactionCard extends Component {
             {!hasSufficientDai && (
               <Text style={styles.danger}>
                 <fbt desc="TransactionCard.insufficientGeneral">
-                  You don't have enough ETH to submit this transaction.
+                  You don&apos;t have enough ETH to submit this transaction.
                 </fbt>
               </Text>
             )}
@@ -191,12 +191,12 @@ class TransactionCard extends Component {
               <Text style={styles.danger}>
                 {functionName === 'emitIdentityUpdated' && (
                   <fbt desc="TransactionCard.insufficientIdentity">
-                    You don't have enough ETH to publish your identity.
+                    You don&apos;t have enough ETH to publish your identity.
                   </fbt>
                 )}
                 {functionName !== 'emitIdentityUpdated' && (
                   <fbt desc="TransactionCard.insufficientGeneral">
-                    You don't have enough ETH to submit this transaction.
+                    You don&apos;t have enough ETH to submit this transaction.
                   </fbt>
                 )}
               </Text>
