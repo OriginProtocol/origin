@@ -27,6 +27,11 @@ const TokenDistributor = require('../util/tokenDistributor')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('adjustPayout')
 
+// Min/max payout amounts.
+const scaling = BigNumber(10).pow(18)
+const minPayoutAmountNaturalUnit = BigNumber(1).times(scaling) // 1 OGN
+const maxPayoutAmountNaturalUnit = BigNumber(2000).times(scaling) // 2k OGN
+
 // Minimum number of block confirmations to wait for before considering
 // a reward distributed.
 const MinBlockConfirmation = 8
@@ -115,6 +120,14 @@ class AdjustPayout {
     logger.info(
       `Paying adjustment of ${amount} OGN (${amountNaturalUnit} in natural unit) to ${ethAddress}`
     )
+
+    // Check amount to payout is within expected range.
+    if (amountNaturalUnit.lt(minPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too low: ${amountNaturalUnit.toFixed()}`)
+    }
+    if (amountNaturalUnit.gt(maxPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too high: ${amountNaturalUnit.toFixed()}`)
+    }
 
     // Create a payout row with status Pending.
     payout = await db.GrowthPayout.create({
