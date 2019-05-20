@@ -24,7 +24,7 @@ jobs:
           paths:
             - .
 
-  test-lint:
+  test_lint:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -32,7 +32,7 @@ jobs:
       - run:
         name: Run Tests
         command: npm run lint
-  test-graphql:
+  test_graphql:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -46,9 +46,9 @@ workflows:
   build-deploy:
     jobs:
       - setup_environment
-      - test-lint:
+      - test_lint:
           requires:
             - setup_environment
-      - test-graphql:
+      - test_graphql:
           requires:
             - setup_environment
