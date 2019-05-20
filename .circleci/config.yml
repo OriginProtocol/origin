@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: circleci/node:10
+    - image: circleci/node:10-browsers
   working_directory: ~/origin
 
 version: 2
