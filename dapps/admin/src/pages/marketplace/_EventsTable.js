@@ -1,24 +1,10 @@
 import React, { Component } from 'react'
-import { getIpfsHashFromBytes32 } from 'utils/ipfsHash'
 import formatDate from 'utils/formatDate'
 
 import Identity from 'components/Identity'
-import { getIpfsGateway } from 'utils/config'
-import withNetwork from 'hoc/withNetwork'
+import IpfsLink from 'components/IpfsLink'
 
-function ipfs(rawHash) {
-  const hash = getIpfsHashFromBytes32(rawHash)
-  const ipfsGateway = getIpfsGateway()
-  return (
-    <a
-      href={`${ipfsGateway}/ipfs/${hash}`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {hash.substr(0, 6)}
-    </a>
-  )
-}
+import withNetwork from 'hoc/withNetwork'
 
 function eventName(e, networkId) {
   const [, type, target] = e.event.split(/(Offer|Listing)/)
@@ -68,7 +54,9 @@ class EventsTable extends Component {
               </td>
               {/* <td>{e.returnValues.listingID}</td>
               <td>{e.returnValues.offerID}</td> */}
-              <td>{ipfs(e.returnValues.ipfsHash)}</td>
+              <td>
+                <IpfsLink rawHash={e.returnValues.ipfsHash} />
+              </td>
               <td>{e.blockNumber}</td>
             </tr>
           ))}
