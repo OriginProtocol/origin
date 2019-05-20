@@ -4,6 +4,11 @@
   "dependencies": {
     "lerna": "^3.14.1"
   },
+  "workspaces": [
+    "dapps/**",
+    "infra/**",
+    "packages/**"
+  ],
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
@@ -22,7 +27,7 @@
     "prettier": "^1.16.4"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\"",
+    "bootstrap": "lerna bootstrap --no-ci --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
     "start": "npm run start --prefix dapps/marketplace",
