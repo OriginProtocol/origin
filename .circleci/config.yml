@@ -33,9 +33,6 @@ jobs:
       - attach_workspace:
           at: .
       - run: sudo apt install -y postgresql-client || true
-      - run:
-          psql -c 'create database travis_ci_test;' -U postgres -h localhost -p
-          5432
       - run: lerna run migrate --scope @origin/event-cache
       - run: npm run test --prefix packages/event-cache
 

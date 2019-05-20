@@ -4,11 +4,18 @@
   "dependencies": {
     "lerna": "^3.14.1"
   },
-  "workspaces": [
-    "dapps/**",
-    "infra/**",
-    "packages/**"
-  ],
+  "workspaces": {
+    "packages": [
+      "dapps/**",
+      "infra/**",
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "openzeppelin-solidity"
+    ]
+  },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
