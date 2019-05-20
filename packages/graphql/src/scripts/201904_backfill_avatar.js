@@ -1,5 +1,6 @@
 const FormData = require('form-data')
 const fetch = require('cross-fetch')
+const chunk = require('lodash/chunk')
 
 import contracts from '../contracts'
 import originIpfs from '@origin/ipfs'
@@ -7,6 +8,9 @@ import IpfsHash from 'ipfs-only-hash'
 import { setNetwork, shutdown } from '../contracts'
 
 setNetwork(process.env.NETWORK || 'test')
+
+// Allows you to backfill only a single account
+const ONLY_ACCOUNT = process.env.ONLY_ACCOUNT
 
 //
 // Backfill script to store old avatars as data urls into IPFS
@@ -20,6 +24,7 @@ setNetwork(process.env.NETWORK || 'test')
 
 const statusCounters = {}
 let uploadCount = 0
+const CONCURRENCY = 10
 
 async function backfillAvatarToIpfs() {
   console.log('Loading events.....')
@@ -39,52 +44,28 @@ async function backfillAvatarToIpfs() {
     }
   })
 
+  const tasks = []
   for (const account in accountIpfs) {
     for (const identityIpfsHash of accountIpfs[account]) {
-      console.log(
-        'Starting Profile',
-        originIpfs.getIpfsHashFromBytes32(identityIpfsHash)
-      )
-      console.log(' for account', account)
-      const data = await originIpfs.get(contracts.ipfsGateway, identityIpfsHash)
-      if (!data) {
-        showStatus('FAIL: Failed to fetch identity IPFS data')
+      if (ONLY_ACCOUNT !== undefined && ONLY_ACCOUNT != account) {
         continue
       }
-      if (data.profile === undefined) {
-        showStatus('SKIP: No profile')
-        continue
-      }
-      if (data.profile.avatarUrl) {
-        showStatus('SKIP: Already using new avatarUrl')
-        continue
-      }
-      if (data.profile.avatar === undefined || data.profile.avatar === '') {
-        showStatus('SKIP: No avatar')
-        continue
-      }
-      if (!data.profile.avatar.startsWith('data:')) {
-        showStatus('SKIP: Not data url for avatar')
-        continue
-      }
-      const { buffer, mimeType } = dataURItoBinary(data.profile.avatar)
-      if (buffer.length == 0) {
-        showStatus('SKIP: Not actual data in data url for avatar')
-        continue
-      }
-      const calculatedUrl = await IpfsHash.of(Buffer.from(buffer))
-      console.log('', mimeType, buffer.length)
-      const actualUrl = await postFile(contracts.ipfsRPC, buffer, mimeType)
-      console.log('', 'saved as ', `${contracts.ipfsGateway}/ipfs/${actualUrl}`)
-
-      if (actualUrl != calculatedUrl) {
-        showStatus('FAIL: Calculated IPFS does not match upload')
-        console.error(calculatedUrl, actualUrl)
-        continue
-      }
-      showStatus('SUCCESS: Avatar uploaded to IPFS')
+      tasks.push({ account, identityIpfsHash })
     }
   }
+
+  for (const chunklet of chunk(tasks, CONCURRENCY)) {
+    await Promise.all(
+      chunklet.map(task => {
+        return (async () => {
+          const { account, identityIpfsHash } = task
+          const logs = await backfillProfileIpfs(account, identityIpfsHash)
+          console.log(logs)
+        })()
+      })
+    )
+  }
+
   console.log('------------------------------------')
   console.log('Run completed - Status totals below:')
   console.log(statusCounters)
@@ -92,14 +73,60 @@ async function backfillAvatarToIpfs() {
   shutdown()
 }
 
+async function backfillProfileIpfs(account, identityIpfsHash) {
+  const logs = []
+  logs.push(
+    `Starting Profile ${originIpfs.getIpfsHashFromBytes32(identityIpfsHash)}`
+  )
+  logs.push(` for account ${account}`)
+  const data = await originIpfs.get(contracts.ipfsGateway, identityIpfsHash)
+  if (!data) {
+    logs.push(showStatus('FAIL: Failed to fetch identity IPFS data'))
+    return logs
+  }
+  if (data.profile === undefined) {
+    logs.push(showStatus('SKIP: No profile'))
+    return logs
+  }
+  if (data.profile.avatarUrl) {
+    logs.push(showStatus('SKIP: Already using new avatarUrl'))
+    return logs
+  }
+  if (data.profile.avatar === undefined || data.profile.avatar === '') {
+    logs.push(showStatus('SKIP: No avatar'))
+    return logs
+  }
+  if (!data.profile.avatar.startsWith('data:')) {
+    logs.push(showStatus('SKIP: Not data url for avatar'))
+    return logs
+  }
+  const { buffer, mimeType } = dataURItoBinary(data.profile.avatar)
+  if (buffer.length == 0) {
+    logs.push(showStatus('SKIP: Not actual data in data url for avatar'))
+    return logs
+  }
+  const calculatedUrl = await IpfsHash.of(Buffer.from(buffer))
+  logs.push(`  ${mimeType} ${buffer.length}`)
+  const actualUrl = await postFile(contracts.ipfsRPC, buffer, mimeType)
+  logs.push(`  saved as ${contracts.ipfsGateway}/ipfs/${actualUrl}`)
+
+  if (actualUrl != calculatedUrl) {
+    logs.push(`FAIL: Calculated IPFS does not match upload`)
+    console.error(calculatedUrl, actualUrl)
+    return logs
+  }
+  logs.push(showStatus('SUCCESS: Avatar uploaded to IPFS'))
+  return logs
+}
+
 function showStatus(status) {
   if (statusCounters[status] == undefined) {
     statusCounters[status] = 0
   }
   statusCounters[status] += 1
-  uploadCount += 0
-  console.log(uploadCount, status)
+  const output = `${uploadCount} ${status}`
   uploadCount += 1
+  return output
 }
 
 async function postFile(ipfsRPC, buffer, mimeType) {
