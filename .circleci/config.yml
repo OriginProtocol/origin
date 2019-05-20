@@ -13,7 +13,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install Packages
           command: npm install --loglevel notice --dev-only --ignore-scripts
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -30,7 +29,6 @@ jobs:
       - attach_workspace:
         at: .
       - run:
-        name: Run Tests
         command: npm run lint
   test_graphql:
     <<: *defaults
@@ -38,7 +36,6 @@ jobs:
       - attach_workspace:
         at: .
       - run:
-        name: Run Tests
         command: npm run test --prefix packages/graphql
 
 workflows:
