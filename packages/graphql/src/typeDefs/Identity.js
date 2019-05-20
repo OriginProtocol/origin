@@ -53,9 +53,9 @@ module.exports = `
     description: String
     # Deprecated field. Base64 encoded avatar. Only present on older profiles.
     avatar: String
-    # IPFS url to avatar photo
+    # IPFS url for avatar photo
     avatarUrl: String
-    # Calculated field. Converts avatarURL to an HTTP(S) gateway URL
+    # Calculated field. Converts avatarURL to an HTTP(s) gateway URL
     avatarUrlExpanded: String
     strength: Int
 
