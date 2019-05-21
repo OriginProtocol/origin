@@ -14,7 +14,7 @@ export default class MobileModal extends Component {
 
   componentDidMount() {
     document.body.appendChild(this.portal)
-    document.body.classList.add('mobile-modal-open')
+    document.body.className += ' mobile-modal-open'
     document.body.addEventListener('touchmove', freezeVp, false)
     this.renderContent(this.props)
 
@@ -33,7 +33,7 @@ export default class MobileModal extends Component {
 
   componentWillUnmount() {
     this.portal.classList.remove('open')
-    document.body.classList.remove('mobile-modal-open')
+    document.body.className = document.body.className.replace(' mobile-modal-open', '')
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
     document.body.removeChild(this.portal)
@@ -63,6 +63,7 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
+        <div className="mobile-modal-overlay"></div>
         <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}
@@ -98,11 +99,13 @@ export default class MobileModal extends Component {
 
   doClose() {
     this.portal.classList.remove('open')
-    this.onCloseTimeout = setTimeout(() => this.props.onClose(), 300)
+    if (this.props.onClose) {
+      this.onCloseTimeout = setTimeout(() => this.props.onClose(), 300)
+    }
   }
 
   onKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (this.props.closeOnEsc === true && e.keyCode === 27) {
       // Esc
       this.doClose()
     }
@@ -117,6 +120,13 @@ require('react-styl')(`
   .mobile-modal-open
     overflow: hidden
     touch-action: none
+  .mobile-modal-overlay
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background-color: rgba(11, 24, 35, 0.3)
   .mobile-modal
     touch-action: none
     position: fixed
@@ -161,6 +171,8 @@ require('react-styl')(`
       .modal-content
         overflow: auto
         flex-grow: 0
+        border-radius: 0
+        border: 0
       .modal-header
         visibility: hidden
         flex-grow: 1
