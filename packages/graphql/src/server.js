@@ -42,7 +42,10 @@ const options = {
         throw new Error('Mutations not allowed')
       }
     }
-  }
+  },
+  // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
+  introspection: true,
+  playground: true
 }
 
 /**
