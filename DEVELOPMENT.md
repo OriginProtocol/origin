@@ -1,9 +1,9 @@
-![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+# ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-Head to https://www.originprotocol.com/developers to learn more about what we're
-building and how to get involved.
+Head to [here](https://www.originprotocol.com/developers) to learn more about
+what we're building and how to get involved.
 
-# Development
+## Development
 
 To get started quickly, you can run a "light" version of the Origin DApp, which
 automatically sets up our DApp, a local IPFS server, and a local blockchain.
@@ -13,20 +13,20 @@ orchestrating several containers and providing access to the full suite of the
 Origin DApp features, including messaging, browser notifications, and
 attestation services.
 
-## Quick start - Running a local DApp
+### Quick start - Running a local DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the
    necessary dependencies:
 
 ```
 git clone https://github.com/OriginProtocol/origin
-cd origin && npm install
+cd origin && yarn
 ```
 
 2. You can then start the marketplace DApp using:
 
 ```
-npm start
+yarn start
 ```
 
 This will start a `webpack-dev-server` with hot reloading on
@@ -69,9 +69,9 @@ services, e.g. use a different Web3 provider or attestation server.
 
 ### About the Origin repository
 
-Origin uses a monorepo setup that is managed by `lerna`. The `--hoist` flag of
-`lerna` is used to pull common dependencies to the root of the monorepo on
-installation.
+Origin uses a monorepo setup that is managed by `lerna`. `yarn` is used for
+package management so that we can leverage the workspaces feature to pull common
+dependencies to the root of the monorepo on installation.
 
 ## Running Docker Compose
 
@@ -152,8 +152,8 @@ documentation for usage. Some commands that may be useful are included below.
 Start and stop the environment:
 
 ```
-	docker-compose up
-	docker-compose stop
+    docker-compose up
+    docker-compose stop
 ```
 
 ⚠️ When docker builds an image, part of the build process is `npm install`,
@@ -206,7 +206,7 @@ since the initial Docker build will be lost. Instead use `docker-compose stop`.
 - If you get errors about missing npm packages, clean install of all modules -
   `cd` to root dir of repo - `lerna clean` (if needed, install lerna with
   `npm install -f lerna`) - `rm -rf node_modules` - `rm package-lock.json` (if
-  it exists) - `bash scripts/clean-package-locks.sh` - `npm install`
+  it exists) - `bash scripts/clean-package-locks.sh` - `yarn install`
 
 - If IPFS fails to start with error "UnhandledPromiseRejectionWarning: Error:
   Lock file is already being hold", clean up the IPFS local data:

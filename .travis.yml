@@ -24,16 +24,16 @@ matrix:
       before_cache:
         - rm -rf node_modules/.cache
       install:
-        - npm install --loglevel notice --dev-only --ignore-scripts
+        - yarn install --loglevel notice --dev-only --ignore-scripts
       script:
-        - npm run lint
+        - yarn lint
 
     - name: "@origin/marketplace integration tests"
       language: node_js
       node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- \
+      install: |
+        yarn install --ignore-scripts
+        yarn run bootstrap -- \
           --scope @origin/marketplace \
           --scope @origin/contracts \
           --scope @origin/eventsource \
@@ -45,14 +45,14 @@ matrix:
           --scope @origin/graphql \
           --scope @origin/event-cache
       script:
-        - npm run test --prefix dapps/marketplace
+        - yarn run test --prefix dapps/marketplace
 
     - name: "@origin/graphql unit tests"
       language: node_js
       node_js: 10
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- \
+      install: |
+        yarn install --ignore-scripts
+        yarn run bootstrap -- \
           --scope @origin/contracts \
           --scope @origin/eventsource \
           --scope @origin/ipfs \
@@ -63,7 +63,7 @@ matrix:
           --scope @origin/graphql \
           --scope @origin/event-cache
       script:
-        - npm run test --prefix packages/graphql
+        - yarn run test --prefix packages/graphql
 
     - name: "@origin/event-cache unit tests"
       language: node_js
@@ -77,9 +77,9 @@ matrix:
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/event-cache
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- \
+      install: |
+        yarn install --ignore-scripts
+        yarn run bootstrap -- \
           --scope @origin/contracts \
           --scope @origin/eventsource \
           --scope @origin/ipfs \
@@ -90,7 +90,7 @@ matrix:
           --scope @origin/graphql \
           --scope @origin/event-cache
       script:
-        - npm run test --prefix packages/event-cache
+        - yarn run test --prefix packages/event-cache
 
     - name: "@origin/bridge unit tests"
       language: node_js
@@ -105,19 +105,19 @@ matrix:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/bridge
       install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/bridge --scope @origin/contracts
+        - yarn install --ignore-scripts
+        - yarn run bootstrap -- --scope @origin/bridge --scope @origin/contracts
       script:
-        - npm run test --prefix infra/bridge
+        - yarn run test --prefix infra/bridge
 
     - name: "@origin/contracts unit tests"
       language: node_js
       node_js: 10
       install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/contracts
+        - yarn install --ignore-scripts
+        - yarn run bootstrap -- --scope @origin/contracts
       script:
-        - npm run test --prefix packages/contracts
+        - yarn run test --prefix packages/contracts
 
     - name: "@origin/discovery unit tests"
       language: node_js
@@ -138,15 +138,15 @@ matrix:
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
       install:
-        - npm install
+        - yarn install
       script:
-        - npm run test --prefix infra/discovery
+        - yarn run test --prefix infra/discovery
 
     - name: "@origin/growth unit tests"
       language: node_js
       node_js: 10
       addons:
-          postgresql: 9.6
+        postgresql: 9.6
       services:
         - postgresql
       env:
@@ -155,9 +155,9 @@ matrix:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- \
+      install: |
+        yarn install --ignore-scripts
+        yarn run bootstrap -- \
           --scope @origin/contracts \
           --scope @origin/eventsource \
           --scope @origin/ipfs \
@@ -172,7 +172,7 @@ matrix:
           --scope @origin/growth \
           --scope @origin/event-cache
       script:
-        - npm run test --prefix infra/growth
+        - yarn run test --prefix infra/growth
 
     - name: "@origin/notifications unit tests"
       language: node_js
@@ -184,18 +184,17 @@ matrix:
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/notifications
-      install:
-        - npm install --ignore-scripts
-        - npm run bootstrap -- --scope @origin/notifications
+      install: |
+        yarn install --ignore-scripts
+        yarn run bootstrap -- --scope @origin/notifications
       script:
-        - npm run test --prefix infra/notifications
-
+        - yarn run test --prefix infra/notifications
     # - name: "@origin/token-transfer-* unit tests"
     #  language: node_js
     #  node_js: 10
     #  install:
-    #    - npm install --ignore-scripts
-    #    - npm run bootstrap -- --scope @origin/contracts --scope @origin/token --scope @origin/token-transfer-client --scope @origin/token-transfer-server
+    #    - yarn install --ignore-scripts
+    #    - yarn run bootstrap -- --scope @origin/contracts --scope @origin/token --scope @origin/token-transfer-client --scope @origin/token-transfer-server
     #  script:
-    #    - npm run test --prefix infra/token-transfer-server
-    #    - npm run test --prefix infra/token-transfer-client
+    #    - yarn run test --prefix infra/token-transfer-server
+    #    - yarn run test --prefix infra/token-transfer-client
