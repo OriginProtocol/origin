@@ -12,7 +12,9 @@ jobs:
   setup_environment:
     <<: *defaults
     steps:
-      - checkout
+      - run:
+          git clone -b ${CIRCLE_BRANCH} —-single-branch
+          https://github.com/OriginProtocol/origin.git —-depth=1
       - restore_cache:
           key: yarn-packages-v2-{{ checksum "yarn.lock" }}
       - run: |

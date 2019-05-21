@@ -4,6 +4,10 @@ git:
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
+language: node_js
+node_js: 10
+cache: yarn
+install: yarn install
 matrix:
   include:
     # Run integration tests using docker compose
@@ -18,30 +22,15 @@ matrix:
     #    - docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from origin-tests
 
     - name: "javascript linting"
-      language: node_js
-      node_js: 10
-      cache: yarn
-      install:
-        - yarn install
-      script:
-        - yarn lint
+      script: yarn lint
 
     - name: "@origin/marketplace integration tests"
-      language: node_js
-      node_js: 10
-      cache: yarn
-      install: yarn install
       script: yarn run test --prefix dapps/marketplace
 
     - name: "@origin/graphql unit tests"
-      language: node_js
-      node_js: 10
-      install: yarn install
       script: yarn run test --prefix packages/graphql
 
     - name: "@origin/event-cache unit tests"
-      language: node_js
-      node_js: 10
       addons:
         postgresql: 9.6
       services:
@@ -51,12 +40,9 @@ matrix:
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/event-cache
-      install: yarn install
       script: yarn run test --prefix packages/event-cache
 
     - name: "@origin/bridge unit tests"
-      language: node_js
-      node_js: 10
       addons:
         postgresql: 9.6
       services:
@@ -66,18 +52,12 @@ matrix:
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/bridge
-      install: yarn install
       script: yarn run test --prefix infra/bridge
 
     - name: "@origin/contracts unit tests"
-      language: node_js
-      node_js: 10
-      install: yarn install
       script: yarn run test --prefix packages/contracts
 
     - name: "@origin/discovery unit tests"
-      language: node_js
-      node_js: 10
       addons:
         postgresql: 9.6
       services:
@@ -93,12 +73,9 @@ matrix:
         - lerna run migrate --scope @origin/discovery
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
-      install: yarn install
       script: yarn run test --prefix infra/discovery
 
     - name: "@origin/growth unit tests"
-      language: node_js
-      node_js: 10
       addons:
         postgresql: 9.6
       services:
@@ -109,12 +86,9 @@ matrix:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
-      install: yarn install
       script: yarn run test --prefix infra/growth
 
     - name: "@origin/notifications unit tests"
-      language: node_js
-      node_js: 10
       addons:
         postgresql: 9.6
       env:
@@ -122,7 +96,6 @@ matrix:
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/notifications
-      install: yarn install
       script: yarn run test --prefix infra/notifications
     # - name: "@origin/token-transfer-* unit tests"
     #  language: node_js
