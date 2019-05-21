@@ -7,10 +7,19 @@ defaults: &defaults
         POSTGRES_DB: travis_ci_test
   working_directory: ~/origin
 
+db: &db
+  docker:
+    - image: circleci/node:10-browsers
+    - image: circleci/postgres:9.6-alpine-ram
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: travis_ci_test
+  working_directory: ~/origin
+
 version: 2
 jobs:
   Setup:
-    working_directory: ~/origin
+    <<: *defaults
     steps:
       - run:
           name: Clone Repo
@@ -55,7 +64,7 @@ jobs:
       - run: yarn run test --prefix packages/graphql
 
   EventCache:
-    <<: *defaults
+    <<: *db
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
@@ -65,7 +74,7 @@ jobs:
       - run: yarn run test --prefix packages/event-cache
 
   Bridge:
-    <<: *defaults
+    <<: *db
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
@@ -82,7 +91,7 @@ jobs:
       - run: yarn run test --prefix packages/contracts
 
   Discovery:
-    <<: *defaults
+    <<: *db
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
       AFFILIATE_ACCOUNT: 0x821aea9a577a9b44299b9c15c88cf3087f3b5544
@@ -99,7 +108,7 @@ jobs:
           yarn run test --prefix infra/bridge
 
   Growth:
-    <<: *defaults
+    <<: *db
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
@@ -111,7 +120,7 @@ jobs:
           yarn run test --prefix infra/growth
 
   Notifications:
-    <<: *defaults
+    <<: *db
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
