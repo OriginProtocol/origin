@@ -1,6 +1,3 @@
-// Iterates over files in `./translation/crowdin` over our languages, expecting them to be in key-value format that crowdin uses
-// Output: files in fbt formatin in `./translation/fbt` dir
-
 const doTestMark = process.argv.length >= 3 && process.argv[2] == 'proof'
 if (doTestMark) {
   console.warn(
@@ -8,9 +5,31 @@ if (doTestMark) {
   )
 }
 
-const locales = 'en_US de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl_NL pt_PT ro_RO ru_RU th_TH tr_TR uk_UA vi_VN zh_CN zh_TW'.split(
-  ' '
-)
+const locales = [
+  'en_US',
+  /*
+  'de_DE',
+  'el_GR',
+  'es_ES',
+  'fil_PH',
+  'fr_FR',
+  'hr_HR',
+  'id_ID',
+  'it_IT',
+  'ja_JP',
+  'ko_KR',
+  'nl_NL',
+  'pt_PT',
+  'ro_RO',
+  'ru_RU',
+  'th_TH'.
+  'tr_TR',
+  'uk_UA',
+  'vi_VN',
+  'zh_CN',
+  'zh_TW'
+  */
+]
 
 // Decodes variable names from crowdin into their original name.
 // See encoding format in fbtToCrowdin.js
@@ -97,7 +116,7 @@ locales.forEach(locale => {
   const srcFile = doTestMark
     ? `${__dirname}/../crowdin/all-messages.json`
     : `${__dirname}/../crowdin/all-messages_${locale}.json`
-  const dstFile = `${__dirname}/../fbt/${locale}.json`
+  const dstFile = `${__dirname}/../src/locales/${locale}.json`
 
   const fs = require('fs')
   const translations = {}

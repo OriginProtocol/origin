@@ -11,7 +11,9 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-import { fbt } from 'fbt-runtime'
+import { IntlViewerContext, init, fbt } from 'fbt-runtime'
+import * as RNLocalize from 'react-native-localize'
+
 
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
@@ -30,6 +32,12 @@ class SettingsScreen extends Component {
 
   handleSetNetwork(network) {
     this.props.setNetwork(network)
+  }
+
+  handleSetLocale(locale) {
+    const fbtLocale = locale.languageTag.replace('-', '_')
+    IntlViewerContext.locale = fbtLocale
+    init({})
   }
 
   render() {
@@ -82,6 +90,20 @@ class SettingsScreen extends Component {
                       />
                     )}
                   </View>
+                </View>
+              </TouchableHighlight>
+            </Fragment>
+          ))}
+          <View style={styles.header}>
+            <Text style={styles.heading}>
+              {fbt('Locales', 'SettingsScreen.localesHeading')}
+            </Text>
+          </View>
+          {RNLocalize.getLocales().map(locale => (
+            <Fragment key={locale.languageTag}>
+              <TouchableHighlight onPress={() => this.handleSetLocale(locale)}>
+                <View style={styles.item}>
+                  <Text style={styles.text}>{locale.languageTag}</Text>
                 </View>
               </TouchableHighlight>
             </Fragment>

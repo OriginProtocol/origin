@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
