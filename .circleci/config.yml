@@ -10,7 +10,7 @@ defaults: &defaults
 version: 2
 jobs:
   Setup:
-    <<: *defaults
+    working_directory: ~/origin
     steps:
       - run:
           name: Clone Repo
@@ -45,14 +45,14 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: yarn test --prefix dapps/marketplace
+      - run: yarn run test --prefix dapps/marketplace
 
   GraphQL:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: yarn test --prefix packages/graphql
+      - run: yarn run test --prefix packages/graphql
 
   EventCache:
     <<: *defaults
@@ -62,7 +62,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/event-cache
-      - run: yarn test --prefix packages/event-cache
+      - run: yarn run test --prefix packages/event-cache
 
   Bridge:
     <<: *defaults
@@ -72,14 +72,14 @@ jobs:
       - attach_workspace:
           at: .
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/bridge
-      - run: yarn test --prefix infra/bridge
+      - run: yarn run test --prefix infra/bridge
 
   Contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: yarn test --prefix packages/contracts
+      - run: yarn run test --prefix packages/contracts
 
   Discovery:
     <<: *defaults
@@ -96,7 +96,7 @@ jobs:
           ./node_modules/.bin/lerna run migrate --scope @origin/discovery
           ./node_modules/.bin/lerna run migrate --scope @origin/growth
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          yarn test --prefix infra/bridge
+          yarn run test --prefix infra/bridge
 
   Growth:
     <<: *defaults
@@ -108,7 +108,7 @@ jobs:
       - run: |
           ./node_modules/.bin/lerna run migrate --scope @origin/growth
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          yarn test --prefix infra/growth
+          yarn run test --prefix infra/growth
 
   Notifications:
     <<: *defaults
@@ -119,7 +119,7 @@ jobs:
           at: .
       - run: |
           ./node_modules/.bin/lerna run migrate --scope @origin/notifications
-          yarn test --prefix infra/notifications
+          yarn run test --prefix infra/notifications
 
 workflows:
   version: 2
