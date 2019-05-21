@@ -125,7 +125,7 @@ workflows:
   version: 2
   test:
     jobs:
-      - setup_environment
+      - Setup
       - Lint:
           requires:
             - Setup
