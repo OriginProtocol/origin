@@ -1,10 +1,6 @@
 defaults: &defaults
   docker:
     - image: circleci/node:10-browsers
-    - image: circleci/postgres:9.6-alpine-ram
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: travis_ci_test
   working_directory: ~/origin
 
 db: &db
