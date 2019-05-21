@@ -160,7 +160,7 @@ module.exports = `
     isBanned: Boolean
   }
 
-  type Query {
+  extend type Query {
     # first property specifies the number of items to return
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
@@ -171,7 +171,7 @@ module.exports = `
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }
 
-  type Mutation {
+  extend type Mutation {
     # Sends email invites with referral code on behalf of the referrer.
     invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.

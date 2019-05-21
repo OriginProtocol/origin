@@ -19,6 +19,11 @@ const logger = Logger.create('distRewards')
 const MinBlockConfirmation = 8
 const BlockMiningTimeMsec = 15000 // 15sec
 
+// Min/max payout amounts.
+const scaling = BigNumber(10).pow(18)
+const minPayoutAmountNaturalUnit = BigNumber(1).times(scaling) // 1 OGN
+const maxPayoutAmountNaturalUnit = BigNumber(2000).times(scaling) // 2k OGN
+
 class DistributeRewards {
   constructor(config, distributor) {
     this.config = config
@@ -104,6 +109,14 @@ class DistributeRewards {
     logger.info(
       `Distributing reward of ${amountTokenUnit} OGN to ${ethAddress}`
     )
+
+    // Check amount is within expected range.
+    if (amount.lt(minPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too low: ${amount.toFixed()}`)
+    }
+    if (amount.gt(maxPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too high: ${amount.toFixed()}`)
+    }
 
     // Create a payout row with status Pending.
     payout = await db.GrowthPayout.create({

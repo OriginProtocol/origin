@@ -1,4 +1,14 @@
 module.exports = `
+  type Query {
+    _ : Boolean
+  }
+  type Mutation {
+    _ : Boolean
+  }
+  type Subscription {
+    _ : Boolean
+  }
+
   type Price {
     currency: CurrencyResult
     amount: String
@@ -64,5 +74,11 @@ module.exports = `
 
     # Array of countries using this currency
     countryCodes: [String]
+  }
+
+  type Balance {
+    wei: String
+    eth: String
+    usd: String
   }
 `
