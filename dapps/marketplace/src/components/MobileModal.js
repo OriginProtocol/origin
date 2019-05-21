@@ -33,7 +33,10 @@ export default class MobileModal extends Component {
 
   componentWillUnmount() {
     this.portal.classList.remove('open')
-    document.body.className = document.body.className.replace(' mobile-modal-open', '')
+    document.body.className = document.body.className.replace(
+      ' mobile-modal-open',
+      ''
+    )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
     document.body.removeChild(this.portal)
@@ -63,7 +66,7 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
-        <div className="mobile-modal-overlay"></div>
+        <div className="mobile-modal-overlay" />
         <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}

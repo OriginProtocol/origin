@@ -36,7 +36,12 @@ class UserActivation extends Component {
   }
 
   render() {
-    const { stage, step, personalDataModal, shouldClosePersonalDataModal } = this.state
+    const {
+      stage,
+      step,
+      personalDataModal,
+      shouldClosePersonalDataModal
+    } = this.state
     const { renderMobileVersion, hideHeader } = this.props
 
     let stepHeader
@@ -66,13 +71,18 @@ class UserActivation extends Component {
       >
         {stepHeader}
         <div>{this[`render${stage}`]()}</div>
-        { personalDataModal && (
+        {personalDataModal && (
           <MobileModal
             closeOnEsc={false}
             shouldClose={shouldClosePersonalDataModal}
             className="user-activation"
             fullscreen={false}
-            onClose={() => this.setState({ personalDataModal: false, shouldClosePersonalDataModal: false })}
+            onClose={() =>
+              this.setState({
+                personalDataModal: false,
+                shouldClosePersonalDataModal: false
+              })
+            }
           >
             {this.renderPersonalDataModal()}
           </MobileModal>
@@ -384,12 +394,15 @@ class UserActivation extends Component {
             </fbt>
           </span>
           <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
-          <a href="#" onClick={e => {
-            e.preventDefault()
-            this.setState({
-              personalDataModal: true
-            })
-          }}>
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              this.setState({
+                personalDataModal: true
+              })
+            }}
+          >
             <fbt desc="UserActivation.learnMore">Learn more</fbt>
           </a>
         </div>
@@ -441,14 +454,27 @@ class UserActivation extends Component {
   renderPersonalDataModal() {
     return (
       <div className="personal-data-modal">
-        <h2><fbt desc="UserActivation.blockchainAndPersonalData">Blockchain &amp; Your Personal Data</fbt></h2>
+        <h2>
+          <fbt desc="UserActivation.blockchainAndPersonalData">
+            Blockchain &amp; Your Personal Data
+          </fbt>
+        </h2>
         <p>
           <fbt desc="UserActivation.personalDataInfo">
-            By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo.
+            By creating a profile, you are associating your name and photo with
+            your Ethereum account. This means that others will be able to
+            connect your blockchain transactions to your name and photo.
           </fbt>
         </p>
         <div className="actions">
-          <button className="btn btn-primary" onClick={() => this.setState({ shouldClosePersonalDataModal: true })}>Got it</button>
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              this.setState({ shouldClosePersonalDataModal: true })
+            }
+          >
+            Got it
+          </button>
         </div>
       </div>
     )
