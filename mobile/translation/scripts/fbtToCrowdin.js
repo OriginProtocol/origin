@@ -30,10 +30,11 @@ const VarPrefix = 'VAR_'
 const b64Prefix = '_B64_'
 
 function b64Encode(str) {
-  return new Buffer.from(str).toString('base64')
-    .replace(/=/g, '')       // Strip base64 padding. It is not essential.
-    .replace(/\//g, 'SLASH')  // Replace '/' since otherwise MT alters the string.
-    .replace(/\+/g, 'PLUS')   // Replace '+' since otherwise MT alters the string.
+  return new Buffer.from(str)
+    .toString('base64')
+    .replace(/=/g, '') // Strip base64 padding. It is not essential.
+    .replace(/\//g, 'SLASH') // Replace '/' since otherwise MT alters the string.
+    .replace(/\+/g, 'PLUS') // Replace '+' since otherwise MT alters the string.
 }
 
 function encodeVarName(varName) {
@@ -68,7 +69,7 @@ function encode(str) {
   // </fbt>
   // In that case we base64 encode the whole string.
   if (str.startsWith('{=') && str.endsWith('}')) {
-    const b64 = b64Encode(str.slice(1, str.length-1))
+    const b64 = b64Encode(str.slice(1, str.length - 1))
     return '{' + VarPrefix + b64 + '}'
   }
 
@@ -78,10 +79,10 @@ function encode(str) {
   for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
     if (cur === '{') {
-      inBracket=true
+      inBracket = true
       continue
     } else if (cur === '}') {
-      inBracket=false
+      inBracket = false
       const encodedVarName = encodeVarName(varName)
       out += '{' + encodedVarName + '}'
       varName = ''
@@ -97,11 +98,9 @@ function encode(str) {
 }
 
 phrases.forEach(phrase => {
-  Object.keys(phrase.hashToText)
-    .forEach(key => {
-      allMessages[key] = encode(phrase.hashToText[key])
-    })
-
+  Object.keys(phrase.hashToText).forEach(key => {
+    allMessages[key] = encode(phrase.hashToText[key])
+  })
 })
 
 const output = JSON.stringify(allMessages, null, 2)

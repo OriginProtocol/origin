@@ -1,9 +1,11 @@
 // Iterates over files in `./translation/crowdin` over our languages, expecting them to be in key-value format that crowdin uses
 // Output: files in fbt formatin in `./translation/fbt` dir
 
-const doTestMark = process.argv.length>=3 && process.argv[2]=='proof'
+const doTestMark = process.argv.length >= 3 && process.argv[2] == 'proof'
 if (doTestMark) {
-  console.warn('⚠️ Proofread mode: Doing translation with test marks included for testing.')
+  console.warn(
+    '⚠️  Proofread mode: Doing translation with test marks included for testing.'
+  )
 }
 
 const locales = 'en_US de_DE el_GR es_ES fil_PH fr_FR hr_HR id_ID it_IT ja_JP ko_KR nl_NL pt_PT ro_RO ru_RU th_TH tr_TR uk_UA vi_VN zh_CN zh_TW'.split(
@@ -19,9 +21,7 @@ const b64Prefix = '_B64_'
 function b64Decode(data) {
   // The "/" and "+" characters cause MT to alter
   // the data so they were replace during encoding.
-  const b64Encoded = data
-    .replace(/SLASH/g, '/')
-    .replace(/PLUS/g, '+')
+  const b64Encoded = data.replace(/SLASH/g, '/').replace(/PLUS/g, '+')
   return new Buffer(b64Encoded, 'base64').toString()
 }
 
@@ -35,14 +35,18 @@ function decodeVarName(encodedVarName) {
   }
 
   if (!data.startsWith(VarPrefix)) {
-    throw new Error(`Unexpected variable format. Missing prefix ${VarPrefix}. Var=${encodedVarName}`)
+    throw new Error(
+      `Unexpected variable format. Missing prefix ${VarPrefix}. Var=${encodedVarName}`
+    )
   }
   data = data.slice(VarPrefix.length)
 
   // Extract the parts from the encoded variable name.
   const parts = data.split(b64Prefix)
   if (parts.length !== 2) {
-    throw new Error(`Unexpected variable format. Expected 2 parts. Var=${encodedVarName}`)
+    throw new Error(
+      `Unexpected variable format. Expected 2 parts. Var=${encodedVarName}`
+    )
   }
 
   // Base64 decode the variable name.
@@ -52,27 +56,30 @@ function decodeVarName(encodedVarName) {
   return originalVarName
 }
 
-
 function decode(str) {
   // Special case where the entire string was just concatenated variables.
-  if (str.startsWith('{' + VarPrefix) && str.endsWith('}') && !str.includes('_B64_')) {
-    const b64 = str.slice(1 + VarPrefix.length, str.length -1)
+  if (
+    str.startsWith('{' + VarPrefix) &&
+    str.endsWith('}') &&
+    !str.includes('_B64_')
+  ) {
+    const b64 = str.slice(1 + VarPrefix.length, str.length - 1)
     const decodedStr = b64Decode(b64)
     return '{' + decodedStr + '}'
   }
 
-  let out=''
+  let out = ''
   let encodedVarName = ''
   let inBracket = false
   for (let i = 0; i < str.length; i++) {
     const cur = str.charAt(i)
-    if (cur==='{') {
-      inBracket=true
+    if (cur === '{') {
+      inBracket = true
       continue
-    } else if (cur==='}') {
-      inBracket=false
+    } else if (cur === '}') {
+      inBracket = false
       const decodedVarName = decodeVarName(encodedVarName)
-      out += '{' + decodedVarName  + '}'
+      out += '{' + decodedVarName + '}'
       encodedVarName = ''
       continue
     }
@@ -85,40 +92,37 @@ function decode(str) {
   return out
 }
 
-
 locales.forEach(locale => {
   // If testing, we use English for all
-  const srcFile = doTestMark ?
-    `${__dirname}/../crowdin/all-messages.json` :
-    `${__dirname}/../crowdin/all-messages_${locale}.json`
+  const srcFile = doTestMark
+    ? `${__dirname}/../crowdin/all-messages.json`
+    : `${__dirname}/../crowdin/all-messages_${locale}.json`
   const dstFile = `${__dirname}/../fbt/${locale}.json`
 
   const fs = require('fs')
   const translations = {}
 
-  let stringKeyValue=''
+  let stringKeyValue = ''
   try {
     stringKeyValue = JSON.parse(fs.readFileSync(srcFile))
-  }
-  catch (error) {
+  } catch (error) {
     console.warn(`Could not find or parse file: ${srcFile}`)
     return
   }
   console.log(`Processing file: ${srcFile}`)
 
   Object.keys(stringKeyValue).forEach(key => {
-    const val = doTestMark ? '◀'+decode(stringKeyValue[key])+'▶' : decode(stringKeyValue[key])
+    const val = doTestMark
+      ? '◀' + decode(stringKeyValue[key]) + '▶'
+      : decode(stringKeyValue[key])
     translations[key] = {
-      'translations': [
-        { 'translation': val }
-      ]
+      translations: [{ translation: val }]
     }
   })
 
-
   const file = {
     'fb-locale': locale,
-    'translations': translations
+    translations: translations
   }
 
   const output = JSON.stringify(file, null, 2)
@@ -127,5 +131,4 @@ locales.forEach(locale => {
   fs.writeFileSync(dstFile, output)
 
   console.log(`✅ ${locale}`)
-
 })

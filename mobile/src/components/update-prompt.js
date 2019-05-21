@@ -83,9 +83,9 @@ class UpdatePrompt extends React.Component {
             />
             {this.state.upgrade === 'force' && (
               <>
-              <Text style={styles.title}>
-                <fbt desc="UpdateScreen.updateRequired">Update required</fbt>
-              </Text>
+                <Text style={styles.title}>
+                  <fbt desc="UpdateScreen.updateRequired">Update required</fbt>
+                </Text>
                 <Text style={styles.subtitle}>
                   <fbt desc="UpdateScreen.updateRequiredDesc">
                     Woops! It looks like you are using an old version of the
@@ -97,7 +97,9 @@ class UpdatePrompt extends React.Component {
             {this.state.upgrade === 'recommend' && (
               <>
                 <Text style={styles.title}>
-                  <fbt desc="UpdateScreen.updateAvailable">Update available</fbt>
+                  <fbt desc="UpdateScreen.updateAvailable">
+                    Update available
+                  </fbt>
                 </Text>
                 <Text style={styles.subtitle}>
                   <fbt desc="UpdateScreen.updateAvailableDesc">
