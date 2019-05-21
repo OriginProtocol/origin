@@ -106,17 +106,10 @@ const resolvers = {
       return eligibility
     },
     async enrollmentStatus(_, args, context) {
-      // console.log(
-      //   await getUserAuthenticationStatus(
-      //     context.authToken,
-      //     args.walletAddress
-      //   )
-      // )
-      // return await getUserAuthenticationStatus(
-      //   context.authToken,
-      //   args.walletAddress
-      // )
-      return enums.GrowthParticipantAuthenticationStatus.Enrolled
+      return await getUserAuthenticationStatus(
+        context.authToken,
+        args.walletAddress
+      )
     }
   },
   Mutation: {
@@ -131,23 +124,21 @@ const resolvers = {
     },
     async enroll(_, args, context) {
       let ip, eligibility, countryCode
-      // if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== 'production') {
         ip = '192.168.1.1'
         eligibility = 'Eligible'
         countryCode = 'NA'
-      // } else {
-      //   ip = context.req.headers['x-real-ip']
-      //   const locationInfo = await getLocationInfo(ip)
-      //   eligibility = locationInfo.eligibility
-      //   countryCode = locationInfo.countryCode
-      // }
+      } else {
+        ip = context.req.headers['x-real-ip']
+        const locationInfo = await getLocationInfo(ip)
+        eligibility = locationInfo.eligibility
+        countryCode = locationInfo.countryCode
+      }
 
-      // if (eligibility === 'Forbidden') {
-      //   logger.warn('Enrollment declined for user in country ', countryCode)
-      //   throw new ForbiddenError('Forbidden country')
-      // }
-
-      console.log(ip, eligibility, countryCode)
+      if (eligibility === 'Forbidden') {
+        logger.warn('Enrollment declined for user in country ', countryCode)
+        throw new ForbiddenError('Forbidden country')
+      }
 
       try {
         const authToken = await authenticateEnrollment(
@@ -172,30 +163,27 @@ const resolvers = {
          * as the above approach happens before a user is authenticated and this leaves us exposed
          * to situations where bad actors could make false referral connections to their own campaigns.
          */
-        // if (args.inviteCode) {
-        //   await GrowthInvite.makeReferralConnection(
-        //     args.inviteCode,
-        //     args.accountId
-        //   )
-        // }
-
-        console.log('authToken', authToken)
+        if (args.inviteCode) {
+          await GrowthInvite.makeReferralConnection(
+            args.inviteCode,
+            args.accountId
+          )
+        }
 
         return {
           authToken,
           isBanned: false
         }
       } catch (e) {
-        console.log('Catch error', e.message, e.stack)
-        // if (e instanceof BannedUserError) {
+        if (e instanceof BannedUserError) {
           return {
             authToken: '',
-            isBanned: false
+            isBanned: true
           }
-        // } else {
-        //   logger.warn('User authentication failed: ', e.message, e.stack)
-        //   throw new AuthenticationError('Growth authentication failure')
-        // }
+        } else {
+          logger.warn('User authentication failed: ', e.message, e.stack)
+          throw new AuthenticationError('Growth authentication failure')
+        }
       }
     },
     async inviteRemind(_, args, context) {

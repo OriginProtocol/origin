@@ -16,6 +16,7 @@ export default gql`
       fingerprintData: $fingerprintData
     ) {
       authToken
+      isBanned
     }
   }
 `
