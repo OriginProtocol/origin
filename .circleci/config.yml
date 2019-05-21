@@ -19,13 +19,13 @@ jobs:
   Setup:
     <<: *defaults
     steps:
-      - restore_cache:
-          keys:
-            - cache-v1-{{ checksum "yarn.lock" }}
       - run:
           name: Clone Repo
           command: |
             git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/OriginProtocol/origin.git ~/origin
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "yarn.lock" }}
       - run:
           name: Yarn Install
           command: |
