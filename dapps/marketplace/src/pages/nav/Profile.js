@@ -16,7 +16,7 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import MobileUserActivation from 'components/MobileUserActivation'
 
-import DeployProxy from '../identity/mutations/DeployProxy'
+// import DeployProxy from '../identity/mutations/DeployProxy'
 
 class ProfileNav extends Component {
   constructor() {
@@ -39,7 +39,7 @@ class ProfileNav extends Component {
             return null
           }
 
-          const walletType = data.web3.walletType
+          // const walletType = data.web3.walletType
           // const { checksumAddress } = data.web3.primaryAccount
           return (
             <Dropdown
@@ -154,7 +154,7 @@ const Network = withNetwork(({ networkName }) => (
 const WalletAddress = ({ wallet, walletType, children }) => {
   return (
     <div className="connected">
-      { children || <fbt desc="nav.profile.activeWallet">Active wallet</fbt> }
+      {children || <fbt desc="nav.profile.activeWallet">Active wallet</fbt>}
       <span>
         <span className={`wallet-icon ${getWalletIconClass(walletType)}`} />
         <span className="wallet-name">{walletType}</span>

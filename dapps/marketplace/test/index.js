@@ -1,7 +1,7 @@
 import {
   changeAccount,
   waitForText,
-  hasText,
+  // hasText,
   clickByText,
   clickBySelector,
   pic,
