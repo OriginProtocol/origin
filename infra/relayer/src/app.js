@@ -11,7 +11,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
-const { relayTx } = require('./relayer')
+const logger = require('./logger')
+const Relayer = require('./relayer')
 
 // For Prometheus metrics collection.
 const bundle = promBundle({
@@ -29,12 +30,20 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bundle)
 
+// networkId: 1=Mainnet, 4=Rinkeby, etc...
+const networkId = parseInt(process.env.NETWORK_ID)
+if (isNaN(networkId)) {
+  throw new Error(`NETWORK_ID invalid or not specified.`)
+}
+const relayer = new Relayer(networkId)
+logger.info(`Using networkId ${networkId}`)
+
 // Register the /relay route for relaying transactions.
-app.post('/relay', relayTx)
+app.post('/relay', relayer.relay)
 
 const port = process.env.PORT || 5100
 app.listen(port, () => {
-  console.log(`Relayer listening on port ${port}...`)
+  logger.info(`Relayer listening on port ${port}...`)
 })
 
 module.exports = app
