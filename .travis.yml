@@ -15,6 +15,7 @@ db: &db
   env:
     - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
 
+dist: xenial
 git:
   depth: 1
 matrix:
