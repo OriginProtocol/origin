@@ -9,17 +9,21 @@ defaults: &defaults
 
 version: 2
 jobs:
-  setup_environment:
+  Setup:
     <<: *defaults
     steps:
-      - run: |
-          git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/OriginProtocol/origin.git ~/origin
+      - run:
+          name: Clone Repo
+          command: |
+            git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/OriginProtocol/origin.git ~/origin
       - restore_cache:
           key: yarn-packages-v3-{{ checksum "yarn.lock" }}
-      - run: |
-          yarn install --frozen-lockfile
-          curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
-          ./bin/node-prune
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile
+            curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
+            ./bin/node-prune
       - save_cache:
           key: yarn-packages-v3-{{ checksum "yarn.lock" }}
           paths:
@@ -29,28 +33,28 @@ jobs:
           paths:
             - .
 
-  "javascript linting":
+  Lint:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: npm run lint
+      - run: yarn lint
 
-  "@origin/marketplace integration tests":
+  Marketplace:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: npm run test --prefix dapps/marketplace
+      - run: yarn test --prefix dapps/marketplace
 
-  "@origin/graphql unit tests":
+  GraphQL:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: npm run test --prefix packages/graphql
+      - run: yarn test --prefix packages/graphql
 
-  "@origin/event-cache unit tests":
+  EventCache:
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -58,9 +62,9 @@ jobs:
       - attach_workspace:
           at: .
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/event-cache
-      - run: npm run test --prefix packages/event-cache
+      - run: yarn test --prefix packages/event-cache
 
-  "@origin/bridge unit tests":
+  Bridge:
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -68,16 +72,16 @@ jobs:
       - attach_workspace:
           at: .
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/bridge
-      - run: npm run test --prefix infra/bridge
+      - run: yarn test --prefix infra/bridge
 
-  "@origin/contracts unit tests":
+  Contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: npm run test --prefix packages/contracts
+      - run: yarn test --prefix packages/contracts
 
-  "@origin/discovery unit tests":
+  Discovery:
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -92,9 +96,9 @@ jobs:
           ./node_modules/.bin/lerna run migrate --scope @origin/discovery
           ./node_modules/.bin/lerna run migrate --scope @origin/growth
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          npm run test --prefix infra/bridge
+          yarn test --prefix infra/bridge
 
-  "@origin/growth unit tests":
+  Growth:
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -104,9 +108,9 @@ jobs:
       - run: |
           ./node_modules/.bin/lerna run migrate --scope @origin/growth
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          npm run test --prefix infra/growth
+          yarn test --prefix infra/growth
 
-  "@origin/notifications unit tests":
+  Notifications:
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -115,37 +119,37 @@ jobs:
           at: .
       - run: |
           ./node_modules/.bin/lerna run migrate --scope @origin/notifications
-          npm run test --prefix infra/notifications
+          yarn test --prefix infra/notifications
 
 workflows:
   version: 2
   test:
     jobs:
       - setup_environment
-      - "javascript linting":
+      - Lint:
           requires:
-            - setup_environment
-      - "@origin/marketplace integration tests":
+            - Setup
+      - Marketplace:
           requires:
-            - setup_environment
-      - "@origin/graphql unit tests":
+            - Setup
+      - GraphQL:
           requires:
-            - setup_environment
-      - "@origin/event-cache unit tests":
+            - Setup
+      - EventCache:
           requires:
-            - setup_environment
-      - "@origin/bridge unit tests":
+            - Setup
+      - Bridge:
           requires:
-            - setup_environment
-      - "@origin/contracts unit tests":
+            - Setup
+      - Contracts:
           requires:
-            - setup_environment
-      - "@origin/discovery unit tests":
+            - Setup
+      - Discovery:
           requires:
-            - setup_environment
-      - "@origin/growth unit tests":
+            - Setup
+      - Growth:
           requires:
-            - setup_environment
-      - "@origin/notifications unit tests":
+            - Setup
+      - Notifications:
           requires:
-            - setup_environment
+            - Setup
