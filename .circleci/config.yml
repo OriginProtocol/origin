@@ -43,14 +43,14 @@ jobs:
           at: .
       - run: npm run test --prefix dapps/marketplace
 
-  test_graphql:
+  "@origin/graphql unit tests":
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run: npm run test --prefix packages/graphql
 
-  test_event_cache:
+  "@origin/event-cache unit tests":
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -60,7 +60,7 @@ jobs:
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/event-cache
       - run: npm run test --prefix packages/event-cache
 
-  test_bridge:
+  "@origin/bridge unit tests":
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -70,14 +70,14 @@ jobs:
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/bridge
       - run: npm run test --prefix infra/bridge
 
-  test_contracts:
+  "@origin/contracts unit tests":
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run: npm run test --prefix packages/contracts
 
-  test_discovery:
+  "@origin/discovery unit tests":
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -94,7 +94,7 @@ jobs:
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
           npm run test --prefix infra/bridge
 
-  test_growth:
+  "@origin/growth unit tests":
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -106,7 +106,7 @@ jobs:
           ./node_modules/.bin/lerna run migrate --scope @origin/identity
           npm run test --prefix infra/growth
 
-  test_notifications:
+  "@origin/notifications unit tests":
     <<: *defaults
     environment:
       DATABASE_URL: postgres://postgres@localhost/travis_ci_test
@@ -128,24 +128,24 @@ workflows:
       - "@origin/marketplace integration tests":
           requires:
             - setup_environment
-      - test_graphql:
+      - "@origin/graphql unit tests":
           requires:
             - setup_environment
-      - test_event_cache:
+      - "@origin/event-cache unit tests":
           requires:
             - setup_environment
-      - test_bridge:
+      - "@origin/bridge unit tests":
           requires:
             - setup_environment
-      - test_contracts:
+      - "@origin/contracts unit tests":
           requires:
             - setup_environment
-      - test_discovery:
+      - "@origin/discovery unit tests":
           requires:
             - setup_environment
-      - test_growth:
+      - "@origin/growth unit tests":
           requires:
             - setup_environment
-      - test_notifications:
+      - "@origin/notifications unit tests":
           requires:
             - setup_environment
