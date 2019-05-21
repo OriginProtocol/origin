@@ -184,6 +184,19 @@ services:
       node infra/discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix infra/discovery"
 
+  graphql:
+    container_name: graphql
+    image: origin
+    volumes: *volumes
+    environment:
+      - NETWORK=docker
+      - GRAPHQL_SERVER_PORT=4002
+    depends_on:
+      - discovery
+    ports:
+      - "4002:4002"
+    command: npm run start --prefix packages/graphql
+
   notifications:
     container_name: notifications
     image: origin
