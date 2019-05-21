@@ -5,6 +5,8 @@ export default {
   discovery: 'https://discovery.dev.originprotocol.com',
   growth: 'https://growth.dev.originprotocol.com',
   bridge: 'https://bridge.dev.originprotocol.com',
+  performanceMode: false,
+  graphql: 'https://graphql.dev.originprotocol.com',
   notifications: 'https://notifications.dev.originprotocol.com',
   OriginToken: '0xc341384f6fe00179b33ef7ae638ed2937a9e4501',
   V00_Marketplace: '0xf3884ecbc6c43383bf7a38c891021380f50abc49',

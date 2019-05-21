@@ -15,7 +15,59 @@ const schema = makeExecutableSchema({
   resolverValidationOptions: { requireResolversForResolveType: false }
 })
 
-const server = new ApolloServer({ schema })
+const options = {
+  schema,
+  context: ({ req }) => {
+    const operation = req.body
+    if (operation && operation.query) {
+      /**
+       * TODO: Maybe check how apollo parses queries and use the same parser.
+       * There could be a case here where a character is inserted before
+       * 'mutation' in the query body that apollo would ignore, but would cause
+       * this to fail.  While I don't think any of the mutations being run from
+       * the server are *dangerous*, it sure isn't ideal and could have some
+       * unintended side-effects.
+       */
+      const match = operation.query.match(/^\s*(mutation)/)
+      if (match) {
+        console.warn(
+          `Mutations not allowed.  Operation: ${operation.operationName}`
+        )
+        throw new Error('Mutations not allowed')
+      }
+    }
+  }
+}
+
+/**
+ * `ENGINE_API_KEY` is the default that Apollo uses and what it specifies in
+ * the docs.  `APOLLO_METRICS_API_KEY` was chosen for clarity, but both are
+ * supported here on the off chance someone uses the former.  Without supporting
+ * both, it may cause some unexpected behavior that I'd rather not have to chase
+ * down later.
+ */
+const API_KEY = process.env.ENGINE_API_KEY || process.env.APOLLO_METRICS_API_KEY
+if (typeof API_KEY !== 'undefined') {
+  options.engine = {
+    apiKey: API_KEY,
+    generateClientInfo: ({ request }) => {
+      const headers = request.http && request.http.headers
+      if (headers) {
+        return {
+          clientName: headers['apollo-client-name'],
+          clientVersion: headers['apollo-client-version']
+        }
+      } else {
+        return {
+          clientName: 'Unknown Client',
+          clientVersion: 'Unversioned'
+        }
+      }
+    }
+  }
+}
+
+const server = new ApolloServer(options)
 server.shutdown = shutdown
 
 export default server

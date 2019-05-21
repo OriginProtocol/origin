@@ -16,6 +16,7 @@ export default gql`
       proxyAccountsEnabled
       originGraphQLVersion
       relayer
+      performanceMode
     }
   }
 `
