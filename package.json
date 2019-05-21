@@ -35,15 +35,15 @@
     "bootstrap": "lerna bootstrap --no-ci --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
-    "start": "npm run start --prefix dapps/marketplace",
+    "start": "lerna run start --prefix dapps/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
-    "postinstall": "npm run bootstrap",
+    "postinstall": "lerna run bootstrap",
     "test": "node scripts/test.js"
   },
   "husky": {
     "hooks": {
-      "pre-push": "lerna run lint && npm run lint --prefix mobile"
+      "pre-push": "lerna run lint && lerna run lint --prefix mobile"
     }
   }
 }

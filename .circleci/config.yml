@@ -84,7 +84,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: yarn run test --prefix packages/contracts
+      - run: ./node_modules/.bin/lerna run test --prefix packages/contracts
 
   Discovery:
     <<: *db
