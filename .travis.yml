@@ -2,9 +2,6 @@
 defaults: &defaults
   language: node_js
   node_js: 10
-  before_install:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-    - export PATH="$HOME/.yarn/bin:$PATH"
   install: yarn install
 
 db: &db
@@ -15,6 +12,7 @@ db: &db
   env:
     - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
 
+dist: xenial
 git:
   depth: 1
 matrix:
