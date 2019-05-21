@@ -24,19 +24,18 @@ jobs:
           command: |
             git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/OriginProtocol/origin.git ~/origin
       - restore_cache:
-          key: yarn-packages-v5-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v6-{{ checksum "yarn.lock" }}
       - run:
           name: Yarn Install
           command: |
             yarn policies set-version
             yarn install --frozen-lockfile
-            yarn cache dir
             curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
-            ./bin/node-prune ~/.cache/yarn
+            ./bin/node-prune
       - save_cache:
-          key: yarn-packages-v5-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v6-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn
+            - "node_modules"
       - persist_to_workspace:
           root: .
           paths:
