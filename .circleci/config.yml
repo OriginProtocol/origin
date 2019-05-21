@@ -1,7 +1,7 @@
 defaults: &defaults
   docker:
     - image: circleci/node:10-browsers
-    - image: circleci/postgres:9.6-alpine
+    - image: circleci/postgres:9.6-alpine-ram
       environment:
         POSTGRES_USER: postgres
         POSTGRES_DB: travis_ci_test
@@ -25,6 +25,27 @@ jobs:
           paths:
             - .
 
+  test_lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run: npm run lint
+
+  test_marketplace:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run: npm run test --prefix dapps/marketplace
+
+  test_graphql:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run: npm run test --prefix packages/graphql
+
   test_event_cache:
     <<: *defaults
     environment:
@@ -32,34 +53,65 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: sudo apt install -y postgresql-client || true
       - run: ./node_modules/.bin/lerna run migrate --scope @origin/event-cache
       - run: npm run test --prefix packages/event-cache
 
-  test_lint:
+  test_bridge:
     <<: *defaults
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/travis_ci_test
     steps:
       - attach_workspace:
           at: .
-      - run: npm run lint
-  test_graphql:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: .
-      - run: npm run test --prefix packages/graphql
-  test_marketplace:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: .
-      - run: npm run test --prefix dapps/marketplace
+      - run: ./node_modules/.bin/lerna run migrate --scope @origin/bridge
+      - run: npm run test --prefix infra/bridge
+
   test_contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run: npm run test --prefix packages/contracts
+
+  test_discovery:
+    <<: *defaults
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/travis_ci_test
+      AFFILIATE_ACCOUNT: 0x821aea9a577a9b44299b9c15c88cf3087f3b5544
+      ARBITRATOR_ACCOUNT: 0x0d1d4e623d10f9fba5db95830f7d3839406c6af2
+      ATTESTATION_ACCOUNT: 0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          ./node_modules/.bin/lerna run migrate --scope @origin/bridge
+          ./node_modules/.bin/lerna run migrate --scope @origin/discovery
+          ./node_modules/.bin/lerna run migrate --scope @origin/growth
+          ./node_modules/.bin/lerna run migrate --scope @origin/identity
+          npm run test --prefix infra/bridge
+
+  test_growth:
+    <<: *defaults
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/travis_ci_test
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          ./node_modules/.bin/lerna run migrate --scope @origin/growth
+          ./node_modules/.bin/lerna run migrate --scope @origin/identity
+          npm run test --prefix infra/growth
+
+  test_notifications:
+    <<: *defaults
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/travis_ci_test
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          ./node_modules/.bin/lerna run migrate --scope @origin/notifications
+          npm run test --prefix infra/notifications
 
 workflows:
   version: 2
@@ -69,15 +121,27 @@ workflows:
       - test_lint:
           requires:
             - setup_environment
-      - test_event_cache:
+      - test_marketplace:
           requires:
             - setup_environment
       - test_graphql:
           requires:
             - setup_environment
-      - test_marketplace:
+      - test_event_cache:
+          requires:
+            - setup_environment
+      - test_bridge:
           requires:
             - setup_environment
       - test_contracts:
+          requires:
+            - setup_environment
+      - test_discovery:
+          requires:
+            - setup_environment
+      - test_growth:
+          requires:
+            - setup_environment
+      - test_notifications:
           requires:
             - setup_environment
