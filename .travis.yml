@@ -11,6 +11,7 @@ db: &db
   env:
     - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
 
+dist: xenial
 cache: yarn
 git:
   depth: 1
