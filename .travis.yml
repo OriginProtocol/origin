@@ -7,6 +7,13 @@ defaults: &defaults
     - export PATH="$HOME/.yarn/bin:$PATH"
   cache: yarn
   install: yarn install
+
+db: &db
+  addons:
+    postgresql: 9.6
+  services:
+    - postgresql
+
 git:
   depth: 1
 matrix:
@@ -27,61 +34,40 @@ matrix:
       script: yarn lint
 
     - name: "@origin/marketplace integration tests"
-      language: node_js
-      node_js: 10
-      cache: yarn
-      install: yarn install
+      <<: *defaults
       script: yarn run test --prefix dapps/marketplace
 
     - name: "@origin/graphql unit tests"
-      language: node_js
-      node_js: 10
-      install: yarn install
+      <<: *defaults
       script: yarn run test --prefix packages/graphql
 
     - name: "@origin/event-cache unit tests"
-      language: node_js
-      node_js: 10
-      addons:
-        postgresql: 9.6
-      services:
-        - postgresql
+      <<: *defaults
+      <<: *db
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/event-cache
-      install: yarn install
       script: yarn run test --prefix packages/event-cache
 
     - name: "@origin/bridge unit tests"
-      language: node_js
-      node_js: 10
-      addons:
-        postgresql: 9.6
-      services:
-        - postgresql
+      <<: *defaults
+      <<: *db
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
         - psql -c 'create database travis_ci_test;' -U postgres
         - lerna run migrate --scope @origin/bridge
-      install: yarn install
       script: yarn run test --prefix infra/bridge
 
     - name: "@origin/contracts unit tests"
-      language: node_js
-      node_js: 10
-      install: yarn install
+      <<: *defaults
       script: yarn run test --prefix packages/contracts
 
     - name: "@origin/discovery unit tests"
-      language: node_js
-      node_js: 10
-      addons:
-        postgresql: 9.6
-      services:
-        - postgresql
+      <<: *defaults
+      <<: *db
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
         - AFFILIATE_ACCOUNT=0x821aea9a577a9b44299b9c15c88cf3087f3b5544
@@ -93,16 +79,11 @@ matrix:
         - lerna run migrate --scope @origin/discovery
         - lerna run migrate --scope @origin/growth
         - lerna run migrate --scope @origin/identity
-      install: yarn install
       script: yarn run test --prefix infra/discovery
 
     - name: "@origin/growth unit tests"
-      language: node_js
-      node_js: 10
-      addons:
-        postgresql: 9.6
-      services:
-        - postgresql
+      <<: *defaults
+      <<: *db
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
@@ -113,10 +94,8 @@ matrix:
       script: yarn run test --prefix infra/growth
 
     - name: "@origin/notifications unit tests"
-      language: node_js
-      node_js: 10
-      addons:
-        postgresql: 9.6
+      <<: *defaults
+      <<: *db
       env:
         - DATABASE_URL=postgres://postgres@localhost/travis_ci_test
       before_script:
