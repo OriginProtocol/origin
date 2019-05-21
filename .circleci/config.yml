@@ -29,14 +29,14 @@ jobs:
           paths:
             - .
 
-  test_lint:
+  "javascript linting":
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - run: npm run lint
 
-  test_marketplace:
+  "@origin/marketplace integration tests":
     <<: *defaults
     steps:
       - attach_workspace:
@@ -122,10 +122,10 @@ workflows:
   test:
     jobs:
       - setup_environment
-      - test_lint:
+      - "javascript linting":
           requires:
             - setup_environment
-      - test_marketplace:
+      - "@origin/marketplace integration tests":
           requires:
             - setup_environment
       - test_graphql:
