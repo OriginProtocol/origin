@@ -1,5 +1,9 @@
 function localStorageHas(prop) {
-  if (typeof window === 'undefined') return false
+  if (
+    typeof window === 'undefined' ||
+    typeof window.localStorage === 'undefined'
+  )
+    return false
   return window.localStorage[prop] ? true : false
 }
 
@@ -13,6 +17,8 @@ export default {
   discovery: 'https://discovery.staging.originprotocol.com',
   growth: 'https://growth.staging.originprotocol.com',
   bridge: 'https://bridge.staging.originprotocol.com',
+  performanceMode: false,
+  graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
   OriginToken: '0xa115e16ef6e217f7a327a57031f75ce0487aadb8',
   V00_Marketplace: '0xe842831533c4bf4b0f71b4521c4320bdb669324e',

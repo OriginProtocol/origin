@@ -61,4 +61,8 @@ cronImageTag: 'a973d11'
 relayerImage: origin-relayer
 relayerImageTag: 'latest'
 
+# origin-graphql
+graphqlImage: origin-graphql
+graphqlImageTag: 'latest'
+
 ipfsLoadBalancerIP: 35.233.189.126
