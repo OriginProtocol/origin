@@ -13,8 +13,8 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          git clone -b ${CIRCLE_BRANCH} —-depth=1
-          https://github.com/OriginProtocol/origin.git
+          git clone -b ${CIRCLE_BRANCH}
+          https://github.com/OriginProtocol/origin.git —-depth=1
       - restore_cache:
           key: yarn-packages-v2-{{ checksum "yarn.lock" }}
       - run: |
