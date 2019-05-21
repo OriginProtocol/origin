@@ -1,8 +1,7 @@
 ---
 defaults: &defaults
   language: node_js
-  node_js: 10
-  install: yarn install
+  node_js: 11
 
 db: &db
   addons:
