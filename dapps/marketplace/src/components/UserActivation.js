@@ -324,12 +324,22 @@ class UserActivation extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const { renderMobileVersion } = this.props
+    const { renderMobileVersion, config } = this.props
     const attestations = [] // TEMP: [this.state.data]
 
     const headerText = renderMobileVersion ? null : (
       <fbt desc="UserActivation.addNameAndPhoto">Add name and photo</fbt>
     )
+
+    const onComplete = () => {
+      if (this.props.renderMobileVersion) {
+        this.setState({
+          stage: 'ProfileCreated'
+        })
+      } else if (this.props.onCompleted) {
+        this.props.onCompleted()
+      }
+    }
 
     return (
       <form
@@ -348,7 +358,7 @@ class UserActivation extends Component {
           <div className="avatar-wrap mt-3">
             <ImageCropper
               onChange={async avatar => {
-                const { ipfsRPC } = this.props.config
+                const { ipfsRPC } = config
                 const uploadedImages = await uploadImages(ipfsRPC, [avatar])
                 const avatarImg = uploadedImages[0]
                 if (avatarImg) {
@@ -412,28 +422,28 @@ class UserActivation extends Component {
             className="btn btn-primary mt-3 mb-3"
             children={fbt('Publish', 'Publish')}
           /> */}
-          <DeployIdentity
-            className="btn btn-primary mt-3 mb-3"
-            identity={this.props.wallet}
-            profile={pick(this.state, [
-              'firstName',
-              'lastName',
-              'avatar',
-              'avatarUrl'
-            ])}
-            attestations={attestations}
-            validate={() => this.validate()}
-            children={fbt('Publish', 'Publish')}
-            onComplete={() => {
-              if (this.props.renderMobileVersion) {
-                this.setState({
-                  stage: 'ProfileCreated'
-                })
-              } else if (this.props.onCompleted) {
-                this.props.onCompleted()
-              }
-            }}
-          />
+          { config.proxyAccountsEnabled ? (
+            <DeployProxy
+              className="btn btn-primary mt-3 mb-3"
+              children={fbt('Publish', 'Publish')}
+              onComplete={onComplete}
+            />
+          ) : (
+            <DeployIdentity
+              className="btn btn-primary mt-3 mb-3"
+              identity={this.props.wallet}
+              profile={pick(this.state, [
+                'firstName',
+                'lastName',
+                'avatar',
+                'avatarUrl'
+              ])}
+              attestations={attestations}
+              validate={() => this.validate()}
+              children={fbt('Publish', 'Publish')}
+              onComplete={onComplete}
+            /> 
+          ) }
         </div>
       </form>
     )
