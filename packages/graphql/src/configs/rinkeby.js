@@ -24,6 +24,7 @@ export default {
   bridge: 'https://bridge.staging.originprotocol.com',
   graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
+  relayer: 'http://localhost:5100',
   messaging: {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'

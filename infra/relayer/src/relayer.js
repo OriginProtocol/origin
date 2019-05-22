@@ -48,28 +48,57 @@ class Relayer {
    */
   constructor(networkId) {
     this.networkId = networkId
+    let privateKey
 
     // Load contract addresses based on network id.
     switch (networkId) {
       // Mainnet
       case 1:
         this.addresses = require('@origin/contracts/build/contracts_mainnet.json')
+        this.web3 = new Web3(
+          'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2'
+        )
+        privateKey = process.env.FORWARDER_PRIVATE_KEY_1
         break
       // Rinkeby
       case 4:
         this.addresses = require('@origin/contracts/build/contracts_rinkeby.json')
+        this.web3 = new Web3(
+          'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
+        )
+        privateKey = process.env.FORWARDER_PRIVATE_KEY_4
         break
       // Local
       case 999:
         this.addresses = require('@origin/contracts/build/contracts.json')
+        this.web3 = new Web3('http://localhost:8545')
         break
       // Origin testnet
       case 2222:
         this.addresses = require('@origin/contracts/build/contracts_origin.json')
+        this.web3 = new Web3('https://testnet.originprotocol.com/rpc')
+        privateKey = process.env.FORWARDER_PRIVATE_KEY_2222
         break
       default:
         throw new Error(`Unsupported network id ${networkId}`)
     }
+    if (privateKey) {
+      const wallet = this.web3.eth.accounts.wallet.add(privateKey)
+      this.forwarder = wallet.address
+      logger.info(`Forwarder account ${this.forwarder}`)
+    }
+    this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
+    this.Marketplace = new this.web3.eth.Contract(MarketplaceContract.abi)
+    this.IdentityEvents = new this.web3.eth.Contract(IdentityEventsContract.abi)
+    this.IdentityProxy = new this.web3.eth.Contract(IdentityProxyContract.abi)
+
+    this.methods = {}
+    this.Marketplace._jsonInterface
+      .concat(this.IdentityProxy._jsonInterface)
+      .concat(this.IdentityEvents._jsonInterface)
+      .concat(this.ProxyFactory._jsonInterface)
+      .filter(i => i.type === 'function' && !i.constant)
+      .forEach(o => (this.methods[o.signature] = o))
   }
   /**
    * Processes a relay transaction request.
@@ -79,39 +108,26 @@ class Relayer {
    * @returns {Promise<*>}
    */
   async relay(req, res) {
-    const { signature, from, txData, provider, to, proxy, preflight } = req.body
+    const { signature, from, txData, to, proxy, preflight } = req.body
 
     // Pre-flight requests check if the relayer is available and willing to pay
     if (preflight) {
       return res.send({ success: true })
     }
 
-    const web3 = new Web3(provider)
-    const ProxyFactory = new web3.eth.Contract(
-      ProxyFactoryContract.abi,
-      this.addresses.ProxyFactory
-    )
+    const web3 = this.web3
 
-    const nodeAccounts = await web3.eth.getAccounts()
-    const Forwarder = nodeAccounts[0]
+    let Forwarder = this.forwarder
+    if (this.networkId === 999) {
+      const nodeAccounts = await this.web3.eth.getAccounts()
+      Forwarder = nodeAccounts[0]
+    }
     let nonce = 0
 
-    const IdentityProxy = new web3.eth.Contract(
-      IdentityProxyContract.abi,
-      proxy
-    )
-    const Marketplace = new web3.eth.Contract(MarketplaceContract.abi)
-    const IdentityEvents = new web3.eth.Contract(IdentityEventsContract.abi)
-    const methods = {}
-    Marketplace._jsonInterface
-      .concat(IdentityProxy._jsonInterface)
-      .concat(IdentityEvents._jsonInterface)
-      .concat(ProxyFactory._jsonInterface)
-      .filter(i => i.type === 'function' && !i.constant)
-      .forEach(o => (methods[o.signature] = o))
+    const IdentityProxy = this.IdentityProxy.clone()
+    IdentityProxy.options.address = proxy
 
-    const method = methods[txData.substr(0, 10)]
-
+    const method = this.methods[txData.substr(0, 10)]
     if (proxy) {
       nonce = await IdentityProxy.methods.nonce(from).call()
     }
@@ -132,7 +148,7 @@ class Relayer {
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
       if (!proxy) {
-        if (to !== ProxyFactory.options.address) {
+        if (to !== this.addresses.ProxyFactory) {
           throw new Error('Incorrect ProxyFactory address provided')
         } else if (method.name !== 'createProxyWithNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
