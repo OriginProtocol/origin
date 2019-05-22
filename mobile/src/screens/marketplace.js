@@ -251,7 +251,7 @@ class MarketplaceScreen extends Component {
     } catch (error) {
       console.debug('Failed to parse uiState')
     }
-    const fiatCurrency = CURRENCIES.find((c => c[0] === fiatCurrencyCode))
+    const fiatCurrency = CURRENCIES.find(c => c[0] === fiatCurrencyCode)
     this.setState({ fiatCurrency })
     // TODO: this will need to be adjusted if multiple non stablecoin support
     // is added to the DApp (or when OGN has a market price)
