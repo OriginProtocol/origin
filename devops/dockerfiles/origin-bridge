@@ -10,12 +10,13 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./infra/bridge ./infra/bridge
 
-RUN npm install --unsafe-perm
+RUN yarn install
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/bridge && \
