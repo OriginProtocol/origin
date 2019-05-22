@@ -353,23 +353,19 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'facebook',
-                  fbt('Facebook', '_ProvisionedChanges.facebook'),
-                  { disabled: !profileCreated }
+                  fbt('Facebook', '_ProvisionedChanges.facebook')
                 )}
                 {this.renderAtt(
                   'twitter',
-                  fbt('Twitter', '_ProvisionedChanges.twitter'),
-                  { disabled: !profileCreated }
+                  fbt('Twitter', '_ProvisionedChanges.twitter')
                 )}
                 {this.renderAtt(
                   'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb'),
-                  { disabled: !profileCreated }
+                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google'),
-                  { disabled: !profileCreated }
+                  fbt('Google', '_ProvisionedChanges.google')
                 )}
                 {this.renderAtt(
                   'website',
