@@ -4,10 +4,12 @@ import get from 'lodash/get'
 import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import RewardsBanner from './_RewardsBanner'
 import TranslationModal from './_TranslationModal'
+import MobileModal from './_MobileModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -37,11 +39,19 @@ import CurrencyContext from 'constants/CurrencyContext'
 const store = Store('localStorage')
 
 class App extends Component {
-  state = { hasError: false, currency: store.get('currency', 'fiat-USD') }
+  state = {
+    hasError: false,
+    displayMobileModal: false,
+    currency: store.get('currency', 'fiat-USD')
+  }
 
   componentDidMount() {
     if (window.ethereum) {
       setTimeout(() => window.ethereum.enable(), 100)
+    }
+    console.log(this.props.wallet)
+    if (!this.props.wallet) {
+      this.setState({ displayMobileModal: true })
     }
   }
 
@@ -131,6 +141,11 @@ class App extends Component {
           </Switch>
         </main>
         <TranslationModal locale={this.props.locale} />
+        {this.state.displayMobileModal && (
+          <MobileModal
+            onClose={() => this.setState({ displayMobileModal: false })}
+          />
+        )}
         <Footer
           locale={this.props.locale}
           onLocale={this.props.onLocale}
@@ -147,7 +162,7 @@ class App extends Component {
   }
 }
 
-export default withCreatorConfig(withRouter(App))
+export default withWallet(withCreatorConfig(withRouter(App)))
 
 require('react-styl')(`
   .app-spinner
