@@ -1,10 +1,4 @@
-module.exports = `
-  extend type Query {
-    identityEvents: IdentityEvents
-    identity(id: ID!): Identity
-    identities(id: ID!): Identity
-  }
-
+export const mutations = `
   extend type Mutation {
     deployIdentity(
       from: String!
@@ -17,6 +11,14 @@ module.exports = `
     deployProxyFactory(from: String!): Transaction
     deployIdentityProxy(from: String!): Transaction
     deployIdentityViaProxy(from: String!, factoryAddress: String, proxyAddress: String, owner: String!): Transaction
+  }
+`
+
+export const types = `
+  extend type Query {
+    identityEvents: IdentityEvents
+    identity(id: ID!): Identity
+    identities(id: ID!): Identity
   }
 
   input ProfileInput {
@@ -73,3 +75,4 @@ module.exports = `
     attestations: [String]
   }
 `
+export default types + mutations
