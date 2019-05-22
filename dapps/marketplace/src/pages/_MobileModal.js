@@ -34,8 +34,8 @@ class MobileModal extends Component {
               </h5>
               <div>
                 <fbt desc="MobileModal.description">
-                  You currently don't have a crypto wallet, which is necessary
-                  to buy and sell on Origin.
+                  You currently don&apos;t have a crypto wallet, which is
+                  necessary to buy and sell on Origin.
                 </fbt>
                 {!isMobile && (
                   <fbt desc="MobileModal.scanQr">
