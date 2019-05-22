@@ -17,13 +17,15 @@ import MobileModal from './MobileModal'
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
 
+import DeployProxy from 'pages/identity/mutations/DeployProxy'
+
 import { uploadImages } from 'utils/uploadImages'
 
 class UserActivation extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stage: 'AddEmail',
+      stage: 'PublishDetail', // TEMP: 'AddEmail',
       step: 1,
       loading: false,
       error: null,
@@ -75,7 +77,7 @@ class UserActivation extends Component {
           <MobileModal
             closeOnEsc={false}
             shouldClose={shouldClosePersonalDataModal}
-            className="user-activation"
+            className="user-activation personal-data-modal"
             fullscreen={false}
             onClose={() =>
               this.setState({
@@ -319,7 +321,7 @@ class UserActivation extends Component {
 
   renderPublishDetail() {
     const { renderMobileVersion } = this.props
-    const attestations = [this.state.data]
+    const attestations = [] // TEMP: [this.state.data]
 
     const headerText = renderMobileVersion ? null : (
       <fbt desc="UserActivation.addNameAndPhoto">Add name and photo</fbt>
@@ -453,30 +455,35 @@ class UserActivation extends Component {
 
   renderPersonalDataModal() {
     return (
-      <div className="personal-data-modal">
-        <h2>
-          <fbt desc="UserActivation.blockchainAndPersonalData">
-            Blockchain &amp; Your Personal Data
-          </fbt>
-        </h2>
-        <p>
-          <fbt desc="UserActivation.personalDataInfo">
-            By creating a profile, you are associating your name and photo with
-            your Ethereum account. This means that others will be able to
-            connect your blockchain transactions to your name and photo.
-          </fbt>
-        </p>
-        <div className="actions">
-          <button
-            className="btn btn-primary"
-            onClick={() =>
-              this.setState({ shouldClosePersonalDataModal: true })
-            }
-          >
-            Got it
-          </button>
+      <>
+        <div className="header-image">
+          <img src="images/tout-header-image.png" alt="header-image" />
         </div>
-      </div>
+        <div class="padded-content">
+          <h2>
+            <fbt desc="UserActivation.blockchainAndPersonalData">
+              Blockchain &amp; Your Personal Data
+            </fbt>
+          </h2>
+          <p>
+            <fbt desc="UserActivation.personalDataInfo">
+              By creating a profile, you are associating your name and photo with
+              your Ethereum account. This means that others will be able to
+              connect your blockchain transactions to your name and photo.
+            </fbt>
+          </p>
+          <div className="actions">
+            <button
+              className="btn btn-primary"
+              onClick={() =>
+                this.setState({ shouldClosePersonalDataModal: true })
+              }
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      </>
     )
   }
 
@@ -601,19 +608,24 @@ require('react-styl')(`
       
       .avatar
         border-radius: 50%
-    .personal-data-modal
+    &.personal-data-modal
+      padding: 0
       text-align: center
-      > h2
-        font-family: Poppins
-        font-weight: 300
-        color: var(--dark)
-        letter-spacing: -0.3px
-        line-height: 1.43
-        margin-bottom: 1.5rem
-      > p
-        font-family: Lato
-        font-size: 1rem
-        line-height: 1.43
-        color: var(--dark)
-        margin-bottom: 2.25rem
+      .header-image, img
+        width: 100%
+      > .padded-content
+        padding: 20px
+        h2
+          font-family: Poppins
+          font-weight: 300
+          color: var(--dark)
+          letter-spacing: -0.3px
+          line-height: 1.43
+          margin-bottom: 1.5rem
+        p
+          font-family: Lato
+          font-size: 1rem
+          line-height: 1.43
+          color: var(--dark)
+          margin-bottom: 2.25rem
 `)
