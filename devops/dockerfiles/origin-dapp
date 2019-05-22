@@ -16,8 +16,8 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-# Copy the necessary files for building dapp
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource/ ./packages/eventsource
@@ -31,9 +31,9 @@ COPY ./packages/validator ./packages/validator
 
 COPY ./dapps/marketplace ./dapps/marketplace
 
-RUN npm install --unsafe-perm
+RUN yarn instatll
 
-RUN eval $(envkey-source) && npm run build --prefix dapps/marketplace
+RUN eval $(envkey-source) && yarn run build -- --scope @origin/marketplace
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds

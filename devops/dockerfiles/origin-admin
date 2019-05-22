@@ -2,7 +2,8 @@ FROM node:10 as build
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource/ ./packages/eventsource/
@@ -15,8 +16,8 @@ COPY ./packages/services/ ./packages/services/
 COPY ./packages/validator/ ./packages/validator/
 COPY ./dapps/admin/ ./dapps/admin/
 
-RUN npm install --unsafe-perm
-RUN npm run build --prefix dapps/admin
+RUN yarn install
+RUN yarn run build -- --scope @origin/admin
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine

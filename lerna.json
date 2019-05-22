@@ -1,16 +1,6 @@
 {
-  "packages": [
-    "dapps/**",
-    "infra/**",
-    "packages/**"
-  ],
-  "command": {
-    "bootstrap": {
-      "hoist": ["**"],
-      "nohoist": [
-        "openzeppelin-solidity"
-      ]
-    }
-  },
+  "packages": ["dapps/**", "infra/**", "packages/**"],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
   "version": "independent"
 }
