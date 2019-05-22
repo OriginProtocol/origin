@@ -8,6 +8,22 @@ const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marke
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
 const logger = require('./logger')
 
+const DefaultProviders = {
+  1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+  999: 'http://localhost:8545',
+  2222: 'https://testnet.originprotocol.com/rpc'
+}
+
+const ContractAddresses = {
+  1: '@origin/contracts/build/contracts_mainnet.json',
+  4: '@origin/contracts/build/contracts_rinkeby.json',
+  999: '@origin/contracts/build/contracts.json',
+  2222: '@origin/contracts/build/contracts_origin.json'
+}
+
+const env = process.env
+
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
     { t: 'address', v: from },
@@ -47,41 +63,16 @@ class Relayer {
    * @param {integer} networkId 1=mainnet, 4=rinkeby, etc...
    */
   constructor(networkId) {
-    this.networkId = networkId
-    let privateKey
+    this.networkId = Number(networkId)
 
-    // Load contract addresses based on network id.
-    switch (networkId) {
-      // Mainnet
-      case 1:
-        this.addresses = require('@origin/contracts/build/contracts_mainnet.json')
-        this.web3 = new Web3(
-          'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2'
-        )
-        privateKey = process.env.FORWARDER_PRIVATE_KEY_1
-        break
-      // Rinkeby
-      case 4:
-        this.addresses = require('@origin/contracts/build/contracts_rinkeby.json')
-        this.web3 = new Web3(
-          'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
-        )
-        privateKey = process.env.FORWARDER_PRIVATE_KEY_4
-        break
-      // Local
-      case 999:
-        this.addresses = require('@origin/contracts/build/contracts.json')
-        this.web3 = new Web3('http://localhost:8545')
-        break
-      // Origin testnet
-      case 2222:
-        this.addresses = require('@origin/contracts/build/contracts_origin.json')
-        this.web3 = new Web3('https://testnet.originprotocol.com/rpc')
-        privateKey = process.env.FORWARDER_PRIVATE_KEY_2222
-        break
-      default:
-        throw new Error(`Unsupported network id ${networkId}`)
+    if (!ContractAddresses[networkId]) {
+      throw new Error(`Unsupported network id ${networkId}`)
     }
+
+    this.addresses = require(ContractAddresses[networkId])
+    this.web3 = new Web3(env.PROVIDER_URL || DefaultProviders[networkId])
+    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
+
     if (privateKey) {
       const wallet = this.web3.eth.accounts.wallet.add(privateKey)
       this.forwarder = wallet.address
