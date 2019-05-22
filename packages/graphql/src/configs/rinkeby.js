@@ -1,13 +1,5 @@
 const addresses = require('@origin/contracts/build/contracts_rinkeby.json')
-
-function localStorageHas(prop) {
-  if (
-    typeof window === 'undefined' ||
-    typeof window.localStorage === 'undefined'
-  )
-    return false
-  return window.localStorage[prop] ? true : false
-}
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
