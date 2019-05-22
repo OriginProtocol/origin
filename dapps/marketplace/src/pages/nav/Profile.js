@@ -186,12 +186,22 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
     <div className="identity">
       <fbt desc="nav.profile.profile">Profile</fbt>
       <div className="info">
-        <Avatar profile={identity} size="3rem" />
+        <Link
+          onClick={() => onClose()}
+          to="/profile"
+          className="name"
+        >
+          <Avatar profile={identity} size="3rem" />
+        </Link>
         <div>
-          <div className="name">
+          <Link
+            onClick={() => onClose()}
+            to="/profile"
+            className="name"
+          >
             {identity.fullName ||
               fbt('Unnamed User', 'nav.profile.unnamedUser')}
-          </div>
+          </Link>
           <Attestations profile={identity} />
         </div>
       </div>
@@ -388,8 +398,11 @@ require('react-styl')(`
            .avatar
              margin-right: 0.75rem
              border-radius: 50%
+             cursor: pointer
            .name
-             font-size: 18px
+              cursor: pointer
+              font-size: 1.2rem
+              color: white
 
          .strength
            font-size: 10px;
