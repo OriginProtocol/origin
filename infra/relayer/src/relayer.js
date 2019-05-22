@@ -6,7 +6,6 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
-const config = require('@origin/contracts/build/contracts.json')
 const logger = require('./logger')
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
@@ -37,7 +36,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 
     return address.toLowerCase() === from.toLowerCase()
   } catch (e) {
-    logger.error.log('error recovering', e)
+    logger.error('error recovering', e)
     return false
   }
 }
@@ -49,6 +48,28 @@ class Relayer {
    */
   constructor(networkId) {
     this.networkId = networkId
+
+    // Load contract addresses based on network id.
+    switch (networkId) {
+      // Mainnet
+      case 1:
+        this.addresses = require('@origin/contracts/build/contracts_mainnet.json')
+        break
+      // Rinkeby
+      case 4:
+        this.addresses = require('@origin/contracts/build/contracts_rinkeby.json')
+        break
+      // Local
+      case 999:
+        this.addresses = require('@origin/contracts/build/contracts.json')
+        break
+      // Origin testnet
+      case 2222:
+        this.addresses = require('@origin/contracts/build/contracts_origin.json')
+        break
+      default:
+        throw new Error(`Unsupported network id ${networkId}`)
+    }
   }
   /**
    * Processes a relay transaction request.
@@ -68,7 +89,7 @@ class Relayer {
     const web3 = new Web3(provider)
     const ProxyFactory = new web3.eth.Contract(
       ProxyFactoryContract.abi,
-      config.ProxyFactory
+      this.addresses.ProxyFactory
     )
 
     const nodeAccounts = await web3.eth.getAccounts()
