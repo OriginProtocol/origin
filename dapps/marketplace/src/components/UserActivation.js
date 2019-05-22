@@ -20,6 +20,7 @@ import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
 import DeployProxy from 'pages/identity/mutations/DeployProxy'
 
 import { uploadImages } from 'utils/uploadImages'
+import { formInput, formFeedback } from 'utils/formHelpers'
 
 class UserActivation extends Component {
   constructor(props) {
@@ -320,6 +321,9 @@ class UserActivation extends Component {
   }
 
   renderPublishDetail() {
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
     const { renderMobileVersion } = this.props
     const attestations = [] // TEMP: [this.state.data]
 
@@ -349,41 +353,35 @@ class UserActivation extends Component {
                 const avatarImg = uploadedImages[0]
                 if (avatarImg) {
                   const avatarUrl = avatarImg.url
-                  this.setState({ avatar, avatarUrl })
+                  this.setState({ avatar, avatarUrl, avatarError: null })
                 }
               }}
             >
               <Avatar className="with-cam" avatarUrl={this.state.avatarUrl} />
             </ImageCropper>
+            {Feedback('avatar')}
           </div>
           <div className="mt-5">
             {renderMobileVersion && <fbt desc="firstName">First Name</fbt>}
             <input
               type="text"
-              className="form-control form-control-lg"
-              value={this.state.firstName}
+              {...input('firstName')}
               placeholder={
                 renderMobileVersion ? '' : fbt('First Name', 'firstName')
               }
-              onChange={e => this.setState({ firstName: e.target.value })}
             />
-            {this.state.firstNameError && (
-              <div className="alert alert-danger mt-3">
-                {this.state.firstNameError}
-              </div>
-            )}
+            {Feedback('firstName')}
           </div>
           <div className="mt-3">
             {renderMobileVersion && <fbt desc="lastName">Last Name</fbt>}
             <input
               type="text"
-              className="form-control form-control-lg"
-              value={this.state.lastName}
+              {...input('lastName')}
               placeholder={
                 renderMobileVersion ? '' : fbt('Last Name', 'lastName')
               }
-              onChange={e => this.setState({ lastName: e.target.value })}
             />
+            {Feedback('lastName')}
           </div>
           {this.state.error && (
             <div className="alert alert-danger mt-3">{this.state.error}</div>
@@ -490,6 +488,8 @@ class UserActivation extends Component {
   validate() {
     let newState = {
       firstNameError: null,
+      lastNameError: null,
+      avatarError: null,
       valid: true
     }
 
@@ -500,6 +500,28 @@ class UserActivation extends Component {
         firstNameError: fbt(
           'First Name is required',
           'UserActivation.firstNameRequired'
+        )
+      }
+    }
+
+    if (!this.state.lastName) {
+      newState = {
+        ...newState,
+        valid: false,
+        lastNameError: fbt(
+          'Last Name is required',
+          'UserActivation.lastNameRequired'
+        )
+      }
+    }
+
+    if (!this.state.avatar) {
+      newState = {
+        ...newState,
+        valid: false,
+        avatarError: fbt(
+          'Avatar is required',
+          'UserActivation.avatarRequired'
         )
       }
     }
@@ -555,6 +577,9 @@ require('react-styl')(`
         font-family: Lato
         font-size: 14px
         color: var(--bluey-grey)
+      .avatar-wrap
+        .invalid-feedback
+          text-align: center
     .info
       text-align: center
       border-radius: 5px

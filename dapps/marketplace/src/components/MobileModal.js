@@ -168,7 +168,7 @@ require('react-styl')(`
         color: white
     &.contained
       box-sizing: border-box
-      margin: 20px
+      margin: 30px
       max-height: calc(100% - 40px)
       background: transparent
       .modal-content
