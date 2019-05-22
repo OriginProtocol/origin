@@ -33,7 +33,9 @@ COPY ./dapps/marketplace ./dapps/marketplace
 
 RUN yarn install
 
-RUN eval $(envkey-source) && yarn run build -- --scope @origin/marketplace
+ENV NODE_ENV=production
+
+RUN eval $(envkey-source) && yarn run build --scope @origin/marketplace
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds

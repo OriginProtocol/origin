@@ -17,7 +17,7 @@ COPY ./packages/validator/ ./packages/validator/
 COPY ./dapps/admin/ ./dapps/admin/
 
 RUN yarn install
-RUN yarn run build -- --scope @origin/admin
+RUN yarn run build --scope @origin/admin
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
