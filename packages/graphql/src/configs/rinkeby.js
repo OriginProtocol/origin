@@ -63,5 +63,5 @@ export default {
 
   // Configs
   performanceMode: false,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }
