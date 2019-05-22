@@ -9,12 +9,13 @@ class MobileUserActivation extends Component {
     super(props)
     this.state = {
       modal: true,
-      shouldClose: false
+      shouldClose: false,
+      title: fbt('Create a Profile', 'MobileUserActivation.createProfile')
     }
   }
 
   render() {
-    const { modal, shouldClose } = this.state
+    const { modal, shouldClose, title } = this.state
 
     if (!modal) {
       return null
@@ -25,13 +26,10 @@ class MobileUserActivation extends Component {
         <MobileModal
           onClose={() => this.onClose()}
           shouldClose={shouldClose}
-          title={
-            <fbt desc="MobileUserActivation.createProfile">
-              Create a Profile
-            </fbt>
-          }
+          title={title}
         >
           <UserActivation
+            onProfileCreated={() => this.setState({ title: null })}
             onCompleted={() => {
               this.setState({
                 shouldClose: true

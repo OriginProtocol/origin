@@ -77,18 +77,20 @@ export default class MobileModal extends Component {
   }
 
   renderFullScreenModal() {
+    const { title, className, children } = this.props
+
     return (
       <>
-        <nav className="navbar">
+        {title && <nav className="navbar">
           <div className="modal-header">
             <a className="back-button" onClick={() => this.onClose()}>
               <img src="images/caret-grey.svg" />
             </a>
             <h3 className="modal-title">{this.props.title}</h3>
           </div>
-        </nav>
-        <div className={`modal-content ${this.props.className}`}>
-          {this.props.children}
+        </nav>}
+        <div className={`modal-content ${className}`}>
+          {children}
         </div>
       </>
     )
@@ -134,17 +136,18 @@ require('react-styl')(`
     touch-action: none
     position: fixed
     opacity: 0
-    top: 100%
-    left: 0
+    top: 0
+    left: 100%
     right: 0
     bottom: 0
-    transition: top 0.3s ease, opacity 0.3s ease
+    transition: left 0.3s ease, opacity 0.3s ease
     z-index: 1000
     background-color: white
     display: flex
     flex-direction: column
     &.open
-      top: 0 
+      top: 0
+      left: 0
       opacity: 1
     .modal-content
       overflow: auto
@@ -167,10 +170,15 @@ require('react-styl')(`
         text-align: center
         color: white
     &.contained
+      top: 100%
+      left: 0
       box-sizing: border-box
       margin: 30px
       max-height: calc(100% - 40px)
       background: transparent
+      transition: top 0.3s ease, opacity 0.3s ease
+      &.open
+        top: 0
       .modal-content
         overflow: auto
         flex-grow: 0

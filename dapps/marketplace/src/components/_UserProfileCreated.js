@@ -53,4 +53,6 @@ export default UserProfileCreated
 require('react-styl')(`
   .profile-created
     text-align: center
+    > img
+        margin-top: 2.5rem
 `)

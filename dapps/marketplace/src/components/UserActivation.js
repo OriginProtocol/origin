@@ -26,7 +26,7 @@ class UserActivation extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stage: 'PublishDetail', // TEMP: 'AddEmail',
+      stage: 'AddEmail',
       step: 1,
       loading: false,
       error: null,
@@ -43,7 +43,9 @@ class UserActivation extends Component {
       stage,
       step,
       personalDataModal,
-      shouldClosePersonalDataModal
+      shouldClosePersonalDataModal,
+      txModal,
+      shouldCloseSignTxModal
     } = this.state
     const { renderMobileVersion, hideHeader } = this.props
 
@@ -58,7 +60,7 @@ class UserActivation extends Component {
                 <fbt desc="UserActivation.addYourEmail">Add your email</fbt>
               )}
               {stage === 'PublishDetail' && (
-                <fbt desc="UserActivation.addYourEmail">Add name and photo</fbt>
+                <fbt desc="UserActivation.addNameAndPhoto">Add name and photo</fbt>
               )}
             </h2>
             <Steps steps={2} step={step} />
@@ -90,14 +92,22 @@ class UserActivation extends Component {
             {this.renderPersonalDataModal()}
           </MobileModal>
         )}
-        {/* { txModal && (
+        {txModal && (
           <MobileModal
-           shouldClose={shouldCloseTxModal}
-           className="user-activation"
-           fullscreen={false}>
-           {this.renderTransactionModal()}
+            closeOnEsc={false}
+            shouldClose={shouldCloseSignTxModal}
+            className="user-activation sign-tx-modal"
+            fullscreen={false}
+            onClose={() =>
+              this.setState({
+                txModal: false,
+                shouldCloseSignTxModal: false
+              })
+            }
+          >
+            {this.renderSignTxModal()}
           </MobileModal>
-        )} */}
+        )}
       </div>
     )
   }
@@ -320,37 +330,39 @@ class UserActivation extends Component {
     )
   }
 
+  onDeployComplete = () => {
+    if (this.props.renderMobileVersion) {
+      this.setState({
+        stage: 'ProfileCreated'
+      })
+      if (this.props.onProfileCreated) {
+        this.props.onProfileCreated();
+      }
+    } else if (this.props.onCompleted) {
+      this.props.onCompleted()
+    }
+  }
+
   renderPublishDetail() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     const { renderMobileVersion, config } = this.props
-    const attestations = [] // TEMP: [this.state.data]
 
     const headerText = renderMobileVersion ? null : (
       <fbt desc="UserActivation.addNameAndPhoto">Add name and photo</fbt>
     )
 
-    const onComplete = () => {
-      if (this.props.renderMobileVersion) {
-        this.setState({
-          stage: 'ProfileCreated'
-        })
-      } else if (this.props.onCompleted) {
-        this.props.onCompleted()
-      }
-    }
-
     return (
       <form
         onSubmit={e => {
           e.preventDefault()
-          this.validate()
-          // if (this.validate()) {
-          //   this.setState({
-          //     txModal: true
-          //   })
-          // }
+          // TEMP:
+          if (this.validate()) {
+            this.setState({
+              txModal: true
+            })
+          }
         }}
       >
         <h3>{headerText}</h3>
@@ -417,45 +429,15 @@ class UserActivation extends Component {
           </a>
         </div>
         <div className="actions">
-          {/* <button
+          <button
             type="submit"
             className="btn btn-primary mt-3 mb-3"
             children={fbt('Publish', 'Publish')}
-          /> */}
-          { config.proxyAccountsEnabled ? (
-            <DeployProxy
-              className="btn btn-primary mt-3 mb-3"
-              children={fbt('Publish', 'Publish')}
-              onComplete={onComplete}
-            />
-          ) : (
-            <DeployIdentity
-              className="btn btn-primary mt-3 mb-3"
-              identity={this.props.wallet}
-              profile={pick(this.state, [
-                'firstName',
-                'lastName',
-                'avatar',
-                'avatarUrl'
-              ])}
-              attestations={attestations}
-              validate={() => this.validate()}
-              children={fbt('Publish', 'Publish')}
-              onComplete={onComplete}
-            /> 
-          ) }
+          />
         </div>
       </form>
     )
   }
-
-  // renderTransactionModal() {
-  //   return (
-  //     <div>
-  //       <h2></h2>
-  //     </div>
-  //   )
-  // }
 
   renderProfileCreated() {
     return <UserProfileCreated onCompleted={this.props.onCompleted} />
@@ -467,7 +449,7 @@ class UserActivation extends Component {
         <div className="header-image">
           <img src="images/tout-header-image.png" alt="header-image" />
         </div>
-        <div class="padded-content">
+        <div className="padded-content">
           <h2>
             <fbt desc="UserActivation.blockchainAndPersonalData">
               Blockchain &amp; Your Personal Data
@@ -489,6 +471,62 @@ class UserActivation extends Component {
             >
               Got it
             </button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  renderSignTxModal() {
+    const { config } = this.props
+    const attestations = [this.state.data]
+    
+    return (
+      <>
+        <div className="header-image">
+          <img src="images/tout-header-image.png" alt="header-image" />
+        </div>
+        <div className="padded-content">
+          <h2>
+            <fbt desc="UserActivation.signToPublish">
+              Sign to Publish
+            </fbt>
+          </h2>
+          <p>
+            <fbt desc="UserActivation.signToCreateWallet">
+              Coinbase Wallet will now ask you to sign your profile creation data.
+            </fbt>
+          </p>
+          <div className="actions">
+            { config.proxyAccountsEnabled ? (
+              <DeployProxy
+                className="btn btn-primary"
+                children={fbt('Got it', 'gotIt')}
+                onComplete={() => {
+                  this.onDeployComplete()
+                  this.setState({ shouldCloseSignTxModal: true })
+                }}
+              />
+            ) : (
+              <DeployIdentity
+                className="btn btn-primary mt-3 mb-3"
+                identity={this.props.wallet}
+                profile={pick(this.state, [
+                  'firstName',
+                  'lastName',
+                  'avatar',
+                  'avatarUrl'
+                ])}
+                attestations={attestations}
+                validate={() => this.validate()}
+                children={fbt('Publish', 'Publish')}
+                skipSuccessScreen={true}
+                onComplete={() => {
+                  this.onDeployComplete()
+                  this.setState({ shouldCloseSignTxModal: true })
+                }}
+              /> 
+            ) }
           </div>
         </div>
       </>
@@ -643,7 +681,7 @@ require('react-styl')(`
       
       .avatar
         border-radius: 50%
-    &.personal-data-modal
+    &.personal-data-modal, &.sign-tx-modal
       padding: 0
       text-align: center
       .header-image, img

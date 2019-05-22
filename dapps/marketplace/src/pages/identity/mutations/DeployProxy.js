@@ -6,6 +6,7 @@ import DeployProxyMutation from 'mutations/DeployProxy'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+import AutoMutate from 'components/AutoMutate'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -65,6 +66,29 @@ class DeployProxy extends Component {
   renderWaitModal() {
     if (!this.state.waitFor) return null
 
+    const { skipSuccessScreen } = this.props
+    const content = skipSuccessScreen ? (
+      <AutoMutate mutatation={() => {
+        this.setState({
+          shouldClose: true
+        })
+      }} />
+    ) : (
+      <div className="make-offer-modal">
+        <div className="success-icon" />
+        <div>
+          <fbt desc="success">Success!</fbt>
+        </div>
+        <button
+          className="btn btn-outline-light"
+          onClick={async () => {
+            this.setState({ shouldClose: true })
+          }}
+          children={fbt('OK', 'OK')}
+        />
+      </div>
+    )
+
     return (
       <WaitForTransaction
         shouldClose={this.state.shouldClose}
@@ -81,21 +105,7 @@ class DeployProxy extends Component {
         hash={this.state.waitFor}
         event="IdentityUpdated"
       >
-        {() => {
-          return (
-            <div className="make-offer-modal">
-              <div className="success-icon" />
-              <div>
-                <fbt desc="success">Success!</fbt>
-              </div>
-              <button
-                className="btn btn-outline-light"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('OK', 'OK')}
-              />
-            </div>
-          )
-        }}
+        {() => content}
       </WaitForTransaction>
     )
   }
