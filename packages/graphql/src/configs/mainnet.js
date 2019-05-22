@@ -15,6 +15,7 @@ export default {
   bridge: 'https://bridge.originprotocol.com',
   graphql: 'https://graphql.originprotocol.com',
   notifications: 'https://notifications.originprotocol.com',
+  relayer: 'https://relayer.originprotocol.com',
   messaging: {
     messagingNamespace: 'origin',
     globalKeyServer: 'https://messaging.originprotocol.com'

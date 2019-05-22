@@ -13,8 +13,6 @@ export default {
   // Web3 provider
   provider:
     'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
-  // provider: 'https://rinkeby.infura.io',
-  // providerWS: 'wss://rinkeby.infura.io/ws',
 
   // Services
   ipfsGateway: 'https://ipfs.staging.originprotocol.com',
@@ -24,7 +22,7 @@ export default {
   bridge: 'https://bridge.staging.originprotocol.com',
   graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
-  relayer: 'http://localhost:5100',
+  relayer: 'https://relayer.staging.originprotocol.com',
   messaging: {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
