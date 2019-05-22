@@ -16,7 +16,8 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   const txData = tx.encodeABI()
 
   // Check if the relayer is available and willing to pay gas for this tx
-  const relayerAvailable = await fetch(contracts.config.relayer, {
+  const relayerUrl = contracts.config.relayer + '/relay'
+  const relayerAvailable = await fetch(relayerUrl, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify({
@@ -44,7 +45,7 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   )
   const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
 
-  const response = await fetch(contracts.config.relayer, {
+  const response = await fetch(relayerUrl, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify({

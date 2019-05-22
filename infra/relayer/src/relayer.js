@@ -6,7 +6,7 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
-const config = require('@origin/contracts/build/contracts.json')
+const logger = require('./logger')
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
@@ -36,115 +36,136 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 
     return address.toLowerCase() === from.toLowerCase()
   } catch (e) {
-    console.log('error recovering', e)
+    logger.error('error recovering', e)
     return false
   }
 }
 
-/**
- * Processes a relay transaction request.
- *
- * @param req
- * @param res
- * @returns {Promise<*>}
- */
-const relayTx = async (req, res) => {
-  const { signature, from, txData, provider, to, proxy, preflight } = req.body
+class Relayer {
+  /**
+   *
+   * @param {integer} networkId 1=mainnet, 4=rinkeby, etc...
+   */
+  constructor(networkId) {
+    this.networkId = networkId
 
-  // Pre-flight requests check if the relayer is available
-  if (preflight) {
-    return res.send({ success: true })
+    // Load contract addresses based on network id.
+    switch (networkId) {
+      // Mainnet
+      case 1:
+        this.addresses = require('@origin/contracts/build/contracts_mainnet.json')
+        break
+      // Rinkeby
+      case 4:
+        this.addresses = require('@origin/contracts/build/contracts_rinkeby.json')
+        break
+      // Local
+      case 999:
+        this.addresses = require('@origin/contracts/build/contracts.json')
+        break
+      // Origin testnet
+      case 2222:
+        this.addresses = require('@origin/contracts/build/contracts_origin.json')
+        break
+      default:
+        throw new Error(`Unsupported network id ${networkId}`)
+    }
   }
+  /**
+   * Processes a relay transaction request.
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
+  async relay(req, res) {
+    const { signature, from, txData, provider, to, proxy, preflight } = req.body
 
-  const web3 = new Web3(provider)
-  const ProxyFactory = new web3.eth.Contract(
-    ProxyFactoryContract.abi,
-    config.ProxyFactory
-  )
-  const IdentityImp = new web3.eth.Contract(
-    IdentityProxyContract.abi,
-    config.IdentityProxyImplementation
-  )
+    // Pre-flight requests check if the relayer is available and willing to pay
+    if (preflight) {
+      return res.send({ success: true })
+    }
 
-  const nodeAccounts = await web3.eth.getAccounts()
-  const forwarder = nodeAccounts[0]
-  let nonce = 0
-
-  const IdentityProxy = new web3.eth.Contract(IdentityProxyContract.abi)
-  const Marketplace = new web3.eth.Contract(MarketplaceContract.abi)
-  const IdentityEvents = new web3.eth.Contract(IdentityEventsContract.abi)
-  const methods = {}
-  Marketplace._jsonInterface
-    .concat(IdentityProxy._jsonInterface)
-    .concat(IdentityEvents._jsonInterface)
-    .filter(i => i.type === 'function' && !i.constant)
-    .forEach(o => (methods[o.signature] = o))
-
-  const method = methods[txData.substr(0, 10)]
-
-  if (proxy) {
-    IdentityProxy.options.address = proxy
-    nonce = await IdentityProxy.methods.nonce(from).call()
-  }
-
-  const signValid = await verifySig({
-    to,
-    from,
-    signature,
-    txData,
-    web3,
-    nonce
-  })
-
-  // 1. Verify sign
-  if (!signValid) {
-    return res.status(400).send({ errors: ['Cannot verify your signature'] })
-  }
-
-  // 2. Verify txData and check function signature
-  // if (!txData.toLowerCase().startsWith('0xca27eb1c')) {
-  //   return res.status(400).send({ errors: ['Invalid function signature'] })
-  // }
-
-  // 3. Deploy or get user's proxy instance
-  if (!proxy) {
-    const changeOwner = await IdentityImp.methods.changeOwner(from).encodeABI()
-
-    const res = await ProxyFactory.methods
-      .createProxy(IdentityImp._address, changeOwner)
-      .send({
-        from: nodeAccounts[0],
-        gas: 4000000
-      })
-      .once('receipt', receipt => {
-        console.log(`Deployed identity proxy (${receipt.gasUsed} gas)`)
-      })
-
-    IdentityProxy.options.address = res.events.ProxyCreation.returnValues.proxy
-  }
-
-  // 4. Call the forward method
-  let txHash
-  try {
-    txHash = await new Promise((resolve, reject) =>
-      IdentityProxy.methods
-        .forward(to, signature, from, txData)
-        .send({ from: forwarder, gas: 4000000 })
-        .once('transactionHash', resolve)
-        .once('receipt', receipt => {
-          const gas = receipt.gasUsed
-          const acct = from.substr(0, 10)
-          console.log(`Paid ${gas} gas on behalf of ${acct} for ${method.name}`)
-        })
-        .catch(reject)
+    const web3 = new Web3(provider)
+    const ProxyFactory = new web3.eth.Contract(
+      ProxyFactoryContract.abi,
+      this.addresses.ProxyFactory
     )
-  } catch (e) {
-    console.log(e)
-    return res.status(400).send({ errors: ['Error forwarding'] })
-  }
 
-  res.status(200)
-  res.send({ id: txHash })
+    const nodeAccounts = await web3.eth.getAccounts()
+    const Forwarder = nodeAccounts[0]
+    let nonce = 0
+
+    const IdentityProxy = new web3.eth.Contract(
+      IdentityProxyContract.abi,
+      proxy
+    )
+    const Marketplace = new web3.eth.Contract(MarketplaceContract.abi)
+    const IdentityEvents = new web3.eth.Contract(IdentityEventsContract.abi)
+    const methods = {}
+    Marketplace._jsonInterface
+      .concat(IdentityProxy._jsonInterface)
+      .concat(IdentityEvents._jsonInterface)
+      .concat(ProxyFactory._jsonInterface)
+      .filter(i => i.type === 'function' && !i.constant)
+      .forEach(o => (methods[o.signature] = o))
+
+    const method = methods[txData.substr(0, 10)]
+
+    if (proxy) {
+      nonce = await IdentityProxy.methods.nonce(from).call()
+    }
+
+    const args = { to, from, signature, txData, web3, nonce }
+    const sigValid = await verifySig(args)
+    if (!sigValid) {
+      return res.status(400).send({ errors: ['Cannot verify your signature'] })
+    }
+
+    // 2. Verify txData and check function signature
+    if (!method) {
+      return res.status(400).send({ errors: ['Invalid function signature'] })
+    }
+
+    let tx, txHash
+
+    try {
+      // If no proxy was specified assume the request is to deploy a proxy...
+      if (!proxy) {
+        if (to !== ProxyFactory.options.address) {
+          throw new Error('Incorrect ProxyFactory address provided')
+        } else if (method.name !== 'createProxyWithNonce') {
+          throw new Error('Incorrect ProxyFactory method provided')
+        }
+        const args = { to, data: txData, from: Forwarder }
+        const gas = await web3.eth.estimateGas(args)
+        tx = web3.eth.sendTransaction({ ...args, gas })
+      } else {
+        const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
+        const gas = await rawTx.estimateGas({ from: Forwarder })
+        // TODO: Not sure why we need extra gas here
+        tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
+      }
+
+      txHash = await new Promise((resolve, reject) =>
+        tx
+          .once('transactionHash', resolve)
+          .once('receipt', receipt => {
+            const gas = receipt.gasUsed
+            const acct = from.substr(0, 10)
+            logger.info(
+              `Paid ${gas} gas on behalf of ${acct} for ${method.name}`
+            )
+          })
+          .catch(reject)
+      )
+    } catch (err) {
+      logger.error(err)
+      return res.status(400).send({ errors: ['Error forwarding'] })
+    }
+
+    res.send({ id: txHash })
+  }
 }
 
-module.exports = { relayTx }
+module.exports = Relayer
