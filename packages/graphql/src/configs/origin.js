@@ -1,4 +1,5 @@
 const addresses = require('@origin/contracts/build/contracts_origin.json')
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
@@ -12,6 +13,7 @@ export default {
   bridge: 'https://bridge.dev.originprotocol.com',
   graphql: 'https://graphql.dev.originprotocol.com',
   notifications: 'https://notifications.dev.originprotocol.com',
+  relayer: 'https://relayer.dev.originprotocol.com',
   messaging: {
     messagingNamespace: 'origin:dev',
     globalKeyServer: 'https://messaging.dev.originprotocol.com'
@@ -42,5 +44,6 @@ export default {
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
   // Configs
-  performanceMode: false
+  performanceMode: false,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }
