@@ -225,11 +225,11 @@ class MarketplaceScreen extends Component {
   requestUIState() {
     const requestUIStateInjection = `
       (function() {
-        if (window && window.localStorage) {
+        if (window && window.localStorage && window.webViewBridge) {
           const uiState = window.localStorage['uiState'];
-          window.webViewBridge.send('handleUIStateResponse', uiState)
+          window.webViewBridge.send('handleUIStateResponse', uiState);
         }
-      })()
+      })();
     `
     if (this.dappWebView) {
       console.debug('Injecting currency request')
