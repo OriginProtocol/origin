@@ -156,7 +156,7 @@ Start and stop the environment:
     docker-compose stop
 ```
 
-⚠️ When docker builds an image, part of the build process is `npm install`,
+⚠️ When docker builds an image, part of the build process is `yarn install`,
 meaning that dependent packages from `package.json` are built into the image.
 This image is immutable. Running `docker-compose up` creates a container for the
 image and a volume where any changes are stored. Running `docker-compose down`
