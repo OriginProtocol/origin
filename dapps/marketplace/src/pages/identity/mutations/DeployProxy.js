@@ -68,11 +68,13 @@ class DeployProxy extends Component {
 
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
-      <AutoMutate mutatation={() => {
-        this.setState({
-          shouldClose: true
-        })
-      }} />
+      <AutoMutate
+        mutatation={() => {
+          this.setState({
+            shouldClose: true
+          })
+        }}
+      />
     ) : (
       <div className="make-offer-modal">
         <div className="success-icon" />

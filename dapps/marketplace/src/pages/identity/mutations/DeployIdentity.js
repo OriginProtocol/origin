@@ -9,7 +9,7 @@ import WaitForTransaction from 'components/WaitForTransaction'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
-import AutoMutate from 'components/AutoMutate';
+import AutoMutate from 'components/AutoMutate'
 
 class DeployIdentity extends Component {
   state = {}
@@ -82,14 +82,16 @@ class DeployIdentity extends Component {
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
-    
+
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
-      <AutoMutate mutatation={() => {
-        this.setState({
-          shouldClose: true
-        })
-      }} />
+      <AutoMutate
+        mutatation={() => {
+          this.setState({
+            shouldClose: true
+          })
+        }}
+      />
     ) : (
       <div className="make-offer-modal">
         <div className="success-icon" />

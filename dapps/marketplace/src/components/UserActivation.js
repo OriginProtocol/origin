@@ -60,7 +60,9 @@ class UserActivation extends Component {
                 <fbt desc="UserActivation.addYourEmail">Add your email</fbt>
               )}
               {stage === 'PublishDetail' && (
-                <fbt desc="UserActivation.addNameAndPhoto">Add name and photo</fbt>
+                <fbt desc="UserActivation.addNameAndPhoto">
+                  Add name and photo
+                </fbt>
               )}
             </h2>
             <Steps steps={2} step={step} />
@@ -336,7 +338,7 @@ class UserActivation extends Component {
         stage: 'ProfileCreated'
       })
       if (this.props.onProfileCreated) {
-        this.props.onProfileCreated();
+        this.props.onProfileCreated()
       }
     } else if (this.props.onCompleted) {
       this.props.onCompleted()
@@ -457,8 +459,8 @@ class UserActivation extends Component {
           </h2>
           <p>
             <fbt desc="UserActivation.personalDataInfo">
-              By creating a profile, you are associating your name and photo with
-              your Ethereum account. This means that others will be able to
+              By creating a profile, you are associating your name and photo
+              with your Ethereum account. This means that others will be able to
               connect your blockchain transactions to your name and photo.
             </fbt>
           </p>
@@ -480,7 +482,7 @@ class UserActivation extends Component {
   renderSignTxModal() {
     const { config } = this.props
     const attestations = [this.state.data]
-    
+
     return (
       <>
         <div className="header-image">
@@ -488,17 +490,16 @@ class UserActivation extends Component {
         </div>
         <div className="padded-content">
           <h2>
-            <fbt desc="UserActivation.signToPublish">
-              Sign to Publish
-            </fbt>
+            <fbt desc="UserActivation.signToPublish">Sign to Publish</fbt>
           </h2>
           <p>
             <fbt desc="UserActivation.signToCreateWallet">
-              Coinbase Wallet will now ask you to sign your profile creation data.
+              Coinbase Wallet will now ask you to sign your profile creation
+              data.
             </fbt>
           </p>
           <div className="actions">
-            { config.proxyAccountsEnabled ? (
+            {config.proxyAccountsEnabled ? (
               <DeployProxy
                 className="btn btn-primary"
                 children={fbt('Got it', 'gotIt')}
@@ -525,8 +526,8 @@ class UserActivation extends Component {
                   this.onDeployComplete()
                   this.setState({ shouldCloseSignTxModal: true })
                 }}
-              /> 
-            ) }
+              />
+            )}
           </div>
         </div>
       </>
@@ -567,10 +568,7 @@ class UserActivation extends Component {
       newState = {
         ...newState,
         valid: false,
-        avatarError: fbt(
-          'Avatar is required',
-          'UserActivation.avatarRequired'
-        )
+        avatarError: fbt('Avatar is required', 'UserActivation.avatarRequired')
       }
     }
 

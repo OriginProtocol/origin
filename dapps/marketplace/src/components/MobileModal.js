@@ -81,17 +81,17 @@ export default class MobileModal extends Component {
 
     return (
       <>
-        {title && <nav className="navbar">
-          <div className="modal-header">
-            <a className="back-button" onClick={() => this.onClose()}>
-              <img src="images/caret-grey.svg" />
-            </a>
-            <h3 className="modal-title">{this.props.title}</h3>
-          </div>
-        </nav>}
-        <div className={`modal-content ${className}`}>
-          {children}
-        </div>
+        {title && (
+          <nav className="navbar">
+            <div className="modal-header">
+              <a className="back-button" onClick={() => this.onClose()}>
+                <img src="images/caret-grey.svg" />
+              </a>
+              <h3 className="modal-title">{this.props.title}</h3>
+            </div>
+          </nav>
+        )}
+        <div className={`modal-content ${className}`}>{children}</div>
       </>
     )
   }
