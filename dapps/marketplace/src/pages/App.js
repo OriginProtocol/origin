@@ -83,8 +83,7 @@ class App extends Component {
     // the DApp via the webview in the mobile app
     const hideRewardsBar =
       this.props.location.pathname.match(/^\/welcome$/g) ||
-      this.props.location.pathname.match(/^\/campaigns$/g) ||
-      window.__mobileBridge
+      this.props.location.pathname.match(/^\/campaigns$/g)
 
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
