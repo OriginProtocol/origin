@@ -236,6 +236,15 @@ class MarketplaceEventHandler {
         // For each unit purchased, insert a ListingPurchased event on
         // the buyer side and a ListingSold event on the seller side.
         const numPurchased = details.offer.quantity || 1
+
+        // We use the offer creation as date of the event so that
+        // buyer/seller get rewarded using rules from the campaign that
+        // was running at time of offer rather than finalization.
+        const offer = db.Offer.findOne({ where: { id: details.offer.id } })
+        if (!offer) {
+          throw new Error(`Failed loading offer id ${details.offer.id}`)
+        }
+
         await GrowthEvent.insert(
           logger,
           numPurchased,
@@ -243,7 +252,7 @@ class MarketplaceEventHandler {
           GrowthEventTypes.ListingPurchased,
           details.offer.id,
           { blockInfo },
-          blockDate
+          offer.createdAt
         )
         await GrowthEvent.insert(
           logger,
@@ -252,7 +261,7 @@ class MarketplaceEventHandler {
           GrowthEventTypes.ListingSold,
           details.offer.id,
           { blockInfo },
-          blockDate
+          offer.createdAt
         )
         break
     }

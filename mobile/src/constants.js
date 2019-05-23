@@ -50,3 +50,12 @@ if (__DEV__) {
 
 export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 export const PROMPT_PUB_KEY = 'My public messaging key is: '
+
+export const CURRENCIES = [
+  ['fiat-USD', 'USD', '$'],
+  ['fiat-GBP', 'GBP', '£'],
+  ['fiat-EUR', 'EUR', '€'],
+  ['fiat-KRW', 'KRW', '₩'],
+  ['fiat-JPY', 'JPY', '¥'],
+  ['fiat-CNY', 'CNY', '¥']
+]
