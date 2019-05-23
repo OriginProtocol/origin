@@ -17,17 +17,17 @@ export default class Address extends Component {
           if (typeof onPress === 'function') {
             onPress()
           } else {
-            Alert.alert(label, evenlySplitAddress(address).join('\n'), [
+            Alert.alert(String(label), evenlySplitAddress(address).join('\n'), [
               {
-                text: fbt('Copy', 'Address.alertCopyButton'),
+                text: String(fbt('Copy', 'Address.alertCopyButton')),
                 onPress: async () => {
                   await Clipboard.setString(address)
                   Alert.alert(
-                    fbt('Copied to clipboard!', 'Address.alertSuccess')
+                    String(fbt('Copied to clipboard!', 'Address.alertSuccess'))
                   )
                 }
               },
-              { text: fbt('OK', 'Address.alertOkButton') }
+              { text: String(fbt('OK', 'Address.alertOkButton')) }
             ])
           }
         }}
