@@ -100,16 +100,33 @@ class Relayer {
       .filter(i => i.type === 'function' && !i.constant)
       .forEach(o => (this.methods[o.signature] = o))
   }
+
+  /**
+   * Returns true if relayer is willing to forward the transaction. False otherwise.
+   *
+   * @param {string} from - Eth address of the sender
+   * @param {string} txData - Transaction data
+   * @param {string} to - Eth address of target contract
+   * @param {string} proxy - Optional. Address of the IdentityProxy
+   * @returns {Promise<boolean>}
+   * @private
+   */
+  async _accept(from, txData, to, proxy) {
+    // TODO: implement fraud logic.
+    logger.debug('_accept called with args:', { from, txData, to, proxy })
+    return false
+  }
+
   /**
    * Processes a relay transaction request.
    *
-   * @param req
-   * @param res
+   * @param {Object} req - Request
+   * @param {Object} res - Response
    * @returns {Promise<*>}
    */
   async relay(req, res) {
     const { signature, from, txData, to, proxy, preflight } = req.body
-    logger.debug('relay called with args', {
+    logger.debug('relay called with args:', {
       from,
       txData,
       to,
@@ -117,25 +134,36 @@ class Relayer {
       preflight
     })
 
-    // Pre-flight requests check if the relayer is available and willing to pay
-    if (preflight) {
-      logger.debug('Preflight returning true')
-      return res.send({ success: true })
-    }
-
     const web3 = this.web3
 
     let Forwarder = this.forwarder
     if (this.networkId === 999) {
-      const nodeAccounts = await this.web3.eth.getAccounts()
+      const nodeAccounts = await web3.eth.getAccounts()
       Forwarder = nodeAccounts[0]
     }
-    let nonce = 0
+    const method = this.methods[txData.substr(0, 10)]
+
+    // Pre-flight requests check if the relayer is available and willing to pay
+    if (preflight) {
+      const accept = await this._accept(from, txData, to, proxy)
+      if (!accept) {
+        // Log the decline in the DB to use as data for future accept decisions.
+        await db.RelayerTxn.create({
+          status: enums.RelayerTxnStatuses.Declined,
+          from,
+          to,
+          method: method.name,
+          forwarder: Forwarder
+          // TODO: capture extra signals into the data column for fraud prevention.
+        })
+      }
+      return res.send({ success: accept })
+    }
 
     const IdentityProxy = this.IdentityProxy.clone()
     IdentityProxy.options.address = proxy
 
-    const method = this.methods[txData.substr(0, 10)]
+    let nonce = 0
     if (proxy) {
       nonce = await IdentityProxy.methods.nonce(from).call()
     }
@@ -175,7 +203,7 @@ class Relayer {
         tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
       }
 
-      const dbTx = db.RelayerTxn.create({
+      const dbTx = await db.RelayerTxn.create({
         status: enums.RelayerTxnStatuses.Pending,
         from,
         to,
@@ -190,11 +218,11 @@ class Relayer {
             // Resolve the promise to return right away the transaction hash to the caller.
             resolve(txHash)
           })
-          .once('receipt', receipt => {
+          .once('receipt', async receipt => {
             // Once block is mined, record the amount of gas and update
             // the status of the transaction in the DB.
             const gas = receipt.gasUsed
-            dbTx.update({
+            await dbTx.update({
               status: enums.RelayerTxnStatuses.Confirmed,
               gas
             })
@@ -206,7 +234,7 @@ class Relayer {
       )
       // Record the transaction hash in the DB.
       logger.info(`Submitted transaction with hash ${txHash}`)
-      dbTx.update({ txnHash: txHash })
+      await dbTx.update({ txnHash: txHash })
     } catch (err) {
       logger.error(err)
       return res.status(400).send({ errors: ['Error forwarding'] })
