@@ -227,4 +227,19 @@ contract IdentityProxy is ERC725 {
         ERC20(_token).approve(_marketplace, _value);
         require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
     }
+
+    function marketplaceFinalizeAndPay(
+        address _marketplace,
+        bytes _finalize,
+        address _seller,
+        address _currency,
+        uint _value
+    )
+        public
+        payable
+        onlyOwner
+    {
+        require(executeCall(_marketplace, 0, _finalize), 'marketplace-call-failed');
+        IdentityProxy(_seller).transferToOwner(_currency, _value);
+    }
 }

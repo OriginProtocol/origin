@@ -19,10 +19,28 @@ describe('Identity', async function() {
     ProxyFactory,
     IdentityProxyImp,
     Seller,
-    DaiStableCoin
+    DaiStableCoin,
+    decodeEvent
+
+  async function makeOffer({ listingID, value }) {
+    const blockNumber = await web3.eth.getBlockNumber()
+    const block = await web3.eth.getBlock(blockNumber)
+
+    const args = [
+      listingID,
+      IpfsHash,
+      block.timestamp + 60 * 120,
+      ZERO_ADDRESS, // affiliate
+      '0', // commission
+      value, // value
+      ZERO_ADDRESS,
+      accounts[0] // arbitrator
+    ]
+    return await Marketplace.methods.makeOffer(...args).encodeABI()
+  }
 
   before(async function() {
-    ({ web3, deploy, accounts } = await helper(`${__dirname}/..`))
+    ({ web3, deploy, accounts, decodeEvent } = await helper(`${__dirname}/..`))
 
     // Address that pays for new user
     Forwarder = accounts[0]
@@ -65,25 +83,32 @@ describe('Identity', async function() {
       .encodeABI()
 
     const res = await ProxyFactory.methods
-      .createProxyWithNonce(IdentityProxyImp._address, changeOwner, 0)
+      .createProxyWithSenderNonce(
+        IdentityProxyImp._address,
+        changeOwner,
+        owner,
+        0
+      )
       .send({ from: Forwarder, gas: 4000000 })
       .once('receipt', trackGas('Deploy Proxy'))
 
     // const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
-    //
-    // let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
-    // creationCode += web3.eth.abi
-    //   .encodeParameter('uint256', IdentityProxyImp._address)
-    //   .slice(2)
-    // const creationHash = web3.utils.sha3(creationCode)
-    //
-    // const create2hash = web3.utils
-    //   .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
-    //   .slice(-40)
-    // const predicted = `0x${create2hash}`
+    const salt = web3.utils.soliditySha3(owner, 0)
 
-    // console.log('predicted', predicted)
-    // console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
+    let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
+    creationCode += web3.eth.abi
+      .encodeParameter('uint256', IdentityProxyImp._address)
+      .slice(2)
+
+    const creationHash = web3.utils.sha3(creationCode)
+
+    const create2hash = web3.utils
+      .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+      .slice(-40)
+    const predicted = `0x${create2hash}`
+
+    console.log('predicted', predicted)
+    console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
 
     return new web3.eth.Contract(
       IdentityProxyImp.options.jsonInterface,
@@ -230,78 +255,161 @@ describe('Identity', async function() {
       })
     })
 
-    it('should forward createListing tx from user proxy', async function() {
-      const txData = Marketplace.methods
-        .createListing(IpfsHash, 0, Marketplace._address)
-        .encodeABI()
+    describe('Marketplace interactions', function() {
+      it('should forward createListing tx from user proxy', async function() {
+        const txData = Marketplace.methods
+          .createListing(IpfsHash, 0, Marketplace._address)
+          .encodeABI()
 
-      const dataToSign = web3.utils.soliditySha3(
-        { t: 'address', v: NewUserAccount.address }, // Signer
-        { t: 'address', v: Marketplace._address }, // Marketplace address
-        { t: 'uint256', v: web3.utils.toWei('0', 'ether') }, // value
-        { t: 'bytes', v: txData },
-        { t: 'uint256', v: 0 } // nonce
-      )
-
-      const signer = NewUserAccount.address
-      const sign = web3.eth.accounts.sign(dataToSign, NewUserAccount.privateKey)
-
-      const IdentityProxy = await deployNewProxyContract(NewUserAccount.address)
-
-      const owner = await IdentityProxy.methods.owner().call()
-      // console.log('Account', NewUserAccount.address)
-      // console.log('Owner  ', owner)
-
-      assert(owner, NewUserAccount.address)
-
-      const result = await IdentityProxy.methods
-        .forward(Marketplace._address, sign.signature, signer, txData)
-        .send({
-          from: Forwarder,
-          gas: 4000000
-        })
-        .once('receipt', trackGas('Create Listing w/ Proxy'))
-
-      assert(result)
-
-      const total = await Marketplace.methods.totalListings().call()
-      assert.equal(total, 1)
-
-      const listing = await Marketplace.methods.listings(0).call()
-      assert.equal(listing.seller, IdentityProxy._address)
-
-      const Ipfs = '0x12345678901234567890123456789012'
-      // console.log(Seller, Marketplace._address, Ipfs)
-      const listingAbi = await Marketplace.methods
-        .createListing(Ipfs, 0, Seller)
-        .encodeABI()
-
-      const execABI = await IdentityProxyImp.methods
-        .marketplaceExecute(
-          Seller,
-          Marketplace._address,
-          listingAbi,
-          DaiStableCoin._address,
-          100
+        const dataToSign = web3.utils.soliditySha3(
+          { t: 'address', v: NewUserAccount.address }, // Signer
+          { t: 'address', v: Marketplace._address }, // Marketplace address
+          { t: 'uint256', v: web3.utils.toWei('0', 'ether') }, // value
+          { t: 'bytes', v: txData },
+          { t: 'uint256', v: 0 } // nonce
         )
-        .encodeABI()
 
-      const SellerProxyRes = await ProxyFactory.methods
-        .createProxy(IdentityProxyImp._address, execABI)
-        .send({ from: Forwarder, gas: 4000000 })
-        .once('receipt', trackGas('Deploy Proxy'))
+        const signer = NewUserAccount.address
+        const sign = web3.eth.accounts.sign(
+          dataToSign,
+          NewUserAccount.privateKey
+        )
 
-      const SellerProxy = SellerProxyRes.events.ProxyCreation.returnValues.proxy
+        const IdentityProxy = await deployNewProxyContract(
+          NewUserAccount.address
+        )
 
-      const listing2 = await Marketplace.methods.listings(1).call()
-      assert(listing2)
+        const owner = await IdentityProxy.methods.owner().call()
+        // console.log('Account', NewUserAccount.address)
+        // console.log('Owner  ', owner)
 
-      const allowance = await DaiStableCoin.methods
-        .allowance(SellerProxy, Marketplace._address)
-        .call()
+        assert(owner, NewUserAccount.address)
 
-      assert(allowance === '100')
-      assert.equal(await Marketplace.methods.totalListings().call(), 2)
+        const result = await IdentityProxy.methods
+          .forward(Marketplace._address, sign.signature, signer, txData)
+          .send({
+            from: Forwarder,
+            gas: 4000000
+          })
+          .once('receipt', trackGas('Create Listing w/ Proxy'))
+
+        assert(result)
+
+        const total = await Marketplace.methods.totalListings().call()
+        assert.equal(total, 1)
+
+        const listing = await Marketplace.methods.listings(0).call()
+        assert.equal(listing.seller, IdentityProxy._address)
+
+        const Ipfs = '0x12345678901234567890123456789012'
+        const listingAbi = await Marketplace.methods
+          .createListing(Ipfs, 0, Seller)
+          .encodeABI()
+
+        const execABI = await IdentityProxyImp.methods
+          .marketplaceExecute(
+            Seller,
+            Marketplace._address,
+            listingAbi,
+            DaiStableCoin._address,
+            100
+          )
+          .encodeABI()
+
+        const SellerProxyRes = await ProxyFactory.methods
+          .createProxy(IdentityProxyImp._address, execABI)
+          .send({ from: Forwarder, gas: 4000000 })
+          .once('receipt', trackGas('Deploy Proxy'))
+
+        const SellerProxy =
+          SellerProxyRes.events.ProxyCreation.returnValues.proxy
+
+        const listing2 = await Marketplace.methods.listings(1).call()
+        assert(listing2)
+
+        const allowance = await DaiStableCoin.methods
+          .allowance(SellerProxy, Marketplace._address)
+          .call()
+
+        assert(allowance === '100')
+        assert.equal(await Marketplace.methods.totalListings().call(), 2)
+      })
+
+      it('should allow seller funds to be transferred automatically', async function() {
+        const wallet = web3.eth.accounts.wallet
+
+        wallet.create(1)
+        const BuyerWallet = wallet[wallet.length - 1]
+        await web3.eth.sendTransaction({
+          from: Forwarder,
+          to: BuyerWallet.address,
+          value: web3.utils.toWei('0.1', 'ether'),
+          gas: 100000
+        })
+
+        const BuyerProxy = await deployNewProxyContract(BuyerWallet.address)
+
+        wallet.create(1)
+        const SellerWallet = wallet[wallet.length - 1]
+        await web3.eth.sendTransaction({
+          from: Forwarder,
+          to: SellerWallet.address,
+          value: web3.utils.toWei('0.1', 'ether'),
+          gas: 100000
+        })
+        const SellerProxy = await deployNewProxyContract(SellerWallet.address)
+
+        const Ipfs = '0x12345678901234567890123456789012'
+        const listingAbi = await Marketplace.methods
+          .createListing(Ipfs, 0, SellerProxy._address)
+          .encodeABI()
+        const res = await SellerProxy.methods
+          .execute(0, Marketplace._address, '0', listingAbi)
+          .send({ from: SellerWallet.address, gas: 4000000 })
+
+        const createListingEvent = decodeEvent(res.events['0'].raw, Marketplace)
+        const listingID = createListingEvent.listingID
+
+        const value = web3.utils.toWei('0.001', 'ether')
+        const offerAbi = await makeOffer({ listingID, value })
+        const offerRes = await BuyerProxy.methods
+          .execute(0, Marketplace._address, value, offerAbi)
+          .send({ from: BuyerWallet.address, gas: 4000000, value })
+
+        const createOfferEvent = decodeEvent(
+          offerRes.events['0'].raw,
+          Marketplace
+        )
+        const offerID = createOfferEvent.offerID
+
+        const acceptAbi = await Marketplace.methods
+          .acceptOffer(listingID, offerID, IpfsHash)
+          .encodeABI()
+
+        await SellerProxy.methods
+          .execute(0, Marketplace._address, '0', acceptAbi)
+          .send({ from: SellerWallet.address, gas: 4000000 })
+
+        const finalizeAbi = await Marketplace.methods
+          .finalize(listingID, offerID, IpfsHash)
+          .encodeABI()
+
+        const balanceBefore = await web3.eth.getBalance(SellerWallet.address)
+
+        await BuyerProxy.methods
+          .marketplaceFinalizeAndPay(
+            Marketplace._address,
+            finalizeAbi,
+            SellerProxy._address,
+            ZERO_ADDRESS,
+            value
+          )
+          .send({ from: BuyerWallet.address, gas: 4000000, value })
+
+        const balanceAfter = await web3.eth.getBalance(SellerWallet.address)
+
+        assert(balanceBefore !== balanceAfter)
+      })
     })
   })
 

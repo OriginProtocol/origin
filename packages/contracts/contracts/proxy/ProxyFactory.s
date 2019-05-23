@@ -56,6 +56,29 @@ contract ProxyFactory {
             }
         emit ProxyCreation(proxy);
     }
+
+    /// @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
+    /// @param _mastercopy Address of master copy.
+    /// @param initializer Payload for message call sent to new proxy contract.
+    /// @param saltNonce Nonce that will be used to generate the salt to calculate the address of the new proxy contract.
+    function createProxyWithSenderNonce(address _mastercopy, bytes memory initializer, address _owner, uint256 saltNonce)
+        public
+        returns (Proxy proxy)
+    {
+        // If the initializer changes the proxy address should change too. Hashing the initializer data is cheaper than just concatinating it
+        bytes32 salt = keccak256(abi.encodePacked(_owner, saltNonce));
+        bytes memory deploymentData = abi.encodePacked(type(Proxy).creationCode, uint256(_mastercopy));
+        // solium-disable-next-line security/no-inline-assembly
+        assembly {
+            proxy := create2(0x0, add(0x20, deploymentData), mload(deploymentData), salt)
+        }
+        if (initializer.length > 0)
+            // solium-disable-next-line security/no-inline-assembly
+            assembly {
+                if eq(call(gas, proxy, 0, add(initializer, 0x20), mload(initializer), 0, 0), 0) { revert(0,0) }
+            }
+        emit ProxyCreation(proxy);
+    }
 }
 
 contract Proxy {
