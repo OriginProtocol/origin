@@ -196,7 +196,7 @@ class BackupScreen extends Component {
                 type="link"
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={fbt('BackupScreen.copyButton', 'Copy to clipboard')}
+                title={fbt('Copy to clipboard', 'BackupScreen.copyButton')}
                 onPress={() =>
                   this.isPrivateKey
                     ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
