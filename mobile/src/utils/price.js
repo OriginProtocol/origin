@@ -3,6 +3,8 @@
 import store from '../Store'
 import fetch from 'cross-fetch'
 
+import { setExchangeRate } from 'actions/ExchangeRates'
+
 const DEFAULT_CRYPTO = 'ETH'
 const DEFAULT_FIAT = 'USD'
 const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
@@ -84,15 +86,13 @@ export const getFiatExchangeRate = async (
  *
  * @param {string} fiatCode - e.g. "USD"
  * @param {string} cryptoCode - e.g. "ETH"
- * @param {object} exchangeRates - the exchange rates object containing currency pairs as stored in redux
- * @return {object} fiatCode, cryptoCode, exchangeRates
+ * @return {object} fiatCode, cryptoCode
  */
 
-const setDefaults = (fiatCode, cryptoCode, exchangeRates) => {
+const setDefaults = (fiatCode, cryptoCode) => {
   return {
     fiatCode: fiatCode || DEFAULT_FIAT,
-    cryptoCode: cryptoCode || DEFAULT_CRYPTO,
-    exchangeRates: exchangeRates || store.getState().exchangeRates
+    cryptoCode: cryptoCode || DEFAULT_CRYPTO
   }
 }
 
@@ -170,4 +170,27 @@ export const getCryptoPrice = async (
   const { rate } = getCachedCurrencyPair(fiatCurrencyCode, cryptoCurrencyCode)
 
   return Number(priceFiat / rate)
+}
+
+/**
+ * @function updateExchangeRate
+ * @description retrieves and updates the exchange rate for a fiat/crypto pair
+ *
+ * @param {string} fiatCurrencyCode - defaults to "USD"
+ * @param {string} cryptoCurrencyCode - defaults to "ETH"
+ **/
+export const updateExchangeRate = async (
+  fiatCurrencyCode = DEFAULT_FIAT,
+  cryptoCurrencyCode = DEFAULT_CRYPTO
+) => {
+  const exchangeRate = await getFiatExchangeRate(
+    fiatCurrencyCode,
+    cryptoCurrencyCode
+  )
+  if (!exchangeRate.cacheHit) {
+    // Not a cache hit, store the update in redux
+    store.dispatch(
+      setExchangeRate(fiatCurrencyCode, cryptoCurrencyCode, exchangeRate.rate)
+    )
+  }
 }
