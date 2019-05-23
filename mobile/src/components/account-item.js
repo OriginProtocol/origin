@@ -10,6 +10,7 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 import Identicon from 'components/identicon'
@@ -53,7 +54,7 @@ class AccountItem extends Component {
             )}
             <Address
               address={item.address}
-              label={'Address'}
+              label={fbt('Address', 'AccountItem.address')}
               style={styles.address}
             />
           </View>

@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { Alert, Clipboard, Text, TouchableOpacity } from 'react-native'
+import { fbt } from 'fbt-runtime'
 
 import { evenlySplitAddress, truncateAddress } from 'utils/user'
 
@@ -16,15 +17,17 @@ export default class Address extends Component {
           if (typeof onPress === 'function') {
             onPress()
           } else {
-            Alert.alert(label, evenlySplitAddress(address).join('\n'), [
+            Alert.alert(String(label), evenlySplitAddress(address).join('\n'), [
               {
-                text: 'Copy',
+                text: String(fbt('Copy', 'Address.alertCopyButton')),
                 onPress: async () => {
                   await Clipboard.setString(address)
-                  Alert.alert('Copied to clipboard!')
+                  Alert.alert(
+                    String(fbt('Copied to clipboard!', 'Address.alertSuccess'))
+                  )
                 }
               },
-              { text: 'OK' }
+              { text: String(fbt('OK', 'Address.alertOkButton')) }
             ])
           }
         }}

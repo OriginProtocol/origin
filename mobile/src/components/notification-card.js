@@ -10,6 +10,7 @@ import {
   View
 } from 'react-native'
 import AndroidOpenSettings from 'react-native-android-open-settings'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
@@ -21,18 +22,22 @@ class NotificationCard extends Component {
   render() {
     return (
       <View style={styles.card}>
-        <Text style={styles.heading}>Enable Notifications</Text>
+        <Text style={styles.heading}>
+          <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
+        </Text>
         <Text style={styles.content}>
-          Woops! It looks like you have notifications disabled. To get the
-          latest updates about your transactions we recommend enabling them in
-          the settings for the Origin Marketplace application.
+          <fbt desc="NotificationCard.message">
+            Woops! It looks like you have notifications disabled. To get the
+            latest updates about your transactions we recommend enabling them in
+            the settings for the Origin Marketplace application.
+          </fbt>
         </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Open Settings'}
+            title={fbt('Open Settings', 'NotificationCard.button')}
             onPress={() => {
               if (Platform.OS === 'ios') {
                 Linking.openURL('app-settings:')
@@ -43,7 +48,9 @@ class NotificationCard extends Component {
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>Close</Text>
+          <Text style={styles.cancel}>
+            <fbt desc="NotificationCard.cancel">Close</fbt>
+          </Text>
         </TouchableOpacity>
       </View>
     )
