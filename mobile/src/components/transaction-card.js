@@ -4,6 +4,7 @@ import React, { Component, Fragment } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import Web3 from 'web3'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
@@ -18,7 +19,7 @@ class TransactionCard extends Component {
   }
 
   render() {
-    const { msgData, wallet } = this.props
+    const { msgData, fiatCurrency, wallet } = this.props
     const { functionName, parameters } = decodeTransaction(msgData.data.data)
     const { _commission, _currency, _value } = parameters
     const balances = wallet.accountBalance
@@ -26,6 +27,11 @@ class TransactionCard extends Component {
       .toBN(msgData.data.gasPrice)
       .mul(web3.utils.toBN(msgData.data.gasLimit))
     const gas = web3.utils.fromWei(gasWei.toString(), 'ether')
+
+    const ethExchangeRate = this.props.exchangeRates[`${fiatCurrency[1]}/ETH`]
+      .rate
+    const daiExchangeRate = this.props.exchangeRates[`${fiatCurrency[1]}/DAI`]
+      .rate
 
     let boost,
       heading,
@@ -35,16 +41,17 @@ class TransactionCard extends Component {
       paymentCurrency,
       daiRequired = 0,
       ethRequired = Number(gas)
+
     switch (functionName) {
       case 'createListing':
-        heading = 'Create Listing'
+        heading = fbt('Create Listing', 'TransactionCard.headingCreate')
         // To boost or not to boost, up to 100
         boost = 0
         // Boolean coercion
         ognInvolved = !!boost
         break
       case 'makeOffer':
-        heading = 'Purchase'
+        heading = fbt('Purchase', 'TransactionCard.headingPurchase')
         payment = web3.utils.fromWei(_value)
         // TODO: handle this detection better, this will only work while there
         // is a single alternate payment currency
@@ -59,21 +66,32 @@ class TransactionCard extends Component {
         daiInvolved = paymentCurrency === 'dai'
         break
       case 'emitIdentityUpdated':
-        heading = 'Publish Identity'
+        heading = fbt(
+          'Publish Identity',
+          'TransactionCard.headingPublishIdentity'
+        )
         break
       case 'approve':
-        heading = 'Approval to Convert ETH to DAI'
+        heading = fbt(
+          'Approve Currency Conversion',
+          'TransactionCard.headingApprove'
+        )
         break
       default:
-        heading = 'Blockchain Transaction'
+        heading = fbt('Blockchain Transaction', 'TransactionCard.default')
     }
 
     const calculableTotal = true
-    const gasInUSD = gas * currencies['eth'].priceToUSD
-    const paymentInUSD = paymentCurrency
-      ? payment * currencies[paymentCurrency].priceToUSD
-      : 0
-    const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
+    const gasFiatPrice = gas * ethExchangeRate
+    const paymentFiatPrice =
+      paymentCurrency === 'eth'
+        ? payment * ethExchangeRate
+        : payment * daiExchangeRate
+
+    const total =
+      calculableTotal &&
+      `${fiatCurrency[2]}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
+
     const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
     const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
 
@@ -86,15 +104,17 @@ class TransactionCard extends Component {
               <Text style={[styles.amount, styles.primary]}>{total}</Text>
             </View>
             <View style={styles.lineItems}>
-              {!!paymentInUSD && (
+              {!!paymentFiatPrice && (
                 <View style={styles.lineItem}>
                   <View>
-                    <Text style={styles.label}>Payment</Text>
+                    <Text style={styles.label}>
+                      <fbt desc="TransactionCard.payment">Payment</fbt>
+                    </Text>
                   </View>
                   <View>
-                    <Text
-                      style={[styles.amount, styles.converted]}
-                    >{`$${paymentInUSD.toFixed(2)}`}</Text>
+                    <Text style={[styles.amount, styles.converted]}>{`${
+                      fiatCurrency[2]
+                    }${paymentFiatPrice.toFixed(2)}`}</Text>
                     <Text style={styles.amount}>
                       <Image
                         source={currencies[paymentCurrency].icon}
@@ -107,12 +127,14 @@ class TransactionCard extends Component {
               )}
               <View style={styles.lineItem}>
                 <View>
-                  <Text style={styles.label}>Gas Cost</Text>
+                  <Text style={styles.label}>
+                    <fbt desc="TransactionCard.gasCost">Gas Cost</fbt>
+                  </Text>
                 </View>
                 <View>
-                  <Text
-                    style={[styles.amount, styles.converted]}
-                  >{`$${gasInUSD.toFixed(2)}`}</Text>
+                  <Text style={[styles.amount, styles.converted]}>{`${
+                    fiatCurrency[2]
+                  }${gasFiatPrice.toFixed(2)}`}</Text>
                   <Text style={styles.amount}>
                     <Image
                       source={currencies['eth'].icon}
@@ -130,17 +152,24 @@ class TransactionCard extends Component {
               <Text style={[styles.amount, styles.primary]}>
                 {Number(gas).toFixed(5)} ETH
               </Text>
-              <Text style={styles.label}>Gas Cost</Text>
+              <Text style={styles.label}>
+                <fbt desc="TransactionCard.gasCost">Gas Cost</fbt>
+              </Text>
             </View>
             <View style={styles.primaryContainer}>
               <Text style={[styles.amount, styles.primary]}>{boost} OGN</Text>
-              <Text style={styles.label}>Boost</Text>
+              <Text style={styles.label}>
+                <fbt desc="TransactionCard.boost">Boost</fbt>
+              </Text>
             </View>
           </Fragment>
         )}
         <View style={styles.accountSummary}>
           <View style={styles.accountText}>
-            <Text style={styles.account}>Your Account: </Text>
+            <Text style={styles.account}>
+              <fbt desc="TransactionCard.accountText">Your Account</fbt>
+              {`: `}
+            </Text>
             <Address
               address={wallet.accounts[0].address}
               style={styles.account}
@@ -148,28 +177,45 @@ class TransactionCard extends Component {
           </View>
           <View style={styles.accountText}>
             <Text style={styles.account}>
-              {daiInvolved || ognInvolved ? 'Your Balances' : 'Your Balance'}:{' '}
+              {daiInvolved || ognInvolved
+                ? fbt('Your Balances', 'TransactionCard.balances')
+                : fbt('Your Balance', 'TransactionCard.balance')}
+              :{' '}
             </Text>
             <Text style={styles.account}>
-              {Number(balances['eth']).toFixed(5)} ETH
-              {daiInvolved && `${Number(balances['dai']).toFixed(2)} DAI`}
-              {ognInvolved && `${balances['ogn']} OGN`}
+              {Number(balances['eth']).toFixed(5)} ETH{' '}
             </Text>
+            {daiInvolved && (
+              <Text style={styles.account}>
+                {Number(balances['dai']).toFixed(2)} DAI{' '}
+              </Text>
+            )}
+            {ognInvolved && (
+              <Text style={styles.account}>{balances['ogn']} OGN</Text>
+            )}
           </View>
           <View style={styles.accountText}>
             {!hasSufficientDai && (
               <Text style={styles.danger}>
-                {`You don't have enough ETH to submit this transaction.`}
+                <fbt desc="TransactionCard.insufficientGeneral">
+                  You don&apos;t have enough ETH to submit this transaction.
+                </fbt>
               </Text>
             )}
           </View>
           <View style={styles.accountText}>
             {!hasSufficientEth && (
               <Text style={styles.danger}>
-                {functionName === 'emitIdentityUpdated' &&
-                  `You don't have enough ETH to publish your identity.`}
-                {functionName !== 'emitIdentityUpdated' &&
-                  `You don't have enough ETH to submit this transaction.`}
+                {functionName === 'emitIdentityUpdated' && (
+                  <fbt desc="TransactionCard.insufficientIdentity">
+                    You don&apos;t have enough ETH to publish your identity.
+                  </fbt>
+                )}
+                {functionName !== 'emitIdentityUpdated' && (
+                  <fbt desc="TransactionCard.insufficientGeneral">
+                    You don&apos;t have enough ETH to submit this transaction.
+                  </fbt>
+                )}
               </Text>
             )}
           </View>
@@ -179,21 +225,23 @@ class TransactionCard extends Component {
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Confirm'}
+            title={fbt('Confirm', 'TransactionCard.button')}
             disabled={!hasSufficientDai || !hasSufficientEth}
             onPress={this.props.onConfirm}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>Cancel</Text>
+          <Text style={styles.cancel}>
+            <fbt desc="TransactionCard.cancel">Cancel</fbt>
+          </Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ exchangeRates, wallet }) => {
+  return { exchangeRates, wallet }
 }
 
 export default connect(mapStateToProps)(TransactionCard)

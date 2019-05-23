@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import TouchID from 'react-native-touch-id'
 import AndroidOpenSettings from 'react-native-android-open-settings'
+import { fbt } from 'fbt-runtime'
 
 import { setBiometryType } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
@@ -62,18 +63,31 @@ class AuthenticationScreen extends Component {
           {biometryPermissionDenied ? (
             <>
               <Text style={styles.title}>
-                {this.state.biometryType} Unavailable
+                <fbt desc="AuthenticationScreen.biometryDisabledTitle">
+                  <fbt:param name="biometryType">
+                    {this.state.biometryType}
+                  </fbt:param>{' '}
+                  Unavailable
+                </fbt>
               </Text>
               <Text style={styles.subtitle}>
-                It looks like you have {this.state.biometryType} disabled. You
-                will need to enable it in the settings for the Origin
-                Marketplace App.
+                <fbt desc="AuthenticationScreen.biometryDisabledSubtitle">
+                  It looks like you have{' '}
+                  <fbt:param name="biometryType">
+                    {this.state.biometryType}
+                  </fbt:param>{' '}
+                  disabled. You will need to enable it in the settings for the
+                  Origin Marketplace App.
+                </fbt>
               </Text>
               <OriginButton
                 size="large"
                 type="primary"
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Open Settings'}
+                title={fbt(
+                  'Open Settings',
+                  'AuthenticationScreen.openSettingsButton'
+                )}
                 onPress={() => {
                   if (Platform.OS === 'ios') {
                     Linking.openURL('app-settings:')
@@ -91,9 +105,13 @@ class AuthenticationScreen extends Component {
                 source={require(IMAGES_PATH + 'lock-icon.png')}
                 style={[styles.image, smallScreen ? { height: '33%' } : {}]}
               />
-              <Text style={styles.title}>Protect your wallet</Text>
+              <Text style={styles.title}>
+                <fbt desc="AuthenticationScreen.title">Protect your wallet</fbt>
+              </Text>
               <Text style={styles.subtitle}>
-                Add an extra layer of security to keep your crypto safe.
+                <fbt desc="AuthenticationScreen.subtitle">
+                  Add an extra layer of security to keep your crypto safe.
+                </fbt>
               </Text>
             </>
           )}
@@ -124,7 +142,10 @@ class AuthenticationScreen extends Component {
             type="link"
             style={styles.button}
             textStyle={{ fontSize: 16, fontWeight: '900' }}
-            title={'Create a Pin Code'}
+            title={fbt(
+              'Create a Pin Code',
+              'AuthenticationScreen.createPinCode'
+            )}
             onPress={() => {
               this.props.navigation.navigate('Pin')
             }}
