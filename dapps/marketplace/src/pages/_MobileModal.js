@@ -50,7 +50,7 @@ class MobileModal extends Component {
                 onClick={() => {
                   window.location.href = 'https://originprotocol.com/mobile'
                 }}
-                children={fbt('Open App', 'Open App')}
+                children={fbt('Open App', 'MobileModal.openAppButton')}
               />
             </div>
           )}
