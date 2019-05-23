@@ -41,7 +41,12 @@ const schemas = [makeExecutableSchema({ typeDefs, resolvers })]
 
 schemas.push(
   makeRemoteExecutableSchema({
-    schema: makeExecutableSchema({ typeDefs: remoteTypeDefs }),
+    schema: makeExecutableSchema({
+      typeDefs: remoteTypeDefs,
+      resolverValidationOptions: {
+        requireResolversForResolveType: false
+      }
+    }),
     link: createHttpLink({
       fetch: (uri, options) => {
         /**

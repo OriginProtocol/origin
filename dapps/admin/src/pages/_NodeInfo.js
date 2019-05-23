@@ -29,6 +29,8 @@ const Subs = () => (
             networkName = 'Ethereum Mainnet'
           } else if (localStorage.ognNetwork === 'rinkeby') {
             networkName = 'Rinkeby'
+          } else if (localStorage.ognNetwork === 'origin') {
+            networkName = 'Origin Testnet'
           }
           return (
             <Popover

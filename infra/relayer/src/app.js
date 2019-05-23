@@ -39,7 +39,13 @@ const relayer = new Relayer(networkId)
 logger.info(`Using networkId ${networkId}`)
 
 // Register the /relay route for relaying transactions.
-app.post('/relay', relayer.relay)
+app.post('/relay', function(req, res) {
+  try {
+    relayer.relay(req, res)
+  } catch (e) {
+    res.send({ success: false })
+  }
+})
 
 const port = process.env.PORT || 5100
 app.listen(port, () => {
