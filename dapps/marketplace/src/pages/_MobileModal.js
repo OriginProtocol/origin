@@ -39,7 +39,7 @@ class MobileModal extends Component {
             </div>
             {!isMobile && (
               <div className="qr">
-                <img src="/images/mobile/qr.png" width="125" />
+                <img src="/images/mobile/qr.svg" />
               </div>
             )}
           </div>
@@ -64,7 +64,6 @@ export default MobileModal
 
 require('react-styl')(`
   .mobile-modal
-    margin-bottom: -1rem
     font-size: 16px
     a
       color: var(--white)
@@ -106,7 +105,7 @@ require('react-styl')(`
   .is-desktop
     .screenshots
       padding-top: 3rem
-      margin-top: -3rem
+      margin-top: -2rem
       margin-right: -3rem
       margin-left: -3rem
       border-top-left-radius: 10px
@@ -115,15 +114,33 @@ require('react-styl')(`
       img
         width: 70%
     .description
-      text-align: left;
+      align-items: center
+      text-align: left
     .close
       position: absolute
       right: 20px
       top: 20px
+    .qr
+      padding: 20px
+      img
+        height: 110px
+        width: 110px
+  .pl-modal
+    .pl-modal-table
+      .pl-modal-cell
+        .pl-modal-content
+          .mobile-modal
+            margin: 20px 15px 0
   .pl-modal-content
     max-width: 655px !important
   .pl-modal-content .actions .btn
     width: 100%
+  .pl-modal-content.is-mobile
+    position: relative
+    .close
+      position: absolute
+      right: 15px
+      top: 15px
   .close
     color: #98a7b4
     text-shadow: none
