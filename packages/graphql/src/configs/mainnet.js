@@ -75,5 +75,5 @@ export default {
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
   // Configs
-  performanceMode: false
+  performanceMode: true
 }
