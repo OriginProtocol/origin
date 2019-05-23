@@ -95,7 +95,7 @@ class SettingsScreen extends Component {
           ))}
           <View style={styles.header}>
             <Text style={styles.heading}>
-              {fbt('Locales', 'SettingsScreen.localesHeading')}
+              <fbt desc="SettingsScreen.generalHeading">LOCALES</fbt>
             </Text>
           </View>
           {RNLocalize.getLocales().map(locale => (
