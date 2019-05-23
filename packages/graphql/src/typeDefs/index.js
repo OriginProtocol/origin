@@ -1,4 +1,5 @@
 import Common from './Common'
+import Web3Common from './Web3Common'
 import Web3 from './Web3'
 import Marketplace from './Marketplace'
 import Identity from './Identity'
@@ -11,6 +12,7 @@ import Uniswap from './Uniswap'
 
 export default [
   Common,
+  Web3Common,
   Web3,
   Marketplace,
   Identity,

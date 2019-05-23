@@ -10,18 +10,13 @@ COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
-COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
-COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/mobile-bridge ./packages/mobile-bridge
+COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
-COPY ./packages/token ./packages/token
-COPY ./infra/bridge ./infra/bridge
-COPY ./infra/discovery ./infra/discovery
-COPY ./infra/growth ./infra/growth
-COPY ./infra/identity ./infra/identity
+COPY ./packages/graphql ./packages/graphql
 
 RUN yarn install
 
-CMD npm run start:discovery --prefix infra/discovery
+CMD npm run start --prefix packages/graphql

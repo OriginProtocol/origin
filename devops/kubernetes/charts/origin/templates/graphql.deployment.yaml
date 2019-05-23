@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "graphql.fullname" . }}
+  labels:
+    app: {{ template "graphql.fullname" . }}
+    app.kubernetes.io/name: origin
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: origin-graphql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "graphql.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "graphql.fullname" . }}
+        release: "{{ .Release.Name }}"
+    spec:
+      containers:
+      - name: origin-graphql
+        image: "{{ .Values.containerRegistry }}/{{ .Release.Namespace }}/{{ .Values.graphqlImage }}:{{ .Values.graphqlImageTag }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 4002
+        env:
+        - name: ENVKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "graphql.fullname" . }}
+              key: ENVKEY
