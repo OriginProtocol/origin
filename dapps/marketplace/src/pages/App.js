@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
-import withWallet from 'hoc/withWallet'
+import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import RewardsBanner from './_RewardsBanner'
@@ -49,15 +49,18 @@ class App extends Component {
     if (window.ethereum) {
       setTimeout(() => window.ethereum.enable(), 100)
     }
-    console.log(this.props.wallet)
-    if (!this.props.wallet) {
-      this.setState({ displayMobileModal: true })
-    }
   }
 
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
+    }
+    if (
+      !this.props.web3Loading &&
+      !this.props.web3.walletType &&
+      this.state.displayMobileModal === false
+    ) {
+      this.setState({ displayMobileModal: true })
     }
   }
 
@@ -162,7 +165,7 @@ class App extends Component {
   }
 }
 
-export default withWallet(withCreatorConfig(withRouter(App)))
+export default withWeb3(withCreatorConfig(withRouter(App)))
 
 require('react-styl')(`
   .app-spinner

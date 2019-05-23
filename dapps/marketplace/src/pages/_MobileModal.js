@@ -15,15 +15,8 @@ class MobileModal extends Component {
       >
         <div className="mobile-modal">
           <div className="screenshots">
-            {!isMobile && (
-              <>
-                <img src="/images/mobile/screenshot-1.png" width="200" />
-                <img src="/images/mobile/screenshot-2.png" width="200" />
-              </>
-            )}
-            {isMobile && (
-              <img src="/images/mobile/screenshot-1.png" width="200" />
-            )}
+            {!isMobile && <img src="/images/mobile/devices.png" />}
+            {isMobile && <img src="/images/mobile/devices-layered.png" />}
           </div>
           <div className="description">
             <div className="blurb">
@@ -84,6 +77,10 @@ require('react-styl')(`
       color: white
     .screenshots
       margin-bottom: 2rem
+      img
+        margin-left: auto
+        margin-right: auto
+        width: 80%
     .description
       display: flex
       text-align: center
@@ -115,6 +112,8 @@ require('react-styl')(`
       border-top-left-radius: 10px
       border-top-right-radius: 10px
       background: #111d28
+      img
+        width: 70%
     .description
       text-align: left;
     .close
