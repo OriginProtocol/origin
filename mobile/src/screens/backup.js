@@ -147,7 +147,7 @@ class BackupScreen extends Component {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.content}>
-            {isPrivateKey && (
+            {this.isPrivateKey && (
               <>
                 <Text style={styles.title}>
                   <fbt desc="BackupScreen.backupPrivateKeyTitle">
@@ -166,7 +166,7 @@ class BackupScreen extends Component {
                 </View>
               </>
             )}
-            {!isPrivateKey && (
+            {!this.isPrivateKey && (
               <>
                 <Text style={styles.title}>
                   <fbt desc="BackupScreen.backupRecoveryTitle">
