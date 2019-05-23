@@ -39,7 +39,13 @@ const ValidateAccountTransform = createTransform(
 const persistConfig = {
   key: 'EncryptedOriginWallet',
   storage: storage,
-  whitelist: ['activation', 'notifications', 'settings', 'wallet'],
+  whitelist: [
+    'activation',
+    'exchangeRates',
+    'notifications',
+    'settings',
+    'wallet'
+  ],
   transforms: [ValidateAccountTransform, encryptor]
 }
 

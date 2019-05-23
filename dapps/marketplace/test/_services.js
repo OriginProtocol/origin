@@ -20,7 +20,7 @@ export default async function() {
     extras: async () => {
       const webpackProcess = spawn(
         './node_modules/.bin/webpack-dev-server',
-        ['--port=8083', '--host=0.0.0.0', '--no-info', '--progress'],
+        ['--port=8083', '--host=0.0.0.0', '--no-info'],
         {
           stdio: 'inherit',
           env: process.env
@@ -36,6 +36,7 @@ export default async function() {
           width: 1280,
           height: 1024
         },
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
         // dumpio: true
         // slowMo: headless ? undefined : 40
       })

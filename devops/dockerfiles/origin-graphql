@@ -4,7 +4,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
@@ -16,6 +17,6 @@ COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/graphql ./packages/graphql
 
-RUN npm install --unsafe-perm
+RUN yarn install
 
 CMD npm run start --prefix packages/graphql
