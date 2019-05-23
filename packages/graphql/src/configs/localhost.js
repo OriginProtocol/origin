@@ -17,7 +17,7 @@ const config = {
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
-  performanceMode: true,
+  performanceMode: false,
   graphql: `http://${HOST}:4002`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
