@@ -3,9 +3,7 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const docker = NETWORKS.find(n => n.name === 'Docker')
-const defaultNetwork = __DEV__ ? docker : mainnet
+const defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
 
 const initialState = {
   network: defaultNetwork,

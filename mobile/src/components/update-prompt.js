@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import compareVersions from 'compare-versions'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { version } from '../../package.json'
@@ -82,20 +83,30 @@ class UpdatePrompt extends React.Component {
             />
             {this.state.upgrade === 'force' && (
               <>
-                <Text style={styles.title}>Update required</Text>
+                <Text style={styles.title}>
+                  <fbt desc="UpdateScreen.updateRequired">Update required</fbt>
+                </Text>
                 <Text style={styles.subtitle}>
-                  Woops! It looks like you are using an old version of the
-                  Origin Marketplace App. Please update to proceed.
+                  <fbt desc="UpdateScreen.updateRequiredDesc">
+                    Woops! It looks like you are using an old version of the
+                    Origin Marketplace App. Please update to proceed.
+                  </fbt>
                 </Text>
               </>
             )}
             {this.state.upgrade === 'recommend' && (
               <>
-                <Text style={styles.title}>Update available</Text>
+                <Text style={styles.title}>
+                  <fbt desc="UpdateScreen.updateAvailable">
+                    Update available
+                  </fbt>
+                </Text>
                 <Text style={styles.subtitle}>
-                  It looks like you are using an old version of the Origin
-                  Marketplace App. For the best experience, we recommend you
-                  update.
+                  <fbt desc="UpdateScreen.updateAvailableDesc">
+                    It looks like you are using an old version of the Origin
+                    Marketplace App. For the best experience, we recommend you
+                    update.
+                  </fbt>
                 </Text>
               </>
             )}
@@ -106,7 +117,7 @@ class UpdatePrompt extends React.Component {
               type="primary"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Update'}
+              title={fbt('Update', 'UpdateScreen.updateButton')}
               onPress={this.openStore}
             />
             <OriginButton
@@ -114,7 +125,7 @@ class UpdatePrompt extends React.Component {
               type="link"
               style={styles.button}
               textStyle={{ fontSize: 18, color: 'white' }}
-              title={'Not now'}
+              title={fbt('Not now', 'UpdateScreen.cancelButton')}
               onPress={() => this.setState({ upgrade: null })}
             />
           </View>

@@ -240,7 +240,9 @@ class MarketplaceEventHandler {
         // We use the offer creation as date of the event so that
         // buyer/seller get rewarded using rules from the campaign that
         // was running at time of offer rather than finalization.
-        const offer = db.Offer.findOne({ where: { id: details.offer.id } })
+        const offer = await db.Offer.findOne({
+          where: { id: details.offer.id }
+        })
         if (!offer) {
           throw new Error(`Failed loading offer id ${details.offer.id}`)
         }

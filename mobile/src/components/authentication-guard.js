@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
+import { fbt } from 'fbt-runtime'
 
 import PinInput from 'components/pin-input'
 
@@ -46,7 +47,7 @@ class AuthenticationGuard extends Component {
         this.onSuccess()
       })
       .catch(() => {
-        this.setState({ error: 'Authentication failed' })
+        this.setState({ error: String(fbt('Authentication failed', 'AuthenticationGuard.biometryFailedError')) })
       })
   }
 
@@ -63,7 +64,7 @@ class AuthenticationGuard extends Component {
       this.onSuccess()
     } else if (this.state.pin.length === this.props.settings.pin.length) {
       this.setState({
-        error: 'Incorrect pin code',
+        error: String(fbt('Incorrect pin code', 'AuthenticationGuard.incorrectPinError')),
         pin: ''
       })
     } else {
@@ -104,7 +105,11 @@ class AuthenticationGuard extends Component {
   renderBiometryGuard() {
     return (
       <>
-        <Text style={styles.title}>Authentication required</Text>
+        <Text style={styles.title}>
+          <fbt desc="AuthenticationGuard.biometryTitle">
+            Authentication required
+          </fbt>
+        </Text>
         {this.state.error && (
           <Text
             style={styles.invalid}
@@ -121,7 +126,11 @@ class AuthenticationGuard extends Component {
     const { settings } = this.props
     return (
       <>
-        <Text style={styles.title}>Pin required</Text>
+        <Text style={styles.title}>
+          <fbt desc="AuthenticationGuard.pinTitle">
+            Pin required
+          </fbt>
+        </Text>
         {this.state.error && (
           <Text style={styles.invalid}>{this.state.error}</Text>
         )}

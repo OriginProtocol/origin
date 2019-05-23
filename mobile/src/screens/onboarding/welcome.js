@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
@@ -39,8 +40,14 @@ class WelcomeScreen extends Component {
             source={require(IMAGES_PATH + 'origin-dark-logo.png')}
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
-          <Text style={styles.title}>Buy and sell stuff with crypto.</Text>
-          <Text style={styles.title}>Earn rewards.</Text>
+          <Text style={styles.title}>
+            <fbt desc="WelcomeScreen.title">
+              Buy and sell stuff with crypto.
+            </fbt>
+          </Text>
+          <Text style={styles.title}>
+            <fbt desc="WelcomeScreen.subtitle">Earn rewards.</fbt>
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           {wallet.accounts.length === 0 && (
@@ -50,7 +57,10 @@ class WelcomeScreen extends Component {
                 type="primary"
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Create a wallet'}
+                title={fbt(
+                  'Create a wallet',
+                  'WelcomeScreen.createWalletButton'
+                )}
                 loading={this.state.loading}
                 disabled={this.state.loading}
                 onPress={() => {
@@ -67,7 +77,10 @@ class WelcomeScreen extends Component {
                 type="link"
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'I already have a wallet'}
+                title={fbt(
+                  'I already have a wallet',
+                  'WelcomeScreen.importWalletButton'
+                )}
                 disabled={this.state.loading}
                 onPress={() => {
                   this.props.navigation.navigate('ImportAccount')
@@ -81,7 +94,7 @@ class WelcomeScreen extends Component {
               type="primary"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Next'}
+              title={fbt('Next', 'WelcomeScreen.nextButton')}
               onPress={() => {
                 this.props.navigation.navigate('Authentication')
               }}
@@ -90,7 +103,9 @@ class WelcomeScreen extends Component {
         </View>
         <View style={styles.legalContainer}>
           <Text style={styles.legal}>
-            By signing up you agree to the Terms of Use and Privacy Policy
+            <fbt desc="WelcomeScreen.disclaimer">
+              By signing up you agree to the Terms of Use and Privacy Policy
+            </fbt>
           </Text>
         </View>
       </SafeAreaView>
