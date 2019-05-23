@@ -20,7 +20,7 @@ const IMAGES_PATH = '../../assets/images/'
 class AccountsScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: fbt('Accounts', 'AccountsScreen.headerTitle'),
+      title: String(fbt('Accounts', 'AccountsScreen.headerTitle')),
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,

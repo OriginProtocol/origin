@@ -14,7 +14,6 @@ import { connect } from 'react-redux'
 import { IntlViewerContext, init, fbt } from 'fbt-runtime'
 import * as RNLocalize from 'react-native-localize'
 
-
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
@@ -22,7 +21,7 @@ const IMAGES_PATH = '../../assets/images/'
 
 class SettingsScreen extends Component {
   static navigationOptions = {
-    title: fbt('Settings', 'SettingsScreen.headerTitle'),
+    title: String(fbt('Settings', 'SettingsScreen.headerTitle')),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,

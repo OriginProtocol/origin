@@ -31,7 +31,7 @@ class AccountScreen extends Component {
   }
 
   static navigationOptions = {
-    title: fbt('Account Details', 'AccountScreen.headerTitle'),
+    title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -41,21 +41,25 @@ class AccountScreen extends Component {
 
   async handleDangerousCopy(privateKey) {
     Alert.alert(
-      fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle'),
-      fbt(
-        'As a security precaution, the clipboard will be cleared after one minute.',
-        'AccountScreen.dangerousCopyAlertMessage'
+      String(fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle')),
+      String(
+        fbt(
+          'As a security precaution, the clipboard will be cleared after one minute.',
+          'AccountScreen.dangerousCopyAlertMessage'
+        )
       ),
       [
         {
-          text: fbt('Got it', 'AccountScreen.dangerousCopyButton'),
+          text: String(fbt('Got it', 'AccountScreen.dangerousCopyButton')),
           onPress: async () => {
             await Clipboard.setString(privateKey)
 
             Alert.alert(
-              fbt(
-                'Copied to clipboard!',
-                'AccountScreen.dangerousCopySuccessAlert'
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'AccountScreen.dangerousCopySuccessAlert'
+                )
               )
             )
 
@@ -77,17 +81,21 @@ class AccountScreen extends Component {
     const isLastAccount = wallet.accounts.length === 1
 
     Alert.alert(
-      fbt('Important!', 'AccountScreen.deleteAlertTitle'),
-      fbt(
-        'Have you backed up your private key or recovery phrase for this account? ' +
-          'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
-          'Are you sure that you want to delete this account?',
-        'AccountScreen.deleteAlertMessage'
+      String(fbt('Important!', 'AccountScreen.deleteAlertTitle')),
+      String(
+        fbt(
+          'Have you backed up your private key or recovery phrase for this account? ' +
+            'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
+            'Are you sure that you want to delete this account?',
+          'AccountScreen.deleteAlertMessage'
+        )
       ),
       [
-        { text: fbt('Cancel', 'AccountScreen.deleteAlertCancelButton') },
         {
-          text: fbt('Delete', 'AccountScreen.deleteAlertConfirmButton'),
+          text: String(fbt('Cancel', 'AccountScreen.deleteAlertCancelButton'))
+        },
+        {
+          text: String(fbt('Delete', 'AccountScreen.deleteAlertConfirmButton')),
           onPress: () => {
             try {
               DeviceEventEmitter.emit(
@@ -178,7 +186,9 @@ class AccountScreen extends Component {
                   title={'Show Recovery Phrase'}
                   onPress={() =>
                     Alert.alert(
-                      fbt('Recovery Phrase', 'AccountScreen.recoveryPhrase'),
+                      String(
+                        fbt('Recovery Phrase', 'AccountScreen.recoveryPhrase')
+                      ),
                       mnemonic
                     )
                   }
@@ -203,7 +213,7 @@ class AccountScreen extends Component {
                   title={'Show Private Key'}
                   onPress={() =>
                     Alert.alert(
-                      fbt('Private Key', 'AccountScreen.privateKey'),
+                      String(fbt('Private Key', 'AccountScreen.privateKey')),
                       privateKey
                     )
                   }

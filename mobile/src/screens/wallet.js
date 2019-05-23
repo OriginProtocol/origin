@@ -13,7 +13,7 @@ import { evenlySplitAddress } from 'utils/user'
 
 class WalletScreen extends Component {
   static navigationOptions = {
-    title: fbt('Wallet', 'WalletScreen.navigationTitle'),
+    title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -29,42 +29,46 @@ class WalletScreen extends Component {
     const { address } = this.props.wallet.activeAccount
 
     Alert.alert(
-      fbt('Funding', 'WalletScreen.fundingAlertTitle'),
-      fbt(
-        `For now, you will need to transfer ${fbt.param(
-          'currency',
-          currency
-        )} into your Orign Wallet from another source.`,
-        'WalletScreen.fundingAlertMessage'
+      String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
+      String(
+        fbt(
+          `For now, you will need to transfer ${fbt.param(
+            'currency',
+            currency
+          )} into your Orign Wallet from another source.`,
+          'WalletScreen.fundingAlertMessage'
+        )
       ),
       [
         {
-          text: fbt(
-            'Show Address',
-            'WalletScreen.fundingAlertShowAddressButton'
+          text: String(
+            fbt('Show Address', 'WalletScreen.fundingAlertShowAddressButton')
           ),
           onPress: () => {
             Alert.alert(
-              fbt(
-                'Wallet Address',
-                'WalletScreen.fundingAlertShowAddressTitle'
+              String(
+                fbt(
+                  'Wallet Address',
+                  'WalletScreen.fundingAlertShowAddressTitle'
+                )
               ),
               evenlySplitAddress(address).join('\n')
             )
           }
         },
         {
-          text: fbt(
-            'Copy Address',
-            'WalletScreen.fundingAlertCopyAddressButton'
+          text: String(
+            fbt('Copy Address', 'WalletScreen.fundingAlertCopyAddressButton')
           ),
           onPress: async () => {
             await Clipboard.setString(address)
 
             Alert.alert(
-              fbt(
-                'Copied to clipboard!',
-                'WalletScreen.fundingAlertCopyAddressTitle'
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'WalletScreen.fundingAlertCopyAddressTitle'
+                )
               ),
               evenlySplitAddress(address).join('\n')
             )
