@@ -113,6 +113,7 @@ require('react-styl')(`
       .mobile-modal
         margin: 20px 15px 0
     .pl-modal-content.is-desktop
+      max-width: 655px !important
       .screenshots
         padding-top: 3rem
         margin: -3rem -3rem 3rem -3rem
@@ -133,10 +134,8 @@ require('react-styl')(`
         img
           height: 110px
           width: 110px
-      .pl-modal-content
-        max-width: 655px !important
-    .pl-modal-content .actions .btn
-      width: 100%
+      .actions .btn
+        width: 100%
     .close
       color: #98a7b4
       text-shadow: none
