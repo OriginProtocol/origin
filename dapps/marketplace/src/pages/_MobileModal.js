@@ -11,6 +11,7 @@ class MobileModal extends Component {
       <Modal
         onClose={() => this.props.onClose()}
         closeBtn={true}
+        classNameOuter="pl-modal-mobile"
         className={isMobile ? 'is-mobile' : 'is-desktop'}
       >
         <div className="mobile-modal">
@@ -29,7 +30,7 @@ class MobileModal extends Component {
                 <fbt desc="MobileModal.description">
                   You currently don&apos;t have a crypto wallet, which is
                   necessary to buy and sell on Origin.
-                </fbt>
+                </fbt>{' '}
                 {!isMobile && (
                   <fbt desc="MobileModal.scanQr">
                     Scan this QR code to download our marketplace app.
@@ -102,46 +103,41 @@ require('react-styl')(`
         font-size: 12px
         input
           margin-right: 0.25rem
-  .is-desktop
-    .screenshots
-      padding-top: 3rem
-      margin-top: -2rem
-      margin-right: -3rem
-      margin-left: -3rem
-      border-top-left-radius: 10px
-      border-top-right-radius: 10px
-      background: #111d28
-      img
-        width: 70%
-    .description
-      align-items: center
-      text-align: left
+  .pl-modal-mobile
+    .pl-modal-content.is-mobile
+      position: relative
+      .close
+        position: absolute
+        right: 15px
+        top: 15px
+      .mobile-modal
+        margin: 20px 15px 0
+    .pl-modal-content.is-desktop
+      .screenshots
+        padding-top: 3rem
+        margin: -3rem -3rem 3rem -3rem
+        border-top-left-radius: 10px
+        border-top-right-radius: 10px
+        background: #111d28
+        img
+          width: 70%
+      .description
+        align-items: center
+        text-align: left
+      .close
+        position: absolute
+        right: 20px
+        top: 20px
+      .qr
+        padding: 20px
+        img
+          height: 110px
+          width: 110px
+      .pl-modal-content
+        max-width: 655px !important
+    .pl-modal-content .actions .btn
+      width: 100%
     .close
-      position: absolute
-      right: 20px
-      top: 20px
-    .qr
-      padding: 20px
-      img
-        height: 110px
-        width: 110px
-  .pl-modal
-    .pl-modal-table
-      .pl-modal-cell
-        .pl-modal-content
-          .mobile-modal
-            margin: 20px 15px 0
-  .pl-modal-content
-    max-width: 655px !important
-  .pl-modal-content .actions .btn
-    width: 100%
-  .pl-modal-content.is-mobile
-    position: relative
-    .close
-      position: absolute
-      right: 15px
-      top: 15px
-  .close
-    color: #98a7b4
-    text-shadow: none
+      color: #98a7b4
+      text-shadow: none
 `)

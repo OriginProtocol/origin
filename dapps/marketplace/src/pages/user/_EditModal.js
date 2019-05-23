@@ -37,7 +37,7 @@ class EditProfileModal extends Component {
       <Modal
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
-        className={this.state.imageCropperOpened ? 'd-none' : ''}
+        classNameOuter={this.state.imageCropperOpened ? 'd-none' : ''}
       >
         <form
           className="edit-profile-modal"
