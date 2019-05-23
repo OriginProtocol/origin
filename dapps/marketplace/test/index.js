@@ -14,6 +14,9 @@ let page
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
+  // Close Origin Marketplace app modal
+  await page.waitForSelector('.pl-modal-content .close')
+  await clickBySelector(page, '.pl-modal-content .close')
 })
 
 const reset = async () => {
