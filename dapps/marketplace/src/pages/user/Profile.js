@@ -104,14 +104,6 @@ class UserProfile extends Component {
 
   componentDidMount() {
     document.body.style.backgroundColor = 'var(--pale-grey-four)'
-
-    const res = fbt(
-      'Changes published to blockchain',
-      'profile.changesPublishedToBlockchain'
-    )
-    console.log(typeof res)
-    console.log(res)
-    window.hmm = res
   }
 
   componentWillUnmount() {
