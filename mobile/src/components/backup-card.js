@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
@@ -16,11 +17,22 @@ class BackupCard extends Component {
 
     return (
       <View style={styles.card}>
-        <Text style={styles.heading}>Back up account</Text>
+        <Text style={styles.heading}>
+          <fbt desc="BackupCard.title">Back up account</fbt>
+        </Text>
         <Text style={styles.content}>
-          If you lose your account{' '}
-          {isPrivateKey ? 'private key' : 'recovery phrase'}, you will not be
-          able to access your funds.
+          {isPrivateKey && (
+            <fbt desc="BackupCard.backupPrivateKeyDesc">
+              If you lose your account private key, you will not be able to
+              access your funds.
+            </fbt>
+          )}
+          {!isPrivateKey && (
+            <fbt desc="BackupCard.backupRecoveryPhraseDesc">
+              If you lose your account recovery phrase, you will not be able to
+              access your funds.
+            </fbt>
+          )}
         </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
@@ -28,13 +40,20 @@ class BackupCard extends Component {
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={
-              isPrivateKey ? 'Back up private key' : 'Back up recovery phrase'
+              isPrivateKey
+                ? fbt('Back up private key', 'BackupCard.backupButton')
+                : fbt(
+                    'Back up recovery phrase',
+                    'BackupCard.backupRecoveryPhraseButton'
+                  )
             }
             onPress={this.props.onRequestBackup}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>Back up later</Text>
+          <Text style={styles.cancel}>
+            <fbt desc="BackupCard.cancel">Back up later</fbt>
+          </Text>
         </TouchableOpacity>
       </View>
     )
