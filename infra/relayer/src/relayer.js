@@ -7,6 +7,8 @@ const IdentityProxyContract = require('@origin/contracts/build/contracts/Identit
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
 const logger = require('./logger')
+const db = require('./models')
+const enums = require('./enums')
 
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
@@ -70,9 +72,16 @@ class Relayer {
     }
 
     this.addresses = require(ContractAddresses[networkId])
-    this.web3 = new Web3(env.PROVIDER_URL || DefaultProviders[networkId])
-    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
+    logger.info('Addresses', this.addresses)
 
+    const providerUrl = env.PROVIDER_URL || DefaultProviders[networkId]
+    if (!providerUrl) {
+      throw new Error('Provider url not defined')
+    }
+    logger.info(`Provider URL: ${providerUrl}`)
+    this.web3 = new Web3(providerUrl)
+
+    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
     if (privateKey) {
       const wallet = this.web3.eth.accounts.wallet.add(privateKey)
       this.forwarder = wallet.address
@@ -100,9 +109,17 @@ class Relayer {
    */
   async relay(req, res) {
     const { signature, from, txData, to, proxy, preflight } = req.body
+    logger.debug('relay called with args', {
+      from,
+      txData,
+      to,
+      proxy,
+      preflight
+    })
 
     // Pre-flight requests check if the relayer is available and willing to pay
     if (preflight) {
+      logger.debug('Preflight returning true')
       return res.send({ success: true })
     }
 
@@ -126,11 +143,13 @@ class Relayer {
     const args = { to, from, signature, txData, web3, nonce }
     const sigValid = await verifySig(args)
     if (!sigValid) {
+      logger.debug('Invalid signature.')
       return res.status(400).send({ errors: ['Cannot verify your signature'] })
     }
 
     // 2. Verify txData and check function signature
     if (!method) {
+      logger.debug('Invalid method')
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
@@ -144,33 +163,56 @@ class Relayer {
         } else if (method.name !== 'createProxyWithNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
         }
+        logger.debug('Deploying proxy')
         const args = { to, data: txData, from: Forwarder }
         const gas = await web3.eth.estimateGas(args)
         tx = web3.eth.sendTransaction({ ...args, gas })
       } else {
+        logger.debug('Forwarding transaction')
         const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
         const gas = await rawTx.estimateGas({ from: Forwarder })
         // TODO: Not sure why we need extra gas here
         tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
       }
 
+      const dbTx = db.RelayerTxn.create({
+        status: enums.RelayerTxnStatuses.Pending,
+        from,
+        to,
+        method: method.name,
+        forwarder: Forwarder
+        // TODO: capture signals into the data column for fraud prevention.
+      })
+
       txHash = await new Promise((resolve, reject) =>
         tx
-          .once('transactionHash', resolve)
+          .once('transactionHash', txHash => {
+            // Resolve the promise to return right away the transaction hash to the caller.
+            resolve(txHash)
+          })
           .once('receipt', receipt => {
+            // Once block is mined, record the amount of gas and update
+            // the status of the transaction in the DB.
             const gas = receipt.gasUsed
-            const acct = from.substr(0, 10)
+            dbTx.update({
+              status: enums.RelayerTxnStatuses.Confirmed,
+              gas
+            })
             logger.info(
-              `Paid ${gas} gas on behalf of ${acct} for ${method.name}`
+              `Transaction with hash ${txHash} confirmed. Paid ${gas} gas`
             )
           })
           .catch(reject)
       )
+      // Record the transaction hash in the DB.
+      logger.info(`Submitted transaction with hash ${txHash}`)
+      dbTx.update({ txnHash: txHash })
     } catch (err) {
       logger.error(err)
       return res.status(400).send({ errors: ['Error forwarding'] })
     }
 
+    // Return the transaction hash to the caller.
     res.send({ id: txHash })
   }
 }
