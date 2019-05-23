@@ -93,20 +93,6 @@ class SettingsScreen extends Component {
               </TouchableHighlight>
             </Fragment>
           ))}
-          <View style={styles.header}>
-            <Text style={styles.heading}>
-              <fbt desc="SettingsScreen.generalHeading">LOCALES</fbt>
-            </Text>
-          </View>
-          {RNLocalize.getLocales().map(locale => (
-            <Fragment key={locale.languageTag}>
-              <TouchableHighlight onPress={() => this.handleSetLocale(locale)}>
-                <View style={styles.item}>
-                  <Text style={styles.text}>{locale.languageTag}</Text>
-                </View>
-              </TouchableHighlight>
-            </Fragment>
-          ))}
         </ScrollView>
       </KeyboardAvoidingView>
     )
