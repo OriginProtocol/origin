@@ -42,6 +42,7 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
+    mobileModalDismissed: false,
     currency: store.get('currency', 'fiat-USD')
   }
 
@@ -58,7 +59,8 @@ class App extends Component {
     if (
       !this.props.web3Loading &&
       !this.props.web3.walletType &&
-      this.state.displayMobileModal === false
+      this.state.displayMobileModal === false &&
+      !this.state.mobileModalDismissed
     ) {
       this.setState({ displayMobileModal: true })
     }
@@ -146,7 +148,12 @@ class App extends Component {
         <TranslationModal locale={this.props.locale} />
         {this.state.displayMobileModal && (
           <MobileModal
-            onClose={() => this.setState({ displayMobileModal: false })}
+            onClose={() =>
+              this.setState({
+                displayMobileModal: false,
+                mobileModalDismissed: true
+              })
+            }
           />
         )}
         <Footer
