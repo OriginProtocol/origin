@@ -7,7 +7,6 @@ if (doTestMark) {
 
 const locales = [
   'en_US',
-  /*
   'de_DE',
   'el_GR',
   'es_ES',
@@ -22,13 +21,12 @@ const locales = [
   'pt_PT',
   'ro_RO',
   'ru_RU',
-  'th_TH'.
+  'th_TH',
   'tr_TR',
   'uk_UA',
   'vi_VN',
   'zh_CN',
   'zh_TW'
-  */
 ]
 
 // Decodes variable names from crowdin into their original name.

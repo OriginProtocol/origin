@@ -3,7 +3,7 @@ const fs = require('fs')
 // Input: Source strings file from fbt, json in fbt format
 // Output: Simple key-value json of strings, for consumption by Crowdin
 
-const srcFile = `${__dirname}/../.source_strings.json`
+const srcFile = `${__dirname}/../../.source_strings.json`
 const dstFile = `${__dirname}/../crowdin/all-messages.json`
 
 const facebookTranslations = fs.readFileSync(srcFile)
