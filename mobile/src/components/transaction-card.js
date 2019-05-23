@@ -19,7 +19,7 @@ class TransactionCard extends Component {
   }
 
   render() {
-    const { msgData, wallet } = this.props
+    const { msgData, fiatCurrency, wallet } = this.props
     const { functionName, parameters } = decodeTransaction(msgData.data.data)
     const { _commission, _currency, _value } = parameters
     const balances = wallet.accountBalance
@@ -27,6 +27,11 @@ class TransactionCard extends Component {
       .toBN(msgData.data.gasPrice)
       .mul(web3.utils.toBN(msgData.data.gasLimit))
     const gas = web3.utils.fromWei(gasWei.toString(), 'ether')
+
+    const ethExchangeRate = this.props.exchangeRates[`${fiatCurrency[1]}/ETH`]
+      .rate
+    const daiExchangeRate = this.props.exchangeRates[`${fiatCurrency[1]}/DAI`]
+      .rate
 
     let boost,
       heading,
@@ -36,6 +41,7 @@ class TransactionCard extends Component {
       paymentCurrency,
       daiRequired = 0,
       ethRequired = Number(gas)
+
     switch (functionName) {
       case 'createListing':
         heading = fbt('Create Listing', 'TransactionCard.headingCreate')
@@ -76,11 +82,16 @@ class TransactionCard extends Component {
     }
 
     const calculableTotal = true
-    const gasInUSD = gas * currencies['eth'].priceToUSD
-    const paymentInUSD = paymentCurrency
-      ? payment * currencies[paymentCurrency].priceToUSD
-      : 0
-    const total = calculableTotal && `$${(gasInUSD + paymentInUSD).toFixed(2)}`
+    const gasFiatPrice = gas * ethExchangeRate
+    const paymentFiatPrice =
+      paymentCurrency === 'eth'
+        ? payment * ethExchangeRate
+        : payment * daiExchangeRate
+
+    const total =
+      calculableTotal &&
+      `${fiatCurrency[2]}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
+
     const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
     const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
 
@@ -93,7 +104,7 @@ class TransactionCard extends Component {
               <Text style={[styles.amount, styles.primary]}>{total}</Text>
             </View>
             <View style={styles.lineItems}>
-              {!!paymentInUSD && (
+              {!!paymentFiatPrice && (
                 <View style={styles.lineItem}>
                   <View>
                     <Text style={styles.label}>
@@ -101,9 +112,9 @@ class TransactionCard extends Component {
                     </Text>
                   </View>
                   <View>
-                    <Text
-                      style={[styles.amount, styles.converted]}
-                    >{`$${paymentInUSD.toFixed(2)}`}</Text>
+                    <Text style={[styles.amount, styles.converted]}>{`${
+                      fiatCurrency[2]
+                    }${paymentFiatPrice.toFixed(2)}`}</Text>
                     <Text style={styles.amount}>
                       <Image
                         source={currencies[paymentCurrency].icon}
@@ -121,9 +132,9 @@ class TransactionCard extends Component {
                   </Text>
                 </View>
                 <View>
-                  <Text
-                    style={[styles.amount, styles.converted]}
-                  >{`$${gasInUSD.toFixed(2)}`}</Text>
+                  <Text style={[styles.amount, styles.converted]}>{`${
+                    fiatCurrency[2]
+                  }${gasFiatPrice.toFixed(2)}`}</Text>
                   <Text style={styles.amount}>
                     <Image
                       source={currencies['eth'].icon}
@@ -172,10 +183,16 @@ class TransactionCard extends Component {
               :{' '}
             </Text>
             <Text style={styles.account}>
-              {Number(balances['eth']).toFixed(5)} ETH
-              {daiInvolved && `${Number(balances['dai']).toFixed(2)} DAI`}
-              {ognInvolved && `${balances['ogn']} OGN`}
+              {Number(balances['eth']).toFixed(5)} ETH{' '}
             </Text>
+            {daiInvolved && (
+              <Text style={styles.account}>
+                {Number(balances['dai']).toFixed(2)} DAI{' '}
+              </Text>
+            )}
+            {ognInvolved && (
+              <Text style={styles.account}>{balances['ogn']} OGN</Text>
+            )}
           </View>
           <View style={styles.accountText}>
             {!hasSufficientDai && (
@@ -223,8 +240,8 @@ class TransactionCard extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ exchangeRates, wallet }) => {
+  return { exchangeRates, wallet }
 }
 
 export default connect(mapStateToProps)(TransactionCard)

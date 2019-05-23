@@ -14,7 +14,7 @@ const config = {
   ipfsRPC: `http://${HOST}:5002`,
   relayer: `http://${HOST}:5100`,
   bridge: 'https://bridge.dev.originprotocol.com',
-  discovery: `http://${HOST}:4000/graphql`,
+  // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
   performanceMode: false,

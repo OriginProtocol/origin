@@ -6,8 +6,23 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
-const config = require('@origin/contracts/build/contracts.json')
 const logger = require('./logger')
+
+const DefaultProviders = {
+  1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+  999: 'http://localhost:8545',
+  2222: 'https://testnet.originprotocol.com/rpc'
+}
+
+const ContractAddresses = {
+  1: '@origin/contracts/build/contracts_mainnet.json',
+  4: '@origin/contracts/build/contracts_rinkeby.json',
+  999: '@origin/contracts/build/contracts.json',
+  2222: '@origin/contracts/build/contracts_origin.json'
+}
+
+const env = process.env
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
@@ -37,7 +52,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 
     return address.toLowerCase() === from.toLowerCase()
   } catch (e) {
-    logger.error.log('error recovering', e)
+    logger.error('error recovering', e)
     return false
   }
 }
@@ -48,7 +63,33 @@ class Relayer {
    * @param {integer} networkId 1=mainnet, 4=rinkeby, etc...
    */
   constructor(networkId) {
-    this.networkId = networkId
+    this.networkId = Number(networkId)
+
+    if (!ContractAddresses[networkId]) {
+      throw new Error(`Unsupported network id ${networkId}`)
+    }
+
+    this.addresses = require(ContractAddresses[networkId])
+    this.web3 = new Web3(env.PROVIDER_URL || DefaultProviders[networkId])
+    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
+
+    if (privateKey) {
+      const wallet = this.web3.eth.accounts.wallet.add(privateKey)
+      this.forwarder = wallet.address
+      logger.info(`Forwarder account ${this.forwarder}`)
+    }
+    this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
+    this.Marketplace = new this.web3.eth.Contract(MarketplaceContract.abi)
+    this.IdentityEvents = new this.web3.eth.Contract(IdentityEventsContract.abi)
+    this.IdentityProxy = new this.web3.eth.Contract(IdentityProxyContract.abi)
+
+    this.methods = {}
+    this.Marketplace._jsonInterface
+      .concat(this.IdentityProxy._jsonInterface)
+      .concat(this.IdentityEvents._jsonInterface)
+      .concat(this.ProxyFactory._jsonInterface)
+      .filter(i => i.type === 'function' && !i.constant)
+      .forEach(o => (this.methods[o.signature] = o))
   }
   /**
    * Processes a relay transaction request.
@@ -58,39 +99,26 @@ class Relayer {
    * @returns {Promise<*>}
    */
   async relay(req, res) {
-    const { signature, from, txData, provider, to, proxy, preflight } = req.body
+    const { signature, from, txData, to, proxy, preflight } = req.body
 
     // Pre-flight requests check if the relayer is available and willing to pay
     if (preflight) {
       return res.send({ success: true })
     }
 
-    const web3 = new Web3(provider)
-    const ProxyFactory = new web3.eth.Contract(
-      ProxyFactoryContract.abi,
-      config.ProxyFactory
-    )
+    const web3 = this.web3
 
-    const nodeAccounts = await web3.eth.getAccounts()
-    const Forwarder = nodeAccounts[0]
+    let Forwarder = this.forwarder
+    if (this.networkId === 999) {
+      const nodeAccounts = await this.web3.eth.getAccounts()
+      Forwarder = nodeAccounts[0]
+    }
     let nonce = 0
 
-    const IdentityProxy = new web3.eth.Contract(
-      IdentityProxyContract.abi,
-      proxy
-    )
-    const Marketplace = new web3.eth.Contract(MarketplaceContract.abi)
-    const IdentityEvents = new web3.eth.Contract(IdentityEventsContract.abi)
-    const methods = {}
-    Marketplace._jsonInterface
-      .concat(IdentityProxy._jsonInterface)
-      .concat(IdentityEvents._jsonInterface)
-      .concat(ProxyFactory._jsonInterface)
-      .filter(i => i.type === 'function' && !i.constant)
-      .forEach(o => (methods[o.signature] = o))
+    const IdentityProxy = this.IdentityProxy.clone()
+    IdentityProxy.options.address = proxy
 
-    const method = methods[txData.substr(0, 10)]
-
+    const method = this.methods[txData.substr(0, 10)]
     if (proxy) {
       nonce = await IdentityProxy.methods.nonce(from).call()
     }
@@ -111,7 +139,7 @@ class Relayer {
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
       if (!proxy) {
-        if (to !== ProxyFactory.options.address) {
+        if (to !== this.addresses.ProxyFactory) {
           throw new Error('Incorrect ProxyFactory address provided')
         } else if (method.name !== 'createProxyWithNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
