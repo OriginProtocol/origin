@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import { fbt } from 'fbt-runtime'
 
 import { setEmail } from 'actions/Settings'
 
@@ -46,7 +47,14 @@ class EmailScreen extends Component {
     if (emailPattern.test(this.state.emailValue)) {
       this.props.setEmail(this.state.emailValue)
     } else {
-      this.setState({ emailError: 'That does not look like a valid email.' })
+      this.setState({
+        emailError: String(
+          fbt(
+            'That does not look like a valid email.',
+            'EmailScreen.invalidEmail'
+          )
+        )
+      })
     }
   }
 
@@ -54,8 +62,14 @@ class EmailScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Let&apos;s Get Started</Text>
-          <Text style={styles.subtitle}>What&apos;s your email address?</Text>
+          <Text style={styles.title}>
+            <fbt desc="EmailScreen.title">Let&apos;s Get Started</fbt>
+          </Text>
+          <Text style={styles.subtitle}>
+            <fbt desc="EmailScreen.subtitle">
+              What&apos;s your email address?
+            </fbt>
+          </Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -71,8 +85,10 @@ class EmailScreen extends Component {
         </View>
         <View style={styles.legalContainer}>
           <Text style={styles.legal}>
-            We will use your email to notify you of important notifications when
-            you buy or sell.
+            <fbt desc="EmailScreen.disclaimer">
+              We will use your email to notify you of important notifications
+              when you buy or sell.
+            </fbt>
           </Text>
         </View>
       </SafeAreaView>
