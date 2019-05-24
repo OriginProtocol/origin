@@ -59,3 +59,47 @@ export const CURRENCIES = [
   ['fiat-JPY', 'JPY', '¥'],
   ['fiat-CNY', 'CNY', '¥']
 ]
+
+export const LANGUAGES = [
+  ['de_DE', 'Deutsch'],
+  ['el_GR', 'ελληνικά'],
+  ['es_ES', 'Español'],
+  ['fil_PH', 'Filipino'],
+  ['fr_FR', 'Français'],
+  ['hr_HR', 'Hrvatski jezik'],
+  ['id_ID', 'Indonesian'],
+  ['it_IT', 'Italiano'],
+  ['ja_JP', '日本語'],
+  ['ko_KR', '한국어'],
+  ['nl_NL', 'Nederlands'],
+  ['pt_PT', 'Português'],
+  ['ro_RO', 'limba română'],
+  ['ru_RU', 'Русский'],
+  ['th_TH', 'ไทย'],
+  ['tr_TR', 'Türkçe'],
+  ['uk_UA', 'Українська'],
+  ['vi_VN', 'Tiếng Việt'],
+  ['zh_CN', '简体中文'],
+  ['zh_TW', '繁體中文'],
+  ['en_US', 'English']
+]
+
+import * as de_DE from 'locales/de_DE.json'
+import * as el_GR from 'locales/el_GR.json'
+import * as en_US from 'locales/en_US.json'
+import * as es_ES from 'locales/es_ES.json'
+import * as fr_FR from 'locales/fr_FR.json'
+import * as it_IT from 'locales/it_IT.json'
+import * as ja_JP from 'locales/ja_JP.json'
+import * as ko_KR from 'locales/ko_KR.json'
+import * as nl_NL from 'locales/nl_NL.json'
+import * as pt_PT from 'locales/pt_PT.json'
+
+export const TRANSLATIONS = {
+  de_DE,
+  el_GR,
+  en_US,
+  es_ES,
+  fr_FR,
+  it_IT
+}
