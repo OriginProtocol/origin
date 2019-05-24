@@ -110,7 +110,7 @@ locales.forEach(locale => {
   const srcFile = doTestMark
     ? `${__dirname}/../crowdin/all-messages.json`
     : `${__dirname}/../crowdin/all-messages_${locale}.json`
-  const dstFile = `${__dirname}/../../src/locales/${locale}.json`
+  const dstFile = `${__dirname}/../fbt/${locale}.json`
 
   const fs = require('fs')
   const translations = {}
