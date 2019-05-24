@@ -16,7 +16,6 @@ class RiskEngine {
    * @private
    */
   async acceptTx(from, txData, to, proxy) {
-    // TODO: implement fraud logic.
     logger.debug('RiskEngine.acceptTx called with args:', {
       from,
       txData,
