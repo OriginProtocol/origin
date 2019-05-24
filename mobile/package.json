@@ -30,10 +30,10 @@
     "test": "jest",
     "fbt:manifest": "node -r @babel/register node_modules/babel-plugin-fbt/bin/manifest --src src",
     "fbt:collect": "node -r @babel/register node_modules/babel-plugin-fbt/bin/collectFBT --json-input --pretty < .src_manifest.json > .source_strings.json",
-    "fbt:translate": "node  -r @babel/register node_modules/babel-plugin-fbt/bin/translate.js --translations src/locales/*.json --jenkins --pretty > .translated_fbts.json",
-    "fbt:clean": "rm .enum_manifest.json .src_manifest.json .source_strings.json .translated_fbts.json src/locales/*.json 2&> /dev/null || exit 0",
-    "translate": "npm run fbt:manifest && npm run fbt:collect && node translation/scripts/fbtToCrowdin && node translation/scripts/crowdinToFbt && npm run fbt:translate && cp .enum_manifest.json translation/fbt/.enum_manifest.json",
-    "translate:proof": "npm run fbt:manifest && npm run fbt:collect && node src/translation/scripts/fbtToCrowdin && node src/translation/scripts/crowdinToFbt proof && npm run fbt:translate && cp .enum_manifest.json src/translation/fbt/.enum_manifest.json"
+    "fbt:translate": "node  -r @babel/register node_modules/babel-plugin-fbt/bin/translate.js --translations translation/fbt/*.json --jenkins --pretty > .translated_fbts.json",
+    "fbt:clean": "rm .enum_manifest.json .src_manifest.json .source_strings.json .translated_fbts.json translation/fbt/*.json 2&> /dev/null || exit 0",
+    "translate": "npm run fbt:manifest && npm run fbt:collect && node translation/scripts/fbtToCrowdin && node translation/scripts/crowdinToFbt && npm run fbt:translate && node translation/scripts/splitTranslations && cp .enum_manifest.json translation/fbt/.enum_manifest.json",
+    "translate:proof": "npm run fbt:manifest && npm run fbt:collect && node translation/scripts/fbtToCrowdin && node translation/scripts/crowdinToFbt proof && npm run fbt:translate && node translation/scripts/splitTranslations && cp .enum_manifest.json translation/fbt/.enum_manifest.json"
   },
   "jest": {
     "preset": "react-native"

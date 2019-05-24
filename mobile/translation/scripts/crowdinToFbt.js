@@ -10,10 +10,7 @@ const locales = [
   'de_DE',
   'el_GR',
   'es_ES',
-  'fil_PH',
   'fr_FR',
-  'hr_HR',
-  'id_ID',
   'it_IT',
   'ja_JP',
   'ko_KR',
@@ -21,7 +18,6 @@ const locales = [
   'pt_PT',
   'ro_RO',
   'ru_RU',
-  'th_TH',
   'tr_TR',
   'uk_UA',
   'vi_VN',
@@ -114,7 +110,7 @@ locales.forEach(locale => {
   const srcFile = doTestMark
     ? `${__dirname}/../crowdin/all-messages.json`
     : `${__dirname}/../crowdin/all-messages_${locale}.json`
-  const dstFile = `${__dirname}/../src/locales/${locale}.json`
+  const dstFile = `${__dirname}/../fbt/${locale}.json`
 
   const fs = require('fs')
   const translations = {}

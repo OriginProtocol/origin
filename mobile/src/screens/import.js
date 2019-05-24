@@ -167,9 +167,7 @@ class ImportAccountScreen extends Component {
               </fbt>
             )}
             {!this.state.mnemonic && (
-              <fbt desc="ImportScreen.privateKeyTitle">
-                Enter Private Key
-              </fbt>
+              <fbt desc="ImportScreen.privateKeyTitle">Enter Private Key</fbt>
             )}
           </Text>
           {this.state.mnemonic && (
