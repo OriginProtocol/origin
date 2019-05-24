@@ -39,7 +39,6 @@ class LanguageScreen extends Component {
   }
 
   handleSetLanguage(language) {
-    console.log(TRANSLATIONS)
     init({ translations: { [language] : TRANSLATIONS[language] }})
     IntlViewerContext.locale = language
     this.props.setLanguage(language)
