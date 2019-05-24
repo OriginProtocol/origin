@@ -19,7 +19,7 @@ import { fbt } from 'fbt-runtime'
 
 import { LANGUAGES, TRANSLATIONS } from '../constants'
 import { setLanguage } from 'actions/Settings'
-import setFbtLanguage from 'utils/language'
+import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -46,10 +46,14 @@ class LanguageScreen extends Component {
 
   render() {
     const { navigation } = this.props
+
+    // Sorted list of available languages
     const languages = LANGUAGES.map(i => {
       return { key: i[0], value: i[1] }
     }).sort((a, b) => (a.value > b.value ? 1 : -1))
-    const selectedLanguage = this.props.settings.language || 'en_US'
+
+    const selectedLanguage = this.props.settings.language || findBestAvailableLanguage()
+
     return (
       <ScrollView style={styles.container}>
         <FlatList
