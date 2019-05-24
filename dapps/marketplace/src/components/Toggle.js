@@ -21,7 +21,6 @@ class Toggle extends Component {
     this.setState({
       isToggledOn: newToggled
     })
-    console.debug('toggle clicked! toggled? ', newToggled)
     if (!this.props.onClickHandler) return
     return this.props.onClickHandler(newToggled)
   }
