@@ -8,6 +8,7 @@
   "scripts": {
     "build": "per-env",
     "build:development": "truffle compile contracts",
+    "build:solc": "node -r @babel/register scripts/compile",
     "build:production": "echo \"Warning: use release contracts for production\"",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 20000 --exit test-alt",

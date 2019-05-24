@@ -71,7 +71,7 @@ class DeployIdentity extends Component {
     const profile = this.props.profile
     if (!profile.avatar) profile.avatar = ''
     const variables = {
-      from: this.props.wallet,
+      from: this.props.walletProxy,
       attestations: this.props.attestations,
       profile
     }

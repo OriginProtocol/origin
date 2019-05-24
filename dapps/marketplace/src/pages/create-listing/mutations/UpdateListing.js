@@ -66,14 +66,14 @@ class UpdateListing extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { listing, tokenBalance, wallet } = this.props
+    const { listing, tokenBalance } = this.props
 
     updateListing({
       variables: applyListingData(this.props, {
         listingID: this.props.listing.id,
         additionalDeposit:
           tokenBalance >= Number(listing.boost) ? listing.boost : '0',
-        from: wallet
+        from: this.props.listing.seller.id
       })
     })
   }

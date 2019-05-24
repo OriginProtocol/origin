@@ -4,6 +4,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import hasProxy from '../../utils/hasProxy'
+import proxyOwner from '../../utils/proxyOwner'
 
 async function deployIdentityViaProxy(
   _,
@@ -39,7 +40,10 @@ async function deployIdentityViaProxy(
     from,
     gas,
     mutation: 'deployIdentityViaProxy',
-    onConfirmation: () => hasProxy.cache.clear()
+    onConfirmation: () => {
+      hasProxy.cache.clear()
+      proxyOwner.cache.clear()
+    }
   })
 }
 

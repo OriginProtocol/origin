@@ -1,6 +1,8 @@
+import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
+import proxyOwner from '../utils/proxyOwner'
 import hasProxy from '../utils/hasProxy'
 import get from 'lodash/get'
 
@@ -15,6 +17,12 @@ export async function checkMetaMask(from) {
       throw new Error(`MetaMask is not on network ${net}`)
     }
     const mmAccount = await contracts.metaMask.eth.getAccounts()
+
+    const owner = await proxyOwner(from)
+    if (owner) {
+      from = owner
+    }
+
     if (!mmAccount || mmAccount[0] !== from) {
       throw new Error(`MetaMask is not set to account ${from}`)
     }
@@ -36,11 +44,14 @@ function useRelayer({ mutation, value }) {
 
 function useProxy({ proxy, addr, to, mutation }) {
   if (!contracts.config.proxyAccountsEnabled) return false
-  if (!proxy) return false
   if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
   if (to) return false
   if (mutation === 'updateTokenAllowance') return false
   if (mutation === 'swapToToken') return false
+  if (!proxy && mutation === 'deployIdentity') return 'create'
+  if (!proxy && mutation === 'createListing') return 'create'
+  if (!proxy && mutation === 'makeOffer') return 'create'
+  if (!proxy) return false
   return true
 }
 
@@ -60,8 +71,10 @@ export default function txHelper({
     let toSend = tx
     web3 = contracts.web3Exec
 
-    // Use proxy if this wallet has one deployed
-    const proxy = await hasProxy(from)
+    // If the from address is a proxy, find the owner
+    const owner = await proxyOwner(from)
+    const proxy = owner ? from : null
+    from = owner || from
 
     if (useRelayer({ mutation, value })) {
       const address = tx._parent._address
@@ -97,7 +110,37 @@ export default function txHelper({
     }
 
     const addr = get(tx, '_parent._address')
-    if (useProxy({ proxy, addr, to, mutation })) {
+    const shouldUseProxy = useProxy({ proxy, addr, to, mutation })
+    if (shouldUseProxy === 'create') {
+      console.log('create proxy', mutation)
+      const Proxy = new web3.eth.Contract(IdentityProxy.abi)
+
+      const txData = await tx.encodeABI()
+      const initFn = await Proxy.methods
+        .changeOwnerAndExecute(from, addr, value || '0', txData)
+        .encodeABI()
+
+      const Contract = new web3.eth.Contract(
+        ProxyFactory.abi,
+        contracts.config.ProxyFactory
+      )
+      console.log('createProxyWithSenderNonce', {
+        initFn,
+        from,
+        addr,
+        value,
+        txData,
+        imp: contracts.config.IdentityProxyImplementation
+      })
+      toSend = Contract.methods.createProxyWithSenderNonce(
+        contracts.config.IdentityProxyImplementation,
+        initFn,
+        from,
+        value || '0'
+      )
+      // gas = await toSend.estimateGas({ from })
+      gas = 500000
+    } else if (shouldUseProxy) {
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
@@ -166,8 +209,14 @@ export default function txHelper({
         }
       })
       .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
-        if (confNumber === 1 && onConfirmation) {
-          onConfirmation(receipt)
+        if (confNumber === 1) {
+          if (shouldUseProxy === 'create') {
+            hasProxy.cache.clear()
+            proxyOwner.cache.clear()
+          }
+          if (onConfirmation) {
+            onConfirmation(receipt)
+          }
         }
         if (confNumber > 0) {
           pubsub.publish('TRANSACTION_UPDATED', {
