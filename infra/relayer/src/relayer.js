@@ -6,6 +6,7 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
+const { ip2geo } = require('@origin/ip2geo')
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
@@ -115,6 +116,7 @@ class Relayer {
   /**
    * Inserts a row in the DB to track the transaction.
    *
+   * @param req
    * @param status
    * @param from
    * @param to
@@ -123,14 +125,21 @@ class Relayer {
    * @returns {Promise<models.RelayerTxn>}
    * @private
    */
-  async _createDbTx(status, from, to, method, forwarder) {
+  async _createDbTx(req, status, from, to, method, forwarder) {
+    // Get the IP from the request header and resolve it into a country code.
+    const ip = req.header('X-Real-IP')
+    const geo = await ip2geo(ip)
+
+    // TODO: capture extra signals for fraud detection and store in data.
+    const data = geo ? { ip, country: geo.countryCode } : { ip }
+
     return await db.RelayerTxn.create({
       status,
-      from,
-      to,
+      from: from.toLowerCase(),
+      to: to.toLowerCase(),
       method,
-      forwarder
-      // TODO: capture signals into the data column for fraud prevention.
+      forwarder: forwarder.toLowerCase(),
+      data
     })
   }
 

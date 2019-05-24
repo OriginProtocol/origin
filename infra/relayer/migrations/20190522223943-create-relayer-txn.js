@@ -45,7 +45,8 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['from']))
+    }).then(() => queryInterface.addIndex(tableName, ['from', 'created_at']))
+      .then(() => queryInterface.addIndex(tableName, ['created_at']))
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)
