@@ -127,7 +127,7 @@ class Relayer {
    */
   async _createDbTx(req, status, from, to, method, forwarder) {
     // Get the IP from the request header and resolve it into a country code.
-    const ip = req.header('X-Real-IP')
+    const ip = req.header('x-real-ip')
     const geo = await ip2geo(ip)
 
     // TODO: capture extra signals for fraud detection and store in data.
@@ -174,6 +174,7 @@ class Relayer {
     if (!accept) {
       // Log the decline in the DB to use as data for future accept decisions.
       await this._createDbTx(
+        req,
         enums.RelayerTxnStatuses.Declined,
         from,
         to,
@@ -222,6 +223,7 @@ class Relayer {
         const args = { to, data: txData, from: Forwarder }
         const gas = await web3.eth.estimateGas(args)
         dbTx = await this._createDbTx(
+          req,
           enums.RelayerTxnStatuses.Pending,
           from,
           to,
@@ -234,6 +236,7 @@ class Relayer {
         const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
         const gas = await rawTx.estimateGas({ from: Forwarder })
         dbTx = await this._createDbTx(
+          req,
           enums.RelayerTxnStatuses.Pending,
           from,
           to,
