@@ -10,6 +10,15 @@ const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
 
+let RiskEngine
+if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
+  RiskEngine = require('./risk/prod/engine')
+  logger.info('Loaded PROD risk engine.')
+} else {
+  RiskEngine = require('./risk/dev/engine')
+  logger.info('Loaded DEV risk engine.')
+}
+
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
   4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
@@ -99,22 +108,30 @@ class Relayer {
       .concat(this.ProxyFactory._jsonInterface)
       .filter(i => i.type === 'function' && !i.constant)
       .forEach(o => (this.methods[o.signature] = o))
+
+    this.riskEngine = new RiskEngine()
   }
 
   /**
-   * Returns true if relayer is willing to forward the transaction. False otherwise.
+   * Inserts a row in the DB to track the transaction.
    *
-   * @param {string} from - Eth address of the sender
-   * @param {string} txData - Transaction data
-   * @param {string} to - Eth address of target contract
-   * @param {string} proxy - Optional. Address of the IdentityProxy
-   * @returns {Promise<boolean>}
+   * @param status
+   * @param from
+   * @param to
+   * @param method
+   * @param forwarder
+   * @returns {Promise<models.RelayerTxn>}
    * @private
    */
-  async _accept(from, txData, to, proxy) {
-    // TODO: implement fraud logic.
-    logger.debug('_accept called with args:', { from, txData, to, proxy })
-    return false
+  async _createDbTx(status, from, to, method, forwarder) {
+    return await db.RelayerTxn.create({
+      status,
+      from,
+      to,
+      method,
+      forwarder
+      // TODO: capture signals into the data column for fraud prevention.
+    })
   }
 
   /**
@@ -143,20 +160,21 @@ class Relayer {
     }
     const method = this.methods[txData.substr(0, 10)]
 
+    // Check if the relayer is willing to process the transaction.
+    const accept = await this.riskEngine.acceptTx(from, txData, to, proxy)
+    if (!accept) {
+      // Log the decline in the DB to use as data for future accept decisions.
+      await this._createDbTx(
+        enums.RelayerTxnStatuses.Declined,
+        from,
+        to,
+        method.name,
+        Forwarder
+      )
+    }
+
     // Pre-flight requests check if the relayer is available and willing to pay
     if (preflight) {
-      const accept = await this._accept(from, txData, to, proxy)
-      if (!accept) {
-        // Log the decline in the DB to use as data for future accept decisions.
-        await db.RelayerTxn.create({
-          status: enums.RelayerTxnStatuses.Declined,
-          from,
-          to,
-          method: method.name,
-          forwarder: Forwarder
-          // TODO: capture extra signals into the data column for fraud prevention.
-        })
-      }
       return res.send({ success: accept })
     }
 
@@ -181,7 +199,7 @@ class Relayer {
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
-    let tx, txHash
+    let tx, txHash, dbTx
 
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
@@ -194,30 +212,31 @@ class Relayer {
         logger.debug('Deploying proxy')
         const args = { to, data: txData, from: Forwarder }
         const gas = await web3.eth.estimateGas(args)
+        dbTx = await this._createDbTx(
+          enums.RelayerTxnStatuses.Pending,
+          from,
+          to,
+          method.name,
+          Forwarder
+        )
         tx = web3.eth.sendTransaction({ ...args, gas })
       } else {
         logger.debug('Forwarding transaction')
         const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
         const gas = await rawTx.estimateGas({ from: Forwarder })
+        dbTx = await this._createDbTx(
+          enums.RelayerTxnStatuses.Pending,
+          from,
+          to,
+          method.name,
+          Forwarder
+        )
         // TODO: Not sure why we need extra gas here
         tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
       }
 
-      const dbTx = await db.RelayerTxn.create({
-        status: enums.RelayerTxnStatuses.Pending,
-        from,
-        to,
-        method: method.name,
-        forwarder: Forwarder
-        // TODO: capture signals into the data column for fraud prevention.
-      })
-
-      txHash = await new Promise((resolve, reject) =>
-        tx
-          .once('transactionHash', txHash => {
-            // Resolve the promise to return right away the transaction hash to the caller.
-            resolve(txHash)
-          })
+      txHash = await new Promise((resolve, reject) => {
+        tx.once('transactionHash', resolve)
           .once('receipt', async receipt => {
             // Once block is mined, record the amount of gas and update
             // the status of the transaction in the DB.
@@ -227,14 +246,22 @@ class Relayer {
               gas
             })
             logger.info(
-              `Transaction with hash ${txHash} confirmed. Paid ${gas} gas`
+              `Confirmed tx with hash ${
+                receipt.transactionHash
+              }. Paid ${gas} gas`
             )
           })
-          .catch(reject)
-      )
+          .catch(async reason => {
+            await dbTx.update({
+              status: enums.RelayerTxnStatuses.Failed
+            })
+            logger.error('Transaction failure:', reason)
+            reject(reason)
+          })
+      })
       // Record the transaction hash in the DB.
-      logger.info(`Submitted transaction with hash ${txHash}`)
-      await dbTx.update({ txnHash: txHash })
+      logger.info(`Submitted tx with hash ${txHash}`)
+      await dbTx.update({ txHash })
     } catch (err) {
       logger.error(err)
       return res.status(400).send({ errors: ['Error forwarding'] })
