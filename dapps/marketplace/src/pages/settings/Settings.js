@@ -80,7 +80,7 @@ class Settings extends Component {
   }
 
   toggleDeveloperMode(on) {
-     this.setState({
+    this.setState({
       developerMode: on
     })
   }
