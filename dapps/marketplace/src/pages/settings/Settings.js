@@ -423,6 +423,7 @@ require('react-styl')(`
       .dropdown-selected
         .arrow
           display: block
+          margin: 0.25rem
           float: right
           content: " "
           height: 24px
