@@ -10,6 +10,7 @@ import {
   createStackNavigator,
   createSwitchNavigator
 } from 'react-navigation'
+import { IntlViewerContext, init } from 'fbt-runtime'
 
 import OriginWallet from './OriginWallet'
 import PushNotifications from './PushNotifications'
@@ -34,6 +35,8 @@ import PinScreen from 'screens/onboarding/pin'
 import ReadyScreen from 'screens/onboarding/ready'
 import Loading from 'components/loading'
 import NavigationService from './NavigationService'
+import { TRANSLATIONS } from './constants'
+import setLanguage from 'utils/language'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -223,10 +226,18 @@ const AppContainer = createAppContainer(
 )
 
 class App extends Component {
+  onBeforeLift() {
+    setLanguage(Store.getState().settings.language)
+  }
+
   render() {
     return (
       <ReduxProvider store={Store}>
-        <PersistGate loading={<Loading />} persistor={persistor}>
+        <PersistGate
+          loading={<Loading />}
+          onBeforeLift={this.onBeforeLift}
+          persistor={persistor}
+        >
           <OriginWallet />
           <AppContainer
             ref={navigatorRef => {

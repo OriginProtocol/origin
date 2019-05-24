@@ -53,8 +53,8 @@ class PinScreen extends Component {
 
   render() {
     const title = this.state.verifyPin
-      ? 'Re-enter Pin Code'
-      : 'Create a Pin Code'
+      ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
+      : fbt('Create a Pin Code', 'PinScreen.createPinCode')
 
     return (
       <SafeAreaView style={styles.container}>

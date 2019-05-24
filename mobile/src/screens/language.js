@@ -15,10 +15,11 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-import { IntlViewerContext, init, fbt } from 'fbt-runtime'
+import { fbt } from 'fbt-runtime'
 
 import { LANGUAGES, TRANSLATIONS } from '../constants'
 import { setLanguage } from 'actions/Settings'
+import setFbtLanguage from 'utils/language'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -39,8 +40,7 @@ class LanguageScreen extends Component {
   }
 
   handleSetLanguage(language) {
-    init({ translations: { [language] : TRANSLATIONS[language] }})
-    IntlViewerContext.locale = language
+    setFbtLanguage(language)
     this.props.setLanguage(language)
   }
 
@@ -59,7 +59,9 @@ class LanguageScreen extends Component {
               onPress={() => this.handleSetLanguage(item.key)}
             >
               <View style={styles.listItem}>
-                <View style={styles.textContainer}><Text>{item.value}</Text></View>
+                <View style={styles.textContainer}>
+                  <Text>{item.value}</Text>
+                </View>
                 {
                   <View style={styles.iconContainer}>
                     {selectedLanguage === item.key && (
@@ -81,7 +83,6 @@ class LanguageScreen extends Component {
   }
 }
 
-
 const mapStateToProps = ({ wallet, settings }) => {
   return { wallet, settings }
 }
@@ -90,7 +91,10 @@ const mapDispatchToProps = dispatch => ({
   setLanguage: language => dispatch(setLanguage(language))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LanguageScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LanguageScreen)
 
 const styles = StyleSheet.create({
   container: {
