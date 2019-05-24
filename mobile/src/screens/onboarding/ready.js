@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { NavigationActions } from 'react-navigation'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
@@ -24,7 +25,9 @@ export default class ReadyScreen extends Component {
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>
-            You&apos;re ready to start buying and selling on Origin
+            <fbt desc="ReadyScreen.title">
+              You&apos;re ready to start buying and selling on Origin
+            </fbt>
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
@@ -33,7 +36,7 @@ export default class ReadyScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Start using Origin'}
+            title={fbt('Start using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
               this.props.navigation.navigate(

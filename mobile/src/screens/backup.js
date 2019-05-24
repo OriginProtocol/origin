@@ -16,6 +16,7 @@ import {
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { NavigationActions } from 'react-navigation'
+import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
@@ -55,17 +56,30 @@ class BackupScreen extends Component {
     }
   }
 
+  // TODO duplicate code from screens/account.js
   async handleDangerousCopy(data) {
     Alert.alert(
-      'Important!',
-      'As a security precaution, the clipboard will be cleared after one minute.',
+      String(fbt('Important!', 'BackupScreen.dangerousCopyAlertTitle')),
+      String(
+        fbt(
+          'As a security precaution, the clipboard will be cleared after one minute.',
+          'BackupScreen.dangerousCopyAlertMessage'
+        )
+      ),
       [
         {
-          text: 'Got it',
+          text: String(fbt('Got it', 'BackupScreen.dangerousCopyButton')),
           onPress: async () => {
             await Clipboard.setString(data)
 
-            Alert.alert('Copied to clipboard!')
+            Alert.alert(
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'BackupScreen.dangerousCopySuccessAlert'
+                )
+              )
+            )
 
             setTimeout(async () => {
               if ((await Clipboard.getString()) === data) {
@@ -134,31 +148,48 @@ class BackupScreen extends Component {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.content}>
-            <Text style={styles.title}>
-              {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
-            </Text>
-            <Text style={styles.subtitle}>
-              Write down your{' '}
-              {this.isPrivateKey ? 'private key' : 'recovery phrase'}
-            </Text>
             {this.isPrivateKey && (
-              <View style={styles.privateKeyContainer}>
-                <Text style={styles.privateKey}>
-                  {wallet.activeAccount.privateKey}
+              <>
+                <Text style={styles.title}>
+                  <fbt desc="BackupScreen.backupPrivateKeyTitle">
+                    Private Key
+                  </fbt>
                 </Text>
-              </View>
+                <Text style={styles.subtitle}>
+                  <fbt desc="BackupScreen.backupPrivateKeySubtitle">
+                    Write down your private key
+                  </fbt>
+                </Text>
+                <View style={styles.privateKeyContainer}>
+                  <Text style={styles.privateKey}>
+                    {wallet.activeAccount.privateKey}
+                  </Text>
+                </View>
+              </>
             )}
             {!this.isPrivateKey && (
-              <View style={styles.recoveryContainer}>
-                {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
-                  return (
-                    <View style={styles.recoveryWordContainer} key={i}>
-                      <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
-                      <Text style={styles.recoveryWord}>{word}</Text>
-                    </View>
-                  )
-                })}
-              </View>
+              <>
+                <Text style={styles.title}>
+                  <fbt desc="BackupScreen.backupRecoveryTitle">
+                    Recovery Phrase
+                  </fbt>
+                </Text>
+                <Text style={styles.subtitle}>
+                  <fbt desc="BackupScreen.backupRecoverySubtitle">
+                    Write down your recovery phrase
+                  </fbt>
+                </Text>
+                <View style={styles.recoveryContainer}>
+                  {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
+                    return (
+                      <View style={styles.recoveryWordContainer} key={i}>
+                        <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
+                        <Text style={styles.recoveryWord}>{word}</Text>
+                      </View>
+                    )
+                  })}
+                </View>
+              </>
             )}
             <View>
               <OriginButton
@@ -166,7 +197,7 @@ class BackupScreen extends Component {
                 type="link"
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Copy to clipboard'}
+                title={fbt('Copy to clipboard', 'BackupScreen.copyButton')}
                 onPress={() =>
                   this.isPrivateKey
                     ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
@@ -176,9 +207,20 @@ class BackupScreen extends Component {
             </View>
             <View style={styles.descContainer}>
               <Text style={styles.desc}>
-                This {this.isPrivateKey ? 'private key' : 'recovery phrase'} is
-                the key to your account. Write it down, or copy it to a password
-                manager. We recommend NOT emailing it to yourself.
+                {this.isPrivateKey && (
+                  <fbt desc="BackupScreen.backupPrivateKeyNote">
+                    This private key is the key to your account. Write it down,
+                    or copy it to a password manager. We recommend NOT emailing
+                    it to yourself.
+                  </fbt>
+                )}
+                {!this.isPrivateKey && (
+                  <fbt desc="BackupScreen.backupRecoveryPhraseNote">
+                    This recovery phrase is the key to your account. Write it
+                    down, or copy it to a password manager. We recommend NOT
+                    emailing it to yourself.
+                  </fbt>
+                )}
               </Text>
             </View>
           </View>
@@ -188,7 +230,7 @@ class BackupScreen extends Component {
               type="primary"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Next'}
+              title={fbt('Next', 'BackupScreen.nextButton')}
               onPress={() => this.setState({ step: 'verify' })}
             />
             <OriginButton
@@ -196,7 +238,7 @@ class BackupScreen extends Component {
               type="link"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Cancel'}
+              title={fbt('Cancel', 'BackupScreen.cancelButton')}
               onPress={() => {
                 this.props.navigation.navigate('Wallet')
               }}
@@ -212,28 +254,45 @@ class BackupScreen extends Component {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.content}>
-            <Text style={styles.title}>
-              {this.isPrivateKey ? 'Private Key' : 'Recovery Phrase'}
-            </Text>
-            <Text style={styles.subtitle}>
-              {this.isPrivateKey
-                ? 'Enter your private key'
-                : 'Select the words in the correct order'}
-            </Text>
             {this.isPrivateKey && (
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                multiline={true}
-                style={styles.input}
-                onChangeText={value => {
-                  this.setState({ verify: value })
-                }}
-              />
+              <>
+                <Text style={styles.title}>
+                  <fbt desc="BackupScreen.verifyPrivateKeyTitle">
+                    Private Key
+                  </fbt>
+                </Text>
+                <Text style={styles.subtitle}>
+                  <fbt desc="BackupScreen.verifyPrivateKeySubtitle">
+                    Enter your private key
+                  </fbt>
+                </Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  multiline={true}
+                  style={styles.input}
+                  onChangeText={value => {
+                    this.setState({ verify: value })
+                  }}
+                />
+              </>
             )}
-            {!this.isPrivateKey && this.renderWordSlots(this.state.verify)}
-            {!this.isPrivateKey &&
-              this.renderWordSlots(this.state.shuffledMnemonic)}
+            {!this.isPrivateKey && (
+              <>
+                <Text style={styles.title}>
+                  <fbt desc="BackupScreen.verifyRecoveryPhraseTitle">
+                    Recovery Phrase
+                  </fbt>
+                </Text>
+                <Text style={styles.subtitle}>
+                  <fbt desc="BackupScreen.verifyRecoveryPhraseSubtitle">
+                    Select the words in the correct order
+                  </fbt>
+                </Text>
+                {this.renderWordSlots(this.state.verify)}
+                {this.renderWordSlots(this.state.shuffledMnemonic)}
+              </>
+            )}
           </View>
           <View style={styles.buttonsContainer}>
             <OriginButton
@@ -242,7 +301,7 @@ class BackupScreen extends Component {
               disabled={!this.backupIsVerified()}
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Next'}
+              title={fbt('Next', 'BackupScreen.nextButton')}
               onPress={() => this.setState({ step: 'success' })}
             />
             <OriginButton
@@ -250,7 +309,7 @@ class BackupScreen extends Component {
               type="link"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Go back'}
+              title={fbt('Go back', 'BackupScreen.backButton')}
               onPress={() => this.setState({ step: 'backup' })}
             />
           </View>
@@ -303,7 +362,9 @@ class BackupScreen extends Component {
             style={[styles.image, smallScreen ? { height: '33%' } : {}]}
           />
           <Text style={styles.title}>
-            You have successfully backed up your recovery phrase
+            <fbt desc="BackupScreen.backupSuccess">
+              You have successfully backed up your recovery phrase
+            </fbt>
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
@@ -312,7 +373,7 @@ class BackupScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Done'}
+            title={fbt('Done', 'BackupScreen.doneButton')}
             onPress={async () => {
               await this.props.setBackupWarningStatus(
                 wallet.activeAccount.address
@@ -330,6 +391,19 @@ class BackupScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+const mapDispatchToProps = dispatch => ({
+  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BackupScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -444,16 +518,3 @@ const styles = StyleSheet.create({
     color: '#c0cbd4'
   }
 })
-
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-const mapDispatchToProps = dispatch => ({
-  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BackupScreen)

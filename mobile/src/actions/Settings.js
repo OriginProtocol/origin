@@ -8,7 +8,8 @@ export const SettingsConstants = keyMirror(
     SET_DEVICE_TOKEN: null,
     SET_EMAIL: null,
     SET_PIN: null,
-    SET_BIOMETRY_TYPE: null
+    SET_BIOMETRY_TYPE: null,
+    SET_LANGUAGE: null
   },
   'SETTINGS'
 )
@@ -45,5 +46,12 @@ export function setBiometryType(biometryType) {
   return {
     type: SettingsConstants.SET_BIOMETRY_TYPE,
     biometryType
+  }
+}
+
+export function setLanguage(language) {
+  return {
+    type: SettingsConstants.SET_LANGUAGE,
+    language
   }
 }

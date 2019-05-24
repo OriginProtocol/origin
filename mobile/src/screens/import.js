@@ -12,6 +12,7 @@ import {
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { ethers } from 'ethers'
+import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
@@ -160,11 +161,20 @@ class ImportAccountScreen extends Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>
-            Enter {this.state.mnemonic ? 'Recovery Phrase' : 'Private Key'}
+            {this.state.mnemonic && (
+              <fbt desc="ImportScreen.recoveryPhraseTitle">
+                Enter Recovery Phrase
+              </fbt>
+            )}
+            {!this.state.mnemonic && (
+              <fbt desc="ImportScreen.privateKeyTitle">Enter Private Key</fbt>
+            )}
           </Text>
           {this.state.mnemonic && (
             <Text style={styles.subtitle}>
-              Enter the 12 words in the correct order
+              <fbt desc="ImportScreen.recoveryPhraseSubtitle">
+                Enter the 12 words in the correct order
+              </fbt>
             </Text>
           )}
           <TextInput
@@ -190,8 +200,16 @@ class ImportAccountScreen extends Component {
             }
           >
             <Text style={styles.switchMethod}>
-              Use a {this.state.mnemonic ? 'private key' : 'recovery phrase'}{' '}
-              instead
+              {this.state.mnemonic && (
+                <fbt desc="ImportScreen.recoveryPhraseSwitch">
+                  Use a recovery phrase instead
+                </fbt>
+              )}
+              {!this.statet.mnemonic && (
+                <fbt desc="ImportScreen.privateKeySwitch">
+                  Use a private key instead
+                </fbt>
+              )}
             </Text>
           </TouchableOpacity>
         </View>
@@ -202,7 +220,7 @@ class ImportAccountScreen extends Component {
               type="link"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Cancel'}
+              title={fbt('Cancel', 'ImportScreen.cancelButton')}
               onPress={() => navigation.navigate(cancelRoute)}
             />
           )}
@@ -211,7 +229,7 @@ class ImportAccountScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Done'}
+            title={fbt('Done', 'ImportScreenn.doneButton')}
             onPress={this.handleSubmit}
             loading={this.state.loading}
             disabled={this.state.loading}
@@ -221,6 +239,19 @@ class ImportAccountScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = ({ activation, settings, wallet }) => {
+  return { activation, settings, wallet }
+}
+
+const mapDispatchToProps = dispatch => ({
+  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ImportAccountScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -284,16 +315,3 @@ const styles = StyleSheet.create({
     color: '#1a82ff'
   }
 })
-
-const mapStateToProps = ({ activation, settings, wallet }) => {
-  return { activation, settings, wallet }
-}
-
-const mapDispatchToProps = dispatch => ({
-  setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImportAccountScreen)
