@@ -21,6 +21,7 @@ import AccountScreen from 'screens/account'
 import BackupPrompt from 'components/backup-prompt'
 import BackupScreen from 'screens/backup'
 import ImportAccountScreen from 'screens/import'
+import LanguageScreen from 'screens/language'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
@@ -110,6 +111,7 @@ const SettingsStack = createStackNavigator(
       }
     ),
     Accounts: AccountsScreen,
+    Language: LanguageScreen,
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
