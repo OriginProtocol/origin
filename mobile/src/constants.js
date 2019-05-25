@@ -60,6 +60,7 @@ export const CURRENCIES = [
   ['fiat-CNY', 'CNY', '¥']
 ]
 
+/* eslint-disable camelcase */
 import * as de_DE from 'locales/de_DE.json'
 import * as el_GR from 'locales/el_GR.json'
 import * as en_US from 'locales/en_US.json'
@@ -79,24 +80,26 @@ import * as zh_CN from 'locales/zh_CN.json'
 import * as zh_TW from 'locales/zh_TW.json'
 
 export const TRANSLATIONS = {
-  de_DE,
-  el_GR,
+  // Comment out those without translations
+  // de_DE,
+  // el_GR,
   en_US,
   es_ES,
-  fr_FR,
-  it_IT,
-  ja_JP,
-  ko_KR,
-  nl_NL,
-  pt_PT,
-  ro_RO,
-  ru_RU,
-  tr_TR,
-  uk_UA,
-  vi_VN,
-  zh_CN,
-  zh_TW
+  // fr_FR,
+  // it_IT,
+  // ja_JP,
+  // ko_KR,
+  // nl_NL,
+  // pt_PT,
+  // ro_RO,
+  // ru_RU,
+  // tr_TR,
+  // uk_UA,
+  // vi_VN,
+  // zh_CN,
+  // zh_TW
 }
+/* eslint-enable camelcase */
 
 export const LANGUAGES = [
   ['de_DE', 'Deutsch'],
