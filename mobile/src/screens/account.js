@@ -30,12 +30,14 @@ class AccountScreen extends Component {
     this.handleSetAccountName = this.handleSetAccountName.bind(this)
   }
 
-  static navigationOptions = {
-    title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
     }
   }
 

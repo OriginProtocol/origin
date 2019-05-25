@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
-import * as RNLocalize from 'react-native-localize'
 
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
@@ -20,12 +19,14 @@ import { NETWORKS } from '../constants'
 const IMAGES_PATH = '../../assets/images/'
 
 class SettingsScreen extends Component {
-  static navigationOptions = {
-    title: String(fbt('Settings', 'SettingsScreen.headerTitle')),
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: String(fbt('Settings', 'SettingsScreen.headerTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
     }
   }
 

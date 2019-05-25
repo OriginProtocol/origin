@@ -2,12 +2,8 @@
 
 import React, { Component } from 'react'
 import {
-  Alert,
-  Clipboard,
-  DeviceEventEmitter,
   FlatList,
   Image,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   TouchableHighlight,
@@ -17,20 +13,21 @@ import {
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
-import { LANGUAGES, TRANSLATIONS } from '../constants'
+import { LANGUAGES } from '../constants'
 import { setLanguage } from 'actions/Settings'
 import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
-import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
 class LanguageScreen extends Component {
-  static navigationOptions = {
-    title: String(fbt('Language', 'LanguageScreen.headerTitle')),
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: String(fbt('Language', 'LanguageScreen.headerTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
     }
   }
 
@@ -45,8 +42,6 @@ class LanguageScreen extends Component {
   }
 
   render() {
-    const { navigation } = this.props
-
     // Sorted list of available languages
     const languages = LANGUAGES.map(i => {
       return { key: i[0], value: i[1] }
