@@ -1,6 +1,5 @@
 'use strict'
 
-
 import React, { Component } from 'react'
 import { YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'

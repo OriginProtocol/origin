@@ -84,7 +84,7 @@ export const TRANSLATIONS = {
   // de_DE,
   // el_GR,
   en_US,
-  es_ES,
+  es_ES
   // fr_FR,
   // it_IT,
   // ja_JP,
