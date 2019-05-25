@@ -111,7 +111,7 @@ class Settings extends Component {
             <div className="settings-group">
               <div className="settings-box">
                 <div className="form-group row">
-                  <div className="col">
+                  <div className="col-sm">
                     <label htmlFor="language">
                       <fbt desc="settings.languageLabel">Language</fbt>
                     </label>
@@ -123,7 +123,7 @@ class Settings extends Component {
                       </small>
                     </div>
                   </div>
-                  <div className="col">
+                  <div className="col-sm">
                     <LocaleDropdown
                       locale={locale}
                       onLocale={onLocale}
@@ -134,7 +134,7 @@ class Settings extends Component {
                 </div>
 
                 <div className="form-group row">
-                  <div className="col">
+                  <div className="col-sm">
                     <label htmlFor="language">
                       <fbt desc="settings.currencyLabel">Currency</fbt>
                     </label>
@@ -146,7 +146,7 @@ class Settings extends Component {
                       </small>
                     </div>
                   </div>
-                  <div className="col">
+                  <div className="col-sm">
                     <CurrencyDropdown
                       value={currency}
                       onChange={onCurrency}
@@ -214,12 +214,12 @@ class Settings extends Component {
                   }`}
                 >
                   <div className="form-group row">
-                    <div className="col">
+                    <div className="col-sm">
                       <label htmlFor="indexing">
                         <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
                       </label>
                     </div>
-                    <div className="col">
+                    <div className="col-sm">
                       <input
                         className="form-control form-control-lg"
                         type="text"
@@ -230,12 +230,12 @@ class Settings extends Component {
                     </div>
                   </div>
                   <div className="form-group row">
-                    <div className="col">
+                    <div className="col-sm">
                       <label htmlFor="indexing">
                         <fbt desc="settings.providerLabel">Ethereum Node</fbt>
                       </label>
                     </div>
-                    <div className="col">
+                    <div className="col-sm">
                       <input
                         className="form-control form-control-lg"
                         type="text"
@@ -246,12 +246,12 @@ class Settings extends Component {
                     </div>
                   </div>
                   <div className="form-group row">
-                    <div className="col">
+                    <div className="col-sm">
                       <label htmlFor="indexing">
                         <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
                       </label>
                     </div>
-                    <div className="col">
+                    <div className="col-sm">
                       <input
                         className="form-control form-control-lg"
                         type="text"
@@ -262,14 +262,14 @@ class Settings extends Component {
                     </div>
                   </div>
                   <div className="form-group row">
-                    <div className="col">
+                    <div className="col-sm">
                       <label htmlFor="indexing">
                         <fbt desc="settings.discoveryLabel">
                           Discovery Server
                         </fbt>
                       </label>
                     </div>
-                    <div className="col">
+                    <div className="col-sm">
                       <input
                         className="form-control form-control-lg"
                         type="text"
@@ -280,12 +280,12 @@ class Settings extends Component {
                     </div>
                   </div>
                   <div className="form-group row less-margin-bottom">
-                    <div className="col">
+                    <div className="col-sm">
                       <label htmlFor="indexing">
                         <fbt desc="settings.relayerLabel">Relayer Server</fbt>
                       </label>
                     </div>
-                    <div className="col">
+                    <div className="col-sm">
                       <input
                         className="form-control form-control-lg"
                         type="text"
@@ -413,7 +413,8 @@ require('react-styl')(`
       color: #000
       font-size: 1.25rem
       padding: 0.5rem
-      width: 320px
+      max-width: 320px
+      width: 100%
       height: 50px
       border-radius: 5px
       border: solid 1px #6f8294
