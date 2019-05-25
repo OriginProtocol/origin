@@ -167,15 +167,13 @@ class ImportAccountScreen extends Component {
               </fbt>
             )}
             {!this.state.mnemonic && (
-              <fbt desc="ImportScreen.privateKeyTitle">
-                Enter Private Key
-              </fbt>
+              <fbt desc="ImportScreen.privateKeyTitle">Enter Private Key</fbt>
             )}
           </Text>
           {this.state.mnemonic && (
             <Text style={styles.subtitle}>
               <fbt desc="ImportScreen.recoveryPhraseSubtitle">
-                Enter the 12 words in the correct order
+                Enter the recovery phrase
               </fbt>
             </Text>
           )}
@@ -203,13 +201,13 @@ class ImportAccountScreen extends Component {
           >
             <Text style={styles.switchMethod}>
               {this.state.mnemonic && (
-                <fbt desc="ImportScreen.recoveryPhraseSwitch">
-                  Use a recovery phrase instead
-                </fbt>
-              )}
-              {!this.statet.mnemonic && (
                 <fbt desc="ImportScreen.privateKeySwitch">
                   Use a private key instead
+                </fbt>
+              )}
+              {!this.state.mnemonic && (
+                <fbt desc="ImportScreen.recoveryPhraseSwitch">
+                  Use a recovery phrase instead
                 </fbt>
               )}
             </Text>

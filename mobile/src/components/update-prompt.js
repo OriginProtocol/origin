@@ -135,6 +135,8 @@ class UpdatePrompt extends React.Component {
   }
 }
 
+export default UpdatePrompt
+
 const styles = StyleSheet.create({
   body: {
     alignItems: 'center',
@@ -176,5 +178,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
-
-export default UpdatePrompt
