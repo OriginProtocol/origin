@@ -460,4 +460,6 @@ require('react-styl')(`
         display: block
         font-weight: bold
         margin-bottom: 3px
+    > div h2::before
+      background-image: url(images/identity/phone-icon-light.svg);
 `)
