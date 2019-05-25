@@ -52,7 +52,8 @@ class LanguageScreen extends Component {
       return { key: i[0], value: i[1] }
     }).sort((a, b) => (a.value > b.value ? 1 : -1))
 
-    const selectedLanguage = this.props.settings.language || findBestAvailableLanguage()
+    const selectedLanguage =
+      this.props.settings.language || findBestAvailableLanguage()
 
     return (
       <ScrollView style={styles.container}>
