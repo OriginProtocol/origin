@@ -93,10 +93,8 @@ class MarketplaceScreen extends Component {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       if (this.dappWebView) {
-        // Reinject the language because the onLoad method of the webview won't
-        // get called again as this is just a reload
+        // Reinject the language
         this.injectLanguage()
-        this.dappWebView.reload()
       }
     }
   }
@@ -187,15 +185,14 @@ class MarketplaceScreen extends Component {
 
   /* Inject the language setting in from redux into the DApp
    */
-  injectLanguage() {
+  injectLanguage(prevLanguage) {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()
     const languageInjection = `
       (function() {
-        if (window && window.localStorage) {
-          window.localStorage.locale = '${language}';
-          console.log(window.localStorage);
+        if (window && window.appComponent) {
+          window.appComponent.onLocale('${language}');
         }
       })()
     `
@@ -308,8 +305,8 @@ class MarketplaceScreen extends Component {
           source={{ uri: marketplaceUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
-            this.injectMessagingKeys()
             this.injectLanguage()
+            this.injectMessagingKeys()
             setInterval(() => {
               this.requestUIState()
             }, 5000)
