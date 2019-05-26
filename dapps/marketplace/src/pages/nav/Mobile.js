@@ -54,7 +54,7 @@ class MobileNav extends Component {
                 children={fbt('Browse Categories', 'navigation.BrowseCategories')}
               />
               <RestrictedLink
-                onClick={e => onClose()}
+                onClick={() => onClose()}
                 to="/create"
                 className="dropdown-item add"
                 children={fbt('Add a Listing', 'navigation.AddaListing')}

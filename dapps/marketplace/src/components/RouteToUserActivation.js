@@ -12,7 +12,7 @@ const RouteToUserActivation = ({ onClose }) => {
         return <MobileUserActivation onClose={onClose} />
     }
 
-    return <Redirect to='/onboard' />
+    return <Redirect to="/onboard" />
 }
 
 export default RouteToUserActivation

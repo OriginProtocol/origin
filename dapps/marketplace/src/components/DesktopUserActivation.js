@@ -533,7 +533,7 @@ class UserActivation extends Component {
   }
 
   renderSignTxModal() {
-    const { config } = this.props
+    // const { config } = this.props
     const attestations = [this.state.data]
 
     return (
