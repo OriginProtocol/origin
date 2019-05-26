@@ -236,19 +236,16 @@ class UserActivation extends Component {
 
     return (
       <Mutation
-        mutation={VerifyEmailCodeMutation}
-        onCompleted={({ verifyEmailCode: result }) => {
+        mutation={GenerateEmailCodeMutation}
+        onCompleted={({ generateEmailCode: result }) => {
           if (result.success) {
             this.setState({
-              stage: 'PublishDetail',
-              loading: false,
-              step: 2,
-              data: result.data
+              resending: false
             })
           } else {
             this.setState({
               error: result.reason,
-              loading: false
+              resending: false
             })
           }
         }}
@@ -257,78 +254,126 @@ class UserActivation extends Component {
           this.setState({ error: 'Check console', loading: false })
         }}
       >
-        {verifyCode => (
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              if (this.state.loading) return
-              this.setState({ error: false, loading: true })
-
-              const trimmedCode = this.state.code.trim()
-
-              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+        {generateCode => (
+          <Mutation
+            mutation={VerifyEmailCodeMutation}
+            onCompleted={({ verifyEmailCode: result }) => {
+              if (result.success) {
                 this.setState({
-                  error: 'Verification code should be a 6 digit number',
+                  stage: 'PublishDetail',
+                  loading: false,
+                  step: 2,
+                  data: result.data
+                })
+              } else {
+                this.setState({
+                  error: result.reason,
                   loading: false
                 })
-                return
               }
-
-              verifyCode({
-                variables: { identity: this.props.wallet, email, code }
-              })
+            }}
+            onError={errorData => {
+              console.error('Error', errorData)
+              this.setState({ error: 'Check console', loading: false })
             }}
           >
-            <div className="boxed-container">
-              <h3>{headerText}</h3>
-              <div className="mt-3">
-                <input
-                  type="tel"
-                  maxLength="6"
-                  className="form-control form-control-lg"
-                  placeholder={placeholderText}
-                  value={this.state.code}
-                  onChange={e => this.setState({ code: e.target.value })}
-                />
-              </div>
-              {this.state.error && (
-                <div className="alert alert-danger mt-3">
-                  {this.state.error}
+            {verifyCode => (
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  if (this.state.loading) return
+                  this.setState({ error: false, loading: true })
+
+                  const trimmedCode = this.state.code.trim()
+
+                  if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+                    this.setState({
+                      error: 'Verification code should be a 6 digit number',
+                      loading: false
+                    })
+                    return
+                  }
+
+                  verifyCode({
+                    variables: { identity: this.props.wallet, email, code }
+                  })
+                }}
+              >
+                <div className="boxed-container">
+                  <h3>{headerText}</h3>
+                  <div className="mt-3">
+                    <input
+                      type="tel"
+                      maxLength="6"
+                      className="form-control form-control-lg"
+                      placeholder={placeholderText}
+                      value={this.state.code}
+                      onChange={e => this.setState({ code: e.target.value })}
+                    />
+                  </div>
+                  {this.state.error && (
+                    <div className="alert alert-danger mt-3">
+                      {this.state.error}
+                    </div>
+                  )}
+                  <div className="help mt-3">
+                    <fbt desc="UserActivation.emailHelp ">
+                      We sent a code to the email address you provided. Please enter
+                      it above.
+                    </fbt>
+                    <a onClick={() => {
+                      if (this.state.resending) return
+                      this.setState({
+                        resending: true
+                      })
+                      generateCode({
+                        variables: {
+                          email: this.state.email
+                        }
+                      })
+                    }}>
+                      {
+                        this.state.resending ? (
+                          <fbt desc="UserActivation.resending">
+                            Resending...
+                          </fbt>
+                        ) : (
+                          <fbt desc="UserActivation.resendCode">
+                            Resend Code
+                          </fbt>
+                        )
+                      }
+                    </a>
+                  </div>
                 </div>
-              )}
-              <div className="help mt-3">
-                <fbt desc="UserActivation.emailHelp ">
-                  We sent a code to the email address you provided. Please enter
-                  it above.
-                </fbt>
-              </div>
-            </div>
-            <div className="info">
-              <span className="title">
-                <fbt desc="UserActivation.visibleOnBlockchain">
-                  What will be visible on the blockchain?
-                </fbt>
-              </span>
-              <fbt desc="UserActivation.verifiedButNotEmail">
-                That you have a verified email, but NOT your actual email
-                address
-              </fbt>
-            </div>
-            <div className="actions">
-              <button
-                type="submit"
-                className="btn btn-primary mt-3 mb-3"
-                disabled={this.state.code.length !== 6}
-                children={
-                  this.state.loading
-                    ? fbt('Loading...', 'Loading...')
-                    : fbt('Verify', 'Verify')
-                }
-              />
-            </div>
-          </form>
+                <div className="info">
+                  <span className="title">
+                    <fbt desc="UserActivation.visibleOnBlockchain">
+                      What will be visible on the blockchain?
+                    </fbt>
+                  </span>
+                  <fbt desc="UserActivation.verifiedButNotEmail">
+                    That you have a verified email, but NOT your actual email
+                    address
+                  </fbt>
+                </div>
+                <div className="actions">
+                  <button
+                    type="submit"
+                    className="btn btn-primary mt-3 mb-3"
+                    disabled={this.state.code.length !== 6}
+                    children={
+                      this.state.loading
+                        ? fbt('Loading...', 'Loading...')
+                        : fbt('Verify', 'Verify')
+                    }
+                  />
+                </div>
+              </form>
+            )}
+          </Mutation>
         )}
-      </Mutation>
+        </Mutation>
     )
   }
 
@@ -623,6 +668,12 @@ require('react-styl')(`
         font-family: Lato
         font-size: 14px
         color: var(--bluey-grey)
+        a
+          margin-left: 5px
+          color: #007bff
+          cursor: pointer
+          &:hover
+            color: #0056b3
       .avatar-wrap
         .invalid-feedback
           text-align: center
