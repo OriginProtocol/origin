@@ -53,7 +53,7 @@ class AppWrapper extends Component {
     }
   }
 
-  onLocale = async (newLocale) => {
+  onLocale = async newLocale => {
     const locale = await setLocale(newLocale)
     this.setState({ locale })
     window.scrollTo(0, 0)
