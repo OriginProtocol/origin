@@ -8,7 +8,6 @@ import Link from 'components/Link'
 import RouteToUserActivation from 'components/RouteToUserActivation'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-
 class MobileNav extends Component {
   constructor(props) {
     super(props)
@@ -25,12 +24,16 @@ class MobileNav extends Component {
      */
     const EarnTokens = this.EarnTokens
 
-
     const RestrictedLink = props => {
       if (!identity) {
         return (
-          <a className={`dropdown-item${props.className ? ' ' + props.className : ''}`} onClick={() => this.setState({ userActivation: true })}>
-            { props.children }
+          <a
+            className={`dropdown-item${
+              props.className ? ' ' + props.className : ''
+            }`}
+            onClick={() => this.setState({ userActivation: true })}
+          >
+            {props.children}
           </a>
         )
       }
@@ -40,7 +43,11 @@ class MobileNav extends Component {
 
     return (
       <>
-        { this.state.userActivation && <RouteToUserActivation onClose={() => this.setState({ userActivation: false })} /> }
+        {this.state.userActivation && (
+          <RouteToUserActivation
+            onClose={() => this.setState({ userActivation: false })}
+          />
+        )}
         <Dropdown
           className="nav-item mobile d-flex d-md-none"
           open={this.props.open}
@@ -51,7 +58,10 @@ class MobileNav extends Component {
                 onClick={() => onClose()}
                 to="/"
                 className="dropdown-item browse"
-                children={fbt('Browse Categories', 'navigation.BrowseCategories')}
+                children={fbt(
+                  'Browse Categories',
+                  'navigation.BrowseCategories'
+                )}
               />
               <RestrictedLink
                 onClick={() => onClose()}

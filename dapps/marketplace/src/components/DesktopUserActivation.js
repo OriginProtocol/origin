@@ -325,31 +325,27 @@ class UserActivation extends Component {
                   )}
                   <div className="help mt-3">
                     <fbt desc="UserActivation.emailHelp ">
-                      We sent a code to the email address you provided. Please enter
-                      it above.
+                      We sent a code to the email address you provided. Please
+                      enter it above.
                     </fbt>
-                    <a onClick={() => {
-                      if (this.state.resending) return
-                      this.setState({
-                        resending: true
-                      })
-                      generateCode({
-                        variables: {
-                          email: this.state.email
-                        }
-                      })
-                    }}>
-                      {
-                        this.state.resending ? (
-                          <fbt desc="UserActivation.resending">
-                            Resending...
-                          </fbt>
-                        ) : (
-                          <fbt desc="UserActivation.resendCode">
-                            Resend Code
-                          </fbt>
-                        )
-                      }
+                    <a
+                      onClick={() => {
+                        if (this.state.resending) return
+                        this.setState({
+                          resending: true
+                        })
+                        generateCode({
+                          variables: {
+                            email: this.state.email
+                          }
+                        })
+                      }}
+                    >
+                      {this.state.resending ? (
+                        <fbt desc="UserActivation.resending">Resending...</fbt>
+                      ) : (
+                        <fbt desc="UserActivation.resendCode">Resend Code</fbt>
+                      )}
                     </a>
                   </div>
                 </div>
@@ -380,7 +376,7 @@ class UserActivation extends Component {
             )}
           </Mutation>
         )}
-        </Mutation>
+      </Mutation>
     )
   }
 
@@ -576,7 +572,9 @@ class UserActivation extends Component {
               children={fbt('Publish', 'Publish')}
               skipSuccessScreen={true}
               onComplete={() => {
-                this.setState({ shouldCloseSignTxModal: true }, () => this.onDeployComplete())
+                this.setState({ shouldCloseSignTxModal: true }, () =>
+                  this.onDeployComplete()
+                )
               }}
             />
             {/* )} */}
@@ -630,7 +628,9 @@ class UserActivation extends Component {
   }
 }
 
-export default withIsMobile(withConfig(withWallet(withIdentity(UserActivation))))
+export default withIsMobile(
+  withConfig(withWallet(withIdentity(UserActivation)))
+)
 
 require('react-styl')(`
   .user-activation

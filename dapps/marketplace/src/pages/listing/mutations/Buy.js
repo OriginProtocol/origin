@@ -81,7 +81,11 @@ class Buy extends Component {
 
     return (
       <>
-        {this.state.userActivation && <RouteToUserActivation onClose={() => this.setState({ userActivation: false })} />}
+        {this.state.userActivation && (
+          <RouteToUserActivation
+            onClose={() => this.setState({ userActivation: false })}
+          />
+        )}
         {action}
         {!this.state.modal ? null : (
           <Modal
@@ -425,7 +429,9 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+export default withWeb3(
+  withWallet(withIdentity(withCanTransact(withRouter(Buy))))
+)
 
 require('react-styl')(`
   .make-offer-modal

@@ -187,19 +187,11 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
     <div className="identity">
       <fbt desc="nav.profile.profile">Profile</fbt>
       <div className="info">
-        <Link
-          onClick={() => onClose()}
-          to="/profile"
-          className="name"
-        >
+        <Link onClick={() => onClose()} to="/profile" className="name">
           <Avatar profile={identity} size="3rem" />
         </Link>
         <div>
-          <Link
-            onClick={() => onClose()}
-            to="/profile"
-            className="name"
-          >
+          <Link onClick={() => onClose()} to="/profile" className="name">
             {identity.fullName ||
               fbt('Unnamed User', 'nav.profile.unnamedUser')}
           </Link>

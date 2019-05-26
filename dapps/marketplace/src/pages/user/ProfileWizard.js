@@ -10,11 +10,7 @@ import { getAttestationReward } from 'utils/growthTools'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 
-const WizardStep = new Enum(
-  'Publish',
-  'VerifyPhone',
-  'VerifyYourOtherProfiles'
-)
+const WizardStep = new Enum('Publish', 'VerifyPhone', 'VerifyYourOtherProfiles')
 
 class ProfileWizard extends Component {
   constructor(props) {

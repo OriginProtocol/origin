@@ -6,13 +6,13 @@ import Redirect from './Redirect'
 import useIsMobile from 'utils/useMobile'
 
 const RouteToUserActivation = ({ onClose }) => {
-    const isMobile = useIsMobile()
+  const isMobile = useIsMobile()
 
-    if (isMobile) {
-        return <MobileUserActivation onClose={onClose} />
-    }
+  if (isMobile) {
+    return <MobileUserActivation onClose={onClose} />
+  }
 
-    return <Redirect to="/onboard" />
+  return <Redirect to="/onboard" />
 }
 
 export default RouteToUserActivation
