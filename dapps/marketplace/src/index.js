@@ -53,6 +53,12 @@ class AppWrapper extends Component {
     }
   }
 
+  onLocale = async (newLocale) => {
+    const locale = await setLocale(newLocale)
+    this.setState({ locale })
+    window.scrollTo(0, 0)
+  }
+
   render() {
     const { ready, locale } = this.state
 
@@ -61,14 +67,7 @@ class AppWrapper extends Component {
       <ApolloProvider client={client}>
         <HashRouter>
           <Analytics>
-            <App
-              locale={locale}
-              onLocale={async newLocale => {
-                const locale = await setLocale(newLocale)
-                this.setState({ locale })
-                window.scrollTo(0, 0)
-              }}
-            />
+            <App locale={locale} onLocale={this.onLocale} />
           </Analytics>
         </HashRouter>
       </ApolloProvider>
@@ -76,6 +75,13 @@ class AppWrapper extends Component {
   }
 }
 
-ReactDOM.render(<AppWrapper />, document.getElementById('app'))
+ReactDOM.render(
+  <AppWrapper
+    ref={app => {
+      window.appComponent = app
+    }}
+  />,
+  document.getElementById('app')
+)
 
 Styl.addStylesheet()
