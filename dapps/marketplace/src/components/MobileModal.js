@@ -125,8 +125,14 @@ require('react-styl')(`
   .mobile-modal-open
     overflow: hidden
     touch-action: none
+    position: relative
+    #app
+      overflow: hidden !important
+      max-height: 100% !important
+      max-width: 100% !important
   .mobile-modal-overlay
     position: fixed
+    touch-action: none
     top: 0
     left: 0
     right: 0
@@ -135,13 +141,14 @@ require('react-styl')(`
   .mobile-modal
     touch-action: none
     position: fixed
+    z-index: 1000
+    -webkit-transform: translate3d(0, 0, 0)
     opacity: 0
     top: 0
     left: 100%
     right: 0
     bottom: 0
     transition: left 0.3s ease, opacity 0.3s ease
-    z-index: 1000
     background-color: white
     display: flex
     flex-direction: column
