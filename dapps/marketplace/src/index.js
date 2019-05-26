@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   if (process.env.SENTRY_DSN) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
-      release: `marketplace-dapp@${process.env.GIT_HASH}`,
+      release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
       environment: process.env.NAMESPACE
     })
   }
