@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import MobileModal from './MobileModal'
-import UserActivation from './UserActivation'
+import UserActivation from './DesktopUserActivation'
 
 class MobileUserActivation extends Component {
   constructor(props) {

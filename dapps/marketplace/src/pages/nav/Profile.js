@@ -14,7 +14,8 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
-import MobileUserActivation from 'components/MobileUserActivation'
+// import MobileUserActivation from 'components/MobileUserActivation'
+import RouteToUserActivation from 'components/RouteToUserActivation'
 
 // import DeployProxy from '../identity/mutations/DeployProxy'
 
@@ -130,7 +131,7 @@ class CreateIdentity extends Component {
             <fbt desc="nav.profile.getStarted">Get Started</fbt>
           </button>
         </div>
-        {this.state.enable && <MobileUserActivation onClose={this.onClose} />}
+        {this.state.enable && <RouteToUserActivation onClose={this.onClose} />}
       </>
     )
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import Redirect from 'components/Redirect'
-import UserActivation from 'components/UserActivation'
+import UserActivation from 'components/DesktopUserActivation'
 import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
