@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import { fbt } from 'fbt-runtime'
 
 import { setPin } from 'actions/Settings'
 import PinInput from 'components/pin-input'
@@ -52,15 +53,19 @@ class PinScreen extends Component {
 
   render() {
     const title = this.state.verifyPin
-      ? 'Re-enter Pin Code'
-      : 'Create a Pin Code'
+      ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
+      : fbt('Create a Pin Code', 'PinScreen.createPinCode')
 
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>{title}</Text>
           {this.state.isRetry === true && (
-            <Text style={styles.invalid}>Pins did not match, try again</Text>
+            <Text style={styles.invalid}>
+              <fbt desc="PinScreen.pinMatchFailure">
+                Pins did not match, try again
+              </fbt>
+            </Text>
           )}
           <PinInput
             value={this.state.pin}
@@ -70,7 +75,9 @@ class PinScreen extends Component {
         </View>
         <View style={styles.legalContainer}>
           <Text style={styles.legal}>
-            Your Pin Code will be used to login to the app.
+            <fbt desc="PinScreen.disclaimer">
+              Your Pin Code will be used to login to the app.
+            </fbt>
           </Text>
         </View>
       </SafeAreaView>

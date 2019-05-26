@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 import Currency from 'components/currency'
@@ -12,7 +13,7 @@ import { evenlySplitAddress } from 'utils/user'
 
 class WalletScreen extends Component {
   static navigationOptions = {
-    title: 'Wallet',
+    title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -28,25 +29,47 @@ class WalletScreen extends Component {
     const { address } = this.props.wallet.activeAccount
 
     Alert.alert(
-      'Funding',
-      `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
+      String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
+      String(
+        fbt(
+          `For now, you will need to transfer ${fbt.param(
+            'currency',
+            currency
+          )} into your Origin Wallet from another source.`,
+          'WalletScreen.fundingAlertMessage'
+        )
+      ),
       [
         {
-          text: 'Show Address',
+          text: String(
+            fbt('Show Address', 'WalletScreen.fundingAlertShowAddressButton')
+          ),
           onPress: () => {
             Alert.alert(
-              'Wallet Address',
+              String(
+                fbt(
+                  'Wallet Address',
+                  'WalletScreen.fundingAlertShowAddressTitle'
+                )
+              ),
               evenlySplitAddress(address).join('\n')
             )
           }
         },
         {
-          text: 'Copy Address',
+          text: String(
+            fbt('Copy Address', 'WalletScreen.fundingAlertCopyAddressButton')
+          ),
           onPress: async () => {
             await Clipboard.setString(address)
 
             Alert.alert(
-              'Copied to clipboard!',
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'WalletScreen.fundingAlertCopyAddressTitle'
+                )
+              ),
               evenlySplitAddress(address).join('\n')
             )
           }
@@ -63,7 +86,7 @@ class WalletScreen extends Component {
         <View style={styles.addressContainer}>
           <Address
             address={wallet.activeAccount.address}
-            label={'Wallet Address'}
+            label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
             style={styles.address}
           />
         </View>

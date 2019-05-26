@@ -3,16 +3,13 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const docker = NETWORKS.find(n => n.name === 'Docker')
-const defaultNetwork = __DEV__ ? docker : mainnet
-
 const initialState = {
-  network: defaultNetwork,
+  network: NETWORKS.find(n => n.name === 'Mainnet'),
   deviceToken: null,
   email: null,
   pin: null,
-  biometryType: null
+  biometryType: null,
+  language: null
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -34,6 +31,9 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_BIOMETRY_TYPE:
       return { ...state, biometryType: action.biometryType }
+
+    case SettingsConstants.SET_LANGUAGE:
+      return { ...state, language: action.language }
   }
 
   return state

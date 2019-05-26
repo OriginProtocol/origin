@@ -1,20 +1,10 @@
 const addresses = require('@origin/contracts/build/contracts_rinkeby.json')
-
-function localStorageHas(prop) {
-  if (
-    typeof window === 'undefined' ||
-    typeof window.localStorage === 'undefined'
-  )
-    return false
-  return window.localStorage[prop] ? true : false
-}
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
   provider:
     'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
-  // provider: 'https://rinkeby.infura.io',
-  // providerWS: 'wss://rinkeby.infura.io/ws',
 
   // Services
   ipfsGateway: 'https://ipfs.staging.originprotocol.com',
@@ -24,6 +14,7 @@ export default {
   bridge: 'https://bridge.staging.originprotocol.com',
   graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
+  relayer: 'https://relayer.staging.originprotocol.com',
   messaging: {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
@@ -62,6 +53,6 @@ export default {
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
   // Configs
-  performanceMode: false,
+  performanceMode: true,
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }

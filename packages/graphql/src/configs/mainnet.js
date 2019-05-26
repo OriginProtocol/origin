@@ -15,6 +15,7 @@ export default {
   bridge: 'https://bridge.originprotocol.com',
   graphql: 'https://graphql.originprotocol.com',
   notifications: 'https://notifications.originprotocol.com',
+  relayer: 'https://relayer.originprotocol.com',
   messaging: {
     messagingNamespace: 'origin',
     globalKeyServer: 'https://messaging.originprotocol.com'
@@ -74,5 +75,5 @@ export default {
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
   // Configs
-  performanceMode: false
+  performanceMode: true
 }
