@@ -13,9 +13,6 @@ import withTokenBalance from 'hoc/withTokenBalance'
 const WizardStep = new Enum(
   'Publish',
   'VerifyPhone',
-  // 'SetOriginProfile',
-  // 'SetEmail',
-  // 'SetPhoneNumber',
   'VerifyYourOtherProfiles'
 )
 
@@ -25,13 +22,9 @@ class ProfileWizard extends Component {
     this.state = {
       uiStep: WizardStep.VerifyPhone,
       publishChanges: false
-      // skipRewardsEnroll: false,
-      // skipVerifyOtherProfiles: false,
-      // userEnroledIntoRewards: false
     }
 
     this.EnrollButton = withEnrolmentModal('button')
-    // this.timeout = setTimeout(() => this.calculateUIStep(), 1)
   }
 
   componentDidUpdate(prevProps) {
@@ -53,139 +46,6 @@ class ProfileWizard extends Component {
   hasPhoneAttestation(profile) {
     return profile.phoneVerified || profile.phoneAttestation
   }
-
-  // componentWillUnmount() {
-  //   clearTimeout(this.timeout)
-  // }
-
-  // calculateUIStep() {
-  //   const {
-  //     publishedProfile,
-  //     currentProfile,
-  //     changesToPublishExist,
-  //     growthEnrollmentStatus
-  //   } = this.props
-
-  //   const { skipRewardsEnroll, skipVerifyOtherProfiles } = this.state
-  //   const userEnroledIntoRewards = growthEnrollmentStatus === 'Enrolled'
-  //   const isMobile = window.innerWidth < 767
-
-  //   const meetsCritria = ({
-  //     originProfile = false,
-  //     email = false,
-  //     phone = false,
-  //     allAttestations = false
-  //   }) => {
-  //     const isOriginProfile = profile => {
-  //       return profile.firstName && profile.lastName && profile.description
-  //     }
-  //     const hasEmailAttestation = profile => {
-  //       return profile.emailVerified || profile.emailAttestation
-  //     }
-  //     const hasPhoneAttestation = profile => {
-  //       return profile.phoneVerified || profile.phoneAttestation
-  //     }
-
-  //     const hasAllAttestation = profile => {
-  //       return (
-  //         (profile.emailVerified || profile.emailAttestation) &&
-  //         (profile.phoneVerified || profile.phoneAttestation) &&
-  //         (profile.facebookVerified || profile.facebookAttestation) &&
-  //         (profile.twitterVerified || profile.twitterAttestation) &&
-  //         (profile.airbnbVerified || profile.airbnbAttestation)
-  //       )
-  //     }
-
-  //     if (
-  //       originProfile &&
-  //       !(isOriginProfile(currentProfile) || isOriginProfile(publishedProfile))
-  //     ) {
-  //       return false
-  //     }
-
-  //     if (
-  //       email &&
-  //       !(
-  //         hasEmailAttestation(currentProfile) ||
-  //         hasEmailAttestation(publishedProfile)
-  //       )
-  //     ) {
-  //       return false
-  //     }
-
-  //     if (
-  //       phone &&
-  //       !(
-  //         hasPhoneAttestation(currentProfile) ||
-  //         hasPhoneAttestation(publishedProfile)
-  //       )
-  //     ) {
-  //       return false
-  //     }
-
-  //     if (
-  //       allAttestations &&
-  //       !(
-  //         hasAllAttestation(currentProfile) ||
-  //         hasAllAttestation(publishedProfile)
-  //       )
-  //     ) {
-  //       return false
-  //     }
-
-  //     return true
-  //   }
-
-  //   /* show enroll step if user is not enrolled, or user has skipped
-  //    * that step. If user is on mobile and we do not yet support mobile
-  //    * Origin Rewards also skip this step
-  //    */
-  //   if (
-  //     !skipRewardsEnroll &&
-  //     !userEnroledIntoRewards &&
-  //     (!isMobile || (isMobile && rewardsOnMobileEnabled))
-  //   ) {
-  //     this.updateUiStepIfNecessary(WizardStep.RewardsEnroll)
-  //   } else if (
-  //     meetsCritria({
-  //       originProfile: true,
-  //       email: true,
-  //       phone: true,
-  //       allAttestations: true
-  //     })
-  //   ) {
-  //     this.updateUiStepIfNecessary(WizardStep.Publish)
-  //   } else if (
-  //     meetsCritria({ originProfile: true, email: true, phone: true }) &&
-  //     skipVerifyOtherProfiles
-  //   ) {
-  //     this.updateUiStepIfNecessary(WizardStep.Publish)
-  //   } else if (
-  //     meetsCritria({ originProfile: true, email: true, phone: true })
-  //   ) {
-  //     this.updateUiStepIfNecessary(WizardStep.VerifyYourOtherProfiles)
-  //   } else if (meetsCritria({ originProfile: true, email: true })) {
-  //     this.updateUiStepIfNecessary(WizardStep.SetPhoneNumber)
-  //   } else if (meetsCritria({ originProfile: true })) {
-  //     this.updateUiStepIfNecessary(WizardStep.SetEmail)
-  //   } else {
-  //     this.updateUiStepIfNecessary(WizardStep.SetOriginProfile)
-  //   }
-
-  //   if (changesToPublishExist !== this.state.publishChanges) {
-  //     this.setState({
-  //       publishChanges: changesToPublishExist
-  //     })
-  //   }
-  // }
-
-  // updateUiStepIfNecessary(wizardStep) {
-  //   if (this.state.uiStep !== wizardStep) {
-  //     this.setState({
-  //       uiStep: wizardStep
-  //     })
-  //   }
-  // }
 
   renderVerifyYourOtherProfiles() {
     return (
@@ -233,12 +93,10 @@ class ProfileWizard extends Component {
           </div>
         )}
         <div className="d-flex mr-auto ml-auto mt-3">
-          {/* {this.addPublishNowButtonIfApplicable()} */}
           <button
             className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
             onClick={e => {
               e.preventDefault()
-              // this.setState({ skipVerifyOtherProfiles: true })
               this.setState({
                 uiStep: WizardStep.Publish
               })
@@ -250,84 +108,6 @@ class ProfileWizard extends Component {
       </>
     )
   }
-
-  // renderSetPhoneNumber() {
-  //   return (
-  //     <Fragment>
-  //       <div className="title">
-  //         <fbt desc="ProfileWizard.VerifyPhoneNumberTitle">
-  //           Next Step: Verify your phone number
-  //         </fbt>
-  //       </div>
-  //       <div className="sub-title">
-  //         <fbt desc="ProfileWizard.VerifyPhoneNumberSubTitle">
-  //           Strengthen your profile even further by verifying a valid 10-digit
-  //           phone number
-  //         </fbt>
-  //       </div>
-  //       {this.attestationRewardsAvailable() && (
-  //         <div className="d-flex rewards justify-content-center mt-2">
-  //           <div>
-  //             <fbt desc="ProfileWizard.verifyToEarn">Verify to earn</fbt>
-  //           </div>
-  //           <div className="d-flex align-items-center">
-  //             <div className="icon" />
-  //             <div className="ogn-coin">
-  //               {getAttestationReward({
-  //                 growthCampaigns: this.props.growthCampaigns,
-  //                 attestation: 'Phone',
-  //                 tokenDecimals: this.props.tokenDecimals || 18
-  //               }).toString()}
-  //               &nbsp;
-  //               <span>OGN</span>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       )}
-  //       <div className="d-flex mr-auto ml-auto mt-3">
-  //         {this.addPublishNowButtonIfApplicable()}
-  //         <button
-  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-  //           onClick={e => {
-  //             e.preventDefault()
-  //             document.getElementById('attestation-component-phone').click()
-  //           }}
-  //         >
-  //           <fbt desc="ProfileWizard.continue">Continue</fbt>
-  //         </button>
-  //       </div>
-  //     </Fragment>
-  //   )
-  // }
-
-  // renderSetEmail() {
-  //   return (
-  //     <Fragment>
-  //       <div className="title">
-  //         <fbt desc="ProfileWizard.VerifyEmailTitle">
-  //           Next Step: Verify your email
-  //         </fbt>
-  //       </div>
-  //       <div className="sub-title">
-  //         <fbt desc="ProfileWizard.VerifyEmailSubTitle">
-  //           Publish to save your changes or continue with verifications
-  //         </fbt>
-  //       </div>
-  //       <div className="d-flex mr-auto ml-auto mt-3">
-  //         {this.addPublishNowButtonIfApplicable()}
-  //         <button
-  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-  //           onClick={e => {
-  //             e.preventDefault()
-  //             document.getElementById('attestation-component-email').click()
-  //           }}
-  //         >
-  //           <fbt desc="ProfileWizard.continue">Continue</fbt>
-  //         </button>
-  //       </div>
-  //     </Fragment>
-  //   )
-  // }
 
   renderPublishChanges(buttonTextOption) {
     const props = this.props.deployIdentityProps
@@ -342,47 +122,11 @@ class ProfileWizard extends Component {
     )
   }
 
-  // addPublishNowButtonIfApplicable() {
-  //   if (this.state.publishChanges) {
-  //     return (
-  //       <DeployIdentity
-  //         {...this.props.deployIdentityProps}
-  //         children={fbt('Publish Changes', 'ProfileWizard.PubishChanges')}
-  //         className="btn btn-primary btn-rounded btn-light mr-3"
-  //       />
-  //     )
-  //   }
-  //   return ''
-  // }
-
   renderPublish() {
     return this.renderPublishChanges(
       fbt('Publish Changes', 'ProfileWizard.PublishChanges')
     )
   }
-
-  // renderRewardsEnroll() {
-  //   return (
-  //     <>
-  //       <div className="title">
-  //         <fbt desc="ProfileWizard.EnrollToEarn">
-  //           Enroll to earn Origin cryptocurrency tokens (OGN)
-  //         </fbt>
-  //       </div>
-  //       <div className="sub-title">
-  //         <fbt desc="ProfileWizard.EarnByCompletingYourProfile">
-  //           Earn tokens by completing your profile.
-  //         </fbt>
-  //       </div>
-  //       <this.EnrollButton
-  //         className="btn btn-primary btn-rounded mr-auto ml-auto mt-3 pl-5 pr-5 pt-2 pb-2"
-  //         skipjoincampaign="false"
-  //       >
-  //         <fbt desc="ProfileWizard.EnrollNow">Enroll Now</fbt>
-  //       </this.EnrollButton>
-  //     </>
-  //   )
-  // }
 
   renderVerifyPhone() {
     const continueButton =
@@ -424,27 +168,6 @@ class ProfileWizard extends Component {
       </>
     )
   }
-
-  // renderSetOriginProfile() {
-  //   return (
-  //     <Fragment>
-  //       <div className="title">
-  //         <fbt desc="ProfileWizard.OriginProfileStep">
-  //           Upload a photo and provide a name and description
-  //         </fbt>
-  //       </div>
-  //       <div className="d-flex mr-auto ml-auto mt-3">
-  //         {this.addPublishNowButtonIfApplicable()}
-  //         <button
-  //           className="btn btn-primary btn-rounded pl-5 pr-5 pt-2 pb-2"
-  //           onClick={e => this.props.openEditProfile(e)}
-  //         >
-  //           <fbt desc="ProfileWizard.getStarted">Get Started</fbt>
-  //         </button>
-  //       </div>
-  //     </Fragment>
-  //   )
-  // }
 
   attestationRewardsAvailable() {
     return (

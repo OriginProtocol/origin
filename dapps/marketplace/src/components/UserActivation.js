@@ -7,6 +7,7 @@ import pick from 'lodash/pick'
 import withConfig from 'hoc/withConfig'
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
+import withIdentity from 'hoc/withIdentity'
 
 import Steps from './Steps'
 import ImageCropper from './ImageCropper'
@@ -19,7 +20,7 @@ import Modal from './Modal'
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
 
-import DeployProxy from 'pages/identity/mutations/DeployProxy'
+// import DeployProxy from 'pages/identity/mutations/DeployProxy'
 
 import { uploadImages } from 'utils/uploadImages'
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -394,6 +395,7 @@ class UserActivation extends Component {
     } else if (this.props.onCompleted) {
       this.props.onCompleted()
     }
+    this.props.identityRefetch()
   }
 
   renderPublishDetail() {
@@ -574,8 +576,7 @@ class UserActivation extends Component {
               children={fbt('Publish', 'Publish')}
               skipSuccessScreen={true}
               onComplete={() => {
-                this.onDeployComplete()
-                this.setState({ shouldCloseSignTxModal: true })
+                this.setState({ shouldCloseSignTxModal: true }, () => this.onDeployComplete())
               }}
             />
             {/* )} */}
@@ -629,7 +630,7 @@ class UserActivation extends Component {
   }
 }
 
-export default withIsMobile(withConfig(withWallet(UserActivation)))
+export default withIsMobile(withConfig(withWallet(withIdentity(UserActivation))))
 
 require('react-styl')(`
   .user-activation
