@@ -6,6 +6,7 @@ import pick from 'lodash/pick'
 
 import withConfig from 'hoc/withConfig'
 import withWallet from 'hoc/withWallet'
+import withIsMobile from 'hoc/withIsMobile'
 
 import Steps from './Steps'
 import ImageCropper from './ImageCropper'
@@ -13,6 +14,7 @@ import Avatar from './Avatar'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import UserProfileCreated from './_UserProfileCreated'
 import MobileModal from './MobileModal'
+import Modal from './Modal'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -51,6 +53,10 @@ class UserActivation extends Component {
 
     let stepHeader
 
+    const isMobile = this.props.ismobile === 'true'
+
+    const ModalComp = isMobile ? MobileModal : Modal
+
     if (!hideHeader) {
       stepHeader =
         stage === 'ProfileCreated' ? null : (
@@ -79,7 +85,7 @@ class UserActivation extends Component {
         {stepHeader}
         <div>{this[`render${stage}`]()}</div>
         {personalDataModal && (
-          <MobileModal
+          <ModalComp
             closeOnEsc={false}
             shouldClose={shouldClosePersonalDataModal}
             className="user-activation personal-data-modal"
@@ -92,10 +98,10 @@ class UserActivation extends Component {
             }
           >
             {this.renderPersonalDataModal()}
-          </MobileModal>
+          </ModalComp>
         )}
         {txModal && (
-          <MobileModal
+          <ModalComp
             closeOnEsc={false}
             shouldClose={shouldCloseSignTxModal}
             className="user-activation sign-tx-modal"
@@ -108,7 +114,7 @@ class UserActivation extends Component {
             }
           >
             {this.renderSignTxModal()}
-          </MobileModal>
+          </ModalComp>
         )}
       </div>
     )
@@ -623,7 +629,7 @@ class UserActivation extends Component {
   }
 }
 
-export default withConfig(withWallet(UserActivation))
+export default withIsMobile(withConfig(withWallet(UserActivation)))
 
 require('react-styl')(`
   .user-activation
@@ -750,4 +756,12 @@ require('react-styl')(`
           line-height: 1.43
           color: var(--dark)
           margin-bottom: 2.25rem
+  .pl-modal .pl-modal-table .pl-modal-cell 
+    .pl-modal-content.user-activation
+      &.sign-tx-modal, &.personal-data-modal
+        padding: 0
+        max-width: 350px
+        > .padded-content
+          h2, p
+            color: #fff
 `)
