@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
@@ -340,7 +341,7 @@ class PhoneAttestation extends Component {
   }
 }
 
-export default withIsMobile(PhoneAttestation)
+export default withWallet(withIsMobile(PhoneAttestation))
 
 require('react-styl')(`
   .attestation-modal
