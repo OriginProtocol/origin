@@ -431,6 +431,7 @@ require('react-styl')(`
     .btn
       width: 100%
       border-radius: 2rem
+      padding: 0.75rem
     .verification-code .form-control
       display: inline-block
     .country-code, .form-control

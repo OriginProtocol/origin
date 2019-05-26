@@ -180,8 +180,7 @@ require('react-styl')(`
       top: 100%
       left: 0
       box-sizing: border-box
-      margin: 30px
-      max-height: calc(100% - 40px)
+      padding: 30px
       background: transparent
       transition: top 0.3s ease, opacity 0.3s ease
       &.open
