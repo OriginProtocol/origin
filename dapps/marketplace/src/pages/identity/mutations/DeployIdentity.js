@@ -18,7 +18,7 @@ class DeployIdentity extends Component {
       <Mutation
         mutation={DeployIdentityMutation}
         onCompleted={({ deployIdentity }) =>
-          this.setState({ waitFor: deployIdentity.id })
+          this.setState({ waitFor: deployIdentity.id, mutationCompleted: true })
         }
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
@@ -115,7 +115,7 @@ class DeployIdentity extends Component {
           if (this.props.refetch) {
             this.props.refetch()
           }
-          if (this.props.onComplete) {
+          if (this.props.onComplete && this.state.mutationCompleted) {
             this.props.onComplete()
           }
           this.props.client.reFetchObservableQueries()

@@ -550,7 +550,7 @@ class UserActivation extends Component {
             </fbt>
           </p>
           <div className="actions">
-            {config.proxyAccountsEnabled ? (
+            {/* {config.proxyAccountsEnabled ? (
               <DeployProxy
                 className="btn btn-primary"
                 children={fbt('Got it', 'gotIt')}
@@ -559,26 +559,26 @@ class UserActivation extends Component {
                   this.setState({ shouldCloseSignTxModal: true })
                 }}
               />
-            ) : (
-              <DeployIdentity
-                className="btn btn-primary mt-3 mb-3"
-                identity={this.props.wallet}
-                profile={pick(this.state, [
-                  'firstName',
-                  'lastName',
-                  'avatar',
-                  'avatarUrl'
-                ])}
-                attestations={attestations}
-                validate={() => this.validate()}
-                children={fbt('Publish', 'Publish')}
-                skipSuccessScreen={true}
-                onComplete={() => {
-                  this.onDeployComplete()
-                  this.setState({ shouldCloseSignTxModal: true })
-                }}
-              />
-            )}
+            ) : ( */}
+            <DeployIdentity
+              className="btn btn-primary mt-3 mb-3"
+              identity={this.props.wallet}
+              profile={pick(this.state, [
+                'firstName',
+                'lastName',
+                'avatar',
+                'avatarUrl'
+              ])}
+              attestations={attestations}
+              validate={() => this.validate()}
+              children={fbt('Publish', 'Publish')}
+              skipSuccessScreen={true}
+              onComplete={() => {
+                this.onDeployComplete()
+                this.setState({ shouldCloseSignTxModal: true })
+              }}
+            />
+            {/* )} */}
           </div>
         </div>
       </>
