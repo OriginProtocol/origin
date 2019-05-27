@@ -122,14 +122,12 @@ class Relayer {
    * @param to
    * @param method
    * @param forwarder
+   * @param ip
+   * @param geo
    * @returns {Promise<models.RelayerTxn>}
    * @private
    */
-  async _createDbTx(req, status, from, to, method, forwarder) {
-    // Get the IP from the request header and resolve it into a country code.
-    const ip = req.header('x-real-ip')
-    const geo = await ip2geo(ip)
-
+  async _createDbTx(req, status, from, to, method, forwarder, ip, geo) {
     // TODO: capture extra signals for fraud detection and store in data.
     const data = geo ? { ip, country: geo.countryCode } : { ip }
 
@@ -169,8 +167,12 @@ class Relayer {
     }
     const method = this.methods[txData.substr(0, 10)]
 
+    // Get the IP from the request header and resolve it into a country code.
+    const ip = req.header('x-real-ip')
+    const geo = await ip2geo(ip)
+
     // Check if the relayer is willing to process the transaction.
-    const accept = await this.riskEngine.acceptTx(from, txData, to, proxy)
+    const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
     if (!accept) {
       // Log the decline in the DB to use as data for future accept decisions.
       await this._createDbTx(
@@ -179,7 +181,9 @@ class Relayer {
         from,
         to,
         method.name,
-        Forwarder
+        Forwarder,
+        ip,
+        geo
       )
     }
 
