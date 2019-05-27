@@ -26,6 +26,12 @@ const UsersQuery = gql`
           listings {
             totalCount
           }
+          account {
+            id
+            owner {
+              id
+            }
+          }
         }
       }
     }

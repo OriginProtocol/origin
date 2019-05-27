@@ -4,6 +4,9 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
+import withWallet from 'hoc/withWallet'
+import withConfig from 'hoc/withConfig'
+
 import ProfileQuery from 'queries/Profile'
 import IdentityQuery from 'queries/Identity'
 
@@ -13,6 +16,8 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
+
+import DeployProxy from '../identity/mutations/DeployProxy'
 
 class ProfileNav extends Component {
   constructor() {
@@ -75,7 +80,7 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdown = ({ data, onClose }) => {
+const ProfileDropdownRaw = ({ data, onClose, wallet, walletProxy, config }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
   return (
     <div className="dropdown-menu dark dropdown-menu-right show profile">
@@ -91,6 +96,28 @@ const ProfileDropdown = ({ data, onClose }) => {
           <Identicon size={50} address={checksumAddress} />
         </div>
       </div>
+      {!config.proxyAccountsEnabled ? null : (
+        <div className="wallet-info">
+          {walletProxy === wallet ? (
+            <div className="d-flex w-100 align-items-center">
+              <h5 className="mb-0 flex-grow-1">Proxy Account</h5>
+              {walletProxy === wallet ? (
+                <DeployProxy
+                  className="btn btn-sm btn-outline-primary px-3"
+                  children="Deploy"
+                />
+              ) : (
+                <div className="wallet-address">{walletProxy}</div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h5>Proxy Account</h5>
+              <div className="wallet-address">{walletProxy}</div>
+            </div>
+          )}
+        </div>
+      )}
       <Balances account={id} onClose={onClose} />
       <Identity id={id} />
       <Link onClick={() => onClose()} to="/profile">
@@ -102,9 +129,10 @@ const ProfileDropdown = ({ data, onClose }) => {
     </div>
   )
 }
+const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-const Identity = ({ id }) => (
-  <Query query={IdentityQuery} variables={{ id }}>
+const Identity = withWallet(({ walletProxy }) => (
+  <Query query={IdentityQuery} variables={{ id: walletProxy }}>
     {({ data, error }) => {
       if (error) return null
       const profile = get(data, 'web3.account.identity') || {}
@@ -140,7 +168,7 @@ const Identity = ({ id }) => (
       )
     }}
   </Query>
-)
+))
 
 export default ProfileNav
 

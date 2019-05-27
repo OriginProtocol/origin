@@ -37,7 +37,9 @@ function getAbsoluteUrl(relativeUrl, state) {
   const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
   const url = new URL(`${protocol}://${host}${relativeUrl}`)
 
-  url.searchParams.append('state', state)
+  if (state) {
+    url.searchParams.append('state', state)
+  }
 
   return url.toString()
 }

@@ -151,7 +151,7 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.wallet !== prevProps.wallet) {
+    if (this.props.walletProxy !== prevProps.walletProxy) {
       const storedAttestations = this.getStoredAttestions()
       this.setState({ ...resetAtts, ...storedAttestations })
     }
@@ -383,7 +383,10 @@ class UserProfile extends Component {
                   ],
                   validate: () => this.validate(),
                   onComplete: () => {
-                    store.set(`attestations-${this.props.wallet}`, undefined)
+                    store.set(
+                      `attestations-${this.props.walletProxy}`,
+                      undefined
+                    )
                     clearVerifiedAccounts()
                   },
                   children: fbt('Publish Now', 'Profile.publishNow')
@@ -432,7 +435,7 @@ class UserProfile extends Component {
   }
 
   renderAtt(type, text, soon) {
-    const { wallet } = this.props
+    const { walletProxy } = this.props
     const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
     let attestationProvisional = false
@@ -455,7 +458,7 @@ class UserProfile extends Component {
     if (AttestationComponent) {
       AttestationComponent = (
         <AttestationComponent
-          wallet={wallet}
+          wallet={walletProxy}
           open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
@@ -529,15 +532,15 @@ class UserProfile extends Component {
       }
       return m
     }, {})
-    store.set(`attestations-${this.props.wallet}`, attestations)
+    store.set(`attestations-${this.props.walletProxy}`, attestations)
     updateVerifiedAccounts({
-      wallet: this.props.wallet,
+      wallet: this.props.walletProxy,
       data: attestations
     })
   }
 
   getAttestations() {
-    const wallet = this.props.wallet
+    const wallet = this.props.walletProxy
     const defaultValue = store.get(`attestations-${wallet}`, {})
     return getVerifiedAccounts({ wallet }, defaultValue)
   }

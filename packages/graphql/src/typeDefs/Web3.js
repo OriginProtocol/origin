@@ -48,9 +48,11 @@ module.exports = `
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String
+    originGraphQLVersion: String
     provider: String
     providerWS: String
-    originGraphQLVersion: String
+    proxyAccountsEnabled: Boolean
+    relayer: String
   }
 
   type Mutation {
@@ -104,6 +106,8 @@ module.exports = `
     name: String
     token(symbol: String!): TokenHolder
     identity: Identity
+    owner: Account
+    proxy: Account
   }
 
   type Balance {
