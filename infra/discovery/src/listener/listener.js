@@ -230,10 +230,8 @@ logger.info(
 )
 
 setNetwork(config.network)
-try {
-  main()
-} catch (err) {
+main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')
   process.exit(-1)
-}
+})
