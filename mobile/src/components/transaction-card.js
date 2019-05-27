@@ -66,6 +66,7 @@ class TransactionCard extends Component {
         daiInvolved = paymentCurrency === 'dai'
         break
       case 'emitIdentityUpdated':
+        payment = 0
         heading = fbt(
           'Publish Identity',
           'TransactionCard.headingPublishIdentity'

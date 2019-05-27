@@ -35,7 +35,7 @@ class WalletScreen extends Component {
           `For now, you will need to transfer ${fbt.param(
             'currency',
             currency
-          )} into your Orign Wallet from another source.`,
+          )} into your Origin Wallet from another source.`,
           'WalletScreen.fundingAlertMessage'
         )
       ),
