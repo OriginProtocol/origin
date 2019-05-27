@@ -162,11 +162,18 @@ async function main() {
         return contracts[contractKey].eventCache.allEvents()
       })
 
+      logger.debug(
+        `Got ${
+          events.length
+        } unfiltered events within interval for ${contractKey}`
+      )
+
       // Filter out events outside of interval (processedToBlock, toBlock].
       const newEvents = events.filter(
         event => event && event.blockNumber > processedToBlock
       )
-      logger.debug(`Got ${newEvents.length} new events for ${contractKey}`)
+
+      logger.info(`Got ${newEvents.length} new events for ${contractKey}`)
 
       if (context.config.concurrency > 1) {
         // Concurrency greater than 1 -> Backfill mode.
