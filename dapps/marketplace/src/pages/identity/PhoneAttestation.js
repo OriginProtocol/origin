@@ -423,7 +423,7 @@ require('react-styl')(`
         .actions
           margin-bottom: 1.5rem
 
-  .mobile-modal .attestation-modal.phone
+  .mobile-modal-light .attestation-modal.phone
     padding: 20px
     text-align: center
     h2

@@ -9,12 +9,12 @@ export default class MobileModal extends Component {
   constructor(props) {
     super(props)
     this.portal = document.createElement('div')
-    this.portal.classList.add('mobile-modal')
+    this.portal.classList.add('mobile-modal-light')
   }
 
   componentDidMount() {
     document.body.appendChild(this.portal)
-    document.body.className += ' mobile-modal-open'
+    document.body.className += ' mobile-modal-light-open'
     document.body.addEventListener('touchmove', freezeVp, false)
     this.renderContent(this.props)
 
@@ -34,7 +34,7 @@ export default class MobileModal extends Component {
   componentWillUnmount() {
     this.portal.classList.remove('open')
     document.body.className = document.body.className.replace(
-      ' mobile-modal-open',
+      ' mobile-modal-light-open',
       ''
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
@@ -66,7 +66,7 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
-        <div className="mobile-modal-overlay" />
+        <div className="mobile-modal-light-overlay" />
         <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}
@@ -122,7 +122,7 @@ export default class MobileModal extends Component {
 }
 
 require('react-styl')(`
-  .mobile-modal-open
+  .mobile-modal-light-open
     overflow: hidden
     touch-action: none
     position: relative
@@ -130,7 +130,7 @@ require('react-styl')(`
       overflow: hidden !important
       max-height: 100% !important
       max-width: 100% !important
-  .mobile-modal-overlay
+  .mobile-modal-light-overlay
     position: fixed
     touch-action: none
     top: 0
@@ -138,7 +138,7 @@ require('react-styl')(`
     right: 0
     bottom: 0
     background-color: rgba(11, 24, 35, 0.3)
-  .mobile-modal
+  .mobile-modal-light
     touch-action: none
     position: fixed
     z-index: 1000
