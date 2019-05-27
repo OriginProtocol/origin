@@ -233,5 +233,5 @@ setNetwork(config.network)
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')
-  process.exit(-1)
+  process.exit(1)
 })
