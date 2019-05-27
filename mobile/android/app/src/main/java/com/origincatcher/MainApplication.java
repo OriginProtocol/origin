@@ -3,6 +3,7 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
 import com.bebnev.RNUserAgentPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNLocalizePackage(),
             new AndroidOpenSettingsPackage(),
             new FingerprintAuthPackage(),
             new RNUserAgentPackage(),

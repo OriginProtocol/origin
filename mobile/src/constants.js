@@ -50,3 +50,74 @@ if (__DEV__) {
 
 export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 export const PROMPT_PUB_KEY = 'My public messaging key is: '
+
+export const CURRENCIES = [
+  ['fiat-USD', 'USD', '$'],
+  ['fiat-GBP', 'GBP', '£'],
+  ['fiat-EUR', 'EUR', '€'],
+  ['fiat-KRW', 'KRW', '₩'],
+  ['fiat-JPY', 'JPY', '¥'],
+  ['fiat-CNY', 'CNY', '¥']
+]
+
+import * as de_DE from 'locales/de_DE.json'
+import * as el_GR from 'locales/el_GR.json'
+import * as en_US from 'locales/en_US.json'
+import * as es_ES from 'locales/es_ES.json'
+import * as fr_FR from 'locales/fr_FR.json'
+import * as it_IT from 'locales/it_IT.json'
+import * as ja_JP from 'locales/ja_JP.json'
+import * as ko_KR from 'locales/ko_KR.json'
+import * as nl_NL from 'locales/nl_NL.json'
+import * as pt_PT from 'locales/pt_PT.json'
+import * as ro_RO from 'locales/ro_RO.json'
+import * as ru_RU from 'locales/ru_RU.json'
+import * as tr_TR from 'locales/tr_TR.json'
+import * as uk_UA from 'locales/uk_UA.json'
+import * as vi_VN from 'locales/vi_VN.json'
+import * as zh_CN from 'locales/zh_CN.json'
+import * as zh_TW from 'locales/zh_TW.json'
+
+export const TRANSLATIONS = {
+  de_DE,
+  el_GR,
+  en_US,
+  es_ES,
+  fr_FR,
+  it_IT,
+  ja_JP,
+  ko_KR,
+  nl_NL,
+  pt_PT,
+  ro_RO,
+  ru_RU,
+  tr_TR,
+  uk_UA,
+  vi_VN,
+  zh_CN,
+  zh_TW
+}
+
+export const LANGUAGES = [
+  ['de_DE', 'Deutsch'],
+  ['el_GR', 'ελληνικά'],
+  ['es_ES', 'Español'],
+  ['fil_PH', 'Filipino'],
+  ['fr_FR', 'Français'],
+  ['hr_HR', 'Hrvatski Jezik'],
+  ['id_ID', 'Indonesian'],
+  ['it_IT', 'Italiano'],
+  ['ja_JP', '日本語'],
+  ['ko_KR', '한국어'],
+  ['nl_NL', 'Nederlands'],
+  ['pt_PT', 'Português'],
+  ['ro_RO', 'Limba Eomână'],
+  ['ru_RU', 'Русский'],
+  ['th_TH', 'ไทย'],
+  ['tr_TR', 'Türkçe'],
+  ['uk_UA', 'Українська'],
+  ['vi_VN', 'Tiếng Việt'],
+  ['zh_CN', '简体中文'],
+  ['zh_TW', '繁體中文'],
+  ['en_US', 'English']
+].filter(l => Object.keys(TRANSLATIONS).includes(l[0]))

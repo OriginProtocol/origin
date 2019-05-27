@@ -42,13 +42,8 @@ const ListingInterface = `
   marketplacePublisher: String
 `
 
-module.exports = `
-  extend type Query {
-    marketplace: Marketplace
-    marketplaces: [Marketplace]
-  }
-
-  extend type Mutation {
+export const mutations = `
+extend type Mutation {
     deployMarketplace(token: String!, version: String, from: String, autoWhitelist: Boolean): Transaction
 
     createListing(
@@ -122,6 +117,13 @@ module.exports = `
     disputeOffer(offerID: ID!, from: String): Transaction
     addFunds(offerID: ID!, amount: String!, from: String): Transaction
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
+  }
+`
+
+export const types = `
+  extend type Query {
+    marketplace: Marketplace
+    marketplaces: [Marketplace]
   }
 
   type Marketplace {
@@ -454,3 +456,4 @@ module.exports = `
     currency: String
   }
 `
+export default types + mutations

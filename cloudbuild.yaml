@@ -33,11 +33,15 @@ steps:
           --location=global \
           --keyring=origin \
           --key=cloudbuild
-        # Checkout private fraud code if deploying @origin/cron
-        if [ "${_CONTAINER}" = "origin-cron" ]; then
+        # Checkout private fraud code if deploying @origin/cron or @origin/relayer
+        if [ "${_CONTAINER}" = "origin-cron" -o "${_CONTAINER}" = "origin-relayer" ]; then
           echo "Cloning origin-fraud"
           gcloud source repos clone origin-fraud --project=origin-214503
-          cp -r ./origin-fraud/ ./infra/growth/src/fraud/
+          if [ "${_CONTAINER}" = "origin-cron" ]; then
+            cp -r ./origin-fraud/growth ./infra/growth/src/fraud/
+          else
+            cp -r ./origin-fraud/relayer ./infra/relayer/src/risk/
+          fi
           rm -rf origin-fraud
         fi
 

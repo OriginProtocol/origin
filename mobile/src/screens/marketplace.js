@@ -18,7 +18,9 @@ import SafeAreaView from 'react-native-safe-area-view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
+import { CURRENCIES } from '../constants'
 import { decodeTransaction } from 'utils/contractDecoder'
+import { updateExchangeRate } from 'utils/price'
 import { webViewToBrowserUserAgent } from 'utils'
 
 class MarketplaceScreen extends Component {
@@ -32,7 +34,8 @@ class MarketplaceScreen extends Component {
     super(props)
 
     this.state = {
-      modals: []
+      modals: [],
+      fiatCurrency: null
     }
 
     DeviceEventEmitter.addListener(
@@ -217,6 +220,45 @@ class MarketplaceScreen extends Component {
     })
   }
 
+  /* Get the uiState from DApp localStorage via a webview bridge request.
+   */
+  requestUIState() {
+    const requestUIStateInjection = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          const uiState = window.localStorage['uiState'];
+          window.webViewBridge.send('handleUIStateResponse', uiState);
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting currency request')
+      this.dappWebView.injectJavaScript(requestUIStateInjection)
+    }
+  }
+
+  /* Handle the response from the uiState request. The uiState localStorage object
+   * can include information about the currency the DApp is set to.
+   */
+  handleUIStateResponse(uiStateJson) {
+    let uiState
+    let fiatCurrencyCode = 'fiat-USD'
+    try {
+      uiState = JSON.parse(uiStateJson)
+      if (uiState['currency']) {
+        fiatCurrencyCode = uiState['currency']
+      }
+    } catch (error) {
+      console.debug('Failed to parse uiState')
+    }
+    const fiatCurrency = CURRENCIES.find(c => c[0] === fiatCurrencyCode)
+    this.setState({ fiatCurrency })
+    // TODO: this will need to be adjusted if multiple non stablecoin support
+    // is added to the DApp (or when OGN has a market price)
+    updateExchangeRate(fiatCurrency[1], 'ETH')
+    updateExchangeRate(fiatCurrency[1], 'DAI')
+  }
+
   render() {
     const { modals } = this.state
     const { navigation } = this.props
@@ -235,6 +277,9 @@ class MarketplaceScreen extends Component {
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectMessagingKeys()
+            setInterval(() => {
+              this.requestUIState()
+            }, 5000)
           }}
           startInLoadingState={true}
           renderLoading={() => {
@@ -259,6 +304,7 @@ class MarketplaceScreen extends Component {
             card = (
               <TransactionCard
                 msgData={modal.msgData}
+                fiatCurrency={this.state.fiatCurrency}
                 onConfirm={() => {
                   DeviceEventEmitter.emit('sendTransaction', modal.msgData.data)
                 }}
