@@ -9,6 +9,12 @@ const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
   if (!CurrenciesByKey[value]) {
     value = Currencies[0][0]
   }
+  const selected = (
+    <div className="dropdown-selected">
+      {`${CurrenciesByKey[value][2]} ${CurrenciesByKey[value][1]}`}
+      <span className="arrow" />
+    </div>
+  )
   return (
     <Dropdown
       className={dropup ? 'dropup' : 'dropdown'}
@@ -40,7 +46,7 @@ const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
           e.preventDefault()
           setOpen(!open)
         }}
-        children={`${CurrenciesByKey[value][2]} ${CurrenciesByKey[value][1]}`}
+        children={selected}
       />
     </Dropdown>
   )
