@@ -8,7 +8,7 @@ class OgnBadge extends Component {
     return (
       <span className={`growth-reward-amount ${className ? className : ''}`}>
         <span className="earn">{fbt('Earn', 'Earn')}</span>
-        <img src="images/ogn-icon.svg"/>
+        <img src="images/ogn-icon.svg" />
         <span className="ogn">{amount}</span>
       </span>
     )

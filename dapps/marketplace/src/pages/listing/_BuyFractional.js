@@ -13,7 +13,14 @@ import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 
-const Fractional = ({ listing, from, range, availability, refetch, growthReward }) => {
+const Fractional = ({
+  listing,
+  from,
+  range,
+  availability,
+  refetch,
+  growthReward
+}) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
@@ -58,10 +65,12 @@ const Fractional = ({ listing, from, range, availability, refetch, growthReward 
             <div className="price">
               <div className="d-flex justify-content-between">
                 <Price listing={listing} descriptor />
-                {growthReward && <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />}
+                {growthReward && (
+                  <OgnBadge
+                    amount={growthReward}
+                    className="listing-detail-growth-reward"
+                  />
+                )}
               </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">

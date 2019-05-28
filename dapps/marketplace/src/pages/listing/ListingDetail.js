@@ -338,9 +338,7 @@ class ListingDetail extends Component {
     } else if (listing.multiUnit) {
       return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
     }
-    return <SingleUnit
-      {...props}
-    />
+    return <SingleUnit {...props} />
   }
 }
 

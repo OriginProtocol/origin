@@ -221,11 +221,14 @@ class Listings extends Component {
   }
 }
 
-export default withGrowthCampaign(withWallet(withTokenBalance(withCreatorConfig(Listings))), {
-  useCache: false,
-  queryEvenIfNotEnrolled: true,
-  suppressErrors: true // still show listings in case growth can not be reached
-})
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withCreatorConfig(Listings))),
+  {
+    useCache: false,
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listings in case growth can not be reached
+  }
+)
 
 require('react-styl')(`
   .listings-container

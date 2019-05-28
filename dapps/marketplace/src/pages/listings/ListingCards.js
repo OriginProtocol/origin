@@ -63,10 +63,12 @@ class ListingCards extends Component {
               {a.__typename === 'AnnouncementListing' ? null : (
                 <div className="price d-flex align-items-end">
                   <Price listing={a} descriptor />
-                  {hasGrowthReward && <OgnBadge
-                    amount={ognListingRewards[a.id]}
-                    className="listing-card-growth-reward"
-                  />}
+                  {hasGrowthReward && (
+                    <OgnBadge
+                      amount={ognListingRewards[a.id]}
+                      className="listing-card-growth-reward"
+                    />
+                  )}
                 </div>
               )}
             </div>

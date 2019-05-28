@@ -218,7 +218,9 @@ class CampaignRules {
    */
   async export(adapter, ethAddress) {
     const events = ethAddress ? await this.getEvents(ethAddress) : undefined
-    const level = ethAddress ? await this._calculateLevel(ethAddress, events) : undefined
+    const level = ethAddress
+      ? await this._calculateLevel(ethAddress, events)
+      : undefined
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
@@ -527,7 +529,9 @@ class BaseRule {
       ethAddress,
       visible: this.config.visible,
       campaign: this.campaign,
-      status: omitUserData ? null : await this.getStatus(ethAddress, events, level),
+      status: omitUserData
+        ? null
+        : await this.getStatus(ethAddress, events, level),
       reward: this.reward,
       rewards: omitUserData ? [] : await this.getRewards(ethAddress, events),
       unlockConditions: this.conditionsToUnlock(),

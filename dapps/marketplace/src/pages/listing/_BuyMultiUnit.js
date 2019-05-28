@@ -10,7 +10,14 @@ import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
 
-const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch, growthReward }) => {
+const MultiUnit = ({
+  listing,
+  from,
+  quantity,
+  updateQuantity,
+  refetch,
+  growthReward
+}) => {
   const selectedCurrency = useContext(CurrencyContext)
   const amount = String(Number(listing.price.amount) * Number(quantity))
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
@@ -30,10 +37,12 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch, growthRew
             <div className="price">
               <div className="d-flex justify-content-between">
                 <Price listing={listing} descriptor />
-                {growthReward && <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />}
+                {growthReward && (
+                  <OgnBadge
+                    amount={growthReward}
+                    className="listing-detail-growth-reward"
+                  />
+                )}
               </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">

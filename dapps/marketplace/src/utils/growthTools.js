@@ -32,10 +32,7 @@ export function getAttestationReward({
   }
 }
 
-export function getGrowthListingsRewards({
-  growthCampaigns,
-  tokenDecimals
-}){
+export function getGrowthListingsRewards({ growthCampaigns, tokenDecimals }) {
   const ognListingRewards = {}
 
   if (growthCampaigns && tokenDecimals) {
@@ -43,8 +40,7 @@ export function getGrowthListingsRewards({
       campaign => campaign.status === 'Active'
     )
 
-    if (!activeCampaign)
-      return ognListingRewards
+    if (!activeCampaign) return ognListingRewards
 
     const decimalDivision = web3.utils
       .toBN(10)

@@ -13,7 +13,14 @@ import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 
-const FractionalHourly = ({ listing, from, range, availability, refetch, growthReward }) => {
+const FractionalHourly = ({
+  listing,
+  from,
+  range,
+  availability,
+  refetch,
+  growthReward
+}) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
@@ -63,10 +70,12 @@ const FractionalHourly = ({ listing, from, range, availability, refetch, growthR
                   <Price price={listing.price} />
                   <div className="desc">/ hour</div>
                 </div>
-                {growthReward && <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />}
+                {growthReward && (
+                  <OgnBadge
+                    amount={growthReward}
+                    className="listing-detail-growth-reward"
+                  />
+                )}
               </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
