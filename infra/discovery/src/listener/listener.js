@@ -236,7 +236,7 @@ logger.info(
   )}`
 )
 
-setNetwork(config.network)
+setNetwork(config.network, { performanceMode: false })
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')
