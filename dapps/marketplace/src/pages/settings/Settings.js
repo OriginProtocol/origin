@@ -6,7 +6,6 @@ import { fbt } from 'fbt-runtime'
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
-import ConfigQuery from 'queries/Config'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
@@ -90,222 +89,224 @@ class Settings extends Component {
     const { locale, onLocale, currency, onCurrency } = this.props
 
     return (
-      <Mutation
-        mutation={SetNetwork}
-        refetchQueries={() => {
-          return [
-            {
-              query: ConfigQuery
-            }
-          ]
-        }}
-      >
+      <Mutation mutation={SetNetwork} refetchQueries="Config">
         {setNetwork => (
-          <div className="container align-self-center settings">
+          <div className="container settings">
             <DocumentTitle
               pageTitle={<fbt desc="settings.title">Settings</fbt>}
             />
-            <h1>
-              <fbt desc="settings.heading">Settings</fbt>
-            </h1>
-            <div className="settings-group">
-              <div className="settings-box">
-                <div className="form-group row">
-                  <div className="col-sm">
-                    <label htmlFor="language">
-                      <fbt desc="settings.languageLabel">Language</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.language">
-                          Please make a selection from the list.
-                        </fbt>
-                      </small>
+            <div className="row">
+              <div className="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+                <h1>
+                  <fbt desc="settings.heading">Settings</fbt>
+                </h1>
+                <div className="settings-group">
+                  <div className="settings-box">
+                    <div className="form-group row">
+                      <div className="col-sm">
+                        <label htmlFor="language">
+                          <fbt desc="settings.languageLabel">Language</fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.language">
+                              Please make a selection from the list.
+                            </fbt>
+                          </small>
+                        </div>
+                      </div>
+                      <div className="col-sm">
+                        <LocaleDropdown
+                          locale={locale}
+                          onLocale={onLocale}
+                          className="settings-dropdown float-right"
+                          dropdown={true}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-sm">
-                    <LocaleDropdown
-                      locale={locale}
-                      onLocale={onLocale}
-                      className="settings-dropdown float-right"
-                      dropdown={true}
-                    />
-                  </div>
-                </div>
 
-                <div className="form-group row">
-                  <div className="col-sm">
-                    <label htmlFor="language">
-                      <fbt desc="settings.currencyLabel">Currency</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.currency">
-                          Please make a selection from the list below.
-                        </fbt>
-                      </small>
+                    <div className="form-group row">
+                      <div className="col-sm">
+                        <label htmlFor="language">
+                          <fbt desc="settings.currencyLabel">Currency</fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.currency">
+                              Please make a selection from the list below.
+                            </fbt>
+                          </small>
+                        </div>
+                      </div>
+                      <div className="col-sm">
+                        <CurrencyDropdown
+                          value={currency}
+                          onChange={onCurrency}
+                          className="settings-dropdown float-right"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-sm">
-                    <CurrencyDropdown
-                      value={currency}
-                      onChange={onCurrency}
-                      className="settings-dropdown float-right"
-                    />
-                  </div>
-                </div>
 
-                {/* TODO: this will require a grqphql mutation and mods to
+                    {/* TODO: this will require a grqphql mutation and mods to
                     @origin/messaging-client.
 
-                <div className="form-group row">
-                  <div className="col">
-                    <label htmlFor="Messaging">
-                      <fbt desc="settings.messagingLabel">
-                        Messaging
-                      </fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking on the button.</fbt></small>
+                    <div className="form-group row">
+                      <div className="col">
+                        <label htmlFor="Messaging">
+                          <fbt desc="settings.messagingLabel">
+                            Messaging
+                          </fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking on the button.</fbt></small>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <button className="btn btn-outline-danger float-right">
+                          <fbt desc="settings.messagingButton">
+                            Disable
+                          </fbt>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col">
-                    <button className="btn btn-outline-danger float-right">
-                      <fbt desc="settings.messagingButton">
-                        Disable
-                      </fbt>
-                    </button>
-                  </div>
-                </div>
-                */}
-              </div>
-            </div>
-            <div className="settings-group">
-              <div className="settings-box">
-                <div
-                  className={`form-group row${
-                    this.state.developerMode ? '' : ' no-border-bottom'
-                  }`}
-                >
-                  <div className="col">
-                    <label htmlFor="performanceMode">
-                      <fbt desc="settings.developerMode">Developer Mode</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.developerModeHint">
-                          Provides more granular control over your experience.
-                        </fbt>
-                      </small>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <Toggle
-                      toggled={true}
-                      initialToggleState={this.state.developerMode}
-                      className="float-right"
-                      onClickHandler={this.toggleDeveloperMode}
-                    />
+                    */}
                   </div>
                 </div>
-                <div
-                  className={`developer${
-                    this.state.developerMode ? '' : ' hide'
-                  }`}
-                >
-                  <div className="form-group row">
-                    <div className="col-sm">
-                      <label htmlFor="indexing">
-                        <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
-                      </label>
-                    </div>
-                    <div className="col-sm">
-                      <input
-                        className="form-control form-control-lg"
-                        type="text"
-                        name="ipfsGateway"
-                        {...input('ipfsGateway')}
-                        onBlur={() => this.saveConfig(setNetwork)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-sm">
-                      <label htmlFor="indexing">
-                        <fbt desc="settings.providerLabel">Ethereum Node</fbt>
-                      </label>
-                    </div>
-                    <div className="col-sm">
-                      <input
-                        className="form-control form-control-lg"
-                        type="text"
-                        name="web3Provider"
-                        {...input('provider')}
-                        onBlur={() => this.saveConfig(setNetwork)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-sm">
-                      <label htmlFor="indexing">
-                        <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
-                      </label>
-                    </div>
-                    <div className="col-sm">
-                      <input
-                        className="form-control form-control-lg"
-                        type="text"
-                        name="bridgeServer"
-                        {...input('bridge')}
-                        onBlur={() => this.saveConfig(setNetwork)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <div className="col-sm">
-                      <label htmlFor="indexing">
-                        <fbt desc="settings.discoveryLabel">
-                          Discovery Server
-                        </fbt>
-                      </label>
-                    </div>
-                    <div className="col-sm">
-                      <input
-                        className="form-control form-control-lg"
-                        type="text"
-                        name="discovery"
-                        {...input('discovery')}
-                        onBlur={() => this.saveConfig(setNetwork)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row less-margin-bottom">
-                    <div className="col-sm">
-                      <label htmlFor="indexing">
-                        <fbt desc="settings.relayerLabel">Relayer Server</fbt>
-                      </label>
-                    </div>
-                    <div className="col-sm">
-                      <input
-                        className="form-control form-control-lg"
-                        type="text"
-                        name="relayer"
-                        {...input('relayer')}
-                        onBlur={() => this.saveConfig(setNetwork)}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group row">
-                    <a
-                      href="#"
-                      className="container text-center restore"
-                      onClick={ev => {
-                        ev.preventDefault()
-                        this.saveConfig(setNetwork, {}, true)
-                      }}
+                <div className="settings-group">
+                  <div className="settings-box">
+                    <div
+                      className={`form-group row${
+                        this.state.developerMode ? '' : ' no-border-bottom'
+                      }`}
                     >
-                      Restore Defaults
-                    </a>
+                      <div className="col">
+                        <label htmlFor="performanceMode">
+                          <fbt desc="settings.developerMode">
+                            Developer Mode
+                          </fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.developerModeHint">
+                              Provides more granular control over your
+                              experience.
+                            </fbt>
+                          </small>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <Toggle
+                          toggled={true}
+                          initialToggleState={this.state.developerMode}
+                          className="float-right"
+                          onClickHandler={this.toggleDeveloperMode}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className={`developer${
+                        this.state.developerMode ? '' : ' hide'
+                      }`}
+                    >
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="ipfsGateway"
+                            {...input('ipfsGateway')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.providerLabel">
+                              Ethereum Node
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="web3Provider"
+                            {...input('provider')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="bridgeServer"
+                            {...input('bridge')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.discoveryLabel">
+                              Discovery Server
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="discovery"
+                            {...input('discovery')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row less-margin-bottom">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.relayerLabel">
+                              Relayer Server
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="relayer"
+                            {...input('relayer')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <a
+                          href="#"
+                          className="container text-center restore"
+                          onClick={ev => {
+                            ev.preventDefault()
+                            this.saveConfig(setNetwork, {}, true)
+                          }}
+                        >
+                          Restore Defaults
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -349,17 +350,13 @@ export default withConfig(Settings)
 require('react-styl')(`
   .settings
     padding-top: 3rem
-    margin: 0 auto
-    max-width: 800px
-
-    .settings-group
-      display: block
 
     .form-text
       margin-top: -0.75rem
       margin-bottom: 0.5rem
       small
-        font-size: 70%
+        font-size: 14px
+        font-weight: 300
 
     .form-group
       margin-bottom: 1.5rem
@@ -371,7 +368,7 @@ require('react-styl')(`
 
       &.row.less-margin-bottom
         margin-bottom: 1rem
-      
+
       &.row:last-of-type,
       &.row.no-border-bottom
         border-bottom: 0
@@ -379,7 +376,7 @@ require('react-styl')(`
         margin-bottom: 0
 
       label
-        font-size: 1rem
+        font-size: 18px
         margin-bottom: 0.75rem
 
       button
@@ -412,6 +409,7 @@ require('react-styl')(`
     .settings-dropdown
       color: #000
       font-size: 1.25rem
+      font-weight: normal
       padding: 0.5rem
       max-width: 320px
       width: 100%
@@ -441,7 +439,15 @@ require('react-styl')(`
     label
       color: #000
       font-size: 0.875rem
-    
+
     .restore
       color: var(--clear-blue)
+
+  @media (max-width: 767.98px)
+    .settings
+      padding-top: 2rem
+      h1
+        font-size: 32px
+        margin-bottom: 1rem
+        line-height: 1.25
 `)

@@ -45,7 +45,7 @@ require('react-styl')(`
     width: 60px
     height: 30px
     border-radius: 15px
-    border: solid 1px var(--bluey-grey)
+    box-shadow: inset 0 0 1px var(--bluey-grey)
     background-color: var(--pale-grey-two)
 
     &.toggle-on
@@ -55,7 +55,6 @@ require('react-styl')(`
 
     .toggle-switch
       position: relative;
-      top: -1px;
       width: 30px
       height: 30px
       border-radius: 15px
