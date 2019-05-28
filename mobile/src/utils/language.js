@@ -7,15 +7,24 @@ import { TRANSLATIONS } from '../constants'
 
 export default function setFbtLanguage(language) {
   if (!language) {
-    const bestAvailable = RNLocalize.findBestAvailableLanguage(
-      Object.keys(TRANSLATIONS).map(x => x.replace('_', '-'))
-    )
-    if (bestAvailable && bestAvailable.languageTag) {
-      language = bestAvailable.languageTag.replace('-', '_')
-    }
+    language = findBestAvailableLanguage()
   }
   if (language && TRANSLATIONS[language]) {
     init({ translations: { [language]: TRANSLATIONS[language] } })
     IntlViewerContext.locale = language
   }
+}
+
+export function findBestAvailableLanguage() {
+  const bestAvailable = RNLocalize.findBestAvailableLanguage(
+    Object.keys(TRANSLATIONS).map(x => x.replace('_', '-').substr(0, 2))
+  )
+
+  let language = 'en_US'
+  if (bestAvailable && bestAvailable.languageTag) {
+    language = Object.keys(TRANSLATIONS).find(x =>
+      x.startsWith(bestAvailable.languageTag)
+    )
+  }
+  return language
 }

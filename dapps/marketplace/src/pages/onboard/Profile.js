@@ -56,7 +56,7 @@ class OnboardProfile extends Component {
           'firstName',
           'lastName',
           'description',
-          'avatar',
+          'avatarUrl',
           'facebookVerified',
           'twitterVerified',
           'airbnbVerified',
@@ -107,15 +107,15 @@ class OnboardProfile extends Component {
                     <div className="col-md-4">
                       <div className="avatar-wrap">
                         <ImageCropper
-                          onChange={async avatar => {
+                          onChange={async avatarBase64 => {
                             const { ipfsRPC } = this.props.config
                             const uploadedImages = await uploadImages(ipfsRPC, [
-                              avatar
+                              avatarBase64
                             ])
                             const avatarImg = uploadedImages[0]
                             if (avatarImg) {
                               const avatarUrl = avatarImg.url
-                              this.setState({ avatar, avatarUrl })
+                              this.setState({ avatarUrl })
                             }
                           }}
                         >
@@ -198,7 +198,6 @@ class OnboardProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar',
                     'avatarUrl'
                   ])}
                   attestations={attestations}

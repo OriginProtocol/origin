@@ -13,7 +13,7 @@ try {
   console.warn('EnvKey not configured')
 }
 
-setNetwork(process.env.NETWORK || 'test')
+setNetwork(process.env.NETWORK || 'test', { performanceMode: false })
 
 const schema = makeExecutableSchema({
   typeDefs,

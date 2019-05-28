@@ -358,6 +358,41 @@
         }
       ]
     },
+    "dP4XrQh0mF/tMLgpd3YQcw==": {
+      "translations": [
+        {
+          "translation": "Name"
+        }
+      ]
+    },
+    "GGc6NEGIsOKjZY7PerWXKQ==": {
+      "translations": [
+        {
+          "translation": "Account name"
+        }
+      ]
+    },
+    "Z5Ad8XT7iUBuDtpMwgC5Ug==": {
+      "translations": [
+        {
+          "translation": "Eth Address"
+        }
+      ]
+    },
+    "KaZkh00tsKdzL4PMvmqOWw==": {
+      "translations": [
+        {
+          "translation": "Make Active Account"
+        }
+      ]
+    },
+    "p3W1jjM1O7xwySSBNKVkeQ==": {
+      "translations": [
+        {
+          "translation": "Show Recovery Phrase"
+        }
+      ]
+    },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
@@ -365,10 +400,38 @@
         }
       ]
     },
+    "3T0ncUvbWQQYHxwCYIWCzQ==": {
+      "translations": [
+        {
+          "translation": "Copy Recovery Phrase"
+        }
+      ]
+    },
+    "2Ql766BBWhadduhv1A8mCg==": {
+      "translations": [
+        {
+          "translation": "Show Private Key"
+        }
+      ]
+    },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
           "translation": "Private Key"
+        }
+      ]
+    },
+    "YL1+Pt1Th3TvLZQaVxak9w==": {
+      "translations": [
+        {
+          "translation": "Copy Private Key"
+        }
+      ]
+    },
+    "sL6k42V4vn/2x26sVAldkw==": {
+      "translations": [
+        {
+          "translation": "Delete Account"
         }
       ]
     },
@@ -435,10 +498,10 @@
         }
       ]
     },
-    "jt7p3vc5AGVd4AB7rqnLWg==": {
+    "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "BackupScreen.copyButton"
+          "translation": "Copy to clipboard"
         }
       ]
     },
@@ -568,6 +631,13 @@
         }
       ]
     },
+    "59TOqnoYcFhWfpYdUrJdiw==": {
+      "translations": [
+        {
+          "translation": "Language"
+        }
+      ]
+    },
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
@@ -635,6 +705,20 @@
       "translations": [
         {
           "translation": "We will use your email to notify you of important notifications when you buy or sell."
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Re-enter Pin Code"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Create a Pin Code"
         }
       ]
     },
@@ -715,10 +799,10 @@
         }
       ]
     },
-    "C5gvDi8+qImz+pSC9zv1Dg==": {
+    "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "GENERAL"
+          "translation": "General"
         }
       ]
     },
@@ -729,17 +813,17 @@
         }
       ]
     },
-    "tdcX/7aQxWz39Q3PHYuHHg==": {
+    "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "NETWORK"
+          "translation": "Language"
         }
       ]
     },
-    "40u6er8jHdh7fMcjVdEcLg==": {
+    "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "LOCALES"
+          "translation": "Network"
         }
       ]
     },
@@ -757,10 +841,10 @@
         }
       ]
     },
-    "bqmJ47EebYQwEAtOfIjdfA==": {
+    "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Orign Wallet from another source."
+          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
         }
       ]
     },
