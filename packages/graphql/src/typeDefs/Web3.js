@@ -31,6 +31,7 @@ module.exports = `
 
   input ConfigInput {
     discovery: String
+    relayer: String
     bridge: String
     ipfsRPC: String
     ipfsGateway: String
