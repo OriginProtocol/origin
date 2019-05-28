@@ -9,18 +9,20 @@ class RiskEngine {
    * Evaluate fraud risks and returns true if transaction should be accepted. False otherwise.
    *
    * @param {string} from - Eth address of the sender
-   * @param {string} txData - Transaction data
    * @param {string} to - Eth address of target contract
-   * @param {string} proxy - Optional. Address of the IdentityProxy
+   * @param {string} txData - Transaction data
+   * @param {string} ip - IP address of the request
+   * @param {{countryCode: string, countryName: string}} geo
    * @returns {Promise<boolean>}
    * @private
    */
-  async acceptTx(from, txData, to, proxy) {
+  async acceptTx(from, to, txData, ip, geo) {
     logger.debug('RiskEngine.acceptTx called with args:', {
       from,
-      txData,
       to,
-      proxy
+      txData,
+      ip,
+      geo
     })
     return true
   }
