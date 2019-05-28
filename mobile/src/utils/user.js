@@ -45,5 +45,6 @@ export function truncateAddress(address = '', chars = 5) {
 }
 
 export function truncate(data, chars = 5) {
+  if (chars && data.length <= chars) return data
   return data.substr(0, chars) + '...'
 }
