@@ -22,6 +22,7 @@ import { CURRENCIES } from '../constants'
 import { decodeTransaction } from 'utils/contractDecoder'
 import { updateExchangeRate } from 'utils/price'
 import { webViewToBrowserUserAgent } from 'utils'
+import { findBestAvailableLanguage } from 'utils/language'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -86,6 +87,16 @@ class MarketplaceScreen extends Component {
     DeviceEventEmitter.removeListener('transactionHash')
     DeviceEventEmitter.removeListener('messageSigned')
     DeviceEventEmitter.removeListener('messagingKeys')
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings.language !== this.props.settings.language) {
+      // Language has changed, need to reload the DApp
+      if (this.dappWebView) {
+        // Reinject the language
+        this.injectLanguage()
+      }
+    }
   }
 
   onWebViewMessage(event) {
@@ -169,6 +180,24 @@ class MarketplaceScreen extends Component {
         console.debug('Injecting messaging keys')
         this.dappWebView.injectJavaScript(keyInjection)
       }
+    }
+  }
+
+  /* Inject the language setting in from redux into the DApp
+   */
+  injectLanguage() {
+    const language = this.props.settings.language
+      ? this.props.settings.language
+      : findBestAvailableLanguage()
+    const languageInjection = `
+      (function() {
+        if (window && window.appComponent) {
+          window.appComponent.onLocale('${language}');
+        }
+      })()
+    `
+    if (this.dappWebView) {
+      this.dappWebView.injectJavaScript(languageInjection)
     }
   }
 
@@ -276,6 +305,7 @@ class MarketplaceScreen extends Component {
           source={{ uri: marketplaceUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
+            this.injectLanguage()
             this.injectMessagingKeys()
             setInterval(() => {
               this.requestUIState()
@@ -350,6 +380,12 @@ class MarketplaceScreen extends Component {
   }
 }
 
+const mapStateToProps = ({ activation, wallet, settings }) => {
+  return { activation, wallet, settings }
+}
+
+export default connect(mapStateToProps)(MarketplaceScreen)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -366,9 +402,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   }
 })
-
-const mapStateToProps = ({ activation, wallet, settings }) => {
-  return { activation, wallet, settings }
-}
-
-export default connect(mapStateToProps)(MarketplaceScreen)

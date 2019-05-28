@@ -39,12 +39,12 @@ if (__DEV__) {
   NETWORKS.push({
     id: 999,
     name: 'Localhost',
-    dappUrl: `http://${process.env.HOST}:3000`
+    dappUrl: `http://${process.env.HOST || 'localhost'}:3000`
   })
   NETWORKS.push({
     id: 999,
     name: 'Docker',
-    dappUrl: `http://${process.env.HOST}:3000/docker#/`
+    dappUrl: `http://${process.env.HOST || 'localhost'}:3000/docker#/`
   })
 }
 
@@ -60,43 +60,46 @@ export const CURRENCIES = [
   ['fiat-CNY', 'CNY', '¥']
 ]
 
-import * as de_DE from 'locales/de_DE.json'
-import * as el_GR from 'locales/el_GR.json'
+/* eslint-disable camelcase */
+// import * as de_DE from 'locales/de_DE.json'
+// import * as el_GR from 'locales/el_GR.json'
 import * as en_US from 'locales/en_US.json'
 import * as es_ES from 'locales/es_ES.json'
-import * as fr_FR from 'locales/fr_FR.json'
-import * as it_IT from 'locales/it_IT.json'
-import * as ja_JP from 'locales/ja_JP.json'
-import * as ko_KR from 'locales/ko_KR.json'
-import * as nl_NL from 'locales/nl_NL.json'
-import * as pt_PT from 'locales/pt_PT.json'
-import * as ro_RO from 'locales/ro_RO.json'
-import * as ru_RU from 'locales/ru_RU.json'
-import * as tr_TR from 'locales/tr_TR.json'
-import * as uk_UA from 'locales/uk_UA.json'
-import * as vi_VN from 'locales/vi_VN.json'
-import * as zh_CN from 'locales/zh_CN.json'
-import * as zh_TW from 'locales/zh_TW.json'
+// import * as fr_FR from 'locales/fr_FR.json'
+// import * as it_IT from 'locales/it_IT.json'
+// import * as ja_JP from 'locales/ja_JP.json'
+// import * as ko_KR from 'locales/ko_KR.json'
+// import * as nl_NL from 'locales/nl_NL.json'
+// import * as pt_PT from 'locales/pt_PT.json'
+// import * as ro_RO from 'locales/ro_RO.json'
+// import * as ru_RU from 'locales/ru_RU.json'
+// import * as tr_TR from 'locales/tr_TR.json'
+// import * as uk_UA from 'locales/uk_UA.json'
+// import * as vi_VN from 'locales/vi_VN.json'
+// import * as zh_CN from 'locales/zh_CN.json'
+// import * as zh_TW from 'locales/zh_TW.json'
 
 export const TRANSLATIONS = {
-  de_DE,
-  el_GR,
+  // Comment out those without translations
+  // de_DE,
+  // el_GR,
   en_US,
-  es_ES,
-  fr_FR,
-  it_IT,
-  ja_JP,
-  ko_KR,
-  nl_NL,
-  pt_PT,
-  ro_RO,
-  ru_RU,
-  tr_TR,
-  uk_UA,
-  vi_VN,
-  zh_CN,
-  zh_TW
+  es_ES
+  // fr_FR,
+  // it_IT,
+  // ja_JP,
+  // ko_KR,
+  // nl_NL,
+  // pt_PT,
+  // ro_RO,
+  // ru_RU,
+  // tr_TR,
+  // uk_UA,
+  // vi_VN,
+  // zh_CN,
+  // zh_TW
 }
+/* eslint-enable camelcase */
 
 export const LANGUAGES = [
   ['de_DE', 'Deutsch'],
