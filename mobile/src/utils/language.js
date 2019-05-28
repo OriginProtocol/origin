@@ -22,7 +22,9 @@ export function findBestAvailableLanguage() {
 
   let language = 'en_US'
   if (bestAvailable && bestAvailable.languageTag) {
-    language = Object.keys(TRANSLATIONS).find(x => x.startsWith(bestAvailable.languageTag))
+    language = Object.keys(TRANSLATIONS).find(x =>
+      x.startsWith(bestAvailable.languageTag)
+    )
   }
   return language
 }

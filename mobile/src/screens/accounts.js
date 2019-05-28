@@ -63,8 +63,15 @@ class AccountsScreen extends Component {
         const listHeaderComponent = (
           <View style={styles.listHeaderContainer}>
             <Text style={styles.listHeader}>
-              {(mnemonic && `Recovery Phrase ${recoveryPhraseNumber}`) ||
-                'Imported from Private Key'}
+              {(mnemonic &&
+                `${fbt(
+                  'Recovery Phrase',
+                  'AccountScreen.recoveryPhraseListHeader'
+                )} ${recoveryPhraseNumber}`) ||
+                fbt(
+                  'Imported from Private Key',
+                  'AccountScreen.privateKeyListHeader'
+                )}
             </Text>
           </View>
         )

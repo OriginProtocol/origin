@@ -1,4 +1,4 @@
 {
-  "plugins": ["@babel/plugin-transform-new-target", "babel-plugin-fbt", "babel-plugin-fbt-runtime"],
+  "plugins": ["@babel/plugin-transform-new-target", "babel-plugin-fbt", "babel-plugin-fbt-runtime", "inline-dotenv"],
   "presets": ["module:metro-react-native-babel-preset"]
 }
