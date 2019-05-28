@@ -42,7 +42,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "lerna run lint && lerna run lint --prefix mobile"
+      "pre-push": "lerna run lint && npm run lint --prefix mobile"
     }
   }
 }

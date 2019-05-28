@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@origin/contracts": "^0.8.6",
+    "@origin/ip2geo": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "envkey": "^1.2.4",

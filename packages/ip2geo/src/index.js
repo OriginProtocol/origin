@@ -1,7 +1,9 @@
+'use strict'
+
 const fetch = require('node-fetch')
 const geoip = require('geoip-lite')
 
-const logger = require('../logger')
+const logger = require('./logger')
 
 const countryMap = {
   AD: 'Andorra',

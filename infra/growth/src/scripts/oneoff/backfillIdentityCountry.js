@@ -9,7 +9,7 @@
 const _identityModels = require('@origin/identity/src/models')
 const _bridgeModels = require('@origin/bridge/src/models')
 const db = { ..._identityModels, ..._bridgeModels }
-const { ip2geo } = require('../../util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 const parseArgv = require('../../util/args')
 
 const Logger = require('logplease')
