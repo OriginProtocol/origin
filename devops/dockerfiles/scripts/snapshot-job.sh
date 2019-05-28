@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # This script is used by the auto-gke-pvc-snapshots container to take snapshots
-# of all the attached Google PVC disks.
+# of all the Google PVC disks attached to the Origin cluster.
 
 if [ -z "${DAYS_RETENTION}" ]; then
   # Default to 14 days
   DAYS_RETENTION=14
 fi
 
-gcloud compute disks list --filter='description:* AND description~kubernetes.io/created-for/pvc/name' --format='value(name,zone)' | while read -r DISK_NAME ZONE; do
+gcloud compute disks list --filter='description:* AND description~kubernetes.io/created-for/pvc/name AND name~gke-origin-* AND description~prod' --format='value(name,zone)' | while read -r DISK_NAME ZONE; do
   gcloud compute disks snapshot "${DISK_NAME}" --snapshot-names autogcs-"${DISK_NAME:0:31}"-"$(date '+%Y-%m-%d-%s')" --zone "${ZONE}"
   echo "Snapshot created"
 done
