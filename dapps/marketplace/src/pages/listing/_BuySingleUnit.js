@@ -7,7 +7,6 @@ import OgnBadge from 'components/OgnBadge'
 import Buy from './mutations/Buy'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
-import { getGrowthListingsRewards } from 'utils/growthTools'
 
 const SingleUnit = ({ listing, from, refetch, growthReward }) => {
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')

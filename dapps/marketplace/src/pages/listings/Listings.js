@@ -224,7 +224,7 @@ class Listings extends Component {
 export default withGrowthCampaign(
   withWallet(withTokenBalance(withCreatorConfig(Listings))),
   {
-    useCache: false,
+    useCache: true,
     queryEvenIfNotEnrolled: true,
     suppressErrors: true // still show listings in case growth can not be reached
   }

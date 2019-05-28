@@ -343,7 +343,7 @@ class ListingDetail extends Component {
 }
 
 export default withGrowthCampaign(withWallet(withTokenBalance(ListingDetail)), {
-  useCache: false,
+  useCache: true,
   queryEvenIfNotEnrolled: true,
   suppressErrors: true // still show listing detail in case growth can not be reached
 })

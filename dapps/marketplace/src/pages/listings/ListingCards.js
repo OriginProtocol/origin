@@ -6,7 +6,6 @@ import OgnBadge from 'components/OgnBadge'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
 import { getGrowthListingsRewards } from 'utils/growthTools'
-import { fbt } from 'fbt-runtime'
 
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
