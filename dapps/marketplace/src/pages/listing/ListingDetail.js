@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 import get from 'lodash/get'
+import { getGrowthListingsRewards } from 'utils/growthTools'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withTokenBalance from 'hoc/withTokenBalance'
 
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
@@ -279,6 +282,17 @@ class ListingDetail extends Component {
       b => b.id === this.props.walletProxy
     )
 
+    const ognListingRewards = getGrowthListingsRewards({
+      growthCampaigns: this.props.growthCampaigns,
+      tokenDecimals: this.props.tokenDecimals
+    })
+    const growthReward = ognListingRewards[listing.id]
+
+    const props = { ...this.props }
+    if (growthReward) {
+      props.growthReward = growthReward
+    }
+
     if (listing.seller.id === this.props.walletProxy) {
       return (
         <EditOnly
@@ -297,7 +311,7 @@ class ListingDetail extends Component {
     } else if (isPendingBuyer && listing.multiUnit) {
       return (
         <>
-          <MultiUnit {...this.props} />
+          <MultiUnit {...props} />
           <OfferMade />
         </>
       )
@@ -308,7 +322,7 @@ class ListingDetail extends Component {
     } else if (isFractional) {
       return (
         <Fractional
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availability}
         />
@@ -316,19 +330,25 @@ class ListingDetail extends Component {
     } else if (isFractionalHourly) {
       return (
         <FractionalHourly
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availabilityHourly}
         />
       )
     } else if (listing.multiUnit) {
-      return <MultiUnit {...this.props} isPendingBuyer={isPendingBuyer} />
+      return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
     }
-    return <SingleUnit {...this.props} />
+    return <SingleUnit
+      {...props}
+    />
   }
 }
 
-export default withWallet(ListingDetail)
+export default withGrowthCampaign(withWallet(withTokenBalance(ListingDetail)), {
+  useCache: false,
+  queryEvenIfNotEnrolled: true,
+  suppressErrors: true // still show listing detail in case growth can not be reached
+})
 
 require('react-styl')(`
   .listing-detail

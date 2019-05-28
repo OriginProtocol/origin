@@ -3,13 +3,16 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import Price from 'components/Price'
+import OgnBadge from 'components/OgnBadge'
 import Buy from './mutations/Buy'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
+import { getGrowthListingsRewards } from 'utils/growthTools'
 
-const SingleUnit = ({ listing, from, refetch }) => {
+const SingleUnit = ({ listing, from, refetch, growthReward }) => {
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
+
   return (
     <WithPrices
       price={listing.price}
@@ -20,8 +23,12 @@ const SingleUnit = ({ listing, from, refetch }) => {
         if (!prices) return null
         return (
           <div className="listing-buy">
-            <div className="price">
+            <div className="price d-flex justify-content-between">
               <Price listing={listing} descriptor />
+              {growthReward && <OgnBadge
+                amount={growthReward}
+                className="listing-detail-growth-reward"
+              />}
             </div>
             <PaymentOptions
               tokens={prices}

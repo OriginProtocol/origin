@@ -7,12 +7,12 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import profileQuery from 'queries/Profile'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 
-function withGrowthCampaign(WrappedComponent) {
+function withGrowthCampaign(WrappedComponent, { useCache, queryEvenIfNotEnrolled, suppressErrors } = {}) {
   const WithGrowthCampaign = props => {
     return (
       <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
         {({ data, error }) => {
-          if (error) {
+          if (error && !suppressErrors) {
             return <QueryError error={error} query={profileQuery} />
           }
 
@@ -24,10 +24,10 @@ function withGrowthCampaign(WrappedComponent) {
               variables={{ walletAddress }}
               skip={!walletAddress}
               // enrollment info can change, do not cache it
-              fetchPolicy="network-only"
+              fetchPolicy={ useCache ? 'cache-first' : 'network-only'}
             >
               {({ data, error }) => {
-                if (error) {
+                if (error && !suppressErrors) {
                   return (
                     <QueryError error={error} query={enrollmentStatusQuery} />
                   )
@@ -38,13 +38,13 @@ function withGrowthCampaign(WrappedComponent) {
                   <Query
                     query={allCampaignsQuery}
                     notifyOnNetworkStatusChange={true}
-                    skip={enrollmentStatus !== 'Enrolled'}
+                    skip={queryEvenIfNotEnrolled ? false : enrollmentStatus !== 'Enrolled'}
                     // do not cache, so user does not need to refresh page when an
-                    // action is completed
-                    fetchPolicy="network-only"
+                    // action is completed. Except if cache explicitly requested
+                    fetchPolicy={ useCache ? 'cache-first' : 'network-only'}
                   >
                     {({ data, error }) => {
-                      if (error) {
+                      if (error && !suppressErrors) {
                         return (
                           <QueryError error={error} query={allCampaignsQuery} />
                         )

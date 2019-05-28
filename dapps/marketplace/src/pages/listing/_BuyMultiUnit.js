@@ -4,17 +4,19 @@ import { fbt } from 'fbt-runtime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price'
+import OgnBadge from 'components/OgnBadge'
 import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
 
-const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
+const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch, growthReward }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const amount = String(Number(listing.price.amount) * Number(quantity))
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
   const totalPrice = { amount, currency: listing.price.currency }
+
   return (
     <WithPrices
       price={totalPrice}
@@ -26,7 +28,13 @@ const MultiUnit = ({ listing, from, quantity, updateQuantity, refetch }) => {
         return (
           <div className="listing-buy multi">
             <div className="price">
-              <Price listing={listing} descriptor />
+              <div className="d-flex justify-content-between">
+                <Price listing={listing} descriptor />
+                {growthReward && <OgnBadge
+                  amount={growthReward}
+                  className="listing-detail-growth-reward"
+                />}
+              </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
                   <Price

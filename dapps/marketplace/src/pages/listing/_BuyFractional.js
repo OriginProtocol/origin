@@ -6,13 +6,14 @@ import { fbt } from 'fbt-runtime'
 import CurrencyContext from 'constants/CurrencyContext'
 
 import Price from 'components/Price'
+import OgnBadge from 'components/OgnBadge'
 import Tooltip from 'components/Tooltip'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 
-const Fractional = ({ listing, from, range, availability, refetch }) => {
+const Fractional = ({ listing, from, range, availability, refetch, growthReward }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
@@ -55,7 +56,13 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         return (
           <div className="listing-buy fractional">
             <div className="price">
-              <Price listing={listing} descriptor />
+              <div className="d-flex justify-content-between">
+                <Price listing={listing} descriptor />
+                {growthReward && <OgnBadge
+                  amount={growthReward}
+                  className="listing-detail-growth-reward"
+                />}
+              </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
                   <Price

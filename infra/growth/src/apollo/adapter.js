@@ -75,6 +75,7 @@ class ApolloAdapter {
     if (!data.visible) {
       return null
     }
+    const ruleHasNoUserData = data.status === null
 
     // Fetch common data across all action types.
     let action = {
@@ -92,6 +93,10 @@ class ApolloAdapter {
     // Some action types require to fetch extra custom data.
     switch (action.type) {
       case 'Referral':
+        if (ruleHasNoUserData) {
+          break
+        }
+
         const referralsInfo = await this._getReferralsActionData(data)
         action = { ...action, ...referralsInfo }
         break
@@ -140,6 +145,7 @@ const campaignToApolloObject = async (
   // User is not enrolled or is banned.
   // Return only basic campaign data.
   if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+    out.actions = await crules.export(adapter, null)
     return out
   }
 

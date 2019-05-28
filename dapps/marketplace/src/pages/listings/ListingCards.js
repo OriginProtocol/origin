@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+
 import Redirect from 'components/Redirect'
 import Price from 'components/Price'
+import OgnBadge from 'components/OgnBadge'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
+import { getGrowthListingsRewards } from 'utils/growthTools'
+import { fbt } from 'fbt-runtime'
 
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
@@ -14,47 +18,60 @@ class ListingCards extends Component {
     const { listings } = this.props
     if (!listings) return null
 
+    const ognListingRewards = getGrowthListingsRewards({
+      growthCampaigns: this.props.growthCampaigns,
+      tokenDecimals: this.props.tokenDecimals
+    })
+
     return (
       <div className="row">
         {this.state.redirect && <Redirect to={this.state.redirect} />}
-        {listings.map(a => (
-          <div
-            key={a.id}
-            onClick={e => {
-              if (altClick(e)) {
-                this.setState({ redirect: `/listing/${a.id}` })
-              } else if (e.target.tagName !== 'A') {
-                window.open(`#/listing/${a.id}`, '_blank')
-              }
-            }}
-            className="col-md-4 listing-card"
-          >
-            {a.media && a.media.length ? (
-              <div
-                className="main-pic"
-                style={{
-                  backgroundImage: `url(${a.media[0].urlExpanded})`
-                }}
-              />
-            ) : (
-              <div className="main-pic empty" />
-            )}
-            <div className="header">
-              <div className="category">
-                <Category listing={a} showPrimary={this.props.showCategory} />
+        {listings.map(a => {
+          const hasGrowthReward = ognListingRewards[a.id]
+
+          return (
+            <div
+              key={a.id}
+              onClick={e => {
+                if (altClick(e)) {
+                  this.setState({ redirect: `/listing/${a.id}` })
+                } else if (e.target.tagName !== 'A') {
+                  window.open(`#/listing/${a.id}`, '_blank')
+                }
+              }}
+              className="col-md-4 listing-card"
+            >
+              {a.media && a.media.length ? (
+                <div
+                  className="main-pic"
+                  style={{
+                    backgroundImage: `url(${a.media[0].urlExpanded})`
+                  }}
+                />
+              ) : (
+                <div className="main-pic empty" />
+              )}
+              <div className="header">
+                <div className="category">
+                  <Category listing={a} showPrimary={this.props.showCategory} />
+                </div>
+                <ListingBadge status={a.status} featured={a.featured} />
               </div>
-              <ListingBadge status={a.status} featured={a.featured} />
+              <h5>
+                <a href={`#/listing/${a.id}`}>{a.title}</a>
+              </h5>
+              {a.__typename === 'AnnouncementListing' ? null : (
+                <div className="price d-flex align-items-end">
+                  <Price listing={a} descriptor />
+                  {hasGrowthReward && <OgnBadge
+                    amount={ognListingRewards[a.id]}
+                    className="listing-card-growth-reward"
+                  />}
+                </div>
+              )}
             </div>
-            <h5>
-              <a href={`#/listing/${a.id}`}>{a.title}</a>
-            </h5>
-            {a.__typename === 'AnnouncementListing' ? null : (
-              <div className="price">
-                <Price listing={a} descriptor />
-              </div>
-            )}
-          </div>
-        ))}
+          )
+        })}
       </div>
     )
   }
@@ -125,4 +142,5 @@ require('react-styl')(`
         font-size: 14px
         font-weight: normal
         margin-left: 0.25rem
+        margin-bottom: 0.12rem
 `)
