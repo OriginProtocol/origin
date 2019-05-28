@@ -21,16 +21,7 @@ import { truncateAddress } from 'utils/user'
 const ONE_MINUTE = 1000 * 60
 
 class AccountScreen extends Component {
-  constructor(props) {
-    super(props)
-
-    this.handleSetAccountActive = this.handleSetAccountActive.bind(this)
-    this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-    this.handleSetAccountName = this.handleSetAccountName.bind(this)
-  }
-
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
       headerTitleStyle: {
@@ -39,6 +30,15 @@ class AccountScreen extends Component {
         fontWeight: 'normal'
       }
     }
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.handleSetAccountActive = this.handleSetAccountActive.bind(this)
+    this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.handleSetAccountName = this.handleSetAccountName.bind(this)
   }
 
   async handleDangerousCopy(privateKey) {

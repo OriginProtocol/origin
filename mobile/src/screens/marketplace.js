@@ -185,7 +185,7 @@ class MarketplaceScreen extends Component {
 
   /* Inject the language setting in from redux into the DApp
    */
-  injectLanguage(prevLanguage) {
+  injectLanguage() {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()

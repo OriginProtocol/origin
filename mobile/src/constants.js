@@ -61,23 +61,23 @@ export const CURRENCIES = [
 ]
 
 /* eslint-disable camelcase */
-import * as de_DE from 'locales/de_DE.json'
-import * as el_GR from 'locales/el_GR.json'
+// import * as de_DE from 'locales/de_DE.json'
+// import * as el_GR from 'locales/el_GR.json'
 import * as en_US from 'locales/en_US.json'
 import * as es_ES from 'locales/es_ES.json'
-import * as fr_FR from 'locales/fr_FR.json'
-import * as it_IT from 'locales/it_IT.json'
-import * as ja_JP from 'locales/ja_JP.json'
-import * as ko_KR from 'locales/ko_KR.json'
-import * as nl_NL from 'locales/nl_NL.json'
-import * as pt_PT from 'locales/pt_PT.json'
-import * as ro_RO from 'locales/ro_RO.json'
-import * as ru_RU from 'locales/ru_RU.json'
-import * as tr_TR from 'locales/tr_TR.json'
-import * as uk_UA from 'locales/uk_UA.json'
-import * as vi_VN from 'locales/vi_VN.json'
-import * as zh_CN from 'locales/zh_CN.json'
-import * as zh_TW from 'locales/zh_TW.json'
+// import * as fr_FR from 'locales/fr_FR.json'
+// import * as it_IT from 'locales/it_IT.json'
+// import * as ja_JP from 'locales/ja_JP.json'
+// import * as ko_KR from 'locales/ko_KR.json'
+// import * as nl_NL from 'locales/nl_NL.json'
+// import * as pt_PT from 'locales/pt_PT.json'
+// import * as ro_RO from 'locales/ro_RO.json'
+// import * as ru_RU from 'locales/ru_RU.json'
+// import * as tr_TR from 'locales/tr_TR.json'
+// import * as uk_UA from 'locales/uk_UA.json'
+// import * as vi_VN from 'locales/vi_VN.json'
+// import * as zh_CN from 'locales/zh_CN.json'
+// import * as zh_TW from 'locales/zh_TW.json'
 
 export const TRANSLATIONS = {
   // Comment out those without translations

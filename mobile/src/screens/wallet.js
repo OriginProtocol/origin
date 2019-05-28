@@ -12,7 +12,7 @@ import currencies from 'utils/currencies'
 import { evenlySplitAddress } from 'utils/user'
 
 class WalletScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
       headerTitleStyle: {

@@ -19,7 +19,7 @@ import { NETWORKS } from '../constants'
 const IMAGES_PATH = '../../assets/images/'
 
 class SettingsScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: String(fbt('Settings', 'SettingsScreen.headerTitle')),
       headerTitleStyle: {

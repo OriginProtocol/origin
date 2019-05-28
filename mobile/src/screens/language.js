@@ -20,7 +20,7 @@ import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
 const IMAGES_PATH = '../../assets/images/'
 
 class LanguageScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: String(fbt('Language', 'LanguageScreen.headerTitle')),
       headerTitleStyle: {
