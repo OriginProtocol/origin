@@ -65,7 +65,8 @@ class BackupScreen extends Component {
           'As a security precaution, the clipboard will be cleared after one minute.',
           'BackupScreen.dangerousCopyAlertMessage'
         )
-      )[
+      ),
+      [
         {
           text: String(fbt('Got it', 'BackupScreen.dangerousCopyButton')),
           onPress: async () => {
@@ -196,7 +197,7 @@ class BackupScreen extends Component {
                 type="link"
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={fbt('BackupScreen.copyButton', 'Copy to clipboard')}
+                title={fbt('Copy to clipboard', 'BackupScreen.copyButton')}
                 onPress={() =>
                   this.isPrivateKey
                     ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
@@ -288,8 +289,8 @@ class BackupScreen extends Component {
                     Select the words in the correct order
                   </fbt>
                 </Text>
-                this.renderWordSlots(this.state.verify)
-                this.renderWordSlots(this.state.shuffledMnemonic)
+                {this.renderWordSlots(this.state.verify)}
+                {this.renderWordSlots(this.state.shuffledMnemonic)}
               </>
             )}
           </View>

@@ -21,6 +21,17 @@ import { truncateAddress } from 'utils/user'
 const ONE_MINUTE = 1000 * 60
 
 class AccountScreen extends Component {
+  static navigationOptions = () => {
+    return {
+      title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
+    }
+  }
+
   constructor(props) {
     super(props)
 
@@ -28,15 +39,6 @@ class AccountScreen extends Component {
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleSetAccountName = this.handleSetAccountName.bind(this)
-  }
-
-  static navigationOptions = {
-    title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
-    }
   }
 
   async handleDangerousCopy(privateKey) {
@@ -146,17 +148,23 @@ class AccountScreen extends Component {
         >
           <View contentContainerStyle={styles.content} style={styles.container}>
             <View style={styles.header}>
-              <Text style={styles.heading}>NAME</Text>
+              <Text style={styles.heading}>
+                <fbt desc="AccountScreen.accountName">Name</fbt>
+              </Text>
             </View>
             <TextInput
-              placeholder={'Account name'}
+              placeholder={String(
+                fbt('Account name', 'AccountScreen.accountNamePlaceholder')
+              )}
               value={name}
               style={styles.input}
               onChange={this.handleSetAccountName}
               onSubmitEditing={this.handleNameUpdate}
             />
             <View style={styles.header}>
-              <Text style={styles.heading}>ETH ADDRESS</Text>
+              <Text style={styles.heading}>
+                <fbt desc="AccountScreen.ethAddress">Eth Address</fbt>
+              </Text>
             </View>
             <TextInput
               editable={false}
@@ -172,7 +180,10 @@ class AccountScreen extends Component {
                 disabled={isActive}
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Make Active Account'}
+                title={fbt(
+                  'Make Active Account',
+                  'AccountScreen.makeActiveAccountButton'
+                )}
                 onPress={this.handleSetAccountActive}
               />
             )}
@@ -183,7 +194,10 @@ class AccountScreen extends Component {
                   type="primary"
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
-                  title={'Show Recovery Phrase'}
+                  title={fbt(
+                    'Show Recovery Phrase',
+                    'AccountScreen.showRecoveryPhraseButton'
+                  )}
                   onPress={() =>
                     Alert.alert(
                       String(
@@ -198,7 +212,10 @@ class AccountScreen extends Component {
                   type="primary"
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
-                  title={'Copy Recovery Phrase'}
+                  title={fbt(
+                    'Copy Recovery Phrase',
+                    'AccountScreen.copyRecoveryPhraseButton'
+                  )}
                   onPress={() => this.handleDangerousCopy(mnemonic)}
                 />
               </>
@@ -210,7 +227,10 @@ class AccountScreen extends Component {
                   type="primary"
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
-                  title={'Show Private Key'}
+                  title={fbt(
+                    'Show Private Key',
+                    'AccountScreen.showPrivateKeyButton'
+                  )}
                   onPress={() =>
                     Alert.alert(
                       String(fbt('Private Key', 'AccountScreen.privateKey')),
@@ -223,7 +243,10 @@ class AccountScreen extends Component {
                   type="primary"
                   style={styles.button}
                   textStyle={{ fontSize: 18, fontWeight: '900' }}
-                  title={'Copy Private Key'}
+                  title={fbt(
+                    'Copy Private Key',
+                    'AccountScreen.copyPrivateKeyButton'
+                  )}
                   onPress={() => this.handleDangerousCopy(privateKey)}
                 />
               </>
@@ -235,7 +258,10 @@ class AccountScreen extends Component {
                 disabled={isActive}
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
-                title={'Delete Account'}
+                title={fbt(
+                  'Delete Account',
+                  'AccountScreen.deleteAccountButton'
+                )}
                 onPress={this.handleDelete}
               />
             )}
@@ -272,7 +298,8 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: 'Lato',
     fontSize: 13,
-    opacity: 0.5
+    opacity: 0.5,
+    textTransform: 'uppercase'
   },
   iconContainer: {
     height: 17,

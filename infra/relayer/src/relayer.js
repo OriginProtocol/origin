@@ -6,7 +6,19 @@ const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFac
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
+const { ip2geo } = require('@origin/ip2geo')
 const logger = require('./logger')
+const db = require('./models')
+const enums = require('./enums')
+
+let RiskEngine
+if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
+  RiskEngine = require('./risk/prod/engine')
+  logger.info('Loaded PROD risk engine.')
+} else {
+  RiskEngine = require('./risk/dev/engine')
+  logger.info('Loaded DEV risk engine.')
+}
 
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
@@ -70,9 +82,16 @@ class Relayer {
     }
 
     this.addresses = require(ContractAddresses[networkId])
-    this.web3 = new Web3(env.PROVIDER_URL || DefaultProviders[networkId])
-    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
+    logger.info('Addresses', this.addresses)
 
+    const providerUrl = env.PROVIDER_URL || DefaultProviders[networkId]
+    if (!providerUrl) {
+      throw new Error('Provider url not defined')
+    }
+    logger.info(`Provider URL: ${providerUrl}`)
+    this.web3 = new Web3(providerUrl)
+
+    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
     if (privateKey) {
       const wallet = this.web3.eth.accounts.wallet.add(privateKey)
       this.forwarder = wallet.address
@@ -90,35 +109,93 @@ class Relayer {
       .concat(this.ProxyFactory._jsonInterface)
       .filter(i => i.type === 'function' && !i.constant)
       .forEach(o => (this.methods[o.signature] = o))
+
+    this.riskEngine = new RiskEngine()
   }
+
+  /**
+   * Inserts a row in the DB to track the transaction.
+   *
+   * @param req
+   * @param status
+   * @param from
+   * @param to
+   * @param method
+   * @param forwarder
+   * @param ip
+   * @param geo
+   * @returns {Promise<models.RelayerTxn>}
+   * @private
+   */
+  async _createDbTx(req, status, from, to, method, forwarder, ip, geo) {
+    // TODO: capture extra signals for fraud detection and store in data.
+    const data = geo ? { ip, country: geo.countryCode } : { ip }
+
+    return await db.RelayerTxn.create({
+      status,
+      from: from.toLowerCase(),
+      to: to.toLowerCase(),
+      method,
+      forwarder: forwarder.toLowerCase(),
+      data
+    })
+  }
+
   /**
    * Processes a relay transaction request.
    *
-   * @param req
-   * @param res
+   * @param {Object} req - Request
+   * @param {Object} res - Response
    * @returns {Promise<*>}
    */
   async relay(req, res) {
     const { signature, from, txData, to, proxy, preflight } = req.body
-
-    // Pre-flight requests check if the relayer is available and willing to pay
-    if (preflight) {
-      return res.send({ success: true })
-    }
+    logger.debug('relay called with args:', {
+      from,
+      txData,
+      to,
+      proxy,
+      preflight
+    })
 
     const web3 = this.web3
 
     let Forwarder = this.forwarder
     if (this.networkId === 999) {
-      const nodeAccounts = await this.web3.eth.getAccounts()
+      const nodeAccounts = await web3.eth.getAccounts()
       Forwarder = nodeAccounts[0]
     }
-    let nonce = 0
+    const method = this.methods[txData.substr(0, 10)]
+
+    // Get the IP from the request header and resolve it into a country code.
+    const ip = req.header('x-real-ip')
+    const geo = await ip2geo(ip)
+
+    // Check if the relayer is willing to process the transaction.
+    const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
+    if (!accept) {
+      // Log the decline in the DB to use as data for future accept decisions.
+      await this._createDbTx(
+        req,
+        enums.RelayerTxnStatuses.Declined,
+        from,
+        to,
+        method.name,
+        Forwarder,
+        ip,
+        geo
+      )
+    }
+
+    // Pre-flight requests check if the relayer is available and willing to pay
+    if (preflight) {
+      return res.send({ success: accept })
+    }
 
     const IdentityProxy = this.IdentityProxy.clone()
     IdentityProxy.options.address = proxy
 
-    const method = this.methods[txData.substr(0, 10)]
+    let nonce = 0
     if (proxy) {
       nonce = await IdentityProxy.methods.nonce(from).call()
     }
@@ -126,15 +203,17 @@ class Relayer {
     const args = { to, from, signature, txData, web3, nonce }
     const sigValid = await verifySig(args)
     if (!sigValid) {
+      logger.debug('Invalid signature.')
       return res.status(400).send({ errors: ['Cannot verify your signature'] })
     }
 
     // 2. Verify txData and check function signature
     if (!method) {
+      logger.debug('Invalid method')
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
-    let tx, txHash
+    let tx, txHash, dbTx
 
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
@@ -144,33 +223,67 @@ class Relayer {
         } else if (method.name !== 'createProxyWithNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
         }
+        logger.debug('Deploying proxy')
         const args = { to, data: txData, from: Forwarder }
         const gas = await web3.eth.estimateGas(args)
+        dbTx = await this._createDbTx(
+          req,
+          enums.RelayerTxnStatuses.Pending,
+          from,
+          to,
+          method.name,
+          Forwarder
+        )
         tx = web3.eth.sendTransaction({ ...args, gas })
       } else {
+        logger.debug('Forwarding transaction')
         const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
         const gas = await rawTx.estimateGas({ from: Forwarder })
+        dbTx = await this._createDbTx(
+          req,
+          enums.RelayerTxnStatuses.Pending,
+          from,
+          to,
+          method.name,
+          Forwarder
+        )
         // TODO: Not sure why we need extra gas here
         tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
       }
 
-      txHash = await new Promise((resolve, reject) =>
-        tx
-          .once('transactionHash', resolve)
-          .once('receipt', receipt => {
+      txHash = await new Promise((resolve, reject) => {
+        tx.once('transactionHash', resolve)
+          .once('receipt', async receipt => {
+            // Once block is mined, record the amount of gas and update
+            // the status of the transaction in the DB.
             const gas = receipt.gasUsed
-            const acct = from.substr(0, 10)
+            await dbTx.update({
+              status: enums.RelayerTxnStatuses.Confirmed,
+              gas
+            })
             logger.info(
-              `Paid ${gas} gas on behalf of ${acct} for ${method.name}`
+              `Confirmed tx with hash ${
+                receipt.transactionHash
+              }. Paid ${gas} gas`
             )
           })
-          .catch(reject)
-      )
+          .catch(async reason => {
+            await dbTx.update({
+              status: enums.RelayerTxnStatuses.Failed
+            })
+            logger.error('Transaction failure:', reason)
+            reject(reason)
+          })
+      })
+      // Record the transaction hash in the DB.
+      logger.info(`Submitted tx with hash ${txHash}`)
+      await dbTx.update({ txHash })
     } catch (err) {
       logger.error(err)
       return res.status(400).send({ errors: ['Error forwarding'] })
     }
 
+    // Return the transaction hash to the caller.
     res.send({ id: txHash })
   }
 }

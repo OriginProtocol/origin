@@ -12,12 +12,14 @@ import currencies from 'utils/currencies'
 import { evenlySplitAddress } from 'utils/user'
 
 class WalletScreen extends Component {
-  static navigationOptions = {
-    title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  static navigationOptions = () => {
+    return {
+      title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
     }
   }
 
@@ -35,7 +37,7 @@ class WalletScreen extends Component {
           `For now, you will need to transfer ${fbt.param(
             'currency',
             currency
-          )} into your Orign Wallet from another source.`,
+          )} into your Origin Wallet from another source.`,
           'WalletScreen.fundingAlertMessage'
         )
       ),
