@@ -67,7 +67,7 @@ const finalizeOffer = async ({ buyer }) => {
 
 describe('Marketplace Dapp', function() {
   let seller, buyer
-  this.timeout(5000)
+  this.timeout(10000)
 
   describe('Single Unit Listing for Eth', function() {
     before(async function() {
