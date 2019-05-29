@@ -1,18 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-class OgnBadge extends Component {
-  render() {
-    const amount = this.props.amount
-    const className = this.props.className
-    return (
-      <span className={`growth-reward-amount ${className ? className : ''}`}>
-        <span className="earn">{fbt('Earn', 'Earn')}</span>
-        <img src="images/ogn-icon.svg" />
-        <span className="ogn">{amount}</span>
-      </span>
-    )
-  }
+const OgnBadge = ({ amount, className }) => {
+  
+  return (
+    <span className={`growth-reward-amount ${className ? className : ''}`}>
+      <span className="earn">{fbt('Earn', 'Earn')}</span>
+      <img src="images/ogn-icon.svg" />
+      <span className="ogn">{amount}</span>
+    </span>
+  )
 }
 
 export default OgnBadge

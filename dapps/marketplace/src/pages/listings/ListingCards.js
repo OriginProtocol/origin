@@ -5,7 +5,7 @@ import Price from 'components/Price'
 import OgnBadge from 'components/OgnBadge'
 import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
-import { getGrowthListingsRewards } from 'utils/growthTools'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
@@ -17,16 +17,11 @@ class ListingCards extends Component {
     const { listings } = this.props
     if (!listings) return null
 
-    const ognListingRewards = getGrowthListingsRewards({
-      growthCampaigns: this.props.growthCampaigns,
-      tokenDecimals: this.props.tokenDecimals
-    })
-
     return (
       <div className="row">
         {this.state.redirect && <Redirect to={this.state.redirect} />}
         {listings.map(a => {
-          const hasGrowthReward = ognListingRewards[a.id]
+          const hasGrowthReward = this.props.ognListingRewards[a.id]
 
           return (
             <div
@@ -64,7 +59,7 @@ class ListingCards extends Component {
                   <Price listing={a} descriptor />
                   {hasGrowthReward && (
                     <OgnBadge
-                      amount={ognListingRewards[a.id]}
+                      amount={this.props.ognListingRewards[a.id]}
                       className="listing-card-growth-reward"
                     />
                   )}
@@ -78,7 +73,7 @@ class ListingCards extends Component {
   }
 }
 
-export default ListingCards
+export default withGrowthRewards(ListingCards)
 
 require('react-styl')(`
   .listing-card

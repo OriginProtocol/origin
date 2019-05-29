@@ -9,7 +9,7 @@ import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 
 function withGrowthCampaign(
   WrappedComponent,
-  { useCache, queryEvenIfNotEnrolled, suppressErrors } = {}
+  { fetchPolicy = 'network-only', queryEvenIfNotEnrolled, suppressErrors } = {}
 ) {
   const WithGrowthCampaign = props => {
     return (
@@ -26,8 +26,7 @@ function withGrowthCampaign(
               query={enrollmentStatusQuery}
               variables={{ walletAddress }}
               skip={!walletAddress}
-              // enrollment info can change, do not cache it
-              fetchPolicy={useCache ? 'cache-first' : 'network-only'}
+              fetchPolicy={fetchPolicy}
             >
               {({ data, error }) => {
                 if (error && !suppressErrors) {
@@ -46,9 +45,7 @@ function withGrowthCampaign(
                         ? false
                         : enrollmentStatus !== 'Enrolled'
                     }
-                    // do not cache, so user does not need to refresh page when an
-                    // action is completed. Except if cache explicitly requested
-                    fetchPolicy={useCache ? 'cache-first' : 'network-only'}
+                    fetchPolicy={fetchPolicy}
                   >
                     {({ data, error }) => {
                       if (error && !suppressErrors) {

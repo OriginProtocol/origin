@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 import get from 'lodash/get'
-import { getGrowthListingsRewards } from 'utils/growthTools'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
@@ -282,11 +282,7 @@ class ListingDetail extends Component {
       b => b.id === this.props.walletProxy
     )
 
-    const ognListingRewards = getGrowthListingsRewards({
-      growthCampaigns: this.props.growthCampaigns,
-      tokenDecimals: this.props.tokenDecimals
-    })
-    const growthReward = ognListingRewards[listing.id]
+    const growthReward = this.props.ognListingRewards[listing.id]
 
     const props = { ...this.props }
     if (growthReward) {
@@ -342,8 +338,8 @@ class ListingDetail extends Component {
   }
 }
 
-export default withGrowthCampaign(withWallet(withTokenBalance(ListingDetail)), {
-  useCache: true,
+export default withGrowthCampaign(withWallet(withTokenBalance(withGrowthRewards(ListingDetail))), {
+  fetchPolicy: 'cache-first',
   queryEvenIfNotEnrolled: true,
   suppressErrors: true // still show listing detail in case growth can not be reached
 })
