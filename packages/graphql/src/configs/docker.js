@@ -14,11 +14,15 @@ const config = {
   providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://${HOST}:8545`),
   ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${HOST}:9999`),
   ipfsRPC: get(process.env, 'IPFS_API_URL', `http://${HOST}:9999`),
-  bridge: `http://${HOST}:5000`,
-  growth: `http://${HOST}:4001`,
-  discovery: `http://${HOST}:4000/graphql`,
+  bridge: get(process.env, 'BRIDGE_SERVER_URL', `http://${HOST}:5000`),
+  growth: get(process.env, 'GROWTH_SERVER_URL', `http://${HOST}:4001`),
+  discovery: get(
+    process.env,
+    'DISCOVERY_SERVER_URL',
+    `http://${HOST}:4000/graphql`
+  ),
   notifications: `http://${HOST}:3456`,
-  performanceMode: true,
+  performanceMode: false,
   graphql: `http://${HOST}:4002`,
   automine: 2000,
   messaging: {
