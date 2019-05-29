@@ -4,9 +4,9 @@ import React from 'react'
 import { Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setBackupWarningStatus } from 'actions/Activation'
-import { get } from 'utils'
 import BackupCard from 'components/backup-card'
 import NavigationService from '../NavigationService'
 

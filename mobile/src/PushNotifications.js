@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import { connect } from 'react-redux'
+import get from 'lodash.get'
 
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken, setNetwork } from 'actions/Settings'
@@ -18,7 +19,6 @@ import {
   ETH_NOTIFICATION_TYPES,
   NETWORKS
 } from './constants'
-import { get } from 'utils'
 import NavigationService from './NavigationService'
 import withConfig from 'hoc/withConfig'
 

@@ -17,6 +17,7 @@ import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
 import { ethers } from 'ethers'
+import get from 'lodash.get'
 const bip39 = require('bip39')
 
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
@@ -37,7 +38,6 @@ import {
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
 } from './constants'
-import { get } from 'utils'
 import { loadData, deleteData } from './tools'
 import withConfig from 'hoc/withConfig'
 
