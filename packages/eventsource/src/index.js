@@ -80,8 +80,7 @@ class OriginEventSource {
     try {
       listing = await getListing(this.contract, listingId)
     } catch (e) {
-      console.log(`No such listing on contract ${listingId}`)
-      return null
+      throw new Error(`No such listing on contract ${listingId}`)
     }
 
     const events = await this.contract.eventCache.getEvents({
