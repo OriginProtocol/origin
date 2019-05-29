@@ -18,6 +18,7 @@ import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withConfig from 'hoc/withConfig'
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -36,6 +37,10 @@ class Buy extends Component {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    if (!this.props.wallet) {
+      return null
+    }
 
     let action = (
       <button
@@ -338,7 +343,8 @@ class Buy extends Component {
       token: this.props.currency,
       from: this.props.walletProxy,
       to: 'marketplace',
-      value: this.props.value
+      value: this.props.value,
+      forceProxy: this.props.config.proxyAccountsEnabled
     }
 
     allowToken({ variables })
@@ -412,7 +418,9 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+export default withConfig(
+  withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+)
 
 require('react-styl')(`
   .make-offer-modal

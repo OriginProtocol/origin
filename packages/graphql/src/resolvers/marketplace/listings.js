@@ -1,7 +1,7 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
 import { getFeatured, getHidden } from './_featuredAndHidden'
-import proxyOwner from '../../utils/proxyOwner'
+import { proxyOwner } from '../../utils/proxy'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')

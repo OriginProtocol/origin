@@ -2,8 +2,7 @@ import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
-import proxyOwner from '../utils/proxyOwner'
-import hasProxy from '../utils/hasProxy'
+import { proxyOwner, resetProxyCache, predictedProxy } from '../utils/proxy'
 import get from 'lodash/get'
 
 import { getTransaction } from '../resolvers/web3/transactions'
@@ -42,15 +41,24 @@ function useRelayer({ mutation, value }) {
   return window.localStorage.enableRelayer ? true : false
 }
 
-function useProxy({ proxy, addr, to, mutation }) {
-  if (!contracts.config.proxyAccountsEnabled) return false
-  if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
+async function useProxy({ proxy, addr, to, from, mutation }) {
+  const { proxyAccountsEnabled } = contracts.config
+  if (!proxyAccountsEnabled) return false
   if (to) return false
   if (mutation === 'updateTokenAllowance') return false
   if (mutation === 'swapToToken') return false
   if (!proxy && mutation === 'deployIdentity') return 'create'
   if (!proxy && mutation === 'createListing') return 'create'
-  if (!proxy && mutation === 'makeOffer') return 'create'
+  if (!proxy && mutation === 'makeOffer') {
+    // If the target contract is the same as the predicted proxy address,
+    // no need to wrap with changeOwnerAndExecute
+    const predicted = await predictedProxy(from)
+    if (addr === predicted) {
+      return 'create-no-wrap'
+    }
+    return 'create'
+  }
+  if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
   if (!proxy) return false
   return true
 }
@@ -110,42 +118,37 @@ export default function txHelper({
     }
 
     const addr = get(tx, '_parent._address')
-    const shouldUseProxy = useProxy({ proxy, addr, to, mutation })
-    if (shouldUseProxy === 'create') {
-      console.log('create proxy', mutation)
-      const Proxy = new web3.eth.Contract(IdentityProxy.abi)
+    const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
 
+    // If this user doesn't have a proxy yet, create one
+    if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
       const txData = await tx.encodeABI()
-      const initFn = await Proxy.methods
-        .changeOwnerAndExecute(from, addr, value || '0', txData)
-        .encodeABI()
+      let initFn = txData
+      if (shouldUseProxy === 'create') {
+        const Proxy = new web3.eth.Contract(IdentityProxy.abi)
+        initFn = await Proxy.methods
+          .changeOwnerAndExecute(from, addr, value || '0', txData)
+          .encodeABI()
+      }
 
       const Contract = new web3.eth.Contract(
         ProxyFactory.abi,
         contracts.config.ProxyFactory
       )
-      console.log('createProxyWithSenderNonce', {
-        initFn,
-        from,
-        addr,
-        value,
-        txData,
-        imp: contracts.config.IdentityProxyImplementation
-      })
       toSend = Contract.methods.createProxyWithSenderNonce(
         contracts.config.IdentityProxyImplementation,
         initFn,
         from,
-        value || '0'
+        '0'
       )
       // gas = await toSend.estimateGas({ from })
-      gas = 500000
+      gas = 1000000
     } else if (shouldUseProxy) {
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
-      gas = await toSend.estimateGas({ from })
-      gas += 100000
+      // gas = await toSend.estimateGas({ from })
+      gas = 1000000
     }
 
     if (web3 && to) {
@@ -188,6 +191,9 @@ export default function txHelper({
         })
       })
       .once('receipt', receipt => {
+        if (String(shouldUseProxy).indexOf('create') === 0) {
+          resetProxyCache()
+        }
         if (onReceipt) {
           onReceipt(receipt)
         }
@@ -210,9 +216,8 @@ export default function txHelper({
       })
       .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
         if (confNumber === 1) {
-          if (shouldUseProxy === 'create') {
-            hasProxy.cache.clear()
-            proxyOwner.cache.clear()
+          if (String(shouldUseProxy).indexOf('create') === 0) {
+            resetProxyCache()
           }
           if (onConfirmation) {
             onConfirmation(receipt)

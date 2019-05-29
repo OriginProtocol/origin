@@ -6,7 +6,7 @@ import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
-import proxyOwner from '../../utils/proxyOwner'
+import { proxyOwner, predictedProxy } from '../../utils/proxy'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -72,17 +72,27 @@ async function makeOffer(_, data) {
   }
 
   let tx = marketplace.methods.makeOffer(...args)
-  const owner = await proxyOwner(buyer)
-  if (owner && currencyAddress !== ZeroAddress) {
-    const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, buyer)
-    const txData = await tx.encodeABI()
-    tx = Proxy.methods.transferTokenMarketplaceExecute(
-      owner,
-      contracts.marketplace._address,
-      txData,
-      currencyAddress,
-      value
-    )
+  if (contracts.config.proxyAccountsEnabled) {
+    let owner = await proxyOwner(buyer)
+    if (currencyAddress !== ZeroAddress) {
+      let proxy = buyer
+      if (!owner) {
+        owner = buyer
+        proxy = await predictedProxy(buyer)
+      }
+      const Proxy = new contracts.web3Exec.eth.Contract(
+        IdentityProxy.abi,
+        proxy
+      )
+      const txData = await tx.encodeABI()
+      tx = Proxy.methods.transferTokenMarketplaceExecute(
+        owner,
+        contracts.marketplace._address,
+        txData,
+        currencyAddress,
+        value
+      )
+    }
   }
 
   return txHelper({

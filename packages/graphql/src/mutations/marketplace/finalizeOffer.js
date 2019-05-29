@@ -4,7 +4,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
-import proxyOwner from '../../utils/proxyOwner'
+import { proxyOwner } from '../../utils/proxy'
 
 async function finalizeOffer(_, data) {
   const from = data.from || contracts.defaultMobileAccount

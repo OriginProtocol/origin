@@ -3,8 +3,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
-import hasProxy from '../../utils/hasProxy'
-import proxyOwner from '../../utils/proxyOwner'
+import { proxyOwner, hasProxy } from '../../utils/proxy'
 
 async function deployIdentityViaProxy(
   _,

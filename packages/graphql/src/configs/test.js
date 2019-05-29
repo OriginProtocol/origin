@@ -1,4 +1,5 @@
 const HOST = process.env.HOST || 'localhost'
+const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
@@ -24,6 +25,10 @@ const config = {
   V00_Marketplace: addresses.Marketplace,
   IdentityEvents: addresses.IdentityEvents,
   DaiExchange: addresses.UniswapDaiExchange,
+  ProxyFactory: addresses.ProxyFactory,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+
   tokens: []
 }
 

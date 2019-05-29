@@ -228,13 +228,12 @@ class Details extends Component {
         'Price must be a number',
         'Price must be a number'
       )
+    } else if (Number(this.state.price) <= 0) {
+      newState.priceError = fbt(
+        'Price must be greater than zero',
+        'Price must be greater than zero'
+      )
     }
-    // else if (Number(this.state.price) <= 0) {
-    //   newState.priceError = fbt(
-    //     'Price must be greater than zero',
-    //     'Price must be greater than zero'
-    //   )
-    // }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 

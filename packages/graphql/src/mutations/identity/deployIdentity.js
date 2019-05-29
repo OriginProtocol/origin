@@ -4,7 +4,7 @@ import validator from '@origin/validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
-import hasProxy from '../../utils/hasProxy'
+import { hasProxy } from '../../utils/proxy'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(

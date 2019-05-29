@@ -14,11 +14,6 @@ let page
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
-  // Close Origin Marketplace app modal
-  await page.waitForSelector('.pl-modal-content .close')
-  setTimeout(async () => {
-    await clickBySelector(page, '.pl-modal-content .close')
-  }, 100)
 })
 
 const reset = async () => {
@@ -29,6 +24,7 @@ const reset = async () => {
     window.sessionStorage.clear()
     window.location = '/#/'
   })
+
   return { buyer, seller }
 }
 
@@ -65,11 +61,9 @@ const finalizeOffer = async ({ buyer }) => {
   await pic(page, 'transaction-finalized')
 }
 
-describe('Marketplace Dapp', function() {
-  let seller, buyer
-  this.timeout(5000)
-
+function listingTests() {
   describe('Single Unit Listing for Eth', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -141,6 +135,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Single Unit Listing for Dai', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -199,6 +194,7 @@ describe('Marketplace Dapp', function() {
 
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
+      await waitForText(page, 'Payment', 'span')
       await clickByText(page, 'Swap Now', 'button')
     })
 
@@ -232,6 +228,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Multi Unit Listing for Eth', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -315,7 +312,7 @@ describe('Marketplace Dapp', function() {
 
   describe('Edit user profile', function() {
     before(async function() {
-      ({ seller, buyer } = await reset())
+      await reset()
     })
 
     it('should go to the profile page', async function() {
@@ -362,4 +359,32 @@ describe('Marketplace Dapp', function() {
       await clickByText(page, 'OK', 'button')
     })
   })
+}
+
+describe('Marketplace Dapp', function() {
+  this.timeout(6000)
+  before(async function() {
+    await page.evaluate(() => {
+      delete window.localStorage.proxyAccountsEnabled
+      window.transactionPoll = 100
+      window.localStorage.useWeb3Wallet =
+        '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe('Marketplace Dapp with proxies enabled', function() {
+  this.timeout(10000)
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.proxyAccountsEnabled = true
+      window.transactionPoll = 100
+      window.localStorage.useWeb3Wallet =
+        '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
 })

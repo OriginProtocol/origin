@@ -6,7 +6,7 @@ import contracts from '../contracts'
 import { listingsBySeller } from './marketplace/listings'
 import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
-import proxyOwner from '../utils/proxyOwner'
+import { proxyOwner } from '../utils/proxy'
 import { transactions } from './web3/transactions'
 
 const ec = () => contracts.marketplace.eventCache
