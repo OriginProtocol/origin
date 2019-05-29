@@ -95,7 +95,7 @@ class WelcomeScreen extends Component {
               type="primary"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={fbt('Next', 'WelcomeScreen.nextButton')}
+              title={fbt('Continue', 'WelcomeScreen.continueButton')}
               onPress={() => {
                 this.props.navigation.navigate(onboardingStep)
               }}
