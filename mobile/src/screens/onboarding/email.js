@@ -7,6 +7,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setEmail } from 'actions/Settings'
+import OriginButton from 'components/origin-button'
 
 class EmailScreen extends Component {
   constructor(props) {
@@ -20,25 +21,8 @@ class EmailScreen extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidUpdate() {
-    const { emailError, emailValue } = this.state
-
-    if (emailError && !emailValue) {
-      this.setState({ emailError: '' })
-    }
-
-    if (this.props.settings.email && this.props.settings.email.length > 0) {
-      // Email is set
-      if (!this.props.settings.pin && !this.props.settings.biometryType) {
-        this.props.navigation.navigate('Authentication')
-      } else {
-        this.props.navigation.navigate('Ready')
-      }
-    }
-  }
-
   handleChange(emailValue) {
-    this.setState({ emailValue: emailValue.trim() })
+    this.setState({ emailError: '', emailValue: emailValue.trim() })
   }
 
   handleSubmit() {
@@ -46,6 +30,7 @@ class EmailScreen extends Component {
     const emailPattern = /.+@.+\..+/
     if (emailPattern.test(this.state.emailValue)) {
       this.props.setEmail(this.state.emailValue)
+      this.props.navigation.navigate('Name')
     } else {
       this.setState({
         emailError: String(
@@ -63,7 +48,7 @@ class EmailScreen extends Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>
-            <fbt desc="EmailScreen.title">Let&apos;s Get Started</fbt>
+            <fbt desc="EmailScreen.title">Let&apos;s get started</fbt>
           </Text>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.subtitle">
@@ -71,6 +56,7 @@ class EmailScreen extends Component {
             </fbt>
           </Text>
           <TextInput
+            placeholder="yourname@youremail.com"
             autoCapitalize="none"
             autoCorrect={false}
             multiline={true}
@@ -78,18 +64,30 @@ class EmailScreen extends Component {
             onSubmitEditing={this.handleSubmit}
             value={this.state.emailValue}
             style={[styles.input, this.state.emailError ? styles.invalid : {}]}
+            autofocus={true}
           />
           {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
           )}
+          <View style={styles.legalContainer}>
+            <Text style={styles.legal}>
+              <fbt desc="EmailScreen.disclaimer">
+                We will use your email to notify you of important notifications
+                when you buy or sell.
+              </fbt>
+            </Text>
+          </View>
         </View>
-        <View style={styles.legalContainer}>
-          <Text style={styles.legal}>
-            <fbt desc="EmailScreen.disclaimer">
-              We will use your email to notify you of important notifications
-              when you buy or sell.
-            </fbt>
-          </Text>
+        <View style={styles.buttonsContainer}>
+          <OriginButton
+            size="large"
+            type="primary"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={fbt('Continue', 'EmailScreen.continueButton')}
+            disabled={!this.state.emailValue.length || this.state.emailError}
+            onPress={this.handleSubmit}
+          />
         </View>
       </SafeAreaView>
     )
@@ -125,6 +123,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#98a7b4'
   },
+  buttonsContainer: {
+    width: '100%'
+  },
+  button: {
+    marginBottom: 20,
+    marginHorizontal: 50
+  },
   content: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -136,23 +141,22 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginHorizontal: 50,
     paddingBottom: 30,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#293f55'
   },
   subtitle: {
     fontFamily: 'Lato',
     fontSize: 20,
-    fontWeight: '600',
     marginHorizontal: 50,
     paddingBottom: 30,
     textAlign: 'center'
   },
   input: {
-    backgroundColor: '#eaf0f3',
+    fontSize: 20,
     borderColor: '#c0cbd4',
-    borderWidth: 1,
-    borderRadius: 5,
+    borderBottomWidth: 1,
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',

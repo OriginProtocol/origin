@@ -10,10 +10,22 @@ class StackSelector extends React.Component {
   }
 
   selectStack() {
-    const displayOnboarding =
-      !this.props.settings.pin && !this.props.settings.biometryType
-    if (displayOnboarding) {
-      this.props.navigation.navigate('Welcome')
+    let onboardingStep
+    if (!this.props.settings.pin && !this.props.settings.biometryType) {
+      onboardingStep = 'Authentication'
+    } else if (!this.props.settings.email) {
+      onboardingStep = 'Email'
+    } else if (
+      !this.props.settings.firstName ||
+      !this.props.settings.lastName
+    ) {
+      onboardingStep = 'Name'
+    } else if (!this.props.settings.profileImage) {
+      onboardingStep = 'ProfileImage'
+    }
+
+    if (onboardingStep) {
+      this.props.navigation.navigate('Welcome', { onboardingStep })
     } else {
       this.props.navigation.navigate('GuardedApp')
     }

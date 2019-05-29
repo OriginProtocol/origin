@@ -24,9 +24,11 @@ import WalletScreen from 'screens/wallet'
 import AuthenticationGuard from 'components/authentication-guard'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
-import EmailScreen from 'screens/onboarding/email'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
+import EmailScreen from 'screens/onboarding/email'
+import NameScreen from 'screens/onboarding/name'
+import ProfileImageScreen from 'screens/onboarding/profile-image'
 import ReadyScreen from 'screens/onboarding/ready'
 
 const IMAGES_PATH = '../assets/images/'
@@ -42,6 +44,8 @@ const OnboardingStack = createSwitchNavigator(
       }
     },
     Email: EmailScreen,
+    Name: NameScreen,
+    ProfileImage: ProfileImageScreen,
     Authentication: Authentication,
     Pin: PinScreen,
     Ready: ReadyScreen

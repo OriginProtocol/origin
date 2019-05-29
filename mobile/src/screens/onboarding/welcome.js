@@ -30,6 +30,7 @@ class WelcomeScreen extends Component {
     const { wallet } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
+    const onboardingStep = this.props.navigation.getParam('onboardingStep')
 
     return (
       <SafeAreaView style={styles.container}>
@@ -50,7 +51,7 @@ class WelcomeScreen extends Component {
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
-          {wallet.accounts.length === 0 && (
+          {!onboardingStep && (
             <>
               <OriginButton
                 size="large"
@@ -88,7 +89,7 @@ class WelcomeScreen extends Component {
               />
             </>
           )}
-          {wallet.accounts.length > 0 && (
+          {onboardingStep && (
             <OriginButton
               size="large"
               type="primary"
@@ -96,7 +97,7 @@ class WelcomeScreen extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={fbt('Next', 'WelcomeScreen.nextButton')}
               onPress={() => {
-                this.props.navigation.navigate('Authentication')
+                this.props.navigation.navigate(onboardingStep)
               }}
             />
           )}

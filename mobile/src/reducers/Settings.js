@@ -6,10 +6,14 @@ import { NETWORKS } from '../constants'
 const initialState = {
   network: NETWORKS.find(n => n.name === 'Mainnet'),
   deviceToken: null,
-  email: null,
+  language: null,
+  // Onboarding
   pin: null,
   biometryType: null,
-  language: null
+  email: null,
+  firstName: null,
+  lastName: null,
+  profileImage: null
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -34,6 +38,16 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_LANGUAGE:
       return { ...state, language: action.language }
+
+    case SettingsConstants.SET_NAME:
+      return {
+        ...state,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName
+      }
+
+    case SettingsConstants.SET_PROFILE_IMAGE:
+      return { ...state, profileImage: action.profileImage }
   }
 
   return state
