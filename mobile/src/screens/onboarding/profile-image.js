@@ -35,14 +35,13 @@ class ProfileImage extends Component {
       profileImageSource: null,
       imagePickerError: null
     }
-    this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleImageClick = this.handleImageClick.bind(this)
   }
 
-  handleChange(field, value) {}
-
-  handleSubmit() {}
+  handleSubmit() {
+    this.props.navigation.navigate('Authentication')
+  }
 
   handleImageClick() {
     ImagePicker.showImagePicker(imagePickerOptions, response => {
@@ -51,6 +50,7 @@ class ProfileImage extends Component {
         console.log(response.error)
       } else {
         const source = { uri: response.uri }
+        // TODO upload to IPFS and store the URI
         this.setState({
           profileImageSource: source
         })
@@ -76,7 +76,7 @@ class ProfileImage extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'ProfileImageScreen.continueButton')}
-            disabled={!this.state.profileImage}
+            disabled={!this.state.profileImageSource}
             onPress={this.handleSubmit}
           />
         </View>
@@ -104,47 +104,24 @@ class ProfileImage extends Component {
   }
 
   renderImage() {
-    let image
-    if (!this.state.profileImageSource) {
-      // Placeholder image
-      image = (
-        <>
-          <Image
-            resizeMethod={'scale'}
-            resizeMode={'contain'}
-            source={require(IMAGES_PATH + 'partners-graphic.png')}
-            style={styles.placeholderImage}
-          />
-          <Text style={styles.title}>
-            <fbt desc="ProfileImageScreen.title">Upload a photo</fbt>
-          </Text>
-        </>
-      )
-    } else {
-      image = (
-        <>
-          <Image
-            resizeMethod={'scale'}
-            resizeMode={'contain'}
-            source={this.state.profileImageSource}
-            style={styles.uploadedImage}
-          />
-          <Text style={styles.title}>
-            <fbt desc="ProfileImageScreen.successTitle">Looking good</fbt>
-          </Text>
-        </>
-      )
-    }
     return (
       <TouchableOpacity
         onPress={this.handleImageClick}
-        style={
-          this.state.profileImageSource
-            ? styles.uploadedImageContainer
-            : styles.placeholderImageContainer
-        }
+        style={styles.content}
       >
-        {image}
+        <Image
+          resizeMethod={'scale'}
+          resizeMode={'contain'}
+          source={this.state.profileImageSource || require(IMAGES_PATH + 'partners-graphic.png')}
+          style={styles.image}
+        />
+        <Text style={styles.title}>
+          {!this.state.profileImageSource ? (
+            <fbt desc="ProfileImageScreen.title">Upload a photo</fbt>
+          ) : (
+            <fbt desc="ProfileImageScreen.successTitle">Looking good</fbt>
+          )}
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -182,13 +159,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1
   },
-  placeholderImageContainer: {
+  image: {
     backgroundColor: '#2e3f53',
-    borderRadius: 50,
-    width: 92,
-    height: 92,
-    alignItems: 'center',
-    justifyContent: 'center'
+    borderRadius: 60,
+    width: 120,
+    height: 120,
   },
   title: {
     fontFamily: 'Lato',
