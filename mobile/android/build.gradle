@@ -41,7 +41,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        // Release builds crash with 3.4.0
+        // Release builds crash with 3.4.0 and 3.4.1
         // https://github.com/facebook/react-native/issues/18357#issuecomment-437186504
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.google.gms:google-services:4.0.2'

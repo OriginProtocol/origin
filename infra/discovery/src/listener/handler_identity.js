@@ -14,7 +14,7 @@ const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
-const { ip2geo } = require('@origin/growth/src/util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {

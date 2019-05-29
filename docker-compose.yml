@@ -51,6 +51,7 @@ services:
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/event-cache/:/app/packages/event-cache/
+      - ./packages/ip2geo/:/app/packages/ip2geo/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
       - ./packages/mobile-bridge/:/app/packages/mobile-bridge/
@@ -72,6 +73,7 @@ services:
       - /app/packages/eventsource/node_modules/
       - /app/packages/event-cache/node_modules/
       - /app/packages/ipfs/node_modules/
+      - /app/packages/ip2geo/node_modules/
       - /app/packages/messaging-client/node_modules/
       - /app/packages/mobile-bridge/node_modules/
       - /app/packages/validator/node_modules/
@@ -189,8 +191,16 @@ services:
     image: origin
     volumes: *volumes
     environment:
+      - DOCKER=true
       - NETWORK=docker
       - GRAPHQL_SERVER_PORT=4002
+      - PROVIDER_URL=http://services:8545
+      - PROVIDER_WS_URL=ws://services:8545
+      - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
+      - IPFS_API_URL=http://ipfs-proxy:9999
+      - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
+      - BRIDGE_SERVER_URL=http://bridge:5000
+      - GROWTH_SERVER_URL=http://growth:4001
     depends_on:
       - discovery
     ports:

@@ -217,6 +217,7 @@ class EventCache {
     }
 
     if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
+      debug('noop, current')
       return
     }
 
