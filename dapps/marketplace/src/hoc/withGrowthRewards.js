@@ -28,12 +28,8 @@ export default function withGrowthRewards(WrappedComponent) {
       }
     }
 
-    return (
-      <WrappedComponent
-        {...props}
-        ognListingRewards={ognListingRewards}
-      />)
+    return <WrappedComponent {...props} ognListingRewards={ognListingRewards} />
   }
-  
+
   return WithGrowthRewards
 }

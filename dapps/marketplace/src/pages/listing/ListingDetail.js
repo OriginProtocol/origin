@@ -338,11 +338,14 @@ class ListingDetail extends Component {
   }
 }
 
-export default withGrowthCampaign(withWallet(withTokenBalance(withGrowthRewards(ListingDetail))), {
-  fetchPolicy: 'cache-first',
-  queryEvenIfNotEnrolled: true,
-  suppressErrors: true // still show listing detail in case growth can not be reached
-})
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withGrowthRewards(ListingDetail))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listing detail in case growth can not be reached
+  }
+)
 
 require('react-styl')(`
   .listing-detail
