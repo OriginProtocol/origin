@@ -8,6 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setEmail } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
 
 class EmailScreen extends Component {
   constructor(props) {
@@ -25,12 +26,12 @@ class EmailScreen extends Component {
     this.setState({ emailError: '', emailValue: emailValue.trim() })
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     // Naive/simple email regex but should catch most issues
     const emailPattern = /.+@.+\..+/
     if (emailPattern.test(this.state.emailValue)) {
-      this.props.setEmail(this.state.emailValue)
-      this.props.navigation.navigate('Name')
+      await this.props.setEmail(this.state.emailValue)
+      this.props.navigation.navigate(this.props.nextOnboardingStep)
     } else {
       this.setState({
         emailError: String(
@@ -56,7 +57,6 @@ class EmailScreen extends Component {
             </fbt>
           </Text>
           <TextInput
-            placeholder="yourname@youremail.com"
             autoCapitalize="none"
             autoCorrect={false}
             multiline={true}
@@ -102,10 +102,12 @@ const mapDispatchToProps = dispatch => ({
   setEmail: email => dispatch(setEmail(email))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EmailScreen)
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EmailScreen)
+)
 
 const styles = StyleSheet.create({
   container: {

@@ -3,6 +3,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
+
 class StackSelector extends React.Component {
   constructor(props) {
     super(props)
@@ -10,22 +12,11 @@ class StackSelector extends React.Component {
   }
 
   selectStack() {
-    let onboardingStep
-    if (!this.props.settings.pin && !this.props.settings.biometryType) {
-      onboardingStep = 'Authentication'
-    } else if (!this.props.settings.email) {
-      onboardingStep = 'Email'
-    } else if (
-      !this.props.settings.firstName ||
-      !this.props.settings.lastName
+    if (
+      this.props.nextOnboardingStep &&
+      this.props.nextOnboardingStep !== 'Ready'
     ) {
-      onboardingStep = 'Name'
-    } else if (!this.props.settings.profileImage) {
-      onboardingStep = 'ProfileImage'
-    }
-
-    if (onboardingStep) {
-      this.props.navigation.navigate('Welcome', { onboardingStep })
+      this.props.navigation.navigate('Welcome')
     } else {
       this.props.navigation.navigate('GuardedApp')
     }
@@ -40,7 +31,9 @@ const mapStateToProps = ({ settings, wallet }) => {
   return { settings, wallet }
 }
 
-export default connect(
-  mapStateToProps,
-  {}
-)(StackSelector)
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    {}
+  )(StackSelector)
+)

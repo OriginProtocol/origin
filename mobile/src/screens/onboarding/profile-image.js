@@ -18,6 +18,7 @@ import ImagePicker from 'react-native-image-picker'
 import { setProfileImage } from 'actions/Settings'
 import { SettingsButton } from 'components/settings-button'
 import OriginButton from 'components/origin-button'
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
 
 const IMAGES_PATH = '../../../assets/images/'
 const imagePickerOptions = {
@@ -32,7 +33,6 @@ class ProfileImage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      profileImageSource: null,
       imagePickerError: null
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -40,20 +40,16 @@ class ProfileImage extends Component {
   }
 
   handleSubmit() {
-    this.props.navigation.navigate('Authentication')
+    this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
   handleImageClick() {
-    ImagePicker.showImagePicker(imagePickerOptions, response => {
+    ImagePicker.showImagePicker(imagePickerOptions, async response => {
       if (response.error) {
         this.setState({ imagePickerError: response.error })
-        console.log(response.error)
       } else {
-        const source = { uri: response.uri }
         // TODO upload to IPFS and store the URI
-        this.setState({
-          profileImageSource: source
-        })
+        await this.props.setProfileImage(response.uri)
       }
     })
   }
@@ -76,7 +72,7 @@ class ProfileImage extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'ProfileImageScreen.continueButton')}
-            disabled={!this.state.profileImageSource}
+            disabled={!this.props.settings.profileImage}
             onPress={this.handleSubmit}
           />
         </View>
@@ -105,18 +101,19 @@ class ProfileImage extends Component {
 
   renderImage() {
     return (
-      <TouchableOpacity
-        onPress={this.handleImageClick}
-        style={styles.content}
-      >
+      <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
         <Image
           resizeMethod={'scale'}
           resizeMode={'contain'}
-          source={this.state.profileImageSource || require(IMAGES_PATH + 'partners-graphic.png')}
+          source={
+            this.props.settings.profileImage
+              ? { uri: this.props.settings.profileImage }
+              : require(IMAGES_PATH + 'partners-graphic.png')
+          }
           style={styles.image}
         />
         <Text style={styles.title}>
-          {!this.state.profileImageSource ? (
+          {!this.props.settings.profileImage ? (
             <fbt desc="ProfileImageScreen.title">Upload a photo</fbt>
           ) : (
             <fbt desc="ProfileImageScreen.successTitle">Looking good</fbt>
@@ -135,10 +132,12 @@ const mapDispatchToProps = dispatch => ({
   setProfileImage: payload => dispatch(setProfileImage(payload))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileImage)
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ProfileImage)
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e3f53',
     borderRadius: 60,
     width: 120,
-    height: 120,
+    height: 120
   },
   title: {
     fontFamily: 'Lato',

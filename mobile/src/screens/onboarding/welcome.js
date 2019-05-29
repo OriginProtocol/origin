@@ -14,6 +14,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -30,7 +31,6 @@ class WelcomeScreen extends Component {
     const { wallet } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
-    const onboardingStep = this.props.navigation.getParam('onboardingStep')
 
     return (
       <SafeAreaView style={styles.container}>
@@ -51,7 +51,7 @@ class WelcomeScreen extends Component {
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
-          {!onboardingStep && (
+          {wallet.accounts.length === 0 && (
             <>
               <OriginButton
                 size="large"
@@ -68,7 +68,9 @@ class WelcomeScreen extends Component {
                   this.setState({ loading: true }, () => {
                     setTimeout(() => {
                       DeviceEventEmitter.emit('createAccount')
-                      this.props.navigation.navigate('Authentication')
+                      this.props.navigation.navigate(
+                        this.props.nextOnboardingStep
+                      )
                     })
                   })
                 }}
@@ -89,7 +91,7 @@ class WelcomeScreen extends Component {
               />
             </>
           )}
-          {onboardingStep && (
+          {wallet.accounts.length > 0 && (
             <OriginButton
               size="large"
               type="primary"
@@ -97,7 +99,7 @@ class WelcomeScreen extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={fbt('Continue', 'WelcomeScreen.continueButton')}
               onPress={() => {
-                this.props.navigation.navigate(onboardingStep)
+                this.props.navigation.navigate(this.props.nextOnboardingStep)
               }}
             />
           )}
@@ -118,7 +120,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(WelcomeScreen)
+export default withOnboardingSteps(connect(mapStateToProps)(WelcomeScreen))
 
 const styles = StyleSheet.create({
   container: {

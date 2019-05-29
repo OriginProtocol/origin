@@ -8,6 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setName } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
 
 class NameScreen extends Component {
   constructor(props) {
@@ -30,12 +31,12 @@ class NameScreen extends Component {
     })
   }
 
-  handleSubmit() {
-    this.props.setName({
+  async handleSubmit() {
+    await this.props.setName({
       firstName: this.state.firstNameValue,
       lastName: this.state.lastNameValue
     })
-    this.props.navigation.navigate('ProfileImage')
+    this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
   render() {
@@ -52,7 +53,6 @@ class NameScreen extends Component {
               </fbt>
             </Text>
             <TextInput
-              placeholder="john"
               autoCapitalize="none"
               autoFocus={true}
               autoCorrect={false}
@@ -74,7 +74,6 @@ class NameScreen extends Component {
               <fbt desc="NameScreen.lastNameSubtitle">Enter your last name</fbt>
             </Text>
             <TextInput
-              placeholder="doe"
               autoCapitalize="none"
               autoCorrect={false}
               multiline={true}
@@ -115,10 +114,12 @@ const mapDispatchToProps = dispatch => ({
   setName: payload => dispatch(setName(payload))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NameScreen)
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(NameScreen)
+)
 
 const styles = StyleSheet.create({
   container: {
