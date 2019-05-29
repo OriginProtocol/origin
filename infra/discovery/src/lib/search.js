@@ -1,4 +1,5 @@
 const elasticsearch = require('elasticsearch')
+const scoring = require('../lib/scoring')
 
 /*
   Module to interface with ElasticSearch.
@@ -69,6 +70,10 @@ class Listing {
         delete offer.timeSlots
       })
     }
+
+    // Precompute score for listing
+    const { scoreMultiplier } = await scoring.scoreListing(listingToIndex)
+    listingToIndex.scoreMultiplier = scoreMultiplier
 
     await client.index({
       index: LISTINGS_INDEX,
@@ -220,6 +225,8 @@ class Listing {
       esQuery.bool.filter.push(innerFilter)
     })
 
+    // All non-time based scoring is staticly computed ahead of time and
+    // index in a listing's `scoreMultiplier` field
     const scoreQuery = {
       function_score: {
         query: esQuery,
@@ -234,42 +241,8 @@ class Listing {
             },
             source: `double score = _score;
 
-            // Downrank "cheap" listings to hide wash/spam transactions.
-            // We might want to make this a smoother transition later.
-            // ETH value may need to become a dynamic parameter later.
-            def cheapListingThresholds = [
-              'fiat-USD' : 1.5,
-              'fiat-EUR' : 1.35,
-              'token-DAI' : 1.5,
-              'token-ETH' : 0.01
-            ];
-
-            if (doc['price.amount'] != null && doc['price.currency.id'] != null) {
-              if (cheapListingThresholds[doc['price.currency.id'].value] != null) {
-                double cheapThreshold = cheapListingThresholds[doc['price.currency.id'].value];
-                if(doc['price.amount'].value <= cheapThreshold) {
-                  score *= 0.2;
-                }
-              }
-            }
-
-            // Downrank anything not active (so lower pending / sold / withdrawn)
-            if (doc['status'] != null && doc['status'].value != 'active') {
-              score *= 0.3
-            }
-
-            // OGN Boosts
-            // 50 tokens gets you a 2.25 multiplier to your base score,
-            // That's probably overpowered. We might as well encourage
-            // listings to use them, and we can sort out a more exact value later.
-            if (doc['commission'] != null && doc['commission'].value > 0){
-              if (doc['commissionPerUnit'] != null && doc['commissionPerUnit'].value > 0) {
-                double commission = Math.min(doc['commissionPerUnit'].value, doc['commission'].value);
-                if(commission > 100) {
-                  commission = 100;
-                }
-                score *= (1.0 + commission * 0.000000000000000000025);
-              }
+            if(doc['scoreMultiplier'] != null){
+              score = doc['scoreMultiplier'].value
             }
 
             // Temporary boost for recently created listings.

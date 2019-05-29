@@ -246,9 +246,7 @@ class OriginEventSource {
       commission = '0'
     if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
-        data.unitsTotal === 1
-          ? (data.commission && data.commission.amount) || '0'
-          : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+        (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
@@ -293,8 +291,10 @@ class OriginEventSource {
       )
     )
 
-    // Compute fields from valid offers.
-    let commissionAvailable = this.web3.utils.toBN(listing.commission)
+    // Compute fields from valid offers
+    // The "deposit" on a listing is actualy the amount of OGN available to
+    // pay for commissions on that listing.
+    let commissionAvailable = this.web3.utils.toBN(listing.deposit)
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
