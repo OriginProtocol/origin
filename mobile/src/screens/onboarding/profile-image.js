@@ -2,12 +2,10 @@
 
 import React, { Component } from 'react'
 import {
-  Dimensions,
   Image,
   StyleSheet,
   TouchableOpacity,
   Text,
-  TextInput,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
