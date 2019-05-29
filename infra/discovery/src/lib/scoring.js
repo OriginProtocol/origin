@@ -10,13 +10,13 @@ async function scoreListing(listing) {
   // We might want to make this a smoother transition later.
   // ETH value may need to become a dynamic parameter later.
   const cheapListingThresholds = {
-      'fiat-USD' : 1.5,
-      'fiat-EUR' : 1.35,
-      'token-DAI' : 1.5,
-      'token-ETH' : 0.01
+      'fiat-USD': 1.5,
+      'fiat-EUR': 1.35,
+      'token-DAI': 1.5,
+      'token-ETH': 0.01
   }
   if (listing.price && listing.price.amount && listing.price.currency && listing.price.currency.id) {
-    const cheapThreshold = cheapListingThresholds[listing.price.currency.id];
+    const cheapThreshold = cheapListingThresholds[listing.price.currency.id]
     if (cheapThreshold) {
       if(listing.price.amount <= cheapThreshold) {
         score *= 0.2
