@@ -9,11 +9,7 @@ const initialState = {
   language: null,
   // Onboarding
   pin: null,
-  biometryType: null,
-  email: null,
-  firstName: null,
-  lastName: null,
-  profileImage: null
+  biometryType: null
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -27,9 +23,6 @@ export default function Settings(state = initialState, action = {}) {
     case SettingsConstants.SET_DEVICE_TOKEN:
       return { ...state, deviceToken: action.deviceToken }
 
-    case SettingsConstants.SET_EMAIL:
-      return { ...state, email: action.email }
-
     case SettingsConstants.SET_PIN:
       return { ...state, pin: action.pin }
 
@@ -38,16 +31,6 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_LANGUAGE:
       return { ...state, language: action.language }
-
-    case SettingsConstants.SET_NAME:
-      return {
-        ...state,
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName
-      }
-
-    case SettingsConstants.SET_PROFILE_IMAGE:
-      return { ...state, profileImage: action.profileImage }
   }
 
   return state
