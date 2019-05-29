@@ -37,12 +37,10 @@ const MultiUnit = ({
             <div className="price">
               <div className="d-flex justify-content-between">
                 <Price listing={listing} descriptor />
-                {growthReward && (
-                  <OgnBadge
-                    amount={growthReward}
-                    className="listing-detail-growth-reward"
-                  />
-                )}
+                <OgnBadge
+                  amount={growthReward}
+                  className="listing-detail-growth-reward"
+                />
               </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">

@@ -70,12 +70,10 @@ const FractionalHourly = ({
                   <Price price={listing.price} />
                   <div className="desc">/ hour</div>
                 </div>
-                {growthReward && (
-                  <OgnBadge
-                    amount={growthReward}
-                    className="listing-detail-growth-reward"
-                  />
-                )}
+                <OgnBadge
+                  amount={growthReward}
+                  className="listing-detail-growth-reward"
+                />
               </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">

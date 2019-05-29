@@ -24,12 +24,10 @@ const SingleUnit = ({ listing, from, refetch, growthReward }) => {
           <div className="listing-buy">
             <div className="price d-flex justify-content-between">
               <Price listing={listing} descriptor />
-              {growthReward && (
-                <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />
-              )}
+              <OgnBadge
+                amount={growthReward}
+                className="listing-detail-growth-reward"
+              />
             </div>
             <PaymentOptions
               tokens={prices}

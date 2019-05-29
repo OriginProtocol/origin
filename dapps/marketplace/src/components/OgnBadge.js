@@ -2,7 +2,9 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 const OgnBadge = ({ amount, className }) => {
-  
+  if (!amount)
+    return null
+
   return (
     <span className={`growth-reward-amount ${className ? className : ''}`}>
       <span className="earn">{fbt('Earn', 'Earn')}</span>
