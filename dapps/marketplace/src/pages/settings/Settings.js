@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import SetNetwork from 'mutations/SetNetwork'
+import ConfigQuery from 'queries/Config'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
@@ -89,7 +90,16 @@ class Settings extends Component {
     const { locale, onLocale, currency, onCurrency } = this.props
 
     return (
-      <Mutation mutation={SetNetwork} refetchQueries="Config">
+      <Mutation
+        mutation={SetNetwork}
+        refetchQueries={() => {
+          return [
+            {
+              query: ConfigQuery
+            }
+          ]
+        }}
+      >
         {setNetwork => (
           <div className="container settings">
             <DocumentTitle
