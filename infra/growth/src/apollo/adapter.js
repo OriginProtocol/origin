@@ -75,7 +75,8 @@ class ApolloAdapter {
     if (!data.visible) {
       return null
     }
-    const ruleHasNoUserData = data.status === null
+
+    const omitUserData = data.ethAddress === null
 
     // Fetch common data across all action types.
     let action = {
@@ -93,7 +94,7 @@ class ApolloAdapter {
     // Some action types require to fetch extra custom data.
     switch (action.type) {
       case 'Referral':
-        if (ruleHasNoUserData) {
+        if (omitUserData) {
           break
         }
 
