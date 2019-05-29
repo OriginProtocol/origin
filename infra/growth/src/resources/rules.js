@@ -212,12 +212,15 @@ class CampaignRules {
    * Walks thru all the rules and calls the adapter with data for each rule.
    *
    * @param {Adapter} adapter - Class to use for formatting the rule data.
-   * @param {string} ethAddress
+   * @param {string} ethAddress - if this parameter is null or undefined growth returns the rules
+   *                              without any user specific data
    * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
   async export(adapter, ethAddress) {
-    const events = await this.getEvents(ethAddress)
-    const level = await this._calculateLevel(ethAddress, events)
+    const events = ethAddress ? await this.getEvents(ethAddress) : undefined
+    const level = ethAddress
+      ? await this._calculateLevel(ethAddress, events)
+      : undefined
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
@@ -520,14 +523,17 @@ class BaseRule {
    * @returns {Promise<Array<Object>>}
    */
   async export(adapter, ethAddress, events, level) {
+    const omitUserData = !ethAddress && !events && !level
     const data = {
       ruleId: this.id,
       ethAddress,
       visible: this.config.visible,
       campaign: this.campaign,
-      status: await this.getStatus(ethAddress, events, level),
+      status: omitUserData
+        ? null
+        : await this.getStatus(ethAddress, events, level),
       reward: this.reward,
-      rewards: await this.getRewards(ethAddress, events),
+      rewards: omitUserData ? [] : await this.getRewards(ethAddress, events),
       unlockConditions: this.conditionsToUnlock(),
       // Fields specific to the ListingIdPurchased rule.
       listingId: this.listingId,

@@ -91,6 +91,7 @@ describe('Apollo adapter - May campaign', () => {
     this.userA = '0xA123'
     this.userB = '0xB456'
     this.userC = '0xC789'
+    this.notEnrolledUser = null
 
     // User A is referrer for user B and C.
     await createReferral(this.userA, this.userB)
@@ -193,8 +194,18 @@ describe('Apollo adapter - May campaign', () => {
         reward: { amount: tokenToNaturalUnits(20000), currency: 'OGN' }
       },
     }
-  })
 
+    this.expectedNonSignedInState = {}
+
+    Object.entries(this.expectedState).forEach(([key, value]) => {
+      if (value.status) {
+        this.expectedNonSignedInState[key] = { ...value, status: null }
+      } else {
+        this.expectedNonSignedInState[key] = { ...value }
+      }
+    })
+
+  })
 
   it(`Adapter at level 0`, async () => {
     const state = await campaignToApolloObject(
@@ -203,8 +214,19 @@ describe('Apollo adapter - May campaign', () => {
       this.userA,
       this.mockAdapter
     )
-
+    
     checkExpectedState(state, this.expectedState)
+  })
+
+  it(`Adapter when user not logged in`, async () => {
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.notEnrolledUser,
+      this.mockAdapter
+    )
+
+    checkExpectedState(state, this.expectedNonSignedInState)
   })
 
   it(`Adapter completed level 0`, async () => {

@@ -87,7 +87,7 @@ module.exports = `
 
   interface GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
@@ -95,7 +95,7 @@ module.exports = `
 
   type GrowthAction implements GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
@@ -109,7 +109,7 @@ module.exports = `
 
   type ReferralAction implements GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     rewardPending: GrowthPrice
     reward: GrowthPrice            # information about reward
@@ -121,7 +121,7 @@ module.exports = `
 
   type ListingIdPurchasedAction implements GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
