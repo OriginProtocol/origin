@@ -278,8 +278,8 @@ class Review extends Component {
 export default withWallet(withTokenBalance(withConfig(Review)))
 
 require('react-styl')(`
-    .country-flag-img
-      width: 2rem
-      height: 2rem
-      margin-right: .5rem;
+  .country-flag-img
+    width: 2rem
+    height: 2rem
+    margin-right: .5rem
 `)
