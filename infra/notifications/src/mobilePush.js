@@ -73,8 +73,12 @@ async function messageMobilePush(receivers, sender, config) {
 
   receivers.forEach(async receiver => {
     try {
-      // TODO: Turn mobile messages into templates
-      const message = messageTemplates.message['mobile']['messageReceived']
+      const messageTemplate = messageTemplates.message['mobile']['messageReceived']
+      // Apply template
+      const message = {
+        title: messageTemplate.title,
+        body: messageTemplate.body
+      }
       const ethAddress = receiver
       const notificationObj = {
         message,
@@ -162,6 +166,7 @@ async function transactionMobilePush(
 
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
+      logger.warn(`checking for ${ethAddress}`)
       const mobileRegister = await MobileRegistry.findOne({
         where: { ethAddress, deleted: false, 'permissions.alert': true }
       })
