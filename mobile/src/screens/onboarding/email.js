@@ -31,6 +31,19 @@ class EmailScreen extends Component {
     this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
+  componentDidMount() {
+    // Override the back button functionality in header
+    this.props.navigation.setParams({
+      handleBack: this.handleBack.bind(this)
+    })
+  }
+
+  handleBack() {
+    this.state.verify
+      ? this.setState({ verify: false })
+      : this.props.navigation.goBack(null)
+  }
+
   handleChange(emailValue) {
     this.setState({ emailError: '', emailValue })
   }

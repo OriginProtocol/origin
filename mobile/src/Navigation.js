@@ -6,7 +6,8 @@ import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createSwitchNavigator
+  createSwitchNavigator,
+  HeaderBackButton
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
@@ -34,7 +35,7 @@ import ReadyScreen from 'screens/onboarding/ready'
 
 const IMAGES_PATH = '../assets/images/'
 
-const OnboardingStack = createSwitchNavigator(
+const OnboardingStack = createStackNavigator(
   {
     Welcome: WelcomeScreen,
     ImportAccount: {
@@ -53,7 +54,26 @@ const OnboardingStack = createSwitchNavigator(
     Ready: ReadyScreen
   },
   {
-    initialRouteName: 'Welcome'
+    initialRouteName: 'Welcome',
+    defaultNavigationOptions: ({ navigation }) => {
+      const { params = {} } = navigation.state
+      return {
+        headerStyle: {
+          borderBottomWidth: 0
+        },
+        headerBackTitle: null,
+        // Allow components to override the back button function by setting a
+        // handleBack function as a navigation param e.g:
+        // this.props.navigation.setParams({ handleBack: this.handleBack.bind(this) })
+        headerLeft: (
+          <HeaderBackButton
+            onPress={() =>
+              params.handleBack ? params.handleBack() : navigation.goBack(null)
+            }
+          />
+        )
+      }
+    }
   }
 )
 

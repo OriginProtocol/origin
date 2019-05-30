@@ -70,7 +70,6 @@ class ProfileImage extends Component {
       const formData = new FormData()
       formData.append('file', outImage)
 
-      console.debug('Uploading image to IPFS')
       const ipfsRPC = this.props.configs.mainnet.ipfsRPC
       const ipfsResponse = await fetch(`${ipfsRPC}/api/v0/add`, {
         method: 'POST',
@@ -171,12 +170,6 @@ class ProfileImage extends Component {
               : require(IMAGES_PATH + 'partners-graphic.png')
           }
           style={styles.image}
-          onLoadStart={() => {
-            this.setState({ loading: true })
-          }}
-          onLoadEnd={() => {
-            this.setState({ loading: false })
-          }}
         />
         <Text style={styles.title}>
           {!this.props.onboarding.profileImage ? (
