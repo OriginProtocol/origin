@@ -27,6 +27,7 @@ import WelcomeScreen from 'screens/onboarding/welcome'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
 import EmailScreen from 'screens/onboarding/email'
+import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
 import ProfileImageScreen from 'screens/onboarding/profile-image'
 import ReadyScreen from 'screens/onboarding/ready'
@@ -44,6 +45,7 @@ const OnboardingStack = createSwitchNavigator(
       }
     },
     Email: EmailScreen,
+    Phone: PhoneScreen,
     Name: NameScreen,
     ProfileImage: ProfileImageScreen,
     Authentication: Authentication,

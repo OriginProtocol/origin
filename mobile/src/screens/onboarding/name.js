@@ -6,9 +6,10 @@ import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
-import { setName } from 'actions/Settings'
+import { setName } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import OnboardingStyles from 'styles/onboarding'
 
 class NameScreen extends Component {
   constructor(props) {
@@ -90,6 +91,12 @@ class NameScreen extends Component {
             )}
           </View>
         </View>
+        <View style={[styles.visibilityWarning, styles.isVisible]}>
+          <Text style={styles.visibilityWarningHeader}>
+            What will be visible on the blockchain?
+          </Text>
+          <Text>Your name will be visible on the blockchain</Text>
+        </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
             size="large"
@@ -122,64 +129,5 @@ export default withOnboardingSteps(
 )
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  legalContainer: {
-    paddingTop: 20,
-    paddingBottom: 30,
-    width: '80%'
-  },
-  legal: {
-    textAlign: 'center',
-    color: '#98a7b4'
-  },
-  buttonsContainer: {
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 36,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center',
-    color: '#293f55'
-  },
-  subtitle: {
-    fontFamily: 'Lato',
-    fontSize: 20,
-    marginHorizontal: 50,
-    textAlign: 'center'
-  },
-  inputContainer: {
-    paddingBottom: 30
-  },
-  input: {
-    fontSize: 20,
-    borderColor: '#c0cbd4',
-    borderBottomWidth: 1,
-    paddingTop: 20,
-    paddingBottom: 10,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    textAlign: 'center',
-    width: 300
-  },
-  invalid: {
-    borderColor: '#ff0000',
-    color: '#ff0000'
-  }
+  ...OnboardingStyles
 })

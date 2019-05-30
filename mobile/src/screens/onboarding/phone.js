@@ -7,19 +7,19 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
-import { setEmailAttestation } from 'actions/Onboarding'
+import { setPhoneAttestation } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
 
-class EmailScreen extends Component {
+class PhoneScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      emailValue: '',
-      emailError: '',
+      phoneValue: '',
+      phoneError: '',
       loading: false,
       verify: false,
       verifyError: '',
@@ -27,45 +27,32 @@ class EmailScreen extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmitEmail = this.handleSubmitEmail.bind(this)
+    this.handleSubmitPhone = this.handleSubmitPhone.bind(this)
     this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
-  handleChange(emailValue) {
-    this.setState({ emailError: '', emailValue })
+  handleChange(phoneValue) {
+    this.setState({ phoneError: '', phoneValue })
   }
 
-  async handleSubmitEmail() {
-    // Naive/simple email regex but should catch most issues
-    const emailPattern = /.+@.+\..+/
-    if (emailPattern.test(this.state.emailValue)) {
-      this.setState({ loading: true })
-      const url = `${
-        this.props.configs.mainnet.bridge
-      }/api/attestations/email/generate-code`
-      const response = await fetch(url, {
-        headers: { 'content-type': 'application/json' },
-        credentials: 'include',
-        method: 'POST',
-        body: JSON.stringify({ email: this.state.emailValue })
-      })
-      if (response.ok) {
-        this.setState({ loading: false, verify: true })
-      } else {
-        const data = await response.json()
-        this.setState({
-          loading: false,
-          emailError: get(data, 'errors[0]', '')
-        })
-      }
+  async handleSubmitPhone() {
+    this.setState({ loading: true })
+    const url = `${
+      this.props.configs.mainnet.bridge
+    }/api/attestations/phone/generate-code`
+    const response = await fetch(url, {
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify({ phone: this.state.phoneValue })
+    })
+    if (response.ok) {
+      this.setState({ loading: false, verify: true })
     } else {
+      const data = await response.json()
       this.setState({
-        emailError: String(
-          fbt(
-            'That does not look like a valid email.',
-            'EmailScreen.invalidEmail'
-          )
-        )
+        loading: false,
+        phoneError: get(data, 'errors[0]', '')
       })
     }
   }
@@ -74,7 +61,7 @@ class EmailScreen extends Component {
     this.setState({ loading: true })
     const url = `${
       this.props.configs.mainnet.bridge
-    }/api/attestations/email/verify`
+    }/api/attestations/phone/verify`
     const response = await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
@@ -82,7 +69,7 @@ class EmailScreen extends Component {
       body: JSON.stringify({
         code: this.state.verificationCode,
         identity: this.props.wallet.activeAccount.address,
-        email: this.state.emailValue
+        phone: this.state.phoneValue
       })
     })
 
@@ -91,7 +78,7 @@ class EmailScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      this.props.setEmailAttestation(data)
+      this.props.setPhoneAttestation(data)
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
@@ -109,11 +96,11 @@ class EmailScreen extends Component {
       <>
         <View style={styles.content}>
           <Text style={styles.title}>
-            <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
+            <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
           </Text>
           <Text style={styles.subtitle}>
-            <fbt desc="EmailScreen.inputSubtitle">
-              What&apos;s your email address?
+            <fbt desc="PhoneScreen.inputSubtitle">
+              Enter a valid 10-digit phone number
             </fbt>
           </Text>
           <TextInput
@@ -122,18 +109,19 @@ class EmailScreen extends Component {
             multiline={true}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
-            value={this.state.emailValue}
-            style={[styles.input, this.state.emailError ? styles.invalid : {}]}
+            value={this.state.phoneValue}
+            style={[styles.input, this.state.phoneError ? styles.invalid : {}]}
             autofocus={true}
           />
-          {this.state.emailError.length > 0 && (
-            <Text style={styles.invalid}>{this.state.emailError}</Text>
+          {this.state.phoneError.length > 0 && (
+            <Text style={styles.invalid}>{this.state.phoneError}</Text>
           )}
           <View style={styles.legalContainer}>
             <Text style={styles.legal}>
-              <fbt desc="EmailScreen.inputHelpText">
-                We will use your email to notify you of important notifications
-                when you buy or sell.
+              <fbt desc="PhoneScreen.inputHelpText">
+                By verifying your phone number, you give Origin permission to
+                send you occasional messages such as notifications about your
+                transactions.
               </fbt>
             </Text>
           </View>
@@ -145,13 +133,13 @@ class EmailScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Continue', 'EmailScreen.continueButton')}
+            title={fbt('Continue', 'PhoneScreen.continueButton')}
             disabled={
-              !this.state.emailValue.length ||
-              this.state.emailError ||
+              !this.state.phoneValue.length ||
+              this.state.phoneError ||
               this.state.loading
             }
-            onPress={this.handleSubmitEmail}
+            onPress={this.handleSubmitPhone}
             loading={this.state.loading}
           />
         </View>
@@ -164,10 +152,10 @@ class EmailScreen extends Component {
       <>
         <View style={styles.content}>
           <Text style={styles.title}>
-            <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
+            <fbt desc="PhoneScreen.verifyTitle">Verify your phone</fbt>
           </Text>
           <Text style={styles.subtitle}>
-            <fbt desc="EmailScreen.verifySubtitle">Enter code</fbt>
+            <fbt desc="PhoneScreen.verifySubtitle">Enter code</fbt>
           </Text>
           <PinInput
             value={this.state.verificationCode}
@@ -184,8 +172,8 @@ class EmailScreen extends Component {
           )}
           <View style={styles.legalContainer}>
             <Text style={styles.legal}>
-              <fbt desc="EmailScreen.verifyHelpText">
-                We sent you a code to the email address you provided. Please
+              <fbt desc="PhoneScreen.verifyHelpText">
+                We sent you a code to the phone address you provided. Please
                 enter it above.
               </fbt>
             </Text>
@@ -198,7 +186,7 @@ class EmailScreen extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Verify', 'EmailScreen.verifyButton')}
+            title={fbt('Verify', 'PhoneScreen.verifyButton')}
             disabled={
               this.state.verificationCode.length < 6 ||
               this.state.verifyError ||
@@ -219,7 +207,7 @@ class EmailScreen extends Component {
           What will be visible on the blockchain?
         </Text>
         <Text>
-          That you have a verified email, but NOT your actual email address.
+          That you have a verified phone, but NOT your actual phone number.
         </Text>
       </View>
     )
@@ -231,8 +219,8 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmailAttestation: emailAttestation =>
-    dispatch(setEmailAttestation(emailAttestation))
+  setPhoneAttestation: phoneAttestation =>
+    dispatch(setPhoneAttestation(phoneAttestation))
 })
 
 export default withConfig(
@@ -240,7 +228,7 @@ export default withConfig(
     connect(
       mapStateToProps,
       mapDispatchToProps
-    )(EmailScreen)
+    )(PhoneScreen)
   )
 )
 

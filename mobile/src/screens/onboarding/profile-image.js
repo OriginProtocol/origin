@@ -7,10 +7,11 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import ImagePicker from 'react-native-image-picker'
 
-import { setProfileImage } from 'actions/Settings'
+import { setProfileImage } from 'actions/Onboarding'
 import { SettingsButton } from 'components/settings-button'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 const imagePickerOptions = {
@@ -25,7 +26,8 @@ class ProfileImage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      imagePickerError: null
+      imagePickerError: null,
+      loading: false
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleImageClick = this.handleImageClick.bind(this)
@@ -37,6 +39,7 @@ class ProfileImage extends Component {
 
   handleImageClick() {
     ImagePicker.showImagePicker(imagePickerOptions, async response => {
+      this.setState({ loading: false })
       if (response.error) {
         this.setState({ imagePickerError: response.error })
       } else {
@@ -57,6 +60,12 @@ class ProfileImage extends Component {
             ? this.renderGalleryPermissionDenied()
             : this.renderImage()}
         </View>
+        <View style={[styles.visibilityWarning, styles.isVisible]}>
+          <Text style={styles.visibilityWarningHeader}>
+            What will be visible on the blockchain?
+          </Text>
+          <Text>Your photo will be visible on the blockchain.</Text>
+        </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
             size="large"
@@ -64,7 +73,7 @@ class ProfileImage extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'ProfileImageScreen.continueButton')}
-            disabled={!this.props.settings.profileImage}
+            disabled={!this.props.onboarding.profileImage}
             onPress={this.handleSubmit}
           />
         </View>
@@ -83,7 +92,7 @@ class ProfileImage extends Component {
         <Text style={styles.subtitle}>
           <fbt desc="ProfileImageScreen.galleryDisabledSubtitle">
             It looks like we cannot access your photo gallery. You will need to
-            allow access in the settings for the Origin Marketplace App.
+            allow access in the onboarding for the Origin Marketplace App.
           </fbt>
         </Text>
         <SettingsButton />
@@ -98,14 +107,14 @@ class ProfileImage extends Component {
           resizeMethod={'scale'}
           resizeMode={'contain'}
           source={
-            this.props.settings.profileImage
-              ? { uri: this.props.settings.profileImage }
+            this.props.onboarding.profileImage
+              ? { uri: this.props.onboarding.profileImage }
               : require(IMAGES_PATH + 'partners-graphic.png')
           }
           style={styles.image}
         />
         <Text style={styles.title}>
-          {!this.props.settings.profileImage ? (
+          {!this.props.onboarding.profileImage ? (
             <fbt desc="ProfileImageScreen.title">Upload a photo</fbt>
           ) : (
             <fbt desc="ProfileImageScreen.successTitle">Looking good</fbt>
@@ -116,8 +125,8 @@ class ProfileImage extends Component {
   }
 }
 
-const mapStateToProps = ({ settings, wallet }) => {
-  return { settings, wallet }
+const mapStateToProps = ({ onboarding, wallet }) => {
+  return { onboarding, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -132,44 +141,12 @@ export default withOnboardingSteps(
 )
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  buttonsContainer: {
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
+  ...OnboardingStyles,
   image: {
     backgroundColor: '#2e3f53',
     borderRadius: 60,
     width: 120,
-    height: 120
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingTop: 20,
-    paddingBottom: 20,
-    textAlign: 'center'
-  },
-  subtitle: {
-    fontFamily: 'Lato',
-    fontSize: 20,
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
+    height: 120,
+    marginBottom: 30
   }
 })
