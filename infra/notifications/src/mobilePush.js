@@ -76,8 +76,8 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
       const messageTemplate = messageTemplates.message['mobile']['messageReceived']
       // Apply template
       const message = {
-        title: messageTemplate.title,
-        body: messageTemplate.body
+        title: messageTemplate.title(),
+        body: messageTemplate.body()
       }
       const ethAddress = receiver
       const notificationObj = {
@@ -133,14 +133,14 @@ async function transactionMobilePush(
   party = party.toLowerCase()
 
   const receivers = {}
-  const buyerMessage = getNotificationMessage(
+  const buyerMessageTemplate = getNotificationMessage(
     eventName,
     party,
     buyerAddress,
     'buyer',
     'mobile'
   )
-  const sellerMessage = getNotificationMessage(
+  const sellerMessageTemplate = getNotificationMessage(
     eventName,
     party,
     sellerAddress,
@@ -151,26 +151,29 @@ async function transactionMobilePush(
     url: offer && `${config.dappUrl}/#/purchases/${offer.id}`
   }
 
-  if (buyerMessage || sellerMessage) {
-    if (buyerMessage) {
+  if (buyerMessageTemplate || sellerMessageTemplate) {
+    if (buyerMessageTemplate) {
       receivers[buyerAddress] = {
-        message: buyerMessage,
+        message: {
+          title: buyerMessageTemplate.title(),
+          body: buyerMessageTemplate.body()
+        },
         payload
       }
     }
-    if (sellerMessage) {
+    if (sellerMessageTemplate) {
       receivers[sellerAddress] = {
-        message: sellerMessage,
+        message: {
+          title: sellerMessageTemplate.title(),
+          body: sellerMessageTemplate.body()
+        },
         payload
       }
     }
 
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
-      logger.warn(`checking for ${ethAddress}`)
-      const mobileRegister = await MobileRegistry.findOne({
-        where: { ethAddress, deleted: false, 'permissions.alert': true }
-      })
+      const mobileRegister = await MobileRegistry.findOne( { where: { ethAddress:ethAddress.toLowerCase(), deleted: false, 'permissions.alert': true } } )
       if (mobileRegister) {
         logger.info(`Pushing transaction notification to ${ethAddress}`)
         await sendNotification(
