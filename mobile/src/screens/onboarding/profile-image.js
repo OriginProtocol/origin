@@ -81,7 +81,6 @@ class ProfileImage extends Component {
       })
 
       if (!ipfsResponse.ok) {
-        console.debug('IPFS upload failed')
         this.setState({
           imagePickerError: 'Photo uploaded failed'
         })
@@ -93,7 +92,6 @@ class ProfileImage extends Component {
       })
 
       const data = await ipfsResponse.json()
-      console.debug('IPFS upload succeeded: ', data)
       await this.props.setProfileImage(data.Hash)
     })
   }
