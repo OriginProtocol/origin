@@ -1,10 +1,4 @@
-module.exports = `
-  extend type Query {
-    identityEvents: IdentityEvents
-    identity(id: ID!): Identity
-    identities(id: ID!): Identity
-  }
-
+export const mutations = `
   extend type Mutation {
     deployIdentity(
       from: String!
@@ -13,6 +7,18 @@ module.exports = `
     ): Transaction
 
     deployIdentityEvents(from: String!): Transaction
+
+    deployProxyFactory(from: String!): Transaction
+    deployIdentityProxy(from: String!): Transaction
+    deployIdentityViaProxy(from: String!, factoryAddress: String, proxyAddress: String, owner: String!): Transaction
+  }
+`
+
+export const types = `
+  extend type Query {
+    identityEvents: IdentityEvents
+    identity(id: ID!): Identity
+    identities(id: ID!): Identity
   }
 
   input ProfileInput {
@@ -51,8 +57,11 @@ module.exports = `
     lastName: String
     fullName: String
     description: String
+    # Deprecated field. Base64 encoded avatar. Only present on older profiles.
     avatar: String
+    # IPFS url for avatar photo
     avatarUrl: String
+    # Calculated field. Converts avatarURL to an HTTP(s) gateway URL
     avatarUrlExpanded: String
     strength: Int
 
@@ -69,3 +78,4 @@ module.exports = `
     attestations: [String]
   }
 `
+export default types + mutations

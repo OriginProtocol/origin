@@ -35,6 +35,9 @@ import useFaucet from './token/useFaucet'
 
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
+import deployIdentityProxy from './identity/deployIdentityProxy'
+import deployIdentityViaProxy from './identity/deployIdentityViaProxy'
+import deployProxyFactory from './identity/deployProxyFactory'
 
 import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
@@ -64,6 +67,9 @@ export default {
   createWallet,
   deployIdentity,
   deployIdentityEvents,
+  deployIdentityProxy,
+  deployIdentityViaProxy,
+  deployProxyFactory,
   deployMarketplace,
   deployToken,
   disputeOffer,

@@ -58,3 +58,9 @@ buck-out/
 android/keystores/keystore.properties
 android/app/debug/
 android/app/release/
+
+# Translations
+/.enum_manifest.json
+/.src_manifest.json
+/.source_strings.json
+/.translated_fbts.json

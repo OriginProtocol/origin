@@ -43,6 +43,8 @@
     "apollo-server": "^2.4.8",
     "cross-fetch": "^3.0.1",
     "dayjs": "^1.8.10",
+    "dotenv": "^6.2.0",
+    "envkey": "^1.2.4",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.3",
     "graphql-subscriptions": "^1.0.0",

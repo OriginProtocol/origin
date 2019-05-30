@@ -122,9 +122,7 @@ class Details extends Component {
                     <div
                       className="country-flag"
                       style={{
-                        backgroundImage: `url(images/flags/${
-                          this.state.issuingCountry.toLowerCase()
-                        }.svg)`
+                        backgroundImage: `url(images/flags/${this.state.issuingCountry.toLowerCase()}.svg)`
                       }}
                     />
                     <div style={{ flex: 1 }}>

@@ -10,6 +10,12 @@ const LanguagesByKey = Languages.reduce((m, o) => {
 
 const LocaleDropdown = ({ className, locale, dropup, onLocale }) => {
   const [open, setOpen] = useState(false)
+  const selected = (
+    <div className="dropdown-selected">
+      {LanguagesByKey[locale]}
+      <span className="arrow" />
+    </div>
+  )
   return (
     <Dropdown
       className={dropup ? 'dropup' : 'dropdown'}
@@ -41,7 +47,7 @@ const LocaleDropdown = ({ className, locale, dropup, onLocale }) => {
           e.preventDefault()
           setOpen(!open)
         }}
-        children={LanguagesByKey[locale]}
+        children={selected}
       />
     </Dropdown>
   )

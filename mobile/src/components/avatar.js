@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 

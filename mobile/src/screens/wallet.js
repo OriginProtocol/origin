@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 import Currency from 'components/currency'
@@ -11,40 +12,66 @@ import currencies from 'utils/currencies'
 import { evenlySplitAddress } from 'utils/user'
 
 class WalletScreen extends Component {
-  static navigationOptions = {
-    title: 'Wallet',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
+  static navigationOptions = () => {
+    return {
+      title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
     }
   }
 
-  componentDidMount() {}
+  constructor(props) {
+    super(props)
+  }
 
   handleFunding(currency) {
     const { address } = this.props.wallet.activeAccount
 
     Alert.alert(
-      'Funding',
-      `For now, you will need to transfer ${currency} into your Orign Wallet from another source.`,
+      String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
+      String(
+        fbt(
+          `For now, you will need to transfer ${fbt.param(
+            'currency',
+            currency
+          )} into your Origin Wallet from another source.`,
+          'WalletScreen.fundingAlertMessage'
+        )
+      ),
       [
         {
-          text: 'Show Address',
+          text: String(
+            fbt('Show Address', 'WalletScreen.fundingAlertShowAddressButton')
+          ),
           onPress: () => {
             Alert.alert(
-              'Wallet Address',
+              String(
+                fbt(
+                  'Wallet Address',
+                  'WalletScreen.fundingAlertShowAddressTitle'
+                )
+              ),
               evenlySplitAddress(address).join('\n')
             )
           }
         },
         {
-          text: 'Copy Address',
+          text: String(
+            fbt('Copy Address', 'WalletScreen.fundingAlertCopyAddressButton')
+          ),
           onPress: async () => {
             await Clipboard.setString(address)
 
             Alert.alert(
-              'Copied to clipboard!',
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'WalletScreen.fundingAlertCopyAddressTitle'
+                )
+              ),
               evenlySplitAddress(address).join('\n')
             )
           }
@@ -61,7 +88,7 @@ class WalletScreen extends Component {
         <View style={styles.addressContainer}>
           <Address
             address={wallet.activeAccount.address}
-            label={'Wallet Address'}
+            label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
             style={styles.address}
           />
         </View>
@@ -101,13 +128,25 @@ class WalletScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ activation, wallet }) => {
+  return { activation, wallet }
 }
 
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f7f8f8',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20
+  },
+  svContainer: {
+    flex: 1
+  },
+  walletSVContainer: {
+    paddingHorizontal: 10
+  },
   address: {
     color: '#6a8296',
     fontFamily: 'Lato',
@@ -118,29 +157,5 @@ const styles = StyleSheet.create({
   addressContainer: {
     paddingHorizontal: 18 * 3,
     paddingVertical: 22
-  },
-  container: {
-    backgroundColor: '#f7f8f8',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20
-  },
-  placeholder: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textAlign: 'center'
-  },
-  separator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  },
-  svContainer: {
-    flex: 1
-  },
-  walletSVContainer: {
-    paddingHorizontal: 10
   }
 })

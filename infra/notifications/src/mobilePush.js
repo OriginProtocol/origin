@@ -57,7 +57,7 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 //
 // Mobile Push notifications for Messages
 //
-async function messageMobilePush(receivers, sender, config) {
+async function messageMobilePush(receivers, sender, messageHash, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
 
@@ -96,6 +96,7 @@ async function messageMobilePush(receivers, sender, config) {
           mobileRegister.deviceType,
           notificationObj,
           ethAddress,
+          messageHash,
           config
         )
       } else {
@@ -177,6 +178,7 @@ async function transactionMobilePush(
           mobileRegister.deviceType,
           notificationObj,
           ethAddress,
+          null,
           config
         )
       } else {
@@ -196,10 +198,12 @@ async function sendNotification(
   deviceType,
   notificationObj,
   ethAddress,
+  messageHash,
   config
 ) {
   if (notificationObj) {
-    const messageFingerprint = getMessageFingerprint(notificationObj)
+    const notificationObjAndHash = { ...notificationObj, messageHash }
+    const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
     if (deviceType === 'APN') {
       if (!apnProvider) {
         logger.error('APN provider not configured, notification failed')

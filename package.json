@@ -2,7 +2,17 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "^3.13.1"
+    "lerna": "^3.14.1"
+  },
+  "workspaces": {
+    "packages": [
+      "dapps/**",
+      "infra/**",
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/openzeppelin-solidity"
+    ]
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -22,13 +32,12 @@
     "prettier": "^1.16.4"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci --progress --hoist \"**\"",
+    "bootstrap": "lerna bootstrap --no-ci --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
-    "start": "npm run start --prefix dapps/marketplace",
+    "start": "lerna run start --prefix dapps/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
-    "postinstall": "npm run bootstrap",
     "test": "node scripts/test.js"
   },
   "husky": {

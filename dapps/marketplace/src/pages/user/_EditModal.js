@@ -16,8 +16,7 @@ class EditProfileModal extends Component {
     super(props)
     this.state = {
       ...pick(props, ['firstName', 'lastName', 'description', 'avatarUrl']),
-      imageCropperOpened: false,
-      avatarUrl: this.props.avatarUrl
+      imageCropperOpened: false
     }
   }
 
@@ -30,14 +29,14 @@ class EditProfileModal extends Component {
   render() {
     const input = formInput(this.state, state => this.setState(state), 'dark')
     const Feedback = formFeedback(this.state)
-    const hasAvatar = this.state.avatar || this.state.avatarUrl
+    const hasAvatar = this.state.avatarUrl
 
     return (
       // Using css hide Edit Profile dialog when image cropper is opened
       <Modal
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
-        className={this.state.imageCropperOpened ? 'd-none' : ''}
+        classNameOuter={this.state.imageCropperOpened ? 'd-none' : ''}
       >
         <form
           className="edit-profile-modal"
@@ -52,13 +51,15 @@ class EditProfileModal extends Component {
           <div className="row">
             <div className="col-6">
               <ImageCropper
-                onChange={async avatar => {
+                onChange={async avatarBase64 => {
                   const { ipfsRPC } = this.props.config
-                  const uploadedImages = await uploadImages(ipfsRPC, [avatar])
+                  const uploadedImages = await uploadImages(ipfsRPC, [
+                    avatarBase64
+                  ])
                   const avatarImg = uploadedImages[0]
                   if (avatarImg) {
                     const avatarUrl = avatarImg.url
-                    this.setState({ avatar, avatarUrl })
+                    this.setState({ avatarUrl })
                   }
                 }}
                 openChange={open =>
@@ -123,11 +124,8 @@ class EditProfileModal extends Component {
                   this.props.onChange(
                     pick(this.state, ['firstName', 'lastName', 'description'])
                   )
-                  if (this.state.avatar) {
-                    this.props.onAvatarChange(
-                      this.state.avatar,
-                      this.state.avatarUrl
-                    )
+                  if (this.state.avatarUrl) {
+                    this.props.onAvatarChange(this.state.avatarUrl)
                   }
                   this.setState({ shouldClose: true })
                 }

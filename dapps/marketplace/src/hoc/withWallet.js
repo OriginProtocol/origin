@@ -18,6 +18,7 @@ function withWallet(WrappedComponent) {
               wallet={get(data, 'web3.primaryAccount.id')}
               walletType={get(data, 'web3.walletType')}
               walletLoading={networkStatus === 1}
+              walletProxy={get(data, 'web3.primaryAccount.proxy.id')}
             />
           )
         }}

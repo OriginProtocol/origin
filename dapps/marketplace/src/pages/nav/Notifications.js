@@ -13,8 +13,8 @@ import NotificationRow from 'pages/notifications/NotificationRow'
 
 class NotificationsNav extends Component {
   render() {
-    const vars = { first: 5, id: this.props.wallet }
-    const skip = !this.props.wallet || !this.props.open
+    const vars = { first: 5, id: this.props.walletProxy }
+    const skip = !vars.id || !this.props.open
     return (
       <Query query={query} variables={vars} skip={skip}>
         {({ data, loading, error }) => (

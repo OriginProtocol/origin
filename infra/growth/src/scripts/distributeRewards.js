@@ -6,12 +6,10 @@ const BigNumber = require('bignumber.js')
 const Logger = require('logplease')
 const Sequelize = require('sequelize')
 
-const Token = require('@origin/token/src/token')
-const { createProviders } = require('@origin/token/src/config')
-
 const db = require('../models')
 const enums = require('../enums')
 const parseArgv = require('../util/args')
+const TokenDistributor = require('../util/tokenDistributor')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('distRewards')
@@ -21,65 +19,10 @@ const logger = Logger.create('distRewards')
 const MinBlockConfirmation = 8
 const BlockMiningTimeMsec = 15000 // 15sec
 
-class TokenDistributor {
-  // Note: we can't use a constructor due to the async call to defaultAccount.
-  async init(networkId, gasPriceMultiplier) {
-    this.networkId = networkId
-    this.gasPriceMultiplier = gasPriceMultiplier
-    this.token = new Token({ providers: createProviders([config.networkId]) })
-    this.supplier = await this.token.defaultAccount(networkId)
-    this.web3 = this.token.web3(networkId)
-  }
-
-  /**
-   * Calculates gas price to use for sending transactions, by applying an
-   * optional gasPriceMultiplier against the current median gas price
-   * fetched from the network.
-   *
-   * @returns {Promise<{BigNumber}>} Gas price to use.
-   */
-  async _calcGasPrice() {
-    // Get default gas price from web3 which is determined by the
-    // last few blocks median gas price.
-    const web3 = this.token.web3(this.networkId)
-    const medianGasPrice = await web3.eth.getGasPrice()
-
-    if (this.gasPriceMultiplier) {
-      // Apply our ratio.
-      const gasPrice = BigNumber(medianGasPrice).times(this.gasPriceMultiplier)
-      return gasPrice.integerValue()
-    }
-    return medianGasPrice
-  }
-
-  /**
-   * Sends OGN to a user
-   *
-   * @param {string} ethAddress
-   * @param {string} amount in natural units.
-   * @returns {Promise<Object>} The transaction receipt.
-   */
-  async credit(ethAddress, amount) {
-    const gasPrice = await this._calcGasPrice()
-    const txnReceipt = await this.token.credit(
-      this.networkId,
-      ethAddress,
-      amount,
-      { gasPrice }
-    )
-    logger.info('Blockchain transaction')
-    logger.info('  NetworkId:        ', this.networkId)
-    logger.info('  GasMultiplier:    ', this.gasPriceMultiplier)
-    logger.info('  GasPrice:         ', gasPrice.toFixed())
-    logger.info('  Amount (natural): ', amount)
-    logger.info('  Amount (tokens):  ', this.token.toTokenUnit(amount))
-    logger.info('  From:             ', this.supplier)
-    logger.info('  To:               ', ethAddress)
-    logger.info('  TxnHash:          ', txnReceipt.transactionHash)
-    logger.info('  BlockNumber:      ', txnReceipt.blockNumber)
-    return txnReceipt
-  }
-}
+// Min/max payout amounts.
+const scaling = BigNumber(10).pow(18)
+const minPayoutAmountNaturalUnit = BigNumber(1).times(scaling) // 1 OGN
+const maxPayoutAmountNaturalUnit = BigNumber(2000).times(scaling) // 2k OGN
 
 class DistributeRewards {
   constructor(config, distributor) {
@@ -94,10 +37,11 @@ class DistributeRewards {
   }
 
   /**
+   * Pays out the sum of the rewards to the user.
    *
    * @param {string} ethAddress
    * @param {Array<models.GrowthReward>} rewards
-   * @returns {Promise<*>}
+   * @returns {Promise<BigNumber>} Payout amount.
    * @private
    */
   async _distributeRewards(ethAddress, rewards) {
@@ -153,6 +97,7 @@ class DistributeRewards {
           payout.id
         } with status ${payout.status}`
       )
+      return BigNumber(0)
     } else {
       throw new Error(
         `Existing payout row id ${payout.id} with status ${
@@ -165,11 +110,20 @@ class DistributeRewards {
       `Distributing reward of ${amountTokenUnit} OGN to ${ethAddress}`
     )
 
+    // Check amount is within expected range.
+    if (amount.lt(minPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too low: ${amount.toFixed()}`)
+    }
+    if (amount.gt(maxPayoutAmountNaturalUnit)) {
+      throw new Error(`Payout amount too high: ${amount.toFixed()}`)
+    }
+
     // Create a payout row with status Pending.
     payout = await db.GrowthPayout.create({
       fromAddress: this.distributor.supplier.toLowerCase(),
       toAddress: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
+      type: enums.GrowthPayout.CampaignDistribution,
       campaignId,
       amount,
       currency
@@ -282,7 +236,7 @@ class DistributeRewards {
   async _confirmAllTransactions(campaignId) {
     // Wait a bit for the last transaction to settle.
     const waitMsec = this.config.doIt
-      ? MinBlockConfirmation * BlockMiningTimeMsec
+      ? 2 * MinBlockConfirmation * BlockMiningTimeMsec
       : 1000
     logger.info(
       `Waiting ${waitMsec / 1000} seconds to allow transactions to settle...`
@@ -335,7 +289,7 @@ class DistributeRewards {
         where: {
           ethAddress,
           campaignId,
-          status: enums.GrowthPayoutdStatuses.Confirmed
+          status: enums.GrowthPayoutStatuses.Confirmed
         }
       })
       if (!payout) {

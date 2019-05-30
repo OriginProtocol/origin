@@ -14,6 +14,11 @@ let page
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
+  // Close Origin Marketplace app modal
+  await page.waitForSelector('.pl-modal-content .close')
+  setTimeout(async () => {
+    await clickBySelector(page, '.pl-modal-content .close')
+  }, 100)
 })
 
 const reset = async () => {
@@ -354,6 +359,7 @@ describe('Marketplace Dapp', function() {
     it('should reach a success page', async function() {
       await waitForText(page, 'Success')
       await pic(page, 'profile-edited')
+      await clickByText(page, 'OK', 'button')
     })
   })
 })

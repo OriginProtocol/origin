@@ -3,7 +3,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('May campaign rules', () => {
@@ -123,7 +123,7 @@ describe('May campaign rules', () => {
         ruleId: 'TwitterAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         },
       },
       {
@@ -132,7 +132,7 @@ describe('May campaign rules', () => {
         ruleId: 'GoogleAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         }
       }
     ]
@@ -198,7 +198,7 @@ describe('May campaign rules', () => {
         ruleId: 'TwitterAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         },
       },
       {
@@ -207,7 +207,7 @@ describe('May campaign rules', () => {
         ruleId: 'GoogleAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenNaturalUnits(25)
+          amount: tokenToNaturalUnits(25)
         }
       }
     ]
@@ -258,7 +258,7 @@ describe('May campaign rules', () => {
       ruleId: 'Referral',
       value: {
         currency: 'OGN',
-        amount: tokenNaturalUnits(50)
+        amount: tokenToNaturalUnits(50)
       },
       refereeEthAddress: this.userB
     })
@@ -306,7 +306,7 @@ describe('May campaign rules', () => {
       ruleId: 'ListingPurchaseTShirt',
       value: {
         currency: 'OGN',
-        amount: tokenNaturalUnits(25)
+        amount: tokenToNaturalUnits(25)
       }
     })
     expect(rewards).to.deep.equal(this.expectedRewards)
