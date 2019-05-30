@@ -46,72 +46,80 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run test --scope @origin/marketplace --stream --no-prefix
+      - run:
+          name: Run Marketplace Tests
+          command: cd dapps/marketplace && yarn test
 
   GraphQL:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run test --scope @origin/graphql --stream --no-prefix
+      - run:
+          name: Run GraphQL Tests
+          command: cd packages/graphql && yarn test
 
   EventCache:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run migrate --scope @origin/event-cache --stream --no-prefix
-      - run: |
-          lerna run test --scope @origin/event-cache --stream --no-prefix
+      - run:
+          name: Run EventCache Tests
+          command: cd packages/event-cache && yarn migrate && yarn test
 
   Bridge:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: lerna run migrate --scope @origin/bridge --stream --no-prefix
-      - run: lerna run test --scope @origin/bridge --stream --no-prefix
+      - run:
+          name: Run Bridge Tests
+          command: cd infra/bridge && yarn migrate && yarn test
 
   Contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: lerna run test --scope @origin/contracts --stream --no-prefix
+      - run:
+          name: Run Contract Tests
+          command: cd packages/contracts && yarn test
 
   Discovery:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run migrate --scope @origin/bridge --stream --no-prefix
-          lerna run migrate --scope @origin/discovery --stream --no-prefix
-          lerna run migrate --scope @origin/growth --stream --no-prefix
-          lerna run migrate --scope @origin/identity --stream --no-prefix
-          lerna run test --scope @origin/bridge --stream --no-prefix
+      - run:
+          name: Run Discovery Tests
+          command: |
+            ./node_modules/.bin/lerna run migrate --scope @origin/bridge --stream --no-prefix
+            ./node_modules/.bin/lerna run migrate --scope @origin/discovery --stream --no-prefix
+            ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream --no-prefix
+            ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream --no-prefix
+            ./node_modules/.bin/lerna run test --scope @origin/bridge --stream --no-prefix
 
   Growth:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run migrate --scope @origin/growth --stream --no-prefix
-          lerna run migrate --scope @origin/identity --stream --no-prefix
-          lerna run test --scope @origin/growth --stream --no-prefix
+      - run:
+          name: Run Growth Tests
+          command: |
+            ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream --no-prefix
+            ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream --no-prefix
+            ./node_modules/.bin/lerna run test --scope @origin/growth --stream --no-prefix
 
   Notifications:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          lerna run migrate --scope @origin/notifications --stream --no-prefix
-          lerna run test --scope @origin/notifications --stream --no-prefix
+      - run:
+          name: Run Notification Tests
+          command: cd infra/notifications && yarn migrate && yarn test
 
 workflows:
   version: 2
