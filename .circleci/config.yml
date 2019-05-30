@@ -46,68 +46,78 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run test --scope @origin/marketplace
+      - run:
+          name: Run Marketplace Tests
+          command: cd dapps/marketplace && yarn test
 
   GraphQL:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run test --scope @origin/graphql
+      - run:
+          name: Run GraphQL Tests
+          command: cd packages/graphql && yarn test
 
   EventCache:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run migrate --scope @origin/event-cache
-      - run: ./node_modules/.bin/lerna run test --scope @origin/event-cache
+      - run:
+          name: Run EventCache Tests
+          command: cd packages/event-cache && yarn migrate && yarn test
 
   Bridge:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run migrate --scope @origin/bridge
-      - run: ./node_modules/.bin/lerna run test --scope @origin/bridge
+      - run:
+          name: Run Bridge Tests
+          command: cd infra/bridge && yarn migrate && yarn test
 
   Contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run test --scope @origin/contracts
+      - run:
+          name: Run Contract Tests
+          command: cd packages/contracts && yarn test
 
   Discovery:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/bridge
-          ./node_modules/.bin/lerna run migrate --scope @origin/discovery
-          ./node_modules/.bin/lerna run migrate --scope @origin/growth
-          ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          ./node_modules/.bin/lerna run test --scope @origin/bridge
+      - run: cd infra/bridge && yarn migrate
+      - run: cd infra/discovery && yarn migrate
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
+      - run:
+          name: Run Discovery Tests
+          command: cd infra/bridge && yarn test
 
   Growth:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/growth
-          ./node_modules/.bin/lerna run migrate --scope @origin/identity
-          ./node_modules/.bin/lerna run test --scope @origin/growth
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
+      - run:
+          name: Run Growth Tests
+          command: cd infra/growth && yarn test
 
   Notifications:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/notifications
-          ./node_modules/.bin/lerna run test --scope @origin/notifications
+      - run:
+          name: Run Notification Tests
+          command: cd infra/notifications && yarn migrate && yarn test
 
 workflows:
   version: 2
