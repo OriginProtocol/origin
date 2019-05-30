@@ -1,15 +1,24 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import ImagePicker from 'react-native-image-picker'
+import ImageResizer from 'react-native-image-resizer'
 
 import { setProfileImage } from 'actions/Onboarding'
 import { SettingsButton } from 'components/settings-button'
 import OriginButton from 'components/origin-button'
+import withConfig from 'hoc/withConfig'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import OnboardingStyles from 'styles/onboarding'
 
@@ -27,6 +36,7 @@ class ProfileImage extends Component {
     super(props)
     this.state = {
       imagePickerError: null,
+      imageSource: null,
       loading: false
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -39,13 +49,53 @@ class ProfileImage extends Component {
 
   handleImageClick() {
     ImagePicker.showImagePicker(imagePickerOptions, async response => {
-      this.setState({ loading: false })
       if (response.error) {
         this.setState({ imagePickerError: response.error })
-      } else {
-        // TODO upload to IPFS and store the URI
-        await this.props.setProfileImage(response.uri)
+        return
       }
+
+      this.setState({ loading: true })
+
+      const outImage = await ImageResizer.createResizedImage(
+        response.uri,
+        1024,
+        1014,
+        'JPEG',
+        90,
+        response.originalRotation
+      )
+
+      // Create form data, origin-ipfs-proxy uses Busboy which only parses multiple
+      // multipart/form-data and application/x-www-form-urlencoded requests
+      const formData = new FormData()
+      formData.append('file', outImage)
+
+      console.debug('Uploading image to IPFS')
+      const ipfsRPC = this.props.configs.mainnet.ipfsRPC
+      const ipfsResponse = await fetch(`${ipfsRPC}/api/v0/add`, {
+        method: 'POST',
+        body: formData
+      })
+
+      this.setState({
+        loading: false
+      })
+
+      if (!ipfsResponse.ok) {
+        console.debug('IPFS upload failed')
+        this.setState({
+          imagePickerError: 'Photo uploaded failed'
+        })
+        return
+      }
+
+      this.setState({
+        imageSource: outImage
+      })
+
+      const data = await ipfsResponse.json()
+      console.debug('IPFS upload succeeded: ', data)
+      await this.props.setProfileImage(data.Hash)
     })
   }
 
@@ -53,13 +103,22 @@ class ProfileImage extends Component {
     const galleryPermissionDenied =
       this.state.imagePickerError === 'Photo library permissions not granted'
 
+    let content
+    if (this.state.loading) {
+      content = (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
+      )
+    } else if (this.galleryPermissionDenied) {
+      content = this.renderGalleryPermissionDenied()
+    } else {
+      content = this.renderImage()
+    }
+
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          {galleryPermissionDenied
-            ? this.renderGalleryPermissionDenied()
-            : this.renderImage()}
-        </View>
+        <View style={styles.content}>{content}</View>
         <View style={[styles.visibilityWarning, styles.isVisible]}>
           <Text style={styles.visibilityWarningHeader}>
             What will be visible on the blockchain?
@@ -101,17 +160,27 @@ class ProfileImage extends Component {
   }
 
   renderImage() {
+    const ipfsRPC = this.props.configs.mainnet.ipfsRPC
+
     return (
       <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
         <Image
           resizeMethod={'scale'}
           resizeMode={'contain'}
           source={
-            this.props.onboarding.profileImage
-              ? { uri: this.props.onboarding.profileImage }
+            this.state.imageSource
+              ? this.state.imageSource
               : require(IMAGES_PATH + 'partners-graphic.png')
           }
           style={styles.image}
+          onLoadEnd={e => {
+            console.log('Load start')
+            this.setState({ loading: true })
+          }}
+          onLoadEnd={e => {
+            console.log('Load end')
+            this.setState({ loading: false })
+          }}
         />
         <Text style={styles.title}>
           {!this.props.onboarding.profileImage ? (
@@ -133,15 +202,21 @@ const mapDispatchToProps = dispatch => ({
   setProfileImage: payload => dispatch(setProfileImage(payload))
 })
 
-export default withOnboardingSteps(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ProfileImage)
+export default withConfig(
+  withOnboardingSteps(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(ProfileImage)
+  )
 )
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,
+  loading: {
+    flex: 1,
+    justifyContent: 'space-around'
+  },
   image: {
     backgroundColor: '#2e3f53',
     borderRadius: 60,
