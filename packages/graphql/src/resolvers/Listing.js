@@ -9,7 +9,8 @@ export default {
   __resolveType() {
     return 'UnitListing'
   },
-  events: async listing => {
+  events: async (listing, args, context, info) => {
+    info.cacheControl.setCacheHint({ maxAge: 15 })
     const { listingId } = parseId(listing.id)
     return await listing.contract.eventCache.getEvents({
       listingID: String(listingId)

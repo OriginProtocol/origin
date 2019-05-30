@@ -8,10 +8,10 @@ const _get = require('lodash/get')
 const memoize = require('lodash/memoize')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-const getListingFn = async (contract, listingId) =>
+const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
 
-const getListing = memoize(getListingFn, (...args) => args[1])
+const getListing = memoize(getListingDirect, (...args) => args[1])
 
 const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
   await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
@@ -61,7 +61,7 @@ class OriginEventSource {
       : this.contract.eventCache.latestBlock
     const cacheKey = `${listingId}-${cacheBlockNumber}`
     const networkId = await this.getNetworkId()
-    if (this.listingCache[cacheKey]) {
+    if (process.env.DISABLE_CACHE !== 'true' && this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
@@ -78,10 +78,13 @@ class OriginEventSource {
       status = 'active'
 
     try {
-      listing = await getListing(this.contract, listingId)
+      if (process.env.DISABLE_CACHE === 'true') {
+        listing = await getListingDirect(this.contract, listingId)
+      } else {
+        listing = await getListing(this.contract, listingId)
+      }
     } catch (e) {
-      console.log(`No such listing on contract ${listingId}`)
-      return null
+      throw new Error(`No such listing on contract ${listingId}`)
     }
 
     const events = await this.contract.eventCache.getEvents({
@@ -276,8 +279,11 @@ class OriginEventSource {
       commission
     })
 
-    this.listingCache[cacheKey] = listingWithOffers
-    return this.listingCache[cacheKey]
+    if (process.env.DISABLE_CACHE === 'true') {
+      return listingWithOffers
+    } else {
+      return (this.listingCache[cacheKey] = listingWithOffers)
+    }
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -387,7 +393,7 @@ class OriginEventSource {
       blockNumber = await this.contract.eventCache.getBlockNumber()
     }
     const cacheKey = `${listingId}-${offerId}-${blockNumber}`
-    if (this.offerCache[cacheKey]) {
+    if (process.env.DISABLE_CACHE !== 'true' && this.offerCache[cacheKey]) {
       return this.offerCache[cacheKey]
     }
 
@@ -473,8 +479,11 @@ class OriginEventSource {
       }
     }
 
-    this.offerCache[cacheKey] = offerObj
-    return offerObj
+    if (process.env.DISABLE_CACHE === 'true') {
+      return offerObj
+    } else {
+      return (this.offerCache[cacheKey] = offerObj)
+    }
   }
 
   // Validates an offer, throwing an error if an issue is found.

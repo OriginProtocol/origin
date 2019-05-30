@@ -76,6 +76,8 @@ class ApolloAdapter {
       return null
     }
 
+    const omitUserData = data.ethAddress === null
+
     // Fetch common data across all action types.
     let action = {
       ruleId: data.ruleId,
@@ -92,6 +94,10 @@ class ApolloAdapter {
     // Some action types require to fetch extra custom data.
     switch (action.type) {
       case 'Referral':
+        if (omitUserData) {
+          break
+        }
+
         const referralsInfo = await this._getReferralsActionData(data)
         action = { ...action, ...referralsInfo }
         break
@@ -140,6 +146,7 @@ const campaignToApolloObject = async (
   // User is not enrolled or is banned.
   // Return only basic campaign data.
   if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+    out.actions = await crules.export(adapter, null)
     return out
   }
 

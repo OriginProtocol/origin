@@ -47,6 +47,7 @@ function withCurrencyBalances(WrappedComponent) {
   const WithCurrencyBalances = props => (
     <Query
       query={query}
+      skip={!props.wallet}
       variables={{
         account: props.wallet,
         proxy: props.walletProxy,
