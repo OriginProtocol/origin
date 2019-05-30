@@ -64,6 +64,7 @@ class Purchases extends Component {
               variables={vars}
               notifyOnNetworkStatusChange={true}
               skip={!vars.id}
+              fetchPolicy="cache-and-network"
             >
               {({ error, data, fetchMore, networkStatus }) => {
                 if (networkStatus <= 2 || !this.props.wallet) {
