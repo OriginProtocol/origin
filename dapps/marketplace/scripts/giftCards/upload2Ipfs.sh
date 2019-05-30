@@ -6,6 +6,13 @@
 # export IPFS_GATEWAY_API_URL="https://ipfs.staging.originprotocol.com/api/v0/add"
 # export IPFS_GATEWAY_API_URL="https://ipfs.originprotocol.com/api/v0/add"
 
+curl -F file=@images/delta.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/homedepot.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/lowes.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/steam.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/united.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/ebay.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+
 curl -F file=@images/airbnb.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/amazon.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/calipizza.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
