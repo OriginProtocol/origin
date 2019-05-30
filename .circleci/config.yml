@@ -91,26 +91,24 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/bridge && yarn migrate
+      - run: cd infra/discovery && yarn migrate
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
-          command: |
-            ./node_modules/.bin/lerna run migrate --scope @origin/bridge --stream --no-prefix
-            ./node_modules/.bin/lerna run migrate --scope @origin/discovery --stream --no-prefix
-            ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream --no-prefix
-            ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream --no-prefix
-            ./node_modules/.bin/lerna run test --scope @origin/bridge --stream --no-prefix
+          command: cd infra/bridge && yarn test
 
   Growth:
     <<: *db
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
       - run:
           name: Run Growth Tests
-          command: |
-            ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream --no-prefix
-            ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream --no-prefix
-            ./node_modules/.bin/lerna run test --scope @origin/growth --stream --no-prefix
+          command: cd infra/growth && yarn test
 
   Notifications:
     <<: *db
