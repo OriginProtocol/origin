@@ -8,17 +8,13 @@ import {
   createAccount
 } from './_helpers'
 import services from './_services'
+import assert from 'assert'
 
 let page
 
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
-  // Close Origin Marketplace app modal
-  await page.waitForSelector('.pl-modal-content .close')
-  setTimeout(async () => {
-    await clickBySelector(page, '.pl-modal-content .close')
-  }, 100)
 })
 
 const reset = async () => {
@@ -65,11 +61,16 @@ const finalizeOffer = async ({ buyer }) => {
   await pic(page, 'transaction-finalized')
 }
 
+function randomTitle() {
+  return `T-Shirt ${Math.floor(Math.random() * 100000)}`
+}
+
 describe('Marketplace Dapp', function() {
   let seller, buyer
-  this.timeout(5000)
+  this.timeout(10000)
 
   describe('Single Unit Listing for Eth', function() {
+    const listingTitle = randomTitle()
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -95,7 +96,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', listingTitle)
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
       await page.click('#eth-checkbox') // Select Eth
@@ -166,7 +167,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
       const input = await page.$('input[type="file"]')
@@ -232,6 +233,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Multi Unit Listing for Eth', function() {
+    let listingHash
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -257,10 +259,12 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
-      await page.type('input[name=quantity]', '0') // Add a zero
+      await page.focus('input[name=quantity]')
+      await page.keyboard.press('Backspace')
+      await page.type('input[name=quantity]', '2')
       await page.click('#eth-checkbox') // Select Eth
       await page.click('#dai-checkbox') // De-select Dai
       const input = await page.$('input[type="file"]')
@@ -288,6 +292,14 @@ describe('Marketplace Dapp', function() {
 
     it('should continue to listing', async function() {
       await clickByText(page, 'View Listing', 'button')
+      listingHash = await page.evaluate(() => window.location.hash)
+    })
+
+    it('should have the correct sales numbers', async function() {
+      await page.waitForSelector('.listing-buy-editonly')
+      const sold = await page.$('.listing-buy-editonly')
+      const sales = await page.evaluate(el => el.innerText, sold)
+      assert(sales.replace(/\n/g, ' ') === 'Sold 0 Pending 0 Available 2')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -311,11 +323,50 @@ describe('Marketplace Dapp', function() {
     it('should allow a new listing to be finalized', async function() {
       await finalizeOffer({ buyer })
     })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should allow the listing to be edited', async function() {
+      await clickByText(page, 'Edit Listing')
+      await clickByText(page, 'Continue')
+      await page.focus('input[name=quantity]')
+      await page.keyboard.press('Backspace')
+      await page.type('input[name=quantity]', '10')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Done')
+      await clickByText(page, 'View Listing', 'button')
+    })
+
+    it('should have the edited sales numbers', async function() {
+      await page.waitForSelector('.listing-buy-editonly')
+      const sold = await page.$('.listing-buy-editonly')
+      const sales = await page.evaluate(el => el.innerText, sold)
+      assert(sales.replace(/\n/g, ' ') === 'Sold 2 Pending 0 Available 8')
+    })
+
+    it('should allow the edited listing to be purchased', async function() {
+      await purchaseListing({ buyer })
+    })
+
+    it('should allow a new listing to be accepted', async function() {
+      await acceptOffer({ seller })
+    })
+
+    it('should allow a new listing to be finalized', async function() {
+      await finalizeOffer({ buyer })
+    })
   })
 
   describe('Edit user profile', function() {
     before(async function() {
       ({ seller, buyer } = await reset())
+      await changeAccount(page, seller)
     })
 
     it('should go to the profile page', async function() {
