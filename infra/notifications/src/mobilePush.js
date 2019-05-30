@@ -71,13 +71,44 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
     url: `${config.dappUrl}/#/messages`
   }
 
+  const senderIdentity = Identity.findOne({
+    where: {
+      ethAddress: sender
+    }
+  })
+
   receivers.forEach(async receiver => {
     try {
+
+      const senderName =
+        senderIdentity !== null &&
+        senderIdentity.firstName &&
+        senderIdentity.lastName
+          ? `${senderIdentity.firstName ||
+              ''} ${senderIdentity.lastName ||
+              ''} (${web3Utils.toChecksumAddress(
+              sender
+            )})`
+          : web3Utils.toChecksumAddress(sender)
+
+      const receiverIdentity = Identity.findOne({
+        where: {
+          ethAddress: receiver
+        }
+      })
+      const templateVars = {
+        config,
+        sender,
+        senderName,
+        dappUrl: config.dappUrl,
+        ipfsGatewayUrl: config.ipfsGatewayUrl
+      }
+
       const messageTemplate = messageTemplates.message['mobile']['messageReceived']
       // Apply template
       const message = {
-        title: messageTemplate.title(),
-        body: messageTemplate.body()
+        title: messageTemplate.title(templateVars),
+        body: messageTemplate.body(templateVars)
       }
       const ethAddress = receiver
       const notificationObj = {
@@ -119,6 +150,7 @@ async function transactionMobilePush(
   buyerAddress,
   sellerAddress,
   offer,
+  listing,
   config
 ) {
   if (!eventName) throw new Error('eventName not defined')
@@ -151,12 +183,20 @@ async function transactionMobilePush(
     url: offer && `${config.dappUrl}/#/purchases/${offer.id}`
   }
 
+  const templateVars = {
+    listing,
+    offer,
+    config,
+    dappUrl: config.dappUrl,
+    ipfsGatewayUrl: config.ipfsGatewayUrl
+  }
+
   if (buyerMessageTemplate || sellerMessageTemplate) {
     if (buyerMessageTemplate) {
       receivers[buyerAddress] = {
         message: {
-          title: buyerMessageTemplate.title(),
-          body: buyerMessageTemplate.body()
+          title: buyerMessageTemplate.title(templateVars),
+          body: buyerMessageTemplate.body(templateVars)
         },
         payload
       }
@@ -164,8 +204,8 @@ async function transactionMobilePush(
     if (sellerMessageTemplate) {
       receivers[sellerAddress] = {
         message: {
-          title: sellerMessageTemplate.title(),
-          body: sellerMessageTemplate.body()
+          title: sellerMessageTemplate.title(templateVars),
+          body: sellerMessageTemplate.body(templateVars)
         },
         payload
       }
@@ -173,7 +213,9 @@ async function transactionMobilePush(
 
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
-      const mobileRegister = await MobileRegistry.findOne( { where: { ethAddress:ethAddress.toLowerCase(), deleted: false, 'permissions.alert': true } } )
+      const mobileRegister = await MobileRegistry.findOne({
+        where: { ethAddress: ethAddress.toLowerCase(), deleted: false, 'permissions.alert': true }
+      })
       if (mobileRegister) {
         logger.info(`Pushing transaction notification to ${ethAddress}`)
         await sendNotification(
