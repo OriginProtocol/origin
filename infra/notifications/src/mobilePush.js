@@ -91,11 +91,6 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
             )})`
           : web3Utils.toChecksumAddress(sender)
 
-      const receiverIdentity = Identity.findOne({
-        where: {
-          ethAddress: receiver
-        }
-      })
       const templateVars = {
         config,
         sender,

@@ -352,6 +352,7 @@ app.post('/events', async (req, res) => {
     buyerAddress,
     sellerAddress,
     offer,
+    listing,
     config
   )
 
