@@ -1,3 +1,5 @@
+const Identity = require('../../identity/src/models').Identity
+
 const { messageTemplates } = require('../templates/messageTemplates')
 
 const apn = require('apn')
@@ -79,16 +81,12 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
 
   receivers.forEach(async receiver => {
     try {
-
       const senderName =
         senderIdentity !== null &&
         senderIdentity.firstName &&
         senderIdentity.lastName
-          ? `${senderIdentity.firstName ||
-              ''} ${senderIdentity.lastName ||
-              ''} (${web3Utils.toChecksumAddress(
-              sender
-            )})`
+          ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
+              ''} (${web3Utils.toChecksumAddress(sender)})`
           : web3Utils.toChecksumAddress(sender)
 
       const templateVars = {
@@ -99,7 +97,8 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
         ipfsGatewayUrl: config.ipfsGatewayUrl
       }
 
-      const messageTemplate = messageTemplates.message['mobile']['messageReceived']
+      const messageTemplate =
+        messageTemplates.message['mobile']['messageReceived']
       // Apply template
       const message = {
         title: messageTemplate.title(templateVars),
@@ -209,7 +208,11 @@ async function transactionMobilePush(
     for (const [_ethAddress, notificationObj] of Object.entries(receivers)) {
       const ethAddress = web3Utils.toChecksumAddress(_ethAddress)
       const mobileRegister = await MobileRegistry.findOne({
-        where: { ethAddress: ethAddress.toLowerCase(), deleted: false, 'permissions.alert': true }
+        where: {
+          ethAddress: ethAddress.toLowerCase(),
+          deleted: false,
+          'permissions.alert': true
+        }
       })
       if (mobileRegister) {
         logger.info(`Pushing transaction notification to ${ethAddress}`)
