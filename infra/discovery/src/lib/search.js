@@ -242,7 +242,7 @@ class Listing {
             source: `double score = _score;
 
             if(doc['scoreMultiplier'] != null){
-              score = doc['scoreMultiplier'].value
+              score *= doc['scoreMultiplier'].value
             }
 
             // Temporary boost for recently created listings.
