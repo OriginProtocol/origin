@@ -159,6 +159,8 @@ export function setNetwork(net, customConfig) {
 
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
+  setProxyFactory(config.ProxyFactory, config.ProxyFactory_Epoch)
+  // TBD: do we need those 2 lines ?
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
     config.ProxyFactory
@@ -421,6 +423,36 @@ export function setIdentityEvents(address, epoch) {
     )
     if (metaMaskEnabled) {
       context.identityEventsExec = context.identityEventsMM
+    }
+  }
+}
+
+export function setProxyFactory(address, epoch) {
+  context.proxyFactory = new web3.eth.Contract(
+    IdentityProxyFactory.abi,
+    address
+  )
+  patchWeb3Contract(context.proxyFactory, epoch, {
+    ...context.config,
+    ipfsEventCache: null, // TODO add cache after launch, once we have non trivial number of events.
+    cacheMaxBlock: null,
+    useLatestFromChain: false,
+    prefix:
+      typeof address === 'undefined'
+        ? 'ProxyFactory_'
+        : `${address.slice(2, 8)}_`,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
+    batchSize: 2500
+  })
+  context.proxyFactoryExec = context.proxyFactory
+
+  if (metaMask) {
+    context.proxyFactoryMM = new metaMask.eth.Contract(
+      IdentityEventsContract.abi,
+      context.proxyFactory.options.address
+    )
+    if (metaMaskEnabled) {
+      context.proxyFactoryExec = context.proxyFactoryMM
     }
   }
 }

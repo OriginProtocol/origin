@@ -87,6 +87,8 @@ const config = {
   identity: args['--identity'] || process.env.INDEX_IDENTITY === 'true',
   // Index growth events.
   growth: args['--growth'] || process.env.INDEX_GROWTH === 'true',
+  // Index identity proxy events.
+  proxy: args['--proxy'] || process.env.INDEX_PROXY === 'true',
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
@@ -116,7 +118,8 @@ async function main() {
 
   const contracts = {
     IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplace
+    Marketplace: contractsContext.marketplace,
+    ProxyFactory: contractsContext.proxyFactory
   }
 
   if (context.config.concurrency > 1) {

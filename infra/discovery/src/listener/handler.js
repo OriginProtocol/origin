@@ -6,6 +6,8 @@ const logger = require('./logger')
 const { withRetrys } = require('./utils')
 const MarketplaceEventHandler = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
+const ProxyEventHandler = require('./handler_proxy')
+
 
 const {
   postToEmailWebhook,
@@ -31,8 +33,10 @@ const EVENT_TO_HANDLER_MAP = {
   OfferFinalized: MarketplaceEventHandler,
   OfferData: MarketplaceEventHandler,
   // Identity Events
-  IdentityUpdated: IdentityEventHandler
   // TODO(franck): handle IdentityDeleted
+  IdentityUpdated: IdentityEventHandler,
+  // Proxy events
+  ProxyCreation: ProxyEventHandler,
 }
 
 // Initializing a new ApolloClient so cache can be disabled
