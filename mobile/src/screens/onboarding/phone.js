@@ -1,11 +1,12 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Picker, StyleSheet, Text, TextInput, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
+import RNPickerSelect from 'react-native-picker-select'
 
 import { setPhoneAttestation } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
@@ -13,17 +14,30 @@ import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
+import _countryCodes from 'utils/countryCodes'
+
+const countryCodes = _countryCodes
+  .map(item => {
+    return {
+      label: `${item.name} (${item.prefix})`,
+      value: item.prefix
+    }
+  })
+  .sort((a, b) => (a.label > b.label ? 1 : -1))
+  .filter(x => x.value == 64)
 
 class PhoneScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      countryCodeValue: '',
       phoneValue: '',
       phoneError: '',
       loading: false,
       verify: false,
       verifyError: '',
-      verificationCode: ''
+      verificationCode: '',
+      verificationMethod: 'sms'
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -31,8 +45,8 @@ class PhoneScreen extends Component {
     this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
-  handleChange(phoneValue) {
-    this.setState({ phoneError: '', phoneValue })
+  handleChange(field, value) {
+    this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
   }
 
   async handleSubmitPhone() {
@@ -44,7 +58,11 @@ class PhoneScreen extends Component {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
       method: 'POST',
-      body: JSON.stringify({ phone: this.state.phoneValue })
+      body: JSON.stringify({
+        country_calling_code: this.state.countryCodeValue,
+        method: this.state.verificationMethod,
+        phone: this.state.phoneValue
+      })
     })
     if (response.ok) {
       this.setState({ loading: false, verify: true })
@@ -69,6 +87,7 @@ class PhoneScreen extends Component {
       body: JSON.stringify({
         code: this.state.verificationCode,
         identity: this.props.wallet.activeAccount.address,
+        country_calling_code: this.state.countryCodeValue,
         phone: this.state.phoneValue
       })
     })
@@ -100,14 +119,20 @@ class PhoneScreen extends Component {
           </Text>
           <Text style={styles.subtitle}>
             <fbt desc="PhoneScreen.inputSubtitle">
-              Enter a valid 10-digit phone number
+              Enter a valid phone number
             </fbt>
           </Text>
+          <RNPickerSelect
+            placeholder={{ label: 'Select a country', value: null }}
+            items={countryCodes}
+            onValueChange={value => this.handleChange('countryCode', value)}
+            style={pickerSelectStyles}
+          />
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             multiline={true}
-            onChangeText={this.handleChange}
+            onChangeText={value => this.handleChange('phone', value)}
             onSubmitEditing={this.handleSubmit}
             value={this.state.phoneValue}
             style={[styles.input, this.state.phoneError ? styles.invalid : {}]}
@@ -232,6 +257,34 @@ export default withConfig(
   )
 )
 
-const styles = StyleSheet.create({
-  ...OnboardingStyles
+const styles = OnboardingStyles
+
+const pickerSelectStyles = StyleSheet.create({
+  viewContainer: {
+    alignItems: 'center'
+  },
+  inputIOS: {
+    color: 'black',
+    fontSize: 20,
+    borderColor: '#c0cbd4',
+    borderBottomWidth: 1,
+    paddingTop: 20,
+    paddingBottom: 10,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    width: 300,
+    textAlign: 'center'
+  },
+  inputAndroid: {
+    color: 'black',
+    fontSize: 20,
+    borderColor: '#c0cbd4',
+    borderBottomWidth: 1,
+    paddingTop: 20,
+    paddingBottom: 10,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+    width: 300,
+    textAlign: 'center'
+  }
 })
