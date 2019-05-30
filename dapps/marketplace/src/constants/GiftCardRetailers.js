@@ -1,3 +1,4 @@
+// prettier-ignore
 export const GiftCardRetailers = {
   '─────────────': '',
   'Amazon': 'QmZowzDMdgZcfcZAJhTUnupNYdBpmbMzbDDto1M1cQk9T3',
