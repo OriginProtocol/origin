@@ -4,7 +4,7 @@ const logger = require('./logger')
 try {
   require('envkey')
 } catch (error) {
-  logger.error('EnvKey not configured. Please set env var ENVKEY')
+  logger.warn('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const express = require('express')
