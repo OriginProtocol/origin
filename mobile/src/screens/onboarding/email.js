@@ -5,33 +5,58 @@ import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash.get'
 
-import { setEmail } from 'actions/Settings'
+import { setEmailAttestation } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
+import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import withConfig from 'hoc/withConfig'
 
 class EmailScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       emailValue: '',
-      emailError: ''
+      emailError: '',
+      loading: false,
+      verify: false,
+      verifyError: '',
+      verificationCode: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmitEmail = this.handleSubmitEmail.bind(this)
+    this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
   handleChange(emailValue) {
-    this.setState({ emailError: '', emailValue: emailValue.trim() })
+    this.setState({ emailError: '', emailValue})
   }
 
-  async handleSubmit() {
+  async handleSubmitEmail() {
     // Naive/simple email regex but should catch most issues
     const emailPattern = /.+@.+\..+/
     if (emailPattern.test(this.state.emailValue)) {
-      await this.props.setEmail(this.state.emailValue)
-      this.props.navigation.navigate(this.props.nextOnboardingStep)
+      this.setState({ loading: true })
+      const url = `${
+        this.props.configs.mainnet.bridge
+      }/api/attestations/email/generate-code`
+      const response = await fetch(url, {
+        headers: { 'content-type': 'application/json' },
+        credentials: 'include',
+        method: 'POST',
+        body: JSON.stringify({ email: this.state.emailValue })
+      })
+      if (response.ok) {
+        this.setState({ loading: false, verify: true })
+      } else {
+        const data = await response.json()
+        this.setState({
+          loading: false,
+          emailError: get(data, 'errors[0]', '')
+        })
+      }
     } else {
       this.setState({
         emailError: String(
@@ -44,15 +69,51 @@ class EmailScreen extends Component {
     }
   }
 
+  async handleSubmitVerification() {
+    this.setState({ loading: true })
+    const url = `${
+      this.props.configs.mainnet.bridge
+    }/api/attestations/email/verify`
+    const response = await fetch(url, {
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify({
+        code: this.state.verificationCode,
+        identity: this.props.wallet.activeAccount.address,
+        email: this.state.emailValue
+      })
+    })
+
+    const data = await response.json()
+    this.setState({ loading: false })
+    if (!response.ok) {
+      this.setState({ verifyError: get(data, 'errors[0]', '') })
+      console.log(get(data, 'errors[0]', ''))
+      console.log(this.state)
+    } else {
+      this.props.setEmailAttestation(data)
+      this.props.navigation.navigate(this.props.nextOnboardingStep)
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        {!this.state.verify ? this.renderInput() : this.renderVerify()}
+      </SafeAreaView>
+    )
+  }
+
+  renderInput() {
+    return (
+      <>
         <View style={styles.content}>
           <Text style={styles.title}>
-            <fbt desc="EmailScreen.title">Let&apos;s get started</fbt>
+            <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
           </Text>
           <Text style={styles.subtitle}>
-            <fbt desc="EmailScreen.subtitle">
+            <fbt desc="EmailScreen.inputSubtitle">
               What&apos;s your email address?
             </fbt>
           </Text>
@@ -71,7 +132,7 @@ class EmailScreen extends Component {
           )}
           <View style={styles.legalContainer}>
             <Text style={styles.legal}>
-              <fbt desc="EmailScreen.disclaimer">
+              <fbt desc="EmailScreen.inputHelpText">
                 We will use your email to notify you of important notifications
                 when you buy or sell.
               </fbt>
@@ -85,28 +146,85 @@ class EmailScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'EmailScreen.continueButton')}
-            disabled={!this.state.emailValue.length || this.state.emailError}
-            onPress={this.handleSubmit}
+            disabled={
+              !this.state.emailValue.length ||
+              this.state.emailError ||
+              this.state.loading
+            }
+            onPress={this.handleSubmitEmail}
+            loading={this.state.loading}
           />
         </View>
-      </SafeAreaView>
+      </>
+    )
+  }
+
+  renderVerify() {
+    return (
+      <>
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
+          </Text>
+          <Text style={styles.subtitle}>
+            <fbt desc="EmailScreen.verifySubtitle">Enter code</fbt>
+          </Text>
+          <PinInput
+            value={this.state.verificationCode}
+            pinLength={6}
+            onChangeText={value =>
+              this.setState({ verificationCode: value.substr(0, 6), verifyError: '' })
+            }
+          />
+          {this.state.verifyError.length > 0 && (
+            <Text style={styles.invalid}>{this.state.verifyError}</Text>
+          )}
+          <View style={styles.legalContainer}>
+            <Text style={styles.legal}>
+              <fbt desc="EmailScreen.verifyHelpText">
+                We sent you a code to the email address you provided. Please
+                enter it above.
+              </fbt>
+            </Text>
+          </View>
+        </View>
+        <View style={styles.buttonsContainer}>
+          <OriginButton
+            size="large"
+            type="primary"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={fbt('Verify', 'EmailScreen.verifyButton')}
+            disabled={
+              this.state.verificationCode.length < 6 ||
+              this.state.verifyError ||
+              this.state.loading
+            }
+            onPress={this.handleSubmitVerification}
+            loading={this.state.loading}
+          />
+        </View>
+      </>
     )
   }
 }
 
-const mapStateToProps = ({ settings, wallet }) => {
-  return { settings, wallet }
+const mapStateToProps = ({ onboarding, wallet }) => {
+  return { onboarding, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmail: email => dispatch(setEmail(email))
+  setEmailAttestation: emailAttestation =>
+    dispatch(setEmailAttestation(emailAttestation))
 })
 
-export default withOnboardingSteps(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(EmailScreen)
+export default withConfig(
+  withOnboardingSteps(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(EmailScreen)
+  )
 )
 
 const styles = StyleSheet.create({

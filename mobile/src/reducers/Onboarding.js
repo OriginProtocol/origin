@@ -13,10 +13,10 @@ const initialState = {
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
     case OnboardingConstants.SET_EMAIL_ATTESTATION:
-      return { ...state, email: action.emailAttestation }
+      return { ...state, emailAttestation: action.emailAttestation }
 
     case OnboardingConstants.SET_PHONE_ATTESTATION:
-      return { ...state, email: action.phoneAttestation }
+      return { ...state, phoneAttestation: action.phoneAttestation }
 
     case OnboardingConstants.SET_NAME:
       return {

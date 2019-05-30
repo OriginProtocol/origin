@@ -14,28 +14,28 @@ export const OnboardingConstants = keyMirror(
 
 export function setEmailAttestation(emailAttestation) {
   return {
-    type: SettingsConstants.SET_EMAIL_ATTESTATION,
+    type: OnboardingConstants.SET_EMAIL_ATTESTATION,
     emailAttestation
   }
 }
 
 export function setPhoneAttestation(phoneAttestation) {
   return {
-    type: SettingsConstants.SET_PHONE_ATTESTATION,
+    type: OnboardingConstants.SET_PHONE_ATTESTATION,
     phoneAttestation
   }
 }
 
 export function setName(payload) {
   return {
-    type: SettingsConstants.SET_NAME,
+    type: OnboardingConstants.SET_NAME,
     payload
   }
 }
 
 export function setProfileImage(profileImage) {
   return {
-    type: SettingsConstants.SET_PROFILE_IMAGE,
+    type: OnboardingConstants.SET_PROFILE_IMAGE,
     profileImage
   }
 }
