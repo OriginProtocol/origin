@@ -23,7 +23,6 @@ function withOnboardingSteps(WrappedComponent) {
     */
 
     nextOnboardingStep() {
-      return 'ProfileImage'
       if (!this.props.onboarding.emailAttestation) {
         return 'Email'
       } else if (!this.props.onboarding.phoneAttestation) {

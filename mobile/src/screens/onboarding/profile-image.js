@@ -110,7 +110,7 @@ class ProfileImage extends Component {
           <ActivityIndicator size="large" />
         </View>
       )
-    } else if (this.galleryPermissionDenied) {
+    } else if (galleryPermissionDenied) {
       content = this.renderGalleryPermissionDenied()
     } else {
       content = this.renderImage()
@@ -160,8 +160,6 @@ class ProfileImage extends Component {
   }
 
   renderImage() {
-    const ipfsRPC = this.props.configs.mainnet.ipfsRPC
-
     return (
       <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
         <Image
@@ -173,12 +171,10 @@ class ProfileImage extends Component {
               : require(IMAGES_PATH + 'partners-graphic.png')
           }
           style={styles.image}
-          onLoadEnd={e => {
-            console.log('Load start')
+          onLoadStart={() => {
             this.setState({ loading: true })
           }}
-          onLoadEnd={e => {
-            console.log('Load end')
+          onLoadEnd={() => {
             this.setState({ loading: false })
           }}
         />
