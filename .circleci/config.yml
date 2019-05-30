@@ -47,14 +47,15 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ./node_modules/.bin/lerna run test --scope @origin/marketplace --stream
+          lerna run test --scope @origin/marketplace --stream --no-prefix
 
   GraphQL:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run: ./node_modules/.bin/lerna run test --scope @origin/graphql --stream
+      - run: |
+          lerna run test --scope @origin/graphql --stream --no-prefix
 
   EventCache:
     <<: *db
@@ -62,26 +63,24 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/event-cache --stream
+          lerna run migrate --scope @origin/event-cache --stream --no-prefix
       - run: |
-          ./node_modules/.bin/lerna run test --scope @origin/event-cache --stream
+          lerna run test --scope @origin/event-cache --stream --no-prefix
 
   Bridge:
     <<: *db
     steps:
       - attach_workspace:
           at: .
-      - run:
-          ./node_modules/.bin/lerna run migrate --scope @origin/bridge --stream
-      - run: ./node_modules/.bin/lerna run test --scope @origin/bridge --stream
+      - run: lerna run migrate --scope @origin/bridge --stream --no-prefix
+      - run: lerna run test --scope @origin/bridge --stream --no-prefix
 
   Contracts:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
-      - run:
-          ./node_modules/.bin/lerna run test --scope @origin/contracts --stream
+      - run: lerna run test --scope @origin/contracts --stream --no-prefix
 
   Discovery:
     <<: *db
@@ -89,11 +88,11 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/bridge --stream
-          ./node_modules/.bin/lerna run migrate --scope @origin/discovery --stream
-          ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream
-          ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream
-          ./node_modules/.bin/lerna run test --scope @origin/bridge --stream
+          lerna run migrate --scope @origin/bridge --stream --no-prefix
+          lerna run migrate --scope @origin/discovery --stream --no-prefix
+          lerna run migrate --scope @origin/growth --stream --no-prefix
+          lerna run migrate --scope @origin/identity --stream --no-prefix
+          lerna run test --scope @origin/bridge --stream --no-prefix
 
   Growth:
     <<: *db
@@ -101,9 +100,9 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/growth --stream
-          ./node_modules/.bin/lerna run migrate --scope @origin/identity --stream
-          ./node_modules/.bin/lerna run test --scope @origin/growth --stream
+          lerna run migrate --scope @origin/growth --stream --no-prefix
+          lerna run migrate --scope @origin/identity --stream --no-prefix
+          lerna run test --scope @origin/growth --stream --no-prefix
 
   Notifications:
     <<: *db
@@ -111,8 +110,8 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-          ./node_modules/.bin/lerna run migrate --scope @origin/notifications --stream
-          ./node_modules/.bin/lerna run test --scope @origin/notifications --stream
+          lerna run migrate --scope @origin/notifications --stream --no-prefix
+          lerna run test --scope @origin/notifications --stream --no-prefix
 
 workflows:
   version: 2
