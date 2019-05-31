@@ -7,7 +7,6 @@ const initialState = {
   network: NETWORKS.find(n => n.name === 'Mainnet'),
   deviceToken: null,
   language: null,
-  // Onboarding
   pin: null,
   biometryType: null
 }

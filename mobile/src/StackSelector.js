@@ -21,8 +21,10 @@ class StackSelector extends React.Component {
       this.props.nextOnboardingStep !== 'Ready'
     ) {
       this.props.navigation.navigate('Welcome')
+    } else if (this.props.settings.pin.length > 0 || this.props.settings.biometryType) {
+      this.props.navigation.navigate('Auth')
     } else {
-      this.props.navigation.navigate('GuardedApp')
+      this.props.navigation.navigate('App')
     }
   }
 
