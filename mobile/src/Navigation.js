@@ -37,7 +37,12 @@ const IMAGES_PATH = '../assets/images/'
 
 const OnboardingStack = createStackNavigator(
   {
-    Welcome: WelcomeScreen,
+    Welcome: {
+      screen: WelcomeScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
@@ -67,9 +72,9 @@ const OnboardingStack = createStackNavigator(
         // this.props.navigation.setParams({ handleBack: this.handleBack.bind(this) })
         headerLeft: (
           <HeaderBackButton
-            onPress={() =>
+            onPress={() => {
               params.handleBack ? params.handleBack() : navigation.goBack(null)
-            }
+            }}
           />
         )
       }
@@ -208,29 +213,31 @@ class MarketplaceApp extends React.Component {
 }
 
 export default createAppContainer(
-  createSwitchNavigator(
+  createStackNavigator(
     {
       StackSelector: StackSelector,
-      Welcome: WelcomeScreen,
+      Auth: {
+        screen: AuthenticationGuard,
+        params: {
+          navigateOnSuccess: 'App'
+        }
+      },
       Onboarding: OnboardingStack,
       GuardedBackup: BackupStack,
-      GuardedApp: createSwitchNavigator(
-        {
-          Auth: {
-            screen: AuthenticationGuard,
-            params: {
-              navigateOnSuccess: 'App'
-            }
-          },
-          App: MarketplaceApp
-        },
-        {
-          initialRouteName: 'Auth'
-        }
-      )
+      App: MarketplaceApp
     },
     {
-      initialRouteName: 'StackSelector'
+      initialRouteName: 'StackSelector',
+      defaultNavigationOptions: {
+        header: null
+      },
+      // Remove the transition on the switch navigator as it makes it clearer
+      // that the DApp webview loads first
+      transitionConfig: () => ({
+        transitionSpec: {
+          duration: 0,  // Set the animation duration time as 0
+        },
+      })
     }
   )
 )

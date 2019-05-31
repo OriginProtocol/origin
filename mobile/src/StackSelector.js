@@ -11,7 +11,11 @@ class StackSelector extends React.Component {
     this.selectStack()
   }
 
-  selectStack() {
+  async selectStack() {
+    // Navigate to WebView screen to ensure DApp is mounted so we can
+    // make graphql mutations and queries via window.gql
+    this.props.navigation.navigate('App')
+
     if (
       this.props.nextOnboardingStep &&
       this.props.nextOnboardingStep !== 'Ready'
