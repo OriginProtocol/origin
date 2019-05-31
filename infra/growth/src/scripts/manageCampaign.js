@@ -7,7 +7,6 @@ const aprilConfig = require('../../campaigns/april')
 const mayConfig = require('../../campaigns/may')
 const juneConfig = require('../../campaigns/june')
 
-
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
 

@@ -59,12 +59,8 @@ const mayConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'PhoneAttestationPublished',
-            reward: {
-              amount: tokenToNaturalUnits(25),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
@@ -75,12 +71,8 @@ const mayConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'FacebookAttestationPublished',
-            reward: {
-              amount: tokenToNaturalUnits(25),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
@@ -91,12 +83,8 @@ const mayConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'AirbnbAttestationPublished',
-            reward: {
-              amount: tokenToNaturalUnits(25),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
@@ -107,12 +95,8 @@ const mayConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'TwitterAttestationPublished',
-            reward: {
-              amount: tokenToNaturalUnits(25),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
@@ -123,12 +107,8 @@ const mayConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'GoogleAttestationPublished',
-            reward: {
-              amount: tokenToNaturalUnits(25),
-              currency: 'OGN'
-            },
+            reward: null,
             visible: true,
-            limit: 1,
             nextLevelCondition: false,
             scope: 'campaign',
             statusScope: 'user'
@@ -722,7 +702,7 @@ const mayConfig = {
         // CHARITY
         //
         {
-          id: 'ListingPurchaseCharity',
+          id: 'ListingPurchase2555',
           class: 'ListingIdPurchase',
           config: {
             listingId: '1-000-2555',
