@@ -41,11 +41,13 @@ const Growth$FbtEnum = {
   'growth.purchase.listing679.title': 'Book an apartment in Venice, Italy',
   'growth.purchase.listing683.title': 'Book a studio in Milan, Italy',
   'growth.purchase.listing763.title': 'Book an apartment in Rome, Italy',
-  'growth.purchase.listing1556.title': 'Book an apartment in Puerto de la Cruz, Tenerife',
+  'growth.purchase.listing1556.title':
+    'Book an apartment in Puerto de la Cruz, Tenerife',
   'growth.purchase.listing2718.title': 'Book an apartment in Maneggio, Italy',
   'growth.purchase.listing2237.title': 'Book an apartment in Vatican, Italy',
   'growth.purchase.listing2781.title': 'Book an apartment in Trastevere, Italy',
-  'growth.purchase.listing2783.title': 'Book a luxury apartment in Venice, Italy',
+  'growth.purchase.listing2783.title':
+    'Book a luxury apartment in Venice, Italy',
 
   'growth.purchase.listing335.title': 'Purchase Ethereum hologram animated art',
   'growth.purchase.listing297.title': 'Purchase ETH hologram',
@@ -70,7 +72,7 @@ const Growth$FbtEnum = {
   'growth.purchase.listing2808.title': 'Purchase a $25 Target Gift Card',
   'growth.purchase.listing2809.title': 'Purchase a $25 Uber Gift Card',
 
-  'growth.purchase.empty.details': '',
+  'growth.purchase.empty.details': ''
 }
 
 module.exports = Growth$FbtEnum
