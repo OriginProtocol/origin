@@ -19,3 +19,10 @@ A GraphiQL demo is available [here](https://www.originadm.in/#/explorer)
 - `src/mutations` mutation resolvers. Code for executing mutations.
 - `src/utils/OriginEventSource` get the current state of listings or offers.
 - `src/utils/eventCache` Caches events from an Ethereum node.
+
+## Service Configuration Environmental Variables
+
+- `NETWORK` - The Origin-defined network to connect to
+- `USE_METRICS_PROVIDER` [`"true"`, `undefined`] - Configure and use the Web3 provider that displays general metrics about usage
+- `APOLLO_METRICS_API_KEY` - API key to use for Apollo metrics.
+- `DISABLE_CACHE` - Disable caching (currently only caching in the `eventsource` package)

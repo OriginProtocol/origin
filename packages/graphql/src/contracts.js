@@ -12,6 +12,7 @@ import { patchWeb3Contract } from '@origin/event-cache'
 
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
+import { addMetricsProvider } from './utils/metricsProvider'
 
 import Configs from './configs'
 
@@ -62,16 +63,29 @@ export function newBlock(blockHeaders) {
 }
 
 function pollForBlocks() {
+  let inProgress = false
   try {
     blockInterval = setInterval(() => {
-      web3.eth.getBlockNumber().then(block => {
-        if (block > lastBlock) {
-          web3.eth.getBlock(block).then(newBlock)
-        }
-      })
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      web3.eth
+        .getBlockNumber()
+        .then(block => {
+          if (block > lastBlock) {
+            web3.eth.getBlock(block).then(newBlock)
+          }
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
     }, 5000)
   } catch (error) {
     console.log(`Polling for new blocks failed: ${error}`)
+    inProgress = false
   }
 }
 
@@ -99,9 +113,7 @@ export function setNetwork(net, customConfig) {
   if (!config) {
     return
   }
-  if (net === 'test') {
-    config = { ...config, ...customConfig }
-  }
+  config = { ...config, ...customConfig }
 
   context.net = net
   context.config = config
@@ -127,6 +139,14 @@ export function setNetwork(net, customConfig) {
   clearInterval(blockInterval)
 
   web3 = applyWeb3Hack(new Web3(config.provider))
+
+  if (config.useMetricsProvider) {
+    addMetricsProvider(web3, {
+      echoEvery: 100, // every 100 requests
+      breakdownEvery: 1000 // every 1000 requests
+    })
+  }
+
   if (isBrowser) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
