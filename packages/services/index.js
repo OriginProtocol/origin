@@ -187,7 +187,8 @@ const startRelayer = () =>
       stdio: 'inherit',
       env: {
         ...process.env,
-        NETWORK_ID: '999'
+        NETWORK_ID: '999',
+        LOG_LEVEL: 'NONE'
       }
     })
     startServer.on('exit', () => {

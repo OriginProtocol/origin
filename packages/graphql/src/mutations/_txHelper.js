@@ -4,9 +4,13 @@ import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
 import { proxyOwner, resetProxyCache, predictedProxy } from '../utils/proxy'
 import get from 'lodash/get'
+import createDebug from 'debug'
 
 import { getTransaction } from '../resolvers/web3/transactions'
 import relayer from './_relayer'
+
+const debug = createDebug('origin:tx-helper:')
+const formatAddr = address => (address ? address.substr(0, 8) : '')
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -34,14 +38,20 @@ const isServer = typeof window === 'undefined'
 
 // Should we try to use the relayer
 function useRelayer({ mutation, value }) {
-  if (!window.localStorage.enableRelayer) return false
-  if (!contracts.config.relayer) return false
-  if (!mutation) return false
+  if (isServer) return
 
-  if (mutation === 'makeOffer' && value) return false
-  if (mutation === 'transferToken') return false
-  if (mutation === 'swapToToken') return false
+  let reason
+  if (!window.localStorage.enableRelayer) reason = 'disabled in localStorage'
+  if (!contracts.config.relayer) reason = 'relayer not configured'
+  if (!mutation) reason = 'no mutation specified'
 
+  if (mutation === 'makeOffer' && value) reason = 'makeOffer has a value'
+  if (mutation === 'transferToken') reason = 'transferToken is disabled'
+  if (mutation === 'swapToToken') reason = 'swapToToken is disabled'
+  if (reason) {
+    debug(`cannot useRelayer: ${reason}`)
+    return false
+  }
   return true
 }
 
@@ -59,30 +69,41 @@ function useRelayer({ mutation, value }) {
  *  - create-no-wrap: Send transaction direct to proxy after creation
  */
 async function useProxy({ proxy, addr, to, from, mutation }) {
+  if (isServer) return
   const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
   const targetIsProxy = addr === predicted
-  if (!proxyAccountsEnabled) return
 
-  // If we're sending a transaction directly to a wallet, don't use proxy
-  if (to) return
-  // Since token approvals need to come direct from a wallet, don't use proxy
-  if (mutation === 'updateTokenAllowance') return
-  // Disable token swaps for now
-  if (mutation === 'swapToToken') return
+  if (!proxyAccountsEnabled) {
+    debug('cannot useProxy: disabled in config')
+    return
+  } else if (to) {
+    debug('cannot useProxy: sending value to wallet')
+    return
+  } else if (mutation === 'updateTokenAllowance') {
+    // Since token approvals need to come direct from a wallet, don't use proxy
+    debug('cannot useProxy: updateTokenAllowance should come from wallet')
+    return
+  } else if (mutation === 'swapToToken') {
+    debug('cannot useProxy: swapToToken disabled')
+    return
+  }
 
   if (proxy) {
+    debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
     return targetIsProxy ? 'execute-no-wrap' : 'execute'
-  }
-
-  // For 'first time' interactions, create proxy and execute in single transaction
-  if (mutation === 'deployIdentity') return 'create'
-  if (mutation === 'createListing') return 'create'
-  if (mutation === 'makeOffer') {
+  } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
+    // For 'first time' interactions, create proxy and execute in single transaction
+    debug(`useProxy: create`)
+    return 'create'
+  } else if (mutation === 'makeOffer') {
     // If the target contract is the same as the predicted proxy address,
     // no need to wrap with changeOwnerAndExecute
+    debug(`useProxy: ${targetIsProxy ? 'create-no-wrap' : 'create'}`)
     return targetIsProxy ? 'create-no-wrap' : 'create'
   }
+
+  debug('cannot useProxy: no proxy specified')
 }
 
 export default function txHelper({
@@ -97,6 +118,8 @@ export default function txHelper({
   web3 // web3.js instance
 }) {
   return new Promise(async (resolve, reject) => {
+    debug(`Mutation ${mutation} from ${formatAddr(from)}`)
+
     let txHash
     let toSend = tx
     web3 = contracts.web3Exec
@@ -115,12 +138,14 @@ export default function txHelper({
       const txData = await tx.encodeABI()
       let initFn = txData
       if (shouldUseProxy === 'create') {
+        debug('wrapping tx with Proxy.changeOwnerAndExecute')
         const Proxy = new web3.eth.Contract(IdentityProxy.abi)
         initFn = await Proxy.methods
           .changeOwnerAndExecute(from, addr, value || '0', txData)
           .encodeABI()
       }
 
+      debug('wrapping tx with Proxy.createProxyWithSenderNonce')
       const Contract = new web3.eth.Contract(
         ProxyFactory.abi,
         contracts.config.ProxyFactory
@@ -135,6 +160,7 @@ export default function txHelper({
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     } else if (shouldUseProxy && !shouldUseRelayer) {
+      debug('wrapping tx with Proxy.execute')
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
@@ -177,7 +203,10 @@ export default function txHelper({
 
         return resolve(relayerResponse)
       } catch (err) {
-        console.log('Relayer error', err)
+        // Re-throw in a timeout so we can catch the error in tests
+        setTimeout(() => {
+          throw err
+        }, 1)
       }
     }
 

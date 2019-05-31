@@ -420,9 +420,8 @@ describe('Marketplace Dapp', function() {
   before(async function() {
     await page.evaluate(() => {
       delete window.localStorage.proxyAccountsEnabled
+      delete window.localStorage.enableRelayer
       window.transactionPoll = 100
-      window.localStorage.useWeb3Wallet =
-        '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
     })
     await page.goto('http://localhost:8083')
   })
@@ -434,6 +433,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.enableRelayer
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -441,15 +441,34 @@ describe('Marketplace Dapp with proxies enabled', function() {
   listingTests()
 })
 
-describe.only('Marketplace Dapp with proxies and relayer enabled', function() {
+describe('Marketplace Dapp with proxies and relayer enabled', function() {
   this.timeout(10000)
+
+  let didThrow = false
+  function pageError(err) {
+    didThrow = err
+  }
+
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.enableRelayer = true
+      window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
   })
+
+  beforeEach(function() {
+    page.on('pageerror', pageError)
+    page.on('error', pageError)
+  })
+
+  afterEach(() => {
+    page.removeListener('pageerror', pageError)
+    page.removeListener('error', pageError)
+    assert(!didThrow, 'Page error detected: ' + didThrow)
+  })
+
   listingTests()
 })

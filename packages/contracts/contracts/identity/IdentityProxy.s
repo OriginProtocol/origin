@@ -124,7 +124,12 @@ contract IdentityProxy is ERC725 {
         require(isSignedByOwner(_hash, sign), "signer-not-owner");
 
         // execute the call
-        require(executeCall(to, value, data), "forward-execute-failed");
+        if (to == address(this)) {
+            // solium-disable-next-line security/no-low-level-calls
+            require(address(this).call(data), "forward-execute-failed");
+        } else {
+            require(executeCall(to, value, data), "forward-execute-failed");
+        }
         emit Forwarded(sign, signer, to, value, data, _hash);
     }
 
@@ -236,9 +241,8 @@ contract IdentityProxy is ERC725 {
         uint _value
     )
         public
-        payable
-        onlyOwner
     {
+        require(msg.sender == address(this), 'finalize-pay-internal');
         require(executeCall(_marketplace, 0, _finalize), 'finalize-pay-failed');
         IdentityProxy(_seller).transferToOwner(_currency, _value);
     }

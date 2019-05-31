@@ -20,6 +20,9 @@ if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
   logger.info('Loaded DEV risk engine.')
 }
 
+const env = process.env
+const isTestEnv = env.NODE_ENV === 'test'
+
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
   4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
@@ -34,7 +37,9 @@ const ContractAddresses = {
   2222: '@origin/contracts/build/contracts_origin.json'
 }
 
-const env = process.env
+if (isTestEnv) {
+  ContractAddresses['999'] = '@origin/contracts/build/tests.json'
+}
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
@@ -171,7 +176,7 @@ class Relayer {
 
     // Get the IP from the request header and resolve it into a country code.
     const ip = req.header('x-real-ip')
-    const geo = await ip2geo(ip)
+    const geo = isTestEnv ? '' : await ip2geo(ip)
 
     // Check if the relayer is willing to process the transaction.
     const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
@@ -252,7 +257,7 @@ class Relayer {
           Forwarder
         )
         // TODO: Not sure why we need extra gas here
-        tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
+        tx = rawTx.send({ from: Forwarder, gas })
       }
 
       txHash = await new Promise((resolve, reject) => {
@@ -261,17 +266,12 @@ class Relayer {
             // Once block is mined, record the amount of gas and update
             // the status of the transaction in the DB.
             const gas = receipt.gasUsed
+            const hash = receipt.transactionHash
             if (dbTx) {
-              await dbTx.update({
-                status: enums.RelayerTxnStatuses.Confirmed,
-                gas
-              })
+              const status = enums.RelayerTxnStatuses.Confirmed
+              await dbTx.update({ status, gas })
             }
-            logger.info(
-              `Confirmed tx with hash ${
-                receipt.transactionHash
-              }. Paid ${gas} gas`
-            )
+            logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
           })
           .catch(async reason => {
             if (dbTx) {
@@ -288,7 +288,9 @@ class Relayer {
       }
     } catch (err) {
       logger.error(err)
-      return res.status(400).send({ errors: ['Error forwarding'] })
+      const errors = ['Error forwarding']
+      if (isTestEnv) errors.push(err.toString())
+      return res.status(400).send({ errors })
     }
 
     // Return the transaction hash to the caller.
