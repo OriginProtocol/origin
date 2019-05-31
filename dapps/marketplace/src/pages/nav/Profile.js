@@ -348,8 +348,9 @@ require('react-styl')(`
             height: 10px
             margin-right: 4px
             margin-left: 6px
-            background-image: url('images/metamask.svg')
             background-size: 10px 10px
+            &.metamask
+              background-image: url('images/metamask.svg')
           > .wallet-name
             color: white
             margin-left: 4px
