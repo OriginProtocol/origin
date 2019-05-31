@@ -11,17 +11,7 @@ const proxyCreationCode = memoize(async () => {
 
 async function predictedProxyRaw(address) {
   const web3 = contracts.web3Exec
-
-  // Calculate the call data used when deploying the contract
-  // const changeOwner = await contracts.ProxyImp.methods
-  //   .changeOwner(address)
-  //   .encodeABI()
-
-  // Salt is based on the call data from above
-  // const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
-
   const salt = web3.utils.soliditySha3(address, 0)
-
   const creationCode = await proxyCreationCode()
   const creationHash = web3.utils.sha3(creationCode)
 

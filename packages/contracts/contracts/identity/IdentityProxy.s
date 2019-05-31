@@ -239,7 +239,7 @@ contract IdentityProxy is ERC725 {
         payable
         onlyOwner
     {
-        require(executeCall(_marketplace, 0, _finalize), 'marketplace-call-failed');
+        require(executeCall(_marketplace, 0, _finalize), 'finalize-pay-failed');
         IdentityProxy(_seller).transferToOwner(_currency, _value);
     }
 
@@ -253,6 +253,6 @@ contract IdentityProxy is ERC725 {
         payable
     {
         changeOwner(_owner);
-        require(executeCall(_to, _value, _data), "change-owner-execute-failed");
+        require(executeCall(_to, _value, _data), "change-owner-exec-failed");
     }
 }

@@ -32,33 +32,57 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
+// Should we try to use the relayer
 function useRelayer({ mutation, value }) {
+  if (!window.localStorage.enableRelayer) return false
   if (!contracts.config.relayer) return false
   if (!mutation) return false
+
   if (mutation === 'makeOffer' && value) return false
   if (mutation === 'transferToken') return false
   if (mutation === 'swapToToken') return false
-  return window.localStorage.enableRelayer ? true : false
+
+  return true
 }
 
+/**
+ * Should we use existing proxy, create new proxy, or don't use proxy at all.
+ * @param proxy     Existing proxy address
+ * @param addr      Contract address
+ * @param to        Receipient wallet
+ * @param from      Wallet address (proxy owner)
+ * @param mutation  Name of mutation
+ * @returns String or `undefined` if proxy should not be used.
+ *  - execute: Wrap transaction with proxy's `execute` method
+ *  - execute-no-wrap: Send transaction direct to proxy
+ *  - create: Wrap transaction with proxy's `changeOwnerAndExecute` method
+ *  - create-no-wrap: Send transaction direct to proxy after creation
+ */
 async function useProxy({ proxy, addr, to, from, mutation }) {
   const { proxyAccountsEnabled } = contracts.config
-  if (!proxyAccountsEnabled) return false
-  if (to) return false
-  if (mutation === 'updateTokenAllowance') return false
-  if (mutation === 'swapToToken') return false
-  if (!proxy && mutation === 'deployIdentity') return 'create'
-  if (!proxy && mutation === 'createListing') return 'create'
   const predicted = await predictedProxy(from)
   const targetIsProxy = addr === predicted
-  if (!proxy && mutation === 'makeOffer') {
+  if (!proxyAccountsEnabled) return
+
+  // If we're sending a transaction directly to a wallet, don't use proxy
+  if (to) return
+  // Since token approvals need to come direct from a wallet, don't use proxy
+  if (mutation === 'updateTokenAllowance') return
+  // Disable token swaps for now
+  if (mutation === 'swapToToken') return
+
+  if (proxy) {
+    return targetIsProxy ? 'execute-no-wrap' : 'execute'
+  }
+
+  // For 'first time' interactions, create proxy and execute in single transaction
+  if (mutation === 'deployIdentity') return 'create'
+  if (mutation === 'createListing') return 'create'
+  if (mutation === 'makeOffer') {
     // If the target contract is the same as the predicted proxy address,
     // no need to wrap with changeOwnerAndExecute
     return targetIsProxy ? 'create-no-wrap' : 'create'
   }
-  if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
-  if (!proxy) return false
-  return targetIsProxy ? 'no-wrap' : true
 }
 
 export default function txHelper({
@@ -107,12 +131,14 @@ export default function txHelper({
         from,
         '0'
       )
+      // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     } else if (shouldUseProxy && !shouldUseRelayer) {
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
+      // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     }
@@ -195,7 +221,7 @@ export default function txHelper({
         })
       })
       .once('receipt', receipt => {
-        if (String(shouldUseProxy).indexOf('create') === 0) {
+        if (String(shouldUseProxy).startsWith('create')) {
           resetProxyCache()
         }
         if (onReceipt) {
