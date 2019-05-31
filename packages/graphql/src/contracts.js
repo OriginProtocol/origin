@@ -138,8 +138,8 @@ export function setNetwork(net, customConfig) {
   }
   clearInterval(blockInterval)
 
-  const provider = process.env.WEB3_PROVIDER_URL
-    ? process.env.WEB3_PROVIDER_URL
+  const provider = process.env.PROVIDER_URL
+    ? process.env.PROVIDER_URL
     : config.provider
   web3 = applyWeb3Hack(new Web3(provider))
 
