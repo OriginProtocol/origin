@@ -17,7 +17,10 @@ export default {
     return contract.methods.totalListings().call()
   },
 
-  listing: async (contract, args) => {
+  listing: async (contract, args, context, info) => {
+    if (info && info.cacheControl) {
+      info.cacheControl.setCacheHint({ maxAge: 15 })
+    }
     const { listingId, blockNumber } = parseId(args.id)
     return await contracts.eventSource.getListing(listingId, blockNumber)
   },
