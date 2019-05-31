@@ -136,8 +136,8 @@ export function setNetwork(net, customConfig) {
 
   if (config.useMetricsProvider) {
     addMetricsProvider(web3, {
-      echoEvery: 2,
-      breakdownEvery: 5
+      echoEvery: 100,
+      breakdownEvery: 1000
     })
   }
 
