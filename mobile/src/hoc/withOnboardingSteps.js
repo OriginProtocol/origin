@@ -5,23 +5,6 @@ import { connect } from 'react-redux'
 
 function withOnboardingSteps(WrappedComponent) {
   class WithOnboardingSteps extends Component {
-    static onboardingSteps = [
-      'Welcome',
-      'Email',
-      'Phone',
-      'Name',
-      'ProfileImage',
-      'Authentication',
-      'Ready'
-    ]
-
-    /*
-    prevOnboardingStep(currentStep) {
-      const i = onboardingSteps.indexOf(currentStep)
-      return onboardingSteps[i - 1]
-    }
-    */
-
     nextOnboardingStep() {
       if (!this.props.onboarding.emailAttestation) {
         return 'Email'
