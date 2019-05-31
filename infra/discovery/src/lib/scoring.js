@@ -23,7 +23,7 @@ async function scoreListing(listing) {
   ) {
     const cheapThreshold = cheapListingThresholds[listing.price.currency.id]
     if (cheapThreshold) {
-      if (listing.price.amount <= cheapThreshold) {
+      if (parseFloat(listing.price.amount) <= cheapThreshold) {
         score *= 0.2
       }
     }
