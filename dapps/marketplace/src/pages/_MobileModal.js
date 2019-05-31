@@ -6,6 +6,9 @@ import Modal from 'components/Modal'
 class MobileModal extends Component {
   render() {
     const isMobile = window.innerWidth < 767
+    if (localStorage.ognNetwork === 'test') {
+      return null
+    }
 
     return (
       <Modal
