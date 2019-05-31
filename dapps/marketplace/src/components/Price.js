@@ -33,38 +33,50 @@ const Price = ({ className, target, currencies, descriptor, ...props }) => {
   const formatted = isFiat ? numberFormat(amount, 2).replace('.00', '') : amount
   const symbol = get(CurrenciesByKey, `${targetCurrency.id}.2`, '')
 
-  const content = (
+  const spanContent = (
     <span className={className}>{`${symbol}${formatted}${
       showCode ? ` ${targetCurrency.code}` : ''
     }`}</span>
   )
 
+  const divContent = (
+    <div className={className}>{`${symbol}${formatted}${
+      showCode ? ` ${targetCurrency.code}` : ''
+    }`}</div>
+  )
+
   if (descriptor) {
     if (listingType === 'FractionalListing') {
       return (
-        <fbt desc="Price.fractionalNightly">
-          <fbt:param name="content">{content}</fbt:param>
-          <span className="desc">per night</span>
-        </fbt>
+        <div>
+          <fbt desc="Price.fractionalNightlyShort">
+            <fbt:param name="content">{spanContent}</fbt:param>
+            <span className="desc">/ night</span>
+          </fbt>
+        </div>
       )
     } else if (listingType === 'FractionalHourlyListing') {
       return (
-        <fbt desc="Price.fractionalHourly">
-          <fbt:param name="content">{content}</fbt:param>
-          <span className="desc">per hour</span>
-        </fbt>
+        <div>
+          <fbt desc="Price.fractionalHourlyShort">
+            <fbt:param name="content">{spanContent}</fbt:param>
+            <span className="desc">/ hour</span>
+          </fbt>
+        </div>
       )
     } else if (get(props, 'listing.multiUnit')) {
       return (
-        <fbt desc="Price.multiUnit">
-          <fbt:param name="content">{content}</fbt:param>
-          <span className="desc">each</span>
-        </fbt>
+        <div>
+          <fbt desc="Price.multiUnitShort">
+            <fbt:param name="content">{spanContent}</fbt:param>
+            <span className="desc">each</span>
+          </fbt>
+        </div>
       )
     }
   }
 
-  return content
+  return divContent
 }
 
 export default withCurrencies(Price)
