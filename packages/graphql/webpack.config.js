@@ -28,7 +28,10 @@ const config = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.json']
+    extensions: ['.js', '.json'],
+    alias: {
+      'web3-provider-engine': 'web3-provider-engine/dist/es5'
+    }
   },
   node: {
     fs: 'empty'

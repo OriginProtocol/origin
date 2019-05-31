@@ -66,7 +66,7 @@ async function createJuneProdCampaign() {
     rules: JSON.stringify(juneConfig),
     startDate: Date.parse('June 1, 2019, 00:00 UTC'),
     endDate: Date.parse('July 1, 2019, 00:00 UTC'),
-    distributionDate: Date.parse('June 1, 2019, 00:00 UTC'),
+    distributionDate: Date.parse('July 1, 2019, 00:00 UTC'),
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
