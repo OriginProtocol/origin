@@ -278,7 +278,10 @@ class MarketplaceScreen extends Component {
   handleUIStateResponse(uiStateJson) {
     let uiState
     let fiatCurrencyCode = 'fiat-USD'
-    if (uiStateJson.constructor === Object && Object.keys(uiStateJson).length === 0 ) {
+    if (
+      uiStateJson.constructor === Object &&
+      Object.keys(uiStateJson).length === 0
+    ) {
       // Empty uiState key, nothiing to do here
       return
     }

@@ -235,8 +235,8 @@ export default createAppContainer(
       // that the DApp webview loads first
       transitionConfig: () => ({
         transitionSpec: {
-          duration: 0,  // Set the animation duration time as 0
-        },
+          duration: 0 // Set the animation duration time as 0
+        }
       })
     }
   )
