@@ -6,7 +6,7 @@ building and how to get involved.
 # Testing
 
 This describes Origin's automated test setup. Linting, unit testing, and
-integration testing is run by TravisCI on each push or pull request.
+integration testing is run by CircleCI on each push or pull request.
 
 ## Linting
 

@@ -8,6 +8,9 @@ import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withWallet from 'hoc/withWallet'
+import withTokenBalance from 'hoc/withTokenBalance'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -90,6 +93,7 @@ class Listings extends Component {
             query={query}
             variables={vars}
             notifyOnNetworkStatusChange={true}
+            fetchPolicy="cache-and-network"
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus <= 2) {
@@ -183,6 +187,8 @@ class Listings extends Component {
                           listings={nodes}
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
+                          growthCampaigns={this.props.growthCampaigns}
+                          tokenDecimals={this.props.tokenDecimals}
                         />
                         {!hasNextPage ? null : (
                           <button
@@ -216,7 +222,14 @@ class Listings extends Component {
   }
 }
 
-export default withCreatorConfig(Listings)
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withCreatorConfig(Listings))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listings in case growth can not be reached
+  }
+)
 
 require('react-styl')(`
   .listings-container
