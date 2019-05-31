@@ -23,7 +23,7 @@ async function createAprilProdCampaign() {
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
-    rewardStatus: enums.GrowthCampaignRewardStatuses.Active
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 }
 
@@ -43,7 +43,7 @@ async function createMayProdCampaign() {
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
-    rewardStatus: enums.GrowthCampaignRewardStatuses.Active
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 }
 
@@ -70,7 +70,7 @@ async function createJuneProdCampaign() {
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
     currency: 'OGN',
-    rewardStatus: enums.GrowthCampaignRewardStatuses.Active
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 }
 

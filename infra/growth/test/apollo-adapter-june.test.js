@@ -83,7 +83,9 @@ describe('Apollo adapter - June campaign', () => {
     expect(this.crules.levels[2]).to.be.an('object')
     expect(this.crules.levels[2].rules.length).to.equal(31)
 
-    // Mock the getEvents method.
+    // Mock the getEvents method to use events from this.events.
+    // When writing a test, be aware that this.events is global and shared with other tests.
+    this.events = []
     this.crules.getEvents = (ethAddress, opts = {}) => {
       return this.events
         .filter(e => e.ethAddress === ethAddress)
@@ -105,8 +107,6 @@ describe('Apollo adapter - June campaign', () => {
     // GrowthInvite.getReferralsInfo that it depends on to work in test.
     this.mockAdapter = new ApolloAdapter()
     this.mockAdapter._getReferralsActionData = async () => { return {} }
-
-    this.events = []
 
     this.expectedState = {
       rewardEarned: {

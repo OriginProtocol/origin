@@ -40,7 +40,8 @@ describe('June campaign rules', () => {
 
     this.expectedRewards = []
 
-    // Mock the rule's getEvent method.
+    // Mock the getEvents method to use events from this.events.
+    // When writing a test, be aware that this.events is global and shared with other tests.
     this.events = []
     this.crules.getEvents = () => { return this.events }
 
