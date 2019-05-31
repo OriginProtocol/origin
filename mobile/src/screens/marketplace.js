@@ -100,6 +100,13 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  scrollHandler(scrollTop) {
+    if (scrollTop < -100) {
+      console.debug('Refreshing')
+      this.dappWebView.injectJavaScript(`document.location.reload()`)
+    }
+  }
+
   onWebViewMessage(event) {
     let msgData
     try {
@@ -204,6 +211,24 @@ class MarketplaceScreen extends Component {
     `
     if (this.dappWebView) {
       this.dappWebView.injectJavaScript(languageInjection)
+    }
+  }
+
+  /* Inject Javascript that causes the page to refresh when it hits the top
+   */
+  injectScrollHandler() {
+    const injectedJavaScript = `
+      (function() {
+        window.onscroll = function() {
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            targetFunc: 'scrollHandler',
+            data: document.documentElement.scrollTop || document.body.scrollTop
+          }))
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
@@ -319,6 +344,7 @@ class MarketplaceScreen extends Component {
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectLanguage()
+            this.injectScrollHandler()
             this.injectMessagingKeys()
             setInterval(() => {
               this.requestUIState()
