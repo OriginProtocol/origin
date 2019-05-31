@@ -2,9 +2,9 @@ const addresses = require('@origin/contracts/build/contracts_mainnet.json')
 
 export default {
   // Web3 provider
-  // provider:
-  //   'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
-  provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  //provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  provider:
+    'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
   // providerWS: 'wss://mainnet.infura.io/ws',
 
   // Services
