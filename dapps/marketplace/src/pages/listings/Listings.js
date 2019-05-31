@@ -93,6 +93,7 @@ class Listings extends Component {
             query={query}
             variables={vars}
             notifyOnNetworkStatusChange={true}
+            fetchPolicy="cache-and-network"
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus <= 2) {
