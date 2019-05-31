@@ -93,22 +93,22 @@ describe('Identity', async function() {
       .once('receipt', trackGas('Deploy Proxy'))
 
     // const salt = web3.utils.soliditySha3(web3.utils.sha3(changeOwner), 0)
-    const salt = web3.utils.soliditySha3(owner, 0)
+    // const salt = web3.utils.soliditySha3(owner, 0)
 
-    let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
-    creationCode += web3.eth.abi
-      .encodeParameter('uint256', IdentityProxyImp._address)
-      .slice(2)
+    // let creationCode = await ProxyFactory.methods.proxyCreationCode().call()
+    // creationCode += web3.eth.abi
+    //   .encodeParameter('uint256', IdentityProxyImp._address)
+    //   .slice(2)
 
-    const creationHash = web3.utils.sha3(creationCode)
+    // const creationHash = web3.utils.sha3(creationCode)
 
-    const create2hash = web3.utils
-      .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
-      .slice(-40)
-    const predicted = `0x${create2hash}`
+    // const create2hash = web3.utils
+    //   .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+    //   .slice(-40)
+    // const predicted = `0x${create2hash}`
 
-    console.log('predicted', predicted)
-    console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
+    // console.log('predicted', predicted)
+    // console.log('actual   ', res.events.ProxyCreation.returnValues.proxy)
 
     return new web3.eth.Contract(
       IdentityProxyImp.options.jsonInterface,
@@ -396,7 +396,7 @@ describe('Identity', async function() {
 
         const balanceBefore = await web3.eth.getBalance(SellerWallet.address)
 
-        await BuyerProxy.methods
+        const finalizePayAbi = await BuyerProxy.methods
           .marketplaceFinalizeAndPay(
             Marketplace._address,
             finalizeAbi,
@@ -404,7 +404,11 @@ describe('Identity', async function() {
             ZERO_ADDRESS,
             value
           )
-          .send({ from: BuyerWallet.address, gas: 4000000, value })
+          .encodeABI()
+
+        await BuyerProxy.methods
+          .execute(0, BuyerProxy._address, '0', finalizePayAbi)
+          .send({ from: BuyerWallet.address, gas: 4000000 })
 
         const balanceAfter = await web3.eth.getBalance(SellerWallet.address)
 
