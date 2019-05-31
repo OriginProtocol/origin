@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
-import { NavigationActions } from 'react-navigation'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
@@ -39,11 +38,7 @@ export default class ReadyScreen extends Component {
             title={fbt('Start using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
-              this.props.navigation.navigate(
-                'GuardedApp',
-                {},
-                NavigationActions.navigate({ routeName: 'App' })
-              )
+              this.props.navigation.navigate('App')
             }}
           />
         </View>
