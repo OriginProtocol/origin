@@ -88,6 +88,7 @@ export default class MobileModal extends Component {
                 <img src="images/caret-grey.svg" />
               </a>
               <h3 className="modal-title">{this.props.title}</h3>
+              <span className="back-button" />
             </div>
           </nav>
         )}
