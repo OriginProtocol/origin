@@ -377,6 +377,7 @@ require('react-styl')(`
         button
           border-radius: 2rem
           padding: 0.5rem 1rem
+          margin-bottom: 2.5rem
           width: 100%
         p
           color: white
