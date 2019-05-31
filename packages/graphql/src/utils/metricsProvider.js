@@ -94,7 +94,7 @@ function convertWeb3Provider(provider) {
     throw new Error('provider not provided')
   }
 
-  if (provider.host && provider.host.indexOf('http') === 0) {
+  if (provider.host && provider.host.startsWith('http')) {
     return new RpcSubprovider({ rpcUrl: provider.host })
   } else if (typeof provider.setEngine !== 'undefined') {
     // This would be a web3-provider-engine subprovider, anyway. Unlikely.

@@ -70,12 +70,18 @@ function pollForBlocks() {
         return
       }
       inProgress = true
-      web3.eth.getBlockNumber().then(block => {
-        if (block > lastBlock) {
-          web3.eth.getBlock(block).then(newBlock)
-        }
-        inProgress = false
-      })
+      web3.eth
+        .getBlockNumber()
+        .then(block => {
+          if (block > lastBlock) {
+            web3.eth.getBlock(block).then(newBlock)
+          }
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
     }, 5000)
   } catch (error) {
     console.log(`Polling for new blocks failed: ${error}`)
@@ -136,8 +142,8 @@ export function setNetwork(net, customConfig) {
 
   if (config.useMetricsProvider) {
     addMetricsProvider(web3, {
-      echoEvery: 100,
-      breakdownEvery: 1000
+      echoEvery: 100, // every 100 requests
+      breakdownEvery: 1000 // every 1000 requests
     })
   }
 
