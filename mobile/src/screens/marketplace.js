@@ -84,6 +84,7 @@ class MarketplaceScreen extends Component {
   }
 
   componentWillUnmount() {
+    console.debug('Unmounted marketplace')
     DeviceEventEmitter.removeListener('transactionHash')
     DeviceEventEmitter.removeListener('messageSigned')
     DeviceEventEmitter.removeListener('messagingKeys')
@@ -147,13 +148,18 @@ class MarketplaceScreen extends Component {
 
   getAccounts() {
     const { wallet } = this.props
-    const filteredAccounts = wallet.accounts.filter(
-      a => a.address !== wallet.activeAccount.address
-    )
-    const accounts = [
-      wallet.activeAccount.address,
-      ...filteredAccounts.map(a => a.address)
-    ]
+    let accounts
+    if (wallet.activeAccount) {
+      const filteredAccounts = wallet.accounts.filter(
+        a => a.address !== wallet.activeAccount.address
+      )
+      accounts = [
+        wallet.activeAccount.address,
+        ...filteredAccounts.map(a => a.address)
+      ]
+    } else {
+      accounts = wallet.accounts
+    }
     return accounts
   }
 
@@ -272,6 +278,10 @@ class MarketplaceScreen extends Component {
   handleUIStateResponse(uiStateJson) {
     let uiState
     let fiatCurrencyCode = 'fiat-USD'
+    if (uiStateJson.constructor === Object && Object.keys(uiStateJson).length === 0 ) {
+      // Empty uiState key, nothiing to do here
+      return
+    }
     try {
       uiState = JSON.parse(uiStateJson)
       if (uiState['currency']) {
