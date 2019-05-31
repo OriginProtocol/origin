@@ -66,7 +66,7 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
-        <div className="mobile-modal-light-overlay" />
+        <div className="mobile-modal-light-overlay" onClick={() => this.onClose()} />
         <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}
@@ -138,6 +138,7 @@ require('react-styl')(`
     right: 0
     bottom: 0
     background-color: rgba(11, 24, 35, 0.3)
+    cursor: pointer
   .mobile-modal-light
     touch-action: none
     position: fixed
