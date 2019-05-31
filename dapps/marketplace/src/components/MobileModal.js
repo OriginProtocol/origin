@@ -146,9 +146,9 @@ require('react-styl')(`
     opacity: 0
     top: 0
     left: 100%
-    right: 0
+    right: -100%
     bottom: 0
-    transition: left 0.3s ease, opacity 0.3s ease
+    transition: left 0.3s ease, opacity 0.3s ease, right 0.3s ease
     background-color: white
     display: flex
     flex-direction: column
@@ -156,6 +156,7 @@ require('react-styl')(`
       top: 0
       left: 0
       opacity: 1
+      right: 0
     .modal-content
       overflow: auto
       flex: auto 1 1
@@ -178,13 +179,16 @@ require('react-styl')(`
         color: white
     &.contained
       top: 100%
+      bottom: -100%
       left: 0
+      right: 0
       box-sizing: border-box
       padding: 30px
       background: transparent
-      transition: top 0.3s ease, opacity 0.3s ease
+      transition: top 0.3s ease, opacity 0.3s ease, bottom 0.3s ease
       &.open
         top: 0
+        bottom: 0
       .modal-content
         overflow: auto
         flex-grow: 0
