@@ -49,18 +49,16 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
   if (mutation === 'swapToToken') return false
   if (!proxy && mutation === 'deployIdentity') return 'create'
   if (!proxy && mutation === 'createListing') return 'create'
+  const predicted = await predictedProxy(from)
+  const targetIsProxy = addr === predicted
   if (!proxy && mutation === 'makeOffer') {
     // If the target contract is the same as the predicted proxy address,
     // no need to wrap with changeOwnerAndExecute
-    const predicted = await predictedProxy(from)
-    if (addr === predicted) {
-      return 'create-no-wrap'
-    }
-    return 'create'
+    return targetIsProxy ? 'create-no-wrap' : 'create'
   }
   if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
   if (!proxy) return false
-  return true
+  return targetIsProxy ? 'no-wrap' : true
 }
 
 export default function txHelper({
@@ -84,10 +82,50 @@ export default function txHelper({
     const proxy = owner ? from : null
     from = owner || from
 
-    if (useRelayer({ mutation, value })) {
-      const address = tx._parent._address
+    const addr = get(tx, '_parent._address')
+    const shouldUseRelayer = useRelayer({ mutation, value })
+    const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
+
+    // If this user doesn't have a proxy yet, create one
+    if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
+      const txData = await tx.encodeABI()
+      let initFn = txData
+      if (shouldUseProxy === 'create') {
+        const Proxy = new web3.eth.Contract(IdentityProxy.abi)
+        initFn = await Proxy.methods
+          .changeOwnerAndExecute(from, addr, value || '0', txData)
+          .encodeABI()
+      }
+
+      const Contract = new web3.eth.Contract(
+        ProxyFactory.abi,
+        contracts.config.ProxyFactory
+      )
+      toSend = Contract.methods.createProxyWithSenderNonce(
+        contracts.config.IdentityProxyImplementation,
+        initFn,
+        from,
+        '0'
+      )
+      // gas = await toSend.estimateGas({ from })
+      gas = 1000000
+    } else if (shouldUseProxy && !shouldUseRelayer) {
+      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
+      const txData = await tx.encodeABI()
+      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
+      // gas = await toSend.estimateGas({ from })
+      gas = 1000000
+    }
+
+    if (shouldUseRelayer && shouldUseProxy) {
+      const address = toSend._parent._address
       try {
-        const relayerResponse = await relayer({ tx, proxy, from, to: address })
+        const relayerResponse = await relayer({
+          tx: toSend,
+          proxy,
+          from,
+          to: address
+        })
         const hasCallbacks = onReceipt || onConfirmation ? true : false
 
         /**
@@ -115,40 +153,6 @@ export default function txHelper({
       } catch (err) {
         console.log('Relayer error', err)
       }
-    }
-
-    const addr = get(tx, '_parent._address')
-    const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
-
-    // If this user doesn't have a proxy yet, create one
-    if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
-      const txData = await tx.encodeABI()
-      let initFn = txData
-      if (shouldUseProxy === 'create') {
-        const Proxy = new web3.eth.Contract(IdentityProxy.abi)
-        initFn = await Proxy.methods
-          .changeOwnerAndExecute(from, addr, value || '0', txData)
-          .encodeABI()
-      }
-
-      const Contract = new web3.eth.Contract(
-        ProxyFactory.abi,
-        contracts.config.ProxyFactory
-      )
-      toSend = Contract.methods.createProxyWithSenderNonce(
-        contracts.config.IdentityProxyImplementation,
-        initFn,
-        from,
-        '0'
-      )
-      // gas = await toSend.estimateGas({ from })
-      gas = 1000000
-    } else if (shouldUseProxy) {
-      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
-      const txData = await tx.encodeABI()
-      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
-      // gas = await toSend.estimateGas({ from })
-      gas = 1000000
     }
 
     if (web3 && to) {

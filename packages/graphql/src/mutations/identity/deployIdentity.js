@@ -4,7 +4,7 @@ import validator from '@origin/validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
-import { hasProxy } from '../../utils/proxy'
+import { hasProxy, resetProxyCache } from '../../utils/proxy'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(
@@ -51,7 +51,8 @@ async function deployIdentity(
     tx: contracts.identityEventsExec.methods.emitIdentityUpdated(ipfsHash),
     from,
     mutation: 'deployIdentity',
-    gas: costs.emitIdentityUpdated
+    gas: costs.emitIdentityUpdated,
+    onConfirmation: () => resetProxyCache()
   })
 }
 

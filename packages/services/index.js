@@ -179,6 +179,23 @@ const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
     })
   })
 
+const startRelayer = () =>
+  new Promise(resolve => {
+    const cwd = path.resolve(__dirname, '../../infra/relayer')
+    const startServer = spawn(`node`, ['src/app.js'], {
+      cwd,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        NETWORK_ID: '999'
+      }
+    })
+    startServer.on('exit', () => {
+      console.log('Relayer stopped.')
+    })
+    resolve(startServer)
+  })
+
 const started = {}
 let extrasResult
 
@@ -226,6 +243,14 @@ module.exports = async function start(opts = {}) {
     await startSslProxy()
   }
 
+  if (opts.relayer && !started.relayer) {
+    if (await portInUse(5100)) {
+      console.log('Relayer already started')
+    } else {
+      started.relayer = await startRelayer()
+    }
+  }
+
   if (opts.extras && !started.extras) {
     extrasResult = await opts.extras()
     started.extras = true
@@ -240,6 +265,9 @@ module.exports = async function start(opts = {}) {
   const shutdownFn = async function shutdown() {
     if (started.ganache) {
       await started.ganache.close()
+    }
+    if (started.relayer) {
+      started.relayer.kill('SIGHUP')
     }
     if (started.ipfs) {
       await new Promise(resolve => started.ipfs.stop(() => resolve()))

@@ -121,10 +121,10 @@ contract IdentityProxy is ERC725 {
         nonce[signer]++;
 
         // this makes sure signer signed correctly AND signer is a valid bouncer
-        require(isSignedByOwner(_hash, sign), "Signer is not contract owner");
+        require(isSignedByOwner(_hash, sign), "signer-not-owner");
 
         // execute the call
-        require(executeCall(to, value, data), "Cannot execute the call");
+        require(executeCall(to, value, data), "forward-execute-failed");
         emit Forwarded(sign, signer, to, value, data, _hash);
     }
 
@@ -210,7 +210,7 @@ contract IdentityProxy is ERC725 {
         changeOwner(_owner);
         ERC20(_token).transferFrom(_owner, this, _value);
         ERC20(_token).approve(_marketplace, _value);
-        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-token-failed');
     }
 
     function marketplaceExecute(
@@ -225,7 +225,7 @@ contract IdentityProxy is ERC725 {
     {
         changeOwner(_owner);
         ERC20(_token).approve(_marketplace, _value);
-        require(executeCall(_marketplace, 0, _offer), 'marketplace-call-failed');
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-exec-failed');
     }
 
     function marketplaceFinalizeAndPay(
@@ -253,6 +253,6 @@ contract IdentityProxy is ERC725 {
         payable
     {
         changeOwner(_owner);
-        require(executeCall(_to, _value, _data), "Cannot execute the call");
+        require(executeCall(_to, _value, _data), "change-owner-execute-failed");
     }
 }

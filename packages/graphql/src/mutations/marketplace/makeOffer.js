@@ -6,7 +6,7 @@ import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
-import { proxyOwner, predictedProxy } from '../../utils/proxy'
+import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -100,7 +100,8 @@ async function makeOffer(_, data) {
     from: buyer,
     mutation: 'makeOffer',
     gas: cost.makeOffer,
-    value: currencyAddress === ZeroAddress ? value : 0
+    value: currencyAddress === ZeroAddress ? value : 0,
+    onConfirmation: () => resetProxyCache()
   })
 }
 

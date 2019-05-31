@@ -29,6 +29,8 @@ async function finalizeOffer(_, data) {
     ipfsHash
   )
 
+  let gas = cost.finalizeOffer
+
   // If both buyer and seller are transacting via proxies, use convenience
   // method to finalize and transfer funds to seller in single transaction.
   const owner = await proxyOwner(from)
@@ -48,6 +50,7 @@ async function finalizeOffer(_, data) {
         offer.currency,
         offer.value
       )
+      gas += 100000
     }
   }
 
@@ -55,7 +58,7 @@ async function finalizeOffer(_, data) {
     tx,
     from,
     mutation: 'finalizeOffer',
-    gas: cost.finalizeOffer
+    gas
   })
 }
 

@@ -435,8 +435,19 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       window.transactionPoll = 100
-      window.localStorage.useWeb3Wallet =
-        '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe.only('Marketplace Dapp with proxies and relayer enabled', function() {
+  this.timeout(10000)
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.enableRelayer = true
+      window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
   })

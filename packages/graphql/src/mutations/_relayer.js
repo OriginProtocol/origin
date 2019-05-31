@@ -43,7 +43,16 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
     { t: 'bytes', v: txData },
     { t: 'uint256', v: nonce }
   )
-  const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
+
+  let signature
+  try {
+    signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
+  } catch (e) {
+    signature = await contracts.web3Exec.eth.sign(
+      '\x19Ethereum Signed Message:\n' + dataToSign.length + dataToSign,
+      from
+    )
+  }
 
   const response = await fetch(relayerUrl, {
     headers: { 'content-type': 'application/json' },
