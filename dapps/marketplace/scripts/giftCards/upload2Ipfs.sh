@@ -6,6 +6,26 @@
 # export IPFS_GATEWAY_API_URL="https://ipfs.staging.originprotocol.com/api/v0/add"
 # export IPFS_GATEWAY_API_URL="https://ipfs.originprotocol.com/api/v0/add"
 
+curl -F file=@images/delta.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/homedepot.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/lowes.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/steam.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/united.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/ebay.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+
+curl -F file=@images/airbnb.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/amazon.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/calipizza.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/googleplay.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/itunes.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/netflix.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/playstation.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/southwest.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/starbucks.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/target.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/uber.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+curl -F file=@images/walmart.png $IPFS_GATEWAY_API_URL ; sleep 1 ;
+
 curl -F file=@images/itunes.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/amazongiftcard.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
 
@@ -353,3 +373,5 @@ curl -F file=@images/yogurtland.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/yogurtmountain.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/z_gallerie.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
 curl -F file=@images/zales.jpg $IPFS_GATEWAY_API_URL ; sleep 1 ;
+
+
