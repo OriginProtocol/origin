@@ -15,7 +15,8 @@ import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 // import MobileUserActivation from 'components/MobileUserActivation'
-import RouteToUserActivation from 'components/RouteToUserActivation'
+// import RouteToUserActivation from 'components/RouteToUserActivation'
+import UserActivationLink from '../../components/UserActivationLink'
 
 // import DeployProxy from '../identity/mutations/DeployProxy'
 
@@ -120,28 +121,18 @@ class CreateIdentity extends Component {
             </fbt>
           </p>
 
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              this.setState({
-                enable: true
-              })
-            }}
-          >
-            <fbt desc="nav.profile.getStarted">Get Started</fbt>
-          </button>
+          <UserActivationLink className="btn btn-primary" onClick={this.onClose} onClose={this.onClose} />
         </div>
-        {this.state.enable && <RouteToUserActivation onClose={this.onClose} />}
       </>
     )
   }
 
   onClose = () => {
-    this.setState({ enable: false }, () => {
-      if (this.props.onClose) {
-        this.props.onClose()
-      }
-    })
+    // this.setState({ enable: false }, () => {
+    if (this.props.onClose) {
+      this.props.onClose()
+    }
+    // })
   }
 }
 
@@ -374,7 +365,7 @@ require('react-styl')(`
         h3
           padding: 0.5rem 0
           margin-bottom: 0.5rem
-        button
+        .btn
           border-radius: 2rem
           padding: 0.5rem 1rem
           margin-bottom: 2.5rem

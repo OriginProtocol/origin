@@ -408,7 +408,6 @@ class UserActivation extends Component {
       <form
         onSubmit={e => {
           e.preventDefault()
-          // TEMP:
           if (this.validate()) {
             this.setState({
               txModal: true

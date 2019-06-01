@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
-import store from 'utils/store'
-const sessionStore = store('sessionStorage')
 
 import Link from 'components/Link'
+import UserActivationLink from '../../components/UserActivationLink';
 
 class GetStarted extends Component {
   state = { open: false }
@@ -12,16 +11,7 @@ class GetStarted extends Component {
     return (
       <ul className="navbar-nav">
         <li className="nav-item">
-          <Link
-            to="/onboard"
-            className="nav-link px-3"
-            onClick={() => {
-              const { pathname, search } = this.props.location
-              sessionStore.set('getStartedRedirect', { pathname, search })
-            }}
-          >
-            <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
-          </Link>
+          <UserActivationLink {...this.props} className="nav-link px-3" />
         </li>
         <li className="nav-item d-none d-md-block">
           <Link
