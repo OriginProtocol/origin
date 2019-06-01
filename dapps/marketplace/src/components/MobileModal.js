@@ -47,11 +47,17 @@ export default class MobileModal extends Component {
     return ReactDOM.createPortal(this.renderContent(), this.portal)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.shouldClose && nextProps.shouldClose) {
-      this.doClose()
-    }
+  componentDidUpdate(prevProps) {
+      if (!prevProps.shouldClose && this.props.shouldClose) {
+        this.doClose()
+      }
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   if (!this.props.shouldClose && nextProps.shouldClose) {
+  //     this.doClose()
+  //   }
+  // }
 
   renderContent() {
     if (this.props.fullscreen === false) {
@@ -87,7 +93,13 @@ export default class MobileModal extends Component {
         {title && (
           <nav className="navbar">
             <div className="modal-header">
-              <a className="back-button" onClick={() => this.onClose()}>
+              <a className="back-button" onClick={() => {
+                if (this.props.onBack) {
+                  this.props.onBack()
+                } else {
+                  this.onClose()
+                }
+              }}>
                 <img src="images/caret-grey.svg" />
               </a>
               <h3 className="modal-title">{this.props.title}</h3>

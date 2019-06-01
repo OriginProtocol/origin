@@ -8,6 +8,7 @@ class MobileUserActivation extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      stage: 'AddEmail',
       modal: true,
       shouldClose: false,
       title: fbt('Create a Profile', 'MobileUserActivation.createProfile')
@@ -24,11 +25,42 @@ class MobileUserActivation extends Component {
     return (
       <>
         <MobileModal
+          onBack={() => {
+            if (!this.state.prevStage) {
+              this.setState({
+                shouldClose: true
+              })
+            } else {
+              this.setState({
+                stage: this.state.prevStage
+              })
+            }
+          }}
           onClose={() => this.onClose()}
           shouldClose={shouldClose}
           title={title}
         >
           <UserActivation
+            stage={this.state.stage}
+            onStageChanged={newStage => {
+              switch (newStage) {
+                case 'VerifyEmail':
+                case 'PublishDetail':
+                  this.setState({
+                    prevStage: 'AddEmail',
+                    stage: newStage
+                  })
+                  break
+                case 'AddEmail':
+                default:
+                  this.setState({
+                    prevStage: null,
+                    stage: newStage
+                  })
+                  break
+              }
+              // this.setState()
+            }}
             onProfileCreated={() => this.setState({ title: null })}
             onCompleted={() => {
               this.setState({

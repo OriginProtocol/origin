@@ -41,6 +41,16 @@ class UserActivation extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.stage && this.props.stage !== prevProps.stage) {
+      this.setState({
+        stage: this.props.stage
+      }, () => this.onStageChanged())
+    } else if (this.state.stage !== prevState.stage) {
+      this.onStageChanged()
+    }
+  }
+
   render() {
     const {
       stage,
@@ -140,7 +150,7 @@ class UserActivation extends Component {
             this.setState({
               stage: 'VerifyEmail',
               loading: false
-            })
+            }, () => this.onStageChanged())
           } else {
             this.setState({
               error: result.reason,
@@ -271,7 +281,7 @@ class UserActivation extends Component {
                   loading: false,
                   step: 2,
                   data: result.data
-                })
+                }, () => this.onStageChanged())
               } else {
                 this.setState({
                   error: result.reason,
@@ -384,7 +394,7 @@ class UserActivation extends Component {
     if (this.props.renderMobileVersion) {
       this.setState({
         stage: 'ProfileCreated'
-      })
+      }, () => this.onStageChanged())
       if (this.props.onProfileCreated) {
         this.props.onProfileCreated()
       }
@@ -624,6 +634,12 @@ class UserActivation extends Component {
     this.setState(newState)
 
     return newState.valid
+  }
+
+  onStageChanged() {
+    if (this.props.onStageChanged) {
+      this.props.onStageChanged(this.state.stage)
+    }
   }
 }
 
