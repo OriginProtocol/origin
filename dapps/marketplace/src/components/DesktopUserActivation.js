@@ -43,9 +43,12 @@ class UserActivation extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.stage && this.props.stage !== prevProps.stage) {
-      this.setState({
-        stage: this.props.stage
-      }, () => this.onStageChanged())
+      this.setState(
+        {
+          stage: this.props.stage
+        },
+        () => this.onStageChanged()
+      )
     } else if (this.state.stage !== prevState.stage) {
       this.onStageChanged()
     }
@@ -147,10 +150,13 @@ class UserActivation extends Component {
         mutation={GenerateEmailCodeMutation}
         onCompleted={({ generateEmailCode: result }) => {
           if (result.success) {
-            this.setState({
-              stage: 'VerifyEmail',
-              loading: false
-            }, () => this.onStageChanged())
+            this.setState(
+              {
+                stage: 'VerifyEmail',
+                loading: false
+              },
+              () => this.onStageChanged()
+            )
           } else {
             this.setState({
               error: result.reason,
@@ -276,12 +282,15 @@ class UserActivation extends Component {
             mutation={VerifyEmailCodeMutation}
             onCompleted={({ verifyEmailCode: result }) => {
               if (result.success) {
-                this.setState({
-                  stage: 'PublishDetail',
-                  loading: false,
-                  step: 2,
-                  data: result.data
-                }, () => this.onStageChanged())
+                this.setState(
+                  {
+                    stage: 'PublishDetail',
+                    loading: false,
+                    step: 2,
+                    data: result.data
+                  },
+                  () => this.onStageChanged()
+                )
               } else {
                 this.setState({
                   error: result.reason,
@@ -392,9 +401,12 @@ class UserActivation extends Component {
 
   onDeployComplete = () => {
     if (this.props.renderMobileVersion) {
-      this.setState({
-        stage: 'ProfileCreated'
-      }, () => this.onStageChanged())
+      this.setState(
+        {
+          stage: 'ProfileCreated'
+        },
+        () => this.onStageChanged()
+      )
       if (this.props.onProfileCreated) {
         this.props.onProfileCreated()
       }

@@ -48,9 +48,9 @@ export default class MobileModal extends Component {
   }
 
   componentDidUpdate(prevProps) {
-      if (!prevProps.shouldClose && this.props.shouldClose) {
-        this.doClose()
-      }
+    if (!prevProps.shouldClose && this.props.shouldClose) {
+      this.doClose()
+    }
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -93,13 +93,16 @@ export default class MobileModal extends Component {
         {title && (
           <nav className="navbar">
             <div className="modal-header">
-              <a className="back-button" onClick={() => {
-                if (this.props.onBack) {
-                  this.props.onBack()
-                } else {
-                  this.onClose()
-                }
-              }}>
+              <a
+                className="back-button"
+                onClick={() => {
+                  if (this.props.onBack) {
+                    this.props.onBack()
+                  } else {
+                    this.onClose()
+                  }
+                }}
+              >
                 <img src="images/caret-grey.svg" />
               </a>
               <h3 className="modal-title">{this.props.title}</h3>
