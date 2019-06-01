@@ -50,7 +50,6 @@ class MetricsProvider extends SubProvider {
   }
 
   incrementRateLimited() {
-    this.incrementError()
     return (this.totalRateLimitedRequests += 1)
   }
 
@@ -86,16 +85,26 @@ class MetricsProvider extends SubProvider {
 
     next((err, result, cb) => {
       if (err) {
+        // Perhaps this should be separated from 429s at some point?
         this.incrementError()
 
         if (err.code === -32603) {
           if (err.message.indexOf('Too Many Requests') > -1) {
+            this.incrementRateLimited()
             console.error('429 Rate limited')
           } else {
             console.error(`Invalid JSON-RPC response: ${err.message}`)
           }
+        } else if (err.code === -32600) {
+          console.error(`Invalid request on method ${this.lastRPCMethod}`)
+          console.debug('Payload: ', JSON.stringify(this.lastPayload))
         } else {
-          console.error('Unknown error occurred in a following subprovider!')
+          console.error(
+            `Unknown error occurred in a following subprovider on method ${
+              this.lastRPCMethod
+            }!`
+          )
+          console.debug('Payload: ', JSON.stringify(this.lastPayload))
           if (err.code) console.error(`JSON-RPC error code: ${err.code}`)
           else console.error(err)
         }
@@ -138,13 +147,17 @@ function addMetricsProvider(web3Inst, options) {
   const engine = new ProviderEngine()
   const metricsProvider = new MetricsProvider(options)
 
-  engine.on('error', function(err) {
-    metricsProvider.incrementError()
-    const lastCall = metricsProvider.lastRPCMethod
-    const lastPayload = metricsProvider.lastPayload
-    console.error(`Provider error [${lastCall}]: `, err)
-    console.debug(`Last payload: `, lastPayload)
-  })
+  /**
+   * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
+   *
+   * This is more or less duplication of the handling in MetricsProvider, but we
+   * can't do anything intelligent from here.  And if we don't have this event
+   * listener, web3-provider-engine will crash the process...  And looking at
+   * their source, I don't *think* there's any exceptions where an error would
+   * present here, and not in the next() callback, so we're more or less just
+   * supressing the crash here.  Probably.
+   */
+  engine.on('error', () => {})
 
   // web3-provider-engine sets to 30, which apparently isn't enough for Origin
   engine.setMaxListeners(50)
