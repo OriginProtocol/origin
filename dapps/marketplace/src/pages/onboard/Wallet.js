@@ -68,8 +68,9 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
               } else if (error) {
                 return <QueryError query={query} />
               }
+
               if (
-                get(data, 'web3.metaMask.id') ||
+                get(data, 'web3.metaMaskAccount.id') ||
                 get(data, 'web3.mobileWalletAccount.id')
               ) {
                 return <Redirect to={`${linkPrefix}/onboard/profile`} />

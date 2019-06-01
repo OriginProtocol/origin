@@ -30,18 +30,6 @@ class Onboard extends Component {
               <MetaMask listing={listing} linkPrefix={linkPrefix} />
             )}
           />
-          {/* <Route
-            path={`${linkPathPrefix}/onboard/messaging`}
-            render={() => (
-              <Messaging listing={listing} linkPrefix={linkPrefix} />
-            )}
-          />
-          <Route
-            path={`${linkPathPrefix}/onboard/notifications`}
-            render={() => (
-              <Notifications listing={listing} linkPrefix={linkPrefix} />
-            )}
-          /> */}
           <Route
             path={`${linkPathPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} linkPrefix={linkPrefix} />}
