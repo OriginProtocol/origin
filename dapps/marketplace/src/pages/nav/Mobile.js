@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import withIdentity from 'hoc/withIdentity'
-
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
-import RouteToUserActivation from 'components/RouteToUserActivation'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 class MobileNav extends Component {
@@ -16,7 +13,7 @@ class MobileNav extends Component {
   }
 
   render() {
-    const { onClose, identity } = this.props
+    const { onClose } = this.props
     const hasUnread = ''
     /* react uses upper/lower case convention to distinguish between DOM tags
      * and user defined components. For that reason if the components starts with
@@ -24,30 +21,8 @@ class MobileNav extends Component {
      */
     const EarnTokens = this.EarnTokens
 
-    const RestrictedLink = props => {
-      if (!identity) {
-        return (
-          <a
-            className={`dropdown-item${
-              props.className ? ' ' + props.className : ''
-            }`}
-            onClick={() => this.setState({ userActivation: true })}
-          >
-            {props.children}
-          </a>
-        )
-      }
-
-      return <Link {...props} />
-    }
-
     return (
       <>
-        {this.state.userActivation && (
-          <RouteToUserActivation
-            onClose={() => this.setState({ userActivation: false })}
-          />
-        )}
         <Dropdown
           className="nav-item mobile d-flex d-md-none"
           open={this.props.open}
@@ -63,7 +38,7 @@ class MobileNav extends Component {
                   'navigation.BrowseCategories'
                 )}
               />
-              <RestrictedLink
+              <Link
                 onClick={() => onClose()}
                 to="/create"
                 className="dropdown-item add"
@@ -97,7 +72,7 @@ class MobileNav extends Component {
                 children={fbt('Sales', 'navigation.sales')}
               />
               <div className="dropdown-divider" />
-              <RestrictedLink
+              <Link
                 onClick={() => onClose()}
                 to="/messages"
                 className="dropdown-item messages"
@@ -137,7 +112,7 @@ class MobileNav extends Component {
   }
 }
 
-export default withIdentity(MobileNav)
+export default MobileNav
 
 require('react-styl')(`
   .navbar .nav-item.mobile

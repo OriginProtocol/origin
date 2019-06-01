@@ -5,8 +5,11 @@ import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIdentity from 'hoc/withIdentity'
 
 import DocumentTitle from 'components/DocumentTitle'
+import UserActivationLink from 'components/UserActivationLink'
+// import Redirect from 'components/Redirect'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
@@ -74,7 +77,11 @@ class CreateListing extends Component {
   }
 
   render() {
-    if (this.props.creatorConfigLoading) {
+    if (
+      this.props.creatorConfigLoading ||
+      this.props.walletLoading ||
+      this.props.identityLoading
+    ) {
       return (
         <div className="app-spinner">
           <fbt desc="App.loadingPleaseWait">
@@ -83,6 +90,10 @@ class CreateListing extends Component {
           </fbt>
         </div>
       )
+    }
+
+    if (!this.props.identity) {
+      return <UserActivationLink forceRedirect={true} />
     }
 
     // Force a given listing type/category
@@ -157,7 +168,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withCreatorConfig(withWallet(CreateListing))
+export default withCreatorConfig(withWallet(withIdentity(CreateListing)))
 
 require('react-styl')(`
   .create-listing

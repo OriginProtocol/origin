@@ -14,7 +14,7 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
-import RouteToUserActivation from 'components/RouteToUserActivation'
+import UserActivationLink from 'components/UserActivationLink'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -71,9 +71,8 @@ class Buy extends Component {
 
     if (!this.props.identity) {
       action = (
-        <button
+        <UserActivationLink
           className={this.props.className}
-          onClick={() => this.setState({ userActivation: true })}
           children={this.props.children}
         />
       )
@@ -81,11 +80,6 @@ class Buy extends Component {
 
     return (
       <>
-        {this.state.userActivation && (
-          <RouteToUserActivation
-            onClose={() => this.setState({ userActivation: false })}
-          />
-        )}
         {action}
         {!this.state.modal ? null : (
           <Modal
