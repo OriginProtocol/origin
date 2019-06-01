@@ -297,6 +297,8 @@ function getWalletIconClass(walletType) {
 export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
+  #app
+    overflow: hidden !important
   .dropdown.profile.show
     background-color: black !important
   .user-image-mask
