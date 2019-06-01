@@ -25,12 +25,30 @@ import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
 import { uploadImages } from 'utils/uploadImages'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
+import {
+  updateVerifiedAccounts,
+  getVerifiedAccounts,
+  clearVerifiedAccounts
+} from 'utils/profileTools'
+
 class UserActivation extends Component {
   constructor(props) {
     super(props)
-    this.state = {
+
+    const state = {
       stage: 'AddEmail',
-      step: 1,
+      step: 1
+    }
+
+    const storedAccounts = getVerifiedAccounts({ wallet: this.props.wallet })
+    if (storedAccounts && storedAccounts.emailAttestation) {
+      state.stage = 'PublishDetail'
+      state.data = storedAccounts.emailAttestation
+      state.step = 2
+    }
+
+    this.state = {
+      ...state,
       loading: false,
       error: null,
       email: '',
@@ -291,6 +309,12 @@ class UserActivation extends Component {
                   },
                   () => this.onStageChanged()
                 )
+                updateVerifiedAccounts({
+                  wallet: this.props.walletProxy,
+                  data: {
+                    emailAttestation: result.data
+                  }
+                })
               } else {
                 this.setState({
                   error: result.reason,
@@ -400,6 +424,7 @@ class UserActivation extends Component {
   }
 
   onDeployComplete = () => {
+    clearVerifiedAccounts()
     if (this.props.renderMobileVersion) {
       this.setState(
         {

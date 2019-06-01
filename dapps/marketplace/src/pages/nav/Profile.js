@@ -14,9 +14,7 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
-// import MobileUserActivation from 'components/MobileUserActivation'
-// import RouteToUserActivation from 'components/RouteToUserActivation'
-import UserActivationLink from '../../components/UserActivationLink'
+import UserActivationLink from 'components/UserActivationLink'
 
 // import DeployProxy from '../identity/mutations/DeployProxy'
 
