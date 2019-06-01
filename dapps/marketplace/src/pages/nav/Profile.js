@@ -121,7 +121,11 @@ class CreateIdentity extends Component {
             </fbt>
           </p>
 
-          <UserActivationLink className="btn btn-primary" onClick={this.onClose} onClose={this.onClose} />
+          <UserActivationLink
+            className="btn btn-primary"
+            onClick={this.onClose}
+            onClose={this.onClose}
+          />
         </div>
       </>
     )

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
-import UserActivationLink from '../../components/UserActivationLink';
+import UserActivationLink from '../../components/UserActivationLink'
 
 class GetStarted extends Component {
   state = { open: false }

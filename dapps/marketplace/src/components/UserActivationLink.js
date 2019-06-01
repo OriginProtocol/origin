@@ -7,7 +7,7 @@ import MobileUserActivation from './MobileUserActivation'
 import store from 'utils/store'
 const sessionStore = store('sessionStorage')
 
-const UserActivationLink =  props => {
+const UserActivationLink = props => {
   const isMobile = useIsMobile()
   const [modal, setModal] = useState(false)
 
@@ -24,7 +24,7 @@ const UserActivationLink =  props => {
   if (isMobile) {
     return (
       <button className={props.className} onClick={() => setModal(true)}>
-        { content }
+        {content}
       </button>
     )
   }
@@ -44,7 +44,7 @@ const UserActivationLink =  props => {
         }
       }}
     >
-      { content }
+      {content}
     </Link>
   )
 }

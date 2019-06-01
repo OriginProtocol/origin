@@ -66,7 +66,10 @@ export default class MobileModal extends Component {
   renderModal() {
     return (
       <>
-        <div className="mobile-modal-light-overlay" onClick={() => this.onClose()} />
+        <div
+          className="mobile-modal-light-overlay"
+          onClick={() => this.onClose()}
+        />
         <div className="modal-header" />
         <div className={`modal-content ${this.props.className}`}>
           {this.props.children}
