@@ -8,6 +8,7 @@ class MetricsProvider extends SubProvider {
 
     this.totalRPC = 0
     this.totalErrors = 0
+    this.totalRateLimitedRequests = 0
     this.methodCallTotals = new Map()
     this.methodErrorTotals = new Map()
 
@@ -48,12 +49,19 @@ class MetricsProvider extends SubProvider {
     return this.totalErrors
   }
 
+  incrementRateLimited() {
+    this.incrementError()
+    return (this.totalRateLimitedRequests += 1)
+  }
+
   _echo() {
     if (this.totalRPC % this.echoEvery === 0) {
       console.log(
         `JSON-RPC stats -- total calls: ${this.totalRPC}  methods used: ${
           this.methodCallTotals.size
-        }  error count: ${this.totalErrors}`
+        }  error count: ${this.totalErrors}  rate limited requests: ${
+          this.totalRateLimitedRequests
+        }`
       )
     }
     if (this.totalRPC % this.breakdownEvery === 0) {
@@ -77,6 +85,22 @@ class MetricsProvider extends SubProvider {
     this._echo()
 
     next((err, result, cb) => {
+      if (err) {
+        this.incrementError()
+
+        if (err.code === -32603) {
+          if (err.message.indexOf('Too Many Requests') > -1) {
+            console.error('429 Rate limited')
+          } else {
+            console.error(`Invalid JSON-RPC response: ${err.message}`)
+          }
+        } else {
+          console.error('Unknown error occurred in a following subprovider!')
+          if (err.code) console.error(`JSON-RPC error code: ${err.code}`)
+          else console.error(err)
+        }
+      }
+
       return cb()
     })
 
