@@ -44,6 +44,9 @@ class MobileUserActivation extends Component {
             stage={this.state.stage}
             onStageChanged={newStage => {
               switch (newStage) {
+                case 'ProfileCreated':
+                  this.setState({ title: null })
+                  break
                 case 'VerifyEmail':
                 case 'PublishDetail':
                   this.setState({
@@ -59,9 +62,7 @@ class MobileUserActivation extends Component {
                   })
                   break
               }
-              // this.setState()
             }}
-            onProfileCreated={() => this.setState({ title: null })}
             onCompleted={() => {
               this.setState({
                 shouldClose: true

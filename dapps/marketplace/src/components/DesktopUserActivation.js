@@ -432,9 +432,7 @@ class UserActivation extends Component {
         },
         () => this.onStageChanged()
       )
-      if (this.props.onProfileCreated) {
-        this.props.onProfileCreated()
-      }
+      return
     } else if (this.props.onCompleted) {
       this.props.onCompleted()
     }
@@ -537,7 +535,13 @@ class UserActivation extends Component {
   }
 
   renderProfileCreated() {
-    return <UserProfileCreated onCompleted={this.props.onCompleted} />
+    return <UserProfileCreated onCompleted={() => {
+      if (this.props.onCompleted) {
+        this.props.onCompleted()
+      }
+
+      this.props.identityRefetch();
+    }} />
   }
 
   renderPersonalDataModal() {
