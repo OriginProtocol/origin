@@ -535,13 +535,17 @@ class UserActivation extends Component {
   }
 
   renderProfileCreated() {
-    return <UserProfileCreated onCompleted={() => {
-      if (this.props.onCompleted) {
-        this.props.onCompleted()
-      }
+    return (
+      <UserProfileCreated
+        onCompleted={() => {
+          if (this.props.onCompleted) {
+            this.props.onCompleted()
+          }
 
-      this.props.identityRefetch();
-    }} />
+          this.props.identityRefetch()
+        }}
+      />
+    )
   }
 
   renderPersonalDataModal() {
