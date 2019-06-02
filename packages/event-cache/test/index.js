@@ -188,4 +188,20 @@ describe('EventCache', function() {
     assert(possibleAccounts.indexOf(orEvents[1].returnValues.account) > -1, 'Unexpected account')
   })
 
+  it('should not die on undefined argument', async () => {
+    const indexedBackend = new InMemoryBackend()
+    const eventCache = new EventCache(IdentityEvents, 0, {
+      backend: indexedBackend
+    })
+
+    const orEvents = await eventCache.getPastEvents('IdentityUpdated', {
+      filter: { account: undefined }
+    })
+
+    assert(
+      orEvents.length == 0,
+      `Request should have returned 0 events, got ${orEvents.length}`
+    )
+  })
+
 })

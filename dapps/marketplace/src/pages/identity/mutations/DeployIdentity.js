@@ -70,7 +70,6 @@ class DeployIdentity extends Component {
 
     this.setState({ waitFor: 'pending' })
     const profile = this.props.profile
-    if (!profile.avatar) profile.avatar = ''
     const variables = {
       from: this.props.wallet,
       attestations: this.props.attestations,

@@ -153,6 +153,7 @@ export function identity({ id, ipfsHash }) {
     // We have 149 identity.avatarUrls missing the ipfs:// protocol.
     // Prepend ipfs:// if needed.
     if (
+      identity.avatarUrl &&
       identity.avatarUrl.length === 46 &&
       identity.avatarUrl.indexOf('://') === -1
     ) {

@@ -114,9 +114,12 @@ class ImportAccountScreen extends Component {
       } catch (error) {
         let errorMessage = error.message
         if (errorMessage === 'invalid mnemonic') {
-          errorMessage = 'That does not look like a valid recovery phrase.'
+          errorMessage = fbt(
+            'That does not look like a valid recovery phrase.',
+            'ImportScreen.invalidRecoveryPhraseError'
+          )
         }
-        this.setState({ error: errorMessage })
+        this.setState({ error: String(errorMessage) })
         return false
       }
       if (!existingAddresses.includes(wallet.address)) {
@@ -145,9 +148,12 @@ class ImportAccountScreen extends Component {
     } catch (error) {
       let errorMessage = error.message
       if (error.code === 'INVALID_ARGUMENT') {
-        errorMessage = 'That is not a valid private key.'
+        errorMessage = fbt(
+          'That is not a valid private key.',
+          'ImportScreen.invalidPrivateKeyError'
+        )
       }
-      this.setState({ error: errorMessage })
+      this.setState({ error: String(errorMessage) })
       return false
     }
     return wallet
@@ -308,7 +314,8 @@ const styles = StyleSheet.create({
   },
   invalid: {
     borderColor: '#ff0000',
-    color: '#ff0000'
+    color: '#ff0000',
+    marginBottom: 10
   },
   switchMethod: {
     fontWeight: '600',
