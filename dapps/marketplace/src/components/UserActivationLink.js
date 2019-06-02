@@ -21,10 +21,10 @@ const UserActivationLink = props => {
     return (
       <MobileUserActivation
         onClose={() => {
-          setRedirectToHome(true)
-
-          if (props.onClose) {
-            props.onClose
+          if (props.forceRedirect) {
+            setRedirectToHome(true)
+          } else if (props.onClose) {
+            props.onClose()
           }
         }}
       />
