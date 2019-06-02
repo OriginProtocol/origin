@@ -161,6 +161,12 @@ class ProfileWizard extends Component {
           </fbt>
         </div>
         {continueButton}
+        <button
+          className="skip ml-auto mr-auto p-2"
+          onClick={() => this.setState({ skipRewardsEnroll: true })}
+        >
+          <fbt desc="ProfileWizard.skip">Skip</fbt>
+        </button>
       </>
     )
   }
@@ -173,10 +179,11 @@ class ProfileWizard extends Component {
   }
 
   render() {
-    const { uiStep, publishChanges } = this.state
+    const { uiStep, publishChanges, skipRewardsEnroll } = this.state
     const { growthEnrollmentStatus, currentProfile } = this.props
 
     if (
+      skipRewardsEnroll ||
       (growthEnrollmentStatus === 'Enrolled' &&
         this.hasPhoneAttestation(currentProfile)) ||
       localStorage.useWeb3Identity
