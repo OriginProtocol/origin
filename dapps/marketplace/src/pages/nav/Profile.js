@@ -297,8 +297,6 @@ function getWalletIconClass(walletType) {
 export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
-  #app
-    overflow: hidden !important
   .dropdown.profile.show
     background-color: black !important
   .user-image-mask
@@ -320,11 +318,7 @@ require('react-styl')(`
     font-size: 14px
     margin-top: 0 !important
     &:before
-      content: ''
-      width: 0 !important
-      height: 0 !important
-      margin: 0 !important
-      padding: 0 !important
+      display: none !important
     > div
       padding: 0.75rem 1.5rem
       border-bottom: 2px solid black
