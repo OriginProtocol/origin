@@ -29,4 +29,7 @@ class GetStarted extends Component {
 export default withRouter(GetStarted)
 
 require('react-styl')(`
+  @media (max-width: 767.98px)
+    .navbar-nav .nav-item .nav-link
+      background-color: transparent
 `)
