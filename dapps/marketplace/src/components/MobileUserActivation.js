@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { fbt } from 'fbt-runtime'
 
 import MobileModal from './MobileModal'
@@ -13,9 +14,19 @@ class MobileUserActivation extends Component {
       shouldClose: false,
       title: fbt('Create a Profile', 'MobileUserActivation.createProfile')
     }
+
+    this.portal = document.createElement('div')
+  }
+
+  componentDidMount() {
+    document.body.appendChild(this.portal)
   }
 
   render() {
+    return ReactDOM.createPortal(this.renderPortal(), this.portal)
+  }
+
+  renderPortal() {
     const { modal, shouldClose, title } = this.state
 
     if (!modal) {
@@ -45,7 +56,10 @@ class MobileUserActivation extends Component {
             onStageChanged={newStage => {
               switch (newStage) {
                 case 'ProfileCreated':
-                  this.setState({ title: null })
+                  this.setState({
+                    prevStage: null,
+                    title: null
+                  })
                   break
                 case 'VerifyEmail':
                 case 'PublishDetail':
@@ -76,6 +90,8 @@ class MobileUserActivation extends Component {
   }
 
   onClose() {
+    document.body.removeChild(this.portal)
+
     this.setState({
       modal: false
     })
