@@ -166,7 +166,7 @@ class Calendar extends Component {
     if (isMobile && !isTouch) {
       return
     }
-    
+
     this.setState({
       dragging: false
     })
@@ -191,25 +191,32 @@ class Calendar extends Component {
     const day = this.state.days[cellIndex]
 
     if (day && !day.unavailable && !day.booked) {
-      this.setState({
-        dragOver: cellIndex,
-        dragEnd: cellIndex,
-        endDate: day.date
-      }, cb)
+      this.setState(
+        {
+          dragOver: cellIndex,
+          dragEnd: cellIndex,
+          endDate: day.date
+        },
+        cb
+      )
     }
   }
 
   setSelectStart(e) {
     const cellIndex = parseInt(e.target.getAttribute('cellindex'))
 
-    if (this.isMobile() && this.state.dragStart && this.state.dragStart === this.state.dragEnd) {
-      // One cell has already been selected, this is the second touch/click. 
+    if (
+      this.isMobile() &&
+      this.state.dragStart &&
+      this.state.dragStart === this.state.dragEnd
+    ) {
+      // One cell has already been selected, this is the second touch/click.
       this.setRangeEnd(e, () => {
         this.notifyChange()
         this.setState({ dragging: false })
       })
       return
-    } 
+    }
 
     this.setState({
       dragging: true,
