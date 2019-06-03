@@ -476,8 +476,10 @@ class UserProfile extends Component {
     )
   }
 
-  renderAtt(type, text, props = {}) {
-    const { soon, disabled, hidden, walletProxy } = props
+  renderAtt(type, text, attProps = {}) {
+    const { soon, disabled, hidden } = attProps
+    const { walletProxy } = this.props
+
     if (hidden) {
       return null
     }
