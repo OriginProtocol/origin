@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const request = require('superagent')
 const get = require('lodash/get')
+const { parsePhoneNumberFromString } = require('libphonenumber-js')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -130,7 +131,13 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
       verified: true
     }
   }
-  const attestationValue = `${req.body.country_calling_code} ${req.body.phone}`
+  let attestationValue
+
+  try {
+    attestationValue = parsePhoneNumberFromString(`+${req.body.country_calling_code} ${req.body.phone}`).number
+  } catch {
+    attestationValue = `${req.body.country_calling_code} ${req.body.phone}`
+  }
 
   const attestation = await generateAttestation(
     AttestationTypes.PHONE,
