@@ -28,25 +28,10 @@ class Calendar extends Component {
 
   componentDidMount = () => {
     window.addEventListener('mouseup', this.onWindowSelectEnd)
-    window.addEventListener('touchend', this.onWindowSelectEnd)
-    window.addEventListener('touchmove', this.preventScrollHack, {
-      passive: false
-    })
   }
 
   componentWillUnmount = () => {
     window.removeEventListener('mouseup', this.onWindowSelectEnd)
-    window.removeEventListener('touchend', this.onWindowSelectEnd)
-    window.removeEventListener('touchmove', this.preventScrollHack)
-  }
-
-  preventScrollHack = e => {
-    // An ugly hack to prevent page-scroll
-    // when drag-selecting vertically
-    if (this.state.dragging) {
-      e.preventDefault()
-      return false
-    }
   }
 
   render() {
@@ -74,8 +59,6 @@ class Calendar extends Component {
 
     // eslint-disable-next-line react/no-direct-mutation-state
     this.state.days = days
-
-    const isMobile = this.props.ismobile === 'true'
 
     return (
       <div className={`calendar${this.props.small ? ' calendar-sm' : ''}`}>
@@ -131,7 +114,7 @@ class Calendar extends Component {
                 className={this.getClass(idx, lastDay, days[idx])}
                 onSelectStart={this.onCellSelectStart}
                 onSelectMove={this.onCellSelectMove}
-                hidePrice={isMobile}
+                hidePrice={this.isMobile()}
               />
             ))}
         </div>
@@ -143,59 +126,99 @@ class Calendar extends Component {
     const isLeftClick = e.button === 0
     const isTouch = e.type !== 'mousedown'
 
-    if (!this.state.dragging && (isLeftClick || isTouch)) {
+    const isMobile = this.isMobile()
+
+    if (isMobile && !isTouch) {
+      return
+    }
+
+    if (isMobile && isTouch && !this.state.dragging) {
+      // Selection has started on Mobile
+      this.setSelectStart(e)
+    } else if (!this.state.dragging && (isLeftClick || isTouch)) {
+      // Start selection on large screens
       e.preventDefault()
 
-      const cellIndex = parseInt(e.target.getAttribute('cellindex'))
-
-      this.setState({
-        dragging: true,
-        dragStart: cellIndex,
-        dragEnd: cellIndex,
-        dragOver: cellIndex,
-        startDate: this.state.days[cellIndex].date,
-        endDate: this.state.days[cellIndex].date
-      })
+      this.setSelectStart(e)
     }
   }
 
   onCellSelectMove = e => {
+    if (this.isMobile()) {
+      return
+    }
+
     if (this.state.dragging) {
       e.preventDefault()
-
-      const cellIndex = this.getCellIndexFromEvent(e)
-      const day = this.state.days[cellIndex]
-
-      if (day && !day.unavailable && !day.booked) {
-        this.setState({
-          dragOver: cellIndex,
-          dragEnd: cellIndex,
-          endDate: day.date
-        })
-      }
+      this.setRangeEnd(e)
     }
   }
 
   onWindowSelectEnd = e => {
-    const isLeftClick = e.button === 0
+    if (!this.state.dragging) {
+      return
+    }
+
     const isTouch = e.type !== 'mousedown'
 
-    if (this.state.dragging && (isLeftClick || isTouch)) {
-      this.setState({
-        dragging: false
-      })
+    const isMobile = this.isMobile()
 
-      if (this.props.onChange) {
-        const day = this.state.days[this.state.dragEnd]
-
-        const start = dayjs(this.state.startDate)
-        let range = `${this.state.startDate}/${day.date}`
-        if (start.isAfter(day.date)) {
-          range = `${day.date}/${this.state.startDate}`
-        }
-        this.props.onChange({ range })
-      }
+    if (isMobile && !isTouch) {
+      return
     }
+    
+    this.setState({
+      dragging: false
+    })
+    this.notifyChange()
+  }
+
+  notifyChange() {
+    if (this.props.onChange) {
+      const day = this.state.days[this.state.dragEnd]
+
+      const start = dayjs(this.state.startDate)
+      let range = `${this.state.startDate}/${day.date}`
+      if (start.isAfter(day.date)) {
+        range = `${day.date}/${this.state.startDate}`
+      }
+      this.props.onChange({ range })
+    }
+  }
+
+  setRangeEnd(e, cb) {
+    const cellIndex = this.getCellIndexFromEvent(e)
+    const day = this.state.days[cellIndex]
+
+    if (day && !day.unavailable && !day.booked) {
+      this.setState({
+        dragOver: cellIndex,
+        dragEnd: cellIndex,
+        endDate: day.date
+      }, cb)
+    }
+  }
+
+  setSelectStart(e) {
+    const cellIndex = parseInt(e.target.getAttribute('cellindex'))
+
+    if (this.isMobile() && this.state.dragStart && this.state.dragStart === this.state.dragEnd) {
+      // One cell has already been selected, this is the second touch/click. 
+      this.setRangeEnd(e, () => {
+        this.notifyChange()
+        this.setState({ dragging: false })
+      })
+      return
+    } 
+
+    this.setState({
+      dragging: true,
+      dragStart: cellIndex,
+      dragEnd: cellIndex,
+      dragOver: cellIndex,
+      startDate: this.state.days[cellIndex].date,
+      endDate: this.state.days[cellIndex].date
+    })
   }
 
   getCellIndexFromEvent = e => {
@@ -262,6 +285,10 @@ class Calendar extends Component {
     }
 
     return `day ${cls}`
+  }
+
+  isMobile() {
+    return this.props.ismobile === 'true'
   }
 }
 
