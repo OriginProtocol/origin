@@ -18,6 +18,7 @@ const WarningIcon = ({ tooltip }) => (
     >
       <path
         fill="#F4C110"
+        fillRule="evenodd"
         d="M11 17.646a1.146 1.146 0 1 1 0-2.293 1.146 1.146 0 0 1 0 2.293zm-.917-3.896h1.834V7.333h-1.834v6.417zM11 0L0 20.167h22L11 0z"
       />
     </svg>

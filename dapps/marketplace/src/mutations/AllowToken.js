@@ -6,8 +6,15 @@ export default gql`
     $from: String!
     $to: String!
     $value: String!
+    $forceProxy: Boolean
   ) {
-    updateTokenAllowance(token: $token, from: $from, to: $to, value: $value) {
+    updateTokenAllowance(
+      token: $token
+      from: $from
+      to: $to
+      value: $value
+      forceProxy: $forceProxy
+    ) {
       id
     }
   }

@@ -31,6 +31,10 @@ const HelpIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
+function isOwner(account, props) {
+  return props.wallet === account || props.walletProxy === account
+}
+
 const Transaction = props => {
   const offerId = props.match.params.offerId
   const vars = { offerId }
@@ -61,14 +65,15 @@ const Transaction = props => {
             )
           }
 
-          const offer = data.marketplace.offer
+          const offer = get(data, 'marketplace.offer')
           if (!offer) {
             return <div className="container">Offer not found</div>
           }
 
-          const isSeller =
-            get(offer, 'listing.seller.id', '') === props.walletProxy
-          const party = isSeller ? offer.buyer.id : offer.listing.seller.id
+          const seller = offer.listing.seller.id
+          const buyer = offer.buyer.id
+          const isSeller = isOwner(seller, props)
+          const party = isSeller ? seller : buyer
 
           const Progress = (
             <>
@@ -76,8 +81,10 @@ const Transaction = props => {
                 <fbt desc="Transaction.progress">Transaction Progress</fbt>
               </h3>
               <TxProgress
+                isBuyer={isOwner(buyer, props)}
+                isSeller={isSeller}
+                party={party}
                 offer={offer}
-                wallet={props.walletProxy}
                 refetch={refetch}
                 loading={networkStatus === 4}
               />
@@ -139,7 +146,7 @@ const Transaction = props => {
                   </fbt:param>.
                 </fbt>
               </h3>
-              <AboutParty id={party} />
+              <AboutParty id={isSeller ? buyer : seller} />
             </>
           )
 

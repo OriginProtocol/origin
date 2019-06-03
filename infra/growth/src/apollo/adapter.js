@@ -40,7 +40,14 @@ class ApolloAdapter {
    * @private
    */
   _ruleIdToActionType(ruleId) {
-    const actionType = ruleIdToActionType[ruleId]
+    let actionType
+    // Test if it matches format "ListingPurchase<listingId>"
+    // otherwise use the ruleIdToActionType dictionary.
+    if (ruleId.match(/^ListingPurchase\d+$/)) {
+      actionType = 'ListingIdPurchased'
+    } else {
+      actionType = ruleIdToActionType[ruleId]
+    }
     if (!actionType) {
       throw new Error(`Unexpected ruleId ${ruleId}`)
     }
