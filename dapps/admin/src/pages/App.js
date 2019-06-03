@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom'
 import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import MetaMaskSwitcher from 'components/MetaMaskSwitcher'
 import Accounts from './accounts/Accounts'
 import Listings from './listings/Listings'
