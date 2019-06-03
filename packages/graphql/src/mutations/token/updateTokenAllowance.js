@@ -1,8 +1,8 @@
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
-import hasProxy from '../../utils/hasProxy'
+import { proxyOwner, predictedProxy } from '../../utils/proxy'
 
-async function updateTokenAllowance(_, { token, from, to, value }) {
+async function updateTokenAllowance(_, { token, from, to, value, forceProxy }) {
   let tokenContract = contracts.tokens.find(t => t.id === token)
   if (token.indexOf('token-') === 0) {
     tokenContract = contracts.tokens.find(
@@ -15,8 +15,12 @@ async function updateTokenAllowance(_, { token, from, to, value }) {
     throw new Error('Could not find contract to update allowance')
   }
   if (to === 'marketplace') {
-    const proxy = await hasProxy(from)
-    to = proxy || contracts.marketplace.options.address
+    const owner = await proxyOwner(from)
+    if (forceProxy && !owner) {
+      to = await predictedProxy(from)
+    } else {
+      to = owner ? from : contracts.marketplace.options.address
+    }
   }
   await checkMetaMask(from)
   value = contracts.web3.utils.toWei(value, 'ether')
