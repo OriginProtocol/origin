@@ -16,6 +16,8 @@ export default async function() {
     ipfs: true,
     populate: true,
     deployContracts: true,
+    relayer: true,
+    graphqlServer: true,
     contractsFile: 'tests',
     extras: async () => {
       const webpackProcess = spawn(

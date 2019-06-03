@@ -1,6 +1,7 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
 import { getFeatured, getHidden } from './_featuredAndHidden'
+import { proxyOwner } from '../../utils/proxy'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')
@@ -104,7 +105,11 @@ export async function listingsBySeller(
   info
 ) {
   const fields = graphqlFields(info)
-  const party = listingSeller.id
+  let party = listingSeller.id
+  const owner = await proxyOwner(party)
+  if (owner) {
+    party = [party, owner]
+  }
 
   let events = await contracts.marketplace.eventCache.getEvents({
     event: 'ListingCreated',

@@ -1,6 +1,6 @@
 import balancesFromWei from '../utils/balancesFromWei'
 import contracts from '../contracts'
-import hasProxy from '../utils/hasProxy'
+import { hasProxy, predictedProxy } from '../utils/proxy'
 import { identity } from './IdentityEvents'
 
 export default {
@@ -64,6 +64,13 @@ export default {
       return { id: account.id }
     }
     const id = await hasProxy(account.id)
+    return id ? { id } : { id: account.id }
+  },
+  predictedProxy: async account => {
+    if (!contracts.config.proxyAccountsEnabled) {
+      return { id: account.id }
+    }
+    const id = await predictedProxy(account.id)
     return id ? { id } : { id: account.id }
   }
 }

@@ -140,7 +140,7 @@ class DisputeOffer extends Component {
     this.setState({ waitFor: 'pending' })
 
     disputeOffer({
-      variables: { offerID: this.props.offer.id, from: this.props.wallet }
+      variables: { offerID: this.props.offer.id, from: this.props.from }
     })
   }
 
