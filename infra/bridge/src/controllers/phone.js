@@ -134,7 +134,9 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
   let attestationValue
 
   try {
-    attestationValue = parsePhoneNumberFromString(`+${req.body.country_calling_code} ${req.body.phone}`).number
+    attestationValue = parsePhoneNumberFromString(
+      `+${req.body.country_calling_code} ${req.body.phone}`
+    ).number
   } catch {
     attestationValue = `${req.body.country_calling_code} ${req.body.phone}`
   }
