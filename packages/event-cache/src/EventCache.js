@@ -74,8 +74,6 @@ const getPastEvents = memoize(
     const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
 
-    instance.lastQueriedBlock = toBlock
-
     if (!numBlocks) return
 
     const newEvents = flattenDeep(await Promise.all(requests))
@@ -89,6 +87,8 @@ const getPastEvents = memoize(
         debug('Error adding new events to backend', e)
       }
     }
+
+    instance.lastQueriedBlock = toBlock
   },
   (...args) => `${args[0].contract._address}-${args[1]}-${args[2]}`
 )
@@ -212,28 +212,12 @@ class EventCache {
   async _fetchEvents() {
     let toBlock = this.latestBlock
 
-    // Debug sanity check
-    const nodeBlock = await this.web3.eth.getBlockNumber()
-    if (toBlock > nodeBlock) {
-      debug(
-        `Block on JSON-RPC node is less than what we're expecting.  This is an error!  ${
-          this.latestBlock
-        } > ${nodeBlock}`
-      )
-      // TODO, set latestBlock back to nodeBlock?
-    } else if (toBlock < nodeBlock) {
-      debug(
-        `Node block is greater than what we're expecting.  This is OK  ${
-          this.latestBlock
-        } < ${nodeBlock}`
-      )
-    }
-
     if (this.useLatestFromChain || !toBlock) {
-      toBlock = this.latestBlock = nodeBlock
+      toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
     }
 
     if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
+      debug('noop, current')
       return
     }
 

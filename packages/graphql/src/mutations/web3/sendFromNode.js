@@ -4,13 +4,14 @@ import contracts from '../../contracts'
 async function sendFromNode(_, { from, to, value }) {
   await checkMetaMask(from)
   const web3 = contracts.web3Exec
-  const tx = web3.eth.sendTransaction({
+  return txHelper({
+    web3,
     from,
     to,
     value: web3.utils.toWei(value, 'ether'),
-    gas: 4612388
+    gas: 4612388,
+    mutation: 'sendFromNode'
   })
-  return txHelper({ tx, from, mutation: 'sendFromNode' })
 }
 
 export default sendFromNode

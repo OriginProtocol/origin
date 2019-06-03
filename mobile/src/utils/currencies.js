@@ -1,17 +1,17 @@
+'use strict'
+
 const IMAGES_PATH = '../../assets/images/'
 
 export default {
   dai: {
     color: '#fec100',
     icon: require(`${IMAGES_PATH}dai-icon.png`),
-    name: 'Maker Dai',
-    priceToUSD: 0.95
+    name: 'Maker Dai'
   },
   eth: {
     color: '#a27cff',
     icon: require(`${IMAGES_PATH}eth-icon.png`),
-    name: 'Ethereum',
-    priceToUSD: 164.53
+    name: 'Ethereum'
   },
   ogn: {
     color: '#007fff',

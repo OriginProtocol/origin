@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Web3 from 'web3'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
@@ -19,19 +20,23 @@ class SignatureCard extends Component {
 
     return (
       <View style={styles.card}>
-        <Text style={styles.heading}>Signature Request</Text>
+        <Text style={styles.heading}>
+          <fbt desc="SignatureCard.heading">Signature Request</fbt>
+        </Text>
         <Text style={styles.content}>{decodedMessage}</Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Sign'}
+            title={fbt('Sign', 'SignatureCard.button')}
             onPress={this.props.onConfirm}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>Cancel</Text>
+          <Text style={styles.cancel}>
+            <fbt desc="SignatureCard.cancel">Cancel</fbt>
+          </Text>
         </TouchableOpacity>
       </View>
     )

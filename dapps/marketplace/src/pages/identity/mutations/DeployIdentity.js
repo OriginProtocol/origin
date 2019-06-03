@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation, withApollo } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import DeployIdentityMutation from 'mutations/DeployIdentity'
@@ -69,7 +69,6 @@ class DeployIdentity extends Component {
 
     this.setState({ waitFor: 'pending' })
     const profile = this.props.profile
-    if (!profile.avatar) profile.avatar = ''
     const variables = {
       from: this.props.wallet,
       attestations: this.props.attestations,
@@ -92,6 +91,7 @@ class DeployIdentity extends Component {
           if (this.props.onComplete) {
             this.props.onComplete()
           }
+          this.props.client.reFetchObservableQueries()
           this.setState({ waitFor: false, error: false, shouldClose: false })
         }}
         hash={this.state.waitFor}
@@ -119,4 +119,4 @@ class DeployIdentity extends Component {
   }
 }
 
-export default withWallet(withCanTransact(DeployIdentity))
+export default withApollo(withWallet(withCanTransact(DeployIdentity)))

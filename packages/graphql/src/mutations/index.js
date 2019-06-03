@@ -35,6 +35,9 @@ import useFaucet from './token/useFaucet'
 
 import deployIdentity from './identity/deployIdentity'
 import deployIdentityEvents from './identity/deployIdentityEvents'
+import deployIdentityProxy from './identity/deployIdentityProxy'
+import deployIdentityViaProxy from './identity/deployIdentityViaProxy'
+import deployProxyFactory from './identity/deployProxyFactory'
 
 import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
@@ -45,6 +48,8 @@ import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import verifyGoogle from './attestations/verifyGoogle'
+import generateWebsiteCode from './attestations/generateWebsiteCode'
+import verifyWebsite from './attestations/verifyWebsite'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -62,6 +67,9 @@ export default {
   createWallet,
   deployIdentity,
   deployIdentityEvents,
+  deployIdentityProxy,
+  deployIdentityViaProxy,
+  deployProxyFactory,
   deployMarketplace,
   deployToken,
   disputeOffer,
@@ -71,6 +79,7 @@ export default {
   generateAirbnbCode,
   generateEmailCode,
   generatePhoneCode,
+  generateWebsiteCode,
   importWallet,
   importWallets,
   makeOffer,
@@ -100,6 +109,7 @@ export default {
   verifyGoogle,
   verifyPhoneCode,
   verifyTwitter,
+  verifyWebsite,
   withdrawListing,
   withdrawOffer,
   refetch: () => true

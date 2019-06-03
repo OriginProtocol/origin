@@ -24,7 +24,7 @@ const nextPage = nextPageFactory('marketplace.user.offers')
 
 class Purchases extends Component {
   render() {
-    const vars = { first: 5, id: this.props.wallet }
+    const vars = { first: 5, id: this.props.walletProxy }
     const filter = get(this.props, 'match.params.filter', 'pending')
     if (filter !== 'all') {
       vars.filter = filter
@@ -63,7 +63,8 @@ class Purchases extends Component {
               query={query}
               variables={vars}
               notifyOnNetworkStatusChange={true}
-              skip={!this.props.wallet}
+              skip={!vars.id}
+              fetchPolicy="cache-and-network"
             >
               {({ error, data, fetchMore, networkStatus }) => {
                 if (networkStatus <= 2 || !this.props.wallet) {

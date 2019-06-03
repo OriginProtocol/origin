@@ -1,10 +1,12 @@
 import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
+import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
+import hasProxy from '../../utils/hasProxy'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -69,14 +71,27 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
-  // console.log(args)
+  let tx = marketplace.methods.makeOffer(...args)
+  const proxy = await hasProxy(buyer)
+  if (proxy && currencyAddress !== ZeroAddress) {
+    const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, proxy)
+    const txData = await tx.encodeABI()
+    tx = Proxy.methods.transferTokenMarketplaceExecute(
+      buyer,
+      contracts.marketplace._address,
+      txData,
+      currencyAddress,
+      value
+    )
+  }
 
-  const tx = marketplace.methods.makeOffer(...args).send({
-    gas: cost.makeOffer,
+  return txHelper({
+    tx,
     from: buyer,
+    mutation: 'makeOffer',
+    gas: cost.makeOffer,
     value: currencyAddress === ZeroAddress ? value : 0
   })
-  return txHelper({ tx, from: buyer, mutation: 'makeOffer' })
 }
 
 async function toIpfsData(data) {

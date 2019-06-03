@@ -10,12 +10,14 @@ async function withdrawOffer(_, data) {
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId } = parseId(data.offerID)
+  const { withdrawOffer } = contracts.marketplaceExec.methods
 
-  const tx = contracts.marketplaceExec.methods
-    .withdrawOffer(listingId, offerId, ipfsHash)
-    .send({ gas: cost.finalizeOffer, from })
-
-  return txHelper({ tx, from, mutation: 'withdrawOffer' })
+  return txHelper({
+    tx: withdrawOffer(listingId, offerId, ipfsHash),
+    from,
+    mutation: 'withdrawOffer',
+    gas: cost.finalizeOffer
+  })
 }
 
 export default withdrawOffer

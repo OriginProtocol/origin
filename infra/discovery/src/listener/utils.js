@@ -33,6 +33,12 @@ async function getLastBlock(config, prefix) {
     // Read state from DB.
     const row = await db.Listener.findByPk(`${prefix}${config.listenerId}`)
     if (!row) {
+      logger.warn(
+        `Last block not set or returned from DB for listener ${prefix}${
+          config.listenerId
+        }. Falling back to default.`
+      )
+
       // No state in DB. This happens if a listener is started for the first time.
       lastBlock = config.defaultContinueBlock
     } else {

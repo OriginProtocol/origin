@@ -1,7 +1,7 @@
 import * as contracts from '../../contracts'
 
-async function setNetwork(_, { network }) {
-  contracts.setNetwork(network)
+async function setNetwork(_, { network, customConfig }) {
+  contracts.setNetwork(network, customConfig)
   return true
 }
 

@@ -4,10 +4,11 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./infra/dapp-creator-server ./infra/dapp-creator-server
 
-RUN npm install --unsafe-perm
+RUN yarn install
 
 CMD npm run start --prefix infra/dapp-creator-server

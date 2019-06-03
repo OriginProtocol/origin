@@ -28,7 +28,7 @@ const Row = ({ country, onClick }) => (
 class CountryDropdown extends Component {
   state = { open: false }
   render() {
-    const backgroundImage = `url(images/flags/${this.props.active}.svg)`
+    const backgroundImage = `url(images/flags/${this.props.active.toLowerCase()}.svg)`
     return (
       <Dropdown
         className="country-code"
@@ -73,11 +73,11 @@ require('react-styl')(`
     &.show
       background-color: var(--dark)
     .active-country
-      background-image: url(images/flags/us.svg);
-      width: 3rem;
-      background-size: 2rem;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-image: url(images/flags/us.svg)
+      width: 3rem
+      background-size: 2rem
+      background-position: center
+      background-repeat: no-repeat
 
     .dropdown-menu
       overflow: auto

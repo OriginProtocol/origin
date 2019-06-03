@@ -1,4 +1,5 @@
 const elasticsearch = require('elasticsearch')
+const scoring = require('../lib/scoring')
 
 /*
   Module to interface with ElasticSearch.
@@ -69,6 +70,10 @@ class Listing {
         delete offer.timeSlots
       })
     }
+
+    // Precompute score for listing
+    const { scoreMultiplier } = await scoring.scoreListing(listingToIndex)
+    listingToIndex.scoreMultiplier = scoreMultiplier
 
     await client.index({
       index: LISTINGS_INDEX,
@@ -220,20 +225,41 @@ class Listing {
       esQuery.bool.filter.push(innerFilter)
     })
 
-    /* When users boost their listing using OGN tokens we boost that listing in elasticSearch.
-     * For more details see document: https://docs.google.com/spreadsheets/d/1bgBlwWvYL7kgAb8aUH4cwDtTHQuFThQ4BCp870O-zEs/edit#gid=0
-     *
-     * If boost slider's max value (currently 100) on listing-create changes this factor needs tweaking as well. (see referenced document)
-     */
-    const boostScoreQuery = {
+    // All non-time based scoring is staticly computed ahead of time and
+    // index in a listing's `scoreMultiplier` field
+    const scoreQuery = {
       function_score: {
         query: esQuery,
-        field_value_factor: {
-          field: 'commissionPerUnit',
-          factor: 0.0000000000000000005, // the same as delimited by 20
-          missing: 0
-        },
-        boost_mode: 'sum'
+
+        script_score: {
+          script: {
+            params: {
+              // Strongly reccomended to pass date in as a paramter since:
+              // - All nodes in an elastic search cluster will be using the same value
+              // - Script itself stays the same, and never needs to be recompiled
+              now: new Date().getTime()
+            },
+            source: `double score = _score;
+
+            if(doc['scoreMultiplier'] != null){
+              score *= doc['scoreMultiplier'].value
+            }
+
+            // Temporary boost for recently created listings.
+            // linear reduction in boost off during boost period.
+            if (doc['createdEvent.timestamp'] != null) {
+              double recentBoostAmount = 0.5;
+              long boostPeriod = 18 * 24 * 60 * 60;
+              long age = params.now - doc['createdEvent.timestamp'].value;
+              if (age > 0 && age < boostPeriod) {
+                score *= 1.0 + ((double)age / (double)boostPeriod) * recentBoostAmount;
+              }
+            }
+            
+            return score;
+            `
+          }
+        }
       }
     }
 
@@ -249,8 +275,8 @@ class Listing {
       body: {
         from: offset,
         size: numberOfItems,
-        query: boostScoreQuery,
-        _source: ['title', 'description', 'price']
+        query: scoreQuery,
+        _source: ['title', 'description', 'price', 'commissionPerUnit']
       }
     })
 
