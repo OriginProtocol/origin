@@ -284,6 +284,10 @@ class MarketplaceEventHandler {
 
     const details = await this._getDetails(block, event)
 
+    if (!details) {
+      throw new Error('Unable to find listing or offer details')
+    }
+
     // On both listing and offer event, index the listing.
     // Notes:
     //  - Reason for also re-indexing on offer event is that the listing data includes
