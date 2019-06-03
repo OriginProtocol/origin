@@ -9,6 +9,7 @@ program
   .option('-s, --setup', 'Write contracts, populate IPFS fixtures, then exit')
   .option('-t, --truffle', 'Write contract addresses to Truffle json')
   .option('-x, --ssl-proxy', 'Start SSL proxy')
+  .option('-r, --relayer', 'Start Relayer')
   .parse(process.argv)
 
 async function setup() {
@@ -34,6 +35,7 @@ if (!process.argv.slice(2).length) {
     ipfs: program.ipfs,
     populate: program.populateIpfs,
     writeTruffle: program.truffle,
-    sslProxy: program.sslProxy
+    sslProxy: program.sslProxy,
+    relayer: program.relayer
   })
 }

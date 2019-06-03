@@ -54,11 +54,11 @@ class FinalizeOffer extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { offer, rating, review, wallet } = this.props
+    const { offer, rating, review, from } = this.props
     finalizeOffer({
       variables: {
         offerID: offer.id,
-        from: wallet,
+        from,
         rating,
         review
       }
