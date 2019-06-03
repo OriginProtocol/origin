@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 
-import withIsMobile from 'hoc/withIsMobile'
 import Price from 'components/Price'
 
 const resetDrag = {
@@ -15,8 +14,7 @@ class Calendar extends Component {
     super(props)
     this.state = {
       year: dayjs().year(),
-      month: dayjs().month(),
-      days: []
+      month: dayjs().month()
     }
   }
 
@@ -24,14 +22,6 @@ class Calendar extends Component {
     if (prevProps.range && !this.props.range) {
       this.setState({ ...resetDrag })
     }
-  }
-
-  componentDidMount = () => {
-    window.addEventListener('mouseup', this.onWindowSelectEnd)
-  }
-
-  componentWillUnmount = () => {
-    window.removeEventListener('mouseup', this.onWindowSelectEnd)
   }
 
   render() {
@@ -56,9 +46,6 @@ class Calendar extends Component {
         days.push(null)
       }
     }
-
-    // eslint-disable-next-line react/no-direct-mutation-state
-    this.state.days = days
 
     return (
       <div className={`calendar${this.props.small ? ' calendar-sm' : ''}`}>
@@ -102,162 +89,91 @@ class Calendar extends Component {
         <div className={`days${this.state.dragging ? '' : ' inactive'}`}>
           {Array(max)
             .fill(0)
-            .map((v, idx) => (
-              <DaySlot
-                key={idx}
-                day={days[idx]}
-                showBooked={this.props.showBooked}
-                interactive={this.props.interactive}
-                originalCurrency={this.props.originalCurrency}
-                currency={this.props.currency}
-                cellIndex={idx}
-                className={this.getClass(idx, lastDay, days[idx])}
-                onSelectStart={this.onCellSelectStart}
-                onSelectMove={this.onCellSelectMove}
-                hidePrice={this.isMobile()}
-              />
-            ))}
+            .map((v, idx) => this.renderDay(days, idx, lastDay))}
         </div>
       </div>
     )
   }
 
-  onCellSelectStart = e => {
-    const isLeftClick = e.button === 0
-    const isTouch = e.type !== 'mousedown'
-
-    const isMobile = this.isMobile()
-
-    if (isMobile && !isTouch) {
-      return
-    }
-
-    if (isMobile && isTouch && !this.state.dragging) {
-      // Selection has started on Mobile
-      this.setSelectStart(e)
-    } else if (!this.state.dragging && (isLeftClick || isTouch)) {
-      // Start selection on large screens
-      e.preventDefault()
-
-      this.setSelectStart(e)
-    }
-  }
-
-  onCellSelectMove = e => {
-    if (this.isMobile()) {
-      return
-    }
-
-    if (this.state.dragging) {
-      e.preventDefault()
-      this.setRangeEnd(e)
-    }
-  }
-
-  onWindowSelectEnd = e => {
-    if (!this.state.dragging) {
-      return
-    }
-
-    const isTouch = e.type !== 'mousedown'
-
-    const isMobile = this.isMobile()
-
-    if (isMobile && !isTouch) {
-      return
-    }
-
-    this.setState({
-      dragging: false
-    })
-    this.notifyChange()
-  }
-
-  notifyChange() {
-    if (this.props.onChange) {
-      const day = this.state.days[this.state.dragEnd]
-
-      const start = dayjs(this.state.startDate)
-      let range = `${this.state.startDate}/${day.date}`
-      if (start.isAfter(day.date)) {
-        range = `${day.date}/${this.state.startDate}`
-      }
-      this.props.onChange({ range })
-    }
-  }
-
-  setRangeEnd(e, cb) {
-    const cellIndex = this.getCellIndexFromEvent(e)
-    const day = this.state.days[cellIndex]
-
-    if (day && !day.unavailable && !day.booked) {
-      this.setState(
-        {
-          dragOver: cellIndex,
-          dragEnd: cellIndex,
-          endDate: day.date
-        },
-        cb
+  renderDay(days, idx, lastDay) {
+    const day = days[idx]
+    if (!day) {
+      return (
+        <div
+          key={idx}
+          className={`empty ${idx < 7 ? 'first-row' : 'last-row'}`}
+        />
       )
     }
-  }
 
-  setSelectStart(e) {
-    const cellIndex = parseInt(e.target.getAttribute('cellindex'))
+    const date = dayjs(day.date)
 
-    if (
-      this.isMobile() &&
-      this.state.dragStart &&
-      this.state.dragStart === this.state.dragEnd
-    ) {
-      // One cell has already been selected, this is the second touch/click.
-      this.setRangeEnd(e, () => {
-        this.notifyChange()
-        this.setState({ dragging: false })
-      })
-      return
+    if (date.add(1, 'day').isBefore(dayjs())) {
+      return (
+        <div
+          key={idx}
+          className={`day in-past${idx % 7 === 6 ? ' end-row' : ''}`}
+        >
+          <div>{date.date()}</div>
+        </div>
+      )
     }
 
-    this.setState({
-      dragging: true,
-      dragStart: cellIndex,
-      dragEnd: cellIndex,
-      dragOver: cellIndex,
-      startDate: this.state.days[cellIndex].date,
-      endDate: this.state.days[cellIndex].date
-    })
-  }
+    let content = (
+      <Price
+        price={{ amount: day.price, currency: this.props.currency }}
+        target={this.props.originalCurrency ? this.props.currency : null}
+      />
+    )
+    if (day.booked && this.props.showBooked) {
+      content = 'Booked'
+    } else if (day.unavailable) {
+      content = 'Unavailable'
+    } else if (day.customPrice) {
+      content = <span style={{ color: 'green' }}>{content}</span>
+    }
 
-  getCellIndexFromEvent = e => {
-    let target
-    if (e.type === 'touchmove' && e.touches) {
-      const touch = e.touches.item(0)
-      target = document.elementFromPoint(touch.clientX, touch.clientY)
-    } else {
-      target = e.target
-      while (target.classList && !target.classList.contains('day')) {
-        target = target.parentNode
+    let interactions = {}
+    if (this.props.interactive !== false) {
+      interactions = {
+        onClick: () => {
+          if (this.state.dragging) {
+            this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
+            if (this.props.onChange) {
+              const start = dayjs(this.state.startDate)
+              let range = `${this.state.startDate}/${day.date}`
+              if (start.isAfter(day.date)) {
+                range = `${day.date}/${this.state.startDate}`
+              }
+              this.props.onChange({ range })
+            }
+          } else {
+            this.setState({
+              dragging: true,
+              dragStart: idx,
+              startDate: day.date,
+              dragEnd: null,
+              endDate: null
+            })
+          }
+        },
+        onMouseOver: () => this.setState({ dragOver: idx })
       }
     }
 
-    return target && target.hasAttribute('cellindex')
-      ? parseInt(target.getAttribute('cellindex'))
-      : null
+    return (
+      <div
+        key={idx}
+        className={`day ${this.getClass(idx, lastDay, day)}`}
+        {...interactions}
+      >
+        <div>{date.date()}</div>
+        <div>{content}</div>
+      </div>
+    )
   }
 
   getClass(idx, lastDay, day) {
-    if (!day) {
-      return `empty ${idx < 7 ? 'first-row' : 'last-row'}`
-    }
-
-    if (
-      dayjs(day.date)
-        .add(1, 'day')
-        .isBefore(dayjs())
-    ) {
-      return `day in-past${idx % 7 === 6 ? ' end-row' : ''}`
-    }
-
     const initStart = this.state.dragStart,
       initEnd = this.state.dragging ? this.state.dragOver : this.state.dragEnd,
       start = initStart < initEnd ? initStart : initEnd,
@@ -291,91 +207,11 @@ class Calendar extends Component {
       cls += ' unavailable'
     }
 
-    return `day ${cls}`
-  }
-
-  isMobile() {
-    return this.props.ismobile === 'true'
+    return cls
   }
 }
 
-class DaySlot extends React.Component {
-  render() {
-    const {
-      day,
-      showBooked,
-      currency,
-      originalCurrency,
-      className,
-      cellIndex,
-      hidePrice
-    } = this.props
-
-    if (!day) {
-      return <div className={className} cellindex={cellIndex} />
-    }
-
-    const date = dayjs(day.date)
-
-    if (date.add(1, 'day').isBefore(dayjs())) {
-      return (
-        <div className={className} cellindex={cellIndex}>
-          <div>{date.date()}</div>
-        </div>
-      )
-    }
-
-    let content
-
-    if (!hidePrice) {
-      content = (
-        <Price
-          price={{ amount: day.price, currency }}
-          target={originalCurrency ? currency : null}
-        />
-      )
-    }
-
-    if (day.booked && showBooked) {
-      content = 'Booked'
-    } else if (day.unavailable) {
-      content = 'Unavailable'
-    } else if (!hidePrice && day.customPrice) {
-      content = <span style={{ color: 'green' }}>{content}</span>
-    }
-
-    return (
-      <div
-        className={className}
-        onMouseDown={this.onMouseDown}
-        onMouseMove={this.onMouseMove}
-        onTouchStart={this.onMouseDown}
-        onTouchMove={this.onMouseMove}
-        cellindex={cellIndex}
-      >
-        <div>{date.date()}</div>
-        <div>{content}</div>
-      </div>
-    )
-  }
-
-  onMouseDown = e => {
-    if (this.props.interactive !== true) {
-      return
-    }
-
-    this.props.onSelectStart(e)
-  }
-
-  onMouseMove = e => {
-    if (this.props.interactive !== true) {
-      return
-    }
-    this.props.onSelectMove(e)
-  }
-}
-
-export default withIsMobile(Calendar)
+export default Calendar
 
 require('react-styl')(`
   .calendar
@@ -399,7 +235,6 @@ require('react-styl')(`
         flex-direction: column
         justify-content: space-between
         min-width: 0
-        cursor: pointer
 
         border-style: solid
         border-color: #c2cbd3
@@ -432,8 +267,10 @@ require('react-styl')(`
         &.active.unselected:hover
           &::after
             border: 3px solid black
-        &.start,&.mid,&.end
+        &.mid
           background-color: var(--pale-clear-blue)
+        &.start,&.end
+          background-color: #d6ecf5
         &.start::after
           border-width: 3px 0 3px 3px
           border-color: black
