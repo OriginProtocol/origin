@@ -1,5 +1,5 @@
 // NOTE: We should consider merging all currency information, as there is
-// duplicate data in graphql/utils/currencies.js
+// duplicate data in graphql/utils/currencies.js and mobile/src/constants.js
 
 export const Currencies = [
   ['fiat-USD', 'USD', '$'],

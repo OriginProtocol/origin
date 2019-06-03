@@ -4,22 +4,15 @@ import keyMirror from 'utils/keyMirror'
 
 export const ActivationConstants = keyMirror(
   {
-    SET_BACKUP_WARNING_STATUS: null,
-    SET_CAROUSEL_STATUS: null
+    SET_BACKUP_WARNING_STATUS: null
   },
   'App'
 )
 
-export function setBackupWarningStatus(dismissed) {
+export function setBackupWarningStatus(address) {
   return {
     type: ActivationConstants.SET_BACKUP_WARNING_STATUS,
-    dismissed
-  }
-}
-
-export function setCarouselStatus(completed) {
-  return {
-    type: ActivationConstants.SET_CAROUSEL_STATUS,
-    completed
+    address,
+    date: new Date()
   }
 }

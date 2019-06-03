@@ -1,3 +1,5 @@
+const { messageTemplates } = require('../templates/messageTemplates')
+
 const apn = require('apn')
 const firebase = require('firebase-admin')
 const web3Utils = require('web3-utils')
@@ -5,6 +7,12 @@ const web3Utils = require('web3-utils')
 const { getNotificationMessage } = require('./notification')
 const logger = require('./logger')
 const MobileRegistry = require('./models').MobileRegistry
+
+const {
+  getMessageFingerprint,
+  isNotificationDupe,
+  logNotificationSent
+} = require('./dupeTools')
 
 // Configure the APN provider
 let apnProvider, apnBundle
@@ -47,21 +55,78 @@ if (process.env.FIREBASE_SERVICE_JSON) {
 }
 
 //
+// Mobile Push notifications for Messages
+//
+async function messageMobilePush(receivers, sender, messageHash, config) {
+  if (!receivers) throw new Error('receivers not defined')
+  if (!sender) throw new Error('sender not defined')
+
+  // Force lowercase
+  sender = sender.toLowerCase()
+  receivers = receivers.map(function(r) {
+    return r.toLowerCase()
+  })
+
+  const payload = {
+    url: `${config.dappUrl}/#/messages`
+  }
+
+  receivers.forEach(async receiver => {
+    try {
+      // TODO: Turn mobile messages into templates
+      const message = messageTemplates.message['mobile']['messageReceived']
+      const ethAddress = receiver
+      const notificationObj = {
+        message,
+        payload
+      }
+
+      // Push the message
+      const mobileRegister = await MobileRegistry.findOne({
+        where: { ethAddress, deleted: false, 'permissions.alert': true }
+      })
+      if (mobileRegister) {
+        logger.info(`Pushing message notification to ${ethAddress}`)
+        await sendNotification(
+          mobileRegister.deviceToken,
+          mobileRegister.deviceType,
+          notificationObj,
+          ethAddress,
+          messageHash,
+          config
+        )
+      } else {
+        logger.info(
+          `Message: No device registered for notifications for ${ethAddress}`
+        )
+      }
+    } catch (error) {
+      logger.error(`Could not send push notification: ${error}`)
+    }
+  })
+}
+
 //
 // Mobile Push notifications
 //
-async function mobilePush(
+async function transactionMobilePush(
   eventName,
   party,
   buyerAddress,
   sellerAddress,
-  offer
+  offer,
+  config
 ) {
-  if (!eventName) throw 'eventName not defined'
-  if (!party) throw 'party not defined'
-  if (!buyerAddress) throw 'buyerAddress not defined'
-  if (!sellerAddress) throw 'sellerAddress not defined'
-  if (!offer) throw 'offer not defined'
+  if (!eventName) throw new Error('eventName not defined')
+  if (!party) throw new Error('party not defined')
+  if (!buyerAddress) throw new Error('buyerAddress not defined')
+  if (!sellerAddress) throw new Error('sellerAddress not defined')
+  if (!offer) throw new Error('offer not defined')
+
+  // Force lowercase
+  buyerAddress = buyerAddress.toLowerCase()
+  sellerAddress = sellerAddress.toLowerCase()
+  party = party.toLowerCase()
 
   const receivers = {}
   const buyerMessage = getNotificationMessage(
@@ -78,10 +143,8 @@ async function mobilePush(
     'seller',
     'mobile'
   )
-  const dappOfferUrl =
-    process.env.DAPP_OFFER_URL || 'https://dapp.originprotocol.com/#/purchases/'
   const payload = {
-    url: offer && `${dappOfferUrl}${offer.id}`
+    url: offer && `${config.dappUrl}/#/purchases/${offer.id}`
   }
 
   if (buyerMessage || sellerMessage) {
@@ -104,14 +167,19 @@ async function mobilePush(
         where: { ethAddress, deleted: false, 'permissions.alert': true }
       })
       if (mobileRegister) {
-        logger.info(`Sending notification to ${ethAddress}`)
+        logger.info(`Pushing transaction notification to ${ethAddress}`)
         await sendNotification(
           mobileRegister.deviceToken,
           mobileRegister.deviceType,
-          notificationObj
+          notificationObj,
+          ethAddress,
+          null,
+          config
         )
       } else {
-        logger.info(`No device registered for notifications for ${ethAddress}`)
+        logger.info(
+          `Transaction: No device registered for notifications for ${ethAddress}`
+        )
       }
     }
   }
@@ -120,13 +188,28 @@ async function mobilePush(
 /* Send the notification depending on the type of notification (FCM or APN)
  *
  */
-async function sendNotification(deviceToken, deviceType, notificationObj) {
+async function sendNotification(
+  deviceToken,
+  deviceType,
+  notificationObj,
+  ethAddress,
+  messageHash,
+  config
+) {
   if (notificationObj) {
+    const notificationObjAndHash = { ...notificationObj, messageHash }
+    const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
     if (deviceType === 'APN') {
       if (!apnProvider) {
         logger.error('APN provider not configured, notification failed')
         return
       }
+
+      if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
+        logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
+        return
+      }
+
       // iOS notifications
       const notification = new apn.Notification({
         alert: notificationObj.message,
@@ -134,8 +217,13 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
         payload: notificationObj.payload,
         topic: apnBundle
       })
-      await apnProvider.send(notification, deviceToken).then(result => {
+      await apnProvider.send(notification, deviceToken).then(async result => {
         if (result.sent.length) {
+          await logNotificationSent(
+            messageFingerprint,
+            ethAddress,
+            'mobile-ios'
+          )
           logger.debug('APN sent: ', result.sent.length)
         }
         if (result.failed) {
@@ -165,7 +253,12 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
 
       await firebaseMessaging
         .send(message)
-        .then(response => {
+        .then(async response => {
+          await logNotificationSent(
+            messageFingerprint,
+            ethAddress,
+            'mobile-android'
+          )
           logger.debug('FCM message sent:', response)
         })
         .catch(error => {
@@ -175,4 +268,4 @@ async function sendNotification(deviceToken, deviceType, notificationObj) {
   }
 }
 
-module.exports = { mobilePush }
+module.exports = { transactionMobilePush, messageMobilePush }

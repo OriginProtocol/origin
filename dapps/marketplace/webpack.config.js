@@ -120,7 +120,10 @@ const config = {
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
       ORIGIN_LINKING: null,
-      ENABLE_GOOGLE_ATTESTATION: false
+      ENABLE_GOOGLE_ATTESTATION: false,
+      ENABLE_WEBSITE_ATTESTATION: false,
+      SENTRY_DSN: null,
+      NAMESPACE: 'dev'
     })
   ],
 

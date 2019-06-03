@@ -1,21 +1,9 @@
 import assert from 'assert'
-import fs from 'fs'
-import solc from 'solc'
 import linker from 'solc/linker'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
 
-const solcOpts = {
-  language: 'Solidity',
-  settings: {
-    metadata: { useLiteralContent: true },
-    outputSelection: {
-      '*': {
-        '*': ['abi', 'evm.bytecode.object']
-      }
-    }
-  }
-}
+import compile from './_compile'
 
 const solidityCoverage = process.env['SOLIDITY_COVERAGE'] !== undefined
 // Use solidity-coverage's forked testrpc if this is a coverage run
@@ -33,23 +21,6 @@ export async function web3Helper(provider = defaultProvider) {
   return { web3, server: instance }
 }
 
-function findImportsPath(prefix) {
-  return function findImports(path) {
-    try {
-      if (path.indexOf('node_modules') < 0) {
-        path = prefix + path
-      }
-      const contents = fs.readFileSync(path).toString()
-      return {
-        contents
-      }
-    } catch (e) {
-      console.log(`File not found: ${path}`)
-      return { error: 'File not found' }
-    }
-  }
-}
-
 export default async function testHelper(contracts, provider) {
   const { web3, server } = await web3Helper(provider)
   const accounts = await web3.eth.getAccounts()
@@ -58,42 +29,19 @@ export default async function testHelper(contracts, provider) {
     contractName,
     { from, args, log, path, trackGas, file }
   ) {
-    file = file || `${contractName}.sol`
-    const sources = {
-      [file]: {
-        content: fs.readFileSync(`${path || contracts}/${file}`).toString()
-      }
-    }
-    const compileOpts = JSON.stringify({ ...solcOpts, sources })
-
-    // Compile the contract using solc
-    const rawOutput = solc.compileStandardWrapper(
-      compileOpts,
-      findImportsPath(path) //contracts)
-    )
-    const output = JSON.parse(rawOutput)
-
-    // If there were any compilation errors, throw them
-    if (output.errors) {
-      output.errors.forEach(err => {
-        if (!err.formattedMessage.match(/Warning:/)) {
-          throw new SyntaxError(err.formattedMessage)
-        }
-      })
-    }
-
-    const {
-      abi,
-      evm: { bytecode }
-    } = output.contracts[file][contractName]
+    const { abi, bytecode, output } = await compile({
+      contractName,
+      path,
+      file,
+      contracts
+    })
 
     async function deployLib(linkedFile, linkedLib, bytecode) {
       const libObj = output.contracts[linkedFile][linkedLib]
+      const linkReferences = libObj.evm.bytecode.linkReferences
 
-      for (const linkedFile2 in libObj.evm.bytecode.linkReferences) {
-        for (const linkedLib2 in libObj.evm.bytecode.linkReferences[
-          linkedFile2
-        ]) {
+      for (const linkedFile2 in linkReferences) {
+        for (const linkedLib2 in linkReferences[linkedFile2]) {
           libObj.evm.bytecode.object = await deployLib(
             linkedFile2,
             linkedLib2,
@@ -119,24 +67,8 @@ export default async function testHelper(contracts, provider) {
     }
 
     if (!bytecode.object) {
-      throw new Error(
-        'No Bytecode. Do the method signatures match the interface?'
-      )
-    }
-
-    if (process.env.BUILD) {
-      fs.writeFileSync(
-        __dirname + '/../src/contracts/' + contractName + '.js',
-        'module.exports = ' +
-          JSON.stringify(
-            {
-              abi,
-              data: bytecode.object
-            },
-            null,
-            4
-          )
-      )
+      const err = 'No Bytecode. Do the method signatures match the interface?'
+      throw new Error(err)
     }
 
     // Instantiate the web3 contract using the abi and bytecode output from solc
@@ -190,6 +122,7 @@ export default async function testHelper(contracts, provider) {
       // Set some default options on the contract
       contract.options.gas = solidityCoverage ? 1500000 * 5 : 1500000
       contract.options.from = from
+      contract.options.bytecode = '0x' + bytecode.object
     }
 
     return contract
@@ -269,10 +202,14 @@ export async function assertRevert(promise, expectedErrorMsg = '') {
   try {
     await promise
   } catch (error) {
-    const revertFound = error.message.search('revert') >= 0 && error.message.search(expectedErrorMsg) >= 0
+    const revertFound =
+      error.message.search('revert') >= 0 &&
+      error.message.search(expectedErrorMsg) >= 0
     assert(
       revertFound,
-      `Expected "revert" ${expectedErrorMsg ? `with error message: ${expectedErrorMsg}`: ''}, got ${error} instead`
+      `Expected "revert" ${
+        expectedErrorMsg ? `with error message: ${expectedErrorMsg}` : ''
+      }, got ${error} instead`
     )
     return
   }

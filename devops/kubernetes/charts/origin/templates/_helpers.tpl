@@ -183,3 +183,28 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s.originprotocol.com" $prefix -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "relayer.fullname" -}}
+{{- printf "%s-%s" .Release.Name "relayer" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "relayer.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "relayer.originprotocol.com" }}
+{{- else -}}
+{{- printf "relayer.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "graphql.fullname" -}}
+{{- printf "%s-%s" .Release.Name "graphql" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "graphql.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "graphql.originprotocol.com" }}
+{{- else -}}
+{{- printf "graphql.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+

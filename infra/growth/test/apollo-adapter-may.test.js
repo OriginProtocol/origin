@@ -6,7 +6,7 @@ const { CampaignRules } = require('../src/resources/rules')
 const { ApolloAdapter, campaignToApolloObject } = require('../src/apollo/adapter')
 const enums = require('../src/enums')
 const db = require('../src/models')
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
@@ -91,6 +91,7 @@ describe('Apollo adapter - May campaign', () => {
     this.userA = '0xA123'
     this.userB = '0xB456'
     this.userC = '0xC789'
+    this.notEnrolledUser = null
 
     // User A is referrer for user B and C.
     await createReferral(this.userA, this.userB)
@@ -124,77 +125,87 @@ describe('Apollo adapter - May campaign', () => {
         type: 'Phone',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       AirbnbAttestation: {
         type: 'Airbnb',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       FacebookAttestation: {
         type: 'Facebook',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       TwitterAttestation: {
         type: 'Twitter',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       GoogleAttestation: {
         type: 'Google',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       Referral: {
         type: 'Referral',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(50), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
       },
       ListingPurchaseTShirt: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       ListingPurchaseGC: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(40), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(40), currency: 'OGN' }
       },
       ListingPurchaseCharity: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(300), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(300), currency: 'OGN' }
       },
       ListingPurchaseHousing: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(750), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(750), currency: 'OGN' }
       },
       ListingPurchaseInfluencer: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(1250), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(1250), currency: 'OGN' }
       },
       ListingPurchaseArt: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenNaturalUnits(20000), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(20000), currency: 'OGN' }
       },
     }
-  })
 
+    this.expectedNonSignedInState = {}
+
+    Object.entries(this.expectedState).forEach(([key, value]) => {
+      if (value.status) {
+        this.expectedNonSignedInState[key] = { ...value, status: null }
+      } else {
+        this.expectedNonSignedInState[key] = { ...value }
+      }
+    })
+
+  })
 
   it(`Adapter at level 0`, async () => {
     const state = await campaignToApolloObject(
@@ -203,8 +214,19 @@ describe('Apollo adapter - May campaign', () => {
       this.userA,
       this.mockAdapter
     )
-
+    
     checkExpectedState(state, this.expectedState)
+  })
+
+  it(`Adapter when user not logged in`, async () => {
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.notEnrolledUser,
+      this.mockAdapter
+    )
+
+    checkExpectedState(state, this.expectedNonSignedInState)
   })
 
   it(`Adapter completed level 0`, async () => {

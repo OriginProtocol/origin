@@ -4,6 +4,11 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withTokenBalance from 'hoc/withTokenBalance'
+import withGrowthRewards from 'hoc/withGrowthRewards'
+
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
@@ -120,52 +125,102 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isGiftCard = listing.__typename === 'GiftCardListing'
-    const isOwnerViewing = listing.seller.id === this.props.from
+    const isOwnerViewing = listing.seller.id === this.props.walletProxy
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
     return (
       <>
         <Gallery pics={listing.media} />
-        <div className="description">{listing.description}</div>
 
+        {isGiftCard || isFractional || isFractionalHourly ? null : (
+          <div className="description">{listing.description}</div>
+        )}
         {!isGiftCard ? null : (
           <>
-            <hr />
-            <div>
-              <fbt desc="create.details.retailer">Retailer</fbt>:{' '}
-              {listing.retailer}
+            <div className="row">
+              <div className="card-details col-sm-6">
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.retailer">Retailer</fbt>
+                  </span>
+                  <span>{listing.retailer}</span>
+                </div>
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.cardAmount">Amount on Card</fbt>
+                  </span>
+                  <span>
+                    {CurrenciesByCountryCode[listing.issuingCountry][2]}
+                    {listing.cardAmount}
+                  </span>
+                </div>
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.issuingCountry">
+                      Issuing Country
+                    </fbt>
+                  </span>
+                  <span>
+                    <img
+                      className="country-flag-img"
+                      src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
+                    />
+                    {countryCodeMapping['en'][listing.issuingCountry]}
+                  </span>
+                </div>
+              </div>
+              <div className="card-details col-sm-6">
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.giftcard.isDigital">
+                      Card type
+                    </fbt>
+                  </span>
+                  <span>
+                    {listing.isDigital ? (
+                      <fbt desc="digital">Digital</fbt>
+                    ) : (
+                      <fbt desc="physical">Physical</fbt>
+                    )}
+                  </span>
+                </div>
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.giftcard.isCashPurchase">
+                      Was this a cash purchase?
+                    </fbt>
+                  </span>
+                  <span>
+                    {listing.isCashPurchase ? (
+                      <fbt desc="yes">Yes</fbt>
+                    ) : (
+                      <fbt desc="no">No</fbt>
+                    )}
+                  </span>
+                </div>
+                <div className="field-row">
+                  <span>
+                    <fbt desc="create.details.giftcard.receiptAvailable">
+                      Is a receipt available?
+                    </fbt>
+                  </span>
+                  <span>
+                    {listing.receiptAvailable ? (
+                      <fbt desc="yes">Yes</fbt>
+                    ) : (
+                      <fbt desc="no">No</fbt>
+                    )}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <fbt desc="create.details.cardAmount">Amount on Card</fbt>:
-              {CurrenciesByCountryCode[listing.issuingCountry][2]}
-              {listing.cardAmount}
-            </div>
-            <div>
-              <fbt desc="create.details.issuingCountry">Issuing Country</fbt>:{' '}
-              {countryCodeMapping['en'][listing.issuingCountry]}
-            </div>
-            <div>
-              <fbt desc="create.details.giftcard.isDigital">
-                Is this card digital?
-              </fbt>
-              {listing.isDigital ? 'Yes' : 'No'}
-            </div>
-            <div>
-              <fbt desc="create.details.giftcard.isCashPurchase">
-                Was this a cash purchase?
-              </fbt>
-              {listing.isCashPurchase ? 'Yes' : 'No'}
-            </div>
-            <div>
-              <fbt desc="create.details.giftcard.receiptAvailable">
-                Is a receipt available?
-              </fbt>
-              {listing.receiptAvailable ? 'Yes' : 'No'}
-            </div>
+            <div className="description">{listing.description}</div>
           </>
         )}
         {!isFractional ? null : (
           <>
+            <div className="description">{listing.description}</div>
+
             <hr />
             <Calendar
               interactive={!isOwnerViewing}
@@ -183,6 +238,8 @@ class ListingDetail extends Component {
         )}
         {!isFractionalHourly ? null : (
           <>
+            <div className="description">{listing.description}</div>
+
             <hr />
             <div className="timeZone">
               <div>
@@ -222,10 +279,17 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.from
+      b => b.id === this.props.walletProxy
     )
 
-    if (listing.seller.id === this.props.from) {
+    const growthReward = this.props.ognListingRewards[listing.id]
+
+    const props = { ...this.props }
+    if (growthReward) {
+      props.growthReward = growthReward
+    }
+
+    if (listing.seller.id === this.props.walletProxy) {
       return (
         <EditOnly
           {...this.props}
@@ -243,7 +307,7 @@ class ListingDetail extends Component {
     } else if (isPendingBuyer && listing.multiUnit) {
       return (
         <>
-          <MultiUnit {...this.props} />
+          <MultiUnit {...props} />
           <OfferMade />
         </>
       )
@@ -254,7 +318,7 @@ class ListingDetail extends Component {
     } else if (isFractional) {
       return (
         <Fractional
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availability}
         />
@@ -262,19 +326,26 @@ class ListingDetail extends Component {
     } else if (isFractionalHourly) {
       return (
         <FractionalHourly
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availabilityHourly}
         />
       )
     } else if (listing.multiUnit) {
-      return <MultiUnit {...this.props} isPendingBuyer={isPendingBuyer} />
+      return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
     }
-    return <SingleUnit {...this.props} />
+    return <SingleUnit {...props} />
   }
 }
 
-export default ListingDetail
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withGrowthRewards(ListingDetail))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listing detail in case growth can not be reached
+  }
+)
 
 require('react-styl')(`
   .listing-detail
@@ -324,6 +395,19 @@ require('react-styl')(`
     .availability-help
       font-size: 14px
       margin-bottom: 1rem
+
+    .field-row
+      display: flex
+      justify-content: space-between
+      font-weight: normal
+      margin-bottom: 1rem
+      > span:nth-child(2)
+        font-weight: bold
+        text-align: right
+    .country-flag-img
+      width: 2rem
+      height: 2rem
+      margin-right: .5rem;
 
     .listing-buy
       padding: 1.5rem

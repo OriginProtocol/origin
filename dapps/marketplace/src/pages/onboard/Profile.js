@@ -56,13 +56,14 @@ class OnboardProfile extends Component {
           'firstName',
           'lastName',
           'description',
-          'avatar',
+          'avatarUrl',
           'facebookVerified',
           'twitterVerified',
           'airbnbVerified',
           'phoneVerified',
           'emailVerified',
-          'googleVerified'
+          'googleVerified',
+          'websiteVerified'
         ])
       )
     }
@@ -106,15 +107,15 @@ class OnboardProfile extends Component {
                     <div className="col-md-4">
                       <div className="avatar-wrap">
                         <ImageCropper
-                          onChange={async avatar => {
+                          onChange={async avatarBase64 => {
                             const { ipfsRPC } = this.props.config
                             const uploadedImages = await uploadImages(ipfsRPC, [
-                              avatar
+                              avatarBase64
                             ])
                             const avatarImg = uploadedImages[0]
                             if (avatarImg) {
                               const avatarUrl = avatarImg.url
-                              this.setState({ avatar, avatarUrl })
+                              this.setState({ avatarUrl })
                             }
                           }}
                         >
@@ -197,7 +198,6 @@ class OnboardProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar',
                     'avatarUrl'
                   ])}
                   attestations={attestations}
@@ -416,6 +416,9 @@ require('react-styl')(`
         background-image: url(images/identity/google-icon.svg)
         background-size: 1.1rem
         margin-left: 0.1rem
+      &.website > i::before
+        background-image: url(images/identity/website-icon-light.svg)
+        background-size: 1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)

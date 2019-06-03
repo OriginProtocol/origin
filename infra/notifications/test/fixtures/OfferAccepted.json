@@ -36,7 +36,7 @@
   "related": {
     "offer": {
       "listing": {
-        "id": "4-000-522-4181140",
+        "id": "1-000-522-4181140",
         "valid": true,
         "validationError": null,
         "status": "pending",
@@ -139,8 +139,8 @@
         "multiUnit": false,
         "__typename": "UnitListing"
       },
-      "id": "4-000-522-2",
-      "listingId": "4-000-522",
+      "id": "1-000-522-2",
+      "listingId": "1-000-522",
       "offerId": "2",
       "value": "257500000000000000",
       "currency": "0x2448eE2641d78CC42D7AD76498917359D961A783",
@@ -174,7 +174,7 @@
       "__typename": "Offer"
     },
     "listing": {
-      "id": "4-000-522-4181140",
+      "id": "1-000-522-4181140",
       "valid": true,
       "validationError": null,
       "status": "pending",

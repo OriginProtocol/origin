@@ -37,6 +37,13 @@ export const waitForText = async (page, text, path) => {
   return xpath
 }
 
+export const hasText = async (page, text, path) => {
+  const escapedText = escapeXpathString(text)
+  const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
+  const result = await page.$x(xpath)
+  return result ? true : false
+}
+
 export const clickByText = async (page, text, path) => {
   const xpath = await waitForText(page, text, path)
 
@@ -63,6 +70,7 @@ export const changeAccount = async (page, account) => {
   await page.evaluate(account => {
     window.localStorage.useWeb3Wallet = account
   }, account)
+  await new Promise(resolve => setTimeout(resolve, 500))
 }
 
 export const createAccount = async page => {

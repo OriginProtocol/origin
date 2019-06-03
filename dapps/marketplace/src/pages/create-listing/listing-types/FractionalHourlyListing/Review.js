@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
 import withTokenBalance from 'hoc/withTokenBalance'
+import withWallet from 'hoc/withWallet'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
@@ -160,7 +161,7 @@ class Review extends Component {
   }
 }
 
-export default withTokenBalance(Review)
+export default withWallet(withTokenBalance(Review))
 
 require('react-styl')(`
   .create-listing .create-listing-review

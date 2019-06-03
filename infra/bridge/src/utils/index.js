@@ -1,6 +1,7 @@
 'use strict'
 
 const Web3 = require('web3')
+const eth = require('web3-eth')
 const dictionary = require('./dictionary')
 
 function generateAirbnbCode(ethAddress, userId) {
@@ -10,22 +11,43 @@ function generateAirbnbCode(ethAddress, userId) {
     .join(' ')
 }
 
+function generateSignature(privateKey, message) {
+  if (!Web3.utils.isHexStrict(privateKey)) {
+    throw new Error('Invalid private key, not a hex string')
+  }
+
+  const signedMessage = new eth().accounts.sign(message, privateKey)
+  return signedMessage.signature
+}
+
 function generateSixDigitCode() {
   return Math.floor(100000 + Math.random() * 900000)
+}
+
+function generateWebsiteCode(ethAddress, host) {
+  const data = Web3.utils.sha3(`${ethAddress}--${host}`)
+  const sign = generateSignature(process.env.ATTESTATION_SIGNING_KEY, data)
+
+  // trim '0x' prefix
+  return sign.slice(2)
 }
 
 function getAbsoluteUrl(relativeUrl, state) {
   const protocol = process.env.HTTPS ? 'https' : 'http'
   const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
-  let url = `${protocol}://${host}${relativeUrl}`
+  const url = new URL(`${protocol}://${host}${relativeUrl}`)
+
   if (state) {
-    url += '?state=' + state
+    url.searchParams.append('state', state)
   }
-  return url
+
+  return url.toString()
 }
 
 module.exports = {
   generateAirbnbCode,
+  generateSignature,
   generateSixDigitCode,
+  generateWebsiteCode,
   getAbsoluteUrl
 }

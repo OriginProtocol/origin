@@ -1,4 +1,4 @@
-const tokenNaturalUnits = require('../src/util/token')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 const aprilConfig = {
@@ -60,7 +60,7 @@ const aprilConfig = {
           config: {
             eventType: 'PhoneAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -75,7 +75,7 @@ const aprilConfig = {
           config: {
             eventType: 'FacebookAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -90,7 +90,7 @@ const aprilConfig = {
           config: {
             eventType: 'AirbnbAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -105,7 +105,7 @@ const aprilConfig = {
           config: {
             eventType: 'TwitterAttestationPublished',
             reward: {
-              amount: tokenNaturalUnits(25),
+              amount: tokenToNaturalUnits(25),
               currency: 'OGN'
             },
             visible: true,
@@ -147,7 +147,7 @@ const aprilConfig = {
           config: {
             levelRequired: 2,
             reward: {
-              amount: tokenNaturalUnits(50),
+              amount: tokenToNaturalUnits(50),
               currency: 'OGN'
             },
             limit: 25,
@@ -162,7 +162,7 @@ const aprilConfig = {
           config: {
             eventType: 'ListingSold',
             reward: {
-              amount: tokenNaturalUnits(100),
+              amount: tokenToNaturalUnits(100),
               currency: 'OGN'
             },
             visible: true,
@@ -177,7 +177,7 @@ const aprilConfig = {
           config: {
             eventType: 'ListingPurchased',
             reward: {
-              amount: tokenNaturalUnits(100),
+              amount: tokenToNaturalUnits(100),
               currency: 'OGN'
             },
             visible: true,

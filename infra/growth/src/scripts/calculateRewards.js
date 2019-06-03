@@ -1,4 +1,4 @@
-// Tool for calculating Growth Engine rewards earned y users. Steps are as follow:
+// Tool for calculating Growth Engine rewards earned by users. Steps are as follow:
 //  - Look for a finished campaign for which calculation hasn't happened yet.
 //  - Gather list of accounts that had events during the campaign window.
 //  - For each account, calculate rewards and insert rows in growth_reward with status 'Pending'.
@@ -13,7 +13,6 @@ const Token = require('@origin/token/src/token')
 const enums = require('../enums')
 const db = require('../models')
 const { CampaignRules } = require('../resources/rules')
-const { SdnMatcher } = require('../util/sdnMatcher')
 const parseArgv = require('../util/args')
 
 // We allow a campaign to go a bit over budget since the capUsed field
@@ -29,53 +28,31 @@ class CalculateRewards {
     this.token = token
     this.stats = {
       numCampaigns: 0,
+      numAccountsPayout: 0,
       calcGrandTotal: BigNumber(0)
     }
-    this.sdnMatcher = new SdnMatcher()
-  }
-
-  async _getParticipants(campaign) {
-    // Get list of growth engine program participants that signed up
-    // before campaign ended and that are in active status.
-    const participants = await db.GrowthParticipant.findAll({
-      where: {
-        status: enums.GrowthParticipantStatuses.Active,
-        createdAt: { [Sequelize.Op.lt]: campaign.endDate }
-      }
-    })
-    return participants
   }
 
   /**
-   * Returns true if the identity associated with the ethAddress tests positive
-   * against the SDN blacklist.
+   *  Returns list of growth engine program participants that are potentially
+   *  eligible for a payout during the campaign. Conditions:
+   *  - signed up before campaign ended
+   *  - in active status
+   *  - not an employee
    *
-   * @param ethAddress
-   * @returns {Promise<boolean>}
+   * @param {models.GrowthCampgign} campaign
+   * @returns {Promise<Array<Object>>}
    * @private
    */
-  async _matchBlackList(ethAddress) {
-    const identity = db.Identity.findOne({ where: { ethAddress } })
-    if (!identity) {
-      return false
-    }
-    const match = this.sdnMatcher.match(identity.firstName, identity.lastName)
-    if (match) {
-      logger.info(
-        `${ethAddress} checked positive against SDN blacklist for name ${
-          identity.firstName
-        } ${identity.lastName}.`
-      )
-    }
-    return match
-  }
-
-  // TODO: Consider flagging the user in the identity table.
-  async _banParticipant(participant, reason) {
-    await participant.update({
-      status: enums.GrowthParticipantStatus.Banned,
-      data: Object.assign({}, participant.data, { banReason: reason })
+  async _getPayableParticipants(campaign) {
+    const participants = await db.GrowthParticipant.findAll({
+      where: {
+        status: enums.GrowthParticipantStatuses.Active,
+        createdAt: { [Sequelize.Op.lt]: campaign.endDate },
+        employee: { [Sequelize.Op.ne]: true }
+      }
     })
+    return participants
   }
 
   async _checkForExistingReward(ethAddress, campaignId) {
@@ -93,7 +70,6 @@ class CalculateRewards {
     try {
       for (const reward of rewards) {
         const data = {
-          status: enums.GrowthRewardStatuses.Pending,
           ethAddress,
           campaignId: reward.campaignId,
           levelId: reward.levelId,
@@ -151,9 +127,10 @@ class CalculateRewards {
           }.`
         )
       }
+      this.stats.numCampaigns++
 
       let campaignTotal = BigNumber(0)
-      const participants = await this._getParticipants(campaign)
+      const participants = await this._getPayableParticipants(campaign)
       for (const participant of participants) {
         const ethAddress = participant.ethAddress
         logger.info(`Calculating reward for account ${ethAddress}`)
@@ -167,36 +144,33 @@ class CalculateRewards {
           continue
         }
 
-        // Check the user's name against the black list.
-        if (await this._matchBlackList(ethAddress)) {
-          await this._banParticipant(ethAddress, 'SDN Blacklist match')
-          logger.info(`Banned participant ${ethAddress} - Skipping.`)
-          continue
-        }
-
         // Calculate rewards for this user.
         // Note that we set the onlyVerifiedEvents param of getRewards to true.
         const rewards = await rules.getRewards(ethAddress, true)
         if (!rewards.length) {
+          // User did not earn any reward.
           continue
         }
 
         // Insert rewards in the growth_reward table.
-        const total = rewards
-          .map(reward => reward.value.amount)
-          .reduce((v1, v2) => BigNumber(v1).plus(v2))
         await this._insertRewards(ethAddress, campaign, rewards)
 
         // Log and update stats.
-        logger.info(`Participant ${ethAddress} - Calculation result:`)
-        logger.info('  Num reward:      ', rewards.length)
-        logger.info('  Total (natural): ', total.toFixed())
-        logger.info('  Total (token):   ', this.token.toTokenUnit(total))
+        this.stats.numAccountsPayout++
+        const total = rewards
+          .map(reward => BigNumber(reward.value.amount))
+          .reduce((v1, v2) => v1.plus(v2))
+        logger.debug(`Participant ${ethAddress} - Calculation result:`)
+        logger.debug('  Num reward:      ', rewards.length)
+        logger.debug('  Total (natural): ', total.toFixed())
+        logger.debug('  Total (token):   ', this.token.toTokenUnit(total))
         campaignTotal = campaignTotal.plus(total)
       }
 
       // Done calculating rewards for this campaign.
-      logger.info(`Campaign calculation done. Total reward of ${campaignTotal}`)
+      logger.info(
+        `Campaign calculation done. Total reward of ${campaignTotal.toFixed()}`
+      )
 
       // Some sanity checks before we record the rewards.
       const maxCap = BigNumber(campaign.cap).times(CampaignMaxOverCapFactor)
@@ -228,7 +202,7 @@ logger.info('Starting rewards calculation job.')
 const args = parseArgv()
 const config = {
   // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] ? args['--persist'] : false
+  persist: args['--persist'] === 'true' || false
 }
 logger.info('Config:')
 logger.info(config)
@@ -239,6 +213,7 @@ const job = new CalculateRewards(config, token)
 job
   .process()
   .then(() => {
+    logger.info('================================')
     logger.info('Rewards calculation stats:')
     logger.info('  Number of campaigns processed:     ', job.stats.numCampaigns)
     logger.info(

@@ -1,5 +1,5 @@
 module.exports = `
-  type Subscription {
+  extend type Subscription {
     newBlock: Block
     newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
@@ -18,7 +18,7 @@ module.exports = `
     node: Transaction!
   }
 
-  type Query {
+  extend type Query {
     web3: Web3
     config: String
     contracts: [Contract]
@@ -31,11 +31,13 @@ module.exports = `
 
   input ConfigInput {
     discovery: String
+    relayer: String
     bridge: String
     ipfsRPC: String
     ipfsGateway: String
     provider: String
     providerWS: String
+    performanceMode: Boolean
   }
 
   type Config {
@@ -48,12 +50,15 @@ module.exports = `
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String
+    originGraphQLVersion: String
     provider: String
     providerWS: String
-    originGraphQLVersion: String
+    proxyAccountsEnabled: Boolean
+    relayer: String
+    performanceMode: Boolean
   }
 
-  type Mutation {
+  extend type Mutation {
     refetch: Boolean
     setNetwork(network: String, customConfig: ConfigInput): Boolean
     toggleMetaMask(enabled: Boolean): Boolean
@@ -96,30 +101,6 @@ module.exports = `
     primaryAccount: Account
   }
 
-  type Account {
-    id: ID!
-    checksumAddress: String
-    balance: Balance
-    role: String
-    name: String
-    token(symbol: String!): TokenHolder
-    identity: Identity
-  }
-
-  type Balance {
-    wei: String
-    eth: String
-    usd: String
-  }
-
-  type TokenHolder {
-    id: ID!
-    account: Account
-    token: Token
-    balance: String
-    allowance(contract: String): String
-  }
-
   type Contract {
     id: ID!
     balance: Balance
@@ -136,114 +117,6 @@ module.exports = `
   type TransferTokenOutput {
     to: TokenHolder
     from: TokenHolder
-  }
-
-  type Transaction {
-    id: ID!
-    status: String
-    blockHash: String
-    blockNumber: Int
-    from: String
-    gas: Int
-    gasPrice: String
-    hash: String
-    input: String
-    nonce: Int
-    to: String
-    value: String
-    pct: Float
-    receipt: TransactionReceipt
-
-    # Timestamp transaction originally submitted
-    submittedAt: Int
-  }
-
-  type TransactionReceipt {
-    id: ID!
-    blockHash: String
-    blockNumber: Int
-    contractAddress: String
-    cumulativeGasUsed: Int
-    gasUsed: Int
-    logs: [Log]
-    events: [Event]
-    logsBloom: String
-    status: Boolean
-    transactionHash: String
-    transactionIndex: Int
-  }
-
-  type Log {
-    id: ID!
-    address: String
-    blockHash: String
-    blockNumber: Int
-    data: String
-    logIndex: Int
-    topics: [String]
-    transactionHash: String
-    transactionIndex: Int
-    type: String
-  }
-
-  type Event {
-    id: ID!
-    address: String
-    blockHash: String
-    blockNumber: Int
-    block: Block
-    event: String
-    logIndex: Int
-    raw: EventRaw
-    returnValues: EventReturnValues
-    returnValuesArr: [EventReturnValuesArr]
-    signature: String
-    transactionHash: String
-    transactionIndex: Int
-    type: String
-    timestamp: Int
-  }
-
-  type EventRaw {
-    data: String
-    topics: [String]
-  }
-
-  type EventReturnValues {
-    listingID: ID
-    offerID: ID
-    party: String!
-    ipfsHash: String!
-    ipfsUrl: String
-  }
-
-  type EventReturnValuesArr {
-    field: String
-    value: String
-  }
-
-  type Block {
-    id: ID!
-    number: Int
-    hash: String
-    parentHash: String
-    mixHash: String
-    nonce: String
-    sha3Uncles: String
-    logsBloom: String
-    transactionsRoot: String
-    stateRoot: String
-    receiptsRoot: String
-    miner: String
-    difficulty: String
-    totalDifficulty: String
-    extraData: String
-    size: Int
-    gasLimit: Int
-    gasUsed: Int
-    timestamp: Int
-    transactions: [String]
-    uncles: [String]
   }
 
   input WalletInput {
