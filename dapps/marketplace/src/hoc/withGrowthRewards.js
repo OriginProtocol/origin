@@ -16,12 +16,17 @@ export default function withGrowthRewards(WrappedComponent) {
 
         activeCampaign.actions.forEach(action => {
           if (action.type === 'ListingIdPurchased') {
-            const normalisedReward = parseInt(
-              web3.utils
-                .toBN(action.reward ? action.reward.amount : 0)
-                .div(decimalDivision)
-                .toString()
-            )
+            let normalisedReward = 0
+            try {
+              normalisedReward = parseInt(
+                web3.utils
+                  .toBN(action.reward ? action.reward.amount : 0)
+                  .div(decimalDivision)
+                  .toString()
+              )
+            } catch (e) {
+              /* Ignore */
+            }
             ognListingRewards[action.listingId] = normalisedReward
           }
         })

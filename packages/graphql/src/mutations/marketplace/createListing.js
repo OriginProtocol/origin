@@ -1,6 +1,7 @@
 import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
 
+import { resetProxyCache } from '../../utils/proxy'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
@@ -95,7 +96,8 @@ async function createListing(_, input) {
     tx,
     from,
     mutation: 'createListing',
-    gas: cost.createListing
+    gas: cost.createListing,
+    onConfirmation: () => resetProxyCache()
   })
 }
 
