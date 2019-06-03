@@ -31,20 +31,37 @@ import {
   clearVerifiedAccounts
 } from 'utils/profileTools'
 
+import Store from 'utils/store'
+
+const store = Store('sessionStorage')
+
 class UserActivation extends Component {
   constructor(props) {
     super(props)
 
-    const state = {
+    let state = {
       stage: 'AddEmail',
-      step: 1
+      step: 1,
+      firstName: '',
+      lastName: ''
     }
 
     const storedAccounts = getVerifiedAccounts({ wallet: this.props.wallet })
     if (storedAccounts && storedAccounts.emailAttestation) {
-      state.stage = 'PublishDetail'
-      state.data = storedAccounts.emailAttestation
-      state.step = 2
+      state = {
+        ...state,
+        stage: 'PublishDetail',
+        data: storedAccounts.emailAttestation,
+        step: 2
+      }
+    }
+
+    const storedUserData = this.getStoredUserData()
+    if (storedUserData) {
+      state = {
+        ...state,
+        ...storedUserData
+      }
     }
 
     this.state = {
@@ -53,8 +70,6 @@ class UserActivation extends Component {
       error: null,
       email: '',
       code: '',
-      firstName: '',
-      lastName: '',
       firstNameError: null
     }
   }
@@ -70,6 +85,13 @@ class UserActivation extends Component {
     } else if (this.state.stage !== prevState.stage) {
       this.onStageChanged()
     }
+
+    this.updateStoredUserData({
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      avatar: this.state.avatar,
+      avatarUrl: this.state.avatarUrl
+    })
   }
 
   render() {
@@ -425,6 +447,7 @@ class UserActivation extends Component {
 
   onDeployComplete = () => {
     clearVerifiedAccounts()
+    this.clearStoredUserData()
     if (this.props.renderMobileVersion) {
       this.setState(
         {
@@ -685,6 +708,21 @@ class UserActivation extends Component {
     if (this.props.onStageChanged) {
       this.props.onStageChanged(this.state.stage)
     }
+  }
+
+  getStoredUserData() {
+    return store.get('user-activation-data')
+  }
+
+  updateStoredUserData(newData) {
+    store.set('user-activation-data', {
+      ...store.get('user-activation-data'),
+      ...newData
+    })
+  }
+
+  clearStoredUserData() {
+    store.set('user-activation-data', undefined)
   }
 }
 
