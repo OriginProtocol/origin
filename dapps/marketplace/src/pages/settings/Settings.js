@@ -10,6 +10,7 @@ import ConfigQuery from 'queries/Config'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
+import Toggle from 'components/Toggle'
 
 const configurableFields = [
   'bridge',
@@ -18,7 +19,8 @@ const configurableFields = [
   'ipfsRPC',
   'provider',
   'providerWS',
-  'performanceMode'
+  'performanceMode',
+  'relayer'
 ]
 
 class Settings extends Component {
@@ -31,6 +33,7 @@ class Settings extends Component {
     }
 
     this.saveConfig = this.saveConfig.bind(this)
+    this.toggleDeveloperMode = this.toggleDeveloperMode.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -41,10 +44,13 @@ class Settings extends Component {
     }
   }
 
-  saveConfig(setNetwork, configUpdate = {}) {
-    const customConfig = {
-      ...pick(this.state, configurableFields),
-      ...configUpdate
+  saveConfig(setNetwork, configUpdate = {}, restoreDefaults = false) {
+    let customConfig = {}
+    if (!restoreDefaults) {
+      customConfig = {
+        ...pick(this.state, configurableFields),
+        ...configUpdate
+      }
     }
     window.localStorage.customConfig = JSON.stringify(customConfig)
     setNetwork({
@@ -73,10 +79,15 @@ class Settings extends Component {
     )
   }
 
+  toggleDeveloperMode(on) {
+    this.setState({
+      developerMode: on
+    })
+  }
+
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const { locale, onLocale, currency, onCurrency } = this.props
-    const notificationsSupported = !!window.Notification
 
     return (
       <Mutation
@@ -94,228 +105,249 @@ class Settings extends Component {
             <DocumentTitle
               pageTitle={<fbt desc="settings.title">Settings</fbt>}
             />
-            <h1>
-              <fbt desc="settings.heading">Settings</fbt>
-            </h1>
             <div className="row">
-              <div className="col-lg-6 col-md-12">
-                <div className="settings-box">
-                  <div className="form-group">
-                    <label htmlFor="language">
-                      <fbt desc="settings.languageLabel">Language</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.language">
-                          Please make a selection from the list below.
-                        </fbt>
-                      </small>
-                    </div>
-                    <LocaleDropdown
-                      locale={locale}
-                      onLocale={onLocale}
-                      className="btn btn-secondary"
-                      dropdown={true}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="language">
-                      <fbt desc="settings.currencyLabel">Currency</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.currency">
-                          Please make a selection from the list below.
-                        </fbt>
-                      </small>
-                    </div>
-                    <CurrencyDropdown
-                      value={currency}
-                      onChange={onCurrency}
-                      className="btn btn-secondary"
-                    />
-                  </div>
-
-                  {notificationsSupported && (
-                    <div className="form-group">
-                      <label htmlFor="notifications">
-                        <fbt desc="settings.notificationsLabel">
-                          Browser Notifications
-                        </fbt>
-                      </label>
-                      {Notification.permission !== 'granted' ? (
-                        <>
-                          <div className="form-text form-text-muted">
-                            <small>
-                              <fbt desc="settings.notificationsHint">
-                                Enable browser notifications below.
-                              </fbt>
-                            </small>
-                          </div>
-                          <button
-                            className="btn btn-success"
-                            onClick={() => this.requestNotificationPermission()}
-                          >
-                            <fbt desc="settings.notificationsButton">
-                              Enable
-                            </fbt>
-                          </button>
-                        </>
-                      ) : (
-                        <div>
-                          <fbt desc="settings.notificationsSuccess">
-                            Browser notifications are enabled.
-                          </fbt>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="form-group">
-                    <label htmlFor="performanceMode">
-                      <fbt desc="settings.performanceMode">
-                        Performance Mode
-                      </fbt>
-                    </label>
-                    {!this.state.performanceMode ? (
-                      <>
+              <div className="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+                <h1>
+                  <fbt desc="settings.heading">Settings</fbt>
+                </h1>
+                <div className="settings-group">
+                  <div className="settings-box">
+                    <div className="form-group row">
+                      <div className="col-sm">
+                        <label htmlFor="language">
+                          <fbt desc="settings.languageLabel">Language</fbt>
+                        </label>
                         <div className="form-text form-text-muted">
                           <small>
-                            <fbt desc="settings.performanceModeHint">
-                              Performance mode uses a centralized server to
-                              improve performance of the dapp.
+                            <fbt desc="settings.language">
+                              Please make a selection from the list.
                             </fbt>
                           </small>
                         </div>
-                        <button
-                          className="btn btn-success"
-                          onClick={() =>
-                            this.saveConfig(setNetwork, {
-                              performanceMode: true
-                            })
-                          }
-                        >
-                          <fbt desc="settings.performanceModeButtonEnable">
-                            Enable
+                      </div>
+                      <div className="col-sm">
+                        <LocaleDropdown
+                          locale={locale}
+                          onLocale={onLocale}
+                          className="settings-dropdown float-right"
+                          dropdown={true}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <div className="col-sm">
+                        <label htmlFor="language">
+                          <fbt desc="settings.currencyLabel">Currency</fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.currency">
+                              Please make a selection from the list below.
+                            </fbt>
+                          </small>
+                        </div>
+                      </div>
+                      <div className="col-sm">
+                        <CurrencyDropdown
+                          value={currency}
+                          onChange={onCurrency}
+                          className="settings-dropdown float-right"
+                        />
+                      </div>
+                    </div>
+
+                    {/* TODO: this will require a grqphql mutation and mods to
+                    @origin/messaging-client.
+
+                    <div className="form-group row">
+                      <div className="col">
+                        <label htmlFor="Messaging">
+                          <fbt desc="settings.messagingLabel">
+                            Messaging
                           </fbt>
-                        </button>
-                      </>
-                    ) : (
-                      <div>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() =>
-                            this.saveConfig(setNetwork, {
-                              performanceMode: false
-                            })
-                          }
-                        >
-                          <fbt desc="settings.performanceModeButtonDisable">
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking on the button.</fbt></small>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <button className="btn btn-outline-danger float-right">
+                          <fbt desc="settings.messagingButton">
                             Disable
                           </fbt>
                         </button>
                       </div>
-                    )}
-                  </div>
-
-                  {/*
-                  <div className="form-group">
-                    <label htmlFor="Messaging"><fbt desc="settings.messagingLabel">Messaging</fbt></label>
-                    <div className="form-text form-text-muted">
-                      <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking the button below.</fbt></small>
                     </div>
-                    <button className="btn btn-outline-danger">
-                      <fbt desc="settings.messagingButton">Disable</fbt>
-                    </button>
+                    */}
                   </div>
-                  */}
                 </div>
-              </div>
-
-              <div className="col-lg-6 col-md-12">
-                <div className="settings-box">
-                  <div className="form-group">
-                    <label htmlFor="indexing">
-                      <fbt desc="settings.discoveryLabel">Discovery Server</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.discoveryHint">
-                          Please enter the URL below. Leave blank to directly
-                          query the blockchain. Search functionality will
-                          disabled if no discovery server is used.
-                        </fbt>
-                      </small>
+                <div className="settings-group">
+                  <div className="settings-box">
+                    <div
+                      className={`form-group row${
+                        this.state.developerMode ? '' : ' no-border-bottom'
+                      }`}
+                    >
+                      <div className="col">
+                        <label htmlFor="performanceMode">
+                          <fbt desc="settings.developerMode">
+                            Developer Mode
+                          </fbt>
+                        </label>
+                        <div className="form-text form-text-muted">
+                          <small>
+                            <fbt desc="settings.developerModeHint">
+                              Provides more granular control over your
+                              experience.
+                            </fbt>
+                          </small>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <Toggle
+                          toggled={true}
+                          initialToggleState={this.state.developerMode}
+                          className="float-right"
+                          onClickHandler={this.toggleDeveloperMode}
+                        />
+                      </div>
                     </div>
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      name="discovery"
-                      {...input('discovery')}
-                      onBlur={() => this.saveConfig(setNetwork)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="indexing">
-                      <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.ipfsHint">
-                          Please enter the URL below.
-                        </fbt>
-                      </small>
+                    <div
+                      className={`developer${
+                        this.state.developerMode ? '' : ' hide'
+                      }`}
+                    >
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="ipfsGateway"
+                            {...input('ipfsGateway')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.providerLabel">
+                              Ethereum Node
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="web3Provider"
+                            {...input('provider')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="bridgeServer"
+                            {...input('bridge')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.discoveryLabel">
+                              Discovery Server
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="discovery"
+                            {...input('discovery')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row less-margin-bottom">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.relayerLabel">
+                              Relayer Server
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="relayer"
+                            {...input('relayer')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <a
+                          href="#"
+                          className="container text-center restore"
+                          onClick={ev => {
+                            ev.preventDefault()
+                            this.saveConfig(setNetwork, {}, true)
+                          }}
+                        >
+                          Restore Defaults
+                        </a>
+                      </div>
                     </div>
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      name="ipfsGateway"
-                      {...input('ipfsGateway')}
-                      onBlur={() => this.saveConfig(setNetwork)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="indexing">
-                      <fbt desc="settings.providerLabel">Web3 Provider</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.providerHint">
-                          Please enter the URL below.
-                        </fbt>
-                      </small>
-                    </div>
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      name="web3Provider"
-                      {...input('provider')}
-                      onBlur={() => this.saveConfig(setNetwork)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="indexing">
-                      <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small>
-                        <fbt desc="settings.bridgeHint">
-                          Please enter the URL below.
-                        </fbt>
-                      </small>
-                    </div>
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      name="bridgeServer"
-                      {...input('bridge')}
-                      onBlur={() => this.saveConfig(setNetwork)}
-                    />
                   </div>
                 </div>
               </div>
             </div>
+            {/* TODO: See #2320
+            <div className="settings-group">
+              <div className="settings-box">
+                <div className="form-group row">
+                  <div className="col">
+                    <label htmlFor="Messaging">
+                      <fbt desc="settings.decentralizedLabel">
+                        Decentralized Mode
+                      </fbt>
+                    </label>
+                    <div className="form-text form-text-muted">
+                      <small><fbt desc="settings.decentralizedHint">
+                        Go fully decentralized but lose certain feaures like seach and free gas.
+                      </fbt></small>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <button className="btn btn-outline-danger float-right">
+                      <fbt desc="settings.decentralizedButton">
+                        Launch
+                      </fbt>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            */}
           </div>
         )}
       </Mutation>
@@ -329,18 +361,103 @@ require('react-styl')(`
   .settings
     padding-top: 3rem
 
-  .settings-box
-    margin-bottom: 1rem
-    padding: 2rem
-    border: 1px solid var(--light)
-    border-radius: var(--default-radius)
-
-  .settings
     .form-text
       margin-top: -0.75rem
       margin-bottom: 0.5rem
       small
-        font-size: 70%
+        font-size: 14px
+        font-weight: 300
+
     .form-group
       margin-bottom: 1.5rem
+
+      &.row
+        border-bottom: solid 1px #c2cbd3
+        background-color: var(--white)
+        padding: 0 1rem 1rem 1rem
+
+      &.row.less-margin-bottom
+        margin-bottom: 1rem
+
+      &.row:last-of-type,
+      &.row.no-border-bottom
+        border-bottom: 0
+        padding: 0 1rem
+        margin-bottom: 0
+
+      label
+        font-size: 18px
+        margin-bottom: 0.75rem
+
+      button
+        margin-top: 0.5rem
+
+      .form-text
+        line-height: 0.75rem
+
+  .settings-box
+    margin-bottom: 1rem
+    padding: 1rem
+    border-radius: 14px
+    border: solid 1px #c2cbd3
+    background-color: var(--white)
+    color: #000
+
+    .hide
+      display: none
+
+    .toggle
+      margin-top: 1rem
+
+    .dropdown
+      .dropdown-menu
+        position: absolute
+        left: 16px
+        top: -3px
+        width: 322px
+
+    .settings-dropdown
+      color: #000
+      font-size: 1.25rem
+      font-weight: normal
+      padding: 0.5rem
+      max-width: 320px
+      width: 100%
+      height: 50px
+      border-radius: 5px
+      border: solid 1px #6f8294
+      background-color: #fafafa
+
+      .dropdown-selected
+        .arrow
+          display: block
+          margin: 0.25rem
+          float: right
+          content: " "
+          height: 24px
+          width: 24px
+          background: url('images/keyboard-arrow-down-material.svg') no-repeat center
+
+    .developer label
+      line-height: calc(1.5em + 1rem + 2px)
+      margin-bottom: 0
+      font-size: 0.875rem
+
+    .developer,
+    .restore,
+    input,
+    label
+      color: #000
+      font-size: 0.875rem
+
+    .restore
+      color: var(--clear-blue)
+
+  @media (max-width: 767.98px)
+    .settings
+      padding-top: 2rem
+      h1
+        font-size: 32px
+        margin-bottom: 1rem
+        line-height: 1.25
 `)

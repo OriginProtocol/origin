@@ -2,7 +2,7 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { getLocationInfo } = require('../src/util/locationInfo')
-const { ip2geo } = require('../src/util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 
 describe('Geolocation', () => {
   it(`Should return locationInfo`, async () => {

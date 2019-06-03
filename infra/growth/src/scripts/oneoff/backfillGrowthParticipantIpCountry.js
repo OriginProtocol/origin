@@ -3,7 +3,7 @@
 const _growthModels = require('../../models')
 const _bridgeModels = require('@origin/bridge/src/models')
 const db = { ..._growthModels, ..._bridgeModels }
-const { ip2geo } = require('../../util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 const parseArgv = require('../../util/args')
 
 const Logger = require('logplease')

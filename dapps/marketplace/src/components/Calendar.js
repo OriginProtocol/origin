@@ -136,24 +136,25 @@ class Calendar extends Component {
     let interactions = {}
     if (this.props.interactive !== false) {
       interactions = {
-        onMouseDown: () => {
-          this.setState({
-            dragging: true,
-            dragStart: idx,
-            startDate: day.date,
-            dragEnd: null,
-            endDate: null
-          })
-        },
-        onMouseUp: () => {
-          this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
-          if (this.props.onChange) {
-            const start = dayjs(this.state.startDate)
-            let range = `${this.state.startDate}/${day.date}`
-            if (start.isAfter(day.date)) {
-              range = `${day.date}/${this.state.startDate}`
+        onClick: () => {
+          if (this.state.dragging) {
+            this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
+            if (this.props.onChange) {
+              const start = dayjs(this.state.startDate)
+              let range = `${this.state.startDate}/${day.date}`
+              if (start.isAfter(day.date)) {
+                range = `${day.date}/${this.state.startDate}`
+              }
+              this.props.onChange({ range })
             }
-            this.props.onChange({ range })
+          } else {
+            this.setState({
+              dragging: true,
+              dragStart: idx,
+              startDate: day.date,
+              dragEnd: null,
+              endDate: null
+            })
           }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
@@ -231,8 +232,8 @@ require('react-styl')(`
         font-weight: normal
         padding: 0.25rem 0.5rem
         display: flex
-        flex-direction: column;
-        justify-content: space-between;
+        flex-direction: column
+        justify-content: space-between
         min-width: 0
 
         border-style: solid
@@ -266,8 +267,10 @@ require('react-styl')(`
         &.active.unselected:hover
           &::after
             border: 3px solid black
-        &.start,&.mid,&.end
+        &.mid
           background-color: var(--pale-clear-blue)
+        &.start,&.end
+          background-color: #d6ecf5
         &.start::after
           border-width: 3px 0 3px 3px
           border-color: black
@@ -295,33 +298,33 @@ require('react-styl')(`
       border-width: 1px 0
       border-style: solid
       border-color: #c2cbd3
-      justify-content: space-between;
+      justify-content: space-between
       text-align: center
       font-size: 14px
       font-weight: normal
       color: var(--bluey-grey)
-      margin-top: 1rem;
-      line-height: 2rem;
+      margin-top: 1rem
+      line-height: 2rem
       > div
         flex: 1
 
     .month-chooser
       display: flex
-      justify-content: space-between;
+      justify-content: space-between
       font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
       .btn
         border-color: #c2cbd3
         &::before
-          content: "";
-          width: 0.75rem;
-          height: 0.75rem;
-          border-width: 0 0 1px 1px;
-          border-color: #979797;
-          border-style: solid;
+          content: ""
+          width: 0.75rem
+          height: 0.75rem
+          border-width: 0 0 1px 1px
+          border-color: #979797
+          border-style: solid
           transform: rotate(45deg) translate(3px, -1px)
-          display: inline-block;
+          display: inline-block
         &.next::before
           transform: rotate(225deg) translate(1px, -2px)
         &:hover::before

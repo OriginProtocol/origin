@@ -57,8 +57,11 @@ export const types = `
     lastName: String
     fullName: String
     description: String
+    # Deprecated field. Base64 encoded avatar. Only present on older profiles.
     avatar: String
+    # IPFS url for avatar photo
     avatarUrl: String
+    # Calculated field. Converts avatarURL to an HTTP(s) gateway URL
     avatarUrlExpanded: String
     strength: Int
 

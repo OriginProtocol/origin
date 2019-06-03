@@ -38,11 +38,12 @@
     "start": "lerna run start --prefix dapps/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v node_modules | node scripts/package-versions.js"
   },
   "husky": {
     "hooks": {
-      "pre-push": "lerna run lint && lerna run lint --prefix mobile"
+      "pre-push": "lerna run lint && npm run lint --prefix mobile"
     }
   }
 }
