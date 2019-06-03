@@ -93,6 +93,7 @@ const getOnMessage = ({ schema, context, onMessageReceived }) => {
   _onMessage = workerMessage => {
     const message = JSON.parse(workerMessage.data)
     const opId = message.id
+    console.log('_onMessage', opId, message)
     if (typeof opId !== 'undefined') {
       switch (message.type) {
         case MessageTypes.GQL_STOP:
@@ -230,8 +231,22 @@ const getOnMessage = ({ schema, context, onMessageReceived }) => {
   return _onMessage
 }
 
-const handleSubscriptions = ({ message, schema, context, onMessageReceived }) =>
-  getOnMessage({ schema, context, onMessageReceived })(message)
+const handleSubscriptions = ({
+  message,
+  schema,
+  context,
+  onMessageReceived
+}) => {
+  const res = getOnMessage({ schema, context, onMessageReceived })(message)
+  console.log('handleSubscriptions', {
+    message,
+    schema,
+    context,
+    onMessageReceived,
+    res
+  })
+  return res
+}
 
 let onMessageReceived
 

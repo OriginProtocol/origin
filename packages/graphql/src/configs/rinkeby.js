@@ -53,6 +53,6 @@ export default {
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
   // Configs
-  performanceMode: true,
+  performanceMode: false,
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }
