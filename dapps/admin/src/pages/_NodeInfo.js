@@ -24,7 +24,6 @@ const Subs = () => (
     {(setNetwork, { client }) => (
       <Subscription subscription={NEW_BLOCKS_SUBSCRIPTION}>
         {({ data, loading, error }) => {
-          console.log({ data, loading, error })
           let networkName = 'Custom network'
           if (localStorage.ognNetwork === 'mainnet') {
             networkName = 'Ethereum Mainnet'
