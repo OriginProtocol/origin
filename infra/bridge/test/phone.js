@@ -184,7 +184,7 @@ describe('phone attestations', () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.PHONE)
-    expect(results[0].value).to.equal('1 12341234')
+    expect(results[0].value).to.equal('+112341234')
   })
 
   it('should error on missing verification code', async () => {
