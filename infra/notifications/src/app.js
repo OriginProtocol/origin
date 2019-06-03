@@ -4,7 +4,7 @@ const logger = require('./logger')
 try {
   require('envkey')
 } catch (error) {
-  logger.error('EnvKey not configured. Please set env var ENVKEY')
+  logger.warn('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const express = require('express')
@@ -352,6 +352,7 @@ app.post('/events', async (req, res) => {
     buyerAddress,
     sellerAddress,
     offer,
+    listing,
     config
   )
 
