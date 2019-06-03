@@ -29,6 +29,7 @@ const reset = async () => {
     window.sessionStorage.clear()
     window.location = '/#/'
   })
+
   return { buyer, seller }
 }
 
@@ -69,12 +70,9 @@ function randomTitle() {
   return `T-Shirt ${Math.floor(Math.random() * 100000)}`
 }
 
-describe('Marketplace Dapp', function() {
-  let seller, buyer
-  this.timeout(10000)
-
+function listingTests() {
   describe('Single Unit Listing for Eth', function() {
-    const listingTitle = randomTitle()
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -100,7 +98,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', listingTitle)
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
       await page.click('#eth-checkbox') // Select Eth
@@ -146,6 +144,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Single Unit Listing for Dai', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -204,6 +203,7 @@ describe('Marketplace Dapp', function() {
 
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
+      await waitForText(page, 'Payment', 'span')
       await clickByText(page, 'Swap Now', 'button')
     })
 
@@ -237,7 +237,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Multi Unit Listing for Eth', function() {
-    let listingHash
+    let seller, buyer, listingHash
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -369,7 +369,7 @@ describe('Marketplace Dapp', function() {
 
   describe('Edit user profile', function() {
     before(async function() {
-      ({ seller, buyer } = await reset())
+      const { seller } = await reset()
       await changeAccount(page, seller)
     })
 
@@ -417,4 +417,62 @@ describe('Marketplace Dapp', function() {
       await clickByText(page, 'OK', 'button')
     })
   })
+}
+
+describe('Marketplace Dapp', function() {
+  this.timeout(6000)
+  before(async function() {
+    await page.evaluate(() => {
+      delete window.localStorage.proxyAccountsEnabled
+      delete window.localStorage.enableRelayer
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe('Marketplace Dapp with proxies enabled', function() {
+  this.timeout(10000)
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.enableRelayer
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe('Marketplace Dapp with proxies and relayer enabled', function() {
+  this.timeout(10000)
+
+  let didThrow = false
+  function pageError(err) {
+    didThrow = err
+  }
+
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.enableRelayer = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+
+  beforeEach(function() {
+    page.on('pageerror', pageError)
+    page.on('error', pageError)
+  })
+
+  afterEach(() => {
+    page.removeListener('pageerror', pageError)
+    page.removeListener('error', pageError)
+    assert(!didThrow, 'Page error detected: ' + didThrow)
+  })
+
+  listingTests()
 })

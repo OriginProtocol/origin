@@ -1,7 +1,13 @@
 import contracts from '../contracts'
 import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy_solc'
+import createDebug from 'debug'
+
+const debug = createDebug('origin:relayer:')
+const addr = address => (address ? address.substr(0, 8) : '')
 
 export default async function relayerHelper({ tx, from, proxy, to }) {
+  debug(`send tx from ${addr(from)}.${proxy ? ` Proxy: ${addr(proxy)}` : ''}`)
+
   const provider = contracts.web3.currentProvider.host
   let nonce = 0
 
@@ -31,8 +37,10 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   })
   const availableData = await relayerAvailable.json()
   if (availableData.errors) {
+    debug(`relayer unavailable: ${availableData.errors[0]}`)
     throw new Error(availableData.errors[0])
   } else if (!availableData.success) {
+    debug(`relayer unavailable.`)
     throw new Error('Relayer server unavailable')
   }
 
@@ -43,7 +51,21 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
     { t: 'bytes', v: txData },
     { t: 'uint256', v: nonce }
   )
-  const signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
+
+  // Fall back to eth.sign... but if that fails too, throw original error
+  let signature, sigErr
+  try {
+    signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
+  } catch (e) {
+    try {
+      signature = await contracts.web3Exec.eth.sign(dataToSign, from)
+    } catch (e) {
+      /* Ignore */
+    }
+  }
+  if (!signature) {
+    throw sigErr
+  }
 
   const response = await fetch(relayerUrl, {
     headers: { 'content-type': 'application/json' },
@@ -66,8 +88,10 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
 
   const data = await response.json()
   if (data.errors) {
+    debug(`error: ${data.errors[0]}`)
     throw new Error(data.errors[0])
   }
 
+  debug(`success. tx hash: ${data.id}`)
   return { id: data.id }
 }

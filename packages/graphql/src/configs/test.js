@@ -1,4 +1,5 @@
 const HOST = process.env.HOST || 'localhost'
+const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
@@ -15,6 +16,7 @@ const config = {
   bridge: 'https://bridge.dev.originprotocol.com',
   performanceMode: false,
   graphql: `http://${HOST}:4002`,
+  relayer: `http://${HOST}:5100`,
   automine: 500,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 
@@ -24,6 +26,10 @@ const config = {
   V00_Marketplace: addresses.Marketplace,
   IdentityEvents: addresses.IdentityEvents,
   DaiExchange: addresses.UniswapDaiExchange,
+  ProxyFactory: addresses.ProxyFactory,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+
   tokens: []
 }
 
