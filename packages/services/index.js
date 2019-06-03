@@ -197,6 +197,17 @@ const startRelayer = () =>
     resolve(startServer)
   })
 
+const startGraphql = () =>
+  new Promise(resolve => {
+    const startServer = spawn(`node`, ['-r', '@babel/register', 'server'], {
+      cwd: path.resolve(__dirname, '../graphql'),
+      stdio: 'inherit',
+      env: { ...process.env, GRAPHQL_SERVER_PORT: 4007 }
+    })
+    startServer.on('exit', () => console.log('GraphQL Server stopped.'))
+    resolve(startServer)
+  })
+
 const started = {}
 let extrasResult
 
@@ -244,6 +255,14 @@ module.exports = async function start(opts = {}) {
     await startSslProxy()
   }
 
+  if (opts.graphqlServer) {
+    if (await portInUse(4007)) {
+      console.log('GraphQL Server already started')
+    } else {
+      started.graphql = await startGraphql()
+    }
+  }
+
   if (opts.relayer && !started.relayer) {
     if (await portInUse(5100)) {
       console.log('Relayer already started')
@@ -269,6 +288,9 @@ module.exports = async function start(opts = {}) {
     }
     if (started.relayer) {
       started.relayer.kill('SIGHUP')
+    }
+    if (started.graphql) {
+      started.graphql.kill('SIGHUP')
     }
     if (started.ipfs) {
       await new Promise(resolve => started.ipfs.stop(() => resolve()))
