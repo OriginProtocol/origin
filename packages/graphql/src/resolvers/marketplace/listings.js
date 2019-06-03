@@ -150,7 +150,8 @@ export default async function listings(
       const discoveryResult = await searchIds(search, filters)
       ids = discoveryResult.ids
       totalCount = ids.length
-    } catch (e) {
+    } catch (err) {
+      console.log('Failed to retrieve results from discovery server', err)
       discoveryError = true
     }
   }
