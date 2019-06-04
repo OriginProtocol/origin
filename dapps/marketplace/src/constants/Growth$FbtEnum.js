@@ -64,6 +64,7 @@ const Growth$FbtEnum = {
   'growth.purchase.listing255.title': 'Purchase a HODL shirt',
   'growth.purchase.listing2799.title': 'Purchase a ETHCon Korea shirt',
   'growth.purchase.listing639.title': 'Purchase an Origin cap',
+  'growth.purchase.listing259.title': 'Purchase a coffee mug',
 
   'growth.purchase.listing2553.title': 'Purchase a $25 Amazon Gift Card',
   'growth.purchase.listing2804.title': 'Purchase a $25 iTunes Gift Card',

@@ -1,7 +1,6 @@
 import {
   changeAccount,
   waitForText,
-  hasText,
   clickByText,
   clickBySelector,
   pic,
@@ -20,6 +19,7 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
+
   await page.evaluate(() => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
@@ -394,12 +394,6 @@ function listingTests() {
     it('should close the edit modal', async function() {
       await clickByText(page, 'OK', 'button')
       await page.waitForSelector('.pl-modal', { hidden: true })
-    })
-
-    it('should skip the wizard', async function() {
-      if (await hasText(page, 'Skip', 'button')) {
-        await clickByText(page, 'Skip', 'button')
-      }
     })
 
     it('should publish the profile changes', async function() {

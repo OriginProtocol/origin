@@ -14,11 +14,14 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+import UserActivationLink from 'components/UserActivationLink'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -70,6 +73,15 @@ class Buy extends Component {
       content = this.renderAllowTokenModal()
     } else {
       action = this.renderMakeOfferMutation()
+    }
+
+    if (!this.props.identity) {
+      action = (
+        <UserActivationLink
+          className={this.props.className}
+          children={this.props.children}
+        />
+      )
     }
 
     return (
@@ -419,7 +431,7 @@ class Buy extends Component {
 }
 
 export default withConfig(
-  withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
 )
 
 require('react-styl')(`
