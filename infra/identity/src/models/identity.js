@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       twitter: DataTypes.STRING,
       facebookVerified: DataTypes.BOOLEAN,
       googleVerified: DataTypes.BOOLEAN,
+      kakaoVerified: DataTypes.BOOLEAN,
       data: DataTypes.JSONB,
       country: DataTypes.CHAR(2),
       avatarUrl: DataTypes.STRING,
