@@ -606,7 +606,7 @@ class UserActivation extends Component {
   }
 
   renderSignTxModal() {
-    // const { config } = this.props
+    const { walletType } = this.props
     const attestations = [this.state.data]
 
     return (
@@ -620,21 +620,11 @@ class UserActivation extends Component {
           </h2>
           <p>
             <fbt desc="UserActivation.signToCreateWallet">
-              Coinbase Wallet will now ask you to sign your profile creation
-              data.
+              <fbt:param name="walletType">{walletType}</fbt:param> will now ask
+              you to sign your profile creation data.
             </fbt>
           </p>
           <div className="actions">
-            {/* {config.proxyAccountsEnabled ? (
-              <DeployProxy
-                className="btn btn-primary"
-                children={fbt('Got it', 'gotIt')}
-                onComplete={() => {
-                  this.onDeployComplete()
-                  this.setState({ shouldCloseSignTxModal: true })
-                }}
-              />
-            ) : ( */}
             <DeployIdentity
               className="btn btn-primary mt-3 mb-3"
               identity={this.props.wallet}
@@ -654,7 +644,6 @@ class UserActivation extends Component {
                 )
               }}
             />
-            {/* )} */}
           </div>
         </div>
       </>
