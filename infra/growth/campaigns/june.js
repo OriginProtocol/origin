@@ -587,6 +587,24 @@ const mayConfig = {
             detailsKey: 'growth.purchase.empty.details'
           }
         },
+        {
+          id: 'ListingPurchase259',
+          class: 'ListingIdPurchase',
+          config: {
+            listingId: '1-000-259',
+            reward: {
+              amount: tokenToNaturalUnits(20),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing259-icon.png',
+            titleKey: 'growth.purchase.listing259.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
         //
         // GC
         //

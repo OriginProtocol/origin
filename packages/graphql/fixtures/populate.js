@@ -117,6 +117,33 @@ export async function createAccount(gqlClient) {
   return user
 }
 
+// export async function deployIdentity(gqlClient, ethAddress) {
+//   const variables = {
+//     profile: {
+//       firstName: 'Test',
+//       lastName: 'Account',
+//       description: 'Tester',
+//       avatar: ''
+//     },
+//     attestations: [],
+//     from: ethAddress
+//   }
+
+//   let result
+//   try {
+//     result = await gqlClient.mutate({ DeployIdentityMutation, variables })
+//   } catch (e) {
+//     console.log(JSON.stringify(e, null, 4))
+//     throw e
+//   }
+//   const key = Object.keys(result.data)[0]
+//   const hash = result.data[key].id
+//   if (hash) {
+//     return await transactionConfirmed(hash, gqlClient)
+//   }
+//   return result.data[key]
+// }
+
 export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {
     variables.from = from

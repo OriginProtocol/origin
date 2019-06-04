@@ -32,7 +32,7 @@ describe('June campaign rules', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(6)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(31)
+    expect(this.crules.levels[2].rules.length).to.equal(32)
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.

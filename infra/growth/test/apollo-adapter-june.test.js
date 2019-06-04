@@ -10,7 +10,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(38)
+  expect(state.actions.length).to.equal(39)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -81,7 +81,7 @@ describe('Apollo adapter - June campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(6)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(31)
+    expect(this.crules.levels[2].rules.length).to.equal(32)
 
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
@@ -304,6 +304,12 @@ describe('Apollo adapter - June campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
       },
+      ListingPurchase259: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
+      },
       ListingPurchase2553: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
@@ -468,6 +474,7 @@ describe('Apollo adapter - June campaign', () => {
     this.expectedState.ListingPurchase255.status = 'Active'
     this.expectedState.ListingPurchase2799.status = 'Active'
     this.expectedState.ListingPurchase639.status = 'Active'
+    this.expectedState.ListingPurchase259.status = 'Active'
     this.expectedState.ListingPurchase2553.status = 'Active'
     this.expectedState.ListingPurchase2804.status = 'Active'
     this.expectedState.ListingPurchase2805.status = 'Active'
