@@ -4,8 +4,9 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 
-router.get('/facebook', async (req, res) => {
+const oauth2RedirectHandler = async (req, res) => {
   const sessionID = req.query.state
+
   if (sessionID) {
     const session = await req.sessionStore.get(sessionID)
     if (!session) {
@@ -19,9 +20,9 @@ router.get('/facebook', async (req, res) => {
   } else {
     // res.sendFile requires absoluite paths and ../ is considered malicious
     // so resolve first
-    res.sendFile(path.resolve(`${__dirname}/../static/facebook.html`))
+    res.sendFile(path.resolve(`${__dirname}/../static/oauth2.html`))
   }
-})
+}
 
 router.get('/twitter', async (req, res) => {
   const sessionID = req.query.state
@@ -43,24 +44,10 @@ router.get('/twitter', async (req, res) => {
   }
 })
 
-router.get('/google', async (req, res) => {
-  const sessionID = req.query.state
+router.get('/facebook', oauth2RedirectHandler)
 
-  if (sessionID) {
-    const session = await req.sessionStore.get(sessionID)
-    if (!session) {
-      return res.status(400).send('Session not found')
-    }
+router.get('/google', oauth2RedirectHandler)
 
-    req.session.code = session.code = req.query.code
-    await req.sessionStore.set(sessionID, session)
-
-    res.redirect(`${session.redirect}?sid=${sessionID}`)
-  } else {
-    // res.sendFile requires absoluite paths and ../ is considered malicious
-    // so resolve first
-    res.sendFile(path.resolve(`${__dirname}/../static/google.html`))
-  }
-})
+router.get('/kakao', oauth2RedirectHandler)
 
 module.exports = router

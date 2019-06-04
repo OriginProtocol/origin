@@ -75,6 +75,9 @@ functionality.
 - [Google](https://developers.google.com/identity/protocols/OAuth2WebServer)
   - GOOGLE_CLIENT_ID
   - GOOGLE_CLIENT_SECRET
+- [KaKao](https://developers.kakao.com/docs/restapi/user-management)
+  - KAKAO_CLIENT_ID
+  - KAKAO_CLIENT_SECRET
 
 ### Set Up Your Database
 

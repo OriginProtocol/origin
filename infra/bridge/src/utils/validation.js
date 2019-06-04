@@ -142,6 +142,12 @@ const websiteGenerateCode = [
   handleValidationError
 ]
 
+const kakaoVerify = [
+  identityValidation,
+  check('code').custom(codeValidation),
+  handleValidationError
+]
+
 const websiteVerify = websiteGenerateCode
 
 module.exports = {
@@ -155,5 +161,6 @@ module.exports = {
   twitterVerifyCode,
   googleVerify,
   websiteGenerateCode,
-  websiteVerify
+  websiteVerify,
+  kakaoVerify
 }
