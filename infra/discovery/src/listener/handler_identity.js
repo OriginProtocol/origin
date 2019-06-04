@@ -227,8 +227,8 @@ class IdentityEventHandler {
   }
 
   /**
-   * Records a ProfilePublished event in the growth_event table.
-   * if the identity has a first name and last name.
+   * Records a ProfilePublished event in the growth_event table
+   * at the condition that the identity has a first name and last name.
    *
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
