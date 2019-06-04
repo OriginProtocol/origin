@@ -1,4 +1,3 @@
-import EthBlockTracker from 'eth-block-tracker'
 import ProviderEngine from 'web3-provider-engine'
 import SubProvider from 'web3-provider-engine/subproviders/subprovider'
 import RpcSubprovider from 'web3-provider-engine/subproviders/rpc'
@@ -156,13 +155,7 @@ function addMetricsProvider(web3Inst, options) {
    * Right now, we're specifically initializing the block tracker so we can
    * disable the `skipConfig` parameter that it sends which breaks Alchemy
    */
-  const engine = new ProviderEngine({
-    blockTracker: new EthBlockTracker({
-      provider: convertedProvider,
-      pollingInterval: 15000,
-      setSkipCacheFlag: false
-    })
-  })
+  const engine = new ProviderEngine({ useSkipCache: false })
 
   /**
    * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
