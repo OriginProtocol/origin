@@ -28,72 +28,71 @@ class MobileNav extends Component {
           open={this.props.open}
           onClose={() => this.props.onClose()}
           content={
-            <div className="dropdown-menu show">
-              <Link
-                onClick={() => onClose()}
-                to="/"
-                className="dropdown-item browse"
-                children={fbt(
-                  'Browse Categories',
-                  'navigation.BrowseCategories'
-                )}
+            <>
+              <div
+                className="dropdown-menu-bg"
+                onClick={() => this.props.onClose()}
               />
-              <Link
-                onClick={() => onClose()}
-                to="/create"
-                className="dropdown-item add"
-                children={fbt('Add a Listing', 'navigation.AddaListing')}
-              />
-              <EarnTokens
-                className="dropdown-item earn"
-                onClose={() => onClose()}
-                onNavigation={() => onClose()}
-              >
-                <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-              </EarnTokens>
-              <div className="dropdown-divider" />
-              <h6 className="dropdown-header">My Items</h6>
-              <Link
-                onClick={() => onClose()}
-                to="/my-purchases"
-                className="dropdown-item purchases"
-                children={fbt('Purchases', 'navigation.purchases')}
-              />
-              <Link
-                onClick={() => onClose()}
-                to="/my-listings"
-                className="dropdown-item listings"
-                children={fbt('Listings', 'navigation.listings')}
-              />
-              <Link
-                onClick={() => onClose()}
-                to="/my-sales"
-                className="dropdown-item sales"
-                children={fbt('Sales', 'navigation.sales')}
-              />
-              <div className="dropdown-divider" />
-              <Link
-                onClick={() => onClose()}
-                to="/messages"
-                className="dropdown-item messages"
-                children={fbt('Messages', 'navigation.messages')}
-              />
-              <Link
-                onClick={() => onClose()}
-                to="/notifications"
-                className="dropdown-item notifications"
-                children={fbt('Notifications', 'navigation.notifications')}
-              />
-              <Link
-                onClick={() => onClose()}
-                to="/settings"
-                className="dropdown-item settings"
-                children={fbt('Settings', 'navigation.settings')}
-              />
-              {/* <a href="#" className="dropdown-item transactions">
-                Transactions
-              </a> */}
-            </div>
+              <div className="dropdown-menu show">
+                <Link
+                  onClick={() => onClose()}
+                  to="/"
+                  className="dropdown-item home"
+                  children={fbt('Home', 'navigation.Home')}
+                />
+                <Link
+                  onClick={() => onClose()}
+                  to="/create"
+                  className="dropdown-item add"
+                  children={fbt('Add a Listing', 'navigation.AddaListing')}
+                />
+                <EarnTokens
+                  className="dropdown-item earn"
+                  onClose={() => onClose()}
+                  onNavigation={() => onClose()}
+                >
+                  <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
+                </EarnTokens>
+                <div className="dropdown-divider" />
+                <Link
+                  onClick={() => onClose()}
+                  to="/my-purchases"
+                  className="dropdown-item purchases"
+                  children={fbt('Purchases', 'navigation.purchases')}
+                />
+                <Link
+                  onClick={() => onClose()}
+                  to="/my-listings"
+                  className="dropdown-item listings"
+                  children={fbt('Listings', 'navigation.listings')}
+                />
+                <Link
+                  onClick={() => onClose()}
+                  to="/my-sales"
+                  className="dropdown-item sales"
+                  children={fbt('Sales', 'navigation.sales')}
+                />
+                <div className="dropdown-divider" />
+                <Link
+                  onClick={() => onClose()}
+                  to="/messages"
+                  className="dropdown-item messages"
+                  children={fbt('Messages', 'navigation.messages')}
+                />
+                <Link
+                  onClick={() => onClose()}
+                  to="/notifications"
+                  className="dropdown-item notifications"
+                  children={fbt('Notifications', 'navigation.notifications')}
+                />
+                <Link
+                  onClick={() => onClose()}
+                  to="/settings"
+                  className="dropdown-item settings"
+                  children={fbt('Settings', 'navigation.settings')}
+                />
+              </div>
+            </>
           }
         >
           <a
@@ -128,9 +127,10 @@ require('react-styl')(`
         background-image: url(images/nav/menu-icon-active.svg)
 
     .dropdown-menu
-      background-color: var(--pale-grey)
+      background-color: var(--white)
       padding: 1rem 0
       border-radius: 0 5px 5px 5px
+      top: 0
       &::before
         content: "◣"
         right: auto
@@ -139,13 +139,13 @@ require('react-styl')(`
         color: var(--pale-grey)
       .dropdown-divider
         margin: 0.5rem 1.5rem
-        border-color: var(--light)
+        border-color: #dde6ea
       .dropdown-header
         text-transform: uppercase
         color: var(--dusk)
       .dropdown-item
         color: #000
-        font-size: 20px
+        font-size: 18px
         font-weight: bold
         position: relative
         line-height: normal
@@ -168,7 +168,7 @@ require('react-styl')(`
         &.add::before
           background-image: url(images/nav/add-listing-icon.svg)
         &.earn::before
-          background-image: url(images/nav/earn-tokens-icon.svg)
+          background-image: url(images/nav/ogn-icon.svg)
         &.purchases::before
           background-image: url(images/nav/purchases-icon.svg)
         &.listings::before
@@ -176,13 +176,11 @@ require('react-styl')(`
         &.sales::before
           background-image: url(images/nav/sales-icon.svg)
         &.messages::before
-          background-image: url(images/messages-icon-selected.svg)
+          background-image: url(images/nav/chatbubble-icon.svg)
         &.notifications::before
-          background-image: url(images/alerts-icon-selected.svg)
+          background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
-          background-image: url(images/settings-icon.svg)
-        &.transactions::before
-          background-image: url(images/nav/arrows-dark.svg)
+          background-image: url(images/nav/gear-icon.svg)
         &::after
           position: absolute
           right: 1.75rem
@@ -195,12 +193,27 @@ require('react-styl')(`
           transform: rotate(45deg)
 
   @media (max-width: 767.98px)
+    .navbar .nav-item.mobile .dropdown-menu-bg
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.3);
+      clip-path: none;
+      width: auto;
+      height: auto;
+      z-index: 1;
     .navbar .nav-item.mobile .dropdown-menu
       &::before
-        content: none
+        content: ""
+      overflow: auto
+      position: fixed !important
       box-shadow: none
       margin-top: 0
       border-radius: 0
       left: 0
-      right: 0
+      right: auto
+      bottom: 0
+      top: 0
 `)

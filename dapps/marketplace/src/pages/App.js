@@ -7,7 +7,6 @@ import { fbt } from 'fbt-runtime'
 import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
-import RewardsBanner from './_RewardsBanner'
 import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
 import Nav from './_Nav'
@@ -94,12 +93,6 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    // hide the rewards bar if you're on any of the rewards pages or using
-    // the DApp via the webview in the mobile app
-    const hideRewardsBar =
-      this.props.location.pathname.match(/^\/welcome$/g) ||
-      this.props.location.pathname.match(/^\/campaigns$/g)
-
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
     const hideNavbar =
@@ -108,7 +101,6 @@ class App extends Component {
 
     return (
       <CurrencyContext.Provider value={this.state.currency}>
-        {!hideRewardsBar && <RewardsBanner />}
         {!hideNavbar && <Nav />}
         <main>
           <Switch>

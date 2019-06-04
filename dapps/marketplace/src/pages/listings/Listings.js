@@ -72,7 +72,7 @@ class Listings extends Component {
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        <Search
+        {/* <Search
           value={this.state.search}
           onSearch={search => {
             this.setState({ search })
@@ -87,7 +87,7 @@ class Listings extends Component {
               })
             })
           }}
-        />
+        /> */}
         <div className="container listings-container">
           <Query
             query={query}

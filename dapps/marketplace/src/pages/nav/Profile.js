@@ -298,7 +298,6 @@ require('react-styl')(`
     height: 26px
     padding-top: 3px
     border-radius: 40px
-    border: solid 1px var(--white)
     background-color: var(--dark-grey-blue)
     &.large
       width: 80px

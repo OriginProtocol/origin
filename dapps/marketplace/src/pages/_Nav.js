@@ -9,7 +9,6 @@ import NavLink from 'components/NavLink'
 import Profile from './nav/Profile'
 import Notifications from './nav/Notifications'
 import Messages from './nav/Messages'
-import Confirmations from './nav/Confirmations'
 import Mobile from './nav/Mobile'
 import GetStarted from './nav/GetStarted'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
@@ -57,46 +56,34 @@ class Nav extends Component {
               <ul className="navbar-nav">
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-purchases" className="nav-link text">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.myPurchases">My Purchases</fbt>
-                    </span>
-                    <span className="d-xl-none">
+                    <span>
                       <fbt desc="navbar.purchases">Purchases</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-listings" className="nav-link text">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.myListings">My Listings</fbt>
-                    </span>
-                    <span className="d-xl-none">
+                    <span>
                       <fbt desc="navbar.listings">Listings</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-md-flex">
                   <NavLink to="/my-sales" className="nav-link text">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.mySales">My Sales</fbt>
-                    </span>
-                    <span className="d-xl-none">
+                    <span>
                       <fbt desc="navbar.sales">Sales</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-lg-flex">
-                  <NavLink
-                    to="/create"
-                    className="nav-link icon-padding add-listing text"
-                  >
+                  <NavLink to="/create" className="nav-link text">
                     <span>
                       <fbt desc="navbar.addListing">Add Listing</fbt>
                     </span>
                   </NavLink>
                 </li>
                 <li className="nav-item d-none d-lg-flex">
-                  <EarnTokens className="nav-link icon-padding earn-tokens text">
+                  <EarnTokens className="nav-link text" href="#">
                     <span className="d-md-none d-xl-flex">
                       <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
                     </span>
@@ -105,7 +92,6 @@ class Nav extends Component {
                     </span>
                   </EarnTokens>
                 </li>
-                <Confirmations {...navProps('confirmations')} />
                 <Messages {...navProps('messages')} />
                 <Notifications {...navProps('notifications')} />
                 <Profile {...navProps('profile')} />
@@ -123,7 +109,7 @@ export default withWallet(withCreatorConfig(Nav))
 require('react-styl')(`
   .navbar
     padding: 0 1rem
-    background-color: var(--dusk) !important
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1)
     > .container
       align-items: stretch
 
@@ -146,7 +132,7 @@ require('react-styl')(`
         border: 0px
       .nav-link
         padding: 0 0.75rem
-        color: var(--pale-grey)
+        color: var(--dusk)
         height: 100%
         display: flex
         align-items: center
@@ -157,22 +143,13 @@ require('react-styl')(`
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
             &:hover,&.active
-              background-color: var(--dark-grey-blue)
+              background-color: rgba(0,0,0,0.1)
           &.active span
-            background-color: var(--dark-grey-blue)
+            background-color: rgba(0,0,0,0.1)
         &.icon-padding span
           padding-left: 2rem
         span
           display: inline-block
-
-        &.add-listing span
-          background: url(images/add-listing-icon.svg) no-repeat 0.5rem center
-          background-size: 1rem
-        &.earn-tokens
-          cursor: pointer
-          span
-            background: url(images/ogn-icon-nav.svg) no-repeat 0.5rem center
-            background-size: 1rem
 
       .dropdown-menu
         padding: 0
@@ -207,7 +184,8 @@ require('react-styl')(`
             text-shadow: none
 
   .navbar-brand
-    background: url(images/origin-beta-logo-white.svg) no-repeat center
+    background: url(images/origin-logo-black.svg) no-repeat center
+    background-size: 100%
     width: 108px
     text-indent: -9999px
 
@@ -220,13 +198,17 @@ require('react-styl')(`
   @media (pointer: fine)
     .navbar .nav-item
       &.show .nav-link:hover
-        background-color: initial
-        &.text span
-          background-color: initial
+        background-color: rgba(0,0,0,0.1)
+        &.text
+          background-color: var(--white)
+          span
+            background-color: rgba(0,0,0,0.1)
       .nav-link:hover
-        background-color: var(--dark-grey-blue)
-        &.text span
-          background-color: var(--dark-grey-blue)
+        background-color: rgba(0,0,0,0.1)
+        &.text
+          background-color: var(--white)
+          span
+            background-color: rgba(0,0,0,0.1)
 
   @media (max-width: 767.98px)
     .navbar
