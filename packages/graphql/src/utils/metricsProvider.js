@@ -1,3 +1,4 @@
+import EthBlockTracker from 'eth-block-tracker'
 import ProviderEngine from 'web3-provider-engine'
 import SubProvider from 'web3-provider-engine/subproviders/subprovider'
 import RpcSubprovider from 'web3-provider-engine/subproviders/rpc'
@@ -144,8 +145,25 @@ function convertWeb3Provider(provider) {
  * @returns {object} - An initialized web3 instance with the altered providers
  */
 function addMetricsProvider(web3Inst, options) {
-  const engine = new ProviderEngine()
+
+  // Our new shiny subproviders
+  const convertedProvider = convertWeb3Provider(web3Inst.currentProvider)
   const metricsProvider = new MetricsProvider(options)
+
+  /**
+   * The blockTracker seems be a default function of web3-provider-engine, but
+   * it's not completely clear if it's necessary(emits the 'latest' event).  It
+   * has an internal currentBlock tracker.  Perhaps we should bolt onto it.
+   * Right now, we're specifically initializing the block tracker so we can
+   * disable the `skipConfig` parameter that it sends which breaks Alchemy
+   */
+  const engine = new ProviderEngine({
+    blockTracker: new EthBlockTracker({
+      provider: convertedProvider,
+      pollingInterval: 15000,
+      setSkipCacheFlag: false,
+    })
+  })
 
   /**
    * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
@@ -163,7 +181,7 @@ function addMetricsProvider(web3Inst, options) {
   engine.setMaxListeners(50)
 
   engine.addProvider(metricsProvider)
-  engine.addProvider(convertWeb3Provider(web3Inst.currentProvider))
+  engine.addProvider(convertedProvider)
 
   web3Inst.setProvider(engine)
 
