@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Modal from 'components/Modal'
-import MobileModal from 'components/MobileModal'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
+
+import omit from 'lodash/omit'
 
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
@@ -11,6 +11,8 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
+import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
 import withIsMobile from 'hoc/withIsMobile'
@@ -572,7 +574,7 @@ function withEnrolmentModal(WrappedComponent) {
                   return (
                     <Fragment>
                       <WrappedComponent
-                        {...this.props}
+                        {...omit(this.props, ['onClose', 'onNavigation'])}
                         onClick={e =>
                           this.handleClick(
                             e,
