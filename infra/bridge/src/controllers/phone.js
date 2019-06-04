@@ -137,7 +137,8 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
     attestationValue = parsePhoneNumberFromString(
       `+${req.body.country_calling_code} ${req.body.phone}`
     ).number
-  } catch {
+  } catch (error) {
+    logger.log(`Could not parse phone number: ${error.message}`)
     attestationValue = `${req.body.country_calling_code} ${req.body.phone}`
   }
 
