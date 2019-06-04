@@ -81,7 +81,7 @@ export const changeAccount = async (page, account) => {
       strength: 0
     })
   }, account)
-  await new Promise(resolve => setTimeout(resolve, 500))
+  await new Promise(resolve => setTimeout(resolve, 1500))
 }
 
 export const createAccount = async page => {
@@ -92,15 +92,6 @@ export const createAccount = async page => {
       )
   )
 }
-
-// export const deployIdentity = async (page, ethAddress) => {
-//   return await page.evaluate(
-//     ethAddress => {
-//       new Promise(resolve =>
-//         window.ognTools.deployIdentity(window.gql, ethAddress).then(resolve)
-//       )
-//     }, ethAddress)
-// }
 
 const shouldScreenshot = process.env.SCREENSHOTS ? true : false
 let screenshots = 0

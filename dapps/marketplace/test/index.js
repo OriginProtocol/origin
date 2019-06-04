@@ -6,7 +6,6 @@ import {
   clickBySelector,
   pic,
   createAccount
-  // deployIdentity
 } from './_helpers'
 import services from './_services'
 import assert from 'assert'
@@ -21,8 +20,6 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
-  // await deployIdentity(page, seller)
-  // await deployIdentity(page, buyer)
 
   await page.evaluate(() => {
     window.transactionPoll = 100
