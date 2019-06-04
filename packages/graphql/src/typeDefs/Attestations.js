@@ -9,6 +9,7 @@ export const mutations = `
     verifyFacebook(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
     verifyTwitter(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
     verifyGoogle(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
+    verifyKakao(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!

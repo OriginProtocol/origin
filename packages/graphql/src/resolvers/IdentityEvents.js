@@ -22,7 +22,8 @@ const progressPct = {
   twitterVerified: 10,
   googleVerified: 10,
   airbnbVerified: websiteAttestationEnabled ? 5 : 10,
-  websiteVerified: websiteAttestationEnabled ? 5 : 0
+  websiteVerified: websiteAttestationEnabled ? 5 : 0,
+  kakaoVerified: 0
 }
 
 function getAttestations(account, attestations) {
@@ -33,7 +34,8 @@ function getAttestations(account, attestations) {
     twitterVerified: false,
     airbnbVerified: false,
     googleVerified: false,
-    websiteVerified: false
+    websiteVerified: false,
+    kakaoVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -62,6 +64,9 @@ function getAttestations(account, attestations) {
       }
       if (siteName === 'google.com') {
         result.googleVerified = true
+      }
+      if (siteName === 'kakao.com') {
+        result.kakaoVerified = true
       }
     }
   })
@@ -267,6 +272,22 @@ export default {
       return null
     }
     let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
+    if (args.redirect) {
+      authUrl += `?redirect=${args.redirect}`
+    }
+    const response = await fetch(authUrl, {
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include'
+    })
+    const authData = await response.json()
+    return authData.url
+  },
+  kakaoAuthUrl: async (_, args) => {
+    const bridgeServer = contracts.config.bridge
+    if (!bridgeServer) {
+      return null
+    }
+    let authUrl = `${bridgeServer}/api/attestations/kakao/auth-url`
     if (args.redirect) {
       authUrl += `?redirect=${args.redirect}`
     }

@@ -48,6 +48,7 @@ import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import verifyGoogle from './attestations/verifyGoogle'
+import verifyKakao from './attestations/verifyKakao'
 import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
 
@@ -107,6 +108,7 @@ export default {
   verifyEmailCode,
   verifyFacebook,
   verifyGoogle,
+  verifyKakao,
   verifyPhoneCode,
   verifyTwitter,
   verifyWebsite,
