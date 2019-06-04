@@ -41,7 +41,8 @@ class EditListing extends Component {
           'title',
           'description',
           'category',
-          'subCategory'
+          'subCategory',
+          'seller'
         ]),
         acceptedTokens: tokens.length ? tokens : ['token-ETH'],
         quantity: String(props.listing.unitsTotal),
@@ -74,7 +75,13 @@ class EditListing extends Component {
       }
     }
 
-    return <CreateListing listing={listing} refetch={this.props.refetch} />
+    return (
+      <CreateListing
+        seller={get(this.props, 'listing.seller.id')}
+        listing={listing}
+        refetch={this.props.refetch}
+      />
+    )
   }
 }
 

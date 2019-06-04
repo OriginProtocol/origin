@@ -1,11 +1,16 @@
+import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import contracts from '../contracts'
-import hasProxy from '../utils/hasProxy'
+import { proxyOwner, resetProxyCache, predictedProxy } from '../utils/proxy'
 import get from 'lodash/get'
+import createDebug from 'debug'
 
 import { getTransaction } from '../resolvers/web3/transactions'
 import relayer from './_relayer'
+
+const debug = createDebug('origin:tx-helper:')
+const formatAddr = address => (address ? address.substr(0, 8) : '')
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -15,6 +20,12 @@ export async function checkMetaMask(from) {
       throw new Error(`MetaMask is not on network ${net}`)
     }
     const mmAccount = await contracts.metaMask.eth.getAccounts()
+
+    const owner = await proxyOwner(from)
+    if (owner) {
+      from = owner
+    }
+
     if (!mmAccount || mmAccount[0] !== from) {
       throw new Error(`MetaMask is not set to account ${from}`)
     }
@@ -25,23 +36,74 @@ export async function checkMetaMask(from) {
 // to hang
 const isServer = typeof window === 'undefined'
 
+// Should we try to use the relayer
 function useRelayer({ mutation, value }) {
-  if (!contracts.config.relayer) return false
-  if (!mutation) return false
-  if (mutation === 'makeOffer' && value) return false
-  if (mutation === 'transferToken') return false
-  if (mutation === 'swapToToken') return false
-  return window.localStorage.enableRelayer ? true : false
+  if (isServer) return
+
+  let reason
+  if (!window.localStorage.enableRelayer) reason = 'disabled in localStorage'
+  if (!contracts.config.relayer) reason = 'relayer not configured'
+  if (!mutation) reason = 'no mutation specified'
+
+  if (mutation === 'makeOffer' && value) reason = 'makeOffer has a value'
+  if (mutation === 'transferToken') reason = 'transferToken is disabled'
+  if (mutation === 'swapToToken') reason = 'swapToToken is disabled'
+  if (reason) {
+    debug(`cannot useRelayer: ${reason}`)
+    return false
+  }
+  return true
 }
 
-function useProxy({ proxy, addr, to, mutation }) {
-  if (!contracts.config.proxyAccountsEnabled) return false
-  if (!proxy) return false
-  if (addr === proxy && mutation !== 'deployIdentityViaProxy') return false
-  if (to) return false
-  if (mutation === 'updateTokenAllowance') return false
-  if (mutation === 'swapToToken') return false
-  return true
+/**
+ * Should we use existing proxy, create new proxy, or don't use proxy at all.
+ * @param proxy     Existing proxy address
+ * @param addr      Contract address
+ * @param to        Receipient wallet
+ * @param from      Wallet address (proxy owner)
+ * @param mutation  Name of mutation
+ * @returns String or `undefined` if proxy should not be used.
+ *  - execute: Wrap transaction with proxy's `execute` method
+ *  - execute-no-wrap: Send transaction direct to proxy
+ *  - create: Wrap transaction with proxy's `changeOwnerAndExecute` method
+ *  - create-no-wrap: Send transaction direct to proxy after creation
+ */
+async function useProxy({ proxy, addr, to, from, mutation }) {
+  if (isServer) return
+  const { proxyAccountsEnabled } = contracts.config
+  const predicted = await predictedProxy(from)
+  const targetIsProxy = addr === predicted
+
+  if (!proxyAccountsEnabled) {
+    debug('cannot useProxy: disabled in config')
+    return
+  } else if (to) {
+    debug('cannot useProxy: sending value to wallet')
+    return
+  } else if (mutation === 'updateTokenAllowance') {
+    // Since token approvals need to come direct from a wallet, don't use proxy
+    debug('cannot useProxy: updateTokenAllowance should come from wallet')
+    return
+  } else if (mutation === 'swapToToken') {
+    debug('cannot useProxy: swapToToken disabled')
+    return
+  }
+
+  if (proxy) {
+    debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
+    return targetIsProxy ? 'execute-no-wrap' : 'execute'
+  } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
+    // For 'first time' interactions, create proxy and execute in single transaction
+    debug(`useProxy: create`)
+    return 'create'
+  } else if (mutation === 'makeOffer') {
+    // If the target contract is the same as the predicted proxy address,
+    // no need to wrap with changeOwnerAndExecute
+    debug(`useProxy: ${targetIsProxy ? 'create-no-wrap' : 'create'}`)
+    return targetIsProxy ? 'create-no-wrap' : 'create'
+  }
+
+  debug('cannot useProxy: no proxy specified')
 }
 
 export default function txHelper({
@@ -56,17 +118,66 @@ export default function txHelper({
   web3 // web3.js instance
 }) {
   return new Promise(async (resolve, reject) => {
+    debug(`Mutation ${mutation} from ${formatAddr(from)}`)
+
     let txHash
     let toSend = tx
     web3 = contracts.web3Exec
 
-    // Use proxy if this wallet has one deployed
-    const proxy = await hasProxy(from)
+    // If the from address is a proxy, find the owner
+    const owner = await proxyOwner(from)
+    const proxy = owner ? from : null
+    from = owner || from
 
-    if (useRelayer({ mutation, value })) {
-      const address = tx._parent._address
+    const addr = get(tx, '_parent._address')
+    const shouldUseRelayer = useRelayer({ mutation, value })
+    const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
+
+    // If this user doesn't have a proxy yet, create one
+    if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
+      const txData = await tx.encodeABI()
+      let initFn = txData
+      if (shouldUseProxy === 'create') {
+        debug('wrapping tx with Proxy.changeOwnerAndExecute')
+        const Proxy = new web3.eth.Contract(IdentityProxy.abi)
+        initFn = await Proxy.methods
+          .changeOwnerAndExecute(from, addr, value || '0', txData)
+          .encodeABI()
+      }
+
+      debug('wrapping tx with Proxy.createProxyWithSenderNonce')
+      const Contract = new web3.eth.Contract(
+        ProxyFactory.abi,
+        contracts.config.ProxyFactory
+      )
+      toSend = Contract.methods.createProxyWithSenderNonce(
+        contracts.config.IdentityProxyImplementation,
+        initFn,
+        from,
+        '0'
+      )
+      // TODO: result from estimateGas is too low. Need to work out exact amount
+      // gas = await toSend.estimateGas({ from })
+      gas = 1000000
+    } else if (shouldUseProxy && !shouldUseRelayer) {
+      debug('wrapping tx with Proxy.execute')
+      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
+      const txData = await tx.encodeABI()
+      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
+      // TODO: result from estimateGas is too low. Need to work out exact amount
+      // gas = await toSend.estimateGas({ from })
+      gas = 1000000
+    }
+
+    if (shouldUseRelayer && shouldUseProxy) {
+      const address = toSend._parent._address
       try {
-        const relayerResponse = await relayer({ tx, proxy, from, to: address })
+        const relayerResponse = await relayer({
+          tx: toSend,
+          proxy,
+          from,
+          to: address
+        })
         const hasCallbacks = onReceipt || onConfirmation ? true : false
 
         /**
@@ -92,17 +203,11 @@ export default function txHelper({
 
         return resolve(relayerResponse)
       } catch (err) {
-        console.log('Relayer error', err)
+        // Re-throw in a timeout so we can catch the error in tests
+        setTimeout(() => {
+          throw err
+        }, 1)
       }
-    }
-
-    const addr = get(tx, '_parent._address')
-    if (useProxy({ proxy, addr, to, mutation })) {
-      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
-      const txData = await tx.encodeABI()
-      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
-      gas = await toSend.estimateGas({ from })
-      gas += 100000
     }
 
     if (web3 && to) {
@@ -145,6 +250,9 @@ export default function txHelper({
         })
       })
       .once('receipt', receipt => {
+        if (String(shouldUseProxy).startsWith('create')) {
+          resetProxyCache()
+        }
         if (onReceipt) {
           onReceipt(receipt)
         }
@@ -166,8 +274,13 @@ export default function txHelper({
         }
       })
       .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
-        if (confNumber === 1 && onConfirmation) {
-          onConfirmation(receipt)
+        if (confNumber === 1) {
+          if (String(shouldUseProxy).indexOf('create') === 0) {
+            resetProxyCache()
+          }
+          if (onConfirmation) {
+            onConfirmation(receipt)
+          }
         }
         if (confNumber > 0) {
           pubsub.publish('TRANSACTION_UPDATED', {

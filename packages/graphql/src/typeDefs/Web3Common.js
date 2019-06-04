@@ -17,6 +17,7 @@ module.exports = `
     identity: Identity
     owner: Account
     proxy: Account
+    predictedProxy: Account
   }
 
   type Block {

@@ -10,8 +10,10 @@ const messageTemplates = {
   message: {
     mobile: {
       messageReceived: {
-        title: 'New Origin Message',
-        body: 'You have received a message on Origin.'
+        title: _.template('New Origin Message from <%- senderName %>'),
+        body: _.template(
+          'You have received a message on Origin from <%- senderName %>.'
+        )
       }
     },
     email: {
@@ -29,24 +31,34 @@ const messageTemplates = {
   seller: {
     mobile: {
       OfferCreated: {
-        title: 'New Offer',
-        body: 'A buyer has made an offer on your listing.'
+        title: _.template('New Offer for <%= listing.title %>'),
+        body: _.template(
+          'A buyer has made an offer on your listing <%= listing.title %>'
+        )
       },
       OfferWithdrawn: {
-        title: 'Offer Withdrawn',
-        body: 'An offer on your listing has been withdrawn.'
+        title: _.template('Offer Withdrawn for <%= listing.title %>'),
+        body: _.template(
+          'An offer on your listing <%= listing.title %> has been withdrawn.'
+        )
       },
       OfferDisputed: {
-        title: 'Dispute Initiated',
-        body: 'A problem has been reported with your transaction.'
+        title: _.template('Dispute Initiated for <%= listing.title %>'),
+        body: _.template(
+          'A problem has been reported with your transaction for <%= listing.title %>.'
+        )
       },
       OfferRuling: {
-        title: 'Dispute Resolved',
-        body: 'A ruling has been issued on your disputed transaction.'
+        title: _.template('Dispute Resolved for <%= listing.title %>'),
+        body: _.template(
+          'A ruling has been issued on your disputed transaction for <%= listing.title %>.'
+        )
       },
       OfferFinalized: {
-        title: 'Sale Completed',
-        body: 'Your transaction has been completed.'
+        title: _.template('Sale Completed for <%= listing.title %>'),
+        body: _.template(
+          'Your transaction for <%= listing.title %> has been completed.'
+        )
       }
     },
     email: {
@@ -104,24 +116,34 @@ const messageTemplates = {
   buyer: {
     mobile: {
       OfferWithdrawn: {
-        title: 'Offer Rejected',
-        body: 'An offer you made has been rejected.'
+        title: _.template('Offer Rejected for <%= listing.title %>'),
+        body: _.template(
+          'An offer you made for <%= listing.title %> has been rejected.'
+        )
       },
       OfferAccepted: {
-        title: 'Offer Accepted',
-        body: 'An offer you made has been accepted.'
+        title: _.template('Offer Accepted for <%= listing.title %>'),
+        body: _.template(
+          'An offer you made for <%= listing.title %> has been accepted.'
+        )
       },
       OfferDisputed: {
-        title: 'Dispute Initiated',
-        body: 'A problem has been reported with your transaction.'
+        title: _.template('Dispute Initiated for <%= listing.title %>'),
+        body: _.template(
+          'A problem has been reported with your transaction for <%= listing.title %>.'
+        )
       },
       OfferRuling: {
-        title: 'Dispute Resolved',
-        body: 'A ruling has been issued on your disputed transaction.'
+        title: _.template('Dispute Resolved for <%= listing.title %>'),
+        body: _.template(
+          'A ruling has been issued on your disputed transaction for <%= listing.title %>.'
+        )
       },
       OfferData: {
-        title: 'New Review',
-        body: 'A review has been left on your transaction.'
+        title: _.template('New Review for <%= listing.title %>'),
+        body: _.template(
+          'A review has been left on your transaction for <%= listing.title %>.'
+        )
       }
     },
     email: {

@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
+import { proxyOwner } from '../utils/proxy'
 
 const websiteAttestationEnabled =
   process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
@@ -69,15 +70,25 @@ function getAttestations(account, attestations) {
 }
 
 export function identity({ id, ipfsHash }) {
+  if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
+    return JSON.parse(localStorage.useWeb3Identity)
+  }
+
   const [account, blockNumber] = id.split('-')
   id = account
   return new Promise(async resolve => {
     if (!contracts.identityEvents.options.address || !id) {
       return null
     }
+    let accounts = id
     if (!ipfsHash) {
+      const owner = await proxyOwner(id)
+      if (owner) {
+        accounts = [id, owner]
+      }
+
       const events = await contracts.identityEvents.eventCache.getEvents({
-        account: id
+        account: accounts
       })
       events.forEach(event => {
         if (blockNumber < event.blockNumber) {
@@ -110,7 +121,7 @@ export function identity({ id, ipfsHash }) {
         'avatarUrl',
         'description'
       ]),
-      ...getAttestations(id, data.attestations || []),
+      ...getAttestations(accounts, data.attestations || []),
       strength: 0,
       ipfsHash,
       owner: {

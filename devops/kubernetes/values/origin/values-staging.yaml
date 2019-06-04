@@ -2,12 +2,12 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '62b3b74'
+bridgeImageTag: '0707833'
 bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '8881165'
+dappImageTag: '189a707'
 dappReplicas: 2
 
 # origin-ipfs-proxy
@@ -20,15 +20,15 @@ faucetImageTag: 'a1f1b45'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '8881165'
+eventlistenerImageTag: '189a707'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '8940022'
+discoveryImageTag: 'a0e9eaf'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '8881165'
+growthImageTag: '0707833'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -36,7 +36,7 @@ messagingImageTag: 'a1f1b45'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '8940022'
+notificationsImageTag: '08090f5'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -61,12 +61,12 @@ cronImageTag: '3813ae6'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: 'a1f1b45'
+adminImageTag: '08090f5'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '3813ae6'
+relayerImageTag: '0707833'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '8881165'
+graphqlImageTag: '189a707'

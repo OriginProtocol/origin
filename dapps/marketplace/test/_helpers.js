@@ -69,8 +69,19 @@ export const clickBySelector = async (page, path) => {
 export const changeAccount = async (page, account) => {
   await page.evaluate(account => {
     window.localStorage.useWeb3Wallet = account
+    window.localStorage.useWeb3Identity = JSON.stringify({
+      id: account,
+      profile: {
+        firstName: 'Test',
+        lastName: 'Account',
+        description: '',
+        avatar: ''
+      },
+      attestations: [],
+      strength: 0
+    })
   }, account)
-  await new Promise(resolve => setTimeout(resolve, 500))
+  await new Promise(resolve => setTimeout(resolve, 1500))
 }
 
 export const createAccount = async page => {

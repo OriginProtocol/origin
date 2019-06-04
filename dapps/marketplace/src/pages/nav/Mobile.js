@@ -22,87 +22,92 @@ class MobileNav extends Component {
     const EarnTokens = this.EarnTokens
 
     return (
-      <Dropdown
-        className="nav-item mobile d-flex d-md-none"
-        open={this.props.open}
-        onClose={() => this.props.onClose()}
-        content={
-          <div className="dropdown-menu show">
-            <Link
-              onClick={() => onClose()}
-              to="/"
-              className="dropdown-item browse"
-              children={fbt('Browse Categories', 'navigation.BrowseCategories')}
-            />
-            <Link
-              onClick={() => onClose()}
-              to="/create"
-              className="dropdown-item add"
-              children={fbt('Add a Listing', 'navigation.AddaListing')}
-            />
-            <EarnTokens
-              className="dropdown-item earn"
-              onClose={() => onClose()}
-              onNavigation={() => onClose()}
-            >
-              <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-            </EarnTokens>
-            <div className="dropdown-divider" />
-            <h6 className="dropdown-header">My Items</h6>
-            <Link
-              onClick={() => onClose()}
-              to="/my-purchases"
-              className="dropdown-item purchases"
-              children={fbt('Purchases', 'navigation.purchases')}
-            />
-            <Link
-              onClick={() => onClose()}
-              to="/my-listings"
-              className="dropdown-item listings"
-              children={fbt('Listings', 'navigation.listings')}
-            />
-            <Link
-              onClick={() => onClose()}
-              to="/my-sales"
-              className="dropdown-item sales"
-              children={fbt('Sales', 'navigation.sales')}
-            />
-            <div className="dropdown-divider" />
-            <Link
-              onClick={() => onClose()}
-              to="/messages"
-              className="dropdown-item messages"
-              children={fbt('Messages', 'navigation.messages')}
-            />
-            <Link
-              onClick={() => onClose()}
-              to="/notifications"
-              className="dropdown-item notifications"
-              children={fbt('Notifications', 'navigation.notifications')}
-            />
-            <Link
-              onClick={() => onClose()}
-              to="/settings"
-              className="dropdown-item settings"
-              children={fbt('Settings', 'navigation.settings')}
-            />
-            {/* <a href="#" className="dropdown-item transactions">
-              Transactions
-            </a> */}
-          </div>
-        }
-      >
-        <a
-          className="nav-link"
-          href="#"
-          onClick={e => {
-            e.preventDefault()
-            this.props.open ? this.props.onClose() : this.props.onOpen()
-          }}
+      <>
+        <Dropdown
+          className="nav-item mobile d-flex d-md-none"
+          open={this.props.open}
+          onClose={() => this.props.onClose()}
+          content={
+            <div className="dropdown-menu show">
+              <Link
+                onClick={() => onClose()}
+                to="/"
+                className="dropdown-item browse"
+                children={fbt(
+                  'Browse Categories',
+                  'navigation.BrowseCategories'
+                )}
+              />
+              <Link
+                onClick={() => onClose()}
+                to="/create"
+                className="dropdown-item add"
+                children={fbt('Add a Listing', 'navigation.AddaListing')}
+              />
+              <EarnTokens
+                className="dropdown-item earn"
+                onClose={() => onClose()}
+                onNavigation={() => onClose()}
+              >
+                <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+              </EarnTokens>
+              <div className="dropdown-divider" />
+              <h6 className="dropdown-header">My Items</h6>
+              <Link
+                onClick={() => onClose()}
+                to="/my-purchases"
+                className="dropdown-item purchases"
+                children={fbt('Purchases', 'navigation.purchases')}
+              />
+              <Link
+                onClick={() => onClose()}
+                to="/my-listings"
+                className="dropdown-item listings"
+                children={fbt('Listings', 'navigation.listings')}
+              />
+              <Link
+                onClick={() => onClose()}
+                to="/my-sales"
+                className="dropdown-item sales"
+                children={fbt('Sales', 'navigation.sales')}
+              />
+              <div className="dropdown-divider" />
+              <Link
+                onClick={() => onClose()}
+                to="/messages"
+                className="dropdown-item messages"
+                children={fbt('Messages', 'navigation.messages')}
+              />
+              <Link
+                onClick={() => onClose()}
+                to="/notifications"
+                className="dropdown-item notifications"
+                children={fbt('Notifications', 'navigation.notifications')}
+              />
+              <Link
+                onClick={() => onClose()}
+                to="/settings"
+                className="dropdown-item settings"
+                children={fbt('Settings', 'navigation.settings')}
+              />
+              {/* <a href="#" className="dropdown-item transactions">
+                Transactions
+              </a> */}
+            </div>
+          }
         >
-          <div className={`mobile-icon${hasUnread}`} />
-        </a>
-      </Dropdown>
+          <a
+            className="nav-link"
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              this.props.open ? this.props.onClose() : this.props.onOpen()
+            }}
+          >
+            <div className={`mobile-icon${hasUnread}`} />
+          </a>
+        </Dropdown>
+      </>
     )
   }
 }

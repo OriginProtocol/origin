@@ -1,4 +1,5 @@
 const HOST = process.env.HOST || 'localhost'
+const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
@@ -18,7 +19,7 @@ const config = {
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
   performanceMode: false,
-  graphql: `http://${HOST}:4002`,
+  graphql: `http://${HOST}:4007`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
   affiliate: addresses.Affiliate,
@@ -31,7 +32,7 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
   tokens: [],
 
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
