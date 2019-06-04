@@ -142,13 +142,20 @@ export default async function listings(
   }
 
   let ids = [],
-    totalCount = 0
+    totalCount = 0,
+    discoveryError = false
 
   if (contracts.discovery) {
-    const discoveryResult = await searchIds(search, filters)
-    ids = discoveryResult.ids
-    totalCount = ids.length
-  } else {
+    try {
+      const discoveryResult = await searchIds(search, filters)
+      ids = discoveryResult.ids
+      totalCount = ids.length
+    } catch (err) {
+      console.log('Failed to retrieve results from discovery server', err)
+      discoveryError = true
+    }
+  }
+  if (!contracts.discovery || discoveryError) {
     const decentralizedResults = await allIds({ contract, sort, hidden })
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount

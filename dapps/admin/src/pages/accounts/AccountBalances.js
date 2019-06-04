@@ -43,7 +43,13 @@ class AccountBalances extends Component {
               <td>{a.name}</td>
               <td>{get(a, 'balance.eth')}</td>
               <td>
-                <Price amount={get(a, 'balance.eth')} />
+                <Price
+                  target="fiat-USD"
+                  price={{
+                    amount: get(a, 'balance.eth'),
+                    currency: 'token-ETH'
+                  }}
+                />
               </td>
               {tokens.map(token => (
                 <td key={token.id}>
