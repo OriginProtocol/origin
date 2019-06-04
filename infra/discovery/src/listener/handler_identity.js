@@ -228,7 +228,7 @@ class IdentityEventHandler {
 
   /**
    * Records a ProfilePublished event in the growth_event table.
-   * Identity must have a first name, last name and avatar picture.
+   * if the identity has a first name and last name.
    *
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
@@ -239,12 +239,8 @@ class IdentityEventHandler {
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
     const validFirstName = identity.firstName && identity.firstName.length > 0
     const validLastName = identity.lastName && identity.lastName.length > 0
-    // Check avatar image presence either as data URI encoded in the avatar field
-    // or as an IPFS URL in the avatarUrl field.
-    const validAvatar =
-      (identity.avatar && identity.avatar.length > 0) ||
-      (identity.avatarUrl && identity.avatarUrl.length > 0)
-    const validProfile = validFirstName && validLastName && validAvatar
+
+    const validProfile = validFirstName && validLastName
     if (!validProfile) {
       return
     }
