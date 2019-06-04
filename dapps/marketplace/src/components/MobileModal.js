@@ -53,12 +53,6 @@ export default class MobileModal extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!this.props.shouldClose && nextProps.shouldClose) {
-  //     this.doClose()
-  //   }
-  // }
-
   renderContent() {
     if (this.props.fullscreen === false) {
       this.portal.classList.add('contained')

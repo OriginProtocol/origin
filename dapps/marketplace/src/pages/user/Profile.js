@@ -25,7 +25,6 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
-// import Redirect from 'components/Redirect'
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
@@ -284,9 +283,6 @@ class UserProfile extends Component {
   }
 
   renderProfile(arrivedFromOnboarding) {
-    // if (!arrivedFromOnboarding && !this.props.identityLoading && !this.props.identity) {
-    //   return <Redirect to={`/onboard`} />
-    // }
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
         m.push(this.state[`${key}Attestation`])

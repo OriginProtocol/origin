@@ -16,7 +16,7 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
-// import DeployProxy from '../identity/mutations/DeployProxy'
+import DeployProxy from '../identity/mutations/DeployProxy'
 
 class ProfileNav extends Component {
   constructor() {
@@ -39,8 +39,6 @@ class ProfileNav extends Component {
             return null
           }
 
-          // const walletType = data.web3.walletType
-          // const { checksumAddress } = data.web3.primaryAccount
           return (
             <Dropdown
               el="li"
@@ -51,7 +49,6 @@ class ProfileNav extends Component {
                 <ProfileDropdown
                   identity={identity}
                   identityLoading={identityLoading}
-                  // walletType={walletType}
                   onClose={() => this.props.onClose()}
                   data={data}
                 />
@@ -130,11 +127,9 @@ class CreateIdentity extends Component {
   }
 
   onClose = () => {
-    // this.setState({ enable: false }, () => {
     if (this.props.onClose) {
       this.props.onClose()
     }
-    // })
   }
 }
 
@@ -225,9 +220,9 @@ const ProfileDropdownRaw = ({
   identity,
   identityLoading,
   walletType,
-  // wallet,
-  // walletProxy,
-  // config,
+  wallet,
+  walletProxy,
+  config,
   onClose
 }) => {
   const { checksumAddress, id } = data.web3.primaryAccount
@@ -237,20 +232,19 @@ const ProfileDropdownRaw = ({
       <div className="active-wallet-info">
         <Network />
         <WalletAddress wallet={checksumAddress} walletType={walletType} />
-        {/* {!config.proxyAccountsEnabled ? null : (
-          <>
+        {!config.proxyAccountsEnabled ? null : (
+          <div className="connected mt-2 proxy-acct">
+            <fbt desc="nav.profile.proxyAccount">Proxy Account</fbt>
             {walletProxy === wallet ? (
               <DeployProxy
                 className="btn btn-sm btn-outline-primary px-3"
                 children="Deploy"
               />
             ) : (
-              <WalletAddress wallet={walletProxy} walletType={walletType}>
-                <fbt desc="nav.profile.proxyAccount">Proxy Account</fbt>
-              </WalletAddress>
+              <span>{walletProxy}</span>
             )}
-          </>
-        )} */}
+          </div>
+        )}
       </div>
       <div className="identity-info">
         <Identity
@@ -325,6 +319,15 @@ require('react-styl')(`
     .active-wallet-info
       padding: 1rem
       background-color: black
+      .connected.proxy-acct
+        display: flex
+        align-items: center
+        justify-content: space-between
+        white-space: nowrap
+        > span
+          text-overflow: ellipsis
+          overflow: hidden
+          margin-left: 0.5rem
       .connected
         padding: 0
         color: var(--light)
@@ -372,7 +375,7 @@ require('react-styl')(`
           color: white
           font-size: 0.9rem
           margin-bottom: 1.75rem
-      
+
        .identity
          font-weight: bold
          .info

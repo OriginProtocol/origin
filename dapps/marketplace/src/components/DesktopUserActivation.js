@@ -20,8 +20,6 @@ import Modal from './Modal'
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
 
-// import DeployProxy from 'pages/identity/mutations/DeployProxy'
-
 import { uploadImages } from 'utils/uploadImages'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
@@ -812,7 +810,7 @@ require('react-styl')(`
       .actions
         .btn
           width: auto
-      
+
       .avatar
         border-radius: 50%
     &.personal-data-modal, &.sign-tx-modal
@@ -835,7 +833,7 @@ require('react-styl')(`
           line-height: 1.43
           color: var(--dark)
           margin-bottom: 2.25rem
-  .pl-modal .pl-modal-table .pl-modal-cell 
+  .pl-modal .pl-modal-table .pl-modal-cell
     .pl-modal-content.user-activation
       &.sign-tx-modal, &.personal-data-modal
         padding: 0

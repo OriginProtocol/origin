@@ -6,7 +6,6 @@ import Enum from 'utils/enum'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import { getAttestationReward } from 'utils/growthTools'
-// import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 

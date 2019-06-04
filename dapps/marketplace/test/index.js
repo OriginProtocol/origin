@@ -1,7 +1,6 @@
 import {
   changeAccount,
   waitForText,
-  // hasText,
   clickByText,
   clickBySelector,
   pic,
@@ -396,12 +395,6 @@ function listingTests() {
       await clickByText(page, 'OK', 'button')
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
-
-    // it('should skip the wizard', async function() {
-    //   if (await hasText(page, 'Skip', 'button')) {
-    //     await clickByText(page, 'Skip', 'button')
-    //   }
-    // })
 
     it('should publish the profile changes', async function() {
       await pic(page, 'profile-before-publish')

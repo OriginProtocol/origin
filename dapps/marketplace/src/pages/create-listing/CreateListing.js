@@ -9,7 +9,6 @@ import withIdentity from 'hoc/withIdentity'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
-// import Redirect from 'components/Redirect'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
