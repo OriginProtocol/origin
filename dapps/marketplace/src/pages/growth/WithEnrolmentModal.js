@@ -137,38 +137,23 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     // Renders mobile header with close button when on mobile device
-    renderMobileHeaderOption(title) {
+    setMobileHeader(title) {
       if (this.state.modalTitle === title) {
-        return null
+        return
       }
 
       this.setState({
         modalTitle: title
       })
-
-      return null
-      // return (
-      //   <div className="header d-flex mb-4">
-      //     <div
-      //       className="col-2 d-flex justify-content-center align-items-center back"
-      //       onClick={() => {
-      //         this.setState({
-      //           open: false
-      //         })
-      //       }}
-      //     >
-      //       <img src="images/close-button.svg" />
-      //     </div>
-      //     <div className="container d-flex justify-content-center align-items-center col-8">
-      //       {title}
-      //     </div>
-      //     <div className="col-2" />
-      //   </div>
-      // )
     }
 
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
+
+      this.setMobileHeader(
+        fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+      )
+
       return (
         <Query
           query={allCampaignsQuery}
@@ -199,9 +184,6 @@ function withEnrolmentModal(WrappedComponent) {
 
             return (
               <div className="join-campaign">
-                {this.renderMobileHeaderOption(
-                  fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
-                )}
                 <div className="internal-modal-content">
                   <div>
                     <img
@@ -253,6 +235,10 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
 
+      this.setMobileHeader(
+        fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
+      )
+
       const cancelButton = (
         <button
           className={`btn ${
@@ -280,12 +266,6 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <div>
-          {this.renderMobileHeaderOption(
-            fbt(
-              'Sign Up for Origin Rewards',
-              'WithEnrolmentModal.SignUpForOrigin'
-            )
-          )}
           <div className="internal-modal-content">
             {!isMobile && (
               <div className="title title-light mt-2">
@@ -370,11 +350,12 @@ function withEnrolmentModal(WrappedComponent) {
       const isRestricted = eligibility === 'Restricted'
       const isForbidden = eligibility === 'Forbidden'
 
+      this.setMobileHeader(
+        fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
+      )
+
       return (
         <div>
-          {this.renderMobileHeaderOption(
-            fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
-          )}
           <div>
             <div className="image-holder mr-auto ml-auto">
               <img src="images/growth/earth-graphic.svg" />
