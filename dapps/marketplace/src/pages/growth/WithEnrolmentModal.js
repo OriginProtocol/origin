@@ -574,7 +574,11 @@ function withEnrolmentModal(WrappedComponent) {
                   return (
                     <Fragment>
                       <WrappedComponent
-                        {...omit(this.props, ['onClose', 'onNavigation', 'onCompleted'])}
+                        {...omit(this.props, [
+                          'onClose',
+                          'onNavigation',
+                          'onCompleted'
+                        ])}
                         onClick={e =>
                           this.handleClick(
                             e,
