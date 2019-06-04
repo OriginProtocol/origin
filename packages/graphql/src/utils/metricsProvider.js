@@ -145,7 +145,6 @@ function convertWeb3Provider(provider) {
  * @returns {object} - An initialized web3 instance with the altered providers
  */
 function addMetricsProvider(web3Inst, options) {
-
   // Our new shiny subproviders
   const convertedProvider = convertWeb3Provider(web3Inst.currentProvider)
   const metricsProvider = new MetricsProvider(options)
@@ -161,7 +160,7 @@ function addMetricsProvider(web3Inst, options) {
     blockTracker: new EthBlockTracker({
       provider: convertedProvider,
       pollingInterval: 15000,
-      setSkipCacheFlag: false,
+      setSkipCacheFlag: false
     })
   })
 
