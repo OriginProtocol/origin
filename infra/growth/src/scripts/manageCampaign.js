@@ -74,6 +74,13 @@ async function createJuneProdCampaign() {
   })
 }
 
+async function updateJuneProdRules() {
+  console.log('Updating June campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 4 } })
+  await campaign.update({ rules: JSON.stringify(juneConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -101,6 +108,11 @@ if (args['--action'] === 'create') {
 } else if (args['--action'] === 'update') {
   if (args['--month'] === 'may') {
     updateMayProdRules().then(() => {
+      console.log('Done')
+      process.exit()
+    })
+  } else if (args['--month'] === 'june') {
+    updateJuneProdRules().then(() => {
       console.log('Done')
       process.exit()
     })
