@@ -493,7 +493,7 @@ class UserActivation extends Component {
                 const avatarImg = uploadedImages[0]
                 if (avatarImg) {
                   const avatarUrl = avatarImg.url
-                  this.setState({ avatar, avatarUrl, avatarError: null })
+                  this.setState({ avatar, avatarUrl })
                 }
               }}
             >
@@ -654,7 +654,6 @@ class UserActivation extends Component {
     let newState = {
       firstNameError: null,
       lastNameError: null,
-      avatarError: null,
       valid: true
     }
 
@@ -677,14 +676,6 @@ class UserActivation extends Component {
           'Last Name is required',
           'UserActivation.lastNameRequired'
         )
-      }
-    }
-
-    if (!this.state.avatar) {
-      newState = {
-        ...newState,
-        valid: false,
-        avatarError: fbt('Avatar is required', 'UserActivation.avatarRequired')
       }
     }
 
