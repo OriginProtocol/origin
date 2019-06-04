@@ -1,4 +1,3 @@
-import contracts from '../contracts'
 const ORIGIN_GQL_VERSION = require('../../package.json').version
 
 export default {
