@@ -54,6 +54,11 @@ class MarketplaceScreen extends Component {
       this.injectMessagingKeys.bind(this)
     )
 
+    DeviceEventEmitter.addListener(
+      'graphqlQuery',
+      this.injectGraphqlQuery.bind(this)
+    )
+
     this.onWebViewMessage = this.onWebViewMessage.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
 
@@ -223,13 +228,36 @@ class MarketplaceScreen extends Component {
           window.ReactNativeWebView.postMessage(JSON.stringify({
             targetFunc: 'scrollHandler',
             data: document.documentElement.scrollTop || document.body.scrollTop
-          }))
+          }));
         }
       })();
     `
     if (this.dappWebView) {
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
+  }
+
+  injectGraphqlQuery(query, variables = {}) {
+    const injectedJavaScript = `
+      (function() {
+        window.gql.query({
+          query: ${JSON.stringify(query)},
+          variables: ${JSON.stringify(variables)}
+        }).then((response) => {
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            targetFunc: 'handleGraphqlQueryResponse',
+            data: response
+          }));
+        });
+      })();
+    `
+    if (this.dappWebView) {
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
+  handleGraphqlQueryResponse(response) {
+    DeviceEventEmitter.emit('graphqlQueryResponse', response)
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -292,7 +320,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting currency request')
+      console.debug('Injecting uiState request')
       this.dappWebView.injectJavaScript(requestUIStateInjection)
     }
   }

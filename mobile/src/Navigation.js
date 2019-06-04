@@ -25,6 +25,7 @@ import WalletScreen from 'screens/wallet'
 import AuthenticationGuard from 'components/authentication-guard'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
+import FetchAccountScreen from 'screens/onboarding/fetch-account'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
 import EmailScreen from 'screens/onboarding/email'
@@ -46,10 +47,11 @@ const OnboardingStack = createStackNavigator(
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
-        navigateOnSuccess: 'Authentication',
+        navigateOnSuccess: 'FetchAccount',
         cancelRoute: 'Welcome'
       }
     },
+    FetchAccount: FetchAccountScreen,
     Email: EmailScreen,
     Phone: PhoneScreen,
     Name: NameScreen,

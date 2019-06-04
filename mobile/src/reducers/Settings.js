@@ -3,8 +3,11 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
+const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
+const origin = NETWORKS.find(n => n.name === 'Origin')
+
 const initialState = {
-  network: NETWORKS.find(n => n.name === 'Mainnet'),
+  network: __DEV__ ? origin : mainnet,
   deviceToken: null,
   language: null,
   pin: null,
