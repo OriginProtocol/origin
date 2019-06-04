@@ -20,6 +20,9 @@ if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
   logger.info('Loaded DEV risk engine.')
 }
 
+const env = process.env
+const isTestEnv = env.NODE_ENV === 'test'
+
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
   4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
@@ -34,7 +37,9 @@ const ContractAddresses = {
   2222: '@origin/contracts/build/contracts_origin.json'
 }
 
-const env = process.env
+if (isTestEnv) {
+  ContractAddresses['999'] = '@origin/contracts/build/tests.json'
+}
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
@@ -128,6 +133,8 @@ class Relayer {
    * @private
    */
   async _createDbTx(req, status, from, to, method, forwarder, ip, geo) {
+    if (!db.RelayerTxn) return
+
     // TODO: capture extra signals for fraud detection and store in data.
     const data = geo ? { ip, country: geo.countryCode } : { ip }
 
@@ -169,7 +176,7 @@ class Relayer {
 
     // Get the IP from the request header and resolve it into a country code.
     const ip = req.header('x-real-ip')
-    const geo = await ip2geo(ip)
+    const geo = isTestEnv ? '' : await ip2geo(ip)
 
     // Check if the relayer is willing to process the transaction.
     const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
@@ -220,12 +227,12 @@ class Relayer {
       if (!proxy) {
         if (to !== this.addresses.ProxyFactory) {
           throw new Error('Incorrect ProxyFactory address provided')
-        } else if (method.name !== 'createProxyWithNonce') {
+        } else if (method.name !== 'createProxyWithSenderNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
         }
         logger.debug('Deploying proxy')
         const args = { to, data: txData, from: Forwarder }
-        const gas = await web3.eth.estimateGas(args)
+        const gas = 2000000 //await web3.eth.estimateGas(args)
         dbTx = await this._createDbTx(
           req,
           enums.RelayerTxnStatuses.Pending,
@@ -236,9 +243,11 @@ class Relayer {
         )
         tx = web3.eth.sendTransaction({ ...args, gas })
       } else {
-        logger.debug('Forwarding transaction')
+        logger.debug('Forwarding transaction to ' + to)
         const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
-        const gas = await rawTx.estimateGas({ from: Forwarder })
+        // const gas = await rawTx.estimateGas({ from: Forwarder })
+        // logger.debug('Estimated gas ' + gas)
+        const gas = 1000000
         dbTx = await this._createDbTx(
           req,
           enums.RelayerTxnStatuses.Pending,
@@ -248,7 +257,7 @@ class Relayer {
           Forwarder
         )
         // TODO: Not sure why we need extra gas here
-        tx = rawTx.send({ from: Forwarder, gas: gas + 100000 })
+        tx = rawTx.send({ from: Forwarder, gas })
       }
 
       txHash = await new Promise((resolve, reject) => {
@@ -257,30 +266,31 @@ class Relayer {
             // Once block is mined, record the amount of gas and update
             // the status of the transaction in the DB.
             const gas = receipt.gasUsed
-            await dbTx.update({
-              status: enums.RelayerTxnStatuses.Confirmed,
-              gas
-            })
-            logger.info(
-              `Confirmed tx with hash ${
-                receipt.transactionHash
-              }. Paid ${gas} gas`
-            )
+            const hash = receipt.transactionHash
+            if (dbTx) {
+              const status = enums.RelayerTxnStatuses.Confirmed
+              await dbTx.update({ status, gas })
+            }
+            logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
           })
           .catch(async reason => {
-            await dbTx.update({
-              status: enums.RelayerTxnStatuses.Failed
-            })
+            if (dbTx) {
+              await dbTx.update({ status: enums.RelayerTxnStatuses.Failed })
+            }
             logger.error('Transaction failure:', reason)
             reject(reason)
           })
       })
       // Record the transaction hash in the DB.
       logger.info(`Submitted tx with hash ${txHash}`)
-      await dbTx.update({ txHash })
+      if (dbTx) {
+        await dbTx.update({ txHash })
+      }
     } catch (err) {
       logger.error(err)
-      return res.status(400).send({ errors: ['Error forwarding'] })
+      const errors = ['Error forwarding']
+      if (isTestEnv) errors.push(err.toString())
+      return res.status(400).send({ errors })
     }
 
     // Return the transaction hash to the caller.

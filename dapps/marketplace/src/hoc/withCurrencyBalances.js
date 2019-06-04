@@ -3,6 +3,8 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import get from 'lodash/get'
 
+import withWallet from './withWallet'
+
 const query = gql`
   query GetCurrencyBalances(
     $tokens: [String]
@@ -50,9 +52,9 @@ function withCurrencyBalances(WrappedComponent) {
       skip={!props.wallet}
       variables={{
         account: props.wallet,
-        proxy: props.walletProxy,
+        proxy: props.walletPredictedProxy,
         tokens: props.targets,
-        useProxy: props.walletProxy !== props.wallet
+        useProxy: props.walletPredictedProxy !== props.wallet
       }}
       fetchPolicy="network-only"
     >
@@ -65,7 +67,7 @@ function withCurrencyBalances(WrappedComponent) {
       )}
     </Query>
   )
-  return WithCurrencyBalances
+  return withWallet(WithCurrencyBalances)
 }
 
 export default withCurrencyBalances

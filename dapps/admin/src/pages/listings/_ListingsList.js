@@ -6,7 +6,6 @@ import { Tag, Icon } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'
-import TokenPrice from 'components/TokenPrice'
 
 function status(listing) {
   if (listing.status === 'active') {
@@ -35,7 +34,6 @@ const Listings = ({ listings, history }) => {
           <th>Category</th>
           <th>Title</th>
           <th>Price</th>
-          <th>USD</th>
           <th>Deposit</th>
           <th>Seller</th>
           <th>Created</th>
@@ -64,10 +62,7 @@ const Listings = ({ listings, history }) => {
               </div>
             </td>
             <td>
-              <TokenPrice {...a.price} />
-            </td>
-            <td>
-              <Price amount={a.price ? a.price.amount : 0} />
+              <Price target="fiat-USD" price={a.price} />
             </td>
             <td>
               {a.deposit !== '0'

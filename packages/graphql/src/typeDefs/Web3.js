@@ -64,7 +64,7 @@ module.exports = `
     toggleMetaMask(enabled: Boolean): Boolean
     deployToken(name: String!, symbol: String!, decimals: String!, supply: String!, type: String, from: String): Transaction
     transferToken(token: String!, from: String!, to: String!, value: String!): Transaction
-    updateTokenAllowance(token: String!, from: String!, to: String!, value: String!): Transaction
+    updateTokenAllowance(token: String!, from: String!, to: String!, value: String!, forceProxy: Boolean): Transaction
     useFaucet(wallet: String!, networkId: String): Boolean
 
     sendFromNode(from: String!, to: String!, value: String!): Transaction
