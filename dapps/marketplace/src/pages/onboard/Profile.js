@@ -63,7 +63,8 @@ class OnboardProfile extends Component {
           'phoneVerified',
           'emailVerified',
           'googleVerified',
-          'websiteVerified'
+          'websiteVerified',
+          'kakaoVerified'
         ])
       )
     }

@@ -89,6 +89,12 @@ const User = ({ match }) => {
                           Website
                         </div>
                       )}
+                      {profile.kakaoVerified && (
+                        <div>
+                          <div className="attestation kakao" />
+                          Kakao
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

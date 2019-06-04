@@ -107,6 +107,14 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation website" />
                     </Tooltip>
                   )}
+                  {profile.kakaoVerified && (
+                    <Tooltip
+                      tooltip={fbt('KaKao Verified', 'KaKao Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation kakao" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>

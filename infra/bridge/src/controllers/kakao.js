@@ -32,7 +32,9 @@ router.get('/auth-url', (req, res) => {
     req.session.redirect = redirect
   }
 
-  const url = `${constants.KAKAO_BASE_AUTH_URL}/authorize?${querystring.stringify(params)}`
+  const url = `${
+    constants.KAKAO_BASE_AUTH_URL
+  }/authorize?${querystring.stringify(params)}`
   res.send({ url: url })
 })
 
@@ -78,11 +80,9 @@ router.post('/verify', kakaoVerify, async (req, res) => {
   // use that data to generate the attetation
   let userDataResponse
   try {
-    userDataResponse = await request
-      .get(constants.KAKAO_PROFILE_URL)
-      .set({
-        Authorization: `Bearer ${accessToken}`
-      })
+    userDataResponse = await request.get(constants.KAKAO_PROFILE_URL).set({
+      Authorization: `Bearer ${accessToken}`
+    })
   } catch (error) {
     logger.error(error)
     return res.status(500).send({

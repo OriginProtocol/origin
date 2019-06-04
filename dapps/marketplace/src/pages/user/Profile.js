@@ -33,6 +33,7 @@ import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
+import KakaoAttestation from 'pages/identity/KakaoAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -48,7 +49,8 @@ const AttestationComponents = {
   twitter: TwitterAttestation,
   airbnb: AirbnbAttestation,
   google: GoogleAttestation,
-  website: WebsiteAttestation
+  website: WebsiteAttestation,
+  kakao: KakaoAttestation
 }
 
 const ProfileFields = [
@@ -64,7 +66,8 @@ const ProfileFields = [
   'phoneVerified',
   'emailVerified',
   'googleVerified',
-  'websiteVerified'
+  'websiteVerified',
+  'kakaoVerified'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -127,7 +130,8 @@ class UserProfile extends Component {
         profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
         profile.airbnbVerified !== prevProfile.airbnbVerified ||
-        profile.websiteVerified !== prevProfile.websiteVerified) &&
+        profile.websiteVerified !== prevProfile.websiteVerified ||
+        profile.kakaoVerified !== prevProfile.kakaoVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -206,6 +210,10 @@ class UserProfile extends Component {
       {
         attestation: 'websiteAttestation',
         message: fbt('Website updated', 'profile.websiteUpdated')
+      },
+      {
+        attestation: 'kakaoAttestation',
+        message: fbt('KaKao updated', 'profile.kakaoUpdated')
       }
     ]
 
@@ -355,6 +363,11 @@ class UserProfile extends Component {
                   this.renderAtt(
                     'website',
                     fbt('Website', '_ProvisionedChanges.website')
+                  )}
+                {process.env.ENABLE_KAKAO_ATTESTATION === 'true' &&
+                  this.renderAtt(
+                    'kakao',
+                    fbt('KaKao', '_ProvisionedChanges.kakao')
                   )}
               </div>
             </div>

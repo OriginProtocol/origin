@@ -20,6 +20,9 @@ export function unpublishedStrength({ props, state }) {
     strength += websiteAttestationEnabled ? 5 : 10
   if (!profile.websiteVerified && state.websiteAttestation)
     strength += websiteAttestationEnabled ? 5 : 0
+
+  // TODO: Add strength for KaKao
+
   return strength
 }
 
@@ -43,7 +46,9 @@ export function changesToPublishExist({ props, state }) {
     !!profile.airbnbVerified ===
       (!!state.airbnbAttestation || !!state.airbnbVerified) &&
     !!profile.websiteVerified ===
-      (!!state.websiteAttestation || !!state.websiteVerified)
+      (!!state.websiteAttestation || !!state.websiteVerified) &&
+    !!profile.kakaoVerified ===
+      (!!state.kakaoAttestation || !!state.kakaoVerified)
   )
 }
 

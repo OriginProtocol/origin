@@ -122,6 +122,7 @@ const config = {
       ORIGIN_LINKING: null,
       ENABLE_GOOGLE_ATTESTATION: false,
       ENABLE_WEBSITE_ATTESTATION: false,
+      ENABLE_KAKAO_ATTESTATION: false,
       SENTRY_DSN: null,
       NAMESPACE: 'dev'
     })
