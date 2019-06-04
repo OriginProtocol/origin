@@ -24689,9 +24689,9 @@ web3-provider-engine@^15.0.0:
     xhr "^2.2.0"
     xtend "^4.0.1"
 
-web3-provider-engine@mikeshultz/web3-provider-engine#too-many-requests:
+web3-provider-engine@mikeshultz/web3-provider-engine#origin-protocol:
   version "15.0.0"
-  resolved "https://codeload.github.com/mikeshultz/web3-provider-engine/tar.gz/c2bbd7483ca13b57a088f542bce3760356a217bd"
+  resolved "https://codeload.github.com/mikeshultz/web3-provider-engine/tar.gz/f3dd07a5720e7b8eb3df57cb41e053655427fc1a"
   dependencies:
     async "^2.5.0"
     backoff "^2.5.0"
