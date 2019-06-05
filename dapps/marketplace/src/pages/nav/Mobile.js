@@ -34,6 +34,16 @@ class MobileNav extends Component {
                 onClick={() => this.props.onClose()}
               />
               <div className="dropdown-menu show">
+                <a
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault()
+                    this.props.onClose()
+                  }}
+                  className="dropdown-item close-dropdown"
+                >
+                  &nbsp;
+                </a>
                 <Link
                   onClick={() => onClose()}
                   to="/"
@@ -121,14 +131,14 @@ require('react-styl')(`
       background: url(images/nav/menu-icon.svg) no-repeat center
       background-size: contain
       position:relative
-    &.show
+    &.show2
       background-color: var(--pale-grey)
       .mobile-icon
         background-image: url(images/nav/menu-icon-active.svg)
 
     .dropdown-menu
       background-color: var(--white)
-      padding: 1rem 0
+      padding: 11px 0 1rem 0
       border-radius: 0 5px 5px 5px
       top: 0
       &::before
@@ -149,7 +159,7 @@ require('react-styl')(`
         font-weight: bold
         position: relative
         line-height: normal
-        padding: 0.75rem 3rem 0.75rem 3.75rem
+        padding: 0.5rem 1.5rem 0.5rem 3.75rem
         overflow: hidden
         text-overflow: ellipsis
         &::before
@@ -162,9 +172,12 @@ require('react-styl')(`
           background-repeat: no-repeat
           background-position: center left
           background-size: 22px
-        &.browse::before
-          background-image: url(images/nav/categories-icon.svg)
+        &.close-dropdown::before
+          background-image: url(images/nav/close-icon.svg)
           background-size: 26px
+          left: 17px
+        &.home::before
+          background-image: url(images/nav/home-icon.svg)
         &.add::before
           background-image: url(images/nav/add-listing-icon.svg)
         &.earn::before
@@ -181,16 +194,6 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
-        &::after
-          position: absolute
-          right: 1.75rem
-          top: 1.125rem
-          content: ""
-          border-top: 2px solid var(--bluey-grey)
-          border-right: 2px solid var(--bluey-grey)
-          width: 10px
-          height: 10px
-          transform: rotate(45deg)
 
   @media (max-width: 767.98px)
     .navbar .nav-item.mobile .dropdown-menu-bg
