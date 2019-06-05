@@ -13,7 +13,16 @@ class Gallery extends Component {
         <div
           className="main-pic"
           style={{ backgroundImage: `url(${active.urlExpanded})` }}
+        >
+        <button
+          className = "right-arrow"
+          onClick={() => {this.state.active<pics.length-1 ? this.setState({ active: this.state.active + 1 }):''}}
         />
+        <button
+          className = "left-arrow"
+          onClick={() => {this.state.active>0 ? this.setState({ active: this.state.active - 1 }):''}}
+        />
+        </div>
         {pics.length === 1 ? null : (
           <div className="thumbnails">
             <div className="inner">
@@ -42,6 +51,25 @@ require('react-styl')(`
     .main-pic
       flex: 1
       height: 100%
+      position: relative;
+    button
+      position: absolute;
+      transform: translate(0%,-50%);
+      background-color: Transparent;
+      background-repeat:no-repeat;
+      cursor:pointer;
+      height: 50px;
+      width: 38px;
+      border: none;
+      outline:none;
+    .right-arrow
+      top: 50%;
+      right: 0%;
+      background-image: url(images/right-arrow-small.svg);
+    .left-arrow
+      top: 50%;
+      left: 0%;
+      background-image: url(images/left-arrow-small.svg);
     .thumbnails
       height: 80px
       .inner
