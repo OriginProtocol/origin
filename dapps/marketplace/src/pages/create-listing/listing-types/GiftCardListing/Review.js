@@ -100,18 +100,29 @@ class Review extends Component {
                   Issuing Country
                 </fbt>
               </div>
-              <div className="col-9">
-                {countryCodeMapping['en'][listing.issuingCountry]}
+              <div className="col-9 d-flex">
+                <img
+                  className="country-flag-img"
+                  src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
+                />
+
+                <div style={{ flex: 1 }}>
+                  {countryCodeMapping['en'][listing.issuingCountry]}
+                </div>
               </div>
             </div>
 
             <div className="row">
               <div className="col-3 label">
-                <fbt desc="create.details.giftcard.isDigital">
-                  Is this card digital?
-                </fbt>
+                <fbt desc="create.details.giftcard.isDigital">Card type</fbt>
               </div>
-              <div className="col-9">{listing.isDigital ? 'Yes' : 'No'}</div>
+              <div className="col-9">
+                {listing.isDigital ? (
+                  <fbt desc="digital">Digital</fbt>
+                ) : (
+                  <fbt desc="physical">Physical</fbt>
+                )}
+              </div>
             </div>
 
             <div className="row">
@@ -121,7 +132,11 @@ class Review extends Component {
                 </fbt>
               </div>
               <div className="col-9">
-                {listing.isCashPurchase ? 'Yes' : 'No'}
+                {listing.isCashPurchase ? (
+                  <fbt desc="yes">Yes</fbt>
+                ) : (
+                  <fbt desc="no">No</fbt>
+                )}
               </div>
             </div>
 
@@ -132,7 +147,11 @@ class Review extends Component {
                 </fbt>
               </div>
               <div className="col-9">
-                {listing.receiptAvailable ? 'Yes' : 'No'}
+                {listing.receiptAvailable ? (
+                  <fbt desc="yes">Yes</fbt>
+                ) : (
+                  <fbt desc="no">No</fbt>
+                )}
               </div>
             </div>
 
@@ -198,12 +217,12 @@ class Review extends Component {
                 </div>
               </div>
             )}
-            <div className="row">
-              <div className="col-3 label">
-                <fbt desc="create.review.photos">Photos</fbt>
-              </div>
-              <div className="col-9">
-                {listing.media.length ? (
+            {listing.media.length <= 1 ? null : (
+              <div className="row">
+                <div className="col-3 label">
+                  <fbt desc="create.review.photos">Photos</fbt>
+                </div>
+                <div className="col-9">
                   <div className="photos">
                     {listing.media.slice(1).map((image, idx) => (
                       <div
@@ -213,13 +232,9 @@ class Review extends Component {
                       />
                     ))}
                   </div>
-                ) : (
-                  <i>
-                    <fbt desc="create.review.no photos">No Photos</fbt>
-                  </i>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="actions">
@@ -261,3 +276,10 @@ class Review extends Component {
 }
 
 export default withWallet(withTokenBalance(withConfig(Review)))
+
+require('react-styl')(`
+  .country-flag-img
+    width: 2rem
+    height: 2rem
+    margin-right: .5rem
+`)

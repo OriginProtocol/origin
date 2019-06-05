@@ -14,7 +14,7 @@ const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
-const { ip2geo } = require('@origin/growth/src/util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
@@ -43,6 +43,8 @@ class IdentityEventHandler {
       return 'phone'
     } else if (attestation.data.attestation.email) {
       return 'email'
+    } else if (attestation.data.attestation.domain) {
+      return 'website'
     } else {
       logger.error(`Failed extracting service from attestation ${attestation}`)
     }
@@ -167,6 +169,12 @@ class IdentityEventHandler {
           case 'google':
             decoratedIdentity.googleVerified = true
             break
+          case 'website':
+            decoratedIdentity.website = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WEBSITE'
+            )
+            break
         }
       })
     )
@@ -208,7 +216,8 @@ class IdentityEventHandler {
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
       country: decoratedIdentity.country,
-      avatarUrl: decoratedIdentity.avatarUrl
+      avatarUrl: decoratedIdentity.avatarUrl,
+      website: decoratedIdentity.website
     }
 
     logger.debug('Identity=', identityRow)
@@ -218,7 +227,9 @@ class IdentityEventHandler {
   }
 
   /**
-   * Records a ProfilePublished event in the growth_event table.
+   * Records a ProfilePublished event in the growth_event table
+   * at the condition that the identity has a first name and last name.
+   *
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @param {Date} Event date.
@@ -226,10 +237,10 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
-    // Check required fields are populated.
-    const validProfile =
-      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
-      identity.avatar.length > 0
+    const validFirstName = identity.firstName && identity.firstName.length > 0
+    const validLastName = identity.lastName && identity.lastName.length > 0
+
+    const validProfile = validFirstName && validLastName
     if (!validProfile) {
       return
     }

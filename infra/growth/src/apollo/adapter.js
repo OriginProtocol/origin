@@ -1,3 +1,4 @@
+const db = require('../models')
 const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
@@ -39,7 +40,14 @@ class ApolloAdapter {
    * @private
    */
   _ruleIdToActionType(ruleId) {
-    const actionType = ruleIdToActionType[ruleId]
+    let actionType
+    // Test if it matches format "ListingPurchase<listingId>"
+    // otherwise use the ruleIdToActionType dictionary.
+    if (ruleId.match(/^ListingPurchase\d+$/)) {
+      actionType = 'ListingIdPurchased'
+    } else {
+      actionType = ruleIdToActionType[ruleId]
+    }
     if (!actionType) {
       throw new Error(`Unexpected ruleId ${ruleId}`)
     }
@@ -75,6 +83,8 @@ class ApolloAdapter {
       return null
     }
 
+    const omitUserData = data.ethAddress === null
+
     // Fetch common data across all action types.
     let action = {
       ruleId: data.ruleId,
@@ -91,6 +101,10 @@ class ApolloAdapter {
     // Some action types require to fetch extra custom data.
     switch (action.type) {
       case 'Referral':
+        if (omitUserData) {
+          break
+        }
+
         const referralsInfo = await this._getReferralsActionData(data)
         action = { ...action, ...referralsInfo }
         break
@@ -125,19 +139,44 @@ const campaignToApolloObject = async (
   ethAddress,
   adapter = new ApolloAdapter()
 ) => {
+  const campaign = crules.campaign
   const out = {
-    id: crules.campaign.id,
-    nameKey: crules.campaign.nameKey,
-    shortNameKey: crules.campaign.shortNameKey,
-    name: crules.campaign.name,
-    startDate: crules.campaign.startDate,
-    endDate: crules.campaign.endDate,
-    distributionDate: crules.campaign.distributionDate,
+    id: campaign.id,
+    nameKey: campaign.nameKey,
+    shortNameKey: campaign.shortNameKey,
+    startDate: campaign.startDate,
+    endDate: campaign.endDate,
+    distributionDate: campaign.distributionDate,
     status: crules.getStatus()
   }
 
-  // User is not enrolled. Return only basic campaign data.
+  // User is not enrolled or is banned.
+  // Return only basic campaign data.
   if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+    out.actions = await crules.export(adapter, null)
+    return out
+  }
+
+  // If campaign distribution is finalized, return the total amount paid out,
+  // but no other details about actions.
+  if (
+    campaign.rewardStatus === enums.GrowthCampaignRewardStatuses.Distributed
+  ) {
+    // Read the payout from the DB
+    const payout = await db.GrowthPayout.findOne({
+      where: {
+        toAddress: ethAddress,
+        campaignId: campaign.id,
+        status: enums.GrowthPayoutStatuses.Confirmed
+      }
+    })
+    if (!payout) {
+      // No payout was made to this account. Return 0 earnings.
+      out.rewardEarned = { amount: '0', currency: campaign.currency }
+    } else {
+      // Return payout made to the account.
+      out.rewardEarned = { amount: payout.amount, currency: payout.currency }
+    }
     return out
   }
 
@@ -147,10 +186,7 @@ const campaignToApolloObject = async (
 
   // Calculate total rewards earned so far.
   const rewards = await crules.getRewards(ethAddress)
-  out.rewardEarned = Money.sum(
-    rewards.map(r => r.value),
-    crules.campaign.currency
-  )
+  out.rewardEarned = Money.sum(rewards.map(r => r.value), campaign.currency)
 
   return out
 }

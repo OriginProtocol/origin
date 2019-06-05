@@ -1,4 +1,4 @@
-module.exports = `
+export const mutations = `
   extend type Mutation {
     generatePhoneCode(prefix: String!, method: String, phone: String!): AttestationCodeResult!
     verifyPhoneCode(prefix: String!, identity: String, phone: String!, code: String!): AttestationVerifyResult!
@@ -12,8 +12,12 @@ module.exports = `
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!
-  }
 
+    generateWebsiteCode(identity: String!, website: String!): AttestationCodeResult!
+    verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
+  }
+`
+export const types = `
   type AttestationCodeResult {
     success: Boolean
     reason: String
@@ -26,3 +30,5 @@ module.exports = `
     data: String
   }
 `
+
+export default types + mutations

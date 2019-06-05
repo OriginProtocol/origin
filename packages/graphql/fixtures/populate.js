@@ -11,6 +11,8 @@ import {
   SendFromNodeMutation,
   TransferTokenMutation,
   DeployMarketplaceMutation,
+  DeployProxyFactoryContractMutation,
+  DeployIdentityProxyMutation,
   UpdateTokenAllowanceMutation,
   AddAffiliateMutation,
   DeployIdentityEventsContractMutation,
@@ -115,6 +117,33 @@ export async function createAccount(gqlClient) {
   return user
 }
 
+// export async function deployIdentity(gqlClient, ethAddress) {
+//   const variables = {
+//     profile: {
+//       firstName: 'Test',
+//       lastName: 'Account',
+//       description: 'Tester',
+//       avatar: ''
+//     },
+//     attestations: [],
+//     from: ethAddress
+//   }
+
+//   let result
+//   try {
+//     result = await gqlClient.mutate({ DeployIdentityMutation, variables })
+//   } catch (e) {
+//     console.log(JSON.stringify(e, null, 4))
+//     throw e
+//   }
+//   const key = Object.keys(result.data)[0]
+//   const hash = result.data[key].id
+//   if (hash) {
+//     return await transactionConfirmed(hash, gqlClient)
+//   }
+//   return result.data[key]
+// }
+
 export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {
     variables.from = from
@@ -170,6 +199,12 @@ export default async function populate(gqlClient, log, done) {
     autoWhitelist: true
   })
   log(`Deployed marketplace to ${Marketplace.contractAddress}`)
+
+  const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)
+  log(`Deployed Proxy Factory to ${ProxyFactory.contractAddress}`)
+
+  const IdentityProxy = await mutate(DeployIdentityProxyMutation, Admin)
+  log(`Deployed Identity Proxy imp to ${IdentityProxy.contractAddress}`)
 
   await mutate(SendFromNodeMutation, NodeAccount, { to: Seller, value: '0.5' })
   log('Sent eth to seller')
@@ -299,7 +334,9 @@ export default async function populate(gqlClient, log, done) {
       IdentityEventsEpoch: IdentityEvents.blockNumber,
       UniswapFactory: UniswapFactory.contractAddress,
       UniswapExchTpl: UniswapExchTpl.contractAddress,
-      UniswapDaiExchange
+      UniswapDaiExchange,
+      ProxyFactory: ProxyFactory.contractAddress,
+      IdentityProxyImplementation: IdentityProxy.contractAddress
     })
   }
 }

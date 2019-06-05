@@ -1,6 +1,6 @@
 import withCurrencyBalances from 'hoc/withCurrencyBalances'
-import withWallet from 'hoc/withWallet'
 import get from 'lodash/get'
+import floor from 'lodash/floor'
 
 // web3.utils.toWei only accepts up to 18 decimal places
 function removeExtraDecimals(numStr) {
@@ -11,9 +11,12 @@ const WithPrices = ({
   target,
   targets = [],
   currencies,
+  proxyCurrencies,
   price: { currency, amount } = {},
   children
 }) => {
+  proxyCurrencies = proxyCurrencies.length ? proxyCurrencies : currencies
+
   let hasBalance = false,
     hasAllowance = false,
     needsAllowance,
@@ -30,7 +33,18 @@ const WithPrices = ({
     if (!targetCurrency) return memo
 
     const amountUSD = amount * foundCurrency.priceInUSD
-    const targetAmount = amountUSD / targetCurrency.priceInUSD
+    const targetAmount = floor(amountUSD / targetCurrency.priceInUSD, 16)
+
+    memo[target] = { amount: String(targetAmount), currency: targetCurrency }
+    return memo
+  }, {})
+
+  const proxyResults = targets.reduce((memo, target) => {
+    const targetCurrency = proxyCurrencies.find(c => c.id === target)
+    if (!targetCurrency) return memo
+
+    const amountUSD = amount * foundCurrency.priceInUSD
+    const targetAmount = floor(amountUSD / targetCurrency.priceInUSD, 16)
 
     memo[target] = { amount: String(targetAmount), currency: targetCurrency }
     return memo
@@ -53,7 +67,7 @@ const WithPrices = ({
       get(results, `${target}.currency.balance`) || '0'
     )
     const availableAllowance = web3.utils.toBN(
-      get(results, `${target}.currency.allowance`) || '0'
+      get(proxyResults, `${target}.currency.allowance`) || '0'
     )
 
     hasBalance = availableBalance.gte(targetValue)
@@ -76,4 +90,4 @@ const WithPrices = ({
   return children({ prices: results, tokenStatus })
 }
 
-export default withWallet(withCurrencyBalances(WithPrices))
+export default withCurrencyBalances(WithPrices)

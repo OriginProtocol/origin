@@ -6,6 +6,10 @@ import get from 'lodash/get'
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
+import { proxyOwner } from '../utils/proxy'
+
+const websiteAttestationEnabled =
+  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
 
 const progressPct = {
   firstName: 10,
@@ -18,7 +22,8 @@ const progressPct = {
   facebookVerified: 10,
   twitterVerified: 10,
   googleVerified: 10,
-  airbnbVerified: 10
+  airbnbVerified: websiteAttestationEnabled ? 5 : 10,
+  websiteVerified: websiteAttestationEnabled ? 5 : 0
 }
 
 function getAttestations(account, attestations) {
@@ -28,7 +33,8 @@ function getAttestations(account, attestations) {
     facebookVerified: false,
     twitterVerified: false,
     airbnbVerified: false,
-    googleVerified: false
+    googleVerified: false,
+    websiteVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -37,6 +43,9 @@ function getAttestations(account, attestations) {
       }
       if (get(attestation, 'data.attestation.phone.verified', false)) {
         result.phoneVerified = true
+      }
+      if (get(attestation, 'data.attestation.domain.verified', false)) {
+        result.websiteVerified = true
       }
       const siteName = get(attestation, 'data.attestation.site.siteName')
       if (siteName === 'facebook.com') {
@@ -61,15 +70,25 @@ function getAttestations(account, attestations) {
 }
 
 export function identity({ id, ipfsHash }) {
+  if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
+    return JSON.parse(localStorage.useWeb3Identity)
+  }
+
   const [account, blockNumber] = id.split('-')
   id = account
   return new Promise(async resolve => {
     if (!contracts.identityEvents.options.address || !id) {
       return null
     }
+    let accounts = id
     if (!ipfsHash) {
+      const owner = await proxyOwner(id)
+      if (owner) {
+        accounts = [id, owner]
+      }
+
       const events = await contracts.identityEvents.eventCache.getEvents({
-        account: id
+        account: accounts
       })
       events.forEach(event => {
         if (blockNumber < event.blockNumber) {
@@ -102,9 +121,12 @@ export function identity({ id, ipfsHash }) {
         'avatarUrl',
         'description'
       ]),
-      ...getAttestations(id, data.attestations || []),
+      ...getAttestations(accounts, data.attestations || []),
       strength: 0,
-      ipfsHash
+      ipfsHash,
+      owner: {
+        id
+      }
     }
 
     if (identity.firstName) {
@@ -119,15 +141,30 @@ export function identity({ id, ipfsHash }) {
       .join(' ')
 
     // Make old style embedded avatars access by their IPFS hash.
-    if (identity.avatarUrl === undefined && identity.avatar !== undefined) {
+    if (
+      identity.avatarUrl === undefined &&
+      identity.avatar !== undefined &&
+      identity.avatar.length > 0
+    ) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
-        identity.avatarUrl = await IpfsHash.of(Buffer.from(avatarBinary.buffer))
+        const avatarHash = await IpfsHash.of(avatarBinary.buffer)
+        identity.avatarUrl = 'ifps://' + avatarHash
       } catch {
         // If we can't translate an old avatar for any reason, don't worry about it.
         // We've already tested the backfill script, and not seen a problem
         // for all valid avatar images.
       }
+    }
+
+    // We have 149 identity.avatarUrls missing the ipfs:// protocol.
+    // Prepend ipfs:// if needed.
+    if (
+      identity.avatarUrl &&
+      identity.avatarUrl.length === 46 &&
+      identity.avatarUrl.indexOf('://') === -1
+    ) {
+      identity.avatarUrl = 'ipfs://' + identity.avatarUrl
     }
 
     if (identity.avatarUrl) {
@@ -147,18 +184,17 @@ export function identity({ id, ipfsHash }) {
   })
 }
 
+/**
+ * Extracts binary data and mime type from a data URI.
+ *
+ * @param dataURI
+ * @returns {{buffer: Buffer, mimeType: string}}
+ */
 function dataURItoBinary(dataURI) {
-  // From https://stackoverflow.com/questions/12168909/blob-from-dataurl
   const parts = dataURI.split(',')
-  const byteString = atob(parts[1])
-  const mimeString = parts[0].split(':')[1].split(';')[0]
-  const ab = new ArrayBuffer(byteString.length)
-  const ia = new Uint8Array(ab)
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
-  }
-  const blob = new Blob([ab], { type: mimeString })
-  return { blob, buffer: ab }
+  const mimeType = parts[0].split(':')[1].split(';')[0]
+  const buffer = new Buffer(parts[1], 'base64')
+  return { buffer, mimeType }
 }
 
 export async function identities(

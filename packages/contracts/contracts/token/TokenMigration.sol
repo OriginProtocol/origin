@@ -37,7 +37,7 @@ contract TokenMigration is Ownable {
     function migrateAccounts(address[] _holders) public onlyOwner notFinished {
         require(fromToken.paused(), "fromToken should be paused during migration");
         require(toToken.paused(), "toToken should be paused during migration");
-        
+
         for (uint i = 0; i < _holders.length; i++) {
             _migrateAccount(_holders[i]);
         }

@@ -38,6 +38,7 @@
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
     "json-stable-stringify": "^1.0.1",
+    "libphonenumber-js": "^1.7.18",
     "logplease": "^1.2.15",
     "mock-session": "0.0.5",
     "nock": "^10.0.6",

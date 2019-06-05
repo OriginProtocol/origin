@@ -281,7 +281,7 @@ async function sendPayoutEmail(ethAddress, amount, txHash) {
     return
   }
   const recipient = identity.email
-  logger.info(`Sending payout email to ${email} for account ${ethAddress}`)
+  logger.info(`Sending payout email to ${recipient} for account ${ethAddress}`)
 
   // Generate the content of the email.
   const vars = {

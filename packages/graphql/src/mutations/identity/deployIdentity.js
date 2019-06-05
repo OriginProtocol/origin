@@ -4,6 +4,7 @@ import validator from '@origin/validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
+import { hasProxy, resetProxyCache } from '../../utils/proxy'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(
@@ -11,6 +12,9 @@ async function deployIdentity(
   { from = contracts.defaultMobileAccount, profile = {}, attestations = [] }
 ) {
   await checkMetaMask(from)
+
+  let wallet = await hasProxy(from)
+  if (!wallet) wallet = from
 
   attestations = attestations
     .map(a => {
@@ -24,10 +28,10 @@ async function deployIdentity(
         return null
       }
     })
-    .filter(a => validateAttestation(from, a))
+    .filter(a => validateAttestation(wallet, a))
 
   profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
-  profile.ethAddress = from
+  profile.ethAddress = wallet
 
   const data = {
     schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
@@ -47,7 +51,8 @@ async function deployIdentity(
     tx: contracts.identityEventsExec.methods.emitIdentityUpdated(ipfsHash),
     from,
     mutation: 'deployIdentity',
-    gas: costs.emitIdentityUpdated
+    gas: costs.emitIdentityUpdated,
+    onConfirmation: () => resetProxyCache()
   })
 }
 

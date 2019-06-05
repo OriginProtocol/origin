@@ -7,6 +7,7 @@ import FinalizeOfferMutation from 'mutations/FinalizeOffer'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class FinalizeOffer extends Component {
   state = {}
@@ -98,4 +99,4 @@ class FinalizeOffer extends Component {
   }
 }
 
-export default withCanTransact(FinalizeOffer)
+export default withWallet(withCanTransact(FinalizeOffer))

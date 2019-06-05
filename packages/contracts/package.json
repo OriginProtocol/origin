@@ -8,6 +8,7 @@
   "scripts": {
     "build": "per-env",
     "build:development": "truffle compile contracts",
+    "build:solc": "node -r @babel/register scripts/compile",
     "build:production": "echo \"Warning: use release contracts for production\"",
     "test": "node scripts/test.js",
     "test:contracts": "mocha -r @babel/register -t 20000 --exit test-alt",
@@ -49,9 +50,10 @@
     "chalk": "^2.4.1",
     "cli-table": "^0.3.1",
     "ganache-core": "2.4.0",
+    "lodash-es": "^4.17.11",
     "mocha": "^5.2.0",
     "prettier-eslint-cli": "^4.7.1",
-    "solc": "^0.4.25",
+    "solc": "^0.5.8",
     "solidity-coverage": "^0.5.11",
     "solium": "^1.1.8",
     "web3-provider-engine": "^15.0.0"

@@ -4,7 +4,7 @@ const logger = require('./logger')
 try {
   require('envkey')
 } catch (error) {
-  logger.error('EnvKey not configured. Please set env var ENVKEY')
+  logger.warn('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const express = require('express')
@@ -253,6 +253,7 @@ app.post('/messages', async (req, res) => {
 
   const sender = req.body.sender // eth address
   const receivers = req.body.receivers // array of eth addresses
+  const messageHash = req.body.messageHash // hash of all message details
 
   if (!sender || !receivers) {
     console.warn('Invalid json received.')
@@ -260,10 +261,10 @@ app.post('/messages', async (req, res) => {
   }
 
   // Email notifications
-  messageEmailSend(receivers, sender, config)
+  messageEmailSend(receivers, sender, messageHash, config)
 
   // Mobile Push notifications
-  messageMobilePush(receivers, sender, config)
+  messageMobilePush(receivers, sender, messageHash, config)
 })
 
 /**
@@ -351,6 +352,7 @@ app.post('/events', async (req, res) => {
     buyerAddress,
     sellerAddress,
     offer,
+    listing,
     config
   )
 

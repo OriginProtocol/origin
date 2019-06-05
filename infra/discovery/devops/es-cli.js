@@ -35,7 +35,7 @@ const index = {
     listing: {
       properties: {
         'price.amount': { type: 'double' },
-        'price.currency.id': { type: 'text' },
+        'price.currency.id': { type: 'keyword' },
         commission: { type: 'double' },
         commissionPerUnit: { type: 'double' },
         unitsTotal: { type: 'integer' },
@@ -47,7 +47,8 @@ const index = {
         subCategory: { type: 'keyword', copy_to: 'all_text' },
         description: { type: 'text', copy_to: 'all_text' },
         title: { type: 'text', copy_to: 'all_text' },
-        all_text: { type: 'text' }
+        all_text: { type: 'text' },
+        scoreMultiplier: { type: 'double' }
       }
     }
   }
@@ -153,6 +154,7 @@ function printUsage() {
     Usage:
     es-cli.js createIndex [indexName]
     es-cli.js deleteIndex [indexName]
+    es-cli.js rebuildIndex [indexName]
     es-cli.js -i   --> interactive mode
   `)
 }
@@ -164,7 +166,8 @@ function printInteractiveUsage() {
 3 create alias
 4 delete alias
 5 delete index
-6 reindex
+6 reindex (copy to new index)
+7 rebuild index (copy to temp index, and copy back)
 9 show usage`)
 }
 
@@ -269,6 +272,72 @@ async function reindex() {
   console.log('Response: ', res)
 }
 
+// DO NOT RUN ON DATA YOU CARE ABOUT
+// OR CANNOT EASILY RECREATE
+async function rebuild(sourceIndex) {
+  console.log('STARTING')
+  console.log(sourceIndex)
+  if (sourceIndex === undefined) {
+    process.stdout.write('Rebuild index: ')
+    sourceIndex = await waitForInput()
+  }
+  const date = new Date()
+    .toISOString()
+    .toLowerCase()
+    .replace(/ |:|\./g, '-')
+  const tempIndex = `${sourceIndex}-temp-${date}`
+
+  let res
+
+  console.log(`⇨  Creating temp index: ${tempIndex}`)
+  res = await createIndexWithName(tempIndex)
+  console.log(res)
+  if (JSON.parse(res).acknowledged !== true) {
+    return false
+  }
+
+  console.log(`⇨  Copying to temp index: ${tempIndex}`)
+  res = await executePayloadRequest(
+    '_reindex',
+    `{"source": { "index": "${sourceIndex}" }, "dest": { "index": "${tempIndex}" }}`
+  )
+  console.log('Response: ', res)
+  if (JSON.parse(res).failures.length !== 0) {
+    return false
+  }
+
+  console.log(`⇨  Deleting original index`)
+  res = await deleteIndexWithName(sourceIndex)
+  console.log('Response: ', res)
+  if (JSON.parse(res).acknowledged !== true) {
+    return false
+  }
+
+  console.log(`⇨  Recreating original index: ${sourceIndex}`)
+  res = await createIndexWithName(sourceIndex)
+  console.log(res)
+  if (JSON.parse(res).acknowledged !== true) {
+    return false
+  }
+
+  console.log(`⇨  Dramatic pause`)
+  // Somhow it needs a little bit of time
+  await new Promise(resolve => setTimeout(resolve, 1000))
+
+  console.log(`⇨  Copying back to original index: ${sourceIndex}`)
+  res = await executePayloadRequest(
+    '_reindex',
+    `{"source": { "index": "${tempIndex}" }, "dest": { "index": "${sourceIndex}" }}`
+  )
+  console.log('Response: ', res)
+  if (JSON.parse(res).failures.length !== 0) {
+    return false
+  }
+
+  console.log(`You can manually delete ${tempIndex}`)
+  return true
+}
+
 async function createAlias() {
   process.stdout.write('Name of the index to apply alias to: ')
   const indexName = await waitForInput()
@@ -323,6 +392,16 @@ async function waitForInput() {
     })
     console.log(`Index ${indexName} deleted!`)
     process.exit(0)
+  } else if (process.argv[2] === 'rebuildIndex' && process.argv.length === 4) {
+    const indexName = process.argv[3]
+    const success = await rebuild(indexName)
+    if (success) {
+      console.log(`Index ${indexName} rebuilt!`)
+    } else {
+      console.log(`Index ${indexName} did not rebuild!`)
+    }
+
+    process.exit(0)
   }
   // interactive mode
   else if (process.argv[2] === '-i' && process.argv.length === 3) {
@@ -351,6 +430,8 @@ async function waitForInput() {
         await deleteIndex()
       } else if (input === '6') {
         await reindex()
+      } else if (input === '7') {
+        await rebuild()
       } else if (input === '9') {
         printInteractiveUsage()
       } else {
