@@ -1,5 +1,3 @@
-const Web3 = require('web3')
-
 const { withRetries } = require('./util')
 
 class ContractHelper {
@@ -13,8 +11,7 @@ class ContractHelper {
    * @returns {object} - Promise that resolves to contract object.
    */
   web3(networkId) {
-    const provider = this.config.providers[networkId]
-    return new Web3(provider)
+    return this.config.providers[networkId]
   }
 
   /**
