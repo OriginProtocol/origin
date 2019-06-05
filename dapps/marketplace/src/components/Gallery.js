@@ -14,14 +14,22 @@ class Gallery extends Component {
           className="main-pic"
           style={{ backgroundImage: `url(${active.urlExpanded})` }}
         >
-        <button
-          className = "right-arrow"
-          onClick={() => {this.state.active<pics.length-1 ? this.setState({ active: this.state.active + 1 }):''}}
-        />
-        <button
-          className = "left-arrow"
-          onClick={() => {this.state.active>0 ? this.setState({ active: this.state.active - 1 }):''}}
-        />
+          <button
+            className="right-arrow"
+            onClick={() => {
+              this.state.active < pics.length - 1
+                ? this.setState({ active: this.state.active + 1 })
+                : ''
+            }}
+          />
+          <button
+            className="left-arrow"
+            onClick={() => {
+              this.state.active > 0
+                ? this.setState({ active: this.state.active - 1 })
+                : ''
+            }}
+          />
         </div>
         {pics.length === 1 ? null : (
           <div className="thumbnails">
