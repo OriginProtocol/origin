@@ -96,7 +96,11 @@ function createProviders(networkIds) {
       web3.eth.defaultAccount = account.address
       providers[networkId] = web3
       if (process.env.NODE_ENV !== 'test') {
-        console.log(`Network=${networkId} URL=${providerUrl} Using private key for account ${account.address}`)
+        console.log(
+          `Network=${networkId} URL=${providerUrl} Using private key for account ${
+            account.address
+          }`
+        )
       }
     } else {
       if (process.env.NODE_ENV !== 'test') {
@@ -106,7 +110,9 @@ function createProviders(networkIds) {
           `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
         )
       }
-      providers[networkId] = new Web3(new HDWalletProvider(mnemonic, providerUrl))
+      providers[networkId] = new Web3(
+        new HDWalletProvider(mnemonic, providerUrl)
+      )
     }
   }
   return providers
