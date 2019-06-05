@@ -101,6 +101,12 @@ const User = ({ match }) => {
                           GitHub
                         </div>
                       )}
+                      {profile.linkedinVerified && (
+                        <div>
+                          <div className="attestation linkedin" />
+                          LinkedIn
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

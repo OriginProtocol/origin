@@ -11,6 +11,7 @@ const Attestations = ({ profile = {} }) => (
     {profile.websiteVerified && <div className="attestation website" />}
     {profile.kakaoVerified && <div className="attestation kakao" />}
     {profile.githubVerified && <div className="attestation github" />}
+    {profile.linkedinVerified && <div className="attestation linkedin" />}
   </div>
 )
 

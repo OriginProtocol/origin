@@ -43,6 +43,7 @@ export const types = `
     googleAuthUrl(redirect: String): String
     kakaoAuthUrl(redirect: String): String
     githubAuthUrl(redirect: String): String
+    linkedinAuthUrl(redirect: String): String
   }
 
   type IdentityConnection {
@@ -76,6 +77,7 @@ export const types = `
     websiteVerified: Boolean
     kakaoVerified: Boolean
     githubVerified: Boolean
+    linkedinVerified: Boolean
 
     name: String
     ipfsHash: String

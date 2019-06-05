@@ -41,6 +41,7 @@ import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import KakaoAttestation from 'pages/identity/KakaoAttestation'
 import GithubAttestation from 'pages/identity/GithubAttestation'
+import LinkedinAttestation from 'pages/identity/LinkedinAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -58,7 +59,8 @@ const AttestationComponents = {
   google: GoogleAttestation,
   website: WebsiteAttestation,
   kakao: KakaoAttestation,
-  github: GithubAttestation
+  github: GithubAttestation,
+  linkedin: LinkedinAttestation
 }
 
 const ProfileFields = [
@@ -76,7 +78,8 @@ const ProfileFields = [
   'googleVerified',
   'websiteVerified',
   'kakaoVerified',
-  'githubVerified'
+  'githubVerified',
+  'linkedinVerified'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -141,7 +144,8 @@ class UserProfile extends Component {
         profile.airbnbVerified !== prevProfile.airbnbVerified ||
         profile.websiteVerified !== prevProfile.websiteVerified ||
         profile.kakaoVerified !== prevProfile.kakaoVerified ||
-        profile.githubVerified !== prevProfile.githubVerified) &&
+        profile.githubVerified !== prevProfile.githubVerified ||
+        profile.linkedinVerified !== prevProfile.linkedinVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -228,6 +232,10 @@ class UserProfile extends Component {
       {
         attestation: 'githubAttestation',
         message: fbt('GitHub updated', 'profile.githubUpdated')
+      },
+      {
+        attestation: 'linkedinAttestation',
+        message: fbt('LinkedIn updated', 'profile.linkedinUpdated')
       }
     ]
 
@@ -391,6 +399,11 @@ class UserProfile extends Component {
                   'github',
                   fbt('GitHub', '_ProvisionedChanges.github'),
                   { hidden: process.env.ENABLE_GITHUB_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'linkedin',
+                  fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
+                  // { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>

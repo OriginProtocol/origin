@@ -123,6 +123,14 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation github" />
                     </Tooltip>
                   )}
+                  {profile.linkedinVerified && (
+                    <Tooltip
+                      tooltip={fbt('LinkedIn Verified', 'LinkedIn Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation linkedin" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>

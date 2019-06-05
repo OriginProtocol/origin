@@ -24,7 +24,8 @@ const progressPct = {
   airbnbVerified: websiteAttestationEnabled ? 5 : 10,
   websiteVerified: websiteAttestationEnabled ? 5 : 0,
   kakaoVerified: 0,
-  githubVerified: 0
+  githubVerified: 0,
+  linkedinVerified: 0
 }
 
 function getAttestations(account, attestations) {
@@ -37,7 +38,8 @@ function getAttestations(account, attestations) {
     googleVerified: false,
     websiteVerified: false,
     kakaoVerified: false,
-    githubVerified: false
+    githubVerified: false,
+    linkedinVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -51,27 +53,32 @@ function getAttestations(account, attestations) {
         result.websiteVerified = true
       }
       const siteName = get(attestation, 'data.attestation.site.siteName')
-      if (siteName === 'facebook.com') {
-        result.facebookVerified = get(
-          attestation,
-          'data.attestation.site.userId.verified',
-          false
-        )
-      }
-      if (siteName === 'airbnb.com') {
-        result.airbnbVerified = true
-      }
-      if (siteName === 'twitter.com') {
-        result.twitterVerified = true
-      }
-      if (siteName === 'google.com') {
-        result.googleVerified = true
-      }
-      if (siteName === 'kakao.com') {
-        result.kakaoVerified = true
-      }
-      if (siteName === 'github.com') {
-        result.githubVerified = true
+      switch (siteName) {
+        case 'facebook.com':
+          result.facebookVerified = get(
+            attestation,
+            'data.attestation.site.userId.verified',
+            false
+          )
+          break
+        case 'airbnb.com':
+          result.airbnbVerified = true
+          break
+        case 'twitter.com':
+          result.twitterVerified = true
+          break
+        case 'google.com':
+          result.googleVerified = true
+          break
+        case 'kakao.com':
+          result.kakaoVerified = true
+          break
+        case 'github.com':
+          result.githubVerified = true
+          break
+        case 'linkedin.com':
+          result.linkedinVerified = true
+          break
       }
     }
   })
@@ -279,5 +286,8 @@ export default {
   },
   githubAuthUrl: (_, args) => {
     return getAuthURL('github', args)
+  },
+  linkedinAuthUrl: (_, args) => {
+    return getAuthURL('linkedin', args)
   }
 }

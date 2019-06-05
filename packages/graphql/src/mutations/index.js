@@ -52,6 +52,7 @@ import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
 import verifyKakao from './attestations/verifyKakao'
 import verifyGithub from './attestations/verifyGithub'
+import verifyLinkedin from './attestations/verifyLinkedin'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -111,6 +112,7 @@ export default {
   verifyGithub,
   verifyGoogle,
   verifyKakao,
+  verifyLinkedin,
   verifyPhoneCode,
   verifyTwitter,
   verifyWebsite,

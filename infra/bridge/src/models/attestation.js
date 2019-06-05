@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         'GOOGLE',
         'WEBSITE',
         'KAKAO',
-        'GITHUB'
+        'GITHUB',
+        'LINKEDIN'
       ),
       // Ethereum address of the attestation. Lowercase.
       ethAddress: DataTypes.CHAR(42),
@@ -52,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
     GOOGLE: 'GOOGLE',
     WEBSITE: 'WEBSITE',
     KAKAO: 'KAKAO',
-    GITHUB: 'GITHUB'
+    GITHUB: 'GITHUB',
+    LINKEDIN: 'LINKEDIN'
   }
   Attestation.associate = function() {
     // associations can be defined here

@@ -52,4 +52,6 @@ router.get('/kakao', oauth2RedirectHandler)
 
 router.get('/github', oauth2RedirectHandler)
 
+router.get('/linkedin', oauth2RedirectHandler)
+
 module.exports = router

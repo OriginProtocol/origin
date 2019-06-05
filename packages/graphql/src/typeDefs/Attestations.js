@@ -11,6 +11,7 @@ export const mutations = `
     verifyGoogle(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
     verifyKakao(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
     verifyGithub(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
+    verifyLinkedin(identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!
