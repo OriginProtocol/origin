@@ -10,6 +10,12 @@ const proxyCreationCode = memoize(async () => {
 })
 
 async function predictedProxyRaw(address) {
+  if (
+    !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyFactory._address
+  ) {
+    return null
+  }
   const web3 = contracts.web3Exec
   const salt = web3.utils.soliditySha3(address, 0)
   const creationCode = await proxyCreationCode()
