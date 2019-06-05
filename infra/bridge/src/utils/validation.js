@@ -38,6 +38,12 @@ const urlValidation = website => {
   return true
 }
 
+const oauth2CallbackVerify = [
+  identityValidation,
+  check('code').custom(codeValidation),
+  handleValidationError
+]
+
 const airbnbGenerateCode = [
   identityValidation,
   check('airbnbUserId')
@@ -79,11 +85,7 @@ const emailVerifyCode = [
   handleValidationError
 ]
 
-const facebookVerify = [
-  identityValidation,
-  check('code').custom(codeValidation),
-  handleValidationError
-]
+const facebookVerify = oauth2CallbackVerify
 
 const phoneGenerateCode = [
   check('country_calling_code')
@@ -130,11 +132,7 @@ const twitterVerifyCode = [
   handleValidationError
 ]
 
-const googleVerify = [
-  identityValidation,
-  check('code').custom(codeValidation),
-  handleValidationError
-]
+const googleVerify = oauth2CallbackVerify
 
 const websiteGenerateCode = [
   identityValidation,
@@ -142,11 +140,9 @@ const websiteGenerateCode = [
   handleValidationError
 ]
 
-const kakaoVerify = [
-  identityValidation,
-  check('code').custom(codeValidation),
-  handleValidationError
-]
+const kakaoVerify = oauth2CallbackVerify
+
+const githubVerify = oauth2CallbackVerify
 
 const websiteVerify = websiteGenerateCode
 
@@ -162,5 +158,6 @@ module.exports = {
   googleVerify,
   websiteGenerateCode,
   websiteVerify,
-  kakaoVerify
+  kakaoVerify,
+  githubVerify
 }

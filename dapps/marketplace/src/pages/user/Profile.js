@@ -40,6 +40,7 @@ import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import KakaoAttestation from 'pages/identity/KakaoAttestation'
+import GithubAttestation from 'pages/identity/GithubAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -56,7 +57,8 @@ const AttestationComponents = {
   airbnb: AirbnbAttestation,
   google: GoogleAttestation,
   website: WebsiteAttestation,
-  kakao: KakaoAttestation
+  kakao: KakaoAttestation,
+  github: GithubAttestation
 }
 
 const ProfileFields = [
@@ -73,7 +75,8 @@ const ProfileFields = [
   'emailVerified',
   'googleVerified',
   'websiteVerified',
-  'kakaoVerified'
+  'kakaoVerified',
+  'githubVerified'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -137,7 +140,8 @@ class UserProfile extends Component {
         profile.twitterVerified !== prevProfile.twitterVerified ||
         profile.airbnbVerified !== prevProfile.airbnbVerified ||
         profile.websiteVerified !== prevProfile.websiteVerified ||
-        profile.kakaoVerified !== prevProfile.kakaoVerified) &&
+        profile.kakaoVerified !== prevProfile.kakaoVerified ||
+        profile.githubVerified !== prevProfile.githubVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -220,6 +224,10 @@ class UserProfile extends Component {
       {
         attestation: 'kakaoAttestation',
         message: fbt('KaKao updated', 'profile.kakaoUpdated')
+      },
+      {
+        attestation: 'githubAttestation',
+        message: fbt('GitHub updated', 'profile.githubUpdated')
       }
     ]
 
@@ -378,6 +386,11 @@ class UserProfile extends Component {
                   'kakao',
                   fbt('KaKao', '_ProvisionedChanges.kakao'),
                   { hidden: process.env.ENABLE_KAKAO_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'github',
+                  fbt('GitHub', '_ProvisionedChanges.github'),
+                  { hidden: process.env.ENABLE_GITHUB_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>

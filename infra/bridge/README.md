@@ -78,6 +78,9 @@ functionality.
 - [KaKao](https://developers.kakao.com/docs/restapi/user-management)
   - KAKAO_CLIENT_ID
   - KAKAO_CLIENT_SECRET
+- [GitHub](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/)
+  - GITHUB_CLIENT_ID
+  - GITHUB_CLIENT_SECRET
 
 ### Set Up Your Database
 

@@ -11,6 +11,7 @@ router.use('/api/attestations/twitter', require('./twitter'))
 router.use('/api/attestations/google', require('./google'))
 router.use('/api/attestations/website', require('./website'))
 router.use('/api/attestations/kakao', require('./kakao'))
+router.use('/api/attestations/github', require('./github'))
 router.use('/redirects', require('./redirects'))
 
 module.exports = router

@@ -27,6 +27,7 @@ export default gql`
           emailVerified
           websiteVerified
           kakaoVerified
+          githubVerified
         }
       }
     }

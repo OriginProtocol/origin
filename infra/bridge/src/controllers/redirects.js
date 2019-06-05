@@ -50,4 +50,6 @@ router.get('/google', oauth2RedirectHandler)
 
 router.get('/kakao', oauth2RedirectHandler)
 
+router.get('/github', oauth2RedirectHandler)
+
 module.exports = router

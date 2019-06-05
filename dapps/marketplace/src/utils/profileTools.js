@@ -21,7 +21,7 @@ export function unpublishedStrength({ props, state }) {
   if (!profile.websiteVerified && state.websiteAttestation)
     strength += websiteAttestationEnabled ? 5 : 0
 
-  // TODO: Add strength for KaKao
+  // TODO: Add strength for KaKao and GitHub
 
   return strength
 }
@@ -48,7 +48,9 @@ export function changesToPublishExist({ props, state }) {
     !!profile.websiteVerified ===
       (!!state.websiteAttestation || !!state.websiteVerified) &&
     !!profile.kakaoVerified ===
-      (!!state.kakaoAttestation || !!state.kakaoVerified)
+      (!!state.kakaoAttestation || !!state.kakaoVerified) &&
+    !!profile.githubVerified ===
+      (!!state.githubAttestation || !!state.githubVerified)
   )
 }
 

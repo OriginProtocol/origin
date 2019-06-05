@@ -23,7 +23,8 @@ const progressPct = {
   googleVerified: 10,
   airbnbVerified: websiteAttestationEnabled ? 5 : 10,
   websiteVerified: websiteAttestationEnabled ? 5 : 0,
-  kakaoVerified: 0
+  kakaoVerified: 0,
+  githubVerified: 0
 }
 
 function getAttestations(account, attestations) {
@@ -35,7 +36,8 @@ function getAttestations(account, attestations) {
     airbnbVerified: false,
     googleVerified: false,
     websiteVerified: false,
-    kakaoVerified: false
+    kakaoVerified: false,
+    githubVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -67,6 +69,9 @@ function getAttestations(account, attestations) {
       }
       if (siteName === 'kakao.com') {
         result.kakaoVerified = true
+      }
+      if (siteName === 'github.com') {
+        result.githubVerified = true
       }
     }
   })
@@ -235,71 +240,44 @@ export async function identities(
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
+/**
+ * Returns authorization URL for all attestation providers
+ * @param {String} provider One of supported attestation provider
+ * @param {Object} args Arguments from GraphQL query resolver
+ */
+async function getAuthURL(provider, args) {
+  const bridgeServer = contracts.config.bridge
+  if (!bridgeServer) {
+    return null
+  }
+  let authUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+  if (args.redirect) {
+    authUrl += `?redirect=${args.redirect}`
+  }
+  const response = await fetch(authUrl, {
+    headers: { 'content-type': 'application/json' },
+    credentials: 'include'
+  })
+  const authData = await response.json()
+  return authData.url
+}
+
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
+  facebookAuthUrl: (_, args) => {
+    return getAuthURL('facebook', args)
   },
-  twitterAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
+  twitterAuthUrl: (_, args) => {
+    return getAuthURL('twitter', args)
   },
-  googleAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
+  googleAuthUrl: (_, args) => {
+    return getAuthURL('google', args)
   },
-  kakaoAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/kakao/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
+  kakaoAuthUrl: (_, args) => {
+    return getAuthURL('kakao', args)
+  },
+  githubAuthUrl: (_, args) => {
+    return getAuthURL('github', args)
   }
 }

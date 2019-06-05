@@ -115,6 +115,14 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation kakao" />
                     </Tooltip>
                   )}
+                  {profile.githubVerified && (
+                    <Tooltip
+                      tooltip={fbt('GitHub Verified', 'GitHub Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation github" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>

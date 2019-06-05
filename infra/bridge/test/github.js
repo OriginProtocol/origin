@@ -14,12 +14,14 @@ const { getAbsoluteUrl } = require('../src/utils')
 
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
-describe('kakao attestations', () => {
+describe('github attestations', () => {
   beforeEach(() => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
-    process.env.KAKAO_CLIENT_ID = 'kakao-client-id'
-    process.env.KAKAO_CLIENT_SECRET = 'kakao-client-secret'
+    process.env.GITHUB_CLIENT_ID = 'github-client-id'
+    process.env.GITHUB_CLIENT_SECRET = 'github-client-secret'
+    process.env.GITHUB_BASE_AUTH_URL = 'https://github.com/login/oauth'
+    process.env.GITHUB_PROFILE_URL = 'https://api.github.com/user'
     process.env.HOST = 'originprotocol.com'
 
     Attestation.destroy({
@@ -30,39 +32,40 @@ describe('kakao attestations', () => {
 
   it('should generate a correct auth url', async () => {
     const response = await request(app)
-      .get('/api/attestations/kakao/auth-url')
+      .get('/api/attestations/github/auth-url')
       .expect(200)
 
     const params = {
-      client_id: process.env.KAKAO_CLIENT_ID,
+      client_id: process.env.GITHUB_CLIENT_ID,
       response_type: 'code',
-      redirect_uri: getAbsoluteUrl('/redirects/kakao/')
+      redirect_uri: getAbsoluteUrl('/redirects/github/')
     }
 
     expect(response.body.url).to.equal(
-      `https://kauth.kakao.com/oauth/authorize?${querystring.stringify(params)}`
+      `https://github.com/login/oauth/authorize?${querystring.stringify(
+        params
+      )}`
     )
   })
 
   it('should generate attestation on valid verification code', async () => {
-    nock('https://kauth.kakao.com')
-      .post('/oauth/token')
+    nock('https://github.com')
+      .post('/login/oauth/access_token')
       .query({
-        client_id: process.env.KAKAO_CLIENT_ID,
-        client_secret: process.env.KAKAO_CLIENT_SECRET,
-        redirect_uri: getAbsoluteUrl('/redirects/kakao/'),
-        code: 'abcdefg',
-        grant_type: 'authorization_code'
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        redirect_uri: getAbsoluteUrl('/redirects/github/'),
+        code: 'abcdefg'
       })
       .reply(200, { access_token: '12345' })
 
-    nock('https://kapi.kakao.com')
-      .matchHeader('Authorization', 'Bearer 12345')
-      .get('/v1/user/me')
+    nock('https://api.github.com')
+      .matchHeader('Authorization', 'token 12345')
+      .get('/user')
       .reply(200, { id: 'Origin Protocol' })
 
     const response = await request(app)
-      .post('/api/attestations/kakao/verify')
+      .post('/api/attestations/github/verify')
       .send({
         identity: ethAddress,
         code: 'abcdefg'
@@ -79,33 +82,32 @@ describe('kakao attestations', () => {
     expect(response.body.data.attestation.verificationMethod.oAuth).to.equal(
       true
     )
-    expect(response.body.data.attestation.site.siteName).to.equal('kakao.com')
+    expect(response.body.data.attestation.site.siteName).to.equal('github.com')
     expect(response.body.data.attestation.site.userId.verified).to.equal(true)
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
-    expect(results[0].method).to.equal(AttestationTypes.KAKAO)
+    expect(results[0].method).to.equal(AttestationTypes.GITHUB)
     expect(results[0].value).to.equal('Origin Protocol')
   })
 
   it('should generate attestation on valid session', async () => {
-    nock('https://kauth.kakao.com')
-      .post('/oauth/token')
+    nock('https://github.com')
+      .post('/login/oauth/access_token')
       .query({
-        client_id: process.env.KAKAO_CLIENT_ID,
-        client_secret: process.env.KAKAO_CLIENT_SECRET,
-        redirect_uri: getAbsoluteUrl('/redirects/kakao/'),
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        redirect_uri: getAbsoluteUrl('/redirects/github/'),
         code: 'abcdefg',
-        grant_type: 'authorization_code',
         state: 123
       })
       .reply(200, { access_token: '12345' })
 
-    nock('https://kapi.kakao.com')
-      .matchHeader('Authorization', 'Bearer 12345')
-      .get('/v1/user/me')
+    nock('https://api.github.com')
+      .matchHeader('Authorization', 'token 12345')
+      .get('/user')
       .reply(200, { id: 'Origin Protocol' })
 
     // Fake session
@@ -125,7 +127,7 @@ describe('kakao attestations', () => {
     parentApp.use(app)
 
     const response = await request(parentApp)
-      .post('/api/attestations/kakao/verify')
+      .post('/api/attestations/github/verify')
       .send({
         identity: ethAddress,
         sid: 123
@@ -142,14 +144,14 @@ describe('kakao attestations', () => {
     expect(response.body.data.attestation.verificationMethod.oAuth).to.equal(
       true
     )
-    expect(response.body.data.attestation.site.siteName).to.equal('kakao.com')
+    expect(response.body.data.attestation.site.siteName).to.equal('github.com')
     expect(response.body.data.attestation.site.userId.verified).to.equal(true)
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
-    expect(results[0].method).to.equal(AttestationTypes.KAKAO)
+    expect(results[0].method).to.equal(AttestationTypes.GITHUB)
     expect(results[0].value).to.equal('Origin Protocol')
   })
 
@@ -171,7 +173,7 @@ describe('kakao attestations', () => {
     parentApp.use(app)
 
     const response = await request(parentApp)
-      .post('/api/attestations/kakao/verify')
+      .post('/api/attestations/github/verify')
       .send({
         identity: ethAddress,
         sid: 12345
@@ -183,7 +185,7 @@ describe('kakao attestations', () => {
 
   it('should error on missing verification code and session id', async () => {
     const response = await request(app)
-      .post('/api/attestations/kakao/verify')
+      .post('/api/attestations/github/verify')
       .send({
         identity: '0x112234455C3a32FD11230C42E7Bccd4A84e02010'
       })

@@ -95,6 +95,12 @@ const User = ({ match }) => {
                           Kakao
                         </div>
                       )}
+                      {profile.githubVerified && (
+                        <div>
+                          <div className="attestation github" />
+                          GitHub
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

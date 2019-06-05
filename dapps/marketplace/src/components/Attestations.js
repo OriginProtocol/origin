@@ -10,6 +10,7 @@ const Attestations = ({ profile = {} }) => (
     {profile.googleVerified && <div className="attestation google" />}
     {profile.websiteVerified && <div className="attestation website" />}
     {profile.kakaoVerified && <div className="attestation kakao" />}
+    {profile.githubVerified && <div className="attestation github" />}
   </div>
 )
 
