@@ -38,7 +38,6 @@ class AccountScreen extends Component {
     this.handleSetAccountActive = this.handleSetAccountActive.bind(this)
     this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
-    this.handleSetAccountName = this.handleSetAccountName.bind(this)
   }
 
   async handleDangerousCopy(privateKey) {
@@ -126,17 +125,10 @@ class AccountScreen extends Component {
     navigation.goBack()
   }
 
-  handleSetAccountName(event) {
-    const { address } = this.props.navigation.getParam('account')
-    const nameValue = event.nativeEvent.text
-    DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
-  }
-
   render() {
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
     const { address, privateKey, mnemonic } = account
-    const name = wallet.accountNameMapping[address]
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.activeAccount.address
 
@@ -147,20 +139,6 @@ class AccountScreen extends Component {
           style={styles.container}
         >
           <View contentContainerStyle={styles.content} style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.heading}>
-                <fbt desc="AccountScreen.accountName">Name</fbt>
-              </Text>
-            </View>
-            <TextInput
-              placeholder={String(
-                fbt('Account name', 'AccountScreen.accountNamePlaceholder')
-              )}
-              value={name}
-              style={styles.input}
-              onChange={this.handleSetAccountName}
-              onSubmitEditing={this.handleNameUpdate}
-            />
             <View style={styles.header}>
               <Text style={styles.heading}>
                 <fbt desc="AccountScreen.ethAddress">Eth Address</fbt>
@@ -272,6 +250,12 @@ class AccountScreen extends Component {
   }
 }
 
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountScreen)
+
 const styles = StyleSheet.create({
   keyboardWrapper: {
     flex: 1
@@ -332,9 +316,3 @@ const styles = StyleSheet.create({
     flex: 1
   }
 })
-
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
-}
-
-export default connect(mapStateToProps)(AccountScreen)

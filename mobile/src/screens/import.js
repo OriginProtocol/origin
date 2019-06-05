@@ -161,7 +161,6 @@ class ImportAccountScreen extends Component {
 
   render() {
     const { navigation } = this.props
-    const cancelRoute = this.props.navigation.getParam('cancelRoute')
 
     return (
       <SafeAreaView style={styles.container}>
@@ -176,13 +175,6 @@ class ImportAccountScreen extends Component {
               <fbt desc="ImportScreen.privateKeyTitle">Enter Private Key</fbt>
             )}
           </Text>
-          {this.state.mnemonic && (
-            <Text style={styles.subtitle}>
-              <fbt desc="ImportScreen.recoveryPhraseSubtitle">
-                Enter the recovery phrase
-              </fbt>
-            </Text>
-          )}
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -220,22 +212,12 @@ class ImportAccountScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.buttonsContainer}>
-          {cancelRoute && (
-            <OriginButton
-              size="large"
-              type="link"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={fbt('Cancel', 'ImportScreen.cancelButton')}
-              onPress={() => navigation.navigate(cancelRoute)}
-            />
-          )}
           <OriginButton
             size="large"
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Done', 'ImportScreenn.doneButton')}
+            title={fbt('Continue', 'ImportScreen.continueButton')}
             onPress={this.handleSubmit}
             loading={this.state.loading}
             disabled={this.state.loading}

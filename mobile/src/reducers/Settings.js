@@ -4,7 +4,7 @@ import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
 const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const origin = NETWORKS.find(n => n.name === 'Origin')
+const origin = NETWORKS.find(n => n.name === 'Rinkeby')
 
 const initialState = {
   network: __DEV__ ? origin : mainnet,

@@ -12,6 +12,7 @@ const initialState = {
   },
   activeAccount: null,
   accountServerNotifications: {},
+  identities: {},
   messagingKeys: {
     address: null,
     signattureKey: null,
@@ -76,6 +77,15 @@ export default function Wallet(state = initialState, action = {}) {
       return {
         ...state,
         messagingKeys: action.payload
+      }
+
+    case WalletConstants.SET_IDENTITY:
+      return {
+        ...state,
+        identities: {
+          ...state.identities,
+          [action.payload.id]: action.payload
+        }
       }
   }
 

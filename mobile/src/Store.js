@@ -6,6 +6,7 @@ import { createTransform } from 'redux-persist'
 
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
+import marketplace from 'reducers/Marketplace'
 import notifications from 'reducers/Notifications'
 import onboarding from 'reducers/Onboarding'
 import settings from 'reducers/Settings'
@@ -61,6 +62,7 @@ const store = createStore(
     combineReducers({
       activation,
       exchangeRates,
+      marketplace,
       notifications,
       onboarding,
       settings,

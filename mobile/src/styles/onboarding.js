@@ -68,7 +68,6 @@ export default StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 30,
     marginBottom: 20,
-    textAlign: 'center',
     width: '80%'
   },
   visibilityWarningHeader: {

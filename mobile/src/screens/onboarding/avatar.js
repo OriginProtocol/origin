@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   TouchableOpacity,
   Text,
@@ -15,14 +14,14 @@ import { fbt } from 'fbt-runtime'
 import ImagePicker from 'react-native-image-picker'
 import ImageResizer from 'react-native-image-resizer'
 
-import { setProfileImage } from 'actions/Onboarding'
+import { setAvatarUri } from 'actions/Onboarding'
 import { SettingsButton } from 'components/settings-button'
+import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
 import withConfig from 'hoc/withConfig'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import OnboardingStyles from 'styles/onboarding'
 
-const IMAGES_PATH = '../../../assets/images/'
 const imagePickerOptions = {
   title: 'Select Photo',
   storageOptions: {
@@ -31,25 +30,23 @@ const imagePickerOptions = {
   }
 }
 
-class ProfileImage extends Component {
+class AvatarScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       imagePickerError: null,
-      imageSource: null,
+      avatarSource: null,
       loading: false
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleImageClick = this.handleImageClick.bind(this)
-  }
-
-  handleSubmit() {
-    this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
   handleImageClick() {
     ImagePicker.showImagePicker(imagePickerOptions, async response => {
-      if (response.error) {
+      if (response.didCancel) {
+        console.debug('User cancelled image picker')
+        return
+      } else if (response.error) {
         this.setState({ imagePickerError: response.error })
         return
       }
@@ -70,35 +67,41 @@ class ProfileImage extends Component {
       const formData = new FormData()
       formData.append('file', outImage)
 
-      const ipfsRPC = this.props.configs.mainnet.ipfsRPC
+      console.debug('Uploading to IPFS')
+      const ipfsRPC = this.props.config.ipfsRPC
       const ipfsResponse = await fetch(`${ipfsRPC}/api/v0/add`, {
         method: 'POST',
         body: formData
       })
 
-      this.setState({
-        loading: false
-      })
-
       if (!ipfsResponse.ok) {
         this.setState({
-          imagePickerError: 'Photo uploaded failed'
+          imagePickerError: fbt(
+            'Photo uploaded failed',
+            'AvatarScreen.uploadFailed'
+          )
         })
         return
       }
 
-      this.setState({
-        imageSource: outImage
-      })
-
       const data = await ipfsResponse.json()
-      await this.props.setProfileImage(data.Hash)
+      console.debug(`IPFS hash: ${data.Hash}`)
+      await this.props.setAvatarUri(`ipfs://${data.Hash}`)
+
+      this.setState({
+        loading: false,
+        avatarSource: outImage
+      })
     })
   }
 
   render() {
     const galleryPermissionDenied =
-      this.state.imagePickerError === 'Photo library permissions not granted'
+      this.state.imagePickerError ===
+      fbt(
+        'Photo library permissions not granted',
+        'AvatarScreen.galleryPermissionDenied'
+      )
 
     let content
     if (this.state.loading) {
@@ -118,9 +121,17 @@ class ProfileImage extends Component {
         <View style={styles.content}>{content}</View>
         <View style={[styles.visibilityWarning, styles.isVisible]}>
           <Text style={styles.visibilityWarningHeader}>
-            What will be visible on the blockchain?
+            {fbt(
+              'What will be visible on the blockchain?',
+              'AvatarScreen.visibilityWarningHeader'
+            )}
           </Text>
-          <Text>Your photo will be visible on the blockchain.</Text>
+          <Text>
+            {fbt(
+              'Your photo will be visible on the blockchain.',
+              'AvatarScreen.visibilityWarningDescription'
+            )}
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -128,9 +139,11 @@ class ProfileImage extends Component {
             type="primary"
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Continue', 'ProfileImageScreen.continueButton')}
-            disabled={!this.props.onboarding.profileImage}
-            onPress={this.handleSubmit}
+            title={fbt('Continue', 'AvatarScreen.continueButton')}
+            disabled={!this.props.onboarding.avatarUri}
+            onPress={() =>
+              this.props.navigation.navigate(this.props.nextOnboardingStep)
+            }
           />
         </View>
       </SafeAreaView>
@@ -141,12 +154,12 @@ class ProfileImage extends Component {
     return (
       <>
         <Text style={styles.title}>
-          <fbt desc="ProfileImageScreen.galleryDisabledTitle">
+          <fbt desc="AvatarScreen.galleryDisabledTitle">
             Gallery access denied
           </fbt>
         </Text>
         <Text style={styles.subtitle}>
-          <fbt desc="ProfileImageScreen.galleryDisabledSubtitle">
+          <fbt desc="AvatarScreen.galleryDisabledSubtitle">
             It looks like we cannot access your photo gallery. You will need to
             allow access in the onboarding for the Origin Marketplace App.
           </fbt>
@@ -159,21 +172,16 @@ class ProfileImage extends Component {
   renderImage() {
     return (
       <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
-        <Image
-          resizeMethod={'scale'}
-          resizeMode={'contain'}
-          source={
-            this.state.imageSource
-              ? this.state.imageSource
-              : require(IMAGES_PATH + 'partners-graphic.png')
-          }
-          style={styles.image}
+        <Avatar
+          source={this.state.avatarSource}
+          size={120}
+          style={{ marginBottom: 30 }}
         />
         <Text style={styles.title}>
-          {!this.props.onboarding.profileImage ? (
-            <fbt desc="ProfileImageScreen.title">Upload a photo</fbt>
+          {!this.props.onboarding.avatarUri ? (
+            <fbt desc="AvatarScreen.title">Upload a photo</fbt>
           ) : (
-            <fbt desc="ProfileImageScreen.successTitle">Looking good</fbt>
+            <fbt desc="AvatarScreen.successTitle">Looking good</fbt>
           )}
         </Text>
       </TouchableOpacity>
@@ -186,7 +194,7 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setProfileImage: payload => dispatch(setProfileImage(payload))
+  setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri))
 })
 
 export default withConfig(
@@ -194,7 +202,7 @@ export default withConfig(
     connect(
       mapStateToProps,
       mapDispatchToProps
-    )(ProfileImage)
+    )(AvatarScreen)
   )
 )
 
@@ -203,12 +211,5 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: 'space-around'
-  },
-  image: {
-    backgroundColor: '#2e3f53',
-    borderRadius: 60,
-    width: 120,
-    height: 120,
-    marginBottom: 30
   }
 })

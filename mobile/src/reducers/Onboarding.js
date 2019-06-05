@@ -4,10 +4,12 @@ import { OnboardingConstants } from 'actions/Onboarding'
 
 const initialState = {
   emailAttestation: null,
+  emailVerified: false,
   phoneAttestation: null,
+  phoneVerified: false,
   firstName: null,
   lastName: null,
-  profileImage: null
+  avatarUri: null
 }
 
 export default function Onboarding(state = initialState, action = {}) {
@@ -15,8 +17,14 @@ export default function Onboarding(state = initialState, action = {}) {
     case OnboardingConstants.SET_EMAIL_ATTESTATION:
       return { ...state, emailAttestation: action.emailAttestation }
 
+    case OnboardingConstants.SET_EMAIL_VERIFIED:
+      return { ...state, emailVerified: action.emailVerified }
+
     case OnboardingConstants.SET_PHONE_ATTESTATION:
       return { ...state, phoneAttestation: action.phoneAttestation }
+
+    case OnboardingConstants.SET_PHONE_VERIFIED:
+      return { ...state, phoneVerified: action.phoneVerified }
 
     case OnboardingConstants.SET_NAME:
       return {
@@ -25,8 +33,11 @@ export default function Onboarding(state = initialState, action = {}) {
         lastName: action.payload.lastName
       }
 
-    case OnboardingConstants.SET_PROFILE_IMAGE:
-      return { ...state, profileImage: action.profileImage }
+    case OnboardingConstants.SET_AVATAR_URI:
+      return { ...state, avatarUri: action.avatarUri }
+
+    case OnboardingConstants.RESET:
+      return initialState
   }
 
   return state

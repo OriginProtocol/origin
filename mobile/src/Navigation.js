@@ -25,13 +25,13 @@ import WalletScreen from 'screens/wallet'
 import AuthenticationGuard from 'components/authentication-guard'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
-import FetchAccountScreen from 'screens/onboarding/fetch-account'
+import ImportedScreen from 'screens/onboarding/imported'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
 import EmailScreen from 'screens/onboarding/email'
 import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
-import ProfileImageScreen from 'screens/onboarding/profile-image'
+import AvatarScreen from 'screens/onboarding/avatar'
 import ReadyScreen from 'screens/onboarding/ready'
 
 const IMAGES_PATH = '../assets/images/'
@@ -47,15 +47,14 @@ const OnboardingStack = createStackNavigator(
     ImportAccount: {
       screen: ImportAccountScreen,
       params: {
-        navigateOnSuccess: 'FetchAccount',
-        cancelRoute: 'Welcome'
+        navigateOnSuccess: 'Imported'
       }
     },
-    FetchAccount: FetchAccountScreen,
+    Imported: ImportedScreen,
     Email: EmailScreen,
     Phone: PhoneScreen,
     Name: NameScreen,
-    ProfileImage: ProfileImageScreen,
+    Avatar: AvatarScreen,
     Authentication: Authentication,
     Pin: PinScreen,
     Ready: ReadyScreen
@@ -86,7 +85,7 @@ const OnboardingStack = createStackNavigator(
 
 const BackupStack = createSwitchNavigator(
   {
-    Auth: {
+    BackupAuth: {
       screen: AuthenticationGuard,
       params: {
         navigateOnSuccess: 'Backup'
@@ -95,7 +94,7 @@ const BackupStack = createSwitchNavigator(
     Backup: BackupScreen
   },
   {
-    initialRouteName: 'Auth'
+    initialRouteName: 'BackupAuth'
   }
 )
 
@@ -118,7 +117,7 @@ const SettingsStack = createStackNavigator(
   {
     Account: createSwitchNavigator(
       {
-        Auth: {
+        SettingsAuth: {
           screen: AuthenticationGuard,
           params: {
             navigateOnSuccess: 'Account'
@@ -127,7 +126,7 @@ const SettingsStack = createStackNavigator(
         Account: AccountScreen
       },
       {
-        initialRouteName: 'Auth'
+        initialRouteName: 'SettingsAuth'
       }
     ),
     Accounts: AccountsScreen,

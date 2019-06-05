@@ -10,7 +10,8 @@ export const WalletConstants = keyMirror(
     SET_ACCOUNT_NAME: null,
     SET_ACCOUNT_BALANCES: null,
     SET_ACCOUNT_SERVER_NOTIFICATIONS: null,
-    SET_MESSAGING_KEYS: null
+    SET_MESSAGING_KEYS: null,
+    SET_IDENTITY: null
   },
   'WALLET'
 )
@@ -53,6 +54,13 @@ export function setAccountName(payload) {
 export function setMessagingKeys(payload) {
   return {
     type: WalletConstants.SET_MESSAGING_KEYS,
+    payload
+  }
+}
+
+export function setIdentity(payload) {
+  return {
+    type: WalletConstants.SET_IDENTITY,
     payload
   }
 }

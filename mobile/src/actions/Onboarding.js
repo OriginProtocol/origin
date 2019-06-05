@@ -5,9 +5,12 @@ import keyMirror from 'utils/keyMirror'
 export const OnboardingConstants = keyMirror(
   {
     SET_EMAIL_ATTESTATION: null,
+    SET_EMAIL_VERIFIED: null,
     SET_PHONE_ATTESTATION: null,
+    SET_PHONE_VERIFIED: null,
     SET_NAME: null,
-    SET_PROFILE_IMAGE: null
+    SET_AVATAR_URI: null,
+    RESET: null
   },
   'ONBOARDING'
 )
@@ -19,10 +22,24 @@ export function setEmailAttestation(emailAttestation) {
   }
 }
 
+export function setEmailVerified(emailVerified) {
+  return {
+    type: OnboardingConstants.SET_EMAIL_VERIFIED,
+    emailVerified
+  }
+}
+
 export function setPhoneAttestation(phoneAttestation) {
   return {
     type: OnboardingConstants.SET_PHONE_ATTESTATION,
     phoneAttestation
+  }
+}
+
+export function setPhoneVerified(phoneVerified) {
+  return {
+    type: OnboardingConstants.SET_PHONE_VERIFIED,
+    phoneVerified
   }
 }
 
@@ -33,9 +50,15 @@ export function setName(payload) {
   }
 }
 
-export function setProfileImage(profileImage) {
+export function setAvatarUri(avatarUri) {
   return {
-    type: OnboardingConstants.SET_PROFILE_IMAGE,
-    profileImage
+    type: OnboardingConstants.SET_AVATAR_URI,
+    avatarUri
+  }
+}
+
+export function reset() {
+  return {
+    type: OnboardingConstants.RESET
   }
 }

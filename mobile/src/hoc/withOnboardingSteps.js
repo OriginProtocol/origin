@@ -6,17 +6,23 @@ import { connect } from 'react-redux'
 function withOnboardingSteps(WrappedComponent) {
   class WithOnboardingSteps extends Component {
     nextOnboardingStep() {
-      if (!this.props.onboarding.emailAttestation) {
+      if (
+        !this.props.onboarding.emailAttestation &&
+        !this.props.onboarding.emailVerified
+      ) {
         return 'Email'
-      } else if (!this.props.onboarding.phoneAttestation) {
+      } else if (
+        !this.props.onboarding.phoneAttestation &&
+        !this.props.onboarding.phoneVerified
+      ) {
         return 'Phone'
       } else if (
         !this.props.onboarding.firstName ||
         !this.props.onboarding.lastName
       ) {
         return 'Name'
-      } else if (!this.props.onboarding.profileImage) {
-        return 'ProfileImage'
+      } else if (!this.props.onboarding.avatarUri) {
+        return 'Avatar'
       } else if (
         !this.props.settings.pin &&
         !this.props.settings.biometryType
@@ -30,7 +36,6 @@ function withOnboardingSteps(WrappedComponent) {
       return (
         <WrappedComponent
           {...this.props}
-          // prevOnboardingStep={this.prevOnboardingStep}
           nextOnboardingStep={this.nextOnboardingStep()}
         />
       )

@@ -23,6 +23,9 @@ import { decodeTransaction } from 'utils/contractDecoder'
 import { updateExchangeRate } from 'utils/price'
 import { webViewToBrowserUserAgent } from 'utils'
 import { findBestAvailableLanguage } from 'utils/language'
+import { setMarketplaceReady } from 'actions/Marketplace'
+import { setIdentity } from 'actions/Wallet'
+import { identity } from 'graphql/queries'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -85,14 +88,13 @@ class MarketplaceScreen extends Component {
     console.debug(
       `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
     )
-    this.props.navigation.setParams({ toggleModal: this.toggleModal })
   }
 
   componentWillUnmount() {
-    console.debug('Unmounted marketplace')
     DeviceEventEmitter.removeListener('transactionHash')
     DeviceEventEmitter.removeListener('messageSigned')
     DeviceEventEmitter.removeListener('messagingKeys')
+    DeviceEventEmitter.removeListener('graphqlQuery')
   }
 
   componentDidUpdate(prevProps) {
@@ -102,13 +104,6 @@ class MarketplaceScreen extends Component {
         // Reinject the language
         this.injectLanguage()
       }
-    }
-  }
-
-  scrollHandler(scrollTop) {
-    if (scrollTop < -100) {
-      console.debug('Refreshing')
-      this.dappWebView.injectJavaScript(`document.location.reload()`)
     }
   }
 
@@ -175,6 +170,24 @@ class MarketplaceScreen extends Component {
     return accounts
   }
 
+  loadIdentities() {
+    const { wallet } = this.props
+
+    wallet.accounts.forEach(account => {
+      console.log('Loading identiity')
+      DeviceEventEmitter.emit('graphqlQuery', 'handleIdentity', identity, {
+        id: account.address
+      })
+    })
+  }
+
+  handleIdentity(response) {
+    if (response.data.identity) {
+      this.props.setIdentity(response.data.identity)
+    }
+    DeviceEventEmitter.emit('identityResponse', response)
+  }
+
   /* Inject the cookies required for messaging to allow preenabling of messaging
    * for accounts
    */
@@ -215,6 +228,7 @@ class MarketplaceScreen extends Component {
       })()
     `
     if (this.dappWebView) {
+      console.debug('Injecting language setting')
       this.dappWebView.injectJavaScript(languageInjection)
     }
   }
@@ -226,18 +240,28 @@ class MarketplaceScreen extends Component {
       (function() {
         window.onscroll = function() {
           window.ReactNativeWebView.postMessage(JSON.stringify({
-            targetFunc: 'scrollHandler',
+            targetFunc: 'handleScrollHandlerResponse',
             data: document.documentElement.scrollTop || document.body.scrollTop
           }));
         }
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting scroll handler')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
-  injectGraphqlQuery(query, variables = {}) {
+  /* Handle the response from window.onScroll
+   */
+  handleScrollHandlerResponse(scrollTop) {
+    if (scrollTop < -100) {
+      console.debug('Refreshing')
+      this.dappWebView.injectJavaScript(`document.location.reload()`)
+    }
+  }
+
+  injectGraphqlQuery(targetFunc, query, variables = {}) {
     const injectedJavaScript = `
       (function() {
         window.gql.query({
@@ -245,19 +269,62 @@ class MarketplaceScreen extends Component {
           variables: ${JSON.stringify(variables)}
         }).then((response) => {
           window.ReactNativeWebView.postMessage(JSON.stringify({
-            targetFunc: 'handleGraphqlQueryResponse',
+            targetFunc: '${targetFunc}',
             data: response
           }));
         });
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting graphql query')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
-  handleGraphqlQueryResponse(response) {
-    DeviceEventEmitter.emit('graphqlQueryResponse', response)
+  /* Get the uiState from DApp localStorage via a webview bridge request.
+   */
+  injectUiStateRequest() {
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          const uiState = window.localStorage['uiState'];
+          window.webViewBridge.send('handleUiStateResponse', uiState);
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting uiState request')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
+  /* Handle the response from the uiState request. The uiState localStorage object
+   * can include information about the currency the DApp is set to.
+   */
+  handleUiStateResponse(uiStateJson) {
+    let uiState
+    let fiatCurrencyCode = 'fiat-USD'
+    if (
+      uiStateJson.constructor === Object &&
+      Object.keys(uiStateJson).length === 0
+    ) {
+      // Empty uiState key, nothiing to do here
+      return
+    }
+    try {
+      uiState = JSON.parse(uiStateJson)
+      if (uiState['currency']) {
+        fiatCurrencyCode = uiState['currency']
+      }
+    } catch (error) {
+      console.debug('Failed to parse uiState')
+    }
+    const fiatCurrency = CURRENCIES.find(c => c[0] === fiatCurrencyCode)
+    this.setState({ fiatCurrency })
+    // TODO: this will need to be adjusted if multiple non stablecoin support
+    // is added to the DApp (or when OGN has a market price)
+    updateExchangeRate(fiatCurrency[1], 'ETH')
+    updateExchangeRate(fiatCurrency[1], 'DAI')
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -308,52 +375,6 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  /* Get the uiState from DApp localStorage via a webview bridge request.
-   */
-  requestUIState() {
-    const requestUIStateInjection = `
-      (function() {
-        if (window && window.localStorage && window.webViewBridge) {
-          const uiState = window.localStorage['uiState'];
-          window.webViewBridge.send('handleUIStateResponse', uiState);
-        }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting uiState request')
-      this.dappWebView.injectJavaScript(requestUIStateInjection)
-    }
-  }
-
-  /* Handle the response from the uiState request. The uiState localStorage object
-   * can include information about the currency the DApp is set to.
-   */
-  handleUIStateResponse(uiStateJson) {
-    let uiState
-    let fiatCurrencyCode = 'fiat-USD'
-    if (
-      uiStateJson.constructor === Object &&
-      Object.keys(uiStateJson).length === 0
-    ) {
-      // Empty uiState key, nothiing to do here
-      return
-    }
-    try {
-      uiState = JSON.parse(uiStateJson)
-      if (uiState['currency']) {
-        fiatCurrencyCode = uiState['currency']
-      }
-    } catch (error) {
-      console.debug('Failed to parse uiState')
-    }
-    const fiatCurrency = CURRENCIES.find(c => c[0] === fiatCurrencyCode)
-    this.setState({ fiatCurrency })
-    // TODO: this will need to be adjusted if multiple non stablecoin support
-    // is added to the DApp (or when OGN has a market price)
-    updateExchangeRate(fiatCurrency[1], 'ETH')
-    updateExchangeRate(fiatCurrency[1], 'DAI')
-  }
-
   render() {
     const { modals } = this.state
     const { navigation } = this.props
@@ -374,8 +395,10 @@ class MarketplaceScreen extends Component {
             this.injectLanguage()
             this.injectScrollHandler()
             this.injectMessagingKeys()
+            this.loadIdentities()
+            this.props.setMarketplaceReady(true)
             setInterval(() => {
-              this.requestUIState()
+              this.injectUiStateRequest()
             }, 5000)
           }}
           startInLoadingState={true}
@@ -451,7 +474,15 @@ const mapStateToProps = ({ activation, wallet, settings }) => {
   return { activation, wallet, settings }
 }
 
-export default connect(mapStateToProps)(MarketplaceScreen)
+const mapDispatchToProps = dispatch => ({
+  setMarketplaceReady: ready => dispatch(setMarketplaceReady(ready)),
+  setIdentity: identity => dispatch(setIdentity(identity))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MarketplaceScreen)
 
 const styles = StyleSheet.create({
   container: {
