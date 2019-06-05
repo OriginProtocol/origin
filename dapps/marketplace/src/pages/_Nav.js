@@ -155,33 +155,10 @@ require('react-styl')(`
         padding: 0
         position: absolute !important
         margin-top: 1rem
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-        border-radius: var(--default-radius) 0 5px 5px
-        border: 0
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 5px 5px
+        border: 1px solid var(--light)
         font-weight: normal
-        border-radius: var(--default-radius) 0 5px 5px
-
-        &::before
-          width: 1rem
-          height: 1rem
-          color: var(--white)
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-          clip-path: polygon(150% -50%, 150% 150%, 100% 150%, 100% 100%, -10% 100%)
-          font-size: 1rem
-          line-height: 1rem
-          content: "◢"
-          position: absolute
-          top: -1rem
-          right: 0
-
-        &.dark
-          color: var(--white)
-          background-color: var(--dark)
-          border: 0
-          box-shadow: none
-          &::before
-            color: var(--dark)
-            text-shadow: none
 
   .navbar-brand
     background: url(images/origin-logo-black.svg) no-repeat center
@@ -216,6 +193,32 @@ require('react-styl')(`
       .nav-item
         position: initial
         .dropdown-menu
-          left: 1rem
-          right: 1rem
+          border: 0
+          &::before
+            content: ""
+          overflow: auto
+          position: fixed !important
+          box-shadow: none
+          margin-top: 0
+          border-radius: 0
+          left: 0
+          right: auto
+          bottom: 0
+          top: 0
+          &.dropdown-menu-right
+            left: auto
+            right: 0
+        .dropdown-menu-bg
+          position: fixed;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.3);
+          clip-path: none;
+          width: auto;
+          height: auto;
+          z-index: 1;
+
+
 `)

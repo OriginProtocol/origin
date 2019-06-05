@@ -131,22 +131,12 @@ require('react-styl')(`
       background: url(images/nav/menu-icon.svg) no-repeat center
       background-size: contain
       position:relative
-    &.show2
-      background-color: var(--pale-grey)
-      .mobile-icon
-        background-image: url(images/nav/menu-icon-active.svg)
 
     .dropdown-menu
       background-color: var(--white)
       padding: 11px 0 1rem 0
       border-radius: 0 5px 5px 5px
       top: 0
-      &::before
-        content: "◣"
-        right: auto
-        left: 0
-        clip-path: polygon(-50% -50%, 150% 150%, 100% 150%, 100% 100%, -10% 100%)
-        color: var(--pale-grey)
       .dropdown-divider
         margin: 0.5rem 1.5rem
         border-color: #dde6ea
@@ -195,28 +185,4 @@ require('react-styl')(`
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
 
-  @media (max-width: 767.98px)
-    .navbar .nav-item.mobile .dropdown-menu-bg
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.3);
-      clip-path: none;
-      width: auto;
-      height: auto;
-      z-index: 1;
-    .navbar .nav-item.mobile .dropdown-menu
-      &::before
-        content: ""
-      overflow: auto
-      position: fixed !important
-      box-shadow: none
-      margin-top: 0
-      border-radius: 0
-      left: 0
-      right: auto
-      bottom: 0
-      top: 0
 `)

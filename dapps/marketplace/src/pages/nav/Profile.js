@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
-import withNetwork from 'hoc/withNetwork'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
@@ -16,7 +16,7 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
-import DeployProxy from '../identity/mutations/DeployProxy'
+// import ActiveWalletInfo from './_ActiveWalletInfo'
 
 class ProfileNav extends Component {
   constructor() {
@@ -35,14 +35,14 @@ class ProfileNav extends Component {
             console.error(error)
             return null
           }
-          if (!data || !data.web3 || !data.web3.primaryAccount) {
+          if (!get(data, 'web3.primaryAccount')) {
             return null
           }
 
           return (
             <Dropdown
               el="li"
-              className="nav-item dark profile"
+              className="nav-item profile"
               open={this.props.open}
               onClose={() => this.props.onClose()}
               content={
@@ -66,19 +66,7 @@ class ProfileNav extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                {identity && (
-                  <Avatar
-                    avatar={identity.avatar}
-                    avatarUrl={identity.avatarUrl}
-                    className="user-image-mask"
-                  />
-                )}
-                {!identity && (
-                  <img
-                    className="user-image-mask"
-                    src="images/identity/unknown-user-small.svg"
-                  />
-                )}
+                <Avatar profile={identity} className="user-image-mask" />
               </a>
             </Dropdown>
           )
@@ -88,73 +76,33 @@ class ProfileNav extends Component {
   }
 }
 
-class CreateIdentity extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      enable: false
-    }
-  }
+const CreateIdentity = onClose => (
+  <>
+    <div className="create-identity text-center">
+      <img
+        className="user-image-mask large"
+        src="images/identity/unknown-user.svg"
+      />
+      <h3>
+        <fbt desc="nav.profile.profileNotCreated">
+          You haven&apos;t created a profile yet
+        </fbt>
+      </h3>
+      <p>
+        <fbt desc="nav.profile.createYourProfile">
+          Creating a profile allows other users to know that you are real and
+          increases the chances of successful transactions on Origin.
+        </fbt>
+      </p>
 
-  render() {
-    return (
-      <>
-        <div className="create-identity text-center">
-          <img
-            className="user-image-mask large"
-            src="images/identity/unknown-user.svg"
-          />
-          <h3>
-            <fbt desc="nav.profile.profileNotCreated">
-              You haven&apos;t created a profile yet
-            </fbt>
-          </h3>
-          <p>
-            <fbt desc="nav.profile.createYourProfile">
-              Creating a profile allows other users to know that you are real
-              and increases the chances of successful transactions on Origin.
-            </fbt>
-          </p>
-
-          <UserActivationLink
-            className="btn btn-primary"
-            onClick={this.onClose}
-            onClose={this.onClose}
-          />
-        </div>
-      </>
-    )
-  }
-
-  onClose = () => {
-    if (this.props.onClose) {
-      this.props.onClose()
-    }
-  }
-}
-
-const Network = withNetwork(({ networkName }) => (
-  <div className="connected">
-    <fbt desc="nav.profile.connectedToNetwork">Connected to</fbt>
-    <span className="net">{networkName}</span>
-  </div>
-))
-
-const WalletAddress = ({ wallet, walletType, children }) => {
-  return (
-    <div className="connected">
-      {children || <fbt desc="nav.profile.activeWallet">Active wallet</fbt>}
-      <span>
-        <span className={`wallet-icon ${getWalletIconClass(walletType)}`} />
-        <span className="wallet-name">{walletType}</span>
-        <span className="wallet-address">{`${wallet.slice(
-          0,
-          4
-        )}...${wallet.slice(-4)}`}</span>
-      </span>
+      <UserActivationLink
+        className="btn btn-primary"
+        onClick={() => onClose()}
+        onClose={() => onClose()}
+      />
     </div>
-  )
-}
+  </>
+)
 
 const Identity = ({ id, identity, identityLoading, onClose }) => {
   if (identityLoading) {
@@ -172,8 +120,7 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
   }
 
   return (
-    <div className="identity">
-      <fbt desc="nav.profile.profile">Profile</fbt>
+    <div className="identity align-items-center d-flex flex-column">
       <div className="info">
         <Link onClick={() => onClose()} to="/profile" className="name">
           <Avatar profile={identity} size="3rem" />
@@ -201,9 +148,9 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
       <Link
         onClick={() => onClose()}
         to="/profile"
-        className="earn-ogn-link mt-3 mb-3"
+        className="btn btn-rounded btn-outline-primary mt-3 mb-3"
       >
-        <fbt desc="nav.profile.earnOGN">Strengthen profile &amp; earn OGN</fbt>
+        <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </Link>
       <Balances
         account={id}
@@ -215,84 +162,32 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
   )
 }
 
-const ProfileDropdownRaw = ({
-  data,
-  identity,
-  identityLoading,
-  walletType,
-  wallet,
-  walletProxy,
-  config,
-  onClose
-}) => {
-  const { checksumAddress, id } = data.web3.primaryAccount
+const ProfileDropdownRaw = ({ data, identity, identityLoading, onClose }) => {
+  const { id } = data.web3.primaryAccount
 
   return (
-    <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <div className="active-wallet-info">
-        <Network />
-        <WalletAddress wallet={checksumAddress} walletType={walletType} />
-        {!config.proxyAccountsEnabled ? null : (
-          <div className="connected mt-2 proxy-acct">
-            <fbt desc="nav.profile.proxyAccount">Proxy Account</fbt>
-            {walletProxy === wallet ? (
-              <DeployProxy
-                className="btn btn-sm btn-outline-primary px-3"
-                children="Deploy"
-              />
-            ) : (
-              <span>{walletProxy}</span>
-            )}
-          </div>
-        )}
+    <>
+      <div className="dropdown-menu-bg" onClick={() => onClose()} />
+      <div className="dropdown-menu dropdown-menu-right show profile">
+        <div className="identity-info">
+          <Identity
+            id={id}
+            identity={identity}
+            identityLoading={identityLoading}
+            onClose={onClose}
+          />
+        </div>
+        {/* <ActiveWalletInfo /> */}
       </div>
-      <div className="identity-info">
-        <Identity
-          id={id}
-          identity={identity}
-          identityLoading={identityLoading}
-          onClose={onClose}
-        />
-      </div>
-    </div>
+    </>
   )
 }
 
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-function getWalletIconClass(walletType) {
-  switch (walletType) {
-    case 'Origin Wallet':
-      return 'origin'
-
-    case 'MetaMask':
-    case 'Meta Mask':
-      return 'metamask'
-
-    case 'Trust Wallet':
-      return 'trust'
-
-    case 'Coinbase Wallet':
-      return 'toshi'
-
-    case 'Cipher':
-      return 'cipher'
-
-    case 'Mist':
-      return 'mist'
-
-    case 'Parity':
-      return 'parity'
-  }
-
-  return 'metamask'
-}
-
 export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
-  .dropdown.profile.show
-    background-color: black !important
   .user-image-mask
     width: 26px
     height: 26px
@@ -305,7 +200,21 @@ require('react-styl')(`
       padding-top: 9px
       margin-top: 1rem
       margin-bottom: 0.5rem
-
+  .dropdown.profile .nav-link
+    position: relative
+    border-left: 1px solid transparent
+    border-right: 1px solid transparent
+  .dropdown.profile.show .nav-link
+    border-left: 1px solid var(--light)
+    border-right: 1px solid var(--light)
+    &::after
+      content: ""
+      position: absolute
+      bottom: -1px
+      left: 0
+      right: 0
+      border-bottom: 1px solid white
+      z-index: 1001
   .dropdown-menu.profile
     width: 300px
     font-size: 14px
@@ -314,66 +223,25 @@ require('react-styl')(`
       display: none !important
     > div
       padding: 0.75rem 1.5rem
-      border-bottom: 2px solid black
-    .active-wallet-info
-      padding: 1rem
-      background-color: black
-      .connected.proxy-acct
-        display: flex
-        align-items: center
-        justify-content: space-between
-        white-space: nowrap
-        > span
-          text-overflow: ellipsis
-          overflow: hidden
-          margin-left: 0.5rem
-      .connected
-        padding: 0
-        color: var(--light)
-        > span
-          display: inline-block
-          margin-left: 4px
-          > .wallet-icon
-            display: inline-block
-            width: 10px
-            height: 10px
-            margin-right: 4px
-            margin-left: 6px
-            background-size: 10px 10px
-            &.metamask
-              background-image: url('images/metamask.svg')
-          > .wallet-name
-            color: white
-            margin-left: 4px
-            margin-right: 6px
-          > .wallet-address
-            font-size: 0.6rem
-        > .net
-          color: var(--greenblue)
-          &::before
-            content: ""
-            display: inline-block
-            background: var(--greenblue)
-            width: 10px
-            height: 10px
-            border-radius: var(--default-radius)
-            margin-right: 4px
-            margin-left: 6px
     .identity-info
-      background-color: var(--dark)
       .create-identity
         h3
           padding: 0.5rem 0
           margin-bottom: 0.5rem
+          font-family: var(--default-font)
+          font-weight: bold
+          color: #000
+          font-size: 22px
+          line-height: normal
         .btn
           border-radius: 2rem
-          padding: 0.5rem 1rem
-          margin-bottom: 2.5rem
-          width: 100%
+          padding: 0.5rem 3rem
+          margin-bottom: 2rem
         p
-          color: white
-          font-size: 0.9rem
+          font-size: 14px
           margin-bottom: 1.75rem
+          color: var(--bluey-grey)
+          line-height: normal
 
        .identity
          font-weight: bold
@@ -388,15 +256,15 @@ require('react-styl')(`
            .name
               cursor: pointer
               font-size: 1.2rem
-              color: white
 
          .strength
-           font-size: 10px;
-           text-transform: uppercase;
-           color: var(--steel);
-           letter-spacing: 0.4px;
+           font-size: 10px
+           text-transform: uppercase
+           color: var(--steel)
+           letter-spacing: 0.4px
+           font-weight: normal
            .progress
-             background-color: #000
+             background-color: #f0f6f9
              height: 6px
              margin-bottom: 0.5rem
              .progress-bar
@@ -411,8 +279,5 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .dropdown-menu.profile
-      width: auto
-      &.show
-        left: 0 !important
-        right: 0 !important
+      max-width: 300px
 `)
