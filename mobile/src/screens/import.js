@@ -160,8 +160,6 @@ class ImportAccountScreen extends Component {
   }
 
   render() {
-    const { navigation } = this.props
-
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
