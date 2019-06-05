@@ -21,7 +21,7 @@ function withOnboardingSteps(WrappedComponent) {
         !this.props.onboarding.lastName
       ) {
         return 'Name'
-      } else if (!this.props.onboarding.avatarUri) {
+      } else if (this.props.onboarding.avatarUri === null) {
         return 'Avatar'
       } else if (
         !this.props.settings.pin &&
