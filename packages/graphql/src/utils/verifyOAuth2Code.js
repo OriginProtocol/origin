@@ -4,13 +4,16 @@ import get from 'lodash/get'
 import contracts from '../contracts'
 
 /**
- * Authorize user and verify and validate attestation 
+ * Authorize user and verify and validate attestation
  * generated after authorization
- * 
+ *
  * @param {*} provider One of supported attestation providers
- * @param {*} vars Variables from GraphQL mutation 
+ * @param {*} vars Variables from GraphQL mutation
  */
-export default async function verifyOAuth2Code(provider, { identity, authUrl, redirect, code }) {
+export default async function verifyOAuth2Code(
+  provider,
+  { identity, authUrl, redirect, code }
+) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }

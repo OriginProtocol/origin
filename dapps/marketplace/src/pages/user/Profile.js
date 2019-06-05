@@ -403,7 +403,7 @@ class UserProfile extends Component {
                 {this.renderAtt(
                   'linkedin',
                   fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
-                  // { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
+                  { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>

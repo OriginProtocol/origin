@@ -98,7 +98,9 @@ class LinkedinAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="LinkedinAttestation.verify">Verify your LinkedIn Account</fbt>
+          <fbt desc="LinkedinAttestation.verify">
+            Verify your LinkedIn Account
+          </fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
@@ -185,7 +187,9 @@ class LinkedinAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="LinkedinAttestation.verified">LinkedIn account verified!</fbt>
+          <fbt desc="LinkedinAttestation.verified">
+            LinkedIn account verified!
+          </fbt>
         </h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">
