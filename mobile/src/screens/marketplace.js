@@ -255,8 +255,7 @@ class MarketplaceScreen extends Component {
   /* Handle the response from window.onScroll
    */
   handleScrollHandlerResponse(scrollTop) {
-    if (scrollTop < -100) {
-      console.debug('Refreshing')
+    if (scrollTop < -60) {
       this.dappWebView.injectJavaScript(`document.location.reload()`)
     }
   }
