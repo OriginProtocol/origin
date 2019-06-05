@@ -100,8 +100,7 @@ class ContractHelper {
    * @returns {string} - Address of default of first unlocked account.
    */
   async defaultAccount(networkId) {
-    const accounts = await this.web3(networkId).eth.getAccounts()
-    return accounts[0]
+    return this.web3(networkId).eth.defaultAccount
   }
 }
 
