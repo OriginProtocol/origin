@@ -1,6 +1,8 @@
 const esmImport = require('esm')(module)
 const contracts = esmImport('@origin/graphql/src/contracts').default
 
+const db = require('../models')
+
 const logger = require('./logger')
 
 class IdentityEventHandler {
@@ -22,7 +24,7 @@ class IdentityEventHandler {
       throw new Error(`Unexpected event ${event.event}`)
     }
 
-    // Get the address of the newly created proxy from the ProxyCreation event.
+    // Get the address of the newly created proxy from the event.
     const proxyAddress = event.returnValues.proxy
     if (!proxyAddress || contracts.web3.utils.toBN(proxyAddress).isZero()) {
       throw new Error(
@@ -31,12 +33,18 @@ class IdentityEventHandler {
     }
     logger.info(`Processing ProxyCreation event. Proxy address=${proxyAddress}`)
 
-    // Call the proxy contract to get the address of the wallet
-    // it was created for.
+    // Call the proxy contract to get the address of its owner.
     const Proxy = contracts.ProxyImp.clone()
     Proxy.options.address = proxyAddress
     const ownerAddress = await Proxy.methods.owner().call()
     logger.info(`Proxy owner=${ownerAddress}`)
+
+    // Persist the data in the DB
+    const data = {
+      address: proxyAddress.toLowerCase(),
+      ownerAddress: ownerAddress.toLowerCase()
+    }
+    await db.Proxy.upsert(data)
     return { proxyAddress, ownerAddress }
   }
 
