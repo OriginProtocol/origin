@@ -168,7 +168,7 @@ export function setNetwork(net, customConfig) {
       maxConcurrent,
       qps
     })
-  } else if (isBrowser) {
+  } else if (!isBrowser) {
     // TODO: Allow for browser?
     createEngine(web3, { qps, maxConcurrent })
   }
