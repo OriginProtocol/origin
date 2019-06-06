@@ -133,6 +133,7 @@ function initStandardSubproviders(web3Inst, options) {
 }
 
 export {
+  createEngine,
   initStandardSubproviders,
   addSubprovider,
   MetricsProvider,
