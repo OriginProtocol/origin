@@ -8,7 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
-import withOriginWallet from 'hoc/withOriginWallet'
+import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
 
 class ImportAccountScreen extends Component {
@@ -121,7 +121,7 @@ const mapDispatchToProps = dispatch => ({
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 
-export default withOriginWallet(
+export default withWeb3Accounts(
   connect(
     mapStateToProps,
     mapDispatchToProps

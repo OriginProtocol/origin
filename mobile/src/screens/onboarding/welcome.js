@@ -8,7 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
-import withOriginWallet from 'hoc/withOriginWallet'
+import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
@@ -114,7 +114,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default withOriginWallet(
+export default withWeb3Accounts(
   withOnboardingSteps(connect(mapStateToProps)(WelcomeScreen))
 )
 

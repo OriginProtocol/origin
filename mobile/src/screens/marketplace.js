@@ -26,7 +26,7 @@ import { findBestAvailableLanguage } from 'utils/language'
 import { setMarketplaceReady } from 'actions/Marketplace'
 import { setIdentity } from 'actions/Wallet'
 import { identity } from 'graphql/queries'
-import withOriginWallet from 'hoc/withOriginWallet'
+import withWeb3Accounts from 'hoc/withWeb3Accounts'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -39,7 +39,7 @@ class MarketplaceScreen extends Component {
     super(props)
     this.state = {
       modals: [],
-      fiatCurrency: null
+      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
     }
     this.setSwipeHandler()
   }
@@ -271,30 +271,29 @@ class MarketplaceScreen extends Component {
   /* Handle the postMessagefrom the uiState request. The uiState localStorage object
    * can include information about the currency the DApp is set to.
    */
-  handleUiStateMessage(uiStateJson) {
-    let uiState
-    let fiatCurrencyCode = 'fiat-USD'
+  async handleUiStateMessage(uiStateJson) {
+    console.debug('Got uiState message')
+
     if (
       uiStateJson.constructor === Object &&
       Object.keys(uiStateJson).length === 0
     ) {
       // Empty uiState key, nothiing to do here
-      return
-    }
-    try {
-      uiState = JSON.parse(uiStateJson)
-      if (uiState['currency']) {
-        fiatCurrencyCode = uiState['currency']
+      console.debug('uiState is empty')
+    } else {
+      let uiState
+      // Parse the uiState value
+      try {
+        uiState = JSON.parse(uiStateJson)
+        if (uiState['currency']) {
+          fiatCurrency = CURRENCIES.find(c => c[0] === uiState['currency'])
+          await this.setState({ fiatCurrecy })
+          this.updateExchangeRates()
+        }
+      } catch (error) {
+        console.debug('Failed to parse uiState')
       }
-    } catch (error) {
-      console.debug('Failed to parse uiState')
     }
-    const fiatCurrency = CURRENCIES.find(c => c[0] === fiatCurrencyCode)
-    this.setState({ fiatCurrency })
-    // TODO: this will need to be adjusted if multiple non stablecoin support
-    // is added to the DApp (or when OGN has a market price)
-    updateExchangeRate(fiatCurrency[1], 'ETH')
-    updateExchangeRate(fiatCurrency[1], 'DAI')
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -303,6 +302,13 @@ class MarketplaceScreen extends Component {
     msgData.isSuccessful = Boolean(result)
     msgData.args = [result]
     this.dappWebView.postMessage(JSON.stringify(msgData))
+  }
+
+  updateExchangeRates() {
+    // TODO: this will need to be adjusted if multiple non stablecoin support
+    // is added to the DApp (or when OGN has a market price)
+    updateExchangeRate(this.state.fiatCurrency[1], 'ETH')
+    updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
   render() {
@@ -328,6 +334,7 @@ class MarketplaceScreen extends Component {
             this.injectScrollHandler()
             this.injectMessagingKeys()
             this.loadIdentities()
+            this.updateExchangeRates()
             this.props.setMarketplaceReady(true)
             setInterval(() => {
               this.injectUiStateRequest()
@@ -421,7 +428,7 @@ const mapDispatchToProps = dispatch => ({
   setIdentity: identity => dispatch(setIdentity(identity))
 })
 
-export default withOriginWallet(
+export default withWeb3Accounts(
   connect(
     mapStateToProps,
     mapDispatchToProps

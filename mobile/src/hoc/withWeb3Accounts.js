@@ -1,10 +1,10 @@
 'use strict'
 
-/* This is a HOC for "Origin Wallet". it includes useful account management
- * functions.
+/* This is a HOC for providing web3 account functions.
  *
  * It uses redux for state and passes methods to wrapped components. In some
- * areas it emits events for other components to hook into (e.g. add/removal of accounts).
+ * areas it emits events for other components to hook into
+ * (e.g. add/removal of accounts).
  *
  * It interacts with the global web3 object to perform web3 functions.
  */
@@ -24,8 +24,8 @@ import {
 } from 'actions/Wallet'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 
-const withOriginWallet = WrappedComponent => {
-  class WithOriginWallet extends Component {
+const withWeb3Accounts = WrappedComponent => {
+  class WithWeb3Accounts extends Component {
     componentWillMount() {
       // Make sure there is an active account that is valid
       const { wallet } = this.props
@@ -273,7 +273,7 @@ const withOriginWallet = WrappedComponent => {
   return connect(
     mapStateToProps,
     mapDispatchToProps
-  )(WithOriginWallet)
+  )(WithWeb3Accounts)
 }
 
-export default withOriginWallet
+export default withWeb3Accounts

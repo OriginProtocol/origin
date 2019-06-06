@@ -16,7 +16,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
-import withOriginWallet from 'hoc/withOriginWallet'
+import withWeb3Accounts from 'hoc/withWeb3Accounts'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -243,7 +243,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default withOriginWallet(connect(mapStateToProps)(AccountScreen))
+export default withWeb3Accounts(connect(mapStateToProps)(AccountScreen))
 
 const styles = StyleSheet.create({
   keyboardWrapper: {
