@@ -49,11 +49,17 @@ describe('Growth Engine rules', () => {
       expect(this.crules.levels[0]).to.be.an('object')
       expect(this.crules.levels[0].rules.length).to.equal(1)
 
+      this.events = []
+      this.crules.getEvents = (ethAddress) => {
+        return this.events
+          .filter(event => event.ethAddress === ethAddress)
+      }
+
       this.ethAddress = '0x123'
     })
 
     it(`Should return level`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.ProfilePublished,
@@ -61,15 +67,12 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.crules.getEvents = () => {
-        return events
-      }
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
     it(`Should return 1 reward`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.ProfilePublished,
@@ -77,7 +80,6 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.crules.getEvents = () => { return events }
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
 
@@ -95,7 +97,7 @@ describe('Growth Engine rules', () => {
     })
 
     it(`Should return no reward if events are invalid`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.ListingCreated,
@@ -115,7 +117,6 @@ describe('Growth Engine rules', () => {
           ethAddress: '0xbad'
         }
       ]
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
@@ -124,13 +125,12 @@ describe('Growth Engine rules', () => {
 
     it(`Should honor limit`, async () => {
       // 5 events but since limit is 2, only 2 rewards should be granted.
-      const events = Array(5).fill({
+      this.events = Array(5).fill({
         id: 1,
         type: GrowthEventTypes.ProfilePublished,
         status: GrowthEventStatuses.Verified,
         ethAddress: this.ethAddress
       })
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [
@@ -198,20 +198,23 @@ describe('Growth Engine rules', () => {
       expect(this.crules.levels[0]).to.be.an('object')
       expect(this.crules.levels[0].rules.length).to.equal(1)
 
+      this.events = []
+      this.crules.getEvents = (ethAddress) => {
+        return this.events
+          .filter(event => event.ethAddress === ethAddress)
+      }
+
       this.ethAddress = '0x123'
     })
 
     it(`Should return level`, async () => {
-      const events = []
-      this.crules.getEvents = () => {
-        return events
-      }
+      this.events = []
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
     })
 
     it(`Should return 1 reward`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.TwitterAttestationPublished,
@@ -231,7 +234,6 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
@@ -247,7 +249,7 @@ describe('Growth Engine rules', () => {
     })
 
     it(`Should return no reward when numRequired not met`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.TwitterAttestationPublished,
@@ -255,7 +257,6 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         }
       ]
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
@@ -263,7 +264,7 @@ describe('Growth Engine rules', () => {
     })
 
     it(`Should return no reward if events are invalid`, async () => {
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.TwitterAttestationPublished,
@@ -283,7 +284,6 @@ describe('Growth Engine rules', () => {
           ethAddress: '0xbad'
         }
       ]
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = []
@@ -292,7 +292,7 @@ describe('Growth Engine rules', () => {
 
     it(`Should honor limit`, async () => {
       // 2 event tuples meet rules requirement. But limit is 1 -> only 1 reward should be granted.
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.TwitterAttestationPublished,
@@ -318,7 +318,6 @@ describe('Growth Engine rules', () => {
           ethAddress: this.ethAddress
         },
       ]
-      this.crules.getEvents = () => { return events }
 
       const rewards = await this.crules.getRewards(this.ethAddress)
       const expectedRewards = [{
@@ -395,7 +394,7 @@ describe('Growth Engine rules', () => {
 
       this.ethAddress = '0x123'
 
-      const events = [
+      this.events = [
         {
           id: 1,
           type: GrowthEventTypes.ListingSold,
@@ -425,9 +424,9 @@ describe('Growth Engine rules', () => {
           createdAt: this.afterCampaign
         }
       ]
-      // Mock getEvents.
-      this.crules.getEvents = () => {
-        return events
+      this.crules.getEvents = (ethAddress) => {
+        return this.events
+          .filter(event => event.ethAddress === ethAddress)
       }
     })
 
@@ -442,6 +441,76 @@ describe('Growth Engine rules', () => {
         campaignId: 1,
         levelId: 1,
         ruleId: 'ListingPurchase',
+        value: {
+          currency: 'OGN',
+          amount: 1
+        }
+      }]
+      expect(rewards).to.deep.equal(expectedRewards)
+    })
+  })
+
+  describe('Proxy', () => {
+
+    before(() => {
+      const config = {
+        numLevels: 1,
+        levels: {
+          0: {
+            rules: [
+              {
+                id: 'Profile',
+                class: 'SingleEvent',
+                config: {
+                  eventType: GrowthEventTypes.ProfilePublished,
+                  reward: {
+                    amount: 1,
+                    currency: 'OGN'
+                  },
+                  limit: 2,
+                  nextLevelCondition: false,
+                  visible: false,
+                  scope: 'user'
+                }
+              }
+            ],
+          }
+        }
+      }
+      const row = { id: 1 }
+      this.crules = new CampaignRules(row, config)
+      expect(this.crules).to.be.an('object')
+      expect(this.crules.numLevels).to.equal(1)
+      expect(this.crules.levels[0]).to.be.an('object')
+      expect(this.crules.levels[0].rules.length).to.equal(1)
+
+      this.ownerAddress = '0x123'
+      this.proxyAddress = '0x456'
+
+      this.events = []
+      this.crules.getEvents = (ethAddress) => {
+        return this.events
+          .filter(event => (event.ethAddress === ethAddress) || (event.ethAddress === this.proxyAddress))
+      }
+    })
+
+    it(`Events from proxy should be credit to owner`, async () => {
+      this.events = [
+        {
+          id: 1,
+          type: GrowthEventTypes.ProfilePublished,
+          status: GrowthEventStatuses.Verified,
+          ethAddress: this.proxyAddress
+        }
+      ]
+      const level = await this.crules.getCurrentLevel(this.ownerAddress)
+      expect(level).to.equal(0)
+
+      const rewards = await this.crules.getRewards(this.ownerAddress)
+      const expectedRewards = [{
+        campaignId: 1,
+        levelId: 0,
+        ruleId: 'Profile',
         value: {
           currency: 'OGN',
           amount: 1
