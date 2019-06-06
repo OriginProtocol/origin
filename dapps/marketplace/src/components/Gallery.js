@@ -21,6 +21,10 @@ class Gallery extends Component {
                 ? this.setState({ active: this.state.active + 1 })
                 : ''
             }}
+            style={{
+              visibility:
+                this.state.active == pics.length - 1 ? 'hidden' : 'visible'
+            }}
           />
           <button
             className="left-arrow"
@@ -28,6 +32,9 @@ class Gallery extends Component {
               this.state.active > 0
                 ? this.setState({ active: this.state.active - 1 })
                 : ''
+            }}
+            style={{
+              visibility: this.state.active == 0 ? 'hidden' : 'visible'
             }}
           />
         </div>
