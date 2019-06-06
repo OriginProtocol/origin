@@ -104,9 +104,8 @@ const User = ({ match }) => {
                     )}
                   </div>
 
-                  <Reviews id={id} hideWhenZero />
-
                   <UserListings user={id} />
+                  <Reviews id={id} hideWhenZero />
                 </div>
               </div>
             </>
