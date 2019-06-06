@@ -44,6 +44,7 @@ export const types = `
     kakaoAuthUrl(redirect: String): String
     githubAuthUrl(redirect: String): String
     linkedinAuthUrl(redirect: String): String
+    wechatAuthUrl(redirect: String): String
   }
 
   type IdentityConnection {
@@ -78,6 +79,7 @@ export const types = `
     kakaoVerified: Boolean
     githubVerified: Boolean
     linkedinVerified: Boolean
+    wechatVerified: Boolean
 
     name: String
     ipfsHash: String

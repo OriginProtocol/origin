@@ -146,6 +146,8 @@ const githubVerify = oauth2CallbackVerify
 
 const linkedinVerify = oauth2CallbackVerify
 
+const wechatVerify = oauth2CallbackVerify
+
 const websiteVerify = websiteGenerateCode
 
 module.exports = {
@@ -162,5 +164,6 @@ module.exports = {
   websiteVerify,
   kakaoVerify,
   githubVerify,
-  linkedinVerify
+  linkedinVerify,
+  wechatVerify
 }

@@ -26,7 +26,8 @@ const progressPct = {
   websiteVerified: websiteAttestationEnabled ? 5 : 0,
   kakaoVerified: 0,
   githubVerified: 0,
-  linkedinVerified: 0
+  linkedinVerified: 0,
+  wechatVerified: 0
 }
 
 function getAttestations(account, attestations) {
@@ -40,7 +41,8 @@ function getAttestations(account, attestations) {
     websiteVerified: false,
     kakaoVerified: false,
     githubVerified: false,
-    linkedinVerified: false
+    linkedinVerified: false,
+    wechatVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -79,6 +81,9 @@ function getAttestations(account, attestations) {
           break
         case 'linkedin.com':
           result.linkedinVerified = true
+          break
+        case 'wechat.com':
+          result.wechatVerified = true
           break
       }
     }
@@ -296,5 +301,8 @@ export default {
   },
   linkedinAuthUrl: (_, args) => {
     return getAuthURL('linkedin', args)
+  },
+  wechatAuthUrl: (_, args) => {
+    return getAuthURL('wechat', args)
   }
 }

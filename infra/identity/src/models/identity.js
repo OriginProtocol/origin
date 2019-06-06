@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       kakaoVerified: DataTypes.BOOLEAN,
       githubVerified: DataTypes.BOOLEAN,
       linkedinVerified: DataTypes.BOOLEAN,
+      wechatVerified: DataTypes.BOOLEAN,
       data: DataTypes.JSONB,
       country: DataTypes.CHAR(2),
       avatarUrl: DataTypes.STRING,

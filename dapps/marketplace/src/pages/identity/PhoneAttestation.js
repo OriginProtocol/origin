@@ -419,6 +419,9 @@ require('react-styl')(`
     &.linkedin > div h2::before
       background-image: url(images/identity/linkedin-icon-large-dark.svg);
       background-size: 4rem
+    &.wechat > div h2::before
+      background-image: url(images/identity/wechat-icon-large-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

@@ -107,6 +107,12 @@ const User = ({ match }) => {
                           LinkedIn
                         </div>
                       )}
+                      {profile.wechatVerified && (
+                        <div>
+                          <div className="attestation wechat" />
+                          WeChat
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

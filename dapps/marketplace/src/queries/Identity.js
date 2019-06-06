@@ -29,6 +29,7 @@ export default gql`
           kakaoVerified
           githubVerified
           linkedinVerified
+          wechatVerified
         }
       }
     }

@@ -125,6 +125,7 @@ const config = {
       ENABLE_KAKAO_ATTESTATION: false,
       ENABLE_GITHUB_ATTESTATION: false,
       ENABLE_LINKEDIN_ATTESTATION: false,
+      ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
       NAMESPACE: 'dev'
     })

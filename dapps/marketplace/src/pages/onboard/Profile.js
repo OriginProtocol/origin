@@ -197,6 +197,9 @@ require('react-styl')(`
       &.linkedin > i::before
         background-image: url(images/identity/linkedin-icon-large.svg)
         background-size: 1rem
+      &.wechat > i::before
+        background-image: url(images/identity/wechat-icon-large.svg)
+        background-size: 1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)

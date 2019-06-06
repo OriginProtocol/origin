@@ -53,6 +53,7 @@ import verifyWebsite from './attestations/verifyWebsite'
 import verifyKakao from './attestations/verifyKakao'
 import verifyGithub from './attestations/verifyGithub'
 import verifyLinkedin from './attestations/verifyLinkedin'
+import verifyWechat from './attestations/verifyWechat'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -116,6 +117,7 @@ export default {
   verifyPhoneCode,
   verifyTwitter,
   verifyWebsite,
+  verifyWechat,
   withdrawListing,
   withdrawOffer,
   refetch: () => true

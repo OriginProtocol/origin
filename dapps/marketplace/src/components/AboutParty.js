@@ -131,6 +131,14 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation linkedin" />
                     </Tooltip>
                   )}
+                  {profile.wechatVerified && (
+                    <Tooltip
+                      tooltip={fbt('WeChat Verified', 'WeChat Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation wechat" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>
