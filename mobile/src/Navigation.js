@@ -11,18 +11,12 @@ import {
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
-import StackSelector from './StackSelector'
-import UpdatePrompt from 'components/update-prompt'
-import AccountsScreen from 'screens/accounts'
-import AccountScreen from 'screens/account'
-import BackupPrompt from 'components/backup-prompt'
-import BackupScreen from 'screens/backup'
-import ImportAccountScreen from 'screens/import'
-import LanguageScreen from 'screens/language'
-import MarketplaceScreen from 'screens/marketplace'
-import SettingsScreen from 'screens/settings'
-import WalletScreen from 'screens/wallet'
+import Navigator from './Navigator'
+//
+// Utilities
 import AuthenticationGuard from 'components/authentication-guard'
+import UpdatePrompt from 'components/update-prompt'
+import BackupPrompt from 'components/backup-prompt'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import ImportedScreen from 'screens/onboarding/imported'
@@ -33,6 +27,16 @@ import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
 import AvatarScreen from 'screens/onboarding/avatar'
 import ReadyScreen from 'screens/onboarding/ready'
+// Main screens
+import AccountsScreen from 'screens/accounts'
+import AccountScreen from 'screens/account'
+import ImportAccountScreen from 'screens/import'
+import LanguageScreen from 'screens/language'
+import MarketplaceScreen from 'screens/marketplace'
+import SettingsScreen from 'screens/settings'
+import WalletScreen from 'screens/wallet'
+// Backup screen
+import BackupScreen from 'screens/backup'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -216,7 +220,7 @@ class MarketplaceApp extends React.Component {
 export default createAppContainer(
   createStackNavigator(
     {
-      StackSelector: StackSelector,
+      Navigator: Navigator,
       Auth: {
         screen: AuthenticationGuard,
         params: {
@@ -228,7 +232,7 @@ export default createAppContainer(
       App: MarketplaceApp
     },
     {
-      initialRouteName: 'StackSelector',
+      initialRouteName: 'Navigator',
       defaultNavigationOptions: {
         header: null
       },

@@ -26,6 +26,7 @@ import { findBestAvailableLanguage } from 'utils/language'
 import { setMarketplaceReady } from 'actions/Marketplace'
 import { setIdentity } from 'actions/Wallet'
 import { identity } from 'graphql/queries'
+import withOriginWallet from 'hoc/withOriginWallet'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -36,35 +37,24 @@ class MarketplaceScreen extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
       modals: [],
       fiatCurrency: null
     }
+    this.setSwipeHandler()
+  }
 
-    DeviceEventEmitter.addListener(
-      'transactionHash',
-      this.handleTransactionHash.bind(this)
-    )
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings.language !== this.props.settings.language) {
+      // Language has changed, need to reload the DApp
+      if (this.dappWebView) {
+        // Reinject the language
+        this.injectLanguage()
+      }
+    }
+  }
 
-    DeviceEventEmitter.addListener(
-      'messageSigned',
-      this.handleSignedMessage.bind(this)
-    )
-
-    DeviceEventEmitter.addListener(
-      'messagingKeys',
-      this.injectMessagingKeys.bind(this)
-    )
-
-    DeviceEventEmitter.addListener(
-      'graphqlQuery',
-      this.injectGraphqlQuery.bind(this)
-    )
-
-    this.onWebViewMessage = this.onWebViewMessage.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
-
+  setSwipeHandler = () => {
     const swipeDistance = 200
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: () => false,
@@ -84,30 +74,7 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  componentDidMount() {
-    console.debug(
-      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
-    )
-  }
-
-  componentWillUnmount() {
-    DeviceEventEmitter.removeListener('transactionHash')
-    DeviceEventEmitter.removeListener('messageSigned')
-    DeviceEventEmitter.removeListener('messagingKeys')
-    DeviceEventEmitter.removeListener('graphqlQuery')
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.settings.language !== this.props.settings.language) {
-      // Language has changed, need to reload the DApp
-      if (this.dappWebView) {
-        // Reinject the language
-        this.injectLanguage()
-      }
-    }
-  }
-
-  onWebViewMessage(event) {
+  onWebViewMessage = (event) => {
     let msgData
     try {
       msgData = JSON.parse(event.nativeEvent.data)
@@ -116,7 +83,11 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    if (this[msgData.targetFunc]) {
+    if (msgData.targetFunc === 'getAccounts') {
+      // Call get account method from OriginWallet HOC
+      const response = this.props.getAccounts()
+      this.handleBridgeResponse(msgData, response)
+    } else if (this[msgData.targetFunc]) {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
@@ -153,24 +124,25 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  getAccounts() {
-    const { wallet } = this.props
-    let accounts
-    if (wallet.activeAccount) {
-      const filteredAccounts = wallet.accounts.filter(
-        a => a.address !== wallet.activeAccount.address
-      )
-      accounts = [
-        wallet.activeAccount.address,
-        ...filteredAccounts.map(a => a.address)
-      ]
-    } else {
-      accounts = wallet.accounts
+  /* Remove a modal and return the given result to the DApp
+   */
+  toggleModal = (modal, result) => {
+    if (!modal) {
+      return
     }
-    return accounts
+    if (modal.msgData) {
+      // Send the response to the webview
+      this.handleBridgeResponse(modal.msgData, result)
+    }
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        modals: [...prevState.modals.filter(m => m !== modal)]
+      }
+    })
   }
 
-  loadIdentities() {
+  loadIdentities = () => {
     const { wallet } = this.props
 
     wallet.accounts.forEach(account => {
@@ -181,7 +153,7 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  handleIdentity(response) {
+  handleIdentity = (response) => {
     if (response.data.identity) {
       this.props.setIdentity(response.data.identity)
     }
@@ -192,8 +164,7 @@ class MarketplaceScreen extends Component {
    * for accounts
    */
   injectMessagingKeys() {
-    const { wallet } = this.props
-    const keys = wallet.messagingKeys
+    const keys = this.props.wallet.messagingKeys
     if (keys) {
       const keyInjection = `
         (function() {
@@ -334,52 +305,12 @@ class MarketplaceScreen extends Component {
     this.dappWebView.postMessage(JSON.stringify(msgData))
   }
 
-  /* Handle a transaction hash event from the Origin Wallet
-   */
-  handleTransactionHash({ transaction, hash }) {
-    // Close matching modal
-    const modal = this.state.modals.find(
-      m => m.msgData && m.msgData.data === transaction
-    )
-    // Toggle the matching modal and return the hash
-    this.toggleModal(modal, hash)
-  }
-
-  /* Handle a signed message event from the Origin Wallet
-   */
-  handleSignedMessage({ data, signedMessage }) {
-    // Close matching modal
-    const modal = this.state.modals.find(
-      m => m.msgData && m.msgData.data === data
-    )
-    // Toggle the matching modal and return the hash
-    this.toggleModal(modal, signedMessage.signature)
-  }
-
-  /* Remove a modal and return the given result to the DApp
-   */
-  toggleModal(modal, result) {
-    if (!modal) {
-      return
-    }
-    if (modal.msgData) {
-      // Send the response to the webview
-      this.handleBridgeResponse(modal.msgData, result)
-    }
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        modals: [...prevState.modals.filter(m => m !== modal)]
-      }
-    })
-  }
-
   render() {
     const { modals } = this.state
     const { navigation } = this.props
-    const marketplaceUrl = navigation.getParam(
-      'marketplaceUrl',
-      this.props.settings.network.dappUrl
+
+    console.debug(
+      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
     )
 
     return (
@@ -388,7 +319,7 @@ class MarketplaceScreen extends Component {
           ref={webview => {
             this.dappWebView = webview
           }}
-          source={{ uri: marketplaceUrl }}
+          source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={() => {
             this.injectLanguage()
@@ -425,7 +356,10 @@ class MarketplaceScreen extends Component {
                 msgData={modal.msgData}
                 fiatCurrency={this.state.fiatCurrency}
                 onConfirm={() => {
-                  DeviceEventEmitter.emit('sendTransaction', modal.msgData.data)
+                  this.props.sendTransaction(modal.msgData.data).on('transactionHash', hash => {
+                    // Toggle the modal and return the hash
+                    this.toggleModal(modal, hash)
+                  })
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
@@ -439,7 +373,9 @@ class MarketplaceScreen extends Component {
               <SignatureCard
                 msgData={modal.msgData}
                 onConfirm={() => {
-                  DeviceEventEmitter.emit('signMessage', modal.msgData.data)
+                  this.props.signMessage(modal.msgData.data).then(signedMessage => {
+                    this.toggleModal(modal, signedMessage)
+                  })
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
@@ -478,10 +414,10 @@ const mapDispatchToProps = dispatch => ({
   setIdentity: identity => dispatch(setIdentity(identity))
 })
 
-export default connect(
+export default withOriginWallet(connect(
   mapStateToProps,
   mapDispatchToProps
-)(MarketplaceScreen)
+)(MarketplaceScreen))
 
 const styles = StyleSheet.create({
   container: {
