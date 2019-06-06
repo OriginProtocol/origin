@@ -12,6 +12,7 @@ module.exports = {
           type: Sequelize.STRING
         },
         owner_address: {
+          allowNull: false,
           type: Sequelize.STRING
         },
         created_at: {

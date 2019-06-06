@@ -1,13 +1,24 @@
+const db = require('../models')
 const esmImport = require('esm')(module)
 const contracts = esmImport('@origin/graphql/src/contracts').default
 
-const db = require('../models')
-
 const logger = require('./logger')
 
-class IdentityEventHandler {
+class ProxyEventHandler {
   constructor(config) {
     this.config = config
+  }
+
+  /**
+   * Lookup a proxy's owner by making a call to the blockchain.
+   * @param proxyAddress
+   * @returns {Promise<*>}
+   * @private
+   */
+  async _getProxyOwner(proxyAddress) {
+    const Proxy = contracts.ProxyImp.clone()
+    Proxy.options.address = proxyAddress
+    return Proxy.methods.owner().call()
   }
 
   /**
@@ -26,7 +37,7 @@ class IdentityEventHandler {
 
     // Get the address of the newly created proxy from the event.
     const proxyAddress = event.returnValues.proxy
-    if (!proxyAddress || contracts.web3.utils.toBN(proxyAddress).isZero()) {
+    if (!proxyAddress || !parseInt(proxyAddress, 16)) {
       throw new Error(
         `Invalid proxy address in ProxyCreation event: ${proxyAddress}`
       )
@@ -34,9 +45,7 @@ class IdentityEventHandler {
     logger.info(`Processing ProxyCreation event. Proxy address=${proxyAddress}`)
 
     // Call the proxy contract to get the address of its owner.
-    const Proxy = contracts.ProxyImp.clone()
-    Proxy.options.address = proxyAddress
-    const ownerAddress = await Proxy.methods.owner().call()
+    const ownerAddress = await this._getProxyOwner(proxyAddress)
     logger.info(`Proxy owner=${ownerAddress}`)
 
     // Persist the data in the DB
@@ -66,4 +75,4 @@ class IdentityEventHandler {
   }
 }
 
-module.exports = IdentityEventHandler
+module.exports = ProxyEventHandler

@@ -116,10 +116,11 @@ logger.info(config)
 async function main() {
   const context = await new Context().init(config, errorCounter)
 
+  // List of contracts the listener watches events from.
   const contracts = {
     //IdentityEvents: contractsContext.identityEvents,
     //Marketplace: contractsContext.marketplace,
-    ProxyFactory: contractsContext.proxyFactory
+    ProxyFactory: contractsContext.ProxyFactory
   }
 
   if (context.config.concurrency > 1) {
