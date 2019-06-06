@@ -1,5 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider')
-const PrivateKeyProvider = require('truffle-privatekey-provider')
+const Web3 = require('web3')
 
 const MAINNET_NETWORK_ID = 1
 const ROPSTEN_NETWORK_ID = 3
@@ -90,10 +90,18 @@ function createProviders(networkIds) {
     }
     // Private key takes precedence
     if (privateKey) {
+      const web3 = new Web3(providerUrl)
+      const account = web3.eth.accounts.privateKeyToAccount('0x' + privateKey)
+      web3.eth.accounts.wallet.add(account)
+      web3.eth.defaultAccount = account.address
+      providers[networkId] = web3
       if (process.env.NODE_ENV !== 'test') {
-        console.log(`Network=${networkId} URL=${providerUrl} Using private key`)
+        console.log(
+          `Network=${networkId} URL=${providerUrl} Using private key for account ${
+            account.address
+          }`
+        )
       }
-      providers[networkId] = new PrivateKeyProvider(privateKey, providerUrl)
     } else {
       if (process.env.NODE_ENV !== 'test') {
         const displayMnemonic =
@@ -102,7 +110,9 @@ function createProviders(networkIds) {
           `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
         )
       }
-      providers[networkId] = new HDWalletProvider(mnemonic, providerUrl)
+      providers[networkId] = new Web3(
+        new HDWalletProvider(mnemonic, providerUrl)
+      )
     }
   }
   return providers

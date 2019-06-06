@@ -23,6 +23,16 @@ export const escapeXpathString = str => {
   return `concat('${splitedQuotes}', '')`
 }
 
+export const clickXpath = async (page, xpath, linkName) => {
+  const linkHandlers = await page.$x(xpath)
+
+  if (linkHandlers.length > 0) {
+    await linkHandlers[0].click()
+  } else {
+    throw new Error(`Link not found: ${linkName || xpath}`)
+  }
+}
+
 export const waitForText = async (page, text, path) => {
   // const hash = Object.keys(enUS).find(key => enUS[key] === text)
   // if (zhCN[hash]) {
@@ -47,13 +57,19 @@ export const hasText = async (page, text, path) => {
 export const clickByText = async (page, text, path) => {
   const xpath = await waitForText(page, text, path)
 
-  const linkHandlers = await page.$x(xpath)
+  await clickXpath(page, xpath, text)
+}
 
-  if (linkHandlers.length > 0) {
-    await linkHandlers[0].click()
-  } else {
-    throw new Error(`Link not found: ${text}`)
-  }
+export const waitForElementWithClassName = async (page, className, path) => {
+  const xpath = `/html/body//${path || '*'}[contains(@class, '${className}')]`
+  await page.waitForXPath(xpath)
+  return xpath
+}
+
+export const giveRating = async (page, rating) => {
+  let xpath = await waitForElementWithClassName(page, 'star-rating')
+  xpath = `${xpath}/div[position()=${rating}]`
+  await clickXpath(page, xpath, `.star-rating(${rating})`)
 }
 
 export const clickBySelector = async (page, path) => {

@@ -205,14 +205,8 @@ export function setNetwork(net, customConfig) {
 
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
-  context.ProxyFactory = new web3.eth.Contract(
-    IdentityProxyFactory.abi,
-    config.ProxyFactory
-  )
-  context.ProxyImp = new web3.eth.Contract(
-    IdentityProxy.abi,
-    config.IdentityProxyImplementation
-  )
+
+  setProxyContracts(config)
 
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -469,6 +463,30 @@ export function setIdentityEvents(address, epoch) {
       context.identityEventsExec = context.identityEventsMM
     }
   }
+}
+
+export function setProxyContracts(config) {
+  context.ProxyFactory = new web3.eth.Contract(
+    IdentityProxyFactory.abi,
+    config.ProxyFactory
+  )
+  context.ProxyImp = new web3.eth.Contract(
+    IdentityProxy.abi,
+    config.IdentityProxyImplementation
+  )
+  // Add an event cache to ProxyFactory.
+  patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
+    ...context.config,
+    ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
+    cacheMaxBlock: null,
+    useLatestFromChain: false,
+    prefix:
+      typeof config.ProxyFactory === 'undefined'
+        ? 'ProxyFactory_'
+        : `${config.ProxyFactory.slice(2, 8)}_`,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
+    batchSize: 2500
+  })
 }
 
 export function shutdown() {
