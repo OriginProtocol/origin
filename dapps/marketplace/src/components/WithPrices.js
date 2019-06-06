@@ -1,5 +1,4 @@
 import withCurrencyBalances from 'hoc/withCurrencyBalances'
-import withWallet from 'hoc/withWallet'
 import get from 'lodash/get'
 import floor from 'lodash/floor'
 
@@ -91,4 +90,4 @@ const WithPrices = ({
   return children({ prices: results, tokenStatus })
 }
 
-export default withWallet(withCurrencyBalances(WithPrices))
+export default withCurrencyBalances(WithPrices)

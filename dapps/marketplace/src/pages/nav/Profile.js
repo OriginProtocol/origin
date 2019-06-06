@@ -1,21 +1,20 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withNetwork from 'hoc/withNetwork'
+import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
 
 import ProfileQuery from 'queries/Profile'
-import IdentityQuery from 'queries/Identity'
 
 import Link from 'components/Link'
-import Identicon from 'components/Identicon'
 import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
+import UserActivationLink from 'components/UserActivationLink'
 
 import DeployProxy from '../identity/mutations/DeployProxy'
 
@@ -26,6 +25,8 @@ class ProfileNav extends Component {
   }
 
   render() {
+    const { identity, identityLoading } = this.props
+
     const poll = window.transactionPoll || 1000
     return (
       <Query query={ProfileQuery} pollInterval={poll}>
@@ -38,7 +39,6 @@ class ProfileNav extends Component {
             return null
           }
 
-          const { checksumAddress } = data.web3.primaryAccount
           return (
             <Dropdown
               el="li"
@@ -47,6 +47,8 @@ class ProfileNav extends Component {
               onClose={() => this.props.onClose()}
               content={
                 <ProfileDropdown
+                  identity={identity}
+                  identityLoading={identityLoading}
                   onClose={() => this.props.onClose()}
                   data={data}
                 />
@@ -57,19 +59,77 @@ class ProfileNav extends Component {
                 href="#"
                 onClick={e => {
                   e.preventDefault()
+                  this.setState({ modal: true })
                   this.props.open ? this.props.onClose() : this.props.onOpen()
                 }}
                 role="button"
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <Identicon address={checksumAddress} />
+                {identity && (
+                  <Avatar
+                    avatar={identity.avatar}
+                    avatarUrl={identity.avatarUrl}
+                    className="user-image-mask"
+                  />
+                )}
+                {!identity && (
+                  <img
+                    className="user-image-mask"
+                    src="images/identity/unknown-user-small.svg"
+                  />
+                )}
               </a>
             </Dropdown>
           )
         }}
       </Query>
     )
+  }
+}
+
+class CreateIdentity extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      enable: false
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <div className="create-identity text-center">
+          <img
+            className="user-image-mask large"
+            src="images/identity/unknown-user.svg"
+          />
+          <h3>
+            <fbt desc="nav.profile.profileNotCreated">
+              You haven&apos;t created a profile yet
+            </fbt>
+          </h3>
+          <p>
+            <fbt desc="nav.profile.createYourProfile">
+              Creating a profile allows other users to know that you are real
+              and increases the chances of successful transactions on Origin.
+            </fbt>
+          </p>
+
+          <UserActivationLink
+            className="btn btn-primary"
+            onClick={this.onClose}
+            onClose={this.onClose}
+          />
+        </div>
+      </>
+    )
+  }
+
+  onClose = () => {
+    if (this.props.onClose) {
+      this.props.onClose()
+    }
   }
 }
 
@@ -80,200 +140,280 @@ const Network = withNetwork(({ networkName }) => (
   </div>
 ))
 
-const ProfileDropdownRaw = ({ data, onClose, wallet, walletProxy, config }) => {
-  const { checksumAddress, id } = data.web3.primaryAccount
+const WalletAddress = ({ wallet, walletType, children }) => {
   return (
-    <div className="dropdown-menu dark dropdown-menu-right show profile">
-      <Network />
-      <div className="wallet-info">
-        <div>
-          <h5>
-            <fbt desc="nav.profile.ethAddress">ETH Address</fbt>
-          </h5>
-          <div className="wallet-address">{checksumAddress}</div>
-        </div>
-        <div className="identicon">
-          <Identicon size={50} address={checksumAddress} />
-        </div>
-      </div>
-      {!config.proxyAccountsEnabled ? null : (
-        <div className="wallet-info">
-          {walletProxy === wallet ? (
-            <div className="d-flex w-100 align-items-center">
-              <h5 className="mb-0 flex-grow-1">Proxy Account</h5>
-              {walletProxy === wallet ? (
-                <DeployProxy
-                  className="btn btn-sm btn-outline-primary px-3"
-                  children="Deploy"
-                />
-              ) : (
-                <div className="wallet-address">{walletProxy}</div>
-              )}
-            </div>
-          ) : (
-            <div>
-              <h5>Proxy Account</h5>
-              <div className="wallet-address">{walletProxy}</div>
-            </div>
-          )}
-        </div>
-      )}
-      <Balances account={id} onClose={onClose} />
-      <Identity id={id} />
-      <Link onClick={() => onClose()} to="/profile">
-        <fbt desc="nav.profile.editProfile">Edit Profile</fbt>
-      </Link>
-      <Link onClick={() => onClose()} to="/settings">
-        <fbt desc="nav.profile.settings">Settings</fbt>
-      </Link>
+    <div className="connected">
+      {children || <fbt desc="nav.profile.activeWallet">Active wallet</fbt>}
+      <span>
+        <span className={`wallet-icon ${getWalletIconClass(walletType)}`} />
+        <span className="wallet-name">{walletType}</span>
+        <span className="wallet-address">{`${wallet.slice(
+          0,
+          4
+        )}...${wallet.slice(-4)}`}</span>
+      </span>
     </div>
   )
 }
+
+const Identity = ({ id, identity, identityLoading, onClose }) => {
+  if (identityLoading) {
+    return (
+      <div>
+        <fbt desc="nav.profile.identityLoading">
+          Hold on while we load your identity...
+        </fbt>
+      </div>
+    )
+  }
+
+  if (!identity) {
+    return <CreateIdentity onClose={onClose} />
+  }
+
+  return (
+    <div className="identity">
+      <fbt desc="nav.profile.profile">Profile</fbt>
+      <div className="info">
+        <Link onClick={() => onClose()} to="/profile" className="name">
+          <Avatar profile={identity} size="3rem" />
+        </Link>
+        <div>
+          <Link onClick={() => onClose()} to="/profile" className="name">
+            {identity.fullName ||
+              fbt('Unnamed User', 'nav.profile.unnamedUser')}
+          </Link>
+          <Attestations profile={identity} />
+        </div>
+      </div>
+      <div className="strength">
+        <div className="progress">
+          <div
+            className="progress-bar"
+            style={{ width: `${identity.strength || '0'}%` }}
+          />
+        </div>
+        {`${fbt(
+          'Profile Strength',
+          'nav.profile.ProfileStrength'
+        )} - ${identity.strength || '0'}%`}
+      </div>
+      <Link
+        onClick={() => onClose()}
+        to="/profile"
+        className="earn-ogn-link mt-3 mb-3"
+      >
+        <fbt desc="nav.profile.earnOGN">Strengthen profile &amp; earn OGN</fbt>
+      </Link>
+      <Balances
+        account={id}
+        onClose={onClose}
+        title={<fbt desc="nav.profile.walletBalance">Wallet balance</fbt>}
+        className="pt-3 pb-3"
+      />
+    </div>
+  )
+}
+
+const ProfileDropdownRaw = ({
+  data,
+  identity,
+  identityLoading,
+  walletType,
+  wallet,
+  walletProxy,
+  config,
+  onClose
+}) => {
+  const { checksumAddress, id } = data.web3.primaryAccount
+
+  return (
+    <div className="dropdown-menu dark dropdown-menu-right show profile">
+      <div className="active-wallet-info">
+        <Network />
+        <WalletAddress wallet={checksumAddress} walletType={walletType} />
+        {!config.proxyAccountsEnabled ? null : (
+          <div className="connected mt-2 proxy-acct">
+            <fbt desc="nav.profile.proxyAccount">Proxy Account</fbt>
+            {walletProxy === wallet ? (
+              <DeployProxy
+                className="btn btn-sm btn-outline-primary px-3"
+                children="Deploy"
+              />
+            ) : (
+              <span>{walletProxy}</span>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="identity-info">
+        <Identity
+          id={id}
+          identity={identity}
+          identityLoading={identityLoading}
+          onClose={onClose}
+        />
+      </div>
+    </div>
+  )
+}
+
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-const Identity = withWallet(({ walletProxy }) => (
-  <Query query={IdentityQuery} variables={{ id: walletProxy }}>
-    {({ data, error }) => {
-      if (error) return null
-      const profile = get(data, 'web3.account.identity') || {}
+function getWalletIconClass(walletType) {
+  switch (walletType) {
+    case 'Origin Wallet':
+      return 'origin'
 
-      return (
-        <div className="identity">
-          <h5>
-            <fbt desc="nav.profile.myIdentity">My Identity</fbt>
-          </h5>
-          <div className="info">
-            <Avatar profile={profile} size="3rem" />
-            <div>
-              <div className="name">
-                {profile.fullName ||
-                  fbt('Unnamed User', 'nav.profile.unnamedUser')}
-              </div>
-              <Attestations profile={profile} />
-            </div>
-          </div>
-          <div className="strength">
-            <div className="progress">
-              <div
-                className="progress-bar"
-                style={{ width: `${profile.strength || '0'}%` }}
-              />
-            </div>
-            {`${fbt(
-              'Profile Strength',
-              'nav.profile.ProfileStrength'
-            )} - ${profile.strength || '0'}%`}
-          </div>
-        </div>
-      )
-    }}
-  </Query>
-))
+    case 'MetaMask':
+    case 'Meta Mask':
+      return 'metamask'
 
-export default ProfileNav
+    case 'Trust Wallet':
+      return 'trust'
+
+    case 'Coinbase Wallet':
+      return 'toshi'
+
+    case 'Cipher':
+      return 'cipher'
+
+    case 'Mist':
+      return 'mist'
+
+    case 'Parity':
+      return 'parity'
+  }
+
+  return 'metamask'
+}
+
+export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
+  .dropdown.profile.show
+    background-color: black !important
+  .user-image-mask
+    width: 26px
+    height: 26px
+    padding-top: 3px
+    border-radius: 40px
+    border: solid 1px var(--white)
+    background-color: var(--dark-grey-blue)
+    &.large
+      width: 80px
+      height: 80px
+      padding-top: 9px
+      margin-top: 1rem
+      margin-bottom: 0.5rem
+
   .dropdown-menu.profile
     width: 300px
     font-size: 14px
+    margin-top: 0 !important
+    &:before
+      display: none !important
     > div
       padding: 0.75rem 1.5rem
-      border-bottom: 2px solid black;
-      &:nth-last-child(2)
-        border-bottom: 0
-    h5
-      color: var(--light)
-      font-size: 14px
-    .connected
-      padding: 0.75rem 1.5rem;
-      color: var(--light)
-      > span
-        display: inline-block
-        color: var(--greenblue)
-        &::before
-          content: ""
-          display: inline-block
-          background: var(--greenblue)
-          width: 10px
-          height: 10px
-          border-radius: var(--default-radius)
-          margin-right: 4px
-          margin-left: 6px
-    .nav-link img
-      margin: 0 0.2rem
-    .wallet-info
-      display: flex
-      flex-direction: row
-      font-size: 14px
-      .wallet-address
-        word-break: break-all
-        line-height: normal
-      .identicon
-        margin-left: 0.5rem
+      border-bottom: 2px solid black
+    .active-wallet-info
+      padding: 1rem
+      background-color: black
+      .connected.proxy-acct
         display: flex
         align-items: center
-    .identity
-      font-weight: bold
-      .info
-        margin-bottom: 1rem
-        margin-top: 0.75rem
-        display: flex
-        .avatar
-          margin-right: 0.75rem
-        .name
-          font-size: 18px
-
-      .strength
-        font-size: 10px;
-        text-transform: uppercase;
-        color: var(--steel);
-        letter-spacing: 0.4px;
-        .progress
-          background-color: #000
-          height: 6px
+        justify-content: space-between
+        white-space: nowrap
+        > span
+          text-overflow: ellipsis
+          overflow: hidden
+          margin-left: 0.5rem
+      .connected
+        padding: 0
+        color: var(--light)
+        > span
+          display: inline-block
+          margin-left: 4px
+          > .wallet-icon
+            display: inline-block
+            width: 10px
+            height: 10px
+            margin-right: 4px
+            margin-left: 6px
+            background-size: 10px 10px
+            &.metamask
+              background-image: url('images/metamask.svg')
+          > .wallet-name
+            color: white
+            margin-left: 4px
+            margin-right: 6px
+          > .wallet-address
+            font-size: 0.6rem
+        > .net
+          color: var(--greenblue)
+          &::before
+            content: ""
+            display: inline-block
+            background: var(--greenblue)
+            width: 10px
+            height: 10px
+            border-radius: var(--default-radius)
+            margin-right: 4px
+            margin-left: 6px
+    .identity-info
+      background-color: var(--dark)
+      .create-identity
+        h3
+          padding: 0.5rem 0
           margin-bottom: 0.5rem
-          .progress-bar
-            background-color: var(--greenblue)
+        .btn
+          border-radius: 2rem
+          padding: 0.5rem 1rem
+          margin-bottom: 2.5rem
+          width: 100%
+        p
+          color: white
+          font-size: 0.9rem
+          margin-bottom: 1.75rem
 
-    > a
-      display: block
-      background: var(--dark-grey-blue)
-      color: var(--white)
-      text-align: center
-      padding: 0.75rem 1rem
-      font-weight: bold
-      border-bottom: 1px solid black
-      &:hover
-        background: var(--dusk)
-      &:last-child
-        border: 0
-        border-radius: 0 0 5px 5px
+       .identity
+         font-weight: bold
+         .info
+           margin-bottom: 1rem
+           margin-top: 0.75rem
+           display: flex
+           .avatar
+             margin-right: 0.75rem
+             border-radius: 50%
+             cursor: pointer
+           .name
+              cursor: pointer
+              font-size: 1.2rem
+              color: white
 
-  .attestations
-    display: flex
-  .attestation
-    background-repeat: no-repeat
-    background-position: center
-    background-size: contain
-    width: 1.25rem
-    height: 1.25rem
-    margin-right: 0.25rem
-    &.email
-      background-image: url(images/identity/email-icon-verified.svg)
-    &.facebook
-      background-image: url(images/identity/facebook-icon-verified.svg)
-    &.phone
-      background-image: url(images/identity/phone-icon-verified.svg)
-    &.twitter
-      background-image: url(images/identity/twitter-icon-verified.svg)
-    &.airbnb
-      background-image: url(images/identity/airbnb-icon-verified.svg)
-    &.google
-      background-image: url(images/identity/google-icon-verified.svg)
-    &.website
-      background-image: url(images/identity/website-icon-verified.svg)
+         .strength
+           font-size: 10px;
+           text-transform: uppercase;
+           color: var(--steel);
+           letter-spacing: 0.4px;
+           .progress
+             background-color: #000
+             height: 6px
+             margin-bottom: 0.5rem
+             .progress-bar
+               background-color: var(--greenblue)
+          .earn-ogn-link
+            font-size: 1rem
+            display: inline-block
+          .balances
+            border-top: 1px solid #333
+            h5
+              font-size: 1rem
 
   @media (max-width: 767.98px)
     .dropdown-menu.profile
       width: auto
+      &.show
+        left: 0 !important
+        right: 0 !important
 `)

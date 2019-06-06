@@ -1,10 +1,11 @@
 const addresses = require('@origin/contracts/build/contracts_mainnet.json')
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
-  // provider:
-  //   'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
-  provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  //provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
+  provider:
+    'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
   // providerWS: 'wss://mainnet.infura.io/ws',
 
   // Services
@@ -32,6 +33,8 @@ export default {
     'QmNQuZynZNNepPR4ntZYoGDa9JUKBwApXvLQHM9chBXKWo',
     'QmZ9ANQNA1r3cbPSMNc9YFyAEijXif2j9m6SyaKDMJ8RsL'
   ],
+  ProxyFactory: addresses.ProxyFactory,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
   V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
@@ -75,5 +78,6 @@ export default {
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
   // Configs
-  performanceMode: true
+  performanceMode: true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }

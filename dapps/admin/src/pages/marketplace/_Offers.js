@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 
 import { AnchorButton, Tooltip, Tag, Icon } from '@blueprintjs/core'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import currency from 'utils/currency'
 import withAccounts from 'hoc/withAccounts'
 
