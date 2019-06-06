@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 
-class StackSelector extends React.Component {
+class Navigator extends React.Component {
   constructor(props) {
     super(props)
     this.selectStack()
@@ -44,5 +44,5 @@ export default withOnboardingSteps(
   connect(
     mapStateToProps,
     {}
-  )(StackSelector)
+  )(Navigator)
 )

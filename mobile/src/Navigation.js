@@ -11,7 +11,7 @@ import {
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
-import StackSelector from './StackSelector'
+import Navigator from './Navigator'
 import UpdatePrompt from 'components/update-prompt'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
@@ -216,7 +216,7 @@ class MarketplaceApp extends React.Component {
 export default createAppContainer(
   createStackNavigator(
     {
-      StackSelector: StackSelector,
+      Navigator: Navigator,
       Auth: {
         screen: AuthenticationGuard,
         params: {
@@ -228,7 +228,7 @@ export default createAppContainer(
       App: MarketplaceApp
     },
     {
-      initialRouteName: 'StackSelector',
+      initialRouteName: 'Navigator',
       defaultNavigationOptions: {
         header: null
       },
