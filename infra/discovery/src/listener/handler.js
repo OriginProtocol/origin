@@ -8,7 +8,6 @@ const MarketplaceEventHandler = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
 const ProxyEventHandler = require('./handler_proxy')
 
-
 const {
   postToEmailWebhook,
   postToDiscordWebhook,
@@ -36,7 +35,7 @@ const EVENT_TO_HANDLER_MAP = {
   // TODO(franck): handle IdentityDeleted
   IdentityUpdated: IdentityEventHandler,
   // Proxy events
-  ProxyCreation: ProxyEventHandler,
+  ProxyCreation: ProxyEventHandler
 }
 
 // Initializing a new ApolloClient so cache can be disabled

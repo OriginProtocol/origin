@@ -117,8 +117,8 @@ async function main() {
   const context = await new Context().init(config, errorCounter)
 
   const contracts = {
-    IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplace,
+    //IdentityEvents: contractsContext.identityEvents,
+    //Marketplace: contractsContext.marketplace,
     ProxyFactory: contractsContext.proxyFactory
   }
 
