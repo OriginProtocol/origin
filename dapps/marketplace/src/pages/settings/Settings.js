@@ -12,6 +12,9 @@ import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
 import Toggle from 'components/Toggle'
 
+import Store from 'utils/store'
+const store = Store('sessionStorage')
+
 const configurableFields = [
   'bridge',
   'discovery',
@@ -29,7 +32,8 @@ class Settings extends Component {
 
     this.state = {
       ...Object.assign(...configurableFields.map(key => ({ [key]: '' }))),
-      ...pick(this.props.config, configurableFields)
+      ...pick(this.props.config, configurableFields),
+      developerMode: store.get('developerMode')
     }
 
     this.saveConfig = this.saveConfig.bind(this)
@@ -80,9 +84,8 @@ class Settings extends Component {
   }
 
   toggleDeveloperMode(on) {
-    this.setState({
-      developerMode: on
-    })
+    store.set('developerMode', on)
+    this.setState({ developerMode: on })
   }
 
   render() {
@@ -301,6 +304,72 @@ class Settings extends Component {
                             name="relayer"
                             {...input('relayer')}
                             onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row d-flex">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.proxyAccountsLabel">
+                              Enable Proxy Accounts
+                            </fbt>
+                          </label>
+                          <div className="form-text form-text-muted pt-1">
+                            <small className="mt-1">
+                              <fbt desc="settings.enableRisk">
+                                Warning: enable at your own risk!
+                              </fbt>
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-sm d-flex align-items-center">
+                          <Toggle
+                            toggled={true}
+                            initialToggleState={
+                              localStorage.proxyAccountsEnabled ? true : false
+                            }
+                            className="mt-0"
+                            onClickHandler={on => {
+                              if (on) {
+                                localStorage.proxyAccountsEnabled = true
+                              } else {
+                                delete localStorage.proxyAccountsEnabled
+                              }
+                              window.location.reload()
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row d-flex">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.relayerToggleLabel">
+                              Enable Relayer
+                            </fbt>
+                          </label>
+                          <div className="form-text form-text-muted pt-1">
+                            <small className="mt-1">
+                              <fbt desc="settings.enableRisk">
+                                Warning: enable at your own risk!
+                              </fbt>
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-sm d-flex align-items-center">
+                          <Toggle
+                            toggled={true}
+                            initialToggleState={
+                              localStorage.enableRelayer ? true : false
+                            }
+                            className="mt-0"
+                            onClickHandler={on => {
+                              if (on) {
+                                localStorage.enableRelayer = true
+                              } else {
+                                delete localStorage.enableRelayer
+                              }
+                              window.location.reload()
+                            }}
                           />
                         </div>
                       </div>
