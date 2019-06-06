@@ -149,7 +149,7 @@ export function identity({ id, ipfsHash }) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
         const avatarHash = await IpfsHash.of(avatarBinary.buffer)
-        identity.avatarUrl = 'ifps://' + avatarHash
+        identity.avatarUrl = 'ipfs://' + avatarHash
       } catch {
         // If we can't translate an old avatar for any reason, don't worry about it.
         // We've already tested the backfill script, and not seen a problem
