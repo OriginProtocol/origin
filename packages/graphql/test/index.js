@@ -122,7 +122,7 @@ describe('Marketplace', function() {
     })
 
     it('should retrieve the listing as of a specfic block', async function() {
-      const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
+      const blockNumber = await contracts.marketplace.eventCache.getBlockNumber()
       const listingId = `999-000-0-${blockNumber}`
       const res = await client.query({
         query: queries.GetListing,
@@ -235,7 +235,7 @@ describe('Marketplace', function() {
           },
           category: 'Test category',
           subCategory: 'Test sub-category',
-          commission: '1.5'
+          commissionPerUnit: '1.5'
         },
         unitData: {
           unitsTotal: 1
@@ -289,7 +289,7 @@ describe('Marketplace', function() {
         listingData.unitData.unitsTotal
       )
       assert.strictEqual(listing.unitsSold, 0)
-      assert.strictEqual(listing.commission, '1500000000000000000')
+      assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '1500000000000000000')
       assert.strictEqual(listing.featured, false)
       assert.strictEqual(listing.hidden, false)
@@ -400,6 +400,7 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
 
       const offer = await getOffer('999-000-2', 0)
+      assert(offer.id === '999-000-2-0')
       assert(offer.status === 1)
       assert(offer.commission === '2000000000000000000')
     })
@@ -422,6 +423,7 @@ describe('Marketplace', function() {
       assert(events.OfferCreated)
 
       const offer = await getOffer('999-000-2', 1)
+      assert.strictEqual(offer.id, '999-000-2-1')
       assert.strictEqual(offer.status, 1)
       assert.strictEqual(offer.commission, '1000000000000000000')
     })
@@ -572,7 +574,6 @@ describe('Marketplace', function() {
         query: queries.GetListing,
         variables: { id: '999-000-2' }
       })
-
       const listing = get(res, 'data.marketplace.listing', {})
       assert.strictEqual(listing.unitsPending, 0)
       assert.strictEqual(listing.unitsSold, 1)

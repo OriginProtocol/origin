@@ -71,9 +71,9 @@ export default function() {
     }
   }
 
-  if (window.__mobileBridgePlatform === 'ios') {
-    window.addEventListener('message', handleMessage)
-  } else if (window.__mobileBridgePlatform === 'android') {
-    document.addEventListener('message', handleMessage)
-  }
+  // iOS receives mesesage events on window
+  window.addEventListener('message', handleMessage)
+
+  // Android receives message events on document
+  document.addEventListener('message', handleMessage)
 }

@@ -11,6 +11,7 @@ const identityQuery = gql`
           fullName
           description
           avatar
+          avatarUrl
           strength
           attestations
           facebookVerified
@@ -19,6 +20,8 @@ const identityQuery = gql`
           phoneVerified
           emailVerified
           googleVerified
+          websiteVerified
+          ipfsHash
         }
       }
     }

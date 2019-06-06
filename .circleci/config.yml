@@ -1,0 +1,153 @@
+defaults: &defaults
+  docker:
+    - image: circleci/node:10-browsers
+  working_directory: ~/origin
+
+db: &db
+  docker:
+    - image: circleci/node:10-browsers
+    - image: circleci/postgres:9.6-alpine-ram
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: circle_ci_test
+  working_directory: ~/origin
+  environment:
+    DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+
+version: 2
+jobs:
+  Setup:
+    <<: *defaults
+    steps:
+      - run:
+          name: Clone Repo
+          command: |
+            git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/OriginProtocol/origin.git ~/origin
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile
+            curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
+            ./bin/node-prune
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  Lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run: yarn lint
+
+  Marketplace:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Marketplace Tests
+          command: cd dapps/marketplace && yarn test
+
+  GraphQL:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run GraphQL Tests
+          command: cd packages/graphql && yarn test
+
+  EventCache:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run EventCache Tests
+          command: cd packages/event-cache && yarn migrate && yarn test
+
+  Bridge:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Bridge Tests
+          command: cd infra/bridge && yarn migrate && yarn test
+
+  Contracts:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Contract Tests
+          command: cd packages/contracts && yarn test
+
+  Discovery:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run: cd infra/bridge && yarn migrate
+      - run: cd infra/discovery && yarn migrate
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
+      - run:
+          name: Run Discovery Tests
+          command: cd infra/bridge && yarn test
+
+  Growth:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run: cd infra/growth && yarn migrate
+      - run: cd infra/identity && yarn migrate
+      - run:
+          name: Run Growth Tests
+          command: cd infra/growth && yarn test
+
+  Notifications:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Notification Tests
+          command: cd infra/notifications && yarn migrate && yarn test
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - Setup
+      - Lint:
+          requires:
+            - Setup
+      - Marketplace:
+          requires:
+            - Setup
+      - GraphQL:
+          requires:
+            - Setup
+      - EventCache:
+          requires:
+            - Setup
+      - Bridge:
+          requires:
+            - Setup
+      - Contracts:
+          requires:
+            - Setup
+      - Discovery:
+          requires:
+            - Setup
+      - Growth:
+          requires:
+            - Setup
+      - Notifications:
+          requires:
+            - Setup

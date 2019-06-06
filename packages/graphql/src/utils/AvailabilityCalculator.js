@@ -35,15 +35,20 @@ class AvailabilityCalculator {
     const start = dayjs(startStr).subtract(1, 'day'),
       end = dayjs(endStr).add(1, 'day')
 
-    if (
-      start.isBefore(dayjs().subtract(1, 'day')) ||
-      end.isAfter(slotRangeMax)
-    ) {
+    /**
+     * dayjs('2019-05-15') will return date object with value 2019-05-15 00:00:00
+     * dayjs() will return current date with current time. e.g. 2019-05-15 12:30:23
+     * So if startStr is current date, start.isBefore(dayjs()) will always fail
+     * The following line will give date object with the current date at 00:00:00 time
+     */
+    const currentDateIgnoringTime = start.startOf('day')
+
+    if (start.isBefore(currentDateIgnoringTime) || end.isAfter(slotRangeMax)) {
       throw 'Cannot update() range outside of one year limit.'
     }
 
     const modifiedSlots = []
-    let bookedRange, unavailableRange, customPriceRange
+    let bookedRange, unavailableRange
     const newBooked = [],
       newUnavailable = [],
       newCustomPrice = []
@@ -92,16 +97,7 @@ class AvailabilityCalculator {
       }
 
       if (slot.customPrice) {
-        if (customPriceRange) {
-          customPriceRange = `${customPriceRange.split('/')[0]}/${slot.date}:${
-            slot.price
-          }`
-        } else {
-          customPriceRange = `${slot.date}/${slot.date}:${slot.price}`
-        }
-      } else if (customPriceRange) {
-        newCustomPrice.push(customPriceRange)
-        customPriceRange = ''
+        newCustomPrice.push(`${slot.date}/${slot.date}:${slot.price}`)
       }
 
       return slot
@@ -114,11 +110,13 @@ class AvailabilityCalculator {
     return modifiedSlots
   }
 
-  estimatePrice(range) {
+  estimateNightlyPrice(range) {
     const [startStr, endStr] = range.split('/')
     const availability = this.getAvailability(startStr, endStr)
+
     const available = availability.every(slot => slot.unavailable === false)
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
+
     return { available, price: Math.round(price * 100000) / 100000 }
   }
 

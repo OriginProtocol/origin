@@ -1,8 +1,8 @@
 const esmImport = require('esm')(module)
-const graphqlClient = esmImport('@origin/graphql').default
+const ApolloClient = esmImport('apollo-client').default
+const { link, cache } = esmImport('@origin/graphql')
 
 const logger = require('./logger')
-const db = require('../models')
 const { withRetrys } = require('./utils')
 const MarketplaceEventHandler = require('./handler_marketplace')
 const IdentityEventHandler = require('./handler_identity')
@@ -35,6 +35,20 @@ const EVENT_TO_HANDLER_MAP = {
   // TODO(franck): handle IdentityDeleted
 }
 
+// Initializing a new ApolloClient so cache can be disabled
+const graphqlClient = new ApolloClient({
+  link,
+  cache,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache'
+    },
+    query: {
+      fetchPolicy: 'no-cache'
+    }
+  }
+})
+
 /**
  *  Main entry point for processing events.
  *   - Logs the event in the DB.
@@ -47,28 +61,11 @@ async function handleEvent(event, context) {
   await withRetrys(async () => {
     block = await context.web3.eth.getBlock(event.blockNumber)
   })
-  const blockDate = new Date(block.timestamp * 1000)
 
   const eventDetails = `blockNumber=${event.blockNumber} \
     transactionIndex=${event.transactionIndex} \
     eventName=${event.event}`
   logger.info(`Processing event: ${eventDetails}`)
-
-  // Record the event in the DB.
-  await withRetrys(async () => {
-    return db.Event.upsert({
-      blockNumber: event.blockNumber,
-      logIndex: event.logIndex,
-      contractAddress: event.address,
-      transactionHash: event.transactionHash,
-      topic0: event.raw.topics[0],
-      topic1: event.raw.topics[1],
-      topic2: event.raw.topics[2],
-      topic3: event.raw.topics[3],
-      data: event,
-      createdAt: blockDate
-    })
-  })
 
   // Call the event handler.
   //
@@ -119,6 +116,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping notifications webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -131,6 +129,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping email webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -143,6 +142,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping discord webhook for ${eventDetails}`)
+      logger.error(e)
     }
   }
 
@@ -161,6 +161,7 @@ async function handleEvent(event, context) {
       }, false)
     } catch (e) {
       logger.error(`Skipping Google Cloud Pub/Sub for ${eventDetails}`)
+      logger.error(e)
     }
   }
 

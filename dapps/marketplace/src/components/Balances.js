@@ -4,17 +4,20 @@ import { fbt } from 'fbt-runtime'
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
 import withEthBalance from 'hoc/withEthBalance'
+import withWallet from 'hoc/withWallet'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const Balances = ({ ethBalance, account }) => {
+const Balances = ({ ethBalance, account, onClose, title, className }) => {
   const EnrollButton = withEnrolmentModal('button')
   const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
+  const titleEl = title || (
+    <fbt desc="Balances.account-balance">Account Balance</fbt>
+  )
+
   return (
-    <div className="balances">
-      <h5>
-        <fbt desc="Balances.account-balance">Account Balance</fbt>
-      </h5>
+    <div className={`balances ${className || ''}`}>
+      <h5>{titleEl}</h5>
       <div className="account eth">
         <div className="icon" />
         <div className="balance">
@@ -53,7 +56,12 @@ const Balances = ({ ethBalance, account }) => {
           </div>
         </div>
         {!enableGrowth ? null : (
-          <EnrollButton className="btn get-ogn d-flex" skipjoincampaign="false">
+          <EnrollButton
+            className="btn get-ogn d-flex"
+            skipjoincampaign="false"
+            onClose={onClose}
+            onNavigation={onClose}
+          >
             <img src="images/growth/blue-add-icon.svg" />
           </EnrollButton>
         )}
@@ -62,7 +70,7 @@ const Balances = ({ ethBalance, account }) => {
   )
 }
 
-export default withEthBalance(Balances)
+export default withWallet(withEthBalance(Balances))
 
 require('react-styl')(`
   .balances

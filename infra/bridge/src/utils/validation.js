@@ -19,6 +19,25 @@ const identityValidation = check('identity')
   .withMessage('Field identity must not be empty.')
   .trim()
 
+const codeValidation = (_, { req }) => {
+  if (!req.body.code && !req.body.sid) {
+    throw new Error('Field `code` or `sid` must be specified.')
+  }
+
+  return true
+}
+
+const urlValidation = website => {
+  try {
+    // The following will throw if the URL is malformed
+    new URL(website)
+  } catch (e) {
+    throw new Error('Field `website` must be a valid URL')
+  }
+
+  return true
+}
+
 const airbnbGenerateCode = [
   identityValidation,
   check('airbnbUserId')
@@ -62,11 +81,7 @@ const emailVerifyCode = [
 
 const facebookVerify = [
   identityValidation,
-  check('code')
-    .not()
-    .isEmpty()
-    .withMessage('Field code must not be empty.')
-    .trim(),
+  check('code').custom(codeValidation),
   handleValidationError
 ]
 
@@ -117,13 +132,17 @@ const twitterVerifyCode = [
 
 const googleVerify = [
   identityValidation,
-  check('code')
-    .not()
-    .isEmpty()
-    .withMessage('Field code must not be empty.')
-    .trim(),
+  check('code').custom(codeValidation),
   handleValidationError
 ]
+
+const websiteGenerateCode = [
+  identityValidation,
+  check('website').custom(urlValidation),
+  handleValidationError
+]
+
+const websiteVerify = websiteGenerateCode
 
 module.exports = {
   airbnbGenerateCode,
@@ -134,5 +153,7 @@ module.exports = {
   phoneGenerateCode,
   phoneVerifyCode,
   twitterVerifyCode,
-  googleVerify
+  googleVerify,
+  websiteGenerateCode,
+  websiteVerify
 }

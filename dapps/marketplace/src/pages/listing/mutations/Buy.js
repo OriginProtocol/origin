@@ -16,10 +16,14 @@ import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import CoinPrice from 'components/CoinPrice'
+import UserActivationLink from 'components/UserActivationLink'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withIdentity from 'hoc/withIdentity'
+import withConfig from 'hoc/withConfig'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -38,6 +42,10 @@ class Buy extends Component {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    if (!this.props.wallet) {
+      return null
+    }
 
     let action = (
       <button
@@ -67,6 +75,15 @@ class Buy extends Component {
       content = this.renderAllowTokenModal()
     } else {
       action = this.renderMakeOfferMutation()
+    }
+
+    if (!this.props.identity) {
+      action = (
+        <UserActivationLink
+          className={this.props.className}
+          children={this.props.children}
+        />
+      )
     }
 
     return (
@@ -393,7 +410,6 @@ class Buy extends Component {
 
     const {
       listing,
-      from,
       value,
       quantity,
       startDate,
@@ -405,7 +421,7 @@ class Buy extends Component {
       listingID: listing.id,
       value,
       currency: currency || 'token-ETH',
-      from,
+      from: this.props.walletProxy,
       quantity: Number(quantity)
     }
 
@@ -415,6 +431,7 @@ class Buy extends Component {
     ) {
       variables.fractionalData = { startDate, endDate }
     }
+
     makeOffer({ variables })
   }
 
@@ -448,7 +465,7 @@ class Buy extends Component {
     this.setState({ modal: true, waitForSwap: 'pending' })
 
     const variables = {
-      from: this.props.from,
+      from: this.props.walletProxy,
       token: this.props.currency,
       tokenValue: String(this.props.tokenStatus.needsBalance)
     }
@@ -465,9 +482,10 @@ class Buy extends Component {
 
     const variables = {
       token: this.props.currency,
-      from: this.props.from,
+      from: this.props.walletProxy,
       to: 'marketplace',
-      value: this.props.value
+      value: this.props.value,
+      forceProxy: this.props.config.proxyAccountsEnabled
     }
 
     allowToken({ variables })
@@ -490,20 +508,7 @@ class Buy extends Component {
               <fbt desc="buy.successOffer">
                 You have made an offer on this listing. Your offer will be
                 visible within a few seconds. Your ETH payment has been
-                transferred to an escrow contract. Here&apos;s what happens
-                next:
-                <ul>
-                  <li>The seller can choose to accept or reject your offer.</li>
-                  <li>
-                    If the offer is accepted and fulfilled, you will be able to
-                    confirm that the sale is complete. Your escrowed payment
-                    will be sent to the seller.
-                  </li>
-                  <li>
-                    If the offer is rejected, the escrowed payment will be
-                    immediately returned to your wallet.
-                  </li>
-                </ul>
+                transferred to an escrow contract.
               </fbt>
             </div>
             <button
@@ -523,7 +528,7 @@ class Buy extends Component {
               children={
                 this.state.loading
                   ? fbt('Loading...', 'Loading...')
-                  : fbt('View Purchase', 'View Purchase')
+                  : fbt('View Purchase Details', 'View Purchase Details')
               }
             />
           </div>
@@ -554,7 +559,9 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+export default withConfig(
+  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+)
 
 require('react-styl')(`
   .make-offer-modal

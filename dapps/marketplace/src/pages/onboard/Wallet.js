@@ -6,10 +6,11 @@ import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import QueryError from 'components/QueryError'
-import Steps from 'components/Steps'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
+import HelpOriginWallet from './_HelpOriginWallet'
+import WalletHeader from './_WalletHeader'
 
 import query from 'queries/Wallet'
 
@@ -17,55 +18,31 @@ const isFirefox = typeof InstallTrigger !== 'undefined'
 const isChrome =
   !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
 
-const OriginWallet = () => (
-  <div className="connect mobile-wallet">
-    <div className="top">
-      <div className="image" />
-      <div>
-        <h4>
-          <fbt desc="onboard.Wallet.originMobile">Origin Mobile Wallet</fbt>
-        </h4>
-        <div className="description">
-          <fbt desc="onboard.Wallet.description">
-            Origin’s Mobile Wallet will allow you to store crypto currency so
-            you can buy and sell on our DApp.
-          </fbt>
-        </div>
-        <div className="note">
-          <fbt desc="onboard.Wallet.availability">
-            Available for iOS and Android
-          </fbt>
-        </div>
-      </div>
-    </div>
-  </div>
-)
-
 const MetaMask = ({ linkPrefix }) => (
-  <div className="connect metamask">
-    <div className="top">
-      <div className="image" />
-      <div>
-        <h4>MetaMask</h4>
-        <div className="description">
-          <fbt desc="onboard.Wallet.metamaskDescription">
-            MetaMask is a browser extension that will allow you to access the
-            decentralized web.
-          </fbt>
-        </div>
-        <div className="note">
-          <fbt desc="onboard.Wallet.metamaskAvailable">
-            Available for
-            <fbt:param name="browser">
-              {isFirefox ? ' Firefox' : ' Google Chrome'}
-            </fbt:param>
-          </fbt>
-        </div>
-      </div>
+  <div className="onboard-box">
+    <div className="metamask-logo" />
+    <div className="status">
+      <fbt desc="onboard.Wallet.metamask">MetaMask</fbt>
+    </div>
+    <div className="help mb-3">
+      <fbt desc="onboard.Wallet.metamaskDescription">
+        Metamask is a browser extension for Chrome that will allow you to access
+        the decentralized web.
+      </fbt>
+    </div>
+    <div className="help mb">
+      <i>
+        <fbt desc="onboard.Wallet.metamaskAvailable">
+          Available for
+          <fbt:param name="browser">
+            {isFirefox ? ' Firefox' : ' Google Chrome'}
+          </fbt:param>
+        </fbt>
+      </i>
     </div>
     <Link
       to={`${linkPrefix}/onboard/metamask`}
-      className="btn btn-outline-primary"
+      className="btn btn-primary mt-10"
     >
       <fbt desc="onboard.Wallet.connectMetaMask">Connect MetaMask</fbt>
     </Link>
@@ -77,15 +54,9 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
 
   return (
     <>
-      <div className="step">Step 1</div>
-      <h3>
-        <fbt desc="onboard.Wallet.connectCryptoWallet">
-          Connect a Crypto Wallet
-        </fbt>
-      </h3>
+      <WalletHeader />
       <div className="row">
         <div className="col-md-8">
-          <Steps steps={4} step={1} />
           <Query query={query} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
@@ -97,17 +68,22 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
               } else if (error) {
                 return <QueryError query={query} />
               }
+
               if (
-                get(data, 'web3.metaMask.id') ||
+                get(data, 'web3.metaMaskAccount.id') ||
                 get(data, 'web3.mobileWalletAccount.id')
               ) {
-                return <Redirect to={`${linkPrefix}/onboard/messaging`} />
+                return <Redirect to={`${linkPrefix}/onboard/profile`} />
               }
 
               return (
                 <>
-                  {hideOriginWallet ? null : <OriginWallet />}
-                  {!showMetaMask ? null : <MetaMask linkPrefix={linkPrefix} />}
+                  {!showMetaMask ? null : (
+                    <MetaMask
+                      hideOriginWallet={hideOriginWallet}
+                      linkPrefix={linkPrefix}
+                    />
+                  )}
                 </>
               )
             }}
@@ -115,6 +91,7 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
         </div>
         <div className="col-md-4">
           <ListingPreview listing={listing} />
+          {hideOriginWallet ? null : <HelpOriginWallet />}
           <HelpWallet />
         </div>
       </div>

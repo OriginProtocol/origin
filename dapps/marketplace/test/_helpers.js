@@ -37,6 +37,13 @@ export const waitForText = async (page, text, path) => {
   return xpath
 }
 
+export const hasText = async (page, text, path) => {
+  const escapedText = escapeXpathString(text)
+  const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
+  const result = await page.$x(xpath)
+  return result ? true : false
+}
+
 export const clickByText = async (page, text, path) => {
   const xpath = await waitForText(page, text, path)
 
@@ -49,10 +56,32 @@ export const clickByText = async (page, text, path) => {
   }
 }
 
+export const clickBySelector = async (page, path) => {
+  await page.waitForSelector(path)
+  const linkHandler = await page.$(path)
+  if (linkHandler) {
+    await linkHandler.click()
+  } else {
+    throw new Error(`Link not found: ${path}`)
+  }
+}
+
 export const changeAccount = async (page, account) => {
   await page.evaluate(account => {
     window.localStorage.useWeb3Wallet = account
+    window.localStorage.useWeb3Identity = JSON.stringify({
+      id: account,
+      profile: {
+        firstName: 'Test',
+        lastName: 'Account',
+        description: '',
+        avatar: ''
+      },
+      attestations: [],
+      strength: 0
+    })
   }, account)
+  await new Promise(resolve => setTimeout(resolve, 1500))
 }
 
 export const createAccount = async page => {

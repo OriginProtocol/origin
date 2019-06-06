@@ -11,7 +11,13 @@ const initialState = {
     ogn: 0
   },
   activeAccount: null,
-  accountServerNotifications: {}
+  accountServerNotifications: {},
+  messagingKeys: {
+    address: null,
+    signattureKey: null,
+    pubMessage: null,
+    pubSignature: null
+  }
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -23,10 +29,10 @@ export default function Wallet(state = initialState, action = {}) {
       const exists = state.accounts.find(
         a => a.address === action.account.address
       )
-      if (!exists) {
+      if (!exists && action.account.address && action.account.privateKey) {
         return {
           ...state,
-          accounts: [action.account, ...state.accounts]
+          accounts: [...state.accounts, action.account]
         }
       } else {
         return state
@@ -42,9 +48,13 @@ export default function Wallet(state = initialState, action = {}) {
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
       // Remove the account from the accounts array
-      return {
-        ...state,
-        activeAccount: action.account
+      if (action.account.address && action.account.privateKey) {
+        return {
+          ...state,
+          activeAccount: action.account
+        }
+      } else {
+        return state
       }
 
     case WalletConstants.SET_ACCOUNT_BALANCES:
@@ -60,6 +70,12 @@ export default function Wallet(state = initialState, action = {}) {
           ...state.accountNameMapping,
           [action.payload.address]: action.payload.name
         }
+      }
+
+    case WalletConstants.SET_MESSAGING_KEYS:
+      return {
+        ...state,
+        messagingKeys: action.payload
       }
   }
 

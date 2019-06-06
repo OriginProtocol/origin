@@ -4,23 +4,16 @@ import get from 'lodash/get'
 
 import ConfigQuery from 'queries/Config'
 
-function withConfig(WrappedComponent) {
-  const WithConfig = props => {
-    return (
-      <Query query={ConfigQuery}>
-        {({ data, networkStatus }) => {
-          const config = get(data, 'configObj', {})
-          return (
-            <WrappedComponent
-              {...props}
-              config={config}
-              configLoading={networkStatus === 1}
-            />
-          )
-        }}
-      </Query>
-    )
-  }
+function withConfig(WrappedComponent, prop = 'config') {
+  const WithConfig = ({ ...props }) => (
+    <Query query={ConfigQuery}>
+      {({ data, networkStatus }) => {
+        props[prop] = get(data, 'configObj') || {}
+        props[`${prop}Loading`] = networkStatus === 1
+        return <WrappedComponent {...props} />
+      }}
+    </Query>
+  )
   return WithConfig
 }
 

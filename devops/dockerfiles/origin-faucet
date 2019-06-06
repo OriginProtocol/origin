@@ -10,18 +10,15 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
-COPY ./packages/origin-js ./packages/origin-js
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/faucet ./infra/faucet
-COPY ./scripts ./scripts
 
-RUN npm install --unsafe-perm
-
-COPY ./packages/contracts/releases/0.8.6/build/ ./packages/contracts/build/
+RUN yarn install
 
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/faucet && \

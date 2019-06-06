@@ -1,6 +1,32 @@
+const db = require('../models')
 const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
+
+// Maps rule Id -> Apollo action type.
+const ruleIdToActionType = {
+  ProfilePublished: 'Profile',
+  EmailAttestation: 'Email',
+  PhoneAttestation: 'Phone',
+  FacebookAttestation: 'Facebook',
+  AirbnbAttestation: 'Airbnb',
+  TwitterAttestation: 'Twitter',
+  GoogleAttestation: 'Google',
+  Referral: 'Referral',
+  // Any listing created.
+  ListingCreated: 'ListingCreated',
+  // Any listing sold.
+  ListingSold: 'ListingSold',
+  // Any listing purchased.
+  ListingPurchase: 'ListingPurchased',
+  // Specific listing purchased.
+  ListingPurchaseTShirt: 'ListingIdPurchased',
+  ListingPurchaseGC: 'ListingIdPurchased',
+  ListingPurchaseCharity: 'ListingIdPurchased',
+  ListingPurchaseHousing: 'ListingIdPurchased',
+  ListingPurchaseInfluencer: 'ListingIdPurchased',
+  ListingPurchaseArt: 'ListingIdPurchased'
+}
 
 /**
  * Adapts data representing the state of a campaign rule into
@@ -8,25 +34,24 @@ const { Money } = require('../util/money')
  */
 class ApolloAdapter {
   /**
-   * Helper function to convert a growth event type into an Apollo action type.
-   * @param eventType
-   * @returns {*}
+   * Helper function to convert a specific rule Id into a generic Apollo action type.
+   * @param {string} ruleId
+   * @returns {string}
    * @private
    */
-  _eventTypeToActionType(eventType) {
-    const eventToActionType = {
-      ProfilePublished: 'Profile',
-      EmailAttestationPublished: 'Email',
-      FacebookAttestationPublished: 'Facebook',
-      AirbnbAttestationPublished: 'Airbnb',
-      TwitterAttestationPublished: 'Twitter',
-      PhoneAttestationPublished: 'Phone',
-      Referral: 'Referral',
-      ListingCreated: 'ListingCreated',
-      ListingSold: 'ListingSold',
-      ListingPurchased: 'ListingPurchased'
+  _ruleIdToActionType(ruleId) {
+    let actionType
+    // Test if it matches format "ListingPurchase<listingId>"
+    // otherwise use the ruleIdToActionType dictionary.
+    if (ruleId.match(/^ListingPurchase\d+$/)) {
+      actionType = 'ListingIdPurchased'
+    } else {
+      actionType = ruleIdToActionType[ruleId]
     }
-    return eventToActionType[eventType]
+    if (!actionType) {
+      throw new Error(`Unexpected ruleId ${ruleId}`)
+    }
+    return actionType
   }
 
   /**
@@ -57,9 +82,13 @@ class ApolloAdapter {
     if (!data.visible) {
       return null
     }
+
+    const omitUserData = data.ethAddress === null
+
+    // Fetch common data across all action types.
     let action = {
-      // TODO: handle multi-events type
-      type: this._eventTypeToActionType(data.eventTypes[0]),
+      ruleId: data.ruleId,
+      type: this._ruleIdToActionType(data.ruleId),
       status: data.status,
       rewardEarned: Money.sum(
         data.rewards.map(r => r.value),
@@ -69,11 +98,27 @@ class ApolloAdapter {
       unlockConditions: data.unlockConditions
     }
 
-    // Add extra information in case of a Referral.
-    if (action.type === 'Referral') {
-      const referralsInfo = await this._getReferralsActionData(data)
-      action = { ...action, ...referralsInfo }
+    // Some action types require to fetch extra custom data.
+    switch (action.type) {
+      case 'Referral':
+        if (omitUserData) {
+          break
+        }
+
+        const referralsInfo = await this._getReferralsActionData(data)
+        action = { ...action, ...referralsInfo }
+        break
+      case 'ListingIdPurchased':
+        const listingInfo = {
+          listingId: data.listingId,
+          iconSrc: data.iconSrc,
+          titleKey: data.titleKey,
+          detailsKey: data.detailsKey
+        }
+        action = { ...action, ...listingInfo }
+        break
     }
+
     return action
   }
 }
@@ -94,19 +139,44 @@ const campaignToApolloObject = async (
   ethAddress,
   adapter = new ApolloAdapter()
 ) => {
+  const campaign = crules.campaign
   const out = {
-    id: crules.campaign.id,
-    nameKey: crules.campaign.nameKey,
-    shortNameKey: crules.campaign.shortNameKey,
-    name: crules.campaign.name,
-    startDate: crules.campaign.startDate,
-    endDate: crules.campaign.endDate,
-    distributionDate: crules.campaign.distributionDate,
+    id: campaign.id,
+    nameKey: campaign.nameKey,
+    shortNameKey: campaign.shortNameKey,
+    startDate: campaign.startDate,
+    endDate: campaign.endDate,
+    distributionDate: campaign.distributionDate,
     status: crules.getStatus()
   }
 
-  // User is not enrolled. Return only basic campaign data.
+  // User is not enrolled or is banned.
+  // Return only basic campaign data.
   if (authentication !== enums.GrowthParticipantAuthenticationStatus.Enrolled) {
+    out.actions = await crules.export(adapter, null)
+    return out
+  }
+
+  // If campaign distribution is finalized, return the total amount paid out,
+  // but no other details about actions.
+  if (
+    campaign.rewardStatus === enums.GrowthCampaignRewardStatuses.Distributed
+  ) {
+    // Read the payout from the DB
+    const payout = await db.GrowthPayout.findOne({
+      where: {
+        toAddress: ethAddress,
+        campaignId: campaign.id,
+        status: enums.GrowthPayoutStatuses.Confirmed
+      }
+    })
+    if (!payout) {
+      // No payout was made to this account. Return 0 earnings.
+      out.rewardEarned = { amount: '0', currency: campaign.currency }
+    } else {
+      // Return payout made to the account.
+      out.rewardEarned = { amount: payout.amount, currency: payout.currency }
+    }
     return out
   }
 
@@ -116,10 +186,7 @@ const campaignToApolloObject = async (
 
   // Calculate total rewards earned so far.
   const rewards = await crules.getRewards(ethAddress)
-  out.rewardEarned = Money.sum(
-    rewards.map(r => r.value),
-    crules.campaign.currency
-  )
+  out.rewardEarned = Money.sum(rewards.map(r => r.value), campaign.currency)
 
   return out
 }

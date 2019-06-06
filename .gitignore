@@ -69,10 +69,14 @@ github.key
 /packages/origin-js/typings
 
 # infra/linking #
-####################
+#################
 /infra/linking/*.rdb
 /infra/linking/*.p8
 /infra/linking/dist
+
+# infra/notifications #
+# #####################
+/infra/notifications/firebase-service.json
 
 # origin-dapp-creator-server #
 ##############################

@@ -2,100 +2,62 @@
 
 import React, { Component } from 'react'
 import {
-  Alert,
-  DeviceEventEmitter,
   StyleSheet,
+  Platform,
+  Linking,
   Text,
   TouchableOpacity,
   View
 } from 'react-native'
-import { connect } from 'react-redux'
-
-import {
-  promptForNotifications,
-  setNotificationsPermissions
-} from 'actions/Activation'
+import AndroidOpenSettings from 'react-native-android-open-settings'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
 class NotificationCard extends Component {
   constructor(props) {
     super(props)
-
-    DeviceEventEmitter.addListener(
-      'notificationPermission',
-      this.handleNotificationPermission.bind(this)
-    )
-  }
-
-  handleNotificationPermission(permissions) {
-    console.debug('Got notification permissions: ', permissions)
-    try {
-      if (!permissions.alert) {
-        Alert.alert(
-          '!',
-          `You've declined our request to turn on push notifications, which we HIGHLY recommend. To fix this, you will need to change the permissions in your iPhone's Settings > Notifications > Origin Wallet.`,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                this.props.setNotificationsPermissions(permissions)
-                this.props.onRequestClose()
-              }
-            }
-          ]
-        )
-      } else {
-        this.props.setNotificationsPermissions(permissions)
-        this.props.onRequestClose()
-      }
-    } catch (e) {
-      console.error(e)
-      throw e
-    }
   }
 
   render() {
     return (
       <View style={styles.card}>
-        <Text style={styles.heading}>Enable Notifications</Text>
+        <Text style={styles.heading}>
+          <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
+        </Text>
         <Text style={styles.content}>
-          We highly recommend enabling notifications to get the latest updates
-          about your transaction with timely alerts.
+          <fbt desc="NotificationCard.message">
+            Woops! It looks like you have notifications disabled. To get the
+            latest updates about your transactions we recommend enabling them in
+            the settings for the Origin Marketplace application.
+          </fbt>
         </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Enable Notifications'}
+            title={fbt('Open Settings', 'NotificationCard.button')}
             onPress={() => {
-              DeviceEventEmitter.emit('requestNotificationPermissions')
+              if (Platform.OS === 'ios') {
+                Linking.openURL('app-settings:')
+              } else {
+                AndroidOpenSettings.appDetailsSettings()
+              }
             }}
           />
         </View>
         <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>Cancel</Text>
+          <Text style={styles.cancel}>
+            <fbt desc="NotificationCard.cancel">Close</fbt>
+          </Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
 
-const mapStateToProps = () => {
-  return {}
-}
-
-const mapDispatchToProps = dispatch => ({
-  promptForNotifications: () => dispatch(promptForNotifications(null)),
-  setNotificationsPermissions: permissions =>
-    dispatch(setNotificationsPermissions(permissions))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NotificationCard)
+export default NotificationCard
 
 const styles = StyleSheet.create({
   buttonContainer: {

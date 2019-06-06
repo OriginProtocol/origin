@@ -16,6 +16,7 @@ const { GrowthInvite } = require('../resources/invite')
 const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
+const { BannedUserError } = require('../util/bannedUserError')
 
 const requireEnrolledUser = context => {
   if (
@@ -34,9 +35,11 @@ const resolvers = {
    */
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
-    __resolveType(obj) {
-      if (obj.type === 'Referral') {
+    __resolveType(action) {
+      if (action.type === 'Referral') {
         return 'ReferralAction'
+      } else if (action.type === 'ListingIdPurchased') {
+        return 'ListingIdPurchasedAction'
       } else {
         return 'GrowthAction'
       }
@@ -66,6 +69,9 @@ const resolvers = {
     },
     async campaign(root, args, context) {
       const campaign = await GrowthCampaign.get(args.id)
+      if (!campaign) {
+        throw new UserInputError('Invalid campaign id', { id: args.id })
+      }
       return await campaignToApolloObject(
         campaign,
         context.authentication,
@@ -139,7 +145,7 @@ const resolvers = {
           args.accountId,
           args.agreementMessage,
           args.signature,
-          args.fingerprint,
+          args.fingerprintData,
           ip,
           countryCode
         )
@@ -157,17 +163,27 @@ const resolvers = {
          * as the above approach happens before a user is authenticated and this leaves us exposed
          * to situations where bad actors could make false referral connections to their own campaigns.
          */
-        if (args.inviteCode !== undefined) {
+        if (args.inviteCode) {
           await GrowthInvite.makeReferralConnection(
             args.inviteCode,
             args.accountId
           )
         }
 
-        return { authToken }
+        return {
+          authToken,
+          isBanned: false
+        }
       } catch (e) {
-        logger.warn('User authentication failed: ', e.message, e.stack)
-        throw new AuthenticationError('Growth authentication failure')
+        if (e instanceof BannedUserError) {
+          return {
+            authToken: '',
+            isBanned: true
+          }
+        } else {
+          logger.warn('User authentication failed: ', e.message, e.stack)
+          throw new AuthenticationError('Growth authentication failure')
+        }
       }
     },
     async inviteRemind(_, args, context) {

@@ -1,89 +1,114 @@
 const _ = require('lodash')
+const fs = require('fs')
+const templateDir = `${__dirname}/../templates`
 
 // We use lodash templates.
 // Docs: https://lodash.com/docs/4.17.11#template
 // Codepen: https://codepen.io/matthewbeta/pen/ZGaYXW
 
 const messageTemplates = {
+  message: {
+    mobile: {
+      messageReceived: {
+        title: _.template('New Origin Message from <%- senderName %>'),
+        body: _.template(
+          'You have received a message on Origin from <%- senderName %>.'
+        )
+      }
+    },
+    email: {
+      messageReceived: {
+        subject: _.template('New Origin Message from <%- senderName %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/MessageReceived.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/MessageReceived.txt`).toString()
+        )
+      }
+    }
+  },
   seller: {
     mobile: {
       OfferCreated: {
-        title: 'New Offer',
-        body: 'A buyer has made an offer on your listing.'
+        title: _.template('New Offer for <%= listing.title %>'),
+        body: _.template(
+          'A buyer has made an offer on your listing <%= listing.title %>'
+        )
       },
       OfferWithdrawn: {
-        title: 'Offer Withdrawn',
-        body: 'An offer on your listing has been withdrawn.'
+        title: _.template('Offer Withdrawn for <%= listing.title %>'),
+        body: _.template(
+          'An offer on your listing <%= listing.title %> has been withdrawn.'
+        )
       },
       OfferDisputed: {
-        title: 'Dispute Initiated',
-        body: 'A problem has been reported with your transaction.'
+        title: _.template('Dispute Initiated for <%= listing.title %>'),
+        body: _.template(
+          'A problem has been reported with your transaction for <%= listing.title %>.'
+        )
       },
       OfferRuling: {
-        title: 'Dispute Resolved',
-        body: 'A ruling has been issued on your disputed transaction.'
+        title: _.template('Dispute Resolved for <%= listing.title %>'),
+        body: _.template(
+          'A ruling has been issued on your disputed transaction for <%= listing.title %>.'
+        )
       },
       OfferFinalized: {
-        title: 'Sale Completed',
-        body: 'Your transaction has been completed.'
+        title: _.template('Sale Completed for <%= listing.title %>'),
+        body: _.template(
+          'Your transaction for <%= listing.title %> has been completed.'
+        )
       }
     },
     email: {
       OfferCreated: {
-        subject: 'New Offer',
+        subject: _.template('New Offer for <%= listing.title %>'),
         html: _.template(
-          `
-          A buyer (<em><%- offer.buyer.identity.fullName %></em>) has made an offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
-        ),
-        text: _.template('A buyer has made an offer on your listing.')
-      },
-      OfferWithdrawn: {
-        subject: 'Offer Withdrawn',
-        html: _.template(
-          `
-          The buyer <em><%- offer.buyer.identity.fullName %></em> has withdrawn their offer on your listing <em><%= listing.title %></em>.
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
-        ),
-        text: _.template('An offer on your listing has been withdrawn.')
-      },
-      OfferDisputed: {
-        subject: 'Dispute Initiated',
-        html: _.template('A problem has been reported with your transaction.'),
-        text: _.template('A problem has been reported with your transaction.')
-      },
-      OfferRuling: {
-        subject: 'Dispute Resolved',
-        html: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/seller-OfferCreated.html`).toString()
         ),
         text: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/seller-OfferCreated.txt`).toString()
+        )
+      },
+      OfferWithdrawn: {
+        subject: _.template('Offer Withdrawn for <%= listing.title %>'),
+        html: _.template(
+          fs
+            .readFileSync(`${templateDir}/seller-OfferWithdrawn.html`)
+            .toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferWithdrawn.txt`).toString()
+        )
+      },
+      OfferDisputed: {
+        subject: _.template('Dispute Initiated for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferDisputed.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferDisputed.txt`).toString()
+        )
+      },
+      OfferRuling: {
+        subject: _.template('Dispute Resolved for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferRuling.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/seller-OfferRuling.txt`).toString()
         )
       },
       OfferFinalized: {
-        subject: 'Sale Completed',
+        subject: _.template('Sale Completed for <%= listing.title %>'),
         html: _.template(
-          `
-          Your transaction with <em><%- offer.buyer.identity.fullName %></em> for
-          <em><%= listing.title %></em> has been completed.
-
-
-          <% if (listing.media[0]) { %>
-          <img class="listing-img" src="https://ipfs.originprotocol.com/ipfs/<%- listing.media[0].url.slice(7,53) %>"/>
-          <% } %>
-          `
+          fs
+            .readFileSync(`${templateDir}/seller-OfferFinalized.html`)
+            .toString()
         ),
         text: _.template(
-          'Your transaction with "<%= offer.buyer.identity.fullName %>" for "<%= listing.title %>" has been completed.'
+          fs.readFileSync(`${templateDir}/seller-OfferFinalized.txt`).toString()
         )
       }
     }
@@ -91,55 +116,81 @@ const messageTemplates = {
   buyer: {
     mobile: {
       OfferWithdrawn: {
-        title: 'Offer Rejected',
-        body: 'An offer you made has been rejected.'
+        title: _.template('Offer Rejected for <%= listing.title %>'),
+        body: _.template(
+          'An offer you made for <%= listing.title %> has been rejected.'
+        )
       },
       OfferAccepted: {
-        title: 'Offer Accepted',
-        body: 'An offer you made has been accepted.'
+        title: _.template('Offer Accepted for <%= listing.title %>'),
+        body: _.template(
+          'An offer you made for <%= listing.title %> has been accepted.'
+        )
       },
       OfferDisputed: {
-        title: 'Dispute Initiated',
-        body: 'A problem has been reported with your transaction.'
+        title: _.template('Dispute Initiated for <%= listing.title %>'),
+        body: _.template(
+          'A problem has been reported with your transaction for <%= listing.title %>.'
+        )
       },
       OfferRuling: {
-        title: 'Dispute Resolved',
-        body: 'A ruling has been issued on your disputed transaction.'
+        title: _.template('Dispute Resolved for <%= listing.title %>'),
+        body: _.template(
+          'A ruling has been issued on your disputed transaction for <%= listing.title %>.'
+        )
       },
       OfferData: {
-        title: 'New Review',
-        body: 'A review has been left on your transaction.'
+        title: _.template('New Review for <%= listing.title %>'),
+        body: _.template(
+          'A review has been left on your transaction for <%= listing.title %>.'
+        )
       }
     },
     email: {
       OfferWithdrawn: {
-        subject: 'Offer Rejected',
-        html: _.template('An offer you made has been rejected.'),
-        text: _.template('An offer you made has been rejected.')
-      },
-      OfferAccepted: {
-        subject: 'Offer Accepted',
-        html: _.template('An offer you made has been accepted.'),
-        text: _.template('An offer you made has been accepted.')
-      },
-      OfferDisputed: {
-        subject: 'Dispute Initiated',
-        html: _.template('A problem has been reported with your transaction.'),
-        text: _.template('A problem has been reported with your transaction.')
-      },
-      OfferRuling: {
-        subject: 'Dispute Resolved',
+        subject: _.template('Offer Rejected for <%= listing.title %>'),
         html: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.html`).toString()
         ),
         text: _.template(
-          'A ruling has been issued on your disputed transaction.'
+          fs.readFileSync(`${templateDir}/buyer-OfferWithdrawn.txt`).toString()
+        )
+      },
+      OfferAccepted: {
+        subject: _.template('Offer Accepted for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferAccepted.txt`).toString()
+        )
+      },
+      OfferDisputed: {
+        subject: _.template('Dispute Initiated for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferDisputed.txt`).toString()
+        )
+      },
+      OfferRuling: {
+        subject: _.template('Dispute Resolved for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
         )
       },
       OfferData: {
-        subject: 'New Review',
-        html: _.template('A review has been left on your transaction.'),
-        text: _.template('A review has been left on your transaction.')
+        subject: _.template('New Review for <%= listing.title %>'),
+        html: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
+        ),
+        text: _.template(
+          fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
+        )
       }
     }
   }

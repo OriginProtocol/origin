@@ -56,3 +56,11 @@ cronImageTag: 'latest'
 # origin-admin
 adminImage: origin-admin
 adminImageTag: 'latest'
+
+# origin-relayer
+relayerImage: origin-relayer
+relayerImageTag: 'latest'
+
+# origin-graphql
+graphqlImage: origin-graphql
+graphqlImageTag: 'latest'

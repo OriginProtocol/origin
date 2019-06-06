@@ -46,8 +46,12 @@ services:
       - ./packages/contracts/migrations:/app/packages/contracts/migrations
       # Core packages
       - ./packages/services/:/app/packages/services/
+      - ./packages/services/data/localhost.key:/app/packages/services/data/localhost.key
+      - ./packages/services/data/localhost.cert:/app/packages/services/data/localhost.cert
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
+      - ./packages/event-cache/:/app/packages/event-cache/
+      - ./packages/ip2geo/:/app/packages/ip2geo/
       - ./packages/ipfs/:/app/packages/ipfs/
       - ./packages/messaging-client/:/app/packages/messaging-client/
       - ./packages/mobile-bridge/:/app/packages/mobile-bridge/
@@ -61,14 +65,15 @@ services:
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
       - ./infra/identity/:/app/infra/identity/
-      - ./infra/linking/:/app/infra/linking/
       # Exclude IPFS and blockchain data from @origin/services
       - /app/packages/services/data
       # Exclude all node_modules from the host
       - /app/packages/services/node_modules/
       - /app/packages/graphql/node_modules/
       - /app/packages/eventsource/node_modules/
+      - /app/packages/event-cache/node_modules/
       - /app/packages/ipfs/node_modules/
+      - /app/packages/ip2geo/node_modules/
       - /app/packages/messaging-client/node_modules/
       - /app/packages/mobile-bridge/node_modules/
       - /app/packages/validator/node_modules/
@@ -80,7 +85,6 @@ services:
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
       - /app/infra/identity/node_modules/
-      - /app/infra/linking/node_modules/
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
       # interacted with via ipfs-proxy
@@ -99,15 +103,16 @@ services:
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis-master:6379
+      - NOTIFICATIONS_ENDPOINT_URL=http://notifications:3456/messages
     depends_on:
       - postgres
       - redis-master
     ports:
-      - "9012:9012"
       - "6647:6647"
+      - "9012:9012"
     command:
       >
-      /bin/bash -c "wait-for.sh -t 0 -q postgres:6379 --
+      /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       npm run migrate --prefix infra/messaging &&
       npm run start --prefix infra/messaging"
 
@@ -140,6 +145,9 @@ services:
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
+      - PROVIDER_URL=http://services:8545
+      - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
+      - IPFS_API_URL=http://ipfs-proxy:9999
       - ENVKEY=
     depends_on:
       - postgres
@@ -149,7 +157,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
-      wait-for.sh -t 0 -q services:8080 --
+      wait-for.sh -t 0 -q services:1111 --
       npm run migrate --prefix infra/discovery &&
       npm run migrate --prefix infra/growth &&
       npm run migrate --prefix infra/identity &&
@@ -160,14 +168,10 @@ services:
     image: origin
     volumes: *volumes
     environment:
-      # MetaMask account 4 (default local blockchain) aka accounts[3]
-      - ARBITRATOR_ACCOUNT=0x821aEa9a577a9b44299B9c15c88cf3087F3b5544
-      # MetaMask account 5 (default local blockchain) aka accounts[4]
-      - AFFILIATE_ACCOUNT=0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2
-      - ATTESTATION_ACCOUNT=0x99C03fBb0C995ff1160133A8bd210D0E77bCD101
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - ELASTICSEARCH_HOST=elasticsearch:9200
-      - NETWORK_ID=999
+      - ELASTICSEARCH=true
+      - NETWORK=docker
       - ENVKEY=
     depends_on:
       - postgres
@@ -182,6 +186,27 @@ services:
       node infra/discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix infra/discovery"
 
+  graphql:
+    container_name: graphql
+    image: origin
+    volumes: *volumes
+    environment:
+      - DOCKER=true
+      - NETWORK=docker
+      - GRAPHQL_SERVER_PORT=4002
+      - PROVIDER_URL=http://services:8545
+      - PROVIDER_WS_URL=ws://services:8545
+      - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
+      - IPFS_API_URL=http://ipfs-proxy:9999
+      - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
+      - BRIDGE_SERVER_URL=http://bridge:5000
+      - GROWTH_SERVER_URL=http://growth:4001
+    depends_on:
+      - discovery
+    ports:
+      - "4002:4002"
+    command: npm run start --prefix packages/graphql
+
   notifications:
     container_name: notifications
     image: origin
@@ -189,7 +214,15 @@ services:
     depends_on:
       - postgres
     environment:
+      - APNS_BUNDLE_ID=com.originprotocol.catcher
+      - APNS_KEY_FILE=
+      - APNS_KEY_ID=
+      - APNS_PRODUCTION=false
+      - APNS_TEAM_ID=
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+        # Service account for Firebase
+      - FIREBASE_SERVICE_JSON=
+      - FIREBASE_DB_URL=
     ports:
       - "3456:3456"
     command:

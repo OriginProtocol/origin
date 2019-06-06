@@ -13,7 +13,10 @@ export default gql`
       ipfsEventCache
       provider
       providerWS
+      proxyAccountsEnabled
       originGraphQLVersion
+      relayer
+      performanceMode
     }
   }
 `

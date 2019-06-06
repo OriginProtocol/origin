@@ -7,8 +7,19 @@ import { Switch, Route } from 'react-router-dom'
 import validator from '@origin/validator'
 
 import Store from 'utils/store'
-import { unpublishedStrength, changesToPublishExist } from 'utils/profileTools'
-import { getAttestationReward } from 'utils/growthTools'
+import {
+  unpublishedStrength,
+  changesToPublishExist,
+  updateVerifiedAccounts,
+  clearVerifiedAccounts,
+  getVerifiedAccounts
+} from 'utils/profileTools'
+
+import {
+  getAttestationReward,
+  getMaxRewardPerUser,
+  getTokensEarned
+} from 'utils/growthTools'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -19,6 +30,7 @@ import Avatar from 'components/Avatar'
 import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
+import Earnings from 'components/Earning'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -26,6 +38,7 @@ import FacebookAttestation from 'pages/identity/FacebookAttestation'
 import GoogleAttestation from 'pages/identity/GoogleAttestation'
 import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
+import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -40,14 +53,14 @@ const AttestationComponents = {
   facebook: FacebookAttestation,
   twitter: TwitterAttestation,
   airbnb: AirbnbAttestation,
-  google: GoogleAttestation
+  google: GoogleAttestation,
+  website: WebsiteAttestation
 }
 
 const ProfileFields = [
   'firstName',
   'lastName',
   'description',
-  'avatar',
   'avatarUrl',
   'strength',
   'attestations',
@@ -56,15 +69,20 @@ const ProfileFields = [
   'airbnbVerified',
   'phoneVerified',
   'emailVerified',
-  'googleVerified'
+  'googleVerified',
+  'websiteVerified'
 ]
+
+const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
+  m[`${o}Attestation`] = null
+  return m
+}, {})
 
 function getState(profile) {
   return {
     firstName: '',
     lastName: '',
     description: '',
-    avatar: '',
     ...pickBy(pick(profile, ProfileFields), k => k)
   }
 }
@@ -73,25 +91,31 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     const profile = get(props, 'identity')
-    const attestations = store.get(`attestations-${props.wallet}`, {})
-    const storedAttestations = {}
-    Object.keys(attestations).forEach(key => {
-      try {
-        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
-          ...JSON.parse(attestations[key]),
-          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
-        })
-        storedAttestations[key] = attestations[key]
-      } catch (e) {
-        // Invalid attestation
-        console.log('Invalid attestation', attestations[key])
-      }
-    })
+
+    const storedAttestations = this.getStoredAttestions()
+
     this.state = {
+      ...resetAtts,
       ...getState(profile),
       ...storedAttestations
     }
-    this.accountsSwitched = false
+    const activeAttestation = get(props, 'match.params.attestation')
+    if (activeAttestation) {
+      this.state[activeAttestation] = true
+    }
+    this.toasterTimeout()
+  }
+
+  componentDidMount() {
+    document.body.style.backgroundColor = 'var(--pale-grey-four)'
+  }
+
+  componentWillUnmount() {
+    /* unfortunately this needs to be hardcoded and can not be read from document.body.style.backgroundColor
+     * since it initially returns an empty string
+     */
+    document.body.style.backgroundColor = 'white'
+    clearTimeout(this.timeout)
   }
 
   changesPublishedToBlockchain(props, prevProps) {
@@ -102,12 +126,14 @@ class UserProfile extends Component {
       (profile.firstName !== prevProfile.firstName ||
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
-        profile.avatar !== prevProfile.avatar ||
+        profile.avatarUrl !== prevProfile.avatarUrl ||
         profile.emailVerified !== prevProfile.emailVerified ||
         profile.phoneVerified !== prevProfile.phoneVerified ||
         profile.facebookVerified !== prevProfile.facebookVerified ||
+        profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
-        profile.airbnbVerified !== prevProfile.airbnbVerified) &&
+        profile.airbnbVerified !== prevProfile.airbnbVerified ||
+        profile.websiteVerified !== prevProfile.websiteVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -119,7 +145,7 @@ class UserProfile extends Component {
       (state.firstName !== prevState.firstName ||
         state.lastName !== prevState.lastName ||
         state.description !== prevState.description ||
-        state.avatar !== prevState.avatar) &&
+        state.avatarUrl !== prevState.avatarUrl) &&
       !this.accountsSwitched
     )
   }
@@ -131,26 +157,14 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.walletProxy !== prevProps.walletProxy) {
+      const storedAttestations = this.getStoredAttestions()
+      this.setState({ ...resetAtts, ...storedAttestations })
+    }
+
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
-      this.accountsSwitched = true
-      /* Semi ugly hack - can not find a better solution to the problem.
-       *
-       * The problem: To show toast notification when a user changes profile or attestation
-       * data we are observing this component's state. False positive notifications
-       * need to be prevented to not falsely fire when state is initially populated or when user
-       * changes wallets.
-       *
-       * The biggest challenge is that wallet id prop changes immediately when the wallet
-       * changes and bit later identity information prop is populated (which can also be empty). It
-       * is hard to connect the wallet change to the identity change, to rule out profile switches.
-       *
-       * Current solution is just to disable any notifications firing 3 seconds after
-       * account switch.
-       */
-      setTimeout(() => {
-        this.accountsSwitched = false
-      }, 3000)
+      this.toasterTimeout()
     }
 
     if (this.changesPublishedToBlockchain(this.props, prevProps)) {
@@ -184,12 +198,20 @@ class UserProfile extends Component {
         message: fbt('Facebook updated', 'profile.facebookUpdated')
       },
       {
+        attestation: 'googleAttestation',
+        message: fbt('Google updated', 'profile.googleUpdated')
+      },
+      {
         attestation: 'twitterAttestation',
         message: fbt('Twitter updated', 'profile.twitterUpdated')
       },
       {
         attestation: 'airbnbAttestation',
         message: fbt('Airbnb updated', 'profile.airbnbUpdated')
+      },
+      {
+        attestation: 'websiteAttestation',
+        message: fbt('Website updated', 'profile.websiteUpdated')
       }
     ]
 
@@ -198,6 +220,28 @@ class UserProfile extends Component {
         this.handleShowNotification(message, 'blue')
       }
     })
+  }
+
+  /**
+   * Semi ugly hack - can not find a better solution to the problem.
+   *
+   * The problem: To show toast notification when a user changes profile or attestation
+   * data we are observing this component's state. False positive notifications
+   * need to be prevented to not falsely fire when state is initially populated or when user
+   * changes wallets.
+   *
+   * The biggest challenge is that wallet id prop changes immediately when the wallet
+   * changes and bit later identity information prop is populated (which can also be empty). It
+   * is hard to connect the wallet change to the identity change, to rule out profile switches.
+   *
+   * Current solution is just to disable any notifications firing 3 seconds after
+   * account switch.
+   */
+  toasterTimeout() {
+    this.accountsSwitched = true
+    this.timeout = setTimeout(() => {
+      this.accountsSwitched = false
+    }, 3000)
   }
 
   render() {
@@ -251,6 +295,10 @@ class UserProfile extends Component {
     if (this.state.lastName) name.push(this.state.lastName)
     const enableGrowth = process.env.ENABLE_GROWTH === 'true'
 
+    const profileCreated =
+      this.props.growthEnrollmentStatus === 'Enrolled' &&
+      (this.state.PhoneAttestation || this.state.phoneVerified)
+
     return (
       <div className="container profile-edit">
         <DocumentTitle>
@@ -260,7 +308,7 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <Avatar avatar={this.state.avatar} />
+                <Avatar avatarUrl={this.state.avatarUrl} />
               </div>
               <div className="info">
                 <a
@@ -311,17 +359,43 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'google',
-                  fbt('Google', '_ProvisionedChanges.google'),
-                  process.env.ENABLE_GOOGLE_ATTESTATION !== 'true'
+                  fbt('Google', '_ProvisionedChanges.google')
+                )}
+                {this.renderAtt(
+                  'website',
+                  fbt('Website', '_ProvisionedChanges.website'),
+                  { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>
 
-            <ProfileStrength
-              large={true}
-              published={get(this.props, 'identity.strength') || 0}
-              unpublished={unpublishedStrength(this)}
-            />
+            <div className="profile-progress">
+              <div>
+                <ProfileStrength
+                  large={true}
+                  published={get(this.props, 'identity.strength') || 0}
+                  unpublished={unpublishedStrength(this)}
+                />
+              </div>
+              {profileCreated && (
+                <div>
+                  <Earnings
+                    large={true}
+                    total={getMaxRewardPerUser({
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                    earned={getTokensEarned({
+                      verifiedServices: Object.keys(
+                        AttestationComponents
+                      ).filter(a => this.state[`${a}Verified`]),
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                  />
+                </div>
+              )}
+            </div>
 
             <div className="actions">
               <ProfileWizard
@@ -333,7 +407,6 @@ class UserProfile extends Component {
                     'firstName',
                     'lastName',
                     'description',
-                    'avatar',
                     'avatarUrl'
                   ]),
                   attestations: [
@@ -341,8 +414,13 @@ class UserProfile extends Component {
                     ...attestations
                   ],
                   validate: () => this.validate(),
-                  onComplete: () =>
-                    store.set(`attestations-${this.props.wallet}`, undefined),
+                  onComplete: () => {
+                    store.set(
+                      `attestations-${this.props.walletProxy}`,
+                      undefined
+                    )
+                    clearVerifiedAccounts()
+                  },
                   children: fbt('Publish Now', 'Profile.publishNow')
                 }}
                 publishedProfile={this.props.identity || {}}
@@ -350,6 +428,12 @@ class UserProfile extends Component {
                 changesToPublishExist={changesToPublishExist(this)}
                 publishedStrength={get(this.props, 'identity.strength') || 0}
                 openEditProfile={e => this.openEditProfile(e)}
+                onEnrolled={() => {
+                  // Open phone attestation once enrollment is complete
+                  this.setState({
+                    phone: true
+                  })
+                }}
               />
             </div>
           </div>
@@ -374,24 +458,28 @@ class UserProfile extends Component {
               'firstName',
               'lastName',
               'description',
-              'avatar'
+              'avatarUrl'
             ])}
-            avatar={this.state.avatar}
+            avatarUrl={this.state.avatarUrl}
             onClose={() => this.setState({ editProfile: false })}
             onChange={newState =>
               this.setState(newState, () => this.validate())
             }
-            onAvatarChange={(avatar, avatarUrl) =>
-              this.setState({ avatar, avatarUrl })
-            }
+            onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
           />
         )}
       </div>
     )
   }
 
-  renderAtt(type, text, soon) {
-    const { wallet } = this.props
+  renderAtt(type, text, attProps = {}) {
+    const { soon, disabled, hidden } = attProps
+    const { walletProxy } = this.props
+
+    if (hidden) {
+      return null
+    }
+
     const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
     let attestationProvisional = false
@@ -404,17 +492,20 @@ class UserProfile extends Component {
       status = ' provisional'
       attestationProvisional = true
     }
+
     if (soon) {
       status = ' soon'
+    } else if (disabled) {
+      status = ' disabled'
     } else {
       status += ' interactive'
     }
 
     let AttestationComponent = AttestationComponents[type]
-    if (AttestationComponent) {
+    if (AttestationComponent && !soon && !disabled) {
       AttestationComponent = (
         <AttestationComponent
-          wallet={wallet}
+          wallet={walletProxy}
           open={!soon && this.state[type]}
           onClose={() => this.setState({ [type]: false })}
           onComplete={att => {
@@ -424,6 +515,8 @@ class UserProfile extends Component {
           }}
         />
       )
+    } else {
+      AttestationComponent = <AttestationComponent wallet={walletProxy} />
     }
 
     let attestationReward = 0
@@ -472,9 +565,9 @@ class UserProfile extends Component {
 
   validate() {
     const newState = {}
-    // if (!this.state.firstName) {
-    //   newState.firstNameError = 'First Name is required'
-    // }
+    if (!this.state.firstName) {
+      newState.firstNameError = 'First Name is required'
+    }
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     this.setState(newState)
@@ -488,7 +581,37 @@ class UserProfile extends Component {
       }
       return m
     }, {})
-    store.set(`attestations-${this.props.wallet}`, attestations)
+    store.set(`attestations-${this.props.walletProxy}`, attestations)
+    updateVerifiedAccounts({
+      wallet: this.props.walletProxy,
+      data: attestations
+    })
+  }
+
+  getAttestations() {
+    const wallet = this.props.walletProxy
+    const defaultValue = store.get(`attestations-${wallet}`, {})
+    return getVerifiedAccounts({ wallet }, defaultValue)
+  }
+
+  getStoredAttestions() {
+    const attestations = this.getAttestations()
+    const storedAttestations = {}
+
+    Object.keys(attestations).forEach(key => {
+      try {
+        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
+          ...JSON.parse(attestations[key]),
+          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
+        })
+        storedAttestations[key] = attestations[key]
+      } catch (e) {
+        // Invalid attestation
+        console.log('Invalid attestation', attestations[key])
+      }
+    })
+
+    return storedAttestations
   }
 }
 
@@ -563,6 +686,11 @@ require('react-styl')(`
         &::before
           background: url(images/ogn-icon.svg) no-repeat center
           background-size: 1rem
+    .profile-progress
+      display: flex
+      > div
+        flex: 50% 1 1
+        padding: 1rem
 
   @media (max-width: 767.98px)
     .profile-edit

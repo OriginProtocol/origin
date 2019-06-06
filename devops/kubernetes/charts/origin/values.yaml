@@ -54,10 +54,6 @@ creatorServerImageTag: latest
 creatorIssuerImage: origin-dapp-creator-issuer
 creatorIssuerImageTag: latest
 
-# origin-linking
-linkingImage: origin-linking
-linkingImageTag: latest
-
 # origin-cron
 cronImage: origin-cron
 cronImageTag: latest
@@ -65,3 +61,7 @@ cronImageTag: latest
 # origin-admin
 adminImage: origin-admin
 adminImageTag: latest
+
+# origin-relayer
+relayerImage: origin-relayer
+relayerImageTag: latest

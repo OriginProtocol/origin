@@ -13,8 +13,9 @@ import QueryError from 'components/QueryError'
 import Link from 'components/Link'
 
 import query from 'queries/Identity'
+import withOwner from 'hoc/withOwner'
 
-const AboutParty = ({ id }) => {
+const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
   if (redirect) {
@@ -37,7 +38,7 @@ const AboutParty = ({ id }) => {
 
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
-              <Avatar avatar={profile.avatar} size={50} />
+              <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
                 <div className="attestations">
@@ -98,6 +99,14 @@ const AboutParty = ({ id }) => {
                       <div className="attestation airbnb" />
                     </Tooltip>
                   )}
+                  {profile.websiteVerified && (
+                    <Tooltip
+                      tooltip={fbt('Website Verified', 'Website Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation website" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>
@@ -105,11 +114,11 @@ const AboutParty = ({ id }) => {
         }}
       </Query>
       <div className="eth-address">
-        <Identicon size={40} address={id} />
+        <Identicon size={40} address={owner} />
         <div>
           <div>ETH Address:</div>
           <div>
-            <EthAddress address={id} />
+            <EthAddress address={owner} />
           </div>
         </div>
       </div>
@@ -130,7 +139,7 @@ const AboutParty = ({ id }) => {
   )
 }
 
-export default AboutParty
+export default withOwner(AboutParty)
 
 require('react-styl')(`
   .about-party

@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 
 import withTokenBalance from 'hoc/withTokenBalance'
+import withWallet from 'hoc/withWallet'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
@@ -30,32 +31,32 @@ class Review extends Component {
 
           <div className="detail">
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.title">Title</fbt>
               </div>
-              <div className="col-9">{listing.title}</div>
+              <div className="col-12 col-sm-9">{listing.title}</div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.category">Category</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Category listing={listing} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.description">Description</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <FormattedDescription text={listing.description} />
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="listing.review.weekdays">Weekdays</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Price
                   target={listing.currency}
                   price={{
@@ -66,10 +67,10 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="listing.review.weekends">Weekends</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Price
                   target={listing.currency}
                   price={{
@@ -80,19 +81,19 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="listing.review.boost-level">Boost Level</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <CoinPrice price={boost} coin="ogn" />
                 <fbt desc="create.review.price-per-hour">/ night</fbt>
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.review.photos">Photos</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 {listing.media.length ? (
                   <div className="photos">
                     {listing.media.map((image, idx) => (
@@ -111,10 +112,10 @@ class Review extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-3 label">
+              <div className="col-12 col-sm-3 label">
                 <fbt desc="create.hourly.availability">Availability</fbt>
               </div>
-              <div className="col-9">
+              <div className="col-12 col-sm-9">
                 <Calendar
                   interactive={false}
                   small={true}
@@ -172,4 +173,4 @@ class Review extends Component {
   }
 }
 
-export default withTokenBalance(Review)
+export default withWallet(withTokenBalance(Review))

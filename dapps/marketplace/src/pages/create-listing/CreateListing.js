@@ -5,13 +5,16 @@ import get from 'lodash/get'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIdentity from 'hoc/withIdentity'
 
 import DocumentTitle from 'components/DocumentTitle'
+import UserActivationLink from 'components/UserActivationLink'
 
 import UnitListing from './listing-types/UnitListing/UnitListing'
 import FractionalListing from './listing-types/FractionalListing/FractionalListing'
 import AnnouncementListing from './listing-types/AnnouncementListing/AnnouncementListing'
 import FractionalHourlyListing from './listing-types/FractionalHourlyListing/FractionalHourlyListing'
+import GiftCardListing from './listing-types/GiftCardListing/GiftCardListing'
 
 import ChooseListingType from './ChooseListingType'
 
@@ -51,6 +54,14 @@ class CreateListing extends Component {
         customPricing: [],
         unavailable: [],
 
+        // Gift Card fields:
+        retailer: '',
+        cardAmount: '',
+        issuingCountry: 'US',
+        isDigital: false,
+        isCashPurchase: false,
+        receiptAvailable: false,
+
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
 
@@ -65,21 +76,53 @@ class CreateListing extends Component {
   }
 
   render() {
+    if (
+      this.props.creatorConfigLoading ||
+      this.props.walletLoading ||
+      this.props.identityLoading
+    ) {
+      return (
+        <div className="app-spinner">
+          <fbt desc="App.loadingPleaseWait">
+            <h5>Loading</h5>
+            <div>Please wait</div>
+          </fbt>
+        </div>
+      )
+    }
+
+    if (!this.props.identity) {
+      return <UserActivationLink forceRedirect={true} />
+    }
+
+    // Force a given listing type/category
+    // Hack: '__' is not allowed in GraphQL where we get our config from, so we change
+    // `typename` into `__typename` here.
+    const forceType =
+      this.props.creatorConfig && this.props.creatorConfig.forceType
+        ? {
+            ...this.props.creatorConfig.forceType,
+            __typename: this.props.creatorConfig.forceType.typename
+          }
+        : {}
+
     const listingTypeMapping = {
       UnitListing,
       AnnouncementListing,
       FractionalListing,
-      FractionalHourlyListing
+      FractionalHourlyListing,
+      GiftCardListing
     }
+
+    const props = {
+      listing: { ...this.state.listing, ...forceType },
+      onChange: listing => this.setListing(listing)
+    }
+
     // Get creation component for listing type (__typename),
     // defaulting to UnitListing
     const ListingTypeComponent =
-      listingTypeMapping[this.state.listing.__typename] || UnitListing
-
-    const props = {
-      listing: this.state.listing,
-      onChange: listing => this.setListing(listing)
-    }
+      listingTypeMapping[props.listing.__typename] || UnitListing
 
     return (
       <div className="container create-listing">
@@ -124,7 +167,7 @@ class CreateListing extends Component {
   }
 }
 
-export default withCreatorConfig(withWallet(CreateListing))
+export default withCreatorConfig(withWallet(withIdentity(CreateListing)))
 
 require('react-styl')(`
   .create-listing

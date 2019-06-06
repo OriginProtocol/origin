@@ -28,6 +28,10 @@ class Dropdown extends Component {
   }
 
   onBlur() {
+    if (document.body.classList.contains('mobile-modal-open')) {
+      return
+    }
+
     if (!this.mouseOver && this.props.onClose) {
       this.props.onClose()
     }

@@ -70,7 +70,7 @@ app.get('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -90,7 +90,7 @@ app.post('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -111,7 +111,7 @@ app.post('/accounts/:address', async (req, res) => {
     }
     return res.status(200).send(address)
   }
-  res.statusMessage = 'Cannot verify signature of registery'
+  res.statusMessage = 'Cannot verify signature of registry'
   return res.status(400).end()
 })
 
@@ -119,7 +119,7 @@ app.get('/conversations/:address', async (req, res) => {
   let { address } = req.params
 
   if (!Web3.utils.isAddress(address)) {
-    res.statusMessage = 'Address is not a valid Ethereum address'
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
@@ -247,7 +247,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     conv_addresses = conversees.map(c => c.ethAddress)
 
     if (!conv_addresses.includes(address)) {
-      return res.status(401).send('Address not part of current conversation.')
+      return res
+        .status(401)
+        .send(`Address '${address}' not part of current conversation.`)
     }
 
     //create a message that's the correct sequence
@@ -278,6 +280,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
   if (message) {
     for (const notify_address of conv_addresses) {
+      // Push to redis
       await redis.publish(
         notify_address,
         JSON.stringify({
@@ -288,7 +291,32 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         })
       )
     }
+
+    // Send to notifications server
+    // e.g. http://localhost:3456/messages
+    if (config.NOTIFICATIONS_ENDPOINT_URL) {
+      const sender = address
+      const messageHash = Web3.utils.keccak256(JSON.stringify(message))
+
+      // Filter out the sender
+      const receivers = conv_addresses.filter(a => a != address)
+      fetch(config.NOTIFICATIONS_ENDPOINT_URL, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender,
+          receivers,
+          messageHash
+        })
+      })
+    }
+
+    // TODO: Remove. Linker not used anymore
     if (config.LINKING_NOTIFY_ENDPOINT) {
+      const sender = address
       const recievers = conv_addresses.filter(a => a != address)
       fetch(config.LINKING_NOTIFY_ENDPOINT, {
         method: 'POST',
@@ -297,7 +325,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          recievers,
+          sender,
+          recievers, // YES, This spelling is wrong
           token: config.LINKING_NOTIFY_TOKEN
         })
       })

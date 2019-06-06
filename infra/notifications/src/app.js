@@ -4,7 +4,7 @@ const logger = require('./logger')
 try {
   require('envkey')
 } catch (error) {
-  logger.error('EnvKey not configured. Please set env var ENVKEY')
+  logger.warn('EnvKey not configured. Please set env var ENVKEY')
 }
 
 const express = require('express')
@@ -12,9 +12,10 @@ const bodyParser = require('body-parser')
 const webpush = require('web-push')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { mobilePush } = require('./mobilePush')
-const { browserPush } = require('./browserPush')
-const { emailSend } = require('./emailSend')
+// const { browserPush } = require('./browserPush')
+const { transactionEmailSend, messageEmailSend } = require('./emailSend')
+const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
+const MobileRegistry = require('./models').MobileRegistry
 
 const app = express()
 const port = 3456
@@ -48,7 +49,22 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-const config = {
+const networkDappDomains = {
+  1: 'https://dapp.originprotocol.com',
+  4: 'https://dapp.staging.originprotocol.com',
+  2222: 'https://dapp.dev.originprotocol.com',
+  999: 'http://localhost:3000'
+}
+const networkGatewayDomains = {
+  1: 'https://ipfs.originprotocol.com',
+  4: 'https://ipfs.staging.originprotocol.com',
+  2222: 'https://ipfs.dev.originprotocol.com',
+  999: 'http://localhost:8080'
+}
+
+const configOptions = {
+  // Ethereum network we're on
+  ethNetworkId: args['--eth-network-id'] || process.env.ETH_NETWORK_ID || 1,
   // Override email. All emails will be sent to this address, regardless of
   // actual intended email address.
   overrideEmail: args['--override-email'] || process.env.OVERRIDE_EMAIL || null,
@@ -58,10 +74,15 @@ const config = {
   asmGroupId: args['--asm-group-id'] || process.env.ASM_GROUP_ID || 9092,
   // Write emails to files, using this directory+prefix. e.g. "emails/finalized"
   emailFileOut: args['--email-file-out'] || process.env.EMAIL_FILE_OUT || null,
-  // Output debugging and other info. Boolean.
-  verbose: args['--verbose'] || false
+  // How far back in time to we look for duplicates?
+  dupeLookbackMs:
+    args['--dupe-lookback-ms'] || process.env.DUPE_LOOKBACK_MS || 1000 * 60 * 30
 }
-
+const config = {
+  dappUrl: networkDappDomains[configOptions.ethNetworkId],
+  ipfsGatewayUrl: networkGatewayDomains[configOptions.ethNetworkId],
+  ...configOptions
+}
 logger.log(config)
 
 // ------------------------------------------------------------------
@@ -83,17 +104,28 @@ const rateLimiterOptions = {
   duration: 60
 }
 const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-// use rate limiter on all root path methods
-app.all((req, res, next) => {
-  rateLimiter
-    .consume(req.connection.remoteAddress)
-    .then(() => {
-      next()
-    })
-    .catch(() => {
-      res.status(429).send('<h1>Too Many Requests</h1>')
-    })
-})
+const rateLimiterMiddleware = (req, res, next) => {
+  if (
+    !req.url.startsWith('/events') &&
+    !req.url.startsWith('/mobile') &&
+    !req.url.startsWith('/messages')
+  ) {
+    rateLimiter
+      .consume(req.connection.remoteAddress)
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        logger.error(`Rejecting request due to rate limiting: ${req.url}`)
+        res.status(429).send('<h2>Too Many Requests</h2>')
+      })
+  } else {
+    next()
+  }
+}
+// Note: register rate limiting middleware *before* all routes
+// so that it gets executed first.
+app.use(rateLimiterMiddleware)
 
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
@@ -158,6 +190,84 @@ app.post('/', async (req, res) => {
 })
 
 /**
+ * Endpoint called from the mobile marketplace app to register a device token
+ * and Ethereum address.
+ */
+app.post('/mobile/register', async (req, res) => {
+  logger.info('Call to mobile device registry endpoint')
+
+  const mobileRegister = {
+    ethAddress: req.body.eth_address,
+    deviceType: req.body.device_type,
+    deviceToken: req.body.device_token,
+    permissions: req.body.permissions
+  }
+
+  // See if a row already exists for this device/address
+  let registryRow = await MobileRegistry.findOne({
+    where: {
+      ethAddress: mobileRegister.ethAddress,
+      deviceToken: mobileRegister.deviceToken
+    }
+  })
+
+  if (!registryRow) {
+    // Nothing exists, create a new row
+    logger.debug('Adding new mobile device to registry: ', req.body)
+    registryRow = await MobileRegistry.create(mobileRegister)
+    res.sendStatus(201)
+  } else {
+    // Row exists, permissions might have changed, update if required
+    logger.debug('Updating mobile device registry: ', req.body)
+    registryRow = await MobileRegistry.upsert(mobileRegister)
+    res.sendStatus(200)
+  }
+})
+
+app.delete('/mobile/register', async (req, res) => {
+  logger.info('Call to delete mobile registry endpoint')
+
+  // See if a row already exists for this device/address
+  const registryRow = await MobileRegistry.findOne({
+    where: {
+      ethAddress: req.body.eth_address,
+      deviceToken: req.body.device_token
+    }
+  })
+
+  if (!registryRow) {
+    res.sendStatus(204)
+  } else {
+    // Update the soft delete column
+    await registryRow.update({ deleted: true })
+    res.sendStatus(200)
+  }
+})
+
+/**
+ * Endpoint called by the messaging-server
+ * list of eth address that have received a message
+ */
+app.post('/messages', async (req, res) => {
+  res.status(200).send({ status: 'ok' })
+
+  const sender = req.body.sender // eth address
+  const receivers = req.body.receivers // array of eth addresses
+  const messageHash = req.body.messageHash // hash of all message details
+
+  if (!sender || !receivers) {
+    console.warn('Invalid json received.')
+    return
+  }
+
+  // Email notifications
+  messageEmailSend(receivers, sender, messageHash, config)
+
+  // Mobile Push notifications
+  messageMobilePush(receivers, sender, messageHash, config)
+})
+
+/**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
  * Sample json payloads in test/fixtures
@@ -175,6 +285,9 @@ app.post('/events', async (req, res) => {
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${
     event.blockNumber
   } logIndex=${event.logIndex}`
+
+  // Return 200 to the event-listener without waiting for processing of the event.
+  res.status(200).send({ status: 'ok' })
 
   // TODO: Temp hack for now that we only test for mobile messages.
   // Thats how the old listener decided if there was a message. Will do
@@ -212,28 +325,17 @@ app.post('/events', async (req, res) => {
 
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
-  if (config.verbose) {
-    logger.log(`>eventName: ${eventName}`)
-    logger.log(`>party: ${party}`)
-    logger.log(`>buyerAddress: ${buyerAddress}`)
-    logger.log(`>sellerAddress: ${sellerAddress}`)
-    logger.log(`offer:`)
-    logger.log(offer)
-    logger.log(`listing:`)
-    logger.log(listing)
-  }
-
-  // Return 200 to the event-listener without waiting for processing of the event.
-  res.status(200).send({ status: 'ok' })
-
-  // Mobile Push (linker) notifications
-  mobilePush(eventName, party, buyerAddress, sellerAddress, offer)
-
-  // Browser push subscripttions
-  browserPush(eventName, party, buyerAddress, sellerAddress, offer)
+  logger.info(`>eventName: ${eventName}`)
+  logger.info(`>party: ${party}`)
+  logger.info(`>buyerAddress: ${buyerAddress}`)
+  logger.info(`>sellerAddress: ${sellerAddress}`)
+  logger.info(`offer:`)
+  logger.info(offer)
+  logger.info(`listing:`)
+  logger.info(listing)
 
   // Email notifications
-  emailSend(
+  transactionEmailSend(
     eventName,
     party,
     buyerAddress,
@@ -242,6 +344,22 @@ app.post('/events', async (req, res) => {
     listing,
     config
   )
+
+  // Mobile Push notifications
+  transactionMobilePush(
+    eventName,
+    party,
+    buyerAddress,
+    sellerAddress,
+    offer,
+    listing,
+    config
+  )
+
+  // Browser push subscripttions
+  // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 })
 
 app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
+
+module.exports = app

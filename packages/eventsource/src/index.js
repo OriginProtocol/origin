@@ -8,10 +8,10 @@ const _get = require('lodash/get')
 const memoize = require('lodash/memoize')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-const getListingFn = async (contract, listingId) =>
+const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
 
-const getListing = memoize(getListingFn, (...args) => args[1])
+const getListing = memoize(getListingDirect, (...args) => args[1])
 
 const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
   await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
@@ -58,10 +58,10 @@ class OriginEventSource {
   async getListing(listingId, blockNumber) {
     const cacheBlockNumber = blockNumber
       ? blockNumber
-      : this.contract.eventCache.getBlockNumber()
+      : this.contract.eventCache.latestBlock
     const cacheKey = `${listingId}-${cacheBlockNumber}`
     const networkId = await this.getNetworkId()
-    if (this.listingCache[cacheKey]) {
+    if (process.env.DISABLE_CACHE !== 'true' && this.listingCache[cacheKey]) {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
@@ -78,14 +78,18 @@ class OriginEventSource {
       status = 'active'
 
     try {
-      listing = await getListing(this.contract, listingId)
+      if (process.env.DISABLE_CACHE === 'true') {
+        listing = await getListingDirect(this.contract, listingId)
+      } else {
+        listing = await getListing(this.contract, listingId)
+      }
     } catch (e) {
-      console.log(`No such listing on contract ${listingId}`)
-      return null
+      throw new Error(`No such listing on contract ${listingId}`)
     }
 
-    const events = await this.contract.eventCache.listings(listingId)
-
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId)
+    })
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -127,7 +131,14 @@ class OriginEventSource {
         'unavailable',
         'customPricing',
         'timeZone',
-        'workingHours'
+        'workingHours',
+
+        'retailer',
+        'cardAmount',
+        'issuingCountry',
+        'isDigital',
+        'isCashPurchase',
+        'receiptAvailable'
       )
       data.valid = true
 
@@ -135,7 +146,6 @@ class OriginEventSource {
       if (data.unitsTotal < 0) {
         data.unitsTotal = 1
       }
-
       // TODO: Dapp1 fractional compat
       if (rawData.availability && !rawData.weekendPrice) {
         try {
@@ -204,7 +214,7 @@ class OriginEventSource {
     if (data.media && Array.isArray(data.media)) {
       data.media = data.media.map(m => ({
         ...m,
-        urlExpanded: `${this.ipfsGateway}/${m.url.replace(':/', '')}`
+        urlExpanded: ipfs.gatewayUrl(this.ipfsGateway, m.url)
       }))
     } else {
       data.media = [] // If invalid, set a clean, empty media array
@@ -228,7 +238,8 @@ class OriginEventSource {
         'UnitListing',
         'FractionalListing',
         'FractionalHourlyListing',
-        'AnnouncementListing'
+        'AnnouncementListing',
+        'GiftCardListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
@@ -238,9 +249,7 @@ class OriginEventSource {
       commission = '0'
     if (__typename !== 'AnnouncementListing') {
       const commissionPerUnitOgn =
-        data.unitsTotal === 1
-          ? (data.commission && data.commission.amount) || '0'
-          : (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
+        (data.commissionPerUnit && data.commissionPerUnit.amount) || '0'
       commissionPerUnit = this.web3.utils.toWei(commissionPerUnitOgn, 'ether')
 
       const commissionOgn = (data.commission && data.commission.amount) || '0'
@@ -268,8 +277,11 @@ class OriginEventSource {
       commission
     })
 
-    this.listingCache[cacheKey] = listingWithOffers
-    return this.listingCache[cacheKey]
+    if (process.env.DISABLE_CACHE === 'true') {
+      return listingWithOffers
+    } else {
+      return (this.listingCache[cacheKey] = listingWithOffers)
+    }
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -285,8 +297,10 @@ class OriginEventSource {
       )
     )
 
-    // Compute fields from valid offers.
-    let commissionAvailable = this.web3.utils.toBN(listing.commission)
+    // Compute fields from valid offers
+    // The "deposit" on a listing is actualy the amount of OGN available to
+    // pay for commissions on that listing.
+    let commissionAvailable = this.web3.utils.toBN(listing.deposit)
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
@@ -298,7 +312,7 @@ class OriginEventSource {
         if (!offer.valid || offer.status === 0) {
           // No need to do anything here.
         } else if (offer.startDate && offer.endDate) {
-          booked.push(`${offer.startDate}-${offer.endDate}`)
+          booked.push(`${offer.startDate}/${offer.endDate}`)
         }
       })
     } else if (listing.__typename !== 'AnnouncementListing') {
@@ -376,18 +390,20 @@ class OriginEventSource {
 
   async _getOffer(listing, listingId, offerId, blockNumber) {
     if (blockNumber === undefined) {
-      blockNumber = this.contract.eventCache.getBlockNumber()
+      blockNumber = await this.contract.eventCache.getBlockNumber()
     }
     const cacheKey = `${listingId}-${offerId}-${blockNumber}`
-    if (this.offerCache[cacheKey]) {
+    if (process.env.DISABLE_CACHE !== 'true' && this.offerCache[cacheKey]) {
       return this.offerCache[cacheKey]
     }
 
     let latestBlock, status, ipfsHash, lastEvent, withdrawnBy, createdBlock
-    const events = await this.contract.eventCache.offers(
-      listingId,
-      Number(offerId)
-    )
+
+    const events = await this.contract.eventCache.getEvents({
+      listingID: String(listingId),
+      offerID: String(offerId)
+    })
+
     events.forEach(e => {
       if (e.event === 'OfferCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -463,8 +479,11 @@ class OriginEventSource {
       }
     }
 
-    this.offerCache[cacheKey] = offerObj
-    return offerObj
+    if (process.env.DISABLE_CACHE === 'true') {
+      return offerObj
+    } else {
+      return (this.offerCache[cacheKey] = offerObj)
+    }
   }
 
   // Validates an offer, throwing an error if an issue is found.

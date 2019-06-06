@@ -8,6 +8,9 @@ program
   .option('-f, --fixtures', 'Deploy contracts and push IPFS fixtures')
   .option('-s, --setup', 'Write contracts, populate IPFS fixtures, then exit')
   .option('-t, --truffle', 'Write contract addresses to Truffle json')
+  .option('-x, --ssl-proxy', 'Start SSL proxy')
+  .option('-r, --relayer', 'Start Relayer')
+  .option('-q, --graphql', 'Start GraphQL Server (Performance)')
   .parse(process.argv)
 
 async function setup() {
@@ -32,6 +35,9 @@ if (!process.argv.slice(2).length) {
     deployContracts: program.fixtures,
     ipfs: program.ipfs,
     populate: program.populateIpfs,
-    writeTruffle: program.truffle
+    writeTruffle: program.truffle,
+    sslProxy: program.sslProxy,
+    relayer: program.relayer,
+    graphqlServer: program.graphql
   })
 }

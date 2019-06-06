@@ -7,7 +7,9 @@ import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+
 import withCanTransact from 'hoc/withCanTransact'
+import withWallet from 'hoc/withWallet'
 
 class WithdrawOffer extends Component {
   state = {}
@@ -90,7 +92,7 @@ class WithdrawOffer extends Component {
     withdrawOffer({
       variables: {
         offerID: this.props.offer.id,
-        from: this.props.offer.buyer.id
+        from: this.props.from
       }
     })
   }
@@ -129,4 +131,4 @@ class WithdrawOffer extends Component {
   }
 }
 
-export default withCanTransact(WithdrawOffer)
+export default withWallet(withCanTransact(WithdrawOffer))

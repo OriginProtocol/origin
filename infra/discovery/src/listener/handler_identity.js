@@ -14,6 +14,7 @@ const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
+const { ip2geo } = require('@origin/ip2geo')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
@@ -42,12 +43,15 @@ class IdentityEventHandler {
       return 'phone'
     } else if (attestation.data.attestation.email) {
       return 'email'
+    } else if (attestation.data.attestation.domain) {
+      return 'website'
     } else {
       logger.error(`Failed extracting service from attestation ${attestation}`)
     }
   }
 
-  /* Get details about an account from @origin/graphql
+  /**
+   * Get details about an account from @origin/graphql
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query
    * @private
@@ -95,6 +99,30 @@ class IdentityEventHandler {
   }
 
   /**
+   * Returns the country of the identity based on IP from the most recent attestation.
+   * @param {string} ethAddress
+   * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
+   * @private
+   */
+  async _countryLookup(ethAddress) {
+    // Load the most recent attestation.
+    const attestation = await db.Attestation.findOne({
+      where: { ethAddress: ethAddress.toLowerCase() },
+      order: [['createdAt', 'DESC']]
+    })
+    if (!attestation) {
+      return null
+    }
+
+    // Do the IP to geo lookup.
+    const geo = await ip2geo(attestation.remoteIpAddress)
+    if (!geo) {
+      return null
+    }
+    return geo.countryCode
+  }
+
+  /**
    * Decorates an identity object with attestation data.
    * @param {{}} identity - result of identityQuery
    * @returns {Promise<void>}
@@ -102,6 +130,8 @@ class IdentityEventHandler {
    */
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
+
+    // Load attestation data.
     await Promise.all(
       decoratedIdentity.attestations.map(async attestationJson => {
         const attestation = JSON.parse(attestationJson)
@@ -139,9 +169,19 @@ class IdentityEventHandler {
           case 'google':
             decoratedIdentity.googleVerified = true
             break
+          case 'website':
+            decoratedIdentity.website = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WEBSITE'
+            )
+            break
         }
       })
     )
+
+    // Add country of origin information based on IP.
+    decoratedIdentity.country = await this._countryLookup(identity.id)
+
     return decoratedIdentity
   }
 
@@ -153,7 +193,7 @@ class IdentityEventHandler {
    * @private
    */
   async _indexIdentity(identity, blockInfo) {
-    // Decorate the user object with extra attestation related info.
+    // Decorate the identity object with extra attestation related info.
     const decoratedIdentity = await this._decorateIdentity(identity)
 
     logger.info(`Indexing identity ${decoratedIdentity.id} in DB`)
@@ -162,7 +202,7 @@ class IdentityEventHandler {
       throw new Error(`Invalid eth address: ${decoratedIdentity.id}`)
     }
 
-    // Construct an decoratedIdentity object based on the user's profile
+    // Construct a decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
     const identityRow = {
       ethAddress: decoratedIdentity.id.toLowerCase(),
@@ -173,7 +213,11 @@ class IdentityEventHandler {
       airbnb: decoratedIdentity.airbnb,
       twitter: decoratedIdentity.twitter,
       facebookVerified: decoratedIdentity.facebookVerified || false,
-      data: { blockInfo }
+      googleVerified: decoratedIdentity.googleVerified || false,
+      data: { blockInfo },
+      country: decoratedIdentity.country,
+      avatarUrl: decoratedIdentity.avatarUrl,
+      website: decoratedIdentity.website
     }
 
     logger.debug('Identity=', identityRow)
@@ -183,7 +227,9 @@ class IdentityEventHandler {
   }
 
   /**
-   * Records a ProfilePublished event in the growth_event table.
+   * Records a ProfilePublished event in the growth_event table
+   * at the condition that the identity has a first name and last name.
+   *
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @param {Date} Event date.
@@ -191,10 +237,10 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
-    // Check required fields are populated.
-    const validProfile =
-      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
-      identity.avatar.length > 0
+    const validFirstName = identity.firstName && identity.firstName.length > 0
+    const validLastName = identity.lastName && identity.lastName.length > 0
+
+    const validProfile = validFirstName && validLastName
     if (!validProfile) {
       return
     }
@@ -202,6 +248,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
+      1,
       identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
@@ -212,7 +259,7 @@ class IdentityEventHandler {
 
   /**
    * Records AttestationPublished events in the growth_event table.
-   * @param {Object} user - Origin js user model object.
+   * @param {Object} identity
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @param {Date} Event date.
    * @returns {Promise<void>}
@@ -234,6 +281,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
+          1,
           identity.id,
           eventType,
           null,
@@ -259,7 +307,8 @@ class IdentityEventHandler {
 
     logger.info(`Processing Identity event for account ${account}`)
 
-    const identity = await this._getIdentityDetails(account)
+    const idWithBlock = account + '-' + event.blockNumber
+    const identity = await this._getIdentityDetails(idWithBlock)
 
     // Avatar can be large binary data. Clip it for logging purposes.
     if (identity.avatar) {
@@ -267,6 +316,21 @@ class IdentityEventHandler {
     }
 
     if (event.returnValues.ipfsHash) {
+      if (event.returnValues.ipfsHash !== identity.ipfsHash) {
+        /**
+         * GraphQL and the listener use two different instances of contracts,
+         * with two different instances of EventCache.  It's possible, this is
+         * also a JSON-RPC node sync issue...  They also use two different
+         * EC queries (allEvents() vs getEvents({ account: '0x...' })), which
+         * has a slight chance of causing this.  Be on the lookout for the
+         * following log message:
+         */
+        logger.warn(
+          `GraphQL IPFS hash does not match event IPFS hash. This is probably \
+           a bug! (event: ${event.returnValues.ipfsHash}, GraphQL: \
+           ${identity.ipfsHash}`
+        )
+      }
       identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
     }
 

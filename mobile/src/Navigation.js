@@ -1,79 +1,118 @@
+'use strict'
+
 import React from 'react'
 import { Image } from 'react-native'
 import {
+  createAppContainer,
   createBottomTabNavigator,
-  createStackNavigator
+  createStackNavigator,
+  createSwitchNavigator
 } from 'react-navigation'
 
-import ForkScreen from 'screens/fork'
+import PushNotifications from './PushNotifications'
+import StackSelector from './StackSelector'
+import UpdatePrompt from 'components/update-prompt'
+import AccountsScreen from 'screens/accounts'
+import AccountScreen from 'screens/account'
+import BackupPrompt from 'components/backup-prompt'
+import BackupScreen from 'screens/backup'
+import ImportAccountScreen from 'screens/import'
+import LanguageScreen from 'screens/language'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
-import AccountsScreen from 'screens/accounts'
-import AccountScreen from 'screens/account'
+import AuthenticationGuard from 'components/authentication-guard'
+// Onboarding
+import WelcomeScreen from 'screens/onboarding/welcome'
+import EmailScreen from 'screens/onboarding/email'
+import Authentication from 'screens/onboarding/authentication'
+import PinScreen from 'screens/onboarding/pin'
+import ReadyScreen from 'screens/onboarding/ready'
 
 const IMAGES_PATH = '../assets/images/'
 
-const navigationOptions = () => ({
-  headerBackTitle: ' ',
-  headerStyle: {
-    backgroundColor: 'white'
-  }
-})
-
-const MarketplaceStack = createStackNavigator(
+const OnboardingStack = createSwitchNavigator(
   {
-    Marketplace: MarketplaceScreen
+    Welcome: WelcomeScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        navigateOnSuccess: 'Authentication',
+        cancelRoute: 'Welcome'
+      }
+    },
+    Email: EmailScreen,
+    Authentication: Authentication,
+    Pin: PinScreen,
+    Ready: ReadyScreen
   },
   {
-    navigationOptions
+    initialRouteName: 'Welcome'
   }
 )
+
+const BackupStack = createSwitchNavigator(
+  {
+    Auth: {
+      screen: AuthenticationGuard,
+      params: {
+        navigateOnSuccess: 'Backup'
+      }
+    },
+    Backup: BackupScreen
+  },
+  {
+    initialRouteName: 'Auth'
+  }
+)
+
+const MarketplaceStack = createStackNavigator({
+  Marketplace: MarketplaceScreen
+})
 
 const WalletStack = createStackNavigator(
   {
     Wallet: WalletScreen
   },
   {
-    navigationOptions
+    cardStyle: {
+      backgroundColor: '#f7f8f8'
+    }
   }
 )
 
 const SettingsStack = createStackNavigator(
   {
-    Account: AccountScreen,
+    Account: createSwitchNavigator(
+      {
+        Auth: {
+          screen: AuthenticationGuard,
+          params: {
+            navigateOnSuccess: 'Account'
+          }
+        },
+        Account: AccountScreen
+      },
+      {
+        initialRouteName: 'Auth'
+      }
+    ),
     Accounts: AccountsScreen,
+    Language: LanguageScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        navigateOnSuccess: 'Accounts'
+      }
+    },
     Settings: SettingsScreen
   },
   {
-    initialRouteName: 'Settings',
-    navigationOptions
+    initialRouteName: 'Settings'
   }
 )
 
-const OnboardingStack = createStackNavigator(
-  {
-    Fork: ForkScreen
-  },
-  {
-    initialRouteName: 'Fork',
-    navigationOptions: () => ({
-      headerBackTitle: ' ',
-      headerStyle: {
-        backgroundColor: '#293f55',
-        borderBottomWidth: 0
-      },
-      headerTitleStyle: {
-        color: 'white',
-        fontFamily: 'Poppins',
-        fontSize: 17,
-        fontWeight: 'normal'
-      }
-    })
-  }
-)
-
-const OriginNavigator = createBottomTabNavigator(
+const _MarketplaceApp = createBottomTabNavigator(
   {
     Marketplace: MarketplaceStack,
     Wallet: WalletStack,
@@ -82,7 +121,7 @@ const OriginNavigator = createBottomTabNavigator(
   {
     initialRouteName: 'Marketplace',
     order: ['Marketplace', 'Wallet', 'Settings'],
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state
 
@@ -125,10 +164,47 @@ const OriginNavigator = createBottomTabNavigator(
   }
 )
 
-export {
-  MarketplaceStack,
-  WalletStack,
-  SettingsStack,
-  OnboardingStack,
-  OriginNavigator
+// Extend the main app navigator to render components that prompt as well
+// This is to avoid prompts coming up over other screens (i.e. auth guard)
+class MarketplaceApp extends React.Component {
+  static router = _MarketplaceApp.router
+  render() {
+    const { navigation } = this.props
+    return (
+      <>
+        <PushNotifications />
+        <UpdatePrompt />
+        <BackupPrompt />
+        <_MarketplaceApp navigation={navigation} />
+      </>
+    )
+  }
 }
+
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      StackSelector: StackSelector,
+      Welcome: WelcomeScreen,
+      Onboarding: OnboardingStack,
+      GuardedBackup: BackupStack,
+      GuardedApp: createSwitchNavigator(
+        {
+          Auth: {
+            screen: AuthenticationGuard,
+            params: {
+              navigateOnSuccess: 'App'
+            }
+          },
+          App: MarketplaceApp
+        },
+        {
+          initialRouteName: 'Auth'
+        }
+      )
+    },
+    {
+      initialRouteName: 'StackSelector'
+    }
+  )
+)

@@ -4,76 +4,47 @@ import QueryError from 'components/QueryError'
 import get from 'lodash/get'
 
 import enrollmentStatusQuery from 'queries/EnrollmentStatus'
-import profileQuery from 'queries/Profile'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
+import withWallet from './withWallet'
 
-function withGrowthCampaign(WrappedComponent) {
+function withGrowthCampaign(
+  WrappedComponent,
+  { fetchPolicy = 'network-only', queryEvenIfNotEnrolled, suppressErrors } = {}
+) {
   const WithGrowthCampaign = props => {
     return (
-      <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-        {({ error, data, networkStatus, loading }) => {
-          if (networkStatus === 1 || loading || !data.web3) {
-            return <WrappedComponent {...props} />
-          } else if (error) {
-            return <QueryError error={error} query={profileQuery} />
+      <Query
+        query={enrollmentStatusQuery}
+        variables={{ walletAddress: props.wallet }}
+        skip={!props.wallet}
+        fetchPolicy={fetchPolicy}
+      >
+        {({ data, error }) => {
+          if (error && !suppressErrors) {
+            return <QueryError error={error} query={enrollmentStatusQuery} />
           }
 
-          const walletAddress = get(data, 'web3.primaryAccount.id')
-
+          const enrollmentStatus = get(data, 'enrollmentStatus')
           return (
             <Query
-              query={enrollmentStatusQuery}
-              variables={{
-                walletAddress: walletAddress ? walletAddress : '0xdummyAddress'
-              }}
-              // enrollment info can change, do not cache it
-              fetchPolicy="network-only"
+              query={allCampaignsQuery}
+              notifyOnNetworkStatusChange={true}
+              skip={
+                queryEvenIfNotEnrolled ? false : enrollmentStatus !== 'Enrolled'
+              }
+              fetchPolicy={fetchPolicy}
             >
-              {({ networkStatus, error, loading, data }) => {
-                if (networkStatus === 1 || loading) {
-                  return <WrappedComponent {...props} />
-                } else if (error) {
-                  return (
-                    <QueryError error={error} query={enrollmentStatusQuery} />
-                  )
-                }
-
-                const enrollmentStatus = data.enrollmentStatus
-                if (enrollmentStatus !== 'Enrolled') {
-                  return (
-                    <WrappedComponent
-                      {...props}
-                      growthEnrollmentStatus={enrollmentStatus}
-                    />
-                  )
+              {({ data, error }) => {
+                if (error && !suppressErrors) {
+                  return <QueryError error={error} query={allCampaignsQuery} />
                 }
 
                 return (
-                  <Query
-                    query={allCampaignsQuery}
-                    notifyOnNetworkStatusChange={true}
-                    // do not cache, so user does not need to refresh page when an
-                    // action is completed
-                    fetchPolicy="network-only"
-                  >
-                    {({ networkStatus, error, loading, data }) => {
-                      if (networkStatus === 1 || loading) {
-                        return <WrappedComponent {...props} />
-                      } else if (error) {
-                        return (
-                          <QueryError error={error} query={allCampaignsQuery} />
-                        )
-                      }
-
-                      return (
-                        <WrappedComponent
-                          {...props}
-                          growthEnrollmentStatus={enrollmentStatus}
-                          growthCampaigns={data.campaigns.nodes}
-                        />
-                      )
-                    }}
-                  </Query>
+                  <WrappedComponent
+                    {...props}
+                    growthEnrollmentStatus={enrollmentStatus}
+                    growthCampaigns={get(data, 'campaigns.nodes') || []}
+                  />
                 )
               }}
             </Query>
@@ -82,7 +53,7 @@ function withGrowthCampaign(WrappedComponent) {
       </Query>
     )
   }
-  return WithGrowthCampaign
+  return withWallet(WithGrowthCampaign)
 }
 
 export default withGrowthCampaign

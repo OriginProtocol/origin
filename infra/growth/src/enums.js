@@ -41,6 +41,7 @@ const GrowthActionType = new Enum(
   'Twitter',
   'Airbnb',
   'Facebook',
+  'Google',
   'Referral',
   'ListingCreated',
   'ListingPurchased'
@@ -55,6 +56,7 @@ const GrowthEventTypes = new Enum(
   'AirbnbAttestationPublished',
   'TwitterAttestationPublished',
   'PhoneAttestationPublished',
+  'GoogleAttestationPublished',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold' // Seller side event.
@@ -68,6 +70,7 @@ const GrowthParticipantAuthenticationStatus = new Enum(
   'NotEnrolled'
 )
 
+// DEPRECATED. Do not use.
 const GrowthRewardStatuses = new Enum(
   'Pending',
   'Fraud,',
@@ -76,6 +79,18 @@ const GrowthRewardStatuses = new Enum(
   'Paid',
   'PaymentFailed',
   'PaidConfirmed'
+)
+
+const GrowthPayoutStatuses = new Enum(
+  'Pending', // Payout transaction submitted to the blockchain
+  'Paid', // Transaction receipt received from blokchain.
+  'Confirmed', // Transaction confirmed.
+  'Failed' // Transaction failed. Should be retried.
+)
+
+const GrowthPayoutTypes = new Enum(
+  'CampaignDistribution', // Payout part of regular campaign distribution.
+  'Adjustment' // Payout part of a manual adjustment. The data column should include details about the reason.
 )
 
 const GrowthInviteContactTypes = new Enum('Email', 'Phone', 'Other')
@@ -90,6 +105,8 @@ module.exports = {
   GrowthParticipantStatuses,
   GrowthParticipantAuthenticationStatus,
   GrowthRewardStatuses,
+  GrowthPayoutStatuses,
+  GrowthPayoutTypes,
   GrowthInviteContactTypes,
   GrowthInviteStatuses,
   GrowthCampaignStatuses,

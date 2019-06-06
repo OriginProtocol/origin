@@ -18,7 +18,7 @@ export default gql`
                 identity {
                   id
                   fullName
-                  avatar
+                  avatarUrlExpanded
                 }
               }
             }

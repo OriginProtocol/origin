@@ -4,10 +4,12 @@ import get from 'lodash/get'
 import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
+import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 import RewardsBanner from './_RewardsBanner'
 import TranslationModal from './_TranslationModal'
+import MobileModal from './_MobileModal'
 import Nav from './_Nav'
 import Footer from './_Footer'
 
@@ -26,6 +28,7 @@ import Notifications from './notifications/Notifications'
 import Settings from './settings/Settings'
 import DappInfo from './about/DappInfo'
 import GrowthCampaigns from './growth/Campaigns'
+import GrowthBanned from 'pages/growth/Banned'
 import GrowthWelcome from './growth/Welcome'
 import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
@@ -36,17 +39,30 @@ import CurrencyContext from 'constants/CurrencyContext'
 const store = Store('localStorage')
 
 class App extends Component {
-  state = { hasError: false, currency: store.get('currency', 'fiat-USD') }
+  state = {
+    hasError: false,
+    displayMobileModal: false,
+    mobileModalDismissed: false,
+    currency: store.get('currency', 'fiat-USD')
+  }
 
   componentDidMount() {
     if (window.ethereum) {
-      window.ethereum.enable()
+      setTimeout(() => window.ethereum.enable(), 100)
     }
   }
 
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
+    }
+    if (
+      !this.props.web3Loading &&
+      !this.props.web3.walletType &&
+      this.state.displayMobileModal === false &&
+      !this.state.mobileModalDismissed
+    ) {
+      this.setState({ displayMobileModal: true })
     }
   }
 
@@ -78,7 +94,8 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    // hide the rewards bar if you're on any of the rewards pages
+    // hide the rewards bar if you're on any of the rewards pages or using
+    // the DApp via the webview in the mobile app
     const hideRewardsBar =
       this.props.location.pathname.match(/^\/welcome$/g) ||
       this.props.location.pathname.match(/^\/campaigns$/g)
@@ -103,7 +120,7 @@ class App extends Component {
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
             <Route path="/user/:id" component={User} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
             <Route
@@ -123,11 +140,22 @@ class App extends Component {
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route exact path="/campaigns" component={GrowthCampaigns} />
+            <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route component={Listings} />
           </Switch>
         </main>
         <TranslationModal locale={this.props.locale} />
+        {this.state.displayMobileModal && (
+          <MobileModal
+            onClose={() =>
+              this.setState({
+                displayMobileModal: false,
+                mobileModalDismissed: true
+              })
+            }
+          />
+        )}
         <Footer
           locale={this.props.locale}
           onLocale={this.props.onLocale}
@@ -144,7 +172,7 @@ class App extends Component {
   }
 }
 
-export default withCreatorConfig(withRouter(App))
+export default withWeb3(withCreatorConfig(withRouter(App)))
 
 require('react-styl')(`
   .app-spinner

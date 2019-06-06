@@ -94,6 +94,19 @@ export default {
           customPricing
           unavailable
         }
+        ... on GiftCardListing {
+          unitsTotal
+          unitsAvailable
+          unitsSold
+          unitsPending
+          multiUnit
+          retailer
+          cardAmount
+          issuingCountry
+          isDigital
+          isCashPurchase
+          receiptAvailable
+        }
       }
     `
   },
@@ -203,6 +216,12 @@ export default {
           unlockConditions {
             messageKey
             iconSource
+          }
+          ... on ListingIdPurchasedAction {
+            listingId
+            titleKey
+            detailsKey
+            iconSrc
           }
           ... on ReferralAction {
             rewardPending {

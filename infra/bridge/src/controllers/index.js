@@ -9,6 +9,7 @@ router.use('/api/attestations/facebook', require('./facebook'))
 router.use('/api/attestations/phone', require('./phone'))
 router.use('/api/attestations/twitter', require('./twitter'))
 router.use('/api/attestations/google', require('./google'))
+router.use('/api/attestations/website', require('./website'))
 router.use('/redirects', require('./redirects'))
 
 module.exports = router

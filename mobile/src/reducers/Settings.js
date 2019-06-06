@@ -3,22 +3,37 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const localhost = NETWORKS.find(n => n.name === 'Localhost')
-
 const initialState = {
-  // eslint-disable-next-line no-undef
-  network: __DEV__ ? localhost : mainnet,
-  deviceToken: null
+  network: NETWORKS.find(n => n.name === 'Mainnet'),
+  deviceToken: null,
+  email: null,
+  pin: null,
+  biometryType: null,
+  language: null
 }
 
 export default function Settings(state = initialState, action = {}) {
   switch (action.type) {
     case SettingsConstants.SET_NETWORK:
-      return { ...state, network: action.network }
+      return {
+        ...state,
+        network: action.network
+      }
 
     case SettingsConstants.SET_DEVICE_TOKEN:
       return { ...state, deviceToken: action.deviceToken }
+
+    case SettingsConstants.SET_EMAIL:
+      return { ...state, email: action.email }
+
+    case SettingsConstants.SET_PIN:
+      return { ...state, pin: action.pin }
+
+    case SettingsConstants.SET_BIOMETRY_TYPE:
+      return { ...state, biometryType: action.biometryType }
+
+    case SettingsConstants.SET_LANGUAGE:
+      return { ...state, language: action.language }
   }
 
   return state

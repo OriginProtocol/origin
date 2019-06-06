@@ -2,15 +2,30 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import Modal from 'components/Modal'
+import AutoMutate from 'components/AutoMutate'
 
 import VerifyGoogleMutation from 'mutations/VerifyGoogle'
 import query from 'queries/GoogleAuthUrl'
 
 class GoogleAttestation extends Component {
-  state = {
-    stage: 'GenerateCode'
+  constructor(props) {
+    super(props)
+    this.state = {
+      stage: 'GenerateCode',
+      mobile: window.innerWidth < 767
+    }
+    this.onResize = this.onResize.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,10 +36,25 @@ class GoogleAttestation extends Component {
     }
   }
 
+  onResize() {
+    if (window.innerWidth < 767 && !this.state.mobile) {
+      this.setState({ mobile: true })
+    } else if (window.innerWidth >= 767 && this.state.mobile) {
+      this.setState({ mobile: false })
+    }
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
+
+    const isMobile = this.state.mobile
+
+    const { origin, pathname } = window.location
+    const redirect = isMobile
+      ? encodeURIComponent(`${origin}${pathname}#/profile/google`)
+      : null
 
     return (
       <Modal
@@ -39,19 +69,32 @@ class GoogleAttestation extends Component {
             stage: 'GenerateCode'
           })
           this.props.onClose()
+          this.props.history.replace('/profile')
         }}
       >
-        <Query query={query}>
+        <Query
+          query={query}
+          variables={{ redirect }}
+          fetchPolicy="network-only"
+          skip={get(this.props, 'match.params.attestation') ? true : false}
+        >
           {({ data }) => {
             const authUrl = get(data, 'identityEvents.googleAuthUrl')
-            return <div>{this[`render${this.state.stage}`]({ authUrl })}</div>
+            return (
+              <div>
+                {this[`render${this.state.stage}`]({
+                  authUrl,
+                  redirect: isMobile
+                })}
+              </div>
+            )
           }}
         </Query>
       </Modal>
     )
   }
 
-  renderGenerateCode({ authUrl }) {
+  renderGenerateCode({ authUrl, redirect }) {
     return (
       <>
         <h2>
@@ -60,11 +103,6 @@ class GoogleAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="alert alert-danger mt-3 d-block d-sm-none">
-          <fbt desc="Attestation.verify.warning">
-            <b>Warning:</b> Currently unavailable on mobile devices
-          </fbt>
-        </div>
         <div className="help">
           <fbt desc="GoogleAttestation.verify.explanation">
             Other users will know that you have a verified Google account, but
@@ -73,7 +111,7 @@ class GoogleAttestation extends Component {
           </fbt>
         </div>
         <div className="actions">
-          {this.renderVerifyButton({ authUrl })}
+          {this.renderVerifyButton({ authUrl, redirect })}
           <button
             className="btn btn-link"
             onClick={() => this.setState({ shouldClose: true })}
@@ -84,7 +122,10 @@ class GoogleAttestation extends Component {
     )
   }
 
-  renderVerifyButton({ authUrl }) {
+  renderVerifyButton({ authUrl, redirect }) {
+    const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
+    const sid = matchSid && matchSid[1] ? matchSid[1] : null
+
     return (
       <Mutation
         mutation={VerifyGoogleMutation}
@@ -96,6 +137,7 @@ class GoogleAttestation extends Component {
               data: result.data,
               loading: false
             })
+            this.props.history.replace('/profile')
           } else {
             this.setState({ error: result.reason, loading: false })
           }
@@ -105,22 +147,36 @@ class GoogleAttestation extends Component {
           this.setState({ error: 'Check console', loading: false })
         }}
       >
-        {verifyCode => (
-          <button
-            className="btn btn-outline-light d-none d-sm-block"
-            onClick={() => {
-              if (this.state.loading) return
-              this.setState({ error: false, loading: true })
-              verifyCode({
-                variables: {
-                  identity: this.props.wallet,
-                  authUrl
+        {verifyCode => {
+          const runMutation = () => {
+            if (this.state.loading) return
+            this.setState({ error: false, loading: true })
+            verifyCode({
+              variables: {
+                identity: this.props.wallet,
+                redirect,
+                authUrl,
+                code: sid
+              }
+            })
+          }
+          return (
+            <>
+              {sid && this.props.wallet ? (
+                <AutoMutate mutatation={runMutation} />
+              ) : null}
+              <button
+                className="btn btn-outline-light"
+                onClick={runMutation}
+                children={
+                  this.state.loading
+                    ? fbt('Loading...', 'Loading...')
+                    : fbt('Continue', 'Continue')
                 }
-              })
-            }}
-            children={this.state.loading ? 'Loading...' : 'Continue'}
-          />
-        )}
+              />
+            </>
+          )
+        }}
       </Mutation>
     )
   }
@@ -157,7 +213,7 @@ class GoogleAttestation extends Component {
   }
 }
 
-export default GoogleAttestation
+export default withRouter(GoogleAttestation)
 
 require('react-styl')(`
 `)

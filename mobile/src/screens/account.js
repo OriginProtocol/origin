@@ -3,14 +3,17 @@
 import React, { Component } from 'react'
 import {
   Alert,
-  DeviceEventEmitter,
   Clipboard,
+  DeviceEventEmitter,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
@@ -18,6 +21,17 @@ import { truncateAddress } from 'utils/user'
 const ONE_MINUTE = 1000 * 60
 
 class AccountScreen extends Component {
+  static navigationOptions = () => {
+    return {
+      title: String(fbt('Account Details', 'AccountScreen.headerTitle')),
+      headerTitleStyle: {
+        fontFamily: 'Poppins',
+        fontSize: 17,
+        fontWeight: 'normal'
+      }
+    }
+  }
+
   constructor(props) {
     super(props)
 
@@ -27,26 +41,29 @@ class AccountScreen extends Component {
     this.handleSetAccountName = this.handleSetAccountName.bind(this)
   }
 
-  static navigationOptions = {
-    title: 'Account Details',
-    headerTitleStyle: {
-      fontFamily: 'Poppins',
-      fontSize: 17,
-      fontWeight: 'normal'
-    }
-  }
-
   async handleDangerousCopy(privateKey) {
     Alert.alert(
-      'Important!',
-      'As a security precaution, your key will be removed from the clipboard after one minute.',
+      String(fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle')),
+      String(
+        fbt(
+          'As a security precaution, the clipboard will be cleared after one minute.',
+          'AccountScreen.dangerousCopyAlertMessage'
+        )
+      ),
       [
         {
-          text: 'Got it.',
+          text: String(fbt('Got it', 'AccountScreen.dangerousCopyButton')),
           onPress: async () => {
             await Clipboard.setString(privateKey)
 
-            Alert.alert('Copied to clipboard!')
+            Alert.alert(
+              String(
+                fbt(
+                  'Copied to clipboard!',
+                  'AccountScreen.dangerousCopySuccessAlert'
+                )
+              )
+            )
 
             setTimeout(async () => {
               const s = await Clipboard.getString()
@@ -62,24 +79,38 @@ class AccountScreen extends Component {
   }
 
   handleDelete() {
-    const { navigation } = this.props
+    const { navigation, wallet } = this.props
+    const isLastAccount = wallet.accounts.length === 1
 
     Alert.alert(
-      'Important!',
-      'Have you backed up your private key for this account? ' +
-        'The account will be permanently deleted and you must have the private key to recover it. ' +
-        'Are you sure that you want to delete this account?',
+      String(fbt('Important!', 'AccountScreen.deleteAlertTitle')),
+      String(
+        fbt(
+          'Have you backed up your private key or recovery phrase for this account? ' +
+            'The account will be permanently deleted and you must have the private key or recovery phrase to recover it. ' +
+            'Are you sure that you want to delete this account?',
+          'AccountScreen.deleteAlertMessage'
+        )
+      ),
       [
-        { text: 'Cancel' },
         {
-          text: 'Delete',
+          text: String(fbt('Cancel', 'AccountScreen.deleteAlertCancelButton'))
+        },
+        {
+          text: String(fbt('Delete', 'AccountScreen.deleteAlertConfirmButton')),
           onPress: () => {
             try {
               DeviceEventEmitter.emit(
                 'removeAccount',
                 navigation.getParam('account')
               )
-              navigation.goBack()
+              if (isLastAccount) {
+                // No accounts left, navigate back to welcome screen
+                navigation.navigate('Welcome')
+              } else {
+                // There are still some accounts, go back to accounts list
+                navigation.navigate('Accounts')
+              }
             } catch (e) {
               console.error(e)
             }
@@ -101,87 +132,156 @@ class AccountScreen extends Component {
     DeviceEventEmitter.emit('setAccountName', { address, name: nameValue })
   }
 
-  showPrivateKey() {
-    const { privateKey } = this.props.navigation.getParam('account')
-    Alert.alert('Private Key', privateKey)
-  }
-
   render() {
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
-    const { address, privateKey } = account
+    const { address, privateKey, mnemonic } = account
     const name = wallet.accountNameMapping[address]
     const multipleAccounts = wallet.accounts.length > 1
-    const isActive = address === wallet.address
+    const isActive = address === wallet.activeAccount.address
 
     return (
-      <View style={styles.wrapper}>
-        <View contentContainerStyle={styles.content} style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.heading}>NAME</Text>
-          </View>
-          <TextInput
-            placeholder={'Unnamed Account'}
-            value={name}
-            style={styles.input}
-            onChange={this.handleSetAccountName}
-            onSubmitEditing={this.handleNameUpdate}
-          />
-          <View style={styles.header}>
-            <Text style={styles.heading}>ETH ADDRESS</Text>
-          </View>
-          <TextInput
-            editable={false}
-            value={truncateAddress(address, 14)}
-            style={styles.input}
-          />
-        </View>
-        <View style={styles.buttonsContainer}>
-          {multipleAccounts && (
-            <OriginButton
-              size="large"
-              type="primary"
-              disabled={isActive}
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Make Active Account'}
-              onPress={this.handleSetAccountActive}
+      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
+        <ScrollView
+          contentContainerStyle={styles.content}
+          style={styles.container}
+        >
+          <View contentContainerStyle={styles.content} style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.heading}>
+                <fbt desc="AccountScreen.accountName">Name</fbt>
+              </Text>
+            </View>
+            <TextInput
+              placeholder={String(
+                fbt('Account name', 'AccountScreen.accountNamePlaceholder')
+              )}
+              value={name}
+              style={styles.input}
+              onChange={this.handleSetAccountName}
+              onSubmitEditing={this.handleNameUpdate}
             />
-          )}
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Show Private Key'}
-            onPress={() => this.showPrivateKey(address)}
-          />
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Copy Private Key'}
-            onPress={() => this.handleDangerousCopy(privateKey)}
-          />
-          {(multipleAccounts || true) && (
-            <OriginButton
-              size="large"
-              type="danger"
-              disabled={isActive}
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={'Delete Account'}
-              onPress={this.handleDelete}
+            <View style={styles.header}>
+              <Text style={styles.heading}>
+                <fbt desc="AccountScreen.ethAddress">Eth Address</fbt>
+              </Text>
+            </View>
+            <TextInput
+              editable={false}
+              value={truncateAddress(address, 14)}
+              style={styles.input}
             />
-          )}
-        </View>
-      </View>
+          </View>
+          <View style={styles.buttonsContainer}>
+            {multipleAccounts && (
+              <OriginButton
+                size="large"
+                type="primary"
+                disabled={isActive}
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={fbt(
+                  'Make Active Account',
+                  'AccountScreen.makeActiveAccountButton'
+                )}
+                onPress={this.handleSetAccountActive}
+              />
+            )}
+            {mnemonic !== undefined && (
+              <>
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={fbt(
+                    'Show Recovery Phrase',
+                    'AccountScreen.showRecoveryPhraseButton'
+                  )}
+                  onPress={() =>
+                    Alert.alert(
+                      String(
+                        fbt('Recovery Phrase', 'AccountScreen.recoveryPhrase')
+                      ),
+                      mnemonic
+                    )
+                  }
+                />
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={fbt(
+                    'Copy Recovery Phrase',
+                    'AccountScreen.copyRecoveryPhraseButton'
+                  )}
+                  onPress={() => this.handleDangerousCopy(mnemonic)}
+                />
+              </>
+            )}
+            {mnemonic === undefined && (
+              <>
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={fbt(
+                    'Show Private Key',
+                    'AccountScreen.showPrivateKeyButton'
+                  )}
+                  onPress={() =>
+                    Alert.alert(
+                      String(fbt('Private Key', 'AccountScreen.privateKey')),
+                      privateKey
+                    )
+                  }
+                />
+                <OriginButton
+                  size="large"
+                  type="primary"
+                  style={styles.button}
+                  textStyle={{ fontSize: 18, fontWeight: '900' }}
+                  title={fbt(
+                    'Copy Private Key',
+                    'AccountScreen.copyPrivateKeyButton'
+                  )}
+                  onPress={() => this.handleDangerousCopy(privateKey)}
+                />
+              </>
+            )}
+            {(multipleAccounts || true) && (
+              <OriginButton
+                size="large"
+                type="danger"
+                disabled={isActive}
+                style={styles.button}
+                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                title={fbt(
+                  'Delete Account',
+                  'AccountScreen.deleteAccountButton'
+                )}
+                onPress={this.handleDelete}
+              />
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  keyboardWrapper: {
+    flex: 1
+  },
+  container: {
+    flex: 1
+  },
+  content: {
+    paddingBottom: 20
+  },
   button: {
     marginBottom: 10,
     marginHorizontal: 20
@@ -189,12 +289,6 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     marginBottom: 10,
     paddingTop: 20
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    paddingBottom: 20
   },
   header: {
     paddingBottom: 5,
@@ -204,7 +298,8 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: 'Lato',
     fontSize: 13,
-    opacity: 0.5
+    opacity: 0.5,
+    textTransform: 'uppercase'
   },
   iconContainer: {
     height: 17,

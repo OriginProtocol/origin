@@ -16,14 +16,21 @@ class EditListing extends Component {
     const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
       listing: {
-        // HomeShare fields:
+        // FractionalListing fields:
         weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
         booked: get(props, 'listing.booked', []),
         customPricing: get(props, 'listing.customPricing', []),
         unavailable: get(props, 'listing.unavailable', []),
-        // Hourly
+        // HourlyFractionalListing fields:
         timeZone: get(props, 'listing.timeZone', ''),
         workingHours: get(props, 'listing.workingHours', []),
+        // GiftCardListing fields:
+        retailer: get(props, 'listing.retailer', ''),
+        cardAmount: get(props, 'listing.cardAmount', ''),
+        issuingCountry: get(props, 'listing.issuingCountry', 'US'),
+        isDigital: get(props, 'listing.isDigital', false),
+        isCashPurchase: get(props, 'listing.isCashPurchase', false),
+        receiptAvailable: get(props, 'listing.receiptAvailable', false),
 
         // Marketplace creator fields:
         marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
@@ -34,7 +41,8 @@ class EditListing extends Component {
           'title',
           'description',
           'category',
-          'subCategory'
+          'subCategory',
+          'seller'
         ]),
         acceptedTokens: tokens.length ? tokens : ['token-ETH'],
         quantity: String(props.listing.unitsTotal),
@@ -67,7 +75,13 @@ class EditListing extends Component {
       }
     }
 
-    return <CreateListing listing={listing} refetch={this.props.refetch} />
+    return (
+      <CreateListing
+        seller={get(this.props, 'listing.seller.id')}
+        listing={listing}
+        refetch={this.props.refetch}
+      />
+    )
   }
 }
 

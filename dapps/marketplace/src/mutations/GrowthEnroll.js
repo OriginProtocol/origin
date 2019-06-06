@@ -6,17 +6,17 @@ export default gql`
     $agreementMessage: String!
     $signature: String!
     $inviteCode: String
-    $fingerprint: String!
+    $fingerprintData: JSON
   ) {
     enroll(
       accountId: $accountId
       agreementMessage: $agreementMessage
       signature: $signature
       inviteCode: $inviteCode
-      fingerprint: $fingerprint
+      fingerprintData: $fingerprintData
     ) {
       authToken
-      error
+      isBanned
     }
   }
 `

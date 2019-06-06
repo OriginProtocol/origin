@@ -2,10 +2,12 @@ import {
   changeAccount,
   waitForText,
   clickByText,
+  clickBySelector,
   pic,
   createAccount
 } from './_helpers'
 import services from './_services'
+import assert from 'assert'
 
 let page
 
@@ -17,11 +19,13 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
+
   await page.evaluate(() => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
   })
+
   return { buyer, seller }
 }
 
@@ -58,11 +62,13 @@ const finalizeOffer = async ({ buyer }) => {
   await pic(page, 'transaction-finalized')
 }
 
-describe('Marketplace Dapp', function() {
-  let seller, buyer
-  this.timeout(5000)
+function randomTitle() {
+  return `T-Shirt ${Math.floor(Math.random() * 100000)}`
+}
 
+function listingTests() {
   describe('Single Unit Listing for Eth', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -88,7 +94,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
       await page.click('#eth-checkbox') // Select Eth
@@ -134,6 +140,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Single Unit Listing for Dai', function() {
+    let seller, buyer
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -159,7 +166,7 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
       const input = await page.$('input[type="file"]')
@@ -192,6 +199,7 @@ describe('Marketplace Dapp', function() {
 
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
+      await waitForText(page, 'Payment', 'span')
       await clickByText(page, 'Swap Now', 'button')
     })
 
@@ -225,6 +233,7 @@ describe('Marketplace Dapp', function() {
   })
 
   describe('Multi Unit Listing for Eth', function() {
+    let seller, buyer, listingHash
     before(async function() {
       ({ seller, buyer } = await reset())
     })
@@ -250,10 +259,12 @@ describe('Marketplace Dapp', function() {
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', 'T-Shirt')
+      await page.type('input[name=title]', randomTitle())
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await page.type('input[name=price]', '1')
-      await page.type('input[name=quantity]', '0') // Add a zero
+      await page.focus('input[name=quantity]')
+      await page.keyboard.press('Backspace')
+      await page.type('input[name=quantity]', '2')
       await page.click('#eth-checkbox') // Select Eth
       await page.click('#dai-checkbox') // De-select Dai
       const input = await page.$('input[type="file"]')
@@ -281,6 +292,14 @@ describe('Marketplace Dapp', function() {
 
     it('should continue to listing', async function() {
       await clickByText(page, 'View Listing', 'button')
+      listingHash = await page.evaluate(() => window.location.hash)
+    })
+
+    it('should have the correct sales numbers', async function() {
+      await page.waitForSelector('.listing-buy-editonly')
+      const sold = await page.$('.listing-buy-editonly')
+      const sales = await page.evaluate(el => el.innerText, sold)
+      assert(sales.replace(/\n/g, ' ') === 'Sold 0 Pending 0 Available 2')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -304,5 +323,149 @@ describe('Marketplace Dapp', function() {
     it('should allow a new listing to be finalized', async function() {
       await finalizeOffer({ buyer })
     })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should allow the listing to be edited', async function() {
+      await clickByText(page, 'Edit Listing')
+      await clickByText(page, 'Continue')
+      await page.focus('input[name=quantity]')
+      await page.keyboard.press('Backspace')
+      await page.type('input[name=quantity]', '10')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Done')
+      await clickByText(page, 'View Listing', 'button')
+    })
+
+    it('should have the edited sales numbers', async function() {
+      await page.waitForSelector('.listing-buy-editonly')
+      const sold = await page.$('.listing-buy-editonly')
+      const sales = await page.evaluate(el => el.innerText, sold)
+      assert(sales.replace(/\n/g, ' ') === 'Sold 2 Pending 0 Available 8')
+    })
+
+    it('should allow the edited listing to be purchased', async function() {
+      await purchaseListing({ buyer })
+    })
+
+    it('should allow a new listing to be accepted', async function() {
+      await acceptOffer({ seller })
+    })
+
+    it('should allow a new listing to be finalized', async function() {
+      await finalizeOffer({ buyer })
+    })
   })
+
+  describe('Edit user profile', function() {
+    before(async function() {
+      const { seller } = await reset()
+      await changeAccount(page, seller)
+    })
+
+    it('should go to the profile page', async function() {
+      await page.evaluate(() => {
+        window.location = '/#/profile'
+      })
+      await pic(page, 'profile-page')
+    })
+
+    it('should open the edit modal', async function() {
+      await clickBySelector(page, '.profile a.edit')
+    })
+
+    it('should enter new profile information', async function() {
+      await page.waitForSelector('input[name=firstName]')
+      await page.type('input[name=firstName]', 'Amerigo vespucci')
+      await page.type('input[name=lastName]', 'Vespucci')
+      await page.type(
+        'textarea[name=description]',
+        `In that hemisphere I have seen things not compatible with the opinions of philosophers.`
+      )
+      await pic(page, 'profile-edit-modal')
+    })
+
+    it('should close the edit modal', async function() {
+      await clickByText(page, 'OK', 'button')
+      await page.waitForSelector('.pl-modal', { hidden: true })
+    })
+
+    it('should publish the profile changes', async function() {
+      await pic(page, 'profile-before-publish')
+      await clickByText(page, 'Publish Changes')
+    })
+
+    it('should reach a success page', async function() {
+      await waitForText(page, 'Success')
+      await pic(page, 'profile-edited')
+      await clickByText(page, 'OK', 'button')
+    })
+  })
+}
+
+describe('Marketplace Dapp', function() {
+  this.timeout(6000)
+  before(async function() {
+    await page.evaluate(() => {
+      delete window.localStorage.performanceMode
+      delete window.localStorage.proxyAccountsEnabled
+      delete window.localStorage.enableRelayer
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe('Marketplace Dapp with proxies enabled', function() {
+  this.timeout(10000)
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.performanceMode
+      delete window.localStorage.enableRelayer
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+  listingTests()
+})
+
+describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
+  this.timeout(10000)
+
+  let didThrow = false
+  function pageError(err) {
+    didThrow = err
+  }
+
+  before(async function() {
+    await page.evaluate(() => {
+      window.localStorage.performanceMode = true
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.enableRelayer = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+
+  beforeEach(function() {
+    page.on('pageerror', pageError)
+    page.on('error', pageError)
+  })
+
+  afterEach(() => {
+    page.removeListener('pageerror', pageError)
+    page.removeListener('error', pageError)
+    assert(!didThrow, 'Page error detected: ' + didThrow)
+  })
+
+  listingTests()
 })

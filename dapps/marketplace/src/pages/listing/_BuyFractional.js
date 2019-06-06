@@ -6,13 +6,21 @@ import { fbt } from 'fbt-runtime'
 import CurrencyContext from 'constants/CurrencyContext'
 
 import Price from 'components/Price'
+import OgnBadge from 'components/OgnBadge'
 import Tooltip from 'components/Tooltip'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 
-const Fractional = ({ listing, from, range, availability, refetch }) => {
+const Fractional = ({
+  listing,
+  from,
+  range,
+  availability,
+  refetch,
+  growthReward
+}) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
   const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
@@ -30,8 +38,10 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
     startDate = split[0]
     endDate = split[1]
     startDateDisplay = dayjs(startDate).format('ddd, MMM D') // Needs l10n
-    endDateDisplay = dayjs(endDate).format('ddd, MMM D') // Needs l10n
-    const priceEstimate = availability.estimatePrice(range)
+    endDateDisplay = dayjs(endDate)
+      .add(1, 'day')
+      .format('ddd, MMM D') // Needs l10n
+    const priceEstimate = availability.estimateNightlyPrice(range)
     available = priceEstimate.available
     if (available) {
       totalPrice = {
@@ -53,7 +63,13 @@ const Fractional = ({ listing, from, range, availability, refetch }) => {
         return (
           <div className="listing-buy fractional">
             <div className="price">
-              <Price listing={listing} descriptor />
+              <div className="d-flex justify-content-between">
+                <Price listing={listing} descriptor />
+                <OgnBadge
+                  amount={growthReward}
+                  className="listing-detail-growth-reward"
+                />
+              </div>
               {listing.price.currency.id === selectedCurrency ? null : (
                 <span className="orig">
                   <Price

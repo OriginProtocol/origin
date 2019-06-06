@@ -1,6 +1,7 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
 import { getFeatured, getHidden } from './_featuredAndHidden'
+import { proxyOwner } from '../../utils/proxy'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')
@@ -99,16 +100,33 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
 
 export async function listingsBySeller(
   listingSeller,
-  { first = 10, after },
+  { first = 10, after, filter },
   _,
   info
 ) {
   const fields = graphqlFields(info)
-  const events = await contracts.marketplace.eventCache.allEvents(
-    'ListingCreated',
-    listingSeller.id
-  )
+  let party = listingSeller.id
+  const owner = await proxyOwner(party)
+  if (owner) {
+    party = [party, owner]
+  }
 
+  let events = await contracts.marketplace.eventCache.getEvents({
+    event: 'ListingCreated',
+    party
+  })
+  if (filter === 'active') {
+    const withdrawnEvents = await contracts.marketplace.eventCache.getEvents({
+      event: 'ListingWithdrawn',
+      party
+    })
+    const withdrawnListingIds = withdrawnEvents.map(
+      e => e.returnValues.listingID
+    )
+    events = events.filter(
+      e => withdrawnListingIds.indexOf(e.returnValues.listingID) < 0
+    )
+  }
   const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
   const totalCount = ids.length
 
@@ -124,13 +142,20 @@ export default async function listings(
   }
 
   let ids = [],
-    totalCount = 0
+    totalCount = 0,
+    discoveryError = false
 
   if (contracts.discovery) {
-    const discoveryResult = await searchIds(search, filters)
-    ids = discoveryResult.ids
-    totalCount = ids.length
-  } else {
+    try {
+      const discoveryResult = await searchIds(search, filters)
+      ids = discoveryResult.ids
+      totalCount = ids.length
+    } catch (err) {
+      console.log('Failed to retrieve results from discovery server', err)
+      discoveryError = true
+    }
+  }
+  if (!contracts.discovery || discoveryError) {
     const decentralizedResults = await allIds({ contract, sort, hidden })
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
