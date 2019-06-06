@@ -27,6 +27,7 @@ async function start() {
     deployContracts: true,
     ipfs: true,
     populate: true,
+    graphqlServer: process.env.PERFORMANCE ? true : false,
     skipContractsIfExists: process.env.CLEAN ? false : true,
     sslProxy
   })

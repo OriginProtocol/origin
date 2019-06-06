@@ -25,7 +25,7 @@ import {
 import Offers from '../marketplace/_Offers'
 import EventsTable from '../marketplace/_EventsTable'
 import Identity from 'components/Identity'
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Gallery from 'components/Gallery'
 import LoadingSpinner from 'components/LoadingSpinner'
 import QueryError from 'components/QueryError'

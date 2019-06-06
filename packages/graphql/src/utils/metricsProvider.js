@@ -8,6 +8,7 @@ class MetricsProvider extends SubProvider {
 
     this.totalRPC = 0
     this.totalErrors = 0
+    this.totalRateLimitedRequests = 0
     this.methodCallTotals = new Map()
     this.methodErrorTotals = new Map()
 
@@ -48,12 +49,18 @@ class MetricsProvider extends SubProvider {
     return this.totalErrors
   }
 
+  incrementRateLimited() {
+    return (this.totalRateLimitedRequests += 1)
+  }
+
   _echo() {
     if (this.totalRPC % this.echoEvery === 0) {
       console.log(
         `JSON-RPC stats -- total calls: ${this.totalRPC}  methods used: ${
           this.methodCallTotals.size
-        }  error count: ${this.totalErrors}`
+        }  error count: ${this.totalErrors}  rate limited requests: ${
+          this.totalRateLimitedRequests
+        }`
       )
     }
     if (this.totalRPC % this.breakdownEvery === 0) {
@@ -77,6 +84,32 @@ class MetricsProvider extends SubProvider {
     this._echo()
 
     next((err, result, cb) => {
+      if (err) {
+        // Perhaps this should be separated from 429s at some point?
+        this.incrementError()
+
+        if (err.code === -32603) {
+          if (err.message.indexOf('Too Many Requests') > -1) {
+            this.incrementRateLimited()
+            console.error('429 Rate limited')
+          } else {
+            console.error(`Invalid JSON-RPC response: ${err.message}`)
+          }
+        } else if (err.code === -32600) {
+          console.error(`Invalid request on method ${this.lastRPCMethod}`)
+          console.debug('Payload: ', JSON.stringify(this.lastPayload))
+        } else {
+          console.error(
+            `Unknown error occurred in a following subprovider on method ${
+              this.lastRPCMethod
+            }!`
+          )
+          console.debug('Payload: ', JSON.stringify(this.lastPayload))
+          if (err.code) console.error(`JSON-RPC error code: ${err.code}`)
+          else console.error(err)
+        }
+      }
+
       return cb()
     })
 
@@ -111,22 +144,36 @@ function convertWeb3Provider(provider) {
  * @returns {object} - An initialized web3 instance with the altered providers
  */
 function addMetricsProvider(web3Inst, options) {
-  const engine = new ProviderEngine()
+  // Our new shiny subproviders
+  const convertedProvider = convertWeb3Provider(web3Inst.currentProvider)
   const metricsProvider = new MetricsProvider(options)
 
-  engine.on('error', function(err) {
-    metricsProvider.incrementError()
-    const lastCall = metricsProvider.lastRPCMethod
-    const lastPayload = metricsProvider.lastPayload
-    console.error(`Provider error [${lastCall}]: `, err)
-    console.debug(`Last payload: `, lastPayload)
-  })
+  /**
+   * The blockTracker seems be a default function of web3-provider-engine, but
+   * it's not completely clear if it's necessary(emits the 'latest' event).  It
+   * has an internal currentBlock tracker.  Perhaps we should bolt onto it.
+   * Right now, we're specifically initializing the block tracker so we can
+   * disable the `skipConfig` parameter that it sends which breaks Alchemy
+   */
+  const engine = new ProviderEngine({ useSkipCache: false })
+
+  /**
+   * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
+   *
+   * This is more or less duplication of the handling in MetricsProvider, but we
+   * can't do anything intelligent from here.  And if we don't have this event
+   * listener, web3-provider-engine will crash the process...  And looking at
+   * their source, I don't *think* there's any exceptions where an error would
+   * present here, and not in the next() callback, so we're more or less just
+   * supressing the crash here.  Probably.
+   */
+  engine.on('error', () => {})
 
   // web3-provider-engine sets to 30, which apparently isn't enough for Origin
   engine.setMaxListeners(50)
 
   engine.addProvider(metricsProvider)
-  engine.addProvider(convertWeb3Provider(web3Inst.currentProvider))
+  engine.addProvider(convertedProvider)
 
   web3Inst.setProvider(engine)
 

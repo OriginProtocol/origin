@@ -1,7 +1,6 @@
 import {
   changeAccount,
   waitForText,
-  hasText,
   clickByText,
   clickBySelector,
   pic,
@@ -20,6 +19,7 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
+
   await page.evaluate(() => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
@@ -396,12 +396,6 @@ function listingTests() {
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
-    it('should skip the wizard', async function() {
-      if (await hasText(page, 'Skip', 'button')) {
-        await clickByText(page, 'Skip', 'button')
-      }
-    })
-
     it('should publish the profile changes', async function() {
       await pic(page, 'profile-before-publish')
       await clickByText(page, 'Publish Changes')
@@ -419,6 +413,7 @@ describe('Marketplace Dapp', function() {
   this.timeout(6000)
   before(async function() {
     await page.evaluate(() => {
+      delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.enableRelayer
       window.transactionPoll = 100
@@ -433,6 +428,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.performanceMode
       delete window.localStorage.enableRelayer
       window.transactionPoll = 100
     })
@@ -441,7 +437,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
   listingTests()
 })
 
-describe('Marketplace Dapp with proxies and relayer enabled', function() {
+describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
   this.timeout(10000)
 
   let didThrow = false
@@ -451,6 +447,7 @@ describe('Marketplace Dapp with proxies and relayer enabled', function() {
 
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.enableRelayer = true
       window.localStorage.debug = 'origin:*'

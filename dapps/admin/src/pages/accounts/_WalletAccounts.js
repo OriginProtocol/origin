@@ -132,7 +132,10 @@ const WalletAccounts = ({
             <td>{a.name}</td>
             <td>{a.balance.eth}</td>
             <td>
-              <Price amount={a.balance.eth} />
+              <Price
+                target="fiat-USD"
+                price={{ amount: a.balance.eth, currency: 'token-ETH' }}
+              />
             </td>
             <td>
               {a.ogn ? (
