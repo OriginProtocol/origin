@@ -21,10 +21,9 @@ import {
   setMessagingKeys
 } from 'actions/Wallet'
 import {
-  BALANCE_POLL_INTERVAL,
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
-} from './constants'
+} from '../constants'
 import withConfig from 'hoc/withConfig'
 
 
