@@ -139,12 +139,20 @@ const SettingsStack = createStackNavigator(
     ),
     Accounts: AccountsScreen,
     Language: LanguageScreen,
-    ImportAccount: {
-      screen: ImportAccountScreen,
+    ImportAccount: ImportAccountScreen,
+    ImportMnemonic: {
+      screen: ImportMnemonicScreen,
       params: {
         navigateOnSuccess: 'Accounts'
       }
     },
+    ImportPrivateKey: {
+      screen: ImportPrivateKeyScreen,
+      params: {
+        navigateOnSuccess: 'Accounts'
+      }
+    },
+
     Settings: SettingsScreen
   },
   {
