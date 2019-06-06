@@ -1,20 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import withOriginWallet from 'hoc/withOriginWallet'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -66,7 +61,7 @@ class WelcomeScreen extends Component {
                 onPress={() => {
                   this.setState({ loading: true }, () => {
                     setTimeout(() => {
-                      DeviceEventEmitter.emit('createAccount')
+                      this.props.createAccount()
                       this.props.navigation.navigate(
                         this.props.nextOnboardingStep
                       )
@@ -119,43 +114,13 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default withOnboardingSteps(connect(mapStateToProps)(WelcomeScreen))
+export default withOriginWallet(
+  withOnboardingSteps(connect(mapStateToProps)(WelcomeScreen))
+)
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    paddingTop: 0
-  },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1
-  },
-  buttonsContainer: {
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  legalContainer: {
-    paddingBottom: 30,
-    width: '80%'
-  },
-  legal: {
-    textAlign: 'center',
-    color: '#98a7b4'
-  },
+  ...OnboardingStyles,
   image: {
-    marginBottom: '10%'
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
+    marginBottom: 30
   }
 })

@@ -61,7 +61,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     width: 300
   },
-  visibilityWarning: {
+  visibilityWarningContainer: {
     borderColor: '#98a7b4',
     backgroundColor: 'rgba(152, 167, 180, 0.1)',
     borderWidth: 1,
@@ -73,6 +73,9 @@ export default StyleSheet.create({
   visibilityWarningHeader: {
     fontWeight: '600',
     paddingBottom: 5
+  },
+  visibilityWarningText: {
+    textAlign: 'center'
   },
   isVisible: {
     borderColor: '#f4c110',

@@ -227,12 +227,16 @@ class EmailScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarning}>
+      <View style={styles.visibilityWarningContainer}>
         <Text style={styles.visibilityWarningHeader}>
-          What will be visible on the blockchain?
+          <fbt desc="EmailScreen.visibilityWarningHeader">
+            What will be visible on the blockchain?
+          </fbt>
         </Text>
-        <Text>
-          That you have a verified email, but NOT your actual email address.
+        <Text style={styles.visibilityWarningText}>
+          <fbt desc="AvatarScreen.visibilityWarningText">
+            That you have a verified email, but NOT your actual email address.
+          </fbt>
         </Text>
       </View>
     )

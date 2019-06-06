@@ -74,7 +74,7 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  onWebViewMessage = (event) => {
+  onWebViewMessage = event => {
     let msgData
     try {
       msgData = JSON.parse(event.nativeEvent.data)
@@ -146,14 +146,14 @@ class MarketplaceScreen extends Component {
     const { wallet } = this.props
 
     wallet.accounts.forEach(account => {
-      console.log('Loading identiity')
+      console.log('Loading identity')
       DeviceEventEmitter.emit('graphqlQuery', 'handleIdentity', identity, {
         id: account.address
       })
     })
   }
 
-  handleIdentity = (response) => {
+  handleIdentity = response => {
     if (response.data.identity) {
       this.props.setIdentity(response.data.identity)
     }
@@ -210,7 +210,7 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         window.onscroll = function() {
-          window.ReactNativeWebView.postMessage(JSON.stringify({
+          window.webviewBridge.send(JSON.stringify({
             targetFunc: 'handleScrollHandlerResponse',
             data: document.documentElement.scrollTop || document.body.scrollTop
           }));
@@ -238,7 +238,7 @@ class MarketplaceScreen extends Component {
           query: ${JSON.stringify(query)},
           variables: ${JSON.stringify(variables)}
         }).then((response) => {
-          window.ReactNativeWebView.postMessage(JSON.stringify({
+          window.webViewBridge.send(JSON.stringify({
             targetFunc: '${targetFunc}',
             data: response
           }));
@@ -258,7 +258,7 @@ class MarketplaceScreen extends Component {
       (function() {
         if (window && window.localStorage && window.webViewBridge) {
           const uiState = window.localStorage['uiState'];
-          window.webViewBridge.send('handleUiStateResponse', uiState);
+          window.webViewBridge.send('handleUiStateMessage', uiState);
         }
       })();
     `
@@ -268,10 +268,10 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  /* Handle the response from the uiState request. The uiState localStorage object
+  /* Handle the postMessagefrom the uiState request. The uiState localStorage object
    * can include information about the currency the DApp is set to.
    */
-  handleUiStateResponse(uiStateJson) {
+  handleUiStateMessage(uiStateJson) {
     let uiState
     let fiatCurrencyCode = 'fiat-USD'
     if (
@@ -307,14 +307,16 @@ class MarketplaceScreen extends Component {
 
   render() {
     const { modals } = this.state
-    const { navigation } = this.props
 
     console.debug(
       `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
     )
 
     return (
-      <SafeAreaView style={styles.sav} {...this._panResponder.panHandlers}>
+      <SafeAreaView
+        style={styles.safeAreaView}
+        {...this._panResponder.panHandlers}
+      >
         <WebView
           ref={webview => {
             this.dappWebView = webview
@@ -356,10 +358,12 @@ class MarketplaceScreen extends Component {
                 msgData={modal.msgData}
                 fiatCurrency={this.state.fiatCurrency}
                 onConfirm={() => {
-                  this.props.sendTransaction(modal.msgData.data).on('transactionHash', hash => {
-                    // Toggle the modal and return the hash
-                    this.toggleModal(modal, hash)
-                  })
+                  this.props
+                    .sendTransaction(modal.msgData.data)
+                    .on('transactionHash', hash => {
+                      // Toggle the modal and return the hash
+                      this.toggleModal(modal, hash)
+                    })
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
@@ -373,9 +377,10 @@ class MarketplaceScreen extends Component {
               <SignatureCard
                 msgData={modal.msgData}
                 onConfirm={() => {
-                  this.props.signMessage(modal.msgData.data).then(signedMessage => {
-                    this.toggleModal(modal, signedMessage)
-                  })
+                  const { signature } = this.props.signMessage(
+                    modal.msgData.data
+                  )
+                  this.toggleModal(modal, signature)
                 }}
                 onRequestClose={() =>
                   this.toggleModal(modal, {
@@ -396,7 +401,9 @@ class MarketplaceScreen extends Component {
                 this.toggleModal(modal)
               }}
             >
-              <SafeAreaView style={styles.container}>{card}</SafeAreaView>
+              <SafeAreaView style={styles.modalSafeAreaView}>
+                {card}
+              </SafeAreaView>
             </Modal>
           )
         })}
@@ -414,20 +421,20 @@ const mapDispatchToProps = dispatch => ({
   setIdentity: identity => dispatch(setIdentity(identity))
 })
 
-export default withOriginWallet(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MarketplaceScreen))
+export default withOriginWallet(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MarketplaceScreen)
+)
 
 const styles = StyleSheet.create({
-  container: {
+  safeAreaView: {
     flex: 1
   },
-  sav: {
-    flex: 1
-  },
-  transparent: {
-    flex: 1
+  modalSafeAreaView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
   },
   loading: {
     flex: 1,

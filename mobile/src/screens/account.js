@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import {
   Alert,
   Clipboard,
-  DeviceEventEmitter,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -17,6 +16,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
+import withOriginWallet from 'hoc/withOriginWallet'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -32,15 +32,7 @@ class AccountScreen extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
-
-    this.handleSetAccountActive = this.handleSetAccountActive.bind(this)
-    this.handleDangerousCopy = this.handleDangerousCopy.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-  }
-
-  async handleDangerousCopy(privateKey) {
+  handleDangerousCopy = async privateKey => {
     Alert.alert(
       String(fbt('Important!', 'AccountScreen.dangerousCopyAlertTitle')),
       String(
@@ -77,7 +69,7 @@ class AccountScreen extends Component {
     )
   }
 
-  handleDelete() {
+  handleDelete = () => {
     const { navigation, wallet } = this.props
     const isLastAccount = wallet.accounts.length === 1
 
@@ -99,10 +91,7 @@ class AccountScreen extends Component {
           text: String(fbt('Delete', 'AccountScreen.deleteAlertConfirmButton')),
           onPress: () => {
             try {
-              DeviceEventEmitter.emit(
-                'removeAccount',
-                navigation.getParam('account')
-              )
+              this.props.removeAccount(navigation.getParam('account'))
               if (isLastAccount) {
                 // No accounts left, navigate back to welcome screen
                 navigation.navigate('Welcome')
@@ -119,11 +108,7 @@ class AccountScreen extends Component {
     )
   }
 
-  handleSetAccountActive() {
-    const { navigation } = this.props
-    DeviceEventEmitter.emit('setAccountActive', navigation.getParam('account'))
-    navigation.goBack()
-  }
+  handleSetAccountActive = () => {}
 
   render() {
     const { navigation, wallet } = this.props
@@ -162,7 +147,11 @@ class AccountScreen extends Component {
                   'Make Active Account',
                   'AccountScreen.makeActiveAccountButton'
                 )}
-                onPress={this.handleSetAccountActive}
+                onPress={() =>
+                  this.props.setAccountActive(
+                    this.props.navigation.getParam('account')
+                  )
+                }
               />
             )}
             {mnemonic !== undefined && (
@@ -254,7 +243,7 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(AccountScreen)
+export default withOriginWallet(connect(mapStateToProps)(AccountScreen))
 
 const styles = StyleSheet.create({
   keyboardWrapper: {

@@ -22,8 +22,9 @@ class Navigator extends React.Component {
     ) {
       this.props.navigation.navigate('Welcome')
     } else if (
-      this.props.settings.pin.length > 0 ||
-      this.props.settings.biometryType
+      (this.props.settings.pin.length > 0 ||
+        this.props.settings.biometryType) &&
+      !__DEV__
     ) {
       this.props.navigation.navigate('Auth')
     } else {

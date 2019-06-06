@@ -244,7 +244,7 @@ class PhoneScreen extends Component {
         <Text style={styles.visibilityWarningHeader}>
           What will be visible on the blockchain?
         </Text>
-        <Text>
+        <Text style={styles.visibilityWarningText}>
           That you have a verified phone, but NOT your actual phone number.
         </Text>
       </View>

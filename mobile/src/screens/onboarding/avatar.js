@@ -121,16 +121,14 @@ class AvatarScreen extends Component {
         <View style={styles.content}>{content}</View>
         <View style={[styles.visibilityWarning, styles.isVisible]}>
           <Text style={styles.visibilityWarningHeader}>
-            {fbt(
-              'What will be visible on the blockchain?',
-              'AvatarScreen.visibilityWarningHeader'
-            )}
+            <fbt desc="AvatarScreen.visibilityWarningHeader">
+              What will be visible on the blockchain?
+            </fbt>
           </Text>
-          <Text>
-            {fbt(
-              'Your photo will be visible on the blockchain.',
-              'AvatarScreen.visibilityWarningDescription'
-            )}
+          <Text style={styles.visibilityWarningText}>
+            <fbt desc="AvatarScreen.visibilityWarningText">
+              Your photo will be visible on the blockchain
+            </fbt>
           </Text>
         </View>
         <View style={styles.buttonsContainer}>

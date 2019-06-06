@@ -286,30 +286,15 @@ export default withConfig(
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,
+  modalSafeAreaView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
+  },
   image: {
     backgroundColor: '#2e3f53',
     borderRadius: 60,
     width: 120,
     height: 120,
     marginBottom: 30
-  },
-  modalSafeAreaView: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
-  },
-  cardHeading: {
-    color: '#0b1823',
-    fontFamily: 'Lato',
-    fontWeight: '600',
-    fontSize: 35,
-    marginBottom: 20,
-    textAlign: 'center'
   }
 })

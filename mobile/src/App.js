@@ -5,6 +5,8 @@ import { YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
+import CryptoJS from 'crypto-js'
+
 import Configs from '@origin/graphql/src/configs'
 
 import Store, { persistor } from './Store'
@@ -14,6 +16,7 @@ import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
 import { loadData, deleteData } from './tools'
 import { NETWORKS } from './constants'
+import { setDeviceToken } from 'actions/Settings'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -48,9 +51,7 @@ class App extends Component {
     setLanguage(settings.language)
 
     // Validate the network setting
-    const networkExists = NETWORKS.find(
-      n => n.name === settings.network.name
-    )
+    const networkExists = NETWORKS.find(n => n.name === settings.network.name)
 
     // If network wasn't found, default to mainnet
     if (!networkExists) {
@@ -66,7 +67,7 @@ class App extends Component {
 
     // Add all the stored accounts to the global web3 object
     for (let i = 0; i < wallet.accounts.length; i++) {
-      global.web3.eth.accounts.wallet.add(wallet.accounts[i]);
+      global.web3.eth.accounts.wallet.add(wallet.accounts[i])
     }
   }
 
@@ -78,19 +79,14 @@ class App extends Component {
         for (let i = 0; i < walletData.length; i++) {
           const data = walletData[i]
           if (data.crypt == 'aes' && data.enc) {
-            let privateKey
             try {
-              privateKey = CryptoJS.AES.decrypt(
-                data.enc,
-                'WALLET_PASSWORD'
-              ).toString(CryptoJS.enc.Utf8)
+              CryptoJS.AES.decrypt(data.enc, 'WALLET_PASSWORD').toString(
+                CryptoJS.enc.Utf8
+              )
             } catch (error) {
               console.warn('Failed to decrypt private key, malformed UTF-8?')
               // Try without UTF-8
-              privateKey = CryptoJS.AES.decrypt(
-                data.enc,
-                'WALLET_PASSWORD'
-              ).toString()
+              CryptoJS.AES.decrypt(data.enc, 'WALLET_PASSWORD').toString()
             }
           }
         }

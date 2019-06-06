@@ -18,6 +18,9 @@ import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
+import ImportAccountScreen from 'screens/import'
+import ImportMnemonicScreen from 'screens/importMnemonic'
+import ImportPrivateKeyScreen from 'screens/importPrivateKey'
 import ImportedScreen from 'screens/onboarding/imported'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
@@ -29,7 +32,6 @@ import ReadyScreen from 'screens/onboarding/ready'
 // Main screens
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
-import ImportAccountScreen from 'screens/import'
 import LanguageScreen from 'screens/language'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
@@ -47,8 +49,15 @@ const OnboardingStack = createStackNavigator(
         header: null
       })
     },
-    ImportAccount: {
-      screen: ImportAccountScreen,
+    ImportAccount: ImportAccountScreen,
+    ImportMnemonic: {
+      screen: ImportMnemonicScreen,
+      params: {
+        navigateOnSuccess: 'Imported'
+      }
+    },
+    ImportPrivateKey: {
+      screen: ImportPrivateKeyScreen,
       params: {
         navigateOnSuccess: 'Imported'
       }
@@ -97,13 +106,9 @@ const BackupStack = createSwitchNavigator(
     Backup: BackupScreen
   },
   {
-    initialRouteName: 'BackupAuth'
+    initialRouteName: !__DEV__ ? 'BackupAuth' : 'Backup'
   }
 )
-
-const MarketplaceStack = createStackNavigator({
-  Marketplace: MarketplaceScreen
-})
 
 const WalletStack = createStackNavigator(
   {
@@ -120,7 +125,7 @@ const SettingsStack = createStackNavigator(
   {
     Account: createSwitchNavigator(
       {
-        SettingsAuth: {
+        AccountAuth: {
           screen: AuthenticationGuard,
           params: {
             navigateOnSuccess: 'Account'
@@ -129,7 +134,7 @@ const SettingsStack = createStackNavigator(
         Account: AccountScreen
       },
       {
-        initialRouteName: 'SettingsAuth'
+        initialRouteName: !__DEV__ ? 'AccountAuth' : 'Account'
       }
     ),
     Accounts: AccountsScreen,
@@ -149,7 +154,7 @@ const SettingsStack = createStackNavigator(
 
 const _MarketplaceApp = createBottomTabNavigator(
   {
-    Marketplace: MarketplaceStack,
+    Marketplace: MarketplaceScreen,
     Wallet: WalletStack,
     Settings: SettingsStack
   },
