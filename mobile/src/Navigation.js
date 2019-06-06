@@ -12,7 +12,6 @@ import {
 
 import PushNotifications from './PushNotifications'
 import Navigator from './Navigator'
-//
 // Utilities
 import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'

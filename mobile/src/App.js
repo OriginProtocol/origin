@@ -8,7 +8,6 @@ import Web3 from 'web3'
 import Configs from '@origin/graphql/src/configs'
 
 import Store, { persistor } from './Store'
-import OriginWallet from './OriginWallet'
 import Loading from 'components/loading'
 import AppContainer from './Navigation'
 import NavigationService from './NavigationService'
