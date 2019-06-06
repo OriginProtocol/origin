@@ -1,8 +1,10 @@
 import { post } from '@origin/ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
+import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
+import { proxyOwner } from '../../utils/proxy'
 
 async function finalizeOffer(_, data) {
   const from = data.from || contracts.defaultMobileAccount
@@ -21,11 +23,43 @@ async function finalizeOffer(_, data) {
   }
 
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  const tx = contracts.marketplaceExec.methods
-    .finalize(listingId, offerId, ipfsHash)
-    .send({ gas: cost.finalizeOffer, from })
+  let tx = contracts.marketplaceExec.methods.finalize(
+    listingId,
+    offerId,
+    ipfsHash
+  )
 
-  return txHelper({ tx, from, mutation: 'finalizeOffer' })
+  let gas = cost.finalizeOffer
+
+  // If both buyer and seller are transacting via proxies, use convenience
+  // method to finalize and transfer funds to seller in single transaction.
+  const owner = await proxyOwner(from)
+  if (owner) {
+    const listing = await contracts.eventSource.getListing(listingId)
+    const sellerOwner = await proxyOwner(listing.seller.id)
+
+    if (sellerOwner) {
+      const offer = await contracts.eventSource.getOffer(listingId, offerId)
+      const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
+      const txData = await tx.encodeABI()
+
+      tx = Proxy.methods.marketplaceFinalizeAndPay(
+        contracts.marketplace._address,
+        txData,
+        listing.seller.id,
+        offer.currency,
+        offer.value
+      )
+      gas += 100000
+    }
+  }
+
+  return txHelper({
+    tx,
+    from,
+    mutation: 'finalizeOffer',
+    gas
+  })
 }
 
 export default finalizeOffer

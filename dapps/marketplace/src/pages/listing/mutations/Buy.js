@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import dayjs from 'dayjs'
 import { Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import numberFormat from 'utils/numberFormat'
@@ -15,10 +14,14 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+import UserActivationLink from 'components/UserActivationLink'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withIdentity from 'hoc/withIdentity'
+import withConfig from 'hoc/withConfig'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -37,6 +40,10 @@ class Buy extends Component {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    if (!this.props.wallet) {
+      return null
+    }
 
     let action = (
       <button
@@ -66,6 +73,15 @@ class Buy extends Component {
       content = this.renderAllowTokenModal()
     } else {
       action = this.renderMakeOfferMutation()
+    }
+
+    if (!this.props.identity) {
+      action = (
+        <UserActivationLink
+          className={this.props.className}
+          children={this.props.children}
+        />
+      )
     }
 
     return (
@@ -266,7 +282,6 @@ class Buy extends Component {
 
     const {
       listing,
-      from,
       value,
       quantity,
       startDate,
@@ -278,31 +293,14 @@ class Buy extends Component {
       listingID: listing.id,
       value,
       currency: currency || 'token-ETH',
-      from,
+      from: this.props.walletProxy,
       quantity: Number(quantity)
     }
 
-    if (listing.__typename === 'FractionalListing') {
-      let _startDate = dayjs(startDate)
-      let _endDate = dayjs(endDate)
-
-      if (_startDate.isAfter(_endDate)) {
-        // Swap start and end dates, if startDate > endDate
-        const t = _startDate
-        _startDate = _endDate
-        _endDate = t
-      }
-
-      if (!_startDate.isSame(_endDate)) {
-        // Exclude checkout slot prices
-        _endDate = _endDate.subtract(1, 'day')
-      }
-
-      variables.fractionalData = {
-        startDate: _startDate.format('YYYY-MM-DD'),
-        endDate: _endDate.format('YYYY-MM-DD')
-      }
-    } else if (listing.__typename === 'FractionalHourlyListing') {
+    if (
+      listing.__typename === 'FractionalListing' ||
+      listing.__typename === 'FractionalHourlyListing'
+    ) {
       variables.fractionalData = { startDate, endDate }
     }
 
@@ -338,7 +336,7 @@ class Buy extends Component {
     this.setState({ modal: true, waitForSwap: 'pending' })
 
     const variables = {
-      from: this.props.from,
+      from: this.props.walletProxy,
       token: this.props.currency,
       tokenValue: String(this.props.tokenStatus.needsBalance)
     }
@@ -355,9 +353,10 @@ class Buy extends Component {
 
     const variables = {
       token: this.props.currency,
-      from: this.props.from,
+      from: this.props.walletProxy,
       to: 'marketplace',
-      value: this.props.value
+      value: this.props.value,
+      forceProxy: this.props.config.proxyAccountsEnabled
     }
 
     allowToken({ variables })
@@ -431,7 +430,9 @@ class Buy extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+export default withConfig(
+  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+)
 
 require('react-styl')(`
   .make-offer-modal

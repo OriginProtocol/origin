@@ -32,10 +32,12 @@ module.exports = `
     Twitter
     Airbnb
     Facebook
+    Google
     Referral
     Profile
     ListingCreated
     ListingPurchased
+    ListingIdPurchased
     ListingSold
   }
 
@@ -85,7 +87,7 @@ module.exports = `
 
   interface GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
@@ -93,7 +95,7 @@ module.exports = `
 
   type GrowthAction implements GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice            # information about reward
     unlockConditions: [UnlockCondition]
@@ -107,7 +109,7 @@ module.exports = `
 
   type ReferralAction implements GrowthBaseAction {
     type: GrowthActionType!
-    status: GrowthActionStatus!
+    status: GrowthActionStatus
     rewardEarned: GrowthPrice
     rewardPending: GrowthPrice
     reward: GrowthPrice            # information about reward
@@ -115,6 +117,18 @@ module.exports = `
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection
     unlockConditions: [UnlockCondition]
+  }
+
+  type ListingIdPurchasedAction implements GrowthBaseAction {
+    type: GrowthActionType!
+    status: GrowthActionStatus
+    rewardEarned: GrowthPrice
+    reward: GrowthPrice
+    unlockConditions: [UnlockCondition]
+    listingId: String!
+    titleKey: String!
+    detailsKey: String!
+    iconSrc: String!
   }
 
   type GrowthCampaign {
@@ -143,9 +157,10 @@ module.exports = `
 
   type EnrollResponse {
     authToken: String
+    isBanned: Boolean
   }
 
-  type Query {
+  extend type Query {
     # first property specifies the number of items to return
     # after is the cursor
     campaigns(first: Int, after: String): GrowthCampaignConnection
@@ -156,7 +171,7 @@ module.exports = `
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
   }
 
-  type Mutation {
+  extend type Mutation {
     # Sends email invites with referral code on behalf of the referrer.
     invite(emails: [String!]!): Boolean
     # Enrolls user into the growth engine program.

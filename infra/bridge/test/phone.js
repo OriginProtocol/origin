@@ -184,7 +184,7 @@ describe('phone attestations', () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.PHONE)
-    expect(results[0].value).to.equal('1 12341234')
+    expect(results[0].value).to.equal('+112341234')
   })
 
   it('should error on missing verification code', async () => {
@@ -301,5 +301,72 @@ describe('phone attestations', () => {
       .expect(200)
 
     expect(parsedBody.locale).to.equal('de')
+  })
+
+  it('should store normalized phone number', async () => {
+    // Execute a generate code request first so the session gets populated with
+    // phoneVerificationMethod
+    const verifyParams = {
+      country_calling_code: '91',
+      phone: '123-123-1234',
+      method: 'sms',
+      locale: 'en'
+    }
+
+    nock('https://api.authy.com')
+      .post('/protected/json/phones/verification/start')
+      .reply(200)
+
+    let cookie
+    await request(app)
+      .post('/api/attestations/phone/generate-code')
+      .send(verifyParams)
+      .expect(200)
+      .then(response => {
+        // Save the cookie for use in the next request
+        cookie = response.headers['set-cookie']
+      })
+
+    const checkParams = {
+      identity: ethAddress,
+      country_calling_code: '91',
+      phone: '123-123-1234',
+      code: '123456'
+    }
+
+    nock('https://api.authy.com')
+      .get('/protected/json/phones/verification/check')
+      .query({
+        country_code: '91',
+        phone_number: '123-123-1234',
+        verification_code: '123456'
+      })
+      .reply(200, {
+        message: 'Verification code is correct',
+        success: true
+      })
+
+    const response = await request(app)
+      .post('/api/attestations/phone/verify')
+      .set('Cookie', cookie)
+      .send(checkParams)
+      .expect(200)
+
+    expect(response.body.schemaId).to.equal(
+      'https://schema.originprotocol.com/attestation_1.0.0.json'
+    )
+    expect(response.body.data.issuer.name).to.equal('Origin Protocol')
+    expect(response.body.data.issuer.url).to.equal(
+      'https://www.originprotocol.com'
+    )
+    expect(response.body.data.attestation.verificationMethod.sms).to.equal(true)
+    expect(response.body.data.attestation.phone.verified).to.equal(true)
+
+    // Verify attestation was recorded in the database
+    const results = await Attestation.findAll()
+    expect(results.length).to.equal(1)
+    expect(results[0].ethAddress).to.equal(ethAddress)
+    expect(results[0].method).to.equal(AttestationTypes.PHONE)
+    expect(results[0].value).to.equal('+911231231234')
   })
 })

@@ -1,15 +1,43 @@
 import React from 'react'
+import makeGatewayUrl from 'utils/makeGatewayUrl'
+import withConfig from 'hoc/withConfig'
 
-const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
+const Avatar = ({
+  size,
+  avatar,
+  avatarUrl,
+  avatarUrlExpanded,
+  profile,
+  config,
+  className,
+  emptyClass = 'empty'
+}) => {
   const props = { style: {}, className: 'avatar' }
   if (size) {
     props.style = { width: size || 50, paddingTop: size || 50 }
   }
+  let httpAvatar = undefined
 
-  if (!avatar) {
+  // If we have a profile, use its avatarUrl and avatarUrlExpanded if needed
+  if (profile) {
+    avatarUrl = avatarUrl || profile.avatarUrl
+    avatarUrlExpanded = avatarUrlExpanded || profile.avatarUrlExpanded
+  }
+
+  // Try expanded url first, since we don't have to wait to get a config object
+  if (avatarUrlExpanded) {
+    httpAvatar = avatarUrlExpanded
+  } else if (avatarUrl && config) {
+    const { ipfsGateway } = config
+    httpAvatar = makeGatewayUrl(ipfsGateway, avatarUrl)
+  } else if (avatar) {
+    httpAvatar = avatar
+  }
+
+  if (!httpAvatar) {
     props.className += ` ${emptyClass}`
   } else {
-    props.style.backgroundImage = `url(${avatar})`
+    props.style.backgroundImage = `url(${httpAvatar})`
   }
 
   if (className) {
@@ -19,7 +47,7 @@ const Avatar = ({ size, avatar, className, emptyClass = 'empty' }) => {
   return <div {...props} />
 }
 
-export default Avatar
+export default withConfig(Avatar)
 
 require('react-styl')(`
   .avatar

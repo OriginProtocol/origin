@@ -105,6 +105,12 @@ const GetListing = gql`
           unitsPending
           unitsSold
         }
+        ... on GiftCardListing {
+          unitsTotal
+          unitsAvailable
+          unitsPending
+          unitsSold
+        }
         ... on FractionalListing {
           weekendPrice {
             amount

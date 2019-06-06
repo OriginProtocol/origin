@@ -1,9 +1,11 @@
 // Ensure storage is cleared on each deploy
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
+const ognNetwork = localStorage.ognNetwork
 if (localStorage.appHash !== appHash) {
   localStorage.clear()
   sessionStorage.clear()
   localStorage.appHash = appHash
+  localStorage.ognNetwork = ognNetwork
 }
 
 import React, { Component } from 'react'
@@ -13,6 +15,7 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
 import client from '@origin/graphql'
+import * as Sentry from '@sentry/browser'
 
 import setLocale from 'utils/setLocale'
 
@@ -24,6 +27,13 @@ if (process.env.NODE_ENV === 'production') {
     require('../public/app.css')
   } catch (e) {
     console.warn('No built CSS found')
+  }
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
+      environment: process.env.NAMESPACE
+    })
   }
 } else {
   try {
@@ -45,6 +55,12 @@ class AppWrapper extends Component {
     }
   }
 
+  onLocale = async newLocale => {
+    const locale = await setLocale(newLocale)
+    this.setState({ locale })
+    window.scrollTo(0, 0)
+  }
+
   render() {
     const { ready, locale } = this.state
 
@@ -53,14 +69,7 @@ class AppWrapper extends Component {
       <ApolloProvider client={client}>
         <HashRouter>
           <Analytics>
-            <App
-              locale={locale}
-              onLocale={async newLocale => {
-                const locale = await setLocale(newLocale)
-                this.setState({ locale })
-                window.scrollTo(0, 0)
-              }}
-            />
+            <App locale={locale} onLocale={this.onLocale} />
           </Analytics>
         </HashRouter>
       </ApolloProvider>
@@ -68,6 +77,13 @@ class AppWrapper extends Component {
   }
 }
 
-ReactDOM.render(<AppWrapper />, document.getElementById('app'))
+ReactDOM.render(
+  <AppWrapper
+    ref={app => {
+      window.appComponent = app
+    }}
+  />,
+  document.getElementById('app')
+)
 
 Styl.addStylesheet()

@@ -14,7 +14,7 @@ const {
   AttestationServiceToEventType,
   GrowthEvent
 } = require('@origin/growth/src/resources/event')
-const { ip2geo } = require('@origin/growth/src/util/ip2geo')
+const { ip2geo } = require('@origin/ip2geo')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
@@ -43,6 +43,8 @@ class IdentityEventHandler {
       return 'phone'
     } else if (attestation.data.attestation.email) {
       return 'email'
+    } else if (attestation.data.attestation.domain) {
+      return 'website'
     } else {
       logger.error(`Failed extracting service from attestation ${attestation}`)
     }
@@ -167,6 +169,12 @@ class IdentityEventHandler {
           case 'google':
             decoratedIdentity.googleVerified = true
             break
+          case 'website':
+            decoratedIdentity.website = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WEBSITE'
+            )
+            break
         }
       })
     )
@@ -207,7 +215,9 @@ class IdentityEventHandler {
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
       data: { blockInfo },
-      country: decoratedIdentity.country
+      country: decoratedIdentity.country,
+      avatarUrl: decoratedIdentity.avatarUrl,
+      website: decoratedIdentity.website
     }
 
     logger.debug('Identity=', identityRow)
@@ -217,7 +227,9 @@ class IdentityEventHandler {
   }
 
   /**
-   * Records a ProfilePublished event in the growth_event table.
+   * Records a ProfilePublished event in the growth_event table
+   * at the condition that the identity has a first name and last name.
+   *
    * @param {Object} user - Origin js user model object.
    * @param {{blockNumber: number, logIndex: number}} blockInfo
    * @param {Date} Event date.
@@ -225,10 +237,10 @@ class IdentityEventHandler {
    * @private
    */
   async _recordGrowthProfileEvent(identity, blockInfo, date) {
-    // Check required fields are populated.
-    const validProfile =
-      (identity.firstName.length > 0 || identity.lastName.length > 0) &&
-      identity.avatar.length > 0
+    const validFirstName = identity.firstName && identity.firstName.length > 0
+    const validLastName = identity.lastName && identity.lastName.length > 0
+
+    const validProfile = validFirstName && validLastName
     if (!validProfile) {
       return
     }
@@ -236,6 +248,7 @@ class IdentityEventHandler {
     // Record the event.
     await GrowthEvent.insert(
       logger,
+      1,
       identity.id,
       GrowthEventTypes.ProfilePublished,
       null,
@@ -268,6 +281,7 @@ class IdentityEventHandler {
 
         return GrowthEvent.insert(
           logger,
+          1,
           identity.id,
           eventType,
           null,
@@ -293,7 +307,8 @@ class IdentityEventHandler {
 
     logger.info(`Processing Identity event for account ${account}`)
 
-    const identity = await this._getIdentityDetails(account)
+    const idWithBlock = account + '-' + event.blockNumber
+    const identity = await this._getIdentityDetails(idWithBlock)
 
     // Avatar can be large binary data. Clip it for logging purposes.
     if (identity.avatar) {
@@ -301,6 +316,21 @@ class IdentityEventHandler {
     }
 
     if (event.returnValues.ipfsHash) {
+      if (event.returnValues.ipfsHash !== identity.ipfsHash) {
+        /**
+         * GraphQL and the listener use two different instances of contracts,
+         * with two different instances of EventCache.  It's possible, this is
+         * also a JSON-RPC node sync issue...  They also use two different
+         * EC queries (allEvents() vs getEvents({ account: '0x...' })), which
+         * has a slight chance of causing this.  Be on the lookout for the
+         * following log message:
+         */
+        logger.warn(
+          `GraphQL IPFS hash does not match event IPFS hash. This is probably \
+           a bug! (event: ${event.returnValues.ipfsHash}, GraphQL: \
+           ${identity.ipfsHash}`
+        )
+      }
       identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
     }
 

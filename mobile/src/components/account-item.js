@@ -1,15 +1,33 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native'
+import { connect } from 'react-redux'
+import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
+import Identicon from 'components/identicon'
+import { truncate } from 'utils/user'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class AccountItem extends Component {
+class AccountItem extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     const { item, navigation, wallet } = this.props
+    // Truncate the account name to something that looks reasonable, the upper
+    // bound was set from an iPhone X
+    const truncateLength = Dimensions.get('window').width < 375 ? 15 : 20
 
     return (
       <TouchableHighlight
@@ -23,12 +41,20 @@ export default class AccountItem extends Component {
       >
         <View style={styles.listItem}>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>
-              {wallet.accountNameMapping[item.address] || 'Unnamed Account'}
-            </Text>
+            <View style={[styles.iconContainer, styles.identiconContainer]}>
+              <Identicon address={item.address} />
+            </View>
+            {wallet.accountNameMapping[item.address] && (
+              <Text style={styles.name}>
+                {truncate(
+                  wallet.accountNameMapping[item.address],
+                  truncateLength
+                )}
+              </Text>
+            )}
             <Address
               address={item.address}
-              label={'Address'}
+              label={fbt('Address', 'AccountItem.address')}
               style={styles.address}
             />
           </View>
@@ -49,6 +75,12 @@ export default class AccountItem extends Component {
   }
 }
 
+const mapStateToProps = ({ wallet }) => {
+  return { wallet }
+}
+
+export default connect(mapStateToProps)(AccountItem)
+
 const styles = StyleSheet.create({
   address: {
     fontFamily: 'Lato',
@@ -60,6 +92,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  identiconContainer: {
+    marginRight: 10
   },
   listItem: {
     backgroundColor: 'white',
@@ -74,6 +109,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 17,
     marginRight: '5%'
+  },
+  unnamed: {
+    color: '#98a7b4'
   },
   selected: {
     marginRight: 17

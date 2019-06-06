@@ -12,8 +12,10 @@
   "scripts": {
     "test": "NODE_ENV=test mocha -r @babel/register test -t 30000",
     "test:browser": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test",
-    "test:watch": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test -w",
+    "test:watch": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test -w -b",
     "start": "node -r @babel/register index",
+    "start:performance": "PERFORMANCE=true node -r @babel/register index",
+    "start:clean": "CLEAN=true node -r @babel/register index",
     "start:test": "NODE_ENV=test node -r @babel/register index",
     "start:development": "DEPLOY_CONTRACTS=1 node -r @babel/register index",
     "build:js": "NODE_ENV=production webpack --loglevel notice",
@@ -41,6 +43,7 @@
     "@origin/mobile-bridge": "^0.1.0",
     "@origin/services": "^0.1.0",
     "@origin/validator": "^0.1.0",
+    "@sentry/browser": "^5.2.0",
     "apollo-cache-persist": "^0.1.1",
     "apollo-link": "^1.2.11",
     "babel-plugin-module-resolver": "^3.2.0",
@@ -162,6 +165,7 @@
   ],
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "proseWrap": "always"
   }
 }

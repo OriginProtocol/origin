@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Modal from 'components/Modal'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
+
+import omit from 'lodash/omit'
 
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
@@ -10,6 +11,8 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
+import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
 import withIsMobile from 'hoc/withIsMobile'
@@ -46,8 +49,28 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
-        userAlreadyEnrolled: false
+        userAlreadyEnrolled: false,
+        modalTitle: fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
       }
+    }
+
+    componentDidUpdate(previosProps, previousState) {
+      if (!this.state.open && previousState.open) {
+        if (this.props.onClose) {
+          this.props.onClose()
+        }
+      }
+    }
+
+    historyNavigate(href) {
+      if (this.props.onNavigation) {
+        this.props.onNavigation()
+      }
+
+      this.props.history.push(href)
     }
 
     handleClick(e, enrollmentStatus, walletPresent) {
@@ -59,24 +82,22 @@ function withEnrolmentModal(WrappedComponent) {
           stage: 'NotSupportedOnMobile'
         })
       } else if (!walletPresent) {
-        this.props.history.push(this.props.urlforonboarding)
+        this.historyNavigate(this.props.urlforonboarding)
       } else if (enrollmentStatus === 'Enrolled') {
-        this.props.history.push('/campaigns')
+        this.historyNavigate('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
         if (this.goToWelcomeWhenNotEnrolled) {
-          this.props.history.push('/welcome')
+          this.historyNavigate('/welcome')
         } else {
           this.setState({
             open: true
           })
         }
       } else if (enrollmentStatus === 'Banned') {
-        alert(
-          fbt(
-            'You have been banned from earning tokens',
-            'GrowthEnrollment.bannedFromEarning'
-          )
-        )
+        this.historyNavigate('/rewards/banned')
+      }
+      if (this.props.onClick) {
+        this.props.onClick()
       }
     }
 
@@ -116,31 +137,23 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     // Renders mobile header with close button when on mobile device
-    renderMobileHeaderOption(title) {
-      if (this.props.ismobile === 'false') return ''
+    setMobileHeader(title) {
+      if (this.state.modalTitle === title) {
+        return
+      }
 
-      return (
-        <div className="header d-flex mb-4">
-          <div
-            className="col-2 d-flex justify-content-center align-items-center back"
-            onClick={() => {
-              this.setState({
-                open: false
-              })
-            }}
-          >
-            <img src="images/close-button.svg" />
-          </div>
-          <div className="container d-flex justify-content-center align-items-center col-8">
-            {title}
-          </div>
-          <div className="col-2" />
-        </div>
-      )
+      this.setState({
+        modalTitle: title
+      })
     }
 
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
+
+      this.setMobileHeader(
+        fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+      )
+
       return (
         <Query
           query={allCampaignsQuery}
@@ -171,9 +184,6 @@ function withEnrolmentModal(WrappedComponent) {
 
             return (
               <div className="join-campaign">
-                {this.renderMobileHeaderOption(
-                  fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
-                )}
                 <div className="internal-modal-content">
                   <div>
                     <img
@@ -225,6 +235,10 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
 
+      this.setMobileHeader(
+        fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
+      )
+
       const cancelButton = (
         <button
           className={`btn ${
@@ -252,13 +266,12 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <div>
-          {this.renderMobileHeaderOption(
-            fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin')
-          )}
           <div className="internal-modal-content">
             {!isMobile && (
               <div className="title title-light mt-2">
-                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
+                <fbt desc="EnrollmentModal.termsTitle">
+                  Sign Up for Origin Rewards
+                </fbt>
               </div>
             )}
             <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
@@ -337,11 +350,12 @@ function withEnrolmentModal(WrappedComponent) {
       const isRestricted = eligibility === 'Restricted'
       const isForbidden = eligibility === 'Forbidden'
 
+      this.setMobileHeader(
+        fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
+      )
+
       return (
         <div>
-          {this.renderMobileHeaderOption(
-            fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
-          )}
           <div>
             <div className="image-holder mr-auto ml-auto">
               <img src="images/growth/earth-graphic.svg" />
@@ -461,8 +475,23 @@ function withEnrolmentModal(WrappedComponent) {
       )
     }
 
+    enrollmentSuccessful() {
+      if (this.props.onCompleted) {
+        this.props.onCompleted()
+      } else {
+        this.historyNavigate('/campaigns')
+      }
+      this.handleCloseModal()
+    }
+
     renderMetamaskSignature() {
-      return <Enroll isMobile={this.props.ismobile === 'true'} />
+      return (
+        <Enroll
+          isMobile={this.props.ismobile === 'true'}
+          onSuccess={() => this.enrollmentSuccessful()}
+          onAccountBlocked={() => this.historyNavigate('/rewards/banned')}
+        />
+      )
     }
 
     renderNotSupportedOnMobile() {
@@ -483,6 +512,10 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
+
+      const isMobile = this.props.ismobile === 'true'
+
+      const ModalComponent = isMobile ? MobileModal : Modal
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
@@ -522,7 +555,11 @@ function withEnrolmentModal(WrappedComponent) {
                   return (
                     <Fragment>
                       <WrappedComponent
-                        {...this.props}
+                        {...omit(this.props, [
+                          'onClose',
+                          'onNavigation',
+                          'onCompleted'
+                        ])}
                         onClick={e =>
                           this.handleClick(
                             e,
@@ -532,7 +569,8 @@ function withEnrolmentModal(WrappedComponent) {
                         }
                       />
                       {open && (
-                        <Modal
+                        <ModalComponent
+                          title={this.state.modalTitle}
                           className={`growth-enrollment-modal ${
                             snowSmallerModal ? 'small' : ''
                           } ${displayMobileModal ? 'mobile' : ''}`}
@@ -543,7 +581,7 @@ function withEnrolmentModal(WrappedComponent) {
                           }}
                         >
                           {this[`render${this.state.stage}`]()}
-                        </Modal>
+                        </ModalComponent>
                       )}
                     </Fragment>
                   )
@@ -708,7 +746,7 @@ require('react-styl')(`
     .growth-enrollment-modal
       .join-campaign
         img
-          width: 8rem
+          max-width: 8rem
         .btn-no-outline
           margin-top: 0.8rem
       .btn

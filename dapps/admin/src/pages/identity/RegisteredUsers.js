@@ -14,6 +14,7 @@ import QueryError from 'components/QueryError'
 const nextPage = nextPageFactory('identityEvents.identities')
 
 import DeployIdentity from './DeployIdentity'
+import DeployIdentityProxy from './DeployIdentityProxy'
 
 class RegisteredUsers extends Component {
   state = {}
@@ -60,13 +61,22 @@ class RegisteredUsers extends Component {
                     <Button
                       text="Create Identity"
                       intent="primary"
+                      className="mr-2"
                       onClick={() => this.setState({ deployIdentity: true })}
+                    />
+                    <Button
+                      text="Deploy Identity Proxy"
+                      intent="primary"
+                      onClick={() =>
+                        this.setState({ deployIdentityProxy: true })
+                      }
                     />
                   </div>
                   <table className="bp3-html-table bp3-small bp3-html-table-bordered bp3-interactive">
                     <thead>
                       <tr>
                         <th>Identity</th>
+                        <th>Owner</th>
                         <th>Name</th>
                         <th>Created</th>
                         <th>Updated</th>
@@ -84,6 +94,11 @@ class RegisteredUsers extends Component {
                             <td>
                               <Address address={user.id} />
                             </td>
+                            <td>
+                              {user.owner.owner.id === user.id ? null : (
+                                <Address address={user.owner.owner.id} />
+                              )}
+                            </td>
                             <td>{user.fullName}</td>
                             <td>{user.createdAt}</td>
                             <td>{user.updatedAt}</td>
@@ -96,6 +111,13 @@ class RegisteredUsers extends Component {
                   <DeployIdentity
                     isOpen={this.state.deployIdentity}
                     onCompleted={() => this.setState({ deployIdentity: false })}
+                  />
+
+                  <DeployIdentityProxy
+                    isOpen={this.state.deployIdentityProxy}
+                    onCompleted={() =>
+                      this.setState({ deployIdentityProxy: false })
+                    }
                   />
 
                   {!hasNextPage ? null : (

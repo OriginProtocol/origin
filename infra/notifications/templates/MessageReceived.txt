@@ -1,0 +1,4 @@
+You have received a message from <%- senderName %>
+
+View your messages at the Origin DApp:
+<%= dappUrl %>/#/messages

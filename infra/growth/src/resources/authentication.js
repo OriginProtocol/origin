@@ -5,6 +5,7 @@ const logger = require('../logger')
 const Web3 = require('web3')
 const enums = require('../enums')
 const crypto = require('crypto')
+const { BannedUserError } = require('../util/bannedUserError')
 
 const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 // TODO: have this stored somewhere in the db
@@ -54,7 +55,7 @@ async function authenticateEnrollment(
     participant.status === enums.GrowthParticipantStatuses.Banned
   ) {
     logger.warn(`Banned user: ${accountId} tried to enroll`)
-    throw new Error('This user is banned')
+    throw new BannedUserError('This user is banned')
   }
 
   const authToken =
@@ -148,6 +149,9 @@ async function createInviteCode(accountId) {
 
   /* Consists of first 3 and last 3 ether address letters plus hex
    * representation of a random number
+   *
+   * IMPORTANT: Frontend expects 11 letter invite code. Be mindful of that
+   * if changing invite code creation logic
    */
   const code =
     `${accountId.substring(2, 5)}` +

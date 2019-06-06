@@ -38,19 +38,25 @@ export default Gallery
 require('react-styl')(`
   .gallery
     display: flex
-    flex-direction: row
+    flex-direction: column
     .main-pic
       flex: 1
+      height: 100%
     .thumbnails
-      display: flex
-      width: 100px
-      margin-left: 1rem
+      height: 80px
       .inner
-        display: flex
-        flex: 1
-        flex-direction: column
+        height: 100%
+        overflow-x:scroll;
+        overflow-y:hidden;
+        white-space:nowrap;
+        > div:first-child
+          padding: 5px 5px 5px 0
+        > div:last-child
+          padding: 5px 0 5px 5px
         > div
-          height: 70px
+          width: 100px
+          height: 100%
+          display: inline-block
           margin-bottom: 5px
           padding: 5px
           background-position: center

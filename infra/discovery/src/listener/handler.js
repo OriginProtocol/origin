@@ -1,5 +1,6 @@
 const esmImport = require('esm')(module)
-const graphqlClient = esmImport('@origin/graphql').default
+const ApolloClient = esmImport('apollo-client').default
+const { link, cache } = esmImport('@origin/graphql')
 
 const logger = require('./logger')
 const { withRetrys } = require('./utils')
@@ -33,6 +34,20 @@ const EVENT_TO_HANDLER_MAP = {
   IdentityUpdated: IdentityEventHandler
   // TODO(franck): handle IdentityDeleted
 }
+
+// Initializing a new ApolloClient so cache can be disabled
+const graphqlClient = new ApolloClient({
+  link,
+  cache,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache'
+    },
+    query: {
+      fetchPolicy: 'no-cache'
+    }
+  }
+})
 
 /**
  *  Main entry point for processing events.

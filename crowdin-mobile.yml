@@ -1,0 +1,3 @@
+files:
+  - source: /mobile/translation/crowdin/all-messages.json
+    translation: /mobile/translation/crowdin/all-messages_%locale_with_underscore%.json

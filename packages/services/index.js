@@ -6,6 +6,9 @@ const fs = require('fs')
 const memdown = require('memdown')
 const net = require('net')
 const path = require('path')
+const proxy = require('http-proxy')
+const key = fs.readFileSync(`${__dirname}/data/localhost.key`, 'utf8')
+const cert = fs.readFileSync(`${__dirname}/data/localhost.cert`, 'utf8')
 
 const portInUse = port =>
   new Promise(function(resolve) {
@@ -122,6 +125,28 @@ const writeTruffle = () =>
     resolve()
   })
 
+const startSslProxy = () =>
+  new Promise(resolve => {
+    console.log('Starting secure proxies...')
+    const Ports = [[443, 3000], [8546, 8545], [8081, 8080], [5003, 5002]]
+
+    Ports.map(pair => {
+      const [src, port] = pair
+      proxy
+        .createServer({
+          xfwd: true,
+          ws: true,
+          target: { port },
+          ssl: { key, cert }
+        })
+        .on('error', e => console.error(e.code))
+        .listen(src)
+
+      console.log(`Started proxy ${src} => ${port}`)
+    })
+    resolve()
+  })
+
 const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
   new Promise((resolve, reject) => {
     const filePath = `${contractsPath}/${filename}.json`
@@ -152,6 +177,35 @@ const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
         reject()
       }
     })
+  })
+
+const startRelayer = () =>
+  new Promise(resolve => {
+    const cwd = path.resolve(__dirname, '../../infra/relayer')
+    const startServer = spawn(`node`, ['src/app.js'], {
+      cwd,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        NETWORK_ID: '999',
+        LOG_LEVEL: 'NONE'
+      }
+    })
+    startServer.on('exit', () => {
+      console.log('Relayer stopped.')
+    })
+    resolve(startServer)
+  })
+
+const startGraphql = () =>
+  new Promise(resolve => {
+    const startServer = spawn(`node`, ['-r', '@babel/register', 'server'], {
+      cwd: path.resolve(__dirname, '../graphql'),
+      stdio: 'inherit',
+      env: { ...process.env, GRAPHQL_SERVER_PORT: 4007 }
+    })
+    startServer.on('exit', () => console.log('GraphQL Server stopped.'))
+    resolve(startServer)
   })
 
 const started = {}
@@ -197,6 +251,26 @@ module.exports = async function start(opts = {}) {
     await writeTruffle()
   }
 
+  if (opts.sslProxy) {
+    await startSslProxy()
+  }
+
+  if (opts.graphqlServer) {
+    if (await portInUse(4007)) {
+      console.log('GraphQL Server already started')
+    } else {
+      started.graphql = await startGraphql()
+    }
+  }
+
+  if (opts.relayer && !started.relayer) {
+    if (await portInUse(5100)) {
+      console.log('Relayer already started')
+    } else {
+      started.relayer = await startRelayer()
+    }
+  }
+
   if (opts.extras && !started.extras) {
     extrasResult = await opts.extras()
     started.extras = true
@@ -211,6 +285,12 @@ module.exports = async function start(opts = {}) {
   const shutdownFn = async function shutdown() {
     if (started.ganache) {
       await started.ganache.close()
+    }
+    if (started.relayer) {
+      started.relayer.kill('SIGHUP')
+    }
+    if (started.graphql) {
+      started.graphql.kill('SIGHUP')
     }
     if (started.ipfs) {
       await new Promise(resolve => started.ipfs.stop(() => resolve()))

@@ -1,4 +1,5 @@
 const HOST = process.env.HOST || 'localhost'
+const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
@@ -13,6 +14,9 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
+  performanceMode: localStorageHas('performanceMode'),
+  graphql: `http://${HOST}:4007`,
+  relayer: `http://${HOST}:5100`,
   automine: 500,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 
@@ -22,6 +26,10 @@ const config = {
   V00_Marketplace: addresses.Marketplace,
   IdentityEvents: addresses.IdentityEvents,
   DaiExchange: addresses.UniswapDaiExchange,
+  ProxyFactory: addresses.ProxyFactory,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+
   tokens: []
 }
 

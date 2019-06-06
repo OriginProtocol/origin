@@ -5,7 +5,11 @@ import keyMirror from 'utils/keyMirror'
 export const SettingsConstants = keyMirror(
   {
     SET_NETWORK: null,
-    SET_DEVICE_TOKEN: null
+    SET_DEVICE_TOKEN: null,
+    SET_EMAIL: null,
+    SET_PIN: null,
+    SET_BIOMETRY_TYPE: null,
+    SET_LANGUAGE: null
   },
   'SETTINGS'
 )
@@ -17,9 +21,37 @@ export function setNetwork(network) {
   }
 }
 
-export function setDeviceToken(payload) {
+export function setDeviceToken(deviceToken) {
   return {
     type: SettingsConstants.SET_DEVICE_TOKEN,
-    payload
+    deviceToken
+  }
+}
+
+export function setEmail(email) {
+  return {
+    type: SettingsConstants.SET_EMAIL,
+    email
+  }
+}
+
+export function setPin(pin) {
+  return {
+    type: SettingsConstants.SET_PIN,
+    pin
+  }
+}
+
+export function setBiometryType(biometryType) {
+  return {
+    type: SettingsConstants.SET_BIOMETRY_TYPE,
+    biometryType
+  }
+}
+
+export function setLanguage(language) {
+  return {
+    type: SettingsConstants.SET_LANGUAGE,
+    language
   }
 }

@@ -12,6 +12,12 @@ export default gql`
       }
       primaryAccount {
         id
+        proxy {
+          id
+        }
+        predictedProxy {
+          id
+        }
       }
     }
   }

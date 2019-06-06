@@ -1,14 +1,15 @@
-![Origin Protocol](data/origin-header.png)
+# ![Origin Protocol](data/origin-header.png)
 
 A UI leveraging `@origin/graphql`. View and manage listings and offers.
 
-Test builds at https://originprotocol.github.io/test-builds/
+Test builds available [here](https://originprotocol.github.io/test-builds/).
 
-# Usage
+## Usage
 
-Refer to [DEVELOPMENT.md](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md)
+Refer to
+[DEVELOPMENT.md](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md)
 
-# Tests
+## Tests
 
 Tests are run in a headless Chrome instance via puppeteer
 
@@ -18,3 +19,4 @@ To observe the tests running in the browser:
 
     npm run test:browser
 
+For more information please see the README in the `test` sub-directory.

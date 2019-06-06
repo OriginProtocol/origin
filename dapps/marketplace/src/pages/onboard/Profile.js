@@ -1,283 +1,70 @@
 import React, { Component } from 'react'
-import pick from 'lodash/pick'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-import ImageCropper from 'components/ImageCropper'
-import Steps from 'components/Steps'
-import Link from 'components/Link'
-
-import { formInput, formFeedback } from 'utils/formHelpers'
-import { unpublishedStrength } from 'utils/profileTools'
-
-import withWallet from 'hoc/withWallet'
-import withIdentity from 'hoc/withIdentity'
-import withEthBalance from 'hoc/withEthBalance'
-
-import ProfileStrength from 'components/ProfileStrength'
-import Avatar from 'components/Avatar'
-
-import PhoneAttestation from 'pages/identity/PhoneAttestation'
-import EmailAttestation from 'pages/identity/EmailAttestation'
-import FacebookAttestation from 'pages/identity/FacebookAttestation'
-import GoogleAttestation from 'pages/identity/GoogleAttestation'
-import TwitterAttestation from 'pages/identity/TwitterAttestation'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
-
-import Header from './_Header'
+import Redirect from 'components/Redirect'
+import UserActivation from 'components/DesktopUserActivation'
+import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
-
-const AttestationComponents = {
-  phone: PhoneAttestation,
-  email: EmailAttestation,
-  facebook: FacebookAttestation,
-  twitter: TwitterAttestation,
-  google: GoogleAttestation
-}
 
 class OnboardProfile extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      firstName: '',
-      lastName: '',
-      description: ''
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const profile = get(this.props, 'identity')
-    if (!prevProps.identity && profile) {
-      this.setState(
-        pick(profile, [
-          'firstName',
-          'lastName',
-          'description',
-          'avatar',
-          'facebookVerified',
-          'twitterVerified',
-          'airbnbVerified',
-          'phoneVerified',
-          'emailVerified',
-          'googleVerified'
-        ])
-      )
+      finished: false
     }
   }
 
   render() {
-    const { listing, linkPrefix } = this.props
-    const { avatar } = this.state
+    const { listing, linkPrefix, hideOriginWallet } = this.props
+    const { finished } = this.state
 
-    const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
-
-    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
-      if (this.state[`${key}Attestation`])
-        m.push(this.state[`${key}Attestation`])
-      return m
-    }, [])
-
-    const hasBalance = Number(this.props.ethBalance || 0) > 0
+    if (finished) {
+      return <Redirect to={`${linkPrefix}/onboard/finished`} />
+    }
 
     return (
       <>
-        <Header />
-        <div className="step">Step 4</div>
-        <h3>
-          <fbt desc="onboard.Profile.enterProfileInfo">
-            Enter Your Profile Information
+        <h1 className="mb-1">
+          <fbt desc="onboard.Profile.createAccount">Create an Account</fbt>
+        </h1>
+        <p className="description mb-5">
+          <fbt desc="onboard.Profile.description">
+            Create a basic profile so others will know who you are in the Origin
+            Marketplace.
           </fbt>
-        </h3>
+        </p>
         <div className="row">
           <div className="col-md-8">
-            <Steps steps={4} step={4} />
             <div className="onboard-box profile pt-3">
-              <form
-                onSubmit={e => {
-                  e.preventDefault()
-                  this.validate()
+              <UserActivation
+                onCompleted={() => {
+                  this.setState({
+                    finished: true
+                  })
                 }}
-              >
-                <div className={hasBalance ? null : 'mask'}>
-                  <div className="row">
-                    <div className="col-md-4">
-                      <div className="avatar-wrap">
-                        <ImageCropper
-                          onChange={a => this.setState({ avatar: a })}
-                        >
-                          <Avatar className="with-cam" avatar={avatar} />
-                        </ImageCropper>
-                      </div>
-                    </div>
-                    <div className="col-md-8">
-                      <div className="row">
-                        <div className="form-group col-md-6">
-                          <label>
-                            <fbt desc="onboard.Profile.firstName">
-                              First Name
-                            </fbt>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...input('firstName')}
-                          />
-                          {Feedback('firstName')}
-                        </div>
-                        <div className="form-group col-md-6">
-                          <label>
-                            <fbt desc="onboard.Profile.lastName">Last Name</fbt>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            {...input('lastName')}
-                          />
-                          {Feedback('lastName')}
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label>Description</label>
-                        <textarea
-                          className="form-control"
-                          placeholder={fbt(
-                            'Tell us a bit about yourself',
-                            'onboard.Profile.tellAboutYourself'
-                          )}
-                          {...input('description')}
-                        />
-                        {Feedback('description')}
-                      </div>
-                    </div>
-                  </div>
-
-                  <label className="mt-3">Attestations</label>
-                  <div className="profile-attestations with-checkmarks">
-                    {this.renderAtt('email', 'Email')}
-                  </div>
-
-                  <ProfileStrength
-                    published={get(this.props, 'identity.strength', 0)}
-                    unpublished={unpublishedStrength(this)}
-                  />
-                </div>
-
-                {hasBalance ? null : (
-                  <div className="no-funds">
-                    <fbt desc="onboard.Profile.noFunds">
-                      <h5>You don&apos;t have funds</h5>
-                      You need to have funds in your wallet to create an
-                      identity. You can always do this later after you fund your
-                      wallet by going to your settings.
-                    </fbt>
-                  </div>
-                )}
-              </form>
-              {!hasBalance ? null : (
-                <DeployIdentity
-                  className="btn btn-primary"
-                  identity={get(this.props, 'identity.id')}
-                  profile={pick(this.state, [
-                    'firstName',
-                    'lastName',
-                    'description',
-                    'avatar'
-                  ])}
-                  attestations={attestations}
-                  validate={() => this.validate()}
-                  children={fbt('Publish', 'Publish')}
-                />
-              )}
-            </div>
-            <div className="continue-btn">
-              <Link
-                to={`${linkPrefix}/onboard/finished`}
-                className={`btn btn-outline-primary`}
-                children={
-                  hasBalance ? fbt('Done', 'Done') : fbt('Skip for now', 'Skip')
-                }
+                hideHeader={true}
               />
             </div>
           </div>
           <div className="col-md-4">
             <ListingPreview listing={listing} />
+            {hideOriginWallet ? null : <HelpOriginWallet />}
             <HelpProfile />
           </div>
         </div>
       </>
     )
   }
-
-  renderAtt(type, text, soon) {
-    const { wallet } = this.props
-    const profile = get(this.props, 'identity') || {}
-
-    let status = ''
-    if (profile[`${type}Verified`]) {
-      status = ' ' + fbt('published', 'statusPublished')
-    } else if (this.state[`${type}Attestation`]) {
-      status = ' ' + fbt('provisional', 'statusProvisional')
-    }
-    if (soon) {
-      status = ' ' + fbt('soon', 'statusSoon')
-    } else {
-      status += ' ' + fbt('interactive', 'statusInteractive')
-    }
-    let AttestationComponent = AttestationComponents[type]
-    if (AttestationComponent) {
-      AttestationComponent = (
-        <AttestationComponent
-          wallet={wallet}
-          open={this.state[type]}
-          onClose={() => {
-            this.setState({ [type]: false })
-          }}
-          onComplete={att => this.setState({ [`${type}Attestation`]: att })}
-        />
-      )
-    }
-
-    return (
-      <>
-        <div
-          className={`profile-attestation ${type}${status}`}
-          onClick={() => this.setState({ [type]: true })}
-        >
-          <i />
-          {text}
-        </div>
-        {AttestationComponent}
-      </>
-    )
-  }
-
-  validate() {
-    const newState = {}
-
-    if (!this.state.firstName) {
-      newState.firstNameError = fbt(
-        'First Name is required',
-        'onboard.Profile.firstNameRequired'
-      )
-    }
-
-    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
-
-    if (!newState.valid) {
-      window.scrollTo(0, 0)
-    }
-    this.setState(newState)
-    return newState.valid
-  }
 }
 
-export default withWallet(withEthBalance(withIdentity(OnboardProfile)))
+export default OnboardProfile
 
 require('react-styl')(`
   .onboard .onboard-box.profile
     padding: 1rem
+    > .user-activation
+      max-width: 475px
     .mask
       position: relative
       &::after
@@ -307,8 +94,6 @@ require('react-styl')(`
         font-family: var(--heading-font)
         font-size: 24px
         font-weight: 200
-    .avatar
-      border-radius: 1rem
 
     > form
       text-align: left
@@ -362,6 +147,7 @@ require('react-styl')(`
       overflow: hidden
       &.interactive
         cursor: pointer
+        color: black
         &:hover
           border-color: var(--clear-blue)
           border-style: solid
@@ -399,6 +185,9 @@ require('react-styl')(`
         background-image: url(images/identity/google-icon.svg)
         background-size: 1.1rem
         margin-left: 0.1rem
+      &.website > i::before
+        background-image: url(images/identity/website-icon-light.svg)
+        background-size: 1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)
@@ -406,6 +195,8 @@ require('react-styl')(`
         color: var(--dusk)
         > i
           background-image: url(images/identity/verification-shape-blue.svg)
+      &.disabled
+        opacity: 0.5
       &.soon
         opacity: 0.5
         &::after
@@ -444,5 +235,7 @@ require('react-styl')(`
     .onboard .onboard-box.profile
       > form .image-cropper
         max-width: 6rem
+    .profile-attestations
+      grid-template-columns: repeat(auto-fill,minmax(170px, 1fr))
 
 `)

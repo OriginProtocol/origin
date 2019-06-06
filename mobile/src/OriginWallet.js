@@ -12,18 +12,17 @@
  */
 
 import { Component } from 'react'
-import { DeviceEventEmitter, Platform, PushNotificationIOS } from 'react-native'
-import PushNotification from 'react-native-push-notification'
+import { DeviceEventEmitter } from 'react-native'
 import Web3 from 'web3'
 import { connect } from 'react-redux'
 import CryptoJS from 'crypto-js'
+import { ethers } from 'ethers'
+const bip39 = require('bip39')
 
-import graphqlContext, {
-  setNetwork as setGraphqlNetwork
-} from '@origin/graphql/src/contracts'
+import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
+import TokenContract from '@origin/contracts/build/contracts/TestToken'
 
-import { addNotification } from 'actions/Notification'
-import { setDeviceToken, setNetwork } from 'actions/Settings'
+import { setNetwork } from 'actions/Settings'
 import {
   addAccount,
   removeAccount,
@@ -34,13 +33,13 @@ import {
 } from 'actions/Wallet'
 import {
   BALANCE_POLL_INTERVAL,
-  DEFAULT_NOTIFICATION_PERMISSIONS,
-  ETH_NOTIFICATION_TYPES,
   NETWORKS,
   PROMPT_MESSAGE,
   PROMPT_PUB_KEY
 } from './constants'
+import { get } from 'utils'
 import { loadData, deleteData } from './tools'
+import withConfig from 'hoc/withConfig'
 
 class OriginWallet extends Component {
   constructor(props) {
@@ -75,17 +74,12 @@ class OriginWallet extends Component {
     )
     DeviceEventEmitter.addListener('signMessage', this.signMessage.bind(this))
     DeviceEventEmitter.addListener('getBalances', this.getBalances.bind(this))
-    DeviceEventEmitter.addListener(
-      'requestNotificationPermissions',
-      this.requestNotificationPermissions.bind(this)
-    )
   }
 
   async componentDidMount() {
     this._migrateLegacyAccounts()
     this.initWeb3()
     this.initAccounts()
-    this.initNotifications()
     this.balancePoller = setInterval(
       () => this.getBalances(),
       BALANCE_POLL_INTERVAL
@@ -145,6 +139,7 @@ class OriginWallet extends Component {
             }
           }
         }
+        deleteData('WALLET_STORE')
       }
     })
   }
@@ -155,23 +150,23 @@ class OriginWallet extends Component {
         this.props.setDeviceToken(walletInfo.deviceToken)
         console.debug('Migrated legacy device token')
       }
+      deleteData('WALLET_INFO')
     })
   }
 
   /* Set the provider for web3 to the provider for the current network in the
    * graphql configuration for the current network
    */
-  initWeb3() {
+  async initWeb3() {
     // Verify that the saved network is valid
     const networkExists = NETWORKS.find(
       n => n.name === this.props.settings.network.name
     )
     if (!networkExists) {
       // Set to mainnet if for some reason the network doesn't exist
-      this.props.setNetwork(NETWORKS.find(n => n.id === 1))
+      await this.props.setNetwork(NETWORKS.find(n => n.id === 1))
     }
-    setGraphqlNetwork(this.props.settings.network.name.toLowerCase())
-    const provider = graphqlContext.config.provider
+    const provider = this.props.config.provider
     console.debug(`Setting provider to ${provider}`)
     this.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
   }
@@ -179,7 +174,7 @@ class OriginWallet extends Component {
   /* Configure web3 using the accounts persisted in redux
    */
   initAccounts() {
-    const { wallet, settings } = this.props
+    const { wallet } = this.props
     // Clear the web3 wallet to make sure we only have the accounts loaded
     // from the data store
     this.web3.eth.accounts.wallet.clear()
@@ -196,7 +191,6 @@ class OriginWallet extends Component {
         a => a.address === wallet.activeAccount.address
       )
     }
-
     // Setup the active account
     if (length) {
       const activeAccount = hasValidActiveAccount
@@ -217,7 +211,7 @@ class OriginWallet extends Component {
     ) {
       // Messaging keys address is different to the active account address,
       // update messaging keys
-      const privateKey = wallet.activeAccount.privateKey
+      let privateKey = wallet.activeAccount.privateKey
       if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
         privateKey = '0x' + privateKey
       }
@@ -246,16 +240,27 @@ class OriginWallet extends Component {
   /* Create new account
    */
   async createAccount() {
-    const wallet = this.web3.eth.accounts.wallet.create(1)
-    const account = wallet[wallet.length - 1]
-    this.props.addAccount(account)
-    this.setAccountActive(account)
+    const mnemonic = bip39.generateMnemonic()
+    // This is the default path but explicitly stated here for clarity
+    const derivePath = `m/44'/60'/0'/0/0`
+    // Web3js doesn't support wallet creation from a mnemonic, so somewhat
+    // redundantly we have to include ethersjs. Perhaps migrate everything
+    // away from web3js to ethersjs or the functionality will be added to web3js
+    // sometime in the future, see:
+    // https://github.com/ethereum/web3.js/issues/1594
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic, derivePath)
+    this.addAccount({
+      address: wallet.address,
+      mnemonic: wallet.mnemonic,
+      privateKey: wallet.privateKey
+    })
   }
 
   /* Add a new account
    */
   async addAccount(account) {
     this.props.addAccount(account)
+    this.web3.eth.accounts.wallet.add(account)
     this.setAccountActive(account)
   }
 
@@ -270,7 +275,9 @@ class OriginWallet extends Component {
       // to the first account found that is not the removed account
       const newActiveAccount =
         wallet.accounts.find(a => a.address !== account.address) || null
-      this.setAccountActive(newActiveAccount)
+      if (newActiveAccount) {
+        this.setAccountActive(newActiveAccount)
+      }
     }
     return result
   }
@@ -280,8 +287,6 @@ class OriginWallet extends Component {
    */
   async setAccountActive(account) {
     await this.props.setAccountActive(account)
-    // Make sure device token is registered with server for this eth address
-    this.registerDeviceToken()
     // Generate messaging keys
     this.generateMessagingKeys()
   }
@@ -303,24 +308,52 @@ class OriginWallet extends Component {
         return
       }
 
+      ethBalance = Number(this.web3.utils.fromWei(ethBalance))
+
+      const tokens = [
+        {
+          id: this.props.config.OriginToken,
+          type: 'OriginToken',
+          name: 'Origin Token',
+          symbol: 'OGN',
+          decimals: '18',
+          supply: '1000000000'
+        },
+        ...this.props.config.tokens
+      ]
+
       const tokenBalances = {}
-      if (graphqlContext.config.tokens) {
-        for (const token of graphqlContext.config.tokens) {
-          let balance = await token.contractExec.methods
+      for (const token of tokens) {
+        const contractDef =
+          token.type === 'OriginToken' ? OriginTokenContract : TokenContract
+        const contract = new this.web3.eth.Contract(contractDef.abi, token.id)
+        let balance
+        // Contract call has been observed to fail when rapidly switching networks
+        // so wrap it in a try/catch
+        try {
+          balance = await contract.methods
             .balanceOf(wallet.activeAccount.address)
             .call()
-          // Divide by number of decimals for token
-          balance = Number(
-            this.web3.utils
-              .toBN(balance)
-              .div(this.web3.utils.toBN(10 ** token.decimals))
+        } catch (error) {
+          console.warn(`Could not get token balance: , ${error}`)
+          // Use the previous balance if one exists so it doesn't get overwritten
+          tokenBalances[token.symbol.toLowerCase()] = get(
+            wallet.accountBalance,
+            token.symbol.toLowerCase()
           )
-          tokenBalances[token.symbol.toLowerCase()] = balance
+          continue
         }
+        // Divide by number of decimals for token
+        balance = Number(
+          this.web3.utils
+            .toBN(balance)
+            .div(this.web3.utils.toBN(10 ** token.decimals))
+        )
+        tokenBalances[token.symbol.toLowerCase()] = balance
       }
 
       this.props.setAccountBalances({
-        eth: this.web3.utils.fromWei(ethBalance),
+        eth: ethBalance,
         ...tokenBalances
       })
     }
@@ -381,104 +414,6 @@ class OriginWallet extends Component {
       })
   }
 
-  /* Configure push notifications
-   */
-  initNotifications() {
-    const { wallet } = this.props
-    PushNotification.configure({
-      // Called when Token is generated (iOS and Android) (optional)
-      onRegister: function(deviceToken) {
-        if (wallet.activeAccount && wallet.activeAccount.address) {
-          this.registerDeviceToken(deviceToken['token'])
-          // Save the device token into redux for later use with other accounts
-          this.props.setDeviceToken(deviceToken['token'])
-        }
-      }.bind(this),
-      // Called when a remote or local notification is opened or received
-      onNotification: function(notification) {
-        this.onNotification(notification)
-        // https://facebook.github.io/react-native/docs/pushnotificationios.html
-        if (Platform.OS === 'ios') {
-          notification.finish(PushNotificationIOS.FetchResult.NoData)
-        }
-      }.bind(this),
-      // Android only
-      senderID: process.env.GCM_SENDER_ID,
-      // iOS only
-      permissions: DEFAULT_NOTIFICATION_PERMISSIONS,
-      // Should the initial notification be popped automatically
-      popInitialNotification: true,
-      requestPermissions: Platform.OS !== 'ios'
-    })
-  }
-
-  /*
-   */
-  onNotification(notification) {
-    this.props.addNotification({
-      id: notification.data.notificationId,
-      message: notification.message.body,
-      url: notification.data.url
-    })
-  }
-
-  /* Register the Ethereum address and device token for notifications with the
-   * notification server
-   */
-  registerDeviceToken(deviceToken) {
-    const activeAddress = this.props.wallet.activeAccount.address
-    if (!activeAddress) {
-      return
-    }
-    const notificationType = this.getNotificationType()
-    return fetch(
-      process.env.NOTIFICATION_REGISTER_ENDPOINT ||
-        'https://notifications.originprotocol.com/mobile/register',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ activeAddress, deviceToken, notificationType })
-      }
-    ).catch(error => {
-      console.debug(
-        'Failed to register notification address with notifications server',
-        error
-      )
-      // Don't hard fail because this maybe deployed in advance of the
-      // notificationn server being completed
-    })
-  }
-
-  /* Return the notification type that should be used for the platform
-   */
-  getNotificationType() {
-    if (Platform.OS === 'ios') {
-      return ETH_NOTIFICATION_TYPES.APN
-    } else if (Platform.OS === 'android') {
-      return ETH_NOTIFICATION_TYPES.FCM
-    }
-  }
-
-  /* Request permissions to send push notifications
-   */
-  async requestNotificationPermissions() {
-    console.debug('Requesting notification permissions')
-    if (Platform.OS === 'ios') {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        await PushNotificationIOS.requestPermissions()
-      )
-    } else {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        DEFAULT_NOTIFICATION_PERMISSIONS
-      )
-    }
-  }
-
   /* This is a renderless component
    */
   render() {
@@ -496,15 +431,13 @@ const mapDispatchToProps = dispatch => ({
   setAccountName: payload => dispatch(setAccountName(payload)),
   setAccountActive: payload => dispatch(setAccountActive(payload)),
   setAccountBalances: balances => dispatch(setAccountBalances(balances)),
-  setAccountServerNotifications: payload =>
-    dispatch(setAccountServerNotifications(payload)),
   setMessagingKeys: payload => dispatch(setMessagingKeys(payload)),
-  setDeviceToken: payload => dispatch(setDeviceToken(payload)),
-  setNetwork: network => dispatch(setNetwork(network)),
-  addNotification: notification => dispatch(addNotification(notification))
+  setNetwork: network => dispatch(setNetwork(network))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OriginWallet)
+export default withConfig(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(OriginWallet)
+)

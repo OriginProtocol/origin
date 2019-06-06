@@ -12,7 +12,7 @@ RUN mv envkey-source /usr/local/bin
 
 COPY ./infra/messaging /app
 
-RUN npm install --loglevel notice
-RUN npm run build
+RUN yarn install
+RUN yarn run build
 
-CMD eval $(envkey-source) && npm run migrate && npm start
+CMD eval $(envkey-source) && yarn run migrate && yarn start

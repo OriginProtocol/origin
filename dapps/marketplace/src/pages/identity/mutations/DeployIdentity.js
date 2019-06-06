@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation, withApollo } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import DeployIdentityMutation from 'mutations/DeployIdentity'
@@ -9,6 +9,7 @@ import WaitForTransaction from 'components/WaitForTransaction'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+import AutoMutate from 'components/AutoMutate'
 
 class DeployIdentity extends Component {
   state = {}
@@ -17,7 +18,7 @@ class DeployIdentity extends Component {
       <Mutation
         mutation={DeployIdentityMutation}
         onCompleted={({ deployIdentity }) =>
-          this.setState({ waitFor: deployIdentity.id })
+          this.setState({ waitFor: deployIdentity.id, mutationCompleted: true })
         }
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
@@ -69,9 +70,8 @@ class DeployIdentity extends Component {
 
     this.setState({ waitFor: 'pending' })
     const profile = this.props.profile
-    if (!profile.avatar) profile.avatar = ''
     const variables = {
-      from: this.props.wallet,
+      from: this.props.walletProxy,
       attestations: this.props.attestations,
       profile
     }
@@ -82,6 +82,31 @@ class DeployIdentity extends Component {
   renderWaitModal() {
     if (!this.state.waitFor) return null
 
+    const { skipSuccessScreen } = this.props
+    const content = skipSuccessScreen ? (
+      <AutoMutate
+        mutatation={() => {
+          this.setState({
+            shouldClose: true
+          })
+        }}
+      />
+    ) : (
+      <div className="make-offer-modal">
+        <div className="success-icon" />
+        <div>
+          <fbt desc="success">Success!</fbt>
+        </div>
+        <button
+          className="btn btn-outline-light"
+          onClick={async () => {
+            this.setState({ shouldClose: true })
+          }}
+          children={fbt('OK', 'OK')}
+        />
+      </div>
+    )
+
     return (
       <WaitForTransaction
         shouldClose={this.state.shouldClose}
@@ -89,34 +114,19 @@ class DeployIdentity extends Component {
           if (this.props.refetch) {
             this.props.refetch()
           }
-          if (this.props.onComplete) {
+          this.props.client.reFetchObservableQueries()
+          this.setState({ waitFor: false, error: false, shouldClose: false })
+          if (this.props.onComplete && this.state.mutationCompleted) {
             this.props.onComplete()
           }
-          this.setState({ waitFor: false, error: false, shouldClose: false })
         }}
         hash={this.state.waitFor}
         event="IdentityUpdated"
       >
-        {() => {
-          return (
-            <div className="make-offer-modal">
-              <div className="success-icon" />
-              <div>
-                <fbt desc="success">Success!</fbt>
-              </div>
-              <button
-                className="btn btn-outline-light"
-                onClick={async () => {
-                  this.setState({ shouldClose: true })
-                }}
-                children={fbt('OK', 'OK')}
-              />
-            </div>
-          )
-        }}
+        {() => content}
       </WaitForTransaction>
     )
   }
 }
 
-export default withWallet(withCanTransact(DeployIdentity))
+export default withApollo(withWallet(withCanTransact(DeployIdentity)))

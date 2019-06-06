@@ -62,12 +62,16 @@ const PaymentOptions = ({
   value,
   onChange,
   price,
+  tokens,
   hasBalance,
   hasEthBalance,
   children,
   cannotTransact
 }) => {
   if (cannotTransact && cannotTransact !== 'no-balance') {
+    return children
+  }
+  if (!Object.keys(tokens).length) {
     return children
   }
 

@@ -4,13 +4,15 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/ipfs ./packages/ipfs
+COPY ./packages/ip2geo ./packages/ip2geo
 COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/mobile-bridge ./packages/mobile-bridge
 COPY ./packages/services ./packages/services
@@ -20,8 +22,7 @@ COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/identity ./infra/identity
-COPY ./scripts ./scripts
 
-RUN npm install --unsafe-perm
+RUN yarn install
 
 CMD npm run start:discovery --prefix infra/discovery

@@ -122,7 +122,7 @@ describe('Marketplace', function() {
     })
 
     it('should retrieve the listing as of a specfic block', async function() {
-      const blockNumber = contracts.marketplace.eventCache.getBlockNumber()
+      const blockNumber = await contracts.marketplace.eventCache.getBlockNumber()
       const listingId = `999-000-0-${blockNumber}`
       const res = await client.query({
         query: queries.GetListing,
@@ -235,7 +235,7 @@ describe('Marketplace', function() {
           },
           category: 'Test category',
           subCategory: 'Test sub-category',
-          commission: '1.5'
+          commissionPerUnit: '1.5'
         },
         unitData: {
           unitsTotal: 1
@@ -289,7 +289,7 @@ describe('Marketplace', function() {
         listingData.unitData.unitsTotal
       )
       assert.strictEqual(listing.unitsSold, 0)
-      assert.strictEqual(listing.commission, '1500000000000000000')
+      assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '1500000000000000000')
       assert.strictEqual(listing.featured, false)
       assert.strictEqual(listing.hidden, false)

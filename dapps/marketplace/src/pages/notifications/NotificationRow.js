@@ -93,7 +93,7 @@ const Row = ({ node, identity, onClick }) => {
   return (
     <div className="notification-row" onClick={() => onClick()}>
       <div>
-        <Avatar avatar={get(identity, 'profile.avatar')} />
+        <Avatar profile={identity} />
       </div>
       <div>
         <div>{description}</div>
@@ -105,7 +105,7 @@ const Row = ({ node, identity, onClick }) => {
   )
 }
 
-export default withIdentity(Row, 'party.id')
+export default withIdentity(Row, 'node.party.id')
 
 require('react-styl')(`
   .notification-row

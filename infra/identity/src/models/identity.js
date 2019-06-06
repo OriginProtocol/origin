@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       facebookVerified: DataTypes.BOOLEAN,
       googleVerified: DataTypes.BOOLEAN,
       data: DataTypes.JSONB,
-      country: DataTypes.CHAR(2)
+      country: DataTypes.CHAR(2),
+      avatarUrl: DataTypes.STRING,
+      website: DataTypes.STRING
     },
     {
       tableName: 'identity'

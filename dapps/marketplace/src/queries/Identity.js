@@ -5,21 +5,27 @@ export default gql`
     web3 {
       account(id: $id) {
         id
+        owner {
+          id
+        }
         identity {
           id
           firstName
           lastName
           fullName
           description
-          avatar
+          avatarUrl
+          avatarUrlExpanded
           strength
           attestations
 
           facebookVerified
+          googleVerified
           twitterVerified
           airbnbVerified
           phoneVerified
           emailVerified
+          websiteVerified
         }
       }
     }

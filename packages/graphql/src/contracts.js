@@ -2,6 +2,8 @@ import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketpla
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
+import IdentityProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
+import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
@@ -10,6 +12,7 @@ import { patchWeb3Contract } from '@origin/event-cache'
 
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
+import { addMetricsProvider } from './utils/metricsProvider'
 
 import Configs from './configs'
 
@@ -60,16 +63,29 @@ export function newBlock(blockHeaders) {
 }
 
 function pollForBlocks() {
+  let inProgress = false
   try {
     blockInterval = setInterval(() => {
-      web3.eth.getBlockNumber().then(block => {
-        if (block > lastBlock) {
-          web3.eth.getBlock(block).then(newBlock)
-        }
-      })
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      web3.eth
+        .getBlockNumber()
+        .then(block => {
+          if (block > lastBlock) {
+            web3.eth.getBlock(block).then(newBlock)
+          }
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
     }, 5000)
   } catch (error) {
     console.log(`Polling for new blocks failed: ${error}`)
+    inProgress = false
   }
 }
 
@@ -97,9 +113,7 @@ export function setNetwork(net, customConfig) {
   if (!config) {
     return
   }
-  if (net === 'test') {
-    config = { ...config, ...customConfig }
-  }
+  config = { ...config, ...customConfig }
 
   context.net = net
   context.config = config
@@ -109,6 +123,7 @@ export function setNetwork(net, customConfig) {
   context.ipfsRPC = config.ipfsRPC
   context.discovery = config.discovery
   context.growth = config.growth
+  context.graphql = config.graphql
 
   delete context.marketplace
   delete context.marketplaceExec
@@ -123,7 +138,18 @@ export function setNetwork(net, customConfig) {
   }
   clearInterval(blockInterval)
 
-  web3 = applyWeb3Hack(new Web3(config.provider))
+  const provider = process.env.PROVIDER_URL
+    ? process.env.PROVIDER_URL
+    : config.provider
+  web3 = applyWeb3Hack(new Web3(provider))
+
+  if (config.useMetricsProvider) {
+    addMetricsProvider(web3, {
+      echoEvery: 100, // every 100 requests
+      breakdownEvery: 1000 // every 1000 requests
+    })
+  }
+
   if (isBrowser) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
@@ -156,6 +182,14 @@ export function setNetwork(net, customConfig) {
 
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
+  context.ProxyFactory = new web3.eth.Contract(
+    IdentityProxyFactory.abi,
+    config.ProxyFactory
+  )
+  context.ProxyImp = new web3.eth.Contract(
+    IdentityProxy.abi,
+    config.IdentityProxyImplementation
+  )
 
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))

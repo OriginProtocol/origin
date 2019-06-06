@@ -41,6 +41,9 @@
     "avatar": {
       "type": "string"
     },
+    "avatarUrl": {
+      "type": "string"
+    },
     "country": {
       "type": "string"
     },

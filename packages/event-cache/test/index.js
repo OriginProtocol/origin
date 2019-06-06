@@ -8,6 +8,7 @@ const ipfs = require('./_ipfs')
 const { STD_GAS, STD_GAS_DEPLOY, STD_GAS_PRICE, INT_1E24 } = require('./const')
 
 describe('EventCache', function() {
+  this.timeout(30000)
 
   let Marketplace,
       OriginToken,
@@ -185,6 +186,22 @@ describe('EventCache', function() {
     const possibleAccounts = [charlie, denise]
     assert(possibleAccounts.indexOf(orEvents[0].returnValues.account) > -1, 'Unexpected account')
     assert(possibleAccounts.indexOf(orEvents[1].returnValues.account) > -1, 'Unexpected account')
+  })
+
+  it('should not die on undefined argument', async () => {
+    const indexedBackend = new InMemoryBackend()
+    const eventCache = new EventCache(IdentityEvents, 0, {
+      backend: indexedBackend
+    })
+
+    const orEvents = await eventCache.getPastEvents('IdentityUpdated', {
+      filter: { account: undefined }
+    })
+
+    assert(
+      orEvents.length == 0,
+      `Request should have returned 0 events, got ${orEvents.length}`
+    )
   })
 
 })

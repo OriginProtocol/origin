@@ -74,8 +74,6 @@ const getPastEvents = memoize(
     const numBlocks = toBlock - fromBlock + 1
     debug(`Get ${numBlocks} blocks in ${requests.length} requests`)
 
-    instance.lastQueriedBlock = toBlock
-
     if (!numBlocks) return
 
     const newEvents = flattenDeep(await Promise.all(requests))
@@ -89,6 +87,8 @@ const getPastEvents = memoize(
         debug('Error adding new events to backend', e)
       }
     }
+
+    instance.lastQueriedBlock = toBlock
   },
   (...args) => `${args[0].contract._address}-${args[1]}-${args[2]}`
 )
@@ -121,6 +121,8 @@ class EventCache {
     this.contract = contract
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)
+    this.lastQueriedBlock = 0
+    this.latestIndexedBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
@@ -209,22 +211,29 @@ class EventCache {
    */
   async _fetchEvents() {
     let toBlock = this.latestBlock
+
     if (this.useLatestFromChain || !toBlock) {
       toBlock = this.latestBlock = await this.web3.eth.getBlockNumber()
     }
 
     if (this.latestBlock && this.lastQueriedBlock === this.latestBlock) {
+      debug('noop, current')
       return
     }
 
-    let fromBlock = this.lastQueriedBlock
-      ? this.lastQueriedBlock + 1
-      : this.originBlock
-    this.latestIndexedBlock = await this.backend.getLatestBlock()
-
-    if (this.latestIndexedBlock > fromBlock) {
-      fromBlock = this.latestIndexedBlock + 1
+    // Set if missing
+    if (this.latestIndexedBlock === 0) {
+      this.latestIndexedBlock = await this.backend.getLatestBlock()
     }
+
+    /**
+     * Base fromBlock on the latest block number that had an event and was added
+     * to the backend. This is defensive against accidental "future" requests on
+     * nodes that may be out of sync
+     */
+    const fromBlock = this.latestIndexedBlock
+      ? this.latestIndexedBlock + 1
+      : this.originBlock
 
     if (fromBlock > toBlock) {
       debug(`fromBlock > toBlock (${fromBlock} > ${toBlock})`)
@@ -232,6 +241,9 @@ class EventCache {
     }
 
     await getPastEvents(this, fromBlock, toBlock, this.batchSize)
+
+    // Update latestIndexedBlock
+    this.latestIndexedBlock = await this.backend.getLatestBlock()
   }
 
   /**
@@ -284,8 +296,8 @@ class EventCache {
    * Returns the latest block number known by the backend
    * @returns {number} The latest known block number
    */
-  getBlockNumber() {
-    return this.backend.getLatestBlock()
+  async getBlockNumber() {
+    return await this.backend.getLatestBlock()
   }
 
   /**
