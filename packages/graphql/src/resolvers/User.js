@@ -112,6 +112,7 @@ async function reviews(user, { first = 10, after }) {
     party = [party, owner]
   }
 
+  // Find all the OfferFinalized events associated with this user
   const listings = await ec().getEvents({ event: 'ListingCreated', party })
   const listingIds = listings.map(e => String(e.returnValues.listingID))
   let events = await ec().getEvents({
@@ -122,40 +123,35 @@ async function reviews(user, { first = 10, after }) {
   events = sortBy(events, event => -event.blockNumber)
 
   const totalCount = events.length
-
-  const allIds = events.map(event =>
-    contracts.eventSource.getOfferIdExp(
+  const idEvents = {}
+  for (const event of events) {
+    const id = await contracts.eventSource.getOfferIdExp(
       event.returnValues.listingID,
       event.returnValues.offerID
     )
-  )
+    idEvents[id] = event
+  }
+  const allIds = Object.keys(idEvents)
+  const { ids, start } = getIdsForPage({ after, ids: allIds })
 
-  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
-
-  let nodes = await Promise.all(
-    events
-      .filter(event => {
-        const offerIdExp = contracts.eventSource.getOfferIdExp(
-          event.returnValues.listingID,
-          event.returnValues.offerID
-        )
-
-        return ids.indexOf(offerIdExp) >= 0
-      })
-      .map(event =>
-        contracts.eventSource.getReview(
-          event.returnValues.listingID,
-          event.returnValues.offerID,
-          event.returnValues.party,
-          event.returnValues.ipfsHash,
-          event
-        )
-      )
-  )
-
-  // Ratings will be required after #2143 gets merged
-  // This filter is to take care of reviews left without a rating before #2143
-  nodes = nodes.filter(node => node.rating)
+  // Fetch reviews one at a time until we have enough nodes
+  const nodes = []
+  for (const id of ids) {
+    const event = idEvents[id]
+    const review = await contracts.eventSource.getReview(
+      event.returnValues.listingID,
+      event.returnValues.offerID,
+      event.returnValues.party,
+      event.returnValues.ipfsHash,
+      event
+    )
+    if (review.rating) {
+      nodes.push(review)
+    }
+    if (nodes.length >= first) {
+      break
+    }
+  }
 
   return getConnection({ start, first, nodes, ids, totalCount })
 }

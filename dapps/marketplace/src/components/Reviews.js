@@ -60,11 +60,15 @@ export default class Reviews extends Component {
 
   render() {
     const { id, after } = this.props
-    const first = this.props.first || 5
+    const first = this.props.first || 3
 
     return (
-      <Query query={query} variables={{ id, first, after }}>
-        {({ data, loading, error, fetchMore }) => {
+      <Query
+        query={query}
+        variables={{ id, first, after }}
+        notifyOnNetworkStatusChange
+      >
+        {({ data, loading, error, fetchMore, networkStatus }) => {
           if (error) {
             return (
               <QueryError
@@ -74,7 +78,9 @@ export default class Reviews extends Component {
               />
             )
           }
-          if (loading) return null
+          if (networkStatus <= 2) {
+            return null
+          }
 
           const reviews = get(data, 'marketplace.user.reviews.nodes', [])
           const count = get(data, 'marketplace.user.reviews.totalCount', 0)
@@ -102,7 +108,7 @@ export default class Reviews extends Component {
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
                 return (
-                  <div key={idx} className="review review-ease-in">
+                  <div key={idx} className="review">
                     <div className="user-info">
                       <div className="avatar-wrap">
                         <Avatar size="4rem" profile={profile} />
@@ -135,13 +141,25 @@ export default class Reviews extends Component {
                 )
               })}
               {hasNextPage ? (
-                <div
-                  className="read-more btn"
-                  onClick={() => this.readMore(fetchMore, endCursor)}
+                <a
+                  href="#more-reviews"
+                  className="read-more"
+                  onClick={e => {
+                    e.preventDefault()
+                    if (!loading) {
+                      this.readMore(fetchMore, endCursor)
+                    }
+                  }}
                 >
-                  <fbt desc="reviews.readMore">Read More</fbt>
-                  <i className="read-more-caret" />
-                </div>
+                  {loading ? (
+                    <fbt desc="reviews.loadingMore">Loading More...</fbt>
+                  ) : (
+                    <>
+                      <fbt desc="reviews.readMore">Read More</fbt>
+                      <i className="read-more-caret" />
+                    </>
+                  )}
+                </a>
               ) : null}
             </div>
           )
@@ -153,6 +171,7 @@ export default class Reviews extends Component {
 
 require('react-styl')(`
   .reviews
+    margin-bottom: 2rem
     .review
       .user-info
         display: flex
@@ -202,10 +221,8 @@ require('react-styl')(`
         margin: 0.5rem 0 3rem 0
       &:last-child .text
         margin-bottom: 0
-      &.review-ease-in
-        animation-name: fadeIn
-        animation-duration: .3s
-        transition-duration: .3s
+      &:last-of-type .text
+        margin-bottom: 1rem
 
     .read-more
       font-size: 18px
@@ -221,9 +238,4 @@ require('react-styl')(`
       background: url(images/caret-blue.svg) no-repeat right
       background-size: 12px
 
-  @keyframes fadeIn
-    from
-      opacity: 0
-    to
-      opacity: 1
 `)
