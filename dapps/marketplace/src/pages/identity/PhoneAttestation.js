@@ -410,6 +410,15 @@ require('react-styl')(`
     &.website > div h2::before
       background-image: url(images/identity/website-icon-dark.svg);
       background-size: 4rem
+    &.kakao > div h2::before
+      background-image: url(images/identity/kakao-icon-large-dark.svg);
+      background-size: 4rem
+    &.github > div h2::before
+      background-image: url(images/identity/github-icon-large-dark.svg);
+      background-size: 4rem
+    &.linkedin > div h2::before
+      background-image: url(images/identity/linkedin-icon-large-dark.svg);
+      background-size: 4rem
 
     &.success
       > div

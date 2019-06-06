@@ -188,6 +188,15 @@ require('react-styl')(`
       &.website > i::before
         background-image: url(images/identity/website-icon-light.svg)
         background-size: 1rem
+      &.kakao > i::before
+        background-image: url(images/identity/kakao-icon-large.svg)
+        background-size: 1rem
+      &.github > i::before
+        background-image: url(images/identity/github-icon-large.svg)
+        background-size: 1rem
+      &.linkedin > i::before
+        background-image: url(images/identity/linkedin-icon-large.svg)
+        background-size: 1rem
 
       &.published,&.provisional
         background-color: var(--pale-clear-blue)
