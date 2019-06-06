@@ -140,7 +140,7 @@ class AvatarScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'AvatarScreen.continueButton')}
-            onPress={() =>
+            onPress={() => {
               if (this.props.onboarding.avatarUri === null) {
                 // If no avatarUri is set the user has elected to continue
                 // and skip the upload. Set the value in the store to false
@@ -148,7 +148,7 @@ class AvatarScreen extends Component {
                 this.props.setAvatarUri(false)
               }
               this.props.navigation.navigate(this.props.nextOnboardingStep)
-            }
+            }}
           />
         </View>
       </SafeAreaView>
