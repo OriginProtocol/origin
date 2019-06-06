@@ -27,3 +27,7 @@ A GraphiQL demo is available [here](https://www.originadm.in/#/explorer)
 - `APOLLO_METRICS_API_KEY` - API key to use for Apollo metrics.
 - `DISABLE_CACHE` - Disable caching (currently only caching in the `eventsource` package)
 - `PROVIDER_URL` - An explicit URL to use for a Web3 JSON-RPC provider
+- `MAX_RPC_QPS` - The maximum JSON-RPC queries per second
+- `MAX_RPC_CONCURRENT` - The maximum concurrent JSON-RPC queries
+- `ECHO_EVERY` - Show basic JSON-RPC stats every `N` requests
+- `BREAKDOWN_EVERY` - Show a JSON-RPC call breakdown every `N` requests
