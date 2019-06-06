@@ -25,14 +25,14 @@ describe('Token CLI Library', async function() {
     nonOwner = accounts[1]
     OriginToken = await deploy('OriginToken', {
       from: owner,
-      path: `${__dirname}/../../origin-contracts/contracts/token/`,
+      path: `${__dirname}/../../contracts/contracts/token/`,
       args: [supply]
     })
     TokenLib = new Token({
       networkId,
       verbose: false,
       providers: {
-        '999': web3.currentProvider
+        '999': web3
       },
       contractAddress: OriginToken._address
     })
