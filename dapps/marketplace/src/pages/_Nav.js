@@ -16,7 +16,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 class Nav extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { open: 'profile' }
     this.EarnTokens = withEnrolmentModal('a')
   }
 
@@ -52,51 +52,49 @@ class Nav extends Component {
           {!this.props.wallet ? (
             <GetStarted />
           ) : (
-            <>
-              <ul className="navbar-nav">
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-purchases" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.purchases">Purchases</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-listings" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.listings">Listings</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-sales" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.sales">Sales</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-lg-flex">
-                  <NavLink to="/create" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.addListing">Add Listing</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-lg-flex">
-                  <EarnTokens className="nav-link text" href="#">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-                    </span>
-                    <span className="d-xl-none">
-                      <fbt desc="navbar.tokens">Tokens</fbt>
-                    </span>
-                  </EarnTokens>
-                </li>
-                <Messages {...navProps('messages')} />
-                <Notifications {...navProps('notifications')} />
-                <Profile {...navProps('profile')} />
-              </ul>
-            </>
+            <ul className="navbar-nav">
+              <li className="nav-item d-none d-md-flex">
+                <NavLink to="/my-purchases" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.purchases">Purchases</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item d-none d-md-flex">
+                <NavLink to="/my-listings" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.listings">Listings</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item d-none d-md-flex">
+                <NavLink to="/my-sales" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.sales">Sales</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item d-none d-lg-flex">
+                <NavLink to="/create" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.addListing">Add Listing</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item d-none d-lg-flex">
+                <EarnTokens className="nav-link text" href="#">
+                  <span className="d-md-none d-xl-flex">
+                    <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                  </span>
+                  <span className="d-xl-none">
+                    <fbt desc="navbar.tokens">Tokens</fbt>
+                  </span>
+                </EarnTokens>
+              </li>
+              <Messages {...navProps('messages')} />
+              <Notifications {...navProps('notifications')} />
+              <Profile {...navProps('profile')} />
+            </ul>
           )}
         </div>
       </nav>

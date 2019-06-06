@@ -66,7 +66,7 @@ class ProfileNav extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <Avatar profile={identity} className="user-image-mask" />
+                <Avatar profile={identity} />
               </a>
             </Dropdown>
           )
@@ -79,10 +79,7 @@ class ProfileNav extends Component {
 const CreateIdentity = onClose => (
   <>
     <div className="create-identity text-center">
-      <img
-        className="user-image-mask large"
-        src="images/identity/unknown-user.svg"
-      />
+      <Avatar />
       <h3>
         <fbt desc="nav.profile.profileNotCreated">
           You haven&apos;t created a profile yet
@@ -104,7 +101,7 @@ const CreateIdentity = onClose => (
   </>
 )
 
-const Identity = ({ id, identity, identityLoading, onClose }) => {
+const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
   if (identityLoading) {
     return (
       <div>
@@ -120,18 +117,13 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
   }
 
   return (
-    <div className="identity align-items-center d-flex flex-column">
+    <div className="identity">
       <div className="info">
+        <Avatar profile={identity} />
         <Link onClick={() => onClose()} to="/profile" className="name">
-          <Avatar profile={identity} size="3rem" />
+          {identity.fullName || fbt('Unnamed User', 'nav.profile.unnamedUser')}
         </Link>
-        <div>
-          <Link onClick={() => onClose()} to="/profile" className="name">
-            {identity.fullName ||
-              fbt('Unnamed User', 'nav.profile.unnamedUser')}
-          </Link>
-          <Attestations profile={identity} />
-        </div>
+        <Attestations profile={identity} />
       </div>
       <div className="strength">
         <div className="progress">
@@ -148,21 +140,30 @@ const Identity = ({ id, identity, identityLoading, onClose }) => {
       <Link
         onClick={() => onClose()}
         to="/profile"
-        className="btn btn-rounded btn-outline-primary mt-3 mb-3"
+        className="btn btn-outline-primary earn-ogn"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </Link>
       <Balances
         account={id}
         onClose={onClose}
-        title={<fbt desc="nav.profile.walletBalance">Wallet balance</fbt>}
+        title={<fbt desc="nav.profile.walletBalance">Wallet balances</fbt>}
         className="pt-3 pb-3"
       />
+      <div className="eth-address">
+        {`ETH Address: ${wallet.substr(0, 7)}...`}
+      </div>
     </div>
   )
 }
 
-const ProfileDropdownRaw = ({ data, identity, identityLoading, onClose }) => {
+const ProfileDropdownRaw = ({
+  walletProxy,
+  data,
+  identity,
+  identityLoading,
+  onClose
+}) => {
   const { id } = data.web3.primaryAccount
 
   return (
@@ -172,6 +173,7 @@ const ProfileDropdownRaw = ({ data, identity, identityLoading, onClose }) => {
         <div className="identity-info">
           <Identity
             id={id}
+            wallet={walletProxy}
             identity={identity}
             identityLoading={identityLoading}
             onClose={onClose}
@@ -188,18 +190,6 @@ const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
-  .user-image-mask
-    width: 26px
-    height: 26px
-    padding-top: 3px
-    border-radius: 40px
-    background-color: var(--dark-grey-blue)
-    &.large
-      width: 80px
-      height: 80px
-      padding-top: 9px
-      margin-top: 1rem
-      margin-bottom: 0.5rem
   .dropdown.profile .nav-link
     position: relative
     border-left: 1px solid transparent
@@ -216,7 +206,7 @@ require('react-styl')(`
       border-bottom: 1px solid white
       z-index: 1001
   .dropdown-menu.profile
-    width: 300px
+    width: 250px
     font-size: 14px
     margin-top: 0 !important
     &:before
@@ -224,7 +214,14 @@ require('react-styl')(`
     > div
       padding: 0.75rem 1.5rem
     .identity-info
+      .avatar
+        border-radius: 50%
+        width: 4.5rem
+        padding-top: 4.5rem
       .create-identity
+        display: flex
+        flex-direction: column
+        align-items: center
         h3
           padding: 0.5rem 0
           margin-bottom: 0.5rem
@@ -245,23 +242,27 @@ require('react-styl')(`
 
        .identity
          font-weight: bold
+         text-align: center
          .info
            margin-bottom: 1rem
            margin-top: 0.75rem
            display: flex
-           .avatar
-             margin-right: 0.75rem
-             border-radius: 50%
-             cursor: pointer
-           .name
-              cursor: pointer
-              font-size: 1.2rem
+           flex-direction: column
+           align-items: center
+           > a.name
+            color: black
+            font-size: 24px
+            font-weight: bold
+            margin: 0.75rem 0 0.5rem 0
+            white-space: nowrap
+            overflow: hidden
+            width: 100%
+            text-overflow: ellipsis
 
          .strength
            font-size: 10px
            text-transform: uppercase
            color: var(--steel)
-           letter-spacing: 0.4px
            font-weight: normal
            .progress
              background-color: #f0f6f9
@@ -269,13 +270,22 @@ require('react-styl')(`
              margin-bottom: 0.5rem
              .progress-bar
                background-color: var(--greenblue)
-          .earn-ogn-link
-            font-size: 1rem
-            display: inline-block
+          .earn-ogn
+            border-radius: 3rem
+            margin: 1.5rem 0 1.25rem 0
+            padding-left: 3rem
+            padding-right: 3rem
           .balances
-            border-top: 1px solid #333
+            border-top: 1px solid #dde6ea
             h5
-              font-size: 1rem
+              font-family: var(--heading-font)
+              font-size: 14px
+              text-align: center
+          .eth-address
+            color: var(--steel)
+            font-size: 10px
+            font-weight: normal
+            margin: 0.5rem 0 1rem 0
 
   @media (max-width: 767.98px)
     .dropdown-menu.profile
