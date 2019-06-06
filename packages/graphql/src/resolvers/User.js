@@ -114,32 +114,48 @@ async function reviews(user, { first = 10, after }) {
 
   const listings = await ec().getEvents({ event: 'ListingCreated', party })
   const listingIds = listings.map(e => String(e.returnValues.listingID))
-  const events = await ec().getEvents({
+  let events = await ec().getEvents({
     listingID: listingIds,
     event: 'OfferFinalized'
   })
 
-  let nodes = await Promise.all(
-    events.map(event =>
-      contracts.eventSource.getReview(
-        event.returnValues.listingID,
-        event.returnValues.offerID,
-        event.returnValues.party,
-        event.returnValues.ipfsHash,
-        event
-      )
+  events = sortBy(events, event => -event.blockNumber)
+
+  const totalCount = events.length
+
+  const allIds = events.map(event =>
+    contracts.eventSource.getOfferIdExp(
+      event.returnValues.listingID,
+      event.returnValues.offerID
     )
   )
 
-  nodes = sortBy(nodes.filter(n => n.rating), n => -n.event.blockNumber)
-
-  const totalCount = nodes.length
-
-  const allIds = nodes.map(node => node.id)
-
   const { ids, start } = getIdsForPage({ after, ids: allIds, first })
 
-  nodes = nodes.filter(n => ids.indexOf(n.id) >= 0)
+  let nodes = await Promise.all(
+    events
+      .filter(event => {
+        const offerIdExp = contracts.eventSource.getOfferIdExp(
+          event.returnValues.listingID,
+          event.returnValues.offerID
+        )
+
+        return ids.indexOf(offerIdExp) >= 0
+      })
+      .map(event =>
+        contracts.eventSource.getReview(
+          event.returnValues.listingID,
+          event.returnValues.offerID,
+          event.returnValues.party,
+          event.returnValues.ipfsHash,
+          event
+        )
+      )
+  )
+
+  // Ratings will be required after #2143 gets merged
+  // This filter is to take care of reviews left without a rating before #2143
+  nodes = nodes.filter(node => node.rating)
 
   return getConnection({ start, first, nodes, ids, totalCount })
 }
