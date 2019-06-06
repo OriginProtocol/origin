@@ -294,8 +294,8 @@ require('react-styl')(`
   .dropdown.profile.show
     background-color: black !important
   .user-image-mask
-    width: 26px
-    height: 26px
+    width: 26px !important
+    height: 26px !important
     padding-top: 3px
     border-radius: 40px
     border: solid 1px var(--white)
