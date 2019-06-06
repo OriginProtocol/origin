@@ -3,15 +3,12 @@
 import React, { Component, Fragment } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
-import Web3 from 'web3'
 import { fbt } from 'fbt-runtime'
 
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import { decodeTransaction } from '../utils/contractDecoder'
-
-const web3 = new Web3()
 
 class TransactionCard extends Component {
   constructor(props) {
@@ -23,10 +20,10 @@ class TransactionCard extends Component {
     const { functionName, parameters } = decodeTransaction(msgData.data.data)
     const { _commission, _currency, _value } = parameters
     const balances = wallet.accountBalance
-    const gasWei = web3.utils
+    const gasWei = global.web3.utils
       .toBN(msgData.data.gasPrice)
-      .mul(web3.utils.toBN(msgData.data.gasLimit))
-    const gas = web3.utils.fromWei(gasWei.toString(), 'ether')
+      .mul(global.web3.utils.toBN(msgData.data.gasLimit))
+    const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
 
     const ethExchangeRate = this.props.exchangeRates[`${fiatCurrency[1]}/ETH`]
       .rate
@@ -52,7 +49,7 @@ class TransactionCard extends Component {
         break
       case 'makeOffer':
         heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-        payment = web3.utils.fromWei(_value)
+        payment = global.web3.utils.fromWei(_value)
         // TODO: handle this detection better, this will only work while there
         // is a single alternate payment currency
         if (_currency === '0x0000000000000000000000000000000000000000') {
