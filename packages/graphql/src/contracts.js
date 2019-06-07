@@ -10,9 +10,9 @@ import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 
+import { initStandardSubproviders, createEngine } from './providers'
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
-import { addMetricsProvider } from './utils/metricsProvider'
 
 import Configs from './configs'
 
@@ -143,11 +143,34 @@ export function setNetwork(net, customConfig) {
     : config.provider
   web3 = applyWeb3Hack(new Web3(provider))
 
+  const qps =
+    typeof process.env.MAX_RPC_QPS !== 'undefined'
+      ? parseInt(process.env.MAX_RPC_QPS)
+      : 100
+  const maxConcurrent =
+    typeof process.env.MAX_RPC_CONCURRENT !== 'undefined'
+      ? parseInt(process.env.MAX_RPC_CONCURRENT)
+      : 25
   if (config.useMetricsProvider) {
-    addMetricsProvider(web3, {
-      echoEvery: 100, // every 100 requests
-      breakdownEvery: 1000 // every 1000 requests
+    // These are "every N requests"
+    const echoEvery =
+      typeof process.env.ECHO_EVERY !== 'undefined'
+        ? parseInt(process.env.ECHO_EVERY)
+        : 250
+    const breakdownEvery =
+      typeof process.env.BREAKDOWN_EVERY !== 'undefined'
+        ? parseInt(process.env.BREAKDOWN_EVERY)
+        : 1000
+
+    initStandardSubproviders(web3, {
+      echoEvery,
+      breakdownEvery,
+      maxConcurrent,
+      qps
     })
+  } else if (!isBrowser) {
+    // TODO: Allow for browser?
+    createEngine(web3, { qps, maxConcurrent })
   }
 
   if (isBrowser) {
@@ -182,14 +205,8 @@ export function setNetwork(net, customConfig) {
 
   setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
-  context.ProxyFactory = new web3.eth.Contract(
-    IdentityProxyFactory.abi,
-    config.ProxyFactory
-  )
-  context.ProxyImp = new web3.eth.Contract(
-    IdentityProxy.abi,
-    config.IdentityProxyImplementation
-  )
+
+  setProxyContracts(config)
 
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -448,7 +465,32 @@ export function setIdentityEvents(address, epoch) {
   }
 }
 
+export function setProxyContracts(config) {
+  context.ProxyFactory = new web3.eth.Contract(
+    IdentityProxyFactory.abi,
+    config.ProxyFactory
+  )
+  context.ProxyImp = new web3.eth.Contract(
+    IdentityProxy.abi,
+    config.IdentityProxyImplementation
+  )
+  // Add an event cache to ProxyFactory.
+  patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
+    ...context.config,
+    ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
+    cacheMaxBlock: null,
+    useLatestFromChain: false,
+    prefix:
+      typeof config.ProxyFactory === 'undefined'
+        ? 'ProxyFactory_'
+        : `${config.ProxyFactory.slice(2, 8)}_`,
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
+    batchSize: 2500
+  })
+}
+
 export function shutdown() {
+  if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
     web3WS.currentProvider.connection.close()

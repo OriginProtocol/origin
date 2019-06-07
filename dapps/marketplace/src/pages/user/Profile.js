@@ -34,11 +34,9 @@ import Earnings from 'components/Earning'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
-import FacebookAttestation from 'pages/identity/FacebookAttestation'
-import GoogleAttestation from 'pages/identity/GoogleAttestation'
-import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
+import OAuthAttestation from 'pages/identity/OAuthAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -47,14 +45,26 @@ import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
+const withOAuthAttestationProvider = provider => {
+  const WithOAuthAttestationProvider = props => {
+    return <OAuthAttestation provider={provider} {...props} />
+  }
+
+  return WithOAuthAttestationProvider
+}
+
 const AttestationComponents = {
   phone: PhoneAttestation,
   email: EmailAttestation,
-  facebook: FacebookAttestation,
-  twitter: TwitterAttestation,
+  facebook: withOAuthAttestationProvider('facebook'),
+  twitter: withOAuthAttestationProvider('twitter'),
   airbnb: AirbnbAttestation,
-  google: GoogleAttestation,
-  website: WebsiteAttestation
+  google: withOAuthAttestationProvider('google'),
+  website: WebsiteAttestation,
+  kakao: withOAuthAttestationProvider('kakao'),
+  github: withOAuthAttestationProvider('github'),
+  linkedin: withOAuthAttestationProvider('linkedin'),
+  wechat: withOAuthAttestationProvider('wechat')
 }
 
 const ProfileFields = [
@@ -70,7 +80,10 @@ const ProfileFields = [
   'phoneVerified',
   'emailVerified',
   'googleVerified',
-  'websiteVerified'
+  'websiteVerified',
+  'kakaoVerified',
+  'githubVerified',
+  'linkedinVerified'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -133,7 +146,10 @@ class UserProfile extends Component {
         profile.googleVerified !== prevProfile.googleVerified ||
         profile.twitterVerified !== prevProfile.twitterVerified ||
         profile.airbnbVerified !== prevProfile.airbnbVerified ||
-        profile.websiteVerified !== prevProfile.websiteVerified) &&
+        profile.websiteVerified !== prevProfile.websiteVerified ||
+        profile.kakaoVerified !== prevProfile.kakaoVerified ||
+        profile.githubVerified !== prevProfile.githubVerified ||
+        profile.linkedinVerified !== prevProfile.linkedinVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -212,6 +228,18 @@ class UserProfile extends Component {
       {
         attestation: 'websiteAttestation',
         message: fbt('Website updated', 'profile.websiteUpdated')
+      },
+      {
+        attestation: 'kakaoAttestation',
+        message: fbt('KaKao updated', 'profile.kakaoUpdated')
+      },
+      {
+        attestation: 'githubAttestation',
+        message: fbt('GitHub updated', 'profile.githubUpdated')
+      },
+      {
+        attestation: 'linkedinAttestation',
+        message: fbt('LinkedIn updated', 'profile.linkedinUpdated')
       }
     ]
 
@@ -365,6 +393,21 @@ class UserProfile extends Component {
                   'website',
                   fbt('Website', '_ProvisionedChanges.website'),
                   { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'kakao',
+                  fbt('KaKao', '_ProvisionedChanges.kakao'),
+                  { hidden: process.env.ENABLE_KAKAO_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'github',
+                  fbt('GitHub', '_ProvisionedChanges.github'),
+                  { hidden: process.env.ENABLE_GITHUB_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'linkedin',
+                  fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
+                  { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>

@@ -4,28 +4,42 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
 import AutoMutate from 'components/AutoMutate'
 
-import VerifyFacebookMutation from 'mutations/VerifyFacebook'
-import query from 'queries/FacebookAuthUrl'
+import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
+import query from 'queries/GetAuthUrl'
 
-class FacebookAttestation extends Component {
+function getProviderDisplayName(provider) {
+  switch (provider) {
+    case 'github':
+      return fbt('GitHub', 'GitHub')
+    case 'facebook':
+      return fbt('Facebook', 'Facebook')
+    case 'twitter':
+      return fbt('Twitter', 'Twitter')
+    case 'google':
+      return fbt('Google', 'Google')
+    case 'kakao':
+      return fbt('Kakao', 'Kakao')
+    case 'linkedin':
+      return fbt('LinkedIn', 'LinkedIn')
+    case 'wechat':
+      return fbt('WeChat', 'WeChat')
+  }
+
+  console.error(`Unknown attestation provider: ${provider}`)
+}
+
+class OAuthAttestation extends Component {
   constructor(props) {
     super(props)
     this.state = {
       stage: 'GenerateCode',
       mobile: window.innerWidth < 767
     }
-    this.onResize = this.onResize.bind(this)
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,12 +50,8 @@ class FacebookAttestation extends Component {
     }
   }
 
-  onResize() {
-    if (window.innerWidth < 767 && !this.state.mobile) {
-      this.setState({ mobile: true })
-    } else if (window.innerWidth >= 767 && this.state.mobile) {
-      this.setState({ mobile: false })
-    }
+  isMobile() {
+    return this.props.ismobile === 'true'
   }
 
   render() {
@@ -49,16 +59,26 @@ class FacebookAttestation extends Component {
       return null
     }
 
-    const isMobile = this.state.mobile
+    const isMobile = this.isMobile()
 
     const { origin, pathname } = window.location
+    const { provider } = this.props
     const redirect = isMobile
-      ? encodeURIComponent(`${origin}${pathname}#/profile/facebook`)
+      ? encodeURIComponent(`${origin}${pathname}#/profile/${provider}`)
       : null
 
     return (
       <Modal
-        className={`attestation-modal facebook${
+        title={
+          <fbt desc="OAuthAttestation.verifyAccount">
+            Verify{' '}
+            <fbt:param name="provider">
+              {getProviderDisplayName(provider)}
+            </fbt:param>{' '}
+            Account
+          </fbt>
+        }
+        className={`${provider} attestation-modal${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
@@ -68,13 +88,18 @@ class FacebookAttestation extends Component {
             error: false,
             stage: 'GenerateCode'
           })
-          this.props.history.replace('/profile')
           this.props.onClose()
+          this.props.history.replace('/profile')
         }}
       >
-        <Query query={query} variables={{ redirect }}>
+        <Query
+          query={query}
+          variables={{ redirect, provider }}
+          fetchPolicy="network-only"
+          skip={get(this.props, 'match.params.attestation') ? true : false}
+        >
           {({ data }) => {
-            const authUrl = get(data, 'identityEvents.facebookAuthUrl')
+            const authUrl = get(data, 'identityEvents.GetAuthUrl')
             return (
               <div>
                 {this[`render${this.state.stage}`]({
@@ -90,19 +115,22 @@ class FacebookAttestation extends Component {
   }
 
   renderGenerateCode({ authUrl, redirect }) {
+    const providerName = getProviderDisplayName(this.props.provider)
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verfify">
-            Verify your Facebook Account
+          <fbt desc="OAuthAttestation.verify">
+            Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
+            Account
           </fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          <fbt desc="FacebookAttestation.verfify.explanation">
-            Other users will know that you have a verified Facebook account, but
+          <fbt desc="OAuthAttestation.verify.explanation">
+            Other users will know that you have a verified{' '}
+            <fbt:param name="provider">{providerName}</fbt:param> account, but
             your account details will not be published on the blockchain. We
             will never post on your behalf.
           </fbt>
@@ -122,11 +150,12 @@ class FacebookAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
+
     return (
       <Mutation
-        mutation={VerifyFacebookMutation}
+        mutation={VerifyOAuthAttestation}
         onCompleted={res => {
-          const result = res.verifyFacebook
+          const result = res.verifyOAuthAttestation
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
@@ -149,9 +178,10 @@ class FacebookAttestation extends Component {
             this.setState({ error: false, loading: true })
             verifyCode({
               variables: {
+                provider: this.props.provider,
                 identity: this.props.wallet,
-                authUrl,
                 redirect,
+                authUrl,
                 code: sid
               }
             })
@@ -178,11 +208,14 @@ class FacebookAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const providerName = getProviderDisplayName(this.props.provider)
+
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verified">
-            Facebook account verified!
+          <fbt desc="OAuthAttestation.verified">
+            <fbt:param name="provider">{providerName}</fbt:param> account
+            verified!
           </fbt>
         </h2>
         <div className="instructions">
@@ -211,7 +244,4 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default withRouter(FacebookAttestation)
-
-require('react-styl')(`
-`)
+export default withIsMobile(withRouter(OAuthAttestation))

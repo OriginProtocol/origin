@@ -5,6 +5,7 @@
   "IdentityEventsEpoch": 7046530,
   "UniswapDaiExchange": "0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14",
   "ProxyFactory": "0x3db9024c37fb280d734E2Ec6a9a9Cc0843CdBb49",
+  "ProxyFactoryEpoch": 7898049,
   "IdentityProxyImplementation": "0x68b8F35b1079655588032981d02F5d2321977613",
   "OGN": "0x8207c1ffc5b6804f6024322ccf34f29c3541ae26",
   "DAI": "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
