@@ -60,15 +60,10 @@ function useRelayer({ mutation, value }) {
  * the standard ones...
  * @param web3 {Web3} a Web3 instance
  */
-async function mineBlock(web3Inst) {
-  if (typeof web3Inst.currentProvider.sendAsync !== 'undefined') {
-    return await web3Inst.currentProvider.sendAsync(
-      { method: 'evm_mine' },
-      () => {}
-    )
-  } else {
-    return web3Inst.currentProvider.send({ method: 'evm_mine' }, () => {})
-  }
+function mineBlock(web3Inst) {
+  const hasAsync = typeof web3Inst.currentProvider.sendAsync !== 'undefined'
+  const sendMethod = hasAsync ? 'sendAsync' : 'send'
+  return web3Inst.currentProvider[sendMethod]({ method: 'evm_mine' }, () => {})
 }
 
 /**
@@ -281,8 +276,8 @@ export default function txHelper({
           }
         })
         if (contracts.automine) {
-          setTimeout(async () => {
-            await mineBlock(contracts.web3)
+          setTimeout(() => {
+            mineBlock(contracts.web3)
           }, contracts.automine)
         }
       })
