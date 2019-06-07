@@ -121,14 +121,18 @@ class OAuthAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="OAuthAttestation.verify">Verify your <fbt:param name="provider">{providerName}</fbt:param> Account</fbt>
+          <fbt desc="OAuthAttestation.verify">
+            Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
+            Account
+          </fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
           <fbt desc="OAuthAttestation.verify.explanation">
-            Other users will know that you have a verified <fbt:param name="provider">{providerName}</fbt:param> account, but
+            Other users will know that you have a verified{' '}
+            <fbt:param name="provider">{providerName}</fbt:param> account, but
             your account details will not be published on the blockchain. We
             will never post on your behalf.
           </fbt>
@@ -211,7 +215,10 @@ class OAuthAttestation extends Component {
     return (
       <>
         <h2>
-          <fbt desc="OAuthAttestation.verified"><fbt:param name="provider">{providerName}</fbt:param> account verified!</fbt>
+          <fbt desc="OAuthAttestation.verified">
+            <fbt:param name="provider">{providerName}</fbt:param> account
+            verified!
+          </fbt>
         </h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">

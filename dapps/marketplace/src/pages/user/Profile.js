@@ -45,11 +45,9 @@ import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
-const withOAuthAttestationProvider = (provider) => {
+const withOAuthAttestationProvider = provider => {
   const WithOAuthAttestationProvider = props => {
-    return (
-      <OAuthAttestation provider={provider} {...props} />
-    )
+    return <OAuthAttestation provider={provider} {...props} />
   }
 
   return WithOAuthAttestationProvider
