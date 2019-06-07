@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
-import queryString from 'query-string'
+// import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -21,7 +21,7 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingsGallery from './ListingCards'
-import Search from './_Search'
+// import Search from './_Search'
 
 import query from 'queries/Listings'
 
