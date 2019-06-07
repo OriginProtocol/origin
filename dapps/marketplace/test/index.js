@@ -33,6 +33,7 @@ const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   await clickByText(page, 'Purchase', 'button')
+  await clickByText(page, 'Confirm Purchase', 'button')
   await waitForText(page, 'View Purchase', 'button')
   await pic(page, 'purchase-listing')
 
@@ -201,6 +202,7 @@ function listingTests() {
       await changeAccount(page, buyer)
       await waitForText(page, 'Payment', 'span')
       await clickByText(page, 'Swap Now', 'button')
+      await clickByText(page, 'Confirm Purchase', 'button')
     })
 
     it('should prompt the user to approve their Dai', async function() {
@@ -308,6 +310,7 @@ function listingTests() {
       await page.waitForSelector('.quantity select')
       await page.select('.quantity select', '2')
       await clickByText(page, 'Purchase', 'button')
+      await clickByText(page, 'Confirm Purchase', 'button')
       await waitForText(page, 'View Purchase', 'button')
       await pic(page, 'purchase-listing')
 
