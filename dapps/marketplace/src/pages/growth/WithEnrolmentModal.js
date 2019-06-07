@@ -294,7 +294,7 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </div>
             )}
-            <div className="normal-line-height terms-title">
+            <div className="px-4 mt-3 normal-line-height terms-title">
               <fbt desc="EnrollmentModal.termsSubTitle">
                 Join Origin’s reward program to earn Origin tokens (OGN). Terms
                 and conditions apply.
@@ -763,6 +763,8 @@ require('react-styl')(`
     margin-left: auto
     margin-right: auto
     padding-top: 20px
+  .mobile-modal-light .growth-enrollment-modal.small
+    text-align: center
   .mobile-modal-light .growth-enrollment-modal.mobile
     max-width: 767px !important
     color: var(--dark)
@@ -809,6 +811,7 @@ require('react-styl')(`
       .terms-title
         color: black
         font-size: 1.125rem
+        font-weight: normal
       .terms-body
         color: var(--dark)
         font-size: 0.875rem
