@@ -371,7 +371,7 @@ function withEnrolmentModal(WrappedComponent) {
       const isForbidden = eligibility === 'Forbidden'
 
       return (
-        <div>
+        <div className="container">
           <div>
             <div className="image-holder text-center">
               <img src="images/growth/not-eligible-graphic.svg" />
@@ -418,7 +418,7 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
-              className={`btn ${
+              className={`btn btn-rounded btn-lg ${
                 this.props.ismobile === 'true'
                   ? 'btn-primary mt-auto'
                   : 'btn-outline-light'
@@ -670,9 +670,14 @@ require('react-styl')(`
       font-weight: 300
     .image-holder
       position: relative
+      max-width: 200px
       height: 150px
     .info-text
       max-width: 400px
+    .red-x-image
+      position: absolute
+      right: 33px
+      bottom: 10px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
     .btn
@@ -753,21 +758,23 @@ require('react-styl')(`
         text-decoration: underline
         color: white
         margin-top: 1.2rem
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .growth-enrollment-modal.mobile
+  .mobile-modal-light .growth-enrollment-modal.mobile.modal-content .container
+    max-width: 520px
+    margin-left: auto
+    margin-right: auto
+    padding-top: 20px
+  .mobile-modal-light .growth-enrollment-modal.mobile
     max-width: 767px !important
     color: var(--dark)
-    .internal-modal-content
-      max-width: 520px
-      margin-left: auto
-      margin-right: auto
+    text-align: center
     .join-campaign
       .btn-no-outline
         color: var(--clear-blue)
     .checkbox-holder
-      color: var(--dark)
+      color: var(--steel)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
+  .mobile-modal-light .modal-content
     background-color: var(--pale-grey-four)
     padding: 0px
     border-radius: 0px
