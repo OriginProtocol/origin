@@ -43,7 +43,10 @@ describe('June campaign rules', () => {
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
     this.events = []
-    this.crules.getEvents = () => { return this.events }
+    this.crules.getEvents = (ethAddress) => {
+      return this.events
+        .filter(event => event.ethAddress === ethAddress)
+    }
 
     // Mock the _getReferees method of the Referral rule.
     this.crules.levels[2].rules[0]._getReferees = () => { return [] }

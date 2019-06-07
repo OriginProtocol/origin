@@ -34,6 +34,7 @@ export default {
   IdentityEvents_EventCache: ['QmPe4ESMh4FhCN82bKwk2y2dkgVSMYS98U7Y5w8qmuhcUh'],
   IdentityEvents_EventCacheMaxBlock: 4265704,
   ProxyFactory: addresses.ProxyFactory,
+  ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   DaiExchange: addresses.UniswapDaiExchange,
   tokens: [

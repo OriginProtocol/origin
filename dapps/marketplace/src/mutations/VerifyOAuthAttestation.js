@@ -1,13 +1,15 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  mutation VerifyGoogle(
+  mutation VerifyOAuthAttestation(
+    $provider: String!
     $identity: String!
     $authUrl: String
     $redirect: Boolean
     $code: String
   ) {
-    verifyGoogle(
+    verifyOAuthAttestation(
+      provider: $provider
       identity: $identity
       authUrl: $authUrl
       redirect: $redirect
