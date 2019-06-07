@@ -122,7 +122,7 @@ class WaitForTransaction extends Component {
           if (error) {
             console.error(error)
             content = <Error />
-          } else if (!receipt) {
+          } else if (!receipt || !confirmedBlock) {
             content = <WaitForFirstBlock />
           } else if (!event) {
             console.error('Expected event not found')
