@@ -490,6 +490,7 @@ export function setProxyContracts(config) {
 }
 
 export function shutdown() {
+  if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
     web3WS.currentProvider.connection.close()
