@@ -429,7 +429,9 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && notCitizenChecked && (
             <button
-              className={`btn btn-primary btn-rounded btn-lg ${this.props.ismobile === 'true' ? 'mt-auto wide-btn' : ''}`}
+              className={`btn btn-primary btn-rounded btn-lg ${
+                this.props.ismobile === 'true' ? 'mt-auto wide-btn' : ''
+              }`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />
