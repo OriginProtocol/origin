@@ -265,8 +265,8 @@ export default function txHelper({
           }
         })
         if (contracts.automine) {
-          setTimeout(() => {
-            contracts.web3.currentProvider.send(
+          setTimeout(async () => {
+            await contracts.web3.currentProvider.sendAsync(
               { method: 'evm_mine' },
               () => {}
             )
