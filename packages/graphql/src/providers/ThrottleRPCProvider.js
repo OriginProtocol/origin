@@ -4,7 +4,7 @@
  *
  * Blame: Mike Shultz <shultzm@gmail.com>
  */
-import request from 'request-promise'
+import fetch from 'cross-fetch'
 import Bottleneck from 'bottleneck/es5'
 import JsonRpcError from 'json-rpc-error'
 import createPayload from 'web3-provider-engine/util/create-payload'
@@ -27,21 +27,16 @@ const METHOD_PRIORITY = {
  * @returns {object} The JS repr of the JSON response data
  */
 async function sendRequest(url, payload) {
-  let result = null
+  let response = null
   let error = null
   try {
-    result = await request({
-      uri: url,
+    response = await fetch(url, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload),
-      rejectUnauthorized: false,
-      timeout: 20000,
-      resolveWithFullResponse: true,
-      simple: false
+      body: JSON.stringify(payload)
     })
   } catch (err) {
     error = err
@@ -52,7 +47,7 @@ async function sendRequest(url, payload) {
   }
 
   // check for error code
-  switch (result.statusCode) {
+  switch (response.status) {
     case 405:
       throw new JsonRpcError.MethodNotFound()
     case 504: // Gateway timeout
@@ -68,15 +63,15 @@ async function sendRequest(url, payload) {
         throw new JsonRpcError.InternalError(err)
       })()
     default:
-      if (result.statusCode != 200) {
-        throw new JsonRpcError.InternalError(result.body)
+      if (response.status != 200) {
+        throw new JsonRpcError.InternalError(response.text)
       }
   }
 
   // parse response
   let data
   try {
-    data = JSON.parse(result.body)
+    data = await response.json()
   } catch (err) {
     console.log('errror parser')
     console.error(err.stack)
