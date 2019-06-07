@@ -62,7 +62,7 @@ function createEngine(web3Inst, options) {
   engine.on('error', () => {})
 
   // web3-provider-engine sets to 30, which apparently isn't enough for Origin
-  engine.setMaxListeners(50)
+  engine.setMaxListeners(75)
 
   engine.addProvider(convertedProvider)
 
