@@ -52,49 +52,54 @@ class Nav extends Component {
           {!this.props.wallet ? (
             <GetStarted />
           ) : (
-            <ul className="navbar-nav">
-              <li className="nav-item d-none d-md-flex">
-                <NavLink to="/my-purchases" className="nav-link text">
-                  <span>
-                    <fbt desc="navbar.purchases">Purchases</fbt>
-                  </span>
-                </NavLink>
-              </li>
-              <li className="nav-item d-none d-md-flex">
-                <NavLink to="/my-listings" className="nav-link text">
-                  <span>
-                    <fbt desc="navbar.listings">Listings</fbt>
-                  </span>
-                </NavLink>
-              </li>
-              <li className="nav-item d-none d-md-flex">
-                <NavLink to="/my-sales" className="nav-link text">
-                  <span>
-                    <fbt desc="navbar.sales">Sales</fbt>
-                  </span>
-                </NavLink>
-              </li>
-              <li className="nav-item d-none d-lg-flex">
-                <NavLink to="/create" className="nav-link text">
-                  <span>
-                    <fbt desc="navbar.addListing">Add Listing</fbt>
-                  </span>
-                </NavLink>
-              </li>
-              <li className="nav-item d-none d-lg-flex">
-                <EarnTokens className="nav-link text" href="#">
-                  <span className="d-md-none d-xl-flex">
-                    <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-                  </span>
-                  <span className="d-xl-none">
-                    <fbt desc="navbar.tokens">Tokens</fbt>
-                  </span>
-                </EarnTokens>
-              </li>
-              <Messages {...navProps('messages')} />
-              <Notifications {...navProps('notifications')} />
-              <Profile {...navProps('profile')} />
-            </ul>
+            <>
+              <form className="form-inline mr-auto d-none d-md-flex">
+                <input className="form-control" type="search" />
+              </form>
+              <ul className="navbar-nav">
+                <li className="nav-item d-none d-md-flex">
+                  <NavLink to="/my-purchases" className="nav-link text">
+                    <span>
+                      <fbt desc="navbar.purchases">Purchases</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="nav-item d-none d-md-flex">
+                  <NavLink to="/my-listings" className="nav-link text">
+                    <span>
+                      <fbt desc="navbar.listings">Listings</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="nav-item d-none d-md-flex">
+                  <NavLink to="/my-sales" className="nav-link text">
+                    <span>
+                      <fbt desc="navbar.sales">Sales</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="nav-item d-none d-lg-flex">
+                  <NavLink to="/create" className="nav-link text">
+                    <span>
+                      <fbt desc="navbar.addListing">Add Listing</fbt>
+                    </span>
+                  </NavLink>
+                </li>
+                <li className="nav-item d-none d-lg-flex">
+                  <EarnTokens className="nav-link text" href="#">
+                    <span className="d-md-none d-xl-flex">
+                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                    </span>
+                    <span className="d-xl-none">
+                      <fbt desc="navbar.tokens">Tokens</fbt>
+                    </span>
+                  </EarnTokens>
+                </li>
+                <Messages {...navProps('messages')} />
+                <Notifications {...navProps('notifications')} />
+                <Profile {...navProps('profile')} />
+              </ul>
+            </>
           )}
         </div>
       </nav>
@@ -110,6 +115,15 @@ require('react-styl')(`
     border-bottom: 1px solid rgba(0, 0, 0, 0.1)
     > .container
       align-items: stretch
+    .form-inline
+      flex: 1
+      max-width: 260px
+      margin-left: 1rem
+      .form-control
+        background: url(images/magnifying-glass.svg) no-repeat right 10px center
+        border-color: #c2cbd3
+        border-radius: 5px
+        width: 100%
 
     .nav-item
       display: flex
@@ -136,7 +150,7 @@ require('react-styl')(`
         align-items: center
         &.text
           background-color: initial
-          padding: 0 0.5rem
+          padding: 0 0.25rem
           span
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
@@ -161,7 +175,7 @@ require('react-styl')(`
   .navbar-brand
     background: url(images/origin-logo-black.svg) no-repeat center
     background-size: 100%
-    width: 108px
+    width: 90px
     text-indent: -9999px
 
   .custom-brand

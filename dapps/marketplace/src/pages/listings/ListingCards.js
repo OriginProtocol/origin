@@ -33,7 +33,7 @@ class ListingCards extends Component {
                   window.open(`#/listing/${a.id}`, '_blank')
                 }
               }}
-              className="col-md-4 listing-card"
+              className="col-md-3 listing-card"
             >
               {a.media && a.media.length ? (
                 <div
