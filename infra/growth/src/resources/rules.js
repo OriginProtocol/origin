@@ -1,6 +1,9 @@
 const Sequelize = require('sequelize')
 
-const db = require('../models')
+const _growthModels = require('../models')
+const _discoveryModels = require('@origin/discovery/src/models')
+const db = { ..._growthModels, ..._discoveryModels }
+
 const {
   GrowthEventTypes,
   GrowthEventStatuses,
@@ -71,7 +74,9 @@ class CampaignRules {
 
   /**
    * Reads events related to a user from the DB.
-   * @param {string} ethAddress - User's account.
+   * Events recorded from any of the proxies owned by that wallet are included.
+   *
+   * @param {string} ethAddress - User's wallet address..
    * @param {Object} Options:
    *   - duringCampaign - Restricts query to events that occurred during
    *  the campaign. By default all events since user signed up are returned.
@@ -85,9 +90,14 @@ class CampaignRules {
     if (opts.beforeCampaign && opts.duringCampaign) {
       throw new Error('beforeCampaign and duringCampaign args are incompatible')
     }
-    const whereClause = {
-      ethAddress: ethAddress.toLowerCase()
-    }
+
+    // Load any proxy associated with the wallet address.
+    const ownerAddress = ethAddress.toLowerCase()
+    const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
+
+    // Query events from wallet and proxy(ies).
+    const addresses = [ownerAddress, ...proxies.map(proxy => proxy.address)]
+    const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
 
     const endDate = opts.beforeCampaign
       ? this.campaign.startDate
@@ -396,7 +406,7 @@ class BaseRule {
 
   /**
    * Counts events, grouped by types.
-   * @param {string} ethAddress - User's account.
+   * @param {string} ethAddress - User's wallet address.
    * @param {Array<models.GrowthEvent>} events
    * @param {function} customIdFn - Optional. Custom id filter function.
    * @returns {Dict{string:number}} - Dict with event type as key and count as value.
@@ -406,7 +416,6 @@ class BaseRule {
     events
       .filter(event => {
         return (
-          event.ethAddress.toLowerCase() === ethAddress.toLowerCase() &&
           eventTypes.includes(event.type) &&
           (!customIdFn || customIdFn(event.customId)) &&
           (event.status === GrowthEventStatuses.Logged ||
