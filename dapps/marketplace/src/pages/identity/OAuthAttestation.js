@@ -7,7 +7,6 @@ import { withRouter } from 'react-router-dom'
 import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
-// import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
 
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
@@ -61,8 +60,6 @@ class OAuthAttestation extends Component {
     }
 
     const isMobile = this.isMobile()
-
-    // const ModalComponent = isMobile ? MobileModal : Modal
 
     const { origin, pathname } = window.location
     const { provider } = this.props
@@ -248,28 +245,3 @@ class OAuthAttestation extends Component {
 }
 
 export default withIsMobile(withRouter(OAuthAttestation))
-
-// require('react-styl')(`
-//   .mobile-modal-light .attestation-modal
-//     padding: 20px
-//     h2
-//       padding-top: 7.5rem
-//     .btn
-//       width: 100%
-//       border-radius: 2rem
-//       padding: 0.75rem
-//     .info
-//       text-align: center
-//       border-radius: 5px
-//       border: solid 1px var(--bluey-grey)
-//       background-color: rgba(152, 167, 180, 0.1)
-//       font-family: Lato
-//       font-size: 14px
-//       color: black
-//       padding: 10px
-//       margin-top: 1rem
-//       .title
-//         display: block
-//         font-weight: bold
-//         margin-bottom: 3px
-// `)
