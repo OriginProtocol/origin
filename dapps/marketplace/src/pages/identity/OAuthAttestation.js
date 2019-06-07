@@ -13,19 +13,19 @@ import query from 'queries/GetAuthUrl'
 function getProviderDisplayName(provider) {
   switch (provider) {
     case 'github':
-      return 'GitHub'
+      return fbt('GitHub', 'GitHub')
     case 'facebook':
-      return 'Facebook'
+      return fbt('Facebook', 'Facebook')
     case 'twitter':
-      return 'Twitter'
+      return fbt('Twitter', 'Twitter')
     case 'google':
-      return 'Google'
+      return fbt('Google', 'Google')
     case 'kakao':
-      return 'Kakao'
+      return fbt('Kakao', 'Kakao')
     case 'linkedin':
-      return 'LinkedIn'
+      return fbt('LinkedIn', 'LinkedIn')
     case 'wechat':
-      return 'WeChat'
+      return fbt('WeChat', 'WeChat')
   }
 
   console.error(`Unknown attestation provider: ${provider}`)

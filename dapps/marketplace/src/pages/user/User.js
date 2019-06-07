@@ -62,55 +62,55 @@ const User = ({ match }) => {
                       {profile.facebookVerified && (
                         <div>
                           <div className="attestation facebook" />
-                          Facebook
+                          <fbt desc="Facebook">Facebook</fbt>
                         </div>
                       )}
                       {profile.twitterVerified && (
                         <div>
                           <div className="attestation twitter" />
-                          Twitter
+                          <fbt desc="Twitter">Twitter</fbt>
                         </div>
                       )}
                       {profile.airbnbVerified && (
                         <div>
                           <div className="attestation airbnb" />
-                          AirBnb
+                          <fbt desc="AirBnb">AirBnb</fbt>
                         </div>
                       )}
                       {profile.googleVerified && (
                         <div>
                           <div className="attestation google" />
-                          Google
+                          <fbt desc="Google">Google</fbt>
                         </div>
                       )}
                       {profile.websiteVerified && (
                         <div>
                           <div className="attestation website" />
-                          Website
+                          <fbt desc="Website">Website</fbt>
                         </div>
                       )}
                       {profile.kakaoVerified && (
                         <div>
                           <div className="attestation kakao" />
-                          Kakao
+                          <fbt desc="Kakao">Kakao</fbt>
                         </div>
                       )}
                       {profile.githubVerified && (
                         <div>
                           <div className="attestation github" />
-                          GitHub
+                          <fbt desc="GitHub">GitHub</fbt>
                         </div>
                       )}
                       {profile.linkedinVerified && (
                         <div>
                           <div className="attestation linkedin" />
-                          LinkedIn
+                          <fbt desc="LinkedIn">LinkedIn</fbt>
                         </div>
                       )}
                       {profile.wechatVerified && (
                         <div>
                           <div className="attestation wechat" />
-                          WeChat
+                          <fbt desc="WeChat">WeChat</fbt>
                         </div>
                       )}
                     </div>
