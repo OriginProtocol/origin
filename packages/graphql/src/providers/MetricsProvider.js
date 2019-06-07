@@ -1,8 +1,9 @@
-import ProviderEngine from 'web3-provider-engine'
 import SubProvider from 'web3-provider-engine/subproviders/subprovider'
-import RpcSubprovider from 'web3-provider-engine/subproviders/rpc'
 
-class MetricsProvider extends SubProvider {
+/**
+ * A web3-provider-engine subprovider to gether metrics on JSON-RPC calls
+ */
+export default class MetricsProvider extends SubProvider {
   constructor(options) {
     super()
 
@@ -116,74 +117,3 @@ class MetricsProvider extends SubProvider {
     return
   }
 }
-
-/**
- * Convert a standard provider to a web3-provider-engine subprovider
- * @param provider {object} - A Web3 provider
- * @returns {object} - A web3-provider-engine subprovider
- */
-function convertWeb3Provider(provider) {
-  if (!provider) {
-    throw new Error('provider not provided')
-  }
-
-  if (provider.host && provider.host.startsWith('http')) {
-    return new RpcSubprovider({ rpcUrl: provider.host })
-  } else if (typeof provider.setEngine !== 'undefined') {
-    // This would be a web3-provider-engine subprovider, anyway. Unlikely.
-    return provider
-  } else {
-    throw new Error('Provider unsupported...')
-  }
-}
-
-/**
- * Adds MetricsProvider to the web3 provider stack of a Web3 instance.
- * @param web3Inst {object} - An initialized Web3 instance
- * @param options {object} - Mapping of configuration options
- * @returns {object} - An initialized web3 instance with the altered providers
- */
-function addMetricsProvider(web3Inst, options) {
-  // Our new shiny subproviders
-  const convertedProvider = convertWeb3Provider(web3Inst.currentProvider)
-  const metricsProvider = new MetricsProvider(options)
-
-  /**
-   * The blockTracker seems be a default function of web3-provider-engine, but
-   * it's not completely clear if it's necessary(emits the 'latest' event).  It
-   * has an internal currentBlock tracker.  Perhaps we should bolt onto it.
-   * Right now, we're specifically initializing the block tracker so we can
-   * disable the `skipConfig` parameter that it sends which breaks Alchemy
-   */
-  const engine = new ProviderEngine({ useSkipCache: false })
-
-  /**
-   * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
-   *
-   * This is more or less duplication of the handling in MetricsProvider, but we
-   * can't do anything intelligent from here.  And if we don't have this event
-   * listener, web3-provider-engine will crash the process...  And looking at
-   * their source, I don't *think* there's any exceptions where an error would
-   * present here, and not in the next() callback, so we're more or less just
-   * supressing the crash here.  Probably.
-   */
-  engine.on('error', () => {})
-
-  // web3-provider-engine sets to 30, which apparently isn't enough for Origin
-  engine.setMaxListeners(50)
-
-  engine.addProvider(metricsProvider)
-  engine.addProvider(convertedProvider)
-
-  web3Inst.setProvider(engine)
-
-  /**
-   * This is REQUIRED.  If you don't do this, you will probably spend a few
-   * hours wondering why web3-provider-engine is gaslighting you.
-   */
-  engine.start()
-
-  return web3Inst
-}
-
-export { MetricsProvider, addMetricsProvider }
