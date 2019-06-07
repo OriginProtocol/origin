@@ -26,6 +26,10 @@ export default gql`
           phoneVerified
           emailVerified
           websiteVerified
+          kakaoVerified
+          githubVerified
+          linkedinVerified
+          wechatVerified
         }
       }
     }
