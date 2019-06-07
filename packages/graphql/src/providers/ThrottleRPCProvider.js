@@ -28,7 +28,6 @@ const METHOD_PRIORITY = {
  */
 async function sendRequest(url, payload) {
   let response = null
-  let error = null
   try {
     response = await fetch(url, {
       method: 'POST',
@@ -39,11 +38,7 @@ async function sendRequest(url, payload) {
       body: JSON.stringify(payload)
     })
   } catch (err) {
-    error = err
-  }
-
-  if (error) {
-    throw new JsonRpcError.InternalError(error)
+    throw new JsonRpcError.InternalError(err)
   }
 
   // check for error code
@@ -51,17 +46,13 @@ async function sendRequest(url, payload) {
     case 405:
       throw new JsonRpcError.MethodNotFound()
     case 504: // Gateway timeout
-      return (function() {
-        let msg = `Gateway timeout. The request took too long to process. `
-        msg += `This can happen when querying logs over too wide a block range.`
-        const err = new Error(msg)
-        throw new JsonRpcError.InternalError(err)
-      })()
+      throw new JsonRpcError.InternalError(
+        new Error(
+          `Gateway timeout. The request took too long to process. This can happen when querying logs over too wide a block range.`
+        )
+      )
     case 429: // Too many requests (rate limiting)
-      return (function() {
-        const err = new Error(`Too Many Requests`)
-        throw new JsonRpcError.InternalError(err)
-      })()
+      throw new JsonRpcError.InternalError(new Error(`Too Many Requests`))
     default:
       if (response.status != 200) {
         throw new JsonRpcError.InternalError(response.text)
@@ -79,7 +70,7 @@ async function sendRequest(url, payload) {
   }
   if (data.error) {
     console.log('data.error')
-    throw data.error
+    throw new JsonRpcError.InternalError(data.error)
   }
 
   return data.result

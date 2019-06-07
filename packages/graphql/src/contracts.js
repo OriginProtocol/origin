@@ -152,7 +152,7 @@ export function setNetwork(net, customConfig) {
       ? parseInt(process.env.MAX_RPC_CONCURRENT)
       : 25
   if (config.useMetricsProvider) {
-    // These are "every N reqeusts"
+    // These are "every N requests"
     const echoEvery =
       typeof process.env.ECHO_EVERY !== 'undefined'
         ? parseInt(process.env.ECHO_EVERY)
