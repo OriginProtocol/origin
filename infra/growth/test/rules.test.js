@@ -494,7 +494,7 @@ describe('Growth Engine rules', () => {
       }
     })
 
-    it(`Events from proxy should be credit to owner`, async () => {
+    it(`Events from proxy should be credited to owner`, async () => {
       this.events = [
         {
           id: 1,
