@@ -137,6 +137,7 @@ class ReviewAndFinalize extends Component {
           </div>
           <div className="d-flex flex-column">
             <FinalizeOffer
+              disabled={this.state.rating === 0}
               rating={this.state.rating}
               review={this.state.review}
               offer={this.props.offer}

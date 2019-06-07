@@ -34,6 +34,7 @@ export default {
     'QmZ9ANQNA1r3cbPSMNc9YFyAEijXif2j9m6SyaKDMJ8RsL'
   ],
   ProxyFactory: addresses.ProxyFactory,
+  ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
