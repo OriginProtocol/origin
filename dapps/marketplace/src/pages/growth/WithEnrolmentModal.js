@@ -512,9 +512,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
-
-      const isMobile = this.props.ismobile === 'true'
-
+      const isMobile = this.props.isMobile
       const ModalComponent = isMobile ? MobileModal : Modal
 
       return (
@@ -546,7 +544,6 @@ function withEnrolmentModal(WrappedComponent) {
                     )
                   }
 
-                  const isMobile = this.props.ismobile === 'true'
                   const displayMobileModal =
                     isMobile && this.state.stage !== 'MetamaskSignature'
                   const snowSmallerModal =
@@ -558,7 +555,8 @@ function withEnrolmentModal(WrappedComponent) {
                         {...omit(this.props, [
                           'onClose',
                           'onNavigation',
-                          'onCompleted'
+                          'onCompleted',
+                          'isMobile'
                         ])}
                         onClick={e =>
                           this.handleClick(

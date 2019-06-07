@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -13,106 +15,128 @@ import Mobile from './nav/Mobile'
 import GetStarted from './nav/GetStarted'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-class Nav extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { open: 'profile' }
-    this.EarnTokens = withEnrolmentModal('a')
-  }
+const Brand = withCreatorConfig(({ creatorConfig }) => {
+  return creatorConfig.logoUrl ? (
+    <Link to="/" className="custom-brand">
+      <img src={creatorConfig.logoUrl} alt={creatorConfig.title} />
+    </Link>
+  ) : (
+    <Link to="/" className="navbar-brand">
+      Origin
+    </Link>
+  )
+})
 
-  render() {
-    const navProps = nav => ({
-      onOpen: () => this.setState({ open: nav }),
-      onClose: () => this.setState({ open: false }),
-      open: this.state.open === nav
-    })
+const Nav = ({ location, isMobile, wallet }) => {
+  const [open, setOpen] = useState()
+  const navProps = nav => ({
+    onOpen: () => setOpen(nav),
+    onClose: () => setOpen(false),
+    open: open === nav
+  })
 
-    /* react uses upper/lower case convention to distinguish between DOM tags
-     * and user defined components. For that reason if the components starts with
-     * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
-     */
-    const EarnTokens = this.EarnTokens
+  if (isMobile) {
+    let customNav
+    if (location.pathname.startsWith('/my-listings')) {
+      customNav = <h1>My Listings</h1>
+    }
+    if (customNav) {
+      return (
+        <nav className="navbar no-border">
+          <Mobile {...navProps('mobile')} />
+          {customNav}
+        </nav>
+      )
+    }
 
     return (
-      <nav className="navbar navbar-expand-md">
+      <nav className="navbar">
+        <Mobile {...navProps('mobile')} />
+        <Brand />
+        <Profile {...navProps('profile')} />
+      </nav>
+    )
+  }
+
+  if (!wallet) {
+    return (
+      <nav className="navbar">
         <div className="container">
-          <Mobile {...navProps('mobile')} />
-          {!this.props.creatorConfig.logoUrl ? (
-            <Link to="/" className="navbar-brand">
-              Origin
-            </Link>
-          ) : (
-            <Link to="/" className="custom-brand">
-              <img
-                src={this.props.creatorConfig.logoUrl}
-                alt={this.props.creatorConfig.title}
-              />
-            </Link>
-          )}
-          {!this.props.wallet ? (
-            <GetStarted />
-          ) : (
-            <>
-              <form className="form-inline mr-auto d-none d-md-flex">
-                <input className="form-control" type="search" />
-              </form>
-              <ul className="navbar-nav">
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-purchases" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.purchases">Purchases</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-listings" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.listings">Listings</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-md-flex">
-                  <NavLink to="/my-sales" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.sales">Sales</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-lg-flex">
-                  <NavLink to="/create" className="nav-link text">
-                    <span>
-                      <fbt desc="navbar.addListing">Add Listing</fbt>
-                    </span>
-                  </NavLink>
-                </li>
-                <li className="nav-item d-none d-lg-flex">
-                  <EarnTokens className="nav-link text" href="#">
-                    <span className="d-md-none d-xl-flex">
-                      <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-                    </span>
-                    <span className="d-xl-none">
-                      <fbt desc="navbar.tokens">Tokens</fbt>
-                    </span>
-                  </EarnTokens>
-                </li>
-                <Messages {...navProps('messages')} />
-                <Notifications {...navProps('notifications')} />
-                <Profile {...navProps('profile')} />
-              </ul>
-            </>
-          )}
+          <Brand />
+          <GetStarted />
         </div>
       </nav>
     )
   }
+
+  /* react uses upper/lower case convention to distinguish between DOM tags
+   * and user defined components. For that reason if the components starts with
+   * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
+   */
+  const EarnTokens = withEnrolmentModal('a')
+
+  return (
+    <nav className="navbar navbar-expand-md">
+      <div className="container">
+        <Brand />
+        <form className="form-inline mr-auto">
+          <input className="form-control" type="search" />
+        </form>
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <NavLink to="/my-purchases" className="nav-link text">
+              <span>
+                <fbt desc="navbar.purchases">Purchases</fbt>
+              </span>
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="/my-listings" className="nav-link text">
+              <span>
+                <fbt desc="navbar.listings">Listings</fbt>
+              </span>
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="/my-sales" className="nav-link text">
+              <span>
+                <fbt desc="navbar.sales">Sales</fbt>
+              </span>
+            </NavLink>
+          </li>
+          <li className="nav-item d-none d-lg-flex">
+            <NavLink to="/create" className="nav-link text">
+              <span>
+                <fbt desc="navbar.addListing">Add Listing</fbt>
+              </span>
+            </NavLink>
+          </li>
+          <li className="nav-item d-none d-lg-flex">
+            <EarnTokens className="nav-link text" href="#">
+              <span className="d-md-none d-xl-flex">
+                <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+              </span>
+              <span className="d-xl-none">
+                <fbt desc="navbar.tokens">Tokens</fbt>
+              </span>
+            </EarnTokens>
+          </li>
+          <Messages {...navProps('messages')} />
+          <Notifications {...navProps('notifications')} />
+          <Profile {...navProps('profile')} />
+        </ul>
+      </div>
+    </nav>
+  )
 }
 
-export default withWallet(withCreatorConfig(Nav))
+export default withRouter(withWallet(withIsMobile(Nav)))
 
 require('react-styl')(`
   .navbar
     padding: 0 1rem
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+    &:not(.no-border)
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1)
     > .container
       align-items: stretch
     .form-inline
@@ -201,7 +225,12 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .navbar
-      padding: 0
+      padding: 0.5rem 0 0 0
+      h1
+        font-size: 24px
+        position: absolute
+        left: 50%
+        transform: translateX(-50%)
       .nav-item
         position: initial
         .dropdown-menu

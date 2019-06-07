@@ -173,14 +173,6 @@ export default withWallet(Purchases)
 require('react-styl')(`
   .transactions
     padding-top: 3rem
-    .nav-pills
-      margin-bottom: 2rem
-      flex-direction: column
-      .nav-link
-        color: var(--dark-grey-blue)
-        &.active
-          background-color: var(--dark-grey-blue)
-          color: var(--white)
     .purchase
       border: 1px solid var(--pale-grey-two);
       border-radius: var(--default-radius);

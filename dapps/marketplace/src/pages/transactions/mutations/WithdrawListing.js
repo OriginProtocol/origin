@@ -31,7 +31,7 @@ class WithdrawListing extends Component {
             <a
               href="#"
               className="text-danger"
-              children={fbt('Close Listing', 'Close Listing')}
+              children={fbt('Delete', 'Delete')}
               onClick={e => {
                 e.preventDefault()
                 this.setState({ sure: true })
