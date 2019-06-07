@@ -115,8 +115,8 @@ export default class ThrottleRPCProvider extends SubProvider {
       if (jobInfo.retryCount > MAX_RETRIES - 1) return null // This will allow the error to throw
       return (jobInfo.retryCount || 1) * BUFFER_MS
     })
-    limiter.on('retry', message => {
-      console.debug(message)
+    limiter.on('retry', (message, jobInfo) => {
+      console.debug('retrying request method: ', jobInfo.args[1].method)
     })
 
     return limiter
