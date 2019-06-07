@@ -287,7 +287,7 @@ class DistributeRewards {
     for (const ethAddress of ethAddresses) {
       const payout = await db.GrowthPayout.findOne({
         where: {
-          ethAddress,
+          toAddress: ethAddress,
           campaignId,
           status: enums.GrowthPayoutStatuses.Confirmed
         }
