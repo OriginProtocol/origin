@@ -56,6 +56,22 @@ function useRelayer({ mutation, value }) {
 }
 
 /**
+ * trigger the EVM to mine a block, supporting the WPE-style providers, and
+ * the standard ones...
+ * @param web3 {Web3} a Web3 instance
+ */
+async function mineBlock(web3Inst) {
+  if (typeof web3Inst.currentProvider.sendAsync !== 'undefined') {
+    return await web3Inst.currentProvider.sendAsync(
+      { method: 'evm_mine' },
+      () => {}
+    )
+  } else {
+    return web3Inst.currentProvider.send({ method: 'evm_mine' }, () => {})
+  }
+}
+
+/**
  * Should we use existing proxy, create new proxy, or don't use proxy at all.
  * @param proxy     Existing proxy address
  * @param addr      Contract address
@@ -266,10 +282,7 @@ export default function txHelper({
         })
         if (contracts.automine) {
           setTimeout(async () => {
-            await contracts.web3.currentProvider.sendAsync(
-              { method: 'evm_mine' },
-              () => {}
-            )
+            await mineBlock(contracts.web3)
           }, contracts.automine)
         }
       })
