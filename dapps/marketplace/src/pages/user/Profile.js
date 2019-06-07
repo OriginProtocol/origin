@@ -34,14 +34,9 @@ import Earnings from 'components/Earning'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
-import FacebookAttestation from 'pages/identity/FacebookAttestation'
-import GoogleAttestation from 'pages/identity/GoogleAttestation'
-import TwitterAttestation from 'pages/identity/TwitterAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
-import KakaoAttestation from 'pages/identity/KakaoAttestation'
-import GithubAttestation from 'pages/identity/GithubAttestation'
-import LinkedinAttestation from 'pages/identity/LinkedinAttestation'
+import OAuthAttestation from 'pages/identity/OAuthAttestation'
 import ProfileWizard from 'pages/user/ProfileWizard'
 import Onboard from 'pages/onboard/Onboard'
 
@@ -50,17 +45,28 @@ import ToastNotification from './ToastNotification'
 
 const store = Store('sessionStorage')
 
+const withOAuthAttestationProvider = (provider) => {
+  const WithOAuthAttestationProvider = props => {
+    return (
+      <OAuthAttestation provider={provider} {...props} />
+    )
+  }
+
+  return WithOAuthAttestationProvider
+}
+
 const AttestationComponents = {
   phone: PhoneAttestation,
   email: EmailAttestation,
-  facebook: FacebookAttestation,
-  twitter: TwitterAttestation,
+  facebook: withOAuthAttestationProvider('facebook'),
+  twitter: withOAuthAttestationProvider('twitter'),
   airbnb: AirbnbAttestation,
-  google: GoogleAttestation,
+  google: withOAuthAttestationProvider('google'),
   website: WebsiteAttestation,
-  kakao: KakaoAttestation,
-  github: GithubAttestation,
-  linkedin: LinkedinAttestation
+  kakao: withOAuthAttestationProvider('kakao'),
+  github: withOAuthAttestationProvider('github'),
+  linkedin: withOAuthAttestationProvider('linkedin'),
+  wechat: withOAuthAttestationProvider('wechat')
 }
 
 const ProfileFields = [

@@ -264,7 +264,7 @@ export async function identities(
  * @param {String} provider One of supported attestation provider
  * @param {Object} args Arguments from GraphQL query resolver
  */
-async function getAuthURL(provider, args) {
+async function getAuthUrl(provider, args) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return null
@@ -284,25 +284,7 @@ async function getAuthURL(provider, args) {
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: (_, args) => {
-    return getAuthURL('facebook', args)
-  },
-  twitterAuthUrl: (_, args) => {
-    return getAuthURL('twitter', args)
-  },
-  googleAuthUrl: (_, args) => {
-    return getAuthURL('google', args)
-  },
-  kakaoAuthUrl: (_, args) => {
-    return getAuthURL('kakao', args)
-  },
-  githubAuthUrl: (_, args) => {
-    return getAuthURL('github', args)
-  },
-  linkedinAuthUrl: (_, args) => {
-    return getAuthURL('linkedin', args)
-  },
-  wechatAuthUrl: (_, args) => {
-    return getAuthURL('wechat', args)
+  getAuthUrl: (_, { provider, ...args }) => {
+    return getAuthUrl(provider, args)
   }
 }

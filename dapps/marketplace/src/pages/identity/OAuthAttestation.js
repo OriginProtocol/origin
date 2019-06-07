@@ -7,10 +7,31 @@ import { withRouter } from 'react-router-dom'
 import Modal from 'components/Modal'
 import AutoMutate from 'components/AutoMutate'
 
-import VerifyFacebookMutation from 'mutations/VerifyFacebook'
-import query from 'queries/FacebookAuthUrl'
+import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
+import query from 'queries/GetAuthUrl'
 
-class FacebookAttestation extends Component {
+function getProviderDisplayName(provider) {
+  switch (provider) {
+    case 'github':
+      return 'GitHub'
+    case 'facebook':
+      return 'Facebook'
+    case 'twitter':
+      return 'Twitter'
+    case 'google':
+      return 'Google'
+    case 'kakao':
+      return 'Kakao'
+    case 'linkedin':
+      return 'LinkedIn'
+    case 'wechat':
+      return 'WeChat'
+  }
+
+  console.error(`Unknown attestation provider: ${provider}`)
+}
+
+class OAuthAttestation extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -52,13 +73,14 @@ class FacebookAttestation extends Component {
     const isMobile = this.state.mobile
 
     const { origin, pathname } = window.location
+    const { provider } = this.props
     const redirect = isMobile
-      ? encodeURIComponent(`${origin}${pathname}#/profile/facebook`)
+      ? encodeURIComponent(`${origin}${pathname}#/profile/${provider}`)
       : null
 
     return (
       <Modal
-        className={`attestation-modal facebook${
+        className={`${provider} attestation-modal${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
@@ -68,13 +90,18 @@ class FacebookAttestation extends Component {
             error: false,
             stage: 'GenerateCode'
           })
-          this.props.history.replace('/profile')
           this.props.onClose()
+          this.props.history.replace('/profile')
         }}
       >
-        <Query query={query} variables={{ redirect }}>
+        <Query
+          query={query}
+          variables={{ redirect, provider }}
+          fetchPolicy="network-only"
+          skip={get(this.props, 'match.params.attestation') ? true : false}
+        >
           {({ data }) => {
-            const authUrl = get(data, 'identityEvents.facebookAuthUrl')
+            const authUrl = get(data, 'identityEvents.GetAuthUrl')
             return (
               <div>
                 {this[`render${this.state.stage}`]({
@@ -90,19 +117,18 @@ class FacebookAttestation extends Component {
   }
 
   renderGenerateCode({ authUrl, redirect }) {
+    const providerName = getProviderDisplayName(this.props.provider)
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verfify">
-            Verify your Facebook Account
-          </fbt>
+          <fbt desc="OAuthAttestation.verify">Verify your <fbt:param name="provider">{providerName}</fbt:param> Account</fbt>
         </h2>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         <div className="help">
-          <fbt desc="FacebookAttestation.verfify.explanation">
-            Other users will know that you have a verified Facebook account, but
+          <fbt desc="OAuthAttestation.verify.explanation">
+            Other users will know that you have a verified <fbt:param name="provider">{providerName}</fbt:param> account, but
             your account details will not be published on the blockchain. We
             will never post on your behalf.
           </fbt>
@@ -122,11 +148,12 @@ class FacebookAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
+
     return (
       <Mutation
-        mutation={VerifyFacebookMutation}
+        mutation={VerifyOAuthAttestation}
         onCompleted={res => {
-          const result = res.verifyFacebook
+          const result = res.verifyOAuthAttestation
           if (result.success) {
             this.setState({
               stage: 'VerifiedOK',
@@ -149,9 +176,10 @@ class FacebookAttestation extends Component {
             this.setState({ error: false, loading: true })
             verifyCode({
               variables: {
+                provider: this.props.provider,
                 identity: this.props.wallet,
-                authUrl,
                 redirect,
+                authUrl,
                 code: sid
               }
             })
@@ -178,12 +206,12 @@ class FacebookAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const providerName = getProviderDisplayName(this.props.provider)
+
     return (
       <>
         <h2>
-          <fbt desc="FacebookAttestation.verified">
-            Facebook account verified!
-          </fbt>
+          <fbt desc="OAuthAttestation.verified"><fbt:param name="provider">{providerName}</fbt:param> account verified!</fbt>
         </h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">
@@ -211,7 +239,7 @@ class FacebookAttestation extends Component {
   }
 }
 
-export default withRouter(FacebookAttestation)
+export default withRouter(OAuthAttestation)
 
 require('react-styl')(`
 `)

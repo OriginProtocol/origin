@@ -38,13 +38,8 @@ export const types = `
       after: String
       sort: String
     ): IdentityConnection
-    facebookAuthUrl(redirect: String): String
-    twitterAuthUrl(redirect: String): String
-    googleAuthUrl(redirect: String): String
-    kakaoAuthUrl(redirect: String): String
-    githubAuthUrl(redirect: String): String
-    linkedinAuthUrl(redirect: String): String
-    wechatAuthUrl(redirect: String): String
+
+    getAuthUrl(provider: String!, redirect: String): String
   }
 
   type IdentityConnection {
