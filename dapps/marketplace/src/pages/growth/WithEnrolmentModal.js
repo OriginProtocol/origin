@@ -275,8 +275,8 @@ function withEnrolmentModal(WrappedComponent) {
             termsAccepted
               ? 'btn-primary btn-rounded'
               : isMobile
-              ? 'btn-primary mt-5 mb-0'
-              : 'btn-outline-light'
+              ? 'btn-primary mt-5 mb-0 wide-btn'
+              : 'ml-2 btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
           disabled={termsAccepted ? undefined : 'disabled'}
@@ -345,7 +345,7 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div
               className={`d-flex justify-content-center ${
-                isMobile ? 'flex-column mt-auto' : ''
+                isMobile ? 'flex-column mt-auto px-4' : ''
               }`}
             >
               {!isMobile && (
@@ -420,7 +420,7 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className={`btn btn-rounded btn-lg ${
                 this.props.ismobile === 'true'
-                  ? 'btn-primary mt-auto'
+                  ? 'btn-primary mt-auto wide-btn'
                   : 'btn-outline-light'
               }`}
               onClick={() => this.handleCloseModal()}
@@ -429,9 +429,7 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && notCitizenChecked && (
             <button
-              className={`btn btn-primary btn-rounded btn-lg${
-                this.props.ismobile === 'true' ? ' mt-auto' : ''
-              }`}
+              className={`btn btn-primary btn-rounded btn-lg ${this.props.ismobile === 'true' ? 'mt-auto wide-btn' : ''}`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />
@@ -683,6 +681,10 @@ require('react-styl')(`
     .btn
       margin-top: 30px
       min-width: 9rem
+    .wide-btn
+      width: 100%
+      margin-left: auto
+      margin-right: auto
     .checkbox-holder
       color: var(--steel-blue)
       font-family: Lato
@@ -792,9 +794,7 @@ require('react-styl')(`
         .btn-no-outline
           margin-top: 0.8rem
       .btn
-        margin-top: 1.2rem
-        margin-left: 1.5rem
-        margin-right: 1.5rem
+        margin-top: 1.5rem
       .title
         font-size: 20px
         line-height: 1.3
