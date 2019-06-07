@@ -40,7 +40,10 @@ describe('April campaign rules', () => {
 
     // Mock the rule's getEvent method.
     this.events = []
-    this.crules.getEvents = () => { return this.events }
+    this.crules.getEvents = (ethAddress) => {
+      return this.events
+        .filter(event => event.ethAddress === ethAddress)
+    }
 
     // Mock the _getReferees method of the Referral rule.
     this.crules.levels[2].rules[0]._getReferees = () => { return [] }

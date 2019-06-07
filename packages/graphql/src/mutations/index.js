@@ -43,13 +43,11 @@ import generateEmailCode from './attestations/generateEmailCode'
 import verifyEmailCode from './attestations/verifyEmailCode'
 import generatePhoneCode from './attestations/generatePhoneCode'
 import verifyPhoneCode from './attestations/verifyPhoneCode'
-import verifyFacebook from './attestations/verifyFacebook'
-import verifyTwitter from './attestations/verifyTwitter'
 import generateAirbnbCode from './attestations/generateAirbnbCode'
 import verifyAirbnbCode from './attestations/verifyAirbnbCode'
-import verifyGoogle from './attestations/verifyGoogle'
 import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
+import verifyOAuthAttestation from './attestations/verifyOAuthAttestation'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -105,10 +103,8 @@ export default {
   useFaucet,
   verifyAirbnbCode,
   verifyEmailCode,
-  verifyFacebook,
-  verifyGoogle,
   verifyPhoneCode,
-  verifyTwitter,
+  verifyOAuthAttestation,
   verifyWebsite,
   withdrawListing,
   withdrawOffer,

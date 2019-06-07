@@ -20,6 +20,9 @@ export function unpublishedStrength({ props, state }) {
     strength += websiteAttestationEnabled ? 5 : 10
   if (!profile.websiteVerified && state.websiteAttestation)
     strength += websiteAttestationEnabled ? 5 : 0
+
+  // TODO: Add strength for KaKao, GitHub, Linkedin and WeChat
+
   return strength
 }
 
@@ -43,7 +46,15 @@ export function changesToPublishExist({ props, state }) {
     !!profile.airbnbVerified ===
       (!!state.airbnbAttestation || !!state.airbnbVerified) &&
     !!profile.websiteVerified ===
-      (!!state.websiteAttestation || !!state.websiteVerified)
+      (!!state.websiteAttestation || !!state.websiteVerified) &&
+    !!profile.kakaoVerified ===
+      (!!state.kakaoAttestation || !!state.kakaoVerified) &&
+    !!profile.githubVerified ===
+      (!!state.githubAttestation || !!state.githubVerified) &&
+    !!profile.linkedinVerified ===
+      (!!state.linkedinAttestation || !!state.linkedinVerified) &&
+    !!profile.wechatVerified ===
+      (!!state.wechatAttestation || !!state.wechatVerified)
   )
 }
 
