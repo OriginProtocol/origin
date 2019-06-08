@@ -43,7 +43,7 @@ class OnboardProfile extends Component {
                     finished: true
                   })
                 }}
-                hideHeader={true}
+                // hideHeader={true}
               />
             </div>
           </div>

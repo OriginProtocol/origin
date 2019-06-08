@@ -12,7 +12,7 @@ class MobileUserActivation extends Component {
       stage: 'AddEmail',
       modal: true,
       shouldClose: false,
-      title: fbt('Create a Profile', 'MobileUserActivation.createProfile')
+      title: fbt('Create a profile', 'MobileUserActivation.createProfile')
     }
 
     this.portal = document.createElement('div')
@@ -27,12 +27,12 @@ class MobileUserActivation extends Component {
   }
 
   renderPortal() {
-    const { modal, shouldClose, title } = this.state
+    const { modal, shouldClose, title, className } = this.state
 
     if (!modal) {
       return null
     }
-
+    
     return (
       <>
         <MobileModal
@@ -50,32 +50,43 @@ class MobileUserActivation extends Component {
           onClose={() => this.onClose()}
           shouldClose={shouldClose}
           title={title}
+          className={className}
+          showBackButton={this.state.stage !== 'RewardsSignUp'}
         >
           <UserActivation
             stage={this.state.stage}
             onStageChanged={newStage => {
+              let newState = {
+                prevStage: null,
+                title: fbt('Create a profile', 'MobileUserActivation.createProfile'),
+                stage: newStage,
+                headerImageUrl: null
+              }
               switch (newStage) {
                 case 'ProfileCreated':
-                  this.setState({
-                    prevStage: null,
-                    title: null
-                  })
+                  newState.title = null
                   break
                 case 'VerifyEmail':
-                case 'PublishDetail':
-                  this.setState({
-                    prevStage: 'AddEmail',
-                    stage: newStage
-                  })
+                  newState.prevStage = 'AddEmail'
                   break
-                case 'AddEmail':
-                default:
-                  this.setState({
-                    prevStage: null,
-                    stage: newStage
-                  })
+                case 'PublishDetail':
+                  newState = {
+                    ...newState,
+                    prevStage: 'AddEmail',
+                    title: fbt('Add name & photo', 'UserActivation.addNameAndPhoto')
+                  }
+                  break
+                case 'RewardsSignUp':
+                  newState = {
+                    ...newState,
+                    className: 'rewards-signup-header',
+                    title: fbt('Get Rewards', 'UserActivation.getRewards'),
+                    headerImageUrl: 'images/tout-header-image@3x.png'
+                  }
                   break
               }
+
+              this.setState(newState)
             }}
             onCompleted={() => {
               this.setState({
@@ -102,3 +113,14 @@ class MobileUserActivation extends Component {
 }
 
 export default MobileUserActivation
+
+// require('react-styl')(`
+//   .rewards-signup-header.modal-header
+//     background-image: url('images/tout-header-image.png')
+//     background-repeat: no-repeat
+//     background-size: 100%
+//     height: 200px
+//     border-radius: 0
+//     .modal-title
+//       color: white
+// `)

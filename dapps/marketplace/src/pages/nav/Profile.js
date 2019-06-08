@@ -301,8 +301,8 @@ require('react-styl')(`
     border: solid 1px var(--white)
     background-color: var(--dark-grey-blue)
     &.large
-      width: 80px
-      height: 80px
+      width: 80px !important
+      height: 80px !important
       padding-top: 9px
       margin-top: 1rem
       margin-bottom: 0.5rem

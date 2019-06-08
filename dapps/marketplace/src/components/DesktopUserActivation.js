@@ -9,10 +9,11 @@ import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
 import withIdentity from 'hoc/withIdentity'
 
-import Steps from './Steps'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+
 import ImageCropper from './ImageCropper'
 import Avatar from './Avatar'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 import UserProfileCreated from './_UserProfileCreated'
 import MobileModal from './MobileModal'
 import Modal from './Modal'
@@ -39,7 +40,6 @@ class UserActivation extends Component {
 
     let state = {
       stage: 'AddEmail',
-      step: 1,
       firstName: '',
       lastName: ''
     }
@@ -49,8 +49,7 @@ class UserActivation extends Component {
       state = {
         ...state,
         stage: 'PublishDetail',
-        data: storedAccounts.emailAttestation,
-        step: 2
+        data: storedAccounts.emailAttestation
       }
     }
 
@@ -69,6 +68,12 @@ class UserActivation extends Component {
       email: '',
       code: '',
       firstNameError: null
+    }
+
+    this.EnrollButton = WithEnrolmentModal('button')
+
+    if (state.stage !== props.stage) {
+      this.onStageChanged()
     }
   }
 
@@ -95,38 +100,18 @@ class UserActivation extends Component {
   render() {
     const {
       stage,
-      step,
       personalDataModal,
       shouldClosePersonalDataModal,
       txModal,
-      shouldCloseSignTxModal
+      shouldCloseSignTxModal,
+      confirmSkipModal,
+      shouldCloseConfirmSkipModal
     } = this.state
-    const { renderMobileVersion, hideHeader } = this.props
-
-    let stepHeader
+    const { renderMobileVersion } = this.props
 
     const isMobile = this.props.ismobile === 'true'
 
     const ModalComp = isMobile ? MobileModal : Modal
-
-    if (!hideHeader) {
-      stepHeader =
-        stage === 'ProfileCreated' ? null : (
-          <>
-            <h2 className="step-title">
-              {stage !== 'PublishDetail' && (
-                <fbt desc="UserActivation.addYourEmail">Add your email</fbt>
-              )}
-              {stage === 'PublishDetail' && (
-                <fbt desc="UserActivation.addNameAndPhoto">
-                  Add name and photo
-                </fbt>
-              )}
-            </h2>
-            <Steps steps={2} step={step} />
-          </>
-        )
-    }
 
     return (
       <div
@@ -134,10 +119,10 @@ class UserActivation extends Component {
           renderMobileVersion ? ' mobile' : ' desktop'
         }`}
       >
-        {stepHeader}
-        <div>{this[`render${stage}`]()}</div>
+        <div className={`user-activation-content${stage === 'RewardsSignUp' ? ' rewards-sign-up' : ''}`}>{this[`render${stage}`]()}</div>
         {personalDataModal && (
           <ModalComp
+            headerImageUrl="images/tout-header-image.png"
             closeOnEsc={false}
             shouldClose={shouldClosePersonalDataModal}
             className="user-activation personal-data-modal"
@@ -154,6 +139,7 @@ class UserActivation extends Component {
         )}
         {txModal && (
           <ModalComp
+            headerImageUrl="images/tout-header-image.png"
             closeOnEsc={false}
             shouldClose={shouldCloseSignTxModal}
             className="user-activation sign-tx-modal"
@@ -166,6 +152,22 @@ class UserActivation extends Component {
             }
           >
             {this.renderSignTxModal()}
+          </ModalComp>
+        )}
+        {confirmSkipModal && (
+          <ModalComp
+            closeOnEsc={false}
+            shouldClose={shouldCloseConfirmSkipModal}
+            className="user-activation confirm-skip-modal"
+            fullscreen={false}
+            onClose={() =>
+              this.setState({
+                confirmSkipModal: false,
+                shouldCloseConfirmSkipModal: false
+              })
+            }
+          >
+            {this.renderSkipConfirmModal()}
           </ModalComp>
         )}
       </div>
@@ -324,7 +326,6 @@ class UserActivation extends Component {
                   {
                     stage: 'PublishDetail',
                     loading: false,
-                    step: 2,
                     data: result.data
                   },
                   () => this.onStageChanged()
@@ -481,9 +482,9 @@ class UserActivation extends Component {
           }
         }}
       >
-        <h3>{headerText}</h3>
+        {headerText ? <h3>{headerText}</h3> : null}
         <div className="boxed-container">
-          <div className="avatar-wrap mt-3">
+          <div className="avatar-wrap">
             <ImageCropper
               onChange={async avatar => {
                 const { ipfsRPC } = config
@@ -500,7 +501,7 @@ class UserActivation extends Component {
             {Feedback('avatar')}
           </div>
           <div className="mt-5">
-            {renderMobileVersion && <fbt desc="firstName">First Name</fbt>}
+            {renderMobileVersion && <label><fbt desc="firstName">First Name</fbt></label>}
             <input
               type="text"
               {...input('firstName')}
@@ -511,7 +512,7 @@ class UserActivation extends Component {
             {Feedback('firstName')}
           </div>
           <div className="mt-3">
-            {renderMobileVersion && <fbt desc="lastName">Last Name</fbt>}
+            {renderMobileVersion && <label><fbt desc="lastName">Last Name</fbt></label>}
             <input
               type="text"
               {...input('lastName')}
@@ -545,6 +546,12 @@ class UserActivation extends Component {
           </a>
         </div>
         <div className="actions">
+          {/* <button type="button" className="btn btn-primary mt-3 mb-3" onClick={() => {
+            this.setState({
+              shouldCloseSignTxModal: true,
+              stage: 'RewardsSignUp'
+            })
+          }}>Testing</button> */}
           <button
             type="submit"
             className="btn btn-primary mt-3 mb-3"
@@ -552,6 +559,38 @@ class UserActivation extends Component {
           />
         </div>
       </form>
+    )
+  }
+
+  renderRewardsSignUp() {
+    const EnrollButton = this.EnrollButton
+    return (
+      <>
+        <div className="help desc mt-3 mb-3">
+          <fbt desc="UserActivation.rewardsDesc">Earn Origin Tokens (OGN) by strengthening your profile and completing tasks in the Origin Marketplace.</fbt>
+        </div>
+        <div className="actions">
+          <EnrollButton
+            type="button"
+            className="btn btn-primary mt-3 mb-3"
+            children={fbt('Yes! Sign me up', 'UserActivation.signMeUp')}
+            onCompleted={() => this.onDeployComplete()}
+          />
+          {/* <button
+            type="button"
+            className="btn btn-primary mt-3 mb-3"
+            children={fbt('Yes! Sign me up', 'UserActivation.signMeUp')}
+          /> */}
+          <button
+            type="button"
+            className="btn btn-outline btn-link mb-3"
+            children={fbt('No, thanks', 'UserActivation.noThanks')}
+            onClick={() => this.setState({
+              confirmSkipModal: true
+            })}
+          />
+        </div>
+      </>
     )
   }
 
@@ -572,9 +611,6 @@ class UserActivation extends Component {
   renderPersonalDataModal() {
     return (
       <>
-        <div className="header-image">
-          <img src="images/tout-header-image.png" alt="header-image" />
-        </div>
         <div className="padded-content">
           <h2>
             <fbt desc="UserActivation.blockchainAndPersonalData">
@@ -595,7 +631,7 @@ class UserActivation extends Component {
                 this.setState({ shouldClosePersonalDataModal: true })
               }
             >
-              Got it
+              <fbt desc="Got it">Got it</fbt>
             </button>
           </div>
         </div>
@@ -609,9 +645,6 @@ class UserActivation extends Component {
 
     return (
       <>
-        <div className="header-image">
-          <img src="images/tout-header-image.png" alt="header-image" />
-        </div>
         <div className="padded-content">
           <h2>
             <fbt desc="UserActivation.signToPublish">Sign to Publish</fbt>
@@ -634,14 +667,56 @@ class UserActivation extends Component {
               ])}
               attestations={attestations}
               validate={() => this.validate()}
-              children={fbt('Publish', 'Publish')}
+              children={fbt('Got it', 'Got it')}
               skipSuccessScreen={true}
               onComplete={() => {
                 this.setState({ shouldCloseSignTxModal: true }, () =>
                   this.onDeployComplete()
                 )
               }}
+              onClose={() => {
+                this.setState({ shouldCloseSignTxModal: true }, () =>
+                  this.onDeployComplete()
+                )
+              }}
             />
+          </div>
+        </div>
+      </>
+    )
+  }
+  
+  renderSkipConfirmModal() {
+    return (
+      <>
+        <div className="padded-content">
+          <h2>
+            <fbt desc="UserActivation.confirmDontWantRewards">
+              Are you sure you don’t want Origin Rewards?
+            </fbt>
+          </h2>
+          <p>
+            <fbt desc="UserActivation.verifyProfileWithoutEarning">
+              You will not be able to earn OGN on Origin, but you can still verify your profile.
+            </fbt>
+          </p>
+          <div className="actions">
+            <button
+              className="btn btn-primary mb-3"
+              onClick={() =>
+                this.setState({ shouldCloseConfirmSkipModal: true }, () => this.onDeployComplete())
+              }
+            >
+              <fbt desc="UserActivation.imSure">I'm sure</fbt>
+            </button>
+            <button
+              className="btn btn-outline btn-link"
+              onClick={() =>
+                this.setState({ shouldCloseConfirmSkipModal: true })
+              }
+            >
+              <fbt desc="UserActivation.noWait">No, wait</fbt>
+            </button>
           </div>
         </div>
       </>
@@ -711,20 +786,13 @@ export default withIsMobile(
 require('react-styl')(`
   .user-activation
     padding: 20px
-    .step-title
-      font-family: var(--heading-font)
-      font-size: 28px
-      font-weight: 300
-      font-style: normal
-      color: var(--dark)
-      margin-bottom: 0.75rem
+    box-sizing: border-box
+    position: relative
     .boxed-container
-      border-radius: 5px
-      border: solid 1px #c2cbd3
+      border: 0
       background-color: var(--white)
       padding: 20px
       > h3
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center
         background-size: 7rem
         padding-top: 9rem
         background-position: center top
@@ -737,29 +805,36 @@ require('react-styl')(`
           left: 0
           height: 7.5rem
           right: 0
+          background-color: #1ec68e
           background-repeat: no-repeat
-          background-image: url(images/identity/email-icon-dark.svg)
+          background-image: url(images/identity/email-icon-light.svg)
           background-size: 3.5rem
           background-position: center
-      input
-        border-radius: 5px
-        border: solid 1px #c2cbd3
-        background-color: #f1f6f9
+          border-radius: 50%
+          border: solid 4px #1ec68e;
+          width: 7.5rem
+          margin: 0 auto
+    input
+      border-radius: 5px
+      border: solid 1px #c2cbd3
+      background-color: #f1f6f9
+      text-align: left
+    .avatar-wrap
+      .invalid-feedback
         text-align: center
-      .help
-        text-align: center
-        font-family: Lato
-        font-size: 14px
-        color: var(--bluey-grey)
-        a
-          margin-left: 5px
-          color: #007bff
-          cursor: pointer
-          &:hover
-            color: #0056b3
-      .avatar-wrap
-        .invalid-feedback
-          text-align: center
+    .help
+      text-align: center
+      font-family: Lato
+      font-size: 14px
+      color: var(--bluey-grey)
+      a
+        margin-left: 5px
+        color: #007bff
+        cursor: pointer
+        &:hover
+          color: #0056b3
+      &.desc
+        color: var(--dark)
     .info
       text-align: center
       border-radius: 5px
@@ -795,6 +870,8 @@ require('react-styl')(`
         width: 100%
         border-radius: 50px
         padding: 0.5rem 1rem
+      .btn.btn-link
+        color: #007bff
     .avatar
       border-radius: 50%
       width: 150px
@@ -813,7 +890,14 @@ require('react-styl')(`
 
       .avatar
         border-radius: 50%
-    &.personal-data-modal, &.sign-tx-modal
+    &.mobile
+      .avatar
+        width: 96px
+        padding-top: 96px
+        &.with-cam::after
+          right: -0.1rem
+          bottom: -0.1rem
+    &.personal-data-modal, &.sign-tx-modal, &.confirm-skip-modal
       padding: 0
       text-align: center
       .header-image, img
@@ -822,7 +906,7 @@ require('react-styl')(`
         padding: 20px
         h2
           font-family: Poppins
-          font-weight: 300
+          font-weight: 500
           color: var(--dark)
           letter-spacing: -0.3px
           line-height: 1.43

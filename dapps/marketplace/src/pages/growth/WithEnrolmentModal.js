@@ -615,6 +615,8 @@ require('react-styl')(`
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
+    &.modal-content
+      padding: 40px
     .header
       background-color: var(--dusk)
       height: 3.75rem
