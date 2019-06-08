@@ -217,6 +217,7 @@ require('react-styl')(`
       flex-shrink: 0
       display: flex
       border-bottom: 0
+      border-radius: 0
       width: 100%
       &.image-only
         width: 100%

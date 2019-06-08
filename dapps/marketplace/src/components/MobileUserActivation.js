@@ -27,7 +27,7 @@ class MobileUserActivation extends Component {
   }
 
   renderPortal() {
-    const { modal, shouldClose, title, className } = this.state
+    const { modal, shouldClose, title, className, headerImageUrl, stage, prevStage } = this.state
 
     if (!modal) {
       return null
@@ -37,13 +37,13 @@ class MobileUserActivation extends Component {
       <>
         <MobileModal
           onBack={() => {
-            if (!this.state.prevStage) {
+            if (!prevStage) {
               this.setState({
                 shouldClose: true
               })
             } else {
               this.setState({
-                stage: this.state.prevStage
+                stage: prevStage
               })
             }
           }}
@@ -51,10 +51,11 @@ class MobileUserActivation extends Component {
           shouldClose={shouldClose}
           title={title}
           className={className}
-          showBackButton={this.state.stage !== 'RewardsSignUp'}
+          showBackButton={stage !== 'RewardsSignUp'}
+          headerImageUrl={headerImageUrl}
         >
           <UserActivation
-            stage={this.state.stage}
+            stage={stage}
             onStageChanged={newStage => {
               let newState = {
                 prevStage: null,
@@ -79,7 +80,7 @@ class MobileUserActivation extends Component {
                 case 'RewardsSignUp':
                   newState = {
                     ...newState,
-                    className: 'rewards-signup-header',
+                    className: `rewards-signup ${className ? ' ' + className : ''}`,
                     title: fbt('Get Rewards', 'UserActivation.getRewards'),
                     headerImageUrl: 'images/tout-header-image@3x.png'
                   }
@@ -89,6 +90,11 @@ class MobileUserActivation extends Component {
               this.setState(newState)
             }}
             onCompleted={() => {
+              this.setState({
+                shouldClose: true
+              })
+            }}
+            onAccountBlocked={() => {
               this.setState({
                 shouldClose: true
               })
@@ -114,13 +120,9 @@ class MobileUserActivation extends Component {
 
 export default MobileUserActivation
 
-// require('react-styl')(`
-//   .rewards-signup-header.modal-header
-//     background-image: url('images/tout-header-image.png')
-//     background-repeat: no-repeat
-//     background-size: 100%
-//     height: 200px
-//     border-radius: 0
-//     .modal-title
-//       color: white
-// `)
+require('react-styl')(`
+  .rewards-signup.modal-header
+    height: 200px
+    .modal-title
+      color: white
+`)

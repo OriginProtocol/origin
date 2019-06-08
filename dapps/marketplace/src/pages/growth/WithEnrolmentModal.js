@@ -236,7 +236,7 @@ function withEnrolmentModal(WrappedComponent) {
       const isMobile = this.props.ismobile === 'true'
 
       this.setMobileHeader(
-        fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
+        fbt('Origin Rewards Terms', 'WithEnrolmentModal.SignUpForOrigin')
       )
 
       const cancelButton = (
@@ -274,7 +274,7 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </div>
             )}
-            <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
+            <div className="normal-line-height terms-title">
               {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
               Join Origin’s reward program to earn Origin tokens (OGN). Terms
               and conditions apply.
@@ -485,11 +485,22 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
+      const isMobile = this.props.ismobile === 'true'
       return (
         <Enroll
-          isMobile={this.props.ismobile === 'true'}
+          isMobile={isMobile}
           onSuccess={() => this.enrollmentSuccessful()}
-          onAccountBlocked={() => this.historyNavigate('/rewards/banned')}
+          onAccountBlocked={() => {
+            if (this.props.onAccountBlocked) {
+              this.props.onAccountBlocked()
+              if (isMobile) {
+                this.historyNavigate('/rewards/banned')
+              }
+            } else {
+              this.historyNavigate('/rewards/banned')
+            }
+            this.handleCloseModal()
+          }}
         />
       )
     }
@@ -558,7 +569,8 @@ function withEnrolmentModal(WrappedComponent) {
                         {...omit(this.props, [
                           'onClose',
                           'onNavigation',
-                          'onCompleted'
+                          'onCompleted',
+                          'onAccountBlocked'
                         ])}
                         onClick={e =>
                           this.handleClick(
@@ -574,6 +586,7 @@ function withEnrolmentModal(WrappedComponent) {
                           className={`growth-enrollment-modal ${
                             snowSmallerModal ? 'small' : ''
                           } ${displayMobileModal ? 'mobile' : ''}`}
+                          shouldClose={this.state.shouldClose}
                           onClose={() => {
                             this.setState({
                               open: false
@@ -616,7 +629,11 @@ require('react-styl')(`
       background-color: #2196F3
   .growth-enrollment-modal
     &.modal-content
-      padding: 40px
+      padding: 20px
+      .btn
+        width: 100%
+        margin: 2rem 0
+        padding: 0.5rem
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -650,7 +667,7 @@ require('react-styl')(`
       margin-top: 30px
       min-width: 9rem
     .checkbox-holder
-      color: var(--pale-grey)
+      color: var(--dark)
       font-family: Lato
       font-weight: normal
       display: block
@@ -695,8 +712,10 @@ require('react-styl')(`
       font-weight: 300
     .terms-title
       color: var(--pale-grey)
+      font-weight: 500
     .terms-body
       color: var(--pale-grey)
+      padding: 0
     .explanation
       font-size: 12px
       text-align: left
@@ -733,7 +752,7 @@ require('react-styl')(`
       .btn-no-outline
         color: var(--clear-blue)
     .checkbox-holder
-      color: var(--steel)
+      color: var(--dark)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
@@ -765,8 +784,6 @@ require('react-styl')(`
       .terms
         background-color: var(--pale-grey-four)
         color: var(--steel)
-        margin-left: 1.5rem
-        margin-right: 1.5rem
         padding: 0.625rem 1rem
         border-radius: 0.312rem
         border: solid 1px var(--light)
@@ -778,6 +795,7 @@ require('react-styl')(`
         font-size: 0.875rem
         font-weight: 300
         line-height: 1.4
+        padding: 0
       .btn-no-outline-link
         font-size: 0.875rem
         color: var(--clear-blue)

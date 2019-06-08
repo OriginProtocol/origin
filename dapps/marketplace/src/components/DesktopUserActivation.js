@@ -525,6 +525,9 @@ class UserActivation extends Component {
           {this.state.error && (
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
+          <div className="help mt-3">
+            <fbt desc="UserActivation.easierToIdentify">By providing a photo and name, you’ll make it easier for buyers and sellers on Origin to identify you.</fbt>
+          </div>
         </div>
         <div className="info yellow">
           <span className="title">
@@ -575,12 +578,8 @@ class UserActivation extends Component {
             className="btn btn-primary mt-3 mb-3"
             children={fbt('Yes! Sign me up', 'UserActivation.signMeUp')}
             onCompleted={() => this.onDeployComplete()}
+            onAccountBlocked={this.props.onAccountBlocked}
           />
-          {/* <button
-            type="button"
-            className="btn btn-primary mt-3 mb-3"
-            children={fbt('Yes! Sign me up', 'UserActivation.signMeUp')}
-          /> */}
           <button
             type="button"
             className="btn btn-outline btn-link mb-3"
@@ -670,14 +669,16 @@ class UserActivation extends Component {
               children={fbt('Got it', 'Got it')}
               skipSuccessScreen={true}
               onComplete={() => {
-                this.setState({ shouldCloseSignTxModal: true }, () =>
-                  this.onDeployComplete()
-                )
+                this.setState({
+                  shouldCloseSignTxModal: true,
+                  stage: 'RewardsSignUp'
+                })
               }}
               onClose={() => {
-                this.setState({ shouldCloseSignTxModal: true }, () =>
-                  this.onDeployComplete()
-                )
+                this.setState({
+                  shouldCloseSignTxModal: true,
+                  stage: 'RewardsSignUp'
+                })
               }}
             />
           </div>
