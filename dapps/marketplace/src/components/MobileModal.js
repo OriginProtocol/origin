@@ -5,12 +5,20 @@ function freezeVp(e) {
   e.preventDefault()
 }
 
-const MobileModalHeader = ({ children, headerImageUrl, className = '', showBackButton = true, onBack }) => {
+const MobileModalHeader = ({
+  children,
+  headerImageUrl,
+  className = '',
+  showBackButton = true,
+  onBack
+}) => {
   if (!children && !headerImageUrl) {
     return null
   } else if (!children) {
     return (
-      <div className={`modal-header image-only${className ? ' ' + className : ''}`}>
+      <div
+        className={`modal-header image-only${className ? ' ' + className : ''}`}
+      >
         <img src={headerImageUrl} />
       </div>
     )
@@ -29,19 +37,10 @@ const MobileModalHeader = ({ children, headerImageUrl, className = '', showBackB
   }
 
   return (
-    <div
-      className={`${headerClassList.join(' ')}`}
-      style={headerStyle}
-    >
-      {
-        showBackButton && (
-          <a
-            className="modal-action-button back-button"
-            onClick={onBack}
-          >
-          </a>
-        )
-      }
+    <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
+      {showBackButton && (
+        <a className="modal-action-button back-button" onClick={onBack} />
+      )}
       <h3 className="modal-title">{children}</h3>
       {showBackButton && <span className="modal-action-button" />}
     </div>
@@ -107,38 +106,73 @@ export default class MobileModal extends Component {
   }
 
   renderModal() {
-    const { title, className = '', children, headerImageUrl='', onBack, showBackButton } = this.props
+    const {
+      title,
+      className = '',
+      children,
+      headerImageUrl = '',
+      onBack,
+      showBackButton
+    } = this.props
 
     return (
       <>
-        <div className="mobile-modal-light-overlay" onClick={() => this.onClose()} />
+        <div
+          className="mobile-modal-light-overlay"
+          onClick={() => this.onClose()}
+        />
         <div className="modal-spacer" />
-        <MobileModalHeader className={className} headerImageUrl={headerImageUrl} showBackButton={showBackButton} onBack={() => {
-          if (onBack) {
-            onBack()
-          } else {
-            this.onClose()
-          }
-        }}>{title}</MobileModalHeader>
-        <div className={`modal-content${className ? ' ' + className : ''}`}>{children}</div>
+        <MobileModalHeader
+          className={className}
+          headerImageUrl={headerImageUrl}
+          showBackButton={showBackButton}
+          onBack={() => {
+            if (onBack) {
+              onBack()
+            } else {
+              this.onClose()
+            }
+          }}
+        >
+          {title}
+        </MobileModalHeader>
+        <div className={`modal-content${className ? ' ' + className : ''}`}>
+          {children}
+        </div>
         <div className="modal-spacer" />
       </>
     )
   }
 
   renderFullScreenModal() {
-    const { title, className = '', children, headerImageUrl='', onBack, showBackButton } = this.props
+    const {
+      title,
+      className = '',
+      children,
+      headerImageUrl = '',
+      onBack,
+      showBackButton
+    } = this.props
 
     return (
       <>
-        <MobileModalHeader className={className} headerImageUrl={headerImageUrl} showBackButton={showBackButton} onBack={() => {
-          if (onBack) {
-            onBack()
-          } else {
-            this.onClose()
-          }
-        }}>{title}</MobileModalHeader>
-        <div className={`modal-content${className ? ' ' + className : ''}`}>{children}</div>
+        <MobileModalHeader
+          className={className}
+          headerImageUrl={headerImageUrl}
+          showBackButton={showBackButton}
+          onBack={() => {
+            if (onBack) {
+              onBack()
+            } else {
+              this.onClose()
+            }
+          }}
+        >
+          {title}
+        </MobileModalHeader>
+        <div className={`modal-content${className ? ' ' + className : ''}`}>
+          {children}
+        </div>
       </>
     )
   }

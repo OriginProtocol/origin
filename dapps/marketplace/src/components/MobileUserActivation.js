@@ -27,12 +27,20 @@ class MobileUserActivation extends Component {
   }
 
   renderPortal() {
-    const { modal, shouldClose, title, className, headerImageUrl, stage, prevStage } = this.state
+    const {
+      modal,
+      shouldClose,
+      title,
+      className,
+      headerImageUrl,
+      stage,
+      prevStage
+    } = this.state
 
     if (!modal) {
       return null
     }
-    
+
     return (
       <>
         <MobileModal
@@ -59,7 +67,10 @@ class MobileUserActivation extends Component {
             onStageChanged={newStage => {
               let newState = {
                 prevStage: null,
-                title: fbt('Create a profile', 'MobileUserActivation.createProfile'),
+                title: fbt(
+                  'Create a profile',
+                  'MobileUserActivation.createProfile'
+                ),
                 stage: newStage,
                 headerImageUrl: null
               }
@@ -74,13 +85,18 @@ class MobileUserActivation extends Component {
                   newState = {
                     ...newState,
                     prevStage: 'AddEmail',
-                    title: fbt('Add name & photo', 'UserActivation.addNameAndPhoto')
+                    title: fbt(
+                      'Add name & photo',
+                      'UserActivation.addNameAndPhoto'
+                    )
                   }
                   break
                 case 'RewardsSignUp':
                   newState = {
                     ...newState,
-                    className: `rewards-signup ${className ? ' ' + className : ''}`,
+                    className: `rewards-signup ${
+                      className ? ' ' + className : ''
+                    }`,
                     title: fbt('Get Rewards', 'UserActivation.getRewards'),
                     headerImageUrl: 'images/tout-header-image@3x.png'
                   }

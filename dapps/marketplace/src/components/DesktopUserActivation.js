@@ -119,7 +119,13 @@ class UserActivation extends Component {
           renderMobileVersion ? ' mobile' : ' desktop'
         }`}
       >
-        <div className={`user-activation-content${stage === 'RewardsSignUp' ? ' rewards-sign-up' : ''}`}>{this[`render${stage}`]()}</div>
+        <div
+          className={`user-activation-content${
+            stage === 'RewardsSignUp' ? ' rewards-sign-up' : ''
+          }`}
+        >
+          {this[`render${stage}`]()}
+        </div>
         {personalDataModal && (
           <ModalComp
             headerImageUrl="images/tout-header-image.png"
@@ -501,7 +507,11 @@ class UserActivation extends Component {
             {Feedback('avatar')}
           </div>
           <div className="mt-5">
-            {renderMobileVersion && <label><fbt desc="firstName">First Name</fbt></label>}
+            {renderMobileVersion && (
+              <label>
+                <fbt desc="firstName">First Name</fbt>
+              </label>
+            )}
             <input
               type="text"
               {...input('firstName')}
@@ -512,7 +522,11 @@ class UserActivation extends Component {
             {Feedback('firstName')}
           </div>
           <div className="mt-3">
-            {renderMobileVersion && <label><fbt desc="lastName">Last Name</fbt></label>}
+            {renderMobileVersion && (
+              <label>
+                <fbt desc="lastName">Last Name</fbt>
+              </label>
+            )}
             <input
               type="text"
               {...input('lastName')}
@@ -526,7 +540,10 @@ class UserActivation extends Component {
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
           <div className="help mt-3">
-            <fbt desc="UserActivation.easierToIdentify">By providing a photo and name, you’ll make it easier for buyers and sellers on Origin to identify you.</fbt>
+            <fbt desc="UserActivation.easierToIdentify">
+              By providing a photo and name, you’ll make it easier for buyers
+              and sellers on Origin to identify you.
+            </fbt>
           </div>
         </div>
         <div className="info yellow">
@@ -570,7 +587,10 @@ class UserActivation extends Component {
     return (
       <>
         <div className="help desc mt-3 mb-3">
-          <fbt desc="UserActivation.rewardsDesc">Earn Origin Tokens (OGN) by strengthening your profile and completing tasks in the Origin Marketplace.</fbt>
+          <fbt desc="UserActivation.rewardsDesc">
+            Earn Origin Tokens (OGN) by strengthening your profile and
+            completing tasks in the Origin Marketplace.
+          </fbt>
         </div>
         <div className="actions">
           <EnrollButton
@@ -584,9 +604,11 @@ class UserActivation extends Component {
             type="button"
             className="btn btn-outline btn-link mb-3"
             children={fbt('No, thanks', 'UserActivation.noThanks')}
-            onClick={() => this.setState({
-              confirmSkipModal: true
-            })}
+            onClick={() =>
+              this.setState({
+                confirmSkipModal: true
+              })
+            }
           />
         </div>
       </>
@@ -686,7 +708,7 @@ class UserActivation extends Component {
       </>
     )
   }
-  
+
   renderSkipConfirmModal() {
     return (
       <>
@@ -698,14 +720,17 @@ class UserActivation extends Component {
           </h2>
           <p>
             <fbt desc="UserActivation.verifyProfileWithoutEarning">
-              You will not be able to earn OGN on Origin, but you can still verify your profile.
+              You will not be able to earn OGN on Origin, but you can still
+              verify your profile.
             </fbt>
           </p>
           <div className="actions">
             <button
               className="btn btn-primary mb-3"
               onClick={() =>
-                this.setState({ shouldCloseConfirmSkipModal: true }, () => this.onDeployComplete())
+                this.setState({ shouldCloseConfirmSkipModal: true }, () =>
+                  this.onDeployComplete()
+                )
               }
             >
               <fbt desc="UserActivation.imSure">I'm sure</fbt>
