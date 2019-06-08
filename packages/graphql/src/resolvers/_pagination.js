@@ -33,14 +33,13 @@ export function getIdsForPage({ after, ids, first }) {
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
-  const end = start + first
-  return { ids: ids.slice(start, end), start }
+  return { ids: ids.slice(start, first ? start + first : undefined), start }
 }
 
 export function getConnection({ start, first, nodes, ids, totalCount }) {
   const firstNodeId = ids[0] || 0
-  const lastNodeId = ids[ids.length - 1] || 0
   const end = start + first
+  const lastNodeId = ids[end - 1] || ids[ids.length - 1] || 0
 
   return {
     totalCount,

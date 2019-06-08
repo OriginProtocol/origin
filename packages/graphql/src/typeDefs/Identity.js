@@ -38,9 +38,8 @@ export const types = `
       after: String
       sort: String
     ): IdentityConnection
-    facebookAuthUrl(redirect: String): String
-    twitterAuthUrl(redirect: String): String
-    googleAuthUrl(redirect: String): String
+
+    getAuthUrl(provider: String!, redirect: String): String
   }
 
   type IdentityConnection {
@@ -72,6 +71,10 @@ export const types = `
     emailVerified: Boolean
     googleVerified: Boolean
     websiteVerified: Boolean
+    kakaoVerified: Boolean
+    githubVerified: Boolean
+    linkedinVerified: Boolean
+    wechatVerified: Boolean
 
     name: String
     ipfsHash: String
