@@ -17,7 +17,7 @@ db: &db
 redis: &redis
   docker:
     - image: circleci/node:10-browsers
-    - image: circleci/redis:5.2.0
+    - image: circleci/redis:5
   working_directory: ~/origin
 
 version: 2
