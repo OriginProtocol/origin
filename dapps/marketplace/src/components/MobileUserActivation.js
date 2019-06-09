@@ -22,6 +22,10 @@ class MobileUserActivation extends Component {
     document.body.appendChild(this.portal)
   }
 
+  componentWillUnmount() {
+    document.body.removeChild(this.portal)
+  }
+
   render() {
     return ReactDOM.createPortal(this.renderPortal(), this.portal)
   }
@@ -123,11 +127,10 @@ class MobileUserActivation extends Component {
   }
 
   onClose() {
-    document.body.removeChild(this.portal)
-
     this.setState({
       modal: false
     })
+
     if (this.props.onClose) {
       this.props.onClose()
     }

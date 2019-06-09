@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import { Mutation, withApollo } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import pick from 'lodash/pick'
@@ -75,6 +75,10 @@ class UserActivation extends Component {
     if (state.stage !== props.stage) {
       this.onStageChanged()
     }
+  }
+
+  componentWillUnmount() {
+    this.refetchQueries()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -450,6 +454,11 @@ class UserActivation extends Component {
     )
   }
 
+  refetchQueries() {
+    this.props.identityRefetch()
+    this.props.client.reFetchObservableQueries()
+  }
+
   onDeployComplete = () => {
     clearVerifiedAccounts()
     this.clearStoredUserData()
@@ -464,7 +473,7 @@ class UserActivation extends Component {
     } else if (this.props.onCompleted) {
       this.props.onCompleted()
     }
-    this.props.identityRefetch()
+    // this.refetchQueries()
   }
 
   renderPublishDetail() {
@@ -623,7 +632,7 @@ class UserActivation extends Component {
             this.props.onCompleted()
           }
 
-          this.props.identityRefetch()
+          // this.props.identityRefetch()
         }}
       />
     )
@@ -686,6 +695,7 @@ class UserActivation extends Component {
                 'avatar',
                 'avatarUrl'
               ])}
+              refetchObservables={false}
               attestations={attestations}
               validate={() => this.validate()}
               children={fbt('Got it', 'Got it')}
@@ -805,9 +815,9 @@ class UserActivation extends Component {
   }
 }
 
-export default withIsMobile(
+export default withApollo(withIsMobile(
   withConfig(withWallet(withIdentity(UserActivation)))
-)
+))
 
 require('react-styl')(`
   .user-activation
