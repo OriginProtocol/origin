@@ -7,7 +7,6 @@ import withWallet from 'hoc/withWallet'
 
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
-import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
 import DocumentTitle from 'components/DocumentTitle'
@@ -18,19 +17,6 @@ import nextPageFactory from 'utils/nextPageFactory'
 import query from 'queries/UserNotifications'
 
 const nextPage = nextPageFactory('marketplace.user.notifications')
-
-const NavPills = () => (
-  <ul className="nav nav-pills flex-column">
-    <li className="nav-item">
-      <NavLink
-        className="nav-link"
-        to="/notifications"
-        exact
-        children={fbt('All', 'All')}
-      />
-    </li>
-  </ul>
-)
 
 class Notifications extends Component {
   state = {}
