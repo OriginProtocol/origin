@@ -47,7 +47,7 @@ class ListingCards extends Component {
               )}
               <div className="header">
                 <div className="category">
-                  <Category listing={a} showPrimary={this.props.showCategory} />
+                  <Category listing={a} showPrimary={false} />
                 </div>
                 <ListingBadge status={a.status} featured={a.featured} />
               </div>

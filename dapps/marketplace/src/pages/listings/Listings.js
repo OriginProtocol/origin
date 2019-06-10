@@ -96,7 +96,7 @@ class Listings extends Component {
 
               return (
                 <BottomScrollListener
-                  offset={200}
+                  offset={400}
                   ready={networkStatus === 7}
                   hasMore={hasNextPage}
                   onBottom={() => {
