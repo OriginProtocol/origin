@@ -15,6 +15,7 @@ const MNEMONIC_ONE = 'one two three four five six'
 const MNEMONIC_TWO = 'two two three four five six'
 const MNEMONIC_THREE = 'three two three four five six'
 const MNEMONIC_FOUR = 'four two three four five six'
+const MNEMONIC_FIVE = 'five two three four five six'
 const TEST_NET_ID = 999
 const TEST_PROVIDER_URL = 'http://localhost:8545/'
 const ZERO = new BN('0', 10)
@@ -351,6 +352,41 @@ describe('Purse', () => {
     assert(Object.keys(purse.pendingTransactions).length > 0, 'no pending transactions')
     await wait(10000) // give it a bit to process the transactions
     assert(Object.keys(purse.pendingTransactions).length === 0, 'there are still pending transactions')
+  })
+
+  it('onReceipt callbacks are utilized', () => {
+    // https://github.com/mochajs/mocha/issues/2407
+    return new Promise(async (resolve) => {
+      const childCount = 2
+      const purse = new Purse({
+        web3,
+        mnemonic: MNEMONIC_FIVE,
+        children: childCount,
+        autofundChildren: true
+      })
+      await purse.init()
+
+      // Fund the master account
+      const masterAddress = purse.masterWallet.getChecksumAddressString()
+      const receipt = await web3.eth.sendTransaction({
+        from: Funder,
+        to: masterAddress,
+        value: ONE_ETHER,
+        gas: 22000,
+        gasPrice: TWO_GWEI
+      })
+      assert(receipt.status, 'funding tx failed')
+
+      await purse.sendTx({
+        to: Rando,
+        value: 1,
+        gas: 22000,
+        gasPrice: TWO_GWEI,
+        data: `0x01`
+      }, async () => {
+        resolve()
+      })
+    })
   })
 
   // TODO, not yet implemented

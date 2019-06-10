@@ -93,6 +93,8 @@ class Purse {
     this.pendingTransactions = {}
     // Counter for tx rebroadcasts
     this.rebroadcastCounters = {}
+    // Callbacks for when receipts show up
+    this.receiptCallbacks = {}
 
     this.rclient = this._setupRedis(redisHost)
 
@@ -228,9 +230,10 @@ class Purse {
    * NOTE: This does not wait for the transaction to be mined!
    *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
+   * @param onReceipt {function} - A callback to call when a receipt is found
    * @returns {string} The transaction hash of the sent transaction
    */
-  async sendTx(tx) {
+  async sendTx(tx, onReceipt) {
     const address = await this.getAvailableAccount()
 
     // Set the from and nonce for the account
@@ -245,6 +248,14 @@ class Purse {
     // Not in this version of web3.js 1.0...
     // const txHash = signed.transactionHash
     const txHash = this.web3.utils.sha3(rawTx)
+
+    // If there's an onReceipt cb, store it for later
+    if (onReceipt) {
+      if (typeof onReceipt !== 'function') {
+        throw new Error('onReceipt is not a function')
+      }
+      this.receiptCallbacks[txHash] = onReceipt
+    }
 
     // In case it needs to be rebroadcast
     this.pendingTransactions[txHash] = rawTx
@@ -538,6 +549,13 @@ class Purse {
         if (!receipt.status) {
           // TODO Should this be communicated to the user and/or tracked?
           logger.warn(`Transaction ${txHash} has failed!`)
+        }
+
+        if (typeof this.receiptCallbacks[txHash] === 'function') {
+          const cbRet = this.receiptCallbacks[txHash](receipt)
+          if (cbRet instanceof Promise) {
+            await cbRet
+          }
         }
         delete this.pendingTransactions[txHash]
         logger.debug(`Removed ${txHash} from pending`)
