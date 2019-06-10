@@ -368,7 +368,6 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
-      const isForbidden = eligibility === 'Forbidden'
       const isMobile = this.props.ismobile === 'true'
 
       return (
@@ -437,11 +436,13 @@ function withEnrolmentModal(WrappedComponent) {
               children={fbt('Continue', 'Continue')}
             />
           )}
-          {isMobile && <button
-            className="btn-no-outline-link"
-            onClick={() => this.handleCloseModal()}
-            children={fbt('Back to home', 'Back to home')}
-          />}
+          {isMobile && (
+            <button
+              className="btn-no-outline-link"
+              onClick={() => this.handleCloseModal()}
+              children={fbt('Back to home', 'Back to home')}
+            />
+          )}
         </div>
       )
     }
@@ -456,7 +457,7 @@ function withEnrolmentModal(WrappedComponent) {
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
-            
+
             // used for testing purposes. No worries overriding this on frontend
             // since another check is done on backend when calling enroll mutation
             let countryOverride = localStorage.getItem(
