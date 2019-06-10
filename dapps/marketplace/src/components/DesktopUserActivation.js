@@ -815,9 +815,9 @@ class UserActivation extends Component {
   }
 }
 
-export default withApollo(withIsMobile(
-  withConfig(withWallet(withIdentity(UserActivation)))
-))
+export default withApollo(
+  withIsMobile(withConfig(withWallet(withIdentity(UserActivation))))
+)
 
 require('react-styl')(`
   .user-activation

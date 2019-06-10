@@ -116,7 +116,7 @@ class DeployIdentity extends Component {
           }
           if (this.props.refetchObservables !== false) {
             this.props.client.reFetchObservableQueries()
-          } 
+          }
           this.setState({ waitFor: false, error: false, shouldClose: false })
           if (this.props.onComplete && this.state.mutationCompleted) {
             this.props.onComplete()
