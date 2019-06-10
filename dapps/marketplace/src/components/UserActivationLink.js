@@ -36,7 +36,11 @@ const UserActivationLink = props => {
     return <Redirect to="/onboard" />
   }
 
-  let content = <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+  let content = (
+    <span>
+      <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+    </span>
+  )
 
   if (props.children) {
     content = props.children

@@ -81,47 +81,47 @@ const ActiveWalletInfo = ({ walletType, wallet, config, walletProxy }) => (
 export default withConfig(withWallet(ActiveWalletInfo))
 
 require('react-styl')(`
-.dropdown-menu.profile
-  .active-wallet-info
-    padding: 1rem
-    .connected.proxy-acct
-      display: flex
-      align-items: center
-      justify-content: space-between
-      white-space: nowrap
-      > span
-        text-overflow: ellipsis
-        overflow: hidden
-        margin-left: 0.5rem
-    .connected
-      padding: 0
-      color: var(--light)
-      > span
-        display: inline-block
-        margin-left: 4px
-        > .wallet-icon
+  .dropdown-menu.profile
+    .active-wallet-info
+      padding: 1rem
+      .connected.proxy-acct
+        display: flex
+        align-items: center
+        justify-content: space-between
+        white-space: nowrap
+        > span
+          text-overflow: ellipsis
+          overflow: hidden
+          margin-left: 0.5rem
+      .connected
+        padding: 0
+        color: var(--light)
+        > span
           display: inline-block
-          width: 10px
-          height: 10px
-          margin-right: 4px
-          margin-left: 6px
-          background-size: 10px 10px
-          &.metamask
-            background-image: url('images/metamask.svg')
-        > .wallet-name
           margin-left: 4px
-          margin-right: 6px
-        > .wallet-address
-          font-size: 0.6rem
-      > .net
-        color: var(--greenblue)
-        &::before
-          content: ""
-          display: inline-block
-          background: var(--greenblue)
-          width: 10px
-          height: 10px
-          border-radius: var(--default-radius)
-          margin-right: 4px
-          margin-left: 6px
+          > .wallet-icon
+            display: inline-block
+            width: 10px
+            height: 10px
+            margin-right: 4px
+            margin-left: 6px
+            background-size: 10px 10px
+            &.metamask
+              background-image: url('images/metamask.svg')
+          > .wallet-name
+            margin-left: 4px
+            margin-right: 6px
+          > .wallet-address
+            font-size: 0.6rem
+        > .net
+          color: var(--greenblue)
+          &::before
+            content: ""
+            display: inline-block
+            background: var(--greenblue)
+            width: 10px
+            height: 10px
+            border-radius: var(--default-radius)
+            margin-right: 4px
+            margin-left: 6px
 `)

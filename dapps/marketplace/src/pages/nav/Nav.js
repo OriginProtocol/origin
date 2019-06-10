@@ -60,16 +60,17 @@ const Nav = ({ location: { pathname }, isMobile, wallet }) => {
       <nav className="navbar no-border">
         <Mobile {...navProps('mobile')} />
         <Brand />
-        <Profile {...navProps('profile')} />
+        {wallet ? <Profile {...navProps('profile')} /> : <GetStarted />}
       </nav>
     )
   }
 
   if (!wallet) {
     return (
-      <nav className="navbar">
+      <nav className="navbar navbar-expand-md">
         <div className="container">
           <Brand />
+          <Search className="form-inline mr-auto" />
           <GetStarted />
         </div>
       </nav>
@@ -196,10 +197,10 @@ require('react-styl')(`
     text-indent: -9999px
 
   .custom-brand
-    padding-top: 0.4125rem;
-    padding-bottom: 0.4125rem;
+    display: flex
+    align-items: center
     img
-      max-height: 2.8rem
+      max-height: 32px
 
   @media (pointer: fine)
     .navbar .nav-item
@@ -217,6 +218,11 @@ require('react-styl')(`
             background-color: rgba(0,0,0,0.1)
 
   @media (max-width: 767.98px)
+    .navbar-brand,.custom-brand
+      position: absolute
+      left: 50%
+      transform: translateX(-50%)
+      margin-right: 0
     .navbar
       padding: 0
       h1
@@ -243,16 +249,15 @@ require('react-styl')(`
             left: auto
             right: 0
         .dropdown-menu-bg
-          position: fixed;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.3);
-          clip-path: none;
-          width: auto;
-          height: auto;
-          z-index: 1;
-
+          position: fixed
+          left: 0
+          right: 0
+          top: 0
+          bottom: 0
+          background: rgba(0,0,0,0.3)
+          clip-path: none
+          width: auto
+          height: auto
+          z-index: 1
 
 `)

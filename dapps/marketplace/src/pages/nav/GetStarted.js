@@ -10,15 +10,19 @@ class GetStarted extends Component {
     return (
       <ul className="navbar-nav">
         <li className="nav-item">
-          <UserActivationLink {...this.props} className="nav-link px-3" />
+          <UserActivationLink {...this.props} className="nav-link text" />
         </li>
         <li className="nav-item d-none d-md-block">
           <UserActivationLink
             {...this.props}
-            className="nav-link px-3"
+            className="nav-link text"
             location={{ pathname: '/create' }}
           >
-            <fbt desc="navigation.getStarted.sellOnOrigin">Sell on Origin</fbt>
+            <span>
+              <fbt desc="navigation.getStarted.sellOnOrigin">
+                Sell on Origin
+              </fbt>
+            </span>
           </UserActivationLink>
         </li>
       </ul>
