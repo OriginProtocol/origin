@@ -4,7 +4,6 @@ import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
-// import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
