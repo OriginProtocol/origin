@@ -5,7 +5,7 @@ export default function withGrowthRewards(WrappedComponent) {
     const ognListingRewards = {}
 
     const tokenDecimals = props.tokenDecimals || 18
-    if (props.growthCampaigns && tokenDecimals) {
+    if (props.growthCampaigns) {
       const activeCampaign = props.growthCampaigns.find(
         campaign => campaign.status === 'Active'
       )
