@@ -87,6 +87,8 @@ const config = {
   identity: args['--identity'] || process.env.INDEX_IDENTITY === 'true',
   // Index growth events.
   growth: args['--growth'] || process.env.INDEX_GROWTH === 'true',
+  // Index identity proxy events.
+  proxy: args['--proxy'] || process.env.INDEX_PROXY === 'true',
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
   // Trail X number of blocks behind
@@ -114,9 +116,11 @@ logger.info(config)
 async function main() {
   const context = await new Context().init(config, errorCounter)
 
+  // List of contracts the listener watches events from.
   const contracts = {
     IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplace
+    Marketplace: contractsContext.marketplace,
+    ProxyFactory: contractsContext.ProxyFactory
   }
 
   if (context.config.concurrency > 1) {
@@ -236,7 +240,7 @@ logger.info(
   )}`
 )
 
-setNetwork(config.network)
+setNetwork(config.network, { performanceMode: false })
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')

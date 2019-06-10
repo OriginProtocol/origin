@@ -20,7 +20,10 @@ const NodeAccounts = ({ data }) => (
           </td>
           <td>{a.balance.eth}</td>
           <td>
-            <Price amount={a.balance.eth} />
+            <Price
+              target="fiat-USD"
+              price={{ currency: 'token-ETH', amount: a.balance.eth }}
+            />
           </td>
         </tr>
       ))}

@@ -38,9 +38,8 @@ export const types = `
       after: String
       sort: String
     ): IdentityConnection
-    facebookAuthUrl(redirect: String): String
-    twitterAuthUrl(redirect: String): String
-    googleAuthUrl(redirect: String): String
+
+    getAuthUrl(provider: String!, redirect: String): String
   }
 
   type IdentityConnection {
@@ -57,8 +56,11 @@ export const types = `
     lastName: String
     fullName: String
     description: String
+    # Deprecated field. Base64 encoded avatar. Only present on older profiles.
     avatar: String
+    # IPFS url for avatar photo
     avatarUrl: String
+    # Calculated field. Converts avatarURL to an HTTP(s) gateway URL
     avatarUrlExpanded: String
     strength: Int
 
@@ -69,6 +71,10 @@ export const types = `
     emailVerified: Boolean
     googleVerified: Boolean
     websiteVerified: Boolean
+    kakaoVerified: Boolean
+    githubVerified: Boolean
+    linkedinVerified: Boolean
+    wechatVerified: Boolean
 
     name: String
     ipfsHash: String

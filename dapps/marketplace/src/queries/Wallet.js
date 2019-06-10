@@ -15,6 +15,9 @@ export default gql`
         proxy {
           id
         }
+        predictedProxy {
+          id
+        }
       }
     }
   }

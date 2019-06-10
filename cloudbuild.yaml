@@ -38,9 +38,11 @@ steps:
           echo "Cloning origin-fraud"
           gcloud source repos clone origin-fraud --project=origin-214503
           if [ "${_CONTAINER}" = "origin-cron" ]; then
-            cp -r ./origin-fraud/growth ./infra/growth/src/fraud/
+            echo "Copying growth fraud"
+            cp -r ./origin-fraud/growth/prod ./infra/growth/src/fraud/
           else
-            cp -r ./origin-fraud/relayer ./infra/relayer/src/risk/
+            echo "Copying relayer fraud"
+            cp -r ./origin-fraud/relayer/prod ./infra/relayer/src/risk/
           fi
           rm -rf origin-fraud
         fi

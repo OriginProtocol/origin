@@ -16,74 +16,74 @@ describe('processableEvent', () => {
 
 describe('getNotificationMessage', () => {
   it(`Messages on buyer side`, async () => {
-    let msg = getNotificationMessage(
+    let msgTemplate = getNotificationMessage(
       'OfferAccepted',
       '0x123',
       '0x456',
       'buyer',
       'mobile'
     )
-    expect(msg)
+    expect(msgTemplate)
       .to.have.property('title')
-      .that.is.a('string')
-    expect(msg)
+      .that.is.a('function')
+    expect(msgTemplate)
       .to.have.property('body')
-      .that.is.a('string')
+      .that.is.a('function')
 
     // Not an event of interest. No notification expected.
-    msg = getNotificationMessage(
+    msgTemplate = getNotificationMessage(
       'RandomEvent',
       '0x123',
       '0x456',
       'buyer',
       'mobile'
     )
-    expect(msg).to.equal(null)
+    expect(msgTemplate).to.equal(null)
 
     // Buyer is the initiator. No notification expected.
-    msg = getNotificationMessage(
+    msgTemplate = getNotificationMessage(
       'OfferAccepted',
       '0x123',
       '0x123',
       'buyer',
       'mobile'
     )
-    expect(msg).to.equal(null)
+    expect(msgTemplate).to.equal(null)
   })
 
   it(`Messages on seller side`, async () => {
-    let msg = getNotificationMessage(
+    let msgTemplate = getNotificationMessage(
       'OfferCreated',
       '0x123',
       '0x456',
       'seller',
       'mobile'
     )
-    expect(msg)
+    expect(msgTemplate)
       .to.have.property('title')
-      .that.is.a('string')
-    expect(msg)
+      .that.is.a('function')
+    expect(msgTemplate)
       .to.have.property('body')
-      .that.is.a('string')
+      .that.is.a('function')
 
     // Not an event of interest. No notification expected.
-    msg = getNotificationMessage(
+    msgTemplate = getNotificationMessage(
       'RandomEvent',
       '0x123',
       '0x456',
       'seller',
       'mobile'
     )
-    expect(msg).to.equal(null)
+    expect(msgTemplate).to.equal(null)
 
     // Seller is the initiator. No notification expected.
-    msg = getNotificationMessage(
+    msgTemplate = getNotificationMessage(
       'OfferCreated',
       '0x123',
       '0x123',
       'seller',
       'mobile'
     )
-    expect(msg).to.equal(null)
+    expect(msgTemplate).to.equal(null)
   })
 })

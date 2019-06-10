@@ -38,23 +38,20 @@ client.defaultOptions = {
   query: { fetchPolicy: 'network-only' }
 }
 
-server.listen({
-    port: 4000
-  }).then(srv => {
-    console.log(`🚀  Server ready at ${srv.url}`)
-    populate(client, console.log, async addresses => {
-      const output = process.argv[2] || 'contracts'
-      try {
-        fs.writeFileSync(
-          `${__dirname}/../../contracts/build/${output}.json`,
-          JSON.stringify(addresses, null, 4)
-        )
-      } catch (e) {
-        console.log('Could not write contracts.json')
-      }
-      await wsClient.close()
-      server.httpServer.close()
-      server.subscriptionServer.close()
-      process.exit()
+server.listen({ port: 4000 }).then(srv => {
+  console.log(`🚀  Server ready at ${srv.url}`)
+  populate(client, console.log, async addresses => {
+    const output = process.argv[2] || 'contracts'
+    try {
+      const path = `${__dirname}/../../contracts/build/${output}.json`
+      const json = JSON.stringify(addresses, null, 4)
+      fs.writeFileSync(path, json)
+    } catch (e) {
+      console.log('Could not write contracts.json')
+    }
+    await wsClient.close()
+    server.httpServer.close()
+    server.subscriptionServer.close()
+    process.exit()
   })
 })

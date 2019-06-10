@@ -5,7 +5,7 @@ import { getIpfsGateway } from 'utils/config'
 
 import { Icon, Card, Spinner } from '@blueprintjs/core'
 
-import Price from 'components/Price2'
+import Price from 'components/Price'
 import Identity from 'components/Identity'
 
 function status(listing) {

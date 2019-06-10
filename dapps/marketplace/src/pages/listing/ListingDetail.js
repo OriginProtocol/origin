@@ -5,6 +5,9 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withTokenBalance from 'hoc/withTokenBalance'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
@@ -227,8 +230,8 @@ class ListingDetail extends Component {
               currency={listing.price.currency}
             />
             <div className="availability-help">
-              <fbt desc="listingDetail.clickAndDrag">
-                * Click and drag to select a date range
+              <fbt desc="listingDetail.calendarDateRange">
+                * Click to select start date and again to select end date.
               </fbt>
             </div>
           </>
@@ -260,8 +263,8 @@ class ListingDetail extends Component {
               currency={listing.price.currency}
             />
             <div className="availability-help">
-              <fbt desc="listingDetail.weekCalendarHelp">
-                * Click and drag to select a time range
+              <fbt desc="listingDetail.weekCalendarRangeHelp">
+                * Click to select start time and again for end time
               </fbt>
             </div>
           </>
@@ -278,6 +281,13 @@ class ListingDetail extends Component {
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.walletProxy
     )
+
+    const growthReward = this.props.ognListingRewards[listing.id]
+
+    const props = { ...this.props }
+    if (growthReward) {
+      props.growthReward = growthReward
+    }
 
     if (listing.seller.id === this.props.walletProxy) {
       return (
@@ -297,7 +307,7 @@ class ListingDetail extends Component {
     } else if (isPendingBuyer && listing.multiUnit) {
       return (
         <>
-          <MultiUnit {...this.props} />
+          <MultiUnit {...props} />
           <OfferMade />
         </>
       )
@@ -308,7 +318,7 @@ class ListingDetail extends Component {
     } else if (isFractional) {
       return (
         <Fractional
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availability}
         />
@@ -316,19 +326,26 @@ class ListingDetail extends Component {
     } else if (isFractionalHourly) {
       return (
         <FractionalHourly
-          {...this.props}
+          {...props}
           range={this.state.range}
           availability={this.state.availabilityHourly}
         />
       )
     } else if (listing.multiUnit) {
-      return <MultiUnit {...this.props} isPendingBuyer={isPendingBuyer} />
+      return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
     }
-    return <SingleUnit {...this.props} />
+    return <SingleUnit {...props} />
   }
 }
 
-export default withWallet(ListingDetail)
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withGrowthRewards(ListingDetail))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listing detail in case growth can not be reached
+  }
+)
 
 require('react-styl')(`
   .listing-detail

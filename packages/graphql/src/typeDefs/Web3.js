@@ -31,6 +31,7 @@ module.exports = `
 
   input ConfigInput {
     discovery: String
+    relayer: String
     bridge: String
     ipfsRPC: String
     ipfsGateway: String
@@ -44,8 +45,6 @@ module.exports = `
     arbitrator: String
     discovery: String
     bridge: String
-    facebookAuthUrl: String
-    googleAuthUrl: String
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String
@@ -63,7 +62,7 @@ module.exports = `
     toggleMetaMask(enabled: Boolean): Boolean
     deployToken(name: String!, symbol: String!, decimals: String!, supply: String!, type: String, from: String): Transaction
     transferToken(token: String!, from: String!, to: String!, value: String!): Transaction
-    updateTokenAllowance(token: String!, from: String!, to: String!, value: String!): Transaction
+    updateTokenAllowance(token: String!, from: String!, to: String!, value: String!, forceProxy: Boolean): Transaction
     useFaucet(wallet: String!, networkId: String): Boolean
 
     sendFromNode(from: String!, to: String!, value: String!): Transaction

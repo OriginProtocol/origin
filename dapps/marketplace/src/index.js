@@ -1,9 +1,11 @@
 // Ensure storage is cleared on each deploy
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
+const ognNetwork = localStorage.ognNetwork
 if (localStorage.appHash !== appHash) {
   localStorage.clear()
   sessionStorage.clear()
   localStorage.appHash = appHash
+  localStorage.ognNetwork = ognNetwork
 }
 
 import React, { Component } from 'react'
