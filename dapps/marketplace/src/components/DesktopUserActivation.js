@@ -763,7 +763,7 @@ class UserActivation extends Component {
                 )
               }
             >
-              <fbt desc="UserActivation.imSure">I'm sure</fbt>
+              <fbt desc="UserActivation.imSure">I&apos;m sure</fbt>
             </button>
             <button
               className="btn btn-outline btn-link"
