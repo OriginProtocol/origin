@@ -92,6 +92,8 @@ class Purse {
     this.pendingTransactions = {}
     // receipt stack to be continuously processed
     this.receiptsToProcess = []
+    // Counter for tx rebroadcasts
+    this.rebroadcastCounters = {}
 
     this.rclient = this._setupRedis(redisHost)
 
@@ -559,7 +561,30 @@ class Purse {
         this.receiptsToProcess.splice(i, 1)
       }
 
-      // TODO tx maintenance, gc, and adjust pending counts by looking for mined transactions, though strictly not necessary
+      /**
+       * Look for dropped transactions and re-broadcast if necessary.  This can sometimes happen
+       * if the transaction has a low gas price and the txpool is loaded.  Or it could have been
+       * garbage collected by the pool for some arbitrary reason.
+       *
+       * TODO: If this becomes a common issue, it might be good to re-sign with the same nonce and
+       * an updated gas price.  Hopefully we'll find this rare, at least until CryptoKitties v57
+       * comes out.
+       */
+      for (const txHash of Object.keys(this.pendingTransactions)) {
+        const tx = await this.web3.eth.getTransaction(txHash)
+        if (!tx) {
+          logger.warn(`Transaction ${txHash} was dropped!  Re-broadcasting...`)
+
+          await sendRawTransaction(this.web3, this.pendingTransactions[txHash])
+
+          // Increment our internal counter.  No functional use yet, but good for testing.
+          if (this.rebroadcastCounters[txHash]) {
+            this.rebroadcastCounters[txHash] += 1
+          } else {
+            this.rebroadcastCounters[txHash] = 1
+          }
+        }
+      }
 
       interval += 1
     } while (await tick())

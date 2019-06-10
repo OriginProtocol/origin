@@ -274,12 +274,43 @@ describe('Purse', () => {
     }
   })
 
+  it('rebroadcasts transactions that are dropped', async () => {
+    const childCount = 2
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_ONE,
+      children: childCount,
+      autofundChildren: true
+    })
+    await purse.init()
+
+    /**
+     * This is kinda janky.  We have to meddle with the Purse's internals to get it to behave a
+     * certain way.  Not the best of unit tests, but it should be able to test its functionality.
+     * Basically, we're giving it a TX that it never really knew about (wasn't sent using sendTX())
+     * to see if it attempts a rebroadcast.  This isn't the valid way to use Purse, because it
+     * bypasses its internal account management and standard tx tracking abilities.
+     */
+    const signed = await purse.signTx(purse.children[0], {
+      to: Funder,
+      value: 1,
+      data: '0xdeadbeef',
+      gas: 22000,
+      gasPrice: TWO_GWEI
+    })
+    const txHash = web3.utils.sha3(signed.rawTransaction)
+    purse.pendingTransactions[txHash] = signed.rawTransaction
+
+    // Give it a few secs to pick it up
+    await wait(3000)
+
+    // Check that the counter went up
+    assert(purse.rebroadcastCounters[txHash] === 1)
+  })
+
   // TODO, not yet implemented
   it.skip('can drain child accounts', async () => { assert(false, 'Not implemented') })
 
   // Not yet implemented
   it.skip('should be able to handle a large volume of transactions', async () => { assert(false, 'Not implemented') })
-
-  // TODO: Can dropped transactions be tested with ganache?  skipping for now...
-  it.skip('rebroadcasts transactions that are dropped', async () => { assert(false, 'Not implemented') })
 })
