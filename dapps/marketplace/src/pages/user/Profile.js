@@ -454,7 +454,7 @@ class UserProfile extends Component {
                     earned={getTokensEarned({
                       verifiedServices: Object.keys(
                         AttestationComponents
-                      ).filter(a => this.state[`${a}Verified`]),
+                      ).filter(a => this.state.mappedVerifiedAttestations[`${a}Verified`]),
                       growthCampaigns: this.props.growthCampaigns,
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
