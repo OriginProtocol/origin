@@ -31,7 +31,7 @@ const logger = require('./logger')
 const REDIS_RETRY_TIMEOUT = 30000
 const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
-const MAX_PENDING_PER_ACCOUNT = 3
+const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('50000000000000000', 10) // 0.05 Ether
 const MIN_CHILD_BALANCE = new BN('1000000000000000', 10) // 0.001 Ether
@@ -69,7 +69,8 @@ class Purse {
     mnemonic,
     children = DEFAULT_CHILDREN,
     autofundChildren = false,
-    redisHost = 'redis://localhost:6379/0'
+    redisHost = 'redis://localhost:6379/0',
+    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT
   }) {
     if (!web3 || !mnemonic) {
       throw new Error('missing required parameters')
@@ -79,6 +80,7 @@ class Purse {
     this.mnemonic = mnemonic
     this._childrenToCreate = children
     this.autofundChildren = autofundChildren
+    this.maxPendingPerAccount = maxPendingPerAccount
 
     this.ready = false
     this.masterKey = null
@@ -179,7 +181,7 @@ class Purse {
      * becomes available...
      */
     do {
-      let lowestPending = MAX_PENDING_PER_ACCOUNT
+      let lowestPending = this.maxPendingPerAccount
       this.children.forEach(child => {
         logger.debug(
           `checking child ${child}  pending: ${
