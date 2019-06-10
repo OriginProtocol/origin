@@ -15,12 +15,16 @@ function waitForTransactionReceipt(web3Inst, txHash, duration = 5000) {
   if (!txHash) {
     throw new Error('Missing transaction hash')
   }
-
+  if (typeof txHash !== 'string' || txHash.length !== 66) {
+    console.log(txHash)
+    throw new Error('Invalid transaction hash!')
+  }
+  console.log('txHash', txHash)
   // ewww....
   return new Promise((resolve, reject) => {
     try {
       timeout = setTimeout(() => {
-        reject(new Error('Timeout waiting for receipt!'))
+        reject(new Error(`Timeout waiting for receipt for tx ${txHash}`))
       }, duration)
 
       interval = setInterval(async () => {
@@ -119,6 +123,14 @@ function insensitiveInArray(str, arr) {
   return false
 }
 
+/**
+ * Sit idle for however many ms you want
+ * @param ms {number} number of miliseconds to wait
+ */
+async function wait(ms) {
+  return new Promise(resolve => setTimeout(() => resolve(true), ms))
+}
+
 module.exports = {
   waitForTransactionReceipt,
   getBalance,
@@ -126,5 +138,6 @@ module.exports = {
   mineBlock,
   startMining,
   stopMining,
-  insensitiveInArray
+  insensitiveInArray,
+  wait
 }

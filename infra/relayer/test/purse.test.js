@@ -7,12 +7,13 @@ const {
   getBalance,
   startMining,
   stopMining,
-  insensitiveInArray
+  insensitiveInArray,
+  wait
 } = require('./utils')
 
 const MNEMONIC_ONE = 'one two three four five six'
 const MNEMONIC_TWO = 'two two three four five six'
-//const MNEMONIC_THREE = 'three two three four five six'
+const MNEMONIC_THREE = 'three two three four five six'
 const TEST_NET_ID = 999
 const TEST_PROVIDER_URL = 'http://localhost:8545/'
 const ZERO = new BN('0', 10)
@@ -174,9 +175,6 @@ describe('Purse', () => {
     await purse.teardown(true)
   })
 
-  // TODO: Can dropped transactions be tested with ganache?  skipping for now...
-  it.skip('rebroadcasts transactions that are dropped', async () => { assert(false, 'Not implemented') })
-
   // This is best tested with Redis, but not required
   it('keeps persistent and accurate count of nonce', async () => {
     const purseOne = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
@@ -206,12 +204,55 @@ describe('Purse', () => {
     await purseTwo.teardown(true)
   })
 
+  // Not yet implemented
+  it('should init once master account is funded and autofund children', async () => {
+    const childCount = 2
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_THREE,
+      children: childCount,
+      autofundChildren: true
+    })
+    await purse.init()
+
+    const masterAddress = purse.masterWallet.getChecksumAddressString()
+    let masterBalance = await getBalance(web3, masterAddress)
+    assert(masterBalance.eq(ZERO), 'non-zero balance on master')
+
+    for (let i = 0; i < childCount; i++) {
+      const chidlBal = await getBalance(web3, purse.children[i])
+      assert(chidlBal.eq(ZERO), 'non-zero balance on child')
+    }
+
+    // Fund the master account
+    const receipt = await web3.eth.sendTransaction({
+      from: Funder,
+      to: masterAddress,
+      value: ONE_ETHER,
+      gas: 22000,
+      gasPrice: TWO_GWEI
+    })
+    assert(receipt.status, 'funding tx failed')
+
+    masterBalance = await getBalance(web3, masterAddress)
+    assert(masterBalance.eq(ONE_ETHER), 'balance on master after funding is wrong')
+
+    // Wait 1s per child. 
+    await wait(childCount * 1000)
+
+    // Check that the children were autofunded
+    for (let i = 0; i < childCount; i++) {
+      const chidlBal = await getBalance(web3, purse.children[i])
+      assert(chidlBal.gt(ZERO), 'zero balance on child')
+    }
+  })
+
   // TODO, not yet implemented
   it.skip('can drain child accounts', async () => { assert(false, 'Not implemented') })
 
   // Not yet implemented
-  it.skip('should init once master account is funded', async () => { assert(false, 'Not implemented') })
-
-  // Not yet implemented
   it.skip('should be able to handle a large volume of transactions', async () => { assert(false, 'Not implemented') })
+
+  // TODO: Can dropped transactions be tested with ganache?  skipping for now...
+  it.skip('rebroadcasts transactions that are dropped', async () => { assert(false, 'Not implemented') })
 })
