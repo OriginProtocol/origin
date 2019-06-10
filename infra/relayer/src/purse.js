@@ -223,7 +223,10 @@ class Purse {
   }
 
   /**
-   * Send a transaction from an available sender account
+   * Send a transaction from an available sender account.
+   *
+   * NOTE: This does not wait for the transaction to be mined!
+   *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
    * @returns {string} The transaction hash of the sent transaction
    */
