@@ -4,7 +4,8 @@ export default function withGrowthRewards(WrappedComponent) {
   const WithGrowthRewards = props => {
     const ognListingRewards = {}
 
-    if (props.growthCampaigns && props.tokenDecimals) {
+    const tokenDecimals = props.tokenDecimals || 18
+    if (props.growthCampaigns) {
       const activeCampaign = props.growthCampaigns.find(
         campaign => campaign.status === 'Active'
       )
@@ -12,7 +13,7 @@ export default function withGrowthRewards(WrappedComponent) {
       if (activeCampaign) {
         const decimalDivision = web3.utils
           .toBN(10)
-          .pow(web3.utils.toBN(props.tokenDecimals))
+          .pow(web3.utils.toBN(tokenDecimals))
 
         activeCampaign.actions.forEach(action => {
           if (action.type === 'ListingIdPurchased') {
