@@ -147,6 +147,33 @@ describe('Purse', () => {
     await purse.teardown(true)
   })
 
+  it('adjusts the child pending count as transactions are mined', async () => {
+    const purse = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
+    await purse.init()
+
+    const txObj = {
+      to: Rando,
+      value: '1',
+      data: '0xdeadbeef',
+      gas: 22000,
+      gasPrice: TWO_GWEI.toString()
+    }
+
+    const txHash = await purse.sendTx(txObj)
+    const receipt = await waitForTransactionReceipt(web3, txHash)
+
+    assert(receipt.status, 'tx failed')
+
+    // Give it a couple seconds to do its thing
+    await wait(2000)
+
+    // Verify it has no pending
+    const checksummedAddress = web3.utils.toChecksumAddress(receipt.from)
+    assert(purse.accounts[checksummedAddress].pendingCount == 0)
+
+    await purse.teardown(true)
+  })
+
   it('sends transactions without waiting for them to be mined', async () => {
     const purse = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
     await purse.init()

@@ -517,6 +517,48 @@ class Purse {
         }
       }
 
+      /**
+       * Handle incoming receipts and remove pending transactions and adjust pending counts.  This
+       * is processed in reverse order so we can alter the array without it effecting the rest as
+       * we go.
+       */
+      for (let i = this.receiptsToProcess.length - 1; i >= 0; i--) {
+        const receipt = this.receiptsToProcess[i]
+        const txHash = receipt.transactionHash
+
+        logger.debug(`Transaction ${txHash} has been mined.`)
+
+        // Remove from pending if it exists(it should)
+        if (this.pendingTransactions[txHash]) {
+          if (!receipt.status) {
+            // TODO Should this be communicated to the user and/or tracked?
+            logger.warn(`Transaction ${txHash} has failed!`)
+          }
+          delete this.pendingTransactions[txHash]
+          logger.debug(`Removed ${txHash} from pending`)
+        }
+
+        // Adjust the pendingCount for the account
+        if (this.accounts.hasOwnProperty(receipt.from)) {
+          if (this.accounts[receipt.from].pendingCount > 0) {
+            this.accounts[receipt.from].pendingCount -= 1
+          } else {
+            logger.error(
+              `Account ${receipt.from}'s pendingCount appears to be inaccurate`
+            )
+          }
+        } else {
+          logger.error(
+            `Account ${
+              receipt.from
+            } isn't one of ours.  This should be impossible!`
+          )
+        }
+
+        // Drop it from the queue
+        this.receiptsToProcess.splice(i, 1)
+      }
+
       // TODO tx maintenance, gc, and adjust pending counts by looking for mined transactions, though strictly not necessary
 
       interval += 1
