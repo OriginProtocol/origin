@@ -102,7 +102,7 @@ class MobileUserActivation extends Component {
                       className ? ' ' + className : ''
                     }`,
                     title: fbt('Get Rewards', 'UserActivation.getRewards'),
-                    headerImageUrl: 'images/tout-header-image@3x.png'
+                    headerImageUrl: 'images/onboard/ogn-image@3x.png'
                   }
                   break
               }

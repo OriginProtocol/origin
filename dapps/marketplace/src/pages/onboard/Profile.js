@@ -6,10 +6,12 @@ import UserActivation from 'components/DesktopUserActivation'
 import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
+import { withRouter } from 'react-router-dom'
 
 class OnboardProfile extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       finished: false
     }
@@ -18,6 +20,8 @@ class OnboardProfile extends Component {
   render() {
     const { listing, linkPrefix, hideOriginWallet } = this.props
     const { finished } = this.state
+
+    const nextLink = `${linkPrefix}/onboard/rewards`;
 
     if (finished) {
       return <Redirect to={`${linkPrefix}/onboard/finished`} />
@@ -36,15 +40,23 @@ class OnboardProfile extends Component {
         </p>
         <div className="row">
           <div className="col-md-8">
-            <div className="onboard-box profile pt-3">
-              <UserActivation
-                onCompleted={() => {
-                  this.setState({
-                    finished: true
-                  })
-                }}
-                // hideHeader={true}
-              />
+            <div className={`onboard-box profile${this.props.rewards ? ' rewards' : ''}`}>
+              { this.props.rewards && <img src="images/onboard/ogn-image@3x.png" className="rewards-signup-header-image" /> }
+              <div className="pt-3">
+                <UserActivation
+                  stage={this.props.rewards ? 'RewardsSignUp' : null}
+                  onStageChanged={newStage => {
+                    if (newStage === 'RewardsSignUp' && !this.props.rewards) {
+                      this.props.history.push(nextLink)
+                    }
+                  }}
+                  onCompleted={() => {
+                    this.setState({
+                      finished: true
+                    })
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="col-md-4">
@@ -58,11 +70,17 @@ class OnboardProfile extends Component {
   }
 }
 
-export default OnboardProfile
+export default withRouter(OnboardProfile)
 
 require('react-styl')(`
   .onboard .onboard-box.profile
     padding: 1rem
+    &.rewards
+      padding: 0
+      > img
+        width: 100%
+        height: 250px
+        object-fit: cover
     > .user-activation
       max-width: 475px
     .mask

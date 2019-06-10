@@ -293,4 +293,7 @@ require('react-styl')(`
         flex-grow: 0
         border-radius: 0
         border: 0
+      .modal-content, .modal-header
+        max-width: 400px
+        margin: 0 auto
 `)

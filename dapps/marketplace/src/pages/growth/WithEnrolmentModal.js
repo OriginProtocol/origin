@@ -357,22 +357,18 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <div>
           <div>
-            <div className="image-holder mr-auto ml-auto">
-              <img src="images/growth/earth-graphic.svg" />
-              <img
-                className="red-x-image"
-                src="images/growth/red-x-graphic.svg"
-              />
+            <div className="image-holder mr-auto ml-auto text-center">
+              <img src="images/growth/not-eligible-graphic.svg" />
             </div>
           </div>
-          <div className="title mt-4">
+          <div className="title mt-4 text-center">
             <fbt desc="GrowthEnrollment.notEligibleTitle">
               Oops,
               <fbt:param name="country">{country}</fbt:param>
               is not eligible
             </fbt>
           </div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+          <div className="mt-3 mr-auto ml-auto normal-line-height info-text text-center">
             <fbt desc="GrowthEnrollment.notEligibleExplanation">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -381,7 +377,7 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           {isRestricted && (
             <Fragment>
-              <div className="mt-4 pt-2">
+              <div className="mt-4 pt-2 text-center">
                 <fbt desc="GrowthEnrollment.restrictedQuestion">
                   Did we detect your your country incorrectly?
                 </fbt>
@@ -657,17 +653,13 @@ require('react-styl')(`
       width: 400px
     .info-text
       max-width: 400px
-    .red-x-image
-      position: absolute
-      right: 110px
-      bottom: 10px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
     .btn
       margin-top: 30px
       min-width: 9rem
     .checkbox-holder
-      color: var(--dark)
+      color: var(--steel-blue)
       font-family: Lato
       font-weight: normal
       display: block
@@ -801,4 +793,6 @@ require('react-styl')(`
         color: var(--clear-blue)
         font-weight: normal
         margin-top: 0.8rem
+      .checkbox-holder
+        color: var(--dark)
 `)

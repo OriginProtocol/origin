@@ -61,6 +61,10 @@ class UserActivation extends Component {
       }
     }
 
+    if (props.stage) {
+      state.stage = props.stage
+    }
+
     this.state = {
       ...state,
       loading: false,
@@ -131,8 +135,8 @@ class UserActivation extends Component {
           {this[`render${stage}`]()}
         </div>
         {personalDataModal && (
-          <ModalComp
-            headerImageUrl="images/tout-header-image.png"
+          <MobileModal
+            headerImageUrl="images/onboard/tout-header-image@3x.png"
             closeOnEsc={false}
             shouldClose={shouldClosePersonalDataModal}
             className="user-activation personal-data-modal"
@@ -145,11 +149,11 @@ class UserActivation extends Component {
             }
           >
             {this.renderPersonalDataModal()}
-          </ModalComp>
+          </MobileModal>
         )}
         {txModal && (
-          <ModalComp
-            headerImageUrl="images/tout-header-image.png"
+          <MobileModal
+            headerImageUrl="images/onboard/tout-header-image@3x.png"
             closeOnEsc={false}
             shouldClose={shouldCloseSignTxModal}
             className="user-activation sign-tx-modal"
@@ -162,7 +166,7 @@ class UserActivation extends Component {
             }
           >
             {this.renderSignTxModal()}
-          </ModalComp>
+          </MobileModal>
         )}
         {confirmSkipModal && (
           <ModalComp
@@ -259,7 +263,7 @@ class UserActivation extends Component {
                 </div>
               )}
               <div className="help mt-3">
-                <fbt desc="UserActivation.emailHelp ">
+                <fbt desc="UserActivation.emailHelp">
                   We use your email to send you important notifications when you
                   buy or sell.
                 </fbt>
@@ -386,7 +390,7 @@ class UserActivation extends Component {
                     <input
                       type="tel"
                       maxLength="6"
-                      className="form-control form-control-lg"
+                      className="form-control form-control-lg text-center"
                       placeholder={placeholderText}
                       value={this.state.code}
                       onChange={e => this.setState({ code: e.target.value })}
@@ -595,6 +599,9 @@ class UserActivation extends Component {
     const EnrollButton = this.EnrollButton
     return (
       <>
+        <div className="mt-3 mb-5">
+          <img src="images/onboard/rewards-logo.svg" className="onboard-rewards-logo" />
+        </div>
         <div className="help desc mt-3 mb-3">
           <fbt desc="UserActivation.rewardsDesc">
             Earn Origin Tokens (OGN) by strengthening your profile and
@@ -604,14 +611,14 @@ class UserActivation extends Component {
         <div className="actions">
           <EnrollButton
             type="button"
-            className="btn btn-primary mt-3 mb-3"
+            className="btn btn-primary mt-3"
             children={fbt('Yes! Sign me up', 'UserActivation.signMeUp')}
             onCompleted={() => this.onDeployComplete()}
             onAccountBlocked={this.props.onAccountBlocked}
           />
           <button
             type="button"
-            className="btn btn-outline btn-link mb-3"
+            className="btn btn-outline btn-link mt-3 mb-3"
             children={fbt('No, thanks', 'UserActivation.noThanks')}
             onClick={() =>
               this.setState({
@@ -913,6 +920,8 @@ require('react-styl')(`
       width: 150px
       padding-top: 150px
       margin: 0 auto
+    .onboard-rewards-logo
+      max-width: 150px
     &.desktop
       padding: 20px
       .boxed-container
