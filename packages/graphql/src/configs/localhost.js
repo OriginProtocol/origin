@@ -31,6 +31,7 @@ const config = {
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
+  ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
   tokens: [],

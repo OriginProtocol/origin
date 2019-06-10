@@ -10,7 +10,6 @@ module.exports = {
       {
         type: Sequelize.JSONB,
         allowNull: false,
-        defaultValue: false
       }
     )
   },

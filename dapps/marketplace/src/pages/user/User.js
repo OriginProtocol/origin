@@ -62,31 +62,55 @@ const User = ({ match }) => {
                       {profile.facebookVerified && (
                         <div>
                           <div className="attestation facebook" />
-                          Facebook
+                          <fbt desc="Facebook">Facebook</fbt>
                         </div>
                       )}
                       {profile.twitterVerified && (
                         <div>
                           <div className="attestation twitter" />
-                          Twitter
+                          <fbt desc="Twitter">Twitter</fbt>
                         </div>
                       )}
                       {profile.airbnbVerified && (
                         <div>
                           <div className="attestation airbnb" />
-                          AirBnb
+                          <fbt desc="AirBnb">AirBnb</fbt>
                         </div>
                       )}
                       {profile.googleVerified && (
                         <div>
                           <div className="attestation google" />
-                          Google
+                          <fbt desc="Google">Google</fbt>
                         </div>
                       )}
                       {profile.websiteVerified && (
                         <div>
                           <div className="attestation website" />
-                          Website
+                          <fbt desc="Website">Website</fbt>
+                        </div>
+                      )}
+                      {profile.kakaoVerified && (
+                        <div>
+                          <div className="attestation kakao" />
+                          <fbt desc="Kakao">Kakao</fbt>
+                        </div>
+                      )}
+                      {profile.githubVerified && (
+                        <div>
+                          <div className="attestation github" />
+                          <fbt desc="GitHub">GitHub</fbt>
+                        </div>
+                      )}
+                      {profile.linkedinVerified && (
+                        <div>
+                          <div className="attestation linkedin" />
+                          <fbt desc="LinkedIn">LinkedIn</fbt>
+                        </div>
+                      )}
+                      {profile.wechatVerified && (
+                        <div>
+                          <div className="attestation wechat" />
+                          <fbt desc="WeChat">WeChat</fbt>
                         </div>
                       )}
                     </div>
@@ -104,9 +128,8 @@ const User = ({ match }) => {
                     )}
                   </div>
 
-                  <Reviews id={id} hideWhenZero />
-
                   <UserListings user={id} />
+                  <Reviews id={id} hideWhenZero />
                 </div>
               </div>
             </>
@@ -154,6 +177,31 @@ require('react-styl')(`
           height: 1.5rem
     .reviews
       margin-top: 2rem
+
+  .attestations
+    display: flex
+  .attestation
+    background-repeat: no-repeat
+    background-position: center
+    background-size: contain
+    width: 1.25rem
+    height: 1.25rem
+    margin-right: 0.25rem
+    &.email
+      background-image: url(images/identity/email-icon-verified.svg)
+    &.facebook
+      background-image: url(images/identity/facebook-icon-verified.svg)
+    &.phone
+      background-image: url(images/identity/phone-icon-verified.svg)
+    &.twitter
+      background-image: url(images/identity/twitter-icon-verified.svg)
+    &.airbnb
+      background-image: url(images/identity/airbnb-icon-verified.svg)
+    &.google
+      background-image: url(images/identity/google-icon-verified.svg)
+    &.website
+      background-image: url(images/identity/website-icon-verified.svg)
+
   @media (max-width: 767.98px)
     .user-profile
       padding-top: 2rem

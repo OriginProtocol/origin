@@ -542,8 +542,7 @@ class OriginEventSource {
 
   async getReview(listingId, offerId, party, ipfsHash, event) {
     const data = await get(this.ipfsGateway, ipfsHash)
-    const networkId = await this.getNetworkId()
-    const offerIdExp = `${networkId}-000-${listingId}-${offerId}`
+    const offerIdExp = await this.getOfferIdExp(listingId, offerId)
     const listing = await this.getListing(listingId, event.blockNumber)
     return {
       id: offerIdExp,
@@ -554,6 +553,11 @@ class OriginEventSource {
       rating: data.rating,
       event
     }
+  }
+
+  async getOfferIdExp(listingId, offerId) {
+    const networkId = await this.getNetworkId()
+    return `${networkId}-000-${listingId}-${offerId}`
   }
 
   resetCache() {

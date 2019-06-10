@@ -107,6 +107,38 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation website" />
                     </Tooltip>
                   )}
+                  {profile.kakaoVerified && (
+                    <Tooltip
+                      tooltip={fbt('KaKao Verified', 'KaKao Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation kakao" />
+                    </Tooltip>
+                  )}
+                  {profile.githubVerified && (
+                    <Tooltip
+                      tooltip={fbt('GitHub Verified', 'GitHub Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation github" />
+                    </Tooltip>
+                  )}
+                  {profile.linkedinVerified && (
+                    <Tooltip
+                      tooltip={fbt('LinkedIn Verified', 'LinkedIn Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation linkedin" />
+                    </Tooltip>
+                  )}
+                  {profile.wechatVerified && (
+                    <Tooltip
+                      tooltip={fbt('WeChat Verified', 'WeChat Verified')}
+                      placement="bottom"
+                    >
+                      <div className="attestation wechat" />
+                    </Tooltip>
+                  )}
                 </div>
               </div>
             </div>
