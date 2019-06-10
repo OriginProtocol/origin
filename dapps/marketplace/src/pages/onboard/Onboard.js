@@ -36,7 +36,13 @@ class Onboard extends Component {
           />
           <Route
             path={`${linkPathPrefix}/onboard/rewards`}
-            render={() => <Profile listing={listing} linkPrefix={linkPrefix} rewards={true} />}
+            render={() => (
+              <Profile
+                listing={listing}
+                linkPrefix={linkPrefix}
+                rewards={true}
+              />
+            )}
           />
           <Route
             path={`${linkPathPrefix}/onboard/finished`}

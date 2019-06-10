@@ -21,11 +21,11 @@ class OnboardProfile extends Component {
     const { listing, linkPrefix, hideOriginWallet } = this.props
     const { finished } = this.state
 
-    const nextLink = `${linkPrefix}/onboard/rewards`;
-
     if (finished) {
       return <Redirect to={`${linkPrefix}/onboard/finished`} />
     }
+
+    const nextLink = `${linkPrefix}/onboard/rewards`
 
     return (
       <>
@@ -40,8 +40,17 @@ class OnboardProfile extends Component {
         </p>
         <div className="row">
           <div className="col-md-8">
-            <div className={`onboard-box profile${this.props.rewards ? ' rewards' : ''}`}>
-              { this.props.rewards && <img src="images/onboard/ogn-image@3x.png" className="rewards-signup-header-image" /> }
+            <div
+              className={`onboard-box profile${
+                this.props.rewards ? ' rewards' : ''
+              }`}
+            >
+              {this.props.rewards && (
+                <img
+                  src="images/onboard/ogn-image@3x.png"
+                  className="rewards-signup-header-image"
+                />
+              )}
               <div className="pt-3">
                 <UserActivation
                   stage={this.props.rewards ? 'RewardsSignUp' : null}

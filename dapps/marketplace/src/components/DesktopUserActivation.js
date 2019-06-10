@@ -6,7 +6,6 @@ import pick from 'lodash/pick'
 
 import withConfig from 'hoc/withConfig'
 import withWallet from 'hoc/withWallet'
-import withIsMobile from 'hoc/withIsMobile'
 import withIdentity from 'hoc/withIdentity'
 
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
@@ -16,7 +15,6 @@ import ImageCropper from './ImageCropper'
 import Avatar from './Avatar'
 import UserProfileCreated from './_UserProfileCreated'
 import MobileModal from './MobileModal'
-import Modal from './Modal'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -81,11 +79,20 @@ class UserActivation extends Component {
     }
   }
 
+  componentDidMount() {
+    this.mounted = true
+  }
+
   componentWillUnmount() {
+    this.mounted = false
     this.refetchQueries()
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (!this.mounted) {
+      return
+    }
+
     if (this.props.stage && this.props.stage !== prevProps.stage) {
       this.setState(
         {
@@ -97,12 +104,19 @@ class UserActivation extends Component {
       this.onStageChanged()
     }
 
-    this.updateStoredUserData({
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      avatar: this.state.avatar,
-      avatarUrl: this.state.avatarUrl
-    })
+    const hasUpdate =
+      this.state.firstName !== prevState.firstName ||
+      this.state.lastName !== prevState.lastName ||
+      this.state.avatar !== prevState.avatar ||
+      this.state.avatarUrl !== prevState.avatarUrl
+    if (hasUpdate) {
+      this.updateStoredUserData({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        avatar: this.state.avatar,
+        avatarUrl: this.state.avatarUrl
+      })
+    }
   }
 
   render() {
@@ -116,10 +130,6 @@ class UserActivation extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
     const { renderMobileVersion } = this.props
-
-    const isMobile = this.props.ismobile === 'true'
-
-    const ModalComp = isMobile ? MobileModal : Modal
 
     return (
       <div
@@ -143,8 +153,8 @@ class UserActivation extends Component {
             fullscreen={false}
             onClose={() =>
               this.setState({
-                personalDataModal: false,
-                shouldClosePersonalDataModal: false
+                personalDataModal: false
+                // shouldClosePersonalDataModal: false
               })
             }
           >
@@ -160,8 +170,8 @@ class UserActivation extends Component {
             fullscreen={false}
             onClose={() =>
               this.setState({
-                txModal: false,
-                shouldCloseSignTxModal: false
+                txModal: false
+                // shouldCloseSignTxModal: false
               })
             }
           >
@@ -169,20 +179,23 @@ class UserActivation extends Component {
           </MobileModal>
         )}
         {confirmSkipModal && (
-          <ModalComp
+          <MobileModal
             closeOnEsc={false}
             shouldClose={shouldCloseConfirmSkipModal}
             className="user-activation confirm-skip-modal"
             fullscreen={false}
-            onClose={() =>
+            onClose={() => {
+              if (!this.mounted) {
+                return null
+              }
               this.setState({
-                confirmSkipModal: false,
-                shouldCloseConfirmSkipModal: false
+                confirmSkipModal: false
+                // shouldCloseConfirmSkipModal: false
               })
-            }
+            }}
           >
             {this.renderSkipConfirmModal()}
-          </ModalComp>
+          </MobileModal>
         )}
       </div>
     )
@@ -496,7 +509,8 @@ class UserActivation extends Component {
           e.preventDefault()
           if (this.validate()) {
             this.setState({
-              txModal: true
+              txModal: true,
+              shouldCloseSignTxModal: false
             })
           }
         }}
@@ -571,7 +585,8 @@ class UserActivation extends Component {
             onClick={e => {
               e.preventDefault()
               this.setState({
-                personalDataModal: true
+                personalDataModal: true,
+                shouldClosePersonalDataModal: false
               })
             }}
           >
@@ -579,12 +594,6 @@ class UserActivation extends Component {
           </a>
         </div>
         <div className="actions">
-          {/* <button type="button" className="btn btn-primary mt-3 mb-3" onClick={() => {
-            this.setState({
-              shouldCloseSignTxModal: true,
-              stage: 'RewardsSignUp'
-            })
-          }}>Testing</button> */}
           <button
             type="submit"
             className="btn btn-primary mt-3 mb-3"
@@ -599,8 +608,11 @@ class UserActivation extends Component {
     const EnrollButton = this.EnrollButton
     return (
       <>
-        <div className="mt-3 mb-5">
-          <img src="images/onboard/rewards-logo.svg" className="onboard-rewards-logo" />
+        <div className="mt-3 mb-5 text-center">
+          <img
+            src="images/onboard/rewards-logo.svg"
+            className="onboard-rewards-logo"
+          />
         </div>
         <div className="help desc mt-3 mb-3">
           <fbt desc="UserActivation.rewardsDesc">
@@ -622,7 +634,8 @@ class UserActivation extends Component {
             children={fbt('No, thanks', 'UserActivation.noThanks')}
             onClick={() =>
               this.setState({
-                confirmSkipModal: true
+                confirmSkipModal: true,
+                shouldCloseConfirmSkipModal: false
               })
             }
           />
@@ -822,9 +835,7 @@ class UserActivation extends Component {
   }
 }
 
-export default withApollo(
-  withIsMobile(withConfig(withWallet(withIdentity(UserActivation))))
-)
+export default withApollo(withConfig(withWallet(withIdentity(UserActivation))))
 
 require('react-styl')(`
   .user-activation
@@ -922,6 +933,7 @@ require('react-styl')(`
       margin: 0 auto
     .onboard-rewards-logo
       max-width: 150px
+      margin: 0 auto
     &.desktop
       padding: 20px
       .boxed-container
