@@ -48,6 +48,16 @@ export const types = `
     totalCount: Int!
   }
 
+  type VerifiedAttestationProperty {
+    type: String!
+    value: String
+  }
+
+  type VerifiedAttestation {
+    id: String!
+    properties: [VerifiedAttestationProperty]
+  }
+
   type Identity {
     id: ID!
     owner: Account
@@ -75,6 +85,8 @@ export const types = `
     githubVerified: Boolean
     linkedinVerified: Boolean
     wechatVerified: Boolean
+
+    verifiedAttestations: [VerifiedAttestation]
 
     name: String
     ipfsHash: String

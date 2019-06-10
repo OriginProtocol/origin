@@ -12,6 +12,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import FormattedDescription from 'components/FormattedDescription'
 
 import UserListings from './_UserListings'
+import { mapVerifiedAttestations } from 'utils/profileTools';
 
 const User = ({ match }) => {
   const id = match.params.id
@@ -26,9 +27,9 @@ const User = ({ match }) => {
           if (loading) return <LoadingSpinner />
 
           const profile = get(data, 'web3.account.identity') || {}
-          const noVerifications = !Object.keys(profile).some(k =>
-            k.match(/verified/i)
-          )
+          const verifiedAttestations = mapVerifiedAttestations(profile)
+
+          const noVerifications = !profile.verifiedAttestations || profile.verifiedAttestations.length === 0
 
           return (
             <>
@@ -47,67 +48,67 @@ const User = ({ match }) => {
                       <h5>
                         <fbt desc="User.verifiedInfo">Verified Info</fbt>
                       </h5>
-                      {profile.emailVerified && (
+                      {verifiedAttestations.emailVerified && (
                         <div>
                           <div className="attestation email" />
                           <fbt desc="User.email">Email</fbt>
                         </div>
                       )}
-                      {profile.phoneVerified && (
+                      {verifiedAttestations.phoneVerified && (
                         <div>
                           <div className="attestation phone" />
                           <fbt desc="User.phone">Phone</fbt>
                         </div>
                       )}
-                      {profile.facebookVerified && (
+                      {verifiedAttestations.facebookVerified && (
                         <div>
                           <div className="attestation facebook" />
                           <fbt desc="Facebook">Facebook</fbt>
                         </div>
                       )}
-                      {profile.twitterVerified && (
+                      {verifiedAttestations.twitterVerified && (
                         <div>
                           <div className="attestation twitter" />
                           <fbt desc="Twitter">Twitter</fbt>
                         </div>
                       )}
-                      {profile.airbnbVerified && (
+                      {verifiedAttestations.airbnbVerified && (
                         <div>
                           <div className="attestation airbnb" />
                           <fbt desc="AirBnb">AirBnb</fbt>
                         </div>
                       )}
-                      {profile.googleVerified && (
+                      {verifiedAttestations.googleVerified && (
                         <div>
                           <div className="attestation google" />
                           <fbt desc="Google">Google</fbt>
                         </div>
                       )}
-                      {profile.websiteVerified && (
+                      {verifiedAttestations.websiteVerified && (
                         <div>
                           <div className="attestation website" />
                           <fbt desc="Website">Website</fbt>
                         </div>
                       )}
-                      {profile.kakaoVerified && (
+                      {verifiedAttestations.kakaoVerified && (
                         <div>
                           <div className="attestation kakao" />
                           <fbt desc="Kakao">Kakao</fbt>
                         </div>
                       )}
-                      {profile.githubVerified && (
+                      {verifiedAttestations.githubVerified && (
                         <div>
                           <div className="attestation github" />
                           <fbt desc="GitHub">GitHub</fbt>
                         </div>
                       )}
-                      {profile.linkedinVerified && (
+                      {verifiedAttestations.linkedinVerified && (
                         <div>
                           <div className="attestation linkedin" />
                           <fbt desc="LinkedIn">LinkedIn</fbt>
                         </div>
                       )}
-                      {profile.wechatVerified && (
+                      {verifiedAttestations.wechatVerified && (
                         <div>
                           <div className="attestation wechat" />
                           <fbt desc="WeChat">WeChat</fbt>

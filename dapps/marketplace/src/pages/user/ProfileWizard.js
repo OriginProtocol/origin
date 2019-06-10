@@ -39,7 +39,12 @@ class ProfileWizard extends Component {
   }
 
   hasPhoneAttestation(profile) {
-    return profile.phoneVerified || profile.phoneAttestation
+    if (profile.phoneAttestation) {
+      return true
+    }
+
+    return !!((profile.verifiedAttestations || [])
+      .find(attestation => attestation.id === 'phone'))
   }
 
   renderVerifyYourOtherProfiles() {

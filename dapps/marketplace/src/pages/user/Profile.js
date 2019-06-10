@@ -42,6 +42,7 @@ import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
+import { mapVerifiedAttestations } from 'utils/profileTools';
 
 const store = Store('sessionStorage')
 
@@ -74,16 +75,7 @@ const ProfileFields = [
   'avatarUrl',
   'strength',
   'attestations',
-  'facebookVerified',
-  'twitterVerified',
-  'airbnbVerified',
-  'phoneVerified',
-  'emailVerified',
-  'googleVerified',
-  'websiteVerified',
-  'kakaoVerified',
-  'githubVerified',
-  'linkedinVerified'
+  'verifiedAttestations'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -96,7 +88,8 @@ function getState(profile) {
     firstName: '',
     lastName: '',
     description: '',
-    ...pickBy(pick(profile, ProfileFields), k => k)
+    ...pickBy(pick(profile, ProfileFields), k => k),
+    mappedVerifiedAttestations: mapVerifiedAttestations(profile)
   }
 }
 
@@ -131,25 +124,28 @@ class UserProfile extends Component {
     clearTimeout(this.timeout)
   }
 
-  changesPublishedToBlockchain(props, prevProps) {
+  changesPublishedToBlockchain(props, prevProps, state, prevState) {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
+
+    const verifiedAttestations = state.mappedVerifiedAttestations
+    const prevVerifiedAttestations = prevState.mappedVerifiedAttestations
 
     return (
       (profile.firstName !== prevProfile.firstName ||
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
         profile.avatarUrl !== prevProfile.avatarUrl ||
-        profile.emailVerified !== prevProfile.emailVerified ||
-        profile.phoneVerified !== prevProfile.phoneVerified ||
-        profile.facebookVerified !== prevProfile.facebookVerified ||
-        profile.googleVerified !== prevProfile.googleVerified ||
-        profile.twitterVerified !== prevProfile.twitterVerified ||
-        profile.airbnbVerified !== prevProfile.airbnbVerified ||
-        profile.websiteVerified !== prevProfile.websiteVerified ||
-        profile.kakaoVerified !== prevProfile.kakaoVerified ||
-        profile.githubVerified !== prevProfile.githubVerified ||
-        profile.linkedinVerified !== prevProfile.linkedinVerified) &&
+        verifiedAttestations.emailVerified !== prevVerifiedAttestations.emailVerified ||
+        verifiedAttestations.phoneVerified !== prevVerifiedAttestations.phoneVerified ||
+        verifiedAttestations.facebookVerified !== prevVerifiedAttestations.facebookVerified ||
+        verifiedAttestations.googleVerified !== prevVerifiedAttestations.googleVerified ||
+        verifiedAttestations.twitterVerified !== prevVerifiedAttestations.twitterVerified ||
+        verifiedAttestations.airbnbVerified !== prevVerifiedAttestations.airbnbVerified ||
+        verifiedAttestations.websiteVerified !== prevVerifiedAttestations.websiteVerified ||
+        verifiedAttestations.kakaoVerified !== prevVerifiedAttestations.kakaoVerified ||
+        verifiedAttestations.githubVerified !== prevVerifiedAttestations.githubVerified ||
+        verifiedAttestations.linkedinVerified !== prevVerifiedAttestations.linkedinVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -183,7 +179,7 @@ class UserProfile extends Component {
       this.toasterTimeout()
     }
 
-    if (this.changesPublishedToBlockchain(this.props, prevProps)) {
+    if (this.changesPublishedToBlockchain(this.props, prevProps, this.state, prevState)) {
       this.handleShowNotification(
         fbt(
           'Changes published to blockchain',
@@ -310,6 +306,16 @@ class UserProfile extends Component {
     this.setState({ editProfile: true })
   }
 
+  hasPhoneAttestation() {
+    if (this.state.phoneAttestation) {
+      return true
+    }
+
+    return !!((this.state.verifiedAttestations || [])
+      .find(attestation => attestation.id === 'phone'))
+  }
+
+
   renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
@@ -325,7 +331,7 @@ class UserProfile extends Component {
 
     const profileCreated =
       this.props.growthEnrollmentStatus === 'Enrolled' &&
-      (this.state.PhoneAttestation || this.state.phoneVerified)
+      this.hasPhoneAttestation()
 
     return (
       <div className="container profile-edit">
@@ -523,12 +529,12 @@ class UserProfile extends Component {
       return null
     }
 
-    const profile = get(this.props, 'identity') || {}
+    // const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
     let attestationProvisional = false
 
     let status = ''
-    if (profile[`${type}Verified`]) {
+    if (this.state.mappedVerifiedAttestations[`${type}Verified`]) {
       status = ' published'
       attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {

@@ -6,19 +6,21 @@ const websiteAttestationEnabled =
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
+  const verifiedAttestations = mapVerifiedAttestations(profile)
+
   let strength = 0
   if (!profile.firstName && state.firstName) strength += 10
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatarUrl && state.avatarUrl) strength += 10
-  if (!profile.emailVerified && state.emailAttestation) strength += 10
-  if (!profile.phoneVerified && state.phoneAttestation) strength += 10
-  if (!profile.facebookVerified && state.facebookAttestation) strength += 10
-  if (!profile.googleVerified && state.googleAttestation) strength += 10
-  if (!profile.twitterVerified && state.twitterAttestation) strength += 10
-  if (!profile.airbnbVerified && state.airbnbAttestation)
+  if (!verifiedAttestations.emailVerified && state.emailAttestation) strength += 10
+  if (!verifiedAttestations.phoneVerified && state.phoneAttestation) strength += 10
+  if (!verifiedAttestations.facebookVerified && state.facebookAttestation) strength += 10
+  if (!verifiedAttestations.googleVerified && state.googleAttestation) strength += 10
+  if (!verifiedAttestations.twitterVerified && state.twitterAttestation) strength += 10
+  if (!verifiedAttestations.airbnbVerified && state.airbnbAttestation)
     strength += websiteAttestationEnabled ? 5 : 10
-  if (!profile.websiteVerified && state.websiteAttestation)
+  if (!verifiedAttestations.websiteVerified && state.websiteAttestation)
     strength += websiteAttestationEnabled ? 5 : 0
 
   // TODO: Add strength for KaKao, GitHub, Linkedin and WeChat
@@ -28,32 +30,34 @@ export function unpublishedStrength({ props, state }) {
 
 export function changesToPublishExist({ props, state }) {
   const profile = get(props, 'identity') || {}
+  const verifiedAttestations = mapVerifiedAttestations(profile)
+
   return !(
     (profile.firstName || '') === state.firstName &&
     (profile.lastName || '') === state.lastName &&
     (profile.description || '') === state.description &&
     (profile.avatarUrl || '') === state.avatarUrl &&
-    !!profile.emailVerified ===
+    !!verifiedAttestations.emailVerified ===
       (!!state.emailAttestation || !!state.emailVerified) &&
-    !!profile.phoneVerified ===
+    !!verifiedAttestations.phoneVerified ===
       (!!state.phoneAttestation || !!state.phoneVerified) &&
-    !!profile.facebookVerified ===
+    !!verifiedAttestations.facebookVerified ===
       (!!state.facebookAttestation || !!state.facebookVerified) &&
-    !!profile.googleVerified ===
+    !!verifiedAttestations.googleVerified ===
       (!!state.googleAttestation || !!state.googleVerified) &&
-    !!profile.twitterVerified ===
+    !!verifiedAttestations.twitterVerified ===
       (!!state.twitterAttestation || !!state.twitterVerified) &&
-    !!profile.airbnbVerified ===
+    !!verifiedAttestations.airbnbVerified ===
       (!!state.airbnbAttestation || !!state.airbnbVerified) &&
-    !!profile.websiteVerified ===
+    !!verifiedAttestations.websiteVerified ===
       (!!state.websiteAttestation || !!state.websiteVerified) &&
-    !!profile.kakaoVerified ===
+    !!verifiedAttestations.kakaoVerified ===
       (!!state.kakaoAttestation || !!state.kakaoVerified) &&
-    !!profile.githubVerified ===
+    !!verifiedAttestations.githubVerified ===
       (!!state.githubAttestation || !!state.githubVerified) &&
-    !!profile.linkedinVerified ===
+    !!verifiedAttestations.linkedinVerified ===
       (!!state.linkedinAttestation || !!state.linkedinVerified) &&
-    !!profile.wechatVerified ===
+    !!verifiedAttestations.wechatVerified ===
       (!!state.wechatAttestation || !!state.wechatVerified)
   )
 }
@@ -118,4 +122,15 @@ export function updateVerifiedAccounts({ wallet, data }) {
 
 export function clearVerifiedAccounts() {
   window.localStorage.removeItem(ATTESTATIONS_LOCALSTORAGE_KEY)
+}
+
+export function mapVerifiedAttestations(profile = {}) {
+  const verifiedAttestations = {}
+
+  Array.from(profile.verifiedAttestations || [])
+    .forEach(attestation => {
+      verifiedAttestations[`${attestation.id}Verified`] = true
+    })
+
+  return verifiedAttestations
 }

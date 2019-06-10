@@ -31,64 +31,101 @@ const progressPct = {
 }
 
 function getAttestations(account, attestations) {
-  const result = {
-    emailVerified: false,
-    phoneVerified: false,
-    facebookVerified: false,
-    twitterVerified: false,
-    airbnbVerified: false,
-    googleVerified: false,
-    websiteVerified: false,
-    kakaoVerified: false,
-    githubVerified: false,
-    linkedinVerified: false,
-    wechatVerified: false
-  }
-  attestations.forEach(attestation => {
-    if (validateAttestation(account, attestation)) {
-      if (get(attestation, 'data.attestation.email.verified', false)) {
-        result.emailVerified = true
+  return attestations
+    .map(attestation => {
+      if (validateAttestation(account, attestation)) {
+        const issuedDate = { type: 'created', value: get(attestation, 'data.issueDate') }
+        if (get(attestation, 'data.attestation.email.verified', false)) {
+          return {
+            id: 'email',
+            properties: [
+              issuedDate
+            ]
+          }
+        }
+        if (get(attestation, 'data.attestation.phone.verified', false)) {
+          return {
+            id: 'phone',
+            properties: [
+              issuedDate
+            ]
+          }
+        }
+        if (get(attestation, 'data.attestation.domain.verified', false)) {
+          let domainName = get(attestation, 'data.verificationMethod.pubAuditableUrl.proofUrl', '')
+
+          if (domainName) {
+            try {
+              domainName = new URL(domainName).origin
+            } catch (e) {
+              console.log(`Failed to parse domain ${domainName}: ${e.message}`)
+            }
+          }
+          return {
+            id: 'website',
+            properties: [
+              { type: 'domainName', value: domainName },
+              issuedDate
+            ]
+          }
+        }
+
+        const siteName = get(attestation, 'data.attestation.site.siteName')
+        const userId = get(attestation, 'data.attestation.site.userId.verified', '')
+
+        switch (siteName) {
+          case 'facebook.com':
+            return {
+              id: 'facebook',
+              properties: [issuedDate]
+            }
+          case 'airbnb.com':
+            return {
+              id: 'airbnb',
+              properties: [
+                { type: 'userId', value: userId },
+                issuedDate
+              ]
+            }
+          case 'twitter.com':
+            return {
+              id: 'twitter',
+              properties: [
+                { type: 'userId', value: userId },
+                issuedDate
+              ]
+            }
+          case 'google.com':
+            return {
+              id: 'google',
+              properties: [issuedDate]
+            }
+          case 'kakao.com':
+            return {
+              id: 'kakao',
+              properties: [issuedDate]
+            }
+          case 'github.com':
+            return {
+              id: 'github',
+              properties: [issuedDate]
+            }
+          case 'linkedin.com':
+            return {
+              id: 'linkedin',
+              properties: [issuedDate]
+            }
+          case 'wechat.com':
+            return {
+              id: 'wechat',
+              properties: [issuedDate]
+            }
+        }
       }
-      if (get(attestation, 'data.attestation.phone.verified', false)) {
-        result.phoneVerified = true
-      }
-      if (get(attestation, 'data.attestation.domain.verified', false)) {
-        result.websiteVerified = true
-      }
-      const siteName = get(attestation, 'data.attestation.site.siteName')
-      switch (siteName) {
-        case 'facebook.com':
-          result.facebookVerified = get(
-            attestation,
-            'data.attestation.site.userId.verified',
-            false
-          )
-          break
-        case 'airbnb.com':
-          result.airbnbVerified = true
-          break
-        case 'twitter.com':
-          result.twitterVerified = true
-          break
-        case 'google.com':
-          result.googleVerified = true
-          break
-        case 'kakao.com':
-          result.kakaoVerified = true
-          break
-        case 'github.com':
-          result.githubVerified = true
-          break
-        case 'linkedin.com':
-          result.linkedinVerified = true
-          break
-        case 'wechat.com':
-          result.wechatVerified = true
-          break
-      }
-    }
-  })
-  return result
+
+      return null
+    })
+    .filter(attestation => !!attestation)
 }
 
 export function identity({ id, ipfsHash }) {
@@ -143,7 +180,7 @@ export function identity({ id, ipfsHash }) {
         'avatarUrl',
         'description'
       ]),
-      ...getAttestations(accounts, data.attestations || []),
+      verifiedAttestations: getAttestations(accounts, data.attestations || []),
       strength: 0,
       ipfsHash,
       owner: {

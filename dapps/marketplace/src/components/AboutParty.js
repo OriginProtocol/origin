@@ -14,6 +14,7 @@ import Link from 'components/Link'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
+import { mapVerifiedAttestations } from 'utils/profileTools';
 
 const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
@@ -36,13 +37,15 @@ const AboutParty = ({ id, owner }) => {
             return null
           }
 
+          const verifiedAttestations = mapVerifiedAttestations(profile)
+
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
               <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
                 <div className="attestations">
-                  {profile.twitterVerified && (
+                  {verifiedAttestations.twitterVerified && (
                     <Tooltip
                       tooltip={fbt(
                         'Twitter Account Verified',
@@ -53,7 +56,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation twitter" />
                     </Tooltip>
                   )}
-                  {profile.googleVerified && (
+                  {verifiedAttestations.googleVerified && (
                     <Tooltip
                       tooltip={fbt(
                         'Google Account Verified',
@@ -64,7 +67,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation google" />
                     </Tooltip>
                   )}
-                  {profile.phoneVerified && (
+                  {verifiedAttestations.phoneVerified && (
                     <Tooltip
                       tooltip={fbt('Phone Verified', 'Phone Verified')}
                       placement="bottom"
@@ -72,7 +75,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation phone" />
                     </Tooltip>
                   )}
-                  {profile.emailVerified && (
+                  {verifiedAttestations.emailVerified && (
                     <Tooltip
                       tooltip={fbt('Email Verified', 'Email Verified')}
                       placement="bottom"
@@ -80,7 +83,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation email" />
                     </Tooltip>
                   )}
-                  {profile.facebookVerified && (
+                  {verifiedAttestations.facebookVerified && (
                     <Tooltip
                       tooltip={fbt('Facebook Verified', 'Facebook Verified')}
                       placement="bottom"
@@ -88,7 +91,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation facebook" />
                     </Tooltip>
                   )}
-                  {profile.airbnbVerified && (
+                  {verifiedAttestations.airbnbVerified && (
                     <Tooltip
                       tooltip={fbt(
                         'Airbnb Account Verified',
@@ -99,7 +102,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation airbnb" />
                     </Tooltip>
                   )}
-                  {profile.websiteVerified && (
+                  {verifiedAttestations.websiteVerified && (
                     <Tooltip
                       tooltip={fbt('Website Verified', 'Website Verified')}
                       placement="bottom"
@@ -107,7 +110,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation website" />
                     </Tooltip>
                   )}
-                  {profile.kakaoVerified && (
+                  {verifiedAttestations.kakaoVerified && (
                     <Tooltip
                       tooltip={fbt('KaKao Verified', 'KaKao Verified')}
                       placement="bottom"
@@ -115,7 +118,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation kakao" />
                     </Tooltip>
                   )}
-                  {profile.githubVerified && (
+                  {verifiedAttestations.githubVerified && (
                     <Tooltip
                       tooltip={fbt('GitHub Verified', 'GitHub Verified')}
                       placement="bottom"
@@ -123,7 +126,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation github" />
                     </Tooltip>
                   )}
-                  {profile.linkedinVerified && (
+                  {verifiedAttestations.linkedinVerified && (
                     <Tooltip
                       tooltip={fbt('LinkedIn Verified', 'LinkedIn Verified')}
                       placement="bottom"
@@ -131,7 +134,7 @@ const AboutParty = ({ id, owner }) => {
                       <div className="attestation linkedin" />
                     </Tooltip>
                   )}
-                  {profile.wechatVerified && (
+                  {verifiedAttestations.wechatVerified && (
                     <Tooltip
                       tooltip={fbt('WeChat Verified', 'WeChat Verified')}
                       placement="bottom"
