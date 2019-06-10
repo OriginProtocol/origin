@@ -98,6 +98,8 @@ const typeDefs = gql`
     marketplacePublisher: String
     createDate: String
     updateVersion: Int
+    scoreMultiplier: Float
+    scoreTags: [String]
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -243,6 +245,7 @@ const typeDefs = gql`
       listingInput: ListingInput
       signature: String!
     ): Listing
+    listingSetScoreTags(id: ID!, scoreTags: [String]): Listing
   }
 `
 

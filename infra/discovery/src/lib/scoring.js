@@ -1,3 +1,11 @@
+const TAG_MULTIPLIERS = {
+  'Super Featured': 5.0,
+  Featured: 2.5,
+  'High Quality': 1.75,
+  'Low Quality': 0.5,
+  Hide: 0.0
+}
+
 async function scoreListing(listing) {
   let score = 1.0
 
@@ -46,6 +54,17 @@ async function scoreListing(listing) {
       boostOGN = 100
     }
     score *= 1.0 + boostOGN * 0.025
+  }
+
+  // Handle moderation scoring tags
+  if (listing.scoreTags && listing.scoreTags.length > 0) {
+    for (const tag of listing.scoreTags) {
+      const tagMultiplier = TAG_MULTIPLIERS[tag]
+      console.log('applying', tag, tagMultiplier)
+      if (tagMultiplier !== undefined) {
+        score *= TAG_MULTIPLIERS[tag]
+      }
+    }
   }
 
   return { scoreMultiplier: score }
