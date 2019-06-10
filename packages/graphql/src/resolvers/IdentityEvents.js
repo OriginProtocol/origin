@@ -232,7 +232,7 @@ export function identity({ id, ipfsHash }) {
         identity.avatarUrl
       )
     }
-    
+
     // Strength for firstName, lastName, etc..
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
@@ -242,9 +242,8 @@ export function identity({ id, ipfsHash }) {
 
     // Strength for attestations
     Array.from(identity.verifiedAttestations || []).map(attestation => {
-      identity.strength += (attestationProgressPct[attestation.id] || 0)
+      identity.strength += attestationProgressPct[attestation.id] || 0
     })
-
 
     resolve(identity)
   })
