@@ -14,6 +14,7 @@ import PushNotification from 'react-native-push-notification'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
@@ -23,9 +24,13 @@ import { decodeTransaction } from 'utils/contractDecoder'
 import { updateExchangeRate } from 'utils/price'
 import { webViewToBrowserUserAgent } from 'utils'
 import { findBestAvailableLanguage } from 'utils/language'
-import { setMarketplaceReady } from 'actions/Marketplace'
-import { setIdentity } from 'actions/Wallet'
-import { identity } from 'graphql/queries'
+import { tokenBalanceFromGql } from 'utils/currencies'
+import {
+  setMarketplaceReady,
+  setMarketplaceWebViewError
+} from 'actions/Marketplace'
+import { setAccountBalances, setIdentity } from 'actions/Wallet'
+import withOriginGraphql from 'hoc/withOriginGraphql'
 import withWeb3Accounts from 'hoc/withWeb3Accounts'
 
 class MarketplaceScreen extends Component {
@@ -42,9 +47,28 @@ class MarketplaceScreen extends Component {
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
     }
     this.setSwipeHandler()
+    DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery)
+    DeviceEventEmitter.addListener(
+      'graphqlMutation',
+      this.injectGraphqlMutation
+    )
+    this.balanceUpdater = setInterval(() => {
+      if (this.props.marketplace.ready) {
+        this.updateBalance()
+      }
+    }, 5000)
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount = () => {
+    console.log('Mounted')
+  }
+
+  componentWillUnmount = () => {
+    console.log('Unmounted')
+    clearInterval(this.balanceUpdater)
+  }
+
+  componentDidUpdate = prevProps => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       if (this.dappWebView) {
@@ -54,6 +78,8 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  /* Enables left and right swiping to go forward/back in the WebView.
+   */
   setSwipeHandler = () => {
     const swipeDistance = 200
     this._panResponder = PanResponder.create({
@@ -74,6 +100,8 @@ class MarketplaceScreen extends Component {
     })
   }
 
+  /* Handles messages received from the WebView via window.postMessage.
+   */
   onWebViewMessage = event => {
     let msgData
     try {
@@ -142,28 +170,10 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  loadIdentities = () => {
-    const { wallet } = this.props
-
-    wallet.accounts.forEach(account => {
-      console.log('Loading identity')
-      DeviceEventEmitter.emit('graphqlQuery', 'handleIdentity', identity, {
-        id: account.address
-      })
-    })
-  }
-
-  handleIdentity = response => {
-    if (response.data.identity) {
-      this.props.setIdentity(response.data.identity)
-    }
-    DeviceEventEmitter.emit('identityResponse', response)
-  }
-
   /* Inject the cookies required for messaging to allow preenabling of messaging
    * for accounts
    */
-  injectMessagingKeys() {
+  injectMessagingKeys = () => {
     const keys = this.props.wallet.messagingKeys
     if (keys) {
       const keyInjection = `
@@ -179,7 +189,6 @@ class MarketplaceScreen extends Component {
         })()
       `
       if (this.dappWebView) {
-        console.debug('Injecting messaging keys')
         this.dappWebView.injectJavaScript(keyInjection)
       }
     }
@@ -187,7 +196,7 @@ class MarketplaceScreen extends Component {
 
   /* Inject the language setting in from redux into the DApp
    */
-  injectLanguage() {
+  injectLanguage = () => {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()
@@ -199,14 +208,13 @@ class MarketplaceScreen extends Component {
       })()
     `
     if (this.dappWebView) {
-      console.debug('Injecting language setting')
       this.dappWebView.injectJavaScript(languageInjection)
     }
   }
 
   /* Inject Javascript that causes the page to refresh when it hits the top
    */
-  injectScrollHandler() {
+  injectScrollHandler = () => {
     const injectedJavaScript = `
       (function() {
         window.onscroll = function() {
@@ -218,42 +226,77 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting scroll handler')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
   /* Handle the response from window.onScroll
    */
-  handleScrollHandlerResponse(scrollTop) {
+  handleScrollHandlerResponse = scrollTop => {
     if (scrollTop < -60) {
       this.dappWebView.injectJavaScript(`document.location.reload()`)
     }
   }
 
-  injectGraphqlQuery(targetFunc, query, variables = {}) {
+  injectGraphqlQuery = (id, query, variables = {}) => {
     const injectedJavaScript = `
       (function() {
         window.gql.query({
           query: ${JSON.stringify(query)},
           variables: ${JSON.stringify(variables)}
         }).then((response) => {
-          window.webViewBridge.send(JSON.stringify({
-            targetFunc: '${targetFunc}',
-            data: response
-          }));
+          window.webViewBridge.send('handleGraphqlResult', {
+            id: '${id}',
+            response: response
+          });
+        }).catch((error) => {
+          window.webViewBridge.send('handleGraphqlError', {
+            id: '${id}',
+            error: error
+          });
         });
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting graphql query')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
+  injectGraphqlMutation = (id, mutation, variables = {}) => {
+    const injectedJavaScript = `
+      (function() {
+        window.gql.mutate({
+          mutation: ${JSON.stringify(mutation)},
+          variables: ${JSON.stringify(variables)}
+        }).then((response) => {
+          window.webViewBridge.send('handleGraphqlResult', {
+            id: '${id}'
+            response: response
+          });
+        }).catch((error) => {
+          window.webViewBridge.send('handleGraphqlError', {
+            id: '${id}',
+            error: error
+          });
+        });
+      })();
+    `
+    if (this.dappWebView) {
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
+  handleGraphqlResult = result => {
+    DeviceEventEmitter.emit('graphqlResult', result)
+  }
+
+  handleGraphqlError = result => {
+    DeviceEventEmitter.emit('graphqlError', result)
+  }
+
   /* Get the uiState from DApp localStorage via a webview bridge request.
    */
-  injectUiStateRequest() {
+  injectUiStateRequest = () => {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage && window.webViewBridge) {
@@ -263,7 +306,6 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting uiState request')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -271,53 +313,103 @@ class MarketplaceScreen extends Component {
   /* Handle the postMessagefrom the uiState request. The uiState localStorage object
    * can include information about the currency the DApp is set to.
    */
-  async handleUiStateMessage(uiStateJson) {
-    console.debug('Got uiState message')
-
+  handleUiStateMessage = async uiStateJson => {
     if (
       uiStateJson.constructor === Object &&
       Object.keys(uiStateJson).length === 0
     ) {
       // Empty uiState key, nothiing to do here
-      console.debug('uiState is empty')
     } else {
       let uiState
       // Parse the uiState value
       try {
         uiState = JSON.parse(uiStateJson)
         if (uiState['currency']) {
-          fiatCurrency = CURRENCIES.find(c => c[0] === uiState['currency'])
-          await this.setState({ fiatCurrecy })
+          const fiatCurrency = CURRENCIES.find(
+            c => c[0] === uiState['currency']
+          )
+          await this.setState({ fiatCurrency })
           this.updateExchangeRates()
         }
       } catch (error) {
-        console.debug('Failed to parse uiState')
+        // Skip
       }
     }
   }
 
   /* Send a response back to the DApp using postMessage in the webview
    */
-  handleBridgeResponse(msgData, result) {
+  handleBridgeResponse = (msgData, result) => {
     msgData.isSuccessful = Boolean(result)
     msgData.args = [result]
     this.dappWebView.postMessage(JSON.stringify(msgData))
   }
 
-  updateExchangeRates() {
+  updateExchangeRates = () => {
     // TODO: this will need to be adjusted if multiple non stablecoin support
     // is added to the DApp (or when OGN has a market price)
     updateExchangeRate(this.state.fiatCurrency[1], 'ETH')
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
+  onWebViewLoad = () => {
+    // Set the language in the DApp to the same as the mobile app
+    this.injectLanguage()
+    // Inject scroll handler for pull to refresh function
+    this.injectScrollHandler()
+    // Preload messaging keys so user doesn't have to enable messaging
+    this.injectMessagingKeys()
+    // Fetch exchange rates for the default currency
+    this.updateExchangeRates()
+    // Periodically grab the uiState from local storage to detect currency
+    // changes
+    setInterval(() => {
+      this.injectUiStateRequest()
+    }, 5000)
+    // Set state to ready in redux
+    this.props.setMarketplaceReady(true)
+    // Update account identity
+    this.updateIdentities()
+    // Update balance
+    this.updateBalance()
+  }
+
+  updateIdentities = () => {
+    this.props.wallet.accounts.forEach(async account => {
+      await this.updateIdentity(account.address)
+    })
+  }
+
+  updateIdentity = async address => {
+    const graphqlResponse = await this.props.getIdentity(address)
+    const identity = get(graphqlResponse, 'data.identity')
+    this.props.setIdentity({ address, identity })
+  }
+
+  updateBalance = async () => {
+    if (this.props.wallet.activeAccount) {
+      const activeAddress = this.props.wallet.activeAccount.address
+      try {
+        const balances = {}
+        // Get ETH balance, decimals don't need modifying
+        const ethBalanceResponse = await this.props.getBalance(activeAddress)
+        balances['eth'] = Number(
+          get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
+        )
+        balances['dai'] = tokenBalanceFromGql(
+          await this.props.getTokenBalance(activeAddress, 'DAI')
+        )
+        balances['ogn'] = tokenBalanceFromGql(
+          await this.props.getTokenBalance(activeAddress, 'OGN')
+        )
+        this.props.setAccountBalances(balances)
+      } catch (error) {
+        console.warn('Could not retrieve balances using GraphQL: ', error)
+      }
+    }
+  }
+
   render() {
-    const { modals } = this.state
-
-    console.debug(
-      `Opening marketplace DApp at ${this.props.settings.network.dappUrl}`
-    )
-
     return (
       <SafeAreaView
         style={styles.safeAreaView}
@@ -329,18 +421,11 @@ class MarketplaceScreen extends Component {
           }}
           source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
-          onLoad={() => {
-            this.injectLanguage()
-            this.injectScrollHandler()
-            this.injectMessagingKeys()
-            this.loadIdentities()
-            this.updateExchangeRates()
-            this.props.setMarketplaceReady(true)
-            setInterval(() => {
-              this.injectUiStateRequest()
-            }, 5000)
+          onLoad={this.onWebViewLoad}
+          onError={syntheticEvent => {
+            const { nativeEvent } = syntheticEvent
+            this.props.setWebViewError(nativeEvent.description)
           }}
-          startInLoadingState={true}
           renderLoading={() => {
             return (
               <View style={styles.loading}>
@@ -350,8 +435,9 @@ class MarketplaceScreen extends Component {
           }}
           decelerationRate="normal"
           userAgent={webViewToBrowserUserAgent()}
+          startInLoadingState={true}
         />
-        {modals.map((modal, index) => {
+        {this.state.modals.map((modal, index) => {
           let card
           if (modal.type === 'enableNotifications') {
             card = (
@@ -368,7 +454,6 @@ class MarketplaceScreen extends Component {
                   this.props
                     .sendTransaction(modal.msgData.data)
                     .on('transactionHash', hash => {
-                      // Toggle the modal and return the hash
                       this.toggleModal(modal, hash)
                     })
                 }}
@@ -419,20 +504,24 @@ class MarketplaceScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, wallet, settings }) => {
-  return { activation, wallet, settings }
+const mapStateToProps = ({ activation, marketplace, wallet, settings }) => {
+  return { activation, marketplace, wallet, settings }
 }
 
 const mapDispatchToProps = dispatch => ({
   setMarketplaceReady: ready => dispatch(setMarketplaceReady(ready)),
-  setIdentity: identity => dispatch(setIdentity(identity))
+  setMarketplaceWebViewError: error => setMarketplaceWebViewError(error),
+  setIdentity: payload => dispatch(setIdentity(payload)),
+  setAccountBalances: balance => dispatch(setAccountBalances(balance))
 })
 
-export default withWeb3Accounts(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(MarketplaceScreen)
+export default withOriginGraphql(
+  withWeb3Accounts(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(MarketplaceScreen)
+  )
 )
 
 const styles = StyleSheet.create({

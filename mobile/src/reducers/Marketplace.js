@@ -3,7 +3,8 @@
 import { MarketplaceConstants } from 'actions/Marketplace'
 
 const initialState = {
-  ready: false
+  ready: false,
+  error: null
 }
 
 export default function Marketplace(state = initialState, action = {}) {
@@ -12,6 +13,12 @@ export default function Marketplace(state = initialState, action = {}) {
       return {
         ...state,
         ready: action.ready
+      }
+
+    case MarketplaceConstants.SET_MARKETPLACE_WEBVIEW_ERROR:
+      return {
+        ...state,
+        error: action.error
       }
   }
 

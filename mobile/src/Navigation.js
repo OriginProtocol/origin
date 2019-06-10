@@ -1,7 +1,8 @@
 'use strict'
 
 import React from 'react'
-import { Image } from 'react-native'
+import { connect } from 'react-redux'
+import { Image, Modal } from 'react-native'
 import {
   createAppContainer,
   createBottomTabNavigator,
@@ -11,11 +12,11 @@ import {
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
-import Navigator from './Navigator'
 // Utilities
 import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
+import Loading from 'components/loading'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import ImportAccountScreen from 'screens/import'
@@ -38,6 +39,7 @@ import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
 // Backup screen
 import BackupScreen from 'screens/backup'
+import { getNextOnboardingStep } from 'utils/user'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -216,6 +218,27 @@ const _MarketplaceApp = createBottomTabNavigator(
 // This is to avoid prompts coming up over other screens (i.e. auth guard)
 class MarketplaceApp extends React.Component {
   static router = _MarketplaceApp.router
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
+      // We can't use the withOnboardingSteps HOC here because it isn't
+      // compatible with react-navigation navigators
+      const nextOnboardingStep = getNextOnboardingStep(
+        this.props.onboarding,
+        this.props.settings
+      )
+      if (nextOnboardingStep && nextOnboardingStep !== 'Ready') {
+        this.props.navigation.navigate('Welcome')
+      } else if (
+        (this.props.settings.pin.length > 0 ||
+          this.props.settings.biometryType) &&
+        !__DEV__
+      ) {
+        this.props.navigation.navigate('Auth')
+      }
+    }
+  }
+
   render() {
     const { navigation } = this.props
     return (
@@ -224,27 +247,33 @@ class MarketplaceApp extends React.Component {
         <UpdatePrompt />
         <BackupPrompt />
         <_MarketplaceApp navigation={navigation} />
+        <Modal visible={!this.props.marketplace.ready}>
+          <Loading />
+        </Modal>
       </>
     )
   }
 }
 
+const mapStateToProps = ({ onboarding, marketplace, settings }) => {
+  return { onboarding, marketplace, settings }
+}
+
 export default createAppContainer(
   createStackNavigator(
     {
-      Navigator: Navigator,
       Auth: {
         screen: AuthenticationGuard,
         params: {
           navigateOnSuccess: 'App'
         }
       },
-      Onboarding: OnboardingStack,
+      App: connect(mapStateToProps)(MarketplaceApp),
       GuardedBackup: BackupStack,
-      App: MarketplaceApp
+      Onboarding: OnboardingStack
     },
     {
-      initialRouteName: 'Navigator',
+      initialRouteName: 'App',
       defaultNavigationOptions: {
         header: null
       },

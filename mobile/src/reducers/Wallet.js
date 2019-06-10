@@ -4,7 +4,6 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   accounts: [],
-  accountNameMapping: {},
   accountBalance: {
     eth: 0,
     dai: 0,
@@ -84,7 +83,7 @@ export default function Wallet(state = initialState, action = {}) {
         ...state,
         identities: {
           ...state.identities,
-          [action.payload.id]: action.payload
+          [action.payload.address]: action.payload.identity
         }
       }
   }

@@ -48,3 +48,27 @@ export function truncate(data, chars = 5) {
   if (chars && data.length <= chars) return data
   return data.substr(0, chars) + '...'
 }
+
+/* Determine the next onboarding step from the state of the onboarding store.
+ *
+ * This logic is abstracted here to avoid duplicating it. It is used by a HOC
+ * (withOnboardingSteps) but it is also needed in Navigation.js to extend
+ * a react-navigation navigator. The HOC is not compatible.
+ */
+export function getNextOnboardingStep(onboardingStore, settingsStore) {
+  if (!onboardingStore.emailAttestation && !onboardingStore.emailVerified) {
+    return 'Email'
+  } else if (
+    !onboardingStore.phoneAttestation &&
+    !onboardingStore.phoneVerified
+  ) {
+    return 'Phone'
+  } else if (!onboardingStore.firstName || !onboardingStore.lastName) {
+    return 'Name'
+  } else if (onboardingStore.avatarUri === null) {
+    return 'Avatar'
+  } else if (!settingsStore.pin && !settingsStore.biometryType) {
+    return 'Authentication'
+  }
+  return 'Ready'
+}

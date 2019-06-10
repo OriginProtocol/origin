@@ -91,11 +91,13 @@ class NameScreen extends Component {
             )}
           </View>
         </View>
-        <View style={[styles.visibilityWarning, styles.isVisible]}>
+        <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
           <Text style={styles.visibilityWarningHeader}>
             What will be visible on the blockchain?
           </Text>
-          <Text>Your name will be visible on the blockchain</Text>
+          <Text style={styles.visibilityWarningHeader}>
+            Your name will be visible on the blockchain
+          </Text>
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton

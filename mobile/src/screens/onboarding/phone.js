@@ -240,7 +240,7 @@ class PhoneScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarning}>
+      <View style={styles.visibilityWarningContainer}>
         <Text style={styles.visibilityWarningHeader}>
           What will be visible on the blockchain?
         </Text>
@@ -270,7 +270,9 @@ export default withConfig(
   )
 )
 
-const styles = OnboardingStyles
+const styles = StyleSheet.create({
+  ...OnboardingStyles
+})
 
 const pickerSelectStyles = StyleSheet.create({
   viewContainer: {

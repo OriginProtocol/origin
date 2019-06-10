@@ -119,7 +119,7 @@ class AvatarScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>{content}</View>
-        <View style={[styles.visibilityWarning, styles.isVisible]}>
+        <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
           <Text style={styles.visibilityWarningHeader}>
             <fbt desc="AvatarScreen.visibilityWarningHeader">
               What will be visible on the blockchain?

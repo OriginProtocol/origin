@@ -23,3 +23,32 @@ export const identity = gql`
     }
   }
 `
+
+export const balance = gql`
+  query Balance($id: ID!) {
+    web3 {
+      account(id: $id) {
+        id
+        balance {
+          eth
+        }
+      }
+    }
+  }
+`
+
+export const tokenBalance = gql`
+  query Balance($id: ID!, $token: String!) {
+    web3 {
+      account(id: $id) {
+        id
+        token(symbol: $token) {
+          balance
+          token {
+            decimals
+          }
+        }
+      }
+    }
+  }
+`
