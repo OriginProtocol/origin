@@ -242,7 +242,7 @@ function withEnrolmentModal(WrappedComponent) {
       const cancelButton = (
         <button
           className={`btn ${
-            isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'
+            isMobile ? 'btn-no-outline-link mt-3 mb-3' : 'btn-outline-light mr-2'
           }`}
           onClick={() => this.handleCloseModal()}
           children={fbt('Cancel', 'Cancel')}
@@ -255,7 +255,7 @@ function withEnrolmentModal(WrappedComponent) {
             termsAccepted
               ? 'btn-primary btn-rounded'
               : isMobile
-              ? 'btn-primary'
+              ? 'btn-primary mt-5 mb-0'
               : 'ml-2 btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
@@ -323,6 +323,7 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </label>
             </div>
+            <div className="modal-spacer" />
             <div
               className={`d-flex justify-content-center ${
                 isMobile ? 'flex-column' : ''
@@ -357,7 +358,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <div>
           <div>
-            <div className="image-holder mr-auto ml-auto text-center">
+            <div className="image-holder text-center">
               <img src="images/growth/not-eligible-graphic.svg" />
             </div>
           </div>
@@ -382,7 +383,7 @@ function withEnrolmentModal(WrappedComponent) {
                   Did we detect your your country incorrectly?
                 </fbt>
               </div>
-              <div className="mt-1 d-flex country-check-label justify-content-center">
+              <div className="mt-3 d-flex country-check-label justify-content-center">
                 <label className="checkbox-holder">
                   <input
                     type="checkbox"
@@ -400,6 +401,7 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
+          <div className="modal-spacer" />
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
               className={`btn ${
@@ -626,6 +628,10 @@ require('react-styl')(`
   .growth-enrollment-modal
     &.modal-content
       padding: 20px
+      > div, .internal-modal-content
+        height: 100%
+        display: flex
+        flex-direction: column
       .btn
         width: 100%
         margin: 2rem 0
@@ -650,7 +656,7 @@ require('react-styl')(`
       font-weight: 300
     .image-holder
       position: relative
-      width: 400px
+      height: 150px
     .info-text
       max-width: 400px
     .checkbox-holder input:checked ~ .checkmark:after
