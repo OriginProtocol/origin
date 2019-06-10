@@ -55,7 +55,7 @@ class TokenDistributor {
       const gasPrice = BigNumber(medianGasPrice).times(this.gasPriceMultiplier)
       return gasPrice.integerValue()
     }
-    return medianGasPrice
+    return BigNumber(medianGasPrice)
   }
 
   /**

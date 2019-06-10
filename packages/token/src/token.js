@@ -42,6 +42,7 @@ class Token extends ContractHelper {
    * @return {string} - Address contract was deployed to.
    */
   contractAddress(networkId) {
+    // TODO: this works for Origin/Rinkeby/Mainnet but not localhost.
     return (
       this.config.contractAddress ||
       (TokenContract.networks[networkId] &&
