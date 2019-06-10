@@ -418,10 +418,10 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && !notCitizenChecked && (
             <button
-              className={`btn btn-rounded btn-lg ${
+              className={`btn btn-rounded btn-lg btn-outline-light ${
                 isMobile
                   ? 'btn-primary mt-auto wide-btn'
-                  : 'btn-outline-light'
+                  : ''
               }`}
               onClick={() => this.handleCloseModal()}
               children={fbt('Done', 'Done')}
@@ -645,7 +645,10 @@ require('react-styl')(`
     .growth-enrollment-modal.small
       max-width: 300px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
-      background-color: #2196F3
+    background-color: #2196F3
+  .pl-modal .pl-modal-table .pl-modal-cell .growth-enrollment-modal.pl-modal-content
+    color: var(--dark)
+    background-color: white
   .growth-enrollment-modal
     &.modal-content
       padding: 20px
@@ -657,6 +660,14 @@ require('react-styl')(`
         width: 100%
         margin: 2rem 0
         padding: 0.5rem
+    .btn-outline-light
+      color: var(--clear-blue)
+      border-color: var(--clear-blue)
+    .eligibility-question
+      font-size: 1rem
+      font-weight: bold
+    .normal-explanation
+      font-size: 1rem
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -739,10 +750,10 @@ require('react-styl')(`
     .country-check-label
       font-weight: 300
     .terms-title
-      color: var(--pale-grey)
       font-weight: 500
+      color: black
     .terms-body
-      color: var(--pale-grey)
+      color: var(--dark)
       padding: 0
     .explanation
       font-size: 12px
@@ -751,15 +762,19 @@ require('react-styl')(`
       padding-right: 25px
       line-height: 1.58
     .terms
+      background-color: var(--pale-grey-four)
+      color: var(--steel)
+      margin-left: 1.5rem
+      margin-right: 1.5rem
+      padding: 0.625rem 1rem
+      border-radius: 0.312rem
+      border: solid 1px var(--light)
+      font-weight: normal
       font-size: 0.75rem
       overflow-y: scroll
       height: 9.375rem
-      background-color: var(--dark-two)
       margin: 1.5rem 0px
       text-align: left
-      padding: 1.125rem 1.56rem
-      font-weight: 300
-      color: var(--pale-grey)
     .join-campaign
       .btn
         padding: 0.7rem 2rem
@@ -795,8 +810,6 @@ require('react-styl')(`
     height: 100%
     width: 100%
   @media (max-width: 767.98px)
-    .growth-enrollment-modal.pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
-      font-size: 15px
     .growth-enrollment-modal
       .join-campaign
         img
@@ -810,11 +823,6 @@ require('react-styl')(`
         line-height: 1.21
         max-width: 15rem
         font-weight: 500
-      .normal-explanation
-        font-size: 1rem
-      .eligibility-question
-        font-size: 1rem
-        font-weight: bold
       .terms
         margin: 16px 0px
       .checkbox-holder
@@ -827,11 +835,9 @@ require('react-styl')(`
         border: solid 1px var(--light)
         font-weight: normal
       .terms-title
-        color: black
         font-size: 1.125rem
         font-weight: normal
       .terms-body
-        color: var(--dark)
         font-size: 0.875rem
         font-weight: 300
         line-height: 1.4
