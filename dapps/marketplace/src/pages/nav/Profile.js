@@ -120,6 +120,7 @@ class CreateIdentity extends Component {
             className="btn btn-primary"
             onClick={this.onClose}
             onClose={this.onClose}
+            location={{ pathname: '/profile' }}
           />
         </div>
       </>

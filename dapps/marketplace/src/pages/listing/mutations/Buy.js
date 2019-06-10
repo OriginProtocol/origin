@@ -80,6 +80,7 @@ class Buy extends Component {
         <UserActivationLink
           className={this.props.className}
           children={this.props.children}
+          location={{ pathname: `/listing/${this.props.listing.id}` }}
         />
       )
     }

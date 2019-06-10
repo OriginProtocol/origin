@@ -14,10 +14,15 @@ const UserActivationLink = props => {
   const [redirectToHome, setRedirectToHome] = useState(false)
 
   if (redirectToHome) {
-    return <Redirect to="/" />
+    return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
   }
 
   if (modal || (isMobile && props.forceRedirect)) {
+    if (props.location) {
+      const { pathname, search } = props.location
+      sessionStore.set('getStartedRedirect', { pathname, search })
+    }
+
     return (
       <MobileUserActivation
         onClose={() => {
