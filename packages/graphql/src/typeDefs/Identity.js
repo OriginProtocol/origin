@@ -74,18 +74,6 @@ export const types = `
     avatarUrlExpanded: String
     strength: Int
 
-    facebookVerified: Boolean
-    twitterVerified: Boolean
-    airbnbVerified: Boolean
-    phoneVerified: Boolean
-    emailVerified: Boolean
-    googleVerified: Boolean
-    websiteVerified: Boolean
-    kakaoVerified: Boolean
-    githubVerified: Boolean
-    linkedinVerified: Boolean
-    wechatVerified: Boolean
-
     verifiedAttestations: [VerifiedAttestation]
 
     name: String

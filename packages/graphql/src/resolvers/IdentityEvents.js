@@ -15,19 +15,21 @@ const progressPct = {
   firstName: 10,
   lastName: 10,
   description: 10,
-  avatar: 10,
+  avatar: 10
+}
 
-  emailVerified: 10,
-  phoneVerified: 10,
-  facebookVerified: 10,
-  twitterVerified: 10,
-  googleVerified: 10,
-  airbnbVerified: websiteAttestationEnabled ? 5 : 10,
-  websiteVerified: websiteAttestationEnabled ? 5 : 0,
-  kakaoVerified: 0,
-  githubVerified: 0,
-  linkedinVerified: 0,
-  wechatVerified: 0
+const attestationProgressPct = {
+  email: 10,
+  phone: 10,
+  facebook: 10,
+  twitter: 10,
+  google: 10,
+  airbnb: websiteAttestationEnabled ? 5 : 10,
+  website: websiteAttestationEnabled ? 5 : 0,
+  kakao: 0,
+  github: 0,
+  linkedin: 0,
+  wechat: 0
 }
 
 function getAttestations(account, attestations) {
@@ -230,12 +232,19 @@ export function identity({ id, ipfsHash }) {
         identity.avatarUrl
       )
     }
-
+    
+    // Strength for firstName, lastName, etc..
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
         identity.strength += progressPct[key]
       }
     })
+
+    // Strength for attestations
+    Array.from(identity.verifiedAttestations || []).map(attestation => {
+      identity.strength += (attestationProgressPct[attestation.id] || 0)
+    })
+
 
     resolve(identity)
   })
