@@ -36,7 +36,7 @@ class Listings extends Component {
     super(props)
 
     this.state = {
-      first: 15,
+      first: 12,
       search: getStateFromQuery(props),
       sort: 'featured',
       hidden: true

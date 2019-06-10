@@ -46,29 +46,25 @@ require('react-styl')(`
       height: 80px
       .inner
         height: 100%
-        overflow-x:scroll;
-        overflow-y:hidden;
-        white-space:nowrap;
-        > div:first-child
-          padding: 5px 5px 5px 0
-        > div:last-child
-          padding: 5px 0 5px 5px
+        overflow-x: scroll
+        overflow-y: hidden
+        white-space: nowrap
         > div
           width: 100px
           height: 100%
+          border-radius: 5px
           display: inline-block
-          margin-bottom: 5px
-          padding: 5px
           background-position: center
           background-repeat: no-repeat
-          background-size: contain
+          background-size: cover
           background-origin: content-box
           cursor: pointer
           opacity: 0.75
+          &:not(:last-child)
+            margin-right: 0.75rem
           &:hover
             opacity: 1
           &.active
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5)
             opacity: 1
 
   @media (max-width: 767.98px)

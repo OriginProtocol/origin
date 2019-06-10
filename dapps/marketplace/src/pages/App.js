@@ -101,7 +101,11 @@ class App extends Component {
 
     return (
       <CurrencyContext.Provider value={this.state.currency}>
-        {!hideNavbar && <Nav />}
+        {!hideNavbar && (
+          <Nav
+            onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+          />
+        )}
         <main>
           <Switch>
             <Route path="/onboard" component={Onboard} />

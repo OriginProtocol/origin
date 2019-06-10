@@ -167,7 +167,7 @@ class GrowthInvite extends Component {
                     >
                       {showCopyConfirmation && (
                         <Fragment>
-                          <img src="/images/growth/checkmark.svg" />
+                          <img src="images/growth/checkmark.svg" />
                           <div className="ml-2">
                             <fbt desc="RewardInvite.copied">Copied</fbt>
                           </div>
@@ -190,13 +190,13 @@ class GrowthInvite extends Component {
                       className="social-btn fb"
                       onClick={() => this.handleFbShareClick()}
                     >
-                      <img src="/images/growth/facebook-icon.svg" />
+                      <img src="images/growth/facebook-icon.svg" />
                     </button>
                     <button
                       className="social-btn tw"
                       onClick={() => this.handleTwitterShareClick()}
                     >
-                      <img src="/images/growth/twitter-icon.svg" />
+                      <img src="images/growth/twitter-icon.svg" />
                     </button>
                   </div>
                 </div>
@@ -532,7 +532,7 @@ class GrowthInvite extends Component {
             className="back d-flex mr-auto"
             onClick={() => handleNavigationChange('Campaigns')}
           >
-            <img src="/images/caret-blue.svg" />
+            <img src="images/caret-blue.svg" />
             <div>
               <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
             </div>

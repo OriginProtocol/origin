@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withIsMobile from 'hoc/withIsMobile'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthRewards from 'hoc/withGrowthRewards'
@@ -12,7 +13,6 @@ import withGrowthRewards from 'hoc/withGrowthRewards'
 import Gallery from 'components/Gallery'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
-import ListingBadge from 'components/ListingBadge'
 import Calendar from 'components/Calendar'
 import WeekCalendar from 'components/WeekCalendar'
 import DocumentTitle from 'components/DocumentTitle'
@@ -34,8 +34,7 @@ import { CurrenciesByCountryCode } from 'constants/Currencies'
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = { mobile: window.innerWidth < 767 }
-    this.onResize = this.onResize.bind(this)
+    this.state = {}
     if (props.listing.__typename === 'FractionalListing') {
       this.state.availability = new AvailabilityCalculator({
         weekdayPrice: get(props, 'listing.price.amount'),
@@ -57,43 +56,19 @@ class ListingDetail extends Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize)
-  }
-
-  onResize() {
-    if (window.innerWidth < 767 && !this.state.mobile) {
-      this.setState({ mobile: true })
-    } else if (window.innerWidth >= 767 && this.state.mobile) {
-      this.setState({ mobile: false })
-    }
-  }
-
   render() {
-    const { listing } = this.props
-    const isMobile = this.state.mobile
+    const { listing, isMobile } = this.props
 
     return (
       <div className="container listing-detail">
         <DocumentTitle pageTitle={listing.title} />
-        <div className="header">
-          <div className="category">
-            <Category listing={listing} />
-          </div>
-          <ListingBadge status={listing.status} featured={listing.featured} />
-        </div>
-        <h2>{listing.title}</h2>
-
         {isMobile ? (
           <>
+            {this.renderHeading()}
             {this.renderListing()}
             {this.renderAction()}
             <h5>
-              <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
+              <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
             </h5>
             <AboutParty id={listing.seller.id} />
             <Reviews id={listing.seller.id} seller />
@@ -106,10 +81,11 @@ class ListingDetail extends Component {
               <Reviews id={listing.seller.id} seller />
             </div>
             <div className="col-md-4">
+              {this.renderHeading()}
               {this.renderAction()}
               <h5>
                 <fbt desc="listingDetail.about-the-seller">
-                  About the Seller
+                  About the seller
                 </fbt>
               </h5>
               <AboutParty id={listing.seller.id} />
@@ -128,13 +104,19 @@ class ListingDetail extends Component {
     const isOwnerViewing = listing.seller.id === this.props.walletProxy
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const isDifferentTimeZone = listing.timeZone !== userTimeZone
+
+    const description = (
+      <div className="description">
+        <h3>
+          <fbt desc="ListingDetail.productDescription">Product Description</fbt>
+        </h3>
+        {String(listing.description).replace(/^\s+/, '')}
+      </div>
+    )
     return (
       <>
         <Gallery pics={listing.media} />
-
-        {isGiftCard || isFractional || isFractionalHourly ? null : (
-          <div className="description">{listing.description}</div>
-        )}
+        {isGiftCard || isFractional || isFractionalHourly ? null : description}
         {!isGiftCard ? null : (
           <>
             <div className="row">
@@ -214,13 +196,12 @@ class ListingDetail extends Component {
                 </div>
               </div>
             </div>
-            <div className="description">{listing.description}</div>
+            {description}
           </>
         )}
         {!isFractional ? null : (
           <>
-            <div className="description">{listing.description}</div>
-
+            {description}
             <hr />
             <Calendar
               interactive={!isOwnerViewing}
@@ -238,8 +219,7 @@ class ListingDetail extends Component {
         )}
         {!isFractionalHourly ? null : (
           <>
-            <div className="description">{listing.description}</div>
-
+            {description}
             <hr />
             <div className="timeZone">
               <div>
@@ -270,6 +250,18 @@ class ListingDetail extends Component {
           </>
         )}
       </>
+    )
+  }
+
+  renderHeading() {
+    const { listing } = this.props
+    return (
+      <div className="heading">
+        <div className="category">
+          <Category listing={listing} />
+        </div>
+        <h2>{listing.title}</h2>
+      </div>
     )
   }
 
@@ -339,7 +331,7 @@ class ListingDetail extends Component {
 }
 
 export default withGrowthCampaign(
-  withWallet(withTokenBalance(withGrowthRewards(ListingDetail))),
+  withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
   {
     fetchPolicy: 'cache-first',
     queryEvenIfNotEnrolled: true,
@@ -353,11 +345,16 @@ require('react-styl')(`
 
     h2
       font-family: var(--heading-font)
-      font-size: 40px
-      font-weight: 200
+      font-size: 36px
+      font-weight: normal
       font-style: normal
       color: var(--dark)
       line-height: 1.25
+
+    h5
+      font-family: var(--heading-font)
+      font-size: 18px
+      margin-bottom: 1.25rem
 
     .header
       display: flex
@@ -377,16 +374,26 @@ require('react-styl')(`
 
     .gallery
       margin-bottom: 1rem
-
-    .main-pic
-      padding-top: 56.6%
-      background-size: contain
-      background-repeat: no-repeat
-      background-position: top center
-      border: 1px solid var(--pale-grey-two)
+      .main-pic
+        padding-top: 56.6%
+        background-size: contain
+        background-repeat: no-repeat
+        background-position: top center
+        border: 1px solid var(--pale-grey-two)
+        border-radius: 10px
+      .thumbnails
+        margin-top: 1rem
 
     .description
+      border-top: 1px solid #dde6ea
       white-space: pre-wrap
+      font-weight: normal
+      margin-top: 4rem
+      padding-top: 2rem
+      h3
+        font-family: Poppins
+        font-size: 24px
+        font-weight: 500
 
     .timeZone
       font-size: 1rem
@@ -410,14 +417,14 @@ require('react-styl')(`
       margin-right: .5rem;
 
     .listing-buy
-      padding: 1.5rem
-      border-radius: var(--default-radius)
-      background-color: var(--pale-grey-eight)
-      margin-bottom: 1rem
+      padding-bottom: 2rem
+      border-bottom: 1px solid #dde6ea
+      margin-bottom: 2rem
       .btn-primary
         border-radius: 2rem
         padding: 0.5rem 1rem
         width: 100%
+        font-size: 20px
       .quantity,.total
         font-family: var(--default-font)
         font-size: 18px
@@ -425,7 +432,7 @@ require('react-styl')(`
         font-weight: normal
         display: flex
         justify-content: space-between
-        margin-bottom: 1rem
+        margin-bottom: 1.5rem
         span:last-child
           font-weight: bold
       .total
@@ -433,42 +440,24 @@ require('react-styl')(`
 
       .price
         font-family: var(--default-font)
-        font-size: 22px
+        font-size: 36px
         color: var(--dark)
         font-weight: bold
         line-height: 1
-        margin-bottom: 1rem
+        padding-bottom: 1.5rem
+        border-bottom: 1px solid #dde6ea
+        margin-bottom: 1.5rem
         span.desc
           font-weight: normal
           margin-left: 0.25rem
+          font-size: 18px
+          color: var(--steel)
         .orig
           color: var(--steel)
           font-weight: normal
           margin-left: 1rem
           font-size: 16px
-      .price-old
-        display: flex
-        align-items: baseline
-        margin-bottom: 1.5rem
-        white-space: nowrap
-        flex-wrap: wrap
-        .eth
-          background: url(images/eth-icon.svg) no-repeat
-          background-size: 1.5rem
-          padding-left: 2rem
-          line-height: 1.5rem
-          font-family: var(--default-font)
-          font-size: 24px
-          font-weight: bold
-          font-style: normal
-          color: #000000
-          > span
-            font-weight: normal
-        .usd
-          color: var(--steel)
-          font-weight: normal
-          margin-left: 1rem
-          font-size: 16px
+          display: none
       &.fractional
         .choose-dates
           display: flex;

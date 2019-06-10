@@ -33,7 +33,7 @@ class ListingCards extends Component {
                   window.open(`#/listing/${a.id}`, '_blank')
                 }
               }}
-              className="col-md-3 listing-card"
+              className="col-md-4 col-lg-3 listing-card"
             >
               {a.media && a.media.length ? (
                 <div
@@ -55,7 +55,7 @@ class ListingCards extends Component {
                 <a href={`#/listing/${a.id}`}>{a.title}</a>
               </h5>
               {a.__typename === 'AnnouncementListing' ? null : (
-                <div className="price d-flex align-items-end">
+                <div className="price d-flex align-items-center">
                   <Price listing={a} descriptor />
                   {hasGrowthReward && (
                     <OgnBadge
@@ -82,7 +82,7 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     justify-content: flex-start
-    margin-bottom: 2rem
+    margin-bottom: 1rem
     margin-top: 1rem
     cursor: pointer
 
@@ -91,6 +91,7 @@ require('react-styl')(`
       background-size: cover
       background-repeat: no-repeat
       background-position: center
+      border-radius: 10px
       &.empty
         background: var(--light) url(images/default-image.svg)
         background-repeat: no-repeat
@@ -103,21 +104,22 @@ require('react-styl')(`
 
     .category
       font-family: var(--default-font)
-      font-size: 14px
+      font-size: 12px
       color: var(--dusk)
       text-transform: uppercase
       margin-top: 0.75rem
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
+      font-weight: normal
 
     .badge
       margin-top: 0.75rem
 
     h5
       font-family: var(--heading-font)
-      font-size: 24px
-      font-weight: 300
+      font-size: 16px
+      font-weight: normal
       color: var(--dark)
       white-space: nowrap
       overflow: hidden
@@ -129,10 +131,11 @@ require('react-styl')(`
 
     .price
       font-family: var(--default-font)
-      font-size: 22px
+      font-size: 16px
       color: var(--dark)
       font-weight: bold
       line-height: 1
+      justify-content: space-between
       span.desc
         color: var(--steel)
         font-size: 14px

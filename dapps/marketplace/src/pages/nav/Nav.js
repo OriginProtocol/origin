@@ -29,7 +29,7 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const Nav = ({ location: { pathname }, isMobile, wallet }) => {
+const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
@@ -60,7 +60,11 @@ const Nav = ({ location: { pathname }, isMobile, wallet }) => {
       <nav className="navbar no-border">
         <Mobile {...navProps('mobile')} />
         <Brand />
-        {wallet ? <Profile {...navProps('profile')} /> : <GetStarted />}
+        {wallet ? (
+          <Profile {...navProps('profile')} />
+        ) : (
+          <GetStarted onClick={() => onGetStarted()} />
+        )}
       </nav>
     )
   }
@@ -71,7 +75,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet }) => {
         <div className="container">
           <Brand />
           <Search className="form-inline mr-auto" />
-          <GetStarted />
+          <GetStarted onClick={() => onGetStarted()} />
         </div>
       </nav>
     )

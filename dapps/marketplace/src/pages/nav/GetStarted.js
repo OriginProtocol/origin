@@ -1,39 +1,24 @@
-import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import { fbt } from 'fbt-runtime'
+import React from 'react'
 
-import UserActivationLink from 'components/UserActivationLink'
+import Avatar from 'components/Avatar'
 
-class GetStarted extends Component {
-  state = { open: false }
-  render() {
-    return (
-      <ul className="navbar-nav">
-        <li className="nav-item">
-          <UserActivationLink {...this.props} className="nav-link text" />
-        </li>
-        <li className="nav-item d-none d-md-block">
-          <UserActivationLink
-            {...this.props}
-            className="nav-link text"
-            location={{ pathname: '/create' }}
-          >
-            <span>
-              <fbt desc="navigation.getStarted.sellOnOrigin">
-                Sell on Origin
-              </fbt>
-            </span>
-          </UserActivationLink>
-        </li>
-      </ul>
-    )
-  }
-}
+const GetStarted = ({ onClick }) => (
+  <ul className="navbar-nav">
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        href="#get-started"
+        onClick={e => {
+          e.preventDefault()
+          if (onClick) onClick()
+        }}
+      >
+        <Avatar />
+      </a>
+    </li>
+  </ul>
+)
 
-export default withRouter(GetStarted)
+export default GetStarted
 
-require('react-styl')(`
-  @media (max-width: 767.98px)
-    .navbar-nav .nav-item .nav-link
-      background-color: transparent
-`)
+require('react-styl')(``)

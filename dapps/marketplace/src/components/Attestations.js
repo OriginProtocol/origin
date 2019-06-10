@@ -1,7 +1,7 @@
 import React from 'react'
 
-const Attestations = ({ profile = {} }) => (
-  <div className="attestations">
+const Attestations = ({ profile = {}, small }) => (
+  <div className={`attestations${small ? ' attestations-small' : ''}`}>
     {profile.emailVerified && <div className="attestation email" />}
     {profile.phoneVerified && <div className="attestation phone" />}
     {profile.facebookVerified && <div className="attestation facebook" />}
@@ -39,11 +39,12 @@ require('react-styl')(`
       background-image: url(images/identity/email-icon-light.svg)
     &.facebook
       border-color: #2d4a89
+      background-size: 35%
       background-color: rgba(#2d4a89, 75%)
       background-image: url(images/identity/facebook-icon-light.svg)
     &.phone
       border-color: #e8b506
-      background-size: 45%
+      background-size: 36%
       background-color: rgba(#e8b506, 75%)
       background-image: url(images/identity/phone-icon-light.svg)
     &.twitter
@@ -53,14 +54,21 @@ require('react-styl')(`
     &.airbnb
       border-color: #ee4f54
       background-color: rgba(#ee4f54, 75%)
+      background-size: 75%
       background-image: url(images/identity/airbnb-icon-light.svg)
     &.google
-      border-color: #e8b506
-      background-color: rgba(#e8b506, 75%)
-      background-image: url(images/identity/google-icon-light.svg)
+      border-color: #4086f7
+      background-color: rgba(#4086f7, 75%)
+      background-image: url(images/identity/google-icon.svg)
     &.website
       border-color: #6331dd
       background-color: rgba(#6331dd, 75%)
       background-image: url(images/identity/website-icon-light.svg)
+
+  .attestations-small .attestation
+    width: 1.5rem
+    height: 1.5rem
+    border-width: 1px
+    margin-right: 0.25rem
 
 `)

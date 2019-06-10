@@ -19,8 +19,8 @@ class MobileModal extends Component {
       >
         <div className="mobile-modal">
           <div className="screenshots">
-            {!isMobile && <img src="/images/mobile/devices.png" />}
-            {isMobile && <img src="/images/mobile/devices-layered.png" />}
+            {!isMobile && <img src="images/mobile/devices.png" />}
+            {isMobile && <img src="images/mobile/devices-layered.png" />}
           </div>
           <div className="description">
             <div className="blurb">
@@ -43,7 +43,7 @@ class MobileModal extends Component {
             </div>
             {!isMobile && (
               <div className="qr">
-                <img src="/images/mobile/qr.svg" />
+                <img src="images/mobile/qr.svg" />
               </div>
             )}
           </div>

@@ -55,7 +55,7 @@ require('react-styl')(`
     min-width: 25px
     width: 100%
     padding-top: 100%
-    background-size: contain
+    background-size: cover
     border-radius: 50%
     background-repeat: no-repeat
     background-position: center

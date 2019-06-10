@@ -55,32 +55,32 @@ function Action(props) {
   }
 
   if (type === 'Email') {
-    foregroundImgSrc = '/images/identity/email-icon-light.svg'
+    foregroundImgSrc = 'images/identity/email-icon-light.svg'
     title = fbt('Verify your Email', 'RewardActions.emailTitle')
   } else if (type === 'Profile') {
-    foregroundImgSrc = '/images/growth/profile-icon.svg'
+    foregroundImgSrc = 'images/growth/profile-icon.svg'
     title = fbt('Add name and photo to profile', 'RewardActions.profileTitle')
   } else if (type === 'Phone') {
-    foregroundImgSrc = '/images/identity/phone-icon-light.svg'
+    foregroundImgSrc = 'images/identity/phone-icon-light.svg'
     title = fbt('Verify your Phone Number', 'RewardActions.phoneTitle')
   } else if (type === 'Twitter') {
-    foregroundImgSrc = '/images/identity/twitter-icon-light.svg'
+    foregroundImgSrc = 'images/identity/twitter-icon-light.svg'
     title = fbt('Verify your Twitter Profile', 'RewardActions.twitterTitle')
   } else if (type === 'Airbnb') {
-    foregroundImgSrc = '/images/identity/airbnb-icon-light.svg'
+    foregroundImgSrc = 'images/identity/airbnb-icon-light.svg'
     title = fbt('Verify your Airbnb Profile', 'RewardActions.airbnbTitle')
   } else if (type === 'Facebook') {
-    foregroundImgSrc = '/images/identity/facebook-icon-light.svg'
+    foregroundImgSrc = 'images/identity/facebook-icon-light.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
   } else if (type === 'Google') {
-    foregroundImgSrc = '/images/identity/google-icon.svg'
+    foregroundImgSrc = 'images/identity/google-icon.svg'
     title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
-    foregroundImgSrc = '/images/growth/purchase-icon.svg'
+    foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
     buttonLink = '/create'
   } else if (type === 'ListingPurchased') {
-    foregroundImgSrc = '/images/growth/purchase-icon.svg'
+    foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Purchase a Listing', 'RewardActions.listingPurchasedTitle')
     buttonLink = '/'
   } else if (type === 'ListingIdPurchased') {
@@ -94,11 +94,11 @@ function Action(props) {
     )
     buttonLink = `/listing/${listingId}`
   } else if (type === 'ListingSold') {
-    foregroundImgSrc = '/images/growth/sell-icon.svg'
+    foregroundImgSrc = 'images/growth/sell-icon.svg'
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
   } else if (type === 'Referral') {
-    foregroundImgSrc = '/images/growth/invite-icon.svg'
+    foregroundImgSrc = 'images/growth/invite-icon.svg'
     title = fbt('Invite Friends to Join Origin', 'RewardActions.referralTitle')
     buttonOnClick = () => {
       window.scrollTo(0, 0)
