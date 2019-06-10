@@ -322,10 +322,10 @@ app.post('/events', async (req, res) => {
   // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
   // The reason is that identity and notification data is stored under owner address.
   let party = returnValues.party.toLowerCase()
-  if (party === buyer.id.toLowerCase()) {
+  if (party === buyer.proxy.id.toLowerCase()) {
     party = buyer.owner.id.toLowerCase()
-  } else if (party === seller.id.toLowerCase()) {
-    party = seller.id.toLowerCase()
+  } else if (party === seller.proxy.id.toLowerCase()) {
+    party = seller.owner.id.toLowerCase()
   }
   const buyerAddress = buyer.owner.id ? buyer.owner.id.toLowerCase() : null
   const sellerAddress = seller.owner.id ? seller.owner.id.toLowerCase() : null

@@ -18,6 +18,9 @@ module.exports = {
             owner {
               id
             }
+            proxy {
+              id
+            }
           }
         }
         arbitrator {
@@ -115,6 +118,9 @@ module.exports = {
             lastName
             fullName
             owner {
+              id
+            }
+            proxy {
               id
             }
           }
