@@ -1,5 +1,6 @@
 import React from 'react'
 import { Tag } from '@blueprintjs/core'
+import { mapVerifiedAttestations } from '@origin/marketplace/src/utils/profileTools'
 
 const Verified = props => (
   <Tag intent="success" className="mr-1" rightIcon="tick">
@@ -11,6 +12,9 @@ const UserProfile = ({ profile }) => {
   if (!profile) {
     return 'No profile set up'
   }
+
+  const verifiedAttestations = mapVerifiedAttestations(profile)
+
   return (
     <div style={{ display: 'flex', alignItems: 'end' }}>
       {!profile.avatar ? null : (
@@ -23,11 +27,17 @@ const UserProfile = ({ profile }) => {
         {!profile.description ? null : (
           <div style={{ marginBottom: 10 }}>{profile.description}</div>
         )}
-        {profile.emailVerified ? <Verified>Email</Verified> : null}
-        {profile.phoneVerified ? <Verified>Phone</Verified> : null}
-        {profile.facebookVerified ? <Verified>Facebook</Verified> : null}
-        {profile.twitterVerified ? <Verified>Twitter</Verified> : null}
-        {profile.airbnbVerified ? <Verified>Airbnb</Verified> : null}
+        {verifiedAttestations.emailVerified ? <Verified>Email</Verified> : null}
+        {verifiedAttestations.phoneVerified ? <Verified>Phone</Verified> : null}
+        {verifiedAttestations.facebookVerified ? (
+          <Verified>Facebook</Verified>
+        ) : null}
+        {verifiedAttestations.twitterVerified ? (
+          <Verified>Twitter</Verified>
+        ) : null}
+        {verifiedAttestations.airbnbVerified ? (
+          <Verified>Airbnb</Verified>
+        ) : null}
       </div>
     </div>
   )
