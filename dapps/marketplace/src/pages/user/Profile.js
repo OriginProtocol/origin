@@ -42,7 +42,7 @@ import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
-import { mapVerifiedAttestations } from 'utils/profileTools';
+import { mapVerifiedAttestations } from 'utils/profileTools'
 
 const store = Store('sessionStorage')
 
@@ -136,16 +136,26 @@ class UserProfile extends Component {
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
         profile.avatarUrl !== prevProfile.avatarUrl ||
-        verifiedAttestations.emailVerified !== prevVerifiedAttestations.emailVerified ||
-        verifiedAttestations.phoneVerified !== prevVerifiedAttestations.phoneVerified ||
-        verifiedAttestations.facebookVerified !== prevVerifiedAttestations.facebookVerified ||
-        verifiedAttestations.googleVerified !== prevVerifiedAttestations.googleVerified ||
-        verifiedAttestations.twitterVerified !== prevVerifiedAttestations.twitterVerified ||
-        verifiedAttestations.airbnbVerified !== prevVerifiedAttestations.airbnbVerified ||
-        verifiedAttestations.websiteVerified !== prevVerifiedAttestations.websiteVerified ||
-        verifiedAttestations.kakaoVerified !== prevVerifiedAttestations.kakaoVerified ||
-        verifiedAttestations.githubVerified !== prevVerifiedAttestations.githubVerified ||
-        verifiedAttestations.linkedinVerified !== prevVerifiedAttestations.linkedinVerified) &&
+        verifiedAttestations.emailVerified !==
+          prevVerifiedAttestations.emailVerified ||
+        verifiedAttestations.phoneVerified !==
+          prevVerifiedAttestations.phoneVerified ||
+        verifiedAttestations.facebookVerified !==
+          prevVerifiedAttestations.facebookVerified ||
+        verifiedAttestations.googleVerified !==
+          prevVerifiedAttestations.googleVerified ||
+        verifiedAttestations.twitterVerified !==
+          prevVerifiedAttestations.twitterVerified ||
+        verifiedAttestations.airbnbVerified !==
+          prevVerifiedAttestations.airbnbVerified ||
+        verifiedAttestations.websiteVerified !==
+          prevVerifiedAttestations.websiteVerified ||
+        verifiedAttestations.kakaoVerified !==
+          prevVerifiedAttestations.kakaoVerified ||
+        verifiedAttestations.githubVerified !==
+          prevVerifiedAttestations.githubVerified ||
+        verifiedAttestations.linkedinVerified !==
+          prevVerifiedAttestations.linkedinVerified) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -179,7 +189,14 @@ class UserProfile extends Component {
       this.toasterTimeout()
     }
 
-    if (this.changesPublishedToBlockchain(this.props, prevProps, this.state, prevState)) {
+    if (
+      this.changesPublishedToBlockchain(
+        this.props,
+        prevProps,
+        this.state,
+        prevState
+      )
+    ) {
       this.handleShowNotification(
         fbt(
           'Changes published to blockchain',
@@ -311,10 +328,10 @@ class UserProfile extends Component {
       return true
     }
 
-    return !!((this.state.verifiedAttestations || [])
-      .find(attestation => attestation.id === 'phone'))
+    return !!(this.state.verifiedAttestations || []).find(
+      attestation => attestation.id === 'phone'
+    )
   }
-
 
   renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {

@@ -14,7 +14,7 @@ import Link from 'components/Link'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
-import { mapVerifiedAttestations } from 'utils/profileTools';
+import { mapVerifiedAttestations } from 'utils/profileTools'
 
 const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)

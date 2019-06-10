@@ -34,25 +34,28 @@ function getAttestations(account, attestations) {
   return attestations
     .map(attestation => {
       if (validateAttestation(account, attestation)) {
-        const issuedDate = { type: 'created', value: get(attestation, 'data.issueDate') }
+        const issuedDate = {
+          type: 'created',
+          value: get(attestation, 'data.issueDate')
+        }
         if (get(attestation, 'data.attestation.email.verified', false)) {
           return {
             id: 'email',
-            properties: [
-              issuedDate
-            ]
+            properties: [issuedDate]
           }
         }
         if (get(attestation, 'data.attestation.phone.verified', false)) {
           return {
             id: 'phone',
-            properties: [
-              issuedDate
-            ]
+            properties: [issuedDate]
           }
         }
         if (get(attestation, 'data.attestation.domain.verified', false)) {
-          let domainName = get(attestation, 'data.verificationMethod.pubAuditableUrl.proofUrl', '')
+          let domainName = get(
+            attestation,
+            'data.verificationMethod.pubAuditableUrl.proofUrl',
+            ''
+          )
 
           if (domainName) {
             try {
@@ -63,15 +66,16 @@ function getAttestations(account, attestations) {
           }
           return {
             id: 'website',
-            properties: [
-              { type: 'domainName', value: domainName },
-              issuedDate
-            ]
+            properties: [{ type: 'domainName', value: domainName }, issuedDate]
           }
         }
 
         const siteName = get(attestation, 'data.attestation.site.siteName')
-        const userId = get(attestation, 'data.attestation.site.userId.verified', '')
+        const userId = get(
+          attestation,
+          'data.attestation.site.userId.verified',
+          ''
+        )
 
         switch (siteName) {
           case 'facebook.com':
@@ -82,18 +86,12 @@ function getAttestations(account, attestations) {
           case 'airbnb.com':
             return {
               id: 'airbnb',
-              properties: [
-                { type: 'userId', value: userId },
-                issuedDate
-              ]
+              properties: [{ type: 'userId', value: userId }, issuedDate]
             }
           case 'twitter.com':
             return {
               id: 'twitter',
-              properties: [
-                { type: 'userId', value: userId },
-                issuedDate
-              ]
+              properties: [{ type: 'userId', value: userId }, issuedDate]
             }
           case 'google.com':
             return {

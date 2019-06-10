@@ -12,7 +12,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import FormattedDescription from 'components/FormattedDescription'
 
 import UserListings from './_UserListings'
-import { mapVerifiedAttestations } from 'utils/profileTools';
+import { mapVerifiedAttestations } from 'utils/profileTools'
 
 const User = ({ match }) => {
   const id = match.params.id
@@ -29,7 +29,9 @@ const User = ({ match }) => {
           const profile = get(data, 'web3.account.identity') || {}
           const verifiedAttestations = mapVerifiedAttestations(profile)
 
-          const noVerifications = !profile.verifiedAttestations || profile.verifiedAttestations.length === 0
+          const noVerifications =
+            !profile.verifiedAttestations ||
+            profile.verifiedAttestations.length === 0
 
           return (
             <>

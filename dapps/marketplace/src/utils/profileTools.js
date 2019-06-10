@@ -13,11 +13,16 @@ export function unpublishedStrength({ props, state }) {
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatarUrl && state.avatarUrl) strength += 10
-  if (!verifiedAttestations.emailVerified && state.emailAttestation) strength += 10
-  if (!verifiedAttestations.phoneVerified && state.phoneAttestation) strength += 10
-  if (!verifiedAttestations.facebookVerified && state.facebookAttestation) strength += 10
-  if (!verifiedAttestations.googleVerified && state.googleAttestation) strength += 10
-  if (!verifiedAttestations.twitterVerified && state.twitterAttestation) strength += 10
+  if (!verifiedAttestations.emailVerified && state.emailAttestation)
+    strength += 10
+  if (!verifiedAttestations.phoneVerified && state.phoneAttestation)
+    strength += 10
+  if (!verifiedAttestations.facebookVerified && state.facebookAttestation)
+    strength += 10
+  if (!verifiedAttestations.googleVerified && state.googleAttestation)
+    strength += 10
+  if (!verifiedAttestations.twitterVerified && state.twitterAttestation)
+    strength += 10
   if (!verifiedAttestations.airbnbVerified && state.airbnbAttestation)
     strength += websiteAttestationEnabled ? 5 : 10
   if (!verifiedAttestations.websiteVerified && state.websiteAttestation)
@@ -127,10 +132,9 @@ export function clearVerifiedAccounts() {
 export function mapVerifiedAttestations(profile = {}) {
   const verifiedAttestations = {}
 
-  Array.from(profile.verifiedAttestations || [])
-    .forEach(attestation => {
-      verifiedAttestations[`${attestation.id}Verified`] = true
-    })
+  Array.from(profile.verifiedAttestations || []).forEach(attestation => {
+    verifiedAttestations[`${attestation.id}Verified`] = true
+  })
 
   return verifiedAttestations
 }
