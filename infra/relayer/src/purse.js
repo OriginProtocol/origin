@@ -487,6 +487,7 @@ class Purse {
    * - Announces a low balance
    * - Funds children when necessary if autofundChildren was set
    * - Does general tx tracking and pending tx count adjustments
+   * - Calls onReceipt callbacks if provided
    */
   async _process() {
     let interval = 0
@@ -551,13 +552,18 @@ class Purse {
           logger.warn(`Transaction ${txHash} has failed!`)
         }
 
+        // Call the onReceipt callback if provided
         if (typeof this.receiptCallbacks[txHash] === 'function') {
           const cbRet = this.receiptCallbacks[txHash](receipt)
           if (cbRet instanceof Promise) {
             await cbRet
           }
+          // remove it from memory after execution
+          delete this.receiptCallbacks[txHash]
         }
+
         delete this.pendingTransactions[txHash]
+
         logger.debug(`Removed ${txHash} from pending`)
 
         // Adjust the pendingCount for the account
