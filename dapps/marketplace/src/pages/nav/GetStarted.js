@@ -21,4 +21,5 @@ const GetStarted = ({ onClick }) => (
 
 export default GetStarted
 
-require('react-styl')(``)
+require('react-styl')(`
+`)
