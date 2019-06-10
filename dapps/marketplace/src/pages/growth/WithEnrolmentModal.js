@@ -369,12 +369,13 @@ function withEnrolmentModal(WrappedComponent) {
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
       const isForbidden = eligibility === 'Forbidden'
+      const isMobile = this.props.ismobile === 'true'
 
       return (
-        <div className="container">
+        <div className="container d-flex flex-column align-items-center">
           <div>
-            <div className="image-holder text-center">
-              <img src="images/growth/not-eligible-graphic.svg" />
+            <div className="image-holder text-center mr-auto ml-auto">
+              <img className="world-image" src="images/growth/not-eligible-graphic.svg" />
             </div>
           </div>
           <div className="title mt-4 text-center">
@@ -384,7 +385,7 @@ function withEnrolmentModal(WrappedComponent) {
               is not eligible
             </fbt>
           </div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text text-center">
+          <div className="normal-explanation mt-3 mr-auto ml-auto normal-line-height info-text text-center">
             <fbt desc="GrowthEnrollment.notEligibleExplanation">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -393,7 +394,7 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           {isRestricted && (
             <Fragment>
-              <div className="mt-4 pt-2 text-center">
+              <div className="eligibility-question mt-4 pt-1 pb-1 text-center">
                 <fbt desc="GrowthEnrollment.restrictedQuestion">
                   Did we detect your your country incorrectly?
                 </fbt>
@@ -416,10 +417,10 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
-          {(isForbidden || (isRestricted && !notCitizenChecked)) && (
+          {isRestricted && !notCitizenChecked && (
             <button
               className={`btn btn-rounded btn-lg ${
-                this.props.ismobile === 'true'
+                isMobile
                   ? 'btn-primary mt-auto wide-btn'
                   : 'btn-outline-light'
               }`}
@@ -430,12 +431,17 @@ function withEnrolmentModal(WrappedComponent) {
           {isRestricted && notCitizenChecked && (
             <button
               className={`btn btn-primary btn-rounded btn-lg ${
-                this.props.ismobile === 'true' ? 'mt-auto wide-btn' : ''
+                isMobile ? 'mt-auto wide-btn' : ''
               }`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />
           )}
+          {isMobile && <button
+            className="btn-no-outline-link"
+            onClick={() => this.handleCloseModal()}
+            children={fbt('Back to home', 'Back to home')}
+          />}
         </div>
       )
     }
@@ -450,7 +456,7 @@ function withEnrolmentModal(WrappedComponent) {
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
-
+            
             // used for testing purposes. No worries overriding this on frontend
             // since another check is done on backend when calling enroll mutation
             let countryOverride = localStorage.getItem(
@@ -676,8 +682,8 @@ require('react-styl')(`
       max-width: 400px
     .red-x-image
       position: absolute
-      right: 33px
-      bottom: 10px
+      right: -10px
+      bottom: 20px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
     .btn
@@ -761,7 +767,6 @@ require('react-styl')(`
         font-weight: normal
         text-decoration: underline
         color: white
-        margin-top: 1.2rem
   .mobile-modal-light .growth-enrollment-modal.mobile.modal-content .container
     max-width: 520px
     margin-left: auto
@@ -773,6 +778,8 @@ require('react-styl')(`
     max-width: 767px !important
     color: var(--dark)
     text-align: center
+    border: 0px
+    background-color: white
     .join-campaign
       .btn-no-outline
         color: var(--clear-blue)
@@ -798,8 +805,15 @@ require('react-styl')(`
       .btn
         margin-top: 1.5rem
       .title
-        font-size: 20px
-        line-height: 1.3
+        font-size: 1.5rem
+        line-height: 1.21
+        max-width: 15rem
+        font-weight: 500
+      .normal-explanation
+        font-size: 1rem
+      .eligibility-question
+        font-size: 1rem
+        font-weight: bold
       .terms
         margin: 16px 0px
       .checkbox-holder
@@ -825,7 +839,14 @@ require('react-styl')(`
         font-size: 0.875rem
         color: var(--clear-blue)
         font-weight: normal
-        margin-top: 0.8rem
+        margin-top: 1.2rem
+        font-size: 1rem
+        font-weight: bold
       .checkbox-holder
         color: var(--dark)
+      .image-holder
+        .world-image
+          max-width: 135px
+        .red-x-image
+          width: 40px
 `)
