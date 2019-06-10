@@ -14,6 +14,7 @@ const {
 const MNEMONIC_ONE = 'one two three four five six'
 const MNEMONIC_TWO = 'two two three four five six'
 const MNEMONIC_THREE = 'three two three four five six'
+const MNEMONIC_FOUR = 'four two three four five six'
 const TEST_NET_ID = 999
 const TEST_PROVIDER_URL = 'http://localhost:8545/'
 const ZERO = new BN('0', 10)
@@ -308,9 +309,50 @@ describe('Purse', () => {
     assert(purse.rebroadcastCounters[txHash] === 1)
   })
 
+  it('should be able to handle a large volume of transactions', async function () {
+    this.timeout(60000)
+
+    const transactionCount = 500
+    const childCount = 25
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_FOUR,
+      children: childCount,
+      autofundChildren: true
+    })
+    await purse.init()
+
+    // fund the master address
+    const masterAddress = purse.masterWallet.getChecksumAddressString()
+    const receipt = await web3.eth.sendTransaction({
+      to: masterAddress,
+      from: Funder,
+      value: ONE_ETHER.mul(new BN(3, 10)),
+      gas: 21000,
+      gasPrice: TWO_GWEI
+    })
+    assert(receipt.status)
+
+    const txTemplate = {
+      to: Rando,
+      gas: 25000,
+      gasPrice: TWO_GWEI
+    }
+
+    // MACHINE GUNNNNN
+    for (let i = 0; i < transactionCount; i++) {
+      const data = `0xdeadbeef`
+      await purse.sendTx({
+        ...txTemplate,
+        data
+      })
+    }
+
+    assert(Object.keys(purse.pendingTransactions).length > 0, 'no pending transactions')
+    await wait(10000) // give it a bit to process the transactions
+    assert(Object.keys(purse.pendingTransactions).length === 0, 'there are still pending transactions')
+  })
+
   // TODO, not yet implemented
   it.skip('can drain child accounts', async () => { assert(false, 'Not implemented') })
-
-  // Not yet implemented
-  it.skip('should be able to handle a large volume of transactions', async () => { assert(false, 'Not implemented') })
 })

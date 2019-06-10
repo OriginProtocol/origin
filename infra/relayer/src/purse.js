@@ -9,9 +9,8 @@
  * TODO
  * ----
  * - Correct redis stored nonce if a tx fails?
- * - Floating gas price
- * - Should there be an upper limit of pending transactions?
- * - Locks and support for parallelism so multiple instances can work at the same time
+ * - Add optional onReceipt callback to sendTx
+ * - Locks and support for parallelism so multiple instances can work at the same time?
  * - Auto-scale children when all accounts hit the max pending setting?
  */
 const { promisify } = require('util')
@@ -92,8 +91,6 @@ class Purse {
     this.accounts = {}
     // Keep track of transactions that are waiting to be mined
     this.pendingTransactions = {}
-    // receipt stack to be continuously processed
-    this.receiptsToProcess = []
     // Counter for tx rebroadcasts
     this.rebroadcastCounters = {}
 
@@ -182,18 +179,22 @@ class Purse {
      */
     do {
       let lowestPending = this.maxPendingPerAccount
-      this.children.forEach(child => {
-        logger.debug(
+      for (const child of this.children) {
+        /*logger.debug(
           `checking child ${child}  pending: ${
             this.accounts[child].pendingCount
           }`
-        )
-        if (this.accounts[child].pendingCount < lowestPending) {
+        )*/
+        const childBal = stringToBN(await this.web3.eth.getBalance(child))
+        if (
+          this.accounts[child].pendingCount < lowestPending &&
+          childBal.gt(MIN_CHILD_BALANCE)
+        ) {
           lowestPending = this.accounts[child].pendingCount
           resolvedAccount = child
           logger.debug(`selecting account ${child}`)
         }
-      })
+      }
 
       if (resolvedAccount) {
         break
@@ -248,6 +249,8 @@ class Purse {
 
     // blast it
     await sendRawTransaction(this.web3, rawTx)
+
+    logger.info(`Sent ${txHash}`)
 
     return txHash
   }
@@ -304,6 +307,7 @@ class Purse {
     this._enforceExists(address)
 
     this.accounts[address].txCount += 1
+    this.accounts[address].pendingCount += 1
     if (this.rclient)
       await this.rclient.incrAsync(`${REDIS_TX_COUNT_PREFIX}${address}`)
   }
@@ -353,14 +357,6 @@ class Purse {
    * TODO: Actually implement this, perhaps
    */
   async drainChildren() {}
-
-  /**
-   * event handler to deal with a receipt when web3.js tells us about it
-   * @param receipt {object} A transaction receipt from web3.js
-   */
-  _handleReceipt(receipt) {
-    this.receiptsToProcess.unshift(receipt)
-  }
 
   /**
    * Sets up the Redis connection to be used for persistant nonce tracking
@@ -526,41 +522,38 @@ class Purse {
        * is processed in reverse order so we can alter the array without it effecting the rest as
        * we go.
        */
-      for (let i = this.receiptsToProcess.length - 1; i >= 0; i--) {
-        const receipt = this.receiptsToProcess[i]
-        const txHash = receipt.transactionHash
+      const pendingHashes = Object.keys(this.pendingTransactions)
+      for (let i = pendingHashes.length - 1; i >= 0; i--) {
+        const txHash = pendingHashes[i]
+        const receipt = await this.web3.eth.getTransactionReceipt(txHash)
+
+        if (!receipt) continue
 
         logger.debug(`Transaction ${txHash} has been mined.`)
 
         // Remove from pending if it exists(it should)
-        if (this.pendingTransactions[txHash]) {
-          if (!receipt.status) {
-            // TODO Should this be communicated to the user and/or tracked?
-            logger.warn(`Transaction ${txHash} has failed!`)
-          }
-          delete this.pendingTransactions[txHash]
-          logger.debug(`Removed ${txHash} from pending`)
+        if (!receipt.status) {
+          // TODO Should this be communicated to the user and/or tracked?
+          logger.warn(`Transaction ${txHash} has failed!`)
         }
+        delete this.pendingTransactions[txHash]
+        logger.debug(`Removed ${txHash} from pending`)
 
         // Adjust the pendingCount for the account
-        if (this.accounts.hasOwnProperty(receipt.from)) {
-          if (this.accounts[receipt.from].pendingCount > 0) {
-            this.accounts[receipt.from].pendingCount -= 1
+        const checksummedFrom = this.web3.utils.toChecksumAddress(receipt.from)
+        if (this.accounts.hasOwnProperty(checksummedFrom)) {
+          if (this.accounts[checksummedFrom].pendingCount > 0) {
+            this.accounts[checksummedFrom].pendingCount -= 1
           } else {
             logger.error(
-              `Account ${receipt.from}'s pendingCount appears to be inaccurate`
+              `Account ${checksummedFrom}'s pendingCount appears to be inaccurate`
             )
           }
         } else {
           logger.error(
-            `Account ${
-              receipt.from
-            } isn't one of ours.  This should be impossible!`
+            `Account ${checksummedFrom} isn't one of ours.  This should be impossible!`
           )
         }
-
-        // Drop it from the queue
-        this.receiptsToProcess.splice(i, 1)
       }
 
       /**
