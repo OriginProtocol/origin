@@ -243,6 +243,8 @@ require('react-styl')(`
       overflow: auto
       flex: auto 1 1
       border: 0
+      display: flex
+      flex-direction: column
     .modal-spacer
       visibility: hidden
       flex-grow: 1

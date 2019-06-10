@@ -293,6 +293,7 @@ class UserActivation extends Component {
                 address
               </fbt>
             </div>
+            <div className="modal-spacer" />
             <div className="actions">
               <button
                 type="submit"
@@ -451,6 +452,7 @@ class UserActivation extends Component {
                     address
                   </fbt>
                 </div>
+                <div className="modal-spacer" />
                 <div className="actions">
                   <button
                     type="submit"
@@ -593,6 +595,7 @@ class UserActivation extends Component {
             <fbt desc="UserActivation.learnMore">Learn more</fbt>
           </a>
         </div>
+        <div className="modal-spacer" />
         <div className="actions">
           <button
             type="submit"
@@ -620,6 +623,7 @@ class UserActivation extends Component {
             completing tasks in the Origin Marketplace.
           </fbt>
         </div>
+        <div className="modal-spacer" />
         <div className="actions">
           <EnrollButton
             type="button"
@@ -948,6 +952,11 @@ require('react-styl')(`
       .avatar
         border-radius: 50%
     &.mobile
+      height: 100%
+      .user-activation-content, .user-activation-content form
+        height: 100%
+        display: flex
+        flex-direction: column
       .avatar
         width: 96px
         padding-top: 96px
