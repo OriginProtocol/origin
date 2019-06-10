@@ -275,38 +275,38 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             )}
             <div className="normal-line-height terms-title">
-              {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
-              Join Origin’s reward program to earn Origin tokens (OGN). Terms
-              and conditions apply.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsSubTitle">
+                Join Origin’s reward program to earn Origin tokens (OGN). Terms
+                and conditions apply.
+              </fbt>
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
-              Earned OGN will be distributed at the end of each campaign. OGN is
-              currently locked for usage on the Origin platform and cannot be
-              transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph1">
+                Earned OGN will be distributed at the end of each campaign. OGN
+                is currently locked for usage on the Origin platform and cannot
+                be transferred. It is expected that OGN will be unlocked and
+                transferrable in the future.
+              </fbt>
             </div>
             <div className="mt-3 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph2">
+                By joining the Origin rewards program, you agree that you will
+                not transfer or sell future earned Origin tokens to other for at
+                least 1 year from the date of earning your tokens.
+              </fbt>
             </div>
             <div className="terms">
-              {/*<fbt desc="EnrollmentModal.termsBody">*/}
-              OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended
-              (the “Securities Act”), and may not be transferred in the United
-              States to, or for the account or benefit of, any U.S. person
-              except pursuant to an available exemption from the registration
-              requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them
-              in Regulation S under the Securities Act and all applicable laws
-              and regulations.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsBody">
+                OGN are being issued in a transaction originally exempt from
+                registration under the U.S. Securities Act of 1933, as amended
+                (the “Securities Act”), and may not be transferred in the United
+                States to, or for the account or benefit of, any U.S. person
+                except pursuant to an available exemption from the registration
+                requirements of the Securities Act and all applicable state
+                securities laws. Terms used above have the meanings given to
+                them in Regulation S under the Securities Act and all applicable
+                laws and regulations.
+              </fbt>
             </div>
             <div className="mt-1 d-flex country-check-label justify-content-center">
               <label className="checkbox-holder">
