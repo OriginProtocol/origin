@@ -260,6 +260,8 @@ require('react-styl')(`
         max-height: 175px
       &.with-image
         height: 200px
+        background-size: cover
+        background-repeat: no-repeat
       .modal-action-button
         flex: 2rem 0 0
         cursor: pointer

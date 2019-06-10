@@ -957,6 +957,8 @@ require('react-styl')(`
         height: 100%
         display: flex
         flex-direction: column
+        &.modal-header.with-image.rewards-sign-up h3
+          color: white
       .avatar
         width: 96px
         padding-top: 96px
