@@ -810,6 +810,7 @@ require('react-styl')(`
         padding: 0.625rem 1rem
         border-radius: 0.312rem
         border: solid 1px var(--light)
+        font-weight: normal
       .terms-title
         color: black
         font-size: 1.125rem

@@ -10,7 +10,7 @@ import SignMessageMutation from 'mutations/SignMessage'
 import GrowthEnroll from 'mutations/GrowthEnroll'
 
 const Error = props => (
-  <div className="p-3">
+  <div className="error-holder p-3 d-flex align-items-center justify-content-center flex-column">
     <div className="error-icon mb-3" />
     <div>
       <b>{props.error}</b>
@@ -184,14 +184,25 @@ class Enroll extends Component {
 export default withRouter(withFingerprint(Enroll))
 
 require('react-styl')(`
+  .growth-enrollment-modal
+    .error-holder
+      height: 100%
+      .error-icon
+        height: 3.5rem
+        width: 3.5rem
   .growth-enrollment
     .title
-      font-weight: 300;
+      font-weight: 300
     .info-text
-      margin-bottom: 75px;
+      margin-bottom: 75px
     .metamask-video
-      margin-top: 90px;
-      margin-bottom: 42px;
+      margin-top: 90px
+      margin-bottom: 42px
     .error
-      color: var(--red);
+      color: var(--red)
+    .error-holder
+      height: 100%
+      .error-icon
+        height: 3.5rem
+        width: 3.5rem
 `)
