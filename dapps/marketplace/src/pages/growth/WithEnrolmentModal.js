@@ -242,7 +242,9 @@ function withEnrolmentModal(WrappedComponent) {
       const cancelButton = (
         <button
           className={`btn ${
-            isMobile ? 'btn-no-outline-link mt-3 mb-3' : 'btn-outline-light mr-2'
+            isMobile
+              ? 'btn-no-outline-link mt-3 mb-3'
+              : 'btn-outline-light mr-2'
           }`}
           onClick={() => this.handleCloseModal()}
           children={fbt('Cancel', 'Cancel')}
