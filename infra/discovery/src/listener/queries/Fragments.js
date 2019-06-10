@@ -15,6 +15,9 @@ module.exports = {
             firstName
             lastName
             fullName
+            owner {
+              id
+            }
           }
         }
         arbitrator {
@@ -111,6 +114,9 @@ module.exports = {
             firstName
             lastName
             fullName
+            owner {
+              id
+            }
           }
         }
         withdrawnBy {

@@ -284,7 +284,7 @@ app.post('/events', async (req, res) => {
   const buyer = offer ? offer.buyer : null // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${
     event.blockNumber
-  } logIndex=${event.logIndex}`
+    } logIndex=${event.logIndex}`
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
@@ -319,9 +319,16 @@ app.post('/events', async (req, res) => {
     return
   }
 
-  const party = returnValues.party.toLowerCase()
-  const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
-  const sellerAddress = seller.id ? seller.id.toLowerCase() : null
+  // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
+  // The reason is that identity and notification data is stored under owner address.
+  let party = returnValues.party.toLowerCase()
+  if (party === buyer.id.toLowerCase()) {
+    party = buyer.owner.id.toLowerCase()
+  } else if (party === seller.id.toLowerCase()) {
+    party = seller.id.toLowerCase()
+  }
+  const buyerAddress = buyer.owner.id ? buyer.owner.id.toLowerCase() : null
+  const sellerAddress = seller.owner.id ? seller.owner.id.toLowerCase() : null
 
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
 

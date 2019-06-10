@@ -22,6 +22,9 @@ const identityQuery = gql`
           googleVerified
           websiteVerified
           ipfsHash
+          owner {
+            id
+          }
         }
       }
     }
