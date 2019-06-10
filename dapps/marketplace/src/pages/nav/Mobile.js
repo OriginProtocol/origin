@@ -135,7 +135,6 @@ require('react-styl')(`
     .dropdown-menu
       background-color: var(--white)
       padding: 11px 0 1rem 0
-      border-radius: 0 5px 5px 5px
       top: 0
       .dropdown-divider
         margin: 0.5rem 1.5rem
@@ -165,7 +164,7 @@ require('react-styl')(`
         &.close-dropdown::before
           background-image: url(images/nav/close-icon.svg)
           background-size: 26px
-          left: 17px
+          left: 18px
         &.home::before
           background-image: url(images/nav/home-icon.svg)
         &.add::before

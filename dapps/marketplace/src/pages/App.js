@@ -7,9 +7,9 @@ import { fbt } from 'fbt-runtime'
 import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
+import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
-import Nav from './_Nav'
 import Footer from './_Footer'
 
 import Onboard from './onboard/Onboard'

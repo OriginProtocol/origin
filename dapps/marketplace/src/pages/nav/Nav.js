@@ -8,11 +8,13 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
-import Profile from './nav/Profile'
-import Notifications from './nav/Notifications'
-import Messages from './nav/Messages'
-import Mobile from './nav/Mobile'
-import GetStarted from './nav/GetStarted'
+import Profile from './Profile'
+import Notifications from './Notifications'
+import Messages from './Messages'
+import Mobile from './Mobile'
+import Search from '../listings/_Search'
+import GetStarted from './GetStarted'
+
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 const Brand = withCreatorConfig(({ creatorConfig }) => {
@@ -27,7 +29,7 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const Nav = ({ location, isMobile, wallet }) => {
+const Nav = ({ location: { pathname }, isMobile, wallet }) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
@@ -36,21 +38,26 @@ const Nav = ({ location, isMobile, wallet }) => {
   })
 
   if (isMobile) {
-    let customNav
-    if (location.pathname.startsWith('/my-listings')) {
-      customNav = <h1>My Listings</h1>
+    let title
+    if (pathname.startsWith('/my-listings')) {
+      title = <fbt desc="Listings.title">My Listings</fbt>
+    } else if (pathname.startsWith('/my-purchases')) {
+      title = <fbt desc="Purchases.title">My Purchases</fbt>
+    } else if (pathname.startsWith('/my-sales')) {
+      title = <fbt desc="Sales.title">My Sales</fbt>
     }
-    if (customNav) {
+
+    if (title) {
       return (
         <nav className="navbar no-border">
           <Mobile {...navProps('mobile')} />
-          {customNav}
+          <h1>{title}</h1>
         </nav>
       )
     }
 
     return (
-      <nav className="navbar">
+      <nav className="navbar no-border">
         <Mobile {...navProps('mobile')} />
         <Brand />
         <Profile {...navProps('profile')} />
@@ -79,10 +86,8 @@ const Nav = ({ location, isMobile, wallet }) => {
     <nav className="navbar navbar-expand-md">
       <div className="container">
         <Brand />
-        <form className="form-inline mr-auto">
-          <input className="form-control" type="search" />
-        </form>
-        <ul className="navbar-nav">
+        <Search className="form-inline mr-auto" />
+        <ul className="navbar-nav ml-3">
           <li className="nav-item">
             <NavLink to="/my-purchases" className="nav-link text">
               <span>
@@ -139,15 +144,6 @@ require('react-styl')(`
       border-bottom: 1px solid rgba(0, 0, 0, 0.1)
     > .container
       align-items: stretch
-    .form-inline
-      flex: 1
-      max-width: 260px
-      margin-left: 1rem
-      .form-control
-        background: url(images/magnifying-glass.svg) no-repeat right 10px center
-        border-color: #c2cbd3
-        border-radius: 5px
-        width: 100%
 
     .nav-item
       display: flex
@@ -161,9 +157,6 @@ require('react-styl')(`
         background-color: var(--white)
         .nav-link
           color: var(--dark)
-      &.dark
-        &.show
-          background-color: var(--dark)
       button
         border: 0px
       .nav-link
@@ -190,7 +183,7 @@ require('react-styl')(`
       .dropdown-menu
         padding: 0
         position: absolute !important
-        margin-top: 1rem
+        margin-top: 0
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
         border-radius: 0 0 5px 5px
         border: 1px solid var(--light)
@@ -225,7 +218,7 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .navbar
-      padding: 0.5rem 0 0 0
+      padding: 0
       h1
         font-size: 24px
         position: absolute

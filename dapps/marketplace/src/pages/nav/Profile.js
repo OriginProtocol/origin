@@ -16,8 +16,6 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
-// import ActiveWalletInfo from './_ActiveWalletInfo'
-
 class ProfileNav extends Component {
   constructor() {
     super()
@@ -104,7 +102,7 @@ const CreateIdentity = onClose => (
 const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
   if (identityLoading) {
     return (
-      <div>
+      <div className="identity-loading">
         <fbt desc="nav.profile.identityLoading">
           Hold on while we load your identity...
         </fbt>
@@ -170,6 +168,16 @@ const ProfileDropdownRaw = ({
     <>
       <div className="dropdown-menu-bg" onClick={() => onClose()} />
       <div className="dropdown-menu dropdown-menu-right show profile">
+        <a
+          className="d-sm-none close-icon"
+          href="#close"
+          onClick={e => {
+            e.preventDefault()
+            onClose()
+          }}
+        >
+          Close
+        </a>
         <div className="identity-info">
           <Identity
             id={id}
@@ -190,11 +198,11 @@ const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 export default withWallet(withIdentity(ProfileNav))
 
 require('react-styl')(`
-  .dropdown.profile .nav-link
+  .dropdown .nav-link
     position: relative
     border-left: 1px solid transparent
     border-right: 1px solid transparent
-  .dropdown.profile.show .nav-link
+  .dropdown.show .nav-link
     border-left: 1px solid var(--light)
     border-right: 1px solid var(--light)
     &::after
@@ -208,7 +216,6 @@ require('react-styl')(`
   .dropdown-menu.profile
     width: 250px
     font-size: 14px
-    margin-top: 0 !important
     &:before
       display: none !important
     > div
@@ -240,6 +247,8 @@ require('react-styl')(`
           color: var(--bluey-grey)
           line-height: normal
 
+       .identity-loading
+          padding-top: 3rem
        .identity
          font-weight: bold
          text-align: center
@@ -290,4 +299,15 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .dropdown-menu.profile
       max-width: 300px
+      .close-icon
+        display: block
+        position: absolute
+        left: 1rem
+        top: 1rem
+        background: url(images/nav/close-icon.svg) no-repeat
+        background-size: 26px
+        text-indent: -9999px
+        width: 2rem
+        height: 2rem
+
 `)

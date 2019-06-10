@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
@@ -23,99 +23,95 @@ import query from 'queries/UserListings'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
-class Listings extends Component {
-  render() {
-    const vars = { first: 5, id: this.props.walletProxy }
+const Listings = ({ match, wallet, walletProxy }) => {
+  const vars = { first: 5, id: walletProxy }
 
-    const filter = get(this.props, 'match.params.filter', 'all')
-    if (filter !== 'all') {
-      vars.filter = filter
-    }
-
-    return (
-      <div className="container transactions">
-        <DocumentTitle
-          pageTitle={<fbt desc="Listings.title">My Listings</fbt>}
-        />
-        <h1 className="d-none d-md-block">
-          <fbt desc="Listings.myListings">My Listings</fbt>
-        </h1>
-
-        <Filter>
-          <FilterItem to="/my-listings" exact>
-            <fbt desc="Listings.all">All</fbt>
-          </FilterItem>
-          <FilterItem to="/my-listings/active">
-            <fbt desc="Listings.active">Active</fbt>
-          </FilterItem>
-          <FilterItem to="/my-listings/inactive">
-            <fbt desc="Listings.inactive">Inactive</fbt>
-          </FilterItem>
-        </Filter>
-
-        <Query
-          query={query}
-          variables={vars}
-          notifyOnNetworkStatusChange={true}
-          skip={!vars.id}
-          fetchPolicy="cache-and-network"
-        >
-          {({ error, data, fetchMore, networkStatus, refetch }) => {
-            if (networkStatus <= 2 || !this.props.wallet) {
-              return <LoadingSpinner />
-            } else if (error) {
-              return <QueryError error={error} query={query} vars={vars} />
-            } else if (!data || !data.marketplace) {
-              return (
-                <p className="p-3">
-                  <fbt desc="Listings.noContract">No marketplace contract?</fbt>
-                </p>
-              )
-            }
-
-            const {
-              nodes,
-              pageInfo: { hasNextPage, endCursor: after },
-              totalCount
-            } = data.marketplace.user.listings
-
-            if (!totalCount) {
-              return <NoListings filter={filter} />
-            }
-
-            return (
-              <BottomScrollListener
-                ready={networkStatus === 7}
-                hasMore={hasNextPage}
-                onBottom={() => nextPage(fetchMore, { ...vars, after })}
-              >
-                <div className="listings">
-                  {nodes.map(listing => (
-                    <Listing
-                      key={`${listing.id}`}
-                      listing={listing}
-                      refetch={refetch}
-                    />
-                  ))}
-                  {!hasNextPage ? null : (
-                    <button
-                      children={
-                        networkStatus === 3
-                          ? fbt('Loading...', 'Listings.loading')
-                          : fbt('Load more', 'Listings.loadMore')
-                      }
-                      className="btn btn-outline-primary btn-rounded mt-3"
-                      onClick={() => nextPage(fetchMore, { ...vars, after })}
-                    />
-                  )}
-                </div>
-              </BottomScrollListener>
-            )
-          }}
-        </Query>
-      </div>
-    )
+  const filter = get(match, 'params.filter', 'all')
+  if (filter !== 'all') {
+    vars.filter = filter
   }
+
+  return (
+    <div className="container transactions">
+      <DocumentTitle pageTitle={<fbt desc="Listings.title">My Listings</fbt>} />
+      <h1 className="d-none d-md-block">
+        <fbt desc="Listings.title">My Listings</fbt>
+      </h1>
+
+      <Filter>
+        <FilterItem to="/my-listings" exact>
+          <fbt desc="Listings.all">All</fbt>
+        </FilterItem>
+        <FilterItem to="/my-listings/active">
+          <fbt desc="Listings.active">Active</fbt>
+        </FilterItem>
+        <FilterItem to="/my-listings/inactive">
+          <fbt desc="Listings.inactive">Inactive</fbt>
+        </FilterItem>
+      </Filter>
+
+      <Query
+        query={query}
+        variables={vars}
+        notifyOnNetworkStatusChange={true}
+        skip={!vars.id}
+        fetchPolicy="cache-and-network"
+      >
+        {({ error, data, fetchMore, networkStatus, refetch }) => {
+          if (networkStatus <= 2 || !wallet) {
+            return <LoadingSpinner />
+          } else if (error) {
+            return <QueryError error={error} query={query} vars={vars} />
+          } else if (!data || !data.marketplace) {
+            return (
+              <p className="p-3">
+                <fbt desc="Listings.noContract">No marketplace contract?</fbt>
+              </p>
+            )
+          }
+
+          const {
+            nodes,
+            pageInfo: { hasNextPage, endCursor: after },
+            totalCount
+          } = data.marketplace.user.listings
+
+          if (!totalCount) {
+            return <NoListings filter={filter} />
+          }
+
+          return (
+            <BottomScrollListener
+              ready={networkStatus === 7}
+              hasMore={hasNextPage}
+              onBottom={() => nextPage(fetchMore, { ...vars, after })}
+            >
+              <div className="listings">
+                {nodes.map(listing => (
+                  <Listing
+                    key={`${listing.id}`}
+                    listing={listing}
+                    refetch={refetch}
+                  />
+                ))}
+                {!hasNextPage ? null : (
+                  <button
+                    children={
+                      networkStatus === 3
+                        ? fbt('Loading...', 'Listings.loading')
+                        : fbt('Load more', 'Listings.loadMore')
+                    }
+                    className="btn btn-outline-primary btn-rounded mt-3"
+                    onClick={() => nextPage(fetchMore, { ...vars, after })}
+                  />
+                )}
+              </div>
+            </BottomScrollListener>
+          )
+        }}
+      </Query>
+    </div>
+  )
 }
 
 const NoListings = ({ filter }) => (
@@ -214,9 +210,11 @@ export default withWallet(Listings)
 
 require('react-styl')(`
   .container.transactions
+    padding-top: 3rem
     max-width: 760px
-    .listings
-      .listing
+
+    .listings,.purchases,.sales
+      .listing,.purchase,.sale
         display: flex
         line-height: normal
         font-weight: normal
@@ -234,10 +232,11 @@ require('react-styl')(`
             border-radius: 5px
         .details
           flex: 1
+          min-width: 0px
           .top
             display: flex
             justify-content: space-between
-            align-items: center
+            align-items: flex-start
             .title
               font-size: 24px
               font-weight: bold
@@ -258,7 +257,6 @@ require('react-styl')(`
         .date
           color: var(--steel)
           font-size: 14px
-          margin-bottom: 1rem
         .price
           font-size: 18px
           display: flex
@@ -277,10 +275,17 @@ require('react-styl')(`
           font-size: 14px
           a:not(:last-of-type)
             margin-right: 2rem
+
+  .listings .listing
+    .date
+      margin-bottom: 1rem
+
   @media (max-width: 767.98px)
     .container.transactions
       padding-top: 0.75rem
-      .listings .listing
+      .listings .listing,
+      .purchases .purchase,
+      .sales .sale
         padding-bottom: 1.25rem
         &:not(:last-of-type)
           margin-bottom: 1.25rem

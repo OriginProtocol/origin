@@ -11,6 +11,7 @@ import withCreatorConfig from 'hoc/withCreatorConfig'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
+import withIsMobile from 'hoc/withIsMobile'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -21,7 +22,7 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingsGallery from './ListingCards'
-// import Search from './_Search'
+import Search from './_Search'
 
 import query from 'queries/Listings'
 
@@ -72,23 +73,10 @@ class Listings extends Component {
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        {/* <Search
-          value={this.state.search}
-          onSearch={search => {
-            this.setState({ search })
-            memStore.set('listingsPage.search', search)
-            this.props.history.push({
-              to: '/search',
-              search: queryString.stringify({
-                q: search.searchInput || undefined,
-                category: search.category.type || undefined,
-                priceMin: search.priceMin || undefined,
-                priceMax: search.priceMax || undefined
-              })
-            })
-          }}
-        /> */}
         <div className="container listings-container">
+          {this.props.isMobile ? (
+            <Search className="search" placeholder />
+          ) : null}
           <Query
             query={query}
             variables={vars}
@@ -223,7 +211,7 @@ class Listings extends Component {
 }
 
 export default withGrowthCampaign(
-  withWallet(withTokenBalance(withCreatorConfig(Listings))),
+  withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
   {
     fetchPolicy: 'cache-first',
     queryEvenIfNotEnrolled: true,
@@ -243,7 +231,9 @@ require('react-styl')(`
     margin-top: 10rem
   @media (max-width: 767.98px)
     .listings-container
-      padding-top: 2rem
+      padding-top: 0
+      .search
+        margin-bottom: 1.5rem
     .listings-count
       margin: 0
       font-size: 32px
