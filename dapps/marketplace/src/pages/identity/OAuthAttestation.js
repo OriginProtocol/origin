@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
 
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
@@ -67,8 +68,10 @@ class OAuthAttestation extends Component {
       ? encodeURIComponent(`${origin}${pathname}#/profile/${provider}`)
       : null
 
+    const ModalComp = isMobile ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComp
         title={
           <fbt desc="OAuthAttestation.verifyAccount">
             Verify{' '}
@@ -110,7 +113,7 @@ class OAuthAttestation extends Component {
             )
           }}
         </Query>
-      </Modal>
+      </ModalComp>
     )
   }
 
@@ -150,6 +153,7 @@ class OAuthAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
+    const isMobile = this.isMobile()
 
     return (
       <Mutation
@@ -192,7 +196,9 @@ class OAuthAttestation extends Component {
                 <AutoMutate mutatation={runMutation} />
               ) : null}
               <button
-                className="btn btn-outline-light"
+                className={`btn ${
+                  isMobile ? 'btn-primary' : 'btn-outline-light'
+                }`}
                 onClick={runMutation}
                 children={
                   this.state.loading
@@ -209,6 +215,7 @@ class OAuthAttestation extends Component {
 
   renderVerifiedOK() {
     const providerName = getProviderDisplayName(this.props.provider)
+    const isMobile = this.isMobile()
 
     return (
       <>
@@ -231,7 +238,9 @@ class OAuthAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className="btn btn-outline-light"
+            className={`btn ${
+              isMobile ? 'btn-primary' : 'btn-outline-light'
+            }`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
@@ -245,3 +254,6 @@ class OAuthAttestation extends Component {
 }
 
 export default withIsMobile(withRouter(OAuthAttestation))
+
+require('react-styl')(`
+`)
