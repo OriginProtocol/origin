@@ -22,6 +22,7 @@ import WelcomeScreen from 'screens/onboarding/welcome'
 import ImportAccountScreen from 'screens/import'
 import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
+import ImportWarningScreen from 'screens/importWarning'
 import ImportedScreen from 'screens/onboarding/imported'
 import Authentication from 'screens/onboarding/authentication'
 import PinScreen from 'screens/onboarding/pin'
@@ -65,6 +66,7 @@ const OnboardingStack = createStackNavigator(
       }
     },
     Imported: ImportedScreen,
+    ImportWarning: ImportWarningScreen,
     Email: EmailScreen,
     Phone: PhoneScreen,
     Name: NameScreen,
@@ -74,7 +76,6 @@ const OnboardingStack = createStackNavigator(
     Ready: ReadyScreen
   },
   {
-    initialRouteName: 'Welcome',
     defaultNavigationOptions: ({ navigation }) => {
       const { params = {} } = navigation.state
       return {
