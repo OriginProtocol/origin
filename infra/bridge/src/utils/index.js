@@ -32,13 +32,13 @@ function generateWebsiteCode(ethAddress, host) {
   return sign.slice(2)
 }
 
-function getAbsoluteUrl(relativeUrl, state) {
+function getAbsoluteUrl(relativeUrl, params = {}) {
   const protocol = process.env.HTTPS ? 'https' : 'http'
   const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
   const url = new URL(`${protocol}://${host}${relativeUrl}`)
 
-  if (state) {
-    url.searchParams.append('state', state)
+  for (let key in params) {
+    url.searchParams.append(key, params[key])
   }
 
   return url.toString()

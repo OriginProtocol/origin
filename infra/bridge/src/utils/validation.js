@@ -123,6 +123,16 @@ const phoneVerifyCode = [
   handleValidationError
 ]
 
+const twitterVerifyCode = [
+  identityValidation,
+  check('sid')
+    .not()
+    .isEmpty()
+    .withMessage('Field sid must not be empty.')
+    .trim(),
+  handleValidationError
+]
+
 const googleVerify = oauth2CallbackVerify
 
 const websiteGenerateCode = [
@@ -130,8 +140,6 @@ const websiteGenerateCode = [
   check('website').custom(urlValidation),
   handleValidationError
 ]
-
-const twitterVerifyCode = oauth2CallbackVerify
 
 const kakaoVerify = oauth2CallbackVerify
 

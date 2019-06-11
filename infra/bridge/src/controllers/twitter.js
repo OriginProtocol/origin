@@ -24,9 +24,8 @@ router.get('/auth-url', async (req, res) => {
 
   let oAuthToken, oAuthTokenSecret
   try {
-    const twitterResponse = await getTwitterOAuthRequestToken(
-      redirect ? req.sessionID : null
-    )
+    const twitterResponse = await getTwitterOAuthRequestToken(req.sessionID)
+
     oAuthToken = twitterResponse.oAuthToken
     oAuthTokenSecret = twitterResponse.oAuthTokenSecret
   } catch (error) {
@@ -56,14 +55,17 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
   let session = req.session
   let verifier = req.body.code
 
-  if (req.body.sid) {
-    session = await req.sessionStore.get(req.body.sid)
-    verifier = session.code
-  }
-  if (!session.oAuthToken || !session.oAuthTokenSecret) {
+  session = await req.sessionStore.get(req.body.sid)
+
+  if (!session || !session.oAuthToken || !session.oAuthTokenSecret) {
     return res.status(400).send({
       errors: ['Invalid Twitter oAuth session.']
     })
+  }
+
+  if (session.redirect) {
+    // In case of redirect, verifier code is stored to session
+    verifier = session.code
   }
 
   let oAuthAccessToken, oAuthAccessTokenSecret
