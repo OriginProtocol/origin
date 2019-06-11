@@ -79,20 +79,11 @@ class UserActivation extends Component {
     }
   }
 
-  componentDidMount() {
-    this.mounted = true
-  }
-
   componentWillUnmount() {
-    this.mounted = false
     this.refetchQueries()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (!this.mounted) {
-      return
-    }
-
     if (this.props.stage && this.props.stage !== prevProps.stage) {
       this.setState(
         {
@@ -154,7 +145,6 @@ class UserActivation extends Component {
             onClose={() =>
               this.setState({
                 personalDataModal: false
-                // shouldClosePersonalDataModal: false
               })
             }
           >
@@ -171,7 +161,6 @@ class UserActivation extends Component {
             onClose={() =>
               this.setState({
                 txModal: false
-                // shouldCloseSignTxModal: false
               })
             }
           >
@@ -185,12 +174,8 @@ class UserActivation extends Component {
             className="user-activation confirm-skip-modal"
             fullscreen={false}
             onClose={() => {
-              if (!this.mounted) {
-                return null
-              }
               this.setState({
                 confirmSkipModal: false
-                // shouldCloseConfirmSkipModal: false
               })
             }}
           >
@@ -293,7 +278,6 @@ class UserActivation extends Component {
                 address
               </fbt>
             </div>
-            <div className="modal-spacer" />
             <div className="actions">
               <button
                 type="submit"
@@ -452,7 +436,6 @@ class UserActivation extends Component {
                     address
                   </fbt>
                 </div>
-                <div className="modal-spacer" />
                 <div className="actions">
                   <button
                     type="submit"
@@ -474,7 +457,6 @@ class UserActivation extends Component {
   }
 
   refetchQueries() {
-    this.props.identityRefetch()
     this.props.client.reFetchObservableQueries()
   }
 
@@ -484,7 +466,8 @@ class UserActivation extends Component {
     if (this.props.renderMobileVersion) {
       this.setState(
         {
-          stage: 'ProfileCreated'
+          stage: 'ProfileCreated',
+          confirmSkipModal: false
         },
         () => this.onStageChanged()
       )
@@ -492,7 +475,6 @@ class UserActivation extends Component {
     } else if (this.props.onCompleted) {
       this.props.onCompleted()
     }
-    // this.refetchQueries()
   }
 
   renderPublishDetail() {
@@ -595,7 +577,6 @@ class UserActivation extends Component {
             <fbt desc="UserActivation.learnMore">Learn more</fbt>
           </a>
         </div>
-        <div className="modal-spacer" />
         <div className="actions">
           <button
             type="submit"
@@ -623,7 +604,6 @@ class UserActivation extends Component {
             completing tasks in the Origin Marketplace.
           </fbt>
         </div>
-        <div className="modal-spacer" />
         <div className="actions">
           <EnrollButton
             type="button"
@@ -655,8 +635,6 @@ class UserActivation extends Component {
           if (this.props.onCompleted) {
             this.props.onCompleted()
           }
-
-          // this.props.identityRefetch()
         }}
       />
     )
@@ -762,9 +740,7 @@ class UserActivation extends Component {
             <button
               className="btn btn-primary mb-3"
               onClick={() =>
-                this.setState({ shouldCloseConfirmSkipModal: true }, () =>
-                  this.onDeployComplete()
-                )
+                this.onDeployComplete()
               }
             >
               <fbt desc="UserActivation.imSure">I&apos;m sure</fbt>

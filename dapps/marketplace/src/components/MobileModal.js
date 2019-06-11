@@ -248,6 +248,8 @@ require('react-styl')(`
     .modal-spacer
       visibility: hidden
       flex-grow: 1
+    .actions
+      margin-top: auto
     .modal-header
       flex-grow: 0
       flex-shrink: 0

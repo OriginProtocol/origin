@@ -62,6 +62,26 @@ function withEnrolmentModal(WrappedComponent) {
         if (this.props.onClose) {
           this.props.onClose()
         }
+      } else if (this.state.stage !== previousState.stage) {
+        let title = fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
+        switch (this.state.stage) {
+          case 'JoinActiveCampaign':
+            title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+            break
+          
+          case 'TermsModal':
+            title = fbt('Origin Rewards Terms', 'WithEnrolmentModal.SignUpForOrigin')
+            break
+
+          case 'RestrictedModal':
+            title = fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
+            break
+        }
+
+        this.setMobileHeader(title)
       }
     }
 
@@ -150,10 +170,6 @@ function withEnrolmentModal(WrappedComponent) {
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
 
-      this.setMobileHeader(
-        fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
-      )
-
       return (
         <Query
           query={allCampaignsQuery}
@@ -235,10 +251,6 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
 
-      this.setMobileHeader(
-        fbt('Origin Rewards Terms', 'WithEnrolmentModal.SignUpForOrigin')
-      )
-
       const cancelButton = (
         <button
           className={`btn ${
@@ -258,7 +270,7 @@ function withEnrolmentModal(WrappedComponent) {
               ? 'btn-primary btn-rounded'
               : isMobile
               ? 'btn-primary mt-5 mb-0'
-              : 'ml-2 btn-outline-light'
+              : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
           disabled={termsAccepted ? undefined : 'disabled'}
@@ -325,10 +337,9 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </label>
             </div>
-            <div className="modal-spacer" />
             <div
               className={`d-flex justify-content-center ${
-                isMobile ? 'flex-column' : ''
+                isMobile ? 'flex-column mt-auto' : ''
               }`}
             >
               {!isMobile && (
@@ -352,10 +363,6 @@ function withEnrolmentModal(WrappedComponent) {
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
       const isForbidden = eligibility === 'Forbidden'
-
-      this.setMobileHeader(
-        fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
-      )
 
       return (
         <div>
@@ -403,12 +410,11 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
-          <div className="modal-spacer" />
           {(isForbidden || (isRestricted && !notCitizenChecked)) && (
             <button
               className={`btn ${
                 this.props.ismobile === 'true'
-                  ? 'btn-primary'
+                  ? 'btn-primary mt-auto'
                   : 'btn-outline-light'
               }`}
               onClick={() => this.handleCloseModal()}
@@ -417,7 +423,7 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && notCitizenChecked && (
             <button
-              className="btn btn-primary btn-rounded btn-lg"
+              className={`btn btn-primary btn-rounded btn-lg${this.props.ismobile === 'true' ? ' mt-auto' : ''}`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />

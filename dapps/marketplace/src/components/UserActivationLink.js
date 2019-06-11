@@ -25,9 +25,15 @@ const UserActivationLink = props => {
     return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
   }
 
-  if (modal || (isMobile && props.forceRedirect)) {
-    useEffect(() => storeLocationToStore(props), [true])
+  const shouldShowMobileModal = modal || (isMobile && props.forceRedirect)
 
+  useEffect(() => () => {
+    if (shouldShowMobileModal) {
+      storeLocationToStore(props)
+    }
+  }, [true])
+
+  if (shouldShowMobileModal) {
     return (
       <MobileUserActivation
         onClose={() => {
@@ -68,7 +74,6 @@ const UserActivationLink = props => {
         if (props.onClick) {
           props.onClick()
         }
-
         storeLocationToStore(props)
       }}
     >

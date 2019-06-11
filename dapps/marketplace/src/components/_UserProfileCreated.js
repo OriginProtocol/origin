@@ -14,7 +14,6 @@ const UserProfileCreated = ({ onCompleted }) => (
         continue your journey in the Origin Marketplace.
       </fbt>
     </div>
-    <div className="modal-spacer" />
     <div className="actions">
       <button
         type="button"
