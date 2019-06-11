@@ -739,9 +739,7 @@ class UserActivation extends Component {
           <div className="actions">
             <button
               className="btn btn-primary mb-3"
-              onClick={() =>
-                this.onDeployComplete()
-              }
+              onClick={() => this.onDeployComplete()}
             >
               <fbt desc="UserActivation.imSure">I&apos;m sure</fbt>
             </button>

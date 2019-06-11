@@ -71,13 +71,19 @@ function withEnrolmentModal(WrappedComponent) {
           case 'JoinActiveCampaign':
             title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
             break
-          
+
           case 'TermsModal':
-            title = fbt('Origin Rewards Terms', 'WithEnrolmentModal.SignUpForOrigin')
+            title = fbt(
+              'Origin Rewards Terms',
+              'WithEnrolmentModal.SignUpForOrigin'
+            )
             break
 
           case 'RestrictedModal':
-            title = fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
+            title = fbt(
+              'Country not eligible',
+              'WithEnrolmentModal.CountryNotEligible'
+            )
             break
         }
 
@@ -423,7 +429,9 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && notCitizenChecked && (
             <button
-              className={`btn btn-primary btn-rounded btn-lg${this.props.ismobile === 'true' ? ' mt-auto' : ''}`}
+              className={`btn btn-primary btn-rounded btn-lg${
+                this.props.ismobile === 'true' ? ' mt-auto' : ''
+              }`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />
