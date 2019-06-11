@@ -5,6 +5,48 @@ function freezeVp(e) {
   e.preventDefault()
 }
 
+const MobileModalHeader = ({
+  children,
+  headerImageUrl,
+  className = '',
+  showBackButton = true,
+  onBack
+}) => {
+  if (!children && !headerImageUrl) {
+    return null
+  } else if (!children) {
+    return (
+      <div
+        className={`modal-header image-only${className ? ' ' + className : ''}`}
+      >
+        <img src={headerImageUrl} />
+      </div>
+    )
+  }
+
+  let headerClassList = ['modal-header']
+  let headerStyle
+
+  if (headerImageUrl) {
+    headerClassList.push('with-image')
+    headerStyle = { backgroundImage: `url(${headerImageUrl})` }
+  }
+
+  if (className) {
+    headerClassList = headerClassList.concat(className.split(' '))
+  }
+
+  return (
+    <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
+      {showBackButton && (
+        <a className="modal-action-button back-button" onClick={onBack} />
+      )}
+      <h3 className="modal-title">{children}</h3>
+      {showBackButton && <span className="modal-action-button" />}
+    </div>
+  )
+}
+
 export default class MobileModal extends Component {
   constructor(props) {
     super(props)
@@ -64,47 +106,73 @@ export default class MobileModal extends Component {
   }
 
   renderModal() {
+    const {
+      title,
+      className = '',
+      children,
+      headerImageUrl = '',
+      onBack,
+      showBackButton
+    } = this.props
+
     return (
       <>
         <div
           className="mobile-modal-light-overlay"
           onClick={() => this.onClose()}
         />
-        <div className="modal-header" />
-        <div className={`modal-content ${this.props.className}`}>
-          {this.props.children}
+        <div className="modal-spacer" />
+        <MobileModalHeader
+          className={className}
+          headerImageUrl={headerImageUrl}
+          showBackButton={showBackButton}
+          onBack={() => {
+            if (onBack) {
+              onBack()
+            } else {
+              this.onClose()
+            }
+          }}
+        >
+          {title}
+        </MobileModalHeader>
+        <div className={`modal-content${className ? ' ' + className : ''}`}>
+          {children}
         </div>
-        <div className="modal-header" />
+        <div className="modal-spacer" />
       </>
     )
   }
 
   renderFullScreenModal() {
-    const { title, className, children } = this.props
+    const {
+      title,
+      className = '',
+      children,
+      headerImageUrl = '',
+      onBack,
+      showBackButton
+    } = this.props
 
     return (
       <>
-        {title && (
-          <nav className="navbar">
-            <div className="modal-header">
-              <a
-                className="back-button"
-                onClick={() => {
-                  if (this.props.onBack) {
-                    this.props.onBack()
-                  } else {
-                    this.onClose()
-                  }
-                }}
-              >
-                <img src="images/caret-grey.svg" />
-              </a>
-              <h3 className="modal-title">{this.props.title}</h3>
-              <span className="back-button" />
-            </div>
-          </nav>
-        )}
-        <div className={`modal-content ${className}`}>{children}</div>
+        <MobileModalHeader
+          className={className}
+          headerImageUrl={headerImageUrl}
+          showBackButton={showBackButton}
+          onBack={() => {
+            if (onBack) {
+              onBack()
+            } else {
+              this.onClose()
+            }
+          }}
+        >
+          {title}
+        </MobileModalHeader>
+        <div className={`modal-content${className ? ' ' + className : ''}`}>
+          {children}
+        </div>
       </>
     )
   }
@@ -166,31 +234,55 @@ require('react-styl')(`
     background-color: white
     display: flex
     flex-direction: column
+    overflow: auto
     &.open
       top: 0
       left: 0
       opacity: 1
       right: 0
     .modal-content
-      overflow: auto
+      min-height: min-content
       flex: auto 1 1
+      border: 0
+      display: flex
+      flex-direction: column
+    .modal-spacer
+      visibility: hidden
+      flex-grow: 1
+    .actions
+      margin-top: auto
     .modal-header
       flex-grow: 0
       flex-shrink: 0
       display: flex
       border-bottom: 0
+      border-radius: 0
       width: 100%
-      .back-button
-        flex: 26px 0 0
+      &.image-only
+        width: 100%
+        max-height: 175px
+      &.with-image
+        height: 200px
+        background-size: cover
+        background-repeat: no-repeat
+      .modal-action-button
+        flex: 2rem 0 0
         cursor: pointer
-        img
+        height: 2rem
+        &.back-button
+          background-image: url('images/caret-grey.svg')
+          background-size: 1.5rem
+          background-position: center
           transform: rotateZ(270deg)
-          height: 1rem
+          background-repeat: no-repeat
       .modal-title
         flex: auto
         white-space: nowrap
         text-align: center
-        color: white
+        font-family: Poppins
+        font-size: 1.5rem
+        font-weight: 500
+        color: var(--dark-grey-blue)
     &.contained
       top: 100%
       bottom: -100%
@@ -208,7 +300,7 @@ require('react-styl')(`
         flex-grow: 0
         border-radius: 0
         border: 0
-      .modal-header
-        visibility: hidden
-        flex-grow: 1
+      .modal-content, .modal-header
+        max-width: 400px
+        margin: 0 auto
 `)

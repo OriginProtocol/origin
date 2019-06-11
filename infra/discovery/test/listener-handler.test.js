@@ -117,12 +117,30 @@ describe('Listener Handlers', () => {
       offerId: offerId
     })
 
-    this.marketplaceEvent = {
+    this.offerCreatedEvent = {
+      id: 'log_e8ed0355',
+      event: 'OfferCreated',
+      address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
+      transactionHash: 'testTransactionHash',
+      blockNumber: 1,
+      logIndex: 1,
+      returnValues: {
+        party: '123',
+        listingID: '240',
+        ipfsHash:
+          '0x7f154a14b9975c7b2269475892fa3f875dc518b6a3f76259fd29212e956c7f64'
+      },
+      raw: {
+        topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      }
+    }
+
+    this.offerFinalizedEvent = {
       id: 'log_e8ed0356',
       event: 'OfferFinalized',
       address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
       transactionHash: 'testTransactionHash',
-      blockNumber: 1,
+      blockNumber: 2,
       logIndex: 1,
       returnValues: {
         party: '123',
@@ -158,7 +176,7 @@ describe('Listener Handlers', () => {
       .stub(MarketplaceEventHandler.prototype, 'process')
       .returns({})
 
-    const handler = await handleEvent(this.marketplaceEvent, this.context)
+    const handler = await handleEvent(this.offerFinalizedEvent, this.context)
     expect(handler.process.calledOnce).to.equal(true)
     expect(handler.webhookEnabled.calledOnce).to.equal(true)
     expect(handler.discordWebhookEnabled.calledOnce).to.equal(true)
@@ -173,9 +191,12 @@ describe('Listener Handlers', () => {
       this.context.graphqlClient
     )
 
+    // Offer must be created before it can be finalized
+    await handler.process({ timestamp: 1 }, this.offerCreatedEvent)
+
     const result = await handler.process(
-      { timestamp: 1 },
-      this.marketplaceEvent
+      { timestamp: 2 },
+      this.offerFinalizedEvent
     )
 
     // Check output

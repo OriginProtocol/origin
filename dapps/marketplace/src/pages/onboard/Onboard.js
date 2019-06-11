@@ -35,6 +35,16 @@ class Onboard extends Component {
             render={() => <Profile listing={listing} linkPrefix={linkPrefix} />}
           />
           <Route
+            path={`${linkPathPrefix}/onboard/rewards`}
+            render={() => (
+              <Profile
+                listing={listing}
+                linkPrefix={linkPrefix}
+                rewards={true}
+              />
+            )}
+          />
+          <Route
             path={`${linkPathPrefix}/onboard/finished`}
             render={() => (
               <Finished redirectto={redirectTo} linkPrefix={linkPrefix} />
@@ -65,6 +75,9 @@ export default Onboard
 require('react-styl')(`
   .onboard
     margin-top: 3.5rem
+    h1
+      font-weight: 500
+      font-family: Poppins
     .btn
       border-radius: 2rem
       padding: 0.75rem 2rem
@@ -127,6 +140,7 @@ require('react-styl')(`
     flex-direction: column
     align-items: center
     text-align: center
+    max-width: 610px
 
     .status
       font-family: var(--heading-font)
