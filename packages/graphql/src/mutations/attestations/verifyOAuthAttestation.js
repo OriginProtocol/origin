@@ -20,7 +20,10 @@ async function verifyOAuthAttestation(
   }
 
   if (!authUrl) {
-    const getAuthUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+    let getAuthUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+    if (redirect) {
+      getAuthUrl += `?redirect=${redirect}`
+    }
     const response = await fetch(getAuthUrl, {
       headers: { 'content-type': 'application/json' }
     })

@@ -107,7 +107,7 @@ class OAuthAttestation extends Component {
               <div>
                 {this[`render${this.state.stage}`]({
                   authUrl,
-                  redirect: isMobile
+                  redirect
                 })}
               </div>
             )

@@ -54,7 +54,8 @@ router.get('/auth-url', async (req, res) => {
  */
 router.post('/verify', twitterVerifyCode, async (req, res) => {
   let session = req.session
-  let verifier = req.body['oauth-verifier']
+  let verifier = req.body.code
+
   if (req.body.sid) {
     session = await req.sessionStore.get(req.body.sid)
     verifier = session.code

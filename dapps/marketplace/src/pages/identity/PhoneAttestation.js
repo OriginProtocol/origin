@@ -496,4 +496,12 @@ require('react-styl')(`
       background-image: url(images/identity/linkedin-icon-large.svg)
     &.wechat > div h2::before
       background-image: url(images/identity/wechat-icon-large.svg)
+
+    > div
+      flex: auto
+      display: flex
+      flex-direction: column
+  
+    &.success > div h2::before
+      background-image: none
 `)
