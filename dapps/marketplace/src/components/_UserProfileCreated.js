@@ -1,6 +1,5 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import Link from './Link'
 
 const UserProfileCreated = ({ onCompleted }) => (
   <div className="profile-created">
