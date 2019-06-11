@@ -198,8 +198,9 @@ class OAuthAttestation extends Component {
         </span>
         {helpContent}
       </div>
-    ) : (<div className="help">{helpContent}</div>)
-  
+    ) : (
+      <div className="help">{helpContent}</div>
+    )
 
     return (
       <>
