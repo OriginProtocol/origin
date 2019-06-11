@@ -1,7 +1,14 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
@@ -21,7 +28,7 @@ class ReadyScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true,
+      loading: true
     }
   }
 
@@ -42,7 +49,11 @@ class ReadyScreen extends Component {
 
     const from = this.props.wallet.activeAccount.address
 
-    const response = await this.props.publishIdentity(from, profile, attestations)
+    const response = await this.props.publishIdentity(
+      from,
+      profile,
+      attestations
+    )
 
     console.log(response)
 

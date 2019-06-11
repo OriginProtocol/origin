@@ -1,7 +1,14 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { DeviceEventEmitter, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import {
+  DeviceEventEmitter,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -40,7 +47,10 @@ class ImportWarningScreen extends Component {
             </fbt>
           </Text>
           <Text style={styles.subtitle}>
-            <fbt desc="ImportWarningScreen.subtitle">We’ve detected an existing wallet associated with this email. Please import it to continue earning rewards.</fbt>
+            <fbt desc="ImportWarningScreen.subtitle">
+              We’ve detected an existing wallet associated with this email.
+              Please import it to continue earning rewards.
+            </fbt>
           </Text>
         </View>
         <View style={styles.buttonsContainer}>

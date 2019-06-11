@@ -43,8 +43,10 @@ export const tokenBalance = gql`
       account(id: $id) {
         id
         token(symbol: $token) {
+          id
           balance
           token {
+            id
             decimals
           }
         }

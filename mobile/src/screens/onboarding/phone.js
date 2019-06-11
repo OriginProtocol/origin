@@ -74,6 +74,7 @@ class PhoneScreen extends Component {
 
     const exists = await this.checkDuplicateIdentity()
     if (exists) {
+      this.setState({ loading: false })
       this.props.navigation.navigate('ImportWarning')
       return
     }
@@ -92,7 +93,7 @@ class PhoneScreen extends Component {
   /* Send a request to @origin/bridge looking for a duplicate for this phone.
    */
   async checkDuplicateIdentity() {
-    const url = `${this.props.config.mainnet.bridge}/utils/exists`
+    const url = `${this.props.config.bridge}/utils/exists`
     const response = await fetch(url, {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
@@ -108,7 +109,7 @@ class PhoneScreen extends Component {
    */
   async generateVerificationCode() {
     const url = `${
-      this.props.configs.mainnet.bridge
+      this.props.config.bridge
     }/api/attestations/phone/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
@@ -127,9 +128,7 @@ class PhoneScreen extends Component {
    */
   async handleSubmitVerification() {
     this.setState({ loading: true })
-    const url = `${
-      this.props.configs.mainnet.bridge
-    }/api/attestations/phone/verify`
+    const url = `${this.props.config.bridge}/api/attestations/phone/verify`
     const response = await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',

@@ -46,7 +46,9 @@ class ImportedScreen extends Component {
   async componentDidMount() {
     let response
     try {
-      response = await this.props.getIdentity(this.props.wallet.activeAccount.address)
+      response = await this.props.getIdentity(
+        this.props.wallet.activeAccount.address
+      )
     } catch (error) {
       // Skip, identity couldn't be loaded
       console.warn(error)
@@ -258,14 +260,16 @@ const mapDispatchToProps = dispatch => ({
   setIdentity: identity => dispatch(setIdentity(identity))
 })
 
-export default withOriginGraphql(withConfig(
-  withOnboardingSteps(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(ImportedScreen)
+export default withOriginGraphql(
+  withConfig(
+    withOnboardingSteps(
+      connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(ImportedScreen)
+    )
   )
-))
+)
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,
