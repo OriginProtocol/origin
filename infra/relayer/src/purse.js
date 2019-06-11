@@ -177,7 +177,11 @@ class Purse {
     /**
      * Select the account with the lowest pending that's under the max allowed
      * pending transactions.  If none vailable, twiddle our thumbs until one
-     * becomes available...
+     * becomes available...  The order is also important here.  According to the
+     * HD wallet "standards" the lowest index/path should be uesd first.  That
+     * way, any wallets using the mnemonic in the future will discover all the
+     * children and their funds.  It is supposed to stop at the first one
+     * without a tx history.
      */
     do {
       let lowestPending = this.maxPendingPerAccount
@@ -368,9 +372,33 @@ class Purse {
 
   /**
    * Draain all children back to the master account
-   * TODO: Actually implement this, perhaps
    */
-  async drainChildren() {}
+  async drainChildren() {
+    const gasPrice = stringToBN(await this.web3.eth.getGasPrice())
+    const gas = new BN('21000', 10)
+    const valueTxFee = gas.mul(gasPrice)
+    const masterAddress = this.masterWallet.getChecksumAddressString()
+    for (let i = 0; i < this.children.length; i++) {
+      const child = this.children[i]
+      const childBalance = numberToBN(await this.web3.eth.getBalance(child))
+      const value = childBalance.sub(valueTxFee)
+
+      // Drain account only if it has more than the cost of the tx in it
+      if (childBalance.gt(valueTxFee)) {
+        const signed = await this.signTx(child, {
+          to: masterAddress,
+          gas,
+          gasPrice,
+          value
+        })
+        const rawTx = signed.rawTransaction
+        const txHash = this.web3.utils.sha3(rawTx)
+        this.pendingTransactions[txHash] = rawTx
+        await sendRawTransaction(this.web3, rawTx)
+        await this.incrementTxCount(child)
+      }
+    }
+  }
 
   /**
    * Sets up the Redis connection to be used for persistant nonce tracking

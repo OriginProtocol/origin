@@ -16,6 +16,7 @@ const MNEMONIC_TWO = 'two two three four five six'
 const MNEMONIC_THREE = 'three two three four five six'
 const MNEMONIC_FOUR = 'four two three four five six'
 const MNEMONIC_FIVE = 'five two three four five six'
+const MNEMONIC_SIX = 'six two three four five six'
 const TEST_NET_ID = 999
 const TEST_PROVIDER_URL = 'http://localhost:8545/'
 const ZERO = new BN('0', 10)
@@ -390,5 +391,46 @@ describe('Purse', () => {
   })
 
   // TODO, not yet implemented
-  it.skip('can drain child accounts', async () => { assert(false, 'Not implemented') })
+  it('can drain child accounts', async () => {
+      const childCount = 5
+      const purse = new Purse({
+        web3,
+        mnemonic: MNEMONIC_SIX,
+        children: childCount,
+        autofundChildren: true
+      })
+      await purse.init()
+
+      // Fund the master account
+      const masterAddress = purse.masterWallet.getChecksumAddressString()
+      const receipt = await web3.eth.sendTransaction({
+        from: Funder,
+        to: masterAddress,
+        value: ONE_ETHER,
+        gas: 22000,
+        gasPrice: TWO_GWEI
+      })
+      assert(receipt.status, 'funding tx failed')
+
+      // Give it a few seconds to fund the children...
+      await wait(5000)
+
+      // verify they have balances
+      for (let i = 0; i < childCount; i++) {
+        const chidlBal = await getBalance(web3, purse.children[i])
+        assert(chidlBal.gt(ZERO), 'zero balance on child')
+      }
+
+      // Draing
+      await purse.drainChildren()
+
+      // Give it a bit to process
+      wait(5000)
+
+      // Verify they'r eempty
+      for (let i = 0; i < childCount; i++) {
+        const chidlBal = await getBalance(web3, purse.children[i])
+        assert(chidlBal.eq(ZERO), 'non-zero balance on child')
+      }
+  })
 })
