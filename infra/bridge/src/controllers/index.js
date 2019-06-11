@@ -15,5 +15,6 @@ router.use('/api/attestations/github', require('./github'))
 router.use('/api/attestations/linkedin', require('./linkedin'))
 router.use('/api/attestations/wechat', require('./wechat'))
 router.use('/redirects', require('./redirects'))
+router.use('/utils', require('./utils'))
 
 module.exports = router
