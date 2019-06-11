@@ -41,10 +41,6 @@ class Buy extends Component {
     }
     let content
 
-    if (!this.props.wallet) {
-      return null
-    }
-
     let action = (
       <button
         className={this.props.className}
@@ -53,35 +49,36 @@ class Buy extends Component {
       />
     )
 
-    if (this.state.error) {
-      content = this.renderTransactionError()
-    } else if (this.state.waitFor) {
-      content = this.renderWaitModal()
-    } else if (this.state.waitForAllow) {
-      content = this.renderWaitAllowModal()
-    } else if (this.state.waitForSwap) {
-      content = this.renderWaitSwapModal()
-    } else if (this.state.allow) {
-      content = this.renderAllowTokenModal()
-    } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation(
-        this.props.cannotTransact ? 'Purchase' : 'Swap Now'
-      )
-      content = this.renderSwapTokenModal()
-    } else if (!this.hasAllowance()) {
-      action = this.renderAllowTokenMutation('Purchase')
-      content = this.renderAllowTokenModal()
-    } else {
-      action = this.renderMakeOfferMutation()
-    }
-
-    if (!this.props.identity) {
+    if (!this.props.identity || !this.props.wallet) {
       action = (
         <UserActivationLink
           className={this.props.className}
           children={this.props.children}
+          location={{ pathname: `/listing/${this.props.listing.id}` }}
         />
       )
+    } else {
+      if (this.state.error) {
+        content = this.renderTransactionError()
+      } else if (this.state.waitFor) {
+        content = this.renderWaitModal()
+      } else if (this.state.waitForAllow) {
+        content = this.renderWaitAllowModal()
+      } else if (this.state.waitForSwap) {
+        content = this.renderWaitSwapModal()
+      } else if (this.state.allow) {
+        content = this.renderAllowTokenModal()
+      } else if (!this.hasBalance()) {
+        action = this.renderSwapTokenMutation(
+          this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+        )
+        content = this.renderSwapTokenModal()
+      } else if (!this.hasAllowance()) {
+        action = this.renderAllowTokenMutation('Purchase')
+        content = this.renderAllowTokenModal()
+      } else {
+        action = this.renderMakeOfferMutation()
+      }
     }
 
     return (

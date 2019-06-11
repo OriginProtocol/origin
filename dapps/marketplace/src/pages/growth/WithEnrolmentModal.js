@@ -62,6 +62,32 @@ function withEnrolmentModal(WrappedComponent) {
         if (this.props.onClose) {
           this.props.onClose()
         }
+      } else if (this.state.stage !== previousState.stage) {
+        let title = fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
+        switch (this.state.stage) {
+          case 'JoinActiveCampaign':
+            title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+            break
+
+          case 'TermsModal':
+            title = fbt(
+              'Origin Rewards Terms',
+              'WithEnrolmentModal.SignUpForOrigin'
+            )
+            break
+
+          case 'RestrictedModal':
+            title = fbt(
+              'Country not eligible',
+              'WithEnrolmentModal.CountryNotEligible'
+            )
+            break
+        }
+
+        this.setMobileHeader(title)
       }
     }
 
@@ -150,10 +176,6 @@ function withEnrolmentModal(WrappedComponent) {
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
 
-      this.setMobileHeader(
-        fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
-      )
-
       return (
         <Query
           query={allCampaignsQuery}
@@ -235,14 +257,12 @@ function withEnrolmentModal(WrappedComponent) {
       const { termsAccepted } = this.state
       const isMobile = this.props.ismobile === 'true'
 
-      this.setMobileHeader(
-        fbt('Sign Up for Origin Rewards', 'WithEnrolmentModal.SignUpForOrigin')
-      )
-
       const cancelButton = (
         <button
           className={`btn ${
-            isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'
+            isMobile
+              ? 'btn-no-outline-link mt-3 mb-3'
+              : 'btn-outline-light mr-2'
           }`}
           onClick={() => this.handleCloseModal()}
           children={fbt('Cancel', 'Cancel')}
@@ -255,8 +275,8 @@ function withEnrolmentModal(WrappedComponent) {
             termsAccepted
               ? 'btn-primary btn-rounded'
               : isMobile
-              ? 'btn-primary'
-              : 'ml-2 btn-outline-light'
+              ? 'btn-primary mt-5 mb-0'
+              : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
           disabled={termsAccepted ? undefined : 'disabled'}
@@ -274,39 +294,39 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </div>
             )}
-            <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
-              {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
-              Join Origin’s reward program to earn Origin tokens (OGN). Terms
-              and conditions apply.
-              {/*</fbt>*/}
+            <div className="normal-line-height terms-title">
+              <fbt desc="EnrollmentModal.termsSubTitle">
+                Join Origin’s reward program to earn Origin tokens (OGN). Terms
+                and conditions apply.
+              </fbt>
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
-              Earned OGN will be distributed at the end of each campaign. OGN is
-              currently locked for usage on the Origin platform and cannot be
-              transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph1">
+                Earned OGN will be distributed at the end of each campaign. OGN
+                is currently locked for usage on the Origin platform and cannot
+                be transferred. It is expected that OGN will be unlocked and
+                transferrable in the future.
+              </fbt>
             </div>
             <div className="mt-3 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph2">
+                By joining the Origin rewards program, you agree that you will
+                not transfer or sell future earned Origin tokens to other for at
+                least 1 year from the date of earning your tokens.
+              </fbt>
             </div>
             <div className="terms">
-              {/*<fbt desc="EnrollmentModal.termsBody">*/}
-              OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended
-              (the “Securities Act”), and may not be transferred in the United
-              States to, or for the account or benefit of, any U.S. person
-              except pursuant to an available exemption from the registration
-              requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them
-              in Regulation S under the Securities Act and all applicable laws
-              and regulations.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsBody">
+                OGN are being issued in a transaction originally exempt from
+                registration under the U.S. Securities Act of 1933, as amended
+                (the “Securities Act”), and may not be transferred in the United
+                States to, or for the account or benefit of, any U.S. person
+                except pursuant to an available exemption from the registration
+                requirements of the Securities Act and all applicable state
+                securities laws. Terms used above have the meanings given to
+                them in Regulation S under the Securities Act and all applicable
+                laws and regulations.
+              </fbt>
             </div>
             <div className="mt-1 d-flex country-check-label justify-content-center">
               <label className="checkbox-holder">
@@ -325,7 +345,7 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div
               className={`d-flex justify-content-center ${
-                isMobile ? 'flex-column' : ''
+                isMobile ? 'flex-column mt-auto' : ''
               }`}
             >
               {!isMobile && (
@@ -350,29 +370,21 @@ function withEnrolmentModal(WrappedComponent) {
       const isRestricted = eligibility === 'Restricted'
       const isForbidden = eligibility === 'Forbidden'
 
-      this.setMobileHeader(
-        fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
-      )
-
       return (
         <div>
           <div>
-            <div className="image-holder mr-auto ml-auto">
-              <img src="images/growth/earth-graphic.svg" />
-              <img
-                className="red-x-image"
-                src="images/growth/red-x-graphic.svg"
-              />
+            <div className="image-holder text-center">
+              <img src="images/growth/not-eligible-graphic.svg" />
             </div>
           </div>
-          <div className="title mt-4">
+          <div className="title mt-4 text-center">
             <fbt desc="GrowthEnrollment.notEligibleTitle">
               Oops,
               <fbt:param name="country">{country}</fbt:param>
               is not eligible
             </fbt>
           </div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+          <div className="mt-3 mr-auto ml-auto normal-line-height info-text text-center">
             <fbt desc="GrowthEnrollment.notEligibleExplanation">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -381,12 +393,12 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           {isRestricted && (
             <Fragment>
-              <div className="mt-4 pt-2">
+              <div className="mt-4 pt-2 text-center">
                 <fbt desc="GrowthEnrollment.restrictedQuestion">
                   Did we detect your your country incorrectly?
                 </fbt>
               </div>
-              <div className="mt-1 d-flex country-check-label justify-content-center">
+              <div className="mt-3 d-flex country-check-label justify-content-center">
                 <label className="checkbox-holder">
                   <input
                     type="checkbox"
@@ -408,7 +420,7 @@ function withEnrolmentModal(WrappedComponent) {
             <button
               className={`btn ${
                 this.props.ismobile === 'true'
-                  ? 'btn-primary'
+                  ? 'btn-primary mt-auto'
                   : 'btn-outline-light'
               }`}
               onClick={() => this.handleCloseModal()}
@@ -417,7 +429,9 @@ function withEnrolmentModal(WrappedComponent) {
           )}
           {isRestricted && notCitizenChecked && (
             <button
-              className="btn btn-primary btn-rounded btn-lg"
+              className={`btn btn-primary btn-rounded btn-lg${
+                this.props.ismobile === 'true' ? ' mt-auto' : ''
+              }`}
               onClick={() => this.handleEligibilityContinue()}
               children={fbt('Continue', 'Continue')}
             />
@@ -485,11 +499,22 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
+      const isMobile = this.props.ismobile === 'true'
       return (
         <Enroll
-          isMobile={this.props.ismobile === 'true'}
+          isMobile={isMobile}
           onSuccess={() => this.enrollmentSuccessful()}
-          onAccountBlocked={() => this.historyNavigate('/rewards/banned')}
+          onAccountBlocked={() => {
+            if (this.props.onAccountBlocked) {
+              this.props.onAccountBlocked()
+              if (isMobile) {
+                this.historyNavigate('/rewards/banned')
+              }
+            } else {
+              this.historyNavigate('/rewards/banned')
+            }
+            this.handleCloseModal()
+          }}
         />
       )
     }
@@ -556,7 +581,8 @@ function withEnrolmentModal(WrappedComponent) {
                           'onClose',
                           'onNavigation',
                           'onCompleted',
-                          'isMobile'
+                          'isMobile',
+                          'onAccountBlocked'
                         ])}
                         onClick={e =>
                           this.handleClick(
@@ -572,6 +598,7 @@ function withEnrolmentModal(WrappedComponent) {
                           className={`growth-enrollment-modal ${
                             snowSmallerModal ? 'small' : ''
                           } ${displayMobileModal ? 'mobile' : ''}`}
+                          shouldClose={this.state.shouldClose}
                           onClose={() => {
                             this.setState({
                               open: false
@@ -613,6 +640,16 @@ require('react-styl')(`
   .growth-enrollment-modal .input:checked ~ .checkmark
       background-color: #2196F3
   .growth-enrollment-modal
+    &.modal-content
+      padding: 20px
+      > div, .internal-modal-content
+        height: 100%
+        display: flex
+        flex-direction: column
+      .btn
+        width: 100%
+        margin: 2rem 0
+        padding: 0.5rem
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -633,20 +670,16 @@ require('react-styl')(`
       font-weight: 300
     .image-holder
       position: relative
-      width: 400px
+      height: 150px
     .info-text
       max-width: 400px
-    .red-x-image
-      position: absolute
-      right: 110px
-      bottom: 10px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
     .btn
       margin-top: 30px
       min-width: 9rem
     .checkbox-holder
-      color: var(--pale-grey)
+      color: var(--steel-blue)
       font-family: Lato
       font-weight: normal
       display: block
@@ -691,8 +724,10 @@ require('react-styl')(`
       font-weight: 300
     .terms-title
       color: var(--pale-grey)
+      font-weight: 500
     .terms-body
       color: var(--pale-grey)
+      padding: 0
     .explanation
       font-size: 12px
       text-align: left
@@ -729,7 +764,7 @@ require('react-styl')(`
       .btn-no-outline
         color: var(--clear-blue)
     .checkbox-holder
-      color: var(--steel)
+      color: var(--dark)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
@@ -761,8 +796,6 @@ require('react-styl')(`
       .terms
         background-color: var(--pale-grey-four)
         color: var(--steel)
-        margin-left: 1.5rem
-        margin-right: 1.5rem
         padding: 0.625rem 1rem
         border-radius: 0.312rem
         border: solid 1px var(--light)
@@ -774,9 +807,12 @@ require('react-styl')(`
         font-size: 0.875rem
         font-weight: 300
         line-height: 1.4
+        padding: 0
       .btn-no-outline-link
         font-size: 0.875rem
         color: var(--clear-blue)
         font-weight: normal
         margin-top: 0.8rem
+      .checkbox-holder
+        color: var(--dark)
 `)

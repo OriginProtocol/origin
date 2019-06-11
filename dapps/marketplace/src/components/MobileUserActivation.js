@@ -12,7 +12,7 @@ class MobileUserActivation extends Component {
       stage: 'AddEmail',
       modal: true,
       shouldClose: false,
-      title: fbt('Create a Profile', 'MobileUserActivation.createProfile')
+      title: fbt('Create a profile', 'MobileUserActivation.createProfile')
     }
 
     this.portal = document.createElement('div')
@@ -22,12 +22,24 @@ class MobileUserActivation extends Component {
     document.body.appendChild(this.portal)
   }
 
+  componentWillUnmount() {
+    document.body.removeChild(this.portal)
+  }
+
   render() {
     return ReactDOM.createPortal(this.renderPortal(), this.portal)
   }
 
   renderPortal() {
-    const { modal, shouldClose, title } = this.state
+    const {
+      modal,
+      shouldClose,
+      title,
+      className,
+      headerImageUrl,
+      stage,
+      prevStage
+    } = this.state
 
     if (!modal) {
       return null
@@ -37,47 +49,72 @@ class MobileUserActivation extends Component {
       <>
         <MobileModal
           onBack={() => {
-            if (!this.state.prevStage) {
+            if (!prevStage) {
               this.setState({
                 shouldClose: true
               })
             } else {
               this.setState({
-                stage: this.state.prevStage
+                stage: prevStage
               })
             }
           }}
           onClose={() => this.onClose()}
           shouldClose={shouldClose}
           title={title}
+          className={className}
+          showBackButton={stage !== 'RewardsSignUp'}
+          headerImageUrl={headerImageUrl}
         >
           <UserActivation
-            stage={this.state.stage}
+            stage={stage}
             onStageChanged={newStage => {
+              let newState = {
+                prevStage: null,
+                title: fbt(
+                  'Create a profile',
+                  'MobileUserActivation.createProfile'
+                ),
+                stage: newStage,
+                headerImageUrl: null
+              }
               switch (newStage) {
                 case 'ProfileCreated':
-                  this.setState({
-                    prevStage: null,
-                    title: null
-                  })
+                  newState.title = null
                   break
                 case 'VerifyEmail':
-                case 'PublishDetail':
-                  this.setState({
-                    prevStage: 'AddEmail',
-                    stage: newStage
-                  })
+                  newState.prevStage = 'AddEmail'
                   break
-                case 'AddEmail':
-                default:
-                  this.setState({
-                    prevStage: null,
-                    stage: newStage
-                  })
+                case 'PublishDetail':
+                  newState = {
+                    ...newState,
+                    prevStage: 'AddEmail',
+                    title: fbt(
+                      'Add name & photo',
+                      'UserActivation.addNameAndPhoto'
+                    )
+                  }
+                  break
+                case 'RewardsSignUp':
+                  newState = {
+                    ...newState,
+                    className: `rewards-signup ${
+                      className ? ' ' + className : ''
+                    }`,
+                    title: fbt('Get Rewards', 'UserActivation.getRewards'),
+                    headerImageUrl: 'images/onboard/ogn-image@3x.png'
+                  }
                   break
               }
+
+              this.setState(newState)
             }}
             onCompleted={() => {
+              this.setState({
+                shouldClose: true
+              })
+            }}
+            onAccountBlocked={() => {
               this.setState({
                 shouldClose: true
               })
@@ -90,11 +127,10 @@ class MobileUserActivation extends Component {
   }
 
   onClose() {
-    document.body.removeChild(this.portal)
-
     this.setState({
       modal: false
     })
+
     if (this.props.onClose) {
       this.props.onClose()
     }
@@ -102,3 +138,10 @@ class MobileUserActivation extends Component {
 }
 
 export default MobileUserActivation
+
+require('react-styl')(`
+  .rewards-signup.modal-header
+    height: 200px
+    .modal-title
+      color: white
+`)

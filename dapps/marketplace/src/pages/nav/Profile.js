@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
@@ -16,63 +16,47 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
-class ProfileNav extends Component {
-  constructor() {
-    super()
-    this.state = {}
-  }
+const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
+  <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
+    {({ data, error }) => {
+      if (error) {
+        console.error(error)
+        return null
+      }
+      if (!get(data, 'web3.primaryAccount')) {
+        return null
+      }
 
-  render() {
-    const { identity, identityLoading } = this.props
-
-    const poll = window.transactionPoll || 1000
-    return (
-      <Query query={ProfileQuery} pollInterval={poll}>
-        {({ data, error }) => {
-          if (error) {
-            console.error(error)
-            return null
+      return (
+        <Dropdown
+          el="li"
+          className="nav-item profile"
+          open={open}
+          onClose={() => onClose()}
+          content={
+            <ProfileDropdown
+              identity={identity}
+              identityLoading={identityLoading}
+              onClose={() => onClose()}
+              data={data}
+            />
           }
-          if (!get(data, 'web3.primaryAccount')) {
-            return null
-          }
-
-          return (
-            <Dropdown
-              el="li"
-              className="nav-item profile"
-              open={this.props.open}
-              onClose={() => this.props.onClose()}
-              content={
-                <ProfileDropdown
-                  identity={identity}
-                  identityLoading={identityLoading}
-                  onClose={() => this.props.onClose()}
-                  data={data}
-                />
-              }
-            >
-              <a
-                className="nav-link"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.setState({ modal: true })
-                  this.props.open ? this.props.onClose() : this.props.onOpen()
-                }}
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <Avatar profile={identity} />
-              </a>
-            </Dropdown>
-          )
-        }}
-      </Query>
-    )
-  }
-}
+        >
+          <a
+            className="nav-link"
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              open ? onClose() : onOpen()
+            }}
+          >
+            <Avatar profile={identity} />
+          </a>
+        </Dropdown>
+      )
+    }}
+  </Query>
+)
 
 const CreateIdentity = onClose => (
   <>

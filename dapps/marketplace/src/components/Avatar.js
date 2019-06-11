@@ -72,7 +72,8 @@ require('react-styl')(`
       content: ""
       width: 2rem
       height: 2rem
-      background: url(images/camera-icon-circle.svg) no-repeat center
+      background: url(images/camera-icon-circle-filled.svg) no-repeat center
+      border-radius: 50%
       background-size: 100%
       position: absolute
       bottom: 0.3rem

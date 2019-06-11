@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
+import { useEffect } from 'react'
 
 import Link from './Link'
 import Redirect from './Redirect'
@@ -8,16 +9,31 @@ import MobileUserActivation from './MobileUserActivation'
 import store from 'utils/store'
 const sessionStore = store('sessionStorage')
 
+const storeLocationToStore = props => {
+  if (props.location) {
+    const { pathname, search } = props.location
+    sessionStore.set('getStartedRedirect', { pathname, search })
+  }
+}
+
 const UserActivationLink = props => {
   const isMobile = useIsMobile()
   const [modal, setModal] = useState(false)
   const [redirectToHome, setRedirectToHome] = useState(false)
 
   if (redirectToHome) {
-    return <Redirect to="/" />
+    return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
   }
 
-  if (modal || (isMobile && props.forceRedirect)) {
+  const shouldShowMobileModal = modal || (isMobile && props.forceRedirect)
+
+  useEffect(() => {
+    if (shouldShowMobileModal) {
+      storeLocationToStore(props)
+    }
+  }, [props.location])
+
+  if (shouldShowMobileModal) {
     return (
       <MobileUserActivation
         onClose={() => {
@@ -62,11 +78,7 @@ const UserActivationLink = props => {
         if (props.onClick) {
           props.onClick()
         }
-
-        if (props.location) {
-          const { pathname, search } = props.location
-          sessionStore.set('getStartedRedirect', { pathname, search })
-        }
+        storeLocationToStore(props)
       }}
     >
       {content}
