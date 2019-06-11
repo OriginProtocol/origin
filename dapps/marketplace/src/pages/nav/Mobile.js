@@ -24,7 +24,7 @@ class MobileNav extends Component {
     return (
       <>
         <Dropdown
-          className="nav-item mobile d-flex d-md-none"
+          className="nav-item mobile"
           open={this.props.open}
           onClose={() => this.props.onClose()}
           content={
@@ -126,8 +126,8 @@ export default MobileNav
 require('react-styl')(`
   .navbar .nav-item.mobile
     .mobile-icon
-      width: 2.2rem
-      height: 1.6rem
+      width: 30px
+      height: 30px
       background: url(images/nav/menu-icon.svg) no-repeat center
       background-size: contain
       position:relative

@@ -83,12 +83,16 @@ require('react-styl')(`
         font-size: 22px
         border: 0
         border-bottom: 1px solid #dde6ea
-        background: url(images/magnifying-glass.svg) no-repeat right 0 center
+        background-image: url(images/magnifying-glass.svg)
+        background-repeat: no-repeat
+        background-position: right 0 center
         background-size: 20px
         border-radius: 0
         padding-left: 0
 
         &::-webkit-input-placeholder
           color: #94a7b5
+        &:focus
+          box-shadow: none
 
 `)

@@ -30,9 +30,9 @@ const Sales = ({ match, wallet, walletProxy }) => {
 
   return (
     <div className="container transactions">
-      <DocumentTitle pageTitle={<fbt desc="Sales.title">My Sales</fbt>} />
+      <DocumentTitle pageTitle={<fbt desc="Sales.title">Sales</fbt>} />
       <h1 className="d-none d-md-block">
-        <fbt desc="Sales.title">My Sales</fbt>
+        <fbt desc="Sales.title">Sales</fbt>
       </h1>
 
       <Filter>
@@ -114,16 +114,14 @@ const Sales = ({ match, wallet, walletProxy }) => {
 }
 
 const NoPurchases = () => (
-  <div className="row">
-    <div className="col-12 text-center">
-      <img src="images/empty-listings-graphic.svg" />
-      <h1>You haven’t bought anything yet.</h1>
-      <p>Click below to view all listings.</p>
-      <br />
-      <Link to="/" className="btn btn-lg btn-primary btn-rounded">
-        Browse Listings
-      </Link>
-    </div>
+  <div className="no-transactions text-center">
+    <img src="images/empty-listings-graphic.svg" />
+    <h3>You haven’t sold anything yet.</h3>
+    <p>Click below to view all listings.</p>
+    <br />
+    <Link to="/" className="btn btn-lg btn-outline-primary btn-rounded">
+      Browse Listings
+    </Link>
   </div>
 )
 
@@ -151,9 +149,6 @@ const Sale = ({ listing, offer }) => (
       </div>
       <div className="price">
         <div className="d-flex">
-          <span className="mr-1">
-            <fbt desc="Purchases.totalPrice">Total Price:</fbt>
-          </span>
           <Price price={offer.totalPrice} />
         </div>
         {offer.quantity === undefined || offer.quantity <= 1 ? null : (

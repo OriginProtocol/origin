@@ -30,11 +30,9 @@ const Listings = ({ match, wallet, walletProxy }) => {
 
   return (
     <div className="container transactions">
-      <DocumentTitle
-        pageTitle={<fbt desc="Purchases.title">My Purchases</fbt>}
-      />
+      <DocumentTitle pageTitle={<fbt desc="Purchases.title">Purchases</fbt>} />
       <h1 className="d-none d-md-block">
-        <fbt desc="Purchases.title">My Purchases</fbt>
+        <fbt desc="Purchases.title">Purchases</fbt>
       </h1>
 
       <Filter>
@@ -116,22 +114,25 @@ const Listings = ({ match, wallet, walletProxy }) => {
 }
 
 const NoPurchases = () => (
-  <div className="row">
-    <div className="col-12 text-center">
-      <img src="images/empty-listings-graphic.svg" />
-      <h1>You haven’t bought anything yet.</h1>
-      <p>Click below to view all listings.</p>
-      <br />
-      <Link to="/" className="btn btn-lg btn-primary btn-rounded">
-        Browse Listings
-      </Link>
-    </div>
+  <div className="no-transactions text-center">
+    <img src="images/empty-listings-graphic.svg" />
+    <h3>You haven’t bought anything yet.</h3>
+    <p>Click below to view all listings.</p>
+    <br />
+    <Link to="/" className="btn btn-lg btn-outline-primary btn-rounded">
+      Browse Listings
+    </Link>
   </div>
 )
 
 const Purchase = ({ listing, offer }) => (
   <div className="purchase">
-    <Pic listing={listing} />
+    <div className="pic">
+      <Pic listing={listing} />
+      {offer.quantity === undefined || offer.quantity <= 1 ? null : (
+        <div className="quantity">{offer.quantity}</div>
+      )}
+    </div>
     <div className="details">
       <div className="top">
         <Link className="title mb-1" to={`/purchases/${offer.id}`}>
@@ -153,19 +154,8 @@ const Purchase = ({ listing, offer }) => (
       </div>
       <div className="price">
         <div className="d-flex">
-          <span className="mr-1">
-            <fbt desc="Purchases.totalPrice">Total Price:</fbt>
-          </span>
           <Price price={offer.totalPrice} />
         </div>
-        {offer.quantity === undefined || offer.quantity <= 1 ? null : (
-          <div className="d-none d-sm-block">
-            <fbt desc="Purchases.quantity">
-              {`Quantity: `}
-              <fbt:param name="content">{offer.quantity}</fbt:param>
-            </fbt>
-          </div>
-        )}
       </div>
       <Stages mini offer={offer} />
     </div>

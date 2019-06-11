@@ -40,26 +40,17 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
   if (isMobile) {
     let title
     if (pathname.startsWith('/my-listings')) {
-      title = <fbt desc="Listings.title">My Listings</fbt>
+      title = <fbt desc="Listings.title">Listings</fbt>
     } else if (pathname.startsWith('/my-purchases')) {
-      title = <fbt desc="Purchases.title">My Purchases</fbt>
+      title = <fbt desc="Purchases.title">Purchases</fbt>
     } else if (pathname.startsWith('/my-sales')) {
-      title = <fbt desc="Sales.title">My Sales</fbt>
-    }
-
-    if (title) {
-      return (
-        <nav className="navbar no-border">
-          <Mobile {...navProps('mobile')} />
-          <h1>{title}</h1>
-        </nav>
-      )
+      title = <fbt desc="Sales.title">Sales</fbt>
     }
 
     return (
       <nav className="navbar no-border">
         <Mobile {...navProps('mobile')} />
-        <Brand />
+        {title ? <h1>{title}</h1> : <Brand />}
         {wallet ? (
           <Profile {...navProps('profile')} />
         ) : (

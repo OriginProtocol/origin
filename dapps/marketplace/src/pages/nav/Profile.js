@@ -80,9 +80,17 @@ const CreateIdentity = onClose => (
       <Avatar />
       <h3>
         <fbt desc="nav.profile.profileNotCreated">
-          You haven&apos;t created a profile yet
+          You haven&apos;t created a profile
         </fbt>
       </h3>
+
+      <div className="strength">
+        <div className="progress" />
+        <fbt desc="nav.profile.ProfileStrength">
+          {'Profile Strength - '}
+          <fbt:param name="percent">{'0%'}</fbt:param>
+        </fbt>
+      </div>
       <p>
         <fbt desc="nav.profile.createYourProfile">
           Creating a profile allows other users to know that you are real and
@@ -113,11 +121,14 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
   if (!identity) {
     return <CreateIdentity onClose={onClose} />
   }
+  const strengthPct = `${identity.strength || '0'}%`
 
   return (
     <div className="identity">
       <div className="info">
-        <Avatar profile={identity} />
+        <Link onClick={() => onClose()} to="/profile">
+          <Avatar profile={identity} />
+        </Link>
         <Link onClick={() => onClose()} to="/profile" className="name">
           {identity.fullName || fbt('Unnamed User', 'nav.profile.unnamedUser')}
         </Link>
@@ -125,15 +136,12 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
       </div>
       <div className="strength">
         <div className="progress">
-          <div
-            className="progress-bar"
-            style={{ width: `${identity.strength || '0'}%` }}
-          />
+          <div className="progress-bar" style={{ width: strengthPct }} />
         </div>
-        {`${fbt(
-          'Profile Strength',
-          'nav.profile.ProfileStrength'
-        )} - ${identity.strength || '0'}%`}
+        <fbt desc="nav.profile.ProfileStrength">
+          {'Profile Strength - '}
+          <fbt:param name="percent">{strengthPct}</fbt:param>
+        </fbt>
       </div>
       <Link
         onClick={() => onClose()}
@@ -213,6 +221,8 @@ require('react-styl')(`
       right: 0
       border-bottom: 1px solid white
       z-index: 1001
+  .dropdown.nav-item.profile .avatar
+    min-width: 28px
   .dropdown-menu.profile
     width: 250px
     font-size: 14px
@@ -226,6 +236,7 @@ require('react-styl')(`
         width: 4.5rem
         padding-top: 4.5rem
       .create-identity
+        margin-top: 3rem
         display: flex
         flex-direction: column
         align-items: center
@@ -246,55 +257,58 @@ require('react-styl')(`
           margin-bottom: 1.75rem
           color: var(--bluey-grey)
           line-height: normal
+        .strength
+          margin: 0.25rem 0 1.5rem 0
 
-       .identity-loading
-          padding-top: 3rem
-       .identity
-         font-weight: bold
-         text-align: center
-         .info
-           margin-bottom: 1rem
-           margin-top: 0.75rem
-           display: flex
-           flex-direction: column
-           align-items: center
-           > a.name
-            color: black
-            font-size: 24px
-            font-weight: bold
-            margin: 0.75rem 0 0.5rem 0
-            white-space: nowrap
-            overflow: hidden
-            width: 100%
-            text-overflow: ellipsis
+      .identity-loading
+         padding-top: 3rem
+      .identity
+        font-weight: bold
+        text-align: center
+        .info
+          margin-bottom: 1rem
+          margin-top: 0.75rem
+          display: flex
+          flex-direction: column
+          align-items: center
+          > a.name
+           color: black
+           font-size: 24px
+           font-weight: bold
+           margin: 0.75rem 0 0.5rem 0
+           white-space: nowrap
+           overflow: hidden
+           width: 100%
+           text-overflow: ellipsis
+        .earn-ogn
+          border-radius: 3rem
+          margin: 1.5rem 0 1.25rem 0
+          padding-left: 3rem
+          padding-right: 3rem
+        .balances
+          border-top: 1px solid #dde6ea
+          h5
+            font-family: var(--heading-font)
+            font-size: 14px
+            text-align: center
+        .eth-address
+          color: var(--steel)
+          font-size: 10px
+          font-weight: normal
+          margin: 0.5rem 0 1rem 0
 
-         .strength
-           font-size: 10px
-           text-transform: uppercase
-           color: var(--steel)
-           font-weight: normal
-           .progress
-             background-color: #f0f6f9
-             height: 6px
-             margin-bottom: 0.5rem
-             .progress-bar
-               background-color: var(--greenblue)
-          .earn-ogn
-            border-radius: 3rem
-            margin: 1.5rem 0 1.25rem 0
-            padding-left: 3rem
-            padding-right: 3rem
-          .balances
-            border-top: 1px solid #dde6ea
-            h5
-              font-family: var(--heading-font)
-              font-size: 14px
-              text-align: center
-          .eth-address
-            color: var(--steel)
-            font-size: 10px
-            font-weight: normal
-            margin: 0.5rem 0 1rem 0
+      .strength
+        width: 100%
+        font-size: 10px
+        text-transform: uppercase
+        color: var(--steel)
+        font-weight: normal
+        .progress
+          background-color: #f0f6f9
+          height: 6px
+          margin-bottom: 0.5rem
+          .progress-bar
+            background-color: var(--greenblue)
 
   @media (max-width: 767.98px)
     .dropdown-menu.profile

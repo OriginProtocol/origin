@@ -36,6 +36,10 @@ require('react-styl')(`
           color: black
 
   @media (max-width: 767.98px)
-    .filter ul .nav-link
-      padding: 0.25rem
+    .filter ul
+      width: 100%
+      .nav-link
+        padding: 0.25rem
+        flex: 1
+        min-width: auto
 `)
