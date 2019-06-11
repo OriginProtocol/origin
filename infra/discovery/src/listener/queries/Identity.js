@@ -14,7 +14,7 @@ const identityQuery = gql`
           avatarUrl
           strength
           attestations
-          
+
           verifiedAttestations {
             id
           }
