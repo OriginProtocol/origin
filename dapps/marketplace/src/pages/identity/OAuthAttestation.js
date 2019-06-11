@@ -38,8 +38,7 @@ class OAuthAttestation extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stage: 'GenerateCode',
-      mobile: window.innerWidth < 767
+      stage: 'GenerateCode'
     }
   }
 

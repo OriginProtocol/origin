@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 
 import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
 import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
@@ -22,13 +25,20 @@ class AirbnbAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt('Verify Airbnb Account', 'VerifyAirbnb.verifyAirbnbAccount')}
         className={`attestation-modal airbnb${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -43,24 +53,48 @@ class AirbnbAttestation extends Component {
         }}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+        Verify your Airbnb account
+      </fbt>
+    )
+
+    const storedOnChain = isMobile ? (
+      <div className="info yellow mt-auto">
+        <span className="title">
+          <fbt desc="VerifyAirbnb.visibleOnBlockchain">
+            What will be visible on the blockchain?
+          </fbt>
+        </span>
+        <fbt desc="VerifyAirbnb.yourAirbnbId">
+          Your Airbnb user ID
+        </fbt>
+      </div>
+    ) : (
+      <div className="help">
+        <fbt desc="VerifyAirbnb.airbnbProfilePublished">
+          Other users will know that you have a verified Airbnb profile and
+          your user id will be published on the blockchain.
+        </fbt>
+      </div>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
-            Verify your Airbnb account
-          </fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyAirbnb.enterAirbnbProfileUrl">
             Enter Airbnb profile URL below
           </fbt>
         </div>
-        <div className="mt-3">
+        <div className="mt-5">
           <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
@@ -72,32 +106,34 @@ class AirbnbAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="help">
-          <fbt desc="VerifyAirbnb.airbnbProfilePublished">
-            Other users will know that you have a verified Airbnb profile and
-            your user id will be published on the blockchain.
-          </fbt>
-        </div>
-        <div className="actions">
+        {storedOnChain}
+        <div className={`actions mt-5`}>
           {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
-          />
+          {!isMobile && (
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          )}
         </div>
       </>
     )
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+        Verify your Airbnb account
+      </fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
-            Verify your Airbnb account
-          </fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyAirbnb.enterCodeIntoAirbnb">
             Go to the Airbnb website, edit your profile and paste the following
@@ -105,17 +141,23 @@ class AirbnbAttestation extends Component {
           </fbt>
         </div>
         <div className="my-3 verification-code">
-          <textarea
+          <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg airbnb-verification-code"
+            value={this.state.code}
             readOnly
-          >
-            {this.state.code}
-          </textarea>
-          {this.state.error && (
+            type="text"
+          />
+          <button type="button" className="btn copy-btn" onClick={() => {
+            this.inputRef.select()
+            document.execCommand('copy')
+          }}>
+            <fbt desc="VerifyAirbnb.copy">Copy</fbt>
+          </button>
+        </div>
+        {this.state.error && (
             <div className="alert alert-danger mt-3">{this.state.error}</div>
           )}
-        </div>
         <div className="help">
           <fbt desc="VerifyAirbnb.continueToConfirmationCodeCheck">
             Continue once the confirmation code is entered in your Airbnb
@@ -124,17 +166,22 @@ class AirbnbAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
-          />
+          {!isMobile && (
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          )}
         </div>
       </>
     )
   }
 
   renderCodeButton() {
+    const isMobile = this.isMobile()
+
     return (
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
@@ -157,7 +204,10 @@ class AirbnbAttestation extends Component {
       >
         {generateCode => (
           <button
-            className="btn btn-outline-light"
+            className={`btn ${
+              isMobile ? 'btn-primary' : 'btn-outline-light'
+            }`}
+            disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -180,6 +230,8 @@ class AirbnbAttestation extends Component {
   }
 
   renderVerifyButton() {
+    const isMobile = this.isMobile()
+
     return (
       <Mutation
         mutation={VerifyAirbnbCodeMutation}
@@ -202,7 +254,10 @@ class AirbnbAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light"
+            className={`btn ${
+              isMobile ? 'btn-primary' : 'btn-outline-light'
+            }`}
+            disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -225,6 +280,8 @@ class AirbnbAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const isMobile = this.isMobile()
+
     return (
       <>
         <h2>
@@ -243,7 +300,7 @@ class AirbnbAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className="btn btn-outline-light"
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
@@ -256,11 +313,51 @@ class AirbnbAttestation extends Component {
   }
 }
 
-export default AirbnbAttestation
+export default withIsMobile(AirbnbAttestation)
 
 require('react-styl')(`
-  .attestation-modal > div .verification-code .form-control.airbnb-verification-code
-    height: 6rem
-    max-width: 24rem
-    resize: none
+  .attestation-modal 
+    > div 
+      .verification-code
+        display: flex
+        flex-direction: row
+        max-width: 24rem
+        margin: 0 auto
+        border: solid 1px #c2cbd3
+        border-radius: 0.3rem
+        .form-control.airbnb-verification-code
+          flex: auto
+          text-align: left
+          border: 0
+        .btn.copy-btn
+          flex: auto 0 0
+          width: auto
+          border: 0
+          border-radius: 0
+          border-left: 1px solid #c2cbd3
+          cursor: pointer
+    .info
+      text-align: center
+      border-radius: 5px
+      border: solid 1px var(--bluey-grey)
+      background-color: rgba(152, 167, 180, 0.1)
+      font-family: Lato
+      font-size: 14px
+      color: black
+      padding: 10px
+      margin-top: 1rem
+      .title
+        display: block
+        font-weight: bold
+        margin-bottom: 3px
+        & ~ a
+          margin-left: 5px
+      &.yellow
+        border: solid 1px var(--golden-rod)
+        background-color: rgba(244, 193, 16, 0.1)
+      &.white
+        border: solid 1px #c2cbd3
+        background-color: white
+        display: flex
+        text-align: left
 `)

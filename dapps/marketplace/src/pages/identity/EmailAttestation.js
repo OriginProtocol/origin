@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -22,13 +25,20 @@ class EmailAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt('Verify Email Address', 'EmailAttestation.verifyEmailAddress')}
         className={`attestation-modal email${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -43,11 +53,17 @@ class EmailAttestation extends Component {
         }}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="EmailAttestation.title">Verify your Email Address</fbt>
+    )
+
     return (
       <Mutation
         mutation={GenerateEmailCodeMutation}
@@ -85,10 +101,10 @@ class EmailAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Email Address</h2>
+            <h2>{header}</h2>
             <div className="instructions">
               <fbt desc="Attestation.instructions">
-                Enter your email address below and OriginID will send you a
+                Enter your email address below and Origin will send you a
                 verification code
               </fbt>
             </div>
@@ -116,7 +132,10 @@ class EmailAttestation extends Component {
             </div>
             <div className="actions">
               <button
-                className="btn btn-outline-light"
+                type="submit"
+                className={`btn ${
+                  isMobile ? 'btn-primary' : 'btn-outline-light'
+                }`}
                 type="submit"
                 children={
                   this.state.loading
@@ -124,12 +143,14 @@ class EmailAttestation extends Component {
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                type="button"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
@@ -138,6 +159,8 @@ class EmailAttestation extends Component {
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
     const { email, code } = this.state
     return (
       <Mutation
@@ -216,18 +239,24 @@ class EmailAttestation extends Component {
             <div className="actions">
               <button
                 type="submit"
-                className="btn btn-outline-light"
+                className={`btn ${
+                  isMobile ? 'btn-primary' : 'btn-outline-light'
+                }`}
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
@@ -236,6 +265,8 @@ class EmailAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const isMobile = this.isMobile()
+
     return (
       <>
         <h2>
@@ -254,7 +285,7 @@ class EmailAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className="btn btn-outline-light"
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
@@ -267,7 +298,7 @@ class EmailAttestation extends Component {
   }
 }
 
-export default EmailAttestation
+export default withIsMobile(EmailAttestation)
 
 require('react-styl')(`
 `)
