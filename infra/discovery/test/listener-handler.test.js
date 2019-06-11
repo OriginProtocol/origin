@@ -119,7 +119,7 @@ describe('Listener Handlers', () => {
 
     this.marketplaceEvent = {
       id: 'log_e8ed0356',
-      event: 'OfferFinalized',
+      event: 'OfferCreated',
       address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
       transactionHash: 'testTransactionHash',
       blockNumber: 1,
