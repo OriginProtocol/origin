@@ -234,13 +234,14 @@ require('react-styl')(`
     background-color: white
     display: flex
     flex-direction: column
+    overflow: auto
     &.open
       top: 0
       left: 0
       opacity: 1
       right: 0
     .modal-content
-      overflow: auto
+      min-height: min-content
       flex: auto 1 1
       border: 0
       display: flex
