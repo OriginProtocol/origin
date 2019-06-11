@@ -11,6 +11,7 @@ import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
 import Gallery from 'components/Gallery'
+import GalleryScroll from 'components/GalleryScroll'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import Calendar from 'components/Calendar'
@@ -115,7 +116,12 @@ class ListingDetail extends Component {
     )
     return (
       <>
-        <Gallery pics={listing.media} />
+        {this.props.isMobile ? (
+          <GalleryScroll pics={listing.media} />
+        ) : (
+          <Gallery pics={listing.media} />
+        )}
+
         {isGiftCard || isFractional || isFractionalHourly ? null : description}
         {!isGiftCard ? null : (
           <>
