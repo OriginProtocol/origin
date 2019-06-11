@@ -34,7 +34,7 @@ class TransactionCard extends Component {
       heading,
       daiInvolved,
       ognInvolved,
-      payment,
+      payment = 0,
       paymentCurrency,
       daiRequired = 0,
       ethRequired = Number(gas)
@@ -79,7 +79,7 @@ class TransactionCard extends Component {
         heading = fbt('Blockchain Transaction', 'TransactionCard.default')
     }
 
-    const calculableTotal = true
+    const calculableTotal = !ognInvolved
     const gasFiatPrice = gas * ethExchangeRate
     const paymentFiatPrice =
       paymentCurrency === 'eth'

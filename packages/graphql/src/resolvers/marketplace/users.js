@@ -1,6 +1,5 @@
-import { getIdsForPage, getConnection } from '../_pagination'
-
 import sortBy from 'lodash/sortBy'
+import { getIdsForPage, getConnection } from '../_pagination'
 
 export default async function users(contract, { first = 10, after, sort }) {
   if (!contract) {

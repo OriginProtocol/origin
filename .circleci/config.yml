@@ -73,6 +73,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/identity && yarn migrate
       - run:
           name: Run Bridge Tests
           command: cd infra/bridge && yarn migrate && yarn test
@@ -97,7 +98,7 @@ jobs:
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
-          command: cd infra/bridge && yarn test
+          command: cd infra/discovery && yarn test
 
   Growth:
     <<: *db

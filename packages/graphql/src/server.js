@@ -13,7 +13,11 @@ try {
   console.warn('EnvKey not configured')
 }
 
-setNetwork(process.env.NETWORK || 'test', { performanceMode: false })
+setNetwork(process.env.NETWORK || 'test', {
+  performanceMode: false,
+  useMetricsProvider: process.env.USE_METRICS_PROVIDER === 'true',
+  proxyAccountsEnabled: process.env.PROXY_ACCOUNTS_ENABLED === 'true'
+})
 
 const schema = makeExecutableSchema({
   typeDefs,

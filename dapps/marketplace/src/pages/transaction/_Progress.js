@@ -13,15 +13,25 @@ import Stages from 'components/TransactionStages'
 
 import WaitForFinalize from './_WaitForFinalize'
 
-const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
-  const props = { offer, loading }
+const TransactionProgress = ({
+  offer,
+  isSeller,
+  isBuyer,
+  party,
+  refetch,
+  loading
+}) => {
+  const props = { offer, loading, party }
+  if (!isBuyer && !isSeller) {
+    return <TransactionStages {...props} />
+  }
   if (offer.status === 3) {
     return <Disputed {...props} />
   }
   if (offer.status === 5) {
     return <DisputeResolved {...props} />
   }
-  if (offer.listing.seller.id === wallet) {
+  if (isSeller) {
     if (offer.status === 4) {
       return <Finalized party="seller" {...props} />
     } else if (offer.status === 2) {
@@ -44,7 +54,7 @@ const TransactionProgress = ({ offer, wallet, refetch, loading }) => {
   }
 
   if (offer.status === 2) {
-    if (offer.listing.seller.id === wallet || offer.buyer.id === wallet) {
+    if (isBuyer || isSeller) {
       return <ReviewAndFinalize {...props} refetch={refetch} />
     }
     return <TransactionStages {...props} />
@@ -93,7 +103,7 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
 class ReviewAndFinalize extends Component {
   state = { rating: 0, review: '' }
   render() {
-    const { offer, loading } = this.props
+    const { offer, loading, party } = this.props
     return (
       <div className={`transaction-progress${loading ? ' loading' : ''}`}>
         <div className="top">
@@ -127,6 +137,7 @@ class ReviewAndFinalize extends Component {
           </div>
           <div className="d-flex flex-column">
             <FinalizeOffer
+              disabled={this.state.rating === 0}
               rating={this.state.rating}
               review={this.state.review}
               offer={this.props.offer}
@@ -137,6 +148,7 @@ class ReviewAndFinalize extends Component {
               <fbt desc="Progress.finalize">Finalize</fbt>
             </FinalizeOffer>
             <DisputeOffer
+              from={party}
               offer={this.props.offer}
               className="btn btn-link withdraw mt-3"
             >
@@ -180,7 +192,7 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
   </div>
 )
 
-const MessageSeller = ({ offer, refetch, loading }) => (
+const MessageSeller = ({ offer, refetch, loading, party }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
@@ -199,13 +211,13 @@ const MessageSeller = ({ offer, refetch, loading }) => (
       <SendMessage to={offer.listing.seller.id} className="btn btn-link">
         <fbt desc="Progress.messageSeller">Message Seller</fbt> &rsaquo;
       </SendMessage>
-      <WithdrawOffer offer={offer} refetch={refetch} />
+      <WithdrawOffer offer={offer} refetch={refetch} from={party} />
     </div>
     <Stages offer={offer} />
   </div>
 )
 
-const WaitForSeller = ({ offer, refetch, loading }) => (
+const WaitForSeller = ({ offer, refetch, loading, party }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
@@ -217,7 +229,7 @@ const WaitForSeller = ({ offer, refetch, loading }) => (
           The seller will review your booking
         </fbt>
       </div>
-      <WithdrawOffer offer={offer} refetch={refetch} />
+      <WithdrawOffer offer={offer} refetch={refetch} from={party} />
     </div>
     <Stages offer={offer} />
   </div>
@@ -329,6 +341,7 @@ require('react-styl')(`
       padding-top: 0
       .stages
         margin-top: 0
+        border-radius: 5px
     &.loading
       &::before
         content: ""

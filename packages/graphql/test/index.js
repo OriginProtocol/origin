@@ -2,7 +2,7 @@ import assert from 'assert'
 import get from 'lodash/get'
 
 import client from '../src/index'
-import contracts from '../src/contracts'
+import contracts, { shutdown } from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -24,6 +24,8 @@ describe('Marketplace', function() {
 
   after(async function() {
     await showGasTable()
+    // web3-provider-engine can hang this process if not called
+    shutdown()
   })
 
   it('should deploy the token contract', async function() {
@@ -235,7 +237,7 @@ describe('Marketplace', function() {
           },
           category: 'Test category',
           subCategory: 'Test sub-category',
-          commission: '1.5'
+          commissionPerUnit: '1.5'
         },
         unitData: {
           unitsTotal: 1
@@ -289,7 +291,7 @@ describe('Marketplace', function() {
         listingData.unitData.unitsTotal
       )
       assert.strictEqual(listing.unitsSold, 0)
-      assert.strictEqual(listing.commission, '1500000000000000000')
+      assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '1500000000000000000')
       assert.strictEqual(listing.featured, false)
       assert.strictEqual(listing.hidden, false)

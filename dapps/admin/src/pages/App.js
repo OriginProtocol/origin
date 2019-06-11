@@ -60,7 +60,13 @@ const App = () => (
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <MetaMaskSwitcher />
-        <Price amount="1" label="1 ETH =" className="mr-3" />
+        <span className="mr-3">
+          {'1 ETH = '}
+          <Price
+            target="fiat-USD"
+            price={{ currency: 'token-ETH', amount: '1' }}
+          />
+        </span>
         <NodeInfo />
       </Navbar.Group>
     </Navbar>

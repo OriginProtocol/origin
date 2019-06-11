@@ -230,8 +230,8 @@ class ListingDetail extends Component {
               currency={listing.price.currency}
             />
             <div className="availability-help">
-              <fbt desc="listingDetail.clickAndDrag">
-                * Click and drag to select a date range
+              <fbt desc="listingDetail.calendarDateRange">
+                * Click to select start date and again to select end date.
               </fbt>
             </div>
           </>
@@ -263,8 +263,8 @@ class ListingDetail extends Component {
               currency={listing.price.currency}
             />
             <div className="availability-help">
-              <fbt desc="listingDetail.weekCalendarHelp">
-                * Click and drag to select a time range
+              <fbt desc="listingDetail.weekCalendarRangeHelp">
+                * Click to select start time and again for end time
               </fbt>
             </div>
           </>
