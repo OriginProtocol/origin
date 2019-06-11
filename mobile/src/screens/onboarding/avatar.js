@@ -68,6 +68,7 @@ class AvatarScreen extends Component {
       formData.append('file', outImage)
 
       console.debug('Uploading to IPFS')
+
       const ipfsRPC = this.props.config.ipfsRPC
       const ipfsResponse = await fetch(`${ipfsRPC}/api/v0/add`, {
         method: 'POST',
@@ -138,12 +139,12 @@ class AvatarScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'AvatarScreen.continueButton')}
-            onPress={() => {
+            onPress={async () => {
               if (this.props.onboarding.avatarUri === null) {
                 // If no avatarUri is set the user has elected to continue
                 // and skip the upload. Set the value in the store to false
                 // so we can distinguish between incomplete and skipped.
-                this.props.setAvatarUri(false)
+                await this.props.setAvatarUri(false)
               }
               this.props.navigation.navigate(this.props.nextOnboardingStep)
             }}

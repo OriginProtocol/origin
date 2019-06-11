@@ -39,10 +39,6 @@ class PhoneScreen extends Component {
       verificationCode: '',
       verificationMethod: 'sms'
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmitPhone = this.handleSubmitPhone.bind(this)
-    this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
   componentDidMount() {
@@ -69,7 +65,7 @@ class PhoneScreen extends Component {
    * number exists, and if so redirect to a warning. Otherwise generate a
    * verificationn code and SMS it to the user.
    */
-  async handleSubmitPhone() {
+  handleSubmitPhone = async () => {
     this.setState({ loading: true })
 
     const exists = await this.checkDuplicateIdentity()
@@ -92,7 +88,7 @@ class PhoneScreen extends Component {
 
   /* Send a request to @origin/bridge looking for a duplicate for this phone.
    */
-  async checkDuplicateIdentity() {
+  checkDuplicateIdentity = async () => {
     const url = `${this.props.config.bridge}/utils/exists`
     const response = await fetch(url, {
       headers: { 'content-type': 'application/json' },
@@ -107,7 +103,7 @@ class PhoneScreen extends Component {
 
   /* Request a verification code from @origin/bridge.
    */
-  async generateVerificationCode() {
+  generateVerificationCode = async () => {
     const url = `${
       this.props.config.bridge
     }/api/attestations/phone/generate-code`
@@ -126,7 +122,7 @@ class PhoneScreen extends Component {
   /* Handle submission of the verification code. Send it to @origin/bridge and
    * store the resulting attestation, or display an error.
    */
-  async handleSubmitVerification() {
+  handleSubmitVerification = async () => {
     this.setState({ loading: true })
     const url = `${this.props.config.bridge}/api/attestations/phone/verify`
     const response = await fetch(url, {
@@ -149,6 +145,11 @@ class PhoneScreen extends Component {
       this.props.setPhoneAttestation(data)
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
+  }
+
+  handleSkip = async () => {
+    await this.props.setPhoneAttestation(false)
+    this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
   render() {
@@ -259,6 +260,14 @@ class PhoneScreen extends Component {
         </View>
         {this.renderVisibilityWarning()}
         <View style={styles.buttonsContainer}>
+          <OriginButton
+            size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={fbt('Skip', 'PhoneScreen.skipButton')}
+            onPress={this.handleSkip}
+          />
           <OriginButton
             size="large"
             type="primary"

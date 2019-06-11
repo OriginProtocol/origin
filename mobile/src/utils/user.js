@@ -59,7 +59,7 @@ export function getNextOnboardingStep(onboardingStore, settingsStore) {
   if (!onboardingStore.emailAttestation && !onboardingStore.emailVerified) {
     return 'Email'
   } else if (
-    !onboardingStore.phoneAttestation &&
+    onboardingStore.phoneAttestation === null &&
     !onboardingStore.phoneVerified
   ) {
     return 'Phone'

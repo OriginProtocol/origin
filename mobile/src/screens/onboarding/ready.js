@@ -41,19 +41,24 @@ class ReadyScreen extends Component {
 
     const attestations = []
     if (this.props.onboarding.emailAttestation) {
-      attestations.push(this.props.onboarding.emailAttestation)
+      attestations.push(JSON.stringify(this.props.onboarding.emailAttestation))
     }
     if (this.props.onboarding.phoneAttestation) {
-      attestations.push(this.props.onboarding.phoneAttestation)
+      attestations.push(JSON.stringify(this.props.onboarding.phoneAttestation))
     }
 
     const from = this.props.wallet.activeAccount.address
 
-    const response = await this.props.publishIdentity(
-      from,
-      profile,
-      attestations
-    )
+    let response
+    try {
+      response = await this.props.publishIdentity(
+        from,
+        profile,
+        attestations
+      )
+    } catch (error) {
+      console.warn('Identity publication failed: ', error)
+    }
 
     console.log(response)
 
