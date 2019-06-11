@@ -27,14 +27,11 @@ const UserActivationLink = props => {
 
   const shouldShowMobileModal = modal || (isMobile && props.forceRedirect)
 
-  useEffect(
-    () => () => {
-      if (shouldShowMobileModal) {
-        storeLocationToStore(props)
-      }
-    },
-    [true]
-  )
+  useEffect(() => {
+    if (shouldShowMobileModal) {
+      storeLocationToStore(props)
+    }
+  }, [props.location])
 
   if (shouldShowMobileModal) {
     return (
