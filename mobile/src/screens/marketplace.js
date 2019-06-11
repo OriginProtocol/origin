@@ -270,7 +270,7 @@ class MarketplaceScreen extends Component {
           variables: ${JSON.stringify(variables)}
         }).then((response) => {
           window.webViewBridge.send('handleGraphqlResult', {
-            id: '${id}'
+            id: '${id}',
             response: response
           });
         }).catch((error) => {
@@ -302,6 +302,20 @@ class MarketplaceScreen extends Component {
         if (window && window.localStorage && window.webViewBridge) {
           const uiState = window.localStorage['uiState'];
           window.webViewBridge.send('handleUiStateMessage', uiState);
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
+  injectEnableProxyAccounts = () => {
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          window.localStorage.proxyAccountsEnabled = true;
+          window.localStorage.enableRelayer = true;
         }
       })();
     `
@@ -353,6 +367,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = () => {
+    // Enable proxy accounts
+    this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function
