@@ -202,6 +202,54 @@
             }
           },
           "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "github.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "linkedin.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "kakao.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "wechat.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
         }
       ],
       "required": ["userId"]
