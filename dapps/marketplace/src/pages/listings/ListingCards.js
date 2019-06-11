@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
 import Redirect from 'components/Redirect'
 import Price from 'components/Price'
@@ -11,66 +11,59 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-class ListingCards extends Component {
-  state = {}
-  render() {
-    const { listings } = this.props
-    if (!listings) return null
+const ListingCards = ({ listings, ognListingRewards }) => {
+  const [redirect, setRedirect] = useState()
+  if (!listings) return null
 
-    return (
-      <div className="row">
-        {this.state.redirect && <Redirect to={this.state.redirect} />}
-        {listings.map(a => {
-          const hasGrowthReward = this.props.ognListingRewards[a.id]
-
-          return (
+  return (
+    <div className="row">
+      {redirect && <Redirect to={redirect} />}
+      {listings.map(a => (
+        <div
+          key={a.id}
+          onClick={e => {
+            if (altClick(e)) {
+              setRedirect(`/listing/${a.id}`)
+            } else if (e.target.tagName !== 'A') {
+              window.open(`#/listing/${a.id}`, '_blank')
+            }
+          }}
+          className="col-md-4 col-lg-3 listing-card"
+        >
+          {a.media && a.media.length ? (
             <div
-              key={a.id}
-              onClick={e => {
-                if (altClick(e)) {
-                  this.setState({ redirect: `/listing/${a.id}` })
-                } else if (e.target.tagName !== 'A') {
-                  window.open(`#/listing/${a.id}`, '_blank')
-                }
+              className="main-pic"
+              style={{
+                backgroundImage: `url(${a.media[0].urlExpanded})`
               }}
-              className="col-md-4 col-lg-3 listing-card"
-            >
-              {a.media && a.media.length ? (
-                <div
-                  className="main-pic"
-                  style={{
-                    backgroundImage: `url(${a.media[0].urlExpanded})`
-                  }}
+            />
+          ) : (
+            <div className="main-pic empty" />
+          )}
+          <div className="header">
+            <div className="category">
+              <Category listing={a} showPrimary={false} />
+            </div>
+            <ListingBadge status={a.status} featured={a.featured} />
+          </div>
+          <h5>
+            <a href={`#/listing/${a.id}`}>{a.title}</a>
+          </h5>
+          {a.__typename === 'AnnouncementListing' ? null : (
+            <div className="price d-flex align-items-center">
+              <Price listing={a} descriptor />
+              {ognListingRewards[a.id] && (
+                <OgnBadge
+                  amount={ognListingRewards[a.id]}
+                  className="listing-card-growth-reward"
                 />
-              ) : (
-                <div className="main-pic empty" />
-              )}
-              <div className="header">
-                <div className="category">
-                  <Category listing={a} showPrimary={false} />
-                </div>
-                <ListingBadge status={a.status} featured={a.featured} />
-              </div>
-              <h5>
-                <a href={`#/listing/${a.id}`}>{a.title}</a>
-              </h5>
-              {a.__typename === 'AnnouncementListing' ? null : (
-                <div className="price d-flex align-items-center">
-                  <Price listing={a} descriptor />
-                  {hasGrowthReward && (
-                    <OgnBadge
-                      amount={this.props.ognListingRewards[a.id]}
-                      className="listing-card-growth-reward"
-                    />
-                  )}
-                </div>
               )}
             </div>
-          )
-        })}
-      </div>
-    )
-  }
+          )}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default withGrowthRewards(ListingCards)
