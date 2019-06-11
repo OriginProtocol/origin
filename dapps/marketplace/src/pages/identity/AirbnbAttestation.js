@@ -73,15 +73,13 @@ class AirbnbAttestation extends Component {
             What will be visible on the blockchain?
           </fbt>
         </span>
-        <fbt desc="VerifyAirbnb.yourAirbnbId">
-          Your Airbnb user ID
-        </fbt>
+        <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
       </div>
     ) : (
       <div className="help">
         <fbt desc="VerifyAirbnb.airbnbProfilePublished">
-          Other users will know that you have a verified Airbnb profile and
-          your user id will be published on the blockchain.
+          Other users will know that you have a verified Airbnb profile and your
+          user id will be published on the blockchain.
         </fbt>
       </div>
     )
@@ -148,16 +146,20 @@ class AirbnbAttestation extends Component {
             readOnly
             type="text"
           />
-          <button type="button" className="btn copy-btn" onClick={() => {
-            this.inputRef.select()
-            document.execCommand('copy')
-          }}>
+          <button
+            type="button"
+            className="btn copy-btn"
+            onClick={() => {
+              this.inputRef.select()
+              document.execCommand('copy')
+            }}
+          >
             <fbt desc="VerifyAirbnb.copy">Copy</fbt>
           </button>
         </div>
         {this.state.error && (
-            <div className="alert alert-danger mt-3">{this.state.error}</div>
-          )}
+          <div className="alert alert-danger mt-3">{this.state.error}</div>
+        )}
         <div className="help">
           <fbt desc="VerifyAirbnb.continueToConfirmationCodeCheck">
             Continue once the confirmation code is entered in your Airbnb
@@ -204,9 +206,7 @@ class AirbnbAttestation extends Component {
       >
         {generateCode => (
           <button
-            className={`btn ${
-              isMobile ? 'btn-primary' : 'btn-outline-light'
-            }`}
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -254,9 +254,7 @@ class AirbnbAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className={`btn ${
-              isMobile ? 'btn-primary' : 'btn-outline-light'
-            }`}
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return

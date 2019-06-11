@@ -237,9 +237,7 @@ class OAuthAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className={`btn ${
-              isMobile ? 'btn-primary' : 'btn-outline-light'
-            }`}
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })

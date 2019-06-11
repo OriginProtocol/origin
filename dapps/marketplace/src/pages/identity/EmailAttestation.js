@@ -38,7 +38,10 @@ class EmailAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt('Verify Email Address', 'EmailAttestation.verifyEmailAddress')}
+        title={fbt(
+          'Verify Email Address',
+          'EmailAttestation.verifyEmailAddress'
+        )}
         className={`attestation-modal email${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -136,7 +139,7 @@ class EmailAttestation extends Component {
                 className={`btn ${
                   isMobile ? 'btn-primary' : 'btn-outline-light'
                 }`}
-                type="submit"
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
