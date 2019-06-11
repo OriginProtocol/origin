@@ -192,10 +192,7 @@ describe('Listener Handlers', () => {
     )
 
     // Offer must be created before it can be finalized
-    await handler.process(
-      { timestamp: 1 },
-      this.offerCreatedEvent
-    )
+    await handler.process({ timestamp: 1 }, this.offerCreatedEvent)
 
     const result = await handler.process(
       { timestamp: 2 },
