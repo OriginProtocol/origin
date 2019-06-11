@@ -12,6 +12,7 @@ import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 
 import { balance, identity, tokenBalance } from 'graphql/queries'
+import { deployIdentity } from 'graphql/mutations'
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -83,7 +84,13 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(identity, { id: ethAddress })
     }
 
-    publishIdentity = () => {}
+    publishIdentity = (from, profile, attestations) => {
+      return this._sendGraphqlMutation(deployIdentity, {
+        from,
+        profile,
+        attestations
+      })
+    }
 
     render() {
       return (
