@@ -22,7 +22,6 @@ class ImportWarningScreen extends Component {
   }
 
   render() {
-    const { wallet } = this.props
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
