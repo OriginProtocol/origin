@@ -21,6 +21,7 @@ import OriginButton from 'components/origin-button'
 import LearnCard from 'components/learn-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
+import withOriginGraphql from 'hoc/withOriginGraphql'
 import OnboardingStyles from 'styles/onboarding'
 import {
   setEmailVerified,
@@ -29,47 +30,29 @@ import {
   setAvatarUri
 } from 'actions/Onboarding'
 import { setIdentity } from 'actions/Wallet'
-import { identity } from 'graphql/queries'
 
 const IMAGES_PATH = '../../../assets/images/'
 
 class ImportedScreen extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       loading: true,
       identity: {},
       displayModal: false
     }
-
-    DeviceEventEmitter.addListener(
-      'identityResponse',
-      this.handleIdentity.bind(this)
-    )
-
-    this.toggleModal = this.toggleModal.bind(this)
   }
 
-  componentDidMount() {
-    // Retry loading identity until success
-    this.identityLoader = setInterval(() => {
-      // Only do GraphQL query if the marketplace screen has loaded
-      if (this.props.marketplace.ready) {
-        console.debug('Requesting identity')
-        // Run a GraphQL query to get the identity for the current address
-        DeviceEventEmitter.emit('graphqlQuery', 'handleIdentity', identity, {
-          id: this.props.wallet.activeAccount.address
-        })
-      } else {
-        console.debug('Marketplace not ready')
-      }
-    }, 1000)
-  }
+  async componentDidMount() {
+    let response
+    try {
+      response = await this.props.getIdentity(this.props.wallet.activeAccount.address)
+    } catch (error) {
+      // Skip, identity couldn't be loaded
+      console.warn(error)
+    }
 
-  handleIdentity(response) {
-    clearInterval(this.identityLoader)
-    const identity = response.data.identity
+    const identity = get(response.data, 'identity')
     if (identity) {
       // Update the onboarding store so we know withOnboardingSteps can correctly
       // calculate the next onboardinig step based on what the user has completed
@@ -81,12 +64,12 @@ class ImportedScreen extends Component {
       })
       this.props.setAvatarUri(identity.avatarUrl)
       // Save the whole identity in the wallet store
-      this.props.setIdentity(response.data.identity)
+      this.props.setIdentity(identity)
     }
     this.setState({ loading: false, identity: identity })
   }
 
-  toggleModal() {
+  toggleModal = () => {
     this.setState({ displayModal: !this.state.displayModal })
   }
 
@@ -275,14 +258,14 @@ const mapDispatchToProps = dispatch => ({
   setIdentity: identity => dispatch(setIdentity(identity))
 })
 
-export default withConfig(
+export default withOriginGraphql(withConfig(
   withOnboardingSteps(
     connect(
       mapStateToProps,
       mapDispatchToProps
     )(ImportedScreen)
   )
-)
+))
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,

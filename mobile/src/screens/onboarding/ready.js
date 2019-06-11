@@ -1,21 +1,68 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import { connect } from 'react-redux'
 
+import {
+  setEmailVerified,
+  setPhoneVerified,
+  setName,
+  setAvatarUri
+} from 'actions/Onboarding'
+import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../../assets/images/'
 
-export default class ReadyScreen extends Component {
+class ReadyScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+    }
+  }
+
+  async componentDidMount() {
+    const profile = {
+      firstName: this.props.onboarding.firstName,
+      lastName: 'Test', //this.props.onboarding.lastName,
+      avatarUrl: this.props.onboarding.avatarUrl
+    }
+
+    const attestations = []
+    if (this.props.onboarding.emailAttestation) {
+      attestations.push(this.props.onboarding.emailAttestation)
+    }
+    if (this.props.onboarding.phoneAttestation) {
+      attestations.push(this.props.onboarding.phoneAttestation)
+    }
+
+    const from = this.props.wallet.activeAccount.address
+
+    const response = await this.props.publishIdentity(from, profile, attestations)
+
+    console.log(response)
+
+    this.setState({ loading: false })
+  }
+
   render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        {this.state.loading ? this.renderLoading() : this.renderReady()}
+      </SafeAreaView>
+    )
+  }
+
+  renderReady() {
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
     return (
-      <SafeAreaView style={styles.container}>
+      <>
         <View style={styles.content}>
           <Image
             resizeMethod={'scale'}
@@ -42,10 +89,40 @@ export default class ReadyScreen extends Component {
             }}
           />
         </View>
-      </SafeAreaView>
+      </>
+    )
+  }
+
+  renderLoading() {
+    return (
+      <View style={styles.content}>
+        <Text style={styles.title}>
+          <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
+        </Text>
+        <ActivityIndicator size="large" />
+      </View>
     )
   }
 }
+
+const mapStateToProps = ({ onboarding, wallet }) => {
+  return { onboarding, wallet }
+}
+
+const mapDispatchToProps = dispatch => ({
+  setEmailVerified: email => dispatch(setEmailVerified(email)),
+  setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
+  setName: payload => dispatch(setName(payload)),
+  setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri)),
+  setIdentity: identity => dispatch(setIdentity(identity))
+})
+
+export default withOriginGraphql(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ReadyScreen)
+)
 
 const styles = StyleSheet.create({
   container: {
