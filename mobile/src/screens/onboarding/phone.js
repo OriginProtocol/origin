@@ -52,22 +52,65 @@ class PhoneScreen extends Component {
     })
   }
 
+  handleChange(field, value) {
+    this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
+  }
+
+  /* Override the back function because of the verify step being present on this
+   * screen and not on a separate route.
+   */
   handleBack() {
     this.state.verify
       ? this.setState({ verify: false })
       : this.props.navigation.goBack(null)
   }
 
-  handleChange(field, value) {
-    this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
-  }
-
+  /* Handle submission of phone number. Check if an identity with this phone
+   * number exists, and if so redirect to a warning. Otherwise generate a
+   * verificationn code and SMS it to the user.
+   */
   async handleSubmitPhone() {
     this.setState({ loading: true })
+
+    const exists = await this.checkDuplicateIdentity()
+    if (exists) {
+      this.props.navigation.navigate('ImportWarning')
+      return
+    }
+
+    const response = await this.generateVerificationCode()
+    if (response.ok) {
+      this.setState({ loading: false, verify: true })
+    } else {
+      this.setState({
+        loading: false,
+        phoneError: get(response.json(), 'errors[0]', '')
+      })
+    }
+  }
+
+  /* Send a request to @origin/bridge looking for a duplicate for this phone.
+   */
+  async checkDuplicateIdentity() {
+    const url = `${this.props.config.mainnet.bridge}/utils/exists`
+    const response = await fetch(url, {
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        phone: `${this.state.countryCodeValue} ${this.state.phoneValue}`
+      })
+    })
+    // 200 status code indicates account was found
+    return response.status === 200
+  }
+
+  /* Request a verification code from @origin/bridge.
+   */
+  async generateVerificationCode() {
     const url = `${
       this.props.configs.mainnet.bridge
     }/api/attestations/phone/generate-code`
-    const response = await fetch(url, {
+    return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
       method: 'POST',
@@ -77,17 +120,11 @@ class PhoneScreen extends Component {
         phone: this.state.phoneValue
       })
     })
-    if (response.ok) {
-      this.setState({ loading: false, verify: true })
-    } else {
-      const data = await response.json()
-      this.setState({
-        loading: false,
-        phoneError: get(data, 'errors[0]', '')
-      })
-    }
   }
 
+  /* Handle submission of the verification code. Send it to @origin/bridge and
+   * store the resulting attestation, or display an error.
+   */
   async handleSubmitVerification() {
     this.setState({ loading: true })
     const url = `${
@@ -123,6 +160,8 @@ class PhoneScreen extends Component {
     )
   }
 
+  /* Render the phone input.
+   */
   renderInput() {
     return (
       <>
@@ -185,6 +224,8 @@ class PhoneScreen extends Component {
     )
   }
 
+  /* Render the input for the verification code.
+   */
   renderVerify() {
     return (
       <>
