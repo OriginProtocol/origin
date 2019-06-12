@@ -387,6 +387,10 @@ require('react-styl')(`
         margin-top: 1.5rem
         .btn-link
           text-decoration: none
+      form
+        display: flex
+        flex: auto
+        flex-direction: column
     &.phone
       > div
         .verification-code
