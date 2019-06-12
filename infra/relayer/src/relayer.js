@@ -253,7 +253,7 @@ class Relayer {
         // logger.debug('Estimated gas ' + gas)
         // TODO: Not sure why we need extra gas here
         const gas = 1000000
-        tx = { data, gas }
+        tx = { to: proxy, data, gas }
         dbTx = await this._createDbTx(
           req,
           enums.RelayerTxnStatuses.Pending,

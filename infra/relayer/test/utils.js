@@ -1,7 +1,9 @@
 /**
  * Utility functions for testing
  */
+const { unpad } = require('ethereumjs-util')
 const { stringToBN } = require('../src/util')
+const { EVENT_SIG_PROXYCREATION } = require('./const')
 
 /**
  * Wait for a transaction to be mined and a receipt return
@@ -131,6 +133,103 @@ async function wait(ms) {
   return new Promise(resolve => setTimeout(() => resolve(true), ms))
 }
 
+/**
+ * Check for an event signature in tx receipt logs
+ * @param receipt {object} A transaction receipt
+ * @param sig {string} An event signature
+ * @returns {boolean} If it was found
+ */
+function eventSigInReceipt(receipt, sig) {
+  for (const log of receipt.logs) {
+    if (log.topics[0] === sig) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * doecode an address from en event log
+ * @param encoded {string} An encoded address
+ * @returns {string} The decoded address
+ */
+function decodeAddress(encoded) {
+  console.log(`decodeAddress(${encoded})`)
+  if (encoded.startsWith('0x')) {
+    encoded = encoded.slice(2)
+  }
+  if (encoded.length === 40) return encoded
+  if (encoded.length < 40) throw new Error('not an address')
+  return `0x${unpad(encoded).padStart(40, '0')}`
+}
+
+/**
+ * Return a proxy address from a ProxyCreation event from receipt logs
+ * @param receipt {object} A transaction receipt
+ * @returns {string} The decoded address
+ */
+function getProxyAddress(receipt) {
+  for (const log of receipt.logs) {
+    if (log.topics[0] === EVENT_SIG_PROXYCREATION) {
+      return decodeAddress(log.data)
+    }
+  }
+  return null
+}
+
+/**
+ * Creates a fake Express Request object for testing
+ * @param options {object} request things
+ * @returns {object} False Reqeust object
+ */
+function mockRequest({ body, headers }) {
+  const _headers = headers ? headers : {}
+  return {
+    headers: _headers,
+    header(name) {
+      return _headers[name]
+    },
+    body,
+  }
+}
+
+/**
+ * Creates a fake Express Response object for testing
+ * @returns {object} False Response object
+ */
+function mockResponse() {
+  const res = {}
+
+  res.statusCode = 200
+
+  res.status = (code) => {
+    res.statusCode = code
+    return res
+  }
+
+  res.send = (body) => {
+    res.body = body
+    return res
+  }
+
+  return res
+}
+
+/**
+ * The hash function used for relayer transactions
+ * @param options {object} Transaction data to hash
+ * @returns {string} A bytes32 hash string
+ */
+function hashTxdata(web3Inst, { from, to, txData, nonce }) {
+  return web3Inst.utils.soliditySha3(
+    { t: 'address', v: from },
+    { t: 'address', v: to },
+    { t: 'uint256', v: '0' },
+    { t: 'bytes', v: txData },
+    { t: 'uint256', v: nonce }
+  )
+}
+
 module.exports = {
   waitForTransactionReceipt,
   getBalance,
@@ -139,5 +238,11 @@ module.exports = {
   startMining,
   stopMining,
   insensitiveInArray,
-  wait
+  wait,
+  eventSigInReceipt,
+  decodeAddress,
+  getProxyAddress,
+  mockRequest,
+  mockResponse,
+  hashTxdata
 }

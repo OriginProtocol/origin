@@ -2,6 +2,7 @@ const assert = require('assert')
 const BN = require('bn.js')
 const Web3 = require('web3')
 const Purse = require('../src/purse')
+
 const {
   waitForTransactionReceipt,
   getBalance,
@@ -10,18 +11,19 @@ const {
   insensitiveInArray,
   wait
 } = require('./utils')
-
-const MNEMONIC_ONE = 'one two three four five six'
-const MNEMONIC_TWO = 'two two three four five six'
-const MNEMONIC_THREE = 'three two three four five six'
-const MNEMONIC_FOUR = 'four two three four five six'
-const MNEMONIC_FIVE = 'five two three four five six'
-const MNEMONIC_SIX = 'six two three four five six'
-const TEST_NET_ID = 999
-const TEST_PROVIDER_URL = 'http://localhost:8545/'
-const ZERO = new BN('0', 10)
-const ONE_ETHER = new BN('1000000000000000000', 10)
-const TWO_GWEI = new BN('2000000000', 10)
+const {
+  MNEMONIC_ONE,
+  MNEMONIC_TWO,
+  MNEMONIC_THREE,
+  MNEMONIC_FOUR,
+  MNEMONIC_FIVE,
+  MNEMONIC_SIX,
+  TEST_NET_ID,
+  TEST_PROVIDER_URL,
+  ZERO,
+  ONE_ETHER,
+  TWO_GWEI
+} = require('./const')
 
 const web3 = new Web3(TEST_PROVIDER_URL)
 

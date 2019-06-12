@@ -257,6 +257,8 @@ class Purse {
       tx.gasPrice = gasPrice
     }
 
+    logger.debug('Sending tx: ', tx)
+
     const signed = await this.signTx(address, tx)
     const rawTx = signed.rawTransaction
     // Not in this version of web3.js 1.0...
