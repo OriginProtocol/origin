@@ -80,7 +80,8 @@ class MobileBridge {
       rpcUrl,
       getAccounts: this.getAccounts.bind(this),
       processTransaction: this.processTransaction.bind(this),
-      signMessage: this.signMessage.bind(this)
+      signMessage: this.signMessage.bind(this),
+      signPersonalMessage: this.signMessage.bind(this)
     })
 
     // Disable caching subProviders, because they interfere with the provider
