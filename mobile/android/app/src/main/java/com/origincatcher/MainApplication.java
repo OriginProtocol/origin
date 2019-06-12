@@ -11,7 +11,6 @@ import com.rnfingerprint.FingerprintAuthPackage;
 import com.bebnev.RNUserAgentPackage;
 import io.sentry.RNSentryPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.bitgo.randombytes.RandomBytesPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -42,7 +41,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNUserAgentPackage(),
             new RNSentryPackage(),
             new RNGestureHandlerPackage(),
-            new RandomBytesPackage(),
             new ReactNativePushNotificationPackage(),
             new RNCWebViewPackage()
       );

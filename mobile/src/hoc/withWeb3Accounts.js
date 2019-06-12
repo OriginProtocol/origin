@@ -13,7 +13,6 @@ import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import { ethers } from 'ethers'
-const bip39 = require('bip39')
 
 import {
   addAccount,
@@ -85,7 +84,7 @@ const withWeb3Accounts = WrappedComponent => {
     /* Create new account
      */
     createAccount = () => {
-      const mnemonic = bip39.generateMnemonic()
+      const mnemonic = ethers.Wallet.createRandom().mnemonic
       // This is the default path but explicitly stated here for clarity
       const derivePath = `m/44'/60'/0'/0/0`
       // Web3js doesn't support wallet creation from a mnemonic, so somewhat

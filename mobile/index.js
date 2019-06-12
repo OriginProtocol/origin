@@ -14,7 +14,7 @@ if (!__DEV__) {
 import './global'
 import App from './src/App'
 
-// Shims required by ethersjsA
+// Shims required by ethersjs
 // https://github.com/ethers-io/ethers.js/issues/304
 import 'ethers/dist/shims.js'
 
