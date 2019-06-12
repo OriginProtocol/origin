@@ -20,12 +20,9 @@ const IdentityQuery = gql`
       avatar
       ipfsHash
 
-      facebookVerified
-      twitterVerified
-      airbnbVerified
-      phoneVerified
-      emailVerified
-      websiteVerified
+      verifiedAttestations {
+        id
+      }
     }
   }
 `

@@ -6,7 +6,7 @@ export const mutations = `
     generateEmailCode(email: String!): AttestationCodeResult!
     verifyEmailCode(email: String!, identity: String, code: String!): AttestationVerifyResult!
 
-    verifyOAuthAttestation(provider: String!, identity: String!, redirect: Boolean, authUrl: String, code: String): AttestationVerifyResult!
+    verifyOAuthAttestation(provider: String!, identity: String!, redirect: String, authUrl: String, code: String): AttestationVerifyResult!
 
     generateAirbnbCode(identity: String!, airbnbUserId: String!): AttestationCodeResult!
     verifyAirbnbCode(identity: String!, airbnbUserId: String!): AttestationVerifyResult!

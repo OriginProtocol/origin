@@ -10,7 +10,7 @@ function twitterOAuth(sid) {
     process.env.TWITTER_CONSUMER_KEY,
     process.env.TWITTER_CONSUMER_SECRET,
     '1.0',
-    getAbsoluteUrl('/redirects/twitter/', sid),
+    getAbsoluteUrl('/redirects/twitter/', { sid }),
     'HMAC-SHA1'
   )
 }
