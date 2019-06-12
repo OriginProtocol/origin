@@ -26,18 +26,20 @@ const GalleryScroll = ({ pics = [] }) => {
           />
         ))}
       </div>
-      <div className="ticks">
-        {pics.map((pic, idx) => (
-          <div
-            className={`tick${offset === idx ? ' active' : ''}`}
-            key={idx}
-            onClick={() => {
-              const width = scrollEl.current.clientWidth
-              scrollEl.current.scrollTo(width * idx, 0)
-            }}
-          />
-        ))}
-      </div>
+      {pics.length === 1 ? null : (
+        <div className="ticks">
+          {pics.map((pic, idx) => (
+            <div
+              className={`tick${offset === idx ? ' active' : ''}`}
+              key={idx}
+              onClick={() => {
+                const width = scrollEl.current.clientWidth
+                scrollEl.current.scrollTo(width * idx, 0)
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
