@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 
 import GenerateWebsiteCodeMutation from 'mutations/GenerateWebsiteCode'
 import VerifyWebsiteMutation from 'mutations/VerifyWebsite'
@@ -22,13 +25,20 @@ class WebsiteAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt('Verify your website', 'VerifyWebsite.verifyYourWebsite')}
         className={`attestation-modal website${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -43,16 +53,20 @@ class WebsiteAttestation extends Component {
         }}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyWebsite.enterWebsiteUrl">
             Enter your website URL below
@@ -108,11 +122,15 @@ class WebsiteAttestation extends Component {
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyWebsite.continueAfterUPload">
             Continue once you have uploaded the file and it is accessible.
@@ -158,7 +176,10 @@ class WebsiteAttestation extends Component {
       >
         {generateCode => (
           <button
-            className="btn btn-outline-light"
+            className={`btn ${
+              this.isMobile() ? 'btn-primary' : 'btn-outline-light'
+            }`}
+            disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -183,7 +204,9 @@ class WebsiteAttestation extends Component {
   renderDownloadButton() {
     return (
       <button
-        className="btn btn-outline-light"
+        className={`btn ${
+          this.isMobile() ? 'btn-primary' : 'btn-outline-light'
+        }`}
         onClick={() => {
           this.setState({
             stage: 'VerifyCode'
@@ -219,7 +242,9 @@ class WebsiteAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light"
+            className={`btn ${
+              this.isMobile() ? 'btn-primary' : 'btn-outline-light'
+            }`}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -242,11 +267,15 @@ class WebsiteAttestation extends Component {
   }
 
   renderVerifiedOK() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="WebsiteAttestation.verified">Website verified!</fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="WebsiteAttestation.verified">Website verified!</fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="Attestation.DontForget">
             Don&apos;t forget to publish your changes.
@@ -260,7 +289,7 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           <button
-            className="btn btn-outline-light"
+            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
             onClick={() => {
               this.props.onComplete(this.state.data)
               this.setState({ shouldClose: true })
@@ -283,7 +312,7 @@ class WebsiteAttestation extends Component {
   }
 }
 
-export default WebsiteAttestation
+export default withIsMobile(WebsiteAttestation)
 
 require('react-styl')(`
   .attestation-modal
