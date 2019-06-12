@@ -14,7 +14,8 @@ before(async function() {
   // Start Ganache (in-memory) and IPFS
   shutdown = await services({
     ganache: { inMemory: true, total_accounts: 20 },
-    deployContracts: true
+    deployContracts: true,
+    ipfs: true
   })
 })
 

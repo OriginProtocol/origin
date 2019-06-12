@@ -17,7 +17,21 @@ const TEST_NET_ID = 999
 const TWO_GWEI = new BN('2000000000', 10)
 const JUNK_HASH = '0x16c55d9e9ca5b673cafaa112195a5ad78ceb104e612ff2afbf34c233d6e7482b'
 
+// IdentityUpdated(address,bytes32)
+const EVENT_SIG_IDENTITYUPDATED = '0x8a49a94a170e0377e29de8e4b741993bed3dc902443fdc59d79e455137ecab18'
+// ProxyCreation(address)
+const EVENT_SIG_PROXYCREATION = '0xa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f80'
+
 const web3 = new Web3(TEST_PROVIDER_URL)
+
+function eventSigInReceipt(receipt, sig) {
+  for (const log of receipt.logs) {
+    if (log.topics[0] === sig) {
+      return true
+    }
+  }
+  return false
+}
 
 function mockRequest({ body, headers }) {
   const _headers = headers ? headers : {}
@@ -63,6 +77,7 @@ describe('Relayer', async () => {
   const contractsJSON = require('../../../packages/contracts/build/contracts.json')
   const ProxyFactoryAddress = contractsJSON['ProxyFactory']
   const IdentityEventsAddress = contractsJSON['IdentityEvents']
+  const IdentityProxyMaster = contractsJSON['IdentityProxyImplementation']
   let netId, ProxyFactory, IdentityEvents, Funder, Rando
 
   before(async () => {
@@ -121,26 +136,25 @@ describe('Relayer', async () => {
     // The proxied call
     const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi)
     const proxyTxData = await Proxy.methods
-      .changeOwnerAndExecute(Rando, IdentityEvents.address, '0', txData)
+      .changeOwnerAndExecute(Rando, IdentityEventsAddress, '0', txData)
       .encodeABI()
 
     // The create proxy call
-    const createCallTxData = await ProxyFactory.methods.createProxyWithSenderNonce(ProxyFactoryAddress, proxyTxData, Rando, '0').encodeABI()
+    const createCallTxData = await ProxyFactory.methods.createProxyWithSenderNonce(IdentityProxyMaster, proxyTxData, Rando, '0').encodeABI()
 
     const txToSend = {
       from: Rando,
       to: ProxyFactoryAddress,
       txData: createCallTxData,
-      nonce: '0'
+      nonce: '0' // TODO: Why does relayer peg this at 0?
     }
-    const txDatahash = hashTxdata({ ...txToSend })
+    const txDatahash = hashTxdata(txToSend)
     const txToSendSignature = await web3.eth.sign(txDatahash, Rando)
 
     const request = mockRequest({
       body: {
         ...txToSend,
         signature: txToSendSignature,
-        txData: createCallTxData,
         proxy: null,
         preflight: false
       }
@@ -153,16 +167,12 @@ describe('Relayer', async () => {
     assert(!response.body.errors, 'errors in response')
     assert(response.body.id, 'missing txhash')
 
-    console.log('Proxy creation txHash', response.body.id)
-
     const proxyReceipt = await web3.eth.getTransactionReceipt(response.body.id)
     assert(proxyReceipt.status)
 
-    /**
-     * This tx receipt should have logs with a ProxyCreation event but doesn't.... ganache bug?
-     * Unable to expand proxy testing without knowing the address of the proxy...
-     */
-    console.log('proxyReceipt', proxyReceipt)
+    // Verify the expected events are in the receipt
+    assert(eventSigInReceipt(proxyReceipt, EVENT_SIG_IDENTITYUPDATED), 'missing IdentityUpdated event')
+    assert(eventSigInReceipt(proxyReceipt, EVENT_SIG_PROXYCREATION), 'missing ProxyCreation event')
 
     await relayer.purse.teardown(true) // Testing cleanup only
   })
