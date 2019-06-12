@@ -14,8 +14,6 @@ import Gallery from 'components/Gallery'
 import GalleryScroll from 'components/GalleryScroll'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
-import Calendar from 'components/Calendar'
-import WeekCalendar from 'components/WeekCalendar'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
 
@@ -29,8 +27,9 @@ import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
 import FractionalHourly from './_BuyFractionalHourly'
 
-import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
-import { CurrenciesByCountryCode } from 'constants/Currencies'
+import GiftCardDetail from './listing-types/GiftCard'
+import FractionalNightlyDetail from './listing-types/FractionalNightly'
+import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -101,10 +100,7 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-    const isGiftCard = listing.__typename === 'GiftCardListing'
     const isOwnerViewing = listing.seller.id === this.props.walletProxy
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const isDifferentTimeZone = listing.timeZone !== userTimeZone
 
     const description = (
       <div className="description">
@@ -114,6 +110,33 @@ class ListingDetail extends Component {
         {String(listing.description).replace(/^\s+/, '')}
       </div>
     )
+
+    let detail = description
+
+    if (listing.__typename === 'GiftCardListing') {
+      detail = <GiftCardDetail listing={listing} description={description} />
+    } else if (isFractional) {
+      detail = (
+        <FractionalNightlyDetail
+          listing={listing}
+          description={description}
+          availability={this.state.availability}
+          isOwnerViewing={isOwnerViewing}
+          onChange={state => this.setState(state)}
+        />
+      )
+    } else if (isFractionalHourly) {
+      detail = (
+        <FractionalHourlyDetail
+          listing={listing}
+          description={description}
+          availability={this.state.availabilityHourly}
+          isOwnerViewing={isOwnerViewing}
+          onChange={state => this.setState(state)}
+        />
+      )
+    }
+
     return (
       <>
         {this.props.isMobile ? (
@@ -121,140 +144,7 @@ class ListingDetail extends Component {
         ) : (
           <Gallery pics={listing.media} />
         )}
-
-        {isGiftCard || isFractional || isFractionalHourly ? null : description}
-        {!isGiftCard ? null : (
-          <>
-            <div className="row">
-              <div className="card-details col-sm-6">
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.retailer">Retailer</fbt>
-                  </span>
-                  <span>{listing.retailer}</span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.cardAmount">Amount on Card</fbt>
-                  </span>
-                  <span>
-                    {CurrenciesByCountryCode[listing.issuingCountry][2]}
-                    {listing.cardAmount}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.issuingCountry">
-                      Issuing Country
-                    </fbt>
-                  </span>
-                  <span>
-                    <img
-                      className="country-flag-img"
-                      src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
-                    />
-                    {countryCodeMapping['en'][listing.issuingCountry]}
-                  </span>
-                </div>
-              </div>
-              <div className="card-details col-sm-6">
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.isDigital">
-                      Card type
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.isDigital ? (
-                      <fbt desc="digital">Digital</fbt>
-                    ) : (
-                      <fbt desc="physical">Physical</fbt>
-                    )}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.isCashPurchase">
-                      Was this a cash purchase?
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.isCashPurchase ? (
-                      <fbt desc="yes">Yes</fbt>
-                    ) : (
-                      <fbt desc="no">No</fbt>
-                    )}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.receiptAvailable">
-                      Is a receipt available?
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.receiptAvailable ? (
-                      <fbt desc="yes">Yes</fbt>
-                    ) : (
-                      <fbt desc="no">No</fbt>
-                    )}
-                  </span>
-                </div>
-              </div>
-            </div>
-            {description}
-          </>
-        )}
-        {!isFractional ? null : (
-          <>
-            {description}
-            <hr />
-            <Calendar
-              interactive={!isOwnerViewing}
-              small={true}
-              onChange={state => this.setState(state)}
-              availability={this.state.availability}
-              currency={listing.price.currency}
-            />
-            <div className="availability-help">
-              <fbt desc="listingDetail.calendarDateRange">
-                * Click to select start date and again to select end date.
-              </fbt>
-            </div>
-          </>
-        )}
-        {!isFractionalHourly ? null : (
-          <>
-            {description}
-            <hr />
-            <div className="timeZone">
-              <div>
-                <fbt desc="listingDetail.timeZone">Time Zone:</fbt>{' '}
-                {listing.timeZone}
-                {isDifferentTimeZone && (
-                  <div>
-                    <fbt desc="listingDetail.timeZoneWarning">
-                      NOTE: This is different from your time zone of
-                      <fbt:param name="userTimeZone">{userTimeZone}</fbt:param>
-                    </fbt>
-                  </div>
-                )}
-              </div>
-            </div>
-            <WeekCalendar
-              interactive={!isOwnerViewing}
-              small={true}
-              onChange={state => this.setState(state)}
-              availability={this.state.availabilityHourly}
-              currency={listing.price.currency}
-            />
-            <div className="availability-help">
-              <fbt desc="listingDetail.weekCalendarRangeHelp">
-                * Click to select start time and again for end time
-              </fbt>
-            </div>
-          </>
-        )}
+        {detail}
       </>
     )
   }
@@ -280,9 +170,8 @@ class ListingDetail extends Component {
       b => b.id === this.props.walletProxy
     )
 
-    const growthReward = this.props.ognListingRewards[listing.id]
-
     const props = { ...this.props }
+    const growthReward = this.props.ognListingRewards[listing.id]
     if (growthReward) {
       props.growthReward = growthReward
     }

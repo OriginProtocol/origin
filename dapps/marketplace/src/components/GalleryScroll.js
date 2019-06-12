@@ -68,7 +68,7 @@ require('react-styl')(`
           background-color: white
           box-shadow: 0px 0px 1px 2px #aaa
     .gallery-scroll
-      overscroll-behavior: contain
+      overscroll-behavior-x: contain
       height: 50vh
       scroll-snap-type: x mandatory
       -webkit-overflow-scrolling: touch
