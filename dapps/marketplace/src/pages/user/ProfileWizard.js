@@ -39,7 +39,13 @@ class ProfileWizard extends Component {
   }
 
   hasPhoneAttestation(profile) {
-    return profile.phoneVerified || profile.phoneAttestation
+    if (profile.phoneAttestation) {
+      return true
+    }
+
+    return !!(profile.verifiedAttestations || []).find(
+      attestation => attestation.id === 'phone'
+    )
   }
 
   renderVerifyYourOtherProfiles() {
@@ -185,7 +191,8 @@ class ProfileWizard extends Component {
       skipRewardsEnroll ||
       (growthEnrollmentStatus === 'Enrolled' &&
         this.hasPhoneAttestation(currentProfile)) ||
-      localStorage.useWeb3Identity
+      localStorage.useWeb3Identity ||
+      uiStep === 'Publish'
     )
       return this.renderPublish()
 

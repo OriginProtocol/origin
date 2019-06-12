@@ -1,20 +1,58 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
-const Attestations = ({ profile = {}, small }) => (
-  <div className={`attestations${small ? ' attestations-small' : ''}`}>
-    {profile.emailVerified && <div className="attestation email" />}
-    {profile.phoneVerified && <div className="attestation phone" />}
-    {profile.facebookVerified && <div className="attestation facebook" />}
-    {profile.twitterVerified && <div className="attestation twitter" />}
-    {profile.airbnbVerified && <div className="attestation airbnb" />}
-    {profile.googleVerified && <div className="attestation google" />}
-    {profile.websiteVerified && <div className="attestation website" />}
-    {profile.kakaoVerified && <div className="attestation kakao" />}
-    {profile.githubVerified && <div className="attestation github" />}
-    {profile.linkedinVerified && <div className="attestation linkedin" />}
-    {profile.wechatVerified && <div className="attestation wechat" />}
-  </div>
-)
+import Tooltip from 'components/Tooltip'
+
+const getVerifiedTooltip = provider => {
+  switch (provider) {
+    case 'email':
+      return fbt('Email Verified', 'Email Verified')
+    case 'phone':
+      return fbt('Phone Verified', 'Phone Verified')
+    case 'website':
+      return fbt('Website Verified', 'Website Verified')
+    case 'airbnb':
+      return fbt('Airbnb Account Verified', 'Airbnb Account Verified')
+    case 'github':
+      return fbt('GitHub Account Verified', 'GitHub Account Verified')
+    case 'facebook':
+      return fbt('Facebook Account Verified', 'Facebook Account Verified')
+    case 'twitter':
+      return fbt('Twitter Account Verified', 'Twitter Account Verified')
+    case 'google':
+      return fbt('Google Account Verified', 'Google Account Verified')
+    case 'kakao':
+      return fbt('Kakao Account Verified', 'Kakao Account Verified')
+    case 'linkedin':
+      return fbt('LinkedIn Account Verified', 'LinkedIn Account Verified')
+    case 'wechat':
+      return fbt('WeChat Account Verified', 'WeChat Account Verified')
+  }
+
+  return provider
+}
+
+const Attestations = ({ profile = {}, small }) => {
+  const verifiedAttestations = profile.verifiedAttestations
+
+  if (!verifiedAttestations) {
+    return null
+  }
+
+  return (
+    <div className={`attestations${small ? ' attestations-small' : ''}`}>
+      {verifiedAttestations.map(attestation => (
+        <Tooltip
+          key={attestation.id}
+          placement="bottom"
+          tooltip={getVerifiedTooltip(attestation.id)}
+        >
+          <div className={`attestation ${attestation.id}`} />
+        </Tooltip>
+      ))}
+    </div>
+  )
+}
 
 export default Attestations
 
