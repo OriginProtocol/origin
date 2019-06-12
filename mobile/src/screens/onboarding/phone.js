@@ -24,7 +24,8 @@ const countryCodes = _countryCodes
     }
   })
   .sort((a, b) => (a.label > b.label ? 1 : -1))
-  .filter(x => x.value == 64)
+  // Filter to New Zealand in development
+  .filter(x => !__DEV__ && x.value == 64)
 
 class PhoneScreen extends Component {
   constructor(props) {

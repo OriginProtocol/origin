@@ -43,7 +43,7 @@ export default StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 20,
     marginHorizontal: 50,
-    paddingBottom: 30,
+    paddingBottom: 10,
     textAlign: 'center'
   },
   invalid: {

@@ -2,24 +2,59 @@ import gql from 'graphql-tag'
 
 export const identity = gql`
   query Identity($id: ID!) {
-    identity(id: $id) {
-      id
-      firstName
-      lastName
-      fullName
-      description
-      avatarUrl
-      avatarUrlExpanded
-      strength
-      attestations
+    web3 {
+      account(id: $id) {
+        id
+        owner {
+          id
+        }
+        identity {
+          id
+          firstName
+          lastName
+          fullName
+          description
+          avatarUrl
+          avatarUrlExpanded
+          strength
+          attestations
 
-      facebookVerified
-      googleVerified
-      twitterVerified
-      airbnbVerified
-      phoneVerified
-      emailVerified
-      websiteVerified
+          facebookVerified
+          googleVerified
+          twitterVerified
+          airbnbVerified
+          phoneVerified
+          emailVerified
+          websiteVerified
+          kakaoVerified
+          githubVerified
+          linkedinVerified
+          wechatVerified
+        }
+      }
+    }
+  }
+`
+
+export const wallet = gql`
+  query Wallet {
+    web3 {
+      metaMaskAccount {
+        id
+      }
+      walletType
+      mobileWalletAccount {
+        id
+      }
+      primaryAccount {
+        id
+        proxy {
+          id
+        }
+        predictedProxy {
+          id
+        }
+      }
     }
   }
 `

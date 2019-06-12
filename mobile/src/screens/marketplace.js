@@ -53,11 +53,6 @@ class MarketplaceScreen extends Component {
       'graphqlMutation',
       this.injectGraphqlMutation
     )
-    this.balanceUpdater = setInterval(() => {
-      if (this.props.marketplace.ready) {
-        this.updateBalance()
-      }
-    }, 5000)
   }
 
   componentDidMount = () => {
@@ -66,7 +61,6 @@ class MarketplaceScreen extends Component {
 
   componentWillUnmount = () => {
     console.log('Unmounted')
-    clearInterval(this.balanceUpdater)
   }
 
   componentDidUpdate = prevProps => {
@@ -129,6 +123,13 @@ class MarketplaceScreen extends Component {
           // special case where we sign a transaction to publish the identity
           const { signature } = this.props.signMessage(msgData.data)
           this.handleBridgeResponse(msgData, signature)
+        } else if (msgData.targetFunc === 'processTransaction') {
+          // If we get a processTransaction request in the Ready view its the
+          // fallback from the relayer. Nothing to do here, we can't ask the user
+          // to pay gas because this is likely a new account. Reject.
+          this.handleBridgeResponse(msgData, {
+            message: 'Transaction could not be processed'
+          })
         }
       } else {
         // Not handled yet, display a modal that deals with the target function
@@ -390,17 +391,20 @@ class MarketplaceScreen extends Component {
     this.injectMessagingKeys()
     // Fetch exchange rates for the default currency
     this.updateExchangeRates()
-    // Periodically grab the uiState from local storage to detect currency
-    // changes
-    setInterval(() => {
+    //
+    const periodicUpdates = () => {
+      // Periodically grab the uiState from local storage to detect currency
+      // changes
       this.injectUiStateRequest()
-    }, 5000)
+      // Update account identity
+      this.updateIdentities()
+      // Update balance
+      this.updateBalance()
+    }
+    periodicUpdates()
+    setInterval(periodicUpdates, 5000)
     // Set state to ready in redux
     this.props.setMarketplaceReady(true)
-    // Update account identity
-    this.updateIdentities()
-    // Update balance
-    this.updateBalance()
   }
 
   updateIdentities = () => {
@@ -410,9 +414,19 @@ class MarketplaceScreen extends Component {
   }
 
   updateIdentity = async address => {
-    const graphqlResponse = await this.props.getIdentity(address)
-    const identity = get(graphqlResponse, 'data.identity')
+    const primaryAccount = await this.walletQuery()
+    // Request the identity through proxy if necessary
+    const identityAddress = primaryAccount.proxy.id
+      ? primaryAccount.proxy.id
+      : primaryAccount.id
+    const graphqlResponse = await this.props.getIdentity(identityAddress)
+    const identity = get(graphqlResponse, 'data.web3.account.identity')
     this.props.setIdentity({ address, identity })
+  }
+
+  walletQuery = async () => {
+    const graphqlResponse = await this.props.getWallet()
+    return get(graphqlResponse, 'data.web3.primaryAccount')
   }
 
   updateBalance = async () => {

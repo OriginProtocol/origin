@@ -13,12 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 
-import {
-  setEmailVerified,
-  setPhoneVerified,
-  setName,
-  setAvatarUri
-} from 'actions/Onboarding'
+import { setEmailVerified, setPhoneVerified } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
@@ -39,8 +34,8 @@ class ReadyScreen extends Component {
   publishIdentity = async () => {
     const profile = {
       firstName: this.props.onboarding.firstName,
-      lastName: 'Test', //this.props.onboarding.lastName,
-      avatarUrl: this.props.onboarding.avatarUrl
+      lastName: 'Linton', //this.props.onboarding.lastName,
+      avatarUrl: this.props.onboarding.avatarUri
     }
 
     const attestations = []
@@ -60,9 +55,16 @@ class ReadyScreen extends Component {
       response = await this.props.publishIdentity(from, profile, attestations)
     } catch (error) {
       console.warn('Identity publication failed: ', error)
+      return
     }
 
-    console.log(response)
+    // Identity publish success, add some flags
+    if (this.props.onboarding.emailAttestation) {
+      this.props.setEmailVerified(true)
+    }
+    if (this.props.onboarding.phoneAttestation) {
+      this.props.setPhoneVerified(true)
+    }
 
     this.setState({ loading: false })
   }
@@ -129,10 +131,7 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   setEmailVerified: email => dispatch(setEmailVerified(email)),
-  setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
-  setName: payload => dispatch(setName(payload)),
-  setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri)),
-  setIdentity: identity => dispatch(setIdentity(identity))
+  setPhoneVerified: phone => dispatch(setPhoneVerified(phone))
 })
 
 export default withOriginGraphql(
