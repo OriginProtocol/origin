@@ -5,7 +5,6 @@ const Web3 = require('web3')
 const ProxyFactoryBuild = require('../../../packages/contracts/build/contracts/ProxyFactory_solc.json')
 const IdentityProxyBuild = require('../../../packages/contracts/build/contracts/IdentityProxy_solc.json')
 const IdentityEventsBuild = require('../../../packages/contracts/build/contracts/IdentityEvents.json')
-const contractsJSON = require('../../../packages/contracts/build/contracts.json')
 
 const Relayer = require('../src/relayer')
 
@@ -13,8 +12,6 @@ const { wait } = require('./utils')
 
 const MNEMONIC_ONE = 'one two three for five six'
 
-const PROXY_FACTORY_ADDRESS = contractsJSON['ProxyFactory']
-const IDENTITY_EVENTS_ADDRESS = contractsJSON['IdentityEvents']
 const TEST_PROVIDER_URL = 'http://localhost:8545/'
 const TEST_NET_ID = 999
 const TWO_GWEI = new BN('2000000000', 10)
@@ -63,6 +60,9 @@ function hashTxdata({ from, to, txData, nonce }) {
 
 
 describe('Relayer', async () => {
+  const contractsJSON = require('../../../packages/contracts/build/contracts.json')
+  const ProxyFactoryAddress = contractsJSON['ProxyFactory']
+  const IdentityEventsAddress = contractsJSON['IdentityEvents']
   let netId, ProxyFactory, IdentityEvents, Funder, Rando
 
   before(async () => {
@@ -75,12 +75,12 @@ describe('Relayer', async () => {
 
     ProxyFactory = new web3.eth.Contract(
       ProxyFactoryBuild.abi,
-      PROXY_FACTORY_ADDRESS
+      ProxyFactoryAddress
     )
 
     IdentityEvents = new web3.eth.Contract(
       IdentityEventsBuild.abi,
-      IDENTITY_EVENTS_ADDRESS
+      IdentityEventsAddress
     )
 
     process.env.FORWARDER_MNEMONIC = MNEMONIC_ONE
@@ -125,11 +125,11 @@ describe('Relayer', async () => {
       .encodeABI()
 
     // The create proxy call
-    const createCallTxData = await ProxyFactory.methods.createProxyWithSenderNonce(PROXY_FACTORY_ADDRESS, proxyTxData, Rando, '0').encodeABI()
+    const createCallTxData = await ProxyFactory.methods.createProxyWithSenderNonce(ProxyFactoryAddress, proxyTxData, Rando, '0').encodeABI()
 
     const txToSend = {
       from: Rando,
-      to: PROXY_FACTORY_ADDRESS,
+      to: ProxyFactoryAddress,
       txData: createCallTxData,
       nonce: '0'
     }
