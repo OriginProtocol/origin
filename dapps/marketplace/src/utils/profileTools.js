@@ -7,10 +7,15 @@ const websiteAttestationEnabled =
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
-  const verifiedAttestations = profile.verifiedAttestations || []
+  const allProviders = props.attestationProviders
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(att => att.id)
 
-  let strength = verifiedAttestations.reduce((sum, att) => {
-    switch (att.id) {
+  let strength = allProviders.reduce((sum, provider) => {
+    if (verifiedAttestations.includes(provider) || !state[`${provider}Attestation`]) {
+      return sum
+    }
+
+    switch (provider) {
       case 'email':
       case 'phone':
       case 'facebook':
