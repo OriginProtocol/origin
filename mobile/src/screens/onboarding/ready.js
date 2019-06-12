@@ -57,11 +57,7 @@ class ReadyScreen extends Component {
 
     let response
     try {
-      response = await this.props.publishIdentity(
-        from,
-        profile,
-        attestations
-      )
+      response = await this.props.publishIdentity(from, profile, attestations)
     } catch (error) {
       console.warn('Identity publication failed: ', error)
     }
